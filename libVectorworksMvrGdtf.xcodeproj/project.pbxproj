@@ -9,8 +9,6 @@
 /* Begin PBXFileReference section */
 		94ACB798213FC39800DA58A3 /* GSDebug.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GSDebug.cpp; path = src/GSDebug.cpp; sourceTree = "<group>"; };
 		94ACB799213FC39800DA58A3 /* GSDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSDebug.h; path = src/GSDebug.h; sourceTree = "<group>"; };
-		94ACB79A213FC39800DA58A3 /* GSString.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GSString.cpp; path = src/GSString.cpp; sourceTree = "<group>"; };
-		94ACB79B213FC39800DA58A3 /* GSString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSString.h; path = src/GSString.h; sourceTree = "<group>"; };
 		94ACB79C213FC39800DA58A3 /* GSString.X.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GSString.X.cpp; path = src/GSString.X.cpp; sourceTree = "<group>"; };
 		94ACB79D213FC39800DA58A3 /* GSString.X.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSString.X.h; path = src/GSString.X.h; sourceTree = "<group>"; };
 		94ACB79E213FC39800DA58A3 /* GSTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSTypes.h; path = src/GSTypes.h; sourceTree = "<group>"; };
@@ -34,8 +32,6 @@
 			children = (
 				94ACB798213FC39800DA58A3 /* GSDebug.cpp */,
 				94ACB799213FC39800DA58A3 /* GSDebug.h */,
-				94ACB79A213FC39800DA58A3 /* GSString.cpp */,
-				94ACB79B213FC39800DA58A3 /* GSString.h */,
 				94ACB79C213FC39800DA58A3 /* GSString.X.cpp */,
 				94ACB79D213FC39800DA58A3 /* GSString.X.h */,
 				94ACB79E213FC39800DA58A3 /* GSTypes.h */,

@@ -30,28 +30,10 @@
 	#include <AppKit/AppKit.h>
 #endif
 
-#if _MINICAD_
-# define GS_CORE_BUILD 1
-#endif
 
-#include "VectorworksSDK.h"
-#include "Kernel/GSIntTypes.h"
+#include "GSIntTypes.h"
 
-#if _MINICAD_
-	#include "../../../../Include/CoreAPI.X.h"
-#else
-	#define ASSERTCLASS(kEveryone, charSet)
 
-    #ifdef NEW_NOTHROW
-    #undef NEW_NOTHROW
-    #endif
-
-	#define NEW_NOTHROW new
-#endif
-
-// This must follow all header files.
-#undef THIS_FILE
-DECLARE_THIS_FILE
 
 
 inline void utf32ToTXCharBuffer(char32_t input, TXChar* output);

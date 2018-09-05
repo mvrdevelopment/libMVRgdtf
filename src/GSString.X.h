@@ -13,14 +13,6 @@
 
 #pragma once
 
-#if !_MINICAD_
-// ASSERTTHISCLASS is not available in the external SDK
-# ifndef ASSERTTHISCLASS
-#  define ASSERTTHISCLASS(toWhom)
-# endif
-#endif
-
-
 // For Unicode string literal
 #if GS_WIN
 #include <Windows.h>
@@ -36,16 +28,11 @@
 #endif
 
 
-#include "GSString.h"
-
 #include <string>
 #include <vector>
 #include <memory>
 #include <sstream>
 
-#define NNA_WARN_ABOUT_EMPTY_STRING_RESOURCES 1
-
-extern VWMM::Partition* gVWMM;
 
 //---------------------------------------------------------------------------------------
 // EEmptyStringResourceHandling - how do we deal with warning about empty string resources.

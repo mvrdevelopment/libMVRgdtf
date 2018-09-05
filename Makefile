@@ -14,7 +14,14 @@ CXXFLAGS	= -g -std=c++11		#c++ compiler flags
 LDFLAGS		= -shared -fPic			#linker flags
 
 #platform flags
+ifeq ($(UNAME), Linux)
 CXXFLAGS	+= -DGS_LIN=1
+endif
+ifeq ($(UNAME), Darwin)
+CXXFLAGS	+= -DGS_OSX=1
+endif
+
+
 
 # define the dirs that are used here
 root      	= $(CURDIR)/
@@ -29,11 +36,10 @@ vpath %.h $(sourcedir)
 vpath %.o $(objectdir)
 
 # Object list
-objects 	= GSString.o GSString.X.o GSTypes.o GSUtil.o 
+objects 	= GSString.X.o GSTypes.o GSUtil.o
 
 # Files 
 # !!!! check necessarity !!!!
-GSString.o 		: GSString.h StdHeaders.h
 GSString.X.o 	: GSString.X.h
 GSTypes.o 		: GSTypes.h
 GSUtil.o 		: GSUtil.h
