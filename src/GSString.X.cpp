@@ -1851,8 +1851,9 @@ bool TXString::SurrogatePairAt(size_t nIndex) const
 	{
 		TXChar firstChar = GetAt(nIndex);
 		TXChar secondChar = GetAt(nIndex+1);
-		isSurrogatePair = inrange<TXChar,TXChar,TXChar>(firstChar, 0xD800, 0xDBFF) &&
-		    inrange<TXChar,TXChar,TXChar>(secondChar, 0xDC00, 0xDFFF);
+		// TODO
+		//isSurrogatePair = inrange<TXChar,TXChar,TXChar>(firstChar, 0xD800, 0xDBFF) &&
+		//    inrange<TXChar,TXChar,TXChar>(secondChar, 0xDC00, 0xDFFF);
 	}
 	
 	return isSurrogatePair;
@@ -2031,7 +2032,7 @@ TXString& TXString::ftoa(Real64 value, Sint32 precision)
 	// LINUX_IMPLEMENTATION - done
 	return std::isspace( aTXChar );
 #else
-	return [[NSCharacterSet whitespaceCharacterSet] characterIsMember:aTXChar];
+	return std::isspace( aTXChar );
 #endif
 }
 
@@ -2244,12 +2245,13 @@ TXString& TXString::Format(const TXString& format)
 // Prepare char buffer based on "encoding" encoding.
 void TXString::PrepareCharBuffer(ETXEncoding encoding) const
 {
+#if GS_LIN
 	int len = (int)stdUStr.length() * 4 + 1;
 
 	if(len > charBufSize)
 	{
 		charBufSize = len;
-		if(charPtr) delete charPtr[];
+		if(charPtr) delete charPtr;
 		charPtr = (char*) new char[charBufSize];
 	}
 
@@ -2260,6 +2262,9 @@ void TXString::PrepareCharBuffer(ETXEncoding encoding) const
 	for(size_t i=0; i<charBufSize && i<strLen; i++)
 		charPtr[i] = str[i];
 	charPtr[strLen] = 0;
+#else 
+	// TODO
+#endif
 
 }
 
