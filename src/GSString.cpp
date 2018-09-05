@@ -31,7 +31,7 @@
 //#include <AppKit/AppKit.h>
 #endif
 
-#include "GSString.X.h"
+#include "GSString.h"
 
 //#######################################################################################
 // TXString class
