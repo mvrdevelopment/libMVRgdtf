@@ -16,6 +16,7 @@ UNAME_S := $(shell uname -s)
 #platform flags
 ifeq ($(UNAME_S), Linux)
 CXXFLAGS	+= -DGS_LIN=1
+LDFLAGS		= -DfPIC 		
 endif
 ifeq ($(UNAME_S), Darwin)
 CXXFLAGS	+= -DGS_MAC=1
@@ -36,4 +37,4 @@ all: $(targetLib)
 
 # Build targetLib
 $(targetLib): $(OBJECTS)
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $(targetLib) $(OBJECTS)
+	$(CXX) $(CXXFLAGS) -c -MMD -MP $(LDFLAGS) -o $(targetLib) $(OBJECTS)
