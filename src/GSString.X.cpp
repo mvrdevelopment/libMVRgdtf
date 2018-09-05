@@ -33,15 +33,6 @@
 
 #include "GSIntTypes.h"
 
-
-
-
-inline void utf32ToTXCharBuffer(char32_t input, TXChar* output);
-inline void utf32BufferToTXCharBuffer(const char32_t* input, TXChar* output, size_t numInputChars = -1);
-inline void txCharBufferToUtf32Buffer(const TXChar* input, char32_t* output, size_t bufElemNum = -1);
-inline void utf8BufferToTXCharBuffer(const char* const input, TXChar* output, size_t inputLen);
-
-
 //#######################################################################################
 // TXString class
 //#######################################################################################
@@ -121,33 +112,8 @@ TXString::TXString(const std::wstring& src)
 	: charPtr(nullptr)
 	, charBufSize(0)
 {
-	std::unique_ptr<TXChar[]> ucchars(new TXChar[src.length() * 2 + 1]);
-	utf32BufferToTXCharBuffer((const char32_t*)src.data(), ucchars.get());
-	stdUStr = ucchars.get();
+	//TODO
 }
-
-//=======================================================================================
-// Construct from CFStringRef&
-TXString::TXString(const CFStringRef& src)
-	: charPtr(nullptr)
-	, charBufSize(0)
-{
-	// Get number of characters.
-	CFIndex len = CFStringGetLength(src);
-	
-	// Create UniChar buffer. Add one for terminal character.
-	std::unique_ptr<UniChar[]> upUniChars(new UniChar[len + 1]);
-	
-	// Copy string data to UniChar buffer.
-	CFStringGetCharacters(src, CFRangeMake(0, len), upUniChars.get());
-	
-	// Add terminal character.
-	upUniChars[len] = 0;
-	
-	// Set string based on UniChar buffer.
-	stdUStr = upUniChars.get();
-}
-
 #endif
 
 //=======================================================================================
@@ -266,9 +232,7 @@ TXString::TXString(const wchar_t* src)
 
 		stdUStr = result;
 #else
-		std::unique_ptr<TXChar[]> ucchars(new TXChar[wcslen(src) * 2 + 1]);
-		utf32BufferToTXCharBuffer((const char32_t*)src, ucchars.get());
-		stdUStr = ucchars.get();
+		//TODO
 #endif
 	}
 }
@@ -302,9 +266,7 @@ TXString::TXString(const wchar_t* src, size_t numWChars)
 
 		stdUStr = result;
 #else
-		std::unique_ptr<TXChar[]> txChars(new TXChar[ length * 2 + 1]);
-		utf32BufferToTXCharBuffer((const char32_t*)src, txChars.get(), length);
-		stdUStr = txChars.get();
+		//TODO
 #endif
 	}
 }
@@ -344,6 +306,7 @@ TXString::TXString(wchar_t ch, size_t count /* 1 */)
 	, charPtr(nullptr)
 	, charBufSize(0)
 {
+	//TODO
 }
 #elif GS_LIN
 TXString::TXString(wchar_t ch, size_t count /* 1 */)
@@ -351,26 +314,14 @@ TXString::TXString(wchar_t ch, size_t count /* 1 */)
 	, charPtr(nullptr)
 	, charBufSize(0)
 {
+	//TODO
 }
 #else
 TXString::TXString(wchar_t w, size_t count /* 1 */)
 	: charPtr(nullptr)
 	, charBufSize(0)
 {
-	if((int)w <= 0xffff)
-	{
-		stdUStr.assign(count, (TXChar) w);
-	}
-	else
-	{
-		UCChar u[3];
-		utf32ToTXCharBuffer((char32_t)w, u);
-
-		for(int i = 0; i < count; ++i)
-		{
-			stdUStr.append(u);
-		}
-	}
+	//TODO
 }
 #endif
 
@@ -378,7 +329,7 @@ TXString::TXString(wchar_t w, size_t count /* 1 */)
 // Destructor
 TXString::~TXString()
 {
-	if(charPtr) gVWMM->TXStringDeallocate(charPtr);
+	if(charPtr) delete charPtr;
 }
 
 
@@ -430,38 +381,10 @@ TXString& TXString::operator=(const std::wstring& src)
 
 	stdUStr = result;
 #else
-	std::unique_ptr<TXChar[]> ucChars(new TXChar[src.length() * 2 + 1]);
-	utf32BufferToTXCharBuffer((const char32_t*)src.data(), ucChars.get());
-	stdUStr = ucChars.get();
+	//TODO
 #endif
 	return *this;
 }
-
-#if GS_MAC
-//=======================================================================================
-// Construct from CFStringRef&
-TXString& TXString::operator=(const CFStringRef& src)
-{
-	// Get number of characters.
-	CFIndex len = CFStringGetLength(src);
-	
-	// Create UniChar buffer.
-	std::unique_ptr<UniChar[]> upUniChars(new UniChar[len + 1]);
-	
-	// Copy string data to UniChar buffer.
-	CFStringGetCharacters(src, CFRangeMake(0, len), upUniChars.get());
-	
-	// Add terminal character.
-	upUniChars[len] = 0;
-	
-	// Set string based on UniChar buffer.
-	stdUStr = upUniChars.get();
-	
-	// Return self reference.
-	return *this;
-}
-
-#endif
 
 //=======================================================================================
 // Assignment from a const char buffer. UTF-8 is the encoding. If 'src' is 
@@ -571,48 +494,14 @@ TXString& TXString::operator=(wchar_t w)
 #if GS_WIN
 	stdUStr = w;
 #elif GS_LIN
+	// TODO
 	stdUStr = w;
 #else
-	if((int) w <= 0xffff)
-	{
-		stdUStr = (TXChar) w;
-	}
-	else
-	{
-		UCChar u[3];
-		utf32ToTXCharBuffer((char32_t)w, u);
-		stdUStr = u;
-	}
+	// TODO
 #endif
 
 	return *this;
 }
-
-//=======================================================================================
-// Assignment from a Unicode code point. For example: txString = 0x27.
-TXString& TXString::operator=(int n)
-{
-	if(n < 0 || n > 0x10FFFF)
-	{
-		stdUStr.clear();
-	}
-	else
-	{
-		if(n <= 0xffff)
-		{
-			stdUStr = (TXChar) n;
-		}
-		else
-		{
-			TXChar u[3];
-			utf32ToTXCharBuffer((char32_t)n, u);
-			stdUStr = u;
-		}
-	}
-
-	return *this;
-}
-
 
 //***********************************************************************************
 // Length related functions
@@ -662,50 +551,11 @@ size_t TXString::GetWidthInNumOfStdChar() const
 	size_t widthInNumOfStdChar = stdUStr.length();
 	
 #if GS_WIN
-	// Create hdc for current screen.
-	HDC hdc = CreateCompatibleDC(NULL);
-
-	if(hdc)
-	{
-		// Current string size.
-		SIZE strSize;
-
-		// Get size of the string.
-		if(GetTextExtentPoint32W(hdc, stdUStr.data(), (int) stdUStr.length(), &strSize))
-		{
-			// Character 'a' size.
-			SIZE charASize;
-
-			// Get size of 'a'.
-			if(GetTextExtentPoint32W(hdc, L"a", 1, &charASize))
-			{
-				// Set return variable to the width in number of 'a' width. 0.7 is added to guard edge case.
-				widthInNumOfStdChar = static_cast<size_t>( ceil( strSize.cx / charASize.cx + 0.7) );
-			}
-		}
-
-		// Release hdc.
-		DeleteDC(hdc);
-	}
+	//TODO
 #elif GS_LIN
-	// LINUX_IMPLEMENTATION
+	//TODO
 #else
-	// Standard character 'a'.
-	NSString*	standardChar = @"a";
-	
-	// TXString in NSString form.
-	NSString*	nsStr = [NSString stringWithCharacters:stdUStr.data()
-											  length:stdUStr.length()];
-	
-	// Standard character size in points based on system font and size.
-	NSSize		standardCharSize = [standardChar sizeWithAttributes:nil];
-	
-	// String size in points based on system font and size.
-	NSSize		stringSize = [nsStr sizeWithAttributes:nil];
-	
-	// Return width in number of standard character width. 0.9 is added to guard edge case.
-	widthInNumOfStdChar = static_cast<size_t>( ceil( stringSize.width / standardCharSize.width + 0.9) );
-
+	//TODO
 #endif
 	
 	// Return width in number of 'a' width.
@@ -997,40 +847,10 @@ TXString& TXString::operator+=(wchar_t w)
 	stdUStr += w;
 #elif GS_LIN
 	stdUStr += w;
+	//TODO
 #else
-	if((int) w <= 0xffff)
-	{
-		stdUStr += (TXChar) w;
-	}
-	else
-	{
-		UCChar u[3];
-		utf32ToTXCharBuffer(w, u);
-		stdUStr += u;
-	}
+	//TODO
 #endif
-
-	return *this;
-}
-
-//=======================================================================================
-// Appends one Unicode code number. If 'w' is not in the valid range, does nothing.
-TXString& TXString::operator+=(int n)
-{
-	//ASSERTN(kPChang, n >= 0 && n <= 0x10ffff);
-	if(n >= 0 && n <= 0x10ffff)
-	{
-		if(n <= 0xffff)
-		{
-			stdUStr += (TXChar) n;
-		}
-		else
-		{
-			TXChar u[3];
-			utf32ToTXCharBuffer(n, u);
-			stdUStr += u;
-		}
-	}
 
 	return *this;
 }
@@ -1332,66 +1152,8 @@ TXString& TXString::Insert(size_t pos, wchar_t w)
 		stdUStr.append(1, w);
 	}
 #else
-	if((int) w <= 0xffff)
-	{
-		if(pos < stdUStr.length())
-		{
-			stdUStr.insert(pos, 1, (TXChar) w);
-		}
-		else
-		{
-			stdUStr.append(1, (TXChar) w);
-		}
-	}
-	else
-	{
-		UCChar u[3];
-		utf32ToTXCharBuffer(w, u);
-		
-		if(pos < stdUStr.length())
-		{
-			stdUStr.insert(pos, u);
-		}
-		else
-		{
-			stdUStr.append(u);
-		}
-	}
+	//TODO
 #endif
-
-	return *this;
-}
-
-//=======================================================================================
-// Insert one character 'ch' at position 'pos'. If pos is larger than length, the new
-// character is append to the end.
-TXString& TXString::Insert(size_t pos, int n)
-{
-	if(n <= 0xffff)
-	{
-		if(pos < stdUStr.length())
-		{
-			stdUStr.insert(pos, 1, (TXChar) n);
-		}
-		else
-		{
-			stdUStr.append(1, (TXChar) n);
-		}
-	}
-	else
-	{
-		TXChar u[3];
-		utf32ToTXCharBuffer(n, u);
-		
-		if(pos < stdUStr.length())
-		{
-			stdUStr.insert(pos, u);
-		}
-		else
-		{
-			stdUStr.append(u);
-		}
-	}
 
 	return *this;
 }
@@ -1576,21 +1338,7 @@ TXString& TXString::MakeUpper()
 	// LINUX_IMPLEMENTATION - done
 	std::transform( stdUStr.begin(), stdUStr.end(), stdUStr.begin(), ::toupper );
 #else
-	size_t len = stdUStr.size();
-
-	CFMutableStringRef	cfUniStr = CFStringCreateMutableWithExternalCharactersNoCopy(
-		kCFAllocatorDefault, 
-		(UCChar*)stdUStr.data(), 
-		len, 
-		len, 
-		kCFAllocatorNull);
-
-	if (cfUniStr) 
-	{
-		// If there is issue with nil, try CFLocaleCopyCurrent or CFLocaleCopyPreferredLanguages
-		CFStringUppercase(cfUniStr, nil);
-		CFRelease(cfUniStr);
-	}
+//TODO
 #endif
 
 	return *this;
@@ -1606,21 +1354,7 @@ TXString& TXString::MakeLower()
 	// LINUX_IMPLEMENTATION - done
 	std::transform( stdUStr.begin(), stdUStr.end(), stdUStr.begin(), ::tolower );
 #else
-	size_t len = stdUStr.size();
-
-	CFMutableStringRef	cfUniStr = CFStringCreateMutableWithExternalCharactersNoCopy(
-		kCFAllocatorDefault, 
-		(UniChar*)stdUStr.data(), 
-		len, 
-		len, 
-		kCFAllocatorNull);
-
-	if (cfUniStr) 
-	{
-		// If there is issue with nil, try CFLocaleCopyCurrent or CFLocaleCopyPreferredLanguages
-		CFStringLowercase(cfUniStr, nil);
-		CFRelease(cfUniStr);
-	}
+//TODO
 #endif
 
 	return *this;
@@ -1648,30 +1382,11 @@ TXString& TXString::MakeReverse()
 TXString& TXString::ToPrecomposed()
 {
 #if GS_WIN
-	if(!IsNormalizedString(NormalizationC, stdUStr.data(), -1))
-	{	// Here, the string needs normalization.
-		int dstBufSize = (int)stdUStr.length() + 1;
-		std::unique_ptr<TXChar[]> upTXChars(new TXChar[dstBufSize]);
-		NormalizeString(NormalizationC, stdUStr.data(), -1, upTXChars.get(), dstBufSize);
-		stdUStr = upTXChars.get();
-	}
-	
+	//TODO
 #elif GS_LIN
 	// LINUX_IMPLEMENTATION
 #else	// Mac
-	NSString *oriStr = [NSString stringWithCharacters:stdUStr.data()
-											   length:stdUStr.length()];
-	
-	NSString *precomposedStr = [oriStr precomposedStringWithCanonicalMapping];
-	
-	NSUInteger length = [precomposedStr length];
-	std::unique_ptr<UniChar[]> upUniChars(new UniChar[length + 1]);
-	
-	[precomposedStr getCharacters:upUniChars.get()];
-	upUniChars[length] = 0;
-	
-	stdUStr = upUniChars.get();
-
+	//TODO
 #endif
 	
 	return *this;
@@ -1682,30 +1397,11 @@ TXString& TXString::ToPrecomposed()
 TXString& TXString::ToDecomposed()
 {
 #if GS_WIN
-	if(!IsNormalizedString(NormalizationD, stdUStr.data(), -1))
-	{	// Here, the string needs normalization.
-		int length = (int)stdUStr.length() * 2 + 1;	// Allocate enough memory.
-		std::unique_ptr<TXChar[]> upTXChars(new TXChar[length]);
-		NormalizeString(NormalizationD, stdUStr.data(), -1, upTXChars.get(), length);
-		stdUStr = upTXChars.get();
-	}
-
+//TODO
 #elif GS_LIN
 	// LINUX_IMPLEMENTATION
 #else	// Mac
-	NSString *oriStr = [NSString stringWithCharacters:stdUStr.data()
-											   length:stdUStr.length()];
-	
-	NSString *decomposedStr = [oriStr decomposedStringWithCanonicalMapping];
-	
-	NSUInteger length = [decomposedStr length];
-	std::unique_ptr<UniChar[]> upUniChars(new UniChar[length + 1]);
-	
-	[decomposedStr getCharacters:upUniChars.get()];
-	upUniChars[length] = 0;
-	
-	stdUStr = upUniChars.get();
-	
+//TODO
 #endif
 	
 	return *this;
@@ -1805,15 +1501,6 @@ std::wstring TXString::GetStdWString() const
 	return converter.from_bytes((const char*)stdUStr.data(), (const char*)(stdUStr.data() + stdUStr.length()));
 #endif
 }
-
-//=======================================================================================
-// Returns a CFStringRef. The client is responsible of releasing the returned ref.
-#if GS_MAC
-CFStringRef TXString::GetCFStringRef() const
-{
-	return CFStringCreateWithCharacters(NULL, stdUStr.data(), stdUStr.length());
-}
-#endif
 
 //***************************************************************************************
 // Copying data into external buffer
@@ -1949,7 +1636,7 @@ void TXString::CopyInto(wchar_t* dst, size_t bufElemSize) const
 			dst[bufElemSize - 1] = 0;
 		}
 #else
-		txCharBufferToUtf32Buffer(stdUStr.data(), (char32_t*)dst, bufElemSize);
+		// TODO
 #endif
 	}
 }
@@ -2339,7 +2026,7 @@ TXString& TXString::ftoa(Real64 value, Sint32 precision)
 	// LINUX_IMPLEMENTATION - done
 	return std::ispunct( aTXChar );
 #else
-	return [[NSCharacterSet punctuationCharacterSet] characterIsMember:aTXChar];
+	//TODO
 #endif
 }
 
@@ -2398,22 +2085,7 @@ Sint32 TXString::CompareNoCase(const TXString &str) const
 
 	return str1.compare(str2);
 #else
-	CFStringRef cs1 = this->GetCFStringRef();
-    CFStringRef cs2 = str.GetCFStringRef();
-	
-	ASSERTN(kBWilliams, cs1 && cs2);
-	if(cs1 && cs2)
-	{
-		CFComparisonResult result = CFStringCompare(cs1, cs2, kCFCompareCaseInsensitive);
-		CFRelease(cs1);
-		CFRelease(cs2);
-		return result;
-	}
-	
-	if(cs1) CFRelease(cs1);
-	if(cs2) CFRelease(cs2);
-	
-    return Compare(str);  // if error converting to CFString, that's pretty bad - use regular Compare as backup... 
+	//TODO
 #endif
 }
 
@@ -2580,43 +2252,13 @@ TXString& TXString::Format(const TXString& format)
 // Prepare char buffer based on "encoding" encoding.
 void TXString::PrepareCharBuffer(ETXEncoding encoding) const
 {
-#if GS_WIN
-
-	// Determine copde page.
-	UINT codePage = CP_UTF8;
-
-	if (encoding == ETXEncoding::eMacEncoded)
-	{
-		codePage = CP_MACCP;
-	}
-	else if (encoding == ETXEncoding::eWinEncoded || encoding == ETXEncoding::eSysEncoded)
-	{
-		codePage = CP_ACP;
-	}
-
-	// Length of the char buffer. Four bytes for each character is enough. 1 for terminal character.
 	int len = (int)stdUStr.length() * 4 + 1;
 
 	if(len > charBufSize)
 	{
 		charBufSize = len;
-		if(charPtr) gVWMM->TXStringDeallocate(charPtr);
-		charPtr = (char*) gVWMM->TXStringAllocate(charBufSize);;
-	}
-
-	// (CodePage, Flags, WideCharStr, WideCharCount, MultiByteStr, MultiByteCount, DefaultChar, UsedDefaultChar)
-	WideCharToMultiByte(codePage, 0, stdUStr.c_str(), -1, charPtr, len, (codePage == CP_UTF8) ? NULL : "?", NULL);
-
-#elif GS_LIN
-	// LINUX_IMPLEMENTATION - done
-	// Length of the char buffer. Four bytes for each character is enough. 1 for terminal character.
-	int len = (int)stdUStr.length() * 4 + 1;
-
-	if(len > charBufSize)
-	{
-		charBufSize = len;
-		if(charPtr) gVWMM->TXStringDeallocate(charPtr);
-		charPtr = (char*) gVWMM->TXStringAllocate(charBufSize);;
+		if(charPtr) delete charPtr[];
+		charPtr = (char*) new char[charBufSize];
 	}
 
 	std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> convert;
@@ -2626,61 +2268,7 @@ void TXString::PrepareCharBuffer(ETXEncoding encoding) const
 	for(size_t i=0; i<charBufSize && i<strLen; i++)
 		charPtr[i] = str[i];
 	charPtr[strLen] = 0;
-#else	// Mac
 
-	// Prepare enough memory for all cases
-	if(charBufSize < 4 * stdUStr.length() + 1) {
-		charBufSize = 4 * (int)stdUStr.length() + 1;	// 1 is reserved for terminal character.
-		if(charPtr) gVWMM->TXStringDeallocate(charPtr);
-		charPtr = (char*) gVWMM->TXStringAllocate(charBufSize);;
-	}
-
-	// Create a CFString to do the conversion
-	CFStringRef cfStr = CFStringCreateWithCharactersNoCopy(kCFAllocatorDefault,
-		stdUStr.data(),
-		stdUStr.length(),
-		kCFAllocatorNull);
-
-	if(cfStr)
-	{
-		CFStringEncoding cfStrEncoding = kCFStringEncodingUTF8;	// Default for eUTF8 and eUnknown
-		
-		if(encoding == ETXEncoding::eMacEncoded || encoding == ETXEncoding::eSysEncoded)
-		{
-			cfStrEncoding = CFStringGetSystemEncoding();
-		}
-		else if(encoding == ETXEncoding::eWinEncoded)
-		{
-			static const bool bIsFarEast = [[[NSLocale preferredLanguages] objectAtIndex:0] hasPrefix:@"ja"]
-										|| [[[NSLocale preferredLanguages] objectAtIndex:0] hasPrefix:@"zh-Hans"];
-
-			if(bIsFarEast)	// Win and Mac encodings are the same in Japanese and Chinese environments.
-			{
-				cfStrEncoding = CFStringGetSystemEncoding();
-			}
-			else
-			{
-				cfStrEncoding = kCFStringEncodingWindowsLatin1;
-			}
-		}
-
-		CFIndex usedBufLen = 0;
-		
-		CFStringGetBytes(cfStr,
-						 CFRangeMake(0, CFStringGetLength(cfStr)),
-						 cfStrEncoding,
-						 '?',
-						 false,
-						 (UInt8*)charPtr,
-						 charBufSize - 1,	// Reserved one byte for terminal character
-						 &usedBufLen);
-		
-		charPtr[usedBufLen] = 0;			// Add terminal character to the end.
-		
-		CFRelease(cfStr);
-	}
-
-#endif
 }
 
 //=======================================================================================
@@ -2726,44 +2314,7 @@ void TXString::SetStdUStrFromCharBuffer(const char* src, size_t srcLenToUse, ETX
 	std::string strSrc = std::string(src, strLen);
 	stdUStr = converter.from_bytes( strSrc );
 #else	// Mac
-
-	if(encoding == ETXEncoding::eUTF8)
-	{
-		std::unique_ptr<TXChar[]> txChars(new TXChar[strLen + 1]);
-		utf8BufferToTXCharBuffer(src, txChars.get(), strLen);
-		stdUStr = txChars.get();
-	}
-	else
-	{
-		CFStringEncoding selectedEncoding = CFStringGetSystemEncoding();
-
-		if(encoding == ETXEncoding::eWinEncoded)
-		{
-			selectedEncoding = kCFStringEncodingWindowsLatin1;
-		}
-
-		CFStringRef cfStr = CFStringCreateWithBytes(kCFAllocatorDefault,
-			(const UInt8*)src,
-			strLen,
-			selectedEncoding,
-			false);
-
-		if (cfStr)
-		{
-			CFIndex cfStrLen = CFStringGetLength(cfStr);
-			CFRange cfStrRange = CFRangeMake(0, cfStrLen);
-
-			std::unique_ptr<UniChar[]> uniChars(new UniChar[cfStrLen + 1]);
-			CFStringGetCharacters(cfStr, cfStrRange, uniChars.get());
-			uniChars[cfStrLen] = '\0';
-			stdUStr = uniChars.get();
-			CFRelease(cfStr);
-		}
-		else
-		{
-			//DSTOP((kPChang, "Error in TXString::SetStdUStrFromCharBuffer(...)"));
-		}
-	}
+	//TODO
 #endif
 }
 
@@ -2922,1157 +2473,3 @@ inline void utf8BufferToTXCharBuffer(const char* const input, TXChar* output, si
 	*output = 0;
 }
 
-
-//#######################################################################################
-// TXStringArray
-//#######################################################################################
-
-//=======================================================================================
-// Default constructor. The array has 'nInitialSize' empty TXString objects.
-TXStringArray::TXStringArray(size_t nInitialSize /* 0 */)
-	: strVec(nInitialSize, TXString())
-{
-}
-
-//=======================================================================================
-// Copy constructor
-TXStringArray::TXStringArray(const TXStringArray &src)
-	: strVec(src.strVec)
-{
-}
-
-//=======================================================================================
-// Move constructor
-TXStringArray::TXStringArray(TXStringArray &&src)
-	: strVec(std::move(src.strVec))
-{
-}
-
-//=======================================================================================
-// Destructor
-TXStringArray::~TXStringArray()
-{
-}
-
-//=======================================================================================
-// Copy assignment operator
-TXStringArray& TXStringArray::operator=(const TXStringArray &src)
-{
-	strVec = src.strVec;
-	return *this;
-}
-
-//=======================================================================================
-// Move assignment operator
-TXStringArray& TXStringArray::operator=(TXStringArray&& src)
-{
-	strVec = std::move(src.strVec);
-	return *this;
-}
-
-//=======================================================================================
-// Set the size of the array. The array is polulated with empty TXString objects. True is
-// always returned.
-TXStringArray& TXStringArray::SetSize(size_t nSize)
-{
-	strVec.resize(nSize);
-
-	return *this;
-}
-
-//=======================================================================================
-// Return the size of the array.
-size_t TXStringArray::GetSize() const
-{
-	return strVec.size();
-}
-
-//=======================================================================================
-// Return true if the array is empty. Return true otherwise.
-bool TXStringArray::IsEmpty() const
-{
-	return strVec.empty();
-}
-
-//=======================================================================================
-// If 'nIndex' is less than the size, element at 'nIndex' is replaced with 'string'. 
-// Otherwise, 'string' is appended to the end.
-TXStringArray& TXStringArray::SetAt(size_t nIndex, const TXString &string)
-{
-	if (nIndex < strVec.size())
-	{
-		strVec[nIndex] = string;
-	}
-	else
-	{
-		strVec.push_back(string);
-	}
-	
-	return *this;
-}
-
-//=======================================================================================
-// Return the const reference to the element at 'nIndex'. If 'nIndex' is out of range, an
-// excepton is thrown.
-const TXString& TXStringArray::GetAt(size_t nIndex) const
-{
-	ASSERTN(kPChang, nIndex < strVec.size());
-	return strVec[nIndex];
-}
-
-//=======================================================================================
-// Return a reference to the element at 'nIndex'. If 'nIndex' is out of range, an
-// excepton is thrown.
-TXString& TXStringArray::GetAt(size_t nIndex)
-{
-	ASSERTN(kPChang, nIndex < strVec.size());
-	return strVec[nIndex];
-}
-
-//=======================================================================================
-// Return the const reference to the element at 'nIndex'. If 'nIndex' is out of range, an
-// excepton is thrown.
-const TXString& TXStringArray::operator[](size_t nIndex) const
-{
-	ASSERTN(kPChang, nIndex < strVec.size());
-	return strVec[nIndex];
-}
-
-//=======================================================================================
-// Return a reference to the element at 'nIndex'. If 'nIndex' is out of range, an
-// excepton is thrown.
-TXString& TXStringArray::operator[](size_t nIndex)
-{
-	ASSERTN(kPChang, nIndex < strVec.size());
-	return strVec[nIndex];
-}
-
-//=======================================================================================
-// Append 'string' to the end. Always return true.
-TXStringArray& TXStringArray::Append(const TXString &string)
-{
-	strVec.push_back(string);
-	return *this;
-}
-
-//=======================================================================================
-// Append another array 'src' to the end. Always return true.
-TXStringArray& TXStringArray::Append(const TXStringArray &src)
-{
-	for(const auto& oneString : src.strVec)
-		strVec.push_back(oneString);
-
-	return *this;
-}
-
-//=======================================================================================
-// Prepend 'string' to the front. Always return true.
-TXStringArray& TXStringArray::Prepend(const TXString &string)
-{
-	strVec.emplace(strVec.begin(), string);
-	return *this;
-}
-
-//=======================================================================================
-// Erase 'nCount' elements starting from 'nIndex'. If 'nIndex' is out of range, it does
-// nothing. If 'nCount' is larger than the size, it will erase to the end.
-TXStringArray& TXStringArray::Erase(size_t nIndex, size_t nCount)
-{
-	if (nIndex < strVec.size() && nCount > 0) {
-		if(nIndex + nCount >= strVec.size())
-		{
-			strVec.erase(strVec.begin() + nIndex, strVec.end());
-		}
-		else
-		{
-			strVec.erase(strVec.begin() + nIndex, strVec.begin() + nIndex + nCount);
-		}
-	}
-	
-	return *this;
-}
-
-//=======================================================================================
-// Clear the array. The size will be zero.
-TXStringArray& TXStringArray::Clear()
-{
-	strVec.clear();
-	
-	return *this;
-}
-
-//=======================================================================================
-// Return the index of the first found string. Return -1 if not found. If 'bIgnoreCase'
-// is true, case is ignored.
-ptrdiff_t TXStringArray::Find(const TXString& str, bool bIgnoreCase /* false */) const
-{
-	for(size_t i = 0; i < strVec.size(); i++)
-	{
-		if( bIgnoreCase )
-		{
-			if(this->GetAt(i).CompareNoCase(str) == 0)
-			{
-				return i;
-			}
-		}
-		else
-		{
-			if(this->GetAt(i).Compare(str) == 0 )
-			{
-				return i;
-			}
-		}
-	}
-
-	return -1;
-}
-
-//=======================================================================================
-// Sort the TXStringArray by case insensitive ascending order if sortFunction is not
-// provided. Otherwise, use sortFunction to sort the TXStringArray.
-TXStringArray& TXStringArray::Sort(std::function<bool (const TXString&, const TXString&)> sortFunction)
-{
-	StrVec::iterator it1 = strVec.begin();
-	StrVec::iterator it2 = strVec.end();
-
-	if(sortFunction)
-	{
-		std::sort(it1, it2, sortFunction);
-	}
-	else
-	{
-		std::sort(it1, it2);	// Default: ascending, case insensitive.
-	}
-	
-	return *this;
-}
-
-//=======================================================================================
-StrVec::iterator TXStringArray::begin()
-{
-	return strVec.begin();
-}
-
-//=======================================================================================
-StrVec::iterator TXStringArray::end()
-{
-	return strVec.end();
-}
-
-//=======================================================================================
-StrVec::const_iterator TXStringArray::begin() const
-{
-	return strVec.begin();
-}
-
-//=======================================================================================
-StrVec::const_iterator TXStringArray::end() const
-{
-	return strVec.end();
-}
-
-//=======================================================================================
-char* TXGenericArray_Allocate(char& memoryCode, size_t sz)
-{
-	char*	newBuf	= NULL;
-
-#if _MINICAD_
-	memoryCode	= 1;
-	newBuf		= (char*) Mem_NewPtr( sz );
-#else
-	memoryCode	= gCBP ? 1 : 0;
-	if ( gCBP )	newBuf	= (char*) ::GS_NewPtr( gCBP, sz );
-	else		newBuf	= (char*) malloc( sz );
-#endif
-
-	return newBuf;
-}
-
-void TXGenericArray_Dispose(char memoryCode, char* pTheData)
-{
-#if _MINICAD_
-	if ( memoryCode == 1 ) {
-		Mem_DisposePtr( (Ptr) pTheData );
-	}
-#else
-	if ( memoryCode == 1 ) {
-		// XXX Vlado
-		// this may produce leaks when it was marked to use CBP
-		// but now the CBP is NULL
-		ASSERTN( kVStanev, gCBP );
-		if ( gCBP ) ::GS_DisposePtr( gCBP, pTheData );
-	}
-	else {
-		free( pTheData );
-	}
-#endif
-}
-
-/*============================================================================*/
-/*============================================================================*/
-
-#if _MINICAD_
-#else
-struct CallBackBlock;
-
-void GS_GetResourceString(CallBackBlock*, short id, short index, TXString& theString, Boolean lookOnlyInCurrentFile, EEmptyStringResourceHandling debugWarning)
-{
-    theString = TXLegacyResource( id, index, (EEmptyHandling)debugWarning);
-}
-#endif
-
-// --------------------------------------------------------------------------------------------------
-TXResource::TXResource(const char* resourceIdentifier, const char* resourceStringIdentifier, EEmptyHandling allowEmpty)
-{
-	gSDK->GetVWResourceString( fString, resourceIdentifier, resourceStringIdentifier, allowEmpty );
-	fResource	= NULL;
-}
-
-TXResource::TXResource(const char* resourceIdentifier)
-{
-	fResource	= gSDK->GetVWResource( resourceIdentifier );
-}
-
-TXResource::TXResource(const TXResource& src)
-{
-	this->operator= ( src );
-}
-
-TXResource::~TXResource()
-{
-	if ( fResource )
-	{
-		gSDK->GSDisposeHandle( fResource );
-		fResource	= NULL;
-	}
-}
-
-TXResource& TXResource::operator = (const TXResource& src)
-{
-	DSTOP((kVStanev, "not implemented and this should be hidden"));
-	return *this;
-}
-
-TXResource::operator const TXString&()
-{
-	if ( fResource && fString.IsEmpty() )
-	{
-		if ( VERIFYN( kVStanev, fResource && *fResource ) )
-		{
-			size_t	size;
-			gSDK->GSGetHandleSize( fResource, size );
-			fString = size > 0 ? TXString( (const char*) *fResource, size ) : "";
-		}
-	}
-
-	return fString;
-}
-
-const char* TXResource::c_str()
-{
-	return this->operator const TXString&();
-}
-
-size_t TXResource::Size() const
-{
-	size_t result = 0;
-	gSDK->GSGetHandleSize( fResource, result );
-	return result;
-}
-
-const void* TXResource::Buffer() const
-{
-	return fResource ? *fResource : NULL;
-}
-
-GSHandle TXResource::GetHandle()
-{
-	return fResource;
-}
-
-inline bool EndsIn(const char *str, const char *ending, const int strLen, const int endingLen)
-{
-	if (strLen < endingLen)
-		return false;
-
-	return (strcmp(str + strLen - endingLen, ending) == 0);
-}
-
-TXResStr::TXResStr(const char* fileName /* typically wihout path or ".vwstrings" extension*/, 
-				   const char* resourceStringIdentifier, EEmptyHandling allowEmpty)
-{
-	static const char *vwsExt = ".vwstrings";
-	static const int vwsExtLen = (int) strlen(vwsExt);
-
-	char resourceIdentifier[256];
-	int fileLen = (int) strlen(fileName);
-
-    if (fileLen == 0)
-    {
-        ; // no op
-    }
-	else if (fileName[fileLen - 1] == '*')
-	{
-		sprintf(resourceIdentifier, "%s/Strings/%s", DEFAULTVWRIDENTIFIER, fileName);
-		gSDK->GetVWResourceString(fString, resourceIdentifier, resourceStringIdentifier, allowEmpty);
-
-	}
-	else if (!EndsIn(fileName, vwsExt, fileLen, vwsExtLen))
-	{
-		sprintf(resourceIdentifier, "%s/Strings/%s.vwstrings", DEFAULTVWRIDENTIFIER, fileName);
-		gSDK->GetVWResourceString(fString, resourceIdentifier, resourceStringIdentifier, allowEmpty);
-
-	}
-	else /* assume if fileName already ends in ".vwstrings" that it specifies a full VWR identifier */
-	{
-		gSDK->GetVWResourceString(fString, fileName, resourceStringIdentifier, allowEmpty);
-
-	}
-}
-
-TXResStr::operator const TXString&()
-{
-	return fString;
-}
-
-// --------------------------------------------------------------------------------------------------
-TXLegacyResource::TXLegacyResource(short stringResID, short indexID, EEmptyHandling allowEmpty)
-{
-	const char* szDefaultResourceIdentifier	= DEFAULTVWRIDENTIFIER;
-
-	if (stringResID < 10000)							// The general rule before VWR resources were in place was that 
-		szDefaultResourceIdentifier = "Vectorworks";	//  plug-in strings were supposed to be in >= 10000 range, "Core" strings in < 10000 range
-
-	char resourceIdentifier[128];
-	sprintf(resourceIdentifier, "%s/Strings/%d *", szDefaultResourceIdentifier, stringResID );
-
-	char stringIdentifier[16];
-	sprintf(stringIdentifier, "%d", indexID );
-
-#if _MINICAD_
-	 ::GetResourceString( fString, resourceIdentifier, stringIdentifier, allowEmpty );
-#else
-	gSDK->GetVWResourceString( fString, resourceIdentifier, stringIdentifier, allowEmpty );
-#endif
-	fResource	= NULL;
-}
-
-TXLegacyResource::TXLegacyResource(const char* defaultResourceIdentifier, short stringResID, short indexID, EEmptyHandling allowEmpty)
-{
-	TXString	resourceIdentifier;
-	resourceIdentifier.Format( "%s/Strings/%d *", defaultResourceIdentifier, stringResID );
-
-	TXString	stringIdentifier;
-	stringIdentifier.Format( "%d", indexID );
-
-	gSDK->GetVWResourceString( fString, resourceIdentifier, stringIdentifier, allowEmpty );
-	fResource	= NULL;
-}
-
-TXLegacyResource::TXLegacyResource(short textResID)
-{
-	TXString	resourceIdentifier;
-	resourceIdentifier.Format( "%s/Strings/HelpText.vwstrings", DEFAULTVWRIDENTIFIER );
-
-	TXString	stringIdentifier;
-	stringIdentifier.Format( "%d", textResID );
-
-	gSDK->GetVWResourceString( fString, resourceIdentifier, stringIdentifier, eAllowEmptyResult );
-	fResource	= NULL;
-}
-
-TXLegacyResource::TXLegacyResource(const char* resourceType, short resourceID)
-{
-	const char* szDefaultResourceIdentifier	= DEFAULTVWRIDENTIFIER;
-
-	TXString	resourceIdentifier;
-	resourceIdentifier.Format( "%s/%s/%d *", szDefaultResourceIdentifier, resourceType, resourceID );
-
-	fResource	= gSDK->GetVWResource( resourceIdentifier );
-}
-
-TXLegacyResource::TXLegacyResource(short stringResID, short indexID, TXString& outString)
-{
-	const char* szDefaultResourceIdentifier	= DEFAULTVWRIDENTIFIER;
-
-	TXString	resourceIdentifier;
-	resourceIdentifier.Format( "%s/Strings/%d *", szDefaultResourceIdentifier, stringResID );
-
-	TXString	stringIdentifier;
-	stringIdentifier.Format( "%d", indexID );
-
-	gSDK->GetVWResourceString( fString, resourceIdentifier, stringIdentifier, eDontAllowEmptyResult );
-	fResource	= NULL;
-
-	outString	= fString;
-}
-
-TXLegacyResource::TXLegacyResource(const TXLegacyResource& src)
-{
-	this->operator= ( src );
-}
-
-TXLegacyResource::~TXLegacyResource()
-{
-	if ( fResource )
-	{
-		gSDK->GSDisposeHandle( fResource );
-		fResource	= NULL;
-	}
-}
-
-TXLegacyResource& TXLegacyResource::operator = (const TXLegacyResource& src)
-{
-	DSTOP((kVStanev, "not implemented and this should be hidden"));
-	return *this;
-}
-
-TXLegacyResource::operator const TXString&()
-{
-	if ( fResource && fString.IsEmpty() )
-	{
-		if ( VERIFYN( kVStanev, fResource && *fResource ) )
-		{
-			size_t	size;
-			gSDK->GSGetHandleSize( fResource, size );
-			fString = size > 0 ? TXString( (const char*) *fResource, size, ETXEncoding::eMacEncoded ) : "";
-		}
-	}
-
-	return fString;
-}
-
-const char* TXLegacyResource::c_str()
-{
-	return this->operator const TXString&();
-}
-
-size_t TXLegacyResource::Size() const
-{
-	size_t result = 0;
-	gSDK->GSGetHandleSize( fResource, result );
-	return result;
-}
-
-const void* TXLegacyResource::Buffer() const
-{
-	return fResource ? *fResource : NULL;
-}
-
-GSHandle TXLegacyResource::GetHandle()
-{
-	return fResource;
-}
-
-// --------------------------------------------------------------------------------------------------
-TXLegacyDialogResource::TXLegacyDialogResource(short dialogResourceID)
-{
-	const char* szDefaultResourceIdentifier	= DEFAULTVWRIDENTIFIER;
-	gSDK->Kludge(3602, (void *)szDefaultResourceIdentifier, NULL); 
-
-	fString.Format( "%s/DialogLayout/%d *", szDefaultResourceIdentifier, dialogResourceID ); 
-}
-
-TXLegacyDialogResource::operator const char*()
-{
-	return fString;
-}
-
-// --------------------------------------------------------------------------------------------------
-
-// ----------------------------------------------------------------------------
-// Implementation of class CFormatString
-// ----------------------------------------------------------------------------
-CFormatString::CFormatString(const TXString& format)
-	: fStrToFormat( format )
-{
-}
-
-CFormatString::~CFormatString()
-{
-}
-
-template<typename T>
-static TXString _SafeFormat(const TXString& format, T marker)
-{
-	static const size_t kBufferSize = 1024;
-	wchar_t localBuffer[kBufferSize];
-
-	Sint32 len = swprintf( localBuffer, kBufferSize, format, marker);
-
-	TXString	result( localBuffer, len );
-	return result;	
-}
-
-TXString CFormatString::Format()
-{
-	fOutBuffer.Clear();
-
-	const TXChar* from = fStrToFormat.GetData();
-
-	static bool bIsFirstTime = true;
-	static std::vector<TXChar> mapDelimiters;
-
-	if(bIsFirstTime)
-	{
-		mapDelimiters.push_back('d');
-		mapDelimiters.push_back('i');
-		mapDelimiters.push_back('u');
-		mapDelimiters.push_back('o');
-		mapDelimiters.push_back('x');
-		mapDelimiters.push_back('X');
-		mapDelimiters.push_back('f');
-		mapDelimiters.push_back('F');
-		mapDelimiters.push_back('e');
-		mapDelimiters.push_back('E');
-		mapDelimiters.push_back('g');
-		mapDelimiters.push_back('G');
-		mapDelimiters.push_back('a');
-		mapDelimiters.push_back('A');
-		mapDelimiters.push_back('c');
-		mapDelimiters.push_back('s');
-		mapDelimiters.push_back('p');
-		mapDelimiters.push_back('n');
-
-		bIsFirstTime = false;
-	}
-
-	enum EState
-	{
-		state_running,
-		state_param
-	};
-
-	EState		state	= state_running;
-	TXString	currentFormatSpec;
-	size_t		paramIndex = 0;
-
-	// Loop through the format, copying plain characters and parsing format specifications
-	while ( true )
-	{
-		if (state == state_running)
-		{
-			if (*from == 0)
-			{
-				// reached out the end of the source
-				break;
-			}
-			else if (*from == '%')
-			{
-				// potential parameter
-				currentFormatSpec = *from;
-				state = state_param;
-			}
-			else
-			{
-				// plain characters
-				fOutBuffer += *from;
-			}
-		}
-		else if (state == state_param)
-		{
-			if (*from == '%' ||
-				*from == ' ' ||
-				*from == 0)
-			{
-				// just print to output
-				size_t	count = currentFormatSpec.GetLength();
-				if (count > 0)
-				{
-					fOutBuffer += currentFormatSpec;
-				}
-
-				currentFormatSpec.Clear();	// reset current format specifier storage
-				state = state_running;		// transition the state machine
-
-				// reached out the end of the source
-				if (*from == 0)
-					break;
-			}
-			else
-			{
-				if (*from)
-					currentFormatSpec += *from;
-
-				// search for a type specifier as delimiter
-				if (std::find( mapDelimiters.begin(), mapDelimiters.end(), *from ) != mapDelimiters.end() )
-				{
-					if (paramIndex < farrParams.size())
-					{
-						// current input parameter to process
-						const SParameter& param = farrParams[paramIndex];
-
-						// the parameter type matches the format specifier
-						// preformat the parameter value based on the format specifier and print to output
-						switch ( param.fType )
-						{
-							case EParamType::PT_SHORT:		fOutBuffer += ::_SafeFormat( currentFormatSpec, param.GetValueShort() );		break;
-							case EParamType::PT_INT:		fOutBuffer += ::_SafeFormat( currentFormatSpec, param.GetValueInt() );			break;
-							case EParamType::PT_LONG:		fOutBuffer += ::_SafeFormat( currentFormatSpec, param.GetValueLong() );			break;
-							case EParamType::PT_LONGLONG:	fOutBuffer += ::_SafeFormat( currentFormatSpec, param.GetValueLongLong() );		break;
-							case EParamType::PT_USHORT:		fOutBuffer += ::_SafeFormat( currentFormatSpec, param.GetValueUShort() );		break;
-							case EParamType::PT_UINT:		fOutBuffer += ::_SafeFormat( currentFormatSpec, param.GetValueUInt() );			break;
-							case EParamType::PT_ULONG:		fOutBuffer += ::_SafeFormat( currentFormatSpec, param.GetValueULong() );		break;
-							case EParamType::PT_ULONGLONG:	fOutBuffer += ::_SafeFormat( currentFormatSpec, param.GetValueULongLong() );	break;
-							case EParamType::PT_REAL:		fOutBuffer += ::_SafeFormat( currentFormatSpec, param.GetValueReal() );			break;
-							case EParamType::PT_VOIDPTR:	fOutBuffer += ::_SafeFormat( currentFormatSpec, param.GetValueVoidPtr() );		break;
-
-							case EParamType::PT_STRING:
-								fOutBuffer += param.GetValueString();
-								break;
-
-							case EParamType::PT_CHAR:
-								if ( currentFormatSpec == "%c" || currentFormatSpec == "%s" )
-									fOutBuffer += param.GetValueChar();
-								else
-									fOutBuffer += ::_SafeFormat( currentFormatSpec, param.GetValueInt() );
-								break;
-
-							default:
-								if ( currentFormatSpec.GetLength() )
-									fOutBuffer += currentFormatSpec;
-								break;
-						}
-
-						paramIndex++;  // move to the next parameter
-					}
-					else
-					{
-						// something went wrong, we've run out of parameters
-						// just print to output
-						size_t	count = currentFormatSpec.GetLength();
-						if (count > 0)
-						{
-							fOutBuffer += currentFormatSpec;
-						}
-					}
-
-					currentFormatSpec = "";    // reset current format specifier storage
-					state = state_running;     // transition the state machine
-				}
-			}
-		}
-
-		from++;  // advance the source
-	}
-
-	return fOutBuffer;
-}
-
-CFormatString& CFormatString::Param(short value)
-{
-	SParameter param;
-	param.fType 	= EParamType::PT_SHORT;
-	param.fValShort	= value;
-	farrParams.push_back(param);
-
-	return *this;
-}
-
-CFormatString& CFormatString::Param(int value)
-{
-	SParameter param;
-	param.fType 	= EParamType::PT_INT;
-	param.fValInt 	= value;
-	farrParams.push_back(param);
-
-	return *this;
-}
-
-CFormatString& CFormatString::Param(long value)
-{
-	SParameter param;
-	param.fType 	= EParamType::PT_LONG;
-	param.fValLong 	= value;
-	farrParams.push_back(param);
-
-	return *this;
-}
-
-CFormatString& CFormatString::Param(long long value)
-{
-	SParameter param;
-	param.fType 		= EParamType::PT_LONGLONG;
-	param.fValLongLong 	= value;
-	farrParams.push_back(param);
-
-	return *this;
-}
-
-CFormatString& CFormatString::Param(unsigned short value)
-{
-	SParameter param;
-	param.fType 		= EParamType::PT_USHORT;
-	param.fValUShort 	= value;
-	farrParams.push_back(param);
-
-	return *this;
-}
-
-CFormatString& CFormatString::Param(unsigned int value)
-{
-	SParameter param;
-	param.fType 	= EParamType::PT_UINT;
-	param.fValUInt 	= value;
-	farrParams.push_back(param);
-
-	return *this;
-}
-
-CFormatString& CFormatString::Param(unsigned long value)
-{
-	SParameter param;
-	param.fType 	= EParamType::PT_ULONG;
-	param.fValULong = value;
-	farrParams.push_back(param);
-
-	return *this;
-}
-
-CFormatString& CFormatString::Param(unsigned long long value)
-{
-	SParameter param;
-	param.fType 		= EParamType::PT_ULONGLONG;
-	param.fValULongLong = value;
-	farrParams.push_back(param);
-
-	return *this;
-}
-
-CFormatString& CFormatString::Param(double value)
-{
-	SParameter param;
-	param.fType 	= EParamType::PT_REAL;
-	param.fValReal 	= value;
-	farrParams.push_back(param);
-
-	return *this;
-}
-
-CFormatString& CFormatString::Param(char value)
-{
-	TXString	str( value, 1 );
-
-	SParameter param;
-	param.fType 	= EParamType::PT_CHAR;
-	param.fValChar 	= str.GetLength() > 0 ? *str.operator const wchar_t *() : 0;
-	param.fValInt	= value;
-	farrParams.push_back(param);
-
-	return *this;
-}
-
-CFormatString& CFormatString::Param(const char* value)
-{
-	SParameter param;
-	param.fType 	= EParamType::PT_STRING;
-	param.fValStr 	= value;
-	farrParams.push_back(param);
-
-	return *this;
-}
-
-CFormatString& CFormatString::Param(wchar_t value)
-{
-	SParameter param;
-	param.fType 	= EParamType::PT_CHAR;
-	param.fValChar 	= value;
-	farrParams.push_back(param);
-
-	return *this;
-}
-
-CFormatString& CFormatString::Param(const wchar_t* value)
-{
-	SParameter param;
-	param.fType 	= EParamType::PT_STRING;
-	param.fValStr 	= value;
-	farrParams.push_back(param);
-
-	return *this;
-}
-
-
-CFormatString& CFormatString::Param(const void* value)
-{
-	SParameter param;
-	param.fType 	= EParamType::PT_VOIDPTR;
-	param.fValVoid 	= value;
-	farrParams.push_back(param);
-
-	return *this;
-}
-
-CFormatString& CFormatString::Param(const TXString& value)
-{
-	SParameter param;
-	param.fType 	= EParamType::PT_STRING;
-	param.fValStr 	= value;
-	farrParams.push_back(param);
-
-	return *this;
-}
-
-short CFormatString::SParameter::GetValueShort() const
-{
-	short result = 0;
-
-	switch ( fType )
-	{
-		case EParamType::PT_SHORT:		result = static_cast<short>(fValShort);			break;
-		case EParamType::PT_INT:		result = static_cast<short>(fValInt);	 		break;
-		case EParamType::PT_LONG:		result = static_cast<short>(fValLong);		 	break;
-		case EParamType::PT_LONGLONG:	result = static_cast<short>(fValLongLong);		break;
-		case EParamType::PT_USHORT:		result = static_cast<short>(fValUShort);		break;
-		case EParamType::PT_UINT:		result = static_cast<short>(fValUInt);	 		break;
-		case EParamType::PT_ULONG:		result = static_cast<short>(fValULong);		 	break;
-		case EParamType::PT_ULONGLONG:	result = static_cast<short>(fValULongLong);		break;
-		case EParamType::PT_REAL:		result = static_cast<short>(fValReal);			break;
-		case EParamType::PT_CHAR:		result = static_cast<short>(fValChar);			break;
-		default: break;
-	}
-
-	return result;
-}
-
-int CFormatString::SParameter::GetValueInt() const
-{
-	int result = 0;
-	switch ( fType )
-	{
-		case EParamType::PT_SHORT:		result = static_cast<int>(fValShort);			break;
-		case EParamType::PT_INT:		result = static_cast<int>(fValInt);	 			break;
-		case EParamType::PT_LONG:		result = static_cast<int>(fValLong);		 	break;
-		case EParamType::PT_LONGLONG:	result = static_cast<int>(fValLongLong);		break;
-		case EParamType::PT_USHORT:		result = static_cast<int>(fValUShort);			break;
-		case EParamType::PT_UINT:		result = static_cast<int>(fValUInt);	 		break;
-		case EParamType::PT_ULONG:		result = static_cast<int>(fValULong);		 	break;
-		case EParamType::PT_ULONGLONG:	result = static_cast<int>(fValULongLong);		break;
-		case EParamType::PT_REAL:		result = static_cast<int>(fValReal);			break;
-		case EParamType::PT_CHAR:		result = static_cast<int>(fValChar);			break;
-		default: break;
-	}
-
-	return result;
-}
-
-long CFormatString::SParameter::GetValueLong() const
-{
-	long result = 0;
-
-	switch ( fType )
-	{
-		case EParamType::PT_SHORT:		result = static_cast<long>(fValShort);			break;
-		case EParamType::PT_INT:		result = static_cast<long>(fValInt);	 		break;
-		case EParamType::PT_LONG:		result = static_cast<long>(fValLong);		 	break;
-		case EParamType::PT_LONGLONG:	result = static_cast<long>(fValLongLong);		break;
-		case EParamType::PT_USHORT:		result = static_cast<long>(fValUShort);			break;
-		case EParamType::PT_UINT:		result = static_cast<long>(fValUInt);	 		break;
-		case EParamType::PT_ULONG:		result = static_cast<long>(fValULong);		 	break;
-		case EParamType::PT_ULONGLONG:	result = static_cast<long>(fValULongLong);		break;
-		case EParamType::PT_REAL:		result = static_cast<long>(fValReal);			break;
-		case EParamType::PT_CHAR:		result = static_cast<long>(fValChar);			break;
-		default: break;
-	}
-
-	return result;
-}
-
-long long CFormatString::SParameter::GetValueLongLong() const
-{
-	long long result = 0;
-
-	switch ( fType )
-	{
-		case EParamType::PT_SHORT:		result = static_cast<long long>(fValShort);			break;
-		case EParamType::PT_INT:		result = static_cast<long long>(fValInt);	 		break;
-		case EParamType::PT_LONG:		result = static_cast<long long>(fValLong);		 	break;
-		case EParamType::PT_LONGLONG:	result = static_cast<long long>(fValLongLong);		break;
-		case EParamType::PT_USHORT:		result = static_cast<long long>(fValUShort);		break;
-		case EParamType::PT_UINT:		result = static_cast<long long>(fValUInt);	 		break;
-		case EParamType::PT_ULONG:		result = static_cast<long long>(fValULong);		 	break;
-		case EParamType::PT_ULONGLONG:	result = static_cast<long long>(fValULongLong);		break;
-		case EParamType::PT_REAL:		result = static_cast<long long>(fValReal);			break;
-		case EParamType::PT_CHAR:		result = static_cast<long long>(fValChar);			break;
-		default: break;
-	}
-
-	return result;
-}
-
-unsigned short CFormatString::SParameter::GetValueUShort() const
-{
-	unsigned short result = 0;
-
-	switch ( fType )
-	{
-		case EParamType::PT_SHORT:		result = static_cast<unsigned short>(fValShort);		break;
-		case EParamType::PT_INT:		result = static_cast<unsigned short>(fValInt);	 		break;
-		case EParamType::PT_LONG:		result = static_cast<unsigned short>(fValLong);		 	break;
-		case EParamType::PT_LONGLONG:	result = static_cast<unsigned short>(fValLongLong);		break;
-		case EParamType::PT_USHORT:		result = static_cast<unsigned short>(fValUShort);		break;
-		case EParamType::PT_UINT:		result = static_cast<unsigned short>(fValUInt);	 		break;
-		case EParamType::PT_ULONG:		result = static_cast<unsigned short>(fValULong);	 	break;
-		case EParamType::PT_ULONGLONG:	result = static_cast<unsigned short>(fValULongLong);	break;
-		case EParamType::PT_REAL:		result = static_cast<unsigned short>(fValReal);			break;
-		case EParamType::PT_CHAR:		result = static_cast<unsigned short>(fValChar);			break;
-		default: break;
-	}
-
-	return result;
-}
-
-unsigned CFormatString::SParameter::GetValueUInt() const
-{
-	unsigned	result = 0;
-
-	switch ( fType )
-	{
-		case EParamType::PT_SHORT:		result = static_cast<unsigned>(fValShort);			break;
-		case EParamType::PT_INT:		result = static_cast<unsigned>(fValInt);	 		break;
-		case EParamType::PT_LONG:		result = static_cast<unsigned>(fValLong);		 	break;
-		case EParamType::PT_LONGLONG:	result = static_cast<unsigned>(fValLongLong);		break;
-		case EParamType::PT_USHORT:		result = static_cast<unsigned>(fValUShort);			break;
-		case EParamType::PT_UINT:		result = static_cast<unsigned>(fValUInt);	 		break;
-		case EParamType::PT_ULONG:		result = static_cast<unsigned>(fValULong);		 	break;
-		case EParamType::PT_ULONGLONG:	result = static_cast<unsigned>(fValULongLong);		break;
-		case EParamType::PT_REAL:		result = static_cast<unsigned>(fValReal);			break;
-		case EParamType::PT_CHAR:		result = static_cast<unsigned>(fValChar);			break;
-		default: break;
-	}
-
-	return result;
-}
-
-unsigned long CFormatString::SParameter::GetValueULong() const
-{
-	unsigned long	result = 0;
-
-	switch ( fType )
-	{
-		case EParamType::PT_SHORT:		result = static_cast<unsigned long>(fValShort);			break;
-		case EParamType::PT_INT:		result = static_cast<unsigned long>(fValInt);	 		break;
-		case EParamType::PT_LONG:		result = static_cast<unsigned long>(fValLong);		 	break;
-		case EParamType::PT_LONGLONG:	result = static_cast<unsigned long>(fValLongLong);		break;
-		case EParamType::PT_USHORT:		result = static_cast<unsigned long>(fValUShort);		break;
-		case EParamType::PT_UINT:		result = static_cast<unsigned long>(fValUInt);	 		break;
-		case EParamType::PT_ULONG:		result = static_cast<unsigned long>(fValULong);		 	break;
-		case EParamType::PT_ULONGLONG:	result = static_cast<unsigned long>(fValULongLong);		break;
-		case EParamType::PT_REAL:		result = static_cast<unsigned long>(fValReal);			break;
-		case EParamType::PT_CHAR:		result = static_cast<unsigned long>(fValChar);			break;
-		default: break;
-	}
-
-	return result;
-}
-
-unsigned long long CFormatString::SParameter::GetValueULongLong() const
-{
-	unsigned long long	result = 0;
-
-	switch ( fType )
-	{
-		case EParamType::PT_SHORT:		result = static_cast<unsigned long long>(fValShort);		break;
-		case EParamType::PT_INT:		result = static_cast<unsigned long long>(fValInt);	 		break;
-		case EParamType::PT_LONG:		result = static_cast<unsigned long long>(fValLong);		 	break;
-		case EParamType::PT_LONGLONG:	result = static_cast<unsigned long long>(fValLongLong);		break;
-		case EParamType::PT_USHORT:		result = static_cast<unsigned long long>(fValUShort);		break;
-		case EParamType::PT_UINT:		result = static_cast<unsigned long long>(fValUInt);	 		break;
-		case EParamType::PT_ULONG:		result = static_cast<unsigned long long>(fValULong);		break;
-		case EParamType::PT_ULONGLONG:	result = static_cast<unsigned long long>(fValULongLong);	break;
-		case EParamType::PT_REAL:		result = static_cast<unsigned long long>(fValReal);			break;
-		case EParamType::PT_CHAR:		result = static_cast<unsigned long long>(fValChar);			break;
-		default: break;
-	}
-
-	return result;
-}
-
-double CFormatString::SParameter::GetValueReal() const
-{
-	double	result = 0;
-
-	switch ( fType )
-	{
-		case EParamType::PT_SHORT:		result = static_cast<double>(fValShort);		break;
-		case EParamType::PT_INT:		result = static_cast<double>(fValInt);	 		break;
-		case EParamType::PT_LONG:		result = static_cast<double>(fValLong);		 	break;
-		case EParamType::PT_LONGLONG:	result = static_cast<double>(fValLongLong);		break;
-		case EParamType::PT_USHORT:		result = static_cast<double>(fValUShort);		break;
-		case EParamType::PT_UINT:		result = static_cast<double>(fValUInt);	 		break;
-		case EParamType::PT_ULONG:		result = static_cast<double>(fValULong);		break;
-		case EParamType::PT_ULONGLONG:	result = static_cast<double>(fValULongLong);	break;
-		case EParamType::PT_REAL:		result = static_cast<double>(fValReal);			break;
-		case EParamType::PT_CHAR:		result = static_cast<double>(fValChar);			break;
-		default: break;
-	}
-
-	return result;
-}
-
-wchar_t CFormatString::SParameter::GetValueChar() const
-{
-	wchar_t result  = 0;
-
-	switch ( fType )
-	{
-		case EParamType::PT_SHORT:		result = static_cast<wchar_t>(fValShort);		break;
-		case EParamType::PT_INT:		result = static_cast<wchar_t>(fValInt); 		break;
-		case EParamType::PT_LONG:		result = static_cast<wchar_t>(fValLong);	 	break;
-		case EParamType::PT_LONGLONG:	result = static_cast<wchar_t>(fValLongLong);	break;
-		case EParamType::PT_USHORT:		result = static_cast<wchar_t>(fValUShort);		break;
-		case EParamType::PT_UINT:		result = static_cast<wchar_t>(fValUInt);		break;
-		case EParamType::PT_ULONG:		result = static_cast<wchar_t>(fValULong);		break;
-		case EParamType::PT_ULONGLONG:	result = static_cast<wchar_t>(fValULongLong);	break;
-		case EParamType::PT_REAL:		result = static_cast<wchar_t>(fValReal);		break;
-		case EParamType::PT_CHAR:		result = static_cast<wchar_t>(fValChar);		break;
-		case EParamType::PT_STRING:		result = fValStr.GetLength() > 0 ? (*fValStr.operator const wchar_t *()) : 0;	break;
-		default: break;
-	}
-
-	return result;
-}
-
-const void* CFormatString::SParameter::GetValueVoidPtr() const
-{
-	const void* result = nullptr;
-	if ( fType == EParamType::PT_VOIDPTR )
-		result = fValVoid;
-
-	return result;
-}
-
-TXString CFormatString::SParameter::GetValueString() const
-{
-	switch ( fType )
-	{
-		case EParamType::PT_STRING:		return fValStr;
-		default:						return TXString();
-	}
-}
-
-//=======================================================================================
-void TXString::swap(TXString &rhs)
-{
-	using std::swap;
-	
-	swap(this->stdUStr, rhs.stdUStr);
-}
-
-void swap(TXString& lhs, TXString& rhs)
-{
-	using std::swap;
-	
-	lhs.swap(rhs);
-}
-
-namespace std
-{
-	template<>
-	void swap<TXString>(TXString& lhs, TXString& rhs)
-	{
-		lhs.swap(rhs);
-	}
-}
-
-//=======================================================================================
