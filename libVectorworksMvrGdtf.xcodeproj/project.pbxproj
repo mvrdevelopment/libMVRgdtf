@@ -7,15 +7,12 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		94ACB798213FC39800DA58A3 /* GSDebug.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GSDebug.cpp; path = src/GSDebug.cpp; sourceTree = "<group>"; };
-		94ACB799213FC39800DA58A3 /* GSDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSDebug.h; path = src/GSDebug.h; sourceTree = "<group>"; };
 		94ACB79C213FC39800DA58A3 /* GSString.X.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GSString.X.cpp; path = src/GSString.X.cpp; sourceTree = "<group>"; };
 		94ACB79D213FC39800DA58A3 /* GSString.X.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSString.X.h; path = src/GSString.X.h; sourceTree = "<group>"; };
 		94ACB79E213FC39800DA58A3 /* GSTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSTypes.h; path = src/GSTypes.h; sourceTree = "<group>"; };
-		94ACB79F213FC39800DA58A3 /* GSUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GSUtil.cpp; path = src/GSUtil.cpp; sourceTree = "<group>"; };
-		94ACB7A0213FC39800DA58A3 /* GSUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSUtil.h; path = src/GSUtil.h; sourceTree = "<group>"; };
 		94ACB7A1213FC39800DA58A3 /* StdHeaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StdHeaders.h; path = src/StdHeaders.h; sourceTree = "<group>"; };
 		94ACB7A3213FC3A700DA58A3 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		94ACB7A4213FF60E00DA58A3 /* GSIntTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GSIntTypes.h; path = src/GSIntTypes.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -30,13 +27,10 @@
 		94ACB797213FC38200DA58A3 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				94ACB798213FC39800DA58A3 /* GSDebug.cpp */,
-				94ACB799213FC39800DA58A3 /* GSDebug.h */,
 				94ACB79C213FC39800DA58A3 /* GSString.X.cpp */,
 				94ACB79D213FC39800DA58A3 /* GSString.X.h */,
+				94ACB7A4213FF60E00DA58A3 /* GSIntTypes.h */,
 				94ACB79E213FC39800DA58A3 /* GSTypes.h */,
-				94ACB79F213FC39800DA58A3 /* GSUtil.cpp */,
-				94ACB7A0213FC39800DA58A3 /* GSUtil.h */,
 				94ACB7A1213FC39800DA58A3 /* StdHeaders.h */,
 			);
 			name = src;

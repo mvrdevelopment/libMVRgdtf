@@ -36,13 +36,12 @@ vpath %.h $(sourcedir)
 vpath %.o $(objectdir)
 
 # Object list
-objects 	= GSString.X.o GSTypes.o GSUtil.o
+objects 	= GSString.X.o GSTypes.o
 
 # Files 
 # !!!! check necessarity !!!!
 GSString.X.o 	: GSString.X.h
 GSTypes.o 		: GSTypes.h
-GSUtil.o 		: GSUtil.h
 
 
 #-------------------------------------------------------------------------------------------------------------------------------
