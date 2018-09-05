@@ -16,7 +16,6 @@ UNAME_S := $(shell uname -s)
 #platform flags
 ifeq ($(UNAME_S), Linux)
 CXXFLAGS	+= -DGS_LIN=1
-LDFLAGS		+= -fPic
 endif
 ifeq ($(UNAME_S), Darwin)
 CXXFLAGS	+= -DGS_MAC=1
