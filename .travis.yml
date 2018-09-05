@@ -1,5 +1,7 @@
 # building the Client
 language: cpp
+os:
+- linux
 matrix:
   include:
     # GCC 5
