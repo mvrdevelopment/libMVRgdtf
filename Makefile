@@ -13,11 +13,12 @@ CXX			= g++				#c++ compiler
 CXXFLAGS	= -g -std=c++11		#c++ compiler flags
 LDFLAGS		= -shared -fPic			#linker flags
 
+UNAME_S := $(shell uname -s)
 #platform flags
-ifeq ($(UNAME), Linux)
+ifeq ($(UNAME_S), Linux)
 CXXFLAGS	+= -DGS_LIN=1
 endif
-ifeq ($(UNAME), Darwin)
+ifeq ($(UNAME_S), Darwin)
 CXXFLAGS	+= -DGS_OSX=1
 endif
 
@@ -67,5 +68,6 @@ $(targetLib):
 
 # Compile the cpp
 %.o : %.cpp
-	@echo "		Compiling source: "$(notdir $<)
+	@echo "Compiling on: "$(UNAME_S)
+	@echo "Compiling source: "$(notdir $<)
 	@$(CXX) $(CXXFLAGS) -MMD -MP -o $(objectdir)$(notdir $@) $(sourcedir)$(notdir $<) 
