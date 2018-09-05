@@ -10,6 +10,7 @@
 /* Includes */
 /* -------- */
 #include "StdHeaders.h"
+#include "GSIntTypes.h"
 
 #define _GSString_X_
 
@@ -22,16 +23,15 @@
 #include <iomanip>
 
 #if GS_WIN
-	// For Unicode normalization form (precomposed v.s. decomposed)
-	#include <WinNls.h>
+// For Unicode normalization form (precomposed v.s. decomposed)
+//	#include <WinNls.h>
 #elif GS_LIN
 
 #else
-	#include <AppKit/AppKit.h>
+//#include <AppKit/AppKit.h>
 #endif
 
-
-#include "GSIntTypes.h"
+#include "GSString.X.h"
 
 //#######################################################################################
 // TXString class

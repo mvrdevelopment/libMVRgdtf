@@ -59,7 +59,7 @@ typedef std::basic_string<TXChar> StdUStr;
 //#######################################################################################
 // TXString class
 //#######################################################################################
-class GS_COMP_API GS_HIDDEN_VISIBILITY TXString : public TDebugObject
+class GS_COMP_API GS_HIDDEN_VISIBILITY TXString
 {
 public:
 	
