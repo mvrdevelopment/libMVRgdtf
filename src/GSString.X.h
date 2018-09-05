@@ -12,17 +12,17 @@
 #define _GSSTRINGX_
 
 #pragma once
+#include "GSTypes.h"
+#include "GSIntTypes.h"
 
 // For Unicode string literal
 #if GS_WIN
-#include <Windows.h>
 #define txu(string) L##string
 #define txuc(string) L##string
 #elif GS_LIN
 #define txu(string) L##string
 #define txuc(string) L##string
 #else
-#include <CoreFoundation/CoreFoundation.h>
 #define txu(string) (const UCChar*)u##string
 #define txuc(ch) (const UCChar)u##ch
 #endif
@@ -208,7 +208,6 @@ public:
 #if GS_MAC
 	TXString& operator<<(size_t number); // size_t is different from Uint64 on the mac
 #endif
-	TXString& operator<<(const GSHandle h); // as number
 	
 	
 	//***********************************************************************************
@@ -466,8 +465,6 @@ private:
 	mutable std::wstring wStr;
 #endif
 
-	// Unit tests
-	friend class UnitTests::TXStringUnitTest;
 };
 
 

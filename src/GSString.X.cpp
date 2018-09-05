@@ -966,14 +966,6 @@ TXString& TXString::operator<<(size_t n)
 }
 #endif
 
-//=======================================================================================
-// Appends one handle as a string
-TXString& TXString::operator<<(const GSHandle h) // as a string
-{
-	return (*this += std::to_string((size_t)h).c_str());
-}
-
-
 //***************************************************************************************
 // Insertion and deletion
 //***************************************************************************************

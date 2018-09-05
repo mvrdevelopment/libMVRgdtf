@@ -82,7 +82,7 @@ typedef	unsigned char	Bool8;
 	};
 #endif
 
-#if _LINUX
+#if GS_LIN
 	const bool	FALSE = 0;
 	const bool	TRUE  = 1;
 #endif
@@ -92,7 +92,7 @@ typedef	unsigned char	Bool8;
 typedef intptr_t	SintptrT;
 typedef uintptr_t	UintptrT;
 
-#if _LINUX
+#if GS_LIN
 typedef __SIZE_TYPE__	size_t;
 #endif
 
@@ -121,9 +121,10 @@ typedef const UCChar*	ConstUCCharPtr;  // Pointer to one or an array of constant
 typedef const UCChar*	ConstUCStrPtr;   // Pointer to NULL-word terminated constant UCChars
 typedef Uint32			UCCharCnt;
 
-#ifdef _LINUX
+#ifdef GS_LIN
+typedef Uint16			UniChar;
+#else
 typedef Uint16			UniChar;
 #endif
 
-
-#endif //_GS_TYPES
+#endif //_GS_TYPES_
