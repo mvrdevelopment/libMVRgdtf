@@ -1,0 +1,234 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXFileReference section */
+		94ACB798213FC39800DA58A3 /* GSDebug.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GSDebug.cpp; path = src/GSDebug.cpp; sourceTree = "<group>"; };
+		94ACB799213FC39800DA58A3 /* GSDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSDebug.h; path = src/GSDebug.h; sourceTree = "<group>"; };
+		94ACB79A213FC39800DA58A3 /* GSString.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GSString.cpp; path = src/GSString.cpp; sourceTree = "<group>"; };
+		94ACB79B213FC39800DA58A3 /* GSString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSString.h; path = src/GSString.h; sourceTree = "<group>"; };
+		94ACB79C213FC39800DA58A3 /* GSString.X.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GSString.X.cpp; path = src/GSString.X.cpp; sourceTree = "<group>"; };
+		94ACB79D213FC39800DA58A3 /* GSString.X.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSString.X.h; path = src/GSString.X.h; sourceTree = "<group>"; };
+		94ACB79E213FC39800DA58A3 /* GSTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSTypes.h; path = src/GSTypes.h; sourceTree = "<group>"; };
+		94ACB79F213FC39800DA58A3 /* GSUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GSUtil.cpp; path = src/GSUtil.cpp; sourceTree = "<group>"; };
+		94ACB7A0213FC39800DA58A3 /* GSUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSUtil.h; path = src/GSUtil.h; sourceTree = "<group>"; };
+		94ACB7A1213FC39800DA58A3 /* StdHeaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StdHeaders.h; path = src/StdHeaders.h; sourceTree = "<group>"; };
+		94ACB7A3213FC3A700DA58A3 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		94ACB78C213FC30700DA58A3 = {
+			isa = PBXGroup;
+			children = (
+				94ACB7A2213FC3A100DA58A3 /* make */,
+				94ACB797213FC38200DA58A3 /* src */,
+			);
+			sourceTree = "<group>";
+		};
+		94ACB797213FC38200DA58A3 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				94ACB798213FC39800DA58A3 /* GSDebug.cpp */,
+				94ACB799213FC39800DA58A3 /* GSDebug.h */,
+				94ACB79A213FC39800DA58A3 /* GSString.cpp */,
+				94ACB79B213FC39800DA58A3 /* GSString.h */,
+				94ACB79C213FC39800DA58A3 /* GSString.X.cpp */,
+				94ACB79D213FC39800DA58A3 /* GSString.X.h */,
+				94ACB79E213FC39800DA58A3 /* GSTypes.h */,
+				94ACB79F213FC39800DA58A3 /* GSUtil.cpp */,
+				94ACB7A0213FC39800DA58A3 /* GSUtil.h */,
+				94ACB7A1213FC39800DA58A3 /* StdHeaders.h */,
+			);
+			name = src;
+			sourceTree = "<group>";
+		};
+		94ACB7A2213FC3A100DA58A3 /* make */ = {
+			isa = PBXGroup;
+			children = (
+				94ACB7A3213FC3A700DA58A3 /* Makefile */,
+			);
+			name = make;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXLegacyTarget section */
+		94ACB791213FC30700DA58A3 /* libVectorworksMvrGdtf */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION)";
+			buildConfigurationList = 94ACB794213FC30700DA58A3 /* Build configuration list for PBXLegacyTarget "libVectorworksMvrGdtf" */;
+			buildPhases = (
+			);
+			buildToolPath = /usr/bin/make;
+			buildWorkingDirectory = /Users/moritzstaffel/Documents/DEV/libVectorworksMvrGdtf;
+			dependencies = (
+			);
+			name = libVectorworksMvrGdtf;
+			passBuildSettingsInEnvironment = 1;
+			productName = libVectorworksMvrGdtf;
+		};
+/* End PBXLegacyTarget section */
+
+/* Begin PBXProject section */
+		94ACB78D213FC30700DA58A3 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0820;
+				ORGANIZATIONNAME = DeerSoft;
+				TargetAttributes = {
+					94ACB791213FC30700DA58A3 = {
+						CreatedOnToolsVersion = 8.2;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 94ACB790213FC30700DA58A3 /* Build configuration list for PBXProject "libVectorworksMvrGdtf" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 94ACB78C213FC30700DA58A3;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				94ACB791213FC30700DA58A3 /* libVectorworksMvrGdtf */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		94ACB792213FC30700DA58A3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+			};
+			name = Debug;
+		};
+		94ACB793213FC30700DA58A3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+			};
+			name = Release;
+		};
+		94ACB795213FC30700DA58A3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEBUGGING_SYMBOLS = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		94ACB796213FC30700DA58A3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		94ACB790213FC30700DA58A3 /* Build configuration list for PBXProject "libVectorworksMvrGdtf" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				94ACB792213FC30700DA58A3 /* Debug */,
+				94ACB793213FC30700DA58A3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		94ACB794213FC30700DA58A3 /* Build configuration list for PBXLegacyTarget "libVectorworksMvrGdtf" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				94ACB795213FC30700DA58A3 /* Debug */,
+				94ACB796213FC30700DA58A3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 94ACB78D213FC30700DA58A3 /* Project object */;
+}
