@@ -70,4 +70,4 @@ $(targetLib):
 %.o : %.cpp
 	@echo "Compiling on: "$(UNAME_S)
 	@echo "Compiling source: "$(notdir $<)
-	@$(CXX) $(CXXFLAGS) -MMD -MP -o $(objectdir)$(notdir $@) $(sourcedir)$(notdir $<) 
+	@$(CXX) $(CXXFLAGS) -MMD -MP -c $<
