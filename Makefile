@@ -19,7 +19,7 @@ ifeq ($(UNAME_S), Linux)
 CXXFLAGS	+= -DGS_LIN=1
 endif
 ifeq ($(UNAME_S), Darwin)
-CXXFLAGS	+= -DGS_OSX=1
+CXXFLAGS	+= -DGS_MAC=1
 endif
 
 
