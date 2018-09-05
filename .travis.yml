@@ -1,0 +1,18 @@
+# building the Client
+language: cpp
+matrix:
+  include:
+    # GCC 5
+    - env: COMPILER=g++-5
+      sudo: required
+      dist: xenial
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-5
+    # Xcode 9.4 Clang
+    - env: OSX build
+      osx_image: xcode9.4
+      os: osx
