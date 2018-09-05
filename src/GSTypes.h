@@ -13,6 +13,11 @@
 #pragma once
 
 #include <stdint.h>
+
+#if GS_LIN
+#include <cstddef>
+#endif
+
 ///////////////////////////////////////////////////////////////////////////////
 // Fixed-width unsigned integer types.
 

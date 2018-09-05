@@ -26,7 +26,9 @@
 // For Unicode normalization form (precomposed v.s. decomposed)
 //	#include <WinNls.h>
 #elif GS_LIN
-
+#include <cstring>
+#include <string>
+#include <algorithm>
 #else
 //#include <AppKit/AppKit.h>
 #endif
