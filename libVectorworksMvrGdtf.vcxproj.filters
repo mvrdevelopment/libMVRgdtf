@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Quelldateien">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Headerdateien">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Ressourcendateien">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{c5709417-d873-47a8-ad84-8babcd7c3ab8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Prefix">
+      <UniqueIdentifier>{c38ca7a8-18db-4c43-ad66-2feb1a133886}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\TXString">
+      <UniqueIdentifier>{e3425f28-2617-4a97-9103-e3954d80c959}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\GSString.cpp">
+      <Filter>src\TXString</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\GSString.h">
+      <Filter>src\TXString</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GSTypes.h">
+      <Filter>src\Prefix</Filter>
+    </ClInclude>
+    <ClInclude Include="src\StdHeaders.h">
+      <Filter>src\Prefix</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Makefile">
+      <Filter>src</Filter>
+    </None>
+  </ItemGroup>
+</Project>
