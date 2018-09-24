@@ -64,5 +64,5 @@ all: $(targetLib)
 
 # Build targetLib
 $(targetLib): $(OBJECTS)
-	cl.exe $(CXXFLAGS) -c -MMD -MP $(LDFLAGS) -o $(targetLib) $(OBJECTS)
+	$(CXX) $(CXXFLAGS) -c -MMD -MP $(LDFLAGS) -o $(targetLib) $(OBJECTS)
 		
