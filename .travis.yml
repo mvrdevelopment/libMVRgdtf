@@ -5,7 +5,7 @@ os:
 matrix:
   include:
     # GCC 5
-    - env: COMPILER=g++-5
+    - env: Ubunt uBuild
       sudo: required
       dist: xenial
       addons:
@@ -18,6 +18,10 @@ matrix:
     - env: OSX build
       osx_image: xcode9.4
       os: osx
+	# Windows
+    - env: Win build
+      os: windows
+
 
 script:
 - make
