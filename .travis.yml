@@ -5,7 +5,7 @@ os:
 matrix:
   include:
     # GCC 5
-    - env: Ubunt uBuild
+    - env: Ubuntu Build
       sudo: required
       dist: xenial
       addons:
