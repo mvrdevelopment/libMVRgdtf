@@ -38,3 +38,4 @@ libVectorworksMvrGdtf.xcodeproj/xcuserdata/moritzstaffel*
 # Visual Studio files
 .vs
 x64
+*.i
