@@ -63,7 +63,8 @@ all: $(targetLib)
 $(targetLibName).dll: $(SOURCES)
 	@echo Start to build lib on Win
 	@echo $(SOURCES)
-	$(CXX) $(CXXFLAGS) $(SOURCES) /MT /link /DLL /OUT:$(buildFolder)\$(targetLib)
+	cl.exe /D_USRDLL /D_WINDLL $(SOURCES) /MT /link /DLL /OUT:helowrld.dll
+#	$(CXX) $(CXXFLAGS) $(SOURCES) /MT /link /DLL /OUT:$(buildFolder)\$(targetLib)
 
 
 # Mac Linux
