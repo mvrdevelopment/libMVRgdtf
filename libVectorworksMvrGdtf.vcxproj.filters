@@ -38,6 +38,9 @@
     <ClInclude Include="src\StdHeaders.h">
       <Filter>src\Prefix</Filter>
     </ClInclude>
+    <ClInclude Include="src\GSIntTypes.h">
+      <Filter>src\Prefix</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Makefile">

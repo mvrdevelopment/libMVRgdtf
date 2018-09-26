@@ -39,3 +39,5 @@ libVectorworksMvrGdtf.xcodeproj/xcuserdata/moritzstaffel*
 .vs
 x64
 *.i
+*.check_cache
+src/CMakeCache.txt

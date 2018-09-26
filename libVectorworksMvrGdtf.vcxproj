@@ -70,7 +70,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <NMakeBuildCommandLine>make all</NMakeBuildCommandLine>
-    <NMakeOutput>libVectorworksMvrGdtf.exe</NMakeOutput>
+    <NMakeOutput>libVectorworksMvrGdtf.dll</NMakeOutput>
     <NMakeCleanCommandLine>make clean</NMakeCleanCommandLine>
     <NMakePreprocessorDefinitions>_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
   </PropertyGroup>
@@ -92,6 +92,7 @@
     <ClCompile Include="src\GSString.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\GSIntTypes.h" />
     <ClInclude Include="src\GSString.h" />
     <ClInclude Include="src\GSTypes.h" />
     <ClInclude Include="src\StdHeaders.h" />
