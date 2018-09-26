@@ -16,9 +16,11 @@ buildFolder = C:\Users\admin\Documents\DEV\libVectorworksMvrGdtf
 # Windows
 ifeq ($(OS),Windows_NT)
 		CXX			= cl.exe			#c++ compiler
-		CXXFLAGS	= /D_USRDLL /D_WINDLL /P
+#		CXXFLAGS	= /D_USRDLL /D_WINDLL /P
+		CXXFLAGS	= /JMC /permissive- /GS /analyze- /W3 /Zc:wchar_t /ZI /Gm- /Od /sdl /Fd"Debug\vc141.pdb" /Zc:inline /fp:precise /D "WIN32" /D "_DEBUG" /D "LIBVECTORWORKSMVRGDTF_EXPORTS" /D "_WINDOWS" /D "_USRDLL" /D "_WINDLL" /D "_UNICODE" /D "UNICODE" /errorReport:prompt /WX- /Zc:forScope /RTC1 /Gd /Oy- /MDd /FC /Fa"Debug\" /EHsc /nologo /Fo"Debug\" /Fp"Debug\libVectorworksMvrGdtf.pch" /diagnostics:classic 
 		CXXFLAGS	+= /DGS_WIN=1		
 		LD			= link.exe				# linker
+		LDFLAGS		= /OUT:"C:\Users\admin\Documents\DEV\libVectorworksMvrGdtf\libVectorworksMvrGdtf.dll" /MANIFEST /NXCOMPAT /PDB:"C:\Users\admin\Documents\DEV\libVectorworksMvrGdtf\libVectorworksMvrGdtf.pdb" /DYNAMICBASE "kernel32.lib" "user32.lib" "gdi32.lib" "winspool.lib" "comdlg32.lib" "advapi32.lib" "shell32.lib" "ole32.lib" "oleaut32.lib" "uuid.lib" "odbc32.lib" "odbccp32.lib" /IMPLIB:""C:\Users\admin\Documents\DEV\libVectorworksMvrGdtf\libVectorworksMvrGdtf.lib" /DEBUG /DLL /MACHINE:X86 /INCREMENTAL /PGD:"C:\Users\admin\Documents\DEV\libVectorworksMvrGdtf\libVectorworksMvrGdtf.pgd" /SUBSYSTEM:WINDOWS /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /ManifestFile:"Debug\libVectorworksMvrGdtf.dll.intermediate.manifest" /ERRORREPORT:PROMPT /NOLOGO /TLBID:1 
 		libExt		= .dll
 
 else
@@ -62,7 +64,7 @@ all: $(targetLib)
 
 $(targetLibName).dll: $(SOURCES)
 	@echo Start to build lib on Win
-	$(CXX) $(CXXFLAGS) src\GSString.cpp /MT /DLL /OUT:hello.lib
+	$(CXX) $(CXXFLAGS) src\GSString.cpp $(LDFLAGS)
 
 
 # Mac Linux
