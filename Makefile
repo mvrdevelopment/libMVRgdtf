@@ -7,35 +7,18 @@
 # set library name
 targetLibName	= libVectorworksMvrGdtf
 
+# Folders
+buildFolder = C:\Users\admin\Documents\DEV\libVectorworksMvrGdtf
+
 #-------------------------------------------------------------------------------------------------------------------------------
 # set platform compiler and linker flags
 
 # Windows
 ifeq ($(OS),Windows_NT)
 		CXX			= cl.exe			#c++ compiler
-		CXXFLAGS	= /RTCc /Yu"StdAfx.h" /MP /FR"C:\Users\admin\Documents\DEV\libVectorworksMvrGdtf" \
-						/GS /W3 /Gy /Zc:wchar_t /Zi /Gm/ /Od /Zc:inline /fp:precise /errorReport:prompt \
-						/GF/ /WX /Zc:forScope /RTC1 /GR /Gd /MDd /FC \
-						/Fa"C:\Users\admin\Documents\DEV\libVectorworksMvrGdtf" \
-						/EHsc /nologo /Fo"C:\Users\admin\Documents\DEV\libVectorworksMvrGdtf" \
-						/Fp"C:\Users\admin\Documents\DEV\libVectorworksMvrGdtf" \
-						/diagnostics:classic
+		CXXFLAGS	= /D_USRDLL /D_WINDLL /P
 		CXXFLAGS	+= /DGS_WIN=1		
 		LD			= link.exe				# linker
-		LDFLAGS		= /OUT:"C:\Users\admin\Documents\DEV\libVectorworksMvrGdtf.dll" /MANIFEST /NXCOMPAT \
-						/PDB:"C:\Users\admin\Documents\DEV\libVectorworksMvrGdtf.pdb" \
-						/LARGEADDRESSAWARE \
-						/IMPLIB:"C:\Users\admin\Documents\DEV\libVectorworksMvrGdtf.lib" /DEBUG /DLL /MACHINE:X64 \
-						/NODEFAULTLIB:"libc" /SAFESEH:NO /INCREMENTAL \
-						/PGD:"C:\Users\admin\Documents\DEV\libVectorworksMvrGdtf.pgd" /SUBSYSTEM:WINDOWS \
-						/MANIFESTUAC:"level='asInvoker' uiAccess='false'" \
-						/ManifestFile:"C:\Users\admin\Documents\DEV\libVectorworksMvrGdtf.dll.intermediate.manifest" \
-						/ERRORREPORT:PROMPT /NOLOGO \
-						/LIBPATH:"C:\Users\admin\Documents\DEV\VectorworksGDTFExchange-VW23.0.x\AppSource\Source\Plug-Ins\DeerSoft\VectorworksMVR\..\..\..\..\Output\LibWin\Debug" \
-						/LIBPATH:"C:\Users\admin\Documents\DEV\VectorworksGDTFExchange-VW23.0.x\AppSource\Source\Plug-Ins\DeerSoft\VectorworksMVR\..\..\..\..\Output\SDK\Debug" \
-						/LIBPATH:"C:\Users\admin\Documents\DEV\VectorworksGDTFExchange-VW23.0.x\AppSource\Source\Plug-Ins\DeerSoft\VectorworksMVR\..\..\..\..\Output\LibWinThirdParty\Debug" \
-						/LIBPATH:"C:\Users\admin\Documents\DEV\VectorworksGDTFExchange-VW23.0.x\AppSource\Source\Plug-Ins\DeerSoft\VectorworksMVR\..\..\..\..\Output\LibWinThirdParty" \
-						/TLBID:1 
 		libExt		= .dll
 
 else
@@ -64,28 +47,24 @@ endif
 # What to compile
 SOURCES = $(shell echo src/*.cpp)
 HEADERS = $(shell echo src/*.h)
-OBJECTS = $(SOURCES:.c=.o)
+OBJECTS = $(SOURCES:.cpp=.o)
 
 
 #-------------------------------------------------------------------------------------------------------------------------------
 # Make Targets
-
-#----------------------------
-# Testing
-$(info $(OS))
-$(info $(UNAME_S))
-$(info $(targetLibName))
-#----------------------------
+targetLib = $(targetLibName)$(libExt)
 
 # ALL
-all: $(targetLibName)$(libExt)
+all: $(targetLib)
 
 # Build targetLib
 # Windows
-$(targetLibName).dll: $(OBJECTS)
-	@echo $(targetLibName)
-	$(CXX) $(CXXFLAGS)
-	$(LD) $(LDFLAGS) $(OBJECTS)
+
+$(targetLibName).dll: $(SOURCES)
+	@echo Start to build lib on Win
+	@echo $(SOURCES)
+	$(CXX) $(CXXFLAGS) $(SOURCES) /MT /link /DLL /OUT:$(buildFolder)\$(targetLib)
+
 
 # Mac Linux
 $(targetLibName).so: $(OBJECTS)
