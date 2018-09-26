@@ -14,10 +14,6 @@
 
 #define _GSString_X_
 
-#include <ctype.h>  // Do not change to <cctype> to avoid platform conflict on
-                    //  whether toupper and tolower are in the "std" namespace
-#include <stdarg.h>
-
 #include <iostream>
 #include <codecvt>
 #include <iomanip>

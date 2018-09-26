@@ -22,7 +22,6 @@
 #if (_MSC_VER >= 1800)
 
 #define __STDC_FORMAT_MACROS
-#include <inttypes.h>
 
 #else
 

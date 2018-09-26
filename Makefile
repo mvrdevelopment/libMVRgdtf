@@ -62,9 +62,7 @@ all: $(targetLib)
 
 $(targetLibName).dll: $(SOURCES)
 	@echo Start to build lib on Win
-	@echo $(SOURCES)
-	cl.exe $(CXXFLAGS) $(SOURCES) /MT /link /DLL /OUT:helowrld.dll
-#	$(CXX) $(CXXFLAGS) $(SOURCES) /MT /link /DLL /OUT:$(buildFolder)\$(targetLib)
+	$(CXX) $(CXXFLAGS) src\GSString.cpp /MT /DLL /OUT:hello.lib
 
 
 # Mac Linux

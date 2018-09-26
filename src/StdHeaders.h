@@ -9,17 +9,14 @@
 //
 #if GS_WIN
 
-#define GS_HIDDEN_VISIBILITY	__declspec(dllexport)
-#define GS_COMP_API				
+#define GS_HIDDEN_VISIBILITY	__declspec(dllexport)		
 
 #elif GS_LIN
 
 #define GS_HIDDEN_VISIBILITY	
-#define GS_COMP_API
 
 #elif GS_MAC
 
 #define GS_HIDDEN_VISIBILITY
-#define GS_COMP_API
 
 #endif
