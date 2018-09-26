@@ -7,5 +7,19 @@
 //
 //  This file contains the type definitions for the Graphsoft core.
 //
-#define GS_HIDDEN_VISIBILITY __declspec(dllexport)
-#define GS_COMP_API extern "C" {}
+#if GS_WIN
+
+#define GS_HIDDEN_VISIBILITY	__declspec(dllexport)
+#define GS_COMP_API				extern "C" {}
+
+#elif GS_LIN
+
+#define GS_HIDDEN_VISIBILITY	
+#define GS_COMP_API
+
+#elif GS_MAC
+
+#define GS_HIDDEN_VISIBILITY
+#define GS_COMP_API
+
+#endif
