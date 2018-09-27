@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2036
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libVectorworksMvrGdtf", "libVectorworksMvrGdtf.vcxproj", "{F3E65135-4FB3-41F4-9B17-1D2C9A5339B2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F3E65135-4FB3-41F4-9B17-1D2C9A5339B2}.Debug|x64.ActiveCfg = Debug|x64
+		{F3E65135-4FB3-41F4-9B17-1D2C9A5339B2}.Debug|x64.Build.0 = Debug|x64
+		{F3E65135-4FB3-41F4-9B17-1D2C9A5339B2}.Debug|x86.ActiveCfg = Debug|Win32
+		{F3E65135-4FB3-41F4-9B17-1D2C9A5339B2}.Debug|x86.Build.0 = Debug|Win32
+		{F3E65135-4FB3-41F4-9B17-1D2C9A5339B2}.Release|x64.ActiveCfg = Release|x64
+		{F3E65135-4FB3-41F4-9B17-1D2C9A5339B2}.Release|x64.Build.0 = Release|x64
+		{F3E65135-4FB3-41F4-9B17-1D2C9A5339B2}.Release|x86.ActiveCfg = Release|Win32
+		{F3E65135-4FB3-41F4-9B17-1D2C9A5339B2}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DF4DEF02-D621-4631-9202-A2CFDB1F6119}
+	EndGlobalSection
+EndGlobal

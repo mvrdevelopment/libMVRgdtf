@@ -1,4 +1,3 @@
-
 //
 //	Copyright  Nemetschek Vectorworks, Inc.
 //	Use of this file is governed by the Nemetschek Vectorworks SDK License Agreement
@@ -7,9 +6,15 @@
 //
 //  This file contains the type definitions for the Graphsoft core.
 //
+
+#pragma once
 #if GS_WIN
 
-#define GS_HIDDEN_VISIBILITY	__declspec(dllexport)		
+#define GS_HIDDEN_VISIBILITY	__declspec(dllexport)	
+
+#define WIN32_LEAN_AND_MEAN             // Selten verwendete Komponenten aus Windows-Headern ausschlieﬂen
+// Windows-Headerdateien
+#include <windows.h>
 
 #elif GS_LIN
 

@@ -13,33 +13,44 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="TXstring">
-      <UniqueIdentifier>{d7536a55-c42c-43ff-8f4d-c3103ba0a994}</UniqueIdentifier>
+    <Filter Include="src">
+      <UniqueIdentifier>{c5709417-d873-47a8-ad84-8babcd7c3ab8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Prefix">
-      <UniqueIdentifier>{6296b42b-0bb7-43fa-9aeb-33b4ee2abb95}</UniqueIdentifier>
+    <Filter Include="src\Prefix">
+      <UniqueIdentifier>{c38ca7a8-18db-4c43-ad66-2feb1a133886}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="src\GSIntTypes.h">
-      <Filter>Prefix</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GSTypes.h">
-      <Filter>Prefix</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GSString.h">
-      <Filter>TXstring</Filter>
-    </ClInclude>
-    <ClInclude Include="src\StdHeaders.h">
-      <Filter>Prefix</Filter>
-    </ClInclude>
+    <Filter Include="src\TXString">
+      <UniqueIdentifier>{e3425f28-2617-4a97-9103-e3954d80c959}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\GSString.cpp">
-      <Filter>TXstring</Filter>
+      <Filter>src\TXString</Filter>
     </ClCompile>
     <ClCompile Include="src\dllmain.cpp">
-      <Filter>Quelldateien</Filter>
+      <Filter>src\Prefix</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\GSString.h">
+      <Filter>src\TXString</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GSTypes.h">
+      <Filter>src\Prefix</Filter>
+    </ClInclude>
+    <ClInclude Include="src\StdHeaders.h">
+      <Filter>src\Prefix</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GSIntTypes.h">
+      <Filter>src\Prefix</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Makefile">
+      <Filter>src</Filter>
+    </None>
+    <None Include=".travis.yml">
+      <Filter>src</Filter>
+    </None>
   </ItemGroup>
 </Project>
