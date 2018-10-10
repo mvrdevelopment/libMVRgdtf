@@ -30,13 +30,7 @@
 *.exe
 *.out
 *.app
-x64/Debug/libVectorworksMvrGdtfUnitTestWinDLLTXString.log
-x64/Debug/libVectorworksMvrGdtfUnitTestWinDLLTXString.Build.CppClean.log
-x64/Debug/libVectorworksMvrGdtf.log
-x64/Debug/libVectorworksMvrGdtf.Build.CppClean.log
-.vs/libVectorworksMvrGdtf/v15/Solution.VC.db
-.vs/libVectorworksMvrGdtf/v15/ipch/8f47b31bac2861f4.ipch
-.vs/libVectorworksMvrGdtf/v15/ipch/3d3e8224d7e1e53a.ipch
-.vs/libVectorworksMvrGdtf/v15/Browse.VC.db
-.vs/libVectorworksMvrGdtf/v15/.suo
-x64/Debug/libVecto.11BBC22F.tlog/unsuccessfulbuild
+
+# Directories
+x64/
+.vs/
