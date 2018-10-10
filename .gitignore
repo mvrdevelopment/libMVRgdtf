@@ -30,14 +30,12 @@
 *.exe
 *.out
 *.app
-
-# Mac Files
-*.DS_Store
-libVectorworksMvrGdtf.xcodeproj/xcuserdata/moritzstaffel*
-
-# Visual Studio files
-.vs
-x64
-*.i
-*.check_cache
-src/CMakeCache.txt
+x64/Debug/libVectorworksMvrGdtfUnitTestWinDLLTXString.log
+x64/Debug/libVectorworksMvrGdtfUnitTestWinDLLTXString.Build.CppClean.log
+x64/Debug/libVectorworksMvrGdtf.log
+x64/Debug/libVectorworksMvrGdtf.Build.CppClean.log
+.vs/libVectorworksMvrGdtf/v15/Solution.VC.db
+.vs/libVectorworksMvrGdtf/v15/ipch/8f47b31bac2861f4.ipch
+.vs/libVectorworksMvrGdtf/v15/ipch/3d3e8224d7e1e53a.ipch
+.vs/libVectorworksMvrGdtf/v15/Browse.VC.db
+.vs/libVectorworksMvrGdtf/v15/.suo
