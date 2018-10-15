@@ -115,7 +115,6 @@ bool operator==(const TXAlloc<T>& lhs, const TXAlloc<T>& rhs) throw() {
 	return true;
 }
 // StrUStr definition
-// StrUStr definition
 typedef std::basic_string<TXChar, std::char_traits<TXChar>, TXAlloc<TXChar>> StdUStr;
 
 #elif GS_LIN

@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
 #include "GSString.h"
-#include "math.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace std;
@@ -14,16 +13,17 @@ namespace libVectorworksMvrGdtfUnitTestWinDLLTXString
 	public:
 		
 		
-		/* Constructors and destructors necessary? (TODO, not implemented yet)
+		/* TODO
 		TEST_METHOD(TestFromOtherStringTypeString)
 		{
 			const string expected("Hard to compare^1234567890ß´üöä+#-.,<°!\"§$%&/()=?`*'_:;>²³{[]}\\~|");
 			const string actual("Hard to compare1");
 			TXString txExpected(expected);
 			TXString txActual(actual);
-			Assert::AreEqual(string(txExpected),string(txActual));
+			Assert::AreNotEqual(txExpected, txActual);
 		}
-		/ TODO
+		
+		
 		TEST_METHOD(TestFromOtherStringTypeWString)
 		{
 			const wstring expected(R"(Hard to compare^1234567890ß´üöä+#-.,<°!"§$%&/()=?`*'_:;>²³{[]}\~|)");
@@ -31,19 +31,35 @@ namespace libVectorworksMvrGdtfUnitTestWinDLLTXString
 			TXString txExpected(expected);
 			TXString txActual(actual);
 			Assert::
-		}*/
+		}
 
+		TEST_METHOD(TestFromOtherStringTypeWString)
+		{
+			const string expected("Hard to compare^1234567890ß´üöä+#-.,<°!\"§$%&/()=?`*'_:;>²³{[]}|");
+			const string actual("Hard to compare2)");
+			TXString txExpected(expected);
+			TXString txActual(actual);
+			Assert::AreEqual(txExpected, txActual);
+		}
+		*/
+
+		TEST_METHOD(GetLength)
+		{
+			const string string1("testlength");
+			TXString txString1(string1);
+			Assert::AreEqual(10, txString1.GetLength());
+		}
 
 		
 		//***********************************************************************************
 		// Assignments
 		//***********************************************************************************
 
-		TEST_METHOD(CopyAssignmentOperator)
-		{
+		//TEST_METHOD(CopyAssignmentOperator)
+		//{
 
-			TXString& operator=(const TXString& src);		// Copy assignment operator
-		}
+		//	TXString& operator=(const TXString& src);		// Copy assignment operator
+		//}
 		/*
 		TXString& operator=(TXString&& src);			// Move assignment operator
 		TXString& operator=(const std::string& src);	// Assignment from std::string

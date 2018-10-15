@@ -103,7 +103,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;LIBVECTORWORKSMVRGDTF_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);GS_WIN;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;LIBVECTORWORKSMVRGDTF_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);GS_WIN;_CRT_SECURE_NO_WARNINGS;EXPORT_SYMBOLS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>StdHeaders.h</PrecompiledHeaderFile>
     </ClCompile>
