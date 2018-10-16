@@ -19,20 +19,20 @@ LDFLAGS		= -shared -DfPIC		# linker options
 ifeq ($(OS),Windows_NT)
 		CXXFLAGS	+= -DGS_WIN=1 -DEXPORT_SYMBOLS=1
 		libExt		= .dll
-		RM			= del /s /q $(BINDIR)\*.dll & del /s /q $(BINDIR)\*.d
+		RM			= del /s /q $(BINDIR)\$(targetLib) & del /s /q $(BINDIR)\$(targetLibName).d
 else
     UNAME_S := $(shell uname -s)
 # Linux
     ifeq ($(UNAME_S),Linux)
 		CXXFLAGS	+= -DGS_LIN=1
 		libExt		= .so
-		RM			= rm -rf bin/*.so	
+		RM			= rm -f bin/$(targetLib)
     endif
 # Mac
     ifeq ($(UNAME_S),Darwin)
 		CXXFLAGS	+= -DGS_MAC=1
 		libExt		= .so
-		RM			= rm -rf bin/*.so	
+		RM			= rm -f bin/$(targetLib)
     endif
 endif
 
