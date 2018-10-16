@@ -1,58 +1,43 @@
-#################################################################
-#																#
-#	Makefile for libVectorworksMvrGdtf							#
-#																#
-#################################################################
+##
+##	Makefile for libVectorworksMvrGdtf
+##
 
 # set library name
 targetLibName	= libVectorworksMvrGdtf
 
-# Folders
-buildFolder = C:\Users\admin\Documents\DEV\libVectorworksMvrGdtf
+# folders
+SRCDIR	= src
+BINDIR	= bin
 
+# compiler, linker and options
+CXX			= g++					# gnu c++ compiler on all platforms
+CXXFLAGS	= -g -std=c++11			# compiler options
+LDFLAGS		= -shared -DfPIC		# linker options
 
 # set platform compiler and linker flags
 # Windows
 ifeq ($(OS),Windows_NT)
-		CXX			= g++
-		CXXFLAGS	= -g
 		CXXFLAGS	+= -DGS_WIN=1 -DEXPORT_SYMBOLS=1
-		LDFLAGS		= -shared -DfPIC 	#linker flags
 		libExt		= .dll
-
+		RM			= del /s /q $(BINDIR)\*.dll & del /s /q $(BINDIR)\*.d
 else
     UNAME_S := $(shell uname -s)
-
 # Linux
     ifeq ($(UNAME_S),Linux)
-        CXX			= g++				#c++ compiler and linker(gcc or ld)
-		CXXFLAGS	= -g -std=c++11		#c++ compiler flags
 		CXXFLAGS	+= -DGS_LIN=1
-		LDFLAGS		= -shared -DfPIC	#linker flags
 		libExt		= .so
+		RM			= rm -rf bin/*.so	
     endif
-
 # Mac
     ifeq ($(UNAME_S),Darwin)
-		CXX			= g++				#c++ compiler and linker(gcc or ld)
-		CXXFLAGS	= -g -std=c++11		#c++ compiler flags
 		CXXFLAGS	+= -DGS_MAC=1
-		LDFLAGS		= -shared -DfPIC	#linker flags
 		libExt		= .so
+		RM			= rm -rf bin/*.so	
     endif
 endif
 
-
 # What to compile
-ifeq ($(OS),Windows_NT)
 	SOURCES = $(shell echo src/*.cpp)
-	HEADERS = $(shell echo src/*.h)
-	OBJECTS = $(SOURCES:.cpp=.o)
-else
-	SOURCES = $(shell echo src/*.cpp)
-	HEADERS = $(shell echo src/*.h)
-	OBJECTS = $(SOURCES:.cpp=.o)
-endif
 
 
 # Make Targets
@@ -61,13 +46,20 @@ targetLib = $(targetLibName)$(libExt)
 # ALL
 all: $(targetLib)
 
+# CLEAN
+clean:
+	@echo "Cleaning $(targetLib)...  "
+	$(RM)
+
 # Build targetLib
 # Windows
 $(targetLibName).dll: $(SOURCES)
 	@echo Start to build lib on Win
-	$(CXX) $(CXXFLAGS) -c -MMD -MP $(LDFLAGS) -o $(targetLib) $(SOURCES)
+	if not exist bin md bin
+	$(CXX) $(CXXFLAGS) -c -MMD -MP $(LDFLAGS) -o $(BINDIR)/$(targetLib) $(SOURCES)
 
 # Mac Linux
 $(targetLibName).so: $(OBJECTS)
 	@echo $(targetLibName)
-	$(CXX) $(CXXFLAGS) -c -MMD -MP $(LDFLAGS) -o $(targetLib) $(OBJECTS)
+	mkdir -p bin
+	$(CXX) $(CXXFLAGS) -c -MMD -MP $(LDFLAGS) -o $(BINDIR)$/(targetLib) $(OBJECTS)
