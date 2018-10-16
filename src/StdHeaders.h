@@ -10,7 +10,11 @@
 #pragma once
 #if GS_WIN
 
-#define GS_HIDDEN_VISIBILITY	__declspec(dllexport)	
+#ifdef EXPORT_SYMBOLS
+#define GS_HIDDEN_VISIBILITY	__declspec(dllexport)
+#else
+#define GS_HIDDEN_VISIBILITY	__declspec(dllimport)
+#endif // EXPORT_SYMBOLS
 
 #define WIN32_LEAN_AND_MEAN             // Selten verwendete Komponenten aus Windows-Headern ausschlieﬂen
 // Windows-Headerdateien
