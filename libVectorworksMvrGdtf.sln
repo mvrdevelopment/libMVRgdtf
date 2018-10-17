@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.28010.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libVectorworksMvrGdtf", "libVectorworksMvrGdtf.vcxproj", "{0ADFBE0D-7F75-4BFB-B5C3-886751A35A0B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DLLUnitTest", "DLLUnitTest\DLLUnitTest.vcxproj", "{4100CB02-AC89-46F2-9A71-32A42D9C5C64}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTestDLL", "UnitTestDLL\UnitTestDLL.vcxproj", "{4100CB02-AC89-46F2-9A71-32A42D9C5C64}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

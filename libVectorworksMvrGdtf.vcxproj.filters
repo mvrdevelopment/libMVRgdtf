@@ -38,9 +38,6 @@
     <ClCompile Include="src\GSString.cpp">
       <Filter>TXstring</Filter>
     </ClCompile>
-    <ClCompile Include="src\dllmain.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Makefile" />

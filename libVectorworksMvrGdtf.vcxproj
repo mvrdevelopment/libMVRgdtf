@@ -155,7 +155,6 @@
     <ClInclude Include="src\StdHeaders.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\dllmain.cpp" />
     <ClCompile Include="src\GSString.cpp" />
   </ItemGroup>
   <ItemGroup>

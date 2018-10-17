@@ -2,64 +2,96 @@
 ##	Makefile for libVectorworksMvrGdtf
 ##
 
+
 # set library name
 targetLibName	= libVectorworksMvrGdtf
 
+
 # folders
 SRCDIR	= src
+OBJDIR	= obj
 BINDIR	= bin
+
 
 # compiler, linker and options
 CXX			= g++					# gnu c++ compiler on all platforms
-CXXFLAGS	= -g -std=c++11			# compiler options
-LDFLAGS		= -shared -DfPIC		# linker options
+CXXFLAGS	= -g -std=c++11	-c		# compiler options
+LDFLAGS	= -shared				# linker options
 
-# set platform compiler and linker flags
+
+# set platform compiler, linker and e.t.c. options
 # Windows
 ifeq ($(OS),Windows_NT)
 		CXXFLAGS	+= -DGS_WIN=1 -DEXPORT_SYMBOLS=1
 		libExt		= .dll
-		RM			= del /s /q $(BINDIR)\$(targetLib) & del /s /q $(BINDIR)\$(targetLibName).d
+		RM			= if exist $(BINDIR)\* del /q $(BINDIR)\* & if exist $(OBJDIR)\* del /q $(OBJDIR)\*
 else
     UNAME_S := $(shell uname -s)
 # Linux
     ifeq ($(UNAME_S),Linux)
-		CXXFLAGS	+= -DGS_LIN=1
+		CXXFLAGS	+= -DGS_LIN=1 -MMD -MP 
+		LDFLAGS	+= -DfPIC
 		libExt		= .so
-		RM			= rm -f bin/$(targetLib)
+		#TODO -f for forced / without delete confirmation
+		RM			= rm $(BINDIR)/*; rm $(OBJDIR)/*
     endif
 # Mac
     ifeq ($(UNAME_S),Darwin)
-		CXXFLAGS	+= -DGS_MAC=1
+		CXXFLAGS	+= -DGS_MAC=1 -MMD -MP 
+		LDFLAGS	+= -DfPIC
 		libExt		= .so
-		RM			= rm -f bin/$(targetLib)
+		#TODO -f for forced / without delete confirmation
+		RM			= rm $(BINDIR)/*; rm $(OBJDIR)/*
     endif
 endif
+LDFLAGS	+= -o
 
-# What to compile
-	SOURCES = $(shell echo src/*.cpp)
+
+# What to compile and link
+ifeq ($(OS),Windows_NT)
+	SOURCES			= $(wildcard $(SRCDIR)/*.cpp)
+	OBJECTSWIN		= $(addprefix $(OBJDIR)/, $(notdir $(SOURCES:.cpp=.o)))
+else
+	SOURCES			= $(shell echo $(SRCDIR)/*.cpp)
+	OBJECTSMACLIN	= $(SOURCES:.cpp=.o)
+endif
 
 
 # Make Targets
 targetLib = $(targetLibName)$(libExt)
 
+
 # ALL
-all: $(targetLib)
+all: $(targetLib) UnitTestDLL.exe
+
 
 # CLEAN
 clean:
 	@echo "Cleaning $(targetLib)...  "
 	$(RM)
 
-# Build targetLib
+# Unit Test
 # Windows
-$(targetLibName).dll: $(SOURCES)
-	@echo Start to build lib on Win
-	if not exist bin md bin
-	$(CXX) $(CXXFLAGS) -c -MMD -MP $(LDFLAGS) -o $(BINDIR)/$(targetLib) $(SOURCES)
+UnitTestDLL.exe: UnitTestDLL/UnitTestDLL.cpp
+	@echo "Building UnitTestDLL.exe"
+	$(CXX) -g -std=c++11 UnitTestDLL/UnitTestDLL.cpp -o bin/UnitTestDLL.exe
+
+# Build .dll/.so
+# Windows
+$(targetLibName).dll: $(OBJECTSWIN)
+	@echo "Linking $(targetLib) ..."
+	if not exist $(OBJDIR) md $(OBJDIR)
+	$(CXX) $(LDFLAGS) $(BINDIR)/$(targetLib) $(OBJECTSWIN) -Wl,--out-implib,$(BINDIR)/$(targetLib).a
+
+
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
+	@echo "Compiling objects for $(targetLib) ..."
+	if not exist $(OBJDIR) md $(OBJDIR)
+	$(CXX) $(CXXFLAGS) $(SOURCES) -o $@
+
 
 # Mac Linux
-$(targetLibName).so: $(OBJECTS)
-	@echo $(targetLibName)
-	mkdir -p bin
-	$(CXX) $(CXXFLAGS) -c -MMD -MP $(LDFLAGS) -o $(BINDIR)$/(targetLib) $(OBJECTS)
+$(targetLibName).so: $(OBJECTSMACLIN)
+	@echo "Linking $(targetLib) ..."
+	mkdir -p $(OBJDIR)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(BINDIR)/(targetLib) $(OBJECTSMACLIN)
