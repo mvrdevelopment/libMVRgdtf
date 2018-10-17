@@ -16,18 +16,14 @@
 #define GS_HIDDEN_VISIBILITY	__declspec(dllimport)
 #endif // EXPORT_SYMBOLS
 
-	
-
 #define WIN32_LEAN_AND_MEAN             // Selten verwendete Komponenten aus Windows-Headern ausschlieﬂen
 // Windows-Headerdateien
 #include <windows.h>
 
 #elif GS_LIN
-
 #define GS_HIDDEN_VISIBILITY	
 
 #elif GS_MAC
-
 #define GS_HIDDEN_VISIBILITY
 
 #endif
