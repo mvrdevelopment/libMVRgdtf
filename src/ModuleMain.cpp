@@ -5,18 +5,10 @@
 //
 
 
-#include "StdAfx.h"
-#include "VectorworksMVR.h"
-#include "IMediaRessourceVectorInterface.h"
+#include "Prefix/StdAfx.h"
+#include "Include/VectorworksMVR.h"
+#include "Include/IMediaRessourceVectorInterface.h"
 #include "Implementation/CMediaRessourceVectorImpl.h"
-#include "../../../../Core/Source/Interfaces/VectorWorks/Filing/FileIdentifier.h"
-#include "../../../../Core/Source/Interfaces/VectorWorks/Filing/FolderIdentifier.h"
-#include "../../../../Core/Source/Interfaces/VectorWorks/Filing/ZIPFileImpl.h"
-#include "../../../Shipping/3DS ImportExport/3DS Library/Source/ImportExportObject3DSImpl.h"
-#include "../../../Shipping/Support/Source/XMLLib/XMLFileImpl.h"
-#include "../../../Shipping/Support/Source/XMLLib/XMLFileNodeImpl.h"
-#include "Wrapper/RawOSFileimpl.h"
-#include "Wrapper/SDKImpl.h"
 
 // GDTF stuff
 #include "Implementation/CGdtfFixture.h"

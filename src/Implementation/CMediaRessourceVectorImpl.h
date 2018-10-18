@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------
 #pragma once
 
-#include "SceneDataExchange.h"
+#include "../SceneDataExchange.h"
 #include "CGeometryReferenceImpl.h"
 #include "CPositionImpl.h"
 #include "CSceneDataProviderImpl.h"

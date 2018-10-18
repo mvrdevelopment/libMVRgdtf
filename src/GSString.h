@@ -128,7 +128,7 @@ typedef std::basic_string<TXChar> StdUStr;
 //#######################################################################################
 // TXString class
 //#######################################################################################
-class GS_HIDDEN_VISIBILITY TXString
+class TXString
 {
 public:
 
@@ -297,7 +297,7 @@ public:
 	TXString& Insert(size_t pos, unsigned char ch);
 	TXString& Insert(size_t pos, UCChar ch);
 	TXString& Insert(size_t pos, wchar_t ch);
-	TXString& Insert(size_t pos, int ch);						// e.g. 0xA5, '¥'
+	TXString& Insert(size_t pos, int ch);						// e.g. 0xA5, 'ï¿½'
 
 	// Delete characters starting from 'pos' for 'len' characters.
 	TXString& Delete(size_t pos, size_t len = (size_t)-1);
