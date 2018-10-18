@@ -34,3 +34,5 @@
 # Directories
 x64/
 .vs/
+bin/
+obj/
