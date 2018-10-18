@@ -16,7 +16,7 @@ BINDIR	= bin
 # compiler, linker and options
 CXX			= g++					# gnu c++ compiler on all platforms
 CXXFLAGS	= -g -std=c++11	-c		# compiler options
-LDFLAGS	= -shared				# linker options
+LDFLAGS		= -shared				# linker options
 
 
 # set platform compiler, linker and e.t.c. options
@@ -30,7 +30,7 @@ else
 # Linux
     ifeq ($(UNAME_S),Linux)
 		CXXFLAGS	+= -DGS_LIN=1 -MMD -MP 
-		LDFLAGS	+= -DfPIC
+		LDFLAGS		+= -DfPIC
 		libExt		= .so
 		#TODO -f for forced / without delete confirmation
 		RM			= rm $(BINDIR)/*; rm $(OBJDIR)/*
@@ -38,12 +38,14 @@ else
 # Mac
     ifeq ($(UNAME_S),Darwin)
 		CXXFLAGS	+= -DGS_MAC=1 -MMD -MP 
-		LDFLAGS	+= -DfPIC
+		LDFLAGS		+= -DfPIC
 		libExt		= .so
 		#TODO -f for forced / without delete confirmation
 		RM			= rm $(BINDIR)/*; rm $(OBJDIR)/*
     endif
 endif
+
+# This is then the end of Linker Flags, don't add more after this
 LDFLAGS	+= -o
 
 
@@ -74,14 +76,15 @@ clean:
 # Windows
 UnitTestDLL.exe: UnitTestDLL/UnitTestDLL.cpp
 	@echo "Building UnitTestDLL.exe"
-	$(CXX) -g -std=c++11 UnitTestDLL/UnitTestDLL.cpp -o bin/UnitTestDLL.exe
+	$(CXX) -g -std=c++11 -DGS_WIN UnitTestDLL/UnitTestDLL.cpp -o bin/UnitTestDLL.exe -I$(SRCDIR)/ -L$(BINDIR) -l$(targetLibName)
+	bin/UnitTestDLL.exe
 
 # Build .dll/.so
 # Windows
 $(targetLibName).dll: $(OBJECTSWIN)
 	@echo "Linking $(targetLib) ..."
 	if not exist $(OBJDIR) md $(OBJDIR)
-	$(CXX) $(LDFLAGS) $(BINDIR)/$(targetLib) $(OBJECTSWIN) -Wl,--out-implib,$(BINDIR)/$(targetLib).a
+	$(CXX) $(LDFLAGS) $(BINDIR)/$@ $(OBJECTSWIN) -Wl,--out-implib,$(BINDIR)/$(targetLibName).lib
 
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
@@ -94,4 +97,4 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 $(targetLibName).so: $(OBJECTSMACLIN)
 	@echo "Linking $(targetLib) ..."
 	mkdir -p $(OBJDIR)
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(BINDIR)/(targetLib) $(OBJECTSMACLIN)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(BINDIR)/$(targetLib) $(OBJECTSMACLIN)

@@ -3,8 +3,8 @@
 
 #include "pch.h"
 #include <iostream>
-//#include "GSString.h"
-//#include "StdHeaders.h"
+#include "StdHeaders.h"
+#include "GSString.h"
 
 int main()
 {
