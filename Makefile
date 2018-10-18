@@ -34,7 +34,7 @@ else
 		LDFLAGS		+= -DfPIC
 		libExt		= .so
 		#TODO -f for forced / without delete confirmation
-		RM			= rm $(BINDIR)/*; rm $(OBJDIR)/*
+		RM			= rm -r $(BINDIR)/*
     endif
 # Mac
     ifeq ($(UNAME_S),Darwin)
@@ -42,7 +42,7 @@ else
 		LDFLAGS		+= -DfPIC
 		libExt		= .so
 		#TODO -f for forced / without delete confirmation
-		RM			= rm $(BINDIR)/*; rm $(OBJDIR)/*
+		RM			= rm -r $(BINDIR)/*
     endif
 endif
 
@@ -100,17 +100,17 @@ $(TargetTestName).exe: unittest/main.cpp
 	$(BINDIR)/$@
 
 # Mac Linux
-$(TargetLibName): unittest/main.cpp
+$(TargetTestName): unittest/main.cpp
 	@echo "Building $@ ..."
-	$(CXX) $(CXXFLAGS) $(CXXFLAGSUNITTEST) unittest/main.cpp -o $(BINDIR)/$@ -I$(SRCDIR)/ -L$(BINDIR) -l$(TargetLibName)
-	./$@
+	$(CXX) $(CXXFLAGS) $(CXXFLAGSUNITTEST) unittest/main.cpp -o $(BINDIR)/$@ -I$(SRCDIR)/ -L$(BINDIR)/ -lVectorworksMvrGdtf
+	./$(BINDIR)/$@
 
 
 # Build .dll/.so
 # Windows
 $(TargetLibName).dll: $(OBJECTSWIN)
 	@echo "Linking $(TargetLib) ..."
-	if not exist $(OBJDIR) md $(OBJDIR)
+	if not exist $(BINDIR) md $(BINDIR)
 	$(CXX) $(LDFLAGS) -o $(BINDIR)/$@ $(OBJECTSWIN) -Wl,--out-implib,$(BINDIR)/$(TargetLibName).lib
 
 
@@ -121,7 +121,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 
 
 # Mac Linux
-$(TargetLibName).so: $(OBJECTSMACLIN)
+$(TargetLibName).so: $(SOURCES)
 	@echo "Linking $(TargetLib) ..."
-	mkdir -p $(OBJDIR)
-	$(CXX) $(CXXFLAGS) -c $(LDFLAGS) -o $(BINDIR)/$@ $(OBJECTSMACLIN)
+	mkdir -p $(BINDIR)
+	$(CXX) $(CXXFLAGS) -c $(LDFLAGS) -o $(BINDIR)/$@ $(SOURCES)
