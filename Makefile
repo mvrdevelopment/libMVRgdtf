@@ -4,7 +4,8 @@
 
 
 # set library name
-targetLibName	= libVectorworksMvrGdtf
+TargetLibName	= libVectorworksMvrGdtf
+TargetTestName	= UnitTest
 
 
 # folders
@@ -15,11 +16,11 @@ BINDIR	= bin
 
 # compiler, linker and options
 CXX			= g++					# gnu c++ compiler on all platforms
-CXXFLAGS	= -g -std=c++11	-c		# compiler options
+CXXFLAGS	= -g -std=c++11			# compiler options
 LDFLAGS		= -shared				# linker options
 
 
-# set platform compiler, linker and e.t.c. options
+# Library:	set platform compiler, linker and e.t.c. options
 # Windows
 ifeq ($(OS),Windows_NT)
 		CXXFLAGS	+= -DGS_WIN=1 -DEXPORT_SYMBOLS=1
@@ -45,8 +46,25 @@ else
     endif
 endif
 
-# This is then the end of Linker Flags, don't add more after this
-LDFLAGS	+= -o
+
+# UnitTest:	set platform compiler, linker and e.t.c. options
+# Windows
+ifeq ($(OS),Windows_NT)
+		CXXFLAGSUNITTEST	+= -DGS_WIN=1
+		UnitTestExt			= .exe
+else
+    UNAME_S := $(shell uname -s)
+# Linux
+    ifeq ($(UNAME_S),Linux)
+		CXXFLAGSUNITTEST	+= -DGS_LIN=1 -MMD -MP 
+		UnitTestExt			=
+    endif
+# Mac
+    ifeq ($(UNAME_S),Darwin)
+		CXXFLAGSUNITTEST	+= -DGS_MAC=1 -MMD -MP 
+		UnitTestExt			=
+    endif
+endif
 
 
 # What to compile and link
@@ -60,41 +78,50 @@ endif
 
 
 # Make Targets
-targetLib = $(targetLibName)$(libExt)
-
+TargetLib	= $(TargetLibName)$(libExt)
+TargetTest	= $(TargetTestName)$(UnitTestExt) 
 
 # ALL
-all: $(targetLib) UnitTestDLL.exe
+all: $(TargetLib)
 
+# UnitTest
+test: $(TargetTest)
 
 # CLEAN
 clean:
-	@echo "Cleaning $(targetLib)...  "
+	@echo "Cleaning $(TargetLib)...  "
 	$(RM)
 
 # Unit Test
 # Windows
-UnitTestDLL.exe: UnitTestDLL/UnitTestDLL.cpp
-	@echo "Building UnitTestDLL.exe"
-	$(CXX) -g -std=c++11 -DGS_WIN UnitTestDLL/UnitTestDLL.cpp -o bin/UnitTestDLL.exe -I$(SRCDIR)/ -L$(BINDIR) -l$(targetLibName)
-	bin/UnitTestDLL.exe
+$(TargetTestName).exe: unittest/main.cpp
+	@echo "Building $@ ..."
+	$(CXX) $(CXXFLAGS) $(CXXFLAGSUNITTEST) unittest/main.cpp -o $(BINDIR)/$@ -I$(SRCDIR)/ -L$(BINDIR) -l$(TargetLibName)
+	$(BINDIR)/$@
+
+# Mac Linux
+$(TargetLibName): unittest/main.cpp
+	@echo "Building $@ ..."
+	$(CXX) $(CXXFLAGS) $(CXXFLAGSUNITTEST) unittest/main.cpp -o $(BINDIR)/$@ -I$(SRCDIR)/ -L$(BINDIR) -l$(TargetLibName)
+	./$@
+
 
 # Build .dll/.so
 # Windows
-$(targetLibName).dll: $(OBJECTSWIN)
-	@echo "Linking $(targetLib) ..."
+$(TargetLibName).dll: $(OBJECTSWIN)
+	@echo "Linking $(TargetLib) ..."
 	if not exist $(OBJDIR) md $(OBJDIR)
-	$(CXX) $(LDFLAGS) $(BINDIR)/$@ $(OBJECTSWIN) -Wl,--out-implib,$(BINDIR)/$(targetLibName).lib
+	$(CXX) $(LDFLAGS) -o $(BINDIR)/$@ $(OBJECTSWIN) -Wl,--out-implib,$(BINDIR)/$(TargetLibName).lib
 
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
-	@echo "Compiling objects for $(targetLib) ..."
+	@echo "Compiling objects for $(TargetLib) ..."
 	if not exist $(OBJDIR) md $(OBJDIR)
-	$(CXX) $(CXXFLAGS) $(SOURCES) -o $@
+	$(CXX) $(CXXFLAGS) -c $(SOURCES) -o $@
 
 
 # Mac Linux
-$(targetLibName).so: $(OBJECTSMACLIN)
-	@echo "Linking $(targetLib) ..."
+$(TargetLibName).so: $(OBJECTSMACLIN)
+	@echo "Linking $(TargetLib) ..."
 	mkdir -p $(OBJDIR)
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(BINDIR)/$(targetLib) $(OBJECTSMACLIN)
+	$(CXX) $(CXXFLAGS) -c $(LDFLAGS) -o $(BINDIR)/$@ $(OBJECTSMACLIN)
