@@ -2,6 +2,7 @@
 //----- Copyright deersoft 2015 - 2017 www.deersoft.de
 //-----------------------------------------------------------------------------
 #pragma once
+#include "Prefix/StdAfx.h"
 #include "CieColor.h"
 #include "Include/GDTFPrefix.h"
 

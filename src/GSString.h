@@ -535,6 +535,7 @@ private:
 #endif
 
 };
+typedef std::vector<TXString> TXStringArray;
 
 
 // Comparison operators
