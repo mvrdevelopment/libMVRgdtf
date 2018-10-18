@@ -5,7 +5,7 @@
 
 # set library name
 TargetLibName	= libVectorworksMvrGdtf
-TargetTestName	= UnitTest
+TargetTestName	= vectorworksMvrGdtfTestApp
 
 
 # folders
