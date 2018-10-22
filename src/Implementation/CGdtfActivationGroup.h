@@ -3,13 +3,13 @@
 //-----------------------------------------------------------------------------
 #pragma once
 
-#include "CGeometryProviderWrapper.h"
+#include "../Include/IMediaRessourceVectorInterface.h"
 #include "../GDTFManager.h"
 
 namespace VectorworksMVR
 {
     //----------------------------------------------------------------------------------------
-    class CGdtfActivationGroupImpl : public VectorworksMVR::VCOMImpl<IGdtfActivationGroup>
+    class CGdtfActivationGroupImpl : public VCOMImpl<IGdtfActivationGroup>
     {
     public:
         CGdtfActivationGroupImpl();

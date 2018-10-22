@@ -21,7 +21,7 @@ namespace VectorWorks
 
 		// tools
 		public:
-			static FolderSpecifier		TranslateFolderSpec(EFolderSpecifier folderSpec);
+			static EFolderSpecifier		TranslateFolderSpec(EFolderSpecifier folderSpec);
 
 		// IFolderIdentifier
 		public:
@@ -51,8 +51,8 @@ namespace VectorWorks
 
 		// IVWUnknown
 		public:
-			virtual Sint32	VCOM_CALLTYPE	AddRef();
-			virtual Sint32	VCOM_CALLTYPE	Release();
+			virtual uint32_t	VCOM_CALLTYPE	AddRef();
+			virtual uint32_t	VCOM_CALLTYPE	Release();
 
 		// Tools
 		public:
@@ -60,7 +60,7 @@ namespace VectorWorks
 			static void			ConvertFoldername(TXString& outName);
 
 		private:
-			bool				EnumerateContents(IFolderContentListener* pListener, const TFolderIdentifier& folder, bool bReqursive, VCOMError& outError);
+			bool				EnumerateContents(IFolderContentListener* pListener, const IFolderIdentifierPtr& folder, bool bReqursive, VCOMError& outError);
 			
 		private:
 			Sint32				fRefCnt;

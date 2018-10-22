@@ -3,10 +3,12 @@
 //-----------------------------------------------------------------------------
 #pragma once
 
+#include "../Include/IMediaRessourceVectorInterface.h"
+
 namespace VectorworksMVR
 {	
 	//----------------------------------------------------------------------------------------
-	class CGeometryReferenceImpl : public VectorworksMVR::VCOMImpl<IGeometryReference>
+	class CGeometryReferenceImpl : public VCOMImpl<IGeometryReference>
 	{
 	public:
 		CGeometryReferenceImpl();

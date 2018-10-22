@@ -3,12 +3,12 @@
 //-----------------------------------------------------------------------------
 #pragma once
 
-#include "CGeometryProviderWrapper.h"
+#include "../Include/IMediaRessourceVectorInterface.h"
 
 namespace VectorworksMVR
 {	
 	//----------------------------------------------------------------------------------------
-	class CClassImpl : public VectorworksMVR::VCOMImpl<IClass>
+	class CClassImpl : public VCOMImpl<IClass>
 	{
 	public:
 		CClassImpl();

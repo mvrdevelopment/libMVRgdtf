@@ -3,13 +3,13 @@
 //-----------------------------------------------------------------------------
 #pragma once
 
-#include "CGeometryProviderWrapper.h"
+#include "../Include/IMediaRessourceVectorInterface.h"
 #include "../GDTFManager.h"
 
 namespace VectorworksMVR
 {
     //----------------------------------------------------------------------------------------
-    class CGdtfDmxChannelFunctionImpl : public VectorworksMVR::VCOMImpl<IGdtfDmxChannelFunction>
+    class CGdtfDmxChannelFunctionImpl : public VCOMImpl<IGdtfDmxChannelFunction>
     {
     public:
         CGdtfDmxChannelFunctionImpl();

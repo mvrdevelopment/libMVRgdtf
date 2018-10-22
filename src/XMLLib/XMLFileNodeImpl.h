@@ -1,6 +1,8 @@
 #pragma once
 #include "../Include/VectorworksMVR.h"
 
+#include "XercesSupport.h"
+
 namespace XML
 {
 	using namespace VectorWorks::Filing;
@@ -51,15 +53,14 @@ namespace XML
 		
 	// IVWUnknown
 	public:
-		virtual Sint32	VCOM_CALLTYPE	AddRef();
-		virtual Sint32	VCOM_CALLTYPE	Release();
+		virtual uint32_t	VCOM_CALLTYPE	AddRef();
+		virtual uint32_t	VCOM_CALLTYPE	Release();
 
 	private:
 		VCOMError						FindAttribute(const TXString& attrName, DOMAttrPtr& outFoundAttr);
 
 	private:
 		Sint32				fRefCnt;
-		CallBackPtr			fCBP;
 	
 		DOMDocumentPtr		fpDomDocument;
 		DOMNodePtr			fpNode;

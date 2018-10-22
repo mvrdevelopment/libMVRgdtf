@@ -113,8 +113,8 @@ public:
 
 // IVWUnknown
 public:
-    virtual Sint32 VCOM_CALLTYPE        AddRef()    { fRefCnt++; return fRefCnt; }
-    virtual Sint32 VCOM_CALLTYPE        Release()
+    virtual uint32_t VCOM_CALLTYPE        AddRef()    { fRefCnt++; return fRefCnt; }
+    virtual uint32_t VCOM_CALLTYPE        Release()
                                     {
                                         ASSERTN( kEveryone, fRefCnt > 0 );
                                         if ( fRefCnt > 0 ) {
@@ -137,5 +137,39 @@ protected:
 
 protected:
     RefNumType    fRefCnt;
+    IVWUnknown* fParent;
+};
+
+// Local VCOM interface implementation with late destruction
+template<class Interface> class VCOMImpl : public Interface
+{
+public:
+                VCOMImpl()						{ fRefCnt = 0; fParent = NULL; }
+                VCOMImpl(IVWUnknown* parent)	{ fRefCnt = 0; fParent = parent; if ( fParent ) { fParent->AddRef(); } }
+    virtual		~VCOMImpl()						{ }
+
+// IVWUnknown
+public:
+    virtual uint32_t VCOM_CALLTYPE		AddRef()	{ fRefCnt++; return fRefCnt; }
+    virtual uint32_t VCOM_CALLTYPE		Release()
+                                                    {
+                                                        ASSERTN( kEveryone, fRefCnt > 0 );
+                                                        if ( fRefCnt > 0 ) {
+                                                            fRefCnt --;
+                                                        }
+                                                        if ( fRefCnt == 0 ) {
+                                                            delete this;
+                                                            // exit immediatelly. 'this' may no longer be valid
+                                                            return 0;
+                                                        }
+                                                        return fRefCnt;
+                                                    }
+
+protected:
+    // notification when this instance ref count goes down to zero
+    virtual void					OnRefCountZero() { if ( fParent ) { fParent->Release(); } fParent = NULL; }
+
+protected:
+    RefNumType	fRefCnt;
     IVWUnknown* fParent;
 };

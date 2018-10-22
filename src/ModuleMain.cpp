@@ -33,6 +33,7 @@
 #include "Implementation/CGdtfDmxChannelSet.h"
 #include "Implementation/CGdtfBreak.h"
 #include "Implementation/CGdtfWheelSlotPrismFacet.h"
+#include "Implementation/CGeometryReferenceImpl.h"
 
 // XML
 #include "XMLLib/XMLFileNodeImpl.h"
@@ -117,18 +118,18 @@ extern "C" VectorworksMVR::VCOMError VW_EXPORT VWQueryInterface(const Vectorwork
     else if (iid == VectorworksMVR::IID_GdtfBreak)
         resultInterface = new VectorworksMVR::CGdtfBreakImpl();
     else if (iid == VectorworksMVR::IID_GdtfWheelSlotPrismFacet)
-        resultInterface = new VectorworksMVR::CGdtfWheelSlotPrismFacetImpl();
-	else if ( iid == VectorWorks::Filing::IID_FileIdentifier )
+        resultInterface = new CGdtfWheelSlotPrismFacetImpl();
+	else if (iid == VectorWorks::Filing::IID_FileIdentifier)
 		resultInterface = new CFileIdentifier();
-	else if ( iid == VectorWorks::Filing::IID_FolderIdentifier )
+	else if (iid == VectorWorks::Filing::IID_FolderIdentifier )
 		resultInterface = new CFolderIdentifier();
-	else if ( iid == VectorWorks::Filing::IID_ZIPFile )
+	else if (iid == VectorWorks::Filing::IID_ZIPFile)
 		resultInterface = new CZIPFileImpl();
-	else if ( iid == VectorWorks::Filing::IID_RawOSFile )
+	else if (iid == VectorWorks::Filing::IID_RawOSFile)
 		resultInterface = new CRawOSFileImpl();
-	else if ( iid == XML::IID_XMLFile )
+	else if (iid == XML::IID_XMLFile)
 		resultInterface = new XML::CXMLFileImpl();
-	else if ( iid == XML::IID_XMLFileNode )
+	else if (iid == XML::IID_XMLFileNode)
 		resultInterface = new XML::CXMLFileNodeImpl();
 	
 	// determine the result values

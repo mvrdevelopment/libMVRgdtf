@@ -3,12 +3,12 @@
 //-----------------------------------------------------------------------------
 #pragma once
 
-#include "CGeometryProviderWrapper.h"
+#include "../Include/IMediaRessourceVectorInterface.h"
 
 namespace VectorworksMVR
 {	
 	//----------------------------------------------------------------------------------------
-	class CSymDefImpl : public VectorworksMVR::VCOMImpl<ISymDef>
+	class CSymDefImpl : public VCOMImpl<ISymDef>
 	{
 	public:
 		CSymDefImpl();
@@ -30,8 +30,6 @@ namespace VectorworksMVR
 	private:
 		SceneData::SceneDataSymDefObj*	fPtr;
 		SceneData::SceneDataExchange*	fContext;
-
-		std::vector<CGeometryProviderWrapper*>	farrGeometryWrappers;
 	};
 	
 	const VWIID IID_ISymDef = { 0x7d668c6d, 0x6fdf, 0x4f84, {0x90, 0x0d, 0x89, 0xc3, 0xdd, 0xb5, 0x05, 0xac}};

@@ -3,13 +3,13 @@
 //-----------------------------------------------------------------------------
 #pragma once
 
-#include "CGeometryProviderWrapper.h"
+#include "../Include/IMediaRessourceVectorInterface.h"
 #include "../GDTFManager.h"
 
 namespace VectorworksMVR
 {
     //----------------------------------------------------------------------------------------
-    class CGdtfGeometryImpl : public VectorworksMVR::VCOMImpl<IGdtfGeometry>
+    class CGdtfGeometryImpl : public VCOMImpl<IGdtfGeometry>
     {
     public:
         CGdtfGeometryImpl();

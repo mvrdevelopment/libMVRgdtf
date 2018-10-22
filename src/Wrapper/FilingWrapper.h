@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../FolderSpecifiers.h"
+
 typedef Uint32	StorageAttributes;
 //General Access
 const StorageAttributes kStorageAttrRead				= 0x00000001;
@@ -137,7 +139,7 @@ private:
 };
 
 // ------------------------------------------------------------------------------------
-bool GetFolder(FolderSpecifier inWhichFolder, TFolderIdentifier& outFolderID,  bool inCreateIfMissing = false);
+bool GetFolder(EFolderSpecifier inWhichFolder, TFolderIdentifier& outFolderID,  bool inCreateIfMissing = false);
 
 
 bool GetFolderAppDataPath(TXString& outPath);

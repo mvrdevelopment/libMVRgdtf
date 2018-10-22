@@ -3,12 +3,12 @@
 //-----------------------------------------------------------------------------
 #pragma once
 
-#include "CGeometryProviderWrapper.h"
+#include "../Include/IMediaRessourceVectorInterface.h"
 
 namespace VectorworksMVR
 {
 	//----------------------------------------------------------------------------------------
-	class CSceneObjImpl : public VectorworksMVR::VCOMImpl<ISceneObj>
+	class CSceneObjImpl : public VCOMImpl<ISceneObj>
 	{
 	public:
 		CSceneObjImpl();
@@ -68,8 +68,6 @@ namespace VectorworksMVR
 		SceneData::SceneDataObjWithMatrix*	fPtr;
 		SceneData::SceneDataExchange*		fContext;
 		ESceneObjType						fType;
-
-		std::vector<CGeometryProviderWrapper*>	farrGeometryWrappers;
 	};
 	
 	const VWIID IID_SceneObject = { 0xc7186c7e, 0x606b, 0x412d, {0xbe, 0xe0, 0xb9, 0x7e, 0xd8, 0xf6, 0x03, 0xa3}};

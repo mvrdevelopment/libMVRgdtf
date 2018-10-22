@@ -3,13 +3,13 @@
 //-----------------------------------------------------------------------------
 #pragma once
 
-#include "CGeometryProviderWrapper.h"
+#include "../Include/IMediaRessourceVectorInterface.h"
 #include "../GDTFManager.h"
 
 namespace VectorworksMVR
 {
     //----------------------------------------------------------------------------------------
-    class CGdtfPhysicalEmitterImpl : public VectorworksMVR::VCOMImpl<IGdtfPhysicalEmitter>
+    class CGdtfPhysicalEmitterImpl : public VCOMImpl<IGdtfPhysicalEmitter>
     {
     public:
         CGdtfPhysicalEmitterImpl();

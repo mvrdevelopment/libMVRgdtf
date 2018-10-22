@@ -4,7 +4,7 @@
 #pragma once
 
 #include "../SceneDataExchange.h"
-#include "CGeometryReferenceImpl.h"
+#include "../Include/IMediaRessourceVectorInterface.h"
 #include "CPositionImpl.h"
 #include "CSceneDataProviderImpl.h"
 #include "CSceneObjImpl.h"
@@ -13,7 +13,7 @@
 
 namespace VectorworksMVR
 {
-	class CMediaRessourceVectorImpl : public VectorworksMVR::VCOMImpl<IMediaRessourceVectorInterface>
+	class CMediaRessourceVectorImpl : public VCOMImpl<IMediaRessourceVectorInterface>
 	{
 	public:
 				CMediaRessourceVectorImpl();

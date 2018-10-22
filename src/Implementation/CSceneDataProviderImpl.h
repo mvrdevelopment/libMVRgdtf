@@ -3,10 +3,12 @@
 //-----------------------------------------------------------------------------
 #pragma once
 
+#include "../Include/IMediaRessourceVectorInterface.h"
+
 namespace VectorworksMVR
 {	
 	//----------------------------------------------------------------------------------------
-	class CSceneDataProviderImpl : public VectorworksMVR::VCOMImpl<ISceneDataProvider>
+	class CSceneDataProviderImpl : public VCOMImpl<ISceneDataProvider>
 	{
 	public:
 		CSceneDataProviderImpl();

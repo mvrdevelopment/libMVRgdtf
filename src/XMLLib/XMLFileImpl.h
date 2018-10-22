@@ -1,48 +1,14 @@
 #pragma once
 
-#include "xercesc/framework/LocalFileFormatTarget.hpp"
-#include "xercesc/framework/MemBufInputSource.hpp"
-#include "xercesc/framework/MemBufFormatTarget.hpp"
+#include "XercesSupport.h"
 
 
-#include "xercesc/parsers/XercesDOMParser.hpp"
-#include "xercesc/parsers/SAXParser.hpp"
-
-#include "xercesc/dom/DOM.hpp"
-#include "xercesc/dom/DOMError.hpp"
-#include "xercesc/dom/DOMErrorHandler.hpp"
-
-#include "xercesc/sax/HandlerBase.hpp"
-#include "xercesc/sax2/SAX2XMLReader.hpp"
-#include "xercesc/sax2/XMLReaderFactory.hpp"
-#include "xercesc/sax2/ContentHandler.hpp"
-#include "xercesc/sax2/DefaultHandler.hpp"
-#include "xercesc/sax2/Attributes.hpp"
-
-#include "xercesc/validators/common/Grammar.hpp"
-#include "xercesc/validators/schema/SchemaValidator.hpp"
-
-#include "xercesc/util/PlatformUtils.hpp"
-#include "xercesc/util/XMLChar.hpp"
-#include "xercesc/util/XMLString.hpp"
-#include "xercesc/util/XMLUniDefs.hpp"
-#include "xercesc/util/Base64.hpp"
-#include "xercesc/util/XMLMsgLoader.hpp"
-
-XERCES_CPP_NAMESPACE_USE
 
 namespace XML
 {
 	using namespace VectorWorks::Filing;
 
-	// ----------------------------------------------------------------------------------------------------
-	typedef DOMImplementation *		DOMImplementationPtr;
-	typedef	XercesDOMParser *		XercesDOMParserPtr;
-	typedef	DOMErrorHandler *		DOMErrorHandlerPtr;
-	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument * DOMDocumentPtr;
-	typedef DOMElement *			DOMElementPtr;
-	typedef DOMNode *				DOMNodePtr;
-	typedef	DOMAttr *				DOMAttrPtr;
+
 
 	// ----------------------------------------------------------------------------------------------------
 	class CXMLFileImpl : public IXMLFile, DOMErrorHandler
@@ -74,8 +40,8 @@ namespace XML
 
 	// IVWUnknown
 	public:
-		virtual Sint32	VCOM_CALLTYPE	AddRef();
-		virtual Sint32	VCOM_CALLTYPE	Release();
+		virtual uint32_t	VCOM_CALLTYPE	AddRef();
+		virtual uint32_t	VCOM_CALLTYPE	Release();
 
 	// DOMErrorHandler
 	public:
@@ -91,7 +57,7 @@ namespace XML
 		static	void					SetLastError(VCOMError error);
 		static	bool					IsNameXMLValid(const XMLCh* szString, size_t len);
 		static	EXMLFileError			GetLastEXMLFileError();
-		static void						Tokenize(const TXString& string, VWFC::Tools::TXStringSTLArray& outArray, const char* szTokens, size_t tokensLen, bool doStopTokenizeForSpecialCh = false, char stopStartCh = '\'');
+		static void						Tokenize(const TXString& string, TXStringArray& outArray, const char* szTokens, size_t tokensLen, bool doStopTokenizeForSpecialCh = false, char stopStartCh = '\'');
 
 	private:
 		typedef EXMLFileError (*TWriteCallback)(void* pData, size_t dataSize, void* pEnv);
@@ -100,7 +66,6 @@ namespace XML
 
 	private:
 		Sint32					fRefCnt;
-		CallBackPtr				fCBP;
 
 		DOMImplementationPtr	fpImpl;
 

@@ -3,10 +3,12 @@
 //-----------------------------------------------------------------------------
 #pragma once
 
+#include "../Include/IMediaRessourceVectorInterface.h"
+
 namespace VectorworksMVR
 {	
 	//----------------------------------------------------------------------------------------
-	class CPositionImpl : public VectorworksMVR::VCOMImpl<IPosition>
+	class CPositionImpl : public VCOMImpl<IPosition>
 	{
 	public:
 		CPositionImpl();

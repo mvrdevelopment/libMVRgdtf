@@ -51,8 +51,8 @@ namespace VectorWorks
 
 		// IVWUnknown
 		public:
-			virtual Sint32	VCOM_CALLTYPE	AddRef();
-			virtual Sint32	VCOM_CALLTYPE	Release();
+			virtual uint32_t	VCOM_CALLTYPE	AddRef();
+			virtual uint32_t	VCOM_CALLTYPE	Release();
 
 		// Tools
 		public:
