@@ -74,7 +74,7 @@ namespace VectorWorks
 			virtual VCOMError VCOM_CALLTYPE	AddFile(const TXString& path, IFileIdentifier* inputFile) = 0;
 
 			virtual VCOMError VCOM_CALLTYPE	RemoveFile(const TXString& path) = 0;
-			virtual VCOMError VCOM_CALLTYPE	MoveFile(const TXString& path) = 0;
+			//virtual VCOMError VCOM_CALLTYPE	MoveFile(const TXString& path) = 0;
 		};
 		typedef VCOMPtr<IZIPFile>		IZIPFilePtr;
 	}

@@ -26,6 +26,7 @@
 #include "../Include/VectorworksMVR.h"
 using namespace VectorworksMVR;
 
+#define VCOM_SUCCEEDED(x) (x==0)
 //---------------------------------------------------------------------------------
 // Add defines
 
@@ -52,8 +53,10 @@ using namespace VectorworksMVR;
 #include "../VWMathUtils.h"
 #include "../VWTransformMatrix.h"
 #include "../UUID.h"
+#include "../RGBColor.h"
 
 using namespace VWFC::Math;
+using namespace VWFC::Tools;
 
 // Interfaces
 #include "../Interface/IFileIdentifier.h"
@@ -88,9 +91,51 @@ using namespace VWFC::Math;
 #include <windows.h>
 
 #elif GS_LIN
-#define GS_HIDDEN_VISIBILITY	
+#define GS_HIDDEN_VISIBILITY	 __attribute__((visibility("default")))
 
 #elif GS_MAC
-#define GS_HIDDEN_VISIBILITY
+#define GS_HIDDEN_VISIBILITY    __attribute__((visibility("default")))
 
 #endif
+
+#define VW_EXPORT GS_HIDDEN_VISIBILITY 
+
+
+typedef size_t RefNumType;
+
+// VCOM interface implementation with immediate destruction
+template<class Interface> class VCOMImmediateImpl : public Interface
+{
+public:
+                VCOMImmediateImpl()                        { fRefCnt = 0; fParent = NULL; }
+                VCOMImmediateImpl(IVWUnknown* parent)    { fRefCnt = 0; fParent = parent; if ( fParent ) { fParent->AddRef(); } }
+    virtual        ~VCOMImmediateImpl()                    { }
+
+// IVWUnknown
+public:
+    virtual Sint32 VCOM_CALLTYPE        AddRef()    { fRefCnt++; return fRefCnt; }
+    virtual Sint32 VCOM_CALLTYPE        Release()
+                                    {
+                                        ASSERTN( kEveryone, fRefCnt > 0 );
+                                        if ( fRefCnt > 0 ) {
+                                            fRefCnt --;
+
+                                            // mechanizm for immediate delete of the interface instance
+                                            if ( fRefCnt == 0 ) {
+                                                this->OnRefCountZero();
+                                                //::GS_VWNotifyDeleteInterface( this );
+                                                // EXIT IMMEDIATELY! 'this' no longer exist!!!
+                                                return 0;
+                                            }
+                                        }
+                                        return fRefCnt;
+                                    }
+
+protected:
+    // notification when this instance ref count goes down to zero
+    virtual void                    OnRefCountZero() { if ( fParent ) { fParent->Release(); } fParent = NULL; }
+
+protected:
+    RefNumType    fRefCnt;
+    IVWUnknown* fParent;
+};

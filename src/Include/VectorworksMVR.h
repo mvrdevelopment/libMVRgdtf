@@ -12,14 +12,14 @@ namespace VectorworksMVR
 	// ---------------------------------------------------------------------------------------------------
 	#ifdef _WIN32
 		#ifdef VECTORWORKS_MVR_IMPL
-			#define VW_EXPORT			__declspec(dllexport)
+			#define EXPORT_MVR_CLASS			__declspec(dllexport)
 		#else
-			#define VW_EXPORT			__declspec(dllimport)
+			#define EXPORT_MVR_CLASS			__declspec(dllimport)
 		#endif
 	#elif _LINUX
-		#define VW_EXPORT			__attribute__((visibility("default")))
+		#define EXPORT_MVR_CLASS			__attribute__((visibility("default")))
 	#else
-		#define VW_EXPORT			__attribute__((visibility("default")))
+		#define EXPORT_MVR_CLASS			__attribute__((visibility("default")))
 	#endif
 	
 	// ---------------------------------------------------------------------------------------------------
@@ -121,6 +121,7 @@ namespace VectorworksMVR
 	const VCOMError		kVCOMError_NoInterface		= 5;
 	const VCOMError		kVCOMError_NotImplemented	= 6;
 	const VCOMError		kVCOMError_InvalidArg		= 15;
+	const VCOMError		kVCOMError_NoInstance		= 16;
 	
 	const VCOMError		kVCOMError_NoValidContainerObj	= 457;
 	const VCOMError		kVCOMError_NoLayerObj			= 458;
@@ -131,7 +132,7 @@ namespace VectorworksMVR
 	const VCOMError		kVCOMError_WrongGeometryType	= 462;
 
 	// ---------------------------------------------------------------------------------------------------
-	extern "C" VCOMError VW_EXPORT VWQueryInterface(const VWIID& iid, IVWUnknown** outInterface);
+	extern "C" VCOMError EXPORT_MVR_CLASS VWQueryInterface(const VWIID& iid, IVWUnknown** outInterface);
 
 	// ---------------------------------------------------------------------------------------------------
 	template<class T> class VCOMPtr

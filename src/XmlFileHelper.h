@@ -1,7 +1,9 @@
 //-----------------------------------------------------------------------------
 //----- Copyright deersoft 2015 - 2017 www.deersoft.de
 //-----------------------------------------------------------------------------
+
 #pragma once
+
 #include "GDTFManager.h"
 #include "XmlFileHelper.h"
 #include "CieColor.h"
@@ -52,7 +54,7 @@ namespace SceneData
 	class GdtfConverter
 	{
 	public:
-		static TXString	ConvertUUID(const VWFC::UUID& uuid);
+		static TXString	ConvertUUID(const VWFC::Tools::UUID& uuid);
 		static TXString	ConvertColor(const CCieColor& color);
 		static TXString	ConvertDouble(double value);
 		static TXString	ConvertInteger(Sint32 value);
@@ -74,7 +76,7 @@ namespace SceneData
 		static TXString ConvertDMXInvertEnum(EGDTFDmxInvert value);
 		static TXString ConvertEncoderInvertEnum(EGDTFEncoderInvert value);
 		
-		static bool		ConvertUUID(			const TXString& value, VWFC::UUID&						uuid);
+		static bool		ConvertUUID(			const TXString& value, VWFC::Tools::UUID&					uuid);
 		static bool		ConvertColor(			const TXString& value, CCieColor&					color);
 		static bool		ConvertDouble(			const TXString& value, double&						doubleValue);
 		static bool		ConvertMatrix(			const TXString& value, VWTransformMatrix&			ma);

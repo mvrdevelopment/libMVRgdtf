@@ -4,12 +4,12 @@
 #pragma once
 
 #include "CGeometryProviderWrapper.h"
-#include "GDTFManager.h"
+#include "../GDTFManager.h"
 
 namespace VectorworksMVR
 {
     //----------------------------------------------------------------------------------------
-    class CGdtfWheelSlotPrismFacetImpl : public VectorworksMVR::VCOMImpl<IGdtfWheelSlotPrismFacet>
+    class CGdtfWheelSlotPrismFacetImpl : public VCOMImpl<IGdtfWheelSlotPrismFacet>
     {
     public:
         CGdtfWheelSlotPrismFacetImpl();

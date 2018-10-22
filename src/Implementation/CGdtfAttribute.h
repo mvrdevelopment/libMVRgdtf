@@ -4,7 +4,7 @@
 #pragma once
 
 #include "CGeometryProviderWrapper.h"
-#include "GDTFManager.h"
+#include "../GDTFManager.h"
 
 namespace VectorworksMVR
 {

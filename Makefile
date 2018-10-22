@@ -26,6 +26,7 @@ ifeq ($(OS),Windows_NT)
 		CXXFLAGS	+= -DGS_WIN=1 -DEXPORT_SYMBOLS=1
 		libExt		= .dll
 		RM			= if exist $(BINDIR)\* del /q $(BINDIR)\* & if exist $(OBJDIR)\* del /q $(OBJDIR)\*
+		MV 			= move *.o $(OBJDIR)/
 else
     UNAME_S := $(shell uname -s)
 # Linux
@@ -35,6 +36,8 @@ else
 		libExt		= .so
 		#TODO -f for forced / without delete confirmation
 		RM			= rm -r $(BINDIR)/*
+		MV 			= mv *.o $(OBJDIR)/
+
     endif
 # Mac
     ifeq ($(UNAME_S),Darwin)
@@ -43,6 +46,7 @@ else
 		libExt		= .so
 		#TODO -f for forced / without delete confirmation
 		RM			= rm -r $(BINDIR)/*
+		MV 			= mv *.o $(OBJDIR)/
     endif
 endif
 
@@ -117,7 +121,8 @@ $(TargetLibName).dll: $(OBJECTSWIN)
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	@echo "Compiling objects for $(TargetLib) ..."
 	if not exist $(OBJDIR) md $(OBJDIR)
-	$(CXX) $(CXXFLAGS) -c $(SOURCES) -o $@
+	$(CXX) $(CXXFLAGS) -I$(SRCDIR) -c $(SOURCES)
+	$(MV)
 
 
 # Mac Linux
@@ -125,3 +130,4 @@ $(TargetLibName).so: $(SOURCES)
 	@echo "Linking $(TargetLib) ..."
 	mkdir -p $(BINDIR)
 	$(CXX) $(CXXFLAGS) -c $(LDFLAGS) -o $(BINDIR)/$@ $(SOURCES)
+	$(MV)

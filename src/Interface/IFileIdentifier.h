@@ -49,6 +49,7 @@ namespace VectorWorks
 
 		// ----------------------------------------------------------------------------------------------------
 		typedef VCOMPtr<IFileIdentifier>			IFileIdentifierPtr;
+		typedef std::vector<IFileIdentifierPtr>		TVWArray_IFileIdentifier;
 
 		// ----------------------------------------------------------------------------------------------------
 		// Errors from the filing routines

@@ -63,9 +63,8 @@ namespace SceneData
 	{
 		
 	public:
-		SceneDataGUID(MCObjectHandle handle);
 		SceneDataGUID(const TXString& uuid);
-		SceneDataGUID(const UUID& uuid);
+		SceneDataGUID(const Tools::UUID& uuid);
 		SceneDataGUID(ESceneDataGUIDType type, const TXString& debugMessage);
 		~SceneDataGUID();
 		
@@ -74,20 +73,14 @@ namespace SceneData
 		
 		
 	private:
-		UUID				_uuid;
+		Tools::UUID			_uuid;
 		ESceneDataGUIDType	_type;
 		TXString			_typeEntry;
 		
-		MCObjectHandle		_linkedHandle;
-		bool				_searchedForLinkedHandle;
-		
 	public:
-		ESceneDataGUIDType	GetType() const;
-		MCObjectHandle		TryFindObjectInDrawing(ESearchUuidIn where);
-		TXString			GetUUIDString() const;
-		const VWFC::UUID&	GetUuidObj() const;
-		
-		void				LinkWithNewObject(MCObjectHandle handle);
+		ESceneDataGUIDType			GetType() const;
+		TXString					GetUUIDString() const;
+		const VWFC::Tools::UUID&	GetUuidObj() const;
 	};
 	
 	
@@ -274,7 +267,6 @@ namespace SceneData
 		
 		// Geometry stuff
 		SceneDataGeometryObjArray	fGeometries;
-		MCObjectHandle				fGeometryHandleToExport;
 		
 		
 	public:
@@ -288,7 +280,6 @@ namespace SceneData
 		SceneDataGroupObj*			GetContainer() const;
 		SceneDataObjWithMatrix*		GetNextObject() const;
 		
-		void								SetGeometryHandle(MCObjectHandle handle);
 		void								AddGeometryObj(SceneDataGeoInstanceObjPtr object);
 		const SceneDataGeometryObjArray&	GetGeometryArr() const;
 		
@@ -335,16 +326,11 @@ namespace SceneData
 		TXString				fFileName;
 		TXString				fFileFullPath;
 		
-		// This is needed for the MVR lib, for VW it is always null
-		IGeometryProvider3DS*	fGeometryProvider;
-		
 	public:
 		void			GetTransformMatrix(VWTransformMatrix& matrix) const;
 		void			SetTransformMatrix(const VWTransformMatrix& matrix);
 		const TXString&	GetFileName() const;
 		void			SetFileName(const TXString& fileName);
-		void			SetGeometryProvider(IGeometryProvider3DS* provider);
-		void			GetGeometryReceiver3DS(IGeometryReceiver3DS* receiver, SceneDataExchange* exchange);
 		const TXString& GetFileFullPath(SceneDataExchange* exchange);
 		
 	public:
@@ -607,7 +593,6 @@ namespace SceneData
 		
 		
 		// File Operation Handeling
-		IImportExportObject3DSPtr			fExporter;
 		IFolderIdentifierPtr				fWorkingFolder;
 		bool								fUndoStarted;
 		TFileIdentifierPtrArray				fGeometryFiles;
@@ -636,17 +621,7 @@ namespace SceneData
 		// Export
 		void						InitializeForExport();
 		void						InitializeForImport();
-		bool						ExportGeometry(const SceneDataGUID& guid, MCObjectHandle handle, SceneDataObjWithMatrixPtr object);
-		MCObjectHandle				ImportGeometry(SceneDataGeoInstanceObjPtr object, bool applyOffset);
-		bool						ImportGDTFFile(MCObjectHandle handle, const TXString& fileName, const TXString& dmxMode);
 		IFolderIdentifierPtr        GetWorkingFolder() { return fWorkingFolder; }
-		
-		// This all here is for MVR operation, and will not be used in plugin contect
-		bool						ExportGeometryProvider(IGeometryProvider3DS* provider, TXString& outFileName);
-		bool						ImportGeometryProvider(IGeometryReceiver3DS* provider, const TXString& inFileName);
-		
-	private:
-		SceneDataGeometryObjPtr		ExportGeometryObj(MCObjectHandle handle, const TXString& fileName, SceneDataObjWithMatrixPtr object);
 		
 		// ---------------------------------------------------------------------------------------------------------------------
 		// Create calls
@@ -657,17 +632,7 @@ namespace SceneData
 		SceneDataClassObjPtr		CreateClassObject(const SceneDataGUID& guid, const TXString& name);
 		
 		SceneDataLayerObjPtr		CreateLayerObject(	const SceneDataGUID& guid,									const TXString& name);
-		SceneDataGroupObjPtr		CreateGroupObject(	const SceneDataGUID& guid, const VWTransformMatrix& offset,							SceneDataGroupObjPtr addToContainer, MCObjectHandle handle);
-		SceneDataFixtureObjPtr		CreateFixture(		const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer, MCObjectHandle handle);
-		SceneDataSceneryObjPtr		CreateSceneryObject(const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer, MCObjectHandle handle);
-		SceneDataFocusPointObjPtr	CreateFocusPoint(	const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer, MCObjectHandle handle);
-		SceneDataTrussObjPtr		CreateTruss(		const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer, MCObjectHandle handle);
-		SceneDataVideoScreenObjPtr	CreateVideoScreen(	const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer, MCObjectHandle handle);
 		
-		void						CreateCustomGdtfFileForFixture(SceneDataFixtureObjPtr fixture, MCObjectHandle handle);
-		
-	private:
-		SceneDataSymbolObjPtr		CreateSymbol(		const SceneDataGUID& guid, const VWTransformMatrix& offset, SceneDataSymDefObjPtr symDef, MCObjectHandle handle);
 		
 		// ---------------------------------------------------------------------------------------------------------------------
 		// Read calls

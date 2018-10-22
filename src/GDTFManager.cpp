@@ -1,12 +1,11 @@
 //-----------------------------------------------------------------------------
 //----- Copyright deersoft 2015 - 2017 www.deersoft.de
 //-----------------------------------------------------------------------------
-#include "Prefix/StdAfx.h"
-#include "Prefix/CommonPrefix.h"
 #include "GDTFManager.h"
 #include "SceneDataExchange.h"
 #include "XmlFileHelper.h"
 #include <iostream>
+#include "Prefix/CommonPrefix.h"
 
 using namespace SceneData;
 
@@ -3078,11 +3077,12 @@ TXString GdtfRevision::GetNodeName()
 
 void GdtfRevision::SetText(const TXString& text)
 {
-	fText = text;
-	fDate = "";
-	fDate += gSDK->GetFormattedDateTimeString(EDateTimeFormat::DDMMYYYY);
-	fDate += " ";
-	fDate += gSDK->GetFormattedDateTimeString(EDateTimeFormat::H_MM_S);
+	// TODO
+	// fText = text;
+	// fDate = "";
+	// fDate += gSDK->GetFormattedDateTimeString(EDateTimeFormat::DDMMYYYY);
+	// fDate += " ";
+	// fDate += gSDK->GetFormattedDateTimeString(EDateTimeFormat::H_MM_S);
 }
 
 const TXString& GdtfRevision::GetDate() const
@@ -3403,7 +3403,7 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 		buffer.WriteToFile(file);
 		
 		// Add it into the file list
-		fLocalFiles.Append(file);
+		fLocalFiles.push_back(file);
 		
 		//
 		inPath = outPath;
@@ -3801,9 +3801,9 @@ GdtfFixture::~GdtfFixture()
 	for (GdtfRevisionPtr obj			: fRevisions)		{ delete obj; }
     
     // Delete Local Files
-	for (size_t i = 0; i<fLocalFiles.GetSize(); i++)
+	for (size_t i = 0; i < fLocalFiles.size(); i++)
 	{
-		IFileIdentifierPtr file = fLocalFiles.GetAt(i);
+		IFileIdentifierPtr file = fLocalFiles[i];
 		file->DeleteOnDisk();
 	}
 }
@@ -4498,7 +4498,7 @@ void GdtfFixture::SetFixtureTypeDescription(const TXString& desc)
 	fFixtureTypeDescription = desc;
 }
 
-void GdtfFixture::SetGuid(const VWFC::UUID& uuid)
+void GdtfFixture::SetGuid(const VWFC::Tools::UUID& uuid)
 {
 	fGuid = uuid;
 }
