@@ -9,7 +9,12 @@ TargetTestName	= vectorworksMvrGdtfTestApp
 
 
 # folders
-SRCDIR	= src
+SRCDIR		= src
+SRCDIR_IMPL	= src/Implementation
+SRCDIR_MZIP	= src/Minizip/Source
+SRCDIR_S256	= src/sha256
+SRCDIR_WRAP	= src/Wrapper
+SRCDIR_XMLL	= src/XMLLib
 OBJDIR	= obj
 BINDIR	= bin
 
