@@ -140,19 +140,11 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetGeometryAt(size_t at
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::AddGeometry(const STransformMatrix& scMatrix, IGeometryProvider* provider)
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::AddGeometry(const STransformMatrix& scMatrix)
 {
-	ASSERTN(kEveryone, provider);
-	if( ! provider ) return kVCOMError_InvalidArg;
-
-	CGeometryProviderWrapper* providerWrapper = new CGeometryProviderWrapper( provider );
-
 	//---------------------------------------------------------------------------
 	// Create the new object, and set the file name
 	SceneData::SceneDataGeometryObjPtr geometryObject = new SceneData::SceneDataGeometryObj();
-	geometryObject->SetGeometryProvider( providerWrapper );
-
-	farrGeometryWrappers.push_back( providerWrapper );
 	
 	//---------------------------------------------------------------------------
 	// Set Transfrom Matrix
@@ -195,7 +187,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::AddSymbol(const STransf
 	
 	//------------------------------------------------------------------------------------------
 	// Create new geometry obj
-	SceneData::SceneDataSymbolObjPtr newSymbolObj = new SceneData::SceneDataSymbolObj(SceneData::SceneDataGUID(VWFC::UUID()));
+	SceneData::SceneDataSymbolObjPtr newSymbolObj = new SceneData::SceneDataSymbolObj(SceneData::SceneDataGUID(VWFC::Tools::UUID()));
 	
 	// Set Transfrom Matrix
 	VWTransformMatrix ma;
