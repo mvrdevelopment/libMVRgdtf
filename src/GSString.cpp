@@ -21,6 +21,7 @@
 #if GS_WIN
 // For Unicode normalization form (precomposed v.s. decomposed)
 //	#include <WinNls.h> 
+#include <cstring>
 #elif GS_LIN
 #include <cstring>
 #include <string>
@@ -409,7 +410,7 @@ TXString& TXString::operator=(const unsigned char* src)
 	if (src && *src != 0)
 	{
 		char charBuf[256];
-		strncpy(charBuf, (const char *)src + 1, src[0]);
+		std::strncpy(charBuf, (const char *)src + 1, src[0]);
 		charBuf[src[0]] = 0;
 		SetStdUStrFromCharBuffer(charBuf);
 	}

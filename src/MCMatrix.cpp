@@ -10,15 +10,9 @@
 
 #include "StdHeaders.h"	// DO NOT MOVE THIS LINE FROM BEING THE FIRST NON-COMMENT LINE.  [DMB, 10/30/95]
 
-#if GS_WIN
-
-	#include "Kernel/QTHeader.h"
-
-#endif
-
-#include "Kernel/MCCoordTypes.h"
-#include "Kernel/MCVector.h"
-#include "Kernel/MCMatrix.h"
+#include "MCCoordTypes.h"
+// #include "MCVector.h"
+#include "MCMatrix.h"
 
 // This must follow all header files.
 #undef THIS_FILE
@@ -1402,7 +1396,7 @@ void GS_API SetMatrixKJ(const WorldPt3 &kDir, const WorldPt3 &jDir, TransformMat
 		AssignVectorsToMatrix(iVec, jVec, kVec, mat);
 	}
 	else
-		DSTOP((kAndrewB, "Unable to make vectors orthonormal!"));
+		DSTOP((kEveryone, "Unable to make vectors orthonormal!"));
 }
 
 
@@ -1509,7 +1503,7 @@ bool GS_API CalcTransformFromOneTriToAnother(TransformMatrix& outMatrix,
 
 		void SetEquation(Uint32 _iEqNumber, const double *_pdEqCoefficients, double _dEqResult )
 		{
-			ASSERTN( kVStanev, _iEqNumber < 4);
+			ASSERTN( kEveryone, _iEqNumber < 4);
 
 			m_A[4*_iEqNumber+0]	= _pdEqCoefficients[0];
 			m_A[4*_iEqNumber+1]	= _pdEqCoefficients[1];
@@ -1521,7 +1515,7 @@ bool GS_API CalcTransformFromOneTriToAnother(TransformMatrix& outMatrix,
 
 		bool FindLUDecompSolution( double *_pSolution, double dZeroEpsilon )
 		{
-			ASSERTN( kVStanev, _pSolution );
+			ASSERTN( kEveryone, _pSolution );
 			Sint32 piIndex[ 4 ];
 
 			double p;
@@ -1614,8 +1608,8 @@ bool GS_API CalcTransformFromOneTriToAnother(TransformMatrix& outMatrix,
 
 		void LUBackSubstitution(double* arrMatrix, const Sint32 *_pcRowIndex, double *_pB, double *_pSolution ) const
 		{
-			ASSERTN( kVStanev, _pB );
-			ASSERTN( kVStanev, _pSolution );
+			ASSERTN( kEveryone, _pB );
+			ASSERTN( kEveryone, _pSolution );
 
 			Sint32    i, ip, j, ii=-1;
 //			long double dSum; // [MAF Cleanup, 12/22/05]
@@ -1689,7 +1683,7 @@ bool GS_API CalcTransformFromOneTriToAnother(TransformMatrix& outMatrix,
 		if ( !system.FindLUDecompSolution( _solution, 1.192092896e-07F ) )
 		{
 			::IdentityMatrix( outMatrix );
-			ASSERTN( kVStanev, false);
+			ASSERTN( kEveryone, false);
 			return false; // Some points coincide - transormation undefined
 		}
 
@@ -1781,7 +1775,7 @@ bool RayCubeIntersection(const WorldCube& inwc, const Ray& inRay,
 	if (outpA1)	*outpA1 = 0;
 	if (outpA2)	*outpA2 = 0;
 
-	if (VERIFYN(kEJKerr, ! inRay.direction.IsZero())
+	if (VERIFYN(kEveryone, ! inRay.direction.IsZero())
 		&& ! inwc.IsEmpty()) {
 
 		#define EpsilonForCoord(x)	(kNearlyEqualEpsilonForWorldCoords * Fabs(x))

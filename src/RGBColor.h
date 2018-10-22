@@ -36,8 +36,6 @@ namespace VWFC
 
 			void		GetColor(Uint8& r, Uint8& g, Uint8& b) const;
 			void		SetColor(Uint8 r, Uint8 g, Uint8 b);
-			void		SetFrontColor();
-			void		SetBackgroundColor();
 
 			private:
 			Uint8 red;

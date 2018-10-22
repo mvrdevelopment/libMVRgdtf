@@ -3,6 +3,7 @@
 //	Use of this file is governed by the Nemetschek Vectorworks SDK License Agreement
 //	http://developer.vectorworks.net/index.php?title=Vectorworks_SDK_License
 //
+#include "Prefix/StdAfx.h"
 #include "RGBColor.h"
 
 using namespace VWFC::Tools;
@@ -107,32 +108,4 @@ void CRGBColor::SetColor(Uint8 r, Uint8 g, Uint8 b)
 	this->red		= (r << 8) | r;
 	this->green		= (g << 8) | g;
 	this->blue		= (b << 8) | b;
-}
-
-// Set black color (white for black background mode)
-void CRGBColor::SetFrontColor()
-{
-	bool bReverseBlackAndWhite = false;
-	::GS_GetProgramVariable( gCBP, varBlackBackground, & bReverseBlackAndWhite );
-	
-	if ( bReverseBlackAndWhite == false ) {
-		this->SetColor( 0, 0, 0 );
-	}
-	else {
-		this->SetColor( 255, 255, 255 );
-	}
-}
-
-// Set white color (black for black background mode)
-void CRGBColor::SetBackgroundColor()
-{
-	bool bReverseBlackAndWhite = false;
-	::GS_GetProgramVariable( gCBP, varBlackBackground, & bReverseBlackAndWhite );
-	
-	if ( bReverseBlackAndWhite == false ) {
-		this->SetColor( 255, 255, 255 );
-	}
-	else {
-		this->SetColor( 0, 0, 0 );
-	}
 }

@@ -402,3 +402,4 @@ enum EExportQuality : short
 #define XML_GDTF_MeasurementNodeName					"Measurement"
 #define XML_GDTF_MeasurementWaveLegth					"WaveLength"
 #define XML_GDTF_MeasurementEnergy						"Energy"
+
