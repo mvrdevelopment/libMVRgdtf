@@ -6,72 +6,20 @@
 #include "SceneDataExchange.h"
 #include "HashManager.h"
 #include "GDTFManager.h"
-#include "GDTFInterface.h"
 #include "XmlFileHelper.h"
-#include "MvrUuid.h"
 
 using namespace SceneData;
 
-
-// ----------------------------------------------------------------------------------------------------------------------------------
-// SceneDataGUID
-SceneDataGUID::SceneDataGUID(MCObjectHandle handle)
-{
-	// Initialize TryFindObjectInDrawing
-	_linkedHandle				= nullptr;
-	_searchedForLinkedHandle	= false;
-	
-	// Check incomming values
-	ASSERTN(kEveryone, handle != nullptr);
-	
-	
-	//---------------------------------------------------------
-	if (handle)
-	{
-		ParametricObjects::MvrUserData userData (handle);
-		
-		if ( ! userData.IsSet())
-		{
-			// Create new Uuid
-			TXString vwUuid;
-			gSDK->GetObjectUuid(handle, vwUuid);
-			
-			// Create a uuid from this
-			UUID uuidFromObj ("{" + vwUuid + "}" );
-						
-			// Set it in the objects
-			userData.SetUuid(uuidFromObj, uuidFromObj);
-			_uuid = uuidFromObj;
-		}
-		else
-		{
-			userData.GetUuid(_uuid);
-		}
-		
-	}
-
-	
-	_type	= eNormal;
-}
-
 SceneDataGUID::SceneDataGUID(const TXString& uuid)
-{
-	// Initialize TryFindObjectInDrawing
-	_linkedHandle				= nullptr;
-	_searchedForLinkedHandle	= false;
-	
+{	
 	ASSERTN(kEveryone, uuid != "");
 	
 	GdtfConverter::ConvertUUID(uuid, _uuid);
 	_type	= eNormal;
 }
 
-SceneDataGUID::SceneDataGUID(const UUID& uuid)
+SceneDataGUID::SceneDataGUID(const VWFC::Tools::UUID& uuid)
 {
-	// Initialize TryFindObjectInDrawing
-	_linkedHandle				= nullptr;
-	_searchedForLinkedHandle	= false;
-	
 	_uuid	= uuid;
 	_type	= eNormal;
 }
@@ -95,146 +43,6 @@ ESceneDataGUIDType SceneDataGUID::GetType() const
 	return _type;
 }
 
-MCObjectHandle SceneDataGUID::TryFindObjectInDrawing(ESearchUuidIn where)
-{
-	if (_linkedHandle != nullptr){ return _linkedHandle; }
-	if (_searchedForLinkedHandle){ return nullptr; }
-	
-	// ---------------------------------------------------------------------------------------------------
-	// Prepare Out Value
-	MCObjectHandle	outHandle	= nullptr;
-	UUID			uuidObj		= _uuid;
-	
-	if (where == ESearchUuidIn::Objects || where == ESearchUuidIn::Symbols)
-	{
-		// ---------------------------------------------------------------------------------------------------
-		// Check what to traverse
-		short traverseWhat = allObjects | descendIntoAll;
-		if (where == ESearchUuidIn::Symbols) { traverseWhat = allSymbolDefs; }
-	
-		// ---------------------------------------------------------------------------------------------------
-		// Do the traversal, this is currently not very fast...
-		gSDK->ForEachObjectN(traverseWhat, [&outHandle, &uuidObj] (MCObjectHandle handle) -> void
-							 {
-								 // If a match is found, just skip everything
-								 if (outHandle != nullptr) return;
-								 
-								 // Check if there is User Data Attached
-								 if (ParametricObjects::MvrUserData::HasUserDataAttached(handle))
-								 {
-									 // Read User Data
-									 ParametricObjects::MvrUserData userData (handle);
-									 
-									 // Check if the user Data is set, this must not be true,
-									 // as the user could duplicate some objects with a attached
-									 // MVRUUID node
-									 if (userData.IsSet() == false)	{ return; }
-									 
-									 
-									 // This is the stored obj
-									 UUID storedUuid;
-									 userData.GetUuid(storedUuid);
-									 
-									 if (storedUuid == uuidObj)
-									 {
-										 outHandle =  handle;
-									 }
-								 }
-							 });
-	}
-	else if (where == ESearchUuidIn::Classes)
-	{
-		gSDK->ForEachClass(true, [&outHandle, &uuidObj] (MCObjectHandle handle) -> void
-						   {
-							   // If a match is found, just skip everything
-							   if (outHandle != nullptr) return;
-							   
-							   // Check if there is User Data Attached
-							   if (ParametricObjects::MvrUserData::HasUserDataAttached(handle))
-							   {
-								   // Read User Data
-								   ParametricObjects::MvrUserData userData (handle);
-								   
-								   // Check if the user Data is set, this must not be true,
-								   // as the user could duplicate some objects with a attached
-								   // MVRUUID node
-								   if (userData.IsSet() == false)	{ return; }
-								   
-								   
-								   // This is the stored obj
-								   UUID storedUuid;
-								   userData.GetUuid(storedUuid);
-								   
-								   if (storedUuid == uuidObj)
-								   {
-									   outHandle =  handle;
-								   }
-							   }
-						   });
-	}
-	else /* Layers*/
-	{
-		gSDK->ForEachLayerN([&outHandle, &uuidObj] (MCObjectHandle handle) -> void
-							{
-								// If a match is found, just skip everything
-								if (outHandle != nullptr) return;
-								
-								// Check if there is User Data Attached
-								if (ParametricObjects::MvrUserData::HasUserDataAttached(handle))
-								{
-									// Read User Data
-									ParametricObjects::MvrUserData userData (handle);
-									
-									// Check if the user Data is set, this must be true here. Otherwise something strange is going on...
-									ASSERTN(kEveryone, userData.IsSet() == true);
-									
-									// This is the stored obj
-									UUID storedUuid;
-									userData.GetUuid(storedUuid);
-									
-									if (storedUuid == uuidObj)
-									{
-										outHandle =  handle;
-									}
-								}
-							});
-	}
-	
-	_linkedHandle = outHandle;
-	_searchedForLinkedHandle = true;
-	return outHandle;
-}
-
-void SceneDataGUID::LinkWithNewObject(MCObjectHandle handle)
-{
-	// Check incomming values
-	ASSERTN(kEveryone, handle != nullptr);
-	
-	ParametricObjects::MvrUserData userData (handle);
-	
-	ASSERTN(kEveryone, userData.IsSet() == false);
-	if ( ! userData.IsSet())
-	{
-		// Create a uuid from this
-		UUID uuidMVR (_uuid);
-		
-		// Create new Uuid
-		TXString vwUuid;
-		gSDK->GetObjectUuid(handle, vwUuid);
-		
-		
-		// Create a uuid from this
-		UUID uuidFromObj ( "{" + vwUuid + "}" );
-		
-		// Set it in the objects
-		userData.SetUuid(uuidMVR, uuidFromObj);
-		
-		_linkedHandle = handle;
-		_searchedForLinkedHandle = true;
-
-	}
-}
-
 TXString SceneDataGUID::GetUUIDString() const
 {
 	if (_type == eNormal)
@@ -246,9 +54,8 @@ TXString SceneDataGUID::GetUUIDString() const
 	return _typeEntry;
 }
 
-const VWFC::UUID& SceneDataGUID::GetUuidObj() const
+const VWFC::Tools::UUID& SceneDataGUID::GetUuidObj() const
 {
-
 	return _uuid;
 }
 
@@ -269,7 +76,7 @@ bool SceneDataGUID::operator ==(const SceneDataGUID& a)
 // SceneDataGUID
 SceneDataGeometryObj::SceneDataGeometryObj() : SceneDataGeoInstanceObj(SceneDataGUID(eNoGuid, ""), false /* Is No Symbol */)
 {
-	fGeometryProvider = nullptr;
+
 }
 
 SceneDataGeometryObj::~SceneDataGeometryObj()
@@ -285,19 +92,6 @@ void SceneDataGeometryObj::GetTransformMatrix(VWTransformMatrix& matrix) const
 void SceneDataGeometryObj::SetTransformMatrix(const VWTransformMatrix& matrix)
 {
 	fMatrix = matrix;
-}
-
-void SceneDataGeometryObj::SetGeometryProvider(IGeometryProvider3DS* provider)
-{
-	fGeometryProvider = provider;
-}
-
-void SceneDataGeometryObj::GetGeometryReceiver3DS(IGeometryReceiver3DS* receiver, SceneDataExchange* exchange)
-{
-	TXString file = this->GetFileName();
-
-	// Read to receiver, this will do only something in MVR Lib contect
-	exchange->ImportGeometryProvider(receiver, file);
 }
 
 const TXString& SceneDataGeometryObj::GetFileName() const
@@ -322,21 +116,10 @@ void SceneDataGeometryObj::SetFileName(const TXString& fileName)
 }
 void SceneDataGeometryObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
 {
-	// For the MVR Lib, export the provider
-	if (fGeometryProvider)
-	{
-		ASSERTN(kEveryone, GetFileName().IsEmpty());
-		
-		TXString exportedFileName;
-		// Do the Export
-		exchange->ExportGeometryProvider(fGeometryProvider, exportedFileName);
-		
-		SetFileName(exportedFileName);
-	}
+	// TODO
+	SetFileName("empty.3ds");
 	
 	pNode->SetNodeAttributeValue(XML_Val_GeometryObjectAttrFile, GetFileName());
-	
-
 	
 }
 
@@ -360,7 +143,6 @@ ESceneDataObjectType SceneDataGeometryObj::GetObjectType()
 {
 	return ESceneDataObjectType::eGeometryObj;
 }
-
 
 //----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataObj
@@ -469,8 +251,8 @@ void SceneDataProviderObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchang
 	
 	// ------------------------------------------------------------------------------
 	// Dump Data
-	ASSERTN(kEveryone, fKeyArr.GetSize() == fDataArr.GetSize());
-	for (size_t i = 0; i < fKeyArr.GetSize(); i++)
+	ASSERTN(kEveryone, fKeyArr.size() == fDataArr.size());
+	for (size_t i = 0; i < fKeyArr.size(); i++)
 	{
 		IXMLFileNodePtr entryNode;
 		if(VCOM_SUCCEEDED(pNode->CreateChildNode(XML_Val_UserDataVWEntry, &entryNode)))
@@ -510,8 +292,8 @@ void SceneDataProviderObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDat
 									 pNode->GetNodeAttributeValue(XML_Val_UserDataVWKeyAttr, key);
 									 
 									 // Append Data
-									 fKeyArr.Append(key);
-									 fDataArr.Append(value);
+									 fKeyArr.push_back(key);
+									 fDataArr.push_back(value);
 								 }
 								 );
 	
@@ -539,21 +321,21 @@ const TXString& SceneDataProviderObj::GetProvider()
 
 void SceneDataProviderObj::AddEntry(const TXString& key,const TXString& value)
 {
-	fKeyArr.Append(key);
-	fDataArr.Append(value);
+	fKeyArr.push_back(key);
+	fDataArr.push_back(value);
 }
 
 
 size_t SceneDataProviderObj::GetEntryCount()
 {
-	return fKeyArr.GetSize();
+	return fKeyArr.size();
 }
 
 bool SceneDataProviderObj::GetEntryAt(size_t at, TXString& key,TXString& value)
 {
 	// Check postion
-	ASSERTN(kEveryone, at < fKeyArr.GetSize());	if (at >= fKeyArr.GetSize())  { return false; }
-	ASSERTN(kEveryone, at < fDataArr.GetSize());if (at >= fDataArr.GetSize()) { return false; }
+	ASSERTN(kEveryone, at < fKeyArr.size());	if (at >= fKeyArr.size())  { return false; }
+	ASSERTN(kEveryone, at < fDataArr.size());	if (at >= fDataArr.size()) { return false; }
 
 	// Set Out Values
 	key		= fKeyArr[at];
@@ -757,7 +539,6 @@ SceneDataObjWithMatrix::SceneDataObjWithMatrix(const SceneDataGUID& guid) : Scen
 {
 	fInContainer			= nullptr;
 	fNextObj				= nullptr;
-	fGeometryHandleToExport = nullptr;
 	fClass					= nullptr;
 }
 
@@ -802,12 +583,6 @@ void SceneDataObjWithMatrix::AddGeometryObj(SceneDataGeoInstanceObjPtr object)
 	if (object) { fGeometries.push_back(object); }
 }
 
-void SceneDataObjWithMatrix::SetGeometryHandle(MCObjectHandle handle)
-{
-	ASSERTN(kEveryone, fGeometryHandleToExport == nullptr);
-	fGeometryHandleToExport = handle;
-}
-
 SceneDataGroupObjPtr SceneDataObjWithMatrix::GetContainer() const
 {
 	return fInContainer;
@@ -837,14 +612,6 @@ void SceneDataObjWithMatrix::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExcha
 			pMatrixNode->SetNodeValue(GdtfConverter::ConvertMatrix(fMatrix));
 
 		}
-	}
-	
-	// ------------------------------------------------------------------------------------------------------------
-	// Export the geometry
-	ASSERTN(kEveryone, exchange != nullptr);
-	if (fGeometryHandleToExport)
-	{
-		exchange->ExportGeometry(this->getGuid(), fGeometryHandleToExport, this);
 	}
 	
 	// ------------------------------------------------------------------------------------------------------------
@@ -978,17 +745,13 @@ void SceneDataObjWithMatrix::ReadMatrixNodeValue(const IXMLFileNodePtr& pNode, V
 				TXString strVal;
 				for (ptrdiff_t i = 0; i < p; i++)
 				{
-					strVal << value.GetAt(i);
+					strVal =+ value.GetAt(i);
 				}
 				
 				//------------------------------------------------------------------------------
 				// Try to convert
-				double dValue = 0;
-				Boolean succses = gSDK->StringToDouble(nsFixDecimal, strVal, dValue);
-				
-				ASSERTN(kEveryone, succses);
-				if (succses == true) { d_arr.push_back(dValue); }
-				
+				double dValue = strVal.atof();
+				d_arr.push_back(dValue); 
 				
 				value.Delete(0, p + 1);
 				
@@ -997,11 +760,8 @@ void SceneDataObjWithMatrix::ReadMatrixNodeValue(const IXMLFileNodePtr& pNode, V
 			
 			//------------------------------------------------------------------------------
 			// Now get the last part of the string and squeeze a double out
-			double dValue = 0;
-			Boolean succses = gSDK->StringToDouble(nsFixDecimal, value, dValue);
-			
-			ASSERTN(kEveryone, succses);
-			if (succses == true) { d_arr.push_back(dValue); }
+			double dValue = value.atof();
+				d_arr.push_back(dValue); 
 			
 			ASSERTN(kEveryone, d_arr.size() == 3);
 			if (d_arr.size() == 3)
@@ -1653,11 +1413,8 @@ SceneDataGUID SceneDataSymbolObj::GetSymDef()
 
 // ----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataExchange
-SceneDataExchange::SceneDataExchange() : fExporter( IID_IImportExportObject3DS )
-{
-	fCountExportedGeometryProviders = 0;
-	fUndoStarted	= false;
-	
+SceneDataExchange::SceneDataExchange()
+{	
 	//---------------------------------------------------------------------------------------------
 	// Set the working folder
 	fWorkingFolder = (IID_FolderIdentifier);
@@ -1681,11 +1438,6 @@ SceneDataExchange::SceneDataExchange() : fExporter( IID_IImportExportObject3DS )
 
 SceneDataExchange::~SceneDataExchange()
 {
-	if (fExporter) { fExporter->End(); }
-	
-	
-	if (fUndoStarted) { gSDK->EndUndoEvent(); }
-	
 	//-------------------------------------------------------------------------------------------------
 	// Housekeeping
 	for (size_t i = 0; i <  fFilesInZip.size() ; i++)
@@ -1695,337 +1447,18 @@ SceneDataExchange::~SceneDataExchange()
 	
 	for (SceneDataObjWithMatrixPtr	childObj : fChildObjs )		{ delete childObj; }
 	for (SceneDataAuxObjPtr			childAux : fAuxDataObjs )	{ delete childAux; }
-	for (SceneDataProviderObjPtr	childPro : fProviderObjs )	{ delete childPro; }
 	
 }
 
 void SceneDataExchange::InitializeForExport()
 {
-	if (fExporter) { fExporter->BeginExport( fWorkingFolder, EExportQuality::eLowConvertRes); }
-}
-
-bool SceneDataExchange::ExportGeometry(const SceneDataGUID& guid, MCObjectHandle handle, SceneDataObjWithMatrixPtr object)
-{
-	// ------------------------------------------------------------------------------------------------
-	// Try to Export
-	ASSERTN(kEveryone, handle != nullptr);
-	if (handle)
-	{
-		bool			hadSymDef = false;
-		// ------------------------------------------------------------------------------------------------
-		// Check if the handle belongs to a param obj
-		if (VWParametricObj::IsParametricObject(handle))
-		{
-			// Get the objects
-			VWParametricObj paramObj (handle);
-			MCObjectHandle	child = paramObj.GetFirstMemberObject();
-
-			while (child)
-			{
-				if (VWSymbolObj::IsSymbolObject(child))
-				{
-					// Get Symbol and symbol Deg
-					VWSymbolObj		sym		(child);
-					VWSymbolDefObj	symDef	(sym.GetSymbolDef());
-					hadSymDef = true;
-		
-					// Preapre GUID for this
-					SceneDataGUID symDefGuid (symDef);
-					
-					// Get obejct Matrix
-					VWTransformMatrix ma;
-					sym.GetObjectMatrix(ma);
-		
-					// Get the symbol Defintion for this
-					SceneDataSymDefObjPtr scSymDef = CreateSymDefObject(SceneDataGUID(symDef), symDef.GetObjectName());
-					
-					if (scSymDef->getGeometryArray().size() == 0)
-					{
-						SceneDataGeometryObjPtr geo = ExportGeometryObj(sym, scSymDef->getGuid(), object);
-						scSymDef->Add(geo);
-					}
-					
-					
-					// Create the Symbol Instance for this
-					SceneDataSymbolObjPtr symbol = CreateSymbol(SceneDataGUID(UUID()), ma, scSymDef, symDef);
-					object->AddGeometryObj(symbol);
-
-					
-				}
-				else
-				{
-					//SceneDataGeometryObjPtr geo = ExportGeometryObj(child, SceneDataGUID(UUID()));
-					//if (geo) { object->AddGeometryObj(geo); }
-				}
-				
-				// Step to the next Object
-				child = gSDK->NextObject(child);
-			}
-		}
-		// ------------------------------------------------------------------------------------------------
-		// If tehre is no SymDef for this
-		if (hadSymDef == false)
-		{
-			TXString filename = guid.GetUUIDString();
-			
-			
-						
-			SceneDataGeometryObjPtr geo = ExportGeometryObj(handle, filename, object);
-			object->AddGeometryObj(geo);
-		}
-		
-		return true;
-	}
-	return false;
-}
-
-SceneDataGeometryObjPtr SceneDataExchange::ExportGeometryObj(MCObjectHandle handle, const TXString& inFileName, SceneDataObjWithMatrixPtr object)
-{
-	// ------------------------------------------------------------------------------------------------
-	// Chech if there is a working folder
-	ASSERTN(kEveryone, fWorkingFolder != nullptr);
-	if (fWorkingFolder == nullptr) { return nullptr;}
-	
-	// The uuid has a lot of white spaces, we don't need here
-	TXString fileName = TXString() << inFileName << ".3ds";
-	fileName.Replace(" ", "");
-	
-	// ------------------------------------------------------------------------------------------------
-	// Try to Export
-	ASSERTN(kEveryone, handle != nullptr);
-	if (handle)
-	{
-		// ------------------------------------------------------------------------------------------------
-		// Check if the handle belongs to a param obj
-		if (fExporter && VCOM_SUCCEEDED(fExporter->Export(handle, fileName, true)))
-		{
-			
-			
-			SceneDataGeometryObjPtr geometry = new SceneDataGeometryObj();
-			geometry->SetFileName(fileName);
-			
-			// Add the file for this
-			IFileIdentifierPtr geoFile (IID_FileIdentifier);
-			if (geoFile)
-			{
-				geoFile->Set(fWorkingFolder, fileName);
-				fGeometryFiles.push_back(geoFile);
-			}
-			
-			return geometry;
-		}
-		
-	}
-	return nullptr;
-}
-
-bool SceneDataExchange::ExportGeometryProvider(IGeometryProvider3DS* provider, TXString& outFileName)
-{
-	// ------------------------------------------------------------------------------------------------
-	// Create a uniqueFileName
-	TXString fileName = TXString() << "geo" << this->fCountExportedGeometryProviders << ".3ds";
-	this->fCountExportedGeometryProviders++;
-	
-	
-	// ------------------------------------------------------------------------------------------------
-	// Chech if there is a working folder
-	ASSERTN(kEveryone, fWorkingFolder != nullptr);
-	if (fWorkingFolder == nullptr) { return false;}
-	
-	// ------------------------------------------------------------------------------------------------
-	// Try to Export
-	ASSERTN(kEveryone, provider != nullptr);
-	if (provider)
-	{
-		// ------------------------------------------------------------------------------------------------
-		// Check if the handle belongs to a param obj
-		if (fExporter && VCOM_SUCCEEDED(fExporter->Export(provider, fileName, true)))
-		{
-			// Add the file for this
-			IFileIdentifierPtr geoFile (IID_FileIdentifier);
-			if (geoFile)
-			{
-				geoFile->Set(fWorkingFolder, fileName);
-				fGeometryFiles.push_back(geoFile);
-				outFileName = fileName;
-			}
-			
-			return true;
-		}
-		
-	}
-	return false;
-}
-
-bool SceneDataExchange::ImportGeometryProvider(IGeometryReceiver3DS* provider, const TXString& inFileName)
-{
-	
-	// ------------------------------------------------------------------------------------------------
-	// Chech if there is a working folder
-	ASSERTN(kEveryone, fWorkingFolder != nullptr);
-	if (fWorkingFolder == nullptr) { return false;}
-	
-	
-	// ------------------------------------------------------------------------------------------------
-	// Add the file for this
-	IFileIdentifierPtr geoFile (IID_FileIdentifier);
-	if (geoFile)
-	{ geoFile->Set(fWorkingFolder, inFileName); }
-	
-
-	
-	// ------------------------------------------------------------------------------------------------
-	// Try to import
-	if (fExporter && VCOM_SUCCEEDED(fExporter->Import(geoFile, provider)))	{ return true; }
-		
-
-	return false;
-}
-
-
-MCObjectHandle SceneDataExchange::ImportGeometry(SceneDataGeoInstanceObjPtr symbolOrGeo3d, bool applyOffset)
-{
-	// Chech if there is a working folder
-	ASSERTN(kEveryone, fWorkingFolder != nullptr);
-	if (fWorkingFolder == nullptr) { return nullptr;}
-	
-	// Chech if there is a valid object
-	ASSERTN(kEveryone, symbolOrGeo3d != nullptr);
-	if (symbolOrGeo3d == nullptr) { return nullptr;}
-	
-	
-	IFileIdentifierPtr geoFile (IID_FileIdentifier);
-	if (geoFile)
-	{
-
-			if (symbolOrGeo3d->GetObjectType() == eGeometryObj)
-			{
-				SceneDataGeometryObjPtr geoObj = dynamic_cast<SceneDataGeometryObjPtr>(symbolOrGeo3d);
-				ASSERTN(kEveryone, geoObj != nullptr);
-				if (geoObj)
-				{
-					geoFile->Set(fWorkingFolder, geoObj->GetFileName());
-					
-					bool fileExists = false;
-					geoFile->ExistsOnDisk(fileExists);
-					
-					// Try to Import
-					ASSERTN(kEveryone, fileExists == true);
-					if ( fileExists )
-					{
-						
-						MCObjectHandle handle = nullptr;
-						
-						if (VCOM_SUCCEEDED(fExporter->Import(geoFile, handle)))
-						{
-							
-							
-							if (applyOffset)
-							{
-								VWTransformMatrix ma;
-								symbolOrGeo3d->GetTransformMatric(ma);
-								
-								if (VWGroupObj::IsGroupObject(handle))
-								{
-									VWGroupObj group (handle);
-									MCObjectHandle mesh = group.GetFirstMemberObject();
-									if (mesh)
-									{
-										VWObject meshObj (mesh);
-										meshObj.SetObjectMatrix(ma);
-									}
-								}
-							}
-							
-							
-							return handle;
-						}
-						
-					}
-				}
-			}
-			else if (symbolOrGeo3d->GetObjectType() == eSymbol)
-			{
-				SceneDataSymbolObjPtr symObj = dynamic_cast<SceneDataSymbolObjPtr>(symbolOrGeo3d);
-				
-				ASSERTN(kEveryone, symObj != nullptr);
-				if (symObj)
-				{
-					SceneDataSymDefObjPtr	symDef		= GetSymDefByUUID(symObj->GetSymDef());
-					
-					if (symDef == nullptr) { DSTOP((kEveryone, "Unresolved SymDef")); return nullptr; }
-					
-					MCObjectHandle			linkedObj	= symDef->getGuid().TryFindObjectInDrawing(ESearchUuidIn::Symbols);
-					
-
-					if (symDef && linkedObj)
-					{
-						VWSymbolObj vwSym (linkedObj, VWPoint2D());
-						
-						if (applyOffset)
-						{
-							VWTransformMatrix ma;
-							symbolOrGeo3d->GetTransformMatric(ma);
-							
-							VWObject obj (vwSym);
-							obj.ApplyObjectMatrix(ma);
-						}
-						return vwSym;
-					}
-				}
-			}
-	}
-	
-	
-	return nullptr;
-}
-
-bool SceneDataExchange::ImportGDTFFile(MCObjectHandle handle, const TXString& fileName, const TXString& dmxMode)
-{
-	//------------------------------------------------------------------------------------------------------------
-	// Prepare pointer to gdtf file
-	IFileIdentifierPtr gdtfFile (IID_FileIdentifier);
-	gdtfFile->Set(fWorkingFolder, fileName);
-	
-	
-	//------------------------------------------------------------------------------------------------------------
-	// Get Interface for GDTF
-
-	VectorWorks::Filing::IImportExportGDTFPtr gdtfInterface (VectorWorks::Filing::IID_ImportExportGDTF);
-	
-	ASSERTN(kEveryone, gdtfInterface != nullptr);
-	if (gdtfInterface)
-	{
-		//------------------------------------------------------------------------------------------------------------
-		// Check if the file is exting
-		bool exists = false;
-		if (VCOM_SUCCEEDED(gdtfFile->ExistsOnDisk(exists)))
-		{
-			
-			//------------------------------------------------------------------------------------------------------------
-			// Import and apply to the lighting device
-			ASSERTN(kEveryone, exists == true);
-			if (exists && VCOM_SUCCEEDED(gdtfInterface->ImportLightingDeviceGDTF(handle, gdtfFile, dmxMode)))
-			{
-				return true;
-			}
-		}
-	}
-	
-	return false;
 }
 
 void SceneDataExchange::InitializeForImport()
 {
 	//------------------------------------------------
 	// Start Undo System
-	gSDK->SupportUndoAndRemove();
-	gSDK->SetUndoMethod(kUndoSwapObjects);
 	fUndoStarted = true;
-	
-	// Start Import
-	fExporter->BeginImport();
-	
 }
 
 SceneDataProviderObjArray& SceneDataExchange::GetProviderObjects()
@@ -2247,7 +1680,7 @@ SceneDataClassObjPtr SceneDataExchange::ReadClassObject(const IXMLFileNodePtr& n
 	return newClass;
 }
 
-SceneDataGroupObjPtr SceneDataExchange::CreateGroupObject(const SceneDataGUID& guid, const VWTransformMatrix& offset, SceneDataGroupObjPtr addToContainer, MCObjectHandle handle)
+SceneDataGroupObjPtr SceneDataExchange::CreateGroupObject(const SceneDataGUID& guid, const VWTransformMatrix& offset, SceneDataGroupObjPtr addToContainer)
 {
 	SceneDataGroupObjPtr newGroup = new SceneDataGroupObj(guid);
 	addToContainer->AddObject(newGroup);
@@ -2267,7 +1700,7 @@ SceneDataGroupObjPtr SceneDataExchange::ReadGroupObject(const SceneDataGUID& gui
 	
 }
 
-SceneDataFixtureObjPtr SceneDataExchange::CreateFixture(const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name, SceneDataGroupObjPtr addToContainer, MCObjectHandle handle)
+SceneDataFixtureObjPtr SceneDataExchange::CreateFixture(const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name, SceneDataGroupObjPtr addToContainer)
 {
 	//----------------------------------------------------------------------------
 	// Create new object
@@ -2282,31 +1715,6 @@ SceneDataFixtureObjPtr SceneDataExchange::CreateFixture(const SceneDataGUID& gui
 	
 	
 	return newFixture;
-}
-
-void SceneDataExchange::CreateCustomGdtfFileForFixture(SceneDataFixtureObjPtr fixture, MCObjectHandle handle)
-{
-	//----------------------------------------------------------------------------
-	// Export GDTF File
-	TXString gdtfFile = "Custom";
-	gdtfFile << "@" << fixture->getName();
-	
-	//
-	const TXString gdtfFolderName	= "GDTF/";
-	const TXString gdtfExt			= ".gdtf";
-	
-	IFileIdentifierPtr gdtfFileUser (IID_FileIdentifier);
-	gdtfFileUser->Set(EFolderSpecifier::kSpotlightDataFolder, true, gdtfFolderName + gdtfFile + gdtfExt);
-	
-	
-	VectorWorks::Filing::IImportExportGDTFPtr gdtf (VectorWorks::Filing::IID_ImportExportGDTF);
-
-	if (gdtf && handle &&VCOM_SUCCEEDED(gdtf->ExportLightingDeviceGDTF(handle, gdtfFileUser)))
-	{
-		fixture->SetGDTFFile(gdtfFile);
-		fixture->SetGdtfDmxMode("DMX Mode");
-	}
-	
 }
 
 SceneDataFixtureObjPtr SceneDataExchange::ReadFixture(const SceneDataGUID& guid, const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer)
@@ -2330,17 +1738,13 @@ SceneDataFixtureObjPtr SceneDataExchange::ReadFixture(const SceneDataGUID& guid,
 
 }
 
-SceneDataSceneryObjPtr SceneDataExchange::CreateSceneryObject(const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name, SceneDataGroupObjPtr addToContainer, MCObjectHandle handle)
+SceneDataSceneryObjPtr SceneDataExchange::CreateSceneryObject(const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name, SceneDataGroupObjPtr addToContainer)
 {
 	SceneDataSceneryObjPtr newSceneryObj = new SceneDataSceneryObj(guid);
 	addToContainer->AddObject(newSceneryObj);
 	
 	newSceneryObj->setName(name);
 	newSceneryObj->SetTransformMatrix(offset);
-	
-	//----------------------------------------------------------------------------
-	// Export the Geometry
-	newSceneryObj->SetGeometryHandle(handle);
 	
 	return newSceneryObj;
 }
@@ -2360,7 +1764,7 @@ SceneDataSceneryObjPtr SceneDataExchange::ReadSceneryObject(const SceneDataGUID&
 	return newSceneryObj;
 }
 
-SceneDataFocusPointObjPtr SceneDataExchange::CreateFocusPoint(const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name, SceneDataGroupObjPtr addToContainer, MCObjectHandle handle)
+SceneDataFocusPointObjPtr SceneDataExchange::CreateFocusPoint(const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name, SceneDataGroupObjPtr addToContainer)
 {
 	//------------------------------------------------------------------------------------
 	// Cycle existing focus Point Objects
@@ -2382,8 +1786,6 @@ SceneDataFocusPointObjPtr SceneDataExchange::CreateFocusPoint(const SceneDataGUI
 				focusPoint->SetTransformMatrix(offset);
 				addToContainer->AddObject(focusPoint);
 				
-				// export Geometry
-				focusPoint->SetGeometryHandle(handle);
 			}
 			return focusPoint;
 		}
@@ -2400,15 +1802,6 @@ SceneDataFocusPointObjPtr SceneDataExchange::CreateFocusPoint(const SceneDataGUI
 	// Set the parameters for this
 	newFocusPointObj->setName(name);
 	newFocusPointObj->SetTransformMatrix(offset);
-	
-	//------------------------------------------------------------------------------------
-	// Export Geometry if needed
-	if (newFocusPointObj->getGuid().GetType() == eNormal)
-	{
-		newFocusPointObj->SetGeometryHandle(handle);
-	}
-	
-	
 	
 	return newFocusPointObj;
 }
@@ -2433,17 +1826,13 @@ SceneDataFocusPointObjPtr SceneDataExchange::ReadFocusPoint(const SceneDataGUID&
 	return newFocusPointObj;
 }
 
-SceneDataTrussObjPtr SceneDataExchange::CreateTruss(const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name, SceneDataGroupObjPtr addToContainer, MCObjectHandle handle)
+SceneDataTrussObjPtr SceneDataExchange::CreateTruss(const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name, SceneDataGroupObjPtr addToContainer)
 {
 	SceneDataTrussObjPtr newTrussObj = new SceneDataTrussObj(guid);
 	addToContainer->AddObject(newTrussObj);
 	
 	newTrussObj->setName(name);
 	newTrussObj->SetTransformMatrix(offset);
-	
-	//----------------------------------------------------------------------------
-	// Export the Geometry
-	newTrussObj->SetGeometryHandle(handle);
 	
 	return newTrussObj;
 }
@@ -2462,18 +1851,14 @@ SceneDataTrussObjPtr SceneDataExchange::ReadTruss(const SceneDataGUID& guid,cons
 	return newTrussObj;
 }
 
-SceneDataVideoScreenObjPtr SceneDataExchange::CreateVideoScreen(const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name, SceneDataGroupObjPtr addToContainer, MCObjectHandle handle)
+SceneDataVideoScreenObjPtr SceneDataExchange::CreateVideoScreen(const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name, SceneDataGroupObjPtr addToContainer)
 {
 	SceneDataVideoScreenObjPtr newVSObj = new SceneDataVideoScreenObj(guid);
 	addToContainer->AddObject(newVSObj);
 	
 	newVSObj->setName(name);
 	newVSObj->SetTransformMatrix(offset);
-	
-	//----------------------------------------------------------------------------
-	// Export the Geometry
-	newVSObj->SetGeometryHandle(handle);
-	
+		
 	return newVSObj;
 }
 
@@ -2493,7 +1878,7 @@ SceneDataVideoScreenObjPtr SceneDataExchange::ReadVideoScreen(const SceneDataGUI
 	return newVSObj;
 }
 
-SceneDataSymbolObjPtr SceneDataExchange::CreateSymbol(const SceneDataGUID& guid, const VWTransformMatrix& offset, SceneDataSymDefObjPtr symDef, MCObjectHandle handle)
+SceneDataSymbolObjPtr SceneDataExchange::CreateSymbol(const SceneDataGUID& guid, const VWTransformMatrix& offset, SceneDataSymDefObjPtr symDef)
 {
 	SceneDataSymbolObjPtr newSymbolObj = new SceneDataSymbolObj(guid);
 	
@@ -2691,7 +2076,7 @@ bool SceneDataExchange::AddNeededGdtfFile(const TXString& gdtfName)
 	
 	//-------------------------------------------------------------------------------------------------
 	// Check if this is already
-	fRequiredGdtfFiles.Append(gdtfName);
+	fRequiredGdtfFiles.push_back(gdtfName);
 	
 	return false;
 }

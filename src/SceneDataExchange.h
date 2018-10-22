@@ -630,9 +630,17 @@ namespace SceneData
 		SceneDataPositionObjPtr		CreatePositionObject(const SceneDataGUID& guid, const TXString& name);
 		SceneDataSymDefObjPtr		CreateSymDefObject(const SceneDataGUID& guid, const TXString& name);
 		SceneDataClassObjPtr		CreateClassObject(const SceneDataGUID& guid, const TXString& name);
+		SceneDataSymbolObjPtr 		CreateSymbol(const SceneDataGUID& guid, const VWTransformMatrix& offset, SceneDataSymDefObjPtr symDef);
+
 		
 		SceneDataLayerObjPtr		CreateLayerObject(	const SceneDataGUID& guid,									const TXString& name);
-		
+		SceneDataGroupObjPtr		CreateGroupObject(	const SceneDataGUID& guid, const VWTransformMatrix& offset,							SceneDataGroupObjPtr addToContainer);
+		SceneDataFixtureObjPtr		CreateFixture(		const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
+		SceneDataSceneryObjPtr		CreateSceneryObject(const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
+		SceneDataFocusPointObjPtr	CreateFocusPoint(	const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
+		SceneDataTrussObjPtr		CreateTruss(		const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
+		SceneDataVideoScreenObjPtr	CreateVideoScreen(	const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
+
 		
 		// ---------------------------------------------------------------------------------------------------------------------
 		// Read calls
@@ -641,6 +649,7 @@ namespace SceneData
 		SceneDataPositionObjPtr		ReadPositionObject(		const IXMLFileNodePtr& node);
 		SceneDataSymDefObjPtr		ReadSymDefObject(		const IXMLFileNodePtr& node);
 		SceneDataClassObjPtr		ReadClassObject(		const IXMLFileNodePtr& node);
+
 		
 		SceneDataLayerObjPtr		ReadLayerObject(		const SceneDataGUID& guid,const IXMLFileNodePtr& node);
 		SceneDataGroupObjPtr		ReadGroupObject(		const SceneDataGUID& guid,const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);

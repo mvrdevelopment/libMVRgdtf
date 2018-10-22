@@ -15,7 +15,7 @@ using namespace VWFC;
 
 using namespace SceneData;
 
-/*static*/ TXString GdtfConverter::ConvertUUID(const UUID& uuid)
+/*static*/ TXString GdtfConverter::ConvertUUID(const VWFC::Tools::UUID& uuid)
 {
 	// Currenty this is working on strings, but if the see performance issues we could switch to
 	// the actual integer operation for this
@@ -90,7 +90,7 @@ using namespace SceneData;
 	
 }
 
-/*static*/ bool GdtfConverter::ConvertUUID(const TXString& inValue, UUID& uuid)
+/*static*/ bool GdtfConverter::ConvertUUID(const TXString& inValue, VWFC::Tools::UUID& uuid)
 {
 	// First check if theinValuelength is as aspected
 	ASSERTN(kEveryone, inValue.GetLength() == 47);
@@ -141,7 +141,7 @@ using namespace SceneData;
 	uuidForRead[36] = value[31];
 	uuidForRead[37] = '}';
 	
-	uuid = UUID(uuidForRead);
+	uuid = VWFC::Tools::UUID(uuidForRead);
 	
 	return true;
 	
