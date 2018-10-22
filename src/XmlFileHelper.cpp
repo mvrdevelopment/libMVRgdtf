@@ -770,7 +770,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 		for (ptrdiff_t i = 0; i < pos; i++)	{ strValInner << strVal.GetAt(i); }
 		
 		// Try to cast
-		lines.Append(strValInner);
+		lines.push_back(strValInner);
 		
 		// Delete and find next
 		strVal.Delete(0, pos + 2);
@@ -778,9 +778,9 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	}
 	
 	// Apped the rest
-	lines.Append(strVal);
+	lines.push_back(strVal);
 	
-	if (lines.GetSize() != 3)
+	if (lines.size() != 3)
 	{
 		DSTOP((kEveryone,"Failed to split the Matrix into vertices"));
 		return false;
@@ -788,10 +788,10 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	
 	// ----------------------------------------------------------------
 	// Do the conversion
-	for (size_t i = 0; i < lines.GetSize(); i++)
+	for (size_t i = 0; i < lines.size(); i++)
 	{
 		std::vector<double> arr;
-		Deserialize(lines.GetAt(i), arr);
+		Deserialize(lines.at(i), arr);
 		
 		if (arr.size() != 3)
 		{
@@ -1181,8 +1181,8 @@ void SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, ISceneDataZipBuffer& buffe
 		for (ptrdiff_t i = 0; i < pos; i++)	{ strValInner << strVal.GetAt(i); }
 		
 		// Try to cast
-		VWStringConv con(strValInner);
-		doubleArr.push_back(con.GetVWDocumentDouble(nsGeneral));
+		TXString con (strValInner);
+		doubleArr.push_back(con.atof());
 		
 		// Delete and find next
 		strVal.Delete(0, pos + 1);
@@ -1190,10 +1190,9 @@ void SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, ISceneDataZipBuffer& buffe
 	}
 	
 	// Delete and find next
-	VWStringConv con(strVal);
-	doubleArr.push_back(con.GetVWDocumentDouble(nsGeneral));
+	TXString con(strVal);
+	doubleArr.push_back(con.atof());
 	
-
 	
 	return true;
 }
