@@ -1,8 +1,7 @@
 //-----------------------------------------------------------------------------
 //----- Copyright deersoft 2015 - 2017 www.deersoft.de
 //-----------------------------------------------------------------------------
-#include "StdAfx.h"
-#include "VectorworksMVR.h"
+#include "Prefix/StdAfx.h"
 #include "CGdtfFixture.h"
 #include "CGdtfWheel.h"
 #include "CGdtfActivationGroup.h"
@@ -58,7 +57,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::OpenForWrite(MvrStri
 	
 	TXString	vwName			(name);
 	TXString	vwManufacturer (manufacturer);
-	VWFC::UUID  vwUuid;
+	VWFC::Tools::UUID  vwUuid;
 	
 	fFixtureObject->SetName(vwName);
 	fFixtureObject->SetManufacturer(vwManufacturer);

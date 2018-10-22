@@ -123,10 +123,10 @@ $(TargetLibName).dll: $(OBJECTSWIN)
 	$(CXX) $(LDFLAGS) -o $(BINDIR)/$@ $(OBJECTSWIN) -Wl,--out-implib,$(BINDIR)/$(TargetLibName).lib
 
 
-$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(wildcard $(SRCDIR_IMPL)/*.cpp)
 	@echo "Compiling objects for $(TargetLib) ..."
 	if not exist $(OBJDIR) md $(OBJDIR)
-	$(CXX) $(CXXFLAGS) -I$(SRCDIR) -c $(SOURCES)
+	$(CXX) $(CXXFLAGS) -I$(SRCDIR) -c $(SOURCES) $(wildcard $(SRCDIR_IMPL)/*.cpp)
 	$(MV)
 
 

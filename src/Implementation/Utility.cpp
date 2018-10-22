@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 //----- Copyright deersoft 2015 - 2017 www.deersoft.de
 //-----------------------------------------------------------------------------
-#include "StdAfx.h"
+#include "Prefix/StdAfx.h"
 #include "Utility.h"
 
 /*static*/ void Utility::ConvertMatrix(const VectorworksMVR::STransformMatrix & smatrix, VWTransformMatrix & vwmatrix)

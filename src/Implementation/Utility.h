@@ -2,8 +2,7 @@
 //----- Copyright deersoft 2015 - 2017 www.deersoft.de
 //-----------------------------------------------------------------------------
 #pragma once
-#include "StdAfx.h"
-#include "VectorworksMVR.h"
+#include "Prefix/StdAfx.h"
 
 class Utility
 {   
