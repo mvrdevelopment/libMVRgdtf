@@ -26,7 +26,9 @@
 #include "../Include/VectorworksMVR.h"
 using namespace VectorworksMVR;
 
-#define VCOM_SUCCEEDED(x) (x==0)
+#define VCOM_SUCCEEDED(x)   (x==0)
+#define	VCOM_FAILED(x)      (x != kVCOMError_NoError)
+
 //---------------------------------------------------------------------------------
 // Add defines
 

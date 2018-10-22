@@ -1001,7 +1001,7 @@ VCOMError CFolderIdentifier::DuplicateOnDisk(IFolderIdentifier * newFolder, bool
 }
 VCOMError CFolderIdentifier::FormatFoldername(TXString& formatName, Uint16 maxCharsWithoutSpace)
 {
-	ASSERTN( kJWarshaw, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
@@ -1009,7 +1009,7 @@ VCOMError CFolderIdentifier::FormatFoldername(TXString& formatName, Uint16 maxCh
 		return kVCOMError_NotInitialized;
 
 	TXString	fullPath		= this->GetFullPath();
-	formatName = ::FormatFilename( fullPath, DemoteTo<short>( kVStanev, maxCharsWithoutSpace ) );
+	formatName = ::FormatFilename( fullPath, DemoteTo<short>( kEveryone, maxCharsWithoutSpace ) );
 
 	return kVCOMError_NoError;	
 }

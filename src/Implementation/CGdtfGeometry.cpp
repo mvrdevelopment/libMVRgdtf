@@ -86,7 +86,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetTransformMatrix(
 	// Check Pointer
 	if ( ! fGeometry) { return kVCOMError_NotInitialized; }
 	
-    VWFC::VWTransformMatrix ma;
+    VWFC::Math::VWTransformMatrix ma;
     
     fGeometry->GetTransformMatrix(ma);
     

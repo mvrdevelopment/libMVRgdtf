@@ -3,7 +3,7 @@
 // Copyright (c) 2014,2015 Stephan Brumme. All rights reserved.
 // see http://create.stephan-brumme.com/disclaimer.html
 //
-#include "StdAfx.h"
+#include "Prefix/StdAfx.h"
 #include "sha256.h"
 
 // big endian architectures need #define __BYTE_ORDER __BIG_ENDIAN

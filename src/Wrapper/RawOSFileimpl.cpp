@@ -61,7 +61,7 @@ VCOMError CRawOSFileImpl::Read(Uint64 position, Uint64& inoutSize, void* pOutBuf
 		return kVCOMError_NotInitialized;
 
 	VCOMError result = kVCOMError_Failed;
-	if ( std::fseek( fTheFile, DemoteTo<long>(kVStanev, position), SEEK_SET ) == 0 )
+	if ( std::fseek( fTheFile, DemoteTo<long>(kEveryone, position), SEEK_SET ) == 0 )
 	{
 
 		Uint64 read = std::fread( pOutBuffer, 1, inoutSize, fTheFile );
@@ -81,7 +81,7 @@ VCOMError CRawOSFileImpl::Write(Uint64 position, Uint64 size, const void* pBuffe
 		return kVCOMError_NotInitialized;
 
 	VCOMError result = kVCOMError_Failed;
-	if ( std::fseek( fTheFile, DemoteTo<long>(kVStanev, position), SEEK_SET ) == 0 )
+	if ( std::fseek( fTheFile, DemoteTo<long>(kEveryone, position), SEEK_SET ) == 0 )
 	{
 		size_t written = std::fwrite( pBuffer, 1, size, fTheFile );
 		if ( written == size )

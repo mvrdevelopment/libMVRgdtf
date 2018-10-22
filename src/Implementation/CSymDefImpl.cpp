@@ -3,6 +3,8 @@
 //-----------------------------------------------------------------------------
 #include "Prefix/StdAfx.h"
 #include "CMediaRessourceVectorImpl.h"
+// #include "CGeometryProviderWrapper.h"
+#include "CGeometryReferenceImpl.h"
 #include "Utility.h"
 
 using namespace VectorWorks::Filing;
@@ -19,9 +21,10 @@ VectorworksMVR::CSymDefImpl::~CSymDefImpl()
 	fPtr		= nullptr;
 	fContext	= nullptr;
 
-	for(auto it : farrGeometryWrappers)
-		delete it;
-	farrGeometryWrappers.clear();
+	// TODO MORITZ CHECK
+	// for(auto it : farrGeometryWrappers)
+	// 	delete it;
+	// farrGeometryWrappers.clear();
 }
 
 MvrString VectorworksMVR::CSymDefImpl::GetName()
@@ -103,34 +106,33 @@ VectorworksMVR::VCOMError VectorworksMVR::CSymDefImpl::GetGeometryAt(size_t at, 
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CSymDefImpl::AddGeometry(const STransformMatrix& scMatrix, IGeometryProvider* provider)
-{
-	ASSERTN(kEveryone, provider);
-	if( ! provider ) return kVCOMError_InvalidArg;
+// TODO MORITZ CHECK
+// VectorworksMVR::VCOMError VectorworksMVR::CSymDefImpl::AddGeometry(const STransformMatrix& scMatrix)
+// {
+// 	ASSERTN(kEveryone, provider);
+// 	if( ! provider ) return kVCOMError_InvalidArg;
 
-	CGeometryProviderWrapper* providerWrapper = new CGeometryProviderWrapper( provider );
-
-	//---------------------------------------------------------------------------
-	// Create the new object, and set the file name
-	SceneData::SceneDataGeometryObjPtr geometryObject = new SceneData::SceneDataGeometryObj();
-	geometryObject->SetGeometryProvider( providerWrapper );
+// 	//---------------------------------------------------------------------------
+// 	// Create the new object, and set the file name
+// 	SceneData::SceneDataGeometryObjPtr geometryObject = new SceneData::SceneDataGeometryObj();
+// 	geometryObject->SetGeometryProvider( providerWrapper );
 	
-	farrGeometryWrappers.push_back( providerWrapper );
+// 	farrGeometryWrappers.push_back( providerWrapper );
 	
-	//---------------------------------------------------------------------------
-	// Set Transfrom Matrix
-	VWTransformMatrix ma;
-	Utility::ConvertMatrix(scMatrix, ma);
-	geometryObject->SetTransformMatrix(ma);
+// 	//---------------------------------------------------------------------------
+// 	// Set Transfrom Matrix
+// 	VWTransformMatrix ma;
+// 	Utility::ConvertMatrix(scMatrix, ma);
+// 	geometryObject->SetTransformMatrix(ma);
 		
 		
-	//---------------------------------------------------------------------------
-	// Simply add it to the the array, deletion will be handeld by the container
-	fPtr->Add(geometryObject);
+// 	//---------------------------------------------------------------------------
+// 	// Simply add it to the the array, deletion will be handeld by the container
+// 	fPtr->Add(geometryObject);
 
-	// If export fails, just return false
-	return kVCOMError_NoError;
-}
+// 	// If export fails, just return false
+// 	return kVCOMError_NoError;
+// }
 
 VectorworksMVR::VCOMError VectorworksMVR::CSymDefImpl::AddSymbol(const STransformMatrix& geometry, ISymDef* symDef)
 {
@@ -158,7 +160,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSymDefImpl::AddSymbol(const STransfor
 	
 	//------------------------------------------------------------------------------------------
 	// Create new geometry obj
-	SceneData::SceneDataSymbolObjPtr newSymbolObj = new SceneData::SceneDataSymbolObj(SceneData::SceneDataGUID(VWFC::UUID()));
+	SceneData::SceneDataSymbolObjPtr newSymbolObj = new SceneData::SceneDataSymbolObj(SceneData::SceneDataGUID(VWFC::Tools::UUID()));
 	
 	// Set Transfrom Matrix
 	VWTransformMatrix ma;

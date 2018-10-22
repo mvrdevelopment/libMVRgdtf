@@ -3,6 +3,10 @@
 //-----------------------------------------------------------------------------
 #include "Prefix/StdAfx.h"
 #include "CMediaRessourceVectorImpl.h"
+
+// TODO MORITZ CHECK
+// #include "CGeometryReferenceImpl.h"
+
 #include "CGdtfFixture.h"
 #include "Utility.h"
 
@@ -21,10 +25,6 @@ VectorworksMVR::CSceneObjImpl::~CSceneObjImpl()
 	fPtr	= nullptr;
 	fContext= nullptr;
 	fType	= ESceneObjType::Group;
-
-	for(auto it : farrGeometryWrappers)
-		delete it;
-	farrGeometryWrappers.clear();
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetType(ESceneObjType& outType)
