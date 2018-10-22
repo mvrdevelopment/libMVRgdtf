@@ -13,8 +13,6 @@ namespace VWFC
 {
 	namespace Math
 	{
-		class VWRectangle2D;
-
 		class VWLine2D
 		{
 		public:
@@ -65,8 +63,6 @@ namespace VWFC
 			bool				PtOnLinePoints(const VWPoint2D& pt, double dEpsilon) const;
 			// checks if point is on left side of the line.
 			bool				PtOnLeft(const VWPoint2D& pt) const;
-			// fast check if a point is near the line segment.
-			bool				PtNearLine(const VWPoint2D& pt, VWPoint2D& outClosestPt, double tolerance) const;
 			// get the angle 0 .. 90 from this line to the specified line
 			double				GetAngle90(const VWLine2D& line) const;
 			// return direction of the line: normal vector (b - a)
@@ -109,8 +105,6 @@ namespace VWFC
 			// return true if the specified two points are on the same side of the line
 			bool				AreOnSameSide(double x1, double y1, double x2, double y2);
 			bool				AreOnSameSide(const VWPoint2D& a, const VWPoint2D& b);
-			// gets the bounding box of this line.
-			VWRectangle2D		GetLineBounds() const;
 
 			// Boolean Functions			
 			bool				Subtract(const VWLine2D& tool, std::vector<VWLine2D> results) const;
@@ -118,7 +112,6 @@ namespace VWFC
 		// Tools
 		public:
 			static bool			PtOnLine(const VWPoint2D& pt, const VWPoint2D& lineA, const VWPoint2D& lineB, double dEpsilon);
-			static bool			PtOnLine_Fast(const VWPoint2D& pt, const VWPoint2D& lnPt1, const VWPoint2D& lnPt2, double epsilon);
 			static void			IntersectLines(const VWPoint2D& p1, const VWPoint2D& p2, const VWPoint2D& p3, const VWPoint2D& p4, VWPoint2D& outInters, bool& outParallel, bool& outOnSegment1, bool& outOnSegment2);
 			static void			IntersectLines(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, double& outIntersX, double& outIntersY, bool& outParallel, bool& outOnSegment1, bool& outOnSegment2, double dEpsilon);
 			static void			IntersectLines(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, double& outIntersX, double& outIntersY, bool& outParallel, bool& outOnSeg1Pt1, bool& outOnSeg1Pt2, bool& outOnSegment1, bool& outOnSegment2, double epsilon);
@@ -139,8 +132,6 @@ namespace VWFC
 			static VWPoint2D	PtPerpLineSeg(const VWPoint2D& pt, const VWPoint2D& lnPt0, const VWPoint2D& lnPt1, double& outSqrDist);
 			// returns the closest point to the line segment. it is a optimized/faster version which uses squared length.
 			static void			PtPerpLine(double pX, double pY, double l1X, double l1Y, double l2X, double l2Y, double& outProjX, double& outProjY);
-			// fast check if a point is near the line segment.
-			static bool			PtNearLine(const VWPoint2D& pt, const VWPoint2D& lnPt0, const VWPoint2D& lnPt1, VWPoint2D& outClosestPt, double tolerance);
 			// checks if point is on left side of the line defined by two points.
 			static bool			PtOnLeftOfLine(const VWPoint2D& pt, const VWPoint2D& lnPt0, const VWPoint2D& lnPt1);
 			// checks if point is on left side of the ray defined by ray point and vector.

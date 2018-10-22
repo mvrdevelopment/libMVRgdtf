@@ -250,12 +250,6 @@ bool VWLine2D::PtOnLeft(const VWPoint2D& pt) const
 	return	( VWLine2D::PtOnLeftOfLine( pt, m_ptStart, m_ptEnd ) );
 }
 
-// fast check if a point is near the line segment.
-bool VWLine2D::PtNearLine(const VWPoint2D& pt, VWPoint2D& outClosestPt, double tolerance) const
-{
-	return	( VWLine2D::PtNearLine( pt, m_ptStart, m_ptEnd, outClosestPt, tolerance ) );
-}
-
 // return true if the specified point is on the line within an epsilon
 bool VWLine2D::PtOnLine(const VWPoint2D& pt, double dEpsilon) const
 {
@@ -276,48 +270,6 @@ bool VWLine2D::PtOnLine(const VWPoint2D& pt, const VWPoint2D& lineA, const VWPoi
 	}
 
 	return bPtOnLine;
-}
-
-// fast check if a point lies on a line segment.
-bool VWLine2D::PtOnLine_Fast(const VWPoint2D& pt, const VWPoint2D& lnPt1, const VWPoint2D& lnPt2, double epsilon)
-{
-	bool					isOnLine	= false;
-
-	// get line bounding box.
-	VWRectangle2D			bboxLine(	lnPt1.x, lnPt2.x,	// left / right.
-										lnPt1.y, lnPt2.y );	// top / bottom.
-
-	if ( MathUtils::Equalish( bboxLine.GetWidth(),	0.0, epsilon ) ||
-		 MathUtils::Equalish( bboxLine.GetHeight(),	0.0, epsilon ) )	// the line bounding box is too narrow.
-	{
-		// use the standard check here.
-		isOnLine						= VWLine2D::PtOnLine( pt, lnPt1, lnPt2, epsilon );
-	}
-	else																// the line bounding box is wide enough.
-	{
-		// check if point is inside the line bounding box.
-		// this will mean that point might lie on the line segment (limiting the search area).
-		if ( bboxLine.IsPtInside( pt, epsilon ) )
-		{
-			// get the squared epsilon.
-			double			sqrEpsilon	= ( epsilon * epsilon );
-
-			double			sqrLineLen	= VWPoint2D::DistanceSqare( lnPt1.x, lnPt1.y, lnPt2.x, lnPt2.y );
-			if ( sqrLineLen > sqrEpsilon )				// it is a correct line (its ends doesn't coincide).
-			{
-				// get squared distance to line.
-				double		A			= ( (lnPt2.x - lnPt1.x) * (lnPt1.y - pt.y) - (lnPt1.x - pt.x) * (lnPt2.y - lnPt1.y) );
-				double		sqrDist		= ( (A * A) / sqrLineLen );
-				if ( sqrDist < sqrEpsilon )
-				{
-					isOnLine			= true;
-				}
-			}
-		}
-	}
-
-	// result.
-	return	isOnLine;
 }
 
 // get the angle 0 .. 90 from this line to the specified line
@@ -423,21 +375,6 @@ bool VWLine2D::AreOnSameSide(double x1, double y1, double x2, double y2)
 bool VWLine2D::AreOnSameSide(const VWPoint2D& a, const VWPoint2D& b)
 {
 	return this->AreOnSameSide( a.x, a.y, b.x, b.y );
-}
-
-// gets the bounding box of this line.
-VWRectangle2D VWLine2D::GetLineBounds() const
-{
-	// reorder coordinates.
-	double			xMin, yMin, xMax, yMax;
-
-	if ( m_ptStart.x < m_ptEnd.x )	{ xMin = m_ptStart.x;	xMax = m_ptEnd.x;	}
-	else							{ xMin = m_ptEnd.x;		xMax = m_ptStart.x;	}
-	if ( m_ptStart.y < m_ptEnd.y )	{ yMin = m_ptStart.y;	yMax = m_ptEnd.y;	}
-	else							{ yMin = m_ptEnd.y;		yMax = m_ptStart.y;	}
-
-	// result.
-	return	( VWRectangle2D( xMin /*left*/, xMax /*right*/, yMax /*top*/, yMin /*bottom*/ ) );
 }
 
 // intersect the infinite lines. The result point can be outside the line segments
@@ -716,170 +653,6 @@ void VWLine2D::IntersectLines(const VWPoint2D& a1, const VWPoint2D& a2, const VW
 	}
 }
 
-// checks if line [pt1,pt2] intersects with line [pt3,pt4], returns intersection line/point.
-// note that even if lines are parallel, it checks for overlapping between them considered as intersection.
-/*static*/ void VWLine2D::IntersectLines(const VWPoint2D& pt1, const VWPoint2D& pt2, const VWPoint2D& pt3, const VWPoint2D& pt4, VWLine2D& outIntersLine, bool& outParallel, bool& outOnSeg1, bool& outOnSeg2, double epsCoord, double epsCollinear)
-{
-	// init.
-	outOnSeg1							= false;
-	outOnSeg2							= false;
-	outParallel							= false;
-
-	// check whether bounding boxes of the line segments have common area.
-	if ( VWLine2D::DoLineSegmentsBoundsIntersect( pt1.x, pt1.y, pt2.x, pt2.y, pt3.x, pt3.y, pt4.x, pt4.y, epsCoord ) )
-	{
-		// get lines' vectors.
-		const VWPoint2D&	line1Vec	= ( pt2 - pt1 );
-		const VWPoint2D&	line2Vec	= ( pt4 - pt3 );
-
-		// check the two lines.
-		double				line1Len	= line1Vec.Magnitude();
-		double				line2Len	= line2Vec.Magnitude();
-
-		bool				isLine1Deg	= MathUtils::Equalish( line1Len, 0.0, epsCoord );
-		bool				isLine2Deg	= MathUtils::Equalish( line2Len, 0.0, epsCoord );
-
-		if ( isLine1Deg && isLine2Deg )	// both lines are degenerate zero-length lines.
-		{
-			if ( MathUtils::Equalish( pt1, pt3, epsCoord ) )
-			{
-				outOnSeg1				= true;
-				outOnSeg2				= true;
-				outParallel				= true;
-
-				// the intersection.
-				outIntersLine.SetLine( pt1, pt1 );	// degenerate point-like line.
-			}
-		}
-		else if ( isLine1Deg )			// first line is degenerate.
-		{
-			VWPoint2D		closestPt;
-			if ( VWLine2D::PtNearLine( pt1, pt3, pt4, closestPt, epsCoord ) )
-			{
-				outOnSeg1				= true;
-				outOnSeg2				= true;
-				outParallel				= true;
-
-				// the intersection.
-				outIntersLine.SetLine( closestPt, closestPt );	// degenerate point-like line.
-			}
-		}
-		else if ( isLine2Deg )			// the 'line' is degenerate.
-		{
-			VWPoint2D		closestPt;
-			if ( VWLine2D::PtNearLine( pt3, pt1, pt2, closestPt, epsCoord ) )
-			{
-				outOnSeg1				= true;
-				outOnSeg2				= true;
-				outParallel				= true;
-
-				// the intersection.
-				outIntersLine.SetLine( closestPt, closestPt );	// degenerate point-like line.
-			}
-		}
-		else							// both lines are non-degenerate.
-		{
-			double			x21			= ( pt2.x - pt1.x );
-			double			x43			= ( pt4.x - pt3.x );
-			double			y21			= ( pt2.y - pt1.y );
-			double			y43			= ( pt4.y - pt3.y );
-
-			// cross product of the vectors (pt1->pt2) and (pt3->pt4).
-			double			t			= ( y43 * x21 - x43 * y21 );
-
-			// XXX Bobi:
-			// since this is a direction test the checked vectors must be normalized.
-			// otherwise, if they differ greatly in length then the result becomes unstable.
-			// knowing lengths we could fast and easily get the cross product of the normalized vectors.
-			// note that here we already know that both lines are not zero-length lines.
-
-			// get the cross product of the normalized vectors.
-			double			tNorm		= ( t / ( line1Len * line2Len ) );
-
-			if ( Abs( tNorm ) > epsCollinear )	// not parallel.
-			{
-				double		x13			= ( pt1.x - pt3.x );
-				double		y13			= ( pt1.y - pt3.y );
-				double		oneDivT		= ( 1 / t );
-
-				double		ua			= ( x43 * y13 - y43 * x13 ) * oneDivT;
-				double		ub			= ( x21 * y13 - y21 * x13 ) * oneDivT;
-
-				// the intersection.
-				VWPoint2D	intersPt( pt1.x + ( ua * x21 ), pt1.y + ( ua * y21 ) );
-				outIntersLine.SetLine( intersPt, intersPt );	// degenerate point-like line.
-
-				// prepare the epsilon for checking the x-coefficient.
-				double		eps			= epsCoord;
-				double		absX21		= Abs( x21 );
-				if ( absX21 > VWPoint2D::sEpsilon )
-				{
-					eps					= ( epsCoord / absX21 );
-				}
-
-				// compare.
-				outOnSeg1				= ( - eps < ua )	&& ( ua < 1.0 + eps );	// on segment 1.
-
-				// prepare the epsilon for checking the y-coefficient.
-				eps						= epsCoord;
-				double		absY21		= Abs( y21 );
-				if ( absY21 > VWPoint2D::sEpsilon )
-				{
-					eps					= ( epsCoord / absY21 );
-				}
-
-				// compare.
-				outOnSeg2				= ( - eps < ub )	&& ( ub < 1.0 + eps );	// on segment 2.
-			}
-			else						// parallel.
-			{
-				outParallel				= true;
-
-				VWPoint2D				closestPt;
-
-				// check whether the lines (line segments) overlap and get the overlapping ends.
-				VWPoint2D				endPts[ 2 ];
-				size_t					endsCnt		= 0;
-
-				const VWPoint2D*		l1Pts[ 2 ]	= { ( & pt1 ), ( & pt2 ) };
-				for ( size_t i = 0 ; ( i < 2 ) && ( endsCnt < 2 ) ; ++ i )
-				{
-					const VWPoint2D&	pt			= ( * l1Pts[ i ] );
-					if ( VWLine2D::PtNearLine( pt, pt3, pt4, closestPt, epsCoord ) )
-					{
-						endPts[ endsCnt ]			= pt;
-						++ endsCnt;
-					}
-				}
-
-				if ( endsCnt < 2 )					// still not all cases examined.
-				{
-					const VWPoint2D*	l2Pts[ 2 ]	= { ( & pt3 ), ( & pt4 ) };
-					for ( size_t i = 0 ; ( i < 2 ) && ( endsCnt < 2 ) ; ++ i )
-					{
-						const VWPoint2D&	pt		= ( * l2Pts[ i ] );
-						if ( VWLine2D::PtNearLine( pt, pt1, pt2, closestPt, epsCoord ) &&									// point on this line and ...
-							 ( i != 0 || endsCnt != 1 || ! MathUtils::Equalish( endPts[ endsCnt - 1 ], pt, epsCoord ) ) )	// ... not already added.
-						{
-							endPts[ endsCnt ]		= pt;
-							++ endsCnt;
-						}
-					}
-				}
-
-				if ( endsCnt > 0 )					// has intersections.
-				{
-					if		( endsCnt == 1 )		outIntersLine.SetLine( endPts[ 0 ], endPts[ 0 ] );	// degenerate point-like line.
-					else if ( endsCnt == 2 )		outIntersLine.SetLine( endPts[ 0 ], endPts[ 1 ] );	// non-degenerate line.
-
-					outOnSeg1						= true;
-					outOnSeg2						= true;
-				}
-			}
-		}
-	}
-}
-
 // only checks if line segment [(x1,y1)(x2,y2)] intersects with line segment [(x3,y3)(x4,y4)]. for faster check.
 bool VWLine2D::AreLineSegmentsIntersecting(const VWPoint2D& p1, const VWPoint2D& p2, const VWPoint2D& p3, const VWPoint2D& p4, double dEpsilon)
 {
@@ -1101,32 +874,6 @@ bool VWLine2D::DoLineSegmentsBoundsIntersect(double x1, double y1, double x2, do
 	// prepare the result - the projected point coordinates.
 	outProjX	= l1X + ( dot * lineDeltaX * oneOverSqrLen );
 	outProjY	= l1Y + ( dot * lineDeltaY * oneOverSqrLen );
-}
-
-// fast check if a point is near the line segment.
-/*static*/ bool VWLine2D::PtNearLine(const VWPoint2D& pt, const VWPoint2D& lnPt0, const VWPoint2D& lnPt1, VWPoint2D& outClosestPt, double tolerance)
-{
-	// init.
-	bool			isNearLine	= false;
-
-	// get line bounding box.
-	VWRectangle2D	bboxLine(	lnPt0.x, lnPt1.x,	// left / right.
-								lnPt0.y, lnPt1.y );	// top / bottom.
-
-	// check if point is within the tolerance to the line bounding box.
-	// this will mean that point might be near the line segment (limiting the search area).
-	if ( bboxLine.IsPtInside( pt, tolerance ) )
-	{
-		double		sqrDistToLn;
-		// get the closest point on line.
-		outClosestPt			= VWLine2D::PtPerpLineSeg( pt, lnPt0, lnPt1, sqrDistToLn );
-
-		// get if the point is near the line within the tolerance.
-		isNearLine				= ( sqrDistToLn < sqr( tolerance ) );
-	}
-
-	// result.
-	return	( isNearLine );
 }
 
 // checks if point is on left side of the line defined by two points.
