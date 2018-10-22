@@ -5,7 +5,6 @@
 //
 
 #include "Prefix/StdAfx.h"
-#include "V"
 
 using namespace VWFC::Math;
 

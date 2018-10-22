@@ -4,8 +4,7 @@
 //	http://developer.vectorworks.net/index.php?title=Vectorworks_SDK_License
 //
 
-#include "StdHeaders.h"
-#include "VectorworksSDK.h"
+#include "Prefix/StdAfx.h"
 
 using namespace VWFC::Math;
 

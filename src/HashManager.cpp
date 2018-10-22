@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 //----- Copyright deersoft 2015 - 2017 www.deersoft.de
 //-----------------------------------------------------------------------------
-#include "StdAfx.h"
+#include "Prefix/StdAfx.h"
 #include "HashManager.h"
 #include "sha256/sha256.h"
 #include "GDTFManager.h"

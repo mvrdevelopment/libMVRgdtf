@@ -50,6 +50,7 @@ using namespace VectorworksMVR;
 #include "../VWPoint2D.h"
 #include "../VWPoint3D.h"
 #include "../VWLine2D.h"
+#include "../VWLine3D.h"
 #include "../VWMathUtils.h"
 #include "../VWTransformMatrix.h"
 #include "../UUID.h"
