@@ -3,9 +3,7 @@
 //-----------------------------------------------------------------------------
 #include "Prefix/StdAfx.h"
 #include "CMediaRessourceVectorImpl.h"
-
-// TODO MORITZ CHECK
-// #include "CGeometryReferenceImpl.h"
+#include "CGeometryReferenceImpl.h"
 
 #include "CGdtfFixture.h"
 #include "Utility.h"

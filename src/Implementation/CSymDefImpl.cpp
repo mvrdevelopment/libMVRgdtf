@@ -106,33 +106,26 @@ VectorworksMVR::VCOMError VectorworksMVR::CSymDefImpl::GetGeometryAt(size_t at, 
 	return kVCOMError_NoError;
 }
 
-// TODO MORITZ CHECK
-// VectorworksMVR::VCOMError VectorworksMVR::CSymDefImpl::AddGeometry(const STransformMatrix& scMatrix)
-// {
-// 	ASSERTN(kEveryone, provider);
-// 	if( ! provider ) return kVCOMError_InvalidArg;
-
-// 	//---------------------------------------------------------------------------
-// 	// Create the new object, and set the file name
-// 	SceneData::SceneDataGeometryObjPtr geometryObject = new SceneData::SceneDataGeometryObj();
-// 	geometryObject->SetGeometryProvider( providerWrapper );
+VectorworksMVR::VCOMError VectorworksMVR::CSymDefImpl::AddGeometry(const STransformMatrix& scMatrix)
+{
+	//---------------------------------------------------------------------------
+	// Create the new object, and set the file name
+	SceneData::SceneDataGeometryObjPtr geometryObject = new SceneData::SceneDataGeometryObj();
 	
-// 	farrGeometryWrappers.push_back( providerWrapper );
-	
-// 	//---------------------------------------------------------------------------
-// 	// Set Transfrom Matrix
-// 	VWTransformMatrix ma;
-// 	Utility::ConvertMatrix(scMatrix, ma);
-// 	geometryObject->SetTransformMatrix(ma);
+	//---------------------------------------------------------------------------
+	// Set Transfrom Matrix
+	VWTransformMatrix ma;
+	Utility::ConvertMatrix(scMatrix, ma);
+	geometryObject->SetTransformMatrix(ma);
 		
 		
-// 	//---------------------------------------------------------------------------
-// 	// Simply add it to the the array, deletion will be handeld by the container
-// 	fPtr->Add(geometryObject);
+	//---------------------------------------------------------------------------
+	// Simply add it to the the array, deletion will be handeld by the container
+	fPtr->Add(geometryObject);
 
-// 	// If export fails, just return false
-// 	return kVCOMError_NoError;
-// }
+	// If export fails, just return false
+	return kVCOMError_NoError;
+}
 
 VectorworksMVR::VCOMError VectorworksMVR::CSymDefImpl::AddSymbol(const STransformMatrix& geometry, ISymDef* symDef)
 {

@@ -210,7 +210,7 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetGeometryCount(size_t& outCount) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetGeometryAt(size_t at, IGeometryReference** outGeometryRef) = 0;
 		
-		virtual VCOMError VCOM_CALLTYPE		AddGeometry(const STransformMatrix& geometry, IGeometryProvider* provider) = 0;
+		virtual VCOMError VCOM_CALLTYPE		AddGeometry(const STransformMatrix& geometry) = 0;
 		virtual VCOMError VCOM_CALLTYPE		AddSymbol(const STransformMatrix& geometry, ISymDef* symDef) = 0;
 		
 	};
@@ -241,7 +241,7 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetGeometryAt(size_t at, IGeometryReference** outGeometryRef) = 0;
 		
 		
-		virtual VCOMError VCOM_CALLTYPE		AddGeometry(const STransformMatrix& geometry, IGeometryProvider* provider) = 0;
+		virtual VCOMError VCOM_CALLTYPE		AddGeometry(const STransformMatrix& geometry) = 0;
 		virtual VCOMError VCOM_CALLTYPE		AddSymbol(const STransformMatrix& geometry, ISymDef* symDef) = 0;
 		
 		virtual VCOMError VCOM_CALLTYPE		GetClass(IClass** outClass) = 0;
