@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "Prefix/StdAfx.h"
 
 #include "TDQuickDraw.h"
 

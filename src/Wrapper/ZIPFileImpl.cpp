@@ -98,7 +98,6 @@ VCOMError CZIPFileIOBufferImpl::SetData(void* pBuffer, size_t bufferSize)
 CZIPFileImpl::CZIPFileImpl()
 {
 	fRefCnt					= 0;
-	fCBP					= gCBP;
 
 	fpOpenedFile			= NULL;
 	fpOpenedFileID			= NULL;
@@ -110,38 +109,25 @@ CZIPFileImpl::CZIPFileImpl()
 	fOpenedFileFullPath		= "";
 
 }
-CZIPFileImpl::CZIPFileImpl( CallBackPtr cbp )
-{
-	fRefCnt				= 0;
-	fCBP				= cbp;
-	
-	fpOpenedFile		= NULL;
-	fpOpenedFileID		= NULL;
-
-	fbOpenedWrite		= false;
-
-	fFolderPath			= "";
-	fOpenedFileFullPath = "";
-}
 
 CZIPFileImpl::~CZIPFileImpl()
 {
 }
-Sint32 CZIPFileImpl::AddRef()
+uint32_t CZIPFileImpl::AddRef()
 {
 	fRefCnt ++;
 	return fRefCnt;
 }
 
-Sint32 CZIPFileImpl::Release()
+uint32_t CZIPFileImpl::Release()
 {
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt > 0 ) {
 		fRefCnt --;
 
 		// mechanizm for immediate delete of the interface instance
 		if ( fRefCnt == 0 ) {
-			::GS_VWNotifyDeleteInterface( this );
+			// ::GS_VWNotifyDeleteInterface( this ); TODO
 			// EXIT IMMEDIATELY! 'this' no longer exist!!!
 			return 0;
 		}

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "Prefix/StdAfx.h"
 
 #include "FilingWrapper.h"
 
@@ -97,7 +97,7 @@ bool TFolderIdentifier::CreateOnDisk(const TXString& fullPath)
 {
 	bool result = false;
 
-#ifdef _WINDOWS
+#ifdef GS_WIN
 	result = CreateDirectory(fullPath, NULL) || ERROR_ALREADY_EXISTS == GetLastError();
 #else
 	// Get pointer
@@ -158,7 +158,7 @@ bool TFolderIdentifier::RevealInOS()
 	struct stat sb;
 	if ( stat(ptr, &sb) == 0 && S_ISDIR(sb.st_mode) )
 		result = TFolderIdentifier::eFolderExists;
-#else
+#elif _MAC
 	// Use mkdir on posix systems
 	const char *	ptr			= fullPath.GetCharPtr();
 	int				createdDir	=  mkdir(ptr, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
@@ -384,7 +384,7 @@ bool GetFolderAppDataPath(TXString& outPath)
 
 	const char *homedir = pw->pw_dir;
 	outPath = TXString(homedir);
-#else
+#elif _MAC
 	//--------------------------------------------------------
 	//Implementation for OSX
 	FSRef ref;
