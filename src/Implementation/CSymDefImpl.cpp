@@ -20,11 +20,6 @@ VectorworksMVR::CSymDefImpl::~CSymDefImpl()
 {
 	fPtr		= nullptr;
 	fContext	= nullptr;
-
-	// TODO MORITZ CHECK
-	// for(auto it : farrGeometryWrappers)
-	// 	delete it;
-	// farrGeometryWrappers.clear();
 }
 
 MvrString VectorworksMVR::CSymDefImpl::GetName()

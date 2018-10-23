@@ -2,12 +2,10 @@
 // Copyright (c) Diehl Graphsoft, Inc. 2006.
 // All Rights Reserved.
 // 
-
-#include "StdHeaders.h"	// Must be first non-comment line.  See StdHeaders.h for explanation.
-
 #include "FileIdentifier.h"
 #include "FolderIdentifier.h"
 #include "UTranslateFiles.h"
+#include "FilingWrapper.h"
 #include <sys/stat.h>
 
 using namespace VectorWorks::Filing;
@@ -25,22 +23,23 @@ CFileIdentifier::~CFileIdentifier()
 	fFolderID.Release();
 }
 
-Sint32 CFileIdentifier::AddRef()
+uint32_t CFileIdentifier::AddRef()
 {
 	fRefCnt ++;
 	return fRefCnt;
 }
 
-Sint32 CFileIdentifier::Release()
+uint32_t CFileIdentifier::Release()
 {
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt > 0 ) {
 		fRefCnt --;
 
 		// mechanizm for immediate delete of the interface instance
 		if ( fRefCnt == 0 ) {
-			::GS_VWNotifyDeleteInterface( this );
+			//::GS_VWNotifyDeleteInterface( this );
 			// EXIT IMMEDIATELY! 'this' no longer exist!!!
+			// TODO
 			return 0;
 		}
 	}
@@ -60,7 +59,7 @@ TXString  CFileIdentifier::GetFileFullPath() const
 
 VCOMError CFileIdentifier::SetFileFullPath(const TXString& fileFullName)
 {
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
@@ -126,7 +125,7 @@ VCOMError CFileIdentifier::SetFileFullPath(const TXString& fileFullName)
 
 VCOMError CFileIdentifier::Set(const TXString& fullPath)
 {
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
@@ -138,7 +137,7 @@ VCOMError CFileIdentifier::Set(const TXString& fullPath)
 
 VCOMError CFileIdentifier::Set(EFolderSpecifier folderSpec, bool bUserFolder, const TXString& fileName)
 {
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
@@ -172,7 +171,7 @@ VCOMError CFileIdentifier::Set(EFolderSpecifier folderSpec, bool bUserFolder, co
 
 VCOMError CFileIdentifier::Set(IFolderIdentifier* pFolderID, const TXString& fileName)
 {
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
@@ -206,7 +205,7 @@ VCOMError CFileIdentifier::Set(IFolderIdentifier* pFolderID, const TXString& fil
 
 VCOMError CFileIdentifier::Clear()
 {
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
@@ -230,7 +229,7 @@ VCOMError CFileIdentifier::IsSet()
 
 VCOMError CFileIdentifier::ExistsOnDisk(bool& outValue)
 {
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
@@ -250,7 +249,7 @@ VCOMError CFileIdentifier::ExistsOnDisk(bool& outValue)
 
 VCOMError CFileIdentifier::GetFileFullPath(TXString& outPath)
 {
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
@@ -265,7 +264,7 @@ VCOMError CFileIdentifier::GetFileFullPath(TXString& outPath)
 
 VCOMError CFileIdentifier::GetFileName(TXString& outName)
 {
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
@@ -313,7 +312,7 @@ VCOMError CFileIdentifier::GetFileSize (size_t& outSize)
 
 VCOMError CFileIdentifier::SetFileName(const TXString& name)
 {
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 	if ( VCOM_FAILED( this->IsSet() ) )
@@ -331,7 +330,7 @@ VCOMError CFileIdentifier::SetFileName(const TXString& name)
 
 VCOMError CFileIdentifier::GetFileExtension(TXString& outExtension)
 {
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
@@ -348,7 +347,7 @@ VCOMError CFileIdentifier::GetFileExtension(TXString& outExtension)
 
 VCOMError CFileIdentifier::SetFileExtension(const TXString& extension)
 {
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
@@ -373,7 +372,7 @@ VCOMError CFileIdentifier::SetFileExtension(const TXString& extension)
 
 VCOMError CFileIdentifier::GetFileNameWithoutExtension(TXString& outName)
 {
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
@@ -391,7 +390,7 @@ VCOMError CFileIdentifier::GetFileNameWithoutExtension(TXString& outName)
 
 VCOMError CFileIdentifier::GetFolder(IFolderIdentifier** ppOutParentFolderID)
 {
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
@@ -406,9 +405,10 @@ VCOMError CFileIdentifier::GetFolder(IFolderIdentifier** ppOutParentFolderID)
 		*ppOutParentFolderID = NULL;
 	}
 
-	VCOMError	error	= ::GS_VWQueryInterface( IID_FolderIdentifier, (IVWUnknown**) ppOutParentFolderID );
-	if ( error != kVCOMError_NoError )
-		return error;
+	// TODO
+	// VCOMError	error	= ::GS_VWQueryInterface( IID_FolderIdentifier, (IVWUnknown**) ppOutParentFolderID );
+	// if ( error != kVCOMError_NoError )
+	// 	return error;
 
 	CFolderIdentifier*	pParentFolder	= dynamic_cast<CFolderIdentifier*>( *ppOutParentFolderID );
 	if ( pParentFolder == NULL )
@@ -422,7 +422,7 @@ VCOMError CFileIdentifier::GetFolder(IFolderIdentifier** ppOutParentFolderID)
 
 VCOMError CFileIdentifier::GetAttributes(SAttributes& outAttributes)
 {
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
@@ -468,7 +468,7 @@ VCOMError CFileIdentifier::GetAttributes(SAttributes& outAttributes)
 
 VCOMError CFileIdentifier::SetAttributes(const SAttributes& attributes)
 {
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 	if ( VCOM_FAILED( this->IsSet() ) )
@@ -479,7 +479,7 @@ VCOMError CFileIdentifier::SetAttributes(const SAttributes& attributes)
 
 VCOMError CFileIdentifier::GetAttributesTimeDateReference(EAttributesTimeReference ref, SAttributesDateTime& outData)
 {
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
@@ -527,7 +527,7 @@ VCOMError CFileIdentifier::GetAttributesTimeDateReference(EAttributesTimeReferen
 
 VCOMError CFileIdentifier::SetAttributesTimeDateReference(EAttributesTimeReference ref, const SAttributesDateTime& data)
 {
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 	if ( VCOM_FAILED( this->IsSet() ) )
@@ -538,7 +538,7 @@ VCOMError CFileIdentifier::SetAttributesTimeDateReference(EAttributesTimeReferen
 
 VCOMError CFileIdentifier::DeleteOnDisk()
 {
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
@@ -566,7 +566,7 @@ VCOMError CFileIdentifier::DeleteOnDisk()
 
 VCOMError CFileIdentifier::RenameOnDisk(const TXString& newName)
 {
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
@@ -611,7 +611,7 @@ VCOMError CFileIdentifier::RenameOnDisk(const TXString& newName)
 
 VCOMError CFileIdentifier::DuplicateOnDisk(IFileIdentifier *pDestFileID, bool bOverwrite)
 {
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
@@ -641,7 +641,7 @@ VCOMError CFileIdentifier::DuplicateOnDisk(IFileIdentifier *pDestFileID, bool bO
 
 VCOMError CFileIdentifier::LaunchInOS()
 { 
-//	ASSERTN( kJWarshaw, fRefCnt > 0 );
+//	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
@@ -664,7 +664,7 @@ VCOMError CFileIdentifier::LaunchInOS()
 
 VCOMError CFileIdentifier::RevealInOS()
 {
-	ASSERTN( kJWarshaw, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
@@ -682,7 +682,7 @@ VCOMError CFileIdentifier::RevealInOS()
 
 VCOMError CFileIdentifier::FormatFilename(TXString& formatName, Uint16 maxCharsWithoutSpace)
 {
-	ASSERTN( kJWarshaw, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
@@ -690,7 +690,7 @@ VCOMError CFileIdentifier::FormatFilename(TXString& formatName, Uint16 maxCharsW
 		return kVCOMError_NotInitialized;
 
 	TXString	fullPath		= this->GetFileFullPath();
-	formatName = ::FormatFilename( fullPath, DemoteTo<short>( kVStanev, maxCharsWithoutSpace ) );
+	formatName = ::FormatFilename( fullPath, DemoteTo<short>( kEveryone, maxCharsWithoutSpace ) );
 
 	return kVCOMError_NoError;	
 }

@@ -255,4 +255,6 @@ enum EFolderSpecifier {
 	kObjectsLandscapeFurnishings				= 309,
 };
 
+typedef Sint32 FolderSpecifier;
+
 #endif

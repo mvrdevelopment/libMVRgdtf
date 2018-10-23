@@ -98,7 +98,7 @@ VCOMError CFolderIdentifier::SetFullPath(const TXString& fullPath)
 	{
 		// cut off everything before '/' or or '\' from the path
 		// Mac paths are in the posix form: /Folder1/Folder2/...
-		char	firstCh	= theFullPath.at( 0 );
+		char	firstCh	= theFullPath.GetAt( 0 );
 		if ( firstCh != '/' && firstCh != '\\' && firstCh != ':' ) {
 			int				at			= theFullPath.Find( '\\', 0 );
 			int				at1			= theFullPath.Find( '/', 0 );
@@ -131,7 +131,7 @@ VCOMError CFolderIdentifier::SetFullPath(const TXString& fullPath)
 
 
 	// ensure proper POSIX path files for in the root
-	if ( ! bIsWinPath && theFullPath.GetLength() > 0 && theFullPath.at(0) == '/' ) {
+	if ( ! bIsWinPath && theFullPath.GetLength() > 0 && theFullPath.GetAt(0) == '/' ) {
 		if ( farrFolderHierarchy.size() == 0 ) {
 			// put an empty holder so if we have files in root
 			// the hierarchy will not be empty
@@ -262,7 +262,7 @@ VCOMError CFolderIdentifier::Set(EFolderSpecifier folderSpec, bool bUserFolder)
 	}
 */
 	TFolderIdentifier	folder;
-	if ( ::GetFolder( innerFolderSpec, folder, false /*inCreateIfMissing*/ ) ) {
+	if ( ::GetFolder( (EFolderSpecifier) innerFolderSpec, folder, false /*inCreateIfMissing*/ ) ) {
 #if GS_WIN
 		error	= this->SetFullPath( folder.GetFolderPath() );
 #else
@@ -319,7 +319,7 @@ VCOMError CFolderIdentifier::Set(IFolderIdentifier* pParentFolder, const TXStrin
 	return this->SetFullPath( fullPath );
 }
 
-VCOMError CFolderIdentifier::clear()
+VCOMError CFolderIdentifier::Clear()
 {
 	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
@@ -419,7 +419,7 @@ VCOMError CFolderIdentifier::GetParentFolder(IFolderIdentifier** ppOutParentFold
 	size_t		len		= farrFolderHierarchy.size();
 	for(size_t i=0; i<len-1; i++) {
 		const TXString&	strPart		= farrFolderHierarchy.at( i );
-		pParentFolder->farrFolderHierarchy.Append( strPart );
+		pParentFolder->farrFolderHierarchy.push_back( strPart );
 	}
 
 	return kVCOMError_NoError;
@@ -778,10 +778,11 @@ VCOMError CFolderIdentifier::EnumerateContents(IFolderContentListener* pListener
 		return kVCOMError_BadPathSpecified;
 
 	VCOMError		error	= kVCOMError_NoError;
-	if ( this->EnumerateContents( pListener, folder, bReqursive, error ) ) {
+	//if ( this->EnumerateContents( pListener, folder, bReqursive, error ) ) {
 		// enumeration has been stopped!
 		// the enumeration return the 'error'
-	}
+		// TODO
+	//}
 	
 	return error;
 }

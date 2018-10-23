@@ -5,7 +5,9 @@
 
 #pragma once
 
+#include "../Prefix/StdAfx.h"
 #include "FolderIdentifier.h"
+
 
 namespace VectorWorks
 {
