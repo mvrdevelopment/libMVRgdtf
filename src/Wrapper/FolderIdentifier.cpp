@@ -9,6 +9,9 @@
 #include "FileIdentifier.h"
 #include "UTranslateFiles.h"
 #include "Include/ApplicationFolders.h"
+#include "FilingWrapper.h"
+
+#include "FolderSpecifiers.h"
 
 
 #if defined(_WINDOWS)
@@ -31,24 +34,24 @@ CFolderIdentifier::~CFolderIdentifier()
 {
 }
 
-Sint32 CFolderIdentifier::AddRef()
+uint32_t CFolderIdentifier::AddRef()
 {
 	fRefCnt ++;
 	return fRefCnt;
 }
 
-Sint32 CFolderIdentifier::Release()
+uint32_t CFolderIdentifier::Release()
 {
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt > 0 ) {
 		fRefCnt --;
 	}
 	
 	if (fRefCnt == 0) {
-		farrFolderHierarchy.Clear();
+		farrFolderHierarchy.clear();
 
 		// mechanizm for immediate delete of the interface instance
-		::GS_VWNotifyDeleteInterface( this );
+		//::GS_VWNotifyDeleteInterface( this ); TODO
 		// EXIT IMMEDIATELY! 'this' no longer exist!!!
 		return 0;
 	}
@@ -58,11 +61,11 @@ Sint32 CFolderIdentifier::Release()
 
 VCOMError CFolderIdentifier::SetFullPath(const TXString& fullPath)
 {
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
-	farrFolderHierarchy.Clear();
+	farrFolderHierarchy.clear();
 	if ( fullPath.IsEmpty() )
 		return kVCOMError_Failed;
 
@@ -95,7 +98,7 @@ VCOMError CFolderIdentifier::SetFullPath(const TXString& fullPath)
 	{
 		// cut off everything before '/' or or '\' from the path
 		// Mac paths are in the posix form: /Folder1/Folder2/...
-		char	firstCh	= theFullPath.GetAt( 0 );
+		char	firstCh	= theFullPath.at( 0 );
 		if ( firstCh != '/' && firstCh != '\\' && firstCh != ':' ) {
 			int				at			= theFullPath.Find( '\\', 0 );
 			int				at1			= theFullPath.Find( '/', 0 );
@@ -128,11 +131,11 @@ VCOMError CFolderIdentifier::SetFullPath(const TXString& fullPath)
 
 
 	// ensure proper POSIX path files for in the root
-	if ( ! bIsWinPath && theFullPath.GetLength() > 0 && theFullPath.GetAt(0) == '/' ) {
-		if ( farrFolderHierarchy.GetSize() == 0 ) {
+	if ( ! bIsWinPath && theFullPath.GetLength() > 0 && theFullPath.at(0) == '/' ) {
+		if ( farrFolderHierarchy.size() == 0 ) {
 			// put an empty holder so if we have files in root
 			// the hierarchy will not be empty
-			farrFolderHierarchy.Append( "" );
+			farrFolderHierarchy.push_back( "" );
 		}
 	}
 	
@@ -172,24 +175,24 @@ VCOMError CFolderIdentifier::SetFullPath(const TXString& fullPath)
 				CFolderIdentifier::ValidateName( strPart );
 			}
 
-			arrFolderHierarchy.Append( strPart );
+			arrFolderHierarchy.push_back( strPart );
 		}
 
 		error				= kVCOMError_NoError;
 	}
 
 	if ( VCOM_SUCCEEDED( error ) ) {
-		size_t	len		= arrFolderHierarchy.GetSize(); 
+		size_t	len		= arrFolderHierarchy.size(); 
 		for(size_t i=0; i<len; i++) {
 			const TXString&	pathPiece	= arrFolderHierarchy[ i ];
 			if ( pathPiece != ".." ) {
-				farrFolderHierarchy.Append( pathPiece );
+				farrFolderHierarchy.push_back( pathPiece );
 			}
 			else {
 				// we have relative path piece, move back in the folder hierarchy
-				size_t	folderPiecesCnt	= farrFolderHierarchy.GetSize();
+				size_t	folderPiecesCnt	= farrFolderHierarchy.size();
 				if ( folderPiecesCnt > 0 ) {
-					farrFolderHierarchy.Erase( folderPiecesCnt - 1 );
+					farrFolderHierarchy.pop_back();
 				}
 			}
 		}
@@ -209,9 +212,9 @@ TXString CFolderIdentifier::GetFullPath() const
 	fullPath								= "/";
 #endif
 
-	size_t			count		= farrFolderHierarchy.GetSize();
+	size_t			count		= farrFolderHierarchy.size();
 	for(size_t i=0; i<count; i++) {
-		TXString		strPart	= farrFolderHierarchy.GetAt( i );
+		TXString		strPart	= farrFolderHierarchy.at( i );
 
 		bool	bIsWinDevice	= false;
 #ifdef _WINDOWS
@@ -231,7 +234,7 @@ TXString CFolderIdentifier::GetFullPath() const
 
 VCOMError CFolderIdentifier::Set(const TXString& fullPath)
 {
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
@@ -244,7 +247,7 @@ VCOMError CFolderIdentifier::Set(const TXString& fullPath)
 				
 VCOMError CFolderIdentifier::Set(EFolderSpecifier folderSpec, bool bUserFolder)
 {
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
@@ -272,7 +275,7 @@ VCOMError CFolderIdentifier::Set(EFolderSpecifier folderSpec, bool bUserFolder)
 
 VCOMError CFolderIdentifier::Set(EFolderSpecifier folderSpec, bool bUserFolder, const TXString& subFolderName)
 {
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
@@ -293,7 +296,7 @@ VCOMError CFolderIdentifier::Set(EFolderSpecifier folderSpec, bool bUserFolder, 
 
 VCOMError CFolderIdentifier::Set(IFolderIdentifier* pParentFolder, const TXString& folderName)
 {
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
@@ -301,7 +304,7 @@ VCOMError CFolderIdentifier::Set(IFolderIdentifier* pParentFolder, const TXStrin
 		return kVCOMError_InvalidArg;
 
 	CFolderIdentifier*	pParent	= dynamic_cast<CFolderIdentifier*>( pParentFolder );
-	if ( pParent == NULL || pParent->farrFolderHierarchy.GetSize() <= 0 )
+	if ( pParent == NULL || pParent->farrFolderHierarchy.size() <= 0 )
 		return kVCOMError_InvalidArg;
 
 	TXString		fullPath	= pParent->GetFullPath();
@@ -316,13 +319,13 @@ VCOMError CFolderIdentifier::Set(IFolderIdentifier* pParentFolder, const TXStrin
 	return this->SetFullPath( fullPath );
 }
 
-VCOMError CFolderIdentifier::Clear()
+VCOMError CFolderIdentifier::clear()
 {
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
-	farrFolderHierarchy.Clear();
+	farrFolderHierarchy.clear();
 	return kVCOMError_NoError;
 }
 
@@ -331,18 +334,18 @@ VCOMError CFolderIdentifier::IsSet()
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
-	return farrFolderHierarchy.GetSize() > 0 ? kVCOMError_NoError : kVCOMError_Failed;
+	return farrFolderHierarchy.size() > 0 ? kVCOMError_NoError : kVCOMError_Failed;
 }
 
 VCOMError CFolderIdentifier::ExistsOnDisk(bool& outValue)
 {
 	outValue	= false;
 
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
-	if ( farrFolderHierarchy.GetSize() <= 0 )
+	if ( farrFolderHierarchy.size() <= 0 )
 		return kVCOMError_NotInitialized;
 
 	TXString	fullPath	= this->GetFullPath();
@@ -353,11 +356,11 @@ VCOMError CFolderIdentifier::ExistsOnDisk(bool& outValue)
 
 VCOMError CFolderIdentifier::GetFullPath(TXString& outPath)
 {
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
-	if ( farrFolderHierarchy.GetSize() <= 0 )
+	if ( farrFolderHierarchy.size() <= 0 )
 		return kVCOMError_BadPathSpecified;
 
 	outPath		= this->GetFullPath();
@@ -370,10 +373,10 @@ VCOMError CFolderIdentifier::GetName(TXString& outName)
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
-	if ( farrFolderHierarchy.GetSize() <= 0 )
+	if ( farrFolderHierarchy.size() <= 0 )
 		return kVCOMError_BadPathSpecified;
 	
-	outName	= farrFolderHierarchy.GetAt( farrFolderHierarchy.GetSize() - 1 );
+	outName	= farrFolderHierarchy.at( farrFolderHierarchy.size() - 1 );
 
 	CFolderIdentifier::ConvertFoldername( outName );
 
@@ -388,11 +391,11 @@ VCOMError CFolderIdentifier::GetName(TXString& outName)
 
 VCOMError CFolderIdentifier::GetParentFolder(IFolderIdentifier** ppOutParentFolderID)
 {
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
-	if ( farrFolderHierarchy.GetSize() <= 0 )
+	if ( farrFolderHierarchy.size() <= 0 )
 		return kVCOMError_Failed;
 
 	if ( ppOutParentFolderID == NULL )
@@ -403,7 +406,7 @@ VCOMError CFolderIdentifier::GetParentFolder(IFolderIdentifier** ppOutParentFold
 		*ppOutParentFolderID = NULL;
 	}
 
-	VCOMError	error	= ::GS_VWQueryInterface( IID_FolderIdentifier, (IVWUnknown**) ppOutParentFolderID );
+	VCOMError	error	= ::VWQueryInterface( IID_FolderIdentifier, (IVWUnknown**) ppOutParentFolderID );
 	if ( error != kVCOMError_NoError )
 		return error;
 
@@ -411,11 +414,11 @@ VCOMError CFolderIdentifier::GetParentFolder(IFolderIdentifier** ppOutParentFold
 	if ( pParentFolder == NULL )
 		return kVCOMError_Failed;
 
-	pParentFolder->farrFolderHierarchy.Clear();
+	pParentFolder->farrFolderHierarchy.clear();
 
-	size_t		len		= farrFolderHierarchy.GetSize();
+	size_t		len		= farrFolderHierarchy.size();
 	for(size_t i=0; i<len-1; i++) {
-		const TXString&	strPart		= farrFolderHierarchy.GetAt( i );
+		const TXString&	strPart		= farrFolderHierarchy.at( i );
 		pParentFolder->farrFolderHierarchy.Append( strPart );
 	}
 
@@ -424,11 +427,11 @@ VCOMError CFolderIdentifier::GetParentFolder(IFolderIdentifier** ppOutParentFold
 
 VCOMError CFolderIdentifier::GetAttributes(SAttributes& outAttributes)
 {
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
-	if ( farrFolderHierarchy.GetSize() <= 0 )
+	if ( farrFolderHierarchy.size() <= 0 )
 		return kVCOMError_Failed;
 
 	const TXString&		fullPath	= this->GetFullPath();
@@ -472,11 +475,11 @@ VCOMError CFolderIdentifier::GetAttributes(SAttributes& outAttributes)
 
 VCOMError CFolderIdentifier::SetAttributes(const SAttributes& attributes)
 {
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
-	if ( farrFolderHierarchy.GetSize() <= 0 )
+	if ( farrFolderHierarchy.size() <= 0 )
 		return kVCOMError_Failed;
 
 	return kVCOMError_NotImplemented;
@@ -484,11 +487,11 @@ VCOMError CFolderIdentifier::SetAttributes(const SAttributes& attributes)
 
 VCOMError CFolderIdentifier::GetAttributesTimeDateReference(EAttributesTimeReference ref, SAttributesDateTime& outData)
 {
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
-	if ( farrFolderHierarchy.GetSize() <= 0 )
+	if ( farrFolderHierarchy.size() <= 0 )
 		return kVCOMError_Failed;
 
 	const TXString&		fullPath	= this->GetFullPath();
@@ -532,11 +535,11 @@ VCOMError CFolderIdentifier::GetAttributesTimeDateReference(EAttributesTimeRefer
 
 VCOMError CFolderIdentifier::SetAttributesTimeDateReference(EAttributesTimeReference ref, const SAttributesDateTime& data)
 {
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
-	if ( farrFolderHierarchy.GetSize() <= 0 )
+	if ( farrFolderHierarchy.size() <= 0 )
 		return kVCOMError_Failed;
 
 	return kVCOMError_NotImplemented;
@@ -756,14 +759,14 @@ bool CFolderIdentifier::EnumerateContents(IFolderContentListener* pListener, con
 
 VCOMError CFolderIdentifier::EnumerateContents(IFolderContentListener* pListener, bool bReqursive)
 {
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
 	if ( pListener == NULL )
 		return kVCOMError_InvalidArg;
 
-	if ( farrFolderHierarchy.GetSize() <= 0 )
+	if ( farrFolderHierarchy.size() <= 0 )
 		return kVCOMError_NotInitialized;
 
 	const TXString&		fullPath	= this->GetFullPath();
@@ -820,11 +823,11 @@ VCOMError CFolderIdentifier::EnumerateContents(TFolderContentCallback_Folder fol
 
 VCOMError CFolderIdentifier::CreateOnDisk()
 {
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
-	if ( farrFolderHierarchy.GetSize() <= 0 )
+	if ( farrFolderHierarchy.size() <= 0 )
 		return kVCOMError_NotInitialized;
 
 	const TXString&		fullPath	= this->GetFullPath();
@@ -885,11 +888,11 @@ VCOMError CFolderIdentifier::DeleteOnDisk()
 	};
 	
 
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
-	if ( farrFolderHierarchy.GetSize() <= 0 )
+	if ( farrFolderHierarchy.size() <= 0 )
 		return kVCOMError_BadPathSpecified;
 
 	TXString		fullPath	= this->GetFullPath();
@@ -951,7 +954,7 @@ VCOMError CFolderIdentifier::RevealInOS()
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
-	if ( farrFolderHierarchy.GetSize() <= 0 )
+	if ( farrFolderHierarchy.size() <= 0 )
 		return kVCOMError_BadPathSpecified;
 
 	const TXString&		fullPath	= this->GetFullPath();
@@ -975,7 +978,7 @@ VCOMError CFolderIdentifier::DuplicateOnDisk(IFolderIdentifier * newFolder, bool
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
-	if ( farrFolderHierarchy.GetSize() <= 0 )
+	if ( farrFolderHierarchy.size() <= 0 )
 		return kVCOMError_NotInitialized;
 
 	const TXString&		fullPath	= this->GetFullPath();
