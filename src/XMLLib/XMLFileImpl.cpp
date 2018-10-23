@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "Prefix/StdAfx.h"
 
 #include "XMLFileImpl.h"
 #include "XMLFileNodeImpl.h"
@@ -8,8 +8,6 @@ using namespace XML;
 using namespace VWFC::Tools;
 
 /*static*/ VCOMError	CXMLFileImpl::fLastError;
-
-#define	SETUP_CBP		gCBP = fCBP;
 
 #if BUG
 class XmlDomErrorHandler: public HandlerBase
@@ -51,10 +49,9 @@ private:
 #endif
 
 // ----------------------------------------------------------------------------------------------------
-CXMLFileImpl::CXMLFileImpl(CallBackPtr cbp)
+CXMLFileImpl::CXMLFileImpl()
 {
 	fRefCnt					= 0;
-	fCBP					= cbp;
 
 	fLastError				= kVCOMError_NoError;
 	fpImpl					= NULL;
@@ -95,21 +92,21 @@ CXMLFileImpl::~CXMLFileImpl()
 	XMLPlatformUtils::Terminate();
 }
 
-Sint32 CXMLFileImpl::AddRef()
+uint32_t CXMLFileImpl::AddRef()
 {
 	fRefCnt ++;
 	return fRefCnt;
 }
 
-Sint32 CXMLFileImpl::Release()
+uint32_t CXMLFileImpl::Release()
 {
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt > 0 ) {
 		fRefCnt --;
 
 		// mechanizm for immediate delete of the interface instance
 		if ( fRefCnt == 0 ) {
-			::GS_VWNotifyDeleteInterface( this );
+			::VWNotifyDeleteInterface( this );
 			// EXIT IMMEDIATELY! 'this' no longer exist!!!
 			return 0;
 		}
@@ -119,8 +116,7 @@ Sint32 CXMLFileImpl::Release()
 
 VCOMError CXMLFileImpl::CreateNew(const TXString& rootName)
 {
-	SETUP_CBP;
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
@@ -160,8 +156,7 @@ VCOMError CXMLFileImpl::CreateNew(const TXString& rootName)
 
 VCOMError CXMLFileImpl::ReadFile(IFileIdentifier* pFileID)
 {
-	SETUP_CBP;
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
@@ -281,8 +276,7 @@ VCOMError CXMLFileImpl::ReadFile(IFileIdentifier* pFileID)
 
 VCOMError CXMLFileImpl::ReadBuffer(IXMLFileIOBuffer* pInputBuffer, EXMLEncoding encoding)
 {
-	SETUP_CBP;
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
@@ -373,8 +367,7 @@ VCOMError CXMLFileImpl::ReadBuffer(IXMLFileIOBuffer* pInputBuffer, EXMLEncoding 
 
 VCOMError CXMLFileImpl::WriteFile(IFileIdentifier* pFileID, EXMLEncoding encoding)
 {
-	SETUP_CBP;
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
@@ -440,7 +433,8 @@ VCOMError CXMLFileImpl::WriteFile(IFileIdentifier* pFileID, EXMLEncoding encodin
 			// LINUX_IMPLEMENTATION - done
 			LocalFileFormatTarget  myFormTarget( fileFullPath.operator const char*() );
 #else
-			LocalFileFormatTarget  myFormTarget( fileFullPath.GetData() );
+			//LocalFileFormatTarget  myFormTarget( fileFullPath.GetData() );
+			// TODO
 #endif
 			pOutput->setByteStream(&myFormTarget);
 
@@ -469,8 +463,7 @@ VCOMError CXMLFileImpl::WriteFile(IFileIdentifier* pFileID, EXMLEncoding encodin
 
 VCOMError CXMLFileImpl::WriteBuffer(IXMLFileIOBuffer* pOutputBuffer, EXMLEncoding encoding)
 {
-	SETUP_CBP;
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
@@ -554,8 +547,7 @@ VCOMError CXMLFileImpl::WriteBuffer(IXMLFileIOBuffer* pOutputBuffer, EXMLEncodin
 
 VCOMError CXMLFileImpl::GetRootNode(IXMLFileNode** ppOutNode)
 {
-	SETUP_CBP;
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
@@ -568,7 +560,7 @@ VCOMError CXMLFileImpl::GetRootNode(IXMLFileNode** ppOutNode)
 	*ppOutNode			= NULL;
 
 	VCOMError	error	= kVCOMError_Failed;
-	if ( VCOM_SUCCEEDED( ::GS_VWQueryInterface( IID_XMLFileNode, (IVWUnknown**) ppOutNode ) ) ) {
+	if ( VCOM_SUCCEEDED( ::VWQueryInterface( IID_XMLFileNode, (IVWUnknown**) ppOutNode ) ) ) {
 		CXMLFileNodeImpl*	pOutNodeImpl	= dynamic_cast<CXMLFileNodeImpl*>( *ppOutNode );
 		if ( pOutNodeImpl ) {
 			pOutNodeImpl->SetData( fpDomDocument, fpDocRoot );
@@ -581,7 +573,6 @@ VCOMError CXMLFileImpl::GetRootNode(IXMLFileNode** ppOutNode)
 
 VCOMError CXMLFileImpl::GetLastError(EXMLFileError& outError)
 {
-	SETUP_CBP;
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
@@ -591,7 +582,6 @@ VCOMError CXMLFileImpl::GetLastError(EXMLFileError& outError)
 
 VCOMError CXMLFileImpl::SetFeature(EXMLFileFeature feature, bool bValue)
 {
-	SETUP_CBP;
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
@@ -623,8 +613,7 @@ VCOMError CXMLFileImpl::SetFeature(EXMLFileFeature feature, bool bValue)
 
 bool CXMLFileImpl::handleError(const DOMError& domError)
 {
-	SETUP_CBP;
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	fLastError	= kVCOMError_XMLFile_DOMError;
 
 	// Instructs the serializer to continue serialization if possible.
@@ -688,7 +677,7 @@ void CXMLFileImpl::resetErrors()
 	return res;
 }
 
-/*static*/ void CXMLFileImpl::Tokenize(const TXString& string, TXStringSTLArray& outArray, const char* szTokens, size_t tokensLen, bool doStopTokenizeForSpecialCh /*= false*/, char stopStartCh /*= '\''*/)
+/*static*/ void CXMLFileImpl::Tokenize(const TXString& string, TXStringArray& outArray, const char* szTokens, size_t tokensLen, bool doStopTokenizeForSpecialCh /*= false*/, char stopStartCh /*= '\''*/)
 {
 	outArray.clear();
 
@@ -733,8 +722,7 @@ void CXMLFileImpl::resetErrors()
 
 VCOMError  CXMLFileImpl::DoSimpleNode(IXMLFileNode* pRefNode, const TXString& nodePath, IXMLFileNode** ppOutNode, TXString& outValue, bool doWrite)
 {
-	SETUP_CBP;
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
@@ -743,7 +731,7 @@ VCOMError  CXMLFileImpl::DoSimpleNode(IXMLFileNode* pRefNode, const TXString& no
 
 	fLastError			= kVCOMError_XMLFile_Parser;
 
-	TXStringSTLArray	arrNodeNames;
+	TXStringArray	arrNodeNames;
 	this->Tokenize( nodePath, arrNodeNames, "/", 1, true, '\'' );
 
 	VCOMError		err	= kVCOMError_InvalidArg;
@@ -794,7 +782,7 @@ VCOMError  CXMLFileImpl::DoSimpleNode(IXMLFileNode* pRefNode, const TXString& no
 						TXString strIndex	= nodeName.Mid( startAt + 1, endAt - startAt - 1 );
 						if ( strIndex.GetLength() > 0 && strIndex.GetAt( 0 ) == '$' )
 						{
-							TXStringSTLArray	arrTokens;
+							TXStringArray	arrTokens;
 							this->Tokenize( strIndex, arrTokens, "=", 1, true, '\'' );
 							if ( arrTokens.size() == 2 )
 							{
@@ -853,7 +841,7 @@ VCOMError  CXMLFileImpl::DoSimpleNode(IXMLFileNode* pRefNode, const TXString& no
 	CXMLFileNodeImpl*	xmlNodeImpl	= dynamic_cast<CXMLFileNodeImpl*>( (IVWUnknown*) xmlNode );
 	if ( VCOM_SUCCEEDED( err ) && xmlNodeImpl ) {
 		if ( ppOutNode && *ppOutNode == NULL ) {
-			::GS_VWQueryInterface( IID_XMLFileNode, (IVWUnknown**) ppOutNode );
+			::VWQueryInterface( IID_XMLFileNode, (IVWUnknown**) ppOutNode );
 		}
 
 		if ( ppOutNode ) {
@@ -882,14 +870,14 @@ VCOMError CXMLFileImpl::GetSimpleNode(IXMLFileNode* pRefNode, const TXString& no
 
 VCOMError CXMLFileImpl::GetSimpleValue(const TXString& nodePath, TXString& outValue)
 {
-	CXMLFileNodeImpl	node( fCBP );
+	CXMLFileNodeImpl	node;
 	IXMLFileNode*		nodePtr	= & node;
 	return this->DoSimpleNode( NULL, nodePath, & nodePtr, outValue, false );
 }
 
 VCOMError CXMLFileImpl::GetSimpleValue(IXMLFileNode* pRefNode, const TXString& nodePath, TXString& outValue)
 {
-	CXMLFileNodeImpl	node( fCBP );
+	CXMLFileNodeImpl	node;
 	IXMLFileNode*		nodePtr	= & node;
 	return this->DoSimpleNode( pRefNode, nodePath, & nodePtr, outValue, false );
 }

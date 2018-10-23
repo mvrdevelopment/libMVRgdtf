@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "Prefix/StdAfx.h"
 
 #include "XMLCore.Xerces.h"
 
@@ -8,17 +8,14 @@
 using namespace VectorWorks::Filing;
 using namespace XML;
 
-#define	SETUP_CBP		gCBP = fCBP;
-
 #if GS_MAC
 	const size_t kBufferSizeModifierForInternationalRobustness = 4; // See Discussion for function ConvertFromTextToUnicode
 #endif
 
 // ----------------------------------------------------------------------------------------------------
-CXMLFileNodeImpl::CXMLFileNodeImpl(CallBackPtr cbp)
+CXMLFileNodeImpl::CXMLFileNodeImpl()
 {
 	fRefCnt			= 0;
-	fCBP			= cbp;
 	fpDomDocument	= NULL;
 	fpNode			= NULL;
 }
@@ -29,21 +26,21 @@ CXMLFileNodeImpl::~CXMLFileNodeImpl()
 	fpNode			= NULL;
 }
 
-Sint32 CXMLFileNodeImpl::AddRef()
+uint32_t CXMLFileNodeImpl::AddRef()
 {
 	fRefCnt ++;
 	return fRefCnt;
 }
 
-Sint32 CXMLFileNodeImpl::Release()
+uint32_t CXMLFileNodeImpl::Release()
 {
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt > 0 ) {
 		fRefCnt --;
 
 		// mechanizm for immediate delete of the interface instance
 		if ( fRefCnt == 0 ) {
-			::GS_VWNotifyDeleteInterface( this );
+			// ::GS_VWNotifyDeleteInterface( this ); TODO
 			// EXIT IMMEDIATELY! 'this' no longer exist!!!
 			return 0;
 		}
@@ -64,8 +61,7 @@ DOMNodePtr CXMLFileNodeImpl::GetNode() const
 
 VCOMError CXMLFileNodeImpl::IsEmpty(bool& outValue)
 {
-	SETUP_CBP;
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
@@ -78,8 +74,7 @@ VCOMError CXMLFileNodeImpl::IsEmpty(bool& outValue)
 
 VCOMError CXMLFileNodeImpl::GetNodeName(TXString& outName)
 {
-	SETUP_CBP;
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
@@ -93,8 +88,7 @@ VCOMError CXMLFileNodeImpl::GetNodeName(TXString& outName)
 
 VCOMError CXMLFileNodeImpl::GetNodeValue(TXString& outValue)
 {
-	SETUP_CBP;
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
@@ -119,8 +113,7 @@ VCOMError CXMLFileNodeImpl::GetNodeValue(TXString& outValue)
 
 VCOMError CXMLFileNodeImpl::SetNodeValue(const TXString& value)
 {
-	SETUP_CBP;
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
@@ -161,8 +154,7 @@ VCOMError CXMLFileNodeImpl::SetNodeValue(const TXString& value)
 
 VCOMError CXMLFileNodeImpl::DeleteNode()
 {
-	SETUP_CBP;
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 
@@ -226,8 +218,7 @@ VCOMError CXMLFileNodeImpl::FindAttribute(const TXString& attrName, DOMAttrPtr& 
 
 VCOMError CXMLFileNodeImpl::GetNodeAttributeValue(const TXString& attrName, TXString& outValue)
 {
-	SETUP_CBP;
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 	if ( fpDomDocument == NULL || fpNode == NULL )
@@ -252,8 +243,7 @@ VCOMError CXMLFileNodeImpl::GetNodeAttributeValue(const TXString& attrName, TXSt
 
 VCOMError CXMLFileNodeImpl::SetNodeAttributeValue(const TXString& attrName, const TXString& value)
 {
-	SETUP_CBP;
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 	if ( fpDomDocument == NULL || fpNode == NULL )
@@ -285,8 +275,7 @@ VCOMError CXMLFileNodeImpl::SetNodeAttributeValue(const TXString& attrName, cons
 
 VCOMError CXMLFileNodeImpl::DeleteNodeAttribute(const TXString& attrName)
 {
-	SETUP_CBP;
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 	if ( fpDomDocument == NULL || fpNode == NULL )
@@ -303,8 +292,7 @@ VCOMError CXMLFileNodeImpl::DeleteNodeAttribute(const TXString& attrName)
 
 VCOMError CXMLFileNodeImpl::GetNodeCDATA(TXString& outData)
 {
-	SETUP_CBP;
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 	if ( fpNode == NULL || fpDomDocument == NULL )
@@ -338,8 +326,7 @@ VCOMError CXMLFileNodeImpl::GetNodeCDATA(TXString& outData)
 
 VCOMError CXMLFileNodeImpl::GetNodeCDATA(void* binaryData, size_t& inOutNumBytes)
 {
-	SETUP_CBP;
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 	if ( fpNode == NULL || fpDomDocument == NULL )
@@ -408,8 +395,7 @@ VCOMError CXMLFileNodeImpl::GetNodeCDATA(void* binaryData, size_t& inOutNumBytes
 
 VCOMError CXMLFileNodeImpl::SetNodeCDATA(const TXString& data)
 {
-	SETUP_CBP;
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 	if ( fpNode == NULL || fpDomDocument == NULL )
@@ -432,8 +418,7 @@ VCOMError CXMLFileNodeImpl::SetNodeCDATA(const TXString& data)
 
 VCOMError CXMLFileNodeImpl::SetNodeCDATA(const void* const binaryData, size_t numBytes)
 {
-	SETUP_CBP;
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 	if ( fpNode == NULL || fpDomDocument == NULL )
@@ -464,8 +449,7 @@ VCOMError CXMLFileNodeImpl::SetNodeCDATA(const void* const binaryData, size_t nu
 
 VCOMError CXMLFileNodeImpl::DeleteNodeCDATA()
 {
-	SETUP_CBP;
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 	if ( fpNode == NULL || fpDomDocument == NULL )
@@ -496,8 +480,7 @@ VCOMError CXMLFileNodeImpl::CreateChildNode(const TXString& name, IXMLFileNode**
 
 VCOMError CXMLFileNodeImpl::GetChildNode(const TXString& name, IXMLFileNode** ppOutNode)
 {
-	SETUP_CBP;
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 	return this->GetChildNode( name, 0, ppOutNode );
@@ -505,8 +488,7 @@ VCOMError CXMLFileNodeImpl::GetChildNode(const TXString& name, IXMLFileNode** pp
 
 VCOMError CXMLFileNodeImpl::GetChildNode(const TXString& name, size_t arrayIndex, IXMLFileNode** ppOutNode)
 {
-	SETUP_CBP;
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 	if ( fpNode == NULL || fpDomDocument == NULL )
@@ -549,7 +531,7 @@ VCOMError CXMLFileNodeImpl::GetChildNode(const TXString& name, size_t arrayIndex
 
 	if ( pFoundChild ) {
 		CXMLFileImpl::SetLastError( kVCOMError_XMLFile_UnknownError );
-		if ( VCOM_SUCCEEDED( ::GS_VWQueryInterface( IID_XMLFileNode, (IVWUnknown**) & pResultNode ) ) ) {
+		if ( VCOM_SUCCEEDED( ::VWQueryInterface( IID_XMLFileNode, (IVWUnknown**) & pResultNode ) ) ) {
 			CXMLFileNodeImpl*	pOutNodeImpl	= dynamic_cast<CXMLFileNodeImpl*>( pResultNode );
 			if ( pOutNodeImpl ) {
 				pOutNodeImpl->SetData( fpDomDocument, pFoundChild );
@@ -579,8 +561,7 @@ VCOMError CXMLFileNodeImpl::GetChildNode(const TXString& name, size_t arrayIndex
 
 VCOMError CXMLFileNodeImpl::GetChildNode(const TXString& name, const TXString& attrName, const TXString& attrValue, IXMLFileNode** ppOutNode)
 {
-	SETUP_CBP;
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 	if ( fpNode == NULL || fpDomDocument == NULL )
@@ -595,7 +576,7 @@ VCOMError CXMLFileNodeImpl::GetChildNode(const TXString& name, const TXString& a
 		CXMLFileImpl::SetLastError( kVCOMError_XMLFile_BadName );
 	}
 	else {
-		CXMLFileNodeImpl	tempNode( fCBP );
+		CXMLFileNodeImpl	tempNode();
 		tempNode.AddRef();
 		TXString			tempAttrValue;
 
@@ -629,7 +610,7 @@ VCOMError CXMLFileNodeImpl::GetChildNode(const TXString& name, const TXString& a
 
 	if ( pFoundChild ) {
 		CXMLFileImpl::SetLastError( kVCOMError_XMLFile_UnknownError );
-		if ( VCOM_SUCCEEDED( ::GS_VWQueryInterface( IID_XMLFileNode, (IVWUnknown**) & pResultNode ) ) ) {
+		if ( VCOM_SUCCEEDED( ::VWQueryInterface( IID_XMLFileNode, (IVWUnknown**) & pResultNode ) ) ) {
 			CXMLFileNodeImpl*	pOutNodeImpl	= dynamic_cast<CXMLFileNodeImpl*>( pResultNode );
 			if ( pOutNodeImpl ) {
 				pOutNodeImpl->SetData( fpDomDocument, pFoundChild );
@@ -659,8 +640,7 @@ VCOMError CXMLFileNodeImpl::GetChildNode(const TXString& name, const TXString& a
 
 VCOMError CXMLFileNodeImpl::GetParentNode(IXMLFileNode** ppOutNode)
 {
-	SETUP_CBP;
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 	if ( fpNode == NULL || fpDomDocument == NULL )
@@ -676,7 +656,7 @@ VCOMError CXMLFileNodeImpl::GetParentNode(IXMLFileNode** ppOutNode)
 		CXMLFileImpl::SetLastError( kVCOMError_XMLFile_ElementNotFound );
 	}
 	else {
-		if ( VCOM_SUCCEEDED( ::GS_VWQueryInterface( IID_XMLFileNode, (IVWUnknown**) & pResultNode ) ) ) {
+		if ( VCOM_SUCCEEDED( ::VWQueryInterface( IID_XMLFileNode, (IVWUnknown**) & pResultNode ) ) ) {
 			CXMLFileNodeImpl*	pOutNodeImpl	= dynamic_cast<CXMLFileNodeImpl*>( pResultNode );
 			if ( pOutNodeImpl ) {
 				pOutNodeImpl->SetData( fpDomDocument, pParentNode );
@@ -699,8 +679,7 @@ VCOMError CXMLFileNodeImpl::GetParentNode(IXMLFileNode** ppOutNode)
 
 VCOMError CXMLFileNodeImpl::GetFirstChildNode(IXMLFileNode** ppOutNode)
 {
-	SETUP_CBP;
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 	if ( fpNode == NULL || fpDomDocument == NULL )
@@ -723,7 +702,7 @@ VCOMError CXMLFileNodeImpl::GetFirstChildNode(IXMLFileNode** ppOutNode)
 
 				CXMLFileImpl::SetLastError( kVCOMError_XMLFile_UnknownError );
 
-				if ( VCOM_SUCCEEDED( ::GS_VWQueryInterface( IID_XMLFileNode, (IVWUnknown**) & pResultNode ) ) ) {
+				if ( VCOM_SUCCEEDED( ::VWQueryInterface( IID_XMLFileNode, (IVWUnknown**) & pResultNode ) ) ) {
 					CXMLFileNodeImpl*	pOutNodeImpl	= dynamic_cast<CXMLFileNodeImpl*>( pResultNode );
 					if ( pOutNodeImpl ) {
 						pOutNodeImpl->SetData( fpDomDocument, pCurNode );
@@ -751,8 +730,7 @@ VCOMError CXMLFileNodeImpl::GetFirstChildNode(IXMLFileNode** ppOutNode)
 
 VCOMError CXMLFileNodeImpl::GetLastChildNode(IXMLFileNode** ppOutNode)
 {
-	SETUP_CBP;
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 	if ( fpNode == NULL || fpDomDocument == NULL )
@@ -775,7 +753,7 @@ VCOMError CXMLFileNodeImpl::GetLastChildNode(IXMLFileNode** ppOutNode)
 
 				CXMLFileImpl::SetLastError( kVCOMError_XMLFile_UnknownError );
 
-				if ( VCOM_SUCCEEDED( ::GS_VWQueryInterface( IID_XMLFileNode, (IVWUnknown**) & pResultNode ) ) ) {
+				if ( VCOM_SUCCEEDED( ::VWQueryInterface( IID_XMLFileNode, (IVWUnknown**) & pResultNode ) ) ) {
 					CXMLFileNodeImpl*	pOutNodeImpl	= dynamic_cast<CXMLFileNodeImpl*>( pResultNode );
 					if ( pOutNodeImpl ) {
 						pOutNodeImpl->SetData( fpDomDocument, pCurNode );
@@ -803,8 +781,7 @@ VCOMError CXMLFileNodeImpl::GetLastChildNode(IXMLFileNode** ppOutNode)
 
 VCOMError CXMLFileNodeImpl::GetNextSiblingNode(IXMLFileNode** ppOutNode)
 {
-	SETUP_CBP;
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 	if ( fpNode == NULL || fpDomDocument == NULL )
@@ -828,7 +805,7 @@ VCOMError CXMLFileNodeImpl::GetNextSiblingNode(IXMLFileNode** ppOutNode)
 
 			CXMLFileImpl::SetLastError( kVCOMError_XMLFile_UnknownError );
 
-			if ( VCOM_SUCCEEDED( ::GS_VWQueryInterface( IID_XMLFileNode, (IVWUnknown**) & pResultNode ) ) ) {
+			if ( VCOM_SUCCEEDED( ::VWQueryInterface( IID_XMLFileNode, (IVWUnknown**) & pResultNode ) ) ) {
 				CXMLFileNodeImpl*	pOutNodeImpl	= dynamic_cast<CXMLFileNodeImpl*>( pResultNode );
 				if ( pOutNodeImpl ) {
 					pOutNodeImpl->SetData( fpDomDocument, pCurNode );
@@ -855,8 +832,7 @@ VCOMError CXMLFileNodeImpl::GetNextSiblingNode(IXMLFileNode** ppOutNode)
 
 VCOMError CXMLFileNodeImpl::GetPrevSiblingNode(IXMLFileNode** ppOutNode)
 {
-	SETUP_CBP;
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 	if ( fpNode == NULL || fpDomDocument == NULL )
@@ -877,7 +853,7 @@ VCOMError CXMLFileNodeImpl::GetPrevSiblingNode(IXMLFileNode** ppOutNode)
 
 			CXMLFileImpl::SetLastError( kVCOMError_XMLFile_UnknownError );
 
-			if ( VCOM_SUCCEEDED( ::GS_VWQueryInterface( IID_XMLFileNode, (IVWUnknown**) & pResultNode ) ) ) {
+			if ( VCOM_SUCCEEDED( ::VWQueryInterface( IID_XMLFileNode, (IVWUnknown**) & pResultNode ) ) ) {
 				CXMLFileNodeImpl*	pOutNodeImpl	= dynamic_cast<CXMLFileNodeImpl*>( pResultNode );
 				if ( pOutNodeImpl ) {
 					pOutNodeImpl->SetData( fpDomDocument, pCurNode );
@@ -904,8 +880,7 @@ VCOMError CXMLFileNodeImpl::GetPrevSiblingNode(IXMLFileNode** ppOutNode)
 
 VCOMError CXMLFileNodeImpl::FindChildNode(const TXString& nodeName, IXMLFileNode** ppOutNode)
 {
-	SETUP_CBP;
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 	if ( fpNode == NULL || fpDomDocument == NULL )
@@ -931,7 +906,7 @@ VCOMError CXMLFileNodeImpl::FindChildNode(const TXString& nodeName, IXMLFileNode
 				if ( XMLString::compareString( nodeName, xmlElementName ) == 0 ) {
 					CXMLFileImpl::SetLastError( kVCOMError_XMLFile_UnknownError );
 
-					if ( VCOM_SUCCEEDED( ::GS_VWQueryInterface( IID_XMLFileNode, (IVWUnknown**) & pResultNode ) ) ) {
+					if ( VCOM_SUCCEEDED( ::VWQueryInterface( IID_XMLFileNode, (IVWUnknown**) & pResultNode ) ) ) {
 						CXMLFileNodeImpl*	pOutNodeImpl	= dynamic_cast<CXMLFileNodeImpl*>( pResultNode );
 						if ( pOutNodeImpl ) {
 							pOutNodeImpl->SetData( fpDomDocument, pCurNode );
@@ -961,8 +936,7 @@ VCOMError CXMLFileNodeImpl::FindChildNode(const TXString& nodeName, IXMLFileNode
 
 VCOMError CXMLFileNodeImpl::GetLastError(EXMLFileError& outError)
 {
-	SETUP_CBP;
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 	outError	= CXMLFileImpl::GetLastEXMLFileError();
@@ -971,7 +945,7 @@ VCOMError CXMLFileNodeImpl::GetLastError(EXMLFileError& outError)
 
 VCOMError CXMLFileNodeImpl::GetNodeAttributes(TXStringArray& outArrNodeAttributes)
 {
-	outArrNodeAttributes.Clear();
+	outArrNodeAttributes.clear();
 
 	VCOMError			error		= kVCOMError_NoError;
 	DOMNamedNodeMap*	pAttrMap	= fpNode->getAttributes();
@@ -982,7 +956,7 @@ VCOMError CXMLFileNodeImpl::GetNodeAttributes(TXStringArray& outArrNodeAttribute
 
 
 
-			outArrNodeAttributes.Append( xmlElementName );
+			outArrNodeAttributes.push_back( xmlElementName );
 
 
 		}
@@ -993,8 +967,7 @@ VCOMError CXMLFileNodeImpl::GetNodeAttributes(TXStringArray& outArrNodeAttribute
 
 VCOMError CXMLFileNodeImpl::CreateChildNodeBeforeIndex(const TXString& name, size_t index, IXMLFileNode** ppOutNode)
 {
-    SETUP_CBP;
-    ASSERTN( kVStanev, fRefCnt > 0 );
+    ASSERTN( kEveryone, fRefCnt > 0 );
     if ( fRefCnt <= 0 )
         return kVCOMError_NotInitialized;
     if ( fpNode == NULL || fpDomDocument == NULL )
@@ -1052,7 +1025,7 @@ VCOMError CXMLFileNodeImpl::CreateChildNodeBeforeIndex(const TXString& name, siz
 				
 				
                 CXMLFileImpl::SetLastError( kVCOMError_XMLFile_UnknownError );
-                if ( VCOM_SUCCEEDED( ::GS_VWQueryInterface( IID_XMLFileNode, (IVWUnknown**) & pResultNode ) ) ) {
+                if ( VCOM_SUCCEEDED( ::VWQueryInterface( IID_XMLFileNode, (IVWUnknown**) & pResultNode ) ) ) {
                     CXMLFileNodeImpl*	pOutNodeImpl	= dynamic_cast<CXMLFileNodeImpl*>( pResultNode );
                     if ( pOutNodeImpl ) {
                         pOutNodeImpl->SetData( fpDomDocument, pChildNode );
@@ -1087,8 +1060,7 @@ VCOMError CXMLFileNodeImpl::CreateChildNodeBeforeIndex(const TXString& name, siz
 
 VCOMError CXMLFileNodeImpl::AddCopyOfExistingNodeBeforeIndex(const IXMLFileNode* existingNode, size_t index, IXMLFileNode** ppOutNode)
 {
-    SETUP_CBP;
-    ASSERTN( kVStanev, fRefCnt > 0 );
+    ASSERTN( kEveryone, fRefCnt > 0 );
     if ( fRefCnt <= 0 )
         return kVCOMError_NotInitialized;
     if ( fpNode == NULL || fpDomDocument == NULL )
@@ -1146,7 +1118,7 @@ VCOMError CXMLFileNodeImpl::AddCopyOfExistingNodeBeforeIndex(const IXMLFileNode*
             
             CXMLFileImpl::SetLastError( kVCOMError_XMLFile_UnknownError );
             
-            if ( VCOM_SUCCEEDED( ::GS_VWQueryInterface( IID_XMLFileNode, (IVWUnknown**) & pResultNode ) ) ) {
+            if ( VCOM_SUCCEEDED( ::VWQueryInterface( IID_XMLFileNode, (IVWUnknown**) & pResultNode ) ) ) {
                 CXMLFileNodeImpl*	pOutNodeImpl	= dynamic_cast<CXMLFileNodeImpl*>( pResultNode );
                 if ( pOutNodeImpl ) {
                     pOutNodeImpl->SetData( fpDomDocument, pChildNode );
@@ -1186,8 +1158,7 @@ VCOMError CXMLFileNodeImpl::AddCopyOfExistingNodeBeforeIndex(const IXMLFileNode*
 
 VCOMError CXMLFileNodeImpl::SetNodeName(const TXString &newName)
 {
-	SETUP_CBP;
-	ASSERTN( kVStanev, fRefCnt > 0 );
+	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
 	if ( fpNode == NULL || fpDomDocument == NULL )

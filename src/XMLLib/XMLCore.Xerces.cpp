@@ -1,16 +1,15 @@
 // XMLCore.Xerces.cpp
 // XML Core functions
 
-#include "StdAfx.h"
+#include "Prefix/StdAfx.h"
 
 #include "XMLCore.Xerces.h"
 #include "ErrorHandler.h"
-#include "PluginResource.h"
+#include "../Wrapper/PluginResource.h"
 
 using namespace VectorWorks::Filing;
 using namespace std;
 using namespace XML;
-using namespace VWFC::PluginSupport;
 
 #if GS_WIN
 	#define NNA_MAX_PATH_LEN MAX_PATH
@@ -178,19 +177,6 @@ DOMData* DOMManager::GetDOMPtr(Sint32 nDOMID)
 	return pDOMData;
 }
 
-SAXData* DOMManager::GetSAXPtr(Sint32 nSAXID)
-{
-	SAXData*	result	= NULL;
-
-	TXMLDataMap::iterator  iter = fXMLDataMap.find(nSAXID);
-	if ( iter != fXMLDataMap.end() ) {
-		SXMLData&	xmlData	= iter->second;
-
-		result	= & xmlData.fSAXData;
-	}
-	return result;
-}
-
 // ******************* DOMData functions *******************
 
 DOMData::DOMData()
@@ -275,7 +261,7 @@ short DOMData::CreateNewXMLDocument(const TXString& rootElementName)
 
 // ****************************** File I/O functions ******************************
 
-#if defined(_WINDOWS)
+#if defined(GS_WIN)
 
 #elif _LINUX
 
@@ -323,11 +309,11 @@ void ConvertToOSXStylePath(const TXString& cstrFileName, TXString& osxStylePath)
 
 
 
-#if defined(_WINDOWS)
-
-			if (GS_GetFolderN(gCBP, whichPath, xmlFile, inCreateIfMissing)) {
-				xmlFile += filename;			
-			}
+#if defined(GS_WIN)
+			//TODO
+			//if (GS_GetFolderN(gCBP, whichPath, xmlFile, inCreateIfMissing)) {
+			//	xmlFile += filename;			
+			//}
 
 #elif _LINUX
 			// LINUX_IMPLEMENTATION - done
@@ -339,7 +325,9 @@ void ConvertToOSXStylePath(const TXString& cstrFileName, TXString& osxStylePath)
 			TXString	hfsPath;
 			TXString	cstrPath;
 
-			if (GS_GetFolderN(gCBP, whichPath, hfsPath, inCreateIfMissing)) {
+			// TODO
+			//if (GS_GetFolderN(whichPath, hfsPath, inCreateIfMissing)) 
+			{
 				ConvertToOSXStylePath(hfsPath, cstrPath);
 
 				// Concatenate the file name
@@ -359,16 +347,17 @@ void ConvertToOSXStylePath(const TXString& cstrFileName, TXString& osxStylePath)
 			// the XML file.
 
 
-			TKludgeHandleIncomingFilePath env;
-			env.fHadError	= true;
-			env.fForWrite	= inCreateIfMissing;
-			env.fPath = filename;
+			//TKludgeHandleIncomingFilePath env;
+			//env.fHadError	= true;
+			//env.fForWrite	= inCreateIfMissing;
+		//	env.fPath = filename;
 
-			if (GS_Kludge(gCBP, kKludgeHandleIncomingFilePath, &env, nil) &&
-				env.fHadError == false &&
-				env.fPath[0] != 0) 
+			// TODO
+			//if (GS_Kludge(kKludgeHandleIncomingFilePath, &env, nil) &&
+			//	env.fHadError == false &&
+			//	env.fPath[0] != 0) 
 			{
-				xmlFile = env.fPath;
+				//xmlFile = env.fPath;
 
 #if ! _WINDOWS
 				if (xmlFile.Find(':') != -1) {
@@ -409,11 +398,11 @@ short DOMData::ReadXMLFile(short whichPath, const TXString&  fileName)
 	}
 	else {
 		VCOMPtr< IFileIdentifier > pXmlFileID( IID_FileIdentifier );
-		VCOMPtr< IApplicationFolders > pAppFolders( IID_ApplicationFolders );
+		VCOMPtr< IFolderIdentifier > pAppFolders( IID_FolderIdentifier );
 
 		whichPath = abs(whichPath);
-		if (!VCOM_SUCCEEDED(pAppFolders->FindFileInStandardFolder((EFolderSpecifier)whichPath, fileName, &pXmlFileID)))
-			return kUnknownError;
+		//if (!VCOM_SUCCEEDED(pAppFolders->FindFileInStandardFolder((EFolderSpecifier)whichPath, fileName, &pXmlFileID)))
+		//	return kUnknownError; TODO
 		TXString filePath;
 
 		pXmlFileID->GetFileFullPath(filePath);
@@ -436,14 +425,14 @@ short DOMData::ReadXMLFile(short whichPath, const TXString&  fileName)
 			try {
 				if ( xmlFile[0] ) {
 					TXString theFilePath = xmlFile;
-#ifdef _WINDOWS
+#ifdef GS_WIN
 					theFilePath.Replace( "/", "\\" );
 #endif
 
 #if GS_LIN
 					m_pXercesDOMParser->parse( theFilePath.operator const char*() );
 #else
-					m_pXercesDOMParser->parse( theFilePath.GetData() );
+					//m_pXercesDOMParser->parse( theFilePath.GetData() ); TODO
 #endif
 
 					m_plDomDocument = m_pXercesDOMParser->getDocument();
@@ -565,11 +554,12 @@ short DOMData::WriteXMLFile(short whichPath, const TXString& fileName)
 		txFileName = GetFullPath(whichPath, fileName, true /*create if missing*/);
 	else {
 		VCOMPtr< IFileIdentifier > pXmlFileID( IID_FileIdentifier );
-		VCOMPtr< IApplicationFolders > pAppFolders( IID_ApplicationFolders );
+		IFolderIdentifierPtr pAppFolders( IID_FolderIdentifier );
 
 		whichPath = abs(whichPath);
-		if (!VCOM_SUCCEEDED(pAppFolders->GetFileInUserRoot((EFolderSpecifier)whichPath, fileName, &pXmlFileID)))
-			return kUnknownError;
+		//if (!VCOM_SUCCEEDED(pAppFolders->Set((EFolderSpecifier)whichPath, fileName, &pXmlFileID)))
+		//	return kUnknownError;
+		// TODO
 
 		pXmlFileID->GetFileFullPath(txFileName);
 
@@ -823,7 +813,7 @@ DOMNodePtr DOMData::FindAttributeSearch(DOMNodePtr pStartNode, const TXString& a
 		if (attr != NULL && attr->getLength() > 0) {
 
 			// Scan all attributes of this element, looking for the desired one
-			for (Sint32 i = 0; DemoteTo<Uint32>(kJeff, i) < attr->getLength(); i++) {
+			for (Sint32 i = 0; DemoteTo<Uint32>(kEveryone, i) < attr->getLength(); i++) {
 				DOMNodePtr	attrPtr = attr->item(i);						// Get current attribute
 				const XMLCh  *xmlAttributeName = attrPtr->getNodeName();	// Get its name
 
@@ -1463,7 +1453,7 @@ short DOMData::FindAttribute(const TXString& elementPath, const TXString& attrib
 				retVal = kAttributeNotFound;	// assume attribute not present, but look for it
 
 				// DOMNamedNodeMap::getLength() returns XMLSize_t which is an unsigned long.
-				for (Sint32 i = 0; DemoteTo<Uint32>(kJeff, i) < attr->getLength(); i++) {
+				for (Sint32 i = 0; DemoteTo<Uint32>(kEveryone, i) < attr->getLength(); i++) {
 					DOMNodePtr	attrPtr = attr->item(i);
 					const XMLCh  *xmlElementName = attrPtr->getNodeName();
 
@@ -1880,121 +1870,4 @@ VCOMError CXMLMemoryIOBuffer::SetData(void* pBuffer, size_t bufferSize)
 	TXString	strBuffer( (const char*) pBuffer, bufferSize );
 	fBuffer		+= strBuffer;
 	return kVCOMError_NoError;
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-CXMLSAXListener::CXMLSAXListener(Sint32 nSAXID, void* callbackRef)
-	: fCallbackRef( callbackRef )
-	, fScriptEngine( IID_VectorScriptEngine )
-	, fSAXID( nSAXID )
-{
-}
-
-CXMLSAXListener::~CXMLSAXListener()
-{
-}
-
-bool CXMLSAXListener::IsReadyAndReportError() const
-{
-	if ( fCallbackRef == NULL && fScriptEngine ) {
-		fScriptEngine->ReportRuntimeError( TXLegacyResource(kStr_SAXAPIErr_ExpectedProcedure) );
-	}
-	return fCallbackRef;
-}
-
-
-const short kSAXNODEType_StartDoc		= 1;
-const short kSAXNODEType_EndDoc			= 2;
-const short kSAXNODEType_StartNode		= 3;
-const short kSAXNODEType_EndNode		= 4;
-const short kSAXNODEType_Value			= 5;
-
-/* CALLBACK
-CONST	kSAXNODEType_StartDoc		= 1;
-		kSAXNODEType_EndDoc			= 2;
-		kSAXNODEType_StartNode		= 3;
-		kSAXNODEType_EndNode		= 4;
-		kSAXNODEType_Value			= 5;
-PROCEDURE XMLSAXNodeCallback(
-		   XMLHandle	:LONGINT;
-		   nodeType		:INTEGER; {one of kSAXNODEType_ constants}
-		   nodeName		:STRING;
-		   nodeValue	:STRING;
-		   nodeAttrs	:DYNARRAY [] OF CHAR);
-*/
-
-void CXMLSAXListener::OnDocument(const bool isStart)
-{
-	if ( fScriptEngine ) {
-		VWPluginLibraryArgTable		args;
-		args.GetArgument(0).SetArgLong( fSAXID );
-		args.GetArgument(1).SetArgInteger( isStart ? kSAXNODEType_StartDoc : kSAXNODEType_EndDoc );
-		args.GetArgument(2).SetArgString( "" );
-		args.GetArgument(3).SetArgString( "" );
-		args.GetArgument(4).SetArgDynArrayChar( "" );
-		fScriptEngine->CallUserProcedure( fCallbackRef, args, 5 );
-	}
-}
-
-void CXMLSAXListener::OnNode(const bool isStart, const SXMLURI& uri, const TXString& name, IXMLSAXAttributes* attributes)
-{
-	if ( fScriptEngine ) {
-		TXString	nodeAttributes;
-		if ( isStart && attributes ) {
-			const char	kDelimiter	= 0x0D;
-
-			size_t		attrsCnt	= attributes->GetCount();
-			for(size_t iAttr=0; iAttr<attrsCnt; iAttr++) {
-				EXMLSAXAttrType type	= attributes->GetTypeAt( iAttr );
-				if ( type == eXMLSAXAttrType_ATTRIBUTE ) {
-					nodeAttributes	+= attributes->GetNameAt( iAttr );
-					nodeAttributes	+= kDelimiter;
-					nodeAttributes	+= attributes->GetValueAt( iAttr );
-					nodeAttributes	+= kDelimiter;
-				}
-			}
-		}
-
-
-		VWPluginLibraryArgTable		args;
-		args.GetArgument(0).SetArgLong( fSAXID );
-		args.GetArgument(1).SetArgInteger( isStart ? kSAXNODEType_StartNode : kSAXNODEType_EndNode );
-		args.GetArgument(2).SetArgString( name );
-		args.GetArgument(3).SetArgString( "" );
-		args.GetArgument(4).SetArgDynArrayChar( nodeAttributes );
-		fScriptEngine->CallUserProcedure( fCallbackRef, args, 5 );
-	}
-
-	fLastNodeName	= name;
-}
-
-void CXMLSAXListener::OnNodeValue(const TXString& value)
-{
-	if ( fScriptEngine ) {
-		// trim the value
-		TXString	theValue;
-		size_t		len			= value.GetLength();
-		for(size_t i=0; i<len; i++) {
-			UCChar	ch	= value.GetAt( i );
-			if (	ch != ' '
-				&&	ch != '\r'
-				&&	ch != '\n'
-				&&	ch != '\t'
-				)
-			{
-				theValue	+= ch;
-			}
-		}
-
-
-		VWPluginLibraryArgTable		args;
-		args.GetArgument(0).SetArgLong( fSAXID );
-		args.GetArgument(1).SetArgInteger( kSAXNODEType_Value );
-		args.GetArgument(2).SetArgString( fLastNodeName );
-		args.GetArgument(3).SetArgString( theValue );
-		args.GetArgument(4).SetArgDynArrayChar( "" );
-		fScriptEngine->CallUserProcedure( fCallbackRef, args, 5 );
-	}
 }

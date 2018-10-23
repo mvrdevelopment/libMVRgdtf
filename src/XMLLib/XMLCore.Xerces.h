@@ -4,13 +4,12 @@
 #ifndef XMLCore_h
 #define XMLCore_h
 
-XERCES_CPP_NAMESPACE_USE
+#include "XercesSupport.h"
 
 
 namespace XML
 {
 	using namespace VectorWorks::Filing;
-	using namespace VectorWorks::Scripting;
 
 	// ------------------------------------------------------------------------------------------------------
 	// Error constants
@@ -28,15 +27,6 @@ namespace XML
 
 	// errors -30 - -60 are reserved for DOM errors
 	// errors -1000 - -2000 are reserved for XML errors
-
-	// ------------------------------------------------------------------------------------------------------
-	typedef DOMImplementation *		DOMImplementationPtr;
-	typedef	XercesDOMParser *		XercesDOMParserPtr;
-	typedef	DOMErrorHandler *		DOMErrorHandlerPtr;
-	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument * DOMDocumentPtr;
-	typedef DOMElement *			DOMElementPtr;
-	typedef DOMNode *				DOMNodePtr;
-	typedef	DOMAttr *				DOMAttrPtr;
 
 	/////////////////////////////////////////////////////////////////////////////
 
@@ -98,6 +88,17 @@ namespace XML
 
 	/////////////////////////////////////////////////////////////////////////////
 
+	struct SXMLData
+	{
+		 DOMData*			fDOMData;	// Pointer to DOMData structure
+	};
+
+	/////////////////////////////////////////////////////////////////////////////
+
+	typedef std::map< Sint32 /* Context ID */, SXMLData>  TXMLDataMap;
+
+	/////////////////////////////////////////////////////////////////////////////
+
 	class CXMLMemoryIOBuffer : public IXMLFileIOBuffer
 	{
 	public:
@@ -113,47 +114,6 @@ namespace XML
 		TXString	fBuffer;
 	};
 
-	/////////////////////////////////////////////////////////////////////////////
-
-	class CXMLSAXListener : public IXMLSAXListener
-	{
-	public:
-					CXMLSAXListener(Sint32 nSAXID, void* callbackRef);
-		virtual		~CXMLSAXListener();
-
-		bool		IsReadyAndReportError() const;
-
-	public:
-		virtual void VCOM_CALLTYPE 	OnDocument(const bool isStart);
-		virtual void VCOM_CALLTYPE 	OnNode(const bool isStart, const SXMLURI& uri, const TXString& name, IXMLSAXAttributes* attributes);
-		virtual void VCOM_CALLTYPE 	OnNodeValue(const TXString&  value);
-
-	private:
-		IVectorScriptEnginePtr	fScriptEngine;
-		Sint32					fSAXID;
-		void*					fCallbackRef;
-		TXString				fLastNodeName;
-	};
-
-	/////////////////////////////////////////////////////////////////////////////
-	struct SAXData
-	{
-		IXMLSAXFilePtr			fSAXFile;
-		CXMLMemoryIOBuffer		fMemoryBuffer;
-	};
-
-	/////////////////////////////////////////////////////////////////////////////
-
-	struct SXMLData
-	{
-		 DOMData*			fDOMData;	// Pointer to DOMData structure
-		 SAXData			fSAXData;
-	};
-
-	/////////////////////////////////////////////////////////////////////////////
-
-	typedef std::map< Sint32 /* Context ID */, SXMLData>  TXMLDataMap;
-
 	class DOMManager
 	{
 		public:
@@ -162,7 +122,6 @@ namespace XML
 			Sint32			InitXML();
 			short			ReleaseXML(Sint32 nDOMID);
 			DOMData*		GetDOMPtr(Sint32 nDOMID);		// Returns DOMData pointer to specified DOM context
-			SAXData*		GetSAXPtr(Sint32 nSAXID);
 
 		private:
 			TXMLDataMap		fXMLDataMap;

@@ -1,14 +1,14 @@
 #pragma once
 
-
 #ifndef ERROR_HANDLER_H
 #define ERROR_HANDLER_H
 
+#include "XercesSupport.h"
 
 namespace XML
 {
 
-	XERCES_CPP_NAMESPACE_USE
+
 
 	class XMLErrorHandler : public DOMErrorHandler
 	{
