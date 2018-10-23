@@ -304,7 +304,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateGroup
 	VWTransformMatrix ma;
 	Utility::ConvertMatrix(offset, ma);
 	
-	SceneData::SceneDataGroupObjPtr ptr = fExchangeObj.CreateGroupObject(uuid, ma, group, nullptr);
+	SceneData::SceneDataGroupObjPtr ptr = fExchangeObj.CreateGroupObject(uuid, ma, group);
 	
 	//---------------------------------------------------------------------------
 	// Initialize Object
@@ -374,7 +374,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateFixtu
 	VWTransformMatrix ma;
 	Utility::ConvertMatrix(offset, ma);
 	
-	SceneData::SceneDataFixtureObjPtr ptr = fExchangeObj.CreateFixture(uuid, ma, nameStr, group, nullptr);
+	SceneData::SceneDataFixtureObjPtr ptr = fExchangeObj.CreateFixture(uuid, ma, nameStr, group);
 	
 	//---------------------------------------------------------------------------
 	// Initialize Object
@@ -443,7 +443,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateScene
 	VWTransformMatrix ma;
 	Utility::ConvertMatrix(offset, ma);
 	
-	SceneData::SceneDataSceneryObjPtr ptr = fExchangeObj.CreateSceneryObject(uuid, ma, nameStr, group, nullptr);
+	SceneData::SceneDataSceneryObjPtr ptr = fExchangeObj.CreateSceneryObject(uuid, ma, nameStr, group);
 	//---------------------------------------------------------------------------
 	// Initialize Object
 	CSceneObjImpl* pSceneObj = nullptr;
@@ -511,7 +511,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateFocus
 	VWTransformMatrix ma;
 	Utility::ConvertMatrix(offset, ma);
 	
-	SceneData::SceneDataFocusPointObjPtr ptr = fExchangeObj.CreateFocusPoint(uuid, ma, nameStr, group, nullptr);
+	SceneData::SceneDataFocusPointObjPtr ptr = fExchangeObj.CreateFocusPoint(uuid, ma, nameStr, group);
 	
 	//---------------------------------------------------------------------------
 	// Initialize Object
@@ -580,7 +580,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateTruss
 	VWTransformMatrix ma;
 	Utility::ConvertMatrix(offset, ma);
 	
-	SceneData::SceneDataTrussObjPtr ptr = fExchangeObj.CreateTruss(uuid, ma, nameStr, group, nullptr);
+	SceneData::SceneDataTrussObjPtr ptr = fExchangeObj.CreateTruss(uuid, ma, nameStr, group);
 	
 	//---------------------------------------------------------------------------
 	// Initialize Object
@@ -649,7 +649,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateVideo
 	VWTransformMatrix ma;
 	Utility::ConvertMatrix(offset, ma);
 	
-	SceneData::SceneDataVideoScreenObjPtr ptr = fExchangeObj.CreateVideoScreen(uuid, ma, nameStr, group, nullptr);
+	SceneData::SceneDataVideoScreenObjPtr ptr = fExchangeObj.CreateVideoScreen(uuid, ma, nameStr, group);
 	
 	//---------------------------------------------------------------------------
 	// Initialize Object
