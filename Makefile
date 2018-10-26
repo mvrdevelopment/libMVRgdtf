@@ -17,7 +17,6 @@ SRCDIR_MZIP	= src/Minizip/Source
 SRCDIR_S256	= src/sha256
 SRCDIR_WRAP	= src/Wrapper
 SRCDIR_XMLL	= src/XMLLib
-SRCDIR_ALL	= SRCDIR SRCDIR_IMPL SRCDIR_MZIP SRCDIR_S256 SRCDIR_WRAP
 OBJDIR	= obj
 BINDIR	= bin
 
@@ -151,8 +150,3 @@ $(TargetLibName).so: $(SOURCES)
 	mkdir -p $(BINDIR)
 	$(CXX) $(CXXFLAGS) -c $(LDFLAGS) -o $(BINDIR)/$@ $(SOURCES)
 	$(MV)
-
-
-
-
-new: $(one) $(two) $(three) $(four) $(five) $(six)
