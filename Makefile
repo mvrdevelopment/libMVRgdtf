@@ -79,6 +79,7 @@ endif
 # What to compile and link
 ifeq ($(OS),Windows_NT)
 	SOURCES			= $(wildcard $(SRCDIR)/*.cpp)
+	HEADERS			= $(wildcard $(SRCDIR)/*.h)
 	OBJECTSWIN		= $(addprefix $(OBJDIR)/, $(notdir $(SOURCES:.cpp=.o)))
 else
 	SOURCES			= $(shell echo $(SRCDIR)/*.cpp)
