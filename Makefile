@@ -3,9 +3,11 @@
 ##
 
 
+
 # set library name
 TargetLibName	= libVectorworksMvrGdtf
 TargetTestName	= vectorworksMvrGdtfTestApp
+
 
 
 # folders
@@ -15,14 +17,17 @@ SRCDIR_MZIP	= src/Minizip/Source
 SRCDIR_S256	= src/sha256
 SRCDIR_WRAP	= src/Wrapper
 SRCDIR_XMLL	= src/XMLLib
+SRCDIR_ALL	= SRCDIR SRCDIR_IMPL SRCDIR_MZIP SRCDIR_S256 SRCDIR_WRAP
 OBJDIR	= obj
 BINDIR	= bin
+
 
 
 # compiler, linker and options
 CXX			= g++					# gnu c++ compiler on all platforms
 CXXFLAGS	= -g -std=c++11			# compiler options
 LDFLAGS		= -shared				# linker options
+
 
 
 # Library:	set platform compiler, linker and e.t.c. options
@@ -56,6 +61,7 @@ else
 endif
 
 
+
 # UnitTest:	set platform compiler, linker and e.t.c. options
 # Windows
 ifeq ($(OS),Windows_NT)
@@ -76,6 +82,7 @@ else
 endif
 
 
+
 # What to compile and link
 ifeq ($(OS),Windows_NT)
 	SOURCES			= $(wildcard $(SRCDIR)/*.cpp)
@@ -85,6 +92,7 @@ else
 	SOURCES			= $(shell echo $(SRCDIR)/*.cpp)
 	OBJECTSMACLIN	= $(SOURCES:.cpp=.o)
 endif
+
 
 
 # Make Targets
@@ -102,6 +110,9 @@ clean:
 	@echo "Cleaning $(TargetLib)...  "
 	$(RM)
 
+
+
+
 # Unit Test
 # Windows
 $(TargetTestName).exe: unittest/main.cpp
@@ -116,18 +127,21 @@ $(TargetTestName): unittest/main.cpp
 	./$(BINDIR)/$@
 
 
+
+
 # Build .dll/.so
 # Windows
 $(TargetLibName).dll: $(OBJECTSWIN)
 	@echo "Linking $(TargetLib) ..."
+	@echo "$(SRCDIR_ALL)"
 	if not exist $(BINDIR) md $(BINDIR)
 	$(CXX) $(LDFLAGS) -o $(BINDIR)/$@ $(OBJECTSWIN) -Wl,--out-implib,$(BINDIR)/$(TargetLibName).lib
 
 
-$(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(wildcard $(SRCDIR_IMPL)/*.cpp)
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	@echo "Compiling objects for $(TargetLib) ..."
 	if not exist $(OBJDIR) md $(OBJDIR)
-	$(CXX) $(CXXFLAGS) -I$(SRCDIR) -c $(SOURCES) $(wildcard $(SRCDIR_IMPL)/*.cpp)
+	$(CXX) $(CXXFLAGS) -I$(SRCDIR) -c $(SOURCES)
 	$(MV)
 
 
@@ -137,3 +151,8 @@ $(TargetLibName).so: $(SOURCES)
 	mkdir -p $(BINDIR)
 	$(CXX) $(CXXFLAGS) -c $(LDFLAGS) -o $(BINDIR)/$@ $(SOURCES)
 	$(MV)
+
+
+
+
+new: $(one) $(two) $(three) $(four) $(five) $(six)
