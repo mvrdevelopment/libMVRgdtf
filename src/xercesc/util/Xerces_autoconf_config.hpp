@@ -45,7 +45,7 @@
 //	it would specify are instead hardcoded in the makefiles
 //
 
-#include <basetsd.h>
+//#include <basetsd.h>
 
 // silence the warning "while compiling class-template member function xxxx : identifier was truncated to '255'
 // characters in the browser information"
