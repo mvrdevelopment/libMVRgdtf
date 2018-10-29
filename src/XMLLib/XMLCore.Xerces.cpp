@@ -1,11 +1,11 @@
 // XMLCore.Xerces.cpp
 // XML Core functions
 
-#include "../Prefix/StdAfx.h"
+#include "Prefix/StdAfx.h"
 
 #include "XMLCore.Xerces.h"
 #include "ErrorHandler.h"
-#include "../Wrapper/PluginResource.h"
+#include "Wrapper/PluginResource.h"
 
 using namespace VectorWorks::Filing;
 using namespace std;
