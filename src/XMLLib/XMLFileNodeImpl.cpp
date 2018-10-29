@@ -576,7 +576,7 @@ VCOMError CXMLFileNodeImpl::GetChildNode(const TXString& name, const TXString& a
 		CXMLFileImpl::SetLastError( kVCOMError_XMLFile_BadName );
 	}
 	else {
-		CXMLFileNodeImpl	tempNode();
+		CXMLFileNodeImpl	tempNode;
 		tempNode.AddRef();
 		TXString			tempAttrValue;
 

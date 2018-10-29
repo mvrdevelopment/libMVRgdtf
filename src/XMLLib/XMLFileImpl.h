@@ -14,6 +14,7 @@ namespace XML
 	class CXMLFileImpl : public IXMLFile, DOMErrorHandler
 	{
 	public:
+						CXMLFileImpl();
 		virtual			~CXMLFileImpl();
 
 	// IXMLFile

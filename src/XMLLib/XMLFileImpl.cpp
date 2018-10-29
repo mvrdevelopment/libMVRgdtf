@@ -106,7 +106,7 @@ uint32_t CXMLFileImpl::Release()
 
 		// mechanizm for immediate delete of the interface instance
 		if ( fRefCnt == 0 ) {
-			::VWNotifyDeleteInterface( this );
+			//::VWNotifyDeleteInterface( this ); TODO
 			// EXIT IMMEDIATELY! 'this' no longer exist!!!
 			return 0;
 		}
@@ -246,7 +246,7 @@ VCOMError CXMLFileImpl::ReadFile(IFileIdentifier* pFileID)
             // LINUX_IMPLEMENTATION - done
             fpXercesDOMParser->parse( fileFullPath.operator const char*() );
 #else
-            fpXercesDOMParser->parse( fileFullPath.GetData() );
+            fpXercesDOMParser->parse( fileFullPath.operator const char*() );
 #endif
 
 			fpDomDocument = fpXercesDOMParser->getDocument();
@@ -434,7 +434,7 @@ VCOMError CXMLFileImpl::WriteFile(IFileIdentifier* pFileID, EXMLEncoding encodin
 			LocalFileFormatTarget  myFormTarget( fileFullPath.operator const char*() );
 #else
 			//LocalFileFormatTarget  myFormTarget( fileFullPath.GetData() );
-			// TODO
+			LocalFileFormatTarget  myFormTarget( fileFullPath.operator const char*() );
 #endif
 			pOutput->setByteStream(&myFormTarget);
 

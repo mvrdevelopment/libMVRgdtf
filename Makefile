@@ -9,7 +9,12 @@ TargetTestName	= vectorworksMvrGdtfTestApp
 
 
 # folders
-SRCDIR	= src
+SRCDIR		= src
+SRCDIR_IMPL	= src/Implementation
+SRCDIR_MZIP	= src/Minizip/Source
+SRCDIR_S256	= src/sha256
+SRCDIR_WRAP	= src/Wrapper
+SRCDIR_XMLL	= src/XMLLib
 OBJDIR	= obj
 BINDIR	= bin
 
@@ -26,6 +31,7 @@ ifeq ($(OS),Windows_NT)
 		CXXFLAGS	+= -DGS_WIN=1 -DEXPORT_SYMBOLS=1
 		libExt		= .dll
 		RM			= if exist $(BINDIR)\* del /q $(BINDIR)\* & if exist $(OBJDIR)\* del /q $(OBJDIR)\*
+		MV 			= move *.o $(OBJDIR)/
 else
     UNAME_S := $(shell uname -s)
 # Linux
@@ -35,6 +41,8 @@ else
 		libExt		= .so
 		#TODO -f for forced / without delete confirmation
 		RM			= rm -r $(BINDIR)/*
+		MV 			= mv *.o $(OBJDIR)/
+
     endif
 # Mac
     ifeq ($(UNAME_S),Darwin)
@@ -43,6 +51,7 @@ else
 		libExt		= .so
 		#TODO -f for forced / without delete confirmation
 		RM			= rm -r $(BINDIR)/*
+		MV 			= mv *.o $(OBJDIR)/
     endif
 endif
 
@@ -70,10 +79,11 @@ endif
 # What to compile and link
 ifeq ($(OS),Windows_NT)
 	SOURCES			= $(wildcard $(SRCDIR)/*.cpp)
+	HEADERS			= $(wildcard $(SRCDIR)/*.h)
 	OBJECTSWIN		= $(addprefix $(OBJDIR)/, $(notdir $(SOURCES:.cpp=.o)))
 else
 	SOURCES			= $(shell echo $(SRCDIR)/*.cpp)
-	OBJECTSMACLIN	= $(SOURCES:.cpp=.o)
+	OBJECTSMACLIN	= $(wildcard $(OBJDIR)/*.o)
 endif
 
 
@@ -114,14 +124,16 @@ $(TargetLibName).dll: $(OBJECTSWIN)
 	$(CXX) $(LDFLAGS) -o $(BINDIR)/$@ $(OBJECTSWIN) -Wl,--out-implib,$(BINDIR)/$(TargetLibName).lib
 
 
-$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(wildcard $(SRCDIR_IMPL)/*.cpp) $(wildcard $(SRCDIR_MZIP)/*.cpp) $(wildcard $(SRCDIR_S256)/*.cpp) $(wildcard $(SRCDIR_WRAP)/*.cpp) $(wildcard $(SRCDIR_XMLL)/*.cpp)
 	@echo "Compiling objects for $(TargetLib) ..."
 	if not exist $(OBJDIR) md $(OBJDIR)
-	$(CXX) $(CXXFLAGS) -c $(SOURCES) -o $@
+	$(CXX) $(CXXFLAGS) -I$(SRCDIR) -c $(SOURCES) $(wildcard $(SRCDIR_IMPL)/*.cpp) $(wildcard $(SRCDIR_MZIP)/*.cpp) $(wildcard $(SRCDIR_S256)/*.cpp) $(wildcard $(SRCDIR_WRAP)/*.cpp) $(wildcard $(SRCDIR_XMLL)/*.cpp)
+	$(MV)
 
 
 # Mac Linux
 $(TargetLibName).so: $(SOURCES)
 	@echo "Linking $(TargetLib) ..."
 	mkdir -p $(BINDIR)
-	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $(LDFLAGS) -o $(BINDIR)/$@ $(SOURCES)
+	$(CXX) $(CXXFLAGS) -c $(LDFLAGS) -o $(BINDIR)/$@ $(SOURCES)
+	$(MV)
