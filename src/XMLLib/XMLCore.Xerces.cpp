@@ -1,7 +1,7 @@
 // XMLCore.Xerces.cpp
 // XML Core functions
 
-#include "Prefix/StdAfx.h"
+#include "../Prefix/StdAfx.h"
 
 #include "XMLCore.Xerces.h"
 #include "ErrorHandler.h"
@@ -316,10 +316,11 @@ void ConvertToOSXStylePath(const TXString& cstrFileName, TXString& osxStylePath)
 			//}
 
 #elif _LINUX
+			// TODO
 			// LINUX_IMPLEMENTATION - done
-			if (GS_GetFolderN(gCBP, whichPath, xmlFile, inCreateIfMissing)) {
-				xmlFile += filename;
-			}
+			// if (GS_GetFolderN(gCBP, whichPath, xmlFile, inCreateIfMissing)) {
+			// 	xmlFile += filename;
+			// }
 #else
 			// Mac
 			TXString	hfsPath;

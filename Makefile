@@ -36,7 +36,7 @@ else
     UNAME_S := $(shell uname -s)
 # Linux
     ifeq ($(UNAME_S),Linux)
-		CXXFLAGS	+= -DGS_LIN=1 -MMD -MP 
+		CXXFLAGS	+= -DGS_LIN=1 -MMD -MP -D_LINUX
 		LDFLAGS		+= -DfPIC
 		libExt		= .so
 		#TODO -f for forced / without delete confirmation
@@ -46,7 +46,7 @@ else
     endif
 # Mac
     ifeq ($(UNAME_S),Darwin)
-		CXXFLAGS	+= -DGS_MAC=1 -MMD -MP 
+		CXXFLAGS	+= -DGS_MAC=1 -MMD -MP -D__APPLE__
 		LDFLAGS		+= -DfPIC
 		libExt		= .so
 		#TODO -f for forced / without delete confirmation
@@ -65,12 +65,12 @@ else
     UNAME_S := $(shell uname -s)
 # Linux
     ifeq ($(UNAME_S),Linux)
-		CXXFLAGSUNITTEST	+= -DGS_LIN=1 -MMD -MP 
+		CXXFLAGSUNITTEST	+= -DGS_LIN=1 -MMD -MP
 		UnitTestExt			=
     endif
 # Mac
     ifeq ($(UNAME_S),Darwin)
-		CXXFLAGSUNITTEST	+= -DGS_MAC=1 -MMD -MP 
+		CXXFLAGSUNITTEST	+= -DGS_MAC=1 -MMD -MP
 		UnitTestExt			=
     endif
 endif
@@ -127,13 +127,13 @@ $(TargetLibName).dll: $(OBJECTSWIN)
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(wildcard $(SRCDIR_IMPL)/*.cpp) $(wildcard $(SRCDIR_MZIP)/*.cpp) $(wildcard $(SRCDIR_S256)/*.cpp) $(wildcard $(SRCDIR_WRAP)/*.cpp) $(wildcard $(SRCDIR_XMLL)/*.cpp)
 	@echo "Compiling objects for $(TargetLib) ..."
 	if not exist $(OBJDIR) md $(OBJDIR)
-	$(CXX) $(CXXFLAGS) -I$(SRCDIR) -c $(SOURCES) $(wildcard $(SRCDIR_IMPL)/*.cpp) $(wildcard $(SRCDIR_MZIP)/*.cpp) $(wildcard $(SRCDIR_S256)/*.cpp) $(wildcard $(SRCDIR_WRAP)/*.cpp) $(wildcard $(SRCDIR_XMLL)/*.cpp)
+	$(CXX) $(CXXFLAGS) -I/home/redblue/Dokumente/DEV/libVectorworksMvrGdtf/$(SRCDIR) -c $(SOURCES) $(wildcard $(SRCDIR_IMPL)/*.cpp) $(wildcard $(SRCDIR_MZIP)/*.cpp) $(wildcard $(SRCDIR_S256)/*.cpp) $(wildcard $(SRCDIR_WRAP)/*.cpp) $(wildcard $(SRCDIR_XMLL)/*.cpp)
 	$(MV)
 
 
 # Mac Linux
-$(TargetLibName).so: $(SOURCES)
+$(TargetLibName).so: $(SOURCES) $(wildcard $(SRCDIR_IMPL)/*.cpp) $(wildcard $(SRCDIR_MZIP)/*.cpp) $(wildcard $(SRCDIR_S256)/*.cpp) $(wildcard $(SRCDIR_WRAP)/*.cpp) $(wildcard $(SRCDIR_XMLL)/*.cpp)
 	@echo "Linking $(TargetLib) ..."
 	mkdir -p $(BINDIR)
-	$(CXX) $(CXXFLAGS) -c $(LDFLAGS) -o $(BINDIR)/$@ $(SOURCES)
+	$(CXX) $(CXXFLAGS) -Wfatal-errors -I$(SRCDIR) $(LDFLAGS) -o $(BINDIR)/$@ $(SOURCES) $(wildcard $(SRCDIR_IMPL)/*.cpp) $(wildcard $(SRCDIR_MZIP)/*.cpp) $(wildcard $(SRCDIR_S256)/*.cpp) $(wildcard $(SRCDIR_WRAP)/*.cpp) $(wildcard $(SRCDIR_XMLL)/*.cpp)
 	$(MV)

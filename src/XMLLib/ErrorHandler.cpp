@@ -1,7 +1,7 @@
 // ErrorHandler.cpp
 //
 // Error handling code for the XML parser.
-#include "Prefix/StdAfx.h"
+#include "../Prefix/StdAfx.h"
 
 #include "ErrorHandler.h"
 

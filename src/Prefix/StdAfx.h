@@ -14,15 +14,10 @@
 #define __FP__
 
 #pragma warning(disable:4786)
-
-#include "CommonPrefix.h"
-
-#elif _LINUX
-
-#include "CommonPrefix.h"
-
 #endif	// _WINDOWS
 
+#include "../GSTypes.h"
+#include "CommonPrefix.h"
 #include "../Include/VectorworksMVR.h"
 using namespace VectorworksMVR;
 
@@ -94,7 +89,7 @@ using namespace VWFC::Tools;
 #include <windows.h>
 
 #elif GS_LIN
-#define GS_HIDDEN_VISIBILITY	 __attribute__((visibility("default")))
+#define GS_HIDDEN_VISIBILITY
 
 #elif GS_MAC
 #define GS_HIDDEN_VISIBILITY    __attribute__((visibility("default")))
@@ -106,18 +101,7 @@ using namespace VWFC::Tools;
 
 typedef size_t RefNumType;
 
-// Type defs
-#ifndef _GS_TYPES_
-	typedef int8_t		Sint8;
-	typedef	int16_t		Sint16;
-	typedef	int32_t		Sint32;
-	typedef int64_t		Sint64;
-	typedef uint8_t		Uint8;
-	typedef	uint16_t	Uint16;
-	typedef	uint32_t	Uint32;
-	typedef uint64_t	Uint64;
-    #define _GS_TYPES_ 1
-#endif
+
 
 // VCOM interface implementation with immediate destruction
 template<class Interface> class VCOMImmediateImpl : public Interface
