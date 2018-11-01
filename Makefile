@@ -154,18 +154,18 @@ $(TargetTestName): unittest/main.cpp
 # Mac Linux
 $(TargetLibName).so: $(OBJECTS)
 	@echo "Linking objects to $(TargetLib) ..."
-	mkdir -p $(BINDIR)
+	@mkdir -p $(BINDIR)
 	$(CXX) $(LDFLAGS) -o $(BINDIR)/$@ $(OBJECTS) 
 
 $(OBJDIR)/%.o : %.cpp
 	@echo "Compiling:	" $<
 	@mkdir -p $(OBJDIR)
-	@$(CXX) $(CXXFLAGS) -I$(SRCDIR) -c $< -o $@
+	$(CXX) $(CXXFLAGS) -I$(SRCDIR) -c $< -o $@
 
 $(OBJDIR)/%.o : %.c
 	@echo "Compiling:	" $<
 	@mkdir -p $(OBJDIR)
-	@$(CXX) $(CXXFLAGS) -I$(SRCDIR) -c $< -o $@
+	$(CXX) $(CXXFLAGS) -I$(SRCDIR) -c $< -o $@
 
 
 # Include Header-Dependencies (stored as ".d" Makefile fragments files
