@@ -28,7 +28,7 @@ LDFLAGS		= -shared				# linker options
 # Library:	set platform compiler, linker and e.t.c. options
 # Windows
 ifeq ($(OS),Windows_NT)
-		CXXFLAGS	+= -DGS_WIN=1 -DEXPORT_SYMBOLS=1
+		CXXFLAGS	+= -DGS_WIN=1 -DEXPORT_SYMBOLS=1 -D_WINDOWS
 		libExt		= .dll
 		RM			= if exist $(BINDIR)\* del /q $(BINDIR)\* & if exist $(OBJDIR)\* del /q $(OBJDIR)\*
 		MV 			= move *.o $(OBJDIR)/
@@ -135,5 +135,5 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(wildcard $(SRCDIR_IMPL)/*.cpp) $(wildcard $(SRC
 $(TargetLibName).so: $(SOURCES) $(wildcard $(SRCDIR_IMPL)/*.cpp) $(wildcard $(SRCDIR_MZIP)/*.cpp) $(wildcard $(SRCDIR_S256)/*.cpp) $(wildcard $(SRCDIR_WRAP)/*.cpp) $(wildcard $(SRCDIR_XMLL)/*.cpp)
 	@echo "Linking $(TargetLib) ..."
 	mkdir -p $(BINDIR)
-	$(CXX) $(CXXFLAGS) -Wfatal-errors -I$(SRCDIR) $(LDFLAGS) -o $(BINDIR)/$@ $(SOURCES) $(wildcard $(SRCDIR_IMPL)/*.cpp) $(wildcard $(SRCDIR_MZIP)/*.cpp) $(wildcard $(SRCDIR_S256)/*.cpp) $(wildcard $(SRCDIR_WRAP)/*.cpp) $(wildcard $(SRCDIR_XMLL)/*.cpp)
+	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $(LDFLAGS) -o $(BINDIR)/$@ $(SOURCES) $(wildcard $(SRCDIR_IMPL)/*.cpp) $(wildcard $(SRCDIR_MZIP)/*.cpp) $(wildcard $(SRCDIR_S256)/*.cpp) $(wildcard $(SRCDIR_WRAP)/*.cpp) $(wildcard $(SRCDIR_XMLL)/*.cpp)
 	$(MV)

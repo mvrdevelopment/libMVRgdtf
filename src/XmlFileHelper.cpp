@@ -7,7 +7,6 @@
 
 using namespace VWFC;
 
-#include "Prefix/CommonPrefix.h"
 #include "SceneDataExchange.h"
 #include "GDTFManager.h"
 #include "XmlFileHelper.h"

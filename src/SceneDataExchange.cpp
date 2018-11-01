@@ -2,7 +2,6 @@
 //----- Copyright deersoft 2015 - 2017 www.deersoft.de
 //-----------------------------------------------------------------------------
 #include "Prefix/StdAfx.h"
-#include "Prefix/CommonPrefix.h"
 #include "SceneDataExchange.h"
 #include "HashManager.h"
 #include "GDTFManager.h"

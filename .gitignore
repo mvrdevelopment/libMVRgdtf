@@ -36,3 +36,5 @@ x64/
 .vs/
 bin/
 obj/
+
+\.vscode/settings\.json

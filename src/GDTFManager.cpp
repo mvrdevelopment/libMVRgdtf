@@ -5,7 +5,6 @@
 #include "SceneDataExchange.h"
 #include "XmlFileHelper.h"
 #include <iostream>
-#include "Prefix/CommonPrefix.h"
 
 using namespace SceneData;
 
