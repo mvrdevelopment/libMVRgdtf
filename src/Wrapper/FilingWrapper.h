@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../FolderSpecifiers.h"
+#include "FolderSpecifiers.h"
 
 typedef Uint32	StorageAttributes;
 //General Access

@@ -3,8 +3,8 @@
 //-----------------------------------------------------------------------------
 #pragma once
 
-#include "../SceneDataExchange.h"
-#include "../Include/IMediaRessourceVectorInterface.h"
+#include "SceneDataExchange.h"
+#include "Include/IMediaRessourceVectorInterface.h"
 #include "CPositionImpl.h"
 #include "CSceneDataProviderImpl.h"
 #include "CSceneObjImpl.h"

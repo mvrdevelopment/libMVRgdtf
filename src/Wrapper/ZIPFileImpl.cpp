@@ -1,7 +1,7 @@
 #include "Prefix/StdAfx.h"
 
 #include "ZIPFileImpl.h"
-#include "../Minizip/Source/miniz.c"
+#include "Minizip/Source/miniz.c"
 #include "TDQuickDraw.h"
 
 using namespace VectorWorks::Filing;

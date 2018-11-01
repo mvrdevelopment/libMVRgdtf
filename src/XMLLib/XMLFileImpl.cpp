@@ -1,4 +1,4 @@
-#include "../Prefix/StdAfx.h"
+#include "Prefix/StdAfx.h"
 
 #include "XMLFileImpl.h"
 #include "XMLFileNodeImpl.h"

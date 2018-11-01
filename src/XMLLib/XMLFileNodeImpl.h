@@ -1,5 +1,5 @@
 #pragma once
-#include "../Include/VectorworksMVR.h"
+#include "Include/VectorworksMVR.h"
 
 #include "XercesSupport.h"
 

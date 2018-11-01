@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------
 #pragma once
 
-#include "../Include/IMediaRessourceVectorInterface.h"
+#include "Include/IMediaRessourceVectorInterface.h"
 
 namespace VectorworksMVR
 {

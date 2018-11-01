@@ -181,16 +181,3 @@ obj:
 obj/%.o : %.cpp
 	@echo "Compiling:	" $< 
 	@$(CXX) $(CXXFLAGS) -I$(SRCDIR) -c $< -o $@
-
-# obj/%.o: %.cpp
-# 	@echo $<
-# 	@echo $(OBJS)
- 	# $(CXX) $(CXXFLAGS) -I$(SRCDIR) -c $< -o $@
-
-
-# $(OBJDIR)/%.o: $(SOURCES)
-# 	$(CXX) $(CXXFLAGS) -I$(SRCDIR) -c $^ -o $@
-
-# $(OBJECT_FILES): $(OBJ)/%.o: %.cpp
-# 	@echo Compiling $<
-# 	@$(CXX) $(CXXFLAGS) -I$(SRCDIR) -o $@ $<

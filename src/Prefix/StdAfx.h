@@ -16,9 +16,9 @@
 #pragma warning(disable:4786)
 #endif	// _WINDOWS
 
-#include "../GSTypes.h"
+#include "GSTypes.h"
 #include "CommonPrefix.h"
-#include "../Include/VectorworksMVR.h"
+#include "Include/VectorworksMVR.h"
 using namespace VectorworksMVR;
 
 #define VCOM_SUCCEEDED(x)   (x==0)
@@ -41,28 +41,28 @@ using namespace VectorworksMVR;
 
 //---------------------------------------------------------------------------------
 // Add includes from VWSDK
-#include "../MCCoordTypes.h"
-#include "../FolderSpecifiers.h"
-#include "../GSString.h"
-#include "../VWPoint2D.h"
-#include "../VWPoint3D.h"
-#include "../VWLine2D.h"
-#include "../VWLine3D.h"
-#include "../VWMathUtils.h"
-#include "../VWTransformMatrix.h"
-#include "../UUID.h"
-#include "../RGBColor.h"
+#include "MCCoordTypes.h"
+#include "FolderSpecifiers.h"
+#include "GSString.h"
+#include "VWPoint2D.h"
+#include "VWPoint3D.h"
+#include "VWLine2D.h"
+#include "VWLine3D.h"
+#include "VWMathUtils.h"
+#include "VWTransformMatrix.h"
+#include "UUID.h"
+#include "RGBColor.h"
 
 using namespace VWFC::Math;
 using namespace VWFC::Tools;
 
 // Interfaces
-#include "../Interface/IFileIdentifier.h"
-#include "../Interface/IFolderIdentifier.h"
-#include "../Interface/IRawOSFile.h"
-#include "../Interface/IZIPFile.h"
-#include "../Interface/IStdFile.h"
-#include "../Interface/IXMLFile.h"
+#include "Interface/IFileIdentifier.h"
+#include "Interface/IFolderIdentifier.h"
+#include "Interface/IRawOSFile.h"
+#include "Interface/IZIPFile.h"
+#include "Interface/IStdFile.h"
+#include "Interface/IXMLFile.h"
 
 
 

@@ -3,8 +3,8 @@
 //-----------------------------------------------------------------------------
 #pragma once
 
-#include "../Include/IMediaRessourceVectorInterface.h"
-#include "../GDTFManager.h"
+#include "Include/IMediaRessourceVectorInterface.h"
+#include "GDTFManager.h"
 
 namespace VectorworksMVR
 {	
