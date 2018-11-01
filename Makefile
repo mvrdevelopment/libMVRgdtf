@@ -40,7 +40,7 @@ else
 		LDFLAGS		+= -DfPIC
 		libExt		= .so
 		#TODO -f for forced / without delete confirmation
-		RM			= rm -r $(BINDIR)/*
+		RM			= rm -rvf $(BINDIR)/*; rm -rvf $(OBJDIR)/*
 		MV 			= mv *.o $(OBJDIR)/
 
     endif
@@ -50,7 +50,7 @@ else
 		LDFLAGS		+= -DfPIC
 		libExt		= .so
 		#TODO -f for forced / without delete confirmation
-		RM			= rm -r $(BINDIR)/*
+		RM			= rm -rvf $(BINDIR)/*; rm -rvf $(OBJDIR)/*
 		MV 			= mv *.o $(OBJDIR)/
     endif
 endif
@@ -94,6 +94,8 @@ TargetTest	= $(TargetTestName)$(UnitTestExt)
 # ALL
 all: $(TargetLib)
 
+one: $(BINDIR)/test.so
+
 # UnitTest
 test: $(TargetTest)
 
@@ -104,36 +106,91 @@ clean:
 
 # Unit Test
 # Windows
-$(TargetTestName).exe: unittest/main.cpp
-	@echo "Building $@ ..."
-	$(CXX) $(CXXFLAGS) $(CXXFLAGSUNITTEST) unittest/main.cpp -o $(BINDIR)/$@ -I$(SRCDIR)/ -L$(BINDIR) -l$(TargetLibName)
-	$(BINDIR)/$@
+# $(TargetTestName).exe: unittest/main.cpp
+# 	@echo "Building $@ ..."
+# 	$(CXX) $(CXXFLAGS) $(CXXFLAGSUNITTEST) unittest/main.cpp -o $(BINDIR)/$@ -I$(SRCDIR)/ -L$(BINDIR) -l$(TargetLibName)
+# 	$(BINDIR)/$@
 
-# Mac Linux
-$(TargetTestName): unittest/main.cpp
-	@echo "Building $@ ..."
-	$(CXX) $(CXXFLAGS) $(CXXFLAGSUNITTEST) unittest/main.cpp -o $(BINDIR)/$@ -I$(SRCDIR)/ -L$(BINDIR)/ -lVectorworksMvrGdtf
-	./$(BINDIR)/$@
+# # Mac Linux
+# $(TargetTestName): unittest/main.cpp
+# 	@echo "Building $@ ..."
+# 	$(CXX) $(CXXFLAGS) $(CXXFLAGSUNITTEST) unittest/main.cpp -o $(BINDIR)/$@ -I$(SRCDIR)/ -L$(BINDIR)/ -lVectorworksMvrGdtf
+# 	./$(BINDIR)/$@
 
 
 # Build .dll/.so
 # Windows
-$(TargetLibName).dll: $(OBJECTSWIN)
-	@echo "Linking $(TargetLib) ..."
-	if not exist $(BINDIR) md $(BINDIR)
-	$(CXX) $(LDFLAGS) -o $(BINDIR)/$@ $(OBJECTSWIN) -Wl,--out-implib,$(BINDIR)/$(TargetLibName).lib
+# $(TargetLibName).dll: $(OBJECTSWIN)
+# 	@echo "Linking $(TargetLib) ..."
+# 	if not exist $(BINDIR) md $(BINDIR)
+# 	$(CXX) $(LDFLAGS) -o $(BINDIR)/$@ $(OBJECTSWIN) -Wl,--out-implib,$(BINDIR)/$(TargetLibName).lib
 
 
-$(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(wildcard $(SRCDIR_IMPL)/*.cpp) $(wildcard $(SRCDIR_MZIP)/*.cpp) $(wildcard $(SRCDIR_S256)/*.cpp) $(wildcard $(SRCDIR_WRAP)/*.cpp) $(wildcard $(SRCDIR_XMLL)/*.cpp)
-	@echo "Compiling objects for $(TargetLib) ..."
-	if not exist $(OBJDIR) md $(OBJDIR)
-	$(CXX) $(CXXFLAGS) -Wfatal-errors -I$(SRCDIR) -c $(SOURCES) $(wildcard $(SRCDIR_IMPL)/*.cpp) $(wildcard $(SRCDIR_MZIP)/*.cpp) $(wildcard $(SRCDIR_S256)/*.cpp) $(wildcard $(SRCDIR_WRAP)/*.cpp) $(wildcard $(SRCDIR_XMLL)/*.cpp)
-	$(MV)
+# $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(wildcard $(SRCDIR_IMPL)/*.cpp) $(wildcard $(SRCDIR_MZIP)/*.cpp) $(wildcard $(SRCDIR_S256)/*.cpp) $(wildcard $(SRCDIR_WRAP)/*.cpp) $(wildcard $(SRCDIR_XMLL)/*.cpp)
+# 	@echo "Compiling objects for $(TargetLib) ..."
+# 	if not exist $(OBJDIR) md $(OBJDIR)
+# 	$(CXX) $(CXXFLAGS) -Wfatal-errors -I$(SRCDIR) -c $(SOURCES) $(wildcard $(SRCDIR_IMPL)/*.cpp) $(wildcard $(SRCDIR_MZIP)/*.cpp) $(wildcard $(SRCDIR_S256)/*.cpp) $(wildcard $(SRCDIR_WRAP)/*.cpp) $(wildcard $(SRCDIR_XMLL)/*.cpp)
+# 	$(MV)
 
 
-# Mac Linux
-$(TargetLibName).so: $(SOURCES) $(wildcard $(SRCDIR_IMPL)/*.cpp) $(wildcard $(SRCDIR_MZIP)/*.cpp) $(wildcard $(SRCDIR_S256)/*.cpp) $(wildcard $(SRCDIR_WRAP)/*.cpp) $(wildcard $(SRCDIR_XMLL)/*.cpp)
-	@echo "Linking $(TargetLib) ..."
-	mkdir -p $(BINDIR)
-	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $(LDFLAGS) -o $(BINDIR)/$@ $(SOURCES) $(wildcard $(SRCDIR_IMPL)/*.cpp) $(wildcard $(SRCDIR_MZIP)/*.cpp) $(wildcard $(SRCDIR_S256)/*.cpp) $(wildcard $(SRCDIR_WRAP)/*.cpp) $(wildcard $(SRCDIR_XMLL)/*.cpp)
-	$(MV)
+# # Mac Linux
+# $(TargetLibName).so: $(SOURCES) $(wildcard $(SRCDIR_IMPL)/*.cpp) $(wildcard $(SRCDIR_MZIP)/*.cpp) $(wildcard $(SRCDIR_S256)/*.cpp) $(wildcard $(SRCDIR_WRAP)/*.cpp) $(wildcard $(SRCDIR_XMLL)/*.cpp)
+# 	@echo "Linking $(TargetLib) ..."
+# 	mkdir -p $(BINDIR)
+# 	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $(LDFLAGS) -o $(BINDIR)/$@ $(SOURCES) $(wildcard $(SRCDIR_IMPL)/*.cpp) $(wildcard $(SRCDIR_MZIP)/*.cpp) $(wildcard $(SRCDIR_S256)/*.cpp) $(wildcard $(SRCDIR_WRAP)/*.cpp) $(wildcard $(SRCDIR_XMLL)/*.cpp)
+# 	$(MV)
+
+
+CPPFILES	= $(wildcard $(SRCDIR)/**/*.cpp)
+HEADERFILES	= $(wildcard $(SRCDIR)/**/*.h)
+OBJFILES := $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(CPPFILES))
+
+
+SRC			= $(wildcard $(SRCDIR)/*.cpp)
+SRC_IMPL	= $(wildcard $(SRCDIR_IMPL)/*.cpp)
+SRC_MZIP	= $(wildcard $(SRCDIR_MZIP)/*.c)
+SRC_S256	= $(wildcard $(SRCDIR_S256)/*.cpp)
+SRC_WRAP	= $(wildcard $(SRCDIR_WRAP)/*.cpp)
+SRC_XMLL	= $(wildcard $(SRCDIR_XMLL)/*.cpp)
+OBJ			= $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(SRC))
+OBJ_IMPL	= $(patsubst $(SRCDIR_IMPL)/%.cpp, $(OBJDIR)/%.o, $(SRC_IMPL))
+OBJ_MZIP	= $(patsubst $(SRCDIR_MZIP)/%.c, $(OBJDIR)/%.o, $(SRC_MZIP))
+OBJ_S256	= $(patsubst $(SRCDIR_S256)/%.cpp, $(OBJDIR)/%.o, $(SRC_S256))
+OBJ_WRAP	= $(patsubst $(SRCDIR_WRAP)/%.cpp, $(OBJDIR)/%.o, $(SRC_WRAP))
+OBJ_XMLL	= $(patsubst $(SRCDIR_XMLL)/%.cpp, $(OBJDIR)/%.o, $(SRC_XMLL))
+SOURCE		= $(SRC) $(SRC_IMPL) $(SRC_MZIP) $(SRC_S256) $(SRC_WRAP) $(SRC_XMLL)
+OBJS		= $(OBJ) $(OBJ_IMPL) $(OBJ_MZIP) $(OBJ_S256) $(OBJ_WRAP) $(OBJ_XMLL)
+VPATH 		= $(SRCDIR):$(SRCDIR_IMPL):$(SRCDIR_MZIP):$(SRCDIR_S256):$(SRCDIR_WRAP):$(SRCDIR_XMLL)
+
+$(BINDIR)/test.so: $(OBJS)
+	@echo "compile test.so for deniz with:"
+	@echo ""
+	@echo $(OBJS)
+	@echo #######################################################"
+	@echo "src/objs:"
+	@echo ""
+	@echo $(OBJ)
+
+
+$(OBJS): | obj
+
+obj:
+	@echo "objdirwill be created if needed"
+	@mkdir -p $(OBJDIR)
+
+obj/%.o : %.cpp
+	@echo "Compiling:	" $< 
+	@$(CXX) $(CXXFLAGS) -I$(SRCDIR) -c $< -o $@
+
+# obj/%.o: %.cpp
+# 	@echo $<
+# 	@echo $(OBJS)
+ 	# $(CXX) $(CXXFLAGS) -I$(SRCDIR) -c $< -o $@
+
+
+# $(OBJDIR)/%.o: $(SOURCES)
+# 	$(CXX) $(CXXFLAGS) -I$(SRCDIR) -c $^ -o $@
+
+# $(OBJECT_FILES): $(OBJ)/%.o: %.cpp
+# 	@echo Compiling $<
+# 	@$(CXX) $(CXXFLAGS) -I$(SRCDIR) -o $@ $<
