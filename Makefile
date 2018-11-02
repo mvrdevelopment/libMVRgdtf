@@ -21,9 +21,10 @@ LIBDIR_POST	= release
 
 
 # compiler, linker and options
-CXX			= g++					# gnu c++ compiler on all platforms
-CXXFLAGS	= -g -std=c++11			# compiler options
-#LDFLAGS		= -shared				# linker options
+CXX					= g++					# gnu c++ compiler on all platforms
+CXXFLAGS			= -g -std=c++11			# compiler options
+CXXFLAGSUNITTEST	= -g -std=c++11			# compiler options unit test
+#LDFLAGS			= -shared				# linker options
 
 
 XERCESLIBNAME	=
@@ -140,10 +141,10 @@ clean:
 
 # Unit Test
 # Windows
-$(TargetTestName).exe: unittest/main.cpp
-	@echo "Building $@ ..."
-	$(CXX) $(CXXFLAGS) $(CXXFLAGSUNITTEST) $< -o $(BINDIR)/$@ -I$(SRCDIR)/ -L$(BINDIR) -l$(TargetLibName)
-	$(BINDIR)/$@
+# $(TargetTestName).exe: unittest/main.cpp
+# 	@echo "Building $@ ..."
+# 	$(CXX) $(CXXFLAGS) $(CXXFLAGSUNITTEST) $< -o $(BINDIR)/$@ -I$(SRCDIR)/ -L$(BINDIR) -l$(TargetLibName)
+# 	$(BINDIR)/$@
 
 # Mac Linux
 $(TargetTestName): unittest/main.cpp
