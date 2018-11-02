@@ -547,7 +547,7 @@ VCOMError CFolderIdentifier::SetAttributesTimeDateReference(EAttributesTimeRefer
 }
 
 #if defined(_WINDOWS)
-bool CFolderIdentifier::EnumerateContents(IFolderContentListener* pListener, const TFolderIdentifier& folder, bool bReqursive, VCOMError& outError)
+bool CFolderIdentifier::EnumerateContentsHandler(IFolderContentListener* pListener, const TFolderIdentifier& folder, bool bReqursive, VCOMError& outError)
 {
 	outError		= kVCOMError_Failed;
 	bool	bStop	= false;
@@ -649,7 +649,7 @@ bool CFolderIdentifier::EnumerateContents(IFolderContentListener* pListener, con
 	return bStop;
 }
 #elif _LINUX
-bool CFolderIdentifier::EnumerateContents(IFolderContentListener* pListener, const TFolderIdentifier& folder, bool bReqursive, VCOMError& outError)
+bool CFolderIdentifier::EnumerateContentsHandler(IFolderContentListener* pListener, const CFolderIdentifier& folder, bool bReqursive, VCOMError& outError)
 {
 	// LINUX_IMPLEMENTATION - done
 	outError		= kVCOMError_Failed;
@@ -661,7 +661,7 @@ bool CFolderIdentifier::EnumerateContents(IFolderContentListener* pListener, con
 	else {
 		outError						= kVCOMError_NoError;
 
-		TXString	rootFolder			= folder.GetFolderPath();
+		TXString	rootFolder			= folder.GetFullPath();
 
 		DIR* dp;
 		struct dirent* dirp;
@@ -687,7 +687,7 @@ bool CFolderIdentifier::EnumerateContents(IFolderContentListener* pListener, con
 					if ( stat(fullPath.GetCharPtr(), &sb) == 0 && S_ISDIR(sb.st_mode) )
 					{
 						IFolderIdentifier*	pFolderID	= NULL;
-						VCOMError			error		= ::GS_VWQueryInterface( IID_FolderIdentifier, (IVWUnknown**) & pFolderID );
+						VCOMError			error		= ::VWQueryInterface( IID_FolderIdentifier, (IVWUnknown**) & pFolderID );
 						if ( error == kVCOMError_NoError ) {
 							CFolderIdentifier*	pFolderInst	= dynamic_cast<CFolderIdentifier*>( pFolderID );
 							if ( pFolderInst ) {
@@ -712,6 +712,8 @@ bool CFolderIdentifier::EnumerateContents(IFolderContentListener* pListener, con
 						}
 
 						// go to seach this folder if the use requires
+						/*
+						TODO
 						if ( bReqursive )
 						{
 							TFolderIdentifier subFolder( fullPath );
@@ -721,10 +723,11 @@ bool CFolderIdentifier::EnumerateContents(IFolderContentListener* pListener, con
 								break;
 							}
 						}
+						*/
 					}
 					else {
 						IFileIdentifier*	pFileID		= NULL;
-						VCOMError			error		= ::GS_VWQueryInterface( IID_FileIdentifier, (IVWUnknown**) & pFileID );
+						VCOMError			error		= VWQueryInterface( IID_FileIdentifier, (IVWUnknown**) & pFileID );
 						if ( error == kVCOMError_NoError ) {
 							CFileIdentifier*	pFileInst	= dynamic_cast<CFileIdentifier*>( pFileID );
 							if ( pFileInst ) {
@@ -778,9 +781,9 @@ VCOMError CFolderIdentifier::EnumerateContents(IFolderContentListener* pListener
 		return kVCOMError_BadPathSpecified;
 
 	VCOMError		error	= kVCOMError_NoError;
-	//if ( this->EnumerateContents( pListener, folder, bReqursive, error ) ) {
-		// enumeration has been stopped!
-		// the enumeration return the 'error'
+	//if ( this->EnumerateContentsHandler( pListener, folder, bReqursive, error ) ) {
+		//enumeration has been stopped!
+		 //the enumeration return the 'error'
 		// TODO
 	//}
 	

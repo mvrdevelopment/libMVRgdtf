@@ -60,7 +60,7 @@ namespace VectorWorks
 			static void			ConvertFoldername(TXString& outName);
 
 		private:
-			bool				EnumerateContents(IFolderContentListener* pListener, const IFolderIdentifierPtr& folder, bool bReqursive, VCOMError& outError);
+			bool				EnumerateContentsHandler(IFolderContentListener* pListener, const CFolderIdentifier& folder, bool bReqursive, VCOMError& outError);
 			
 		private:
 			Sint32				fRefCnt;
