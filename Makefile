@@ -111,7 +111,7 @@ TargetLib	= $(TargetLibName)$(libExt)
 TargetTest	= $(TargetTestName)$(UnitTestExt) 
 
 # ALL
-all: $(TargetLib)
+all: $(TargetLib) $(TargetTestName)
 
 # UnitTest
 test: $(TargetTest)
