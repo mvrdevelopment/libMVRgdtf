@@ -42,25 +42,27 @@ else
     UNAME_S := $(shell uname -s)
 # Linux
     ifeq ($(UNAME_S),Linux)
-		CXXFLAGS		+= -DGS_LIN=1 -D_LINUX -MMD -MP -fPIC
+		CXXFLAGS		+= -DGS_LIN=1 -D_LINUX -MMD -MP #-fPIC
 		LDFLAGS			+=
 		libExt			= .a
 		LIBDIR_PLAT		= lin
 		XERCESLIBNAME	= xerces-c
-		XERCESLIBPATH	= libs/lin/release
-		RM				= rm -rf $(BINDIR)/*; rm -rf $(OBJDIR)/*; \
-						rm -f $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)/$(TargetLib)
+		LIBPATH			= libs/lin/release
 		LINKWITHLIBS 	+= -luuid -lpthread
+		RM				= rm -rf $(BINDIR)/*; rm -rf $(OBJDIR)/*; \
+						rm -f $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)/lib$(TargetLib)
     endif
 # Mac
     ifeq ($(UNAME_S),Darwin)
-		CXXFLAGS		+= -DGS_MAC=1 -D__APPLE__ -MMD -MP -fPIC
+		CXXFLAGS		+= -DGS_MAC=1 -D__APPLE__ -MMD -MP #-fPIC
 		LDFLAGS			+=
 		libExt			= .a
 		LIBDIR_PLAT		= mac
 		XERCESLIBNAME	= Xerces
-		XERCESLIBPATH	= libs/mac/release
-		RM				= rm -rf $(BINDIR)/*; rm -rf $(OBJDIR)/*
+		LIBPATH			= -Llibs/mac/release
+		LINKWITHLIBS 	+= -luuid -lpthread
+		RM				= rm -rf $(BINDIR)/*; rm -rf $(OBJDIR)/*; \
+						rm -f $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)/lib$(TargetLib)
     endif
 endif
 
@@ -122,7 +124,7 @@ TargetLib	= $(TargetLibName)$(libExt)
 TargetTest	= $(TargetTestName)$(UnitTestExt) 
 
 # ALL
-all: lib$(TargetLib) $(TargetTestName)
+all: $(TargetLib) $(TargetTestName)
 
 # UnitTest
 test: $(TargetTest)
@@ -146,7 +148,7 @@ $(TargetTestName).exe: unittest/main.cpp
 # Mac Linux
 $(TargetTestName): unittest/main.cpp
 	@echo "Building $@ ..."
-	$(CXX) $(CXXFLAGSUNITTEST) $< -o $(BINDIR)/$@ -I$(SRCDIR) -Llibs/lin/release -ltestlib -L$(XERCESLIBPATH) -l$(XERCESLIBNAME) -luuid -lpthread
+	$(CXX) $(CXXFLAGSUNITTEST) $< -o $(BINDIR)/$@ -I$(SRCDIR) -L$(LIBPATH) -l$(TargetLibName) -l$(XERCESLIBNAME) $(LINKWITHLIBS)
 	./$(BINDIR)/$@
 
 
@@ -166,15 +168,17 @@ $(TargetTestName): unittest/main.cpp
 
 
 # Mac Linux
-lib$(TargetLibName).a: $(OBJECTS)
-	@echo "Linking objects to $(TargetLib) ..."
+$(TargetLibName).a: $(OBJECTS)
+	@echo "Linking objects to lib$(TargetLib) ..."
 	@mkdir -p $(BINDIR)
-	$(CXX) $(LDFLAGS) -o $(BINDIR)/$@ $(OBJECTS) -L$(XERCESLIBPATH) -l$(XERCESLIBNAME) $(LINKWITHLIBS)
+	ar rcs $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)/lib$@ $(OBJECTS)
+	@#$(CXX) $(LDFLAGS) -o $(BINDIR)/$@ $(OBJECTS) -L$(XERCESLIBPATH) -l$(XERCESLIBNAME) $(LINKWITHLIBS)
 
 $(OBJDIR)/%.o : %.cpp
 	@echo "Compiling:	" $<
 	@mkdir -p $(OBJDIR)
 	$(CXX) $(CXXFLAGS) -I$(SRCDIR) -c $< -o $@
+
 
 # Include Header-Dependencies (stored as ".d" Makefile fragments files
 # THIS MUST BE THE LAST SECTION OF THIS MAKEFILE, OTHERWISE YOU RISK OUT-OF-DATE OBJECTS GETTING LINKED
