@@ -392,7 +392,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetGdtfFixture(IGdtfFix
 	*outFixture		= pGdtfFixture;
 	
 	// If reading failed
-	if(!read) {kVCOMError_Failed;}
+	if(!read) {return kVCOMError_Failed;}
 	
 	return kVCOMError_NoError;
 	
