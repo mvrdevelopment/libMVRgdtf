@@ -14,6 +14,7 @@
 #pragma once
 
 #include "MCCoordTypes.h"
+#include "BasicMath.X.h"
 
 
 //**********************************************************************************
