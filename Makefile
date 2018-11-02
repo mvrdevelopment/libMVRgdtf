@@ -29,6 +29,8 @@ CXXFLAGS	= -g -std=c++11			# compiler options
 XERCESLIBNAME	=
 XERCESLIBPATH	=
 
+LINKWITHLIBS    =
+
 # Library: set platform compiler, linker and e.t.c. options
 # Windows
 ifeq ($(OS),Windows_NT)
@@ -48,6 +50,7 @@ else
 		XERCESLIBPATH	= libs/lin/release
 		RM				= rm -rf $(BINDIR)/*; rm -rf $(OBJDIR)/*; \
 						rm -f $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)/$(TargetLib)
+		LINKWITHLIBS 	+= -luuid
     endif
 # Mac
     ifeq ($(UNAME_S),Darwin)
@@ -166,7 +169,7 @@ $(TargetTestName): unittest/main.cpp
 lib$(TargetLibName).a: $(OBJECTS)
 	@echo "Linking objects to $(TargetLib) ..."
 	@mkdir -p $(BINDIR)
-	$(CXX) $(LDFLAGS) -o $(BINDIR)/$@ $(OBJECTS) -L$(XERCESLIBPATH) -l$(XERCESLIBNAME)
+	$(CXX) $(LDFLAGS) -o $(BINDIR)/$@ $(OBJECTS) -L$(XERCESLIBPATH) -l$(XERCESLIBNAME) $(LINKWITHLIBS)
 
 $(OBJDIR)/%.o : %.cpp
 	@echo "Compiling:	" $<
