@@ -23,7 +23,6 @@
 # Compiled Static libraries
 *.lai
 *.la
-*.a
 *.lib
 
 # Executables
@@ -36,7 +35,9 @@ x64/
 .vs/
 bin/
 obj/
+testfiles/
 
 \.vscode/settings\.json
 
-testfiles/
+
+libs/lin/release/libtestlib\.a
