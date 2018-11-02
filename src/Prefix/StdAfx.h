@@ -19,6 +19,7 @@
 #include "GSTypes.h"
 #include "CommonPrefix.h"
 #include "Include/VectorworksMVR.h"
+#include <iostream>
 using namespace VectorworksMVR;
 
 #define VCOM_SUCCEEDED(x)   (x==0)
@@ -28,10 +29,13 @@ using namespace VectorworksMVR;
 // Add defines
 
 // TODO
-#define ASSERTN 
-#define DSTOP 
+#define __PrintDebugValue__(x, y) std::cout << #x << " " << #y <<" Failed!" << std::endl
+#define __PrintDebugValue2__(x) std::cout << #x << " Failed!" << std::endl
+
+#define ASSERTN(x,y)  if(bool(y) == false) { __PrintDebugValue__(x, y); }
+#define DSTOP(params)                { __PrintDebugValue2__(params); }
 #define VERIFYN
-#define VWFC_ASSERT
+#define VWFC_ASSERT(x,y)  if(bool(y) == false) { __PrintDebugValue__(x, y); }
 #define THROW_VWFC_EXCEPTION
 
 #define kEveryone 1

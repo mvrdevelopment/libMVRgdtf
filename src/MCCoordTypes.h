@@ -19,7 +19,6 @@
 #endif
 
 #include "BasicMath.X.h"
-#include "StaticArrays.h"
 
 #if TEST
 	#define WORLDRECTISEMPTY(rect, assert)	(rect.IsEmpty(assert))
@@ -306,8 +305,6 @@ inline Boolean WorldPtsAreRelativelyClose(WorldPt p1, WorldPt p2, double ratio =
 	return ((WorldCoordsAreRelativelyClose(p1.x, p2.x, ratio))
 		&&  (WorldCoordsAreRelativelyClose(p1.y, p2.y, ratio)));
 }
-
-DEFINE_LISTSTRUCT(WorldPt);
 
 inline WorldCoord CrossProductMagnitude(const WorldPt& a, const WorldPt& b)  { return a.x * b.y - a.y * b.x; }
 // Assumes a and b are vectors
@@ -1178,9 +1175,6 @@ inline Boolean WorldPt3sAreRelativelyClose(const WorldPt3& p1, const WorldPt3& p
 		&&  (WorldCoordsAreRelativelyClose(p1.y, p2.y, ratio))
 		&&  (WorldCoordsAreRelativelyClose(p1.z, p2.z, ratio)));
 }
-
-
-DEFINE_LISTSTRUCT(WorldPt3);
 
 
 // Make these methods of WorldPt3 [MAF 11/24/99]

@@ -97,7 +97,7 @@ typedef	unsigned char	Bool8;
 typedef intptr_t	SintptrT;
 typedef uintptr_t	UintptrT;
 
-#if GS_LIN
+#if GS_LIN || GS_MAC
 typedef __SIZE_TYPE__	size_t;
 #endif
 
