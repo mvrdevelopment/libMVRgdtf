@@ -8,7 +8,7 @@
 //
 
 
-#include "StdHeaders.h"	// DO NOT MOVE THIS LINE FROM BEING THE FIRST NON-COMMENT LINE.  [DMB, 10/30/95]
+#include "Prefix/StdAfx.h"	// DO NOT MOVE THIS LINE FROM BEING THE FIRST NON-COMMENT LINE.  [DMB, 10/30/95]
 
 #include "MCCoordTypes.h"
 // #include "MCVector.h"

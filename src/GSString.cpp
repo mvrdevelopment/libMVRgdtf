@@ -9,7 +9,7 @@
 
 /* Includes */
 /* -------- */
-#include "StdHeaders.h"
+#include "Prefix/StdAfx.h"
 #include "GSIntTypes.h"
 
 #define _GSString_X_

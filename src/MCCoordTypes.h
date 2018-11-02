@@ -1142,7 +1142,7 @@ struct WorldPt3 : public _WorldPt3 {
 	WorldCoord	Dot(const WorldPt3 & p) const	{ return DotProduct(*this, p);	}
 
 	void            Normalize(void) { if (!this->IsZero()) *this /= this->Magnitude(); }
-	WorldPt3 GS_API Normal(void) const;
+	WorldPt3 GS_API Normal(void) const { WorldPt3 p (*this); p.Normalize(); return p; };
 	Boolean         IsNormalized(void) const { return NormalizedValueIsNearlyOne(this->MagnitudeSquared()); }
 
 	void GS_API ByteSwap();

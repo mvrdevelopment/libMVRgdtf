@@ -4,7 +4,7 @@
 
 
 # set library name
-TargetLibName	= libVectorworksMvrGdtf
+TargetLibName	= VectorworksMvrGdtf
 TargetTestName	= vectorworksMvrGdtfTestApp
 
 
@@ -16,12 +16,14 @@ SRCDIR_WRAP	= src/Wrapper
 SRCDIR_XMLL	= src/XMLLib
 OBJDIR		= obj
 BINDIR		= bin
+LIBDIR_PRE	= libs
+LIBDIR_POST	= release
 
 
 # compiler, linker and options
 CXX			= g++					# gnu c++ compiler on all platforms
 CXXFLAGS	= -g -std=c++11			# compiler options
-LDFLAGS		= -shared				# linker options
+#LDFLAGS		= -shared				# linker options
 
 
 XERCESLIBNAME	=
@@ -30,29 +32,32 @@ XERCESLIBPATH	=
 # Library: set platform compiler, linker and e.t.c. options
 # Windows
 ifeq ($(OS),Windows_NT)
-		CXXFLAGS	+= -DGS_WIN=1 -DEXPORT_SYMBOLS=1 -D_WINDOWS
-		libExt		= .dll
-		RM			= if exist $(BINDIR)\* del /q $(BINDIR)\* & if exist $(OBJDIR)\* del /q $(OBJDIR)\*
-		MV 			= move *.o $(OBJDIR)/
+		CXXFLAGS		+= -DGS_WIN=1 -DEXPORT_SYMBOLS=1 -D_WINDOWS
+		libExt			= .dll
+		RM				= if exist $(BINDIR)\* del /q $(BINDIR)\* & if exist $(OBJDIR)\* del /q $(OBJDIR)\*
+		MV 				= move *.o $(OBJDIR)/
 else
     UNAME_S := $(shell uname -s)
 # Linux
     ifeq ($(UNAME_S),Linux)
-		CXXFLAGS	+= -DGS_LIN=1 -MMD -MP -fPIC -D_LINUX
-		LDFLAGS		+=
-		libExt		= .so
-		RM			= rm -rf $(BINDIR)/*; rm -rf $(OBJDIR)/*
-		XERCESLIBNAME	=
-		XERCESLIBPATH	= 
+		CXXFLAGS		+= -DGS_LIN=1 -D_LINUX -MMD -MP -fPIC
+		LDFLAGS			+=
+		libExt			= .a
+		LIBDIR_PLAT		= lin
+		XERCESLIBNAME	= xerces-c
+		XERCESLIBPATH	= libs/lin/release
+		RM				= rm -rf $(BINDIR)/*; rm -rf $(OBJDIR)/*; \
+						rm -f $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)/$(TargetLib)
     endif
 # Mac
     ifeq ($(UNAME_S),Darwin)
-		CXXFLAGS	+= -DGS_MAC=1 -MMD -MP -fPIC -D__APPLE__
-		LDFLAGS		+=
-		libExt		= .so
-		RM			= rm -rf $(BINDIR)/*; rm -rf $(OBJDIR)/*
-		XERCESLIBNAME	= Xerces
-		XERCESLIBPATH	= ./libs/mac/release/
+		CXXFLAGS		+= -DGS_MAC=1 -D__APPLE__ -MMD -MP -fPIC
+		LDFLAGS			+=
+		libExt			= .a
+		LIBDIR_PLAT		= mac
+		XERCESLIBNAME	= xerces-c
+		XERCESLIBPATH	= libs/mac/release
+		RM				= rm -rf $(BINDIR)/*; rm -rf $(OBJDIR)/*
     endif
 endif
 
@@ -66,12 +71,12 @@ else
     UNAME_S := $(shell uname -s)
 # Linux
     ifeq ($(UNAME_S),Linux)
-		CXXFLAGSUNITTEST	+= -DGS_LIN=1 -MMD -MP
+		CXXFLAGSUNITTEST	+= -DGS_LIN=1 -D_LINUX -MMD -MP
 		UnitTestExt			=
     endif
 # Mac
     ifeq ($(UNAME_S),Darwin)
-		CXXFLAGSUNITTEST	+= -DGS_MAC=1 -MMD -MP
+		CXXFLAGSUNITTEST	+= -DGS_MAC=1 -D__APPLE__ -MMD -MP
 		UnitTestExt			=
     endif
 endif
@@ -114,7 +119,7 @@ TargetLib	= $(TargetLibName)$(libExt)
 TargetTest	= $(TargetTestName)$(UnitTestExt) 
 
 # ALL
-all: $(TargetLib) $(TargetTestName)
+all: lib$(TargetLib) $(TargetTestName)
 
 # UnitTest
 test: $(TargetTest)
@@ -138,7 +143,7 @@ $(TargetTestName).exe: unittest/main.cpp
 # Mac Linux
 $(TargetTestName): unittest/main.cpp
 	@echo "Building $@ ..."
-	$(CXX) $(CXXFLAGSUNITTEST) $< -o $(BINDIR)/$@ -I$(SRCDIR) -L$(BINDIR)/ -lVectorworksMvrGdtf
+	$(CXX) $(CXXFLAGSUNITTEST) $< -o $(BINDIR)/$@ -I$(SRCDIR) -Llibs/lin/release -ltestlib -L$(XERCESLIBPATH) -l$(XERCESLIBNAME)
 	./$(BINDIR)/$@
 
 
@@ -158,7 +163,7 @@ $(TargetTestName): unittest/main.cpp
 
 
 # Mac Linux
-$(TargetLibName).so: $(OBJECTS)
+lib$(TargetLibName).a: $(OBJECTS)
 	@echo "Linking objects to $(TargetLib) ..."
 	@mkdir -p $(BINDIR)
 	$(CXX) $(LDFLAGS) -o $(BINDIR)/$@ $(OBJECTS) -L$(XERCESLIBPATH) -l$(XERCESLIBNAME)
