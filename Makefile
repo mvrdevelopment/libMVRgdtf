@@ -24,6 +24,9 @@ CXXFLAGS	= -g -std=c++11			# compiler options
 LDFLAGS		= -shared				# linker options
 
 
+XERCESLIBNAME	=
+XERCESLIBPATH	=
+
 # Library: set platform compiler, linker and e.t.c. options
 # Windows
 ifeq ($(OS),Windows_NT)
@@ -39,7 +42,8 @@ else
 		LDFLAGS		+=
 		libExt		= .so
 		RM			= rm -rf $(BINDIR)/*; rm -rf $(OBJDIR)/*
-
+		XERCESLIBNAME	=
+		XERCESLIBPATH	= 
     endif
 # Mac
     ifeq ($(UNAME_S),Darwin)
@@ -47,6 +51,8 @@ else
 		LDFLAGS		+=
 		libExt		= .so
 		RM			= rm -rf $(BINDIR)/*; rm -rf $(OBJDIR)/*
+		XERCESLIBNAME	= xerces-c
+		XERCESLIBPATH	= ./libs/mac/release/
     endif
 endif
 
@@ -152,18 +158,12 @@ $(TargetTestName): unittest/main.cpp
 $(TargetLibName).so: $(OBJECTS)
 	@echo "Linking objects to $(TargetLib) ..."
 	@mkdir -p $(BINDIR)
-	$(CXX) $(LDFLAGS) -o $(BINDIR)/$@ $(OBJECTS) 
+	$(CXX) $(LDFLAGS) -o $(BINDIR)/$@ $(OBJECTS) -L$(XERCESLIBPATH) -l$(XERCESLIBNAME)
 
 $(OBJDIR)/%.o : %.cpp
 	@echo "Compiling:	" $<
 	@mkdir -p $(OBJDIR)
 	$(CXX) $(CXXFLAGS) -I$(SRCDIR) -c $< -o $@
-
-$(OBJDIR)/%.o : %.c
-	@echo "Compiling:	" $<
-	@mkdir -p $(OBJDIR)
-	$(CXX) $(CXXFLAGS) -I$(SRCDIR) -c $< -o $@
-
 
 # Include Header-Dependencies (stored as ".d" Makefile fragments files
 # THIS MUST BE THE LAST SECTION OF THIS MAKEFILE, OTHERWISE YOU RISK OUT-OF-DATE OBJECTS GETTING LINKED
