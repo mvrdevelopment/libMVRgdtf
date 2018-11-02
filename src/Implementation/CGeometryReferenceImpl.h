@@ -16,7 +16,6 @@ namespace VectorworksMVR
 		
 	public:
 		virtual VCOMError VCOM_CALLTYPE		GetIsSymbol(bool& isSymbol);
-		virtual VCOMError VCOM_CALLTYPE		GetGeometry(IGeometryReceiver* receiver);
 		virtual MvrString VCOM_CALLTYPE		GetFileForGeometry();
 		virtual VCOMError VCOM_CALLTYPE		GetSymDef(ISymDef** outSymDef);
 		virtual VCOMError VCOM_CALLTYPE		GetTransfromMatrix(STransformMatrix& outName);

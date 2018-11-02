@@ -744,7 +744,7 @@ void SceneDataObjWithMatrix::ReadMatrixNodeValue(const IXMLFileNodePtr& pNode, V
 				TXString strVal;
 				for (ptrdiff_t i = 0; i < p; i++)
 				{
-					strVal =+ value.GetAt(i);
+					strVal += value.GetAt(i);
 				}
 				
 				//------------------------------------------------------------------------------

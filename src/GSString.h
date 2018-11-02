@@ -250,6 +250,7 @@ public:
 	TXString& operator+=(unsigned char ch);
 	TXString& operator+=(UCChar ch);
 	TXString& operator+=(wchar_t ch);
+	TXString& operator+=(TXChar ch);
 	TXString& operator+=(int n);				// Unicode code point, for example: 0x63
 												// This is different behaviour than operator<< which appends the number as value
 
@@ -274,6 +275,7 @@ public:
 	TXString& operator<<(Uint32 number);
 	TXString& operator<<(Uint64 number);
 	TXString& operator<<(double number);
+	
 #if GS_MAC
 	TXString& operator<<(size_t number); // size_t is different from Uint64 on the mac
 #endif

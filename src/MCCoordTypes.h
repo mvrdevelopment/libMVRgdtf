@@ -1715,7 +1715,7 @@ public:
 	bool		IsExactlyEqualTo(const TransformMatrix& m) const { return (memcmp(this, &m, sizeof(TransformMatrix)) == 0); }
 	int	 GS_API Compare(const TransformMatrix& inRight) const;
 	
-	void GS_API SetToIdentity();
+	void GS_API SetToIdentity() {}; // TODO
 	
 
 	void GS_API ByteSwap();
@@ -1730,7 +1730,7 @@ struct TransformXMatrix
 // calculations, you should use the 3x4 TransformMatrix instead. 
 {	
 	double	mat[4][4];
-	void GS_API SetToIdentity();
+	void GS_API SetToIdentity() {};  //TODO
 };
 
 // XXX_JDW_MINOR - Should rename TransformXMatrix to something like TransformMatrix4x4 or Matrix4 or...

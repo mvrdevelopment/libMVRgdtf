@@ -260,15 +260,15 @@ VCOMError CFolderIdentifier::Set(EFolderSpecifier folderSpec, bool bUserFolder)
 	if (::GS_GetFolderN( NULL, innerFolderSpec, outPath )) {
 		error	= this->SetFullPath( outPath );
 	}
-*/
-	TFolderIdentifier	folder;
-	if ( ::GetFolder( (EFolderSpecifier) innerFolderSpec, folder, false /*inCreateIfMissing*/ ) ) {
-#if GS_WIN
-		error	= this->SetFullPath( folder.GetFolderPath() );
-#else
-        error   = this->SetFullPath( folder.GetPosixFolderPath());
-#endif
-	}
+*/ //TODO
+// 	TFolderIdentifier	folder;
+// 	if ( ::GetFolder( (EFolderSpecifier) innerFolderSpec, folder, false /*inCreateIfMissing*/ ) ) {
+// #if GS_WIN
+// 		error	= this->SetFullPath( folder.GetFolderPath() );
+// #else
+//         error   = this->SetFullPath( folder.GetPosixFolderPath());
+// #endif
+// 	}
 
 	return error;
 }

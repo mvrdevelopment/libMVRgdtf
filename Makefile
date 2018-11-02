@@ -50,7 +50,7 @@ else
 		XERCESLIBPATH	= libs/lin/release
 		RM				= rm -rf $(BINDIR)/*; rm -rf $(OBJDIR)/*; \
 						rm -f $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)/$(TargetLib)
-		LINKWITHLIBS 	+= -luuid
+		LINKWITHLIBS 	+= -luuid -lpthread
     endif
 # Mac
     ifeq ($(UNAME_S),Darwin)
@@ -146,7 +146,7 @@ $(TargetTestName).exe: unittest/main.cpp
 # Mac Linux
 $(TargetTestName): unittest/main.cpp
 	@echo "Building $@ ..."
-	$(CXX) $(CXXFLAGSUNITTEST) $< -o $(BINDIR)/$@ -I$(SRCDIR) -Llibs/lin/release -ltestlib -L$(XERCESLIBPATH) -l$(XERCESLIBNAME)
+	$(CXX) $(CXXFLAGSUNITTEST) $< -o $(BINDIR)/$@ -I$(SRCDIR) -Llibs/lin/release -ltestlib -L$(XERCESLIBPATH) -l$(XERCESLIBNAME) -luuid -lpthread
 	./$(BINDIR)/$@
 
 

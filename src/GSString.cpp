@@ -822,6 +822,13 @@ TXString& TXString::operator+=(char ch)
 	return *this;
 }
 
+// Appends one char
+TXString& TXString::operator+=(TXChar ch)
+{
+	stdUStr += ch;
+	return *this;
+}
+
 //=======================================================================================
 // Appends one unsigned char
 TXString& TXString::operator+=(unsigned char ch)

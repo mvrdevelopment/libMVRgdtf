@@ -12,6 +12,7 @@ using namespace VectorworksMVR;
 #define		VCOM_SUCCEEDED(x)		(x == 0)
 #define		VCOM_FAILED(x)			(x != 0)
 
+void WriteMVR();
 
 int main()
 {
@@ -19,6 +20,7 @@ int main()
 	//TXStringUnitTest txStringTest;
 	//bool ret  = txStringTest.RunTest();
 
+	WriteMVR();
 	return 0;
 }
 

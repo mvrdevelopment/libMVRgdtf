@@ -38,3 +38,5 @@ bin/
 obj/
 
 \.vscode/settings\.json
+
+testfiles/
