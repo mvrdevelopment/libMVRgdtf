@@ -32,10 +32,10 @@ using namespace VectorworksMVR;
 #define __PrintDebugValue__(x, y) std::cout << #x << " " << #y <<" Failed!" << std::endl
 #define __PrintDebugValue2__(x) std::cout << #x << " Failed!" << std::endl
 
-#define ASSERTN(x,y)  if(bool(y) == false) { __PrintDebugValue__(x, y); }
-#define DSTOP(params)                { __PrintDebugValue2__(params); }
+#define ASSERTN(x,y)            if(bool(y) == false)    { __PrintDebugValue__(x, y); }
+#define DSTOP(params)                                   { __PrintDebugValue2__(params); }
 #define VERIFYN
-#define VWFC_ASSERT(x,y)  if(bool(y) == false) { __PrintDebugValue__(x, y); }
+#define VWFC_ASSERT(x)                                  { __PrintDebugValue2__(x); }
 #define THROW_VWFC_EXCEPTION
 
 #define kEveryone 1

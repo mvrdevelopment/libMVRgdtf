@@ -98,8 +98,8 @@ OBJ_MZIP	= $(patsubst $(SRCDIR_MZIP)/%.c, $(OBJDIR)/%.o, $(SRC_MZIP))
 OBJ_S256	= $(patsubst $(SRCDIR_S256)/%.cpp, $(OBJDIR)/%.o, $(SRC_S256))
 OBJ_WRAP	= $(patsubst $(SRCDIR_WRAP)/%.cpp, $(OBJDIR)/%.o, $(SRC_WRAP))
 OBJ_XMLL	= $(patsubst $(SRCDIR_XMLL)/%.cpp, $(OBJDIR)/%.o, $(SRC_XMLL))
-SOURCES		= $(SRC) $(SRC_IMPL) #$(SRC_MZIP) $(SRC_S256) $(SRC_WRAP) $(SRC_XMLL)
-OBJECTS		= $(OBJ) $(OBJ_IMPL) #$(OBJ_MZIP) $(OBJ_S256) $(OBJ_WRAP) $(OBJ_XMLL)
+SOURCES		= $(SRC) $(SRC_IMPL) $(SRC_MZIP) $(SRC_S256) $(SRC_WRAP) $(SRC_XMLL)
+OBJECTS		= $(OBJ) $(OBJ_IMPL) $(OBJ_MZIP) $(OBJ_S256) $(OBJ_WRAP) $(OBJ_XMLL)
 
 
 # place where to look for %.cpp for generic rule $(OBJDIR)/%.o : %.cpp
