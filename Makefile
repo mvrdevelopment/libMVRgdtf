@@ -119,6 +119,9 @@ all: $(TargetLib) $(TargetTestName)
 # UnitTest
 test: $(TargetTest)
 
+# Xerces Build
+xerces: 
+
 # CLEAN
 clean:
 	@echo "Cleaning $(BINDIR)/ and $(OBJDIR)/ ...  "

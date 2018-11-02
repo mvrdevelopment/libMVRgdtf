@@ -48,7 +48,7 @@ const extern double kWorldCoordsPerMM;     // 1
 const extern short  kMaximumTotalDigitsOfPrecision;      
 const extern short  kMaximumFractionalDigitsOfPrecision; 
 
-const extern double kNearlyEqualEpsilonForWorldCoords = 1e-13;
+const extern double kNearlyEqualEpsilonForWorldCoords;
 const extern double kWorldCoordBumpEpsilon;
 
 const extern double kNearlyEqualEpsilonForRadians;
@@ -69,8 +69,8 @@ inline double     WorldCoordToInches(WorldCoord coord)   { return coord * kInche
 
 //----------------------------------------------------------------------------------------
 
-const extern WorldCoord kMaxLegalWorldCoord = 1.0E100;
-const extern WorldCoord kMaxOutOfRangeWorldCoord = DBL_MAX;
+const extern WorldCoord kMaxLegalWorldCoord;
+const extern WorldCoord kMaxOutOfRangeWorldCoord;
 
 #define kMaxCoord kMaxOutOfRangeWorldCoord  // kMaxCoord is here to support old SDK references - don't use this if you can help it [MAF 11/30/00]
 
