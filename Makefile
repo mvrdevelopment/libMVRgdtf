@@ -51,7 +51,7 @@ else
 		LDFLAGS		+=
 		libExt		= .so
 		RM			= rm -rf $(BINDIR)/*; rm -rf $(OBJDIR)/*
-		XERCESLIBNAME	= xerces-c
+		XERCESLIBNAME	= Xerces
 		XERCESLIBPATH	= ./libs/mac/release/
     endif
 endif
