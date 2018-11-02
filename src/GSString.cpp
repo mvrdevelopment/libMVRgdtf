@@ -822,12 +822,14 @@ TXString& TXString::operator+=(char ch)
 	return *this;
 }
 
+#ifdef GS_LIN
 // Appends one char
 TXString& TXString::operator+=(TXChar ch)
 {
 	stdUStr += ch;
 	return *this;
 }
+#endif
 
 //=======================================================================================
 // Appends one unsigned char
