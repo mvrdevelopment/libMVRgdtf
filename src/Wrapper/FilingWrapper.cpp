@@ -12,8 +12,9 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <pwd.h>
+#elif GS_MAC
+#include <unistd.h>
 #endif
-
 // ------------------------------------------------------------------------------------
 TXBaseStorageAccess::TXBaseStorageAccess()
 {

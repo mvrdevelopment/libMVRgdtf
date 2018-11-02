@@ -267,6 +267,7 @@ short DOMData::CreateNewXMLDocument(const TXString& rootElementName)
 
 #else
 
+/*
 // Converts a path from OS 9-style to a Posix-style path, and copies the result into
 // osxStylePath.  osxStylePath must contain enough storage for the output.  Usually,
 // allocating 1024 bytes is safe.
@@ -292,7 +293,7 @@ void ConvertToOSXStylePath(const TXString& cstrFileName, TXString& osxStylePath)
 	}
 }
 
-
+*/
 #endif
 
 
@@ -467,7 +468,7 @@ short DOMData::ReadXMLFile(short whichPath, const TXString&  fileName)
 			}
 			
 			catch (const SAXParseException& toCatch) {
-				toCatch;
+				//toCatch;
 				retVal = kParserError; //ConvertDOMErrorToVSError(toCatch.code);	// Get DOM error code
 			}
 

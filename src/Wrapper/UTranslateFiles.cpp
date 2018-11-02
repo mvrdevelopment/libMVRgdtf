@@ -2,58 +2,6 @@
 
 #include "UTranslateFiles.h"
 
-#if GS_WIN
-
-#elif GS_LIN
-
-#else
-// we fake this implementation for the stand alone app
-// it is provided by Vectorworks when running as a plugin
-@implementation NSString (NNAStringCategory)
-
-
-+ (NSString*)stringWithTXString:(const TXString &)txs
-{
-	return [NSString stringWithCharacters:txs.GetData()
-								   length:txs.GetLength()];
-}
-
-- (TXString)toTXString
-{
-	int len = [self length];
-	unichar buffer[len + 1];
-	[self getCharacters:buffer
-				  range:NSMakeRange(0,len)];
-	buffer[len] = 0;
-	return TXString(buffer);
-}
-
-@end
-
-TXString GetDisplayStringForPath(const TXString& path)
-{
-	@autoreleasepool
-	{
-		NSString*			displayStr	= @"";
-		TXString			retVal		= path;
-
-		NSString* pathNSString = [NSString stringWithTXString:path];
-		NSArray* pathComponents = [[NSFileManager defaultManager] componentsToDisplayForPath:pathNSString];
-
-		if (pathComponents)
-		{
-			for (int i=0; i<[pathComponents count]; i++)
-			{
-				displayStr = [displayStr stringByAppendingPathComponent:[pathComponents objectAtIndex:i]];
-			}
-
-			retVal = [displayStr toTXString];
-		}
-
-		return retVal;
-	}
-}
-#endif
 
 TXString FormatFilename(const TXString& stringIn, short maxCharactersWithoutSpace)
 //
@@ -66,14 +14,6 @@ TXString FormatFilename(const TXString& stringIn, short maxCharactersWithoutSpac
 	// must truncate the front of the string with an ellipsis if it is too long. [MGD 06/05/07]
 
 	TXString xStringIn(stringIn);
-
-#if GS_WIN
-
-#elif GS_LIN
-
-#else
-	xStringIn = GetDisplayStringForPath(xStringIn);
-#endif
 
 	short contiguousCharacters      = 0;
 
