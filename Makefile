@@ -149,7 +149,7 @@ $(TargetTestName).exe: unittest/main.cpp
 $(TargetTestName): unittest/main.cpp
 	@echo "Building $@ ..."
 	$(CXX) $(CXXFLAGSUNITTEST) $< -o $(BINDIR)/$@ -I$(SRCDIR) -L$(LIBPATH) -l$(TargetLibName) -l$(XERCESLIBNAME) $(LINKWITHLIBS)
-	./$(BINDIR)/$@
+	@#./$(BINDIR)/$@
 
 
 # Build .dll/.so
