@@ -41,3 +41,5 @@ testfiles/
 
 
 libs/lin/release/libtestlib\.a
+
+libs/lin/release/libVectorworksMvrGdtf\.a
