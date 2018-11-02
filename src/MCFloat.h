@@ -429,8 +429,8 @@ inline EFPByteOrder ByteOrder(Bool8 needsSwapping)
 #endif
 
 
-const extern double kNearlyEqualEpsilonForDoubles;
-const extern double kNearlyEqualEpsilonForNormalizedValues;
+const extern double kNearlyEqualEpsilonForDoubles = 1e-10;
+const extern double kNearlyEqualEpsilonForNormalizedValues = 1e-06;
 
 
 //----------------------------------------------------------------------------------------
