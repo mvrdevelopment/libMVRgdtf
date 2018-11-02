@@ -132,7 +132,7 @@ $(TargetTestName).exe: unittest/main.cpp
 # Mac Linux
 $(TargetTestName): unittest/main.cpp
 	@echo "Building $@ ..."
-	$(CXX) $(CXXFLAGS) $(CXXFLAGSUNITTEST) $< -o $(BINDIR)/$@ -I$(SRCDIR)/ -L$(BINDIR)/ -l$(TargetLibName)
+	$(CXX) $(CXXFLAGSUNITTEST) $< -o $(BINDIR)/$@ -L$(BINDIR)/ -lVectorworksMvrGdtf
 	./$(BINDIR)/$@
 
 
