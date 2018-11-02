@@ -25,7 +25,6 @@ using namespace XML;
 // Prototypes
 short ConvertDOMErrorToVSError(short DOMErr);
 short ConvertXMLErrorToVSError(short XMLErr);
-void ConvertToOSXStylePath(const TXString& cstrFileName, TXString& osxStylePath);
 
 
 // 4/4/06, JAG:
@@ -330,7 +329,7 @@ void ConvertToOSXStylePath(const TXString& cstrFileName, TXString& osxStylePath)
 			// TODO
 			//if (GS_GetFolderN(whichPath, hfsPath, inCreateIfMissing)) 
 			{
-				ConvertToOSXStylePath(hfsPath, cstrPath);
+				//ConvertToOSXStylePath(hfsPath, cstrPath);
 
 				// Concatenate the file name
 				xmlFile = cstrPath;
@@ -365,7 +364,7 @@ void ConvertToOSXStylePath(const TXString& cstrFileName, TXString& osxStylePath)
 				if (xmlFile.Find(':') != -1) {
 					TXString	osxStylePath;
 
-					ConvertToOSXStylePath(xmlFile, osxStylePath);
+					// TODO ConvertToOSXStylePath(xmlFile, osxStylePath);
 
 					xmlFile = osxStylePath;
 					
