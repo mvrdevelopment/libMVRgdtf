@@ -11,7 +11,6 @@ TargetTestName	= vectorworksMvrGdtfTestApp
 # folders
 SRCDIR		= src
 SRCDIR_IMPL	= src/Implementation
-SRCDIR_MZIP	= src/Minizip/Source
 SRCDIR_S256	= src/sha256
 SRCDIR_WRAP	= src/Wrapper
 SRCDIR_XMLL	= src/XMLLib
@@ -88,22 +87,20 @@ endif
 # sources and objects
 SRC			= $(wildcard $(SRCDIR)/*.cpp)
 SRC_IMPL	= $(wildcard $(SRCDIR_IMPL)/*.cpp)
-SRC_MZIP	= $(wildcard $(SRCDIR_MZIP)/*.c)
 SRC_S256	= $(wildcard $(SRCDIR_S256)/*.cpp)
 SRC_WRAP	= $(wildcard $(SRCDIR_WRAP)/*.cpp)
 SRC_XMLL	= $(wildcard $(SRCDIR_XMLL)/*.cpp)
 OBJ			= $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(SRC))
 OBJ_IMPL	= $(patsubst $(SRCDIR_IMPL)/%.cpp, $(OBJDIR)/%.o, $(SRC_IMPL))
-OBJ_MZIP	= $(patsubst $(SRCDIR_MZIP)/%.c, $(OBJDIR)/%.o, $(SRC_MZIP))
 OBJ_S256	= $(patsubst $(SRCDIR_S256)/%.cpp, $(OBJDIR)/%.o, $(SRC_S256))
 OBJ_WRAP	= $(patsubst $(SRCDIR_WRAP)/%.cpp, $(OBJDIR)/%.o, $(SRC_WRAP))
 OBJ_XMLL	= $(patsubst $(SRCDIR_XMLL)/%.cpp, $(OBJDIR)/%.o, $(SRC_XMLL))
-SOURCES		= $(SRC) $(SRC_IMPL) $(SRC_MZIP) $(SRC_S256) $(SRC_WRAP) $(SRC_XMLL)
-OBJECTS		= $(OBJ) $(OBJ_IMPL) $(OBJ_MZIP) $(OBJ_S256) $(OBJ_WRAP) $(OBJ_XMLL)
+SOURCES		= $(SRC) $(SRC_IMPL) $(SRC_S256) $(SRC_WRAP) $(SRC_XMLL)
+OBJECTS		= $(OBJ) $(OBJ_IMPL) $(OBJ_S256) $(OBJ_WRAP) $(OBJ_XMLL)
 
 
 # place where to look for %.cpp for generic rule $(OBJDIR)/%.o : %.cpp
-VPATH 		= $(SRCDIR):$(SRCDIR_IMPL):$(SRCDIR_MZIP):$(SRCDIR_S256):$(SRCDIR_WRAP):$(SRCDIR_XMLL)
+VPATH 		= $(SRCDIR):$(SRCDIR_IMPL):$(SRCDIR_S256):$(SRCDIR_WRAP):$(SRCDIR_XMLL)
 
 
 # Make Targets
