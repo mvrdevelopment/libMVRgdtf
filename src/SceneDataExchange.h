@@ -64,7 +64,7 @@ namespace SceneData
 		
 	public:
 		SceneDataGUID(const TXString& uuid);
-		SceneDataGUID(const Tools::UUID& uuid);
+		SceneDataGUID(const Tools::VWUUID& uuid);
 		SceneDataGUID(ESceneDataGUIDType type, const TXString& debugMessage);
 		~SceneDataGUID();
 		
@@ -73,14 +73,14 @@ namespace SceneData
 		
 		
 	private:
-		Tools::UUID			_uuid;
+		Tools::VWUUID			_uuid;
 		ESceneDataGUIDType	_type;
 		TXString			_typeEntry;
 		
 	public:
 		ESceneDataGUIDType			GetType() const;
 		TXString					GetUUIDString() const;
-		const VWFC::Tools::UUID&	GetUuidObj() const;
+		const VWFC::Tools::VWUUID&	GetUuidObj() const;
 	};
 	
 	

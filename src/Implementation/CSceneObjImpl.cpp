@@ -185,7 +185,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::AddSymbol(const STransf
 	
 	//------------------------------------------------------------------------------------------
 	// Create new geometry obj
-	SceneData::SceneDataSymbolObjPtr newSymbolObj = new SceneData::SceneDataSymbolObj(SceneData::SceneDataGUID(VWFC::Tools::UUID()));
+	SceneData::SceneDataSymbolObjPtr newSymbolObj = new SceneData::SceneDataSymbolObj(SceneData::SceneDataGUID(VWFC::Tools::VWUUID()));
 	
 	// Set Transfrom Matrix
 	VWTransformMatrix ma;

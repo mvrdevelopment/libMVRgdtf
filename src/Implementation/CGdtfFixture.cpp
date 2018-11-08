@@ -57,7 +57,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::OpenForWrite(MvrStri
 	
 	TXString	vwName			(name);
 	TXString	vwManufacturer (manufacturer);
-	VWFC::Tools::UUID  vwUuid;
+	VWFC::Tools::VWUUID  vwUuid;
 	
 	fFixtureObject->SetName(vwName);
 	fFixtureObject->SetManufacturer(vwManufacturer);
