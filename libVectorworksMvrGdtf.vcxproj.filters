@@ -19,11 +19,11 @@
     <Filter Include="src\Interface">
       <UniqueIdentifier>{480895af-bf90-429a-8a31-0708a3e13054}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Minizip">
-      <UniqueIdentifier>{ebfdc516-0638-46e4-902d-613071e94a36}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Prefix">
       <UniqueIdentifier>{b77792d0-d9d3-4c19-8314-355bd7e0d4df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Wrapper">
+      <UniqueIdentifier>{b9f64660-55d4-4675-b964-2e9130ed5581}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -246,6 +246,30 @@
     <ClInclude Include="src\XmlFileHelper.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\Wrapper\FileIdentifier.h">
+      <Filter>src\Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Wrapper\FilingWrapper.h">
+      <Filter>src\Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Wrapper\FolderIdentifier.h">
+      <Filter>src\Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Wrapper\PluginResource.h">
+      <Filter>src\Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Wrapper\RawOSFileimpl.h">
+      <Filter>src\Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Wrapper\TDQuickDraw.h">
+      <Filter>src\Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Wrapper\UTranslateFiles.h">
+      <Filter>src\Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Wrapper\ZIPFileImpl.h">
+      <Filter>src\Wrapper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Implementation\CClassImpl.cpp">
@@ -338,9 +362,6 @@
     <ClCompile Include="src\Implementation\Utility.cpp">
       <Filter>src\Implementation</Filter>
     </ClCompile>
-    <ClCompile Include="src\Minizip\Source\miniz.c">
-      <Filter>src\Minizip</Filter>
-    </ClCompile>
     <ClCompile Include="src\sha256\sha256.cpp">
       <Filter>src\sha256</Filter>
     </ClCompile>
@@ -412,6 +433,27 @@
     </ClCompile>
     <ClCompile Include="src\XmlFileHelper.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Wrapper\FileIdentifier.cpp">
+      <Filter>src\Wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Wrapper\FilingWrapper.cpp">
+      <Filter>src\Wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Wrapper\FolderIdentifier.cpp">
+      <Filter>src\Wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Wrapper\RawOSFileimpl.cpp">
+      <Filter>src\Wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Wrapper\TDQuickDraw.cpp">
+      <Filter>src\Wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Wrapper\UTranslateFiles.cpp">
+      <Filter>src\Wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Wrapper\ZIPFileImpl.cpp">
+      <Filter>src\Wrapper</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
