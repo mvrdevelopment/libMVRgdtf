@@ -41,7 +41,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::ReadFromFile(MvrStri
     return ReadFromFile(file);
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::OpenForWrite(MvrString fullPath, MvrString name, MvrString manufacturer, const UUID& uuid)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::OpenForWrite(MvrString fullPath, MvrString name, MvrString manufacturer, const MvrUUID& uuid)
 {	
 	TXString strFullPath ( fullPath );
 	
@@ -159,7 +159,7 @@ MvrString VectorworksMVR::CGdtfFixtureImpl::GetFixtureTypeDescription()
     return fFixtureObject->GetFixtureTypeDescription().GetCharPtr();
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetFixtureGUID(VectorworksMVR::UUID &uuid)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetFixtureGUID(VectorworksMVR::MvrUUID &uuid)
 {
     if(!fFixtureObject) {return kVCOMError_NotInitialized;}
     

@@ -41,7 +41,7 @@ MvrString VectorworksMVR::CSceneObjImpl::GetName()
 	return fPtr->getName().GetCharPtr();
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetGuid(UUID& outGuid)
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetGuid(MvrUUID& outGuid)
 {
 	// Check if this is initialized
 	ASSERTN(kEveryone,fPtr);

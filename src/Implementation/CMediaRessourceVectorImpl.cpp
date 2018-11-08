@@ -94,7 +94,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateDataP
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreatePositionObject(const UUID& guid,		MvrString name,	IPosition** outPositionObj)
+VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreatePositionObject(const MvrUUID& guid,		MvrString name,	IPosition** outPositionObj)
 {
 	//---------------------------------------------------------------------------
 	// Create the obj
@@ -139,7 +139,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreatePosit
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateSymDefObject( const UUID& guid,		MvrString name,	ISymDef** outSymDef)
+VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateSymDefObject( const MvrUUID& guid,		MvrString name,	ISymDef** outSymDef)
 {
 	//---------------------------------------------------------------------------
 	// Create the obj
@@ -184,7 +184,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateSymDe
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateClassObject(		 const UUID& guid,		MvrString name,	IClass** outclass)
+VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateClassObject(		 const MvrUUID& guid,		MvrString name,	IClass** outclass)
 {
 	//---------------------------------------------------------------------------
 	// Create the obj
@@ -229,7 +229,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateClass
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateLayerObject(	const UUID& guid, MvrString name,								ISceneObj**		outLayerObj)
+VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateLayerObject(	const MvrUUID& guid, MvrString name,								ISceneObj**		outLayerObj)
 {
 	//---------------------------------------------------------------------------
 	// Create the obj
@@ -274,7 +274,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateLayer
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateGroupObject(	const UUID& guid, const STransformMatrix& offset, ISceneObj* addToContainer,	ISceneObj**	outGroupObj)
+VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateGroupObject(	const MvrUUID& guid, const STransformMatrix& offset, ISceneObj* addToContainer,	ISceneObj**	outGroupObj)
 {
 	//---------------------------------------------------------------------------
 	// Read Container
@@ -342,7 +342,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateGroup
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateFixture(const UUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outFixture)
+VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateFixture(const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outFixture)
 {
 	
 	//---------------------------------------------------------------------------
@@ -412,7 +412,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateFixtu
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateSceneObject(	const UUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**		outSceneObj)
+VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateSceneObject(	const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**		outSceneObj)
 {
 	//---------------------------------------------------------------------------
 	// Read Container
@@ -480,7 +480,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateScene
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateFocusPoint(	const UUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj** outFocusPoint)
+VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateFocusPoint(	const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj** outFocusPoint)
 {
 	//---------------------------------------------------------------------------
 	// Read Container
@@ -549,7 +549,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateFocus
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateTruss(		const UUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**		outTruss)
+VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateTruss(		const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**		outTruss)
 {
 	//---------------------------------------------------------------------------
 	// Read Container
@@ -618,7 +618,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateTruss
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateVideoScreen(	const UUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj** outVideoScreen)
+VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateVideoScreen(	const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj** outVideoScreen)
 {
 	//---------------------------------------------------------------------------
 	// Read Container

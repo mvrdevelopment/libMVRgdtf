@@ -45,9 +45,9 @@ namespace VectorworksMVR
 		Uint16 r, g, b;
 	};
 	
-	struct UUID
+	struct MvrUUID
 	{
-		UUID(Uint32 a,Uint32 b,Uint32 c,Uint32 d) { this->a = a; this->b = b; this->c = c; this->d = d;}
+		MvrUUID(Uint32 a,Uint32 b,Uint32 c,Uint32 d) { this->a = a; this->b = b; this->c = c; this->d = d;}
 		Uint32 a, b, c, d;
 	};
 	
@@ -75,7 +75,7 @@ namespace VectorworksMVR
 	{
 	public:
 		virtual MvrString VCOM_CALLTYPE		GetName() = 0;
-		virtual VCOMError VCOM_CALLTYPE		GetGuid(UUID& guid) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetGuid(MvrUUID& guid) = 0;
 	};
 	typedef VCOMPtr<IPosition>	IPositionPtr;
 	
@@ -84,7 +84,7 @@ namespace VectorworksMVR
 	{
 	public:
 		virtual MvrString VCOM_CALLTYPE		GetName() = 0;
-		virtual VCOMError VCOM_CALLTYPE		GetGuid(UUID& guid) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetGuid(MvrUUID& guid) = 0;
 	};
 	typedef VCOMPtr<IClass>	IClassPtr;
 	
@@ -233,7 +233,7 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetType(ESceneObjType& outType) = 0;
 		
 		virtual MvrString VCOM_CALLTYPE		GetName() = 0;
-		virtual VCOMError VCOM_CALLTYPE		GetGuid(UUID& outGuid) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetGuid(MvrUUID& outGuid) = 0;
 		
 		virtual VCOMError VCOM_CALLTYPE		GetTransfromMatrix(STransformMatrix& outName) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetGeometryCount(size_t& outCount) = 0;
@@ -287,17 +287,17 @@ namespace VectorworksMVR
 		
 		// After this you can generate Aux Objects
 		virtual VCOMError VCOM_CALLTYPE		CreateDataProviderObject(MvrString provider,	MvrString version,	ISceneDataProvider** outSceneDataProvider) = 0;
-		virtual VCOMError VCOM_CALLTYPE		CreatePositionObject(	 const UUID& guid,		MvrString name,		IPosition** outPositionObj) = 0;
-		virtual VCOMError VCOM_CALLTYPE		CreateSymDefObject(		 const UUID& guid,		MvrString name,		ISymDef** outSymDef) = 0;
-		virtual VCOMError VCOM_CALLTYPE		CreateClassObject(		 const UUID& guid,		MvrString name,		IClass** outclass) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreatePositionObject(	 const MvrUUID& guid,		MvrString name,		IPosition** outPositionObj) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateSymDefObject(		 const MvrUUID& guid,		MvrString name,		ISymDef** outSymDef) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateClassObject(		 const MvrUUID& guid,		MvrString name,		IClass** outclass) = 0;
 		
 		// Then you can generate all other objects
-		virtual VCOMError VCOM_CALLTYPE		CreateLayerObject(	const UUID& guid,								  MvrString name,								ISceneObj**	outLayerObj) = 0;
-		virtual VCOMError VCOM_CALLTYPE		CreateGroupObject(	const UUID& guid, const STransformMatrix& offset,					ISceneObj* addToContainer,	ISceneObj**	outGroupObj) = 0;
-		virtual VCOMError VCOM_CALLTYPE		CreateFixture(		const UUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outFixture) = 0;
-		virtual VCOMError VCOM_CALLTYPE		CreateSceneObject(	const UUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outSceneObj) = 0;
-		virtual VCOMError VCOM_CALLTYPE		CreateFocusPoint(	const UUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj** outFocusPoint) = 0;
-		virtual VCOMError VCOM_CALLTYPE		CreateVideoScreen(	const UUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**outVideoScreen) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateLayerObject(	const MvrUUID& guid,								  MvrString name,								ISceneObj**	outLayerObj) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateGroupObject(	const MvrUUID& guid, const STransformMatrix& offset,					ISceneObj* addToContainer,	ISceneObj**	outGroupObj) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateFixture(		const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outFixture) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateSceneObject(	const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outSceneObj) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateFocusPoint(	const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj** outFocusPoint) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateVideoScreen(	const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**outVideoScreen) = 0;
 		
 		// Add the end call to write the file to disk
 		virtual VCOMError VCOM_CALLTYPE		Close() = 0;
@@ -766,13 +766,13 @@ namespace VectorworksMVR
 		public:
         virtual VCOMError VCOM_CALLTYPE		ReadFromFile(MvrString fullPath) = 0;
 		
-		virtual VCOMError VCOM_CALLTYPE		OpenForWrite(MvrString fullPath, MvrString name, MvrString manufacturer, const UUID& uuid) = 0;
+		virtual VCOMError VCOM_CALLTYPE		OpenForWrite(MvrString fullPath, MvrString name, MvrString manufacturer, const MvrUUID& uuid) = 0;
 		virtual VCOMError VCOM_CALLTYPE		AddFileToGdtfFile(MvrString fullPath) = 0;
 		virtual VCOMError VCOM_CALLTYPE		Close() = 0;
         
         virtual MvrString VCOM_CALLTYPE		GetName() = 0;
         virtual MvrString VCOM_CALLTYPE     GetManufacturer() = 0;
-		 virtual VCOMError VCOM_CALLTYPE    GetFixtureGUID(UUID& uuid) = 0;
+		 virtual VCOMError VCOM_CALLTYPE    GetFixtureGUID(MvrUUID& uuid) = 0;
 		
 		virtual MvrString VCOM_CALLTYPE     GetFixtureTypeDescription() = 0;
 		virtual MvrString VCOM_CALLTYPE		GetShortName() = 0;

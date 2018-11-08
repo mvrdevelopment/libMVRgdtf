@@ -16,7 +16,7 @@ namespace VectorworksMVR
 		
 	public:
 		virtual MvrString VCOM_CALLTYPE		GetName();
-		virtual VCOMError VCOM_CALLTYPE		GetGuid(UUID& guid);
+		virtual VCOMError VCOM_CALLTYPE		GetGuid(MvrUUID& guid);
 		
 		
 		// Implementation

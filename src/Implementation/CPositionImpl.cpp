@@ -28,7 +28,7 @@ MvrString VectorworksMVR::CPositionImpl::GetName()
 	return fPtr->getName().GetCharPtr();
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CPositionImpl::GetGuid(UUID& outGuid)
+VectorworksMVR::VCOMError VectorworksMVR::CPositionImpl::GetGuid(MvrUUID& outGuid)
 {
 	// Check if this is initialized
 	ASSERTN(kEveryone,fPtr);
