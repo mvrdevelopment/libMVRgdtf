@@ -405,10 +405,10 @@ VCOMError CFileIdentifier::GetFolder(IFolderIdentifier** ppOutParentFolderID)
 		*ppOutParentFolderID = NULL;
 	}
 
-	// TODO
-	// VCOMError	error	= ::GS_VWQueryInterface( IID_FolderIdentifier, (IVWUnknown**) ppOutParentFolderID );
-	// if ( error != kVCOMError_NoError )
-	// 	return error;
+	
+	VCOMError	error	= VWQueryInterface( IID_FolderIdentifier, (IVWUnknown**) ppOutParentFolderID );
+	if ( error != kVCOMError_NoError ) 
+		return kVCOMError_Failed;
 
 	CFolderIdentifier*	pParentFolder	= dynamic_cast<CFolderIdentifier*>( *ppOutParentFolderID );
 	if ( pParentFolder == NULL )

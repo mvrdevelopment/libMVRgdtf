@@ -582,7 +582,7 @@ bool CFolderIdentifier::EnumerateContentsHandler(IFolderContentListener* pListen
 
 				if ( nextFindInfo.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ) {
 					IFolderIdentifier*	pFolderID	= NULL;
-					VCOMError			error		= ::GS_VWQueryInterface( IID_FolderIdentifier, (IVWUnknown**) & pFolderID );
+					VCOMError			error		= VWQueryInterface( IID_FolderIdentifier, (IVWUnknown**) & pFolderID );
 					if ( error == kVCOMError_NoError ) {
 						CFolderIdentifier*	pFolderInst	= dynamic_cast<CFolderIdentifier*>( pFolderID );
 						if ( pFolderInst ) {
@@ -615,7 +615,7 @@ bool CFolderIdentifier::EnumerateContentsHandler(IFolderContentListener* pListen
 				}
 				else {
 					IFileIdentifier*	pFileID		= NULL;
-					VCOMError			error		= ::GS_VWQueryInterface( IID_FileIdentifier, (IVWUnknown**) & pFileID );
+					VCOMError			error		= VWQueryInterface( IID_FileIdentifier, (IVWUnknown**) & pFileID );
 					if ( error == kVCOMError_NoError ) {
 						CFileIdentifier*	pFileInst	= dynamic_cast<CFileIdentifier*>( pFileID );
 						if ( pFileInst ) {
