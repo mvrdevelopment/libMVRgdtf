@@ -52,31 +52,31 @@ void MvrUnittest::WriteFile()
         //------------------------------------------------------------------------------------------------
         // Write globals
         IPositionPtr position = nullptr;
-        __checkVCOM(mvrFileWrite->CreatePositionObject(UUID(688696821, 558449194, 2115941252, 1809800703), "My Position", & position));
+        __checkVCOM(mvrFileWrite->CreatePositionObject(MvrUUID(688696821, 558449194, 2115941252, 1809800703), "My Position", & position));
 
 
         ISymDefPtr symDef1 = nullptr;
-        if(__checkVCOM(mvrFileWrite->CreateSymDefObject(UUID(122079618, 11832014, 669376348, 947930087), "Symbol Definition for the FocusPoint", & symDef1)))
+        if(__checkVCOM(mvrFileWrite->CreateSymDefObject(MvrUUID(122079618, 11832014, 669376348, 947930087), "Symbol Definition for the FocusPoint", & symDef1)))
         {
             __checkVCOM(symDef1->AddGeometry(STransformMatrix()));
         }
         
         IClassPtr clas1 = nullptr;
-        __checkVCOM(mvrFileWrite->CreateClassObject(UUID(122074618, 11852014, 669377348, 947530087), "My first Class", & clas1));
+        __checkVCOM(mvrFileWrite->CreateClassObject(MvrUUID(122074618, 11852014, 669377348, 947530087), "My first Class", & clas1));
 
         
         IClassPtr clas2 = nullptr;
-        __checkVCOM(mvrFileWrite->CreateClassObject(UUID(122774618, 11892014, 669397348, 947530057), "My second Class", & clas2));
+        __checkVCOM(mvrFileWrite->CreateClassObject(MvrUUID(122774618, 11892014, 669397348, 947530057), "My second Class", & clas2));
 
         //------------------------------------------------------------------------------------------------
         // Now write content
         ISceneObjPtr layer1 = nullptr;
-        if(__checkVCOM(mvrFileWrite->CreateLayerObject(UUID(465143117, 742747285, 1361655924, 1172316535), "My Layer 1", & layer1)))
+        if(__checkVCOM(mvrFileWrite->CreateLayerObject(MvrUUID(465143117, 742747285, 1361655924, 1172316535), "My Layer 1", & layer1)))
         {
 
             // Create Focus Point
             ISceneObjPtr focusPoint = nullptr;
-            if(__checkVCOM(mvrFileWrite->CreateFocusPoint(UUID(1998334672, 457193269, 1786021763, 1463564339), STransformMatrix(), "My FocusPoint", layer1, & focusPoint)))
+            if(__checkVCOM(mvrFileWrite->CreateFocusPoint(MvrUUID(1998334672, 457193269, 1786021763, 1463564339), STransformMatrix(), "My FocusPoint", layer1, & focusPoint)))
             {
                 __checkVCOM(focusPoint->AddSymbol(STransformMatrix(), symDef1));
                 __checkVCOM(focusPoint->SetClass(clas1));
@@ -84,7 +84,7 @@ void MvrUnittest::WriteFile()
 
             // And place some fixtures on it
             ISceneObjPtr fixture1 = nullptr;
-            if(__checkVCOM(mvrFileWrite->CreateFixture(UUID(1808353427, 683171502, 518343034, 1766902383), STransformMatrix(), "My Fixture Name", layer1, & fixture1)))
+            if(__checkVCOM(mvrFileWrite->CreateFixture(MvrUUID(1808353427, 683171502, 518343034, 1766902383), STransformMatrix(), "My Fixture Name", layer1, & fixture1)))
             {
                 __checkVCOM(fixture1->SetGdtfName("Martin@Mac Aura XB"));
                 __checkVCOM(fixture1->SetGdtfMode("My fancy other GDTF DMX Mode"));
