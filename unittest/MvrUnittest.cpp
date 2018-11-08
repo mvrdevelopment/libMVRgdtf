@@ -27,6 +27,8 @@ bool MvrUnittest::ExecuteTest()
 {
     WriteFile();
     ReadFile();
+
+    return true;
 }
 
 void MvrUnittest::WriteFile()

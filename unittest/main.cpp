@@ -22,9 +22,9 @@ int main()
 	std::cout << "Start Unit Test" << std::endl; 
 
 	MvrUnittest mvrTest;
-	mvrTest.RunTest();
+	bool mvrOK = mvrTest.RunTest();
 
-	return 0;
+	return (mvrOK == true);
 }
 
 void WriteMVR()

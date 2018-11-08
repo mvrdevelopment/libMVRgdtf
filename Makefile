@@ -61,8 +61,8 @@ else
 		libExt			= .a
 		LIBDIR_PLAT		= mac
 		XERCESLIBNAME	= Xerces
-		LIBPATH			= -Llibs/mac/release
-		LINKWITHLIBS 	+= -luuid -lpthread
+		LIBPATH			= libs/mac/release
+		LINKWITHLIBS 	+= -lpthread -framework CoreServices -framework CoreFoundation
 		RM				= rm -rf $(BINDIR)/*; rm -rf $(OBJDIR)/*; \
 						rm -f $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)/lib$(TargetLib)
     endif
