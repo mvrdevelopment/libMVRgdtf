@@ -23,7 +23,6 @@
 # Compiled Static libraries
 *.lai
 *.la
-*.a
 *.lib
 
 # Executables
@@ -36,3 +35,11 @@ x64/
 .vs/
 bin/
 obj/
+testfiles/
+
+\.vscode/settings\.json
+
+
+libs/lin/release/libtestlib\.a
+
+libs/lin/release/libVectorworksMvrGdtf\.a

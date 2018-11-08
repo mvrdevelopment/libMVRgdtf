@@ -30,7 +30,7 @@ typedef uint64_t	Uint64;
 ///////////////////////////////////////////////////////////////////////////////
 // Fixed-width signed integer types.
 
-typedef char		Sint8;	
+typedef int8_t		Sint8;	
 typedef	int16_t		Sint16;
 typedef	int32_t		Sint32;
 typedef int64_t		Sint64;
@@ -97,7 +97,7 @@ typedef	unsigned char	Bool8;
 typedef intptr_t	SintptrT;
 typedef uintptr_t	UintptrT;
 
-#if GS_LIN
+#if GS_LIN || GS_MAC
 typedef __SIZE_TYPE__	size_t;
 #endif
 

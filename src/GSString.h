@@ -128,7 +128,7 @@ typedef std::basic_string<TXChar> StdUStr;
 //#######################################################################################
 // TXString class
 //#######################################################################################
-class GS_HIDDEN_VISIBILITY TXString
+class TXString
 {
 public:
 
@@ -250,6 +250,9 @@ public:
 	TXString& operator+=(unsigned char ch);
 	TXString& operator+=(UCChar ch);
 	TXString& operator+=(wchar_t ch);
+	#ifdef GS_LIN
+	TXString& operator+=(TXChar ch);
+	#endif
 	TXString& operator+=(int n);				// Unicode code point, for example: 0x63
 												// This is different behaviour than operator<< which appends the number as value
 
@@ -274,6 +277,7 @@ public:
 	TXString& operator<<(Uint32 number);
 	TXString& operator<<(Uint64 number);
 	TXString& operator<<(double number);
+	
 #if GS_MAC
 	TXString& operator<<(size_t number); // size_t is different from Uint64 on the mac
 #endif
@@ -297,7 +301,7 @@ public:
 	TXString& Insert(size_t pos, unsigned char ch);
 	TXString& Insert(size_t pos, UCChar ch);
 	TXString& Insert(size_t pos, wchar_t ch);
-	TXString& Insert(size_t pos, int ch);						// e.g. 0xA5, '¥'
+	TXString& Insert(size_t pos, int ch);						// e.g. 0xA5, 'ï¿½'
 
 	// Delete characters starting from 'pos' for 'len' characters.
 	TXString& Delete(size_t pos, size_t len = (size_t)-1);
@@ -535,6 +539,7 @@ private:
 #endif
 
 };
+typedef std::vector<TXString> TXStringArray;
 
 
 // Comparison operators

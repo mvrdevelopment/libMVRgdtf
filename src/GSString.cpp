@@ -9,7 +9,7 @@
 
 /* Includes */
 /* -------- */
-#include "StdHeaders.h"
+#include "Prefix/StdAfx.h"
 #include "GSIntTypes.h"
 
 #define _GSString_X_
@@ -21,6 +21,7 @@
 #if GS_WIN
 // For Unicode normalization form (precomposed v.s. decomposed)
 //	#include <WinNls.h> 
+#include <cstring>
 #elif GS_LIN
 #include <cstring>
 #include <string>
@@ -409,7 +410,7 @@ TXString& TXString::operator=(const unsigned char* src)
 	if (src && *src != 0)
 	{
 		char charBuf[256];
-		strncpy(charBuf, (const char *)src + 1, src[0]);
+		std::strncpy(charBuf, (const char *)src + 1, src[0]);
 		charBuf[src[0]] = 0;
 		SetStdUStrFromCharBuffer(charBuf);
 	}
@@ -820,6 +821,15 @@ TXString& TXString::operator+=(char ch)
 	stdUStr += (unsigned char)ch;	// The casting is necessary on Windows.
 	return *this;
 }
+
+#ifdef GS_LIN
+// Appends one char
+TXString& TXString::operator+=(TXChar ch)
+{
+	stdUStr += ch;
+	return *this;
+}
+#endif
 
 //=======================================================================================
 // Appends one unsigned char
