@@ -42,8 +42,17 @@ void MvrUnittest::WriteFile()
             {
                 __checkVCOM(obj->AddKeyValue("Key", "Value"));
             }
+            
+            // First create a layer
+	        ISceneObjPtr layer1 = nullptr;
+            if(__checkVCOM(mvrFileWrite->CreateLayerObject(UUID(465143117, 742747285, 1361655924, 1172316535), "My Layer 1", & layer1)))
+            {
+
+            }
+	        
+	
     }
-    	
+    mvrFileWrite->Close();	
 }
 
 void MvrUnittest::ReadFile()
@@ -57,7 +66,7 @@ void MvrUnittest::ReadFile()
         size_t count = 0;
         __checkVCOM(mvrRead->GetDataProviderObjectCount(count));
 
-        checkifEqual("CountProvider",count, 1);
+        checkifEqual("CountProvider ",count, 1);
 
         for(size_t i = 0; i <count; i++)
         {
@@ -68,6 +77,15 @@ void MvrUnittest::ReadFile()
                 checkifEqual("Check Value", obj->GetValueAt(0), "Value");
             }
         }
+
+        //------------------------------------------------------------------------------------------------
+	    // Read Layers
+	    ISceneObjPtr readLayer = nullptr;
+        if(__checkVCOM(mvrRead->GetFirstLayer(&readLayer)))
+        {
+            checkifEqual("Layer name", readLayer->GetName(), "My Layer 1");
+        }
+	    
 
     }
 }
