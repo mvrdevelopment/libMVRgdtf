@@ -14,7 +14,7 @@
 #include <sys/types.h>
 #include <pwd.h>
 #elif GS_MAC
-#include <unistd.h>
+#include <stdio.h> 
 #endif
 
 using namespace VectorworksMVR;
@@ -59,18 +59,10 @@ bool GetFolderAppDataPath(std::string& outPath)
 
 	const char *homedir = pw->pw_dir;
 	outPath = std::string(homedir);
-#elif _MAC
-	//--------------------------------------------------------
+#elif GS_MAC
 	//Implementation for OSX
-	FSRef ref;
-	OSType folderType = kApplicationSupportFolderType;
-	char path[PATH_MAX];
-	
-	FSFindFolder( kUserDomain, folderType, kCreateFolder, &ref );
-	
-	FSRefMakePath( &ref, (UInt8*)&path, PATH_MAX );
-	
-	outPath = std::string(path);
+	const char *homeDir = getenv("HOME");
+	outPath = std::string(homeDir);
 #endif
 	
 	return true;
