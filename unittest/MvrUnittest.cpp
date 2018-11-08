@@ -3,19 +3,19 @@
 //-----------------------------------------------------------------------------
 #include "Unittest.h"
 #include "MvrUnittest.h"
+#include <iostream>
 
 #include "Include/VectorworksMVR.h"
-
-#define 	FILE_NAME				"/home/redblue/Dokumente/DEV/libVectorworksMvrGdtf/testfiles/unittestOutput.mvr"
-#define 	GDTFFOLDER				"/home/redblue/Dokumente/DEV/libVectorworksMvrGdtf/testfiles/"
-
 using namespace VectorworksMVR;
 
 #define __checkVCOM(x) checkVCOM(x, #x)
 
-MvrUnittest::MvrUnittest()
+MvrUnittest::MvrUnittest(const std::string& currentDir)
 {
+    fPath = currentDir;
+    fPath =+ "/testfiles/unittestOutput.mvr";
 
+    std::cout << "Export to File" << fPath << std::endl; 
 }
 
 MvrUnittest::~MvrUnittest()
@@ -39,7 +39,7 @@ void MvrUnittest::WriteFile()
 
 	//------------------------------------------------------------------------------------------------
 	// Open file for write
-    if(__checkVCOM(mvrFileWrite->OpenForWrite(FILE_NAME)))
+    if(__checkVCOM(mvrFileWrite->OpenForWrite(fPath.c_str())))
     {
         //------------------------------------------------------------------------------------------------
         // Add Custom data
@@ -104,7 +104,7 @@ void MvrUnittest::ReadFile()
 	// Create Pointer to MVR Interface
 	IMediaRessourceVectorInterfacePtr mvrRead( IID_MediaRessourceVectorInterface );
 
-    if(__checkVCOM(mvrRead->OpenForRead(FILE_NAME)))
+    if(__checkVCOM(mvrRead->OpenForRead(fPath.c_str())))
     {
         size_t count = 0;
         __checkVCOM(mvrRead->GetDataProviderObjectCount(count));

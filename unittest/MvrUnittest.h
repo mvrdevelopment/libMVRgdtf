@@ -7,7 +7,7 @@
 class MvrUnittest : public Unittest
 {
 public:
-    MvrUnittest();
+    MvrUnittest(const std::string& currentDir);
     virtual ~MvrUnittest();
 protected:
     bool virtual ExecuteTest();
@@ -15,4 +15,6 @@ protected:
 private:
     void WriteFile();
     void ReadFile();
+
+    std::string fPath;
 };

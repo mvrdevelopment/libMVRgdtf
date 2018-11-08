@@ -17,11 +17,16 @@ using namespace VectorworksMVR;
 
 void WriteMVR();
 
-int main()
+int main(int argc, char* argv[])
 {
+	// Get Current dir
+	std::string argv_str(argv[0]);
+    std::string base = argv_str.substr(0, argv_str.find_last_of("/"));
+
 	std::cout << "Start Unit Test" << std::endl; 
 
-	MvrUnittest mvrTest;
+
+	MvrUnittest mvrTest(base);
 	bool mvrOK = mvrTest.RunTest();
 
 	return (mvrOK == true);
