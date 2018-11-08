@@ -6,6 +6,16 @@
 #include "Unittest.h"
 #include "MvrUnittest.h"
 
+#if defined(GSWIN)
+# include <Shlobj.h>
+# include <Shlwapi.h>
+#elif GS_LIN
+#include <unistd.h>
+#include <sys/types.h>
+#include <pwd.h>
+#elif GS_MAC
+#include <unistd.h>
+#endif
 
 using namespace VectorworksMVR;
 
@@ -16,21 +26,56 @@ using namespace VectorworksMVR;
 #define 	_P						
 
 void WriteMVR();
+bool GetFolderAppDataPath(std::string& outPath);
 
 int main(int argc, char* argv[])
 {
 	// Get Current dir
-	std::string argv_str(argv[0]);
-    std::string base = argv_str.substr(0, argv_str.find_last_of("/"));
-
-	std::cout << "Start Unit Test" << std::endl; 
-
+	std::string base;
+	GetFolderAppDataPath(base);
 
 	MvrUnittest mvrTest(base);
 	bool mvrOK = mvrTest.RunTest();
 
 	return (mvrOK == true);
 }
+
+bool GetFolderAppDataPath(std::string& outPath)
+{
+	//--------------------------------------------------------
+	// Implementation for Windows
+#ifdef _WINDOWS
+	// Beware, brain-compiled code ahead!
+	wchar_t buffer[MAX_PATH];
+	HWND hWnd = NULL;
+	
+	BOOL result = SHGetSpecialFolderPath(hWnd, buffer, CSIDL_LOCAL_APPDATA, false );
+	
+	if(!result) return false;
+	outPath = std::string(buffer);
+#elif _LINUX
+	// LINUX_IMPLEMENTATION - done
+	struct passwd *pw = getpwuid(getuid());
+
+	const char *homedir = pw->pw_dir;
+	outPath = std::string(homedir);
+#elif _MAC
+	//--------------------------------------------------------
+	//Implementation for OSX
+	FSRef ref;
+	OSType folderType = kApplicationSupportFolderType;
+	char path[PATH_MAX];
+	
+	FSFindFolder( kUserDomain, folderType, kCreateFolder, &ref );
+	
+	FSRefMakePath( &ref, (UInt8*)&path, PATH_MAX );
+	
+	outPath = std::string(path);
+#endif
+	
+	return true;
+}
+
 
 void WriteMVR()
 {
