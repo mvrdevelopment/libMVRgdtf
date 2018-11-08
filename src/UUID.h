@@ -12,28 +12,28 @@ namespace VWFC
 	{
 		// NOTE! You have to import library 'Rpcrt4.lib' on windows
 		// for this class to be used !!!
-		class UUID
+		class VWUUID
 		{
 		public:
-						UUID();
+						VWUUID();
 						// the bits are reversed
 						//	for example:
 						//	{09E95D97-364C-43d5-8ADF-FF4CE0EC41A7}
 						//	'975DE909' 'd5434C36' '4CFFDF8A' 'A741ECE0'
-						UUID(Uint32 a, Uint32 b, Uint32 c, Uint32 d);
+						VWUUID(Uint32 a, Uint32 b, Uint32 c, Uint32 d);
 						// copy the bytes one by one
-						UUID(const Uint8* const pArray, size_t size);
-						UUID(const VWIID& iid);
-						UUID(const UUID& src);
+						VWUUID(const Uint8* const pArray, size_t size);
+						VWUUID(const VWIID& iid);
+						VWUUID(const VWUUID& src);
 						// Trows exception if not in this format
 						// {09E95D97-364C-43d5-8ADF-FF4CE0EC41A7}
-						UUID(const TXString& str);
-						~UUID();
+						VWUUID(const TXString& str);
+						~VWUUID();
 
-			UUID&		operator=(const UUID& src);
+			VWUUID&		operator=(const VWUUID& src);
 
-			bool		operator==(const UUID& id) const;
-			bool		operator!=(const UUID& id) const;
+			bool		operator==(const VWUUID& id) const;
+			bool		operator!=(const VWUUID& id) const;
 						operator TXString() const;
 
 			// create four 32 Bit integer from the components of the GUID structure

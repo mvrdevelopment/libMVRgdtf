@@ -41,7 +41,7 @@ MvrString VectorworksMVR::CSceneObjImpl::GetName()
 	return fPtr->getName().GetCharPtr();
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetGuid(UUID& outGuid)
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetGuid(MvrUUID& outGuid)
 {
 	// Check if this is initialized
 	ASSERTN(kEveryone,fPtr);
@@ -185,7 +185,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::AddSymbol(const STransf
 	
 	//------------------------------------------------------------------------------------------
 	// Create new geometry obj
-	SceneData::SceneDataSymbolObjPtr newSymbolObj = new SceneData::SceneDataSymbolObj(SceneData::SceneDataGUID(VWFC::Tools::UUID()));
+	SceneData::SceneDataSymbolObjPtr newSymbolObj = new SceneData::SceneDataSymbolObj(SceneData::SceneDataGUID(VWFC::Tools::VWUUID()));
 	
 	// Set Transfrom Matrix
 	VWTransformMatrix ma;

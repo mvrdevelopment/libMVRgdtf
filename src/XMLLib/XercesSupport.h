@@ -3,7 +3,11 @@
 //-----------------------------------------------------------------------------
 #pragma once
 
+#ifndef GS_WIN
 #define XERCES_STATIC_LIBRARY 1
+#endif // !1
+
+
 
 #include "xercesc/framework/LocalFileFormatTarget.hpp"
 #include "xercesc/framework/MemBufInputSource.hpp"

@@ -17,7 +17,7 @@ SceneDataGUID::SceneDataGUID(const TXString& uuid)
 	_type	= eNormal;
 }
 
-SceneDataGUID::SceneDataGUID(const VWFC::Tools::UUID& uuid)
+SceneDataGUID::SceneDataGUID(const VWFC::Tools::VWUUID& uuid)
 {
 	_uuid	= uuid;
 	_type	= eNormal;
@@ -53,7 +53,7 @@ TXString SceneDataGUID::GetUUIDString() const
 	return _typeEntry;
 }
 
-const VWFC::Tools::UUID& SceneDataGUID::GetUuidObj() const
+const VWFC::Tools::VWUUID& SceneDataGUID::GetUuidObj() const
 {
 	return _uuid;
 }

@@ -103,7 +103,7 @@ using namespace VWFC::Tools;
 #define VW_EXPORT GS_HIDDEN_VISIBILITY 
 
 
-typedef size_t RefNumType;
+typedef uint32_t RefNumType;
 
 
 

@@ -37,19 +37,19 @@ namespace VectorworksMVR
 		
 		// After this you can generate Aux Objects
 		virtual VCOMError VCOM_CALLTYPE		CreateDataProviderObject(MvrString provider,	MvrString version, ISceneDataProvider** outSceneDataProvider);
-		virtual VCOMError VCOM_CALLTYPE		CreatePositionObject(	 const UUID& guid,		MvrString name,	IPosition** outPositionObj);
-		virtual VCOMError VCOM_CALLTYPE		CreateSymDefObject(		 const UUID& guid,		MvrString name,	ISymDef** outSymDef);
-		virtual VCOMError VCOM_CALLTYPE		CreateClassObject(		 const UUID& guid,		MvrString name,	IClass** outclass);
+		virtual VCOMError VCOM_CALLTYPE		CreatePositionObject(	 const MvrUUID& guid,		MvrString name,	IPosition** outPositionObj);
+		virtual VCOMError VCOM_CALLTYPE		CreateSymDefObject(		 const MvrUUID& guid,		MvrString name,	ISymDef** outSymDef);
+		virtual VCOMError VCOM_CALLTYPE		CreateClassObject(		 const MvrUUID& guid,		MvrString name,	IClass** outclass);
 		
 		
 		// Then you can generate all other objects
-		virtual VCOMError VCOM_CALLTYPE		CreateLayerObject(	const UUID& guid,								 MvrString name,								ISceneObj**	outLayerObj);
-		virtual VCOMError VCOM_CALLTYPE		CreateGroupObject(	const UUID& guid, const STransformMatrix& offset,							ISceneObj* addToContainer,	ISceneObj**	outGroupObj);
-		virtual VCOMError VCOM_CALLTYPE		CreateFixture(		const UUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outFixture);
-		virtual VCOMError VCOM_CALLTYPE		CreateSceneObject(	const UUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outSceneObj);
-		virtual VCOMError VCOM_CALLTYPE		CreateFocusPoint(	const UUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj** outFocusPoint);
-		virtual VCOMError VCOM_CALLTYPE		CreateTruss(		const UUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outTruss);
-		virtual VCOMError VCOM_CALLTYPE		CreateVideoScreen(	const UUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj** outVideoScreen);
+		virtual VCOMError VCOM_CALLTYPE		CreateLayerObject(	const MvrUUID& guid,								 MvrString name,								ISceneObj**	outLayerObj);
+		virtual VCOMError VCOM_CALLTYPE		CreateGroupObject(	const MvrUUID& guid, const STransformMatrix& offset,							ISceneObj* addToContainer,	ISceneObj**	outGroupObj);
+		virtual VCOMError VCOM_CALLTYPE		CreateFixture(		const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outFixture);
+		virtual VCOMError VCOM_CALLTYPE		CreateSceneObject(	const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outSceneObj);
+		virtual VCOMError VCOM_CALLTYPE		CreateFocusPoint(	const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj** outFocusPoint);
+		virtual VCOMError VCOM_CALLTYPE		CreateTruss(		const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outTruss);
+		virtual VCOMError VCOM_CALLTYPE		CreateVideoScreen(	const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj** outVideoScreen);
 		
 		// Add the end call to write the file to disk
 		virtual VCOMError VCOM_CALLTYPE		Close();
