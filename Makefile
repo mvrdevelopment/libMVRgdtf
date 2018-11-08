@@ -14,6 +14,7 @@ SRCDIR_IMPL	= src/Implementation
 SRCDIR_S256	= src/sha256
 SRCDIR_WRAP	= src/Wrapper
 SRCDIR_XMLL	= src/XMLLib
+SRCDIR_UNIT = unittest
 OBJDIR		= obj
 BINDIR		= bin
 LIBDIR_PRE	= libs
@@ -115,6 +116,8 @@ OBJ_XMLL	= $(patsubst $(SRCDIR_XMLL)/%.cpp, $(OBJDIR)/%.o, $(SRC_XMLL))
 SOURCES		= $(SRC) $(SRC_IMPL) $(SRC_S256) $(SRC_WRAP) $(SRC_XMLL)
 OBJECTS		= $(OBJ) $(OBJ_IMPL) $(OBJ_S256) $(OBJ_WRAP) $(OBJ_XMLL)
 
+SRC_UNIT	= $(wildcard $(SRCDIR_UNIT)/*.cpp)
+OBJ_UNIT	= $(patsubst $(SRCDIR_UNIT)/%.cpp, $(OBJDIR)/%.o, $(SRC_UNIT))
 
 # place where to look for %.cpp for generic rule $(OBJDIR)/%.o : %.cpp
 VPATH 		= $(SRCDIR):$(SRCDIR_IMPL):$(SRCDIR_S256):$(SRCDIR_WRAP):$(SRCDIR_XMLL)
@@ -138,35 +141,12 @@ clean:
 	@echo "Cleaning $(BINDIR)/ and $(OBJDIR)/ ...  "
 	$(RM)
 
-
-# Unit Test
-# Windows
-# $(TargetTestName).exe: unittest/main.cpp
-# 	@echo "Building $@ ..."
-# 	$(CXX) $(CXXFLAGS) $(CXXFLAGSUNITTEST) $< -o $(BINDIR)/$@ -I$(SRCDIR)/ -L$(BINDIR) -l$(TargetLibName)
-# 	$(BINDIR)/$@
-
 # Mac Linux
-$(TargetTestName): unittest/main.cpp
+$(TargetTestName): $(SRC_UNIT)
 	@echo "Building $@ ..."
-	$(CXX) $(CXXFLAGSUNITTEST) $< -o $(BINDIR)/$@ -I$(SRCDIR) -L$(LIBPATH) -l$(TargetLibName) -l$(XERCESLIBNAME) $(LINKWITHLIBS)
-	@#./$(BINDIR)/$@
-
-
-# Build .dll/.so
-# Windows
-# $(TargetLibName).dll: $(OBJECTSWIN)
-# 	@echo "Linking $(TargetLib) ..."
-# 	if not exist $(BINDIR) md $(BINDIR)
-# 	$(CXX) $(LDFLAGS) -o $(BINDIR)/$@ $(OBJECTSWIN) -Wl,--out-implib,$(BINDIR)/$(TargetLibName).lib
-
-
-# $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(wildcard $(SRCDIR_IMPL)/*.cpp) $(wildcard $(SRCDIR_MZIP)/*.cpp) $(wildcard $(SRCDIR_S256)/*.cpp) $(wildcard $(SRCDIR_WRAP)/*.cpp) $(wildcard $(SRCDIR_XMLL)/*.cpp)
-# 	@echo "Compiling objects for $(TargetLib) ..."
-# 	if not exist $(OBJDIR) md $(OBJDIR)
-# 	$(CXX) $(CXXFLAGS) -Wfatal-errors -I$(SRCDIR) -c $(SOURCES) $(wildcard $(SRCDIR_IMPL)/*.cpp) $(wildcard $(SRCDIR_MZIP)/*.cpp) $(wildcard $(SRCDIR_S256)/*.cpp) $(wildcard $(SRCDIR_WRAP)/*.cpp) $(wildcard $(SRCDIR_XMLL)/*.cpp)
-# 	$(MV)
-
+	@echo $(SRC_UNIT)
+	$(CXX) $(CXXFLAGSUNITTEST) $^ -o $(BINDIR)/$@ -I$(SRCDIR) -L$(LIBPATH) -l$(TargetLibName) -l$(XERCESLIBNAME) $(LINKWITHLIBS)
+	@./$(BINDIR)/$@
 
 # Mac Linux
 $(TargetLibName).a: $(OBJECTS)

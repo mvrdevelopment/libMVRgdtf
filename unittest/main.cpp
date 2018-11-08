@@ -2,9 +2,10 @@
 //----- Copyright deersoft 2015 - 2018 www.deersoft.de
 //-----------------------------------------------------------------------------
 #include <iostream>
-#include "TXStringUnittest.h"
-#include "MvrUnittest.h"
 #include "Include/VectorworksMVR.h"
+#include "Unittest.h"
+#include "MvrUnittest.h"
+
 
 using namespace VectorworksMVR;
 
@@ -12,16 +13,17 @@ using namespace VectorworksMVR;
 #define 	GDTFFOLDER				"/home/redblue/Dokumente/DEV/libVectorworksMvrGdtf/testfiles/"
 #define		VCOM_SUCCEEDED(x)		(x == 0)
 #define		VCOM_FAILED(x)			(x != 0)
+#define 	_P						
 
 void WriteMVR();
 
 int main()
 {
 	std::cout << "Start Unit Test" << std::endl; 
-	//TXStringUnitTest txStringTest;
-	//bool ret  = txStringTest.RunTest();
 
-	WriteMVR();
+	MvrUnittest mvrTest;
+	mvrTest.RunTest();
+
 	return 0;
 }
 

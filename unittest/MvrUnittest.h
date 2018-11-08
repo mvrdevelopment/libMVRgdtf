@@ -1,6 +1,7 @@
 //-----------------------------------------------------------------------------
 //----- Copyright deersoft 2015 - 2018 www.deersoft.de
 //-----------------------------------------------------------------------------
+#pragma once
 #include "Unittest.h"
 
 class MvrUnittest : public Unittest
@@ -8,9 +9,10 @@ class MvrUnittest : public Unittest
 public:
     MvrUnittest();
     virtual ~MvrUnittest();
-public:
-	bool virtual RunTest();
+protected:
+    bool virtual ExecuteTest();
 
-public:
-    void checkifEqual(val1, val2)
+private:
+    void WriteFile();
+    void ReadFile();
 };
