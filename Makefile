@@ -48,7 +48,7 @@ else
 		libExt			= .a
 		LIBDIR_PLAT		= lin
 		XERCESLIBNAME	= xerces-c
-		LIBPATH			= libs/lin/release
+		LIBPATH			= -Llibs/lin/release
 		LINKWITHLIBS 	+= -luuid -lpthread
 		RM				= rm -rf $(BINDIR)/*; rm -rf $(OBJDIR)/*; \
 						rm -f $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)/lib$(TargetLib)
@@ -61,7 +61,7 @@ else
 		LIBDIR_PLAT		= mac
 		XERCESLIBNAME	= Xerces
 		LIBPATH			= -Llibs/mac/release
-		LINKWITHLIBS 	+= -luuid -lpthread
+		LINKWITHLIBS 	+= -lpthread -framework CoreServices -framework CoreFoundation
 		RM				= rm -rf $(BINDIR)/*; rm -rf $(OBJDIR)/*; \
 						rm -f $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)/lib$(TargetLib)
     endif
@@ -149,8 +149,8 @@ clean:
 # Mac Linux
 $(TargetTestName): unittest/main.cpp
 	@echo "Building $@ ..."
-	$(CXX) $(CXXFLAGSUNITTEST) $< -o $(BINDIR)/$@ -I$(SRCDIR) -L$(LIBPATH) -l$(TargetLibName) -l$(XERCESLIBNAME) $(LINKWITHLIBS)
-	@#./$(BINDIR)/$@
+	$(CXX) $(CXXFLAGSUNITTEST) $< -o $(BINDIR)/$@ -I$(SRCDIR) $(LIBPATH) -l$(TargetLibName) -l$(XERCESLIBNAME) $(LINKWITHLIBS)
+	./$(BINDIR)/$@
 
 
 # Build .dll/.so
