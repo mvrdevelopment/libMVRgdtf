@@ -2,7 +2,8 @@
 //----- Copyright deersoft 2015 - 2018 www.deersoft.de
 //-----------------------------------------------------------------------------
 #include <iostream>
-#include "TXStringUnitTest.h"
+#include "TXStringUnittest.h"
+#include "MvrUnittest.h"
 #include "Include/VectorworksMVR.h"
 
 using namespace VectorworksMVR;
@@ -184,7 +185,7 @@ void WriteMVR()
 		ISceneObjPtr sceneObj = nullptr;
 		VCOM_SUCCEEDED(mvrFileRead->GetFirstChild(readLayer, &sceneObj));
 		
-		//_P(readLayer->GetName());
+		_P(readLayer->GetName());
 		
 		while (sceneObj)
 		{
@@ -205,7 +206,7 @@ void WriteMVR()
 				}
 			}
 			
-			//_P(sceneObj->GetName());
+			_P(sceneObj->GetName());
 			
 			//------------------------------------------------------------------------
 			// Step to next Obj
