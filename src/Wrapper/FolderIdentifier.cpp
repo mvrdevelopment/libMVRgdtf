@@ -547,7 +547,7 @@ VCOMError CFolderIdentifier::SetAttributesTimeDateReference(EAttributesTimeRefer
 }
 
 #if defined(_WINDOWS)
-bool CFolderIdentifier::EnumerateContentsHandler(IFolderContentListener* pListener, const TFolderIdentifier& folder, bool bReqursive, VCOMError& outError)
+bool CFolderIdentifier::EnumerateContentsHandler(IFolderContentListener* pListener, const CFolderIdentifier& folder, bool bReqursive, VCOMError& outError)
 {
 	outError		= kVCOMError_Failed;
 	bool	bStop	= false;
@@ -558,7 +558,7 @@ bool CFolderIdentifier::EnumerateContentsHandler(IFolderContentListener* pListen
 	else {
 		outError						= kVCOMError_NoError;
 
-		TXString	rootFolder			= folder.GetFolderPath();
+		TXString	rootFolder			= folder.GetFullPath();
 		TXString	searchFilter		= rootFolder + "*.*"; // all files
 		
 		WIN32_FIND_DATA	nextFindInfo;
@@ -603,15 +603,16 @@ bool CFolderIdentifier::EnumerateContentsHandler(IFolderContentListener* pListen
 
 						pFolderID->Release();
 					}
-
+					/*TODO
 					// go to seach this folder if the use requires
 					if ( bReqursive ) {
-						TFolderIdentifier subFolder( fullPath );
-						bStop	= this->EnumerateContents( pListener, subFolder, bReqursive, outError );
+						CFolderIdentifier subFolder( fullPath );
+						bStop	= this->EnumerateContentsHandler( pListener, subFolder, bReqursive, outError );
 						if ( bStop ) {
 							break;
 						}
 					}
+					*/
 				}
 				else {
 					IFileIdentifier*	pFileID		= NULL;
