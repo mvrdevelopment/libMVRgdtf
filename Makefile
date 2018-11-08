@@ -61,7 +61,7 @@ else
 		LIBDIR_PLAT		= mac
 		XERCESLIBNAME	= Xerces
 		LIBPATH			= -Llibs/mac/release
-		LINKWITHLIBS 	+= -lpthread
+		LINKWITHLIBS 	+= -lpthread -framework CoreServices -framework CoreFoundation
 		RM				= rm -rf $(BINDIR)/*; rm -rf $(OBJDIR)/*; \
 						rm -f $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)/lib$(TargetLib)
     endif
@@ -150,7 +150,7 @@ clean:
 $(TargetTestName): unittest/main.cpp
 	@echo "Building $@ ..."
 	$(CXX) $(CXXFLAGSUNITTEST) $< -o $(BINDIR)/$@ -I$(SRCDIR) $(LIBPATH) -l$(TargetLibName) -l$(XERCESLIBNAME) $(LINKWITHLIBS)
-	@#./$(BINDIR)/$@
+	./$(BINDIR)/$@
 
 
 # Build .dll/.so
