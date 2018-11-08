@@ -42,7 +42,7 @@ void MvrUnittest::WriteFile()
     if(__checkVCOM(mvrFileWrite->OpenForWrite(FILE_NAME)))
     {
         //------------------------------------------------------------------------------------------------
-        // Open file for write
+        // Add Custom data
         ISceneDataProviderPtr obj;
         if(__checkVCOM(mvrFileWrite->CreateDataProviderObject("Test Data", "1", &obj)))
         {
@@ -50,116 +50,49 @@ void MvrUnittest::WriteFile()
         }
         
         //------------------------------------------------------------------------------------------------
-        // Now write positions and symdefs
+        // Write globals
         IPositionPtr position = nullptr;
-        if(__checkVCOM(mvrFileWrite->CreatePositionObject(UUID(688696821, 558449194, 2115941252, 1809800703), "My Position", & position)))
-        {
-        }
+        __checkVCOM(mvrFileWrite->CreatePositionObject(UUID(688696821, 558449194, 2115941252, 1809800703), "My Position", & position));
+
 
         ISymDefPtr symDef1 = nullptr;
         if(__checkVCOM(mvrFileWrite->CreateSymDefObject(UUID(122079618, 11832014, 669376348, 947930087), "Symbol Definition for the FocusPoint", & symDef1)))
         {
+            __checkVCOM(symDef1->AddGeometry(STransformMatrix()));
         }
         
-        if(__checkVCOM(symDef1->AddGeometry(STransformMatrix())))
-        {
-        }
+        IClassPtr clas1 = nullptr;
+        __checkVCOM(mvrFileWrite->CreateClassObject(UUID(122074618, 11852014, 669377348, 947530087), "My first Class", & clas1));
+
+        
+        IClassPtr clas2 = nullptr;
+        __checkVCOM(mvrFileWrite->CreateClassObject(UUID(122774618, 11892014, 669397348, 947530057), "My second Class", & clas2));
 
         //------------------------------------------------------------------------------------------------
         // Now write content
-
-        // First create a layer
         ISceneObjPtr layer1 = nullptr;
         if(__checkVCOM(mvrFileWrite->CreateLayerObject(UUID(465143117, 742747285, 1361655924, 1172316535), "My Layer 1", & layer1)))
         {
-        }
-	
-        // Create two classes
-        IClassPtr clas1 = nullptr;
-        if(__checkVCOM(mvrFileWrite->CreateClassObject(UUID(122074618, 11852014, 669377348, 947530087), "My first Class", & clas1)))
-        {
-        }
-        
-        // Create two classes
-        IClassPtr clas2 = nullptr;
-        if(__checkVCOM(mvrFileWrite->CreateClassObject(UUID(122774618, 11892014, 669397348, 947530057), "My second Class", & clas2)))
-        {
-        }
-        
-        // Create Focus Point
-        ISceneObjPtr focusPoint = nullptr;
-        if(__checkVCOM(mvrFileWrite->CreateFocusPoint(UUID(1998334672, 457193269, 1786021763, 1463564339), STransformMatrix(), "My FocusPoint", layer1, & focusPoint)))
-        {
-        }
 
-        if(__checkVCOM(focusPoint->AddSymbol(STransformMatrix(), symDef1)))
-        {
-        }
+            // Create Focus Point
+            ISceneObjPtr focusPoint = nullptr;
+            if(__checkVCOM(mvrFileWrite->CreateFocusPoint(UUID(1998334672, 457193269, 1786021763, 1463564339), STransformMatrix(), "My FocusPoint", layer1, & focusPoint)))
+            {
+                __checkVCOM(focusPoint->AddSymbol(STransformMatrix(), symDef1));
+                __checkVCOM(focusPoint->SetClass(clas1));
+            }
 
-        if(__checkVCOM(focusPoint->SetClass(clas1)))
-        {
+            // And place some fixtures on it
+            ISceneObjPtr fixture1 = nullptr;
+            if(__checkVCOM(mvrFileWrite->CreateFixture(UUID(1808353427, 683171502, 518343034, 1766902383), STransformMatrix(), "My Fixture Name", layer1, & fixture1)))
+            {
+                __checkVCOM(fixture1->SetGdtfName("Martin@Mac Aura XB"));
+                __checkVCOM(fixture1->SetGdtfMode("My fancy other GDTF DMX Mode"));
+                __checkVCOM(fixture1->AddAdress(352, 0));
+                __checkVCOM(fixture1->AddAdress(5684, 1));
+                __checkVCOM(fixture1->SetFocusPoint(focusPoint));
+            }
         }
-
-        // And place some fixtures on it
-        ISceneObjPtr fixture1 = nullptr;
-        if(__checkVCOM(mvrFileWrite->CreateFixture(UUID(1808353427, 683171502, 518343034, 1766902383), STransformMatrix(), "My Fixture Name", layer1, & fixture1)))
-        {
-        }
-        
-        if(__checkVCOM(fixture1->SetGdtfName("Martin@Mac Aura XB")))
-        {
-        }
-
-        if(__checkVCOM(fixture1->SetGdtfMode("Mode 1 v1.1")))
-        {
-        }
-
-        if(__checkVCOM(fixture1->AddAdress(1542, 0)))
-        {
-        }
-
-        if(__checkVCOM(fixture1->AddAdress(25, 1)))
-        {
-        }
-
-        if(__checkVCOM(fixture1->SetFocusPoint(focusPoint)))
-        {
-        }
-
-        if(__checkVCOM(fixture1->SetPosition(position)))
-        {
-        }
-
-        if(__checkVCOM(fixture1->SetClass(clas2)))
-        {
-        }
-        
-        // And another fixture
-        ISceneObjPtr fixture2 = nullptr;
-        if(__checkVCOM(mvrFileWrite->CreateFixture(UUID(1136161871, 1699151080, 751939975, 1748783014), STransformMatrix(), "My Fixture Name", layer1, & fixture2)))
-        {
-        }
-        
-        if(__checkVCOM(fixture2->SetGdtfName("Martin@Mac Aura XB")))
-        {
-        }
-
-        if(__checkVCOM(fixture2->SetGdtfMode("My fancy other GDTF DMX Mode")))
-        {
-        }
-
-        if(__checkVCOM(fixture2->AddAdress(352, 0)))
-        {
-        }
-
-        if(__checkVCOM(fixture2->AddAdress(5684, 1)))
-        {
-        }
-
-	    if(__checkVCOM(fixture2->SetFocusPoint(focusPoint)))
-        {
-        }
-
 
     }
     mvrFileWrite->Close();	
