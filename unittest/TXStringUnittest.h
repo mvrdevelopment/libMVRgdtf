@@ -1,13 +1,13 @@
 ﻿//-----------------------------------------------------------------------------
 //----- Copyright deersoft 2015 - 2018 www.deersoft.de
 //-----------------------------------------------------------------------------
-#include "UnitTest.h"
+#include "Unittest.h"
 
-class TXStringUnitTest : public UnitTest
+class TXStringUnittest : public Unittest
 {
 public:
-    TXStringUnitTest();
-    virtual ~TXStringUnitTest();
+    TXStringUnittest();
+    virtual ~TXStringUnittest();
 public:
 	bool virtual RunTest();
 };

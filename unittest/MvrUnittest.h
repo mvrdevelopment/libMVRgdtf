@@ -1,13 +1,16 @@
 //-----------------------------------------------------------------------------
 //----- Copyright deersoft 2015 - 2018 www.deersoft.de
 //-----------------------------------------------------------------------------
+#include "Unittest.h"
 
-class UnitTest
+class MvrUnittest : public Unittest
 {
 public:
-    UnitTest();
-    virtual ~UnitTest();
+    MvrUnittest();
+    virtual ~MvrUnittest();
 public:
-    bool virtual RunTest() = 0;
+	bool virtual RunTest();
 
+public:
+    void checkifEqual(val1, val2)
 };
