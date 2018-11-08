@@ -115,13 +115,13 @@ VCOMError CFolderIdentifier::SetFullPath(const TXString& fullPath)
 	// if it is a network path add one '\' to denote this
 	if ( bIsWinPath ) {
 		if ( theFullPath.GetLength() >= 2 && theFullPath.Left(2) == "\\\\" ) {
-			farrFolderHierarchy.Append( "\\" );
+			farrFolderHierarchy.push_back( "\\" );
 	
 		}
 	}
 	else {
 		if ( theFullPath.GetLength() >= 2 && theFullPath.Left(2) == "//" ) {
-			farrFolderHierarchy.Append( "\\" );
+			farrFolderHierarchy.push_back( "\\" );
 	
 		}
 	}
