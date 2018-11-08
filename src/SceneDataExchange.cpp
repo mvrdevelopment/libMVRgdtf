@@ -2219,7 +2219,7 @@ void SceneDataExchange::ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xml
 			IXMLFileNodePtr userDataNode = nullptr;
 			if (VCOM_SUCCEEDED(rootNode->FindChildNode(XML_Val_UserDataNodeName, & userDataNode)))
 			{
-    
+				// TODO missing implementation
 			} ASSERTN(kEveryone, userDataNode != nullptr);
 			
 			
