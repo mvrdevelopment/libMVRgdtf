@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\BasicMath.X.h" />
+    <ClInclude Include="src\CieColor.h" />
+    <ClInclude Include="src\FolderSpecifiers.h" />
+    <ClInclude Include="src\GDTFManager.h" />
+    <ClInclude Include="src\GSDebug.h" />
+    <ClInclude Include="src\GSIntTypes.h" />
+    <ClInclude Include="src\GSString.h" />
+    <ClInclude Include="src\GSTypes.h" />
+    <ClInclude Include="src\GSUtil.h" />
+    <ClInclude Include="src\HashManager.h" />
+    <ClInclude Include="src\Implementation\CClassImpl.h" />
+    <ClInclude Include="src\Implementation\CGdtfActivationGroup.h" />
+    <ClInclude Include="src\Implementation\CGdtfAttribute.h" />
+    <ClInclude Include="src\Implementation\CGdtfBreak.h" />
+    <ClInclude Include="src\Implementation\CGdtfDmxChannel.h" />
+    <ClInclude Include="src\Implementation\CGdtfDmxChannelFunction.h" />
+    <ClInclude Include="src\Implementation\CGdtfDmxChannelSet.h" />
+    <ClInclude Include="src\Implementation\CGdtfDmxLogicalChannel.h" />
+    <ClInclude Include="src\Implementation\CGdtfDmxMode.h" />
+    <ClInclude Include="src\Implementation\CGdtfDmxRelation.h" />
+    <ClInclude Include="src\Implementation\CGdtfFeature.h" />
+    <ClInclude Include="src\Implementation\CGdtfFeatureGroup.h" />
+    <ClInclude Include="src\Implementation\CGdtfFixture.h" />
+    <ClInclude Include="src\Implementation\CGdtfGeometry.h" />
+    <ClInclude Include="src\Implementation\CGdtfMacro.h" />
+    <ClInclude Include="src\Implementation\CGdtfMeasurementPoint.h" />
+    <ClInclude Include="src\Implementation\CGdtfModel.h" />
+    <ClInclude Include="src\Implementation\CGdtfPhysicalEmitter.h" />
+    <ClInclude Include="src\Implementation\CGdtfRevision.h" />
+    <ClInclude Include="src\Implementation\CGdtfUserPreset.h" />
+    <ClInclude Include="src\Implementation\CGdtfWheel.h" />
+    <ClInclude Include="src\Implementation\CGdtfWheelSlot.h" />
+    <ClInclude Include="src\Implementation\CGdtfWheelSlotPrismFacet.h" />
+    <ClInclude Include="src\Implementation\CGeometryReferenceImpl.h" />
+    <ClInclude Include="src\Implementation\CMediaRessourceVectorImpl.h" />
+    <ClInclude Include="src\Implementation\CPositionImpl.h" />
+    <ClInclude Include="src\Implementation\CSceneDataProviderImpl.h" />
+    <ClInclude Include="src\Implementation\CSceneObjImpl.h" />
+    <ClInclude Include="src\Implementation\CSymDefImpl.h" />
+    <ClInclude Include="src\Implementation\Utility.h" />
+    <ClInclude Include="src\Include\GDTFPrefix.h" />
+    <ClInclude Include="src\Include\IMediaRessourceVectorInterface.h" />
+    <ClInclude Include="src\Include\VectorworksMVR.h" />
+    <ClInclude Include="src\Interface\IFileIdentifier.h" />
+    <ClInclude Include="src\Interface\IFolderIdentifier.h" />
+    <ClInclude Include="src\Interface\IRawOSFile.h" />
+    <ClInclude Include="src\Interface\IStdFile.h" />
+    <ClInclude Include="src\Interface\IXMLFile.h" />
+    <ClInclude Include="src\Interface\IZIPFile.h" />
+    <ClInclude Include="src\MCCoordTypes.h" />
+    <ClInclude Include="src\MCFloat.h" />
+    <ClInclude Include="src\MCMatrix.h" />
+    <ClInclude Include="src\Prefix\CommonPrefix.h" />
+    <ClInclude Include="src\Prefix\DebugPrefix.h" />
+    <ClInclude Include="src\Prefix\ReleasePrefix.h" />
+    <ClInclude Include="src\Prefix\StdAfx.h" />
+    <ClInclude Include="src\Prefix\StdHeaders.h" />
+    <ClInclude Include="src\RGBColor.h" />
+    <ClInclude Include="src\SceneDataExchange.h" />
+    <ClInclude Include="src\sha256\sha256.h" />
+    <ClInclude Include="src\UUID.h" />
+    <ClInclude Include="src\VWLine2D.h" />
+    <ClInclude Include="src\VWLine3D.h" />
+    <ClInclude Include="src\VWMathUtils.h" />
+    <ClInclude Include="src\VWPoint2D.h" />
+    <ClInclude Include="src\VWPoint3D.h" />
+    <ClInclude Include="src\VWTransformMatrix.h" />
+    <ClInclude Include="src\XmlFileHelper.h" />
+    <ClInclude Include="src\XMLLib\ErrorHandler.h" />
+    <ClInclude Include="src\XMLLib\XercesSupport.h" />
+    <ClInclude Include="src\XMLLib\XMLCore.Xerces.h" />
+    <ClInclude Include="src\XMLLib\XMLFileImpl.h" />
+    <ClInclude Include="src\XMLLib\XMLFileNodeImpl.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\BasicMath.X.cpp" />
+    <ClCompile Include="src\CieColor.cpp" />
+    <ClCompile Include="src\GDTFManager.cpp" />
+    <ClCompile Include="src\GSString.cpp" />
+    <ClCompile Include="src\HashManager.cpp" />
+    <ClCompile Include="src\Implementation\CClassImpl.cpp" />
+    <ClCompile Include="src\Implementation\CGdtfActivationGroup.cpp" />
+    <ClCompile Include="src\Implementation\CGdtfAttribute.cpp" />
+    <ClCompile Include="src\Implementation\CGdtfBreak.cpp" />
+    <ClCompile Include="src\Implementation\CGdtfDmxChannel.cpp" />
+    <ClCompile Include="src\Implementation\CGdtfDmxChannelFunction.cpp" />
+    <ClCompile Include="src\Implementation\CGdtfDmxChannelSet.cpp" />
+    <ClCompile Include="src\Implementation\CGdtfDmxLogicalChannel.cpp" />
+    <ClCompile Include="src\Implementation\CGdtfDmxMode.cpp" />
+    <ClCompile Include="src\Implementation\CGdtfDmxRelation.cpp" />
+    <ClCompile Include="src\Implementation\CGdtfFeature.cpp" />
+    <ClCompile Include="src\Implementation\CGdtfFeatureGroup.cpp" />
+    <ClCompile Include="src\Implementation\CGdtfFixture.cpp" />
+    <ClCompile Include="src\Implementation\CGdtfGeometry.cpp" />
+    <ClCompile Include="src\Implementation\CGdtfMacro.cpp" />
+    <ClCompile Include="src\Implementation\CGdtfMeasurementPoint.cpp" />
+    <ClCompile Include="src\Implementation\CGdtfModel.cpp" />
+    <ClCompile Include="src\Implementation\CGdtfPhysicalEmitter.cpp" />
+    <ClCompile Include="src\Implementation\CGdtfRevision.cpp" />
+    <ClCompile Include="src\Implementation\CGdtfUserPreset.cpp" />
+    <ClCompile Include="src\Implementation\CGdtfWheel.cpp" />
+    <ClCompile Include="src\Implementation\CGdtfWheelSlot.cpp" />
+    <ClCompile Include="src\Implementation\CGdtfWheelSlotPrismFacet.cpp" />
+    <ClCompile Include="src\Implementation\CGeometryReferenceImpl.cpp" />
+    <ClCompile Include="src\Implementation\CMediaRessourceVectorImpl.cpp" />
+    <ClCompile Include="src\Implementation\CPositionImpl.cpp" />
+    <ClCompile Include="src\Implementation\CSceneDataProviderImpl.cpp" />
+    <ClCompile Include="src\Implementation\CSceneObjImpl.cpp" />
+    <ClCompile Include="src\Implementation\CSymDefImpl.cpp" />
+    <ClCompile Include="src\Implementation\Utility.cpp" />
+    <ClCompile Include="src\MCCoordTypes.cpp" />
+    <ClCompile Include="src\MCFloat.cpp" />
+    <ClCompile Include="src\MCMatrix.cpp" />
+    <ClCompile Include="src\Minizip\Source\miniz.c" />
+    <ClCompile Include="src\ModuleMain.cpp" />
+    <ClCompile Include="src\RGBColor.cpp" />
+    <ClCompile Include="src\SceneDataExchange.cpp" />
+    <ClCompile Include="src\sha256\sha256.cpp" />
+    <ClCompile Include="src\UUID.cpp" />
+    <ClCompile Include="src\VWLine2D.cpp" />
+    <ClCompile Include="src\VWLine3D.cpp" />
+    <ClCompile Include="src\VWMathUtils.cpp" />
+    <ClCompile Include="src\VWPoint2D.cpp" />
+    <ClCompile Include="src\VWPoint3D.cpp" />
+    <ClCompile Include="src\VWTransformMatrix.cpp" />
+    <ClCompile Include="src\XmlFileHelper.cpp" />
+    <ClCompile Include="src\XMLLib\ErrorHandler.cpp" />
+    <ClCompile Include="src\XMLLib\XMLCore.Xerces.cpp" />
+    <ClCompile Include="src\XMLLib\XMLFileImpl.cpp" />
+    <ClCompile Include="src\XMLLib\XMLFileNodeImpl.cpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{BF7C7ABD-E7E9-4110-AA85-A8452D47126B}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>libVectorworksMvrGdtf</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;LIBVECTORWORKSMVRGDTF_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;LIBVECTORWORKSMVRGDTF_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);GS_WIN;EXPORT_SYMBOLS</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>src/</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;LIBVECTORWORKSMVRGDTF_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;LIBVECTORWORKSMVRGDTF_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);GS_WIN;EXPORT_SYMBOLS</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
