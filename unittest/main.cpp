@@ -2,9 +2,20 @@
 //----- Copyright deersoft 2015 - 2018 www.deersoft.de
 //-----------------------------------------------------------------------------
 #include <iostream>
-#include "TXStringUnittest.h"
-#include "MvrUnittest.h"
 #include "Include/VectorworksMVR.h"
+#include "Unittest.h"
+#include "MvrUnittest.h"
+
+#if defined(GSWIN)
+# include <Shlobj.h>
+# include <Shlwapi.h>
+#elif GS_LIN
+#include <unistd.h>
+#include <sys/types.h>
+#include <pwd.h>
+#elif GS_MAC
+#include <stdio.h> 
+#endif
 
 using namespace VectorworksMVR;
 
@@ -12,18 +23,51 @@ using namespace VectorworksMVR;
 #define 	GDTFFOLDER				"/home/redblue/Dokumente/DEV/libVectorworksMvrGdtf/testfiles/"
 #define		VCOM_SUCCEEDED(x)		(x == 0)
 #define		VCOM_FAILED(x)			(x != 0)
+#define 	_P						
 
 void WriteMVR();
+bool GetFolderAppDataPath(std::string& outPath);
 
-int main()
+int main(int argc, char* argv[])
 {
-	std::cout << "Start Unit Test" << std::endl; 
-	//TXStringUnitTest txStringTest;
-	//bool ret  = txStringTest.RunTest();
+	// Get Current dir
+	std::string base;
+	GetFolderAppDataPath(base);
 
-	WriteMVR();
-	return 0;
+	MvrUnittest mvrTest(base);
+	bool mvrOK = mvrTest.RunTest();
+
+	return (mvrOK == true);
 }
+
+bool GetFolderAppDataPath(std::string& outPath)
+{
+	//--------------------------------------------------------
+	// Implementation for Windows
+#ifdef _WINDOWS
+	// Beware, brain-compiled code ahead!
+	wchar_t buffer[MAX_PATH];
+	HWND hWnd = NULL;
+	
+	BOOL result = SHGetSpecialFolderPath(hWnd, buffer, CSIDL_LOCAL_APPDATA, false );
+	
+	if(!result) return false;
+	outPath = std::string(buffer);
+#elif _LINUX
+	// LINUX_IMPLEMENTATION - done
+	struct passwd *pw = getpwuid(getuid());
+
+	const char *homedir = pw->pw_dir;
+	outPath = std::string(homedir);
+#elif GS_MAC
+	//Implementation for OSX
+	const char *homeDir = getenv("HOME");
+	outPath = std::string(homeDir);
+#endif
+	
+	return true;
+}
+
 
 void WriteMVR()
 {
@@ -54,11 +98,11 @@ void WriteMVR()
 	//------------------------------------------------------------------------------------------------
 	// Now write positions and symdefs
 	IPositionPtr position = nullptr;
-	VCOM_SUCCEEDED(mvrFileWrite->CreatePositionObject(UUID(688696821, 558449194, 2115941252, 1809800703), "My Position", & position));
+	VCOM_SUCCEEDED(mvrFileWrite->CreatePositionObject(MvrUUID(688696821, 558449194, 2115941252, 1809800703), "My Position", & position));
 	
 	
 	ISymDefPtr symDef1 = nullptr;
-	VCOM_SUCCEEDED(mvrFileWrite->CreateSymDefObject(UUID(122079618, 11832014, 669376348, 947930087), "Symbol Definition for the FocusPoint", & symDef1));
+	VCOM_SUCCEEDED(mvrFileWrite->CreateSymDefObject(MvrUUID(122079618, 11832014, 669376348, 947930087), "Symbol Definition for the FocusPoint", & symDef1));
 	
 
 	
@@ -71,26 +115,26 @@ void WriteMVR()
 	
 	// First create a layer
 	ISceneObjPtr layer1 = nullptr;
-	VCOM_SUCCEEDED(mvrFileWrite->CreateLayerObject(UUID(465143117, 742747285, 1361655924, 1172316535), "My Layer 1", & layer1));
+	VCOM_SUCCEEDED(mvrFileWrite->CreateLayerObject(MvrUUID(465143117, 742747285, 1361655924, 1172316535), "My Layer 1", & layer1));
 	
 	// Create two classes
 	IClassPtr clas1 = nullptr;
-	VCOM_SUCCEEDED(mvrFileWrite->CreateClassObject(UUID(122074618, 11852014, 669377348, 947530087), "My first Class", & clas1));
+	VCOM_SUCCEEDED(mvrFileWrite->CreateClassObject(MvrUUID(122074618, 11852014, 669377348, 947530087), "My first Class", & clas1));
 	
 	// Create two classes
 	IClassPtr clas2 = nullptr;
-	VCOM_SUCCEEDED(mvrFileWrite->CreateClassObject(UUID(122774618, 11892014, 669397348, 947530057), "My second Class", & clas2));
+	VCOM_SUCCEEDED(mvrFileWrite->CreateClassObject(MvrUUID(122774618, 11892014, 669397348, 947530057), "My second Class", & clas2));
 	
 	
 	// Create Focus Point
 	ISceneObjPtr focusPoint = nullptr;
-	VCOM_SUCCEEDED(mvrFileWrite->CreateFocusPoint(UUID(1998334672, 457193269, 1786021763, 1463564339), STransformMatrix(), "My FocusPoint", layer1, & focusPoint));
+	VCOM_SUCCEEDED(mvrFileWrite->CreateFocusPoint(MvrUUID(1998334672, 457193269, 1786021763, 1463564339), STransformMatrix(), "My FocusPoint", layer1, & focusPoint));
 	VCOM_SUCCEEDED(focusPoint->AddSymbol(STransformMatrix(), symDef1));
 	VCOM_SUCCEEDED(focusPoint->SetClass(clas1));
 	
 	// And place some fixtures on it
 	ISceneObjPtr fixture1 = nullptr;
-	VCOM_SUCCEEDED(mvrFileWrite->CreateFixture(UUID(1808353427, 683171502, 518343034, 1766902383), STransformMatrix(), "My Fixture Name", layer1, & fixture1));
+	VCOM_SUCCEEDED(mvrFileWrite->CreateFixture(MvrUUID(1808353427, 683171502, 518343034, 1766902383), STransformMatrix(), "My Fixture Name", layer1, & fixture1));
 	
 	VCOM_SUCCEEDED(fixture1->SetGdtfName("Martin@Mac Aura XB"));
 	VCOM_SUCCEEDED(fixture1->SetGdtfMode("Mode 1 v1.1"));
@@ -102,7 +146,7 @@ void WriteMVR()
 	
 	// And another fixture
 	ISceneObjPtr fixture2 = nullptr;
-	VCOM_SUCCEEDED(mvrFileWrite->CreateFixture(UUID(1136161871, 1699151080, 751939975, 1748783014), STransformMatrix(), "My Fixture Name", layer1, & fixture2));
+	VCOM_SUCCEEDED(mvrFileWrite->CreateFixture(MvrUUID(1136161871, 1699151080, 751939975, 1748783014), STransformMatrix(), "My Fixture Name", layer1, & fixture2));
 	
 	VCOM_SUCCEEDED(fixture2->SetGdtfName("Martin@Mac Aura XB"));
 	VCOM_SUCCEEDED(fixture2->SetGdtfMode("My fancy other GDTF DMX Mode"));
@@ -112,11 +156,11 @@ void WriteMVR()
 	
 	// Create second Layer
 	ISceneObjPtr layer2 = nullptr;
-	VCOM_SUCCEEDED(mvrFileWrite->CreateLayerObject(UUID(465143117, 742747285, 1361655924, 1172316535), "My Layer 2", & layer2));
+	VCOM_SUCCEEDED(mvrFileWrite->CreateLayerObject(MvrUUID(465143117, 742747285, 1361655924, 1172316535), "My Layer 2", & layer2));
 	
 	
 	ISceneObjPtr fixture3= nullptr;
-	VCOM_SUCCEEDED(mvrFileWrite->CreateFixture(UUID(1136161871, 1699151080, 751939975, 1748783014), STransformMatrix(), "My Fixture Name", layer2, & fixture3));
+	VCOM_SUCCEEDED(mvrFileWrite->CreateFixture(MvrUUID(1136161871, 1699151080, 751939975, 1748783014), STransformMatrix(), "My Fixture Name", layer2, & fixture3));
 	
 	VCOM_SUCCEEDED(fixture3->SetGdtfName("Martin@Mac Aura XB"));
 	VCOM_SUCCEEDED(fixture3->SetGdtfMode("My fancy other GDTF DMX Mode"));

@@ -11,7 +11,7 @@ namespace VectorworksMVR
 {
 	// ---------------------------------------------------------------------------------------------------
 	#ifdef _WIN32
-		#ifdef VECTORWORKS_MVR_IMPL
+		#ifdef EXPORT_SYMBOLS
 			#define EXPORT_MVR_CLASS			__declspec(dllexport)
 		#else
 			#define EXPORT_MVR_CLASS			__declspec(dllimport)

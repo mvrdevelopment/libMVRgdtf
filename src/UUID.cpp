@@ -26,7 +26,7 @@ namespace windows {
 
 using namespace VWFC;
 
-VWFC::Tools::UUID::UUID(Uint32 a, Uint32 b, Uint32 c, Uint32 d)
+VWFC::Tools::VWUUID::VWUUID(Uint32 a, Uint32 b, Uint32 c, Uint32 d)
 {
 	fData[0]			= (Uint8) (a & 0xFF);
 	fData[1]			= (Uint8) ((a >> 8) & 0xFF);
@@ -46,7 +46,7 @@ VWFC::Tools::UUID::UUID(Uint32 a, Uint32 b, Uint32 c, Uint32 d)
 	fData[15]			= (Uint8) ((d >> 24) & 0xFF);
 }
 
-VWFC::Tools::UUID::UUID(const Uint8* const pArray, size_t size)
+VWFC::Tools::VWUUID::VWUUID(const Uint8* const pArray, size_t size)
 {
 	for(size_t i=0; i<16; i++) {
 		if ( i < size )	fData[i] = pArray[i];
@@ -54,7 +54,7 @@ VWFC::Tools::UUID::UUID(const Uint8* const pArray, size_t size)
 	}
 }
 
-VWFC::Tools::UUID::UUID(const VWIID& iid)
+VWFC::Tools::VWUUID::VWUUID(const VWIID& iid)
 {
 	fData[3]			= (Uint8) (iid.data1 & 0xFF);
 	fData[2]			= (Uint8) ((iid.data1 >> 8) & 0xFF);
@@ -77,24 +77,24 @@ VWFC::Tools::UUID::UUID(const VWIID& iid)
 	fData[ 15 ]	 	= iid.data4[7];
 }
 
-VWFC::Tools::UUID::UUID(const VWFC::Tools::UUID& src)
+VWFC::Tools::VWUUID::VWUUID(const VWFC::Tools::VWUUID& src)
 {
 	for(Sint32 i=0; i<16; i++)
 		fData[i] = src.fData[i];
 }
 
-VWFC::Tools::UUID::~UUID()
+VWFC::Tools::VWUUID::~VWUUID()
 {
 }
 
-VWFC::Tools::UUID& VWFC::Tools::UUID::operator=(const VWFC::Tools::UUID& src)
+VWFC::Tools::VWUUID& VWFC::Tools::VWUUID::operator=(const VWFC::Tools::VWUUID& src)
 {
 	for(Sint32 i=0; i<16; i++)
 		fData[i] = src.fData[i];
 	return *this;
 }
 
-bool VWFC::Tools::UUID::operator==(const VWFC::Tools::UUID& id) const
+bool VWFC::Tools::VWUUID::operator==(const VWFC::Tools::VWUUID& id) const
 {
 	for(Sint32 i=0; i<16; i++) {
 		if ( fData[i] != id.fData[i] )
@@ -103,7 +103,7 @@ bool VWFC::Tools::UUID::operator==(const VWFC::Tools::UUID& id) const
 	return true;
 }
 
-bool VWFC::Tools::UUID::operator!=(const VWFC::Tools::UUID& id) const
+bool VWFC::Tools::VWUUID::operator!=(const VWFC::Tools::VWUUID& id) const
 {
 	return !this->operator==(id);
 }
@@ -132,7 +132,7 @@ static TXString	GetPieceAsText(Uint8 piece)
 }
 
 // {09E95D97-364C-43d5-8ADF-FF4CE0EC41A7}
-VWFC::Tools::UUID::operator TXString() const
+VWFC::Tools::VWUUID::operator TXString() const
 {
 	TXString	str		= "{";
 	str					+= ::GetPieceAsText( fData[0] );
@@ -161,7 +161,7 @@ VWFC::Tools::UUID::operator TXString() const
 	return str;
 }
 
-TXString VWFC::Tools::UUID::ToString(bool includeBrackets) const
+TXString VWFC::Tools::VWUUID::ToString(bool includeBrackets) const
 {
 	TXString	str;
 	if ( includeBrackets ) str = "{";
@@ -217,7 +217,7 @@ static Uint8 GetDigitForPiece(const char* pString)
 	return res;
 }
 
-VWFC::Tools::UUID::UUID(const TXString& str)
+VWFC::Tools::VWUUID::VWUUID(const TXString& str)
 {
 	// {09E95D97-364C-43d5-8ADF-FF4CE0EC41A7}
 	bool	b	= str.GetLength() == 38;
@@ -236,7 +236,7 @@ VWFC::Tools::UUID::UUID(const TXString& str)
 	if ( ! b )
 	{
 		// create new UUID if this is not a valid UUID
-		UUID newUUID;
+		VWUUID newUUID;
 		*this = newUUID;
 	}
 
@@ -263,7 +263,7 @@ VWFC::Tools::UUID::UUID(const TXString& str)
 	}
 }
 
-VWFC::Tools::UUID::UUID()
+VWFC::Tools::VWUUID::VWUUID()
 {
 #ifdef _WINDOWS
 	GUID	guid;
@@ -294,7 +294,7 @@ VWFC::Tools::UUID::UUID()
 #endif
 }
 
-void VWFC::Tools::UUID::GetUUID(Uint32& out1, Uint32& out2, Uint32& out3, Uint32& out4) const
+void VWFC::Tools::VWUUID::GetUUID(Uint32& out1, Uint32& out2, Uint32& out3, Uint32& out4) const
 {
    out1 = (Uint32) ( fData[0] + fData[1] * 256 + fData[2] * 65536 + fData[3] * 16777216 );
    out2 = (Uint32) ( fData[4] + fData[5] * 256 + fData[6] * 65536 + fData[7] * 16777216 );
@@ -302,7 +302,7 @@ void VWFC::Tools::UUID::GetUUID(Uint32& out1, Uint32& out2, Uint32& out3, Uint32
    out4 = (Uint32) ( fData[12] + fData[13] * 256 + fData[14] * 65536 + fData[15] * 16777216 );
 }
 
-void VWFC::Tools::UUID::GetUUID(Uint8* pArray, size_t size) const
+void VWFC::Tools::VWUUID::GetUUID(Uint8* pArray, size_t size) const
 {
 	for(size_t i=0; i<size; i++) {
 		if ( i >= 16 )
@@ -312,7 +312,7 @@ void VWFC::Tools::UUID::GetUUID(Uint8* pArray, size_t size) const
 	}
 }
 
-void VWFC::Tools::UUID::GetUUID(VWIID& out) const
+void VWFC::Tools::VWUUID::GetUUID(VWIID& out) const
 {
     out.data1		= (Sint32)  ( fData[3] + fData[2] * 256 + fData[1] * 65536 + fData[0] * 16777216 );
     out.data2		= (short) ( fData[5] + fData[4] * 256);
@@ -327,7 +327,7 @@ void VWFC::Tools::UUID::GetUUID(VWIID& out) const
 	out.data4[7]	= fData[ 15 ];
 }
 
-TXString VWFC::Tools::UUID::Encode(const TXString& arrChars) const
+TXString VWFC::Tools::VWUUID::Encode(const TXString& arrChars) const
 {
 	const size_t	validCharsCount	= arrChars.GetLength();
 	const size_t	extractCount	= 6;

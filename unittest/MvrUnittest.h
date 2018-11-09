@@ -1,16 +1,20 @@
 //-----------------------------------------------------------------------------
 //----- Copyright deersoft 2015 - 2018 www.deersoft.de
 //-----------------------------------------------------------------------------
+#pragma once
 #include "Unittest.h"
 
 class MvrUnittest : public Unittest
 {
 public:
-    MvrUnittest();
+    MvrUnittest(const std::string& currentDir);
     virtual ~MvrUnittest();
-public:
-	bool virtual RunTest();
+protected:
+    bool virtual ExecuteTest();
 
-public:
-    void checkifEqual(val1, val2)
+private:
+    void WriteFile();
+    void ReadFile();
+
+    std::string fPath;
 };

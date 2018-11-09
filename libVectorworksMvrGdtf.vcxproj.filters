@@ -1,45 +1,459 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Quelldateien">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="src">
+      <UniqueIdentifier>{9c23fda4-a875-4778-a8a5-a415cb1cc36f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Headerdateien">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    <Filter Include="src\XmlLib">
+      <UniqueIdentifier>{89b9b138-2148-4eec-9133-aaae64bb9d1c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Ressourcendateien">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="src\sha256">
+      <UniqueIdentifier>{86c52968-b157-4b0a-82e7-3d9be40d3399}</UniqueIdentifier>
     </Filter>
-    <Filter Include="TXstring">
-      <UniqueIdentifier>{d7536a55-c42c-43ff-8f4d-c3103ba0a994}</UniqueIdentifier>
+    <Filter Include="src\Implementation">
+      <UniqueIdentifier>{54888928-2930-4f3d-aa51-bdf8be9d91f7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Prefix">
-      <UniqueIdentifier>{6296b42b-0bb7-43fa-9aeb-33b4ee2abb95}</UniqueIdentifier>
+    <Filter Include="src\Include">
+      <UniqueIdentifier>{f3d50a07-cd3c-4774-976c-daf81091b4a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Interface">
+      <UniqueIdentifier>{480895af-bf90-429a-8a31-0708a3e13054}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Prefix">
+      <UniqueIdentifier>{b77792d0-d9d3-4c19-8314-355bd7e0d4df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Wrapper">
+      <UniqueIdentifier>{b9f64660-55d4-4675-b964-2e9130ed5581}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\GSIntTypes.h">
-      <Filter>Prefix</Filter>
+    <ClInclude Include="src\Implementation\CGdtfFixture.h">
+      <Filter>src\Implementation</Filter>
     </ClInclude>
-    <ClInclude Include="src\GSTypes.h">
-      <Filter>Prefix</Filter>
+    <ClInclude Include="src\Implementation\CGdtfGeometry.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Implementation\CGdtfMacro.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Implementation\CGdtfMeasurementPoint.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Implementation\CGdtfModel.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Implementation\CGdtfPhysicalEmitter.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Implementation\CGdtfRevision.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Implementation\CGdtfUserPreset.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Implementation\CGdtfWheel.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Implementation\CGdtfWheelSlot.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Implementation\CGdtfWheelSlotPrismFacet.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Implementation\CGeometryReferenceImpl.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Implementation\CMediaRessourceVectorImpl.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Implementation\CPositionImpl.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Implementation\CSceneDataProviderImpl.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Implementation\CSceneObjImpl.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Implementation\CSymDefImpl.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Implementation\Utility.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Implementation\CClassImpl.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Implementation\CGdtfActivationGroup.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Implementation\CGdtfAttribute.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Implementation\CGdtfBreak.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Implementation\CGdtfDmxChannel.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Implementation\CGdtfDmxChannelFunction.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Implementation\CGdtfDmxChannelSet.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Implementation\CGdtfDmxLogicalChannel.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Implementation\CGdtfDmxMode.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Implementation\CGdtfDmxRelation.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Implementation\CGdtfFeature.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Implementation\CGdtfFeatureGroup.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Include\IMediaRessourceVectorInterface.h">
+      <Filter>src\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Include\VectorworksMVR.h">
+      <Filter>src\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Include\GDTFPrefix.h">
+      <Filter>src\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Interface\IFolderIdentifier.h">
+      <Filter>src\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Interface\IRawOSFile.h">
+      <Filter>src\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Interface\IStdFile.h">
+      <Filter>src\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Interface\IXMLFile.h">
+      <Filter>src\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Interface\IZIPFile.h">
+      <Filter>src\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Interface\IFileIdentifier.h">
+      <Filter>src\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Prefix\CommonPrefix.h">
+      <Filter>src\Prefix</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Prefix\DebugPrefix.h">
+      <Filter>src\Prefix</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Prefix\ReleasePrefix.h">
+      <Filter>src\Prefix</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Prefix\StdAfx.h">
+      <Filter>src\Prefix</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Prefix\StdHeaders.h">
+      <Filter>src\Prefix</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sha256\sha256.h">
+      <Filter>src\sha256</Filter>
+    </ClInclude>
+    <ClInclude Include="src\XMLLib\ErrorHandler.h">
+      <Filter>src\XmlLib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\XMLLib\XercesSupport.h">
+      <Filter>src\XmlLib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\XMLLib\XMLCore.Xerces.h">
+      <Filter>src\XmlLib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\XMLLib\XMLFileImpl.h">
+      <Filter>src\XmlLib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\XMLLib\XMLFileNodeImpl.h">
+      <Filter>src\XmlLib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\BasicMath.X.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CieColor.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FolderSpecifiers.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GDTFManager.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GSDebug.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GSIntTypes.h">
+      <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\GSString.h">
-      <Filter>TXstring</Filter>
+      <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\StdHeaders.h">
-      <Filter>Prefix</Filter>
+    <ClInclude Include="src\GSTypes.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GSUtil.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\HashManager.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MCCoordTypes.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MCFloat.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MCMatrix.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RGBColor.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SceneDataExchange.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UUID.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VWLine2D.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VWLine3D.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VWMathUtils.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VWPoint2D.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VWPoint3D.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VWTransformMatrix.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\XmlFileHelper.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Wrapper\FileIdentifier.h">
+      <Filter>src\Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Wrapper\FilingWrapper.h">
+      <Filter>src\Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Wrapper\FolderIdentifier.h">
+      <Filter>src\Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Wrapper\PluginResource.h">
+      <Filter>src\Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Wrapper\RawOSFileimpl.h">
+      <Filter>src\Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Wrapper\TDQuickDraw.h">
+      <Filter>src\Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Wrapper\UTranslateFiles.h">
+      <Filter>src\Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Wrapper\ZIPFileImpl.h">
+      <Filter>src\Wrapper</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\GSString.cpp">
-      <Filter>TXstring</Filter>
+    <ClCompile Include="src\Implementation\CClassImpl.cpp">
+      <Filter>src\Implementation</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Makefile" />
+    <ClCompile Include="src\Implementation\CGdtfActivationGroup.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Implementation\CGdtfAttribute.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Implementation\CGdtfBreak.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Implementation\CGdtfDmxChannel.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Implementation\CGdtfDmxChannelFunction.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Implementation\CGdtfDmxChannelSet.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Implementation\CGdtfDmxLogicalChannel.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Implementation\CGdtfDmxMode.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Implementation\CGdtfDmxRelation.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Implementation\CGdtfFeature.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Implementation\CGdtfFeatureGroup.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Implementation\CGdtfFixture.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Implementation\CGdtfGeometry.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Implementation\CGdtfMacro.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Implementation\CGdtfMeasurementPoint.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Implementation\CGdtfModel.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Implementation\CGdtfPhysicalEmitter.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Implementation\CGdtfRevision.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Implementation\CGdtfUserPreset.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Implementation\CGdtfWheel.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Implementation\CGdtfWheelSlot.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Implementation\CGdtfWheelSlotPrismFacet.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Implementation\CGeometryReferenceImpl.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Implementation\CMediaRessourceVectorImpl.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Implementation\CPositionImpl.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Implementation\CSceneDataProviderImpl.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Implementation\CSceneObjImpl.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Implementation\CSymDefImpl.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Implementation\Utility.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sha256\sha256.cpp">
+      <Filter>src\sha256</Filter>
+    </ClCompile>
+    <ClCompile Include="src\XMLLib\XMLCore.Xerces.cpp">
+      <Filter>src\XmlLib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\XMLLib\XMLFileImpl.cpp">
+      <Filter>src\XmlLib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\XMLLib\XMLFileNodeImpl.cpp">
+      <Filter>src\XmlLib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\XMLLib\ErrorHandler.cpp">
+      <Filter>src\XmlLib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BasicMath.X.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CieColor.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GDTFManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GSString.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\HashManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MCCoordTypes.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MCFloat.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MCMatrix.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ModuleMain.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RGBColor.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SceneDataExchange.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UUID.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VWLine2D.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VWLine3D.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VWMathUtils.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VWPoint2D.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VWPoint3D.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VWTransformMatrix.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\XmlFileHelper.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Wrapper\FileIdentifier.cpp">
+      <Filter>src\Wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Wrapper\FilingWrapper.cpp">
+      <Filter>src\Wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Wrapper\FolderIdentifier.cpp">
+      <Filter>src\Wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Wrapper\RawOSFileimpl.cpp">
+      <Filter>src\Wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Wrapper\TDQuickDraw.cpp">
+      <Filter>src\Wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Wrapper\UTranslateFiles.cpp">
+      <Filter>src\Wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Wrapper\ZIPFileImpl.cpp">
+      <Filter>src\Wrapper</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

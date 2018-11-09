@@ -9,7 +9,7 @@
 using namespace VectorWorks::Filing;
 using namespace VectorworksMVR::GdtfDefines;
 
-typedef VWFC::Tools::UUID	GdtfFixtureGUID;
+typedef VWFC::Tools::VWUUID	GdtfFixtureGUID;
 typedef TXString			GdtfPNGFile;
 typedef TXString			Gdtf3DSFile;
 
@@ -1219,7 +1219,7 @@ namespace SceneData
 		void				SetShortName(const TXString& shortName);
 		void				SetManufacturer(const TXString& manu);
 		void				SetFixtureTypeDescription(const TXString& desc);
-		void				SetGuid(const VWFC::Tools::UUID& uuid);
+		void				SetGuid(const VWFC::Tools::VWUUID& uuid);
 		void				SetPNGFile(const GdtfPNGFile& png);
 		
 	public:

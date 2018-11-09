@@ -19,7 +19,7 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetType(ESceneObjType& outType);
 		
 		virtual MvrString VCOM_CALLTYPE		GetName();
-		virtual VCOMError VCOM_CALLTYPE		GetGuid(UUID& outGuid);
+		virtual VCOMError VCOM_CALLTYPE		GetGuid(MvrUUID& outGuid);
 		
 		virtual VCOMError VCOM_CALLTYPE		GetTransfromMatrix(STransformMatrix& outName);
 		virtual VCOMError VCOM_CALLTYPE		GetGeometryCount(size_t& outCount);

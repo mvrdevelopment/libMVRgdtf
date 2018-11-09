@@ -17,7 +17,7 @@ namespace VectorworksMVR
 		
         virtual VCOMError VCOM_CALLTYPE		ReadFromFile(MvrString fullPath);
 		
-		virtual VCOMError VCOM_CALLTYPE		OpenForWrite(MvrString fullPath, MvrString name, MvrString manufacturer, const UUID& uuid);
+		virtual VCOMError VCOM_CALLTYPE		OpenForWrite(MvrString fullPath, MvrString name, MvrString manufacturer, const MvrUUID& uuid);
 		virtual VCOMError VCOM_CALLTYPE		AddFileToGdtfFile(MvrString fullPath);
 		virtual VCOMError VCOM_CALLTYPE		Close();
 		
@@ -25,7 +25,7 @@ namespace VectorworksMVR
         virtual MvrString VCOM_CALLTYPE		GetShortName();
         virtual MvrString VCOM_CALLTYPE     GetManufacturer();
         virtual MvrString VCOM_CALLTYPE     GetFixtureTypeDescription();
-        virtual VCOMError VCOM_CALLTYPE     GetFixtureGUID(UUID& uuid);
+        virtual VCOMError VCOM_CALLTYPE     GetFixtureGUID(MvrUUID& uuid);
         virtual MvrString VCOM_CALLTYPE     GetFixtureThumbnail();
 		virtual MvrString VCOM_CALLTYPE     GetFixtureThumbnailFullPath();
 		
