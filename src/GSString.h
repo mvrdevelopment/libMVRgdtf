@@ -363,6 +363,10 @@ public:
 	std::string GetStdString(ETXEncoding e = ETXEncoding::eUTF8) const;
 	std::wstring GetStdWString() const;
 
+#if GS_MAC
+	CFStringRef GetCFStringRef() const;
+#endif
+	
 
 	//***********************************************************************************
 	// Copying data into external buffer

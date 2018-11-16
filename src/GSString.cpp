@@ -890,9 +890,17 @@ TXString& TXString::operator+=(wchar_t w)
 	stdUStr += w;
 #elif GS_LIN
 	stdUStr += w;
-	//TODO
 #else
-	//TODO
+		if((int) w <= 0xffff)
+	{
+		stdUStr += (TXChar) w;
+	}
+	else
+	{
+		UCChar u[3];
+		utf32ToTXCharBuffer(w, u);
+		stdUStr += u;
+	}
 #endif
 
 	return *this;
@@ -1187,7 +1195,31 @@ TXString& TXString::Insert(size_t pos, wchar_t w)
 		stdUStr.append(1, w);
 	}
 #else
-	//TODO
+	if((int) w <= 0xffff)
+	{
+		if(pos < stdUStr.length())
+		{
+			stdUStr.insert(pos, 1, (TXChar) w);
+		}
+		else
+		{
+			stdUStr.append(1, (TXChar) w);
+		}
+	}
+	else
+	{
+		UCChar u[3];
+		utf32ToTXCharBuffer(w, u);
+		
+		if(pos < stdUStr.length())
+		{
+			stdUStr.insert(pos, u);
+		}
+		else
+		{
+			stdUStr.append(u);
+		}
+	}
 #endif
 
 	return *this;
@@ -1373,7 +1405,21 @@ TXString& TXString::MakeUpper()
 	// LINUX_IMPLEMENTATION - done
 	std::transform(stdUStr.begin(), stdUStr.end(), stdUStr.begin(), ::toupper);
 #else
-	//TODO
+	size_t len = stdUStr.size();
+
+	CFMutableStringRef	cfUniStr = CFStringCreateMutableWithExternalCharactersNoCopy(
+																			kCFAllocatorDefault, 
+																			(UCChar*)stdUStr.data(), 
+																			len, 
+																			len, 
+																			kCFAllocatorNull);
+
+	if (cfUniStr) 
+	{
+		// If there is issue with nil, try CFLocaleCopyCurrent or CFLocaleCopyPreferredLanguages
+		CFStringUppercase(cfUniStr, nil);
+		CFRelease(cfUniStr);
+	}
 #endif
 
 	return *this;
@@ -1389,7 +1435,21 @@ TXString& TXString::MakeLower()
 	// LINUX_IMPLEMENTATION - done
 	std::transform(stdUStr.begin(), stdUStr.end(), stdUStr.begin(), ::tolower);
 #else
-	//TODO
+	size_t len = stdUStr.size();
+
+	CFMutableStringRef	cfUniStr = CFStringCreateMutableWithExternalCharactersNoCopy(
+																			kCFAllocatorDefault, 
+																			(UniChar*)stdUStr.data(), 
+																			len, 
+																			len, 
+																			kCFAllocatorNull);
+
+	if (cfUniStr) 
+	{
+		// If there is issue with nil, try CFLocaleCopyCurrent or CFLocaleCopyPreferredLanguages
+		CFStringLowercase(cfUniStr, nil);
+		CFRelease(cfUniStr);
+	}
 #endif
 
 	return *this;
@@ -1537,6 +1597,15 @@ std::wstring TXString::GetStdWString() const
 #endif
 }
 
+//=======================================================================================
+// Returns a CFStringRef. The client is responsible of releasing the returned ref.
+#if GS_MAC
+CFStringRef TXString::GetCFStringRef() const
+{
+	return CFStringCreateWithCharacters(NULL, stdUStr.data(), stdUStr.length());
+}
+#endif
+
 //***************************************************************************************
 // Copying data into external buffer
 //***************************************************************************************
@@ -1671,7 +1740,7 @@ void TXString::CopyInto(wchar_t* dst, size_t bufElemSize) const
 			dst[bufElemSize - 1] = 0;
 		}
 #else
-		// TODO
+		txCharBufferToUtf32Buffer(stdUStr.data(), (char32_t*)dst, bufElemSize);
 #endif
 	}
 }
@@ -2062,7 +2131,7 @@ TXString& TXString::ftoa(Real64 value, Sint32 precision)
 	// LINUX_IMPLEMENTATION - done
 	return std::ispunct(aTXChar);
 #else
-	//TODO
+	return std::ispunct(aTXChar);
 #endif
 }
 
@@ -2122,8 +2191,22 @@ Sint32 TXString::CompareNoCase(const TXString &str) const
 
 	return str1.compare(str2);
 #else
-	//TODO
-	return false;
+	CFStringRef cs1 = this->GetCFStringRef();
+    CFStringRef cs2 = str.GetCFStringRef();
+	
+	ASSERTN(kBWilliams, cs1 && cs2);
+	if(cs1 && cs2)
+	{
+		CFComparisonResult result = CFStringCompare(cs1, cs2, kCFCompareCaseInsensitive);
+		CFRelease(cs1);
+		CFRelease(cs2);
+		return result;
+	}
+	
+	if(cs1) CFRelease(cs1);
+	if(cs2) CFRelease(cs2);
+	
+    return Compare(str);  // if error converting to CFString, that's pretty bad - use regular Compare as backup... 
 #endif
 }
 
@@ -2308,7 +2391,74 @@ void TXString::PrepareCharBuffer(ETXEncoding encoding) const
 		charPtr[i] = str[i];
 	charPtr[strLen] = 0;
 #else 
-	// TODO
+	
+	// Prepare enough memory for all cases
+	if(charBufSize < 4 * stdUStr.length() + 1) 
+	{
+		charBufSize = 4 * (int)stdUStr.length() + 1;	// 1 is reserved for terminal character.
+	
+		// Delete existing pointer
+		if(charPtr)  { ::operator delete(charPtr); charPtr = nullptr; }
+		// Try to allocate new memprs
+		try
+		{
+			charPtr = (char*)::operator new(charBufSize);
+		}
+		catch(std::bad_alloc) 
+		{
+			ASSERTN(false, "Allocate new failed (exception)");
+			charPtr = nullptr;
+		}
+
+	}
+	// Create a CFString to do the conversion
+	CFStringRef cfStr = CFStringCreateWithCharactersNoCopy(kCFAllocatorDefault,
+		stdUStr.data(),
+		stdUStr.length(),
+		kCFAllocatorNull);
+
+	if(cfStr)
+	{
+		CFStringEncoding cfStrEncoding = kCFStringEncodingUTF8;	// Default for eUTF8 and eUnknown
+		
+		if(encoding == ETXEncoding::eMacEncoded || encoding == ETXEncoding::eSysEncoded)
+		{
+			cfStrEncoding = CFStringGetSystemEncoding();
+		}
+		/* 
+		// I have removed this for now MS 11/16/18
+		else if(encoding == ETXEncoding::eWinEncoded)
+		{
+			static const bool bIsFarEast = [[[NSLocale preferredLanguages] objectAtIndex:0] hasPrefix:@"ja"]
+										|| [[[NSLocale preferredLanguages] objectAtIndex:0] hasPrefix:@"zh-Hans"];
+
+			if(bIsFarEast)	// Win and Mac encodings are the same in Japanese and Chinese environments.
+			{
+				cfStrEncoding = CFStringGetSystemEncoding();
+			}
+			else
+			{
+				cfStrEncoding = kCFStringEncodingWindowsLatin1;
+			}
+		}
+		*/
+
+		CFIndex usedBufLen = 0;
+		
+		CFStringGetBytes(cfStr,
+						 CFRangeMake(0, CFStringGetLength(cfStr)),
+						 cfStrEncoding,
+						 '?',
+						 false,
+						 (UInt8*)charPtr,
+						 charBufSize - 1,	// Reserved one byte for terminal character
+						 &usedBufLen);
+		
+		charPtr[usedBufLen] = 0;			// Add terminal character to the end.
+		
+		CFRelease(cfStr);
+	}
+
 #endif
 
 }
