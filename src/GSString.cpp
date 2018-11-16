@@ -32,6 +32,11 @@
 
 #include "GSString.h"
 
+inline void utf32ToTXCharBuffer(char32_t input, TXChar* output);
+inline void utf32BufferToTXCharBuffer(const char32_t* input, TXChar* output, size_t numInputChars = -1);
+inline void txCharBufferToUtf32Buffer(const TXChar* input, char32_t* output, size_t bufElemNum = -1);
+inline void utf8BufferToTXCharBuffer(const char* const input, TXChar* output, size_t inputLen);
+
 //#######################################################################################
 // TXString class
 //#######################################################################################
@@ -111,7 +116,9 @@ TXString::TXString(const std::wstring& src)
 	: charPtr(nullptr)
 	, charBufSize(0)
 {
-	//TODO
+	std::unique_ptr<TXChar[]> ucchars(new TXChar[src.length() * 2 + 1]);
+	utf32BufferToTXCharBuffer((const char32_t*)src.data(), ucchars.get());
+	stdUStr = ucchars.get();
 }
 #endif
 
@@ -231,7 +238,9 @@ TXString::TXString(const wchar_t* src)
 
 		stdUStr = result;
 #else
-		//TODO
+		std::unique_ptr<TXChar[]> ucchars(new TXChar[wcslen(src) * 2 + 1]);
+		utf32BufferToTXCharBuffer((const char32_t*)src, ucchars.get());
+		stdUStr = ucchars.get();
 #endif
 	}
 }
@@ -265,7 +274,9 @@ TXString::TXString(const wchar_t* src, size_t numWChars)
 
 		stdUStr = result;
 #else
-		//TODO
+		std::unique_ptr<TXChar[]> txChars(new TXChar[ length * 2 + 1]);
+		utf32BufferToTXCharBuffer((const char32_t*)src, txChars.get(), length);
+		stdUStr = txChars.get();
 #endif
 	}
 }
@@ -320,7 +331,20 @@ TXString::TXString(wchar_t w, size_t count /* 1 */)
 	: charPtr(nullptr)
 	, charBufSize(0)
 {
-	//TODO
+	if((int)w <= 0xffff)
+	{
+		stdUStr.assign(count, (TXChar) w);
+	}
+	else
+	{
+		UCChar u[3];
+		utf32ToTXCharBuffer((char32_t)w, u);
+
+		for(int i = 0; i < count; ++i)
+		{
+			stdUStr.append(u);
+		}
+	}
 }
 #endif
 
@@ -380,7 +404,9 @@ TXString& TXString::operator=(const std::wstring& src)
 
 	stdUStr = result;
 #else
-	//TODO
+	std::unique_ptr<TXChar[]> ucChars(new TXChar[src.length() * 2 + 1]);
+	utf32BufferToTXCharBuffer((const char32_t*)src.data(), ucChars.get());
+	stdUStr = ucChars.get();
 #endif
 	return *this;
 }
@@ -496,7 +522,16 @@ TXString& TXString::operator=(wchar_t w)
 	// TODO
 	stdUStr = w;
 #else
-	// TODO
+		if((int) w <= 0xffff)
+	{
+		stdUStr = (TXChar) w;
+	}
+	else
+	{
+		UCChar u[3];
+		utf32ToTXCharBuffer((char32_t)w, u);
+		stdUStr = u;
+	}
 #endif
 
 	return *this;
@@ -540,25 +575,6 @@ size_t TXString::GetEncodingLength(ETXEncoding e) const
 	}
 
 	return encodingLen;
-}
-
-//=======================================================================================
-// Return width in number of standard character width.
-size_t TXString::GetWidthInNumOfStdChar() const
-{
-	// Set default value of width to the number of UTF-16 characters.
-	size_t widthInNumOfStdChar = stdUStr.length();
-
-#if GS_WIN
-	//TODO
-#elif GS_LIN
-	//TODO
-#else
-	//TODO
-#endif
-
-	// Return width in number of 'a' width.
-	return widthInNumOfStdChar;
 }
 
 //=======================================================================================
@@ -855,9 +871,17 @@ TXString& TXString::operator+=(wchar_t w)
 	stdUStr += w;
 #elif GS_LIN
 	stdUStr += w;
-	//TODO
 #else
-	//TODO
+		if((int) w <= 0xffff)
+	{
+		stdUStr += (TXChar) w;
+	}
+	else
+	{
+		UCChar u[3];
+		utf32ToTXCharBuffer(w, u);
+		stdUStr += u;
+	}
 #endif
 
 	return *this;
@@ -1152,7 +1176,31 @@ TXString& TXString::Insert(size_t pos, wchar_t w)
 		stdUStr.append(1, w);
 	}
 #else
-	//TODO
+	if((int) w <= 0xffff)
+	{
+		if(pos < stdUStr.length())
+		{
+			stdUStr.insert(pos, 1, (TXChar) w);
+		}
+		else
+		{
+			stdUStr.append(1, (TXChar) w);
+		}
+	}
+	else
+	{
+		UCChar u[3];
+		utf32ToTXCharBuffer(w, u);
+		
+		if(pos < stdUStr.length())
+		{
+			stdUStr.insert(pos, u);
+		}
+		else
+		{
+			stdUStr.append(u);
+		}
+	}
 #endif
 
 	return *this;
@@ -1338,7 +1386,21 @@ TXString& TXString::MakeUpper()
 	// LINUX_IMPLEMENTATION - done
 	std::transform(stdUStr.begin(), stdUStr.end(), stdUStr.begin(), ::toupper);
 #else
-	//TODO
+	size_t len = stdUStr.size();
+
+	CFMutableStringRef	cfUniStr = CFStringCreateMutableWithExternalCharactersNoCopy(
+																			kCFAllocatorDefault, 
+																			(UCChar*)stdUStr.data(), 
+																			len, 
+																			len, 
+																			kCFAllocatorNull);
+
+	if (cfUniStr) 
+	{
+		// If there is issue with nil, try CFLocaleCopyCurrent or CFLocaleCopyPreferredLanguages
+		CFStringUppercase(cfUniStr, nil);
+		CFRelease(cfUniStr);
+	}
 #endif
 
 	return *this;
@@ -1354,7 +1416,21 @@ TXString& TXString::MakeLower()
 	// LINUX_IMPLEMENTATION - done
 	std::transform(stdUStr.begin(), stdUStr.end(), stdUStr.begin(), ::tolower);
 #else
-	//TODO
+	size_t len = stdUStr.size();
+
+	CFMutableStringRef	cfUniStr = CFStringCreateMutableWithExternalCharactersNoCopy(
+																			kCFAllocatorDefault, 
+																			(UniChar*)stdUStr.data(), 
+																			len, 
+																			len, 
+																			kCFAllocatorNull);
+
+	if (cfUniStr) 
+	{
+		// If there is issue with nil, try CFLocaleCopyCurrent or CFLocaleCopyPreferredLanguages
+		CFStringLowercase(cfUniStr, nil);
+		CFRelease(cfUniStr);
+	}
 #endif
 
 	return *this;
@@ -1376,37 +1452,6 @@ TXString& TXString::MakeReverse()
 
 	return *this;
 }
-
-//=======================================================================================
-// Make sure the string is in precomposed form. Return itself.
-TXString& TXString::ToPrecomposed()
-{
-#if GS_WIN
-	//TODO
-#elif GS_LIN
-	// LINUX_IMPLEMENTATION
-#else	// Mac
-	//TODO
-#endif
-
-	return *this;
-}
-
-//=======================================================================================
-// Makek sure the string is in decomposed form. Return itself.
-TXString& TXString::ToDecomposed()
-{
-#if GS_WIN
-	//TODO
-#elif GS_LIN
-	// LINUX_IMPLEMENTATION
-#else	// Mac
-	//TODO
-#endif
-
-	return *this;
-}
-
 
 //***************************************************************************************
 // Getting data and casting
@@ -1501,6 +1546,15 @@ std::wstring TXString::GetStdWString() const
 	return converter.from_bytes((const char*)stdUStr.data(), (const char*)(stdUStr.data() + stdUStr.length()));
 #endif
 }
+
+//=======================================================================================
+// Returns a CFStringRef. The client is responsible of releasing the returned ref.
+#if GS_MAC
+CFStringRef TXString::GetCFStringRef() const
+{
+	return CFStringCreateWithCharacters(NULL, stdUStr.data(), stdUStr.length());
+}
+#endif
 
 //***************************************************************************************
 // Copying data into external buffer
@@ -1636,7 +1690,7 @@ void TXString::CopyInto(wchar_t* dst, size_t bufElemSize) const
 			dst[bufElemSize - 1] = 0;
 		}
 #else
-		// TODO
+		txCharBufferToUtf32Buffer(stdUStr.data(), (char32_t*)dst, bufElemSize);
 #endif
 	}
 }
@@ -2027,7 +2081,7 @@ TXString& TXString::ftoa(Real64 value, Sint32 precision)
 	// LINUX_IMPLEMENTATION - done
 	return std::ispunct(aTXChar);
 #else
-	//TODO
+	return std::ispunct(aTXChar);
 #endif
 }
 
@@ -2087,8 +2141,22 @@ Sint32 TXString::CompareNoCase(const TXString &str) const
 
 	return str1.compare(str2);
 #else
-	//TODO
-	return false;
+	CFStringRef cs1 = this->GetCFStringRef();
+    CFStringRef cs2 = str.GetCFStringRef();
+	
+	ASSERTN(kBWilliams, cs1 && cs2);
+	if(cs1 && cs2)
+	{
+		CFComparisonResult result = CFStringCompare(cs1, cs2, kCFCompareCaseInsensitive);
+		CFRelease(cs1);
+		CFRelease(cs2);
+		return result;
+	}
+	
+	if(cs1) CFRelease(cs1);
+	if(cs2) CFRelease(cs2);
+	
+    return Compare(str);  // if error converting to CFString, that's pretty bad - use regular Compare as backup... 
 #endif
 }
 
@@ -2273,7 +2341,74 @@ void TXString::PrepareCharBuffer(ETXEncoding encoding) const
 		charPtr[i] = str[i];
 	charPtr[strLen] = 0;
 #else 
-	// TODO
+	
+	// Prepare enough memory for all cases
+	if(charBufSize < 4 * stdUStr.length() + 1) 
+	{
+		charBufSize = 4 * (int)stdUStr.length() + 1;	// 1 is reserved for terminal character.
+	
+		// Delete existing pointer
+		if(charPtr)  { ::operator delete(charPtr); charPtr = nullptr; }
+		// Try to allocate new memprs
+		try
+		{
+			charPtr = (char*)::operator new(charBufSize);
+		}
+		catch(std::bad_alloc) 
+		{
+			ASSERTN(false, "Allocate new failed (exception)");
+			charPtr = nullptr;
+		}
+
+	}
+	// Create a CFString to do the conversion
+	CFStringRef cfStr = CFStringCreateWithCharactersNoCopy(kCFAllocatorDefault,
+		stdUStr.data(),
+		stdUStr.length(),
+		kCFAllocatorNull);
+
+	if(cfStr)
+	{
+		CFStringEncoding cfStrEncoding = kCFStringEncodingUTF8;	// Default for eUTF8 and eUnknown
+		
+		if(encoding == ETXEncoding::eMacEncoded || encoding == ETXEncoding::eSysEncoded)
+		{
+			cfStrEncoding = CFStringGetSystemEncoding();
+		}
+		/* 
+		// I have removed this for now MS 11/16/18
+		else if(encoding == ETXEncoding::eWinEncoded)
+		{
+			static const bool bIsFarEast = [[[NSLocale preferredLanguages] objectAtIndex:0] hasPrefix:@"ja"]
+										|| [[[NSLocale preferredLanguages] objectAtIndex:0] hasPrefix:@"zh-Hans"];
+
+			if(bIsFarEast)	// Win and Mac encodings are the same in Japanese and Chinese environments.
+			{
+				cfStrEncoding = CFStringGetSystemEncoding();
+			}
+			else
+			{
+				cfStrEncoding = kCFStringEncodingWindowsLatin1;
+			}
+		}
+		*/
+
+		CFIndex usedBufLen = 0;
+		
+		CFStringGetBytes(cfStr,
+						 CFRangeMake(0, CFStringGetLength(cfStr)),
+						 cfStrEncoding,
+						 '?',
+						 false,
+						 (UInt8*)charPtr,
+						 charBufSize - 1,	// Reserved one byte for terminal character
+						 &usedBufLen);
+		
+		charPtr[usedBufLen] = 0;			// Add terminal character to the end.
+		
+		CFRelease(cfStr);
+	}
+
 #endif
 
 }
@@ -2300,7 +2435,44 @@ void TXString::SetStdUStrFromCharBuffer(const char* src, size_t srcLenToUse, ETX
 	std::string strSrc = std::string(src, strLen);
 	stdUStr = converter.from_bytes(strSrc);
 #else	// Mac
-	//TODO
+	if(encoding == ETXEncoding::eUTF8)
+	{
+		std::unique_ptr<TXChar[]> txChars(new TXChar[strLen + 1]);
+		utf8BufferToTXCharBuffer(src, txChars.get(), strLen);
+		stdUStr = txChars.get();
+	}
+	else
+	{
+		CFStringEncoding selectedEncoding = CFStringGetSystemEncoding();
+
+		if(encoding == ETXEncoding::eWinEncoded)
+		{
+			selectedEncoding = kCFStringEncodingWindowsLatin1;
+		}
+
+		CFStringRef cfStr = CFStringCreateWithBytes(kCFAllocatorDefault,
+			(const UInt8*)src,
+			strLen,
+			selectedEncoding,
+			false);
+
+		if (cfStr)
+		{
+			CFIndex cfStrLen = CFStringGetLength(cfStr);
+			CFRange cfStrRange = CFRangeMake(0, cfStrLen);
+
+			std::unique_ptr<UniChar[]> uniChars(new UniChar[cfStrLen + 1]);
+			CFStringGetCharacters(cfStr, cfStrRange, uniChars.get());
+			uniChars[cfStrLen] = '\0';
+			stdUStr = uniChars.get();
+			CFRelease(cfStr);
+		}
+		else
+		{
+			//DSTOP((kPChang, "Error in TXString::SetStdUStrFromCharBuffer(...)"));
+		}
+	}
+
 #endif
 }
 

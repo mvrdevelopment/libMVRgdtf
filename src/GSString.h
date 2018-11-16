@@ -23,6 +23,7 @@
 #define txu(string) L##string
 #define txuc(string) L##string
 #else
+#include <CoreFoundation/CoreFoundation.h>
 #define txu(string) (const UCChar*)u##string
 #define txuc(ch) (const UCChar)u##ch
 #endif
@@ -217,8 +218,6 @@ public:
 	TXString& Truncate(size_t len);
 	TXString& Clear();
 
-	size_t GetWidthInNumOfStdChar() const;	// Get width in number of standard character width.
-
 	//***********************************************************************************
 	// Element access
 	//***********************************************************************************
@@ -333,11 +332,6 @@ public:
 	// Reverse the string.
 	TXString& MakeReverse();
 
-	// Conversion to a Unicode normalization form
-	TXString& ToPrecomposed();
-	TXString& ToDecomposed();
-
-
 	//***********************************************************************************
 	// Getting data and casting
 	//***********************************************************************************
@@ -362,6 +356,10 @@ public:
 	std::string GetStdString(ETXEncoding e = ETXEncoding::eUTF8) const;
 	std::wstring GetStdWString() const;
 
+#if GS_MAC
+	CFStringRef GetCFStringRef() const;
+#endif
+	
 
 	//***********************************************************************************
 	// Copying data into external buffer
