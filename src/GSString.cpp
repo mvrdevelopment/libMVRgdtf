@@ -316,7 +316,6 @@ TXString::TXString(wchar_t ch, size_t count /* 1 */)
 	, charPtr(nullptr)
 	, charBufSize(0)
 {
-	//TODO
 }
 #elif GS_LIN
 TXString::TXString(wchar_t ch, size_t count /* 1 */)
@@ -324,7 +323,6 @@ TXString::TXString(wchar_t ch, size_t count /* 1 */)
 	, charPtr(nullptr)
 	, charBufSize(0)
 {
-	//TODO
 }
 #else
 TXString::TXString(wchar_t w, size_t count /* 1 */)
@@ -1381,7 +1379,7 @@ TXString& TXString::Replace(const TXString& oldStr, const TXString& newStr, bool
 TXString& TXString::MakeUpper()
 {
 #if GS_WIN
-	//TODO
+    CharUpperBuffW((LPWSTR)stdUStr.data(), (DWORD)stdUStr.size());	// LCMapStringEx
 #elif GS_LIN
 	// LINUX_IMPLEMENTATION - done
 	std::transform(stdUStr.begin(), stdUStr.end(), stdUStr.begin(), ::toupper);
@@ -1411,7 +1409,7 @@ TXString& TXString::MakeUpper()
 TXString& TXString::MakeLower()
 {
 #if GS_WIN
-	// TODO
+    CharLowerBuffW((LPWSTR)stdUStr.data(), (DWORD)stdUStr.size());	// LCMapStringEx
 #elif GS_LIN
 	// LINUX_IMPLEMENTATION - done
 	std::transform(stdUStr.begin(), stdUStr.end(), stdUStr.begin(), ::tolower);
@@ -2129,8 +2127,7 @@ Sint32 TXString::Compare(const TXString &str) const
 Sint32 TXString::CompareNoCase(const TXString &str) const
 {
 #if GS_WIN
-	////TODO
-	return false;
+    return lstrcmpiW(stdUStr.c_str(), str.stdUStr.c_str());
 #elif GS_LIN
 
 	std::u16string str1(this->stdUStr);
@@ -2323,7 +2320,43 @@ TXString& TXString::Format(const TXString& format)
 // Prepare char buffer based on "encoding" encoding.
 void TXString::PrepareCharBuffer(ETXEncoding encoding) const
 {
-#if GS_LIN
+#if GS_WIN
+
+    // Determine copde page.
+    UINT codePage = CP_UTF8;
+
+    if (encoding == ETXEncoding::eMacEncoded)
+    {
+        codePage = CP_MACCP;
+    }
+    else if (encoding == ETXEncoding::eWinEncoded || encoding == ETXEncoding::eSysEncoded)
+    {
+        codePage = CP_ACP;
+    }
+
+    // Length of the char buffer. Four bytes for each character is enough. 1 for terminal character.
+    int len = (int)stdUStr.length() * 4 + 1;
+
+    if (len > charBufSize)
+    {
+        charBufSize = len;
+        // Delete existing pointer
+        if (charPtr) { ::operator delete(charPtr); charPtr = nullptr; }
+        // Try to allocate new memprs
+        try
+        {
+            charPtr = (char*)::operator new(charBufSize);
+        }
+        catch (std::bad_alloc)
+        {
+            ASSERTN(false, "Allocate new failed (exception)");
+            charPtr = nullptr;
+        }
+    }
+
+    // (CodePage, Flags, WideCharStr, WideCharCount, MultiByteStr, MultiByteCount, DefaultChar, UsedDefaultChar)
+    WideCharToMultiByte(codePage, 0, stdUStr.c_str(), -1, charPtr, len, (codePage == CP_UTF8) ? NULL : "?", NULL);
+#elif GS_LIN
 	int len = (int)stdUStr.length() * 4 + 1;
 
 	if (len > charBufSize)
@@ -2428,7 +2461,26 @@ void TXString::SetStdUStrFromCharBuffer(const char* src, size_t srcLenToUse, ETX
 	while (strLen < srcLenToUse && src[strLen] != 0) ++strLen;
 
 #if GS_WIN
-	//TODO
+    if (encoding == ETXEncoding::eUTF8)	// UTF-8
+    {
+        std::unique_ptr<TXChar[]> txChars(new TXChar[strLen + 1]);	// The buffer is big enough.
+        utf8BufferToTXCharBuffer(src, txChars.get(), strLen);
+        stdUStr = txChars.get();
+    }
+    else
+    {
+        UINT codePage = CP_ACP;			// Windows ANSI encoding.
+
+        if (encoding == ETXEncoding::eMacEncoded)
+        {
+            codePage = CP_MACCP;		// Mac encoding.
+        }
+
+        std::unique_ptr<TXChar[]> txChars(new TXChar[strLen + 1]);	// The buffer is big enough.
+        int newLen = MultiByteToWideChar(codePage, MB_PRECOMPOSED, src, (int)strLen, txChars.get(), int(strLen + 1));
+        txChars.get()[newLen] = 0;		// Add 0 to the end.
+        stdUStr = txChars.get();
+    }
 #elif GS_LIN
 	// LINUX_IMPLEMENTATION - done
 	std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> converter;

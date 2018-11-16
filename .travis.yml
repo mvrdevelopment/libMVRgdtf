@@ -18,6 +18,11 @@ matrix:
     - env: OSX build
       osx_image: xcode9.4
       os: osx
+    # Windows 2016 Server
+    - env: Windows 2016 Server
+      os: windows
+      script:
+        - CMD //C "runMSBuild.bat"
 
 script:
 - make

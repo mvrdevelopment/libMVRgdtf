@@ -16,7 +16,7 @@ SRCDIR_WRAP	= src/Wrapper
 SRCDIR_XMLL	= src/XMLLib
 SRCDIR_UNIT = unittest
 OBJDIR		= obj
-BINDIR		= bin
+BINDIR		= x64/Release
 LIBDIR_PRE	= libs
 LIBDIR_POST	= release
 
@@ -87,19 +87,6 @@ else
 		UnitTestExt			=
     endif
 endif
-
-
-# deprecated maybe, let's see because of windows vsproj-generation 
-#
-# # What to compile and link
-# ifeq ($(OS),Windows_NT)
-# 	SOURCES			= $(wildcard $(SRCDIR)/*.cpp)
-# 	HEADERS			= $(wildcard $(SRCDIR)/*.h)
-# 	OBJECTSWIN		= $(addprefix $(OBJDIR)/, $(notdir $(SOURCES:.cpp=.o)))
-# else
-# 	SOURCES			= $(shell echo $(SRCDIR)/*.cpp)
-# 	OBJECTSMACLIN	= $(wildcard $(OBJDIR)/*.o)
-# endif
 
 
 # sources and objects
