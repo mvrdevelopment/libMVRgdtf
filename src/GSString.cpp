@@ -116,7 +116,9 @@ TXString::TXString(const std::wstring& src)
 	: charPtr(nullptr)
 	, charBufSize(0)
 {
-	//TODO
+	std::unique_ptr<TXChar[]> ucchars(new TXChar[src.length() * 2 + 1]);
+	utf32BufferToTXCharBuffer((const char32_t*)src.data(), ucchars.get());
+	stdUStr = ucchars.get();
 }
 #endif
 
@@ -236,7 +238,9 @@ TXString::TXString(const wchar_t* src)
 
 		stdUStr = result;
 #else
-		//TODO
+		std::unique_ptr<TXChar[]> ucchars(new TXChar[wcslen(src) * 2 + 1]);
+		utf32BufferToTXCharBuffer((const char32_t*)src, ucchars.get());
+		stdUStr = ucchars.get();
 #endif
 	}
 }
@@ -270,7 +274,9 @@ TXString::TXString(const wchar_t* src, size_t numWChars)
 
 		stdUStr = result;
 #else
-		//TODO
+		std::unique_ptr<TXChar[]> txChars(new TXChar[ length * 2 + 1]);
+		utf32BufferToTXCharBuffer((const char32_t*)src, txChars.get(), length);
+		stdUStr = txChars.get();
 #endif
 	}
 }
@@ -325,7 +331,20 @@ TXString::TXString(wchar_t w, size_t count /* 1 */)
 	: charPtr(nullptr)
 	, charBufSize(0)
 {
-	//TODO
+	if((int)w <= 0xffff)
+	{
+		stdUStr.assign(count, (TXChar) w);
+	}
+	else
+	{
+		UCChar u[3];
+		utf32ToTXCharBuffer((char32_t)w, u);
+
+		for(int i = 0; i < count; ++i)
+		{
+			stdUStr.append(u);
+		}
+	}
 }
 #endif
 
@@ -385,7 +404,9 @@ TXString& TXString::operator=(const std::wstring& src)
 
 	stdUStr = result;
 #else
-	//TODO
+	std::unique_ptr<TXChar[]> ucChars(new TXChar[src.length() * 2 + 1]);
+	utf32BufferToTXCharBuffer((const char32_t*)src.data(), ucChars.get());
+	stdUStr = ucChars.get();
 #endif
 	return *this;
 }
@@ -501,7 +522,16 @@ TXString& TXString::operator=(wchar_t w)
 	// TODO
 	stdUStr = w;
 #else
-	// TODO
+		if((int) w <= 0xffff)
+	{
+		stdUStr = (TXChar) w;
+	}
+	else
+	{
+		UCChar u[3];
+		utf32ToTXCharBuffer((char32_t)w, u);
+		stdUStr = u;
+	}
 #endif
 
 	return *this;
