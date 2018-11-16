@@ -32,6 +32,11 @@
 
 #include "GSString.h"
 
+inline void utf32ToTXCharBuffer(char32_t input, TXChar* output);
+inline void utf32BufferToTXCharBuffer(const char32_t* input, TXChar* output, size_t numInputChars = -1);
+inline void txCharBufferToUtf32Buffer(const TXChar* input, char32_t* output, size_t bufElemNum = -1);
+inline void utf8BufferToTXCharBuffer(const char* const input, TXChar* output, size_t inputLen);
+
 //#######################################################################################
 // TXString class
 //#######################################################################################
@@ -2300,7 +2305,44 @@ void TXString::SetStdUStrFromCharBuffer(const char* src, size_t srcLenToUse, ETX
 	std::string strSrc = std::string(src, strLen);
 	stdUStr = converter.from_bytes(strSrc);
 #else	// Mac
-	//TODO
+	if(encoding == ETXEncoding::eUTF8)
+	{
+		std::unique_ptr<TXChar[]> txChars(new TXChar[strLen + 1]);
+		utf8BufferToTXCharBuffer(src, txChars.get(), strLen);
+		stdUStr = txChars.get();
+	}
+	else
+	{
+		CFStringEncoding selectedEncoding = CFStringGetSystemEncoding();
+
+		if(encoding == ETXEncoding::eWinEncoded)
+		{
+			selectedEncoding = kCFStringEncodingWindowsLatin1;
+		}
+
+		CFStringRef cfStr = CFStringCreateWithBytes(kCFAllocatorDefault,
+			(const UInt8*)src,
+			strLen,
+			selectedEncoding,
+			false);
+
+		if (cfStr)
+		{
+			CFIndex cfStrLen = CFStringGetLength(cfStr);
+			CFRange cfStrRange = CFRangeMake(0, cfStrLen);
+
+			std::unique_ptr<UniChar[]> uniChars(new UniChar[cfStrLen + 1]);
+			CFStringGetCharacters(cfStr, cfStrRange, uniChars.get());
+			uniChars[cfStrLen] = '\0';
+			stdUStr = uniChars.get();
+			CFRelease(cfStr);
+		}
+		else
+		{
+			//DSTOP((kPChang, "Error in TXString::SetStdUStrFromCharBuffer(...)"));
+		}
+	}
+
 #endif
 }
 

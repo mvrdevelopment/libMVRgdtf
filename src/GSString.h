@@ -23,6 +23,7 @@
 #define txu(string) L##string
 #define txuc(string) L##string
 #else
+#include <CoreFoundation/CoreFoundation.h>
 #define txu(string) (const UCChar*)u##string
 #define txuc(ch) (const UCChar)u##ch
 #endif
