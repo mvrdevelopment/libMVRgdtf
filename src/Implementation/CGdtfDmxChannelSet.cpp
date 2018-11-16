@@ -1,7 +1,8 @@
 //-----------------------------------------------------------------------------
 //----- Copyright deersoft 2015 - 2017 www.deersoft.de
 //-----------------------------------------------------------------------------
-#include "Prefix/StdAfx.h"
+#include "StdAfx.h"
+#include "VectorworksMVR.h"
 #include "CGdtfDmxChannelSet.h"
 #include "CGdtfWheelSlot.h"
 
@@ -71,6 +72,16 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelSetImpl::GetWheelSlot(S
 	WheelSlotIdx = fChannelSet->GetWheelSlot();
 
     return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelSetImpl::GetUsePhysicalFromParent(bool& outUse)
+{
+	// Check Pointer
+	if ( ! fChannelSet) { return kVCOMError_NotInitialized; }
+	
+	outUse = fChannelSet->GetUsePhysicalFromParent();
+	
+	return kVCOMError_NoError;
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelSetImpl::SetPhysicalStart(double start)

@@ -22,6 +22,8 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetPhysicalStart(double& start);
         virtual VCOMError VCOM_CALLTYPE     GetPhysicalEnd(double& end);        
         virtual VCOMError VCOM_CALLTYPE     GetWheelSlot(Sint32& WheelSlotIdx);
+		virtual VCOMError VCOM_CALLTYPE		GetUsePhysicalFromParent(bool& outUse);
+		
 		
 		virtual VCOMError VCOM_CALLTYPE     SetPhysicalStart(double start);
 		virtual VCOMError VCOM_CALLTYPE     SetPhysicalEnd(double end);		
