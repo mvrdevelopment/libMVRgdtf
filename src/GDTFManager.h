@@ -23,11 +23,38 @@ namespace SceneData
 	class GdtfFixture;
 	class GdtfDmxLogicalChannel;
 	class GdtfDmxChannel;
-	class GdtfDmxChannelFunction;
-	
+    class GdtfMacroDMX;   
+    class GdtfMacroVisual;	
+	class GdtfDmxChannelFunction;	
+    class GdtfFTRDM;
+    class GdtfArtNet;
+    class GdtfsAcn;
+    class GdtfKiNET;
+    class GdtfPosiStageNet;
+    class GdtfOpenSoundControl;
+    class GdtfCITP;
+    class GdtfRDMNotifications;
+
+    class GdtfRDMParameterValue;        
+    typedef GdtfRDMParameterValue*	GdtfRDMParameterValuePtr;
+    typedef std::vector<GdtfRDMParameterValue*>	TGdtfRDMParameterValueArray;
+
+    class GdtfRDMParameter;    
+    typedef GdtfRDMParameter*	GdtfRDMParameterPtr;
+    typedef std::vector<GdtfRDMParameter*>	TGdtfRDMParameterArray;
+
+    class GdtfRDMValue_SENSOR_DEFINITION;
+    typedef GdtfRDMValue_SENSOR_DEFINITION*	GdtfRDMValue_SENSOR_DEFINITIONPtr;
+    typedef std::vector<GdtfRDMValue_SENSOR_DEFINITION*>	TGdtfRDMValue_SENSOR_DEFINITIONArray;
+
+    class GdtfRDMAbsentNotification;
+
+    class GdtfRDMValueSensor;
+    typedef std::vector<GdtfRDMValueSensor*>	TGdtfRDMValueSensorArray;
+
+    //-----------------------------------------------------------------------------
 	//------------------------------------------------------------------------------------
-	// Attributes
-	
+	// Attributes	
 	
 	class GdtfObject
 	{
@@ -276,10 +303,8 @@ namespace SceneData
 		TXString						fName;
 		CCieColor						fColor;
 		TXString						fGobo;
-
 		TGdtfWheelSlotPrismFacetArray	fPrismFacts;
-		GdtfWheel*                      fWheelParent;
-		
+		GdtfWheel*                      fWheelParent;		
 		TXString						fGoboFile; // MediaFileName
 		
 	public:
@@ -287,14 +312,12 @@ namespace SceneData
 		const TXString&                 GetGoboFileFullPath();
 		CCieColor                       GetColor() const;
 		const TXString&                 GetName() const;
-        bool                            GetPrintcolor();
         TGdtfWheelSlotPrismFacetArray   GetPrismFacets();
 		
 		void							SetName(const TXString& name);
 		void							SetGobo(const GdtfPNGFile& png);
 		void							SetColor(const CCieColor& color);
 		GdtfWheelSlotPrismFacet*		AddPrismFacet();
-		void							SetPrintColor(const bool& print);
 
 		virtual TXString				GetNodeReference() const;
 
@@ -331,8 +354,6 @@ namespace SceneData
 		
         const TXString&             GetName() const;        
 
-        const TGdtfWheelSlotArray   GetWheelSlotArray();
-		
 		const TGdtfWheelSlotArray&	GetWheelSlotArray() const;
 		bool						IsGoboWheel() const;
 		virtual TXString			GetNodeReference() const;
@@ -385,12 +406,12 @@ namespace SceneData
 		const TXString&					GetGeometryFile() const;
 		const TXString&					GetGeometryFileFullPath();
 		// Setter
-		void							SetName(const TXString& name);
-		void							SetLength(const double& length);
-		void							SetWidth(const double& width);
-		void							SetHeight(const double& height);
-		void							SetPrimitiveType(const EGdtfModel_PrimitiveType& type);
-		void							SetGeometryFile(const Gdtf3DSFile& file);
+		void						    SetName(const TXString& name);
+		void					    	SetLength(const double& length);
+		void						    SetWidth(const double& width);
+		void						    SetHeight(const double& height);
+		void						    SetPrimitiveType(const EGdtfModel_PrimitiveType& type);
+		void						    SetGeometryFile(const Gdtf3DSFile& file);
 		
 	public:
 		virtual EGdtfObjectType			GetObjectType();
@@ -566,10 +587,7 @@ namespace SceneData
 		virtual	TXString				GetNodeName();
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
-	};
-	
-	
-	
+	};	
 	
 	class GdtfGeometryLamp : public GdtfGeometry
 	{
@@ -690,8 +708,9 @@ namespace SceneData
 		TXString			fUniqueName;
 		DMXAddress			fDmxStart;
 		DMXAddress			fDmxEnd;
-		double				fPhysicalStart;	// Units?????
-		double				fPhysicalEnd;	// Units?????		
+		bool				fSetPhysical;
+		double				fPhysicalStart;
+		double				fPhysicalEnd;
 		Sint32				fWheelSlotIdx;
 
 		GdtfDmxChannelFunction* fParentChnlFunction; 
@@ -706,6 +725,7 @@ namespace SceneData
         double                          GetPhysicalStart() const;
         double                          GetPhysicalEnd() const;        
 		Sint32							GetWheelSlot();
+		bool							GetUsePhysicalFromParent() const;
 		//
 		GdtfDmxChannel*					GetParentDMXChannel() const;		
 		// Setter
@@ -883,14 +903,16 @@ namespace SceneData
         Sint32								GetUltra() const;
 		Sint32								GetUber() const;
         EGdtfDmxFrequency					GetFrequency() const;
-        Sint32								GetDefaultValue() const;
-        Sint32								GetHighlight() const;
+        DMXAddress							GetDefaultValue() const;
+        DMXAddress							GetHighlight() const;
+		bool								HasHighlight() const;
         double                              GetMoveInBlackFrames() const;
         double								GetDmxChangeTimeLimit() const;				
         const TGdtfDmxLogicalChannelArray	GetLogicalChannelArray();
 		GdtfGeometryPtr						GetGeomRef();
 		TXString							GetUnresolvedGeomRef() const;
 		EGdtfChannelBitResolution			GetChannelBitResolution();
+		DmxValue							GetChannelMaxDmx();
 
 		void								SetName(const TXString& name);
 		void								SetDmxBreak(Sint32 dmxBreak);
@@ -899,8 +921,8 @@ namespace SceneData
 		void								SetDmxUltra(Sint32 ultra);
 		void								SetDmxUber(Sint32 uber);
 		void								SetFrequency(EGdtfDmxFrequency frequency);
-		void								SetDefaultValue(Sint32 defaultValue);
-		void								SetHighlight(Sint32 highlight);
+		void								SetDefaultValue(DMXAddress defaultValue);
+		void								SetHighlight(DMXAddress highlight);
 		void								SetMoveInBlackFrames(double moveInBlackFrames);
 		void								SetDmxChangeTimeLimit(double changeLimit);
 		void								SetModel(GdtfModelPtr ptr);
@@ -927,8 +949,8 @@ namespace SceneData
 		GdtfDmxChannelPtr			fMasterDmxChannel;
 		GdtfDmxChannelFunctionPtr	fSlaveChannelFunction;
 		EGdtfDmxRelationType		fRelationType;
-		Sint32						fDmxStart;
-		Sint32						fDmdEnd;
+		DMXAddress					fDmxStart;
+		DMXAddress					fDmdEnd;
 		
 		// Pointer Resolve
 		TXString					fUnresolvedDmxStart;
@@ -940,8 +962,7 @@ namespace SceneData
 		TXString					GetUnresolvedMasterRef() const;
 		TXString					GetUnresolvedSlaveRef() const;
 		void						ResolveDmxRange();
-
-		
+        		
 	public:
 		// Getter
 		virtual EGdtfObjectType			GetObjectType();
@@ -982,7 +1003,7 @@ namespace SceneData
 		TXString				fUnresolvedGeomRef;
 		//
 		TGdtfDmxChannelArray	fChannels;
-		TGdtfDmxRelationArray	fRelations;		
+		TGdtfDmxRelationArray	fRelations;	  	
 
 	public:		
 		const TXString&				GetModeName() const;
@@ -1011,8 +1032,7 @@ namespace SceneData
 		
 	};
 	typedef GdtfDmxMode*				GdtfDmxModePtr;
-	typedef std::vector<GdtfDmxMode*>	TGdtfDmxModeArray;
-	
+	typedef std::vector<GdtfDmxMode*>	TGdtfDmxModeArray;	
 	
 	//------------------------------------------------------------------------------------
 	// GdtfRevision Definition
@@ -1044,7 +1064,897 @@ namespace SceneData
 	typedef GdtfRevision*	GdtfRevisionPtr;
 	typedef std::vector<GdtfRevision*>	TGdtfRevisionArray;
 	
-	
+    //------------------------------------------------------------------------------------
+    // Protocolls Definitions
+    
+    class GdtfProtocols : public GdtfObject
+    {
+    public:
+        GdtfProtocols();
+        ~GdtfProtocols();
+    private:
+        // Childs
+        GdtfFTRDM*                  fRDM;             
+        GdtfArtNet*                 fArtNet;          
+        GdtfsAcn*                   fsACN;            
+        GdtfKiNET*                  fKiNET;           
+        GdtfPosiStageNet*           fPosiStageNet;    
+        GdtfOpenSoundControl*       fOpenSoundControl;
+        GdtfCITP*                   fCITP;            
+    public:
+        virtual EGdtfObjectType			GetObjectType();
+
+    public:
+        // Getter        
+        GdtfFTRDM*                  GetRDM();              
+        GdtfArtNet*                 GetArtNet();            
+        GdtfsAcn*                   Get_sACN();              
+        GdtfKiNET*                  GetKiNET();             
+        GdtfPosiStageNet*           GetPosiStageNet();      
+        GdtfOpenSoundControl*       GetOpenSoundControl();  
+        GdtfCITP*                   GetCITP();              
+        // Setter    
+        GdtfFTRDM*                  CreateRDM();
+        void                        SetArtNet(GdtfArtNet* val);
+        void                        Set_sACN(GdtfsAcn* val);
+        void                        SetKiNET(GdtfKiNET* val);
+        void                        SetPosiStageNet(GdtfPosiStageNet* val);
+        void                        SetOpenSoundControl(GdtfOpenSoundControl* val);
+        void                        SetCITP(GdtfCITP* val);
+
+    protected:
+        virtual	TXString				GetNodeName();
+        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+    };
+    typedef GdtfProtocols*	GdtfProtocolsPtr;    
+
+    class GdtfFTRDM : public GdtfObject
+    {
+    public:
+        GdtfFTRDM();
+        GdtfFTRDM(Sint32 manufacturerID, Sint32 deviceModelID);
+        ~GdtfFTRDM();
+    private:
+        // Attributes
+        Sint32      fManufacturerID;  // Manufacturer ESTA ID; Size: 2 bytes
+        Sint32      fDeviceModelID;   // Unique device model ID; Size: 2 bytes        
+        TSint32Array  fSoftwareVersIDs; // Array of software versions IDs; Size of each version: 4 bytes
+        // Childs
+        TGdtfRDMParameterArray   fRDMParameters;     // Instead of using the <RDMParameterS> we directly use a list off <RDMParameter> here.
+        GdtfRDMNotifications*    fRDMNotifications;
+    public:
+        virtual EGdtfObjectType			GetObjectType();
+
+    public:
+        // Getter
+        Sint32                        GetManufacturerID() const;
+        Sint32                        GetDeviceModelID()  const;
+        const TSint32Array&             GetSoftwareVersIDs() const;        
+        const TGdtfRDMParameterArray& GetRDMParametersArray() const;
+        GdtfRDMNotifications*         GetRDMNotifications() const;
+        // Setter
+        void SetManufacturerID(Sint32 val);
+        void SetDeviceModelID(Sint32 val);
+        void AddSoftwareVersID(Sint32 ID);
+        GdtfRDMParameterPtr AddRDMParameter(
+            const TXString& name, 
+            Sint32 PID,            
+            EGdtf_RDMParam_Type              Type,
+            EGdtf_RDMParam_DataType          dataType,
+            EGdtf_RDMParam_Command           command,
+            EGdtf_RDMParam_SensorUnit        sensorUnit,
+            EGdtf_RDMParam_SensorUnitPrefix  sensorUnitPrefix,        
+            Sint32                           minValue,        
+            Sint32                           maxValue,
+            Sint32                           PDLSize,
+            const TXString&                        description);
+        
+        void SetRDMNotifications(GdtfRDMNotifications* notifications);
+    protected:
+        virtual	TXString				GetNodeName();
+        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+    };
+    typedef GdtfFTRDM*	GdtfFTRDMPtr;    
+
+    class GdtfRDMParameter : public GdtfObject
+    {
+    public:
+        GdtfRDMParameter();
+        GdtfRDMParameter(const TXString& name, 
+                         Sint32 PID,            
+                         EGdtf_RDMParam_Type              Type,
+                         EGdtf_RDMParam_DataType          dataType,
+                         EGdtf_RDMParam_Command           command,
+                         EGdtf_RDMParam_SensorUnit        sensorUnit,
+                         EGdtf_RDMParam_SensorUnitPrefix  sensorUnitPrefix,        
+                         Sint32                           minValue,        
+                         Sint32                           maxValue,
+                         Sint32                           PDLSize,
+                         const TXString&                        description);
+        ~GdtfRDMParameter();
+    private:
+        // Attributes
+        TXString                        fName;        
+        Sint32                          fPID;                
+        EGdtf_RDMParam_Type             fType;
+        EGdtf_RDMParam_DataType         fDataType;
+        EGdtf_RDMParam_Command          fCommand;
+        EGdtf_RDMParam_SensorUnit       fSensorUnit;
+        EGdtf_RDMParam_SensorUnitPrefix fSensorUnitPrefix;        
+        Sint32                          fMinValue;        
+        Sint32                          fMaxValue;
+        Sint32                          fPDLSize;
+        TXString                        fDescription;
+        // Children
+        TGdtfRDMParameterValueArray    fParameterValueArray;
+    public:
+        virtual EGdtfObjectType			GetObjectType();
+
+    public:
+        // Getter        
+        const TXString&                 GetName() const;
+        Sint32                          GetPID() const;
+        EGdtf_RDMParam_Type             GetType() const;
+        EGdtf_RDMParam_DataType         GetDataType() const;
+        EGdtf_RDMParam_Command          GetCommand() const;
+        EGdtf_RDMParam_SensorUnit       GetSensorUnit() const;
+        EGdtf_RDMParam_SensorUnitPrefix GetSensorUnitPrefix() const;        
+        Sint32                          GetMinValue() const;        
+        Sint32                          GetMaxValue() const;
+        Sint32                          GetPDLSize() const;
+        const TXString&                 GetDescription() const;        
+        const TGdtfRDMParameterValueArray &   GetParameterValueArray() const;
+        // Setter       
+        void SetName(const TXString& val);
+        void SetPID(Sint32 val);
+        void SetType(EGdtf_RDMParam_Type val);
+        void SetDataType(EGdtf_RDMParam_DataType val);
+        void SetCommand(EGdtf_RDMParam_Command val);
+        void SetSensorUnit(EGdtf_RDMParam_SensorUnit val);
+        void SetSensorUnitPrefix(EGdtf_RDMParam_SensorUnitPrefix val);        
+        void SetMinValue(Sint32 val);        
+        void SetMaxValue(Sint32 val);
+        void SetPDLSize(Sint32 val);
+        void SetDescription(const TXString& val); 
+
+        GdtfRDMParameterValue* AddRMDValueBool();
+        GdtfRDMParameterValue* AddDmxPersoalityDescription();
+        GdtfRDMParameterValue* AddSensorDefinition();
+        GdtfRDMParameterValue* AddSlotInfo();
+        GdtfRDMParameterValue* AddStatusID_Desciption();
+
+    protected:
+        virtual	TXString				GetNodeName();
+        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+    };
+
+    class GdtfRDMParameterNotification : public GdtfObject
+    {
+    public:
+        GdtfRDMParameterNotification();
+        GdtfRDMParameterNotification(Sint32 PID);
+        ~GdtfRDMParameterNotification();
+    private:
+        // Attributes
+        Sint32 fPID;
+        // Childs
+        TGdtfRDMParameterValueArray fParameterValueArray; 
+    public:
+        virtual EGdtfObjectType			GetObjectType();        
+    public:
+        // Getter
+        Sint32	    	                GetPID() const;
+        TGdtfRDMParameterValueArray     GetParameterValueArray() const;
+        // Setter
+        void						    SetPID(Sint32 val);
+        GdtfRDMParameterValue*          AddRMDValueBool();
+        GdtfRDMParameterValue*          AddRealTimeClock();
+    protected:
+        virtual	TXString				GetNodeName();
+        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+    };
+    typedef GdtfRDMParameterNotification*	GdtfRDMParameterNotificationPtr;
+    typedef std::vector<GdtfRDMParameterNotification*>	TGdtfRDMParameterNotificationArray;
+
+    class GdtfRDMSensorNotification : public GdtfObject
+    {
+    public:
+        GdtfRDMSensorNotification();
+        GdtfRDMSensorNotification(Sint32 sensorOffset);
+        ~GdtfRDMSensorNotification();
+    private:
+        // Attributes
+        Sint32 fSensorOffset;
+        // Childs                
+        TGdtfRDMValueSensorArray fSensorValueArray;
+
+    public:
+        virtual EGdtfObjectType			     GetObjectType();
+    public:
+        // Getter        
+        Sint32                               GetSensorOffset() const;
+        TGdtfRDMValueSensorArray             GetSensorValueArray(); 
+        // Setter       
+        void						         SetSensorOffset(Sint32 val);
+        GdtfRDMValueSensor*                  AddValueSensor(Sint32 value, Sint32 lowest, Sint32 highest, Sint32 recorded, EGdtf_RDMValue_ThresholdOperator thresholdOperator);
+
+    protected:
+        virtual	TXString				     GetNodeName();
+        virtual	void					     OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					     OnReadFromNode(const IXMLFileNodePtr& pNode);
+    }; 
+    typedef GdtfRDMSensorNotification*	GdtfRDMSensorNotificationPtr;
+    typedef std::vector<GdtfRDMSensorNotification*>	TGdtfRDMSensorNotificationArray;
+
+    class GdtfRDMNotifications : public GdtfObject
+    {
+    public:
+        GdtfRDMNotifications();
+        ~GdtfRDMNotifications();
+    private:        
+        // Childs        
+        GdtfRDMAbsentNotification*         fRDMAbsentNotification;
+        TGdtfRDMParameterNotificationArray fRDMParamNotificationArray;
+        TGdtfRDMSensorNotificationArray    fRDMSensorNotificationArray;
+    public:
+        virtual EGdtfObjectType			GetObjectType();
+
+    public:
+        // Getter        
+        GdtfRDMAbsentNotification*              GetAbsentNotification() const;
+        TGdtfRDMParameterNotificationArray      GetParameterNotificationArray() const; 
+        TGdtfRDMSensorNotificationArray         GetSensorNotificationArray() const;
+        // Setter       
+        void                                    SetAbsentNotification(GdtfRDMAbsentNotification* val); 
+        GdtfRDMParameterNotification*           AddRDMParameterNotification(Sint32 PID);
+        GdtfRDMSensorNotification*              AddDMSensorNotification(Sint32 sensorOffset);
+    protected:
+        virtual	TXString				        GetNodeName();
+        virtual	void					        OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					        OnReadFromNode(const IXMLFileNodePtr& pNode);
+    };
+    typedef GdtfRDMNotifications*	GdtfRDMNotificationsPtr;   
+
+
+    class GdtfRDMAbsentNotification : public GdtfObject
+    {
+    public:
+        GdtfRDMAbsentNotification();
+        ~GdtfRDMAbsentNotification();
+    private:                
+        // See Issue: "GdtfRDMAbsentNotification #200"
+
+        /* TODO: Check at another time again. The RDM Absent notification currently 
+        does not have any attributes and does not have any children. (26.09.2018) */
+    public:
+        virtual EGdtfObjectType			GetObjectType();
+
+    public:
+        // Getter        
+        // ..
+        // Setter       
+        // ..
+    protected:
+        virtual	TXString				GetNodeName();
+    };
+    typedef GdtfRDMAbsentNotification*	GdtfRDMAbsentNotificationPtr;
+    typedef std::vector<GdtfRDMAbsentNotification*>	TGdtfRDMAbsentNotificationArray;
+    
+//-----------------------------------------------------------------------------
+// RDM Values
+//-----------------------------------------------------------------------------
+    class GdtfRDMParameterValue : public GdtfObject
+    {
+    /*
+        # ABSTRACT CLASS # 
+        
+        The following GdtfTypes inherit from this class:
+
+            RDMValueBool
+            RDMValue_UNSIGNED_BYTE
+            RDMValue_SIGNED_BYTE
+            RDMValue_UNSIGNED_WORD
+            RDMValue_SIGNED_WORD
+            RDMValue_UNSIGNED_DWORD
+            RDMValue_SIGNED_DWORD
+            RDMValue_ASCII
+            RDMValue_DMX_PERSONALITY_DESCRIPTION
+            RDMValue_SENSOR_DEFINITION
+            RDMValue_SLOT_INFO
+            RDMValue_STATUS_ID_ DESCRIPTION            
+            RDMValue_REAL_TIME_CLOCK
+    */ 
+    public:
+        GdtfRDMParameterValue();        
+        ~GdtfRDMParameterValue();
+    public:
+        // Getter        
+        // - 
+        // Setter       
+        // -
+    public:
+            virtual EGdtfObjectType			GetObjectType() = 0;
+    protected:
+            virtual	TXString				GetNodeName() = 0;
+    };
+  
+    class GdtfRDMParameterValue_Numeric : public GdtfRDMParameterValue
+    {
+    /*
+            # ABSTRACT CLASS #
+
+            The following GdtfTypes inherit from this class (they are basically the same as we do not deffer between intBytes and the signedFlag):
+
+            RDMValue_UNSIGNED_BYTE
+            RDMValue_SIGNED_BYTE
+            RDMValue_UNSIGNED_WORD
+            RDMValue_SIGNED_WORD
+            RDMValue_UNSIGNED_DWORD
+            RDMValue_SIGNED_DWORD
+            RDMValue_ASCII
+    */
+    public:
+        GdtfRDMParameterValue_Numeric();
+        GdtfRDMParameterValue_Numeric(Sint32 value, EGdtf_RDMValue_ThresholdOperator thresholdOperator);
+        ~GdtfRDMParameterValue_Numeric();
+    protected:
+        // Attributes
+        Sint32                           fValue;
+        EGdtf_RDMValue_ThresholdOperator fThresholdOperator;
+    public:
+        // Getter        
+        Sint32		                        GetValue() const;
+        EGdtf_RDMValue_ThresholdOperator	GetThresholdOperator() const;
+		
+        // Setter
+        void		                        SetValue(Sint32 value);
+        void                            	SetThresholdOperator(EGdtf_RDMValue_ThresholdOperator value);
+protected:
+        virtual	TXString				    GetNodeName() = 0;
+        virtual EGdtfObjectType			    GetObjectType() = 0;
+
+        virtual	void					    OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					    OnReadFromNode(const IXMLFileNodePtr& pNode);
+    };    
+
+    class GdtfRDMValueBool : public GdtfRDMParameterValue
+    {
+    public:
+        GdtfRDMValueBool();
+        GdtfRDMValueBool(EGdtf_RDMValueBool_Value value, EGdtf_RDMValue_ThresholdOperator thresholdOperator);
+        ~GdtfRDMValueBool();
+    private:        
+        EGdtf_RDMValueBool_Value         fValue;
+        EGdtf_RDMValue_ThresholdOperator fThresholdOperator;
+    public:
+        virtual EGdtfObjectType			 GetObjectType();
+    public:
+        // Getter        
+        EGdtf_RDMValueBool_Value		        GetValue() const;
+        EGdtf_RDMValue_ThresholdOperator        GetThresholdOperator() const;
+        // Setter       
+        void SetValue(EGdtf_RDMValueBool_Value value);
+        void SetThresholdOperator(EGdtf_RDMValue_ThresholdOperator value);
+    protected:
+        virtual	TXString				GetNodeName();
+        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+    };
+    typedef GdtfRDMValueBool*	GdtfRDMValueBoolPtr;
+
+    // RDMParameterValue_Numeric
+
+    class GdtfRDMValue_UNSIGNED_BYTE : public GdtfRDMParameterValue_Numeric
+    {
+    public:
+        GdtfRDMValue_UNSIGNED_BYTE();
+        GdtfRDMValue_UNSIGNED_BYTE(Sint32 value, EGdtf_RDMValue_ThresholdOperator thresholdOperator);
+        ~GdtfRDMValue_UNSIGNED_BYTE();
+    public:
+        virtual EGdtfObjectType			GetObjectType();
+
+    public:
+        // Getter        
+        // -
+        // Setter       
+        // -
+    protected:
+        virtual	TXString				GetNodeName();
+    };
+    typedef GdtfRDMValue_UNSIGNED_BYTE*	GdtfRDMValue_UNSIGNED_BYTEPtr;
+    
+    class GdtfRDMValue_SIGNED_BYTE : public GdtfRDMParameterValue_Numeric
+    {
+    public:
+        GdtfRDMValue_SIGNED_BYTE();
+        GdtfRDMValue_SIGNED_BYTE(Sint32 value, EGdtf_RDMValue_ThresholdOperator thresholdOperator);
+        ~GdtfRDMValue_SIGNED_BYTE();
+    private:       
+
+    public:
+        virtual EGdtfObjectType			GetObjectType();
+
+    public:
+        // Getter        
+        // -
+        // Setter       
+        // -
+    protected:
+        virtual	TXString				GetNodeName();
+    };
+    typedef GdtfRDMValue_SIGNED_BYTE*	GdtfRDMValue_SIGNED_BYTEPtr;
+        
+    class GdtfRDMValue_UNSIGNED_WORD : public GdtfRDMParameterValue_Numeric
+    {
+    public:
+        GdtfRDMValue_UNSIGNED_WORD();
+        GdtfRDMValue_UNSIGNED_WORD(Sint32 value, EGdtf_RDMValue_ThresholdOperator thresholdOperator);
+        ~GdtfRDMValue_UNSIGNED_WORD();
+    private:       
+
+    public:
+        virtual EGdtfObjectType			GetObjectType();
+
+    public:
+        // Getter        
+        // -
+        // Setter       
+        // -
+    protected:
+        virtual	TXString				GetNodeName();
+    };
+    typedef GdtfRDMValue_UNSIGNED_WORD*	GdtfRDMValue_UNSIGNED_WORDPtr;
+     
+    class GdtfRDMValue_SIGNED_WORD : public GdtfRDMParameterValue_Numeric
+    {
+    public:
+        GdtfRDMValue_SIGNED_WORD();
+        GdtfRDMValue_SIGNED_WORD(Sint32 value, EGdtf_RDMValue_ThresholdOperator thresholdOperator);
+        ~GdtfRDMValue_SIGNED_WORD();
+    private:       
+
+    public:
+        virtual EGdtfObjectType			GetObjectType();
+
+    public:
+        // Getter        
+        // -
+        // Setter       
+        // -
+    protected:
+        virtual	TXString				GetNodeName();
+    };
+    typedef GdtfRDMValue_SIGNED_WORD*	GdtfRDMValue_SIGNED_WORDPtr;
+
+    class GdtfRDMValue_UNSIGNED_DWORD : public GdtfRDMParameterValue_Numeric
+    {
+    public:
+        GdtfRDMValue_UNSIGNED_DWORD();
+        GdtfRDMValue_UNSIGNED_DWORD(Sint32 value, EGdtf_RDMValue_ThresholdOperator thresholdOperator);
+        ~GdtfRDMValue_UNSIGNED_DWORD();
+    private:       
+
+    public:
+        virtual EGdtfObjectType			GetObjectType();
+
+    public:
+        // Getter        
+        // -
+        // Setter       
+        // -
+    protected:
+        virtual	TXString				GetNodeName();
+    };
+    typedef GdtfRDMValue_UNSIGNED_DWORD*	GdtfRDMValue_UNSIGNED_DWORDPtr;
+        
+    class GdtfRDMValue_SIGNED_DWORD : public GdtfRDMParameterValue_Numeric
+    {
+    public:
+        GdtfRDMValue_SIGNED_DWORD();
+        GdtfRDMValue_SIGNED_DWORD(Sint32 value, EGdtf_RDMValue_ThresholdOperator thresholdOperator);
+        ~GdtfRDMValue_SIGNED_DWORD();
+    private:       
+
+    public:
+        virtual EGdtfObjectType			GetObjectType();
+
+    public:
+        // Getter        
+        // -
+        // Setter       
+        // -
+    protected:
+        virtual	TXString				GetNodeName();
+    };
+    typedef GdtfRDMValue_SIGNED_DWORD*	GdtfRDMValue_SIGNED_DWORDPtr;
+
+    class GdtfRDMValue_ASCII : public GdtfRDMParameterValue_Numeric
+    {
+    public:
+        GdtfRDMValue_ASCII();
+        GdtfRDMValue_ASCII(Sint32 value, EGdtf_RDMValue_ThresholdOperator thresholdOperator);
+        ~GdtfRDMValue_ASCII();
+    private:       
+
+    public:
+        virtual EGdtfObjectType			GetObjectType();
+
+    public:
+        // Getter        
+        // -
+        // Setter       
+        // -
+    protected:
+        virtual	TXString				GetNodeName();
+    };
+    typedef GdtfRDMValue_ASCII*	GdtfRDMValue_ASCIIPtr;
+
+    class GdtfGdtfRDMValue_DMX_PERSONALITY_DESCRIPTION : public GdtfRDMParameterValue
+    {
+    public:
+        GdtfGdtfRDMValue_DMX_PERSONALITY_DESCRIPTION();
+        GdtfGdtfRDMValue_DMX_PERSONALITY_DESCRIPTION(Sint32 footPrint, TXString& description);
+        ~GdtfGdtfRDMValue_DMX_PERSONALITY_DESCRIPTION();
+    private:       
+        Sint32   fFootPrint;
+        TXString fDescription;
+    public:
+        virtual EGdtfObjectType			GetObjectType();
+
+    public:
+        // Getter        
+        Sint32          GetFootPrint() const;
+        const TXString& GetDescription() const;
+        // Setter       
+        void            SetFootPrint(Sint32 val);
+        void            SetDescription(const TXString& val);
+    protected:
+        virtual	TXString				GetNodeName();
+        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+    };
+    typedef GdtfGdtfRDMValue_DMX_PERSONALITY_DESCRIPTION*	GdtfGdtfRDMValue_DMX_PERSONALITY_DESCRIPTIONPtr;    
+    
+    class GdtfRDMValue_SENSOR_DEFINITION : public GdtfRDMParameterValue
+    {
+    public:
+        GdtfRDMValue_SENSOR_DEFINITION();
+        GdtfRDMValue_SENSOR_DEFINITION(
+            EGdtf_RDMValue_SENSOR_DEFINITION_TYPE         type,
+            EGdtf_RDMParam_SensorUnit                     unit,
+            EGdtf_RDMParam_SensorUnitPrefix               prefix,
+            Sint32                                        rangeMinValue,
+            Sint32                                        rangeMaxValue,
+            Sint32                                        normalMinValue,
+            Sint32                                        normalMaxValue,
+            EGdtf_RDMValue_LowesHighestDetectionSupported lowesHighestDetectionSupported,
+            EGdtf_RDMValue_RecordValueSupported           recordValueSupported,
+            TXString&                                     description);
+
+        ~GdtfRDMValue_SENSOR_DEFINITION();
+    private:        
+        EGdtf_RDMValue_SENSOR_DEFINITION_TYPE fType;
+        EGdtf_RDMParam_SensorUnit             fUnit;   // Defines the SI unit of the sensor data. Predefined values are the same as for the SensorUnit attribute of the RDM parameter. 
+        EGdtf_RDMParam_SensorUnitPrefix       fPrefix; // Defines the SI prefix and the multiplication factor of the units. Sensor unit prefix; The predefined values are the same as for SensorUnitPrefix attribute of the RDM parameter. 
+        Sint32 fRangeMinValue;
+        Sint32 fRangeMaxValue;
+        Sint32 fNormalMinValue;
+        Sint32 fNormalMaxValue;
+        EGdtf_RDMValue_LowesHighestDetectionSupported fLowesHighestDetectionSupported;
+        EGdtf_RDMValue_RecordValueSupported           fRecordValueSupported;
+        TXString fDescription;
+    public:
+        virtual EGdtfObjectType			GetObjectType();
+
+    public:
+        // Getter        
+        EGdtf_RDMValue_SENSOR_DEFINITION_TYPE GetType() const;
+        EGdtf_RDMParam_SensorUnit             GetUnit() const;
+        EGdtf_RDMParam_SensorUnitPrefix       GetPrefix() const;
+        Sint32 GetRangeMinValue() const;
+        Sint32 GetRangeMaxValue() const;
+        Sint32 GetNormalMinValue() const;
+        Sint32 GetNormalMaxValueype() const;
+        EGdtf_RDMValue_LowesHighestDetectionSupported GetLowesHighestDetectionSupported() const;
+        EGdtf_RDMValue_RecordValueSupported           GetRecordValueSupported() const;
+        const TXString& GetDescription() const;
+        // Setter       
+        void SetType(EGdtf_RDMValue_SENSOR_DEFINITION_TYPE val) ;
+        void SetUnit(EGdtf_RDMParam_SensorUnit val) ;
+        void SetPrefix(EGdtf_RDMParam_SensorUnitPrefix val) ;
+        void SetRangeMinValue(Sint32 val) ;
+        void SetRangeMaxValue(Sint32 val) ;
+        void SetNormalMinValue(Sint32 val) ;
+        void SetNormalMaxValueype(Sint32 val) ;
+        void SetLowesHighestDetectionSupported(EGdtf_RDMValue_LowesHighestDetectionSupported val);
+        void SetRecordValueSupported(EGdtf_RDMValue_RecordValueSupported val);
+        void SetDescription(const TXString& val) ;
+        // 
+    protected:
+        virtual	TXString				GetNodeName();
+        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+    };
+    
+    class GdtfRDMValue_SLOT_INFO : public GdtfRDMParameterValue
+    {
+    public:
+        GdtfRDMValue_SLOT_INFO();
+        GdtfRDMValue_SLOT_INFO(
+            Sint32 offset,
+            EGdtf_RDMValue_SLOT_INFO_Type  type,
+            EGdtf_RDMValue_SLOT_INFO_SlotLabelID slotLabelID);
+        
+        ~GdtfRDMValue_SLOT_INFO();
+    private:        
+        Sint32                               fOffset;
+        EGdtf_RDMValue_SLOT_INFO_Type        fType;
+        EGdtf_RDMValue_SLOT_INFO_SlotLabelID fSlotLabelID;
+    public:
+        virtual EGdtfObjectType			    GetObjectType();
+
+    public:
+        // Getter        
+        Sint32                               GetOffset()const;
+        EGdtf_RDMValue_SLOT_INFO_Type        GetType()const;
+        EGdtf_RDMValue_SLOT_INFO_SlotLabelID GetSlotLabelID()const;        
+        // Setter       
+        void SetOffset(Sint32 val);
+        void SetType (EGdtf_RDMValue_SLOT_INFO_Type val);
+        void SetSlotLabelID(EGdtf_RDMValue_SLOT_INFO_SlotLabelID val);
+    protected:
+        virtual	TXString				GetNodeName();
+        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+    };
+    typedef GdtfRDMValue_SLOT_INFO*	GdtfGdtfRDMValue_SLOT_INFOPtr;
+
+    class GdtfRDMValue_STATUS_ID_DESCRIPTION : public GdtfRDMParameterValue
+    {
+    public:
+        GdtfRDMValue_STATUS_ID_DESCRIPTION();
+        GdtfRDMValue_STATUS_ID_DESCRIPTION(Sint32 statusID, const TXString& description);
+        ~GdtfRDMValue_STATUS_ID_DESCRIPTION();
+    private:
+        StatusID   fStatusID;
+        TXString   fDescription;            
+    public:
+        virtual EGdtfObjectType			GetObjectType();
+
+    public:
+        // Getter        
+        StatusID                    GetStatusID() const;
+        const TXString&		        GetDescription() const;
+        // Setter       
+       void                         SetStatusID(StatusID val);
+       void         		        SetDescription(const TXString& val);
+    protected:
+        virtual	TXString				GetNodeName();
+        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+    };
+    typedef GdtfRDMValue_STATUS_ID_DESCRIPTION*	GdtfRDMValue_STATUS_ID_DESCRIPTIONPtr;
+         
+//-----------------------------------------------------------------------------    
+
+    class GdtfRDMValue_RealTimeClock : public GdtfRDMParameterValue
+    {
+    public:        
+        GdtfRDMValue_RealTimeClock();
+        GdtfRDMValue_RealTimeClock(Sint32 year, Sint32 month, Sint32 day, Sint32 hours, Sint32 minute, Sint32 second, EGdtf_RDMValue_ThresholdOperator thresholdOperator);
+        ~GdtfRDMValue_RealTimeClock();
+    private:        
+        Sint32 fYear; 
+        Sint32 fMonth;
+        Sint32 fDay;
+        Sint32 fHours;
+        Sint32 fMinute;
+        Sint32 fSecond;
+        EGdtf_RDMValue_ThresholdOperator fThresholdOperator;
+    public:
+        virtual EGdtfObjectType			GetObjectType();
+
+    public:
+        // Getter        
+        Sint32                           GetYear() const; 
+        Sint32                           GetMonth() const;
+        Sint32                           GetDay() const;
+        Sint32                           GetHours() const;
+        Sint32                           GetMinute() const;
+        Sint32                           GetSecond() const;
+        EGdtf_RDMValue_ThresholdOperator GetThresholdOperator() const;
+        // Setter
+        void SetYear(Sint32 val); 
+        void SetMonth(Sint32 val);
+        void SetDay(Sint32 val);
+        void SetHours(Sint32 val);
+        void SetMinute(Sint32 val);
+        void SetSecond(Sint32 val);
+        void SetThresholdOperator(EGdtf_RDMValue_ThresholdOperator val);
+    protected:
+        virtual	TXString				GetNodeName();
+        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+    };
+    typedef GdtfRDMValue_RealTimeClock*	GdtfRDMValue_RealTimeClockPtr;
+    
+    class GdtfRDMValueSensor : public GdtfObject
+    {
+    public:
+        GdtfRDMValueSensor();
+        GdtfRDMValueSensor(Sint32 value, Sint32 lowest, Sint32 highest, Sint32 recorded, EGdtf_RDMValue_ThresholdOperator thresholdOperator);
+        ~GdtfRDMValueSensor();
+    private:
+        Sint32 fValue;
+        Sint32 fLowest;
+        Sint32 fHighest;
+        Sint32 fRecorded;
+        EGdtf_RDMValue_ThresholdOperator fThresholdOperator;
+    public:
+        virtual EGdtfObjectType			GetObjectType();
+
+    public:
+        // Getter        
+        Sint32		                                    GetValue() const;
+        Sint32		                                    GetLowest() const;
+        Sint32		                                    GetHighest() const;
+        Sint32		                                    GetRecorded() const;
+        EGdtf_RDMValue_ThresholdOperator		        GetThresholdOperator() const;
+        // Setter       
+        void				SetValue(Sint32 val);
+        void				SetLowest(Sint32 val);
+        void				SetHighest(Sint32 val);
+        void				SetRecorded(Sint32 val);
+        void				SetThresholdOperator(EGdtf_RDMValue_ThresholdOperator val);
+    protected:
+        virtual	TXString				GetNodeName();
+        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+    };
+    typedef GdtfRDMValueSensor*	GdtfRDMValueSensorPtr;
+
+    class GdtfArtNet : public GdtfObject
+    {
+    public:
+        GdtfArtNet();
+        ~GdtfArtNet();
+    private:
+        // Atributes
+        // TODO: This TYPE not defined in the docu to this day(26.09.18). Implement later.
+    public:
+        virtual EGdtfObjectType			GetObjectType();
+
+    public:
+        // Getter        
+        //...
+        // Setter       
+        // ...
+    protected:
+        virtual	TXString				    GetNodeName();
+        // virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        // virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+    };
+    typedef GdtfArtNet*	GdtfArtNetPtr;
+    
+    class GdtfsAcn : public GdtfObject
+    {
+    public:
+        GdtfsAcn();
+        ~GdtfsAcn();
+    private:
+        // Atributes
+        // TODO: This TYPE not defined in the docu to this day(26.09.18). Implement later.
+    public:
+        virtual EGdtfObjectType			GetObjectType();
+
+    public:
+        // Getter        
+        // ...
+        // Setter       
+        // ...
+    protected:
+        virtual	TXString				GetNodeName();
+        // virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        // virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+    };
+    typedef GdtfsAcn*	GdtfsAcnPtr;    
+
+    class GdtfKiNET : public GdtfObject
+    {
+    public:
+        GdtfKiNET();
+        ~GdtfKiNET();
+    private:
+        // Atributes
+        // TODO: This TYPE not defined in the docu to this day(26.09.18). Implement later.
+    public:
+        virtual EGdtfObjectType			GetObjectType();
+
+    public:
+        // Getter        
+        // ...
+        // Setter       
+        // ...
+    protected:
+        virtual	TXString				GetNodeName();
+        //virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        //virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+    };
+    typedef GdtfKiNET*	GdtfKiNETPtr;
+
+    class GdtfPosiStageNet : public GdtfObject
+    {
+    public:
+        GdtfPosiStageNet();
+        ~GdtfPosiStageNet();
+    private:
+        // Atributes
+        // TODO: This TYPE not defined in the docu to this day(26.09.18). Implement later.
+    public:
+        virtual EGdtfObjectType			GetObjectType();
+
+    public:
+        // Getter        
+        // ...
+        // Setter       
+        // ...
+    protected:
+        virtual	TXString				GetNodeName();
+        //virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        //virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+    };
+    typedef GdtfPosiStageNet*	GdtfPosiStageNetPtr;
+
+    class GdtfOpenSoundControl : public GdtfObject
+    {
+    public:
+        GdtfOpenSoundControl();
+        ~GdtfOpenSoundControl();
+    private:
+        // Atributes
+        // TODO: This TYPE not defined in the docu to this day(26.09.18). Implement later.
+    public:
+        virtual EGdtfObjectType			GetObjectType();
+
+    public:
+        // Getter        
+        // ...
+        // Setter       
+        // ...
+    protected:
+        virtual	TXString				GetNodeName();
+        //virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        //virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+    };
+    typedef GdtfOpenSoundControl*	GdtfOpenSoundControlPtr;
+
+    class GdtfCITP : public GdtfObject
+    {
+    public:
+        GdtfCITP();
+        ~GdtfCITP();
+    private:
+        // Atributes
+        // TODO: This TYPE not defined in the docu to this day(26.09.18). Implement later.
+    public:
+        virtual EGdtfObjectType			GetObjectType();
+
+    public:
+        // Getter        
+        // ...
+        // Setter       
+        // ...
+    protected:
+        virtual	TXString				GetNodeName();
+        //virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        //virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+    };
+    typedef GdtfCITP*	GdtfCITPPtr;
+
 	//------------------------------------------------------------------------------------
 	// GdtfUserPreset Definition
 	class GdtfUserPreset : public GdtfObject
@@ -1066,32 +1976,205 @@ namespace SceneData
 	typedef std::vector<GdtfUserPresetPtr>	TGdtfUserPresetArray;
 	
 	//------------------------------------------------------------------------------------
-	// GdtfMacro Definition
+	// Macro Definitions
+
 	class GdtfMacro : public GdtfObject
 	{
 	public:
-		GdtfMacro();
+		GdtfMacro(const TXString& name);
 		~GdtfMacro();
 		
 	private:
         TXString fName;
-		
-	public:
-        const TXString& GetName() const;
-        
+        // Childs
+        GdtfMacroDMX*    fMacroDMX;   
+        GdtfMacroVisual* fMacroVisual;
+    public:
+        virtual EGdtfObjectType			GetObjectType();    
+    public:
+        // Getter
+        const TXString&  GetName() const;        
+        GdtfMacroDMX*    GetMacroDMX() const;
+        GdtfMacroVisual* GetMacroVisual() const;
+        // Setter
         void SetName(const TXString & name);
-
-		virtual EGdtfObjectType			GetObjectType();
-		
+        void SetMacroDMX(GdtfMacroDMX* val);
+        void SetMacroVisual(GdtfMacroVisual* val);
 	protected:
 		virtual	TXString				GetNodeName();
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
-		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
-		
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);		
 	};
 	typedef GdtfMacro*					GdtfMacroPtr;
 	typedef std::vector<GdtfMacroPtr>	TGdtfMacroArray;
-	
+    
+    class GdtfMacroDMXValue : public GdtfObject
+    {
+    public:
+        GdtfMacroDMXValue();
+        GdtfMacroDMXValue(DmxValue dmxVal, GdtfDmxChannelPtr dmxChannel);
+        ~GdtfMacroDMXValue();
+    private:
+        DmxValue				fValue;
+        TXString                funresolvedDMXChannel;   
+        GdtfDmxChannelPtr       fDMXChannel;
+    public:
+        virtual EGdtfObjectType			GetObjectType();
+
+    public:
+        // Getter        
+        DmxValue		            GetValue() const;
+        const TXString&				GetUnresolvedDMXChannel() const;
+        GdtfDmxChannelPtr           GetDMXChannel() const;
+        // Setter       
+        void						SetValue(DmxValue val);
+        void                        SetDMXChannel(GdtfDmxChannelPtr chnl);
+
+    protected:
+        virtual	TXString				GetNodeName();
+        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+    };
+    typedef GdtfMacroDMXValue*	GdtfMacroDMXValuePtr;
+    typedef std::vector<GdtfMacroDMXValue*>	TGdtfMacroDMXValueArray;
+
+    class GdtfMacroDMXStep : public GdtfObject
+    {
+    public:
+        GdtfMacroDMXStep();
+        GdtfMacroDMXStep(Sint32 duration);
+        ~GdtfMacroDMXStep();
+    private:
+        Sint32 fDuration;
+        // Childs
+        TGdtfMacroDMXValueArray fDMXValues;
+    public:
+        virtual EGdtfObjectType	GetObjectType();
+
+    public:
+        // Getter        
+        Sint32 GetDuration() const;
+        TGdtfMacroDMXValueArray GetDMXValueArray() const;
+        // Setter               
+        void SetDuration(Sint32 d);
+        //
+        GdtfMacroDMXValuePtr AddDmxValue(DmxValue dmxVal, GdtfDmxChannelPtr dmxChannel);
+    protected:
+        virtual	TXString				GetNodeName();
+        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+    };
+    typedef GdtfMacroDMXStep*	GdtfMacroDMXStepPtr;
+    typedef std::vector<GdtfMacroDMXStep*>	TGdtfMacroDMXStepArray;
+    
+    class GdtfMacroDMX : public GdtfObject
+    {
+    public:
+        GdtfMacroDMX();
+        ~GdtfMacroDMX();
+    private:
+        TGdtfMacroDMXStepArray fDMXSetps;        
+    public:
+        virtual EGdtfObjectType			GetObjectType();
+        virtual TGdtfMacroDMXStepArray  GetStepArray();
+    public:
+        GdtfMacroDMXStepPtr AddDmxStep(Sint32& duration);
+    protected:
+        virtual	TXString				GetNodeName();
+        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+    };
+
+    class GdtfMacroVisualValue : public GdtfObject
+    {
+    public:
+        GdtfMacroVisualValue();
+        GdtfMacroVisualValue(DmxValue dmxVal, GdtfDmxChannelFunctionPtr channelFunctionRef);
+        ~GdtfMacroVisualValue();
+    private:
+        DmxValue				  fDmxValue;
+        TXString                  fUnresolvedChannelFunctionRef;
+        GdtfDmxChannelFunctionPtr fChannelFunctionRef;
+    public:
+        virtual EGdtfObjectType			GetObjectType();
+
+    public:
+        // Getter        
+        DmxValue                     GetDmxValue() const;
+        const TXString&			     GetUnresolvedChannelFunctionRef() const;
+        GdtfDmxChannelFunctionPtr    GetChannelFunctionRef() const;
+        // Setter               
+        void                         SetDmxValue(DmxValue val);
+        void	        			 SetUnresolvedChannelFunctionRef(const TXString& ref);
+        void                         SetChannelFunction(GdtfDmxChannelFunctionPtr ref);
+
+    protected:
+        virtual	TXString			GetNodeName();
+        virtual	void				OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void				OnReadFromNode(const IXMLFileNodePtr& pNode);
+    };
+
+    typedef GdtfMacroVisualValue*	GdtfMacroVisualValuePtr;
+    typedef std::vector<GdtfMacroVisualValue*>	TGdtfMacroVisualValueArray;
+    
+    class GdtfMacroVisualStep : public GdtfObject
+    {
+    public:
+        GdtfMacroVisualStep();
+        ~GdtfMacroVisualStep();
+    private:
+        Sint32 fDuration;
+        double  fFade;
+        double  fDelay;
+        // Childs
+        TGdtfMacroVisualValueArray fVisualValues; 
+
+    public:
+        TGdtfMacroVisualValueArray GetVisualValueArray();
+        virtual EGdtfObjectType	   GetObjectType();
+
+    public:
+        // Getter        
+        Sint32  getDuration();
+        double  getFade();
+        double  getDelay();
+        // Setter
+        void setDuration(Sint32 d);
+        void setFade(double f);
+        void setDelay(double d);
+        //
+        GdtfMacroVisualValue* AddVisualValue(DmxValue& dmxVal, GdtfDmxChannelFunctionPtr channelFunctionRef);
+
+    protected:
+        virtual	TXString				GetNodeName();
+        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+    };
+    typedef GdtfMacroVisualStep*	GdtfMacroVisualStepPtr;
+    typedef std::vector<GdtfMacroVisualStep*>	TGdtfMacroVisualStepArray;
+    
+    class GdtfMacroVisual : public GdtfObject
+    {
+    public:
+        GdtfMacroVisual();
+        ~GdtfMacroVisual();
+    private:        
+        TGdtfMacroVisualStepArray fVisualSteps;
+    public:
+        virtual EGdtfObjectType			GetObjectType();
+
+    public:
+        TGdtfMacroVisualStepArray GetVisualStepArray();
+        
+        GdtfMacroVisualStepPtr AddVisualStep();
+
+    protected:
+        virtual	TXString				GetNodeName();
+        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+    };
+    typedef GdtfMacroVisual*	GdtfMacroVisualPtr;
+
 	//------------------------------------------------------------------------------------
 	// GdtfPhysicalDescription Definition
 	class GdtfMeasurementPoint : public GdtfObject
@@ -1155,6 +2238,88 @@ namespace SceneData
 	typedef GdtfPhysicalEmitter*				GdtfPhysicalEmitterPtr;
 	typedef std::vector<GdtfPhysicalEmitter*>	TGdtfPhysicalEmitterArray;
 	
+    class GdtfCRI : public GdtfObject
+    {
+    public:
+        GdtfCRI();
+        GdtfCRI(EGdtfColorSample ces, Sint32 colorTemp);
+        ~GdtfCRI();
+    private:
+        // Attributes
+        EGdtfColorSample fCES;
+        Sint32           fColorTemperature;
+    public:
+        virtual EGdtfObjectType			GetObjectType();
+
+    public:
+        // Getter                
+        EGdtfColorSample GetColorSample() const;
+        Sint32           GetColorTemperature() const;
+        // Setter       
+        void SetColorSample(EGdtfColorSample val);
+        void SetColorTemperature(Sint32 val);
+    protected:
+        virtual	TXString				GetNodeName();
+        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+    };
+    typedef GdtfCRI*	GdtfCRIPtr;
+    typedef std::vector<GdtfCRI*>	TGdtf_CRIArray;
+
+    class GdtfCRIGroup : public GdtfObject
+    {
+    public:
+        GdtfCRIGroup();
+        GdtfCRIGroup(double colorTsemp);
+        ~GdtfCRIGroup();
+    private:
+        // Attributes
+        double fColorTemperature; // Color temperature; Default value : 6000; Unit: kelvin
+		
+		// Childs
+        TGdtf_CRIArray fCRI_Array;
+    public:
+        virtual EGdtfObjectType			GetObjectType();
+
+    public:
+        // Getter        
+        double         GetColorTemperature() const;
+        TGdtf_CRIArray GetCRI_Array() const;
+        // Setter       
+        void            SetColorTemperature(double val);
+        GdtfCRIPtr      Add_CRI(EGdtfColorSample ces, Sint32 colorTemp);
+    protected:
+        virtual	TXString				GetNodeName();
+        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+    };
+    typedef GdtfCRIGroup*	GdtfCRIGroupPtr;
+    typedef std::vector<GdtfCRIGroup*>	TGdtf_CRIGroupArray;
+
+	class GdtfDMXProfile : public GdtfObject
+     {
+     public:
+         GdtfDMXProfile();
+         ~GdtfDMXProfile();
+     private:
+         // Attributes
+     public:
+         virtual EGdtfObjectType			GetObjectType();
+
+     public:
+         // Getter        
+         //
+         // Setter       
+         //
+     protected:
+         virtual	TXString				GetNodeName();
+         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+         virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+     };
+     typedef GdtfDMXProfile*	GdtfDMXProfilePtr;
+     typedef std::vector<GdtfDMXProfile*>	TGdtfDMXProfileArray;
+	
+
 	//------------------------------------------------------------------------------------
 	// GdtfFixture Definition
 	class GdtfFixture : public GdtfObject
@@ -1174,6 +2339,8 @@ namespace SceneData
 		GdtfFixtureGUID	fGuid;
 		GdtfPNGFile		fTumbnail;
 		TXString		fTumbnailFullPath;
+		GdtfFixtureGUID	fLinkedGuid;
+		bool			fHasLinkedGuid;
 
 		//------------------------------------------------
 		// Storage
@@ -1193,10 +2360,11 @@ namespace SceneData
 		TGdtfMacroArray					fMacros;
 		
 		TGdtfPhysicalEmitterArray		fEmitters;
-		// 
-        
-        // RDM is not supported by this Lib currenty...
-        // So no FTRDM Array here
+        TGdtfDMXProfileArray            fDmxProfiles;
+        TGdtf_CRIGroupArray             fCRI_Groups;
+		
+
+		GdtfProtocols					fProtocollContainer;
 		
 		//------------------------------------------------
 		// Reading support
@@ -1212,16 +2380,18 @@ namespace SceneData
         const TXString&		GetManufacturer() const;
         const TXString&		GetFixtureTypeDescription() const;
         GdtfFixtureGUID		GetGuid() const;
+		GdtfFixtureGUID		GetLinkedGuid() const;
+		bool				HasLinkedGuid() const;
         const GdtfPNGFile&  GetPNGFile() const;
-		const GdtfPNGFile&  GetPNGFileFullPath();
-		
+		const GdtfPNGFile&  GetPNGFileFullPath();		
+        // Setter
 		void				SetName(const TXString& name);
 		void				SetShortName(const TXString& shortName);
 		void				SetManufacturer(const TXString& manu);
 		void				SetFixtureTypeDescription(const TXString& desc);
-		void				SetGuid(const VWFC::Tools::VWUUID& uuid);
+		void				SetGuid(const VWFC::UUID& uuid);
+		void				SetLinkedGuid(const VWFC::UUID& uuid);
 		void				SetPNGFile(const GdtfPNGFile& png);
-		
 	public:
 		//----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		// Add calls
@@ -1237,16 +2407,18 @@ namespace SceneData
 		GdtfGeometryPtr			AddGeometryBeam(	const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
 		GdtfGeometryPtr			AddGeometryWithAxis(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
 		GdtfGeometryPtr			AddGeometryWithLamp(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
-		
-		
+				
 		GdtfWheelPtr			AddWheel(TXString name);
 		GdtfDmxModePtr			AddDmxMode(const TXString& name);
 		GdtfPhysicalEmitterPtr	AddEmitter(const TXString& name);
-		GdtfMacroPtr			AddMacro();
+		GdtfMacroPtr			AddMacro(const TXString& name);
+        GdtfDMXProfilePtr       AddDmxProfile();
+
 		GdtfUserPresetPtr		AddUserPreset();
 		GdtfFeatureGroupPtr		AddFeatureGroup(const TXString& name, const TXString& prettyName);
 		GdtfActivationGroupPtr	AddActivationGroup(const TXString& name);
-		
+        GdtfCRIGroupPtr         AddCRIGroup(double colorTsemp);
+
 		//----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		// Read calls
 		const TGdtfWheelArray&                  GetWheelArray();
@@ -1260,6 +2432,10 @@ namespace SceneData
         const TGdtfUserPresetArray&             GetPresetArray();
         const TGdtfMacroArray&                  GetMacroArray();
         const TGdtfPhysicalEmitterArray&		GetPhysicalEmitterArray();
+        const TGdtfDMXProfileArray&             GetDmxProfileArray();
+        const TGdtf_CRIGroupArray&              GetCRIGroupArray();
+		
+		GdtfProtocols&							GetProtocollContainer();
         
 	public:
 		virtual EGdtfObjectType			GetObjectType();
@@ -1296,10 +2472,5 @@ namespace SceneData
 		
 		bool							IsReaded();
 		void							GetWorkingFolder(IFolderIdentifierPtr& folder);
-		
-
-		
 	};
-	
-
 }

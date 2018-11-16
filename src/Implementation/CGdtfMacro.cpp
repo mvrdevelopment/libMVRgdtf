@@ -37,3 +37,8 @@ void VectorworksMVR::CGdtfMacroImpl::setPointer(SceneData::GdtfMacro *macro)
 {
     fMacro = macro;
 }
+
+SceneData::GdtfMacro* VectorworksMVR::CGdtfMacroImpl::getPointer()
+{
+    return fMacro;
+}

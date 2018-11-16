@@ -87,7 +87,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::GetDmxFrequency(E
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::GetDefaultValue(Sint32 &defaultValue)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::GetDefaultValue(DmxValue &defaultValue)
 {
 	// Check Pointer
 	if ( ! fChannel) { return kVCOMError_NotInitialized; }
@@ -97,7 +97,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::GetDefaultValue(S
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::GetHighlight(Sint32 &highlight)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::GetHighlight(DmxValue &highlight)
 {
 	// Check Pointer
 	if ( ! fChannel) { return kVCOMError_NotInitialized; }
@@ -105,6 +105,16 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::GetHighlight(Sint
     highlight = fChannel->GetHighlight();
     
     return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::HasHighlight(bool &highlight)
+{
+	// Check Pointer
+	if ( ! fChannel) { return kVCOMError_NotInitialized; }
+	
+	highlight = fChannel->HasHighlight();
+	
+	return kVCOMError_NoError;
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::GetMoveInBlackFrames(double &frames)
@@ -232,7 +242,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::SetDmxFrequency(E
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::SetDefaultValue(Sint32 defaultValue)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::SetDefaultValue(DmxValue defaultValue)
 {
 	// Check Pointer
 	if ( ! fChannel) { return kVCOMError_NotInitialized; }
@@ -242,7 +252,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::SetDefaultValue(S
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::SetHighlight(Sint32 highlight)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::SetHighlight(DmxValue highlight)
 {
 	// Check Pointer
 	if ( ! fChannel) { return kVCOMError_NotInitialized; }

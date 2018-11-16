@@ -22,9 +22,10 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetUltra(Sint32& ultra);
 		virtual VCOMError VCOM_CALLTYPE	    GetUber(Sint32& uber);
         virtual VCOMError VCOM_CALLTYPE     GetDmxFrequency(EGdtfDmxFrequency& frequency);
-        virtual VCOMError VCOM_CALLTYPE     GetDefaultValue(Sint32& defaultValue);
-        virtual VCOMError VCOM_CALLTYPE     GetHighlight(Sint32& highlight);
-        virtual VCOMError VCOM_CALLTYPE     GetMoveInBlackFrames(double& frames);
+        virtual VCOMError VCOM_CALLTYPE     GetDefaultValue(DmxValue& defaultValue);
+        virtual VCOMError VCOM_CALLTYPE     GetHighlight(DmxValue& highlight);
+		virtual VCOMError VCOM_CALLTYPE     HasHighlight(bool& highlight);
+		virtual VCOMError VCOM_CALLTYPE     GetMoveInBlackFrames(double& frames);
         virtual VCOMError VCOM_CALLTYPE     GetDmxChangeTimeLimit(double& changeTimeLimit);
 		virtual VCOMError VCOM_CALLTYPE     GetGeometry(VectorworksMVR::IGdtfGeometry **geo);
 		
@@ -34,8 +35,8 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE     SetUltra(Sint32 ultra);
 		virtual VCOMError VCOM_CALLTYPE     SetUber(Sint32 uber);
 		virtual VCOMError VCOM_CALLTYPE     SetDmxFrequency(EGdtfDmxFrequency frequency);
-		virtual VCOMError VCOM_CALLTYPE     SetDefaultValue(Sint32 defaultValue);
-		virtual VCOMError VCOM_CALLTYPE     SetHighlight(Sint32 highlight);
+		virtual VCOMError VCOM_CALLTYPE     SetDefaultValue(DmxValue defaultValue);
+		virtual VCOMError VCOM_CALLTYPE     SetHighlight(DmxValue highlight);
 		virtual VCOMError VCOM_CALLTYPE     SetMoveInBlackFrames(double frames);
 		virtual VCOMError VCOM_CALLTYPE     SetDmxChangeTimeLimit(double changeTimeLimit);
 		virtual VCOMError VCOM_CALLTYPE     SetGeometry(IGdtfGeometry* model);

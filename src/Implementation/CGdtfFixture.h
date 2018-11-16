@@ -28,10 +28,16 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetFixtureGUID(MvrUUID& uuid);
         virtual MvrString VCOM_CALLTYPE     GetFixtureThumbnail();
 		virtual MvrString VCOM_CALLTYPE     GetFixtureThumbnailFullPath();
+		virtual VCOMError VCOM_CALLTYPE		GetLinkedFixtureGUID(UUID& uuid);
+		virtual VCOMError VCOM_CALLTYPE		HasLinkedFixtureGUID(bool& has);
+
+		
 		
 		virtual VCOMError VCOM_CALLTYPE     SetFixtureTypeDescription(MvrString descrip);
 		virtual VCOMError VCOM_CALLTYPE		SetShortName(MvrString shortName);
 		virtual VCOMError VCOM_CALLTYPE     SetFixtureThumbnail(MvrString thubnail);
+		virtual VCOMError VCOM_CALLTYPE		SetLinkedFixtureGUID(const UUID& uuid);
+		
         
         virtual VCOMError VCOM_CALLTYPE		GetActivationGroupCount(size_t& count);
         virtual VCOMError VCOM_CALLTYPE		GetActivationGroupAt(size_t at, IGdtfActivationGroup** activationGroup);
@@ -71,12 +77,24 @@ namespace VectorworksMVR
         
         virtual VCOMError VCOM_CALLTYPE		GetMacroCount(size_t& count);
         virtual VCOMError VCOM_CALLTYPE		GetMacroAt(size_t at, IGdtfMacro** macro );
-		virtual VCOMError VCOM_CALLTYPE     CreateMacro(IGdtfMacro** macro);
+		virtual VCOMError VCOM_CALLTYPE     CreateMacro(MvrString& name, IGdtfMacro** macro);
         
 		virtual VCOMError VCOM_CALLTYPE     GetEmitterCount(size_t& count);
 		virtual VCOMError VCOM_CALLTYPE     GetEmitterAt(size_t at, IGdtfPhysicalEmitter** emitter);
 		virtual VCOMError VCOM_CALLTYPE     CreateEmitter(MvrString name,const CieColor& color, IGdtfPhysicalEmitter** emitter);
+
+        virtual VCOMError VCOM_CALLTYPE		GetDMXProfileCount(size_t& count);
+        virtual VCOMError VCOM_CALLTYPE		CreateDMXProfile(VectorworksMVR::IGdtfDMXProfile** outVal);
+        virtual VCOMError VCOM_CALLTYPE		GetDMXProfileAt(size_t at, VectorworksMVR::IGdtfDMXProfile** value);
+
+        virtual VCOMError VCOM_CALLTYPE		GetCRIGroupCount(size_t& count);
+        virtual VCOMError VCOM_CALLTYPE		CreateCRIGroup(double colorTemp, VectorworksMVR::IGdtfCRIGroup** outVal);
+        virtual VCOMError VCOM_CALLTYPE		GetCRIGroupAt(size_t at, VectorworksMVR::IGdtfCRIGroup** value);
 		
+		// Protocoll
+		virtual VCOMError VCOM_CALLTYPE GetRDM(IGdtf_FTRDM ** newFTRDM);
+		virtual VCOMError VCOM_CALLTYPE CreateRDM(VectorworksMVR::IGdtf_FTRDM ** outFTRDM);
+        
 		//Internal
 		VectorworksMVR::VCOMError			ReadFromFile(IFileIdentifierPtr file);
 		

@@ -1,7 +1,6 @@
 //-----------------------------------------------------------------------------
 //----- Copyright deersoft 2015 - 2017 www.deersoft.de
 //-----------------------------------------------------------------------------
-
 #pragma once
 
 #include "GDTFManager.h"
@@ -54,16 +53,19 @@ namespace SceneData
 	class GdtfConverter
 	{
 	public:
-		static TXString	ConvertUUID(const VWFC::Tools::VWUUID& uuid);
+        //-----------------------------------------------------------------------------
+        // Convert to String functions:
+		static TXString	ConvertUUID(const VWFC::UUID& uuid);
 		static TXString	ConvertColor(const CCieColor& color);
 		static TXString	ConvertDouble(double value);
 		static TXString	ConvertInteger(Sint32 value);
 		static TXString	ConvertInteger(size_t value);
 		static TXString	ConvertInteger(Sint32 value, bool noneValue);
+        static TXString	ConvertIntegerArray (TSint32Array& values);
 		static TXString	ConvertDMXAdress(DMXAddress value);
 		static TXString	ConvertDMXValue(DmxValue value, EGdtfChannelBitResolution chanlReso, bool noneValue=false);		
 		static TXString	ConvertPrimitiveType(EGdtfModel_PrimitiveType value);
-		static TXString ConvertMatrix(const VWTransformMatrix& ma);
+		static TXString ConvertMatrix(const VWTransformMatrix& ma, bool fourLines);
 		static TXString ConvertRotation(const VWTransformMatrix& ma);
 		static TXString	ConvertLampeType(EGdtfLampType value);
 		static TXString	ConvertFrequenz(EGdtfDmxFrequency value);
@@ -75,8 +77,22 @@ namespace SceneData
 		static TXString ConvertBeamType(EGdtfBeamType value);
 		static TXString ConvertDMXInvertEnum(EGDTFDmxInvert value);
 		static TXString ConvertEncoderInvertEnum(EGDTFEncoderInvert value);
-		
-		static bool		ConvertUUID(			const TXString& value, VWFC::Tools::VWUUID&					uuid);
+        static TXString ConvertRDMParamTypeEnum(EGdtf_RDMParam_Type value);
+        static TXString Convert_RDMParamDataTypeEnum(EGdtf_RDMParam_DataType value);		
+        static TXString Convert_RDMParam_CommandEnum(EGdtf_RDMParam_Command value);
+        static TXString Convert_RDMParam_SensorUnitEnum(EGdtf_RDMParam_SensorUnit value);        
+        static TXString Convert_RDMParam_SensorUnitPrefixEnum(EGdtf_RDMParam_SensorUnitPrefix value);
+        static TXString ConvertEGdtf_RDMValueBool_ValueEnum(EGdtf_RDMValueBool_Value value);
+        static TXString ConvertEGdtf_RDMValue_ThresholdOperatorEnum(EGdtf_RDMValue_ThresholdOperator value);		
+        static TXString ConvertRDMValue_SENSOR_DEFINITION_TypeEnum(EGdtf_RDMValue_SENSOR_DEFINITION_TYPE value);
+        static TXString Convert_RDMValue_LowesHighestDetectionSupportedEnum(EGdtf_RDMValue_LowesHighestDetectionSupported value);
+        static TXString Convert_RDMValue_RecordValueSupportedEnum(EGdtf_RDMValue_RecordValueSupported value);
+        static TXString ConvertRDMValue_SLOT_INFO_TypeEnum(EGdtf_RDMValue_SLOT_INFO_Type value);
+        static TXString ConvertRDMValue_SLOT_INFO_SlotLabelIDEnum(EGdtf_RDMValue_SLOT_INFO_SlotLabelID value);
+        //-----------------------------------------------------------------------------
+        // Convert from String functions:
+        static bool		ConvertUUID(			const TXString& value, VWFC::UUID&						uuid);
+        static TXString ConvertEGdtfColorSampleEnum(EGdtfColorSample value);
 		static bool		ConvertColor(			const TXString& value, CCieColor&					color);
 		static bool		ConvertDouble(			const TXString& value, double&						doubleValue);
 		static bool		ConvertMatrix(			const TXString& value, VWTransformMatrix&			ma);
@@ -87,6 +103,7 @@ namespace SceneData
 		static bool		ConvertInteger(			const TXString& value, Sint8&						intValue);
 		static bool		ConvertInteger(			const TXString& value, size_t&						intValue);
 		static bool		ConvertInteger(			const TXString& value, Sint32&						intValue,		bool& noneValue);
+        static bool     ConvertIntegerArray(          TXString values, TSint32Array& intArray);
 		static bool		ConvertDMXAdress(	    const TXString& value, DMXAddress & intValue);
 		static bool  	ConvertDMXValue(		const TXString& strValue,  EGdtfChannelBitResolution chanlReso, DmxValue & intValue);
 		static bool  	ConvertDMXValue(		const TXString& strValue,  EGdtfChannelBitResolution chanlReso, DmxValue & intValue, bool& noneValue);
@@ -99,7 +116,20 @@ namespace SceneData
 		static bool		ConvertBeamType(		const TXString& value, EGdtfBeamType&				type);
 		static bool		ConvertDMXInvertEnum(	const TXString& value, EGDTFDmxInvert&				dmx);
 		static bool		ConvertEncoderInvertEnum(const TXString& value,EGDTFEncoderInvert&			enc);
-		
+        static bool     ConvertRDMParamTypeEnum(const TXString & value, EGdtf_RDMParam_Type & val);
+        static bool     Convert_RDMParamDataTypeEnum(const TXString & value, EGdtf_RDMParam_DataType & val);
+        static bool     Convert_RDMParam_CommandEnum(const TXString & value, EGdtf_RDMParam_Command & val);
+        static bool     Convert_RDMParam_SensorUnitEnum(const TXString & value, EGdtf_RDMParam_SensorUnit & val);
+        static bool     Convert_RDMParam_SensorUnitPrefixEnum(const TXString & value, EGdtf_RDMParam_SensorUnitPrefix & val);
+        static bool     ConvertEGdtf_RDMValueBool_ValueEnum(const TXString & value, EGdtf_RDMValueBool_Value & val);
+        static bool     ConvertEGdtf_RDMValue_ThresholdOperatorEnum(const TXString & value, EGdtf_RDMValue_ThresholdOperator & val);
+        static bool     ConvertRDMValue_SENSOR_DEFINITION_TypeEnum(const TXString & value, EGdtf_RDMValue_SENSOR_DEFINITION_TYPE & val);
+        static bool     Convert_RDMValue_LowesHighestDetectionSupportedEnum(const TXString & value, EGdtf_RDMValue_LowesHighestDetectionSupported & val);
+        static bool     Convert_RDMValue_RecordValueSupportedEnum(const TXString & value, EGdtf_RDMValue_RecordValueSupported & val);
+        static bool     ConvertRDMValue_SLOT_INFO_TypeEnum(const TXString & value, EGdtf_RDMValue_SLOT_INFO_Type & val);
+        static bool     ConvertRDMValue_SLOT_INFO_SlotLabelIDEnum(const TXString & value, EGdtf_RDMValue_SLOT_INFO_SlotLabelID & val);        
+        static bool     ConvertEGdtfColorSampleEnum(const TXString& inVal, EGdtfColorSample& outVal);
+
 		typedef		std::function<void(IXMLFileNodePtr objNode)>	TProcessNodeCall;
 		static void		TraverseNodes(IXMLFileNodePtr root, const TXString& childContainerNodeName,const TXString& childNodeName, TProcessNodeCall processNodeFunction);
 		
@@ -108,8 +138,7 @@ namespace SceneData
 		
 	private:
 		static bool		Deserialize(const TXString& value, std::vector<double>& doubleArr);
-		
-		
+		static bool		Deserialize(const TXString& value, TSint32Array& doubleArr);
 	};
 	
 	class SceneDataZip
@@ -119,9 +148,4 @@ namespace SceneData
         static void AddFileToZip(IZIPFilePtr& zipFile, ISceneDataZipBuffer& buffer,const TXString &name , bool createChecksum);
 		static bool GetFile(const TXString& fileName,const IFolderIdentifierPtr& workingFolder, IFileIdentifierPtr& outFile, bool& hasCheckSum, bool& checksumIsFine, bool checkSumCheck );
 	};
-    
-    
-
-    
-    
 }

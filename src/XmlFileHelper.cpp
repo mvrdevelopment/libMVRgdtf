@@ -4,7 +4,6 @@
 
 
 #include "Prefix/StdAfx.h"
-
 using namespace VWFC;
 
 #include "SceneDataExchange.h"
@@ -140,7 +139,7 @@ using namespace SceneData;
 	uuidForRead[36] = value[31];
 	uuidForRead[37] = '}';
 	
-	uuid = VWFC::Tools::VWUUID(uuidForRead);
+	uuid = UUID(uuidForRead);
 	
 	return true;
 	
@@ -188,6 +187,12 @@ using namespace SceneData;
 
 /*static*/ bool GdtfConverter::ConvertDouble(const TXString& value, double& doubleValue)
 {
+	if(value.IsEmpty())
+	{
+		doubleValue = 0.0;
+		return false;
+	}
+	
 	// Try to convert
 	doubleValue = value.atof();
 	
@@ -248,6 +253,48 @@ TXString SceneData::GdtfConverter::ConvertDMXValue(DmxValue value, EGdtfChannelB
 	TXString valueStr;
 	valueStr << value;
 	return valueStr;
+}
+
+TXString SceneData::GdtfConverter::ConvertIntegerArray(TSint32Array & values)
+/* Takes an Int-Array and returns it as string in the format: "{Int, Int, ... Int}" */
+{   
+    TXString arrayStr;
+    
+    // Begin the array Str
+    arrayStr = "{";
+
+    // Add the Values
+    for (int idx = 0; idx < values.size(); idx++)
+    {        
+        arrayStr += TXString().ToStringInt(values.at(idx));
+        
+        // The last index is size-1. We want that no "," is appended at the last item 
+        // so only append "," for idx < last_idx.
+        if (idx < values.size() - 1) 
+        {
+            arrayStr += ",";
+        }        
+    }    
+
+    // CLose the Array Str
+    arrayStr += "}";
+
+    return arrayStr;
+}
+
+bool SceneData::GdtfConverter::ConvertIntegerArray(TXString values, TSint32Array & intArray)
+/* Takes string in the format: "{Int, Int, ... Int}" and fills the values into the IntArray. */
+{
+    TXString intArrayString = values;
+    if (values.IsEmpty()) { return false; }
+
+    // Remove the barcets "{" and "}"
+    values.Replace("{", "");
+    values.Replace("}", "");
+
+    // Seperate the string by ","
+    GdtfConverter::Deserialize(values, intArray);
+    return true;
 }
 
 /*static*/ TXString GdtfConverter::ConvertInteger(size_t value)
@@ -348,15 +395,15 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString& strValue, EGdtfCh
 			        // (No need to check eGdtfChannelBitResolution_8 here.)
                     case eGdtfChannelBitResolution_16:
 			        {			
-				        intValue = dmxValueRaw * 256; break;
+				        intValue = dmxValueRaw / 256; break;
 			        }
                     case eGdtfChannelBitResolution_24:
 			        {
-				        intValue = dmxValueRaw * 256 * 256; break;
+				        intValue = dmxValueRaw / 256 / 256; break;
 			        }	
                     case eGdtfChannelBitResolution_32:
 			        {			
-				        intValue = dmxValueRaw * 256 * 256 * 256; break;
+				        intValue = dmxValueRaw / 256 / 256 / 256; break;
 			        }                    
                 }
                 break;
@@ -368,16 +415,16 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString& strValue, EGdtfCh
 
                     case eGdtfChannelBitResolution_8:
                     {
-                        intValue = dmxValueRaw / 256; break;
+                        intValue = dmxValueRaw * 256; break;
                     }
                     // /No need to check eGdtfChannelBitResolution_16 here.)
                     case eGdtfChannelBitResolution_24:
                     {
-                        intValue = dmxValueRaw * 256; break;
+                        intValue = dmxValueRaw / 256; break;
                     }
                     case eGdtfChannelBitResolution_32:
                     {
-                        intValue = dmxValueRaw * 256 * 256; break;
+                        intValue = dmxValueRaw / 256 / 256; break;
                     }
                 }
                 break;
@@ -388,16 +435,16 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString& strValue, EGdtfCh
                 {
                     case eGdtfChannelBitResolution_8:
                     {
-                        intValue = dmxValueRaw / 256 / 256; break;
+                        intValue = dmxValueRaw * 256 * 256; break;
                     }
                     case eGdtfChannelBitResolution_16:
                     {
-                        intValue = dmxValueRaw / 256; break;
+                        intValue = dmxValueRaw * 256; break;
                     }
                     // (No need to check eGdtfChannelBitResolution_24 here.)
                     case eGdtfChannelBitResolution_32:
                     {
-                        intValue = dmxValueRaw * 256; break;
+                        intValue = dmxValueRaw / 256; break;
                     }                
                 }
                 break;
@@ -408,15 +455,15 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString& strValue, EGdtfCh
                 {
                     case eGdtfChannelBitResolution_8:
                     {
-                        intValue = dmxValueRaw / 256 / 256 / 256; break;
+                        intValue = dmxValueRaw * 256 * 256 * 256; break;
                     }
                     case eGdtfChannelBitResolution_16:
                     {
-                        intValue = dmxValueRaw / 256 / 256; break;
+                        intValue = dmxValueRaw * 256 * 256; break;
                     }
                     case eGdtfChannelBitResolution_24:
                     {
-                        intValue = dmxValueRaw / 256; break;
+                        intValue = dmxValueRaw * 256; break;
                     }
                     // (No need to check eGdtfChannelBitResolution_32 here.)                    
                 }
@@ -520,9 +567,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 		case EGdtfSpecial::Zoom:		return XML_EGdtfSpecialEnum_Zoom;
 		case EGdtfSpecial::Dummy:		return XML_EGdtfSpecialEnum_Dummy;
 			
-		default: DSTOP((kEveryone,"EGdtfSpecial enum is not implemented!"));
-			
-			
+		default: DSTOP((kEveryone,"EGdtfSpecial enum is not implemented!"));			
 	}
 	
 	// Return default value
@@ -645,14 +690,28 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 }
 
 
-/*static*/ TXString GdtfConverter::ConvertMatrix(const VWTransformMatrix& ma)
+/*static*/ TXString GdtfConverter::ConvertMatrix(const VWTransformMatrix& ma, bool fourLines)
 {
 	TXString value;
-	value << "{" << ma.GetUVector().x  << "," << ma.GetUVector().y << "," << ma.GetUVector().z << "}";
-	value << "{" << ma.GetVVector().x  << "," << ma.GetVVector().y << "," << ma.GetVVector().z << "}";
-	value << "{" << ma.GetWVector().x  << "," << ma.GetWVector().y << "," << ma.GetWVector().z << "}";
-	value << "{" << ma.GetOffset().x   << "," << ma.GetOffset().y  << "," << ma.GetOffset().z  << "}";
+	if(fourLines)
+	{
+		// For GDTF
+		value << "{" << ma.GetUVector().x  << "," << ma.GetUVector().y << "," << ma.GetUVector().z << "," << ma.GetOffset().x << "}";
+		value << "{" << ma.GetVVector().x  << "," << ma.GetVVector().y << "," << ma.GetVVector().z << "," << ma.GetOffset().y << "}";
+		value << "{" << ma.GetWVector().x  << "," << ma.GetWVector().y << "," << ma.GetWVector().z << "," << ma.GetOffset().z << "}";
+		value << "{" << "0"                << "," << "0"               << "," << "0"               << "," << "1"              << "}";
+
+	}
+	else
+	{
+		// For MVR
+		value << "{" << ma.GetUVector().x  << "," << ma.GetUVector().y << "," << ma.GetUVector().z << "}";
+		value << "{" << ma.GetVVector().x  << "," << ma.GetVVector().y << "," << ma.GetVVector().z << "}";
+		value << "{" << ma.GetWVector().x  << "," << ma.GetWVector().y << "," << ma.GetWVector().z << "}";
+		value << "{" << ma.GetOffset().x   << "," << ma.GetOffset().y  << "," << ma.GetOffset().z  << "}";
+	}
 	
+
 	
 	return value;
 }
@@ -720,10 +779,32 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 		}
 		
 		// ----------------------------------------------------------------
-		// Set the matrix
-		matrix.fMatrix.mat[i][0] = arr [0];
-		matrix.fMatrix.mat[i][1] = arr [1];
-		matrix.fMatrix.mat[i][2] = arr [2];
+		// Set the matrix for a 4x3 matrix
+		if(arr.size() == 3)
+		{
+			matrix.fMatrix.mat[i][0] = arr [0];
+			matrix.fMatrix.mat[i][1] = arr [1];
+			matrix.fMatrix.mat[i][2] = arr [2];
+
+		}
+		// ----------------------------------------------------------------
+		// Set the matrix for a 4x4 matrix
+		else
+		{
+			if(i<3)
+			{
+				// This is the rotation part
+				matrix.fMatrix.mat[i][0] = arr [0];
+				matrix.fMatrix.mat[i][1] = arr [1];
+				matrix.fMatrix.mat[i][2] = arr [2];
+
+				// This is the offset part
+				matrix.fMatrix.mat[3][i] = arr [3];
+			}
+
+
+		}
+
 
 	}
 
@@ -883,8 +964,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	else												{ freq = eGdtfDmxFrequency_30; DSTOP((kEveryone, "Unaspected Input for Lamp Type Enum"));}
 	
 	// Return true
-	return true;
-	
+	return true;	
 }
 
 /*static*/ TXString GdtfConverter::ConvertSnapEnum(EGdtfDmxSnap value)
@@ -894,14 +974,10 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 		case eGdtfDmxMaster_No:		return XML_GDTF_DMXSnapEnum_No;
 		case eGdtfDmxMaster_On:		return XML_GDTF_DMXSnapEnum_On;
 		case eGdtfDmxMaster_Off:	return XML_GDTF_DMXSnapEnum_Off;
-		case eGdtfDmxMaster_Yes:	return XML_GDTF_DMXSnapEnum_Yes;
-	}
-	
-	// Make Assert
-	ASSERTN(kEveryone,	value == eGdtfDmxMaster_On ||
-			value == eGdtfDmxMaster_No ||
-			value == eGdtfDmxMaster_Off ||
-			value == eGdtfDmxMaster_Yes);
+		case eGdtfDmxMaster_Yes:	return XML_GDTF_DMXSnapEnum_Yes;        
+
+        default: DSTOP((kEveryone, "ConvertSnapEnum: Invalid Input-Value"));
+	}	
 	
 	// Return default value
 	return XML_GDTF_DMXSnapEnum_No;
@@ -928,12 +1004,8 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 		case eGdtfDmxMaster_None:	return XML_GDTF_DMXMasterEnum_None;
 		case eGdtfDmxMaster_Grand:	return XML_GDTF_DMXMasterEnum_Grand;
 		case eGdtfDmxMaster_Group:	return XML_GDTF_DMXMasterEnum_Group;
-	}
-	
-	// Make Assert
-	ASSERTN(kEveryone,	value == eGdtfDmxMaster_None ||
-			value == eGdtfDmxMaster_Grand ||
-			value == eGdtfDmxMaster_Group);
+        default: DSTOP((kEveryone, "ConvertMasterEnum: Invalid Input-Value"));
+	}	
 	
 	// Return default value
 	return XML_GDTF_DMXMasterEnum_None;
@@ -959,12 +1031,8 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 		case eGdtfDmxRelationType_Mode:		return XML_GDTF_DMXMasterEnum_Mode;
 		case eGdtfDmxRelationType_Multiply:	return XML_GDTF_DMXMasterEnum_Multiply;
 		case eGdtfDmxRelationType_Override:	return XML_GDTF_DMXMasterEnum_Override;
-	}
-	
-	// Make Assert
-	ASSERTN(kEveryone,	value == eGdtfDmxRelationType_Mode ||
-			value == eGdtfDmxRelationType_Multiply ||
-			value == eGdtfDmxRelationType_Override);
+        default: DSTOP((kEveryone, "ConvertRelationEnum: Invalid Input-Value"));
+	}	
 	
 	// Return default value
 	return XML_GDTF_DMXMasterEnum_Mode;
@@ -990,11 +1058,8 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	{
 		case eGDTFDmxInvert_No:			return XML_GDTF_DMXChannelDmxInvertEnum_No;
 		case eGDTFDmxInvert_Yes:		return XML_GDTF_DMXChannelDmxnvertEnum_Yes;
-	}
-	
-	// Make Assert
-	ASSERTN(kEveryone,	value == eGDTFDmxInvert_No ||
-						value == eGDTFDmxInvert_Yes );
+        default: DSTOP((kEveryone, "ConvertDMXInvertEnum: Invalid Input-Value"));
+	}	
 	
 	// Return default value
 	return XML_GDTF_DMXChannelDmxInvertEnum_No;
@@ -1009,7 +1074,6 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	
 	// Return true
 	return true;
-	
 }
 
 /*static*/ TXString GdtfConverter::ConvertEncoderInvertEnum(EGDTFEncoderInvert value)
@@ -1018,17 +1082,14 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	{
 		case eGDTFEncoderInvert_No:			return XML_GDTF_DMXChannelEncoderInvertEnum_No;
 		case eGDTFEncoderInvert_Yes:		return XML_GDTF_DMXChannelEncoderInvertEnum_Yes;
-	}
-	
-	// Make Assert
-	ASSERTN(kEveryone,	value == eGDTFEncoderInvert_No ||
-						value == eGDTFEncoderInvert_Yes );
+        default: DSTOP((kEveryone, "ConvertEncoderInvertEnum: Invalid Input-Value"));
+	}	
 	
 	// Return default value
 	return XML_GDTF_DMXChannelEncoderInvertEnum_No;
 }
 
-/*static*/ bool GdtfConverter::ConvertEncoderInvertEnum(const TXString& value,EGDTFEncoderInvert&			enc)
+/*static*/ bool GdtfConverter::ConvertEncoderInvertEnum(const TXString& value, EGDTFEncoderInvert&			enc)
 {
 	if		(value == XML_GDTF_DMXChannelEncoderInvertEnum_No)	{ enc = eGDTFEncoderInvert_No;		}
 	else if (value == XML_GDTF_DMXChannelEncoderInvertEnum_Yes)	{ enc = eGDTFEncoderInvert_Yes;		}
@@ -1036,9 +1097,822 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	else														{ enc = eGDTFEncoderInvert_No; DSTOP((kEveryone, "Unaspected Input for EGDTFEncoderInvert Enum"));}
 	
 	// Return true
-	return true;
-	
+	return true;	
 }
+
+/*static*/ TXString GdtfConverter::ConvertRDMParamTypeEnum(EGdtf_RDMParam_Type value)
+{           
+    switch (value)
+    {
+        case EGdtf_RDMParam_Type::RDM:			  return XML_GDTF_RDMParamTypeEnum_RDM;
+        case EGdtf_RDMParam_Type::FixtureType:	  return XML_GDTF_RDMParamTypeEnum_FixtureType;
+        case EGdtf_RDMParam_Type::Fixture:		  return XML_GDTF_RDMParamTypeEnum_Fixture;        
+        default: DSTOP((kEveryone, "ConvertRDMParamTypeEnum: Invalid Input-Value"));
+    }
+
+    // Default
+    return XML_GDTF_RDMParamTypeEnum_RDM; // TODO: Theres no default value at the moment check this later again. (19.10)
+}
+
+/*static*/ bool GdtfConverter::ConvertRDMParamTypeEnum(const TXString& value, EGdtf_RDMParam_Type&			val)
+{
+    if (value == XML_GDTF_RDMParamTypeEnum_RDM)              { val = EGdtf_RDMParam_Type::RDM;}
+    else if (value == XML_GDTF_RDMParamTypeEnum_FixtureType) { val = EGdtf_RDMParam_Type::FixtureType;}
+    else if (value == XML_GDTF_RDMParamTypeEnum_Fixture)     { val = EGdtf_RDMParam_Type::Fixture;}
+    else 
+    { 
+        val = EGdtf_RDMParam_Type::RDM; 
+        DSTOP((kEveryone, "Unaspected Input for ConvertRDMParamTypeEnum Enum")); 
+    } // TODO: Theres no default value at the moment check this later again. (19.10)
+
+    return true;
+}
+
+/*static*/ TXString GdtfConverter::Convert_RDMParamDataTypeEnum(EGdtf_RDMParam_DataType value)
+{
+    switch (value)
+    {
+        case EGdtf_RDMParam_DataType::DS_NOT_DEFINED :   	return XML_GDTF_RDMParam_DataTypeEnum_DS_NOT_DEFINED;
+        case EGdtf_RDMParam_DataType::DS_BIT_FIELD:			return XML_GDTF_RDMParam_DataTypeEnum_DS_BIT_FIELD;
+        case EGdtf_RDMParam_DataType::DS_ASCII: 			return XML_GDTF_RDMParam_DataTypeEnum_DS_ASCII;
+        case EGdtf_RDMParam_DataType::DS_UNSIGNED_BYTE:		return XML_GDTF_RDMParam_DataTypeEnum_DS_UNSIGNED_BYTE;
+        case EGdtf_RDMParam_DataType::DS_SIGNED_BYTE:		return XML_GDTF_RDMParam_DataTypeEnum_DS_SIGNED_BYTE;
+        case EGdtf_RDMParam_DataType::DS_UNSIGNED_WORD:		return XML_GDTF_RDMParam_DataTypeEnum_DS_UNSIGNED_WORD;
+        case EGdtf_RDMParam_DataType::DS_SIGNED_WORD:   	return XML_GDTF_RDMParam_DataTypeEnum_DS_SIGNED_WORD;
+        case EGdtf_RDMParam_DataType::DS_UNSIGNED_DWORD:	return XML_GDTF_RDMParam_DataTypeEnum_DS_UNSIGNED_DWORD;
+        case EGdtf_RDMParam_DataType::DS_SIGNED_DWORD:		return XML_GDTF_RDMParam_DataTypeEnum_DS_SIGNED_DWORD;
+        case EGdtf_RDMParam_DataType::DS_MS:        		return XML_GDTF_RDMParam_DataTypeEnum_DS_MS;
+        default: DSTOP((kEveryone, "Convert_RDMParamDataTypeEnum: Invalid Input-Value"));
+    }
+
+    // Default
+    return XML_GDTF_RDMParam_DataTypeEnum_DS_NOT_DEFINED; // TODO: Theres no default value at the moment check this later again. (19.10)
+}
+
+/*static*/ bool GdtfConverter::Convert_RDMParamDataTypeEnum(const TXString& value, EGdtf_RDMParam_DataType& val)
+{
+    if      (value == XML_GDTF_RDMParam_DataTypeEnum_DS_NOT_DEFINED)    { val = EGdtf_RDMParam_DataType::DS_NOT_DEFINED; }
+    else if (value == XML_GDTF_RDMParam_DataTypeEnum_DS_BIT_FIELD)      { val = EGdtf_RDMParam_DataType::DS_BIT_FIELD ; }
+    else if (value == XML_GDTF_RDMParam_DataTypeEnum_DS_ASCII)          { val = EGdtf_RDMParam_DataType::DS_ASCII; }
+    else if (value == XML_GDTF_RDMParam_DataTypeEnum_DS_UNSIGNED_BYTE)  { val = EGdtf_RDMParam_DataType::DS_UNSIGNED_BYTE; }
+    else if (value == XML_GDTF_RDMParam_DataTypeEnum_DS_SIGNED_BYTE)    { val = EGdtf_RDMParam_DataType::DS_SIGNED_BYTE; }
+    else if (value == XML_GDTF_RDMParam_DataTypeEnum_DS_UNSIGNED_WORD)  { val = EGdtf_RDMParam_DataType::DS_UNSIGNED_WORD; }
+    else if (value == XML_GDTF_RDMParam_DataTypeEnum_DS_SIGNED_WORD)    { val = EGdtf_RDMParam_DataType::DS_SIGNED_WORD; }
+    else if (value == XML_GDTF_RDMParam_DataTypeEnum_DS_UNSIGNED_DWORD) { val = EGdtf_RDMParam_DataType::DS_UNSIGNED_DWORD; }
+    else if (value == XML_GDTF_RDMParam_DataTypeEnum_DS_SIGNED_DWORD)   { val = EGdtf_RDMParam_DataType::DS_SIGNED_DWORD; }
+    else if (value == XML_GDTF_RDMParam_DataTypeEnum_DS_MS)             { val = EGdtf_RDMParam_DataType::DS_MS;}
+    else 
+    { 
+        val = EGdtf_RDMParam_DataType::DS_NOT_DEFINED; // TODO: Theres no default value at the moment check this later again. (19.10)
+        DSTOP((kEveryone, "Unaspected Input for EGDTFvaloderInvert Enum"));        
+    }
+
+    return true;
+}
+
+/*static*/ TXString GdtfConverter::Convert_RDMParam_CommandEnum(EGdtf_RDMParam_Command value)
+{
+    switch (value)
+    {
+        case EGdtf_RDMParam_Command::None:	    		return XML_GDTF_RDMParam_Command_None;
+        case EGdtf_RDMParam_Command::CC_GET:			return XML_GDTF_RDMParam_Command_CC_GET;
+        case EGdtf_RDMParam_Command::CC_SET:			return XML_GDTF_RDMParam_Command_CC_SET;
+        case EGdtf_RDMParam_Command::CC_GET_SET:		return XML_GDTF_RDMParam_Command_CC_GET_SET;
+        default: DSTOP( (kEveryone, "Convert_RDMParam_CommandEnum: Invalid Input-Value") );
+    }
+    
+    // Default
+    return XML_GDTF_RDMParam_Command_None; // TODO: Theres no default value at the moment check this later again. (19.10)
+}
+
+/*static*/ bool GdtfConverter::Convert_RDMParam_CommandEnum(const TXString& value, EGdtf_RDMParam_Command&			val)
+{
+    if      (value == XML_GDTF_RDMParam_Command_None)       { val = EGdtf_RDMParam_Command::None; }
+    else if (value == XML_GDTF_RDMParam_Command_CC_GET)     { val = EGdtf_RDMParam_Command::CC_GET; }
+    else if (value == XML_GDTF_RDMParam_Command_CC_SET)     { val = EGdtf_RDMParam_Command::CC_SET; }
+    else if (value == XML_GDTF_RDMParam_Command_CC_GET_SET) { val = EGdtf_RDMParam_Command::CC_GET_SET; }
+    else
+    {
+        val = EGdtf_RDMParam_Command::None;; // TODO: Theres no default value at the moment check this later again. (19.10)
+        DSTOP((kEveryone, "Unaspected Input for Convert_RDMParam_CommandEnum Enum"));
+    }
+
+    return true;
+}
+
+
+/*static*/ TXString GdtfConverter::Convert_RDMParam_SensorUnitEnum(EGdtf_RDMParam_SensorUnit value)
+{
+    switch (value)
+    {
+    case EGdtf_RDMParam_SensorUnit::UNITS_NONE:		                    return XML_GDTF_RDMParam_SensorUnit_UNITS_NONE;
+    case EGdtf_RDMParam_SensorUnit::UNITS_CENTIGRADE:	                return XML_GDTF_RDMParam_SensorUnit_UNITS_CENTIGRADE;
+    case EGdtf_RDMParam_SensorUnit::UNITS_VOLTS_DC:			            return XML_GDTF_RDMParam_SensorUnit_UNITS_VOLTS_DC;
+    case EGdtf_RDMParam_SensorUnit::UNITS_VOLTS_AC_PEAK:		    	return XML_GDTF_RDMParam_SensorUnit_UNITS_VOLTS_AC_PEAK;
+    case EGdtf_RDMParam_SensorUnit::UNITS_VOLTS_AC_RMS:			        return XML_GDTF_RDMParam_SensorUnit_UNITS_VOLTS_AC_RMS;
+    case EGdtf_RDMParam_SensorUnit::UNITS_AMPERE_DC:			        return XML_GDTF_RDMParam_SensorUnit_UNITS_AMPERE_DC;
+    case EGdtf_RDMParam_SensorUnit::UNITS_AMPERE_AC_PEAK:			    return XML_GDTF_RDMParam_SensorUnit_UNITS_AMPERE_AC_PEAK;
+    case EGdtf_RDMParam_SensorUnit::UNITS_AMPERE_AC_RMS:		      	return XML_GDTF_RDMParam_SensorUnit_UNITS_AMPERE_AC_RMS;
+    case EGdtf_RDMParam_SensorUnit::UNITS_HERTZ:		            	return XML_GDTF_RDMParam_SensorUnit_UNITS_HERTZ;
+    case EGdtf_RDMParam_SensorUnit::UNITS_OHM:			                return XML_GDTF_RDMParam_SensorUnit_UNITS_OHM;
+    case EGdtf_RDMParam_SensorUnit::UNITS_WATT:			                return XML_GDTF_RDMParam_SensorUnit_UNITS_WATT;
+    case EGdtf_RDMParam_SensorUnit::UNITS_KILOGRAM:		            	return XML_GDTF_RDMParam_SensorUnit_UNITS_KILOGRAM;
+    case EGdtf_RDMParam_SensorUnit::UNITS_METERS:			            return XML_GDTF_RDMParam_SensorUnit_UNITS_METERS;
+    case EGdtf_RDMParam_SensorUnit::UNITS_METERS_SQUARED:		    	return XML_GDTF_RDMParam_SensorUnit_UNITS_METERS_SQUARED;
+    case EGdtf_RDMParam_SensorUnit::UNITS_METERS_CUBED:			        return XML_GDTF_RDMParam_SensorUnit_UNITS_METERS_CUBED;
+    case EGdtf_RDMParam_SensorUnit::UNITS_KILOGRAMMES_PER_METER_CUBED:	return XML_GDTF_RDMParam_SensorUnit_UNITS_KILOGRAMMES_PER_METER_CUBED;
+    case EGdtf_RDMParam_SensorUnit::UNITS_METERS_PER_SECOND:			return XML_GDTF_RDMParam_SensorUnit_UNITS_METERS_PER_SECOND;
+    case EGdtf_RDMParam_SensorUnit::UNITS_METERS_PER_SECOND_SQUARED:	return XML_GDTF_RDMParam_SensorUnit_UNITS_METERS_PER_SECOND_SQUARED;
+    case EGdtf_RDMParam_SensorUnit::UNITS_NEWTON:			            return XML_GDTF_RDMParam_SensorUnit_UNITS_NEWTON;
+    case EGdtf_RDMParam_SensorUnit::UNITS_JOULE:			            return XML_GDTF_RDMParam_SensorUnit_UNITS_JOULE;
+    case EGdtf_RDMParam_SensorUnit::UNITS_PASCAL:			            return XML_GDTF_RDMParam_SensorUnit_UNITS_PASCAL;
+    case EGdtf_RDMParam_SensorUnit::UNITS_SECOND:			            return XML_GDTF_RDMParam_SensorUnit_UNITS_SECOND;
+    case EGdtf_RDMParam_SensorUnit::UNITS_DEGREE:			            return XML_GDTF_RDMParam_SensorUnit_UNITS_DEGREE;
+    case EGdtf_RDMParam_SensorUnit::UNITS_STERADIAN:		        	return XML_GDTF_RDMParam_SensorUnit_UNITS_STERADIAN;
+    case EGdtf_RDMParam_SensorUnit::UNITS_CANDELA:		            	return XML_GDTF_RDMParam_SensorUnit_UNITS_CANDELA;
+    case EGdtf_RDMParam_SensorUnit::UNITS_LUMEN:			            return XML_GDTF_RDMParam_SensorUnit_UNITS_LUMEN;
+    case EGdtf_RDMParam_SensorUnit::UNITS_LUX:			                return XML_GDTF_RDMParam_SensorUnit_UNITS_LUX;
+    case EGdtf_RDMParam_SensorUnit::UNITS_IRE:		                	return XML_GDTF_RDMParam_SensorUnit_UNITS_IRE;
+    case EGdtf_RDMParam_SensorUnit::UNITS_BYTE:		                	return XML_GDTF_RDMParam_SensorUnit_UNITS_BYTE;
+    case EGdtf_RDMParam_SensorUnit::UNITS_MS:		                	return XML_GDTF_RDMParam_SensorUnit_UNITS_MS;    
+    default: DSTOP( (kEveryone, "Convert_RDMParam_SensorUnitEnum: Invalid Input-Value") );
+    }
+        
+    return XML_GDTF_RDMParam_SensorUnit_UNITS_NONE;  // TODO: Theres no default value at the moment check this later again. (19.10)
+}
+
+/*static*/ bool GdtfConverter::Convert_RDMParam_SensorUnitEnum(const TXString& value, EGdtf_RDMParam_SensorUnit&	val)
+{
+    if      (value == XML_GDTF_RDMParam_SensorUnit_UNITS_NONE)                        { val = EGdtf_RDMParam_SensorUnit::UNITS_NONE;}
+    else if (value == XML_GDTF_RDMParam_SensorUnit_UNITS_CENTIGRADE)                  { val = EGdtf_RDMParam_SensorUnit::UNITS_CENTIGRADE;}
+    else if (value == XML_GDTF_RDMParam_SensorUnit_UNITS_VOLTS_DC)                    { val = EGdtf_RDMParam_SensorUnit::UNITS_VOLTS_DC;}
+    else if (value == XML_GDTF_RDMParam_SensorUnit_UNITS_VOLTS_AC_PEAK)               { val = EGdtf_RDMParam_SensorUnit::UNITS_VOLTS_AC_PEAK;}
+    else if (value == XML_GDTF_RDMParam_SensorUnit_UNITS_VOLTS_AC_RMS)                { val = EGdtf_RDMParam_SensorUnit::UNITS_VOLTS_AC_RMS;}
+    else if (value == XML_GDTF_RDMParam_SensorUnit_UNITS_AMPERE_DC)                   { val = EGdtf_RDMParam_SensorUnit::UNITS_AMPERE_DC;}
+    else if (value == XML_GDTF_RDMParam_SensorUnit_UNITS_AMPERE_AC_PEAK)              { val = EGdtf_RDMParam_SensorUnit::UNITS_AMPERE_AC_PEAK;}
+    else if (value == XML_GDTF_RDMParam_SensorUnit_UNITS_AMPERE_AC_RMS)               { val = EGdtf_RDMParam_SensorUnit::UNITS_AMPERE_AC_RMS;}
+    else if (value == XML_GDTF_RDMParam_SensorUnit_UNITS_HERTZ)                       { val = EGdtf_RDMParam_SensorUnit::UNITS_HERTZ;}
+    else if (value == XML_GDTF_RDMParam_SensorUnit_UNITS_OHM)                         { val = EGdtf_RDMParam_SensorUnit::UNITS_OHM;}
+    else if (value == XML_GDTF_RDMParam_SensorUnit_UNITS_WATT)                        { val = EGdtf_RDMParam_SensorUnit::UNITS_WATT;}
+    else if (value == XML_GDTF_RDMParam_SensorUnit_UNITS_KILOGRAM)                    { val = EGdtf_RDMParam_SensorUnit::UNITS_KILOGRAM;}
+    else if (value == XML_GDTF_RDMParam_SensorUnit_UNITS_METERS)                      { val = EGdtf_RDMParam_SensorUnit::UNITS_METERS;}
+    else if (value == XML_GDTF_RDMParam_SensorUnit_UNITS_METERS_SQUARED)              { val = EGdtf_RDMParam_SensorUnit::UNITS_METERS_SQUARED;}
+    else if (value == XML_GDTF_RDMParam_SensorUnit_UNITS_METERS_CUBED)                { val = EGdtf_RDMParam_SensorUnit::UNITS_METERS_CUBED;}
+    else if (value == XML_GDTF_RDMParam_SensorUnit_UNITS_KILOGRAMMES_PER_METER_CUBED) { val = EGdtf_RDMParam_SensorUnit::UNITS_KILOGRAMMES_PER_METER_CUBED;}
+    else if (value == XML_GDTF_RDMParam_SensorUnit_UNITS_METERS_PER_SECOND)           { val = EGdtf_RDMParam_SensorUnit::UNITS_METERS_PER_SECOND;}
+    else if (value == XML_GDTF_RDMParam_SensorUnit_UNITS_METERS_PER_SECOND_SQUARED)   { val = EGdtf_RDMParam_SensorUnit::UNITS_METERS_PER_SECOND_SQUARED;}
+    else if (value == XML_GDTF_RDMParam_SensorUnit_UNITS_NEWTON)                      { val = EGdtf_RDMParam_SensorUnit::UNITS_NEWTON;}
+    else if (value == XML_GDTF_RDMParam_SensorUnit_UNITS_JOULE)                       { val = EGdtf_RDMParam_SensorUnit::UNITS_JOULE;}
+    else if (value == XML_GDTF_RDMParam_SensorUnit_UNITS_PASCAL)                      { val = EGdtf_RDMParam_SensorUnit::UNITS_PASCAL;}
+    else if (value == XML_GDTF_RDMParam_SensorUnit_UNITS_SECOND)                      { val = EGdtf_RDMParam_SensorUnit::UNITS_SECOND;}
+    else if (value == XML_GDTF_RDMParam_SensorUnit_UNITS_DEGREE)                      { val = EGdtf_RDMParam_SensorUnit::UNITS_DEGREE;}
+    else if (value == XML_GDTF_RDMParam_SensorUnit_UNITS_STERADIAN)                   { val = EGdtf_RDMParam_SensorUnit::UNITS_STERADIAN;}
+    else if (value == XML_GDTF_RDMParam_SensorUnit_UNITS_CANDELA)                     { val = EGdtf_RDMParam_SensorUnit::UNITS_CANDELA;}
+    else if (value == XML_GDTF_RDMParam_SensorUnit_UNITS_LUMEN)                       { val = EGdtf_RDMParam_SensorUnit::UNITS_LUMEN;}
+    else if (value == XML_GDTF_RDMParam_SensorUnit_UNITS_LUX)                         { val = EGdtf_RDMParam_SensorUnit::UNITS_LUX;}
+    else if (value == XML_GDTF_RDMParam_SensorUnit_UNITS_IRE)                         { val = EGdtf_RDMParam_SensorUnit::UNITS_IRE;}
+    else if (value == XML_GDTF_RDMParam_SensorUnit_UNITS_BYTE)                        { val = EGdtf_RDMParam_SensorUnit::UNITS_BYTE;}
+    else if (value == XML_GDTF_RDMParam_SensorUnit_UNITS_MS)                          { val = EGdtf_RDMParam_SensorUnit::UNITS_MS;}
+    else
+    {
+        val = EGdtf_RDMParam_SensorUnit::UNITS_NONE;   // TODO: Theres no default value at the moment check this later again. (19.10)
+        DSTOP((kEveryone, "Unaspected Input for Convert_RDMParam_SensorUnitEnum Enum"));
+    }
+
+    // Return true
+    return true;
+}
+
+/*static*/ TXString GdtfConverter::Convert_RDMParam_SensorUnitPrefixEnum(EGdtf_RDMParam_SensorUnitPrefix value)
+{
+    switch (value)
+    {
+    case EGdtf_RDMParam_SensorUnitPrefix::PREFIX_NONE:			return XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_NONE;
+    case EGdtf_RDMParam_SensorUnitPrefix::PREFIX_DECI:			return XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_DECI;
+    case EGdtf_RDMParam_SensorUnitPrefix::PREFIX_CENTI:			return XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_CENTI;
+    case EGdtf_RDMParam_SensorUnitPrefix::PREFIX_MILLI:			return XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_MILLI;
+    case EGdtf_RDMParam_SensorUnitPrefix::PREFIX_MICRO:			return XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_MICRO;
+    case EGdtf_RDMParam_SensorUnitPrefix::PREFIX_NANO:			return XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_NANO;
+    case EGdtf_RDMParam_SensorUnitPrefix::PREFIX_PICO:			return XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_PICO;
+    case EGdtf_RDMParam_SensorUnitPrefix::PREFIX_FEMPTO:		return XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_FEMPTO;
+    case EGdtf_RDMParam_SensorUnitPrefix::PREFIX_ATTO:			return XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_ATTO;
+    case EGdtf_RDMParam_SensorUnitPrefix::PREFIX_ZEPTO:			return XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_ZEPTO;
+    case EGdtf_RDMParam_SensorUnitPrefix::PREFIX_YOCTO:			return XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_YOCTO;
+    case EGdtf_RDMParam_SensorUnitPrefix::PREFIX_DECA:			return XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_DECA;
+    case EGdtf_RDMParam_SensorUnitPrefix::PREFIX_HECTO:			return XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_HECTO;
+    case EGdtf_RDMParam_SensorUnitPrefix::PREFIX_KILO:			return XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_KILO;
+    case EGdtf_RDMParam_SensorUnitPrefix::PREFIX_MEGA:			return XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_MEGA;
+    case EGdtf_RDMParam_SensorUnitPrefix::PREFIX_GIGA:			return XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_GIGA;
+    case EGdtf_RDMParam_SensorUnitPrefix::PREFIX_TERRA:			return XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_TERRA;
+    case EGdtf_RDMParam_SensorUnitPrefix::PREFIX_PETA:			return XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_PETA;
+    case EGdtf_RDMParam_SensorUnitPrefix::PREFIX_EXA:			return XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_EXA;
+    case EGdtf_RDMParam_SensorUnitPrefix::PREFIX_ZETTA:			return XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_ZETTA;
+    case EGdtf_RDMParam_SensorUnitPrefix::PREFIX_YOTTA:			return XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_YOTTA;    
+    default: DSTOP((kEveryone, "Convert_RDMParam_SensorUnitPrefixEnum: Invalid Input-Value"));
+    }
+    
+    // Default
+    return XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_NONE; // TODO: Theres no default value at the moment check this later again. (19.10)
+}
+
+/*static*/ bool GdtfConverter::Convert_RDMParam_SensorUnitPrefixEnum(const TXString& value, EGdtf_RDMParam_SensorUnitPrefix& val)
+{    
+    if      (value == XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_NONE)   { val =  EGdtf_RDMParam_SensorUnitPrefix::PREFIX_NONE;}
+    else if (value == XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_DECI)   { val =  EGdtf_RDMParam_SensorUnitPrefix::PREFIX_DECI;}
+    else if (value == XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_CENTI)  { val =  EGdtf_RDMParam_SensorUnitPrefix::PREFIX_CENTI;}
+    else if (value == XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_MILLI)  { val =  EGdtf_RDMParam_SensorUnitPrefix::PREFIX_MILLI;}
+    else if (value == XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_MICRO)  { val =  EGdtf_RDMParam_SensorUnitPrefix::PREFIX_MICRO;}
+    else if (value == XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_NANO)   { val =  EGdtf_RDMParam_SensorUnitPrefix::PREFIX_NANO;}
+    else if (value == XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_PICO)   { val =  EGdtf_RDMParam_SensorUnitPrefix::PREFIX_PICO;}
+    else if (value == XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_FEMPTO) { val =  EGdtf_RDMParam_SensorUnitPrefix::PREFIX_FEMPTO;}
+    else if (value == XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_ATTO)   { val =  EGdtf_RDMParam_SensorUnitPrefix::PREFIX_ATTO;}
+    else if (value == XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_ZEPTO)  { val =  EGdtf_RDMParam_SensorUnitPrefix::PREFIX_ZEPTO;}
+    else if (value == XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_YOCTO)  { val =  EGdtf_RDMParam_SensorUnitPrefix::PREFIX_YOCTO;}
+    else if (value == XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_DECA)   { val =  EGdtf_RDMParam_SensorUnitPrefix::PREFIX_DECA;}
+    else if (value == XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_HECTO)  { val =  EGdtf_RDMParam_SensorUnitPrefix::PREFIX_HECTO;}
+    else if (value == XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_KILO)   { val =  EGdtf_RDMParam_SensorUnitPrefix::PREFIX_KILO;}
+    else if (value == XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_MEGA)   { val =  EGdtf_RDMParam_SensorUnitPrefix::PREFIX_MEGA;}
+    else if (value == XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_GIGA)   { val =  EGdtf_RDMParam_SensorUnitPrefix::PREFIX_GIGA;}
+    else if (value == XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_TERRA)  { val =  EGdtf_RDMParam_SensorUnitPrefix::PREFIX_TERRA;}
+    else if (value == XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_PETA)   { val =  EGdtf_RDMParam_SensorUnitPrefix::PREFIX_PETA;}
+    else if (value == XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_EXA)    { val =  EGdtf_RDMParam_SensorUnitPrefix::PREFIX_EXA;}
+    else if (value == XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_ZETTA)  { val =  EGdtf_RDMParam_SensorUnitPrefix::PREFIX_ZETTA;}
+    else if (value == XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_YOTTA)  { val =  EGdtf_RDMParam_SensorUnitPrefix::PREFIX_YOTTA;}
+    else
+    {
+        val = EGdtf_RDMParam_SensorUnitPrefix::PREFIX_NONE;   // TODO: Theres no default value at the moment check this later again. (19.10)
+        DSTOP((kEveryone, "Unaspected Input for Convert_RDMParam_SensorUnitPrefixEnum Enum"));
+    }
+
+    return true;
+}
+
+
+/*static*/ TXString GdtfConverter::ConvertEGdtf_RDMValueBool_ValueEnum(EGdtf_RDMValueBool_Value value)
+{
+    switch (value)
+    {
+    case EGdtf_RDMValueBool_Value::eYes:			return XML_GDTF_RDMValueBool_Value_YES;
+    case EGdtf_RDMValueBool_Value::eNo:			return XML_GDTF_RDMValueBool_Value_NO;
+    default: DSTOP((kEveryone, "ConvertEGdtf_RDMValueBool_ValueEnum: Invalid Input-Value"));
+    }
+
+    // Default
+    return XML_GDTF_RDMValueBool_Value_YES; // TODO: Theres no default value at the moment check this later again. (19.10)
+}
+
+/*static*/ bool GdtfConverter::ConvertEGdtf_RDMValueBool_ValueEnum(const TXString& value, EGdtf_RDMValueBool_Value&	val)
+{
+    if      (value == XML_GDTF_RDMValueBool_Value_YES) { val = EGdtf_RDMValueBool_Value::eYes; }
+    else if (value == XML_GDTF_RDMValueBool_Value_NO)  { val = EGdtf_RDMValueBool_Value::eNo; }
+    else
+    {
+        val = EGdtf_RDMValueBool_Value::eYes;   // TODO: Theres no default value at the moment check this later again. (19.10)
+        DSTOP((kEveryone, "Unaspected Input for ConvertEGdtf_RDMValueBool_ValueEnum Enum"));
+    }
+        
+    return true;
+}
+
+/*static*/ TXString GdtfConverter::ConvertEGdtf_RDMValue_ThresholdOperatorEnum(EGdtf_RDMValue_ThresholdOperator value)
+{
+    switch (value)
+    {
+    case EGdtf_RDMValue_ThresholdOperator::Is:		    	return XML_GDTF_ThresholdOperator_Is;
+    case EGdtf_RDMValue_ThresholdOperator::IsNot:			return XML_GDTF_ThresholdOperator_IsNot;
+    case EGdtf_RDMValue_ThresholdOperator::Greater:			return XML_GDTF_ThresholdOperator_Greater;
+    case EGdtf_RDMValue_ThresholdOperator::Less:			return XML_GDTF_ThresholdOperator_Less;
+    default: DSTOP((kEveryone, "ConvertEGdtf_RDMValue_ThresholdOperatorEnum: Invalid Input-Value"));
+    }
+
+    // Default
+    return XML_GDTF_ThresholdOperator_Is; // TODO: Theres no default value at the moment check this later again. (19.10)
+}
+
+/*static*/ bool GdtfConverter::ConvertEGdtf_RDMValue_ThresholdOperatorEnum(const TXString& value, EGdtf_RDMValue_ThresholdOperator& val)
+{
+    if      (value == XML_GDTF_ThresholdOperator_Is)      { val = EGdtf_RDMValue_ThresholdOperator::Is; }
+    else if (value == XML_GDTF_ThresholdOperator_IsNot)   { val = EGdtf_RDMValue_ThresholdOperator::IsNot; }
+    else if (value == XML_GDTF_ThresholdOperator_Greater) { val = EGdtf_RDMValue_ThresholdOperator::Greater; }
+    else if (value == XML_GDTF_ThresholdOperator_Less)    { val = EGdtf_RDMValue_ThresholdOperator::Less; }
+    else
+    {
+        val = EGdtf_RDMValue_ThresholdOperator::Is;   // TODO: Theres no default value at the moment check this later again. (19.10)
+        DSTOP((kEveryone, "Unaspected Input for ConvertEGdtf_RDMValue_ThresholdOperatorEnum Enum"));
+    }
+
+    // Return true
+    return true;
+}
+
+/*static*/ TXString GdtfConverter::ConvertRDMValue_SENSOR_DEFINITION_TypeEnum(EGdtf_RDMValue_SENSOR_DEFINITION_TYPE value)
+{
+    switch (value)
+    {
+    case EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_TEMPERATURE: return XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_TEMPERATURE;
+    case EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_VOLTAGE: return XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_VOLTAGE;
+    case EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_CURRENT: return XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_CURRENT;
+    case EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_FREQUENCY: return XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_FREQUENCY;
+    case EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_RESISTANCE: return XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_RESISTANCE;
+    case EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_POWER: return XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_POWER;
+    case EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_MASS: return XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_MASS;
+    case EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_LENGTH: return XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_LENGTH;
+    case EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_AREA: return XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_AREA;
+    case EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_VOLUME: return XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_VOLUME;
+    case EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_DENSITY: return XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_DENSITY;
+    case EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_VELOCITY: return XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_VELOCITY;
+    case EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_ACCELERATION: return XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_ACCELERATION;
+    case EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_FORCE: return XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_FORCE;
+    case EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_ENERGY: return XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_ENERGY;
+    case EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_PRESSURE: return XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_PRESSURE;
+    case EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_TIME: return XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_TIME;
+    case EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_ANGLE: return XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_ANGLE;
+    case EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_POSITION_X: return XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_POSITION_X;
+    case EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_POSITION_Y: return XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_POSITION_Y;
+    case EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_POSITION_Z: return XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_POSITION_Z;
+    case EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_ANGULAR_VELOCITY: return XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_ANGULAR_VELOCITY;
+    case EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_LUMINOUS_INTENSITY: return XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_LUMINOUS_INTENSITY;
+    case EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_LUMINOUS_FLUX: return XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_LUMINOUS_FLUX;
+    case EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_ILLUMINANCE: return XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_ILLUMINANCE;
+    case EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_CHROMINANCE_RED: return XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_CHROMINANCE_RED;
+    case EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_CHROMINANCE_GREEN: return XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_CHROMINANCE_GREEN;
+    case EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_CHROMINANCE_BLUE: return XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_CHROMINANCE_BLUE;
+    case EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_CONTACTS: return XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_CONTACTS;
+    case EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_MEMORY: return XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_MEMORY;
+    case EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_ITEMS: return XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_ITEMS;
+    case EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_HUMIDITY: return XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_HUMIDITY;
+    case EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_COUNTER_16BIT: return XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_COUNTER_16BIT;
+    case EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_OTHER: return XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_OTHER;
+    case EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_MS: return XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_MS;
+    default: DSTOP((kEveryone, "ConvertRDMValue_SENSOR_DEFINITION_TypeEnum: Invalid Input-Value"));
+    }        
+
+    // Default
+    return XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_TEMPERATURE; // TODO: Theres no default value at the moment check this later again. (19.10)
+}
+
+/*static*/ bool GdtfConverter::ConvertRDMValue_SENSOR_DEFINITION_TypeEnum(const TXString& value, EGdtf_RDMValue_SENSOR_DEFINITION_TYPE&			val)
+{    
+    if      (value == XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_TEMPERATURE)           { val = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_TEMPERATURE; }
+    else if (value == XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_VOLTAGE)               { val = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_VOLTAGE; }
+    else if (value == XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_CURRENT)               { val = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_CURRENT; }
+    else if (value == XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_FREQUENCY)             { val = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_FREQUENCY; }
+    else if (value == XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_RESISTANCE)            { val = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_RESISTANCE; }
+    else if (value == XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_POWER)                 { val = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_POWER; }
+    else if (value == XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_MASS)                  { val = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_MASS; }
+    else if (value == XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_LENGTH)                { val = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_LENGTH; }
+    else if (value == XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_AREA)                  { val = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_AREA; }
+    else if (value == XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_VOLUME)                { val = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_VOLUME; }
+    else if (value == XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_DENSITY)               { val = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_DENSITY; }
+    else if (value == XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_VELOCITY)              { val = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_VELOCITY; }
+    else if (value == XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_ACCELERATION)          { val = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_ACCELERATION; }
+    else if (value == XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_FORCE)                 { val = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_FORCE; }
+    else if (value == XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_ENERGY)                { val = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_ENERGY; }
+    else if (value == XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_PRESSURE)              { val = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_PRESSURE; }
+    else if (value == XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_TIME)                  { val = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_TIME; }
+    else if (value == XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_ANGLE)                 { val = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_ANGLE; }
+    else if (value == XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_POSITION_X)            { val = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_POSITION_X; }
+    else if (value == XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_POSITION_Y)            { val = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_POSITION_Y; }
+    else if (value == XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_POSITION_Z)            { val = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_POSITION_Z; }
+    else if (value == XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_ANGULAR_VELOCITY)      { val = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_ANGULAR_VELOCITY; }
+    else if (value == XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_LUMINOUS_INTENSITY)    { val = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_LUMINOUS_INTENSITY; }
+    else if (value == XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_LUMINOUS_FLUX)         { val = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_LUMINOUS_FLUX; }
+    else if (value == XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_ILLUMINANCE)           { val = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_ILLUMINANCE; }
+    else if (value == XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_CHROMINANCE_RED)       { val = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_CHROMINANCE_RED; }
+    else if (value == XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_CHROMINANCE_GREEN)     { val = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_CHROMINANCE_GREEN; }
+    else if (value == XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_CHROMINANCE_BLUE)      { val = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_CHROMINANCE_BLUE; }
+    else if (value == XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_CONTACTS)              { val = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_CONTACTS; }
+    else if (value == XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_MEMORY)                { val = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_MEMORY; }
+    else if (value == XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_ITEMS)                 { val = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_ITEMS; }
+    else if (value == XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_HUMIDITY)              { val = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_HUMIDITY; }
+    else if (value == XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_COUNTER_16BIT)         { val = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_COUNTER_16BIT; }
+    else if (value == XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_OTHER)                 { val = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_OTHER; }
+    else if (value == XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_MS)                    { val = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_MS; }
+    else
+    {
+        val = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_TEMPERATURE;   // TODO: Theres no default value at the moment check this later again. (19.10)
+        DSTOP((kEveryone, "Unaspected Input for ConvertRDMValue_SENSOR_DEFINITION_TypeEnum Enum"));
+    }
+       
+    return true;
+}
+
+/*static*/ TXString GdtfConverter::Convert_RDMValue_LowesHighestDetectionSupportedEnum(EGdtf_RDMValue_LowesHighestDetectionSupported value)
+{
+    switch (value)
+    {
+    case EGdtf_RDMValue_LowesHighestDetectionSupported::eYES:	return XML_GDTF_RDMValue_LowesHighestDetectionSupported_ENUM_YES;
+    case EGdtf_RDMValue_LowesHighestDetectionSupported::eNO:     return XML_GDTF_RDMValue_LowesHighestDetectionSupported_ENUM_NO;
+    default: DSTOP((kEveryone, "Convert_RDMValue_LowesHighestDetectionSupportedEnum: Invalid Input-Value"));
+    }   
+    
+    return XML_GDTF_RDMValue_LowesHighestDetectionSupported_ENUM_YES; // TODO: Theres no default value at the moment check this later again. (19.10)
+}
+
+/*static*/ bool GdtfConverter::Convert_RDMValue_LowesHighestDetectionSupportedEnum(const TXString& value, EGdtf_RDMValue_LowesHighestDetectionSupported&			val)
+{
+    if      (value == XML_GDTF_RDMValue_LowesHighestDetectionSupported_ENUM_YES) { val = EGdtf_RDMValue_LowesHighestDetectionSupported::eYES; }
+    else if (value == XML_GDTF_RDMValue_LowesHighestDetectionSupported_ENUM_NO)  { val = EGdtf_RDMValue_LowesHighestDetectionSupported::eNO; }
+    else
+    {
+        val = val = EGdtf_RDMValue_LowesHighestDetectionSupported::eYES;   // TODO: Theres no default value at the moment check this later again. (19.10)
+        DSTOP((kEveryone, "Unaspected Input for Convert_RDMValue_LowesHighestDetectionSupportedEnum."));
+    }
+
+    return true;
+}
+
+/*static*/ TXString GdtfConverter::Convert_RDMValue_RecordValueSupportedEnum(EGdtf_RDMValue_RecordValueSupported value)
+{
+    switch (value)
+    {
+    case EGdtf_RDMValue_RecordValueSupported::eYES:			return XML_GDTF_RDMValue_RecordValueSupported_ENUM_YES;
+    case EGdtf_RDMValue_RecordValueSupported::eNO:			return XML_GDTF_RDMValue_RecordValueSupported_ENUM_NO;
+    default: DSTOP((kEveryone, "Convert_RDMValue_RecordValueSupportedEnum: Invalid Input-Value"));
+    }
+    
+    // Default
+    return XML_GDTF_RDMValue_RecordValueSupported_ENUM_YES; // TODO: Theres no default value at the moment check this later again. (19.10)
+}
+
+/*static*/ bool GdtfConverter::Convert_RDMValue_RecordValueSupportedEnum(const TXString& value, EGdtf_RDMValue_RecordValueSupported& val)
+{
+    if      (value == XML_GDTF_RDMValue_RecordValueSupported_ENUM_YES) { val = EGdtf_RDMValue_RecordValueSupported::eYES; }
+    else if (value == XML_GDTF_RDMValue_RecordValueSupported_ENUM_NO)  { val = EGdtf_RDMValue_RecordValueSupported::eNO; }
+    else
+    {
+        val = EGdtf_RDMValue_RecordValueSupported::eYES;   // TODO: Theres no default value at the moment check this later again. (19.10)
+        DSTOP((kEveryone, "Unaspected Input for Convert_RDMValue_RecordValueSupportedEnum"));
+    }
+
+    return true;
+}
+
+/*static*/ TXString GdtfConverter::ConvertRDMValue_SLOT_INFO_TypeEnum(EGdtf_RDMValue_SLOT_INFO_Type value)
+{
+    switch (value)
+    {    
+    case EGdtf_RDMValue_SLOT_INFO_Type::ST_PRIMARY:           return XML_GDTF_SLOT_INFO_Type_ENUM_ST_PRIMARY;
+    case EGdtf_RDMValue_SLOT_INFO_Type::ST_SEC_FINE:          return XML_GDTF_SLOT_INFO_Type_ENUM_ST_SEC_FINE;
+    case EGdtf_RDMValue_SLOT_INFO_Type::ST_SEC_TIMING:        return XML_GDTF_SLOT_INFO_Type_ENUM_ST_SEC_TIMING;
+    case EGdtf_RDMValue_SLOT_INFO_Type::ST_SEC_SPEED:         return XML_GDTF_SLOT_INFO_Type_ENUM_ST_SEC_SPEED;
+    case EGdtf_RDMValue_SLOT_INFO_Type::ST_SEC_CONTROL:       return XML_GDTF_SLOT_INFO_Type_ENUM_ST_SEC_CONTROL;
+    case EGdtf_RDMValue_SLOT_INFO_Type::ST_SEC_INDEX:         return XML_GDTF_SLOT_INFO_Type_ENUM_ST_SEC_INDEX;
+    case EGdtf_RDMValue_SLOT_INFO_Type::ST_SEC_ROTATION:      return XML_GDTF_SLOT_INFO_Type_ENUM_ST_SEC_ROTATION;
+    case EGdtf_RDMValue_SLOT_INFO_Type::ST_SEC_INDEX_ROTATE:  return XML_GDTF_SLOT_INFO_Type_ENUM_ST_SEC_INDEX_ROTATE;
+    case EGdtf_RDMValue_SLOT_INFO_Type::ST_SEC_UNDEFINED:     return XML_GDTF_SLOT_INFO_Type_ENUM_ST_SEC_UNDEFINED;
+    default: DSTOP((kEveryone, "ConvertRDMValue_SLOT_INFO_TypeEnum: Invalid Input-Value"));
+    }
+
+    // Default
+    return XML_GDTF_SLOT_INFO_Type_ENUM_ST_PRIMARY; // TODO: Theres no default value at the moment check this later again. (19.10)
+}
+
+/*static*/ bool GdtfConverter::ConvertRDMValue_SLOT_INFO_TypeEnum(const TXString& value, EGdtf_RDMValue_SLOT_INFO_Type&	val)
+{
+    if      (value == XML_GDTF_SLOT_INFO_Type_ENUM_ST_PRIMARY) { val = EGdtf_RDMValue_SLOT_INFO_Type::ST_PRIMARY; }
+    else if (value == XML_GDTF_SLOT_INFO_Type_ENUM_ST_SEC_FINE) { val = EGdtf_RDMValue_SLOT_INFO_Type::ST_SEC_FINE; }
+    else if (value == XML_GDTF_SLOT_INFO_Type_ENUM_ST_SEC_TIMING) { val = EGdtf_RDMValue_SLOT_INFO_Type::ST_SEC_TIMING; }
+    else if (value == XML_GDTF_SLOT_INFO_Type_ENUM_ST_SEC_SPEED) { val = EGdtf_RDMValue_SLOT_INFO_Type::ST_SEC_SPEED; }
+    else if (value == XML_GDTF_SLOT_INFO_Type_ENUM_ST_SEC_CONTROL) { val = EGdtf_RDMValue_SLOT_INFO_Type::ST_SEC_CONTROL; }
+    else if (value == XML_GDTF_SLOT_INFO_Type_ENUM_ST_SEC_INDEX) { val = EGdtf_RDMValue_SLOT_INFO_Type::ST_SEC_INDEX; }
+    else if (value == XML_GDTF_SLOT_INFO_Type_ENUM_ST_SEC_ROTATION) { val = EGdtf_RDMValue_SLOT_INFO_Type::ST_SEC_ROTATION; }
+    else if (value == XML_GDTF_SLOT_INFO_Type_ENUM_ST_SEC_INDEX_ROTATE) { val = EGdtf_RDMValue_SLOT_INFO_Type::ST_SEC_INDEX_ROTATE; }
+    else if (value == XML_GDTF_SLOT_INFO_Type_ENUM_ST_SEC_UNDEFINED) { val = EGdtf_RDMValue_SLOT_INFO_Type::ST_SEC_UNDEFINED; }
+    else
+    {
+        val = EGdtf_RDMValue_SLOT_INFO_Type::ST_PRIMARY;   // TODO: Theres no default value at the moment check this later again. (19.10)
+        DSTOP((kEveryone, "Unaspected Input for ConvertRDMValue_SLOT_INFO_TypeEnum"));
+    }
+
+    return true;
+}
+
+/*static*/ TXString GdtfConverter::ConvertRDMValue_SLOT_INFO_SlotLabelIDEnum(EGdtf_RDMValue_SLOT_INFO_SlotLabelID value)
+{
+    switch (value)
+    {    
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_INTENSITY:                return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_INTENSITY;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_INTENSITY_MASTER:         return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_INTENSITY_MASTER;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_PAN:                      return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_PAN;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_TILT:                     return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_TILT;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_WHEEL:              return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_WHEEL;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_SUB_CYAN:           return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_SUB_CYAN;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_SUB_YELLOW:         return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_SUB_YELLOW;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_SUB_MAGENTA:        return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_SUB_MAGENTA;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_ADD_RED:            return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_ADD_RED;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_ADD_GREEN:          return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_ADD_GREEN;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_ADD_BLUE:           return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_ADD_BLUE;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_CORRECTION:         return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_CORRECTION;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_SCROLL:             return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_SCROLL;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_SEMAPHORE:          return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_SEMAPHORE;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_ADD_AMBER:          return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_ADD_AMBER;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_ADD_WHITE:          return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_ADD_WHITE;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_ADD_WARM_WHITE:     return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_ADD_WARM_WHITE;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_ADD_COOL_WHITE:     return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_ADD_COOL_WHITE;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_SUB_UV:             return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_SUB_UV;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_HUE:                return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_HUE;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_SATURATION:         return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_SATURATION;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_STATIC_GOBO_WHEEL:        return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_STATIC_GOBO_WHEEL;                                                                                       
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_ROTO_GOBO_WHEEL:          return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_ROTO_GOBO_WHEEL;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_PRISM_WHEEL:              return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_PRISM_WHEEL;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_EFFECTS_WHEEL:            return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_EFFECTS_WHEEL;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_BEAM_SIZE_IRIS:           return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_BEAM_SIZE_IRIS;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_EDGE:                     return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_EDGE;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_FROST:                    return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_FROST;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_STROBE:                   return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_STROBE;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_ZOOM:                     return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_ZOOM;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_FRAMING_SHUTTER:          return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_FRAMING_SHUTTER;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_SHUTTER_ROTATE:           return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_SHUTTER_ROTATE;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_DOUSER:                   return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_DOUSER;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_BARN_DOOR:                return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_BARN_DOOR;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_LAMP_CONTROL:             return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_LAMP_CONTROL;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_FIXTURE_CONTROL:          return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_FIXTURE_CONTROL;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_FIXTURE_SPEED:            return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_FIXTURE_SPEED;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_MACRO:                    return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_MACRO;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_POWER_CONTROL:            return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_POWER_CONTROL;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_FAN_CONTROL:              return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_FAN_CONTROL;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_HEATER_CONTROL:           return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_HEATER_CONTROL;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_FOUNTAIN_CONTROL:         return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_FOUNTAIN_CONTROL;
+        case EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_UNDEFINED:                return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_UNDEFINED;
+        default: DSTOP((kEveryone, "ConvertRDMValue_SLOT_INFO_SlotLabelIDEnum: Invalid Input-Value"));
+    }
+        
+    return XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_INTENSITY; // TODO: Theres no default value at the moment check this later again. (19.10)
+}
+
+
+/*static*/ bool GdtfConverter::ConvertRDMValue_SLOT_INFO_SlotLabelIDEnum(const TXString& value, EGdtf_RDMValue_SLOT_INFO_SlotLabelID&	val)
+{           
+     if      (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_INTENSITY) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_INTENSITY; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_INTENSITY_MASTER) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_INTENSITY_MASTER; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_PAN) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_PAN; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_TILT) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_TILT; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_WHEEL) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_WHEEL; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_SUB_CYAN) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_SUB_CYAN; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_SUB_YELLOW) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_SUB_YELLOW; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_SUB_MAGENTA) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_SUB_MAGENTA; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_ADD_RED) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_ADD_RED; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_ADD_GREEN) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_ADD_GREEN; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_ADD_BLUE) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_ADD_BLUE; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_CORRECTION) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_CORRECTION; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_SCROLL) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_SCROLL; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_SEMAPHORE) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_SEMAPHORE; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_ADD_AMBER) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_ADD_AMBER; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_ADD_WHITE) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_ADD_WHITE; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_ADD_WARM_WHITE) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_ADD_WARM_WHITE; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_ADD_COOL_WHITE) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_ADD_COOL_WHITE; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_SUB_UV) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_SUB_UV; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_HUE) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_HUE; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_SATURATION) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_SATURATION; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_STATIC_GOBO_WHEEL) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_STATIC_GOBO_WHEEL; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_ROTO_GOBO_WHEEL) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_ROTO_GOBO_WHEEL; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_PRISM_WHEEL) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_PRISM_WHEEL; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_EFFECTS_WHEEL) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_EFFECTS_WHEEL; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_BEAM_SIZE_IRIS) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_BEAM_SIZE_IRIS; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_EDGE) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_EDGE; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_FROST) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_FROST; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_STROBE) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_STROBE; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_ZOOM) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_ZOOM; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_FRAMING_SHUTTER) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_FRAMING_SHUTTER; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_SHUTTER_ROTATE) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_SHUTTER_ROTATE; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_DOUSER) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_DOUSER; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_BARN_DOOR) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_BARN_DOOR; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_LAMP_CONTROL) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_LAMP_CONTROL; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_FIXTURE_CONTROL) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_FIXTURE_CONTROL; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_FIXTURE_SPEED) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_FIXTURE_SPEED; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_MACRO) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_MACRO; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_POWER_CONTROL) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_POWER_CONTROL; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_FAN_CONTROL) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_FAN_CONTROL; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_HEATER_CONTROL) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_HEATER_CONTROL; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_FOUNTAIN_CONTROL) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_FOUNTAIN_CONTROL; }
+     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_UNDEFINED) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_UNDEFINED; }    
+     else
+     {
+         val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_INTENSITY;   // TODO: Theres no default value at the moment check this later again. (19.10)
+         DSTOP((kEveryone, "Unaspected Input for ConvertRDMValue_SLOT_INFO_SlotLabelIDEnum"));
+     }
+
+    return true;
+}
+
+/*static*/ TXString GdtfConverter::ConvertEGdtfColorSampleEnum(EGdtfColorSample value)
+{
+    switch (value)
+    {
+    case EGdtfColorSample::CES_01:			return XML_GDTF_ColorSample_1;
+    case EGdtfColorSample::CES_02:			return XML_GDTF_ColorSample_2;
+    case EGdtfColorSample::CES_03:			return XML_GDTF_ColorSample_3;
+    case EGdtfColorSample::CES_04:			return XML_GDTF_ColorSample_4;
+    case EGdtfColorSample::CES_05:			return XML_GDTF_ColorSample_5;
+    case EGdtfColorSample::CES_06:			return XML_GDTF_ColorSample_6;
+    case EGdtfColorSample::CES_07:			return XML_GDTF_ColorSample_7;
+    case EGdtfColorSample::CES_08:			return XML_GDTF_ColorSample_8;
+    case EGdtfColorSample::CES_09:			return XML_GDTF_ColorSample_9;
+    case EGdtfColorSample::CES_10:			return XML_GDTF_ColorSample_10;
+    case EGdtfColorSample::CES_11:			return XML_GDTF_ColorSample_11;
+    case EGdtfColorSample::CES_12:			return XML_GDTF_ColorSample_12;
+    case EGdtfColorSample::CES_13:			return XML_GDTF_ColorSample_13;
+    case EGdtfColorSample::CES_14:			return XML_GDTF_ColorSample_14;
+    case EGdtfColorSample::CES_15:			return XML_GDTF_ColorSample_15;
+    case EGdtfColorSample::CES_16:			return XML_GDTF_ColorSample_16;
+    case EGdtfColorSample::CES_17:			return XML_GDTF_ColorSample_17;
+    case EGdtfColorSample::CES_18:			return XML_GDTF_ColorSample_18;
+    case EGdtfColorSample::CES_19:			return XML_GDTF_ColorSample_19;
+    case EGdtfColorSample::CES_20:			return XML_GDTF_ColorSample_20;
+    case EGdtfColorSample::CES_21:			return XML_GDTF_ColorSample_21;
+    case EGdtfColorSample::CES_22:			return XML_GDTF_ColorSample_22;
+    case EGdtfColorSample::CES_23:			return XML_GDTF_ColorSample_23;
+    case EGdtfColorSample::CES_24:			return XML_GDTF_ColorSample_24;
+    case EGdtfColorSample::CES_25:			return XML_GDTF_ColorSample_25;
+    case EGdtfColorSample::CES_26:			return XML_GDTF_ColorSample_26;
+    case EGdtfColorSample::CES_27:			return XML_GDTF_ColorSample_27;
+    case EGdtfColorSample::CES_28:			return XML_GDTF_ColorSample_28;
+    case EGdtfColorSample::CES_29:			return XML_GDTF_ColorSample_29;
+    case EGdtfColorSample::CES_30:			return XML_GDTF_ColorSample_30;
+    case EGdtfColorSample::CES_31:			return XML_GDTF_ColorSample_31;
+    case EGdtfColorSample::CES_32:			return XML_GDTF_ColorSample_32;
+    case EGdtfColorSample::CES_33:			return XML_GDTF_ColorSample_33;
+    case EGdtfColorSample::CES_34:			return XML_GDTF_ColorSample_34;
+    case EGdtfColorSample::CES_35:			return XML_GDTF_ColorSample_35;
+    case EGdtfColorSample::CES_36:			return XML_GDTF_ColorSample_36;
+    case EGdtfColorSample::CES_37:			return XML_GDTF_ColorSample_37;
+    case EGdtfColorSample::CES_38:			return XML_GDTF_ColorSample_38;
+    case EGdtfColorSample::CES_39:			return XML_GDTF_ColorSample_39;
+    case EGdtfColorSample::CES_40:			return XML_GDTF_ColorSample_40;
+    case EGdtfColorSample::CES_41:			return XML_GDTF_ColorSample_41;
+    case EGdtfColorSample::CES_42:			return XML_GDTF_ColorSample_42;
+    case EGdtfColorSample::CES_43:			return XML_GDTF_ColorSample_43;
+    case EGdtfColorSample::CES_44:			return XML_GDTF_ColorSample_44;
+    case EGdtfColorSample::CES_45:			return XML_GDTF_ColorSample_45;
+    case EGdtfColorSample::CES_46:			return XML_GDTF_ColorSample_46;
+    case EGdtfColorSample::CES_47:			return XML_GDTF_ColorSample_47;
+    case EGdtfColorSample::CES_48:			return XML_GDTF_ColorSample_48;
+    case EGdtfColorSample::CES_49:			return XML_GDTF_ColorSample_49;
+    case EGdtfColorSample::CES_50:			return XML_GDTF_ColorSample_50;
+    case EGdtfColorSample::CES_51:			return XML_GDTF_ColorSample_51;
+    case EGdtfColorSample::CES_52:			return XML_GDTF_ColorSample_52;
+    case EGdtfColorSample::CES_53:			return XML_GDTF_ColorSample_53;
+    case EGdtfColorSample::CES_54:			return XML_GDTF_ColorSample_54;
+    case EGdtfColorSample::CES_55:			return XML_GDTF_ColorSample_55;
+    case EGdtfColorSample::CES_56:			return XML_GDTF_ColorSample_56;
+    case EGdtfColorSample::CES_57:			return XML_GDTF_ColorSample_57;
+    case EGdtfColorSample::CES_58:			return XML_GDTF_ColorSample_58;
+    case EGdtfColorSample::CES_59:			return XML_GDTF_ColorSample_59;
+    case EGdtfColorSample::CES_60:			return XML_GDTF_ColorSample_60;
+    case EGdtfColorSample::CES_61:			return XML_GDTF_ColorSample_61;
+    case EGdtfColorSample::CES_62:			return XML_GDTF_ColorSample_62;
+    case EGdtfColorSample::CES_63:			return XML_GDTF_ColorSample_63;
+    case EGdtfColorSample::CES_64:			return XML_GDTF_ColorSample_64;
+    case EGdtfColorSample::CES_65:			return XML_GDTF_ColorSample_65;
+    case EGdtfColorSample::CES_66:			return XML_GDTF_ColorSample_66;
+    case EGdtfColorSample::CES_67:			return XML_GDTF_ColorSample_67;
+    case EGdtfColorSample::CES_68:			return XML_GDTF_ColorSample_68;
+    case EGdtfColorSample::CES_69:			return XML_GDTF_ColorSample_69;
+    case EGdtfColorSample::CES_70:			return XML_GDTF_ColorSample_70;
+    case EGdtfColorSample::CES_71:			return XML_GDTF_ColorSample_71;
+    case EGdtfColorSample::CES_72:			return XML_GDTF_ColorSample_72;
+    case EGdtfColorSample::CES_73:			return XML_GDTF_ColorSample_73;
+    case EGdtfColorSample::CES_74:			return XML_GDTF_ColorSample_74;
+    case EGdtfColorSample::CES_75:			return XML_GDTF_ColorSample_75;
+    case EGdtfColorSample::CES_76:			return XML_GDTF_ColorSample_76;
+    case EGdtfColorSample::CES_77:			return XML_GDTF_ColorSample_77;
+    case EGdtfColorSample::CES_78:			return XML_GDTF_ColorSample_78;
+    case EGdtfColorSample::CES_79:			return XML_GDTF_ColorSample_79;
+    case EGdtfColorSample::CES_80:			return XML_GDTF_ColorSample_80;
+    case EGdtfColorSample::CES_81:			return XML_GDTF_ColorSample_81;
+    case EGdtfColorSample::CES_82:			return XML_GDTF_ColorSample_82;
+    case EGdtfColorSample::CES_83:			return XML_GDTF_ColorSample_83;
+    case EGdtfColorSample::CES_84:			return XML_GDTF_ColorSample_84;
+    case EGdtfColorSample::CES_85:			return XML_GDTF_ColorSample_85;
+    case EGdtfColorSample::CES_86:			return XML_GDTF_ColorSample_86;
+    case EGdtfColorSample::CES_87:			return XML_GDTF_ColorSample_87;
+    case EGdtfColorSample::CES_88:			return XML_GDTF_ColorSample_88;
+    case EGdtfColorSample::CES_89:			return XML_GDTF_ColorSample_89;
+    case EGdtfColorSample::CES_90:			return XML_GDTF_ColorSample_90;
+    case EGdtfColorSample::CES_91:			return XML_GDTF_ColorSample_91;
+    case EGdtfColorSample::CES_92:			return XML_GDTF_ColorSample_92;
+    case EGdtfColorSample::CES_93:			return XML_GDTF_ColorSample_93;
+    case EGdtfColorSample::CES_94:			return XML_GDTF_ColorSample_94;
+    case EGdtfColorSample::CES_95:			return XML_GDTF_ColorSample_95;
+    case EGdtfColorSample::CES_96:			return XML_GDTF_ColorSample_96;
+    case EGdtfColorSample::CES_97:			return XML_GDTF_ColorSample_97;
+    case EGdtfColorSample::CES_98:			return XML_GDTF_ColorSample_98;
+    case EGdtfColorSample::CES_99:			return XML_GDTF_ColorSample_99;
+    }
+
+	DSTOP((kEveryone, "Unknown Enum for EGdtfColorSample"));
+
+    return XML_GDTF_ColorSample_1;
+}
+
+/*static*/ bool GdtfConverter::ConvertEGdtfColorSampleEnum(const TXString& inVal, EGdtfColorSample& outVal)
+{    
+    if      (inVal == XML_GDTF_ColorSample_1)  { outVal = EGdtfColorSample::CES_01; }
+    else if (inVal == XML_GDTF_ColorSample_2)  { outVal = EGdtfColorSample::CES_02; }
+    else if (inVal == XML_GDTF_ColorSample_3)  { outVal = EGdtfColorSample::CES_03; }
+    else if (inVal == XML_GDTF_ColorSample_4)  { outVal = EGdtfColorSample::CES_04; }
+    else if (inVal == XML_GDTF_ColorSample_5)  { outVal = EGdtfColorSample::CES_05; }
+    else if (inVal == XML_GDTF_ColorSample_6)  { outVal = EGdtfColorSample::CES_06; }
+    else if (inVal == XML_GDTF_ColorSample_7)  { outVal = EGdtfColorSample::CES_07; }
+    else if (inVal == XML_GDTF_ColorSample_8)  { outVal = EGdtfColorSample::CES_08; }
+    else if (inVal == XML_GDTF_ColorSample_9)  { outVal = EGdtfColorSample::CES_09; }
+    else if (inVal == XML_GDTF_ColorSample_10) { outVal = EGdtfColorSample::CES_10; }
+    else if (inVal == XML_GDTF_ColorSample_11) { outVal = EGdtfColorSample::CES_11; }
+    else if (inVal == XML_GDTF_ColorSample_12) { outVal = EGdtfColorSample::CES_12; }
+    else if (inVal == XML_GDTF_ColorSample_13) { outVal = EGdtfColorSample::CES_13; }
+    else if (inVal == XML_GDTF_ColorSample_14) { outVal = EGdtfColorSample::CES_14; }
+    else if (inVal == XML_GDTF_ColorSample_15) { outVal = EGdtfColorSample::CES_15; }
+    else if (inVal == XML_GDTF_ColorSample_16) { outVal = EGdtfColorSample::CES_16; }
+    else if (inVal == XML_GDTF_ColorSample_17) { outVal = EGdtfColorSample::CES_17; }
+    else if (inVal == XML_GDTF_ColorSample_18) { outVal = EGdtfColorSample::CES_18; }
+    else if (inVal == XML_GDTF_ColorSample_19) { outVal = EGdtfColorSample::CES_19; }
+    else if (inVal == XML_GDTF_ColorSample_20) { outVal = EGdtfColorSample::CES_20; }
+    else if (inVal == XML_GDTF_ColorSample_21) { outVal = EGdtfColorSample::CES_21; }
+    else if (inVal == XML_GDTF_ColorSample_22) { outVal = EGdtfColorSample::CES_22; }
+    else if (inVal == XML_GDTF_ColorSample_23) { outVal = EGdtfColorSample::CES_23; }
+    else if (inVal == XML_GDTF_ColorSample_24) { outVal = EGdtfColorSample::CES_24; }
+    else if (inVal == XML_GDTF_ColorSample_25) { outVal = EGdtfColorSample::CES_25; }
+    else if (inVal == XML_GDTF_ColorSample_26) { outVal = EGdtfColorSample::CES_26; }
+    else if (inVal == XML_GDTF_ColorSample_27) { outVal = EGdtfColorSample::CES_27; }
+    else if (inVal == XML_GDTF_ColorSample_28) { outVal = EGdtfColorSample::CES_28; }
+    else if (inVal == XML_GDTF_ColorSample_29) { outVal = EGdtfColorSample::CES_29; }
+    else if (inVal == XML_GDTF_ColorSample_30) { outVal = EGdtfColorSample::CES_30; }
+    else if (inVal == XML_GDTF_ColorSample_31) { outVal = EGdtfColorSample::CES_31; }
+    else if (inVal == XML_GDTF_ColorSample_32) { outVal = EGdtfColorSample::CES_32; }
+    else if (inVal == XML_GDTF_ColorSample_33) { outVal = EGdtfColorSample::CES_33; }
+    else if (inVal == XML_GDTF_ColorSample_34) { outVal = EGdtfColorSample::CES_34; }
+    else if (inVal == XML_GDTF_ColorSample_35) { outVal = EGdtfColorSample::CES_35; }
+    else if (inVal == XML_GDTF_ColorSample_36) { outVal = EGdtfColorSample::CES_36; }
+    else if (inVal == XML_GDTF_ColorSample_37) { outVal = EGdtfColorSample::CES_37; }
+    else if (inVal == XML_GDTF_ColorSample_38) { outVal = EGdtfColorSample::CES_38; }
+    else if (inVal == XML_GDTF_ColorSample_39) { outVal = EGdtfColorSample::CES_39; }
+    else if (inVal == XML_GDTF_ColorSample_40) { outVal = EGdtfColorSample::CES_40; }
+    else if (inVal == XML_GDTF_ColorSample_41) { outVal = EGdtfColorSample::CES_41; }
+    else if (inVal == XML_GDTF_ColorSample_42) { outVal = EGdtfColorSample::CES_42; }
+    else if (inVal == XML_GDTF_ColorSample_43) { outVal = EGdtfColorSample::CES_43; }
+    else if (inVal == XML_GDTF_ColorSample_44) { outVal = EGdtfColorSample::CES_44; }
+    else if (inVal == XML_GDTF_ColorSample_45) { outVal = EGdtfColorSample::CES_45; }
+    else if (inVal == XML_GDTF_ColorSample_46) { outVal = EGdtfColorSample::CES_46; }
+    else if (inVal == XML_GDTF_ColorSample_47) { outVal = EGdtfColorSample::CES_47; }
+    else if (inVal == XML_GDTF_ColorSample_48) { outVal = EGdtfColorSample::CES_48; }
+    else if (inVal == XML_GDTF_ColorSample_49) { outVal = EGdtfColorSample::CES_49; }
+    else if (inVal == XML_GDTF_ColorSample_50) { outVal = EGdtfColorSample::CES_50; }
+    else if (inVal == XML_GDTF_ColorSample_51) { outVal = EGdtfColorSample::CES_51; }
+    else if (inVal == XML_GDTF_ColorSample_52) { outVal = EGdtfColorSample::CES_52; }
+    else if (inVal == XML_GDTF_ColorSample_53) { outVal = EGdtfColorSample::CES_53; }
+    else if (inVal == XML_GDTF_ColorSample_54) { outVal = EGdtfColorSample::CES_54; }
+    else if (inVal == XML_GDTF_ColorSample_55) { outVal = EGdtfColorSample::CES_55; }
+    else if (inVal == XML_GDTF_ColorSample_56) { outVal = EGdtfColorSample::CES_56; }
+    else if (inVal == XML_GDTF_ColorSample_57) { outVal = EGdtfColorSample::CES_57; }
+    else if (inVal == XML_GDTF_ColorSample_58) { outVal = EGdtfColorSample::CES_58; }
+    else if (inVal == XML_GDTF_ColorSample_59) { outVal = EGdtfColorSample::CES_59; }
+    else if (inVal == XML_GDTF_ColorSample_60) { outVal = EGdtfColorSample::CES_60; }
+    else if (inVal == XML_GDTF_ColorSample_61) { outVal = EGdtfColorSample::CES_61; }
+    else if (inVal == XML_GDTF_ColorSample_62) { outVal = EGdtfColorSample::CES_62; }
+    else if (inVal == XML_GDTF_ColorSample_63) { outVal = EGdtfColorSample::CES_63; }
+    else if (inVal == XML_GDTF_ColorSample_64) { outVal = EGdtfColorSample::CES_64; }
+    else if (inVal == XML_GDTF_ColorSample_65) { outVal = EGdtfColorSample::CES_65; }
+    else if (inVal == XML_GDTF_ColorSample_66) { outVal = EGdtfColorSample::CES_66; }
+    else if (inVal == XML_GDTF_ColorSample_67) { outVal = EGdtfColorSample::CES_67; }
+    else if (inVal == XML_GDTF_ColorSample_68) { outVal = EGdtfColorSample::CES_68; }
+    else if (inVal == XML_GDTF_ColorSample_69) { outVal = EGdtfColorSample::CES_69; }
+    else if (inVal == XML_GDTF_ColorSample_70) { outVal = EGdtfColorSample::CES_70; }
+    else if (inVal == XML_GDTF_ColorSample_71) { outVal = EGdtfColorSample::CES_71; }
+    else if (inVal == XML_GDTF_ColorSample_72) { outVal = EGdtfColorSample::CES_72; }
+    else if (inVal == XML_GDTF_ColorSample_73) { outVal = EGdtfColorSample::CES_73; }
+    else if (inVal == XML_GDTF_ColorSample_74) { outVal = EGdtfColorSample::CES_74; }
+    else if (inVal == XML_GDTF_ColorSample_75) { outVal = EGdtfColorSample::CES_75; }
+    else if (inVal == XML_GDTF_ColorSample_76) { outVal = EGdtfColorSample::CES_76; }
+    else if (inVal == XML_GDTF_ColorSample_77) { outVal = EGdtfColorSample::CES_77; }
+    else if (inVal == XML_GDTF_ColorSample_78) { outVal = EGdtfColorSample::CES_78; }
+    else if (inVal == XML_GDTF_ColorSample_79) { outVal = EGdtfColorSample::CES_79; }
+    else if (inVal == XML_GDTF_ColorSample_80) { outVal = EGdtfColorSample::CES_80; }
+    else if (inVal == XML_GDTF_ColorSample_81) { outVal = EGdtfColorSample::CES_81; }
+    else if (inVal == XML_GDTF_ColorSample_82) { outVal = EGdtfColorSample::CES_82; }
+    else if (inVal == XML_GDTF_ColorSample_83) { outVal = EGdtfColorSample::CES_83; }
+    else if (inVal == XML_GDTF_ColorSample_84) { outVal = EGdtfColorSample::CES_84; }
+    else if (inVal == XML_GDTF_ColorSample_85) { outVal = EGdtfColorSample::CES_85; }
+    else if (inVal == XML_GDTF_ColorSample_86) { outVal = EGdtfColorSample::CES_86; }
+    else if (inVal == XML_GDTF_ColorSample_87) { outVal = EGdtfColorSample::CES_87; }
+    else if (inVal == XML_GDTF_ColorSample_88) { outVal = EGdtfColorSample::CES_88; }
+    else if (inVal == XML_GDTF_ColorSample_89) { outVal = EGdtfColorSample::CES_89; }
+    else if (inVal == XML_GDTF_ColorSample_90) { outVal = EGdtfColorSample::CES_90; }
+    else if (inVal == XML_GDTF_ColorSample_91) { outVal = EGdtfColorSample::CES_91; }
+    else if (inVal == XML_GDTF_ColorSample_92) { outVal = EGdtfColorSample::CES_92; }
+    else if (inVal == XML_GDTF_ColorSample_93) { outVal = EGdtfColorSample::CES_93; }
+    else if (inVal == XML_GDTF_ColorSample_94) { outVal = EGdtfColorSample::CES_94; }
+    else if (inVal == XML_GDTF_ColorSample_95) { outVal = EGdtfColorSample::CES_95; }
+    else if (inVal == XML_GDTF_ColorSample_96) { outVal = EGdtfColorSample::CES_96; }
+    else if (inVal == XML_GDTF_ColorSample_97) { outVal = EGdtfColorSample::CES_97; }
+    else if (inVal == XML_GDTF_ColorSample_98) { outVal = EGdtfColorSample::CES_98; }
+    else if (inVal == XML_GDTF_ColorSample_99) { outVal = EGdtfColorSample::CES_99; }
+
+    DSTOP((kEveryone, "Unknown Value for EGdtfColorSample"));
+       
+    return true;
+}
+
 
 bool SceneDataZip::GetFile(const TXString &fileName, const IFolderIdentifierPtr &workingFolder, IFileIdentifierPtr& outFile, bool& hasCheckSum, bool& checksumIsFine, bool checkSumCheck )
 {
@@ -1177,7 +2051,7 @@ void SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, ISceneDataZipBuffer& buffe
 	{
 		// Copy string
 		TXString strValInner;
-		for (ptrdiff_t i = 0; i < pos; i++)	{ strValInner << strVal.GetAt(i); }
+		for (ptrdiff_t i = 0; i < pos; i++)	{ strValInner += strVal.GetAt(i); }
 		
 		// Try to cast
 		TXString con (strValInner);
@@ -1191,7 +2065,33 @@ void SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, ISceneDataZipBuffer& buffe
 	// Delete and find next
 	TXString con(strVal);
 	doubleArr.push_back(con.atof());
+		
+	return true;
+}
+
+/*static*/ bool GdtfConverter::Deserialize(const TXString& value, TSint32Array & intArray)
+{
+	// Split string
+	TXString strVal = value;
 	
+	// Find first entry
+	ptrdiff_t pos = strVal.Find(",");
+	while (pos > 0 )
+	{
+		// Copy string
+		TXString strValInner;
+		for (ptrdiff_t i = 0; i < pos; i++)	{ strValInner += strVal.GetAt(i); }
+		
+		// Try to cast
+		intArray.push_back(strValInner.atoi());
+		
+		// Delete and find next
+		strVal.Delete(0, pos + 1);
+		pos = strVal.Find(",");
+	}
+	
+	// Delete and find next
+	intArray.push_back(strVal.atoi());
 	
 	return true;
 }
@@ -1225,9 +2125,6 @@ void GdtfConverter::TraverseNodes(IXMLFileNodePtr root, const TXString& childCon
 				objNode = next;
 			}
 		}
-		
-		
-		
 	}
 }
 

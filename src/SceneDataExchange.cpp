@@ -10,7 +10,7 @@
 using namespace SceneData;
 
 SceneDataGUID::SceneDataGUID(const TXString& uuid)
-{	
+{
 	ASSERTN(kEveryone, uuid != "");
 	
 	GdtfConverter::ConvertUUID(uuid, _uuid);
@@ -608,7 +608,7 @@ void SceneDataObjWithMatrix::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExcha
 		IXMLFileNodePtr pMatrixNode;
 		if ( VCOM_SUCCEEDED( pNode->CreateChildNode( XML_Val_MatrixNodeName, & pMatrixNode ) ) )
 		{
-			pMatrixNode->SetNodeValue(GdtfConverter::ConvertMatrix(fMatrix));
+			pMatrixNode->SetNodeValue(GdtfConverter::ConvertMatrix(fMatrix, false));
 
 		}
 	}
@@ -822,7 +822,7 @@ ESceneDataObjectType SceneDataLayerObj::GetObjectType()
 
 // ----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataAuxObj
-SceneDataDmxAdress::SceneDataDmxAdress(size_t universe, Uint8 adress, size_t breakId)
+SceneDataDmxAdress::SceneDataDmxAdress(size_t universe, size_t adress, size_t breakId)
 {
 	// The First Universe starts with 1
 	// But Universe 0 is also the first universe. So 0 and 1 are here the same thing
@@ -838,12 +838,13 @@ SceneDataDmxAdress::SceneDataDmxAdress(size_t absuluteAdress, size_t breakId)
 	fBreak			= breakId;
 }
 
-Uint8 SceneDataDmxAdress::GetAdress() const
+size_t SceneDataDmxAdress::GetAdress() const
 {
 	size_t value = fAbsuluteAdress -( 512 * ( GetUniverse() - 1));
-	Uint8 adress = DemoteTo<Uint8>(kEveryone, value );
 	
-	return adress;
+	ASSERTN(kEveryone, value <= 512);
+	
+	return value;
 }
 
 size_t SceneDataDmxAdress::GetUniverse() const
@@ -1446,6 +1447,7 @@ SceneDataExchange::~SceneDataExchange()
 	
 	for (SceneDataObjWithMatrixPtr	childObj : fChildObjs )		{ delete childObj; }
 	for (SceneDataAuxObjPtr			childAux : fAuxDataObjs )	{ delete childAux; }
+	for (SceneDataProviderObjPtr	childPro : fProviderObjs )	{ delete childPro; }
 	
 }
 
@@ -1944,16 +1946,15 @@ bool SceneDataExchange::WriteToFile(const IFileIdentifierPtr& file)
 	
 	//-------------------------------------------------------------------------------------------------
 	// Add the needed
-	for (const TXString& gdtfFileNamme : fRequiredGdtfFiles)
+	for (const TXString& gdtfFileName : fRequiredGdtfFiles)
 	{
 		//
 		bool			exported		= false;
-		const TXString	gdtfExt			= ".gdtf";
 		
 		for (IFolderIdentifierPtr folder : fGdtfFolderLocations)
 		{
 			IFileIdentifierPtr gdtfFilePtr (IID_FileIdentifier);
-			gdtfFilePtr->Set(folder, gdtfFileNamme + gdtfExt);
+			gdtfFilePtr->Set(folder, gdtfFileName);
 			
 			if		(SceneDataZip::AddFileToZip(zipfile, gdtfFilePtr,  true/*Checksum*/, false/*Delete*/, false/*ASSERT*/))	{ exported = true;  break; }
 		}
