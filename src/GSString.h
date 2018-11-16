@@ -218,8 +218,6 @@ public:
 	TXString& Truncate(size_t len);
 	TXString& Clear();
 
-	size_t GetWidthInNumOfStdChar() const;	// Get width in number of standard character width.
-
 	//***********************************************************************************
 	// Element access
 	//***********************************************************************************
@@ -333,11 +331,6 @@ public:
 
 	// Reverse the string.
 	TXString& MakeReverse();
-
-	// Conversion to a Unicode normalization form
-	TXString& ToPrecomposed();
-	TXString& ToDecomposed();
-
 
 	//***********************************************************************************
 	// Getting data and casting

@@ -578,25 +578,6 @@ size_t TXString::GetEncodingLength(ETXEncoding e) const
 }
 
 //=======================================================================================
-// Return width in number of standard character width.
-size_t TXString::GetWidthInNumOfStdChar() const
-{
-	// Set default value of width to the number of UTF-16 characters.
-	size_t widthInNumOfStdChar = stdUStr.length();
-
-#if GS_WIN
-	//TODO
-#elif GS_LIN
-	//TODO
-#else
-	//TODO
-#endif
-
-	// Return width in number of 'a' width.
-	return widthInNumOfStdChar;
-}
-
-//=======================================================================================
 // Return true if string is empty. Return false otherwise.
 bool TXString::IsEmpty() const
 {
@@ -1471,37 +1452,6 @@ TXString& TXString::MakeReverse()
 
 	return *this;
 }
-
-//=======================================================================================
-// Make sure the string is in precomposed form. Return itself.
-TXString& TXString::ToPrecomposed()
-{
-#if GS_WIN
-	//TODO
-#elif GS_LIN
-	// LINUX_IMPLEMENTATION
-#else	// Mac
-	//TODO
-#endif
-
-	return *this;
-}
-
-//=======================================================================================
-// Makek sure the string is in decomposed form. Return itself.
-TXString& TXString::ToDecomposed()
-{
-#if GS_WIN
-	//TODO
-#elif GS_LIN
-	// LINUX_IMPLEMENTATION
-#else	// Mac
-	//TODO
-#endif
-
-	return *this;
-}
-
 
 //***************************************************************************************
 // Getting data and casting
