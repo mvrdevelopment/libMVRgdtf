@@ -139,7 +139,7 @@ using namespace SceneData;
 	uuidForRead[36] = value[31];
 	uuidForRead[37] = '}';
 	
-	uuid = UUID(uuidForRead);
+	uuid = VWUUID(uuidForRead);
 	
 	return true;
 	

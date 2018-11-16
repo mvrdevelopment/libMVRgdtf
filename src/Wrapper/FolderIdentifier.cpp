@@ -8,7 +8,7 @@
 #include "FolderIdentifier.h"
 #include "FileIdentifier.h"
 #include "UTranslateFiles.h"
-#include "Include/ApplicationFolders.h"
+//#include "Include/ApplicationFolders.h"
 #include "FilingWrapper.h"
 
 #include "FolderSpecifiers.h"
@@ -256,19 +256,14 @@ VCOMError CFolderIdentifier::Set(EFolderSpecifier folderSpec, bool bUserFolder)
 		return kVCOMError_InvalidArg;
 
 	VCOMError	error	= kVCOMError_Failed;
-/*	char		outPath[1024];
-	if (::GS_GetFolderN( NULL, innerFolderSpec, outPath )) {
-		error	= this->SetFullPath( outPath );
-	}
-*/ //TODO
-// 	TFolderIdentifier	folder;
-// 	if ( ::GetFolder( (EFolderSpecifier) innerFolderSpec, folder, false /*inCreateIfMissing*/ ) ) {
-// #if GS_WIN
-// 		error	= this->SetFullPath( folder.GetFolderPath() );
-// #else
-//         error   = this->SetFullPath( folder.GetPosixFolderPath());
-// #endif
-// 	}
+ 	TFolderIdentifier	folder;
+ 	if ( GetFolderWithSpecifer( (EFolderSpecifier) innerFolderSpec, folder, false /*inCreateIfMissing*/ ) ) {
+ #if GS_WIN
+ 		error	= this->SetFullPath( folder.GetFolderPath() );
+ #else
+         error   = this->SetFullPath( folder.GetPosixFolderPath());
+ #endif
+ 	}
 
 	return error;
 }

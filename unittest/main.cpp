@@ -5,6 +5,7 @@
 #include "Include/VectorworksMVR.h"
 #include "Unittest.h"
 #include "MvrUnittest.h"
+#include "GdtfUnittest.h"
 
 #if defined(_WINDOWS)
 # include <Shlobj.h>
@@ -19,7 +20,6 @@
 
 using namespace VectorworksMVR;					
 
-void WriteMVR();
 bool GetFolderAppDataPath(std::string& outPath);
 
 int main(int argc, char* argv[])
@@ -31,7 +31,10 @@ int main(int argc, char* argv[])
 	MvrUnittest mvrTest(base);
 	bool mvrOK = mvrTest.RunTest();
 
-	return (mvrOK == true);
+	GdtfUnittest gdtfTest(base);
+	bool gdtfOk = gdtfTest.RunTest();
+
+	return (mvrOK && gdtfOk);
 }
 
 bool GetFolderAppDataPath(std::string& outPath)

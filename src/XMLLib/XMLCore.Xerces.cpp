@@ -555,12 +555,7 @@ short DOMData::WriteXMLFile(short whichPath, const TXString& fileName)
 		txFileName = GetFullPath(whichPath, fileName, true /*create if missing*/);
 	else {
 		VCOMPtr< IFileIdentifier > pXmlFileID( IID_FileIdentifier );
-		IFolderIdentifierPtr pAppFolders( IID_FolderIdentifier );
-
 		whichPath = abs(whichPath);
-		//if (!VCOM_SUCCEEDED(pAppFolders->Set((EFolderSpecifier)whichPath, fileName, &pXmlFileID)))
-		//	return kUnknownError;
-		// TODO
 
 		pXmlFileID->GetFileFullPath(txFileName);
 

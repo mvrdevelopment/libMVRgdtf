@@ -397,10 +397,6 @@ public:
 	ptrdiff_t FindNotOneOf(const TXString &charSet, size_t posFirst = 0) const;
 	ptrdiff_t ReverseFindNotOneOf(const TXString &charSet, size_t posLast = -1) const;
 
-	bool SurrogatePairAt(size_t nIndex) const;
-	bool HasSurrogatePair() const;
-
-
 	//***********************************************************************************
 	// Creating sub-string
 	//***********************************************************************************

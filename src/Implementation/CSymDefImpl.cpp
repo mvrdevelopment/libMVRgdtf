@@ -3,7 +3,6 @@
 //-----------------------------------------------------------------------------
 #include "Prefix/StdAfx.h"
 #include "CMediaRessourceVectorImpl.h"
-// #include "CGeometryProviderWrapper.h"
 #include "CGeometryReferenceImpl.h"
 #include "Utility.h"
 

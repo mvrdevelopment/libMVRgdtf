@@ -3,12 +3,11 @@
 //-----------------------------------------------------------------------------
 #pragma once
 
-#include "CGeometryProviderWrapper.h"
 #include "GDTFManager.h"
 
 namespace VectorworksMVR
 {
-    class CGdtfCRIImpl : public VectorworksMVR::VCOMImpl<IGdtfCRI>
+    class CGdtfCRIImpl : public VCOMImpl<IGdtfCRI>
     {
     public:
         CGdtfCRIImpl();

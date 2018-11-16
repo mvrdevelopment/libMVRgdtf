@@ -14,6 +14,7 @@
 #include <pwd.h>
 #elif GS_MAC
 #include <unistd.h>
+#include <CoreServices/CoreServices.h>
 #endif
 // ------------------------------------------------------------------------------------
 TXBaseStorageAccess::TXBaseStorageAccess()
@@ -159,7 +160,7 @@ bool TFolderIdentifier::RevealInOS()
 	struct stat sb;
 	if ( stat(ptr, &sb) == 0 && S_ISDIR(sb.st_mode) )
 		result = TFolderIdentifier::eFolderExists;
-#elif _MAC
+#elif GS_MAC
 	// Use mkdir on posix systems
 	const char *	ptr			= fullPath.GetCharPtr();
 	int				createdDir	=  mkdir(ptr, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
@@ -349,16 +350,17 @@ bool TFileIdentifier::RevealInOS()
 	return nullptr;
 }
 
-// ------------------------------------------------------------------------------------
-bool GetFolder(FolderSpecifier inWhichFolder, TFolderIdentifier&	outFolderID,  bool inCreateIfMissing)
+bool GetFolderWithSpecifer(EFolderSpecifier inWhichFolder, TFolderIdentifier & outFolderID, bool inCreateIfMissing)
 {
 	// If you require the Spotlight Folder, you will get a path to a readable location on disk
-	if (inWhichFolder == 302 ||  inWhichFolder == -302/*kSpotlightFolder*/)
+	if (inWhichFolder == 302 || inWhichFolder == -302/*kSpotlightFolder*/)
 	{
 		TXString appdataPath;
-		if	( ! GetFolderAppDataPath(appdataPath) )
-			{ return false; }
-		
+		if (!GetFolderAppDataPath(appdataPath))
+		{
+			return false;
+		}
+
 		outFolderID.SetByFullPath(appdataPath);
 		return true;
 	}
@@ -385,7 +387,7 @@ bool GetFolderAppDataPath(TXString& outPath)
 
 	const char *homedir = pw->pw_dir;
 	outPath = TXString(homedir);
-#elif _MAC
+#elif GS_MAC
 	//--------------------------------------------------------
 	//Implementation for OSX
 	FSRef ref;

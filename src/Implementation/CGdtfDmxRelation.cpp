@@ -124,7 +124,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxRelationImpl::GetRelationType(
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxRelationImpl::GetDmxStart(Sint32 &start)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxRelationImpl::GetDmxStart(DmxValue &start)
 {
 	// Check Pointer
 	if ( ! fRelation) { return kVCOMError_NotInitialized; }
@@ -134,7 +134,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxRelationImpl::GetDmxStart(Sint
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxRelationImpl::GetDmxEnd(Sint32 &end)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxRelationImpl::GetDmxEnd(DmxValue &end)
 {
 	// Check Pointer
 	if ( ! fRelation) { return kVCOMError_NotInitialized; }

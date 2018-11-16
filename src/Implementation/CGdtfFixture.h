@@ -28,7 +28,7 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetFixtureGUID(MvrUUID& uuid);
         virtual MvrString VCOM_CALLTYPE     GetFixtureThumbnail();
 		virtual MvrString VCOM_CALLTYPE     GetFixtureThumbnailFullPath();
-		virtual VCOMError VCOM_CALLTYPE		GetLinkedFixtureGUID(UUID& uuid);
+		virtual VCOMError VCOM_CALLTYPE		GetLinkedFixtureGUID(MvrUUID& uuid);
 		virtual VCOMError VCOM_CALLTYPE		HasLinkedFixtureGUID(bool& has);
 
 		
@@ -36,7 +36,7 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE     SetFixtureTypeDescription(MvrString descrip);
 		virtual VCOMError VCOM_CALLTYPE		SetShortName(MvrString shortName);
 		virtual VCOMError VCOM_CALLTYPE     SetFixtureThumbnail(MvrString thubnail);
-		virtual VCOMError VCOM_CALLTYPE		SetLinkedFixtureGUID(const UUID& uuid);
+		virtual VCOMError VCOM_CALLTYPE		SetLinkedFixtureGUID(const MvrUUID& uuid);
 		
         
         virtual VCOMError VCOM_CALLTYPE		GetActivationGroupCount(size_t& count);

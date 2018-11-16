@@ -1,8 +1,7 @@
 //-----------------------------------------------------------------------------
 //----- Copyright deersoft 2015 - 2018 www.deersoft.de
 //-----------------------------------------------------------------------------
-#include "StdAfx.h"
-#include "VectorworksMVR.h"
+#include "Prefix/StdAfx.h"
 #include "CGdtfRDMAbsentNotification.h"
 
 VectorworksMVR::CGdtfRDMAbsentNotificationImpl::CGdtfRDMAbsentNotificationImpl()

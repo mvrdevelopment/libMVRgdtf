@@ -48,7 +48,7 @@
 #include "Wrapper/TDQuickDraw.h"
 #include "Wrapper/UTranslateFiles.h"
 #include "Wrapper/ZIPFileImpl.h"
-#include "Wrapper/Include/ApplicationFolders.h"
+//#include "Wrapper/Include/ApplicationFolders.h"
 
 
 //------------------------------------------------------------------

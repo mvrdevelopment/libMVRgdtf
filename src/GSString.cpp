@@ -1903,38 +1903,6 @@ ptrdiff_t TXString::ReverseFindNotOneOf(const TXString &charSet,
 	return pos;
 }
 
-bool TXString::SurrogatePairAt(size_t nIndex) const
-{
-	bool isSurrogatePair = false;
-
-	if (nIndex >= 0 && nIndex < (GetLength() - 1))
-	{
-		TXChar firstChar = GetAt(nIndex);
-		TXChar secondChar = GetAt(nIndex + 1);
-		// TODO
-		//isSurrogatePair = inrange<TXChar,TXChar,TXChar>(firstChar, 0xD800, 0xDBFF) &&
-		//    inrange<TXChar,TXChar,TXChar>(secondChar, 0xDC00, 0xDFFF);
-	}
-
-	return isSurrogatePair;
-}
-
-bool TXString::HasSurrogatePair() const
-{
-	bool hasSurrogatePair = false;
-
-	if (GetLength() > 1)
-	{
-		for (size_t nIndex = 0; nIndex < (GetLength() - 1) && !hasSurrogatePair; nIndex++)
-		{
-			if (SurrogatePairAt(nIndex))
-				hasSurrogatePair = true;
-		}
-	}
-
-	return hasSurrogatePair;
-}
-
 //***************************************************************************************
 // Creating sub-string
 //***************************************************************************************

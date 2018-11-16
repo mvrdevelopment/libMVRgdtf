@@ -3,13 +3,12 @@
 //-----------------------------------------------------------------------------
 #pragma once
 
-#include "CGeometryProviderWrapper.h"
 #include "GDTFManager.h"
 
 namespace VectorworksMVR
 {
     //----------------------------------------------------------------------------------------
-    class CGdtfMacroVisualValueImpl : public VectorworksMVR::VCOMImpl<IGdtfMacroVisualValue>
+    class CGdtfMacroVisualValueImpl : public VCOMImpl<IGdtfMacroVisualValue>
     {
     public:
         CGdtfMacroVisualValueImpl();

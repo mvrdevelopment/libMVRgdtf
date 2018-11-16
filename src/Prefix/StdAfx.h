@@ -28,7 +28,6 @@ using namespace VectorworksMVR;
 //---------------------------------------------------------------------------------
 // Add defines
 
-// TODO
 #define __PrintDebugValue__(x, y) std::cout << #x << " " << #y <<" Failed!" << std::endl
 #define __PrintDebugValue2__(x) std::cout << #x << " Failed!" << std::endl
 

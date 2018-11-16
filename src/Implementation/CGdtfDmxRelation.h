@@ -19,8 +19,8 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetMasterChannel(IGdtfDmxChannel** master);
         virtual VCOMError VCOM_CALLTYPE     GetSlaveChannel(IGdtfDmxChannelFunction** slave);
         virtual VCOMError VCOM_CALLTYPE     GetRelationType(EGdtfDmxRelationType& relation);
-        virtual VCOMError VCOM_CALLTYPE     GetDmxStart(Sint32& start);
-        virtual VCOMError VCOM_CALLTYPE     GetDmxEnd(Sint32& end);
+        virtual VCOMError VCOM_CALLTYPE     GetDmxStart(DmxValue& start);
+        virtual VCOMError VCOM_CALLTYPE     GetDmxEnd(DmxValue& end);
 
 		virtual VCOMError VCOM_CALLTYPE     SetName(MvrString name);
 		virtual VCOMError VCOM_CALLTYPE     SetMasterChannel(IGdtfDmxChannel* newMaster);

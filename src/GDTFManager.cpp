@@ -4770,12 +4770,12 @@ void GdtfFixture::SetFixtureTypeDescription(const TXString& desc)
 	fFixtureTypeDescription = desc;
 }
 
-void GdtfFixture::SetGuid(const VWFC::Tools::UUID& uuid)
+void GdtfFixture::SetGuid(const VWFC::Tools::VWUUID& uuid)
 {
 	fGuid = uuid;
 }
 
-void GdtfFixture::SetLinkedGuid(const VWFC::Tools::UUID& uuid)
+void GdtfFixture::SetLinkedGuid(const VWFC::Tools::VWUUID& uuid)
 {
 	fHasLinkedGuid = true;
 	fLinkedGuid = uuid;

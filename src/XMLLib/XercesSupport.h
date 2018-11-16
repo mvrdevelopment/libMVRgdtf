@@ -38,7 +38,6 @@
 #include "xercesc/util/Base64.hpp"
 #include "xercesc/util/XMLMsgLoader.hpp"
 
-// TODO
 XERCES_CPP_NAMESPACE_USE
 
 // ----------------------------------------------------------------------------------------------------

@@ -3,12 +3,11 @@
 //-----------------------------------------------------------------------------
 #pragma once
 
-#include "CGeometryProviderWrapper.h"
 #include "GDTFManager.h"
 
 namespace VectorworksMVR
 {
-    class CGdtfRDMSensorNotificationImpl : public VectorworksMVR::VCOMImpl<IGdtfRDMSensorNotification>
+    class CGdtfRDMSensorNotificationImpl : public VCOMImpl<IGdtfRDMSensorNotification>
     {
     public:
         CGdtfRDMSensorNotificationImpl();

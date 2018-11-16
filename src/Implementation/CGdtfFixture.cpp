@@ -64,7 +64,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::OpenForWrite(MvrStri
 	
 	TXString	vwName			(name);
 	TXString	vwManufacturer (manufacturer);
-	VWFC::UUID  vwUuid = VWFC::Tools::UUID(uuid.a, uuid.b, uuid.c, uuid.d);
+	VWFC::Tools::VWUUID vwUuid = VWFC::Tools::VWUUID(uuid.a, uuid.b, uuid.c, uuid.d);
 	
 	fFixtureObject->SetName(vwName);
 	fFixtureObject->SetManufacturer(vwManufacturer);
@@ -175,7 +175,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetFixtureGUID(Vecto
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetLinkedFixtureGUID(VectorworksMVR::UUID &uuid)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetLinkedFixtureGUID(VectorworksMVR::MvrUUID &uuid)
 {
 	if(!fFixtureObject) {return kVCOMError_NotInitialized;}
 	
@@ -247,11 +247,11 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::SetFixtureThumbnail(
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::SetLinkedFixtureGUID(const UUID& uuid)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::SetLinkedFixtureGUID(const MvrUUID& uuid)
 {
 	if(!fFixtureObject) {return kVCOMError_NotInitialized;}
 	
-	VWFC::Tools::UUID vwUuid = VWFC::Tools::UUID(uuid.a, uuid.b, uuid.c, uuid.d);
+	VWFC::Tools::VWUUID vwUuid = VWFC::Tools::VWUUID(uuid.a, uuid.b, uuid.c, uuid.d);
 	fFixtureObject->SetLinkedGuid(vwUuid);
 	
 	return kVCOMError_NoError;

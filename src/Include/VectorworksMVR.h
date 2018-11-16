@@ -121,6 +121,7 @@ namespace VectorworksMVR
 	const VCOMError		kVCOMError_NoInterface		= 5;
 	const VCOMError		kVCOMError_NotImplemented	= 6;
 	const VCOMError		kVCOMError_InvalidArg		= 15;
+	const VCOMError		kVCOMError_NoInstance		= 16;
 	
 	const VCOMError		kVCOMError_NoValidContainerObj	      = 457;
 	const VCOMError		kVCOMError_NoLayerObj			      = 458;

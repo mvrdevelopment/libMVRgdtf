@@ -139,7 +139,7 @@ private:
 };
 
 // ------------------------------------------------------------------------------------
-bool GetFolder(EFolderSpecifier inWhichFolder, TFolderIdentifier& outFolderID,  bool inCreateIfMissing = false);
+bool GetFolderWithSpecifer(EFolderSpecifier inWhichFolder, TFolderIdentifier& outFolderID,  bool inCreateIfMissing = false);
 
 
 bool GetFolderAppDataPath(TXString& outPath);
