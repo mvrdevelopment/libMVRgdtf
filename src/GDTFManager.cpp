@@ -3188,11 +3188,9 @@ TXString GdtfRevision::GetNodeName()
 
 void GdtfRevision::SetText(const TXString& text)
 {
+	// TODO Set text
 	fText = text;
 	fDate = "";
-	fDate += gSDK->GetFormattedDateTimeString(EDateTimeFormat::DDMMYYYY);
-	fDate += " ";
-	fDate += gSDK->GetFormattedDateTimeString(EDateTimeFormat::H_MM_S);
 }
 
 const TXString& GdtfRevision::GetDate() const
@@ -4772,12 +4770,12 @@ void GdtfFixture::SetFixtureTypeDescription(const TXString& desc)
 	fFixtureTypeDescription = desc;
 }
 
-void GdtfFixture::SetGuid(const VWFC::UUID& uuid)
+void GdtfFixture::SetGuid(const VWFC::Tools::UUID& uuid)
 {
 	fGuid = uuid;
 }
 
-void GdtfFixture::SetLinkedGuid(const VWFC::UUID& uuid)
+void GdtfFixture::SetLinkedGuid(const VWFC::Tools::UUID& uuid)
 {
 	fHasLinkedGuid = true;
 	fLinkedGuid = uuid;

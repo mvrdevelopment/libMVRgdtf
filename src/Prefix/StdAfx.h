@@ -68,6 +68,8 @@ using namespace VWFC::Tools;
 #include "Interface/IStdFile.h"
 #include "Interface/IXMLFile.h"
 
+// Needed typedefs
+typedef std::vector<Sint32> TSint32Array;
 
 
 //
