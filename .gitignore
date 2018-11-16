@@ -27,18 +27,10 @@
 *.exe
 *.out
 *.app
+*.gdtf
+*.mvr
 
-# Directories
-.vs/
-bin/
-obj/
-testfiles/
-
-\.vscode/settings\.json
-
-libs/lin/release/libtestlib\.a
-libs/lin/release/libVectorworksMvrGdtf\.a
-
+# etc
 *.pdb
 *.idb
 *.log
@@ -47,7 +39,17 @@ libs/lin/release/libVectorworksMvrGdtf\.a
 *.ipdb
 *.iobj
 *.exp
-*.mvr
+*.ilk
+
+# Directories
+.vs/
+bin/
+obj/
+testfiles/
+
+# exclude specific files
+\.vscode/settings\.json
 x64/Debug/libVectorworksMvrGdtf.lib
 x64/Debug/libVectorworksMvrGdtf.dll
-*.ilk
+x64/Release/libVectorworksMvrGdtf.lib
+x64/Release/libVectorworksMvrGdtf.dll
