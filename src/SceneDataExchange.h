@@ -128,6 +128,7 @@ namespace SceneData
 	{
 
 	public:
+		SceneDataProviderObj();
 		SceneDataProviderObj(const TXString& proveride,const TXString& version);
 		virtual ~SceneDataProviderObj();
 		
