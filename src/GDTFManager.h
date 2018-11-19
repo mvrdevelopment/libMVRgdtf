@@ -690,6 +690,8 @@ namespace SceneData
         GdtfGeometry*					GetLinkedGeometry();
         void					        SetLinkedGeometry(GdtfGeometry* ptr);
 		
+        const TXString&					GetUnresolvedLinkedGeometry();
+
 	protected:
 		virtual	TXString				GetNodeName();
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
