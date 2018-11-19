@@ -230,6 +230,12 @@ SceneDataProviderObj::SceneDataProviderObj(const TXString& provider,const TXStri
 	fProvider	= provider;
 }
 
+SceneDataProviderObj::SceneDataProviderObj() : SceneDataObj(SceneDataGUID(eNoGuid,""))
+{
+	fVersion	= "";
+	fProvider	= "";
+}
+
 SceneDataProviderObj::~SceneDataProviderObj()
 {
 	
@@ -330,17 +336,24 @@ size_t SceneDataProviderObj::GetEntryCount()
 	return fKeyArr.size();
 }
 
-bool SceneDataProviderObj::GetEntryAt(size_t at, TXString& key,TXString& value)
+TXString& SceneDataProviderObj::GetKeyAt(size_t at)
 {
 	// Check postion
-	ASSERTN(kEveryone, at < fKeyArr.size());	if (at >= fKeyArr.size())  { return false; }
-	ASSERTN(kEveryone, at < fDataArr.size());	if (at >= fDataArr.size()) { return false; }
+	ASSERTN(kEveryone, at < fKeyArr.size());	
+	ASSERTN(kEveryone, at < fDataArr.size());	
 
 	// Set Out Values
-	key		= fKeyArr[at];
-	value	= fDataArr[at];
-	
-	return true;
+	return fKeyArr[at];;
+}
+
+TXString& SceneDataProviderObj::GetValueAt(size_t at)
+{
+	// Check postion
+	ASSERTN(kEveryone, at < fKeyArr.size());	
+	ASSERTN(kEveryone, at < fDataArr.size());	
+
+	// Set Out Values
+	return fDataArr[at];;
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------------
@@ -2220,7 +2233,18 @@ void SceneDataExchange::ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xml
 			IXMLFileNodePtr userDataNode = nullptr;
 			if (VCOM_SUCCEEDED(rootNode->FindChildNode(XML_Val_UserDataNodeName, & userDataNode)))
 			{
-				// TODO missing implementation
+					GdtfConverter::TraverseNodes(userDataNode, "", XML_Val_DataNodeName, [this] (IXMLFileNodePtr objNode) -> void
+						{
+							// Create the object
+							SceneDataProviderObj* userData = new SceneDataProviderObj();
+							
+							// Read from node
+							userData->ReadFromNode(objNode, this);
+							
+							// Add to list
+							fProviderObjs.push_back(userData);
+							return;
+						});
 			} ASSERTN(kEveryone, userDataNode != nullptr);
 			
 			
