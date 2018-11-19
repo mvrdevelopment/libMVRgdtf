@@ -44,7 +44,7 @@ else
     UNAME_S := $(shell uname -s)
 # Linux
     ifeq ($(UNAME_S),Linux)
-		CXXFLAGS		+= -DGS_LIN=1 -D_LINUX -MMD -MP #-fPIC
+		CXXFLAGS		+= -DGS_LIN=1 -D_LINUX -MMD -MP -fPIC
 		LDFLAGS			+=
 		libExt			= .a
 		LIBDIR_PLAT		= lin

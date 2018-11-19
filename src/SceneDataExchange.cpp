@@ -230,6 +230,12 @@ SceneDataProviderObj::SceneDataProviderObj(const TXString& provider,const TXStri
 	fProvider	= provider;
 }
 
+SceneDataProviderObj::SceneDataProviderObj() : SceneDataObj(SceneDataGUID(eNoGuid,""))
+{
+	fVersion	= "";
+	fProvider	= "";
+}
+
 SceneDataProviderObj::~SceneDataProviderObj()
 {
 	
@@ -2220,7 +2226,18 @@ void SceneDataExchange::ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xml
 			IXMLFileNodePtr userDataNode = nullptr;
 			if (VCOM_SUCCEEDED(rootNode->FindChildNode(XML_Val_UserDataNodeName, & userDataNode)))
 			{
-				// TODO missing implementation
+					GdtfConverter::TraverseNodes(userDataNode, "", XML_Val_DataNodeName, [this] (IXMLFileNodePtr objNode) -> void
+						{
+							// Create the object
+							SceneDataProviderObj* userData = new SceneDataProviderObj();
+							
+							// Read from node
+							userData->ReadFromNode(objNode, this);
+							
+							// Add to list
+							fProviderObjs.push_back(userData);
+							return;
+						});
 			} ASSERTN(kEveryone, userDataNode != nullptr);
 			
 			
