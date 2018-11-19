@@ -7,6 +7,8 @@
 
 #include "Include/VectorworksMVR.h"
 using namespace VectorworksMVR;
+using namespace VectorworksMVR::GdtfDefines;
+
 
 #define __checkVCOM(x) this->checkVCOM(x, #x)
 
@@ -46,6 +48,34 @@ void GdtfUnittest::WriteFile()
 		__checkVCOM(gdtfWrite->SetShortName("shortName"));
 		__checkVCOM(gdtfWrite->SetFixtureThumbnail("thumbnail"));
 		__checkVCOM(gdtfWrite->SetLinkedFixtureGUID(linkedUuid));
+
+		IGdtfActivationGroupPtr gdtfActGroup;
+		__checkVCOM(gdtfWrite->CreateActivationGroup("actGroupName", &gdtfActGroup));
+
+		IGdtfFeatureGroupPtr gdtfFeatureGroup;
+		if (__checkVCOM(gdtfWrite->CreateFeatureGroup("featureGroupName", "featureGroupPrettyName", &gdtfFeatureGroup)))
+		{
+			IGdtfFeaturePtr gdtfFeature;
+			__checkVCOM(gdtfFeatureGroup->CreateFeature("featureName", &gdtfFeature));
+		}
+		
+		IGdtfAttributePtr gdtfAttribute;
+		if (__checkVCOM(gdtfWrite->CreateAttribute("name", "prettyName", &gdtfAttribute)))
+		{
+			IGdtfActivationGroupPtr gdtfActivattionGroupLink;
+			__checkVCOM(gdtfAttribute->SetActivationGroup(gdtfActivattionGroupLink));
+
+			IGdtfFeaturePtr gdtfFeatureLink;
+			__checkVCOM(gdtfAttribute->SetFeature(gdtfFeatureLink));
+
+			EGdtfPhysicalUnit unit = EGdtfPhysicalUnit::Angle;
+			__checkVCOM(gdtfAttribute->SetPhysicalUnit(unit));
+
+			CieColor cieCol;
+			__checkVCOM(gdtfAttribute->SetColor(cieCol));	//TODO maybe
+
+			// Child TODO
+		}
 
 		IGdtfWheelPtr wheel1;
 		if (__checkVCOM(gdtfWrite->CreateWheel("Wheel 1", &wheel1)))
@@ -97,97 +127,6 @@ void GdtfUnittest::WriteFile()
 
 		/*
 
-		// Extract the name out if the
-							std::string wheelName = GetParamString("name", wheelObj);
-
-							VectorworksMVR::IGdtfWheelPtr gdtfWheelObj;
-							if (VCOM_SUCCEEDED(gdtfFile->CreateWheel(wheelName.c_str(), &gdtfWheelObj)))
-							{
-								Local<Array> wheelSlotContainer;
-								if (GetArrayByName("wheelSlots", wheelObj, wheelSlotContainer))
-								{
-									for (size_t j = 0; j < wheelSlotContainer->Length(); j++)
-									{
-										Local<Value>    possibleWheelSlot = wheelSlotContainer->Get(j);
-										Local<Object>   wheelSlotObj;
-										if (CastToObject(possibleWheelSlot, wheelSlotObj))
-										{
-											std::string     wheelSlotName = GetParamString("name", wheelSlotObj);
-
-											VectorworksMVR::IGdtfWheelSlotPtr gdtfWheelSlot;
-											if (VCOM_SUCCEEDED(gdtfWheelObj->CreateWheelSlot(wheelSlotName.c_str(), &gdtfWheelSlot)))
-											{
-												// Set Color
-												VectorworksMVR::CieColor cieCol;
-												cieCol.fx = GetParamDouble("col_x", wheelSlotObj);
-												cieCol.fy = GetParamDouble("col_y", wheelSlotObj);
-												cieCol.f_Y = GetParamDouble("col_L", wheelSlotObj);
-
-												VCOM_SUCCEEDED(gdtfWheelSlot->SetColor(cieCol));
-
-												// Set Gobo
-												std::string goboName = GetParamString("goboName", wheelSlotObj);
-												if (goboName.length() > 0)
-												{
-													VCOM_SUCCEEDED(gdtfWheelSlot->SetGobo(goboName.c_str()));
-													CopyFileIntoGdtf(goboName, sessionFolder, gdtfFile);
-												}
-
-												// Add Facets
-												Local<Array> prismContainer;
-												if (GetArrayByName("prismFacets", wheelSlotObj, prismContainer))
-												{
-													for (size_t k = 0; k < prismContainer->Length(); k++)
-													{
-														Local<Value>    possiblePrism = prismContainer->Get(k);
-														Local<Object>   prismObj;
-														if (CastToObject(possiblePrism, prismObj))
-														{
-															Local<Object>                       matrix;
-															VectorworksMVR::STransformMatrix    ma;
-															if (GetObjectByName("matrix", prismObj, matrix))
-															{
-																ma.ux = GetParamDouble("ux", matrix);
-																ma.uy = GetParamDouble("uy", matrix);
-																ma.uz = GetParamDouble("uz", matrix);
-
-																ma.vx = GetParamDouble("vx", matrix);
-																ma.vy = GetParamDouble("vy", matrix);
-																ma.vz = GetParamDouble("vz", matrix);
-
-																ma.wx = GetParamDouble("wx", matrix);
-																ma.wy = GetParamDouble("wy", matrix);
-																ma.wz = GetParamDouble("wz", matrix);
-
-																ma.ox = GetParamDouble("ox", matrix);
-																ma.oy = GetParamDouble("oy", matrix);
-																ma.oz = GetParamDouble("oz", matrix);
-															}
-
-															Local<Object>               colorObj;
-															VectorworksMVR::CieColor    facetCol;
-															if (GetObjectByName("color", prismObj, colorObj))
-															{
-																facetCol.fx = GetParamDouble("fx", colorObj);
-																facetCol.fy = GetParamDouble("fy", colorObj);
-																facetCol.f_Y = GetParamDouble("f_Y", colorObj);
-															}
-
-															VectorworksMVR::IGdtfWheelSlotPrismFacetPtr gdtfFacet;
-															if (VCOM_SUCCEEDED(gdtfWheelSlot->CreatePrismFacet(ma, &gdtfFacet)))
-															{
-																VCOM_SUCCEEDED(gdtfFacet->SetColor(facetCol));
-
-
-															} // Create GdtfFacet
-														}// Cast Prism
-													} // Cycle Prism
-												} // Get Prism Array
-											} // Create GdtfWheel
-										} // Cast to Wheel Slot
-									} // Cycle Array
-								} // wheelSlots
-							} // Create GdtfWheel
 		//------------------------------------------------------------------------------    
 		// Create the Path to the gdtf file
 		if (VCOM_SUCCEEDED(gdtfFile->OpenForWrite(pathToGdtf.c_str(), fixtureName.c_str(), manufacturer.c_str(), uuid)))
