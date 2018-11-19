@@ -14,7 +14,8 @@
 #include <pwd.h>
 #elif GS_MAC
 #include <unistd.h>
-#include <CoreServices/CoreServices.h>
+#include <sys/types.h>
+#include <pwd.h>
 #endif
 // ------------------------------------------------------------------------------------
 TXBaseStorageAccess::TXBaseStorageAccess()
@@ -353,7 +354,7 @@ bool TFileIdentifier::RevealInOS()
 bool GetFolderWithSpecifer(EFolderSpecifier inWhichFolder, TFolderIdentifier & outFolderID, bool inCreateIfMissing)
 {
 	// If you require the Spotlight Folder, you will get a path to a readable location on disk
-	if (inWhichFolder == 302 || inWhichFolder == -302/*kSpotlightFolder*/)
+	if ((Sint32)inWhichFolder == 302 || (Sint32)inWhichFolder == -302/*kSpotlightFolder*/)
 	{
 		TXString appdataPath;
 		if (!GetFolderAppDataPath(appdataPath))
@@ -390,15 +391,10 @@ bool GetFolderAppDataPath(TXString& outPath)
 #elif GS_MAC
 	//--------------------------------------------------------
 	//Implementation for OSX
-	FSRef ref;
-	OSType folderType = kApplicationSupportFolderType;
-	char path[PATH_MAX];
-	
-	FSFindFolder( kUserDomain, folderType, kCreateFolder, &ref );
-	
-	FSRefMakePath( &ref, (UInt8*)&path, PATH_MAX );
-	
-	outPath = TXString(path);
+	struct passwd *pw = getpwuid(getuid());
+
+	const char *homedir = pw->pw_dir;
+	outPath = TXString(homedir);
 #endif
 	
 	return true;
