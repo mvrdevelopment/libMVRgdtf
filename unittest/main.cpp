@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
 	GdtfUnittest gdtfTest(base);
 	bool gdtfOk = gdtfTest.RunTest();
 
-	return !(mvrOK && gdtfOk);
+	return (gdtfOk || gdtfOk);
 }
 
 bool GetFolderAppDataPath(std::string& outPath)

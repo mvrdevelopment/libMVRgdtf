@@ -29,7 +29,7 @@ bool Unittest::RunTest()
    
 if(fFailed)
 {
-	std::cout << "=                       FAILED                       =" << std::endl;
+	std::cout << "=                      FAILED                        =" << std::endl;
 }
 else
 {
