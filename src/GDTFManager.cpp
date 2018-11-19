@@ -1751,13 +1751,13 @@ DMXAddress GdtfBreak::GetDmxAddress()
 GdtfGeometryReference::GdtfGeometryReference(GdtfGeometry* parent) 
 					 : GdtfGeometry(parent)
 {
-
+	fLinkedGeometry = nullptr;
 }
 
 GdtfGeometryReference::GdtfGeometryReference(const TXString& name, GdtfModelPtr refToModel,const VWTransformMatrix& ma, GdtfGeometry* parent) 
 					 : GdtfGeometry(name,refToModel,ma, parent)
 {
-
+	fLinkedGeometry = nullptr;
 }
 
 GdtfGeometryReference::~GdtfGeometryReference()
@@ -1770,6 +1770,16 @@ GdtfBreak* GdtfGeometryReference::AddBreak()
 	GdtfBreak* gdtfBreak = new GdtfBreak();
 	fBreaks.push_back(gdtfBreak);
 	return gdtfBreak;
+}
+
+GdtfGeometry* GdtfGeometryReference::GetLinkedGeometry()
+{
+	return fLinkedGeometry;
+}
+
+void GdtfGeometryReference::SetLinkedGeometry(GdtfGeometry* ptr)
+{
+	fLinkedGeometry = ptr;
 }
 
 void GdtfGeometryReference::OnPrintToFile(IXMLFileNodePtr pNode)
