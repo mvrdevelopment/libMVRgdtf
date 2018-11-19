@@ -256,7 +256,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfAttributeImpl::SetMainAttribute(I
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfAttributeImpl::SetPhysicalUnit(GdtfDefines::EGdtfPhysicalUnit & unit)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfAttributeImpl::SetPhysicalUnit(GdtfDefines::EGdtfPhysicalUnit unit)
 {
 	// Check Pointer
 	if( ! fAttribute) return kVCOMError_NotInitialized;

@@ -59,14 +59,11 @@ MvrString VectorworksMVR::CSceneDataProviderImpl::GetKeyAt(size_t at)
 	if( ! fPtr) return "";
 	
 	//------------------------------------------------------------------------------------------
-	// Get Count
-	TXString txKey;
-	TXString txValue;
+	// Get Value
 	
-	
-	if (fPtr->GetEntryAt(at, txKey, txValue))
+	if (fPtr->GetEntryCount() > at)
 	{
-		return txKey.GetCharPtr();
+		return fPtr->GetKeyAt(at).GetCharPtr();
 	}
 	
 	// Otherwise return false
@@ -83,14 +80,9 @@ MvrString VectorworksMVR::CSceneDataProviderImpl::GetValueAt(size_t at)
 	
 	//------------------------------------------------------------------------------------------
 	// Get Count
-	TXString txKey;
-	TXString txValue;
-	
-	
-	
-	if (fPtr->GetEntryAt(at, txKey, txValue))
+	if (fPtr->GetEntryCount() > at)
 	{
-		return txValue.GetCharPtr();
+		return fPtr->GetValueAt(at).GetCharPtr();
 	}
 	
 	// Otherwise return false

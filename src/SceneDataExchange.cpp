@@ -336,17 +336,24 @@ size_t SceneDataProviderObj::GetEntryCount()
 	return fKeyArr.size();
 }
 
-bool SceneDataProviderObj::GetEntryAt(size_t at, TXString& key,TXString& value)
+TXString& SceneDataProviderObj::GetKeyAt(size_t at)
 {
 	// Check postion
-	ASSERTN(kEveryone, at < fKeyArr.size());	if (at >= fKeyArr.size())  { return false; }
-	ASSERTN(kEveryone, at < fDataArr.size());	if (at >= fDataArr.size()) { return false; }
+	ASSERTN(kEveryone, at < fKeyArr.size());	
+	ASSERTN(kEveryone, at < fDataArr.size());	
 
 	// Set Out Values
-	key		= fKeyArr[at];
-	value	= fDataArr[at];
-	
-	return true;
+	return fKeyArr[at];;
+}
+
+TXString& SceneDataProviderObj::GetValueAt(size_t at)
+{
+	// Check postion
+	ASSERTN(kEveryone, at < fKeyArr.size());	
+	ASSERTN(kEveryone, at < fDataArr.size());	
+
+	// Set Out Values
+	return fDataArr[at];;
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------------
