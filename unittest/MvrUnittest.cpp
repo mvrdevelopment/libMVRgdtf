@@ -13,7 +13,7 @@ using namespace VectorworksMVR;
 MvrUnittest::MvrUnittest(const std::string& currentDir)
 {
     fPath = currentDir;
-    fPath += std::string("/unittestOutput.mvr");
+    fPath += std::string("/testMvr.mvr");
 
     std::cout << "Export File to" << fPath << std::endl; 
 }
@@ -25,7 +25,7 @@ MvrUnittest::~MvrUnittest()
 
 bool MvrUnittest::ExecuteTest()
 {
-	std::cout << "=                     MvrUnittest                    =" << std::endl;
+	std::cout << "=                                        MvrUnittest                                       =" << std::endl;
     WriteFile();
     ReadFile();
 

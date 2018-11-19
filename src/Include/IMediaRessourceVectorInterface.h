@@ -406,7 +406,7 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE     SetActivationGroup(IGdtfActivationGroup* activationGroup) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetFeature(IGdtfFeature* feature) = 0;
         virtual VCOMError VCOM_CALLTYPE     SetMainAttribute(IGdtfAttribute* mainAttrib) = 0;
-        virtual VCOMError VCOM_CALLTYPE     SetPhysicalUnit(GdtfDefines::EGdtfPhysicalUnit& unit) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetPhysicalUnit(GdtfDefines::EGdtfPhysicalUnit unit) = 0;
         virtual VCOMError VCOM_CALLTYPE     SetColor(const CieColor & col) = 0;
 
 		

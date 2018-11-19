@@ -27,7 +27,7 @@ GdtfUnittest::~GdtfUnittest()
 
 bool GdtfUnittest::ExecuteTest()
 {
-	std::cout << "=                    GdtfUnittest                    =" << std::endl;
+	std::cout << "=                                        GdtfUnittest                                      =" << std::endl;
     WriteFile();
     ReadFile();
 
@@ -50,26 +50,23 @@ void GdtfUnittest::WriteFile()
 		__checkVCOM(gdtfWrite->SetLinkedFixtureGUID(linkedUuid));
 
 		IGdtfActivationGroupPtr gdtfActGroup;
+		IGdtfFeaturePtr			gdtfFeature;
 		__checkVCOM(gdtfWrite->CreateActivationGroup("actGroupName", &gdtfActGroup));
 
 		IGdtfFeatureGroupPtr gdtfFeatureGroup;
 		if (__checkVCOM(gdtfWrite->CreateFeatureGroup("featureGroupName", "featureGroupPrettyName", &gdtfFeatureGroup)))
 		{
-			IGdtfFeaturePtr gdtfFeature;
+			
 			__checkVCOM(gdtfFeatureGroup->CreateFeature("featureName", &gdtfFeature));
 		}
 		
 		IGdtfAttributePtr gdtfAttribute;
 		if (__checkVCOM(gdtfWrite->CreateAttribute("nameAttribute", "prettyNameAttribute", &gdtfAttribute)))
 		{
-			IGdtfActivationGroupPtr gdtfActivattionGroupLink;
-			__checkVCOM(gdtfAttribute->SetActivationGroup(gdtfActivattionGroupLink));
+			__checkVCOM(gdtfAttribute->SetActivationGroup(gdtfActGroup));
+			__checkVCOM(gdtfAttribute->SetFeature(gdtfFeature));
 
-			IGdtfFeaturePtr gdtfFeatureLink;
-			__checkVCOM(gdtfAttribute->SetFeature(gdtfFeatureLink));
-
-			EGdtfPhysicalUnit unit = EGdtfPhysicalUnit::Angle;
-			__checkVCOM(gdtfAttribute->SetPhysicalUnit(unit));
+			__checkVCOM(gdtfAttribute->SetPhysicalUnit(EGdtfPhysicalUnit::Angle));
 
 			CieColor cieCol;
 			cieCol.fx  = 1.0;
@@ -140,13 +137,10 @@ void GdtfUnittest::WriteFile()
 			__checkVCOM(gdtfModel->SetHeight(10));
 			__checkVCOM(gdtfModel->SetWidth(20));
 			__checkVCOM(gdtfModel->SetLength(30));
-			EGdtfModel_PrimitiveType primType = EGdtfModel_PrimitiveType::eGdtfModel_PrimitiveType_Sphere;
-			__checkVCOM(gdtfModel->SetPrimitiveType(primType));
+			__checkVCOM(gdtfModel->SetPrimitiveType(EGdtfModel_PrimitiveType::eGdtfModel_PrimitiveType_Sphere));
 		}
 
-		IGdtfModelPtr model;
 		IGdtfGeometryPtr childGeo;
-		EGdtfObjectType objectType = EGdtfObjectType::eGdtfRDMValue_UNSIGNED_BYTE;
 		STransformMatrix ma;
 		ma.ux = 1;
 		ma.uy = 2;
@@ -163,13 +157,12 @@ void GdtfUnittest::WriteFile()
 		ma.ox = 10;
 		ma.oy = 11;
 		ma.oz = 12;
-		__checkVCOM(gdtfWrite->CreateGeometry(objectType, "nameGeometry", model, ma, &childGeo));
+		__checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometry, "nameGeometry", gdtfModel, ma, &childGeo));
 
 		IGdtfDmxModePtr gdtfDmxMode;
 		if (__checkVCOM(gdtfWrite->CreateDmxMode("nameDmxMode", &gdtfDmxMode)))
 		{
-			IGdtfGeometryPtr geometry;
-			__checkVCOM(gdtfDmxMode->SetGeometry(geometry));
+			__checkVCOM(gdtfDmxMode->SetGeometry(childGeo));
 			
 			IGdtfDmxChannelPtr gdtfDmxChannel;
 			if (__checkVCOM(gdtfDmxMode->CreateDmxChannel("nameDmxChannel", &gdtfDmxChannel)))
@@ -178,40 +171,33 @@ void GdtfUnittest::WriteFile()
 				__checkVCOM(gdtfDmxChannel->SetFine(2));
 				__checkVCOM(gdtfDmxChannel->SetUltra(3));
 				__checkVCOM(gdtfDmxChannel->SetUber(4));
-				EGdtfDmxFrequency dmxFrequency = EGdtfDmxFrequency::eGdtfDmxFrequency_30;
-				__checkVCOM(gdtfDmxChannel->SetDmxFrequency(dmxFrequency));
+				__checkVCOM(gdtfDmxChannel->SetDmxFrequency(EGdtfDmxFrequency::eGdtfDmxFrequency_30));
 				__checkVCOM(gdtfDmxChannel->SetDefaultValue(5));
 				__checkVCOM(gdtfDmxChannel->SetHighlight(6));
 				__checkVCOM(gdtfDmxChannel->SetDmxBreak(7));
 				__checkVCOM(gdtfDmxChannel->SetMoveInBlackFrames(8));
 				__checkVCOM(gdtfDmxChannel->SetDmxChangeTimeLimit(9));
-				IGdtfGeometryPtr geometry;
-				__checkVCOM(gdtfDmxChannel->SetGeometry(geometry));
+				__checkVCOM(gdtfDmxChannel->SetGeometry(childGeo));
 
 				IGdtfDmxLogicalChannelPtr gdtfLogicalChannel;
 				if (__checkVCOM(gdtfDmxChannel->CreateLogicalChannel("nameLogicalChannel", &gdtfLogicalChannel)))
 				{
-					IGdtfAttributePtr attribute;
-					__checkVCOM(gdtfLogicalChannel->SetAttribute(attribute));
-					EGdtfDmxMaster master = EGdtfDmxMaster::eGdtfDmxMaster_Grand;
-					__checkVCOM(gdtfLogicalChannel->SetDmxMaster(master));
-					EGdtfDmxSnap snap = EGdtfDmxSnap::eGdtfDmxMaster_On;
-					__checkVCOM(gdtfLogicalChannel->SetDmxSnap(snap));
+					__checkVCOM(gdtfLogicalChannel->SetAttribute(gdtfAttribute));
+					__checkVCOM(gdtfLogicalChannel->SetDmxMaster(EGdtfDmxMaster::eGdtfDmxMaster_Grand));
+					__checkVCOM(gdtfLogicalChannel->SetDmxSnap(EGdtfDmxSnap::eGdtfDmxMaster_On));
 
 					IGdtfDmxChannelFunctionPtr gdftChannelFunction;
 					if (__checkVCOM(gdtfLogicalChannel->CreateDmxFunction("nameDmxFunction", &gdftChannelFunction)))
 					{
 						IGdtfAttributePtr attribute;
-						__checkVCOM(gdftChannelFunction->SetAttribute(attribute));
+						__checkVCOM(gdftChannelFunction->SetAttribute(gdtfAttribute));
 						__checkVCOM(gdftChannelFunction->SetOriginalAttribute("orginalAttribute"));
 						__checkVCOM(gdftChannelFunction->SetStartAddress(1));
 						__checkVCOM(gdftChannelFunction->SetPhysicalStart(2));
 						__checkVCOM(gdftChannelFunction->SetPhysicalEnd(3));
 						__checkVCOM(gdftChannelFunction->SetRealFade(4));
-						EGDTFDmxInvert dmxInvert = EGDTFDmxInvert::eGDTFDmxInvert_No;
-						__checkVCOM(gdftChannelFunction->SetDMXInvert(dmxInvert));
-						EGDTFEncoderInvert encoderInvert = EGDTFEncoderInvert::eGDTFEncoderInvert_Yes;
-						__checkVCOM(gdftChannelFunction->SetEncoderInvert(encoderInvert));
+						__checkVCOM(gdftChannelFunction->SetDMXInvert(EGDTFDmxInvert::eGDTFDmxInvert_No));
+						__checkVCOM(gdftChannelFunction->SetEncoderInvert(EGDTFEncoderInvert::eGDTFEncoderInvert_Yes));
 
 						IGdtfDmxChannelSetPtr gdtfChannelSet;
 						if (__checkVCOM(gdftChannelFunction->CreateDmxChannelSet("nameDmxChannelSet", 1, 2, &gdtfChannelSet)))
