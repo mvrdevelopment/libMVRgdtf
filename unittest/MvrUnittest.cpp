@@ -116,8 +116,11 @@ void MvrUnittest::ReadFile()
             ISceneDataProviderPtr obj;
             if(__checkVCOM(mvrRead->GetDataProviderObjectAt(i, &obj)))
             {
-                checkifEqual("Check Key ", obj->GetKeyAt(0), "Key");
-                checkifEqual("Check Value ", obj->GetValueAt(0), "Value");
+                MvrString key   = obj->GetKeyAt(0);
+                MvrString value = obj->GetValueAt(0);
+
+                checkifEqual("Check Key "  ,"Key"  , key);
+                checkifEqual("Check Value ","Value", value);
             }
         }
 

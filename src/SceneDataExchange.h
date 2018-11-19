@@ -154,8 +154,9 @@ namespace SceneData
 	public:
 		void			AddEntry(const TXString& key,const TXString& value );
 		size_t			GetEntryCount();
-		bool			GetEntryAt(size_t at, TXString& key,TXString& value );
-		
+		TXString&		GetKeyAt(size_t at);
+		TXString&		GetValueAt(size_t at);
+
 
 	public:
 	};
