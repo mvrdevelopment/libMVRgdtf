@@ -77,7 +77,7 @@ void GdtfUnittest::WriteFile()
 			cieCol.f_Y = 0.4242424242;
 			__checkVCOM(gdtfAttribute->SetColor(cieCol));	//TODO maybe
 
-			// Child TODO
+			// Child TODO maybe
 		}
 
 		IGdtfWheelPtr wheel1;
@@ -148,6 +148,26 @@ void GdtfUnittest::WriteFile()
 			__checkVCOM(gdtfModel->SetPrimitiveType(primType));
 		}
 
+		IGdtfModelPtr model;
+		IGdtfGeometryPtr childGeo;
+		EGdtfObjectType objectType = EGdtfObjectType::eGdtfRDMValue_UNSIGNED_BYTE;
+		STransformMatrix ma;
+		ma.ux = 1;
+		ma.uy = 2;
+		ma.uz = 3;
+
+		ma.vx = 4;
+		ma.vy = 5;
+		ma.vz = 6;
+
+		ma.wx = 7;
+		ma.wy = 8;
+		ma.wz = 9;
+
+		ma.ox = 10;
+		ma.oy = 11;
+		ma.oz = 12;
+		__checkVCOM(gdtfWrite->CreateGeometry(objectType, "nameGeometry", model, ma, &childGeo));
 
         __checkVCOM(gdtfWrite->Close());
     }
