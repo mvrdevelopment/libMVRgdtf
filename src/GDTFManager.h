@@ -679,7 +679,8 @@ namespace SceneData
 	private:
 		TGdtfBreakArray fBreaks;
         GdtfGeometry*   fLinkedGeometry;
-		
+        
+        TXString        fUnresolvedGeoRef;
 		
 	public:
 		virtual EGdtfObjectType			GetObjectType();

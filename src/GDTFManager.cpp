@@ -1795,6 +1795,9 @@ void GdtfGeometryReference::OnPrintToFile(IXMLFileNodePtr pNode)
 	{
 		breakObj->WriteToNode(pNode);
 	}
+
+	if(fLinkedGeometry) { pNode->SetNodeAttributeValue(XML_GDTF_GeometryReferenceLinkedGeo, fLinkedGeometry->GetNodeReference()); }
+
 	
 }
 
@@ -1813,6 +1816,9 @@ void GdtfGeometryReference::OnReadFromNode(const IXMLFileNodePtr& pNode)
 									 fBreaks.push_back(breakObj);
 								 }
 								 );
+
+	pNode->GetNodeAttributeValue(XML_GDTF_GeometryReferenceLinkedGeo, fUnresolvedGeoRef); 
+
 	
 }
 

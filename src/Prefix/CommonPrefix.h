@@ -298,6 +298,7 @@ const Sint32 kMVR_MinorVersion = 1;
 #define XML_GDTF_BreakOffset					"DMXOffset"
 
 #define XML_GDTF_GeometryReferenceNodeName		"GeometryReference"
+#define XML_GDTF_GeometryReferenceLinkedGeo     "Geometry"
 
 
 #define XML_GDTF_DMXModeNodeName				"DMXMode"
