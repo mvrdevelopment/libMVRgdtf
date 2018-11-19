@@ -25,6 +25,7 @@ GdtfUnittest::~GdtfUnittest()
 
 bool GdtfUnittest::ExecuteTest()
 {
+	std::cout << "=                    GdtfUnittest                    =" << std::endl;
     WriteFile();
     ReadFile();
 

@@ -25,6 +25,7 @@ MvrUnittest::~MvrUnittest()
 
 bool MvrUnittest::ExecuteTest()
 {
+	std::cout << "=                     MvrUnittest                    =" << std::endl;
     WriteFile();
     ReadFile();
 

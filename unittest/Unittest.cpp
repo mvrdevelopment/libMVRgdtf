@@ -18,7 +18,6 @@ Unittest::~Unittest()
 bool Unittest::RunTest()
 {
     std::cout << "======================================================" << std::endl;
-	std::cout << "=                       UnitTest                     =" << std::endl;
     this->ExecuteTest();
 
    
@@ -31,8 +30,12 @@ bool Unittest::RunTest()
 if(fFailed)
 {
 	std::cout << "=                       FAILED                       =" << std::endl;
-	std::cout << "======================================================" << std::endl;
 }
+else
+{
+	std::cout << "=                      SUCCEEDED                     =" << std::endl;
+}
+	std::cout << "======================================================" << std::endl;
     return fFailed;
 }
 
