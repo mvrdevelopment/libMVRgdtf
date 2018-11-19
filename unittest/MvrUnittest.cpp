@@ -96,7 +96,7 @@ void MvrUnittest::WriteFile()
         }
 
     }
-    mvrFileWrite->Close();	
+    mvrFileWrite->Close();
 }
 
 void MvrUnittest::ReadFile()

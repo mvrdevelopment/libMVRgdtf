@@ -229,6 +229,4 @@ void GdtfUnittest::ReadFile()
         this->checkifEqual("GetName", fixtureName, "FixtureName");
         
     }
-
-	
 }
