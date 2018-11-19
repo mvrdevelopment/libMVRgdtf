@@ -90,9 +90,7 @@ void GdtfUnittest::WriteFile()
 				cieCol.fx  = 0.5;
 				cieCol.fy  = 0.4242424242;
 				cieCol.f_Y = 1.0;
-
 				__checkVCOM(wheel1Slot->SetColor(cieCol));
-
 
 				STransformMatrix ma;
 				ma.ux = 1;
@@ -111,12 +109,10 @@ void GdtfUnittest::WriteFile()
 				ma.oy = 11;
 				ma.oz = 12;
 
-
 				CieColor facetCol;
 				facetCol.fx  = 0.4242424242;
 				facetCol.fy  = 1.0;
 				facetCol.f_Y = 0.5;
-
 
 				IGdtfWheelSlotPrismFacetPtr gdtfFacet;
 				if (__checkVCOM(wheel1Slot->CreatePrismFacet(ma, &gdtfFacet)))
@@ -168,6 +164,66 @@ void GdtfUnittest::WriteFile()
 		ma.oy = 11;
 		ma.oz = 12;
 		__checkVCOM(gdtfWrite->CreateGeometry(objectType, "nameGeometry", model, ma, &childGeo));
+
+		IGdtfDmxModePtr gdtfDmxMode;
+		if (__checkVCOM(gdtfWrite->CreateDmxMode("nameDmxMode", &gdtfDmxMode)))
+		{
+			IGdtfGeometryPtr geometry;
+			__checkVCOM(gdtfDmxMode->SetGeometry(geometry));
+			
+			IGdtfDmxChannelPtr gdtfDmxChannel;
+			if (__checkVCOM(gdtfDmxMode->CreateDmxChannel("nameDmxChannel", &gdtfDmxChannel)))
+			{
+				__checkVCOM(gdtfDmxChannel->SetCoarse(1));
+				__checkVCOM(gdtfDmxChannel->SetFine(2));
+				__checkVCOM(gdtfDmxChannel->SetUltra(3));
+				__checkVCOM(gdtfDmxChannel->SetUber(4));
+				EGdtfDmxFrequency dmxFrequency = EGdtfDmxFrequency::eGdtfDmxFrequency_30;
+				__checkVCOM(gdtfDmxChannel->SetDmxFrequency(dmxFrequency));
+				__checkVCOM(gdtfDmxChannel->SetDefaultValue(5));
+				__checkVCOM(gdtfDmxChannel->SetHighlight(6));
+				__checkVCOM(gdtfDmxChannel->SetDmxBreak(7));
+				__checkVCOM(gdtfDmxChannel->SetMoveInBlackFrames(8));
+				__checkVCOM(gdtfDmxChannel->SetDmxChangeTimeLimit(9));
+				IGdtfGeometryPtr geometry;
+				__checkVCOM(gdtfDmxChannel->SetGeometry(geometry));
+
+				IGdtfDmxLogicalChannelPtr gdtfLogicalChannel;
+				if (__checkVCOM(gdtfDmxChannel->CreateLogicalChannel("nameLogicalChannel", &gdtfLogicalChannel)))
+				{
+					IGdtfAttributePtr attribute;
+					__checkVCOM(gdtfLogicalChannel->SetAttribute(attribute));
+					EGdtfDmxMaster master = EGdtfDmxMaster::eGdtfDmxMaster_Grand;
+					__checkVCOM(gdtfLogicalChannel->SetDmxMaster(master));
+					EGdtfDmxSnap snap = EGdtfDmxSnap::eGdtfDmxMaster_On;
+					__checkVCOM(gdtfLogicalChannel->SetDmxSnap(snap));
+
+					IGdtfDmxChannelFunctionPtr gdftChannelFunction;
+					if (__checkVCOM(gdtfLogicalChannel->CreateDmxFunction("nameDmxFunction", &gdftChannelFunction)))
+					{
+						IGdtfAttributePtr attribute;
+						__checkVCOM(gdftChannelFunction->SetAttribute(attribute));
+						__checkVCOM(gdftChannelFunction->SetOriginalAttribute("orginalAttribute"));
+						__checkVCOM(gdftChannelFunction->SetStartAddress(1));
+						__checkVCOM(gdftChannelFunction->SetPhysicalStart(2));
+						__checkVCOM(gdftChannelFunction->SetPhysicalEnd(3));
+						__checkVCOM(gdftChannelFunction->SetRealFade(4));
+						EGDTFDmxInvert dmxInvert = EGDTFDmxInvert::eGDTFDmxInvert_No;
+						__checkVCOM(gdftChannelFunction->SetDMXInvert(dmxInvert));
+						EGDTFEncoderInvert encoderInvert = EGDTFEncoderInvert::eGDTFEncoderInvert_Yes;
+						__checkVCOM(gdftChannelFunction->SetEncoderInvert(encoderInvert));
+
+						IGdtfDmxChannelSetPtr gdtfChannelSet;
+						if (__checkVCOM(gdftChannelFunction->CreateDmxChannelSet("nameDmxChannelSet", 1, 2, &gdtfChannelSet)))
+						{
+							__checkVCOM(gdtfChannelSet->SetPhysicalEnd(20));
+							__checkVCOM(gdtfChannelSet->SetPhysicalStart(10));
+							__checkVCOM(gdtfChannelSet->SetWheelSlot(11));
+						}
+					}
+				}
+			}
+		}
 
         __checkVCOM(gdtfWrite->Close());
     }
