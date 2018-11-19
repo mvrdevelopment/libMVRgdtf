@@ -42,26 +42,26 @@ void GdtfUnittest::WriteFile()
 
     MvrUUID uuid (225204211, 177198167, 1575790, 96627);
 	MvrUUID linkedUuid (2227440, 1542265, 1573622, 2328410);
-    if(__checkVCOM(gdtfWrite->OpenForWrite(fPath.c_str(),"FixtureName","Manufacturer", uuid)))
+    if(__checkVCOM(gdtfWrite->OpenForWrite(fPath.c_str(),"My FixtureName","My Manufacturer", uuid)))
     {
-		__checkVCOM(gdtfWrite->SetFixtureTypeDescription("Description"));
-		__checkVCOM(gdtfWrite->SetShortName("shortName"));
-		__checkVCOM(gdtfWrite->SetFixtureThumbnail("thumbnail"));
+		__checkVCOM(gdtfWrite->SetFixtureTypeDescription("My Description"));
+		__checkVCOM(gdtfWrite->SetShortName("My shortName"));
+		__checkVCOM(gdtfWrite->SetFixtureThumbnail("My thumbnail"));
 		__checkVCOM(gdtfWrite->SetLinkedFixtureGUID(linkedUuid));
 
 		IGdtfActivationGroupPtr gdtfActGroup;
 		IGdtfFeaturePtr			gdtfFeature;
-		__checkVCOM(gdtfWrite->CreateActivationGroup("actGroupName", &gdtfActGroup));
+		__checkVCOM(gdtfWrite->CreateActivationGroup("My actGroupName", &gdtfActGroup));
 
 		IGdtfFeatureGroupPtr gdtfFeatureGroup;
-		if (__checkVCOM(gdtfWrite->CreateFeatureGroup("featureGroupName", "featureGroupPrettyName", &gdtfFeatureGroup)))
+		if (__checkVCOM(gdtfWrite->CreateFeatureGroup("My featureGroupName", "My featureGroupPrettyName", &gdtfFeatureGroup)))
 		{
 			
-			__checkVCOM(gdtfFeatureGroup->CreateFeature("featureName", &gdtfFeature));
+			__checkVCOM(gdtfFeatureGroup->CreateFeature("My featureName", &gdtfFeature));
 		}
 		
 		IGdtfAttributePtr gdtfAttribute;
-		if (__checkVCOM(gdtfWrite->CreateAttribute("nameAttribute", "prettyNameAttribute", &gdtfAttribute)))
+		if (__checkVCOM(gdtfWrite->CreateAttribute("My nameAttribute", "My prettyNameAttribute", &gdtfAttribute)))
 		{
 			__checkVCOM(gdtfAttribute->SetActivationGroup(gdtfActGroup));
 			__checkVCOM(gdtfAttribute->SetFeature(gdtfFeature));
@@ -78,10 +78,10 @@ void GdtfUnittest::WriteFile()
 		}
 
 		IGdtfWheelPtr wheel1;
-		if (__checkVCOM(gdtfWrite->CreateWheel("Wheel 1", &wheel1)))
+		if (__checkVCOM(gdtfWrite->CreateWheel("My Wheel1", &wheel1)))
 		{
 			IGdtfWheelSlotPtr wheel1Slot;
-			if (__checkVCOM(wheel1->CreateWheelSlot("WheelSlot1 Wheel1", &wheel1Slot)))
+			if (__checkVCOM(wheel1->CreateWheelSlot("My WheelSlot1Wheel1", &wheel1Slot)))
 			{
 				CieColor cieCol;
 				cieCol.fx  = 0.5;
@@ -124,16 +124,16 @@ void GdtfUnittest::WriteFile()
 		color.fx = 1.0;
 		color.fy = 0.5;
 		color.f_Y = 0.4242424242;
-		if (__checkVCOM(gdtfWrite->CreateEmitter("nameEmitter", color, &gdtfEmitter)))
+		if (__checkVCOM(gdtfWrite->CreateEmitter("My nameEmitter", color, &gdtfEmitter)))
 		{
 			IGdtfMeasurementPointPtr gdtfMeasurement;
 			__checkVCOM(gdtfEmitter->CreateMeasurementPoint(100, 200, &gdtfMeasurement));
 		}
 
 		IGdtfModelPtr gdtfModel;
-		if (__checkVCOM(gdtfWrite->CreateModel("nameModel", &gdtfModel)))
+		if (__checkVCOM(gdtfWrite->CreateModel("My nameModel", &gdtfModel)))
 		{
-			__checkVCOM(gdtfModel->Set3DSGeometryFile("file3DSGeometry"));
+			__checkVCOM(gdtfModel->Set3DSGeometryFile("My file3DSGeometry"));
 			__checkVCOM(gdtfModel->SetHeight(10));
 			__checkVCOM(gdtfModel->SetWidth(20));
 			__checkVCOM(gdtfModel->SetLength(30));
@@ -157,15 +157,15 @@ void GdtfUnittest::WriteFile()
 		ma.ox = 10;
 		ma.oy = 11;
 		ma.oz = 12;
-		__checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometry, "nameGeometry", gdtfModel, ma, &childGeo));
+		__checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometry, "My nameGeometry", gdtfModel, ma, &childGeo));
 
 		IGdtfDmxModePtr gdtfDmxMode;
-		if (__checkVCOM(gdtfWrite->CreateDmxMode("nameDmxMode", &gdtfDmxMode)))
+		if (__checkVCOM(gdtfWrite->CreateDmxMode("My nameDmxMode", &gdtfDmxMode)))
 		{
 			__checkVCOM(gdtfDmxMode->SetGeometry(childGeo));
 			
 			IGdtfDmxChannelPtr gdtfDmxChannel;
-			if (__checkVCOM(gdtfDmxMode->CreateDmxChannel("nameDmxChannel", &gdtfDmxChannel)))
+			if (__checkVCOM(gdtfDmxMode->CreateDmxChannel("My nameDmxChannel", &gdtfDmxChannel)))
 			{
 				__checkVCOM(gdtfDmxChannel->SetCoarse(1));
 				__checkVCOM(gdtfDmxChannel->SetFine(2));
@@ -180,18 +180,18 @@ void GdtfUnittest::WriteFile()
 				__checkVCOM(gdtfDmxChannel->SetGeometry(childGeo));
 
 				IGdtfDmxLogicalChannelPtr gdtfLogicalChannel;
-				if (__checkVCOM(gdtfDmxChannel->CreateLogicalChannel("nameLogicalChannel", &gdtfLogicalChannel)))
+				if (__checkVCOM(gdtfDmxChannel->CreateLogicalChannel("My nameLogicalChannel", &gdtfLogicalChannel)))
 				{
 					__checkVCOM(gdtfLogicalChannel->SetAttribute(gdtfAttribute));
 					__checkVCOM(gdtfLogicalChannel->SetDmxMaster(EGdtfDmxMaster::eGdtfDmxMaster_Grand));
 					__checkVCOM(gdtfLogicalChannel->SetDmxSnap(EGdtfDmxSnap::eGdtfDmxMaster_On));
 
 					IGdtfDmxChannelFunctionPtr gdftChannelFunction;
-					if (__checkVCOM(gdtfLogicalChannel->CreateDmxFunction("nameDmxFunction", &gdftChannelFunction)))
+					if (__checkVCOM(gdtfLogicalChannel->CreateDmxFunction("My nameDmxFunction", &gdftChannelFunction)))
 					{
 						IGdtfAttributePtr attribute;
 						__checkVCOM(gdftChannelFunction->SetAttribute(gdtfAttribute));
-						__checkVCOM(gdftChannelFunction->SetOriginalAttribute("orginalAttribute"));
+						__checkVCOM(gdftChannelFunction->SetOriginalAttribute("My orginalAttribute"));
 						__checkVCOM(gdftChannelFunction->SetStartAddress(1));
 						__checkVCOM(gdftChannelFunction->SetPhysicalStart(2));
 						__checkVCOM(gdftChannelFunction->SetPhysicalEnd(3));
@@ -200,7 +200,7 @@ void GdtfUnittest::WriteFile()
 						__checkVCOM(gdftChannelFunction->SetEncoderInvert(EGDTFEncoderInvert::eGDTFEncoderInvert_Yes));
 
 						IGdtfDmxChannelSetPtr gdtfChannelSet;
-						if (__checkVCOM(gdftChannelFunction->CreateDmxChannelSet("nameDmxChannelSet", 1, 2, &gdtfChannelSet)))
+						if (__checkVCOM(gdftChannelFunction->CreateDmxChannelSet("My nameDmxChannelSet", 1, 2, &gdtfChannelSet)))
 						{
 							__checkVCOM(gdtfChannelSet->SetPhysicalEnd(20));
 							__checkVCOM(gdtfChannelSet->SetPhysicalStart(10));
@@ -220,13 +220,90 @@ void GdtfUnittest::ReadFile()
 	//------------------------------------------------------------------------------------------------
 	// Create Pointer to GDTF Interface
     IGdtfFixturePtr gdtfRead (IID_IGdtfFixture);
-
-    
     if(__checkVCOM(gdtfRead->ReadFromFile(fPath.c_str())))
     {
-        // Check Fixture Name
-        MvrString fixtureName = gdtfRead->GetName();
-        this->checkifEqual("GetName", fixtureName, "FixtureName");
-        
+		// Check Fixture Name
+		MvrString fixtureName = gdtfRead->GetName();
+		this->checkifEqual("GetName", fixtureName, "My FixtureName");
+
+		MvrString fixtureShortName = gdtfRead->GetShortName();
+		this->checkifEqual("GetShortName", fixtureShortName, "My shortName");
+
+		MvrString manufacturer = gdtfRead->GetManufacturer();
+		this->checkifEqual("GetManufacturer", manufacturer, "My Manufacturer");
+
+		MvrString description = gdtfRead->GetFixtureTypeDescription();
+		this->checkifEqual("GetFixtureTypeDescription", description, "My Description");
+
+		MvrUUID fixtureId(0,0,0,0);
+		__checkVCOM(gdtfRead->GetFixtureGUID(fixtureId));
+		this->checkifEqual("GetFixtureGUID uuid.a", fixtureId.a, 225204211);
+		this->checkifEqual("GetFixtureGUID uuid.b", fixtureId.b, 177198167);
+		this->checkifEqual("GetFixtureGUID uuid.c", fixtureId.c, 1575790);
+		this->checkifEqual("GetFixtureGUID uuid.d", fixtureId.d, 96627);
+		
+		MvrString pngFileName = gdtfRead->GetFixtureThumbnail();
+		this->checkifEqual("GetFixtureThumbnail", pngFileName, "My thumbnail");
+
+		// TODO, how does the path to look exactly, i guess nothing fancy
+		MvrString fullPath = gdtfRead->GetFixtureThumbnail();
+		this->checkifEqual("GetFixtureThumbnail", fullPath, "My thumbnail");
+
+		MvrUUID linkedUuid(0, 0, 0, 0);
+		bool hasLinkedFixture = false;
+		__checkVCOM(gdtfRead->HasLinkedFixtureGUID(hasLinkedFixture));
+		__checkVCOM(gdtfRead->GetLinkedFixtureGUID(linkedUuid));
+		this->checkifEqual("GetFixtureGUID linkedUuid.a", linkedUuid.a, 2227440);
+		this->checkifEqual("GetFixtureGUID linkedUuid.b", linkedUuid.b, 1542265);
+		this->checkifEqual("GetFixtureGUID linkedUuid.c", linkedUuid.c, 1573622);
+		this->checkifEqual("GetFixtureGUID linkedUuid.d", linkedUuid.d, 2328410);
+
+		size_t countWheels = 0;
+		__checkVCOM(gdtfRead->GetWheelCount(countWheels));
+		{
+			for (size_t i = 0; i < countWheels; i++)
+			{
+				IGdtfWheelPtr gdtfWheel;
+				if (__checkVCOM(gdtfRead->GetWheelAt(i, &gdtfWheel)))
+				{
+					MvrString wheelName = gdtfWheel->GetName();
+					this->checkifEqual("GetGdtfWheelName", wheelName, "My Wheel1");
+
+					size_t countSlots = 0;
+					__checkVCOM(gdtfWheel->GetWheelSlotCount(countSlots));
+					for (size_t j = 0; j < countSlots; j++)
+					{
+						IGdtfWheelSlotPtr gdtfSlot;
+						__checkVCOM(gdtfWheel->GetWheelSlotAt(j, &gdtfSlot));
+
+						MvrString slotName = gdtfSlot->GetName();
+						this->checkifEqual("GetGdtfSlotName", slotName, "My WheelSlot1Wheel1");
+
+						size_t prismFacetCount = 0;
+						__checkVCOM(gdtfSlot->GetPrismFacetCount(prismFacetCount));
+						for (size_t k = 0; k < prismFacetCount; k++)
+						{
+							IGdtfWheelSlotPrismFacetPtr prismFacet;
+							if (__checkVCOM(gdtfSlot->GetPrismFacetAt(k, &prismFacet)))
+							{
+								CieColor color;
+								color.fx = 0;
+								color.fy = 0;
+								color.f_Y = 0;
+								__checkVCOM(prismFacet->GetColor(color));
+								/*this->checkifEqual("GetWheelSlotPrismFacetColorFx",color.fx, 0.424242);
+								this->checkifEqual("GetWheelSlotPrismFacetColorFy",color.fy, 1.000000);
+								this->checkifEqual("GeWheelSlotPrismFacetColorFY", color.f_Y, 0.500000);*/
+							}
+							
+
+						}
+					}
+
+				}
+
+			}
+		}
+
     }
 }

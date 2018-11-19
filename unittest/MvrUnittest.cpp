@@ -36,16 +36,16 @@ void MvrUnittest::WriteFile()
 {
 	//------------------------------------------------------------------------------------------------
 	// Create Pointer to MVR Interface
-	IMediaRessourceVectorInterfacePtr mvrFileWrite( IID_MediaRessourceVectorInterface );
+	IMediaRessourceVectorInterfacePtr mvrWrite( IID_MediaRessourceVectorInterface );
 
 	//------------------------------------------------------------------------------------------------
 	// Open file for write
-    if(__checkVCOM(mvrFileWrite->OpenForWrite(fPath.c_str())))
+    if(__checkVCOM(mvrWrite->OpenForWrite(fPath.c_str())))
     {
         //------------------------------------------------------------------------------------------------
         // Add Custom data
         ISceneDataProviderPtr obj;
-        if(__checkVCOM(mvrFileWrite->CreateDataProviderObject("Test Data", "1", &obj)))
+        if(__checkVCOM(mvrWrite->CreateDataProviderObject("Test Data", "1", &obj)))
         {
             __checkVCOM(obj->AddKeyValue("Key", "Value"));
         }
@@ -53,31 +53,31 @@ void MvrUnittest::WriteFile()
         //------------------------------------------------------------------------------------------------
         // Write globals
         IPositionPtr position = nullptr;
-        __checkVCOM(mvrFileWrite->CreatePositionObject(MvrUUID(688696821, 558449194, 2115941252, 1809800703), "My Position", & position));
+        __checkVCOM(mvrWrite->CreatePositionObject(MvrUUID(688696821, 558449194, 2115941252, 1809800703), "My Position", & position));
 
 
         ISymDefPtr symDef1 = nullptr;
-        if(__checkVCOM(mvrFileWrite->CreateSymDefObject(MvrUUID(122079618, 11832014, 669376348, 947930087), "Symbol Definition for the FocusPoint", & symDef1)))
+        if(__checkVCOM(mvrWrite->CreateSymDefObject(MvrUUID(122079618, 11832014, 669376348, 947930087), "Symbol Definition for the FocusPoint", & symDef1)))
         {
             __checkVCOM(symDef1->AddGeometry(STransformMatrix()));
         }
         
         IClassPtr clas1 = nullptr;
-        __checkVCOM(mvrFileWrite->CreateClassObject(MvrUUID(122074618, 11852014, 669377348, 947530087), "My first Class", & clas1));
+        __checkVCOM(mvrWrite->CreateClassObject(MvrUUID(122074618, 11852014, 669377348, 947530087), "My first Class", & clas1));
 
         
         IClassPtr clas2 = nullptr;
-        __checkVCOM(mvrFileWrite->CreateClassObject(MvrUUID(122774618, 11892014, 669397348, 947530057), "My second Class", & clas2));
+        __checkVCOM(mvrWrite->CreateClassObject(MvrUUID(122774618, 11892014, 669397348, 947530057), "My second Class", & clas2));
 
         //------------------------------------------------------------------------------------------------
         // Now write content
         ISceneObjPtr layer1 = nullptr;
-        if(__checkVCOM(mvrFileWrite->CreateLayerObject(MvrUUID(465143117, 742747285, 1361655924, 1172316535), "My Layer 1", & layer1)))
+        if(__checkVCOM(mvrWrite->CreateLayerObject(MvrUUID(465143117, 742747285, 1361655924, 1172316535), "My Layer 1", & layer1)))
         {
 
             // Create Focus Point
             ISceneObjPtr focusPoint = nullptr;
-            if(__checkVCOM(mvrFileWrite->CreateFocusPoint(MvrUUID(1998334672, 457193269, 1786021763, 1463564339), STransformMatrix(), "My FocusPoint", layer1, & focusPoint)))
+            if(__checkVCOM(mvrWrite->CreateFocusPoint(MvrUUID(1998334672, 457193269, 1786021763, 1463564339), STransformMatrix(), "My FocusPoint", layer1, & focusPoint)))
             {
                 __checkVCOM(focusPoint->AddSymbol(STransformMatrix(), symDef1));
                 __checkVCOM(focusPoint->SetClass(clas1));
@@ -85,7 +85,8 @@ void MvrUnittest::WriteFile()
 
             // And place some fixtures on it
             ISceneObjPtr fixture1 = nullptr;
-            if(__checkVCOM(mvrFileWrite->CreateFixture(MvrUUID(1808353427, 683171502, 518343034, 1766902383), STransformMatrix(), "My Fixture Name", layer1, & fixture1)))
+			// TODO Next issues a problem with opening gdtf file, which is not found
+            if(__checkVCOM(mvrWrite->CreateFixture(MvrUUID(1808353427, 683171502, 518343034, 1766902383), STransformMatrix(), "My Fixture Name", layer1, & fixture1)))
             {
                 __checkVCOM(fixture1->SetGdtfName("Martin@Mac Aura XB"));
                 __checkVCOM(fixture1->SetGdtfMode("My fancy other GDTF DMX Mode"));
@@ -96,7 +97,7 @@ void MvrUnittest::WriteFile()
         }
 
     }
-    mvrFileWrite->Close();
+	__checkVCOM(mvrWrite->Close());
 }
 
 void MvrUnittest::ReadFile()
@@ -104,7 +105,6 @@ void MvrUnittest::ReadFile()
 	//------------------------------------------------------------------------------------------------
 	// Create Pointer to MVR Interface
 	IMediaRessourceVectorInterfacePtr mvrRead( IID_MediaRessourceVectorInterface );
-
     if(__checkVCOM(mvrRead->OpenForRead(fPath.c_str())))
     {
         size_t count = 0;
