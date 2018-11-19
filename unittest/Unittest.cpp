@@ -33,7 +33,7 @@ if(fFailed)
 }
 else
 {
-	std::cout << "=                      SUCCEEDED                     =" << std::endl;
+	std::cout << "=                     SUCCEEDED                      =" << std::endl;
 }
 	std::cout << "======================================================" << std::endl;
     return fFailed;
