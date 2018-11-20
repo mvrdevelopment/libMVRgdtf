@@ -19,12 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\unittest\GdtfDmxUnittest.cpp" />
     <ClCompile Include="..\unittest\GdtfUnittest.cpp" />
     <ClCompile Include="..\unittest\main.cpp" />
     <ClCompile Include="..\unittest\MvrUnittest.cpp" />
     <ClCompile Include="..\unittest\Unittest.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\unittest\GdtfDmxUnittest.h" />
     <ClInclude Include="..\unittest\GdtfUnittest.h" />
     <ClInclude Include="..\unittest\main.h" />
     <ClInclude Include="..\unittest\MvrUnittest.h" />
