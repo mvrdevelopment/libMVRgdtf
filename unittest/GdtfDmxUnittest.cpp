@@ -251,6 +251,7 @@ void GdtfDmxUnittest::CheckFunction(VectorworksMVR::IGdtfDmxChannelFunctionPtr& 
 
 void GdtfDmxUnittest::Check8bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxChannel)
 {
+	// ---------------------------------------------------------------------------
 	// Get Logical Channels
 	size_t count = 0;
 	__checkVCOM(dmxChannel->GetLogicalChannelCount(count));
@@ -262,6 +263,7 @@ void GdtfDmxUnittest::Check8bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxCh
 	IGdtfDmxLogicalChannelPtr bit8LogicalChannel2;
 	__checkVCOM(dmxChannel->GetLogicalChannelAt(1, &bit8LogicalChannel2));
 
+	// ---------------------------------------------------------------------------
 	// Get Functions
 	__checkVCOM(bit8LogicalChannel1->GetDmxFunctionCount(count));
 	this->checkifEqual("Count Function Count", 2, count);
@@ -285,16 +287,23 @@ void GdtfDmxUnittest::Check8bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxCh
 	__checkVCOM(bit8LogicalChannel2->GetDmxFunctionAt(1, &bit8Function4));
 	CheckFunction(bit8Function4, "Function4", 200, 255);
 
-	// Check Channel Set Count
+	// ---------------------------------------------------------------------------
+	// Check Channel Set Count bit8Function1
 	__checkVCOM(bit8Function1->GetDmxChannelSetCount(count));
 	this->checkifEqual("bit8Function1 Count Channel Set", 5, count);
 
+	// ---------------------------------------------------------------------------
+	// Check Channel Set Count bit8Function2
 	__checkVCOM(bit8Function2->GetDmxChannelSetCount(count));
 	this->checkifEqual("bit8Function2 Count Channel Set", 6, count);
 
+	// ---------------------------------------------------------------------------
+	// Check Channel Set Count bit8Function3
 	__checkVCOM(bit8Function3->GetDmxChannelSetCount(count));
 	this->checkifEqual("bit8Function3 Count Channel Set", 6, count);
 
+	// ---------------------------------------------------------------------------
+	// Check Channel Set Count bit8Function4
 	__checkVCOM(bit8Function4->GetDmxChannelSetCount(count));
 	this->checkifEqual("bit8Function4 Count Channel Set", 7, count);
 
