@@ -68,6 +68,7 @@ void GdtfDmxUnittest::WriteFile()
 
 		IGdtfDmxChannelFunctionPtr bit8Function1;
 		bit8LogicalChannel1->CreateDmxFunction("Function1", &bit8Function1);
+		bit8Function1->SetStartAddress(0);
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet1;
 		bit8Function1->CreateDmxChannelSet("My Name1", 15, 60, &bit8ChannelSet1);
@@ -76,20 +77,21 @@ void GdtfDmxUnittest::WriteFile()
 		bit8Function1->CreateDmxChannelSet("My Name2", 61, 90, &bit8ChannelSet2);
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet3;
-		bit8Function1->CreateDmxChannelSet("My Name3", 128, 230, &bit8ChannelSet3);
+		bit8Function1->CreateDmxChannelSet("My Name3", 91, 92, &bit8ChannelSet3);
 
 		// Second Channel Function
 		IGdtfDmxChannelFunctionPtr bit8Function2;
 		bit8LogicalChannel1->CreateDmxFunction("Function2", &bit8Function2);
+		bit8Function2->SetStartAddress(100);
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet4;
-		bit8Function2->CreateDmxChannelSet("My Name4", 15, 60, &bit8ChannelSet4);
+		bit8Function2->CreateDmxChannelSet("My Name4", 100, 120, &bit8ChannelSet4);
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet5;
-		bit8Function2->CreateDmxChannelSet("My Name5", 61, 90, &bit8ChannelSet5);
+		bit8Function2->CreateDmxChannelSet("My Name5", 121, 130, &bit8ChannelSet5);
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet6;
-		bit8Function2->CreateDmxChannelSet("My Name6", 128, 230, &bit8ChannelSet6);
+		bit8Function2->CreateDmxChannelSet("My Name6", 160, 165, &bit8ChannelSet6);
 
 		// Second Logical Channel
 		IGdtfDmxLogicalChannelPtr bit8LogicalChannel2;
@@ -97,28 +99,30 @@ void GdtfDmxUnittest::WriteFile()
 
 		IGdtfDmxChannelFunctionPtr bit8Function3;
 		bit8LogicalChannel2->CreateDmxFunction("Function3", &bit8Function3);
+		bit8Function3->SetStartAddress(170);
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet7;
-		bit8Function3->CreateDmxChannelSet("My Name7", 15, 60, &bit8ChannelSet7);
+		bit8Function3->CreateDmxChannelSet("My Name7", 170, 170, &bit8ChannelSet7);
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet8;
-		bit8Function3->CreateDmxChannelSet("My Name8", 61, 90, &bit8ChannelSet8);
+		bit8Function3->CreateDmxChannelSet("My Name8", 180, 180, &bit8ChannelSet8);
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet9;
-		bit8Function3->CreateDmxChannelSet("My Name9", 128, 230, &bit8ChannelSet9);
+		bit8Function3->CreateDmxChannelSet("My Name9", 181, 198, &bit8ChannelSet9);
 
 		// Second Channel Function
 		IGdtfDmxChannelFunctionPtr bit8Function4;
 		bit8LogicalChannel2->CreateDmxFunction("Function4", &bit8Function4);
+		bit8Function4->SetStartAddress(200);
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet10;
-		bit8Function4->CreateDmxChannelSet("My Name10", 15, 60, &bit8ChannelSet10);
+		bit8Function4->CreateDmxChannelSet("My Name10", 210, 210, &bit8ChannelSet10);
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet11;
-		bit8Function4->CreateDmxChannelSet("My Name11", 61, 90, &bit8ChannelSet11);
+		bit8Function4->CreateDmxChannelSet("My Name11", 220, 225, &bit8ChannelSet11);
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet12;
-		bit8Function4->CreateDmxChannelSet("My Name12", 128, 230, &bit8ChannelSet12);
+		bit8Function4->CreateDmxChannelSet("My Name12", 200, 255, &bit8ChannelSet12);
 
 		//----------------------------------------------------------------
 		// Write 16 bit Channel
@@ -185,30 +189,7 @@ void GdtfDmxUnittest::ReadFile()
 		__checkVCOM(bit8Function->GetDmxChannelSetCount(countChannelSets));
 		this->checkifEqual("Check Count DMX Channels", 6, countChannelSets);
 
-		IGdtfDmxChannelSetPtr bit8ChannelSet1;
-		__checkVCOM(bit8Function->GetDmxChannelSetAt(0, &bit8ChannelSet1)); 
-		this->CheckChannelSet(bit8ChannelSet1, "",0,14);
 
-
-		IGdtfDmxChannelSetPtr bit8ChannelSet2;
-		__checkVCOM(bit8Function->GetDmxChannelSetAt(1, &bit8ChannelSet2));
-		this->CheckChannelSet(bit8ChannelSet2, "My Name1",15,60);
-
-		IGdtfDmxChannelSetPtr bit8ChannelSet3;
-		__checkVCOM(bit8Function->GetDmxChannelSetAt(2, &bit8ChannelSet3));
-		this->CheckChannelSet(bit8ChannelSet3, "My Name2",61,90);
-
-		IGdtfDmxChannelSetPtr bit8ChannelSet4;
-		__checkVCOM(bit8Function->GetDmxChannelSetAt(3, &bit8ChannelSet4));
-		this->CheckChannelSet(bit8ChannelSet4, "",91,127);
-
-		IGdtfDmxChannelSetPtr bit8ChannelSet5;
-		__checkVCOM(bit8Function->GetDmxChannelSetAt(4, &bit8ChannelSet5));
-		this->CheckChannelSet(bit8ChannelSet5, "My Name3",128,230);
-
-		IGdtfDmxChannelSetPtr bit8ChannelSet6;
-		__checkVCOM(bit8Function->GetDmxChannelSetAt(5, &bit8ChannelSet6));
-		this->CheckChannelSet(bit8ChannelSet6, "",231,255);
 
 		//----------------------------------------------------------------
 		// Read 16 bit Channel
@@ -227,7 +208,7 @@ void GdtfDmxUnittest::ReadFile()
 
 		IGdtfDmxChannelSetPtr bit16ChannelSet1;
 		__checkVCOM(bit16Function->GetDmxChannelSetAt(0, &bit16ChannelSet1)); 
-		this->CheckChannelSet(bit8ChannelSet1, "",0,14);
+		this->CheckChannelSet(bit16ChannelSet1, "",0,14);
 
 		IGdtfDmxChannelSetPtr bit16ChannelSet2;
 		__checkVCOM(bit16Function->GetDmxChannelSetAt(1, &bit16ChannelSet2));
