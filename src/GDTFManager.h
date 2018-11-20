@@ -850,6 +850,7 @@ namespace SceneData
 		TGdtfDmxChannelFuntionArray	fFunctions;		
 		
 		GdtfDmxChannel*  			fParentDmxChannel;
+        GdtfDmxLogicalChannel*      fNextLogicalChannel;
 		
 	public:
 
@@ -864,7 +865,9 @@ namespace SceneData
 		TXString							GetUnresolvedAttribRef() const;
 
 		GdtfDmxChannel*						GetParentDMXChannel() const;
-		
+        void						        SetNextLogicalChannel(GdtfDmxLogicalChannel* next) ;
+		GdtfDmxLogicalChannel*			    GetNextLogicalChannel() ;
+
 		void								SetName(const TXString& name);
 		void								SetAttribute(GdtfAttributePtr newAttr);
 		void								SetDmxSnap(EGdtfDmxSnap snap);
