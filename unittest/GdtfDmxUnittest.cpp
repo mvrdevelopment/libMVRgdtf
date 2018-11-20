@@ -62,20 +62,63 @@ void GdtfDmxUnittest::WriteFile()
 		__checkVCOM(bit8channel->SetGeometry(geometry));
 		bit8channel->SetCoarse(1);
 
-		IGdtfDmxLogicalChannelPtr bit8LogicalChannel;
-		bit8channel->CreateLogicalChannel("Log1", &bit8LogicalChannel);
+		// First Logical Channel
+		IGdtfDmxLogicalChannelPtr bit8LogicalChannel1;
+		bit8channel->CreateLogicalChannel("Log1", &bit8LogicalChannel1);
 
-		IGdtfDmxChannelFunctionPtr bit8Function;
-		bit8LogicalChannel->CreateDmxFunction("Function", &bit8Function);
+		IGdtfDmxChannelFunctionPtr bit8Function1;
+		bit8LogicalChannel1->CreateDmxFunction("Function1", &bit8Function1);
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet1;
-		bit8Function->CreateDmxChannelSet("My Name1", 15, 60, &bit8ChannelSet1);
+		bit8Function1->CreateDmxChannelSet("My Name1", 15, 60, &bit8ChannelSet1);
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet2;
-		bit8Function->CreateDmxChannelSet("My Name2", 61, 90, &bit8ChannelSet2);
+		bit8Function1->CreateDmxChannelSet("My Name2", 61, 90, &bit8ChannelSet2);
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet3;
-		bit8Function->CreateDmxChannelSet("My Name3", 128, 230, &bit8ChannelSet3);
+		bit8Function1->CreateDmxChannelSet("My Name3", 128, 230, &bit8ChannelSet3);
+
+		// Second Channel Function
+		IGdtfDmxChannelFunctionPtr bit8Function2;
+		bit8LogicalChannel1->CreateDmxFunction("Function2", &bit8Function2);
+
+		IGdtfDmxChannelSetPtr bit8ChannelSet4;
+		bit8Function2->CreateDmxChannelSet("My Name1", 15, 60, &bit8ChannelSet4);
+
+		IGdtfDmxChannelSetPtr bit8ChannelSet5;
+		bit8Function2->CreateDmxChannelSet("My Name2", 61, 90, &bit8ChannelSet5);
+
+		IGdtfDmxChannelSetPtr bit8ChannelSet6;
+		bit8Function2->CreateDmxChannelSet("My Name3", 128, 230, &bit8ChannelSet6);
+
+		// Second Logical Channel
+		IGdtfDmxLogicalChannelPtr bit8LogicalChannel2;
+		bit8channel->CreateLogicalChannel("Log2", &bit8LogicalChannel2);
+
+		IGdtfDmxChannelFunctionPtr bit8Function3;
+		bit8LogicalChannel2->CreateDmxFunction("Function3", &bit8Function3);
+
+		IGdtfDmxChannelSetPtr bit8ChannelSet7;
+		bit8Function3->CreateDmxChannelSet("My Name7", 15, 60, &bit8ChannelSet7);
+
+		IGdtfDmxChannelSetPtr bit8ChannelSet8;
+		bit8Function3->CreateDmxChannelSet("My Name8", 61, 90, &bit8ChannelSet8);
+
+		IGdtfDmxChannelSetPtr bit8ChannelSet9;
+		bit8Function3->CreateDmxChannelSet("My Name9", 128, 230, &bit8ChannelSet9);
+
+		// Second Channel Function
+		IGdtfDmxChannelFunctionPtr bit8Function4;
+		bit8LogicalChannel1->CreateDmxFunction("Function4", &bit8Function4);
+
+		IGdtfDmxChannelSetPtr bit8ChannelSet10;
+		bit8Function4->CreateDmxChannelSet("My Name10", 15, 60, &bit8ChannelSet10);
+
+		IGdtfDmxChannelSetPtr bit8ChannelSet11;
+		bit8Function4->CreateDmxChannelSet("My Name11", 61, 90, &bit8ChannelSet11);
+
+		IGdtfDmxChannelSetPtr bit8ChannelSet12;
+		bit8Function4->CreateDmxChannelSet("My Name12", 128, 230, &bit8ChannelSet12);
 
 		//----------------------------------------------------------------
 		// Write 16 bit Channel
