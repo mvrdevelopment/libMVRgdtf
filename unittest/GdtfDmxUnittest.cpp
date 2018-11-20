@@ -67,8 +67,14 @@ void GdtfDmxUnittest::WriteFile()
 		IGdtfDmxChannelFunctionPtr bit8Function;
 		bit8LogicalChannel->CreateDmxFunction("Function", &bit8Function);
 
-		IGdtfDmxChannelSetPtr bit8ChannelSet;
-		bit8Function->CreateDmxChannelSet("My Name", 15, 60, &bit8ChannelSet);
+		IGdtfDmxChannelSetPtr bit8ChannelSet1;
+		bit8Function->CreateDmxChannelSet("My Name", 15, 60, &bit8ChannelSet1);
+
+		IGdtfDmxChannelSetPtr bit8ChannelSet2;
+		bit8Function->CreateDmxChannelSet("My Name", 61, 90, &bit8ChannelSet2);
+
+		IGdtfDmxChannelSetPtr bit8ChannelSet3;
+		bit8Function->CreateDmxChannelSet("My Name", 128, 230, &bit8ChannelSet3);
 
 
         __checkVCOM(gdtfWrite->Close());
@@ -82,6 +88,55 @@ void GdtfDmxUnittest::ReadFile()
     IGdtfFixturePtr gdtfRead (IID_IGdtfFixture);
     if(__checkVCOM(gdtfRead->ReadFromFile(fPath.c_str())))
     {
+		//------------------------------------------------------------------
+		// Get DMX Mode
+		size_t countDmxModes;
+		__checkVCOM(gdtfRead->GetDmxModeCount(countDmxModes));
+		this->checkifEqual("Check Count DMX Modes", 1, countDmxModes);
+
+		IGdtfDmxModePtr mode;
+		__checkVCOM(gdtfRead->GetDmxModeAt(0, &mode));
+
+		size_t countChannels = 0;
+		__checkVCOM(mode->GetDmxChannelCount(countChannels));
+		this->checkifEqual("Check Count DMX Channels", 1, countChannels);
+		
+
+		//----------------------------------------------------------------
+		// Write 8 bit Channel
+		IGdtfDmxChannelPtr bit8channel;
+		__checkVCOM(mode->GetDmxChannelAt(0, &bit8channel));
+
+		IGdtfDmxLogicalChannelPtr bit8LogicalChannel;
+		__checkVCOM(bit8channel->GetLogicalChannelAt(0, &bit8LogicalChannel));
+
+		IGdtfDmxChannelFunctionPtr bit8Function;
+		__checkVCOM(bit8LogicalChannel->GetDmxFunctionAt(0, &bit8Function));
+
+		// Check DMX Channel Sets
+		size_t countChannelSets = 0;
+		__checkVCOM(bit8Function->GetDmxChannelSetCount(countChannelSets));
+		this->checkifEqual("Check Count DMX Channels", 6, countChannelSets);
+
+		IGdtfDmxChannelSetPtr bit8ChannelSet1;
+		__checkVCOM(bit8Function->GetDmxChannelSetAt(0, &bit8ChannelSet1));
+
+		IGdtfDmxChannelSetPtr bit8ChannelSet2;
+		__checkVCOM(bit8Function->GetDmxChannelSetAt(1, &bit8ChannelSet2));
+
+		IGdtfDmxChannelSetPtr bit8ChannelSet3;
+		__checkVCOM(bit8Function->GetDmxChannelSetAt(2, &bit8ChannelSet3));
+
+		IGdtfDmxChannelSetPtr bit8ChannelSet4;
+		__checkVCOM(bit8Function->GetDmxChannelSetAt(3, &bit8ChannelSet4));
+
+		IGdtfDmxChannelSetPtr bit8ChannelSet5;
+		__checkVCOM(bit8Function->GetDmxChannelSetAt(4, &bit8ChannelSet5));
+
+		IGdtfDmxChannelSetPtr bit8ChannelSet6;
+		__checkVCOM(bit8Function->GetDmxChannelSetAt(5, &bit8ChannelSet6));
+
+
 	}
 
 }

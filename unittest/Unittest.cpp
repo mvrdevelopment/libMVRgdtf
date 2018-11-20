@@ -76,9 +76,9 @@ void Unittest::checkifEqual(const std::string& check, const size_t val1, const s
 };
 
 
-void Unittest::checkifEqual(const std::string& check, const std::string& val1, const std::string& val2)
+void Unittest::checkifEqual(const std::string& check, const std::string& aspected, const std::string& result)
 {
-    if(val1 == val2) return;
+    if(aspected == result) return;
 
     // Else Log the error
     fFailed = true;
@@ -86,9 +86,9 @@ void Unittest::checkifEqual(const std::string& check, const std::string& val1, c
     UnittestFailObject test;
     test.fMessage += check;
     test.fMessage += "Aspected: ";
-    test.fMessage += val1;
+    test.fMessage += aspected;
     test.fMessage += " Result: ";
-    test.fMessage += val2;
+    test.fMessage += result;
 
     fFailedTests.push_back(test);
 
