@@ -6,6 +6,7 @@
 #include "Unittest.h"
 #include "MvrUnittest.h"
 #include "GdtfUnittest.h"
+#include "GdtfDmxUnittest.h"
 
 #if defined(_WINDOWS)
 # include <Shlobj.h>
@@ -34,7 +35,10 @@ int main(int argc, char* argv[])
 	GdtfUnittest gdtfTest(base);
 	bool gdtfOk = gdtfTest.RunTest();
 
-	return (mvrOK || gdtfOk);
+	GdtfDmxUnittest gdtfDmxTest(base);
+	bool gdtfDmxOk = gdtfDmxTest.RunTest();
+
+	return (mvrOK || gdtfOk || gdtfDmxOk);
 }
 
 bool GetFolderAppDataPath(std::string& outPath)
