@@ -2226,6 +2226,20 @@ void GdtfDmxChannel::OnReadFromNode(const IXMLFileNodePtr& pNode)
 
 									 // Read from node
 									 logicalChan->ReadFromNode(objNode);
+									
+									// If there is already a logical channel
+									if( ! fLogicalChannels.empty())
+									{
+										// Get the prev array and the new array
+										const TGdtfDmxChannelFuntionArray& prevArr = fLogicalChannels.back()->GetDmxChannelFunctions();
+										const TGdtfDmxChannelFuntionArray& currArr = logicalChan->GetDmxChannelFunctions();
+
+										// If bouth arrays are not empty, link them togheter
+										if( (! prevArr.empty()) && (! currArr.empty()) )
+										{
+											prevArr.back()->SetNextFunction(currArr.front());
+										}
+									}
 								
 									 fLogicalChannels.push_back(logicalChan);
 									 return;
