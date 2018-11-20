@@ -1037,7 +1037,7 @@ void GdtfGeometry::SetModel(GdtfModelPtr model)
 
 GdtfGeometryPtr GdtfGeometry::AddGeometryWithAxis(const TXString& name, GdtfModelPtr refToModel,const VWTransformMatrix& ma)
 {
-	GdtfGeometryAxis* axis = new GdtfGeometryAxis(name, refToModel, ma, nullptr);
+	GdtfGeometryAxis* axis = new GdtfGeometryAxis(name, refToModel, ma, this);
 	
 	fInternalGeometries.push_back(axis);
 	
@@ -1046,7 +1046,7 @@ GdtfGeometryPtr GdtfGeometry::AddGeometryWithAxis(const TXString& name, GdtfMode
 
 GdtfGeometryPtr GdtfGeometry::AddGeometryWithLamp(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma)
 {
-	GdtfGeometryLamp* lamp = new GdtfGeometryLamp(name, refToModel, ma, nullptr);
+	GdtfGeometryLamp* lamp = new GdtfGeometryLamp(name, refToModel, ma, this);
 	
 	fInternalGeometries.push_back(lamp);
 	
@@ -1055,7 +1055,7 @@ GdtfGeometryPtr GdtfGeometry::AddGeometryWithLamp(const TXString& name, GdtfMode
 
 GdtfGeometryPtr GdtfGeometry::AddGeometry(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma)
 {
-	GdtfGeometry* geo = new GdtfGeometry(name, refToModel, ma, nullptr);
+	GdtfGeometry* geo = new GdtfGeometry(name, refToModel, ma, this);
 	
 	fInternalGeometries.push_back(geo);
 	
@@ -1064,7 +1064,7 @@ GdtfGeometryPtr GdtfGeometry::AddGeometry(const TXString& name, GdtfModelPtr ref
 
 GdtfGeometryPtr GdtfGeometry::AddGeometryReference(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma)
 {
-	GdtfGeometry* geo = new GdtfGeometryReference(name, refToModel, ma, nullptr);
+	GdtfGeometry* geo = new GdtfGeometryReference(name, refToModel, ma, this);
 	
 	fInternalGeometries.push_back(geo);
 	
@@ -1073,7 +1073,7 @@ GdtfGeometryPtr GdtfGeometry::AddGeometryReference(const TXString& name, GdtfMod
 
 GdtfGeometryPtr GdtfGeometry::AddGeometryShaper(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma)
 {
-	GdtfGeometry* geo = new GdtfGeometryShaperFilter(name, refToModel, ma, nullptr);
+	GdtfGeometry* geo = new GdtfGeometryShaperFilter(name, refToModel, ma, this);
 	
 	fInternalGeometries.push_back(geo);
 	
@@ -1082,7 +1082,7 @@ GdtfGeometryPtr GdtfGeometry::AddGeometryShaper(const TXString& name, GdtfModelP
 
 GdtfGeometryPtr GdtfGeometry::AddGeometryColor(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma)
 {
-	GdtfGeometry* geo = new GdtfGeometryColorFilter(name, refToModel, ma, nullptr);
+	GdtfGeometry* geo = new GdtfGeometryColorFilter(name, refToModel, ma, this);
 	
 	fInternalGeometries.push_back(geo);
 	
@@ -1091,7 +1091,7 @@ GdtfGeometryPtr GdtfGeometry::AddGeometryColor(const TXString& name, GdtfModelPt
 
 GdtfGeometryPtr GdtfGeometry::AddGeometryGobo(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma)
 {
-	GdtfGeometry* geo = new GdtfGeometryGoboFilter(name, refToModel, ma, nullptr);
+	GdtfGeometry* geo = new GdtfGeometryGoboFilter(name, refToModel, ma, this);
 	
 	fInternalGeometries.push_back(geo);
 	
@@ -1100,7 +1100,7 @@ GdtfGeometryPtr GdtfGeometry::AddGeometryGobo(const TXString& name, GdtfModelPtr
 
 GdtfGeometryPtr GdtfGeometry::AddGeometryBeam(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma)
 {
-	GdtfGeometry* geo = new GdtfGeometryBeamFilter(name, refToModel, ma, nullptr);
+	GdtfGeometry* geo = new GdtfGeometryBeamFilter(name, refToModel, ma, this);
 	
 	fInternalGeometries.push_back(geo);
 	
