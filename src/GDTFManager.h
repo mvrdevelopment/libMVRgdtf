@@ -790,6 +790,7 @@ namespace SceneData
         GdtfAttribute*				    GetAttribute();
 		const TXString&					GetOriginalAttribute();
         DmxValue						GetStartAdress() const;
+        DmxValue						GetEndAdress() const;
         double							GetPhysicalStart() const;
         double							GetPhysicalEnd() const;
         double							GetRealFade() const;        

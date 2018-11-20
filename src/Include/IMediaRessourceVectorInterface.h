@@ -590,6 +590,7 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetAttribute(IGdtfAttribute** attribute) = 0;
         virtual MvrString VCOM_CALLTYPE     GetOriginalAttribute() = 0;
         virtual VCOMError VCOM_CALLTYPE     GetStartAddress(GdtfDefines::DMXAddress& address) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetEndAddress(GdtfDefines::DMXAddress& address) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetPhysicalStart(double& start) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetPhysicalEnd(double& end) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetRealFade(double& fade) = 0;        

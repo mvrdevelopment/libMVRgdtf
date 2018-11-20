@@ -2767,6 +2767,11 @@ DmxValue GdtfDmxChannelFunction::GetStartAdress() const
 	return fAdressStart;
 }
 
+DmxValue GdtfDmxChannelFunction::GetEndAdress() const
+{
+	return 0;
+}
+
 double GdtfDmxChannelFunction::GetPhysicalStart() const
 {
 	return fPhysicalStart;
