@@ -83,13 +83,13 @@ void GdtfDmxUnittest::WriteFile()
 		bit8LogicalChannel1->CreateDmxFunction("Function2", &bit8Function2);
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet4;
-		bit8Function2->CreateDmxChannelSet("My Name1", 15, 60, &bit8ChannelSet4);
+		bit8Function2->CreateDmxChannelSet("My Name4", 15, 60, &bit8ChannelSet4);
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet5;
-		bit8Function2->CreateDmxChannelSet("My Name2", 61, 90, &bit8ChannelSet5);
+		bit8Function2->CreateDmxChannelSet("My Name5", 61, 90, &bit8ChannelSet5);
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet6;
-		bit8Function2->CreateDmxChannelSet("My Name3", 128, 230, &bit8ChannelSet6);
+		bit8Function2->CreateDmxChannelSet("My Name6", 128, 230, &bit8ChannelSet6);
 
 		// Second Logical Channel
 		IGdtfDmxLogicalChannelPtr bit8LogicalChannel2;
@@ -109,7 +109,7 @@ void GdtfDmxUnittest::WriteFile()
 
 		// Second Channel Function
 		IGdtfDmxChannelFunctionPtr bit8Function4;
-		bit8LogicalChannel1->CreateDmxFunction("Function4", &bit8Function4);
+		bit8LogicalChannel2->CreateDmxFunction("Function4", &bit8Function4);
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet10;
 		bit8Function4->CreateDmxChannelSet("My Name10", 15, 60, &bit8ChannelSet10);
