@@ -130,6 +130,8 @@ void GdtfUnittest::WriteFile()
 			__checkVCOM(gdtfEmitter->CreateMeasurementPoint(100, 200, &gdtfMeasurement));
 		}
 
+		//------------------------------------------------------------------------------------------------------------------
+		// Handle Models
 		IGdtfModelPtr gdtfModel;
 		if (__checkVCOM(gdtfWrite->CreateModel("My nameModel", &gdtfModel)))
 		{
@@ -140,28 +142,29 @@ void GdtfUnittest::WriteFile()
 			__checkVCOM(gdtfModel->SetPrimitiveType(EGdtfModel_PrimitiveType::eGdtfModel_PrimitiveType_Sphere));
 		}
 
-		IGdtfGeometryPtr childGeo;
+		//------------------------------------------------------------------------------------------------------------------
+		// Handle Geometry
+		
 		STransformMatrix ma;
-		ma.ux = 1;
-		ma.uy = 2;
-		ma.uz = 3;
+		ma.ux = 1;ma.vx = 4;ma.wx = 7;ma.ox = 10;
+		ma.uy = 2;ma.vy = 5;ma.wy = 8;ma.oy = 11;
+		ma.uz = 3;ma.vz = 6;ma.wz = 9;ma.oz = 12;
 
-		ma.vx = 4;
-		ma.vy = 5;
-		ma.vz = 6;
-
-		ma.wx = 7;
-		ma.wy = 8;
-		ma.wz = 9;
-
-		ma.ox = 10;
-		ma.oy = 11;
-		ma.oz = 12;
+		// Create First child
+		IGdtfGeometryPtr childGeo;
 		__checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometry, "My nameGeometry", gdtfModel, ma, &childGeo));
 
-		IGdtfGeometryPtr geoRef;
-		__checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometryReference, "My Reference", gdtfModel, ma, &geoRef));
-		__checkVCOM(geoRef->SetGeometryReference(childGeo));
+		// Create Child in Child
+		IGdtfGeometryPtr innerChild;
+		__checkVCOM(childGeo->CreateGeometry(EGdtfObjectType::eGdtfGeometry, "My Inner Geo", gdtfModel, ma, &innerChild));
+
+		IGdtfGeometryPtr geoRef1;
+		__checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometryReference, "My Reference", gdtfModel, ma, &geoRef1));
+		__checkVCOM(geoRef1->SetGeometryReference(childGeo));
+
+		IGdtfGeometryPtr geoRef2;
+		__checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometryReference, "My Ref to Inner Obj", gdtfModel, ma, &geoRef2));
+		__checkVCOM(geoRef2->SetGeometryReference(innerChild));
 
 
 		IGdtfDmxModePtr gdtfDmxMode;
@@ -316,13 +319,16 @@ void GdtfUnittest::ReadFile()
 		// Geometry Section Section
 		size_t countGeo = 0;
 		__checkVCOM(gdtfRead->GetGeometryCount(countGeo));
-		this->checkifEqual("Geometry Count", countGeo, 2);
+		this->checkifEqual("Geometry Count", countGeo, 3);
 
 		IGdtfGeometryPtr geo1;
 		__checkVCOM(gdtfRead->GetGeometryAt(0, &geo1));
 
 		IGdtfGeometryPtr geo2;
 		__checkVCOM(gdtfRead->GetGeometryAt(1, &geo2));
+
+		IGdtfGeometryPtr geo3;
+		__checkVCOM(gdtfRead->GetGeometryAt(2, &geo3));
 
 		if(geo1 && geo2)
 		{
@@ -331,6 +337,15 @@ void GdtfUnittest::ReadFile()
 			{
 				this->checkifEqual("Geo Link", geo1->GetName(), refedGeo->GetName());
 			}			
+		}
+
+		if(geo3)
+		{
+			IGdtfGeometryPtr refedGeo;
+			if(__checkVCOM(geo3->GetGeometryReference(&refedGeo)))
+			{
+				this->checkifEqual("Geo Link Inner", "My Inner Geo", refedGeo->GetName());
+			}
 		}
 
     }
