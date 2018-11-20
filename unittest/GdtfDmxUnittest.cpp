@@ -236,6 +236,19 @@ void GdtfDmxUnittest::CheckChannelSet(IGdtfDmxChannelSetPtr& channelSet, std::st
 	this->checkifEqual("Check End ",  end, thisEnd);
 }
 
+void GdtfDmxUnittest::CheckFunction(VectorworksMVR::IGdtfDmxChannelFunctionPtr& function, std::string name, VectorworksMVR::GdtfDefines::DmxValue start, VectorworksMVR::GdtfDefines::DmxValue end)
+{
+	this->checkifEqual("Check Name ", name, function->GetName());
+
+	DmxValue thisStart = 0;
+	__checkVCOM(function->GetStartAddress(thisStart));
+	this->checkifEqual("Check Start ", start, thisStart);
+
+	DmxValue thisEnd = 0;
+	__checkVCOM(function->GetEndAddress(thisEnd));
+	this->checkifEqual("Check End ",  end, thisEnd);
+}
+
 void GdtfDmxUnittest::Check8bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxChannel)
 {
 	// Get Logical Channels
@@ -258,15 +271,19 @@ void GdtfDmxUnittest::Check8bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxCh
 
 	IGdtfDmxChannelFunctionPtr bit8Function1;
 	__checkVCOM(bit8LogicalChannel1->GetDmxFunctionAt(0, &bit8Function1));
+	CheckFunction(bit8Function1, "Function1", 0, 99);
 
 	IGdtfDmxChannelFunctionPtr bit8Function2;
 	__checkVCOM(bit8LogicalChannel1->GetDmxFunctionAt(1, &bit8Function2));
+	CheckFunction(bit8Function2, "Function2", 100, 169);
 
 	IGdtfDmxChannelFunctionPtr bit8Function3;
 	__checkVCOM(bit8LogicalChannel2->GetDmxFunctionAt(0, &bit8Function3));
+	CheckFunction(bit8Function3, "Function3", 170, 199);
 
 	IGdtfDmxChannelFunctionPtr bit8Function4;
 	__checkVCOM(bit8LogicalChannel2->GetDmxFunctionAt(1, &bit8Function4));
+	CheckFunction(bit8Function4, "Function4", 200, 255);
 
 	// Check Channel Set Count
 	__checkVCOM(bit8Function1->GetDmxChannelSetCount(count));
