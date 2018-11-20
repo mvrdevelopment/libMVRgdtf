@@ -2924,7 +2924,7 @@ GdtfDmxChannel * SceneData::GdtfDmxChannelFunction::GetParentDMXChannel() const
 GdtfDmxChannelSet::GdtfDmxChannelSet(GdtfDmxChannelFunction* parent)
 {
 	fDmxStart		= 0;
-	fDmxEnd			= parent->GetEndAdress();
+	fDmxEnd			= -1;
 	fPhysicalStart	= 0.0;
 	fPhysicalEnd	= 1.0;	
 	fWheelSlotIdx	= 0;
@@ -2937,7 +2937,7 @@ GdtfDmxChannelSet::GdtfDmxChannelSet(const TXString& name, GdtfDmxChannelFunctio
 {
 	fUniqueName = name;
 	fDmxStart		= 0;
-	fDmxEnd			= parent->GetEndAdress();
+	fDmxEnd			= -1;
 	fPhysicalStart	= 0.0;
 	fPhysicalEnd	= 1.0;	
 	fWheelSlotIdx	= 0;
@@ -3061,6 +3061,7 @@ DmxValue GdtfDmxChannelSet::GetDmxStart() const
 
 DMXAddress GdtfDmxChannelSet::GetDmxEnd() const
 {
+	if(fNextChannelSet == nullptr && fDmxEnd == -1) {  return fParentChnlFunction->GetEndAdress(); }
 	return fDmxEnd;
 }
 
