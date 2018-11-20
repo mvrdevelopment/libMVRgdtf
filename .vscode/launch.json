@@ -20,7 +20,7 @@
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/bin/vectorworksMvrGdtfTestApp",
+            "program": "${workspaceFolder}/x64/Release/vectorworksMvrGdtfTestApp",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

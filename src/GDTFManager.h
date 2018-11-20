@@ -678,13 +678,20 @@ namespace SceneData
 		
 	private:
 		TGdtfBreakArray fBreaks;
-		
+        GdtfGeometry*   fLinkedGeometry;
+        
+        TXString        fUnresolvedGeoRef;
 		
 	public:
 		virtual EGdtfObjectType			GetObjectType();
         TGdtfBreakArray                 GetBreakArray();
 		GdtfBreakPtr					AddBreak();
+
+        GdtfGeometry*					GetLinkedGeometry();
+        void					        SetLinkedGeometry(GdtfGeometry* ptr);
 		
+        const TXString&					GetUnresolvedLinkedGeometry();
+
 	protected:
 		virtual	TXString				GetNodeName();
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);

@@ -782,6 +782,82 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::CreateBreak(Sint32 
 	return kVCOMError_NoError;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetGeometryReference(IGdtfGeometry** geometry)
+{
+	// Check Pointer
+	if ( ! fGeometry) { return kVCOMError_NotInitialized; }
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryReference) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryReferencePtr ref = dynamic_cast<SceneData::GdtfGeometryReferencePtr>(fGeometry);
+	if ( ! ref) { return kVCOMError_Failed; }
+	
+		
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CGdtfGeometryImpl*			pGeoObj			= nullptr;
+	SceneData::GdtfGeometry*	gdtfGeometry 	= ref->GetLinkedGeometry();
+
+	if(!gdtfGeometry) { return kVCOMError_NotSet; }
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfGeometry, (IVWUnknown**) & pGeoObj)))
+	{
+		// Check Casting
+		CGdtfGeometryImpl* pResultInterface = dynamic_cast<CGdtfGeometryImpl* >(pGeoObj);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(gdtfGeometry);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incomming Object
+	if (*geometry)
+	{
+		(*geometry)->Release();
+		*geometry		= NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*geometry		= pGeoObj;
+	
+	return kVCOMError_NoError;
+}
+
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetGeometryReference(IGdtfGeometry*  geometry)
+{
+	// Check Pointer
+	if ( ! fGeometry) { return kVCOMError_NotInitialized; }
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryReference) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryReferencePtr ref = dynamic_cast<SceneData::GdtfGeometryReferencePtr>(fGeometry);
+	if ( ! ref) { return kVCOMError_Failed; }
+	
+		
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CGdtfGeometryImpl*			pGeoObj			= dynamic_cast<CGdtfGeometryImpl*> (geometry);
+	if(!pGeoObj) { return kVCOMError_InvalidArg; }
+	
+	SceneData::GdtfGeometry*	gdtfGeometryToSet 	= pGeoObj->GetPointer();
+	ref->SetLinkedGeometry(gdtfGeometryToSet);
+	
+	return kVCOMError_NoError;
+}
+
+
 void VectorworksMVR::CGdtfGeometryImpl::SetPointer(SceneData::GdtfGeometry* geometry)
 {
 	fGeometry		= geometry;

@@ -159,6 +159,11 @@ void GdtfUnittest::WriteFile()
 		ma.oz = 12;
 		__checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometry, "My nameGeometry", gdtfModel, ma, &childGeo));
 
+		IGdtfGeometryPtr geoRef;
+		__checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometryReference, "My Reference", gdtfModel, ma, &geoRef));
+		__checkVCOM(geoRef->SetGeometryReference(childGeo));
+
+
 		IGdtfDmxModePtr gdtfDmxMode;
 		if (__checkVCOM(gdtfWrite->CreateDmxMode("My nameDmxMode", &gdtfDmxMode)))
 		{
@@ -258,6 +263,8 @@ void GdtfUnittest::ReadFile()
 		this->checkifEqual("GetFixtureGUID linkedUuid.c", linkedUuid.c, 1573622);
 		this->checkifEqual("GetFixtureGUID linkedUuid.d", linkedUuid.d, 2328410);
 
+		//--------------------------------------------------------------------------------
+		// Wheel Section
 		size_t countWheels = 0;
 		__checkVCOM(gdtfRead->GetWheelCount(countWheels));
 		{
@@ -303,6 +310,27 @@ void GdtfUnittest::ReadFile()
 				}
 
 			}
+		}
+
+		//--------------------------------------------------------------------------------
+		// Geometry Section Section
+		size_t countGeo = 0;
+		__checkVCOM(gdtfRead->GetGeometryCount(countGeo));
+		this->checkifEqual("Geometry Count", countGeo, 2);
+
+		IGdtfGeometryPtr geo1;
+		__checkVCOM(gdtfRead->GetGeometryAt(0, &geo1));
+
+		IGdtfGeometryPtr geo2;
+		__checkVCOM(gdtfRead->GetGeometryAt(1, &geo2));
+
+		if(geo1 && geo2)
+		{
+			IGdtfGeometryPtr refedGeo;
+			if(__checkVCOM(geo2->GetGeometryReference(&refedGeo)))
+			{
+				this->checkifEqual("Geo Link", geo1->GetName(), refedGeo->GetName());
+			}			
 		}
 
     }

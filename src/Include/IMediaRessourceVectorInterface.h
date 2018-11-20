@@ -551,7 +551,11 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE     GetBreakCount(size_t& count) = 0;
 		virtual VCOMError VCOM_CALLTYPE     GetBreakAt(size_t at, IGdtfBreak** gdtfBreak) = 0;
 		virtual VCOMError VCOM_CALLTYPE     CreateBreak(Sint32 dmxBreak, GdtfDefines::DMXAddress address, IGdtfBreak** gdtfBreak) = 0;
-		
+		virtual VCOMError VCOM_CALLTYPE     GetGeometryReference(IGdtfGeometry** geometry) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetGeometryReference(IGdtfGeometry*  geometry) = 0;
+
+
+
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
 	};

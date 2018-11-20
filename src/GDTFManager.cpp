@@ -1751,13 +1751,13 @@ DMXAddress GdtfBreak::GetDmxAddress()
 GdtfGeometryReference::GdtfGeometryReference(GdtfGeometry* parent) 
 					 : GdtfGeometry(parent)
 {
-
+	fLinkedGeometry = nullptr;
 }
 
 GdtfGeometryReference::GdtfGeometryReference(const TXString& name, GdtfModelPtr refToModel,const VWTransformMatrix& ma, GdtfGeometry* parent) 
 					 : GdtfGeometry(name,refToModel,ma, parent)
 {
-
+	fLinkedGeometry = nullptr;
 }
 
 GdtfGeometryReference::~GdtfGeometryReference()
@@ -1770,6 +1770,21 @@ GdtfBreak* GdtfGeometryReference::AddBreak()
 	GdtfBreak* gdtfBreak = new GdtfBreak();
 	fBreaks.push_back(gdtfBreak);
 	return gdtfBreak;
+}
+
+GdtfGeometry* GdtfGeometryReference::GetLinkedGeometry()
+{
+	return fLinkedGeometry;
+}
+
+const TXString& GdtfGeometryReference::GetUnresolvedLinkedGeometry()
+{
+	return fUnresolvedGeoRef;
+}
+
+void GdtfGeometryReference::SetLinkedGeometry(GdtfGeometry* ptr)
+{
+	fLinkedGeometry = ptr;
 }
 
 void GdtfGeometryReference::OnPrintToFile(IXMLFileNodePtr pNode)
@@ -1785,6 +1800,9 @@ void GdtfGeometryReference::OnPrintToFile(IXMLFileNodePtr pNode)
 	{
 		breakObj->WriteToNode(pNode);
 	}
+
+	if(fLinkedGeometry) { pNode->SetNodeAttributeValue(XML_GDTF_GeometryReferenceLinkedGeo, fLinkedGeometry->GetNodeReference()); }
+
 	
 }
 
@@ -1803,6 +1821,9 @@ void GdtfGeometryReference::OnReadFromNode(const IXMLFileNodePtr& pNode)
 									 fBreaks.push_back(breakObj);
 								 }
 								 );
+
+	pNode->GetNodeAttributeValue(XML_GDTF_GeometryReferenceLinkedGeo, fUnresolvedGeoRef); 
+
 	
 }
 
@@ -3727,6 +3748,8 @@ void GdtfFixture::ResolveGeometryRefs()
 
 void GdtfFixture::ResolveGeometryRefs_Recursive(GdtfGeometryPtr geometry)
 {
+	// ----------------------------------------------------------------------------
+	// Resolve Model Refs
 	TXString		unresolvedModelRef	= geometry->GetUnresolvedModelRef();
 	if( ! unresolvedModelRef.IsEmpty())
 	{
@@ -3739,6 +3762,20 @@ void GdtfFixture::ResolveGeometryRefs_Recursive(GdtfGeometryPtr geometry)
 		
 		ASSERTN(kEveryone, linkedModel != nullptr);
 		if (linkedModel)	{ geometry->SetUnresolvedModelRef( linkedModel ); }
+	}
+
+	// ----------------------------------------------------------------------------
+	// Resolve Geo Refs
+	if(geometry->GetObjectType() == eGdtfGeometryReference)
+	{
+		GdtfGeometryReferencePtr geoRef = dynamic_cast<GdtfGeometryReferencePtr>(geometry);
+		ASSERTN(kEveryone, geoRef != nullptr);
+		if(geoRef)
+		{
+			GdtfGeometryPtr geo = this->ResolveGeometryRef(geoRef->GetUnresolvedLinkedGeometry(), fGeometries);
+			ASSERTN(kEveryone, geo != nullptr);
+			geoRef->SetLinkedGeometry(geo);
+		}
 	}
 	
 	// Now traverse child geometry
