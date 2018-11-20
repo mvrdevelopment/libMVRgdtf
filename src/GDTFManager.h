@@ -781,6 +781,7 @@ namespace SceneData
 		
 		// Parent Logical Channel
 		GdtfDmxLogicalChannel*	fParentLogicalChannel;
+        GdtfDmxChannelFunction* fNextFunction;
 
 	public:
 		virtual EGdtfObjectType			GetObjectType();
@@ -806,6 +807,8 @@ namespace SceneData
 		TXString						getUnresolvedWheelRef() const;
 		TXString						getUnresolvedEmitterRef() const;
 		GdtfDmxChannel*					GetParentDMXChannel() const;
+
+        void                            SetNextFunction(GdtfDmxChannelFunction* next);
 
 		
 		void							SetWheel(GdtfWheelPtr newWhl);

@@ -2403,7 +2403,12 @@ void GdtfDmxLogicalChannel::SetDmxMaster(EGdtfDmxMaster master)
 GdtfDmxChannelFunctionPtr GdtfDmxLogicalChannel::AddDmxChannelFunction(const TXString &name)
 {
 	GdtfDmxChannelFunctionPtr function = new GdtfDmxChannelFunction(name, this);
+
+	// Also set next function here
+	if(fFunctions.size() > 0)	{ fFunctions.back()->SetNextFunction(function); }
+
 	fFunctions.push_back(function);
+
 	return function;
 }
 
@@ -2450,9 +2455,13 @@ void GdtfDmxLogicalChannel::OnReadFromNode(const IXMLFileNodePtr& pNode)
 									 
 									 // Read from node
 									 function->ReadFromNode(objNode);
+
+									 if(fFunctions.size() > 0)	{ fFunctions.back()->SetNextFunction(function); }
 									 
 									 // Add to list
 									 fFunctions.push_back(function);
+
+									 
 									 return;
 								 });
 }
@@ -2519,8 +2528,9 @@ GdtfDmxChannelFunction::GdtfDmxChannelFunction(GdtfDmxLogicalChannel* parent)
 	fEmitter				= nullptr;
 	fEncoderInvert			= EGDTFEncoderInvert::eGDTFEncoderInvert_No;
 	fDmxInvert				= EGDTFDmxInvert::eGDTFDmxInvert_No;
-	fAttribute			= nullptr;
+	fAttribute				= nullptr;
 	fParentLogicalChannel	= parent;
+	fNextFunction			= nullptr;
 }
 
 GdtfDmxChannelFunction::GdtfDmxChannelFunction(const TXString& name, GdtfDmxLogicalChannel* parent)
@@ -2534,13 +2544,20 @@ GdtfDmxChannelFunction::GdtfDmxChannelFunction(const TXString& name, GdtfDmxLogi
 	fEmitter				= nullptr;
 	fEncoderInvert			= EGDTFEncoderInvert::eGDTFEncoderInvert_No;
 	fDmxInvert				= EGDTFDmxInvert::eGDTFDmxInvert_No;	
-	fAttribute			= nullptr;
+	fAttribute				= nullptr;
 	fParentLogicalChannel	= parent;
+	fNextFunction			= nullptr;
 }
 
 GdtfDmxChannelFunction::~GdtfDmxChannelFunction()
 {
 	for (GdtfDmxChannelSetPtr ptr : fChannelSets) { delete ptr; }
+}
+
+void GdtfDmxChannelFunction::SetNextFunction(GdtfDmxChannelFunction* next)
+{
+	ASSERTN(kEveryone, fNextFunction == nullptr);
+	fNextFunction = next;
 }
 
 void GdtfDmxChannelFunction::SetName(const TXString &name)
@@ -2769,7 +2786,11 @@ DmxValue GdtfDmxChannelFunction::GetStartAdress() const
 
 DmxValue GdtfDmxChannelFunction::GetEndAdress() const
 {
-	return 0;
+	// If there is a next function, return the end address based on this
+	if(fNextFunction) {return (fNextFunction->GetStartAdress() - 1); }
+
+	// Otherwise return the max for this feature
+	return fParentLogicalChannel->GetParentDMXChannel()->GetChannelMaxDmx();
 }
 
 double GdtfDmxChannelFunction::GetPhysicalStart() const
