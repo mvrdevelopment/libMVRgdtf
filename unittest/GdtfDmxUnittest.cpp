@@ -335,7 +335,7 @@ void GdtfDmxUnittest::Check8bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxCh
 
 	IGdtfDmxChannelSetPtr bit8ChannelSet10;
 	__checkVCOM(bit8Function2->GetDmxChannelSetAt(4, &bit8ChannelSet5));
-	this->CheckChannelSet(bit8ChannelSet5, "",165,169);
+	this->CheckChannelSet(bit8ChannelSet5, "",166,169);
 	// ---------------------------------------------------------------------------
 	// Check Channel Set Count bit8Function3
 	__checkVCOM(bit8Function3->GetDmxChannelSetCount(count));
