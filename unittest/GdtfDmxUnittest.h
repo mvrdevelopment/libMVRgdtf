@@ -17,4 +17,6 @@ private:
     void ReadFile();
 
     std::string fPath;
+
+    void CheckChannelSet(VectorworksMVR::IGdtfDmxChannelSetPtr& channelSet, std::string name, VectorworksMVR::GdtfDefines::DmxValue start, VectorworksMVR::GdtfDefines::DmxValue end);
 };

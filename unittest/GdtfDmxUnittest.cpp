@@ -120,29 +120,42 @@ void GdtfDmxUnittest::ReadFile()
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet1;
 		__checkVCOM(bit8Function->GetDmxChannelSetAt(0, &bit8ChannelSet1)); 
-		this->checkifEqual("Check Empty Channel Set 1", "", bit8ChannelSet1->GetName());
+		this->CheckChannelSet(bit8ChannelSet1, "",0,14);
+
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet2;
 		__checkVCOM(bit8Function->GetDmxChannelSetAt(1, &bit8ChannelSet2));
-		this->checkifEqual("Check Channel Set 2", "My Name1", bit8ChannelSet2->GetName());
+		this->CheckChannelSet(bit8ChannelSet2, "My Name1",15,60);
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet3;
 		__checkVCOM(bit8Function->GetDmxChannelSetAt(2, &bit8ChannelSet3));
-		this->checkifEqual("Check Channel Set 3", "My Name2", bit8ChannelSet3->GetName());
+		this->CheckChannelSet(bit8ChannelSet3, "My Name2",61,90);
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet4;
 		__checkVCOM(bit8Function->GetDmxChannelSetAt(3, &bit8ChannelSet4));
-		this->checkifEqual("Check Empty Channel Set 2", "", bit8ChannelSet4->GetName());
+		this->CheckChannelSet(bit8ChannelSet4, "",91,127);
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet5;
 		__checkVCOM(bit8Function->GetDmxChannelSetAt(4, &bit8ChannelSet5));
-		this->checkifEqual("Check Channel Set 3", "My Name3", bit8ChannelSet5->GetName());
+		this->CheckChannelSet(bit8ChannelSet5, "My Name3",128,230);
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet6;
 		__checkVCOM(bit8Function->GetDmxChannelSetAt(5, &bit8ChannelSet6));
-		this->checkifEqual("Check Empty Channel Set 3", "", bit8ChannelSet6->GetName());
-
+		this->CheckChannelSet(bit8ChannelSet6, "",231,255);
 
 	}
 
+}
+
+void GdtfDmxUnittest::CheckChannelSet(IGdtfDmxChannelSetPtr& channelSet, std::string name, DmxValue start, DmxValue end)
+{
+	this->checkifEqual("Check Name ", name, channelSet->GetName());
+
+	DmxValue thisStart = 0;
+	__checkVCOM(channelSet->GetDmxStartAddress(thisStart));
+	this->checkifEqual("Check Start ", start, thisStart);
+
+	DmxValue thisEnd = 0;
+	__checkVCOM(channelSet->GetDmxEndAddress(thisEnd));
+	this->checkifEqual("Check End ",  end, thisEnd);
 }
