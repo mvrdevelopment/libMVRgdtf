@@ -2766,6 +2766,9 @@ void GdtfDmxChannelFunction::OnReadFromNode(const IXMLFileNodePtr& pNode)
 									 
 									 // Read from node
 									 channelSet->ReadFromNode(objNode);
+									
+									// Link with next
+									if(!fChannelSets.empty()) { fChannelSets.back()->SetNextChannelSet(channelSet);}
 									 
 									 // Add to list
 									 fChannelSets.push_back(channelSet);
@@ -2926,7 +2929,7 @@ GdtfDmxChannelSet::GdtfDmxChannelSet(GdtfDmxChannelFunction* parent)
 	fPhysicalEnd	= 1.0;	
 	fWheelSlotIdx	= 0;
 	fSetPhysical	= false;
-
+	fNextChannelSet = nullptr;
 	fParentChnlFunction = parent;
 }
 
@@ -2939,12 +2942,18 @@ GdtfDmxChannelSet::GdtfDmxChannelSet(const TXString& name, GdtfDmxChannelFunctio
 	fPhysicalEnd	= 1.0;	
 	fWheelSlotIdx	= 0;
 	fSetPhysical	= false;
-
+	fNextChannelSet = nullptr;
 	fParentChnlFunction = parent;
 }
 
 GdtfDmxChannelSet::~GdtfDmxChannelSet()
 {
+}
+
+void GdtfDmxChannelSet::SetNextChannelSet(GdtfDmxChannelSet* next)
+{
+	ASSERTN(kEveryone, fNextChannelSet == nullptr);
+	fNextChannelSet = next;
 }
 
 void GdtfDmxChannelSet::SetName(const TXString& name)

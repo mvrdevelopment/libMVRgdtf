@@ -722,6 +722,7 @@ namespace SceneData
 		Sint32				fWheelSlotIdx;
 
 		GdtfDmxChannelFunction* fParentChnlFunction; 
+        GdtfDmxChannelSet*      fNextChannelSet;
 
 	public:
 		// Getter
@@ -743,6 +744,8 @@ namespace SceneData
 		void							SetPhysicalStart(double start);
 		void							SetPhysicalEnd(double end);		
 		void							SetWheelSlot(Sint32 slotIndex);
+
+        void					        SetNextChannelSet(GdtfDmxChannelSet* next);	
 				
 	protected:
 		virtual	TXString				GetNodeName();
