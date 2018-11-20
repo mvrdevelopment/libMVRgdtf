@@ -352,7 +352,7 @@ bool SplitStr(const TXString& str, TXString& part1, TXString& part2, size_t spli
 	// First Part
 	for (size_t i = 0; i < splitPos; i++)
 	{
-		part1 << str.GetAt(i);
+		part1 += str.GetAt(i);
 	}
 
 	// 2nd Part: Start at Split pos + 1 to exclude the spilt char from the result.
@@ -361,7 +361,7 @@ bool SplitStr(const TXString& str, TXString& part1, TXString& part2, size_t spli
 	if (includeSplitPos) { start2ndPart = splitPos; }
 	else				 { start2ndPart = splitPos + 1; }
 
-	for (size_t i = start2ndPart; i < strLen; i++)	{ part2 << str.GetAt(i); }
+	for (size_t i = start2ndPart; i < strLen; i++)	{ part2 += str.GetAt(i); }
 	
 	return true;
 }
