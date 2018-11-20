@@ -68,13 +68,13 @@ void GdtfDmxUnittest::WriteFile()
 		bit8LogicalChannel->CreateDmxFunction("Function", &bit8Function);
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet1;
-		bit8Function->CreateDmxChannelSet("My Name", 15, 60, &bit8ChannelSet1);
+		bit8Function->CreateDmxChannelSet("My Name1", 15, 60, &bit8ChannelSet1);
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet2;
-		bit8Function->CreateDmxChannelSet("My Name", 61, 90, &bit8ChannelSet2);
+		bit8Function->CreateDmxChannelSet("My Name2", 61, 90, &bit8ChannelSet2);
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet3;
-		bit8Function->CreateDmxChannelSet("My Name", 128, 230, &bit8ChannelSet3);
+		bit8Function->CreateDmxChannelSet("My Name3", 128, 230, &bit8ChannelSet3);
 
 
         __checkVCOM(gdtfWrite->Close());
@@ -119,22 +119,28 @@ void GdtfDmxUnittest::ReadFile()
 		this->checkifEqual("Check Count DMX Channels", 6, countChannelSets);
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet1;
-		__checkVCOM(bit8Function->GetDmxChannelSetAt(0, &bit8ChannelSet1));
+		__checkVCOM(bit8Function->GetDmxChannelSetAt(0, &bit8ChannelSet1)); 
+		this->checkifEqual("Check Empty Channel Set 1", "", bit8ChannelSet1->GetName());
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet2;
 		__checkVCOM(bit8Function->GetDmxChannelSetAt(1, &bit8ChannelSet2));
+		this->checkifEqual("Check Channel Set 2", "My Name1", bit8ChannelSet2->GetName());
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet3;
 		__checkVCOM(bit8Function->GetDmxChannelSetAt(2, &bit8ChannelSet3));
+		this->checkifEqual("Check Channel Set 3", "My Name2", bit8ChannelSet3->GetName());
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet4;
 		__checkVCOM(bit8Function->GetDmxChannelSetAt(3, &bit8ChannelSet4));
+		this->checkifEqual("Check Empty Channel Set 2", "", bit8ChannelSet4->GetName());
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet5;
 		__checkVCOM(bit8Function->GetDmxChannelSetAt(4, &bit8ChannelSet5));
+		this->checkifEqual("Check Channel Set 3", "My Name3", bit8ChannelSet5->GetName());
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet6;
 		__checkVCOM(bit8Function->GetDmxChannelSetAt(5, &bit8ChannelSet6));
+		this->checkifEqual("Check Empty Channel Set 3", "", bit8ChannelSet6->GetName());
 
 
 	}
