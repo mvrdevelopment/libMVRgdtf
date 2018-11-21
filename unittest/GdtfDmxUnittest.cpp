@@ -44,6 +44,12 @@ void GdtfDmxUnittest::WriteFile()
     if(__checkVCOM(gdtfWrite->OpenForWrite(fPath.c_str(),"My FixtureName","My Manufacturer", uuid)))
     {
 		//----------------------------------------------------------------
+		// Create Attribute
+		IGdtfAttributePtr attribute;
+		__checkVCOM(gdtfWrite->CreateAttribute("Attribute","Pretty", &attribute));
+
+
+		//----------------------------------------------------------------
 		// Create Model
 		IGdtfModelPtr model;
 		__checkVCOM(gdtfWrite->CreateModel("Model", &model));
@@ -65,6 +71,7 @@ void GdtfDmxUnittest::WriteFile()
 		// First Logical Channel
 		IGdtfDmxLogicalChannelPtr bit8LogicalChannel1;
 		bit8channel->CreateLogicalChannel("Log1", &bit8LogicalChannel1);
+		bit8LogicalChannel1->SetAttribute(attribute);
 
 		IGdtfDmxChannelFunctionPtr bit8Function1;
 		bit8LogicalChannel1->CreateDmxFunction("Function1", &bit8Function1);
@@ -96,6 +103,7 @@ void GdtfDmxUnittest::WriteFile()
 		// Second Logical Channel
 		IGdtfDmxLogicalChannelPtr bit8LogicalChannel2;
 		bit8channel->CreateLogicalChannel("Log2", &bit8LogicalChannel2);
+		bit8LogicalChannel2->SetAttribute(attribute);
 
 		IGdtfDmxChannelFunctionPtr bit8Function3;
 		bit8LogicalChannel2->CreateDmxFunction("Function3", &bit8Function3);
@@ -134,6 +142,7 @@ void GdtfDmxUnittest::WriteFile()
 
 		IGdtfDmxLogicalChannelPtr bit16LogicalChannel;
 		bit16channel->CreateLogicalChannel("Log1", &bit16LogicalChannel);
+		bit16LogicalChannel->SetAttribute(attribute);
 
 		IGdtfDmxChannelFunctionPtr bit16Function;
 		bit16LogicalChannel->CreateDmxFunction("Function", &bit16Function);
