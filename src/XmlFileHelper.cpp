@@ -187,11 +187,7 @@ using namespace SceneData;
 
 /*static*/ bool GdtfConverter::ConvertDouble(const TXString& value, double& doubleValue)
 {
-	if(value.IsEmpty())
-	{
-		doubleValue = 0.0;
-		return false;
-	}
+	if(value.IsEmpty()) { return false; }
 	
 	// Try to convert
 	doubleValue = value.atof();
