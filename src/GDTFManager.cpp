@@ -2211,8 +2211,12 @@ void GdtfDmxChannel::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	}	
 	//
 	TXString highlight;	
-	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelHighlight,			highlight);	
-	GdtfConverter::ConvertDMXValue(highlight, this->GetChannelBitResolution(), fHeighlight, fHeighlightNone);
+	if(VCOM_SUCCEEDED(pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelHighlight,			highlight)	))
+	{
+		GdtfConverter::ConvertDMXValue(highlight, this->GetChannelBitResolution(), fHeighlight, fHeighlightNone);
+	}
+	
+	
 	//
 	TXString mib;		pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelMibFadeFrames,		mib);		GdtfConverter::ConvertDouble(mib,			fMoveInBlackFrames);
 	TXString timelimit;	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelDMXChangeTimeLimit,	timelimit);	GdtfConverter::ConvertDouble(timelimit,	fDmxChangeTimeLimit);
