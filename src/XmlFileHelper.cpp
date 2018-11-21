@@ -91,7 +91,7 @@ using namespace SceneData;
 /*static*/ bool GdtfConverter::ConvertUUID(const TXString& inValue, VWFC::Tools::VWUUID& uuid)
 {
 	// First check if theinValuelength is as aspected
-	ASSERTN(kEveryone, inValue.GetLength() == 47);
+	ASSERTN(kEveryone, inValue.GetLength() == 47 || inValue.GetLength() == 0);
 	if (inValue.GetLength() != 47)	{ return false; }
 	
 	// Remove white space
