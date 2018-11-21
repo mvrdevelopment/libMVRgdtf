@@ -774,7 +774,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 		// Use this for 4x4 matrix and 4x3 matrix
 		if (arr.size() < 3 || arr.size() > 4)
 		{
-			DSTOP((kEveryone, "Failed to seserialize string"));
+			DSTOP((kEveryone, "Unaspected Format of Matrix"));
 			continue;
 		}
 		
@@ -847,7 +847,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	{
 		// Copy string
 		TXString strValInner;
-		for (ptrdiff_t i = 0; i < pos; i++)	{ strValInner << strVal.GetAt(i); }
+		for (ptrdiff_t i = 0; i < pos; i++)	{ strValInner += strVal.GetAt(i); }
 		
 		// Try to cast
 		lines.push_back(strValInner);
@@ -875,7 +875,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 		
 		if (arr.size() != 3)
 		{
-			DSTOP((kEveryone, "Failed to seserialize string"));
+			DSTOP((kEveryone, "Unaspected amount of entries in Matrix"));
 			continue;
 		}
 		
