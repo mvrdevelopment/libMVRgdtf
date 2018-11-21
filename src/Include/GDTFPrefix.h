@@ -178,31 +178,31 @@ namespace VectorworksMVR
 		
 		enum EGdtfDmxSnap
 		{
-			eGdtfDmxMaster_Yes,
-			eGdtfDmxMaster_No,
-			eGdtfDmxMaster_On,
-			eGdtfDmxMaster_Off,
+			eGdtfDmxMaster_Yes  = 0,
+			eGdtfDmxMaster_No   = 1,
+			eGdtfDmxMaster_On   = 2,
+			eGdtfDmxMaster_Off  = 3,
 		};
 		
 		enum EGDTFEncoderInvert
 		{
-			eGDTFEncoderInvert_No, //Default
-			eGDTFEncoderInvert_Yes,
+			eGDTFEncoderInvert_No   = 0, //Default
+			eGDTFEncoderInvert_Yes  = 1,
 			
 		};
 		
 		enum EGDTFDmxInvert
 		{
-			eGDTFDmxInvert_No, //Default
-			eGDTFDmxInvert_Yes,
+			eGDTFDmxInvert_No       = 0, //Default
+			eGDTFDmxInvert_Yes      = 1,
 			
 		};
 		
 		enum EGdtfDmxRelationType // Default is missing
 		{
-			eGdtfDmxRelationType_Mode,
-			eGdtfDmxRelationType_Multiply,
-			eGdtfDmxRelationType_Override,
+			eGdtfDmxRelationType_Mode       = 0,
+			eGdtfDmxRelationType_Multiply   = 1,
+			eGdtfDmxRelationType_Override   = 2,
 		};
 
 		enum  EGdtfChannelBitResolution
