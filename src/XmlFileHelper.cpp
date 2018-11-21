@@ -988,7 +988,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	if		(value == XML_GDTF_DMXSnapEnum_No)	{ snap = eGdtfDmxMaster_No;		}
 	else if (value == XML_GDTF_DMXSnapEnum_On)	{ snap = eGdtfDmxMaster_On;		}
 	else if (value == XML_GDTF_DMXSnapEnum_Off)	{ snap = eGdtfDmxMaster_Off;	}
-	else if (value == XML_GDTF_DMXSnapEnum_Yes)	{ snap = eGdtfDmxMaster_Off;	}
+	else if (value == XML_GDTF_DMXSnapEnum_Yes)	{ snap = eGdtfDmxMaster_Yes;	}
 	else if (value == "")						{ snap = eGdtfDmxMaster_No;		}
 	else										{ snap = eGdtfDmxMaster_No; DSTOP((kEveryone, "Unaspected Input for EGdtfDmxSnap Enum"));}
 	
