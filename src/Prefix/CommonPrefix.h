@@ -281,6 +281,7 @@ const Sint32 kMVR_MinorVersion = 1;
 #define XML_GDTF_BeamRadius						"BeamRadius"
 #define XML_GDTF_FieldAngle						"FieldAngle"
 #define XML_GDTF_BeamType						"BeamType"
+#define XML_GDTF_BeamColorRenderingIndex        "ColorRenderingIndex"				
 
 #define XML_GDTF_BeamTypeEnum_Wash				"Wash"
 #define XML_GDTF_BeamTypeEnum_Spot				"Spot"
@@ -696,7 +697,7 @@ const Sint32 kMVR_MinorVersion = 1;
 #define XML_GDTF_ColorRenderingIndexCollect             "CRIs"
 #define XML_GDTF_ColorRenderingIndexGroup               "CRIGroup"
 #define XML_GDTF_ColorRenderingIndexGrou_AttrColorTemp  "ColorTemperature"
-#define XML_GDTF_ColorRenderingIndex                    "CRI"				// Shared with Beam
+#define XML_GDTF_ColorRenderingIndex                    "CRI"			
 #define XML_GDTF_ColorRenderingIndex_AttrCES            "CES"
 #define XML_GDTF_ColorRenderingIndex_AttrColorTemp      "ColorTemperature"
 
