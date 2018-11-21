@@ -211,22 +211,25 @@ using namespace SceneData;
 
 /*static*/ bool GdtfConverter::ConvertInteger(const TXString& value, Sint8& intValue)
 {
+    if(value.IsEmpty()) return false;
+
 	intValue = value.atoi();
-	
 	return true;
 }
 
 /*static*/ bool GdtfConverter::ConvertInteger(const TXString& value, size_t& intValue)
 {
-	intValue = value.atoi();
+    if(value.IsEmpty()) return false;
 	
+    intValue = value.atoi();
 	return true;
 }
 
 /*static*/ bool GdtfConverter::ConvertInteger(const TXString& value, Sint32& intValue)
 {
-	intValue = value.atoi();
+    if(value.IsEmpty()) return false;
 	
+    intValue = value.atoi();
 	return true;
 }
 
