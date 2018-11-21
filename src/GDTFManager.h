@@ -722,6 +722,7 @@ namespace SceneData
 		Sint32				fWheelSlotIdx;
 
 		GdtfDmxChannelFunction* fParentChnlFunction; 
+        GdtfDmxChannelSet*      fNextChannelSet;
 
 	public:
 		// Getter
@@ -743,6 +744,8 @@ namespace SceneData
 		void							SetPhysicalStart(double start);
 		void							SetPhysicalEnd(double end);		
 		void							SetWheelSlot(Sint32 slotIndex);
+
+        void					        SetNextChannelSet(GdtfDmxChannelSet* next);	
 				
 	protected:
 		virtual	TXString				GetNodeName();
@@ -781,6 +784,7 @@ namespace SceneData
 		
 		// Parent Logical Channel
 		GdtfDmxLogicalChannel*	fParentLogicalChannel;
+        GdtfDmxChannelFunction* fNextFunction;
 
 	public:
 		virtual EGdtfObjectType			GetObjectType();
@@ -790,6 +794,7 @@ namespace SceneData
         GdtfAttribute*				    GetAttribute();
 		const TXString&					GetOriginalAttribute();
         DmxValue						GetStartAdress() const;
+        DmxValue						GetEndAdress() const;
         double							GetPhysicalStart() const;
         double							GetPhysicalEnd() const;
         double							GetRealFade() const;        
@@ -805,6 +810,8 @@ namespace SceneData
 		TXString						getUnresolvedWheelRef() const;
 		TXString						getUnresolvedEmitterRef() const;
 		GdtfDmxChannel*					GetParentDMXChannel() const;
+
+        void                            SetNextFunction(GdtfDmxChannelFunction* next);
 
 		
 		void							SetWheel(GdtfWheelPtr newWhl);
@@ -846,6 +853,7 @@ namespace SceneData
 		TGdtfDmxChannelFuntionArray	fFunctions;		
 		
 		GdtfDmxChannel*  			fParentDmxChannel;
+        GdtfDmxLogicalChannel*      fNextLogicalChannel;
 		
 	public:
 
@@ -860,7 +868,9 @@ namespace SceneData
 		TXString							GetUnresolvedAttribRef() const;
 
 		GdtfDmxChannel*						GetParentDMXChannel() const;
-		
+        void						        SetNextLogicalChannel(GdtfDmxLogicalChannel* next) ;
+		GdtfDmxLogicalChannel*			    GetNextLogicalChannel() ;
+
 		void								SetName(const TXString& name);
 		void								SetAttribute(GdtfAttributePtr newAttr);
 		void								SetDmxSnap(EGdtfDmxSnap snap);

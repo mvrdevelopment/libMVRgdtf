@@ -17,6 +17,10 @@ private:
     void ReadFile();
 
     std::string fPath;
-
+    
     void CheckChannelSet(VectorworksMVR::IGdtfDmxChannelSetPtr& channelSet, std::string name, VectorworksMVR::GdtfDefines::DmxValue start, VectorworksMVR::GdtfDefines::DmxValue end);
+    void CheckFunction(VectorworksMVR::IGdtfDmxChannelFunctionPtr& function, std::string name, VectorworksMVR::GdtfDefines::DmxValue start, VectorworksMVR::GdtfDefines::DmxValue end);
+
+    void Check8bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxChannel);
+
 };
