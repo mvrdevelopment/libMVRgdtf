@@ -289,6 +289,16 @@ void GdtfUnittest::ReadFile()
 						MvrString slotName = gdtfSlot->GetName();
 						this->checkifEqual("GetGdtfSlotName", slotName, "My WheelSlot1Wheel1");
 
+						CieColor color;
+						color.fx = 0;
+						color.fy = 0;
+						color.f_Y = 0;
+						__checkVCOM(gdtfSlot->GetColor(color));
+						this->checkifEqual("GetWheelSlot1Wheel1ColorFx",color.fx, 0.500000);
+						this->checkifEqual("GetWheelSlot1Wheel1ColorFy",color.fy, 0.424242);
+						this->checkifEqual("GetWheelSlot1Wheel1ColorFY", color.f_Y, 1.000000);
+
+
 						size_t prismFacetCount = 0;
 						__checkVCOM(gdtfSlot->GetPrismFacetCount(prismFacetCount));
 						for (size_t k = 0; k < prismFacetCount; k++)
@@ -301,19 +311,33 @@ void GdtfUnittest::ReadFile()
 								color.fy = 0;
 								color.f_Y = 0;
 								__checkVCOM(prismFacet->GetColor(color));
-								/*this->checkifEqual("GetWheelSlotPrismFacetColorFx",color.fx, 0.424242);
+								this->checkifEqual("GetWheelSlotPrismFacetColorFx",color.fx, 0.424242);
 								this->checkifEqual("GetWheelSlotPrismFacetColorFy",color.fy, 1.000000);
-								this->checkifEqual("GeWheelSlotPrismFacetColorFY", color.f_Y, 0.500000);*/
+								this->checkifEqual("GeWheelSlotPrismFacetColorFY", color.f_Y, 0.500000);
+
+								STransformMatrix matrix;
+								__checkVCOM(prismFacet->GetTransformMatrix(matrix));
+								this->checkifEqual("GetTransformMatrix.ux", matrix.ux, 1);
+								this->checkifEqual("GetTransformMatrix.uy", matrix.uy, 2);
+								this->checkifEqual("GetTransformMatrix.uz", matrix.uz, 3);
+
+								this->checkifEqual("GetTransformMatrix.vx", matrix.vx, 4);
+								this->checkifEqual("GetTransformMatrix.vy", matrix.vy, 5);
+								this->checkifEqual("GetTransformMatrix.vz", matrix.vz, 6);
+
+								this->checkifEqual("GetTransformMatrix.wx", matrix.wx, 7);
+								this->checkifEqual("GetTransformMatrix.wy", matrix.wy, 8);
+								this->checkifEqual("GetTransformMatrix.wz", matrix.wz, 9);
+
+								this->checkifEqual("GetTransformMatrix.ox", matrix.ox, 10);
+								this->checkifEqual("GetTransformMatrix.oy", matrix.oy, 11);
+								this->checkifEqual("GetTransformMatrix.oz", matrix.oz, 12);
 							}
-							
-
-						}
-					}
-
+						} // Read PrismFacets
+					} // Count WheelSlot Loop
 				}
-
-			}
-		}
+			} // Count Wheels Loop
+		} // Fill with Wheels
 
 		//--------------------------------------------------------------------------------
 		// Geometry Section Section
