@@ -147,6 +147,7 @@ namespace SceneData
 		
 	public:
         const TXString&							GetName() const;
+        GdtfFeatureGroup*						GetFeatureGroup() const;
 		void									SetName(const TXString& name);
 		
 		const std::vector<GdtfAttribute*>&		GetLinkedAttributes() const;

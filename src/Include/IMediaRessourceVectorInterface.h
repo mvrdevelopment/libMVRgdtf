@@ -67,6 +67,7 @@ namespace VectorworksMVR
     class IGdtfRDMParameterNotification;
     class IGdtf_FTRDM;
 	class IGdtfRDMParameter;
+	class IGdtfFeatureGroup;
 
 	//-------------------------------------------------------------------------------------------------------------
 	class DYNAMIC_ATTRIBUTE ISceneDataProvider : public IVWUnknown
@@ -366,6 +367,7 @@ namespace VectorworksMVR
 		
 		virtual VCOMError VCOM_CALLTYPE		GetAttributeCount(size_t& count) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetAttributeAt(size_t at, IGdtfAttribute** attribute) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetFeatureGroup(IGdtfFeatureGroup** group) = 0;
 		
         virtual VCOMError VCOM_CALLTYPE     SetName(MvrString name) = 0;
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
