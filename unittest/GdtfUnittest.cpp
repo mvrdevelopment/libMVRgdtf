@@ -89,22 +89,11 @@ void GdtfUnittest::WriteFile()
 				cieCol.f_Y = 1.0;
 				__checkVCOM(wheel1Slot->SetColor(cieCol));
 
+				// no "ox, oy, oz" entries here
 				STransformMatrix ma;
-				ma.ux = 1;
-				ma.uy = 2;
-				ma.uz = 3;
-
-				ma.vx = 4;
-				ma.vy = 5;
-				ma.vz = 6;
-
-				ma.wx = 7;
-				ma.wy = 8;
-				ma.wz = 9;
-
-				ma.ox = 10;
-				ma.oy = 11;
-				ma.oz = 12;
+				ma.ux = 1;ma.vx = 4;ma.wx = 7;
+				ma.uy = 2;ma.vy = 5;ma.wy = 8;
+				ma.uz = 3;ma.vz = 6;ma.wz = 9;
 
 				CieColor facetCol;
 				facetCol.fx  = 0.4242424242;
@@ -232,39 +221,39 @@ void GdtfUnittest::ReadFile()
     {
 		// Check Fixture Name
 		MvrString fixtureName = gdtfRead->GetName();
-		this->checkifEqual("GetName", fixtureName, "My FixtureName");
+		this->checkifEqual("GetName ", fixtureName, "My FixtureName");
 
 		MvrString fixtureShortName = gdtfRead->GetShortName();
-		this->checkifEqual("GetShortName", fixtureShortName, "My shortName");
+		this->checkifEqual("GetShortName ", fixtureShortName, "My shortName");
 
 		MvrString manufacturer = gdtfRead->GetManufacturer();
-		this->checkifEqual("GetManufacturer", manufacturer, "My Manufacturer");
+		this->checkifEqual("GetManufacturer ", manufacturer, "My Manufacturer");
 
 		MvrString description = gdtfRead->GetFixtureTypeDescription();
-		this->checkifEqual("GetFixtureTypeDescription", description, "My Description");
+		this->checkifEqual("GetFixtureTypeDescription ", description, "My Description");
 
 		MvrUUID fixtureId(0,0,0,0);
 		__checkVCOM(gdtfRead->GetFixtureGUID(fixtureId));
-		this->checkifEqual("GetFixtureGUID uuid.a", fixtureId.a, 225204211);
-		this->checkifEqual("GetFixtureGUID uuid.b", fixtureId.b, 177198167);
-		this->checkifEqual("GetFixtureGUID uuid.c", fixtureId.c, 1575790);
-		this->checkifEqual("GetFixtureGUID uuid.d", fixtureId.d, 96627);
+		this->checkifEqual("GetFixtureGUID uuid.a ", fixtureId.a, 225204211);
+		this->checkifEqual("GetFixtureGUID uuid.b ", fixtureId.b, 177198167);
+		this->checkifEqual("GetFixtureGUID uuid.c ", fixtureId.c, 1575790);
+		this->checkifEqual("GetFixtureGUID uuid.d ", fixtureId.d, 96627);
 		
 		MvrString pngFileName = gdtfRead->GetFixtureThumbnail();
-		this->checkifEqual("GetFixtureThumbnail", pngFileName, "My thumbnail");
+		this->checkifEqual("GetFixtureThumbnail ", pngFileName, "My thumbnail");
 
 		// TODO, how does the path to look exactly, i guess nothing fancy
 		MvrString fullPath = gdtfRead->GetFixtureThumbnail();
-		this->checkifEqual("GetFixtureThumbnail", fullPath, "My thumbnail");
+		this->checkifEqual("GetFixtureThumbnail ", fullPath, "My thumbnail");
 
 		MvrUUID linkedUuid(0, 0, 0, 0);
 		bool hasLinkedFixture = false;
 		__checkVCOM(gdtfRead->HasLinkedFixtureGUID(hasLinkedFixture));
 		__checkVCOM(gdtfRead->GetLinkedFixtureGUID(linkedUuid));
-		this->checkifEqual("GetFixtureGUID linkedUuid.a", linkedUuid.a, 2227440);
-		this->checkifEqual("GetFixtureGUID linkedUuid.b", linkedUuid.b, 1542265);
-		this->checkifEqual("GetFixtureGUID linkedUuid.c", linkedUuid.c, 1573622);
-		this->checkifEqual("GetFixtureGUID linkedUuid.d", linkedUuid.d, 2328410);
+		this->checkifEqual("GetFixtureGUID linkedUuid.a ", linkedUuid.a, 2227440);
+		this->checkifEqual("GetFixtureGUID linkedUuid.b ", linkedUuid.b, 1542265);
+		this->checkifEqual("GetFixtureGUID linkedUuid.c ", linkedUuid.c, 1573622);
+		this->checkifEqual("GetFixtureGUID linkedUuid.d ", linkedUuid.d, 2328410);
 
 		//--------------------------------------------------------------------------------
 		// Wheel Section
@@ -277,7 +266,7 @@ void GdtfUnittest::ReadFile()
 				if (__checkVCOM(gdtfRead->GetWheelAt(i, &gdtfWheel)))
 				{
 					MvrString wheelName = gdtfWheel->GetName();
-					this->checkifEqual("GetGdtfWheelName", wheelName, "My Wheel1");
+					this->checkifEqual("GetGdtfWheelName ", wheelName, "My Wheel1");
 
 					size_t countSlots = 0;
 					__checkVCOM(gdtfWheel->GetWheelSlotCount(countSlots));
@@ -287,16 +276,16 @@ void GdtfUnittest::ReadFile()
 						__checkVCOM(gdtfWheel->GetWheelSlotAt(j, &gdtfSlot));
 
 						MvrString slotName = gdtfSlot->GetName();
-						this->checkifEqual("GetGdtfSlotName", slotName, "My WheelSlot1Wheel1");
+						this->checkifEqual("GetGdtfSlotName ", slotName, "My WheelSlot1Wheel1");
 
 						CieColor color;
 						color.fx = 0;
 						color.fy = 0;
 						color.f_Y = 0;
 						__checkVCOM(gdtfSlot->GetColor(color));
-						this->checkifEqual("GetWheelSlot1Wheel1ColorFx",color.fx, 0.500000);
-						this->checkifEqual("GetWheelSlot1Wheel1ColorFy",color.fy, 0.424242);
-						this->checkifEqual("GetWheelSlot1Wheel1ColorFY", color.f_Y, 1.000000);
+						this->checkifEqual("GetWheelSlot1Wheel1ColorFx ",color.fx, 0.500000);
+						this->checkifEqual("GetWheelSlot1Wheel1ColorFy ",color.fy, 0.424242);
+						this->checkifEqual("GetWheelSlot1Wheel1ColorFY ", color.f_Y, 1.000000);
 
 
 						size_t prismFacetCount = 0;
@@ -311,27 +300,24 @@ void GdtfUnittest::ReadFile()
 								color.fy = 0;
 								color.f_Y = 0;
 								__checkVCOM(prismFacet->GetColor(color));
-								this->checkifEqual("GetWheelSlotPrismFacetColorFx",color.fx, 0.424242);
-								this->checkifEqual("GetWheelSlotPrismFacetColorFy",color.fy, 1.000000);
-								this->checkifEqual("GeWheelSlotPrismFacetColorFY", color.f_Y, 0.500000);
+								this->checkifEqual("GetWheelSlotPrismFacetColorFx ",color.fx, 0.424242);
+								this->checkifEqual("GetWheelSlotPrismFacetColorFy ",color.fy, 1.000000);
+								this->checkifEqual("GeWheelSlotPrismFacetColorFY ", color.f_Y, 0.500000);
 
+								// no "ox, oy, oz" entries here
 								STransformMatrix matrix;
 								__checkVCOM(prismFacet->GetTransformMatrix(matrix));
-								this->checkifEqual("GetTransformMatrix.ux", matrix.ux, 1);
-								this->checkifEqual("GetTransformMatrix.uy", matrix.uy, 2);
-								this->checkifEqual("GetTransformMatrix.uz", matrix.uz, 3);
+								this->checkifEqual("GetTransformMatrix.ux ", matrix.ux, 1);
+								this->checkifEqual("GetTransformMatrix.uy ", matrix.uy, 2);
+								this->checkifEqual("GetTransformMatrix.uz ", matrix.uz, 3);
 
-								this->checkifEqual("GetTransformMatrix.vx", matrix.vx, 4);
-								this->checkifEqual("GetTransformMatrix.vy", matrix.vy, 5);
-								this->checkifEqual("GetTransformMatrix.vz", matrix.vz, 6);
+								this->checkifEqual("GetTransformMatrix.vx ", matrix.vx, 4);
+								this->checkifEqual("GetTransformMatrix.vy ", matrix.vy, 5);
+								this->checkifEqual("GetTransformMatrix.vz ", matrix.vz, 6);
 
-								this->checkifEqual("GetTransformMatrix.wx", matrix.wx, 7);
-								this->checkifEqual("GetTransformMatrix.wy", matrix.wy, 8);
-								this->checkifEqual("GetTransformMatrix.wz", matrix.wz, 9);
-
-								this->checkifEqual("GetTransformMatrix.ox", matrix.ox, 10);
-								this->checkifEqual("GetTransformMatrix.oy", matrix.oy, 11);
-								this->checkifEqual("GetTransformMatrix.oz", matrix.oz, 12);
+								this->checkifEqual("GetTransformMatrix.wx ", matrix.wx, 7);
+								this->checkifEqual("GetTransformMatrix.wy ", matrix.wy, 8);
+								this->checkifEqual("GetTransformMatrix.wz ", matrix.wz, 9);
 							}
 						} // Read PrismFacets
 					} // Count WheelSlot Loop
@@ -343,7 +329,7 @@ void GdtfUnittest::ReadFile()
 		// Geometry Section Section
 		size_t countGeo = 0;
 		__checkVCOM(gdtfRead->GetGeometryCount(countGeo));
-		this->checkifEqual("Geometry Count", countGeo, 3);
+		this->checkifEqual("Geometry Count ", countGeo, 3);
 
 		IGdtfGeometryPtr geo1;
 		__checkVCOM(gdtfRead->GetGeometryAt(0, &geo1));
@@ -359,7 +345,7 @@ void GdtfUnittest::ReadFile()
 			IGdtfGeometryPtr refedGeo;
 			if(__checkVCOM(geo2->GetGeometryReference(&refedGeo)))
 			{
-				this->checkifEqual("Geo Link", geo1->GetName(), refedGeo->GetName());
+				this->checkifEqual("Geo Link ", geo1->GetName(), refedGeo->GetName());
 			}			
 		}
 
