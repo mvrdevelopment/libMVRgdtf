@@ -128,8 +128,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFeatureImpl::GetFeatureGroup(IGdt
 	
 	
 	SceneData::GdtfFeatureGroupPtr gdtfGroup = fFeature->GetFeatureGroup();
-	
-	
+	if(!gdtfGroup) { return kVCOMError_NotSet; }
 	//---------------------------------------------------------------------------
 	// Initialize Object
 	CGdtfFeatureGroupImpl* pGroup = nullptr;
