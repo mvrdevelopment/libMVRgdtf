@@ -19,6 +19,8 @@ namespace VectorworksMVR
 		
 		virtual VCOMError VCOM_CALLTYPE		GetAttributeCount(size_t& count);
 		virtual VCOMError VCOM_CALLTYPE		GetAttributeAt(size_t at, IGdtfAttribute** attribute);
+        virtual VCOMError VCOM_CALLTYPE     GetFeatureGroup(IGdtfFeatureGroup** group);
+
 
         virtual VCOMError VCOM_CALLTYPE     SetName(MvrString name);        
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr);
