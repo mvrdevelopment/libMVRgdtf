@@ -3,6 +3,7 @@
 //-----------------------------------------------------------------------------
 #include "Prefix/StdAfx.h"
 #include "CGdtfFeature.h"
+#include "CGdtfFeatureGroup.h"
 #include "CGdtfAttribute.h"
 
 
@@ -116,6 +117,50 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFeatureImpl::GetAttributeAt(size_
 	//---------------------------------------------------------------------------
 	// Set Out Value
 	*attribute	= pAttributeObj;
+	
+	return kVCOMError_NoError;
+}
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFeatureImpl::GetFeatureGroup(IGdtfFeatureGroup** group)
+{
+	// Check if Set
+	if(!fFeature) {return kVCOMError_NotInitialized;}
+	
+	
+	
+	SceneData::GdtfFeatureGroupPtr gdtfGroup = fFeature->GetFeatureGroup();
+	if(!gdtfGroup) { return kVCOMError_NotSet; }
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CGdtfFeatureGroupImpl* pGroup = nullptr;
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfFeatureGroup, (IVWUnknown**) & pGroup)))
+	{
+		// Check Casting
+		CGdtfFeatureGroupImpl* pResultInterface = dynamic_cast<CGdtfFeatureGroupImpl* >(pGroup);
+		if (pResultInterface)
+		{
+			pResultInterface->setPointer(gdtfGroup);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incomming Object
+	if (*group)
+	{
+		(*group)->Release();
+		*group		= NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*group	= pGroup;
 	
 	return kVCOMError_NoError;
 }

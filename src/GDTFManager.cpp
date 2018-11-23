@@ -201,6 +201,11 @@ const TXString& GdtfFeature::GetName() const
 	return fName;
 }
 
+GdtfFeatureGroup* GdtfFeature::GetFeatureGroup() const
+{
+	return fParent;
+}
+
 const TGdtfAttributeArray& GdtfFeature::GetLinkedAttributes() const
 {
 	return fLinkedAttributes;
