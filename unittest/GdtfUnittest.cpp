@@ -546,9 +546,11 @@ void GdtfUnittest::ReadFile()
 
 								// Wheel
 								IGdtfWheelPtr gdtfWheel;
-								__checkVCOM(gdtfFunction->GetOnWheel(&gdtfWheel));
-								MvrString wheelName = gdtfWheel->GetName();
-								this->checkifEqual("gdtfWheelGetName ", wheelName, "My Wheel??");
+								if (__checkVCOM(gdtfFunction->GetOnWheel(&gdtfWheel)))
+								{
+									MvrString wheelName = gdtfWheel->GetName();
+									this->checkifEqual("gdtfWheelGetName ", wheelName, "My Wheel??");
+								}
 
 								// Emitter
 								IGdtfPhysicalEmitterPtr gdtfEmitter;
