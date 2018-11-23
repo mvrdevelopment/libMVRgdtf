@@ -131,6 +131,7 @@ namespace VectorworksMVR
 	const VCOMError		kVCOMError_NotSet				      = 461;
 	const VCOMError		kVCOMError_WrongGeometryType	      = 462;
     const VCOMError     kVCOMError_WrongRDMParameterValueType = 463;
+	const VCOMError     kVCOMError_SlaveMasterNotInSameMode   = 464;
 
 
 	// ---------------------------------------------------------------------------------------------------

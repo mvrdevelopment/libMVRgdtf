@@ -272,6 +272,11 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxModeImpl::CreateDmxRelation(Mv
 
 	SceneData::GdtfDmxChannelFunction* gdtfFunc= dmxFunctionImpl->getPointer();
 	if ( ! gdtfFunc) { return kVCOMError_Failed; }   
+
+    // Check Pointers
+    if(gdtfDmxChan->GetParentMode() != fDmxMode)                        { return kVCOMError_SlaveMasterNotInSameMode; }
+    if(gdtfFunc->GetParentDMXChannel()->GetParentMode() != fDmxMode)    { return kVCOMError_SlaveMasterNotInSameMode; }
+    
 }
 
 void VectorworksMVR::CGdtfDmxModeImpl::setPointer(SceneData::GdtfDmxMode *dmxMode)
