@@ -176,8 +176,8 @@ void GdtfDmxUnittest::ReadFile()
 		// Check Attribute
 		IGdtfAttributePtr	gdtfAttribute;
 		__checkVCOM(gdtfRead->GetAttributeAt(0, &gdtfAttribute));
-		this->checkifEqual("gdtAttribute GetName() ", gdtfAttribute->GetName(), "Attribute");
-		this->checkifEqual("gdtAttribute GetName() ", gdtfAttribute->GetPrettyName(), "Pretty");
+		this->checkifEqual("gdtfAttribute GetName() ", gdtfAttribute->GetName(), "Attribute");
+		this->checkifEqual("gdtfAttribute GetName() ", gdtfAttribute->GetPrettyName(), "Pretty");
 
 
 		//------------------------------------------------------------------------------    
