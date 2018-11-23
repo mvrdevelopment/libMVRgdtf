@@ -217,6 +217,17 @@ void GdtfDmxUnittest::ReadFile()
 		} // Models loop
 
 
+		//--------------------------------------------------------------------------------
+		// Geometry Section
+		size_t countGeo = 0;
+		__checkVCOM(gdtfRead->GetGeometryCount(countGeo));
+		this->checkifEqual("Geometry Count ", countGeo, 1);
+
+		IGdtfGeometryPtr gdtfGeometry;
+		__checkVCOM(gdtfRead->GetGeometryAt(0, &gdtfGeometry));
+		this->checkifEqual("GetGeometryAtGetName() ", gdtfGeometry->GetName(), "Geometry");
+		
+
 		//------------------------------------------------------------------
 		// Get DMX Mode
 		size_t countDmxModes;
