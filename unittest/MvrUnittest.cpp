@@ -20,7 +20,6 @@ MvrUnittest::MvrUnittest(const std::string& currentDir)
 
 MvrUnittest::~MvrUnittest()
 {
-    
 }
 
 bool MvrUnittest::ExecuteTest()
@@ -65,7 +64,6 @@ void MvrUnittest::WriteFile()
         IClassPtr clas1 = nullptr;
         __checkVCOM(mvrWrite->CreateClassObject(MvrUUID(122074618, 11852014, 669377348, 947530087), "My first Class", & clas1));
 
-        
         IClassPtr clas2 = nullptr;
         __checkVCOM(mvrWrite->CreateClassObject(MvrUUID(122774618, 11892014, 669397348, 947530057), "My second Class", & clas2));
 
@@ -95,7 +93,6 @@ void MvrUnittest::WriteFile()
                 __checkVCOM(fixture1->SetFocusPoint(focusPoint));
             }
         }
-
     }
 	__checkVCOM(mvrWrite->Close());
 }
@@ -139,7 +136,5 @@ void MvrUnittest::ReadFile()
         {
             checkifEqual("Layer name", readLayer->GetName(), "My Layer 1");
         }
-	    
-
     }
 }
