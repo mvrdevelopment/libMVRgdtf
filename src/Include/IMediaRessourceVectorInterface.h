@@ -692,10 +692,6 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetDmxStart(GdtfDefines::DmxValue& start) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetDmxEnd(GdtfDefines::DmxValue& end) = 0;
 
-		virtual VCOMError VCOM_CALLTYPE     SetName(MvrString name) = 0;
-		virtual VCOMError VCOM_CALLTYPE     SetMasterChannel(IGdtfDmxChannel* newMaster)= 0;
-		virtual VCOMError VCOM_CALLTYPE     SetSlaveChannel(IGdtfDmxChannelFunction* newSlave)= 0;
-		virtual VCOMError VCOM_CALLTYPE     SetRelationType(GdtfDefines::EGdtfDmxRelationType type)= 0;
 		virtual VCOMError VCOM_CALLTYPE     SetDmxStart(GdtfDefines::DmxValue start)= 0;
 		virtual VCOMError VCOM_CALLTYPE     SetDmxEnd(GdtfDefines::DmxValue end)= 0;
 
@@ -718,6 +714,7 @@ namespace VectorworksMVR
         
         virtual VCOMError VCOM_CALLTYPE     GetDmxRelationCount(size_t& count) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetDmxRelationAt(size_t at, IGdtfDmxRelation** relation) = 0;
+		virtual VCOMError VCOM_CALLTYPE     CreateDmxRelation(MvrString name, GdtfDefines::EGdtfDmxRelationType type, IGdtfDmxChannel* master, IGdtfDmxChannelFunction* slave, IGdtfDmxRelation** relation) = 0;
 		
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;

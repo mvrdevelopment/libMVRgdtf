@@ -144,60 +144,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxRelationImpl::GetDmxEnd(DmxVal
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxRelationImpl::SetName(MvrString name)
-{
-	if ( ! fRelation) { return kVCOMError_NotInitialized; }
-
-    fRelation->SetName(name);
-    
-    return kVCOMError_NoError;
-}
-
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxRelationImpl::SetMasterChannel(IGdtfDmxChannel * newMaster)
-{
-	if ( ! fRelation) { return kVCOMError_NotInitialized; }
-	if ( ! newMaster) { return kVCOMError_InvalidArg; }
-        
-	// Cast
-	CGdtfDmxChannelImpl* dmxChanImpl = dynamic_cast<CGdtfDmxChannelImpl*>(newMaster);
-	if ( ! dmxChanImpl)		{ return kVCOMError_Failed; }
-	
-	// Set Object
-	SceneData::GdtfDmxChannel* gdtfDmxChan= dmxChanImpl->getPointer();
-	if ( ! gdtfDmxChan) { return kVCOMError_Failed; }    
-
-    fRelation->SetMasterChannel(gdtfDmxChan);
-    
-    return kVCOMError_NoError;
-}
-
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxRelationImpl::SetSlaveChannel(IGdtfDmxChannelFunction * newSlave)
-{
-	if ( ! fRelation) { return kVCOMError_NotInitialized; }
-    if ( ! newSlave)  { return kVCOMError_InvalidArg; }
-
-	// Cast
-	CGdtfDmxChannelFunctionImpl* dmxFunctionImpl = dynamic_cast<CGdtfDmxChannelFunctionImpl*>(newSlave);
-	if ( ! dmxFunctionImpl)		{ return kVCOMError_Failed; }
-	
-	// Set Object
-	SceneData::GdtfDmxChannelFunction* gdtfFunc= dmxFunctionImpl->getPointer();
-	if ( ! gdtfFunc) { return kVCOMError_Failed; } 
-    
-    fRelation->SetSlaveChannel(gdtfFunc);
-    
-    return kVCOMError_NoError;
-}
-
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxRelationImpl::SetRelationType(GdtfDefines::EGdtfDmxRelationType type)
-{
-	if ( ! fRelation) { return kVCOMError_NotInitialized; }
-	
-    fRelation->SetRelationType(type);
-
-    return kVCOMError_NoError;
-}
-
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxRelationImpl::SetDmxStart(DmxValue start)
 {
 	if ( ! fRelation) { return kVCOMError_NotInitialized; }

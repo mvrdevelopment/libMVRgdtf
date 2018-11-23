@@ -6,6 +6,8 @@
 #include "CGdtfGeometry.h"
 #include "CGdtfDmxChannel.h"
 #include "CGdtfDmxRelation.h"
+#include "CGdtfDmxChannelFunction.h"
+#include "CGdtfDmxChannel.h"
 
 
 using namespace VectorWorks::Filing;
@@ -249,6 +251,27 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxModeImpl::GetDmxRelationAt(siz
     *relation		= pDmxRelationObj;
     
     return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxModeImpl::CreateDmxRelation(MvrString name, GdtfDefines::EGdtfDmxRelationType type, IGdtfDmxChannel* master, IGdtfDmxChannelFunction* slave, IGdtfDmxRelation** relation)
+{
+    // Check incomming values
+    if ( ! master) { return kVCOMError_InvalidArg; }
+    if ( ! slave)  { return kVCOMError_InvalidArg; }
+        
+	// Cast
+	CGdtfDmxChannelImpl* dmxChanImpl = dynamic_cast<CGdtfDmxChannelImpl*>(master);
+	if ( ! dmxChanImpl)		{ return kVCOMError_Failed; }
+
+	CGdtfDmxChannelFunctionImpl* dmxFunctionImpl = dynamic_cast<CGdtfDmxChannelFunctionImpl*>(slave);
+	if ( ! dmxFunctionImpl)		{ return kVCOMError_Failed; }
+	
+	// Get Scene Objects
+	SceneData::GdtfDmxChannel* gdtfDmxChan= dmxChanImpl->getPointer();
+	if ( ! gdtfDmxChan) { return kVCOMError_Failed; }  
+
+	SceneData::GdtfDmxChannelFunction* gdtfFunc= dmxFunctionImpl->getPointer();
+	if ( ! gdtfFunc) { return kVCOMError_Failed; }   
 }
 
 void VectorworksMVR::CGdtfDmxModeImpl::setPointer(SceneData::GdtfDmxMode *dmxMode)
