@@ -20,8 +20,6 @@ bool Unittest::RunTest()
     std::cout << "============================================================================================" << std::endl;
     this->ExecuteTest();
 
-   
-   
    for(size_t i = 0; i < fFailedTests.size(); i++)
    {
        std::cout << fFailedTests[i].fMessage << std::endl;
@@ -41,23 +39,22 @@ else
 
 void Unittest::checkifEqual(const std::string& check, const Uint32 val1, const Uint32 val2)
 {
-    if(val1 == val2) return;
+	if (val1 == val2) return;
 
-    // Else Log the error
-    fFailed = true;
+	// Else Log the error
+	fFailed = true;
 
-    UnittestFailObject test;
-    test.fMessage += check;
-    test.fMessage += "Aspected: ";
-    test.fMessage += std::to_string(val1);
-    test.fMessage += " Result: ";
-    test.fMessage += std::to_string(val2);
+	UnittestFailObject test;
+	test.fMessage += check;
+	test.fMessage += "Aspected: ";
+	test.fMessage += std::to_string(val1);
+	test.fMessage += " Result: ";
+	test.fMessage += std::to_string(val2);
 
-    fFailedTests.push_back(test);
-
+	fFailedTests.push_back(test);
 };
 
-void Unittest::checkifEqual(const std::string& check, const size_t val1, const size_t val2)
+void Unittest::checkifEqual(const std::string& check, const double val1, const double val2)
 {
 	if (val1 == val2) return;
 
@@ -72,27 +69,57 @@ void Unittest::checkifEqual(const std::string& check, const size_t val1, const s
 	test.fMessage += std::to_string(val2);
 
 	fFailedTests.push_back(test);
-
 };
 
+void Unittest::checkifEqual(const std::string& check, const size_t val1, const size_t val2)
+{
+	if (val1 == val2) return;
+
+	// Else Log the error
+	fFailed = true;
+
+	UnittestFailObject test;
+	test.fMessage += check;
+	test.fMessage += " FAILED";
+
+	fFailedTests.push_back(test);
+};
+
+void Unittest::checkifEqual(const std::string& check, const VectorworksMVR::GdtfDefines::EGdtfModel_PrimitiveType val1, const VectorworksMVR::GdtfDefines::EGdtfModel_PrimitiveType val2)
+{
+	if (val1 == val2) return;
+
+	// Else Log the error
+	fFailed = true;
+
+	UnittestFailObject test;
+	test.fMessage += check;
+	test.fMessage += "Aspected: ";
+	test.fMessage += std::to_string(val1);
+	test.fMessage += " Result: ";
+	test.fMessage += std::to_string(val2);
+
+	fFailedTests.push_back(test);
+};
 
 void Unittest::checkifEqual(const std::string& check, const std::string& aspected, const std::string& result)
 {
-    if(aspected == result) return;
+	if (aspected == result) return;
 
-    // Else Log the error
-    fFailed = true;
+	// Else Log the error
+	fFailed = true;
 
-    UnittestFailObject test;
-    test.fMessage += check;
-    test.fMessage += "Aspected: ";
-    test.fMessage += aspected;
-    test.fMessage += " Result: ";
-    test.fMessage += result;
+	UnittestFailObject test;
+	test.fMessage += check;
+	test.fMessage += "Aspected: ";
+	test.fMessage += aspected;
+	test.fMessage += " Result: ";
+	test.fMessage += result;
 
-    fFailedTests.push_back(test);
+	fFailedTests.push_back(test);
 
 };
+
 
 bool Unittest::checkVCOM(VectorworksMVR::VCOMError error, const std::string& check)
 {
@@ -110,5 +137,21 @@ bool Unittest::checkVCOM(VectorworksMVR::VCOMError error, const std::string& che
     fFailedTests.push_back(test);
 
     return false;
+};
 
+void Unittest::checkifEqual(const std::string& check, void* val1, void* val2)
+{
+	if (val1 == val2) return;
+
+	// Else Log the error
+	fFailed = true;
+
+	UnittestFailObject test;
+	test.fMessage += check;
+	test.fMessage += "Aspected: ";
+	test.fMessage += (Uint64)val1;
+	test.fMessage += " Result: ";
+	test.fMessage += (Uint64)val1;
+
+	fFailedTests.push_back(test);
 };
