@@ -276,6 +276,48 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxModeImpl::CreateDmxRelation(Mv
     // Check Pointers
     if(gdtfDmxChan->GetParentMode() != fDmxMode)                        { return kVCOMError_SlaveMasterNotInSameMode; }
     if(gdtfFunc->GetParentDMXChannel()->GetParentMode() != fDmxMode)    { return kVCOMError_SlaveMasterNotInSameMode; }
+
+    // Now Create the new Relatation
+    TXString vwName (name);
+
+    SceneData::GdtfDmxRelation* gdtfDmxRelation = fDmxMode->AddDmxRelation(gdtfDmxChan, gdtfFunc, vwName);
+    gdtfDmxRelation->SetRelationType(type);
+
+     
+    //---------------------------------------------------------------------------
+    // Initialize Object
+    CGdtfDmxRelationImpl*		pDmxRelationObj = nullptr;
+    
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDmxRelation, (IVWUnknown**) & pDmxRelationObj)))
+    {
+        // Check Casting
+        CGdtfDmxRelationImpl* pResultInterface = dynamic_cast<CGdtfDmxRelationImpl* >(pDmxRelationObj);
+        if (pResultInterface)
+        {
+            pResultInterface->setPointer(gdtfDmxRelation);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+    
+    //---------------------------------------------------------------------------
+    // Check Incomming Object
+    if (*relation)
+    {
+        (*relation)->Release();
+        *relation		= NULL;
+    }
+    
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *relation		= pDmxRelationObj;
+    
+    return kVCOMError_NoError;
     
 }
 
