@@ -21,8 +21,7 @@ GdtfDmxUnittest::GdtfDmxUnittest(const std::string& currentDir)
 }
 
 GdtfDmxUnittest::~GdtfDmxUnittest()
-{
-    
+{  
 }
 
 bool GdtfDmxUnittest::ExecuteTest()
@@ -172,7 +171,7 @@ void GdtfDmxUnittest::ReadFile()
 		// Read the Attributes
 		size_t countAttributes = 0;
 		__checkVCOM(gdtfRead->GetAttributeCount(countAttributes));
-		this->checkifEqual("Check Count Attributes ", countAttributes, 1);
+		this->checkifEqual("Check Count Attributes ", countAttributes, size_t(1));
 
 		// Check Attribute
 		IGdtfAttributePtr	gdtfAttribute;
@@ -197,17 +196,17 @@ void GdtfDmxUnittest::ReadFile()
 				// Height
 				double heightVal = 0.0;
 				__checkVCOM(gdtfModel->GetHeight(heightVal));
-				this->checkifEqual("gdtfModelGetHeight ", heightVal, 0);
+				this->checkifEqual("gdtfModelGetHeight ", heightVal, double(0));
 
 				// Width
 				double widthVal = 0.0;
 				__checkVCOM(gdtfModel->GetWidth(widthVal));
-				this->checkifEqual("gdtfModelGetWidth ", widthVal, 0);
+				this->checkifEqual("gdtfModelGetWidth ", widthVal, double(0));
 
 				// Length
 				double lengthVal = 0.0;
 				__checkVCOM(gdtfModel->GetLength(lengthVal));
-				this->checkifEqual("gdtfModelGetLength ", lengthVal, 0);
+				this->checkifEqual("gdtfModelGetLength ", lengthVal, double(0));
 
 				// PrimitiveType
 				EGdtfModel_PrimitiveType primitiveType = EGdtfModel_PrimitiveType::eGdtfModel_PrimitiveType_Undefined;
@@ -221,7 +220,7 @@ void GdtfDmxUnittest::ReadFile()
 		// Geometry Section
 		size_t countGeo = 0;
 		__checkVCOM(gdtfRead->GetGeometryCount(countGeo));
-		this->checkifEqual("Geometry Count ", countGeo, 1);
+		this->checkifEqual("Geometry Count ", countGeo, size_t(1));
 
 		IGdtfGeometryPtr gdtfGeometry;
 		__checkVCOM(gdtfRead->GetGeometryAt(0, &gdtfGeometry));
@@ -232,14 +231,14 @@ void GdtfDmxUnittest::ReadFile()
 		// Get DMX Mode
 		size_t countDmxModes;
 		__checkVCOM(gdtfRead->GetDmxModeCount(countDmxModes));
-		this->checkifEqual("Check Count DMX Modes", 1, countDmxModes);
+		this->checkifEqual("Check Count DMX Modes", countDmxModes, size_t(1));
 
 		IGdtfDmxModePtr mode;
 		__checkVCOM(gdtfRead->GetDmxModeAt(0, &mode));
 
 		size_t countChannels = 0;
 		__checkVCOM(mode->GetDmxChannelCount(countChannels));
-		this->checkifEqual("Check Count DMX Channels", 2, countChannels);
+		this->checkifEqual("Check Count DMX Channels", countChannels, size_t(2));
 		
 
 		//----------------------------------------------------------------
@@ -262,7 +261,7 @@ void GdtfDmxUnittest::ReadFile()
 		// Check DMX Channel Sets
 		size_t countChannelSets = 0;
 		__checkVCOM(bit16Function->GetDmxChannelSetCount(countChannelSets));
-		this->checkifEqual("Check Count DMX Channels", 6, countChannelSets);
+		this->checkifEqual("Check Count DMX Channels", countChannelSets, size_t(6));
 
 		IGdtfDmxChannelSetPtr bit16ChannelSet1;
 		__checkVCOM(bit16Function->GetDmxChannelSetAt(0, &bit16ChannelSet1)); 
@@ -324,7 +323,7 @@ void GdtfDmxUnittest::Check8bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxCh
 	// Get Logical Channels
 	size_t count = 0;
 	__checkVCOM(dmxChannel->GetLogicalChannelCount(count));
-	this->checkifEqual("Count Logical Channels", 2, count);
+	this->checkifEqual("Count Logical Channels", count, size_t(2));
 
 	IGdtfDmxLogicalChannelPtr bit8LogicalChannel1;
 	__checkVCOM(dmxChannel->GetLogicalChannelAt(0, &bit8LogicalChannel1));
@@ -335,10 +334,10 @@ void GdtfDmxUnittest::Check8bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxCh
 	// ---------------------------------------------------------------------------
 	// Get Functions
 	__checkVCOM(bit8LogicalChannel1->GetDmxFunctionCount(count));
-	this->checkifEqual("Count Function Count", 2, count);
+	this->checkifEqual("Count Function Count", count, size_t(2));
 
 	__checkVCOM(bit8LogicalChannel2->GetDmxFunctionCount(count));
-	this->checkifEqual("Count Function Count", 2, count);
+	this->checkifEqual("Count Function Count", count, size_t(2));
 
 	IGdtfDmxChannelFunctionPtr bit8Function1;
 	__checkVCOM(bit8LogicalChannel1->GetDmxFunctionAt(0, &bit8Function1));
@@ -359,7 +358,7 @@ void GdtfDmxUnittest::Check8bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxCh
 	// ---------------------------------------------------------------------------
 	// Check Channel Set Count bit8Function1
 	__checkVCOM(bit8Function1->GetDmxChannelSetCount(count));
-	this->checkifEqual("bit8Function1 Count Channel Set", 5, count);
+	this->checkifEqual("bit8Function1 Count Channel Set", count, size_t(5));
 
 	IGdtfDmxChannelSetPtr bit8ChannelSet1;
 	__checkVCOM(bit8Function1->GetDmxChannelSetAt(0, &bit8ChannelSet1));
@@ -384,7 +383,7 @@ void GdtfDmxUnittest::Check8bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxCh
 	// ---------------------------------------------------------------------------
 	// Check Channel Set Count bit8Function2
 	__checkVCOM(bit8Function2->GetDmxChannelSetCount(count));
-	this->checkifEqual("bit8Function2 Count Channel Set", 5, count);
+	this->checkifEqual("bit8Function2 Count Channel Set", count, size_t(5));
 
 	IGdtfDmxChannelSetPtr bit8ChannelSet6;
 	__checkVCOM(bit8Function2->GetDmxChannelSetAt(0, &bit8ChannelSet1));
@@ -408,7 +407,7 @@ void GdtfDmxUnittest::Check8bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxCh
 	// ---------------------------------------------------------------------------
 	// Check Channel Set Count bit8Function3
 	__checkVCOM(bit8Function3->GetDmxChannelSetCount(count));
-	this->checkifEqual("bit8Function3 Count Channel Set", 5, count);
+	this->checkifEqual("bit8Function3 Count Channel Set", count, size_t(5));
 
 	IGdtfDmxChannelSetPtr bit8ChannelSet11;
 	__checkVCOM(bit8Function3->GetDmxChannelSetAt(0, &bit8ChannelSet11));
@@ -433,7 +432,7 @@ void GdtfDmxUnittest::Check8bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxCh
 	// ---------------------------------------------------------------------------
 	// Check Channel Set Count bit8Function4
 	__checkVCOM(bit8Function4->GetDmxChannelSetCount(count));
-	this->checkifEqual("bit8Function4 Count Channel Set", 6, count);
+	this->checkifEqual("bit8Function4 Count Channel Set", count, size_t(6));
 
 	IGdtfDmxChannelSetPtr bit8ChannelSet16;
 	__checkVCOM(bit8Function4->GetDmxChannelSetAt(0, &bit8ChannelSet16));

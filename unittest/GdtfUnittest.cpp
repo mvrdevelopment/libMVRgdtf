@@ -261,10 +261,10 @@ void GdtfUnittest::ReadFile()
 
 		MvrUUID fixtureId(0,0,0,0);
 		__checkVCOM(gdtfRead->GetFixtureGUID(fixtureId));
-		this->checkifEqual("GetFixtureGUID uuid.a "		, fixtureId.a		, 225204211);
-		this->checkifEqual("GetFixtureGUID uuid.b "		, fixtureId.b		, 177198167);
-		this->checkifEqual("GetFixtureGUID uuid.c "		, fixtureId.c		, 1575790);
-		this->checkifEqual("GetFixtureGUID uuid.d "		, fixtureId.d		, 96627);
+		this->checkifEqual("GetFixtureGUID uuid.a "		, fixtureId.a		, Uint32(225204211));
+		this->checkifEqual("GetFixtureGUID uuid.b "		, fixtureId.b		, Uint32(177198167));
+		this->checkifEqual("GetFixtureGUID uuid.c "		, fixtureId.c		, Uint32(1575790));
+		this->checkifEqual("GetFixtureGUID uuid.d "		, fixtureId.d		, Uint32(96627));
 		
 		// Get the Image from GDTF File
 		MvrString pngFileName		= gdtfRead->GetFixtureThumbnail();
@@ -276,10 +276,10 @@ void GdtfUnittest::ReadFile()
 		bool hasLinkedFixture = false;
 		__checkVCOM(gdtfRead->HasLinkedFixtureGUID(hasLinkedFixture));
 		__checkVCOM(gdtfRead->GetLinkedFixtureGUID(linkedUuid));
-		this->checkifEqual("GetFixtureGUID linkedUuid.a ", linkedUuid.a, 2227440);
-		this->checkifEqual("GetFixtureGUID linkedUuid.b ", linkedUuid.b, 1542265);
-		this->checkifEqual("GetFixtureGUID linkedUuid.c ", linkedUuid.c, 1573622);
-		this->checkifEqual("GetFixtureGUID linkedUuid.d ", linkedUuid.d, 2328410);
+		this->checkifEqual("GetFixtureGUID linkedUuid.a ", linkedUuid.a, Uint32(2227440));
+		this->checkifEqual("GetFixtureGUID linkedUuid.b ", linkedUuid.b, Uint32(1542265));
+		this->checkifEqual("GetFixtureGUID linkedUuid.c ", linkedUuid.c, Uint32(1573622));
+		this->checkifEqual("GetFixtureGUID linkedUuid.d ", linkedUuid.d, Uint32(2328410));
 
 
 		//--------------------------------------------------------------------------------
@@ -336,17 +336,17 @@ void GdtfUnittest::ReadFile()
 								// no "ox, oy, oz" entries here
 								STransformMatrix matrix;
 								__checkVCOM(prismFacet->GetTransformMatrix(matrix));
-								this->checkifEqual("GetTransformMatrix.ux ", matrix.ux, 1);
-								this->checkifEqual("GetTransformMatrix.uy ", matrix.uy, 2);
-								this->checkifEqual("GetTransformMatrix.uz ", matrix.uz, 3);
+								this->checkifEqual("GetTransformMatrix.ux ", matrix.ux, double(1));
+								this->checkifEqual("GetTransformMatrix.uy ", matrix.uy, double(2));
+								this->checkifEqual("GetTransformMatrix.uz ", matrix.uz, double(3));
 
-								this->checkifEqual("GetTransformMatrix.vx ", matrix.vx, 4);
-								this->checkifEqual("GetTransformMatrix.vy ", matrix.vy, 5);
-								this->checkifEqual("GetTransformMatrix.vz ", matrix.vz, 6);
+								this->checkifEqual("GetTransformMatrix.vx ", matrix.vx, double(4));
+								this->checkifEqual("GetTransformMatrix.vy ", matrix.vy, double(5));
+								this->checkifEqual("GetTransformMatrix.vz ", matrix.vz, double(6));
 
-								this->checkifEqual("GetTransformMatrix.wx ", matrix.wx, 7);
-								this->checkifEqual("GetTransformMatrix.wy ", matrix.wy, 8);
-								this->checkifEqual("GetTransformMatrix.wz ", matrix.wz, 9);
+								this->checkifEqual("GetTransformMatrix.wx ", matrix.wx, double(7));
+								this->checkifEqual("GetTransformMatrix.wy ", matrix.wy, double(8));
+								this->checkifEqual("GetTransformMatrix.wz ", matrix.wz, double(9));
 							}
 						} // PrismFacets loop
 					} // WheelSlot loop
@@ -385,11 +385,11 @@ void GdtfUnittest::ReadFile()
 					{
 						double waveLength_Val = 0;
 						__checkVCOM(emitterMeasurement->GetWaveLength(waveLength_Val));
-						this->checkifEqual("GetWaveLength ", waveLength_Val, 100);		// only for object valid, because of hardcoded wavelength and energy
+						this->checkifEqual("GetWaveLength ", waveLength_Val, double(100));		// only for object valid, because of hardcoded wavelength and energy
 
 						double energy_Val = 0;
 						__checkVCOM(emitterMeasurement->GetEnergy(energy_Val));
-						this->checkifEqual("GetEnergy ", energy_Val, 200);				// only for object valid, because of hardcoded wavelength and energy
+						this->checkifEqual("GetEnergy ", energy_Val, double(200));				// only for object valid, because of hardcoded wavelength and energy
 					}
 				} // measurements loop
 			}
@@ -407,12 +407,14 @@ void GdtfUnittest::ReadFile()
 			{
 				// Set the name
 				MvrString dmxModeName = gdtfDmxMode->GetName();
+				this->checkifEqual("gdtfDmxModeGetName ", dmxModeName, "My DmxModeName");
 
 				// Set the Geomytry
 				IGdtfGeometryPtr gdtfGeometry;
 				if (__checkVCOM(gdtfDmxMode->GetGeometry(&gdtfGeometry)))
 				{
 					MvrString dmxModeGeometry = gdtfGeometry->GetName();
+					this->checkifEqual("dmxModeGeometryGetName ", dmxModeGeometry, "My nameGeometry");
 				}
 
 				//------------------------------------------------------------------------------ 
@@ -426,59 +428,69 @@ void GdtfUnittest::ReadFile()
 
 					// Set the name
 					MvrString dmxChannelName = gdtfDmxChannel->GetName();
+					this->checkifEqual("gdtfDmxChannelGetName ", dmxChannelName, "My nameGeometry_My attributeName");
 
 					// Set the geometry
-					MvrString	geometryName;
 					IGdtfGeometryPtr	geometryPtr;
 					if (__checkVCOM(gdtfDmxChannel->GetGeometry(&geometryPtr)))
 					{
-						geometryName = geometryPtr->GetName();
+						MvrString geometryName = geometryPtr->GetName();
+						this->checkifEqual("geometryPtrGetName ", geometryName, "My nameGeometry");
 					}
 
 					// Move In Black Frames
 					double moveInBlack = 0;
 					__checkVCOM(gdtfDmxChannel->GetMoveInBlackFrames(moveInBlack));
-
-					Sint32 dmxBreak = moveInBlack;
+					this->checkifEqual("gdtfDmxChannelGetMoveInBlackFrames ", moveInBlack, double(8));
 
 					// Coarse
 					Sint32 coarse;
 					__checkVCOM(gdtfDmxChannel->GetCoarse(coarse));
+					this->checkifEqual("gdtfDmxChannelGetCoarse ", coarse, 1);
 
 					// Fine
 					Sint32 fine;
 					__checkVCOM(gdtfDmxChannel->GetFine(fine));
+					this->checkifEqual("gdtfDmxChannelGetFine ", fine, 2);
 
 					// Ultra
 					Sint32 ultra;
 					__checkVCOM(gdtfDmxChannel->GetUltra(ultra));
+					this->checkifEqual("gdtfDmxChannelGetUltra ", ultra, 3);
 
 					// Uber
 					Sint32 uber;
 					__checkVCOM(gdtfDmxChannel->GetUber(uber));
+					this->checkifEqual("gdtfDmxChannelGetUber ", uber, 4);
 
 					// DMX Frequency
 					EGdtfDmxFrequency freq;
 					__checkVCOM(gdtfDmxChannel->GetDmxFrequency(freq));
+					this->checkifEqual("gdtfDmxChannelGetDmxFrequency ", freq, EGdtfDmxFrequency::eGdtfDmxFrequency_30);
 
 					// Default Value
 					GdtfDefines::DmxValue def;
 					__checkVCOM(gdtfDmxChannel->GetDefaultValue(def));
+					this->checkifEqual("gdtfDmxChannelGetDefaultValue ", def, GdtfDefines::DmxValue(5));
 
 					// Highlight
 					GdtfDefines::DmxValue highlight;
 					__checkVCOM(gdtfDmxChannel->GetHighlight(highlight));
+					this->checkifEqual("gdtfDmxChannelGetHighlight ", highlight, GdtfDefines::DmxValue(6));
 
 					bool hasHighlight = false;
 					__checkVCOM(gdtfDmxChannel->HasHighlight(hasHighlight));
+					this->checkifEqual("gdtfDmxChannelHasHighlight ", hasHighlight, 1);
 
 					// DMX Change Time Limit
 					double change;
 					__checkVCOM(gdtfDmxChannel->GetDmxChangeTimeLimit(change));
+					this->checkifEqual("gdtfDmxChannelGetDmxChangeTimeLimit ", change, double(9));
 
 					// DMX Break
 					Sint32 breakId;
 					__checkVCOM(gdtfDmxChannel->GetDmxBreak(breakId));
+					this->checkifEqual("gdtfDmxChannelGetDmxBreak ", breakId, 7);
 
 					//------------------------------------------------------------------------------    
 					// Add the Logical Channels
@@ -491,21 +503,25 @@ void GdtfUnittest::ReadFile()
 
 						// Set the name
 						MvrString logicalChannelName = gdtfLogicalChannel->GetName();
+						this->checkifEqual("gdtfLogicalChannelGetName ", logicalChannelName, "My attributeName");
 
 						// Attribute
 						IGdtfAttributePtr gdtfAttribute;
 						if (__checkVCOM(gdtfLogicalChannel->GetAttribute(&gdtfAttribute)))
 						{
 							MvrString logicalChannelName = gdtfAttribute->GetName();
+							this->checkifEqual("gdtfAttributeGetName ", logicalChannelName, "My attributeName");
 						}
 
 						// DMX Snap
 						EGdtfDmxSnap snap;
 						__checkVCOM(gdtfLogicalChannel->GetDmxSnap(snap));
+						this->checkifEqual("gdtfLogicalChannelGetDmxSnap ", snap, EGdtfDmxSnap::eGdtfDmxMaster_On);
 
 						// DMX Master
 						EGdtfDmxMaster master;
 						__checkVCOM(gdtfLogicalChannel->GetDmxMaster(master));
+						this->checkifEqual("gdtfLogicalChannelGetDmxMaster ", master, EGdtfDmxMaster::eGdtfDmxMaster_Grand);
 
 						//------------------------------------------------------------------------------    
 						// Add the Features 
@@ -514,99 +530,117 @@ void GdtfUnittest::ReadFile()
 						for (size_t j = 0; j < countFeatures; j++)
 						{
 							IGdtfDmxChannelFunctionPtr gdtfFunction;
-							__checkVCOM(gdtfLogicalChannel->GetDmxFunctionAt(j, &gdtfFunction));
-
-							// Set the name
-							MvrString featureName = gdtfFunction->GetName();
-
-							// Attribute
-							IGdtfAttributePtr gdtfAttribute;
-							if (__checkVCOM(gdtfFunction->GetAttribute(&gdtfAttribute)))
+							if (__checkVCOM(gdtfLogicalChannel->GetDmxFunctionAt(j, &gdtfFunction)))
 							{
-								MvrString attributeName = gdtfAttribute->GetName();
-							}
-
-							// Wheel
-							IGdtfWheelPtr gdtfWheel;
-							if (__checkVCOM(gdtfFunction->GetOnWheel(&gdtfWheel)))
-							{
-								MvrString wheelName = gdtfWheel->GetName();
-							}
-
-							// Emitter
-							IGdtfPhysicalEmitterPtr gdtfEmitter;
-							if (__checkVCOM(gdtfFunction->GetEmitter(&gdtfEmitter)))
-							{
-								MvrString emitterName = gdtfEmitter->GetName();
-							}
-
-							//OriginalAttrbute
-							MvrString ogAttribute = gdtfFunction->GetOriginalAttribute();
-
-							//Start Address
-							GdtfDefines::DMXAddress dmxStartAddress;
-							__checkVCOM(gdtfFunction->GetStartAddress(dmxStartAddress));
-
-							//physical Start
-							double physicalStart;
-							__checkVCOM(gdtfFunction->GetPhysicalStart(physicalStart));
-
-							//physical End
-							double physicalEnd;
-							__checkVCOM(gdtfFunction->GetPhysicalEnd(physicalEnd));
-
-							//real Fade
-							double realFade;
-							__checkVCOM(gdtfFunction->GetRealFade(realFade));
-
-							// DMX Invert
-							EGDTFDmxInvert dmxInv;
-							__checkVCOM(gdtfFunction->GetDMXInvert(dmxInv));
-
-							// Encoder Invert
-							EGDTFEncoderInvert encInv;
-							__checkVCOM(gdtfFunction->GetEncoderInvert(encInv));
-
-							//------------------------------------------------------------------------------    
-							// Add the ChannelSets 
-							size_t countChannelSets = 0;
-							__checkVCOM(gdtfFunction->GetDmxChannelSetCount(countChannelSets));
-
-
-							std::vector<IGdtfDmxChannelSetPtr> gdtfChannelSets;
-							for (size_t j = 0; j < countChannelSets; j++)
-							{
-								IGdtfDmxChannelSetPtr gdtfChannelSet;
-								__checkVCOM(gdtfFunction->GetDmxChannelSetAt(j, &gdtfChannelSet));
-
-								std::string channelSetName = gdtfChannelSet->GetName();
-								if (!channelSetName.empty()) { gdtfChannelSets.push_back(gdtfChannelSet); }
-							}
-
-							for (size_t j = 0; j < gdtfChannelSets.size(); j++)
-							{
-								IGdtfDmxChannelSetPtr gdtfChannelSet = gdtfChannelSets[j];
-
 								// Set the name
-								MvrString channelSetName = gdtfChannelSet->GetName();
+								MvrString featureName = gdtfFunction->GetName();
+								this->checkifEqual("gdtfFunctionGetName ", featureName, "My nameDmxFunction");
 
-								GdtfDefines::DMXAddress startAddr;
-								__checkVCOM(gdtfChannelSet->GetDmxStartAddress(startAddr));
+								// Attribute
+								IGdtfAttributePtr gdtfAttribute;
+								if (__checkVCOM(gdtfFunction->GetAttribute(&gdtfAttribute)))
+								{
+									MvrString attributeName = gdtfAttribute->GetName();
+									this->checkifEqual("gdtfAttributeGetName ", attributeName, "My attributeName");
+								}
 
-								GdtfDefines::DMXAddress endAddr;
-								__checkVCOM(gdtfChannelSet->GetDmxEndAddress(endAddr));
+								// Wheel
+								IGdtfWheelPtr gdtfWheel;
+								if (__checkVCOM(gdtfFunction->GetOnWheel(&gdtfWheel)))
+								{
+									MvrString wheelName = gdtfWheel->GetName();
+									this->checkifEqual("gdtfWheelGetName ", wheelName, "My Wheel??");
+								}
 
+								// Emitter
+								IGdtfPhysicalEmitterPtr gdtfEmitter;
+								if (__checkVCOM(gdtfFunction->GetEmitter(&gdtfEmitter)))
+								{
+									MvrString emitterName = gdtfEmitter->GetName();
+									this->checkifEqual("gdtfEmitterGetName ", emitterName, "My Emitter??");
+								}
+
+								//OriginalAttribute
+								MvrString ogAttribute = gdtfFunction->GetOriginalAttribute();
+								this->checkifEqual("gdtfFunctionGetOriginalAttribute ", ogAttribute, "My orginalAttribute");
+
+								//Start Address
+								GdtfDefines::DMXAddress dmxStartAddress;
+								__checkVCOM(gdtfFunction->GetStartAddress(dmxStartAddress));
+								this->checkifEqual("gdtfFunctionGetStartAddress ", dmxStartAddress, GdtfDefines::DMXAddress(1));
+
+								//physical Start
 								double physicalStart;
-								__checkVCOM(gdtfChannelSet->GetPhysicalStart(physicalStart));
+								__checkVCOM(gdtfFunction->GetPhysicalStart(physicalStart));
+								this->checkifEqual("gdtfFunctionGetPhysicalStart ", physicalStart, double(2));
 
+								//physical End
 								double physicalEnd;
-								__checkVCOM(gdtfChannelSet->GetPhysicalEnd(physicalEnd));
-								
-								bool isSet = false;
-								__checkVCOM(gdtfChannelSet->GetUsePhysicalFromParent(isSet));
-								
-								Sint32 wheelSlotIndex;
-								__checkVCOM(gdtfChannelSet->GetWheelSlot(wheelSlotIndex));
+								__checkVCOM(gdtfFunction->GetPhysicalEnd(physicalEnd));
+								this->checkifEqual("gdtfFunctionGetPhysicalEnd ", physicalEnd, double(3));
+
+								//real Fade
+								double realFade;
+								__checkVCOM(gdtfFunction->GetRealFade(realFade));
+								this->checkifEqual("gdtfFunctionGetRealFade ", realFade, double(4));
+
+								// DMX Invert
+								EGDTFDmxInvert dmxInv;
+								__checkVCOM(gdtfFunction->GetDMXInvert(dmxInv));
+								this->checkifEqual("gdtfFunctionGetDMXInvert ", dmxInv, EGDTFDmxInvert::eGDTFDmxInvert_No);
+
+								// Encoder Invert
+								EGDTFEncoderInvert encInv;
+								__checkVCOM(gdtfFunction->GetEncoderInvert(encInv));
+								this->checkifEqual("gdtfFunctionGetEncoderInvert ", encInv, EGDTFEncoderInvert::eGDTFEncoderInvert_Yes);
+
+								//------------------------------------------------------------------------------    
+								// Add the ChannelSets 
+								size_t countChannelSets = 0;
+								__checkVCOM(gdtfFunction->GetDmxChannelSetCount(countChannelSets));
+
+								std::vector<IGdtfDmxChannelSetPtr> gdtfChannelSets;
+								for (size_t j = 0; j < countChannelSets; j++)
+								{
+									IGdtfDmxChannelSetPtr gdtfChannelSet;
+									__checkVCOM(gdtfFunction->GetDmxChannelSetAt(j, &gdtfChannelSet));
+
+									std::string channelSetName = gdtfChannelSet->GetName();
+									if (!channelSetName.empty()) { gdtfChannelSets.push_back(gdtfChannelSet); }
+								}
+
+								for (size_t j = 0; j < gdtfChannelSets.size(); j++)
+								{
+									IGdtfDmxChannelSetPtr gdtfChannelSet = gdtfChannelSets[j];
+
+									// Set the name
+									MvrString channelSetName = gdtfChannelSet->GetName();
+									this->checkifEqual("gdtfChannelSetGetName ", channelSetName, "My nameDmxChannelSet");
+
+									GdtfDefines::DMXAddress startAddr;
+									__checkVCOM(gdtfChannelSet->GetDmxStartAddress(startAddr));
+									this->checkifEqual("gdtfChannelSetGetDmxStartAddress ", startAddr, GdtfDefines::DMXAddress(1));
+
+									GdtfDefines::DMXAddress endAddr;
+									__checkVCOM(gdtfChannelSet->GetDmxEndAddress(endAddr));
+									this->checkifEqual("gdtfChannelSetGetDmxEndAddress ", endAddr, GdtfDefines::DMXAddress(2));
+
+									double physicalStart;
+									__checkVCOM(gdtfChannelSet->GetPhysicalStart(physicalStart));
+									this->checkifEqual("gdtfChannelSetGetPhysicalStart ", physicalStart, double(10));
+
+									double physicalEnd;
+									__checkVCOM(gdtfChannelSet->GetPhysicalEnd(physicalEnd));
+									this->checkifEqual("gdtfChannelSetGetPhysicalEnd ", physicalEnd, double(20));
+
+									bool isSet = false;
+									__checkVCOM(gdtfChannelSet->GetUsePhysicalFromParent(isSet));
+									this->checkifEqual("gdtfChannelSetGetUsePhysicalFromParent ", isSet, 0);
+
+									Sint32 wheelSlotIndex;
+									__checkVCOM(gdtfChannelSet->GetWheelSlot(wheelSlotIndex));
+									this->checkifEqual("gdtfChannelSetGetWheelSlot ", wheelSlotIndex, 11);
+								}
 							}
 						}
 					}
@@ -624,6 +658,7 @@ void GdtfUnittest::ReadFile()
 
 					// Set the name
 					MvrString dmxRelationName = gdtfRelation->GetName();
+					this->checkifEqual("gdtfRelationGetName ", dmxRelationName, "Relation");
 
 					// Get Master Channel
 					IGdtfDmxChannelPtr	master;
@@ -644,14 +679,21 @@ void GdtfUnittest::ReadFile()
 					// Relation Type
 					EGdtfDmxRelationType rel;
 					__checkVCOM(gdtfRelation->GetRelationType(rel));
+					this->checkifEqual("gdtfRelationGetRelationType ", rel, EGdtfDmxRelationType::eGdtfDmxRelationType_Override);
 					
 					// DMX Start
-					Sint32 start;
-					__checkVCOM(gdtfRelation->GetDmxStart(start));
-				
+					GdtfDefines::DmxValue start;
+					if (__checkVCOM(gdtfRelation->GetDmxStart(start)))
+					{
+						this->checkifEqual("gdtfRelationGetDmxStart ", start, GdtfDefines::DmxValue(1234));
+					}
+
 					// DMX End
-					Sint32 end;
-					__checkVCOM(gdtfRelation->GetDmxEnd(end));
+					GdtfDefines::DmxValue end;
+					if (__checkVCOM(gdtfRelation->GetDmxEnd(end)))
+					{
+						this->checkifEqual("gdtfRelationGetDmxEnd ", end, GdtfDefines::DmxValue(1234));
+					}
 				}
 			}
 		}
@@ -674,7 +716,7 @@ void GdtfUnittest::ReadFile()
 				// Add the Attributes
 				size_t countMainAttributes = 0;
 				__checkVCOM(gdtfActivationGroups->GetAttributeCount(countMainAttributes));
-				this->checkifEqual("Check Count Attributes", countMainAttributes, 2);
+				this->checkifEqual("Check Count Attributes", countMainAttributes, size_t(2));
 
 				// Check Main Attribute
 				IGdtfAttributePtr	gdtfMainAttribute;
@@ -749,17 +791,17 @@ void GdtfUnittest::ReadFile()
 				// Height
 				double heightVal = 0.0;
 				__checkVCOM(gdtfModel->GetHeight(heightVal));
-				this->checkifEqual("gdtfModelGetHeight ", heightVal, 10);
+				this->checkifEqual("gdtfModelGetHeight ", heightVal, double(10));
 
 				// Width
 				double widthVal = 0.0;
 				__checkVCOM(gdtfModel->GetWidth(widthVal));
-				this->checkifEqual("gdtfModelGetWidth ", widthVal, 20);
+				this->checkifEqual("gdtfModelGetWidth ", widthVal, double(20));
 
 				// Length
 				double lengthVal = 0.0;
 				__checkVCOM(gdtfModel->GetLength(lengthVal));
-				this->checkifEqual("gdtfModelGetLength ", lengthVal, 30);
+				this->checkifEqual("gdtfModelGetLength ", lengthVal, double(30));
 
 				// PrimitiveType
 				EGdtfModel_PrimitiveType primitiveType = EGdtfModel_PrimitiveType::eGdtfModel_PrimitiveType_Undefined;
@@ -773,7 +815,7 @@ void GdtfUnittest::ReadFile()
 		// Geometry Section
 		size_t countGeo = 0;
 		__checkVCOM(gdtfRead->GetGeometryCount(countGeo));
-		this->checkifEqual("Geometry Count ", countGeo, 3);
+		this->checkifEqual("Geometry Count ", countGeo, size_t(3));
 
 		IGdtfGeometryPtr geo1;
 		__checkVCOM(gdtfRead->GetGeometryAt(0, &geo1));
