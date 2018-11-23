@@ -183,7 +183,8 @@ void GdtfUnittest::WriteFile()
 		{
 			__checkVCOM(gdtfDmxMode->SetGeometry(childGeo));
 			
-			IGdtfDmxChannelPtr gdtfDmxChannel;
+			IGdtfDmxChannelPtr 			gdtfDmxChannel;
+			IGdtfDmxChannelFunctionPtr	gdftChannelFunction;
 			if (__checkVCOM(gdtfDmxMode->CreateDmxChannel("My DmxChannelName", &gdtfDmxChannel)))
 			{
 				__checkVCOM(gdtfDmxChannel->SetCoarse(1));
@@ -205,7 +206,7 @@ void GdtfUnittest::WriteFile()
 					__checkVCOM(gdtfLogicalChannel->SetDmxMaster(EGdtfDmxMaster::eGdtfDmxMaster_Grand));
 					__checkVCOM(gdtfLogicalChannel->SetDmxSnap(EGdtfDmxSnap::eGdtfDmxMaster_On));
 
-					IGdtfDmxChannelFunctionPtr gdftChannelFunction;
+					
 					if (__checkVCOM(gdtfLogicalChannel->CreateDmxFunction("My nameDmxFunction", &gdftChannelFunction)))
 					{
 						IGdtfAttributePtr attribute;
@@ -228,6 +229,10 @@ void GdtfUnittest::WriteFile()
 					}
 				}
 			}
+
+			// Add Relation
+			IGdtfDmxRelationPtr relation;
+			__checkVCOM(gdtfDmxMode->CreateDmxRelation("Relation", EGdtfDmxRelationType::eGdtfDmxRelationType_Override, gdtfDmxChannel, gdftChannelFunction, & relation));
 		}
 
 
