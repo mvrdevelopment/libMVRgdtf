@@ -408,30 +408,36 @@ void GdtfUnittest::ReadFile()
 				// Add the Attributes
 				size_t countMainAttributes = 0;
 				__checkVCOM(gdtfActivationGroups->GetAttributeCount(countMainAttributes));
-				for (size_t i = 0; i < countMainAttributes; i++)
+				this->checkifEqual("Check Count Attributes", countMainAttributes, 2);
+
+				// Check Main Attribute
+				IGdtfAttributePtr	gdtfMainAttribute;
+				__checkVCOM(gdtfActivationGroups->GetAttributeAt(0, &gdtfMainAttribute));
+				this->checkifEqual("gdtfMainAttribute GetName()"		, gdtfMainAttribute->GetName()			, "My MainAttributeName");
+
+				double lyLinkTest = 0;
+				gdtfMainAttribute->BindToObject( & lyLinkTest);
+
+
+				// Check Slave Attribute
+				IGdtfAttributePtr	gdtfSlaveAttribute;
+				__checkVCOM(gdtfActivationGroups->GetAttributeAt(1, &gdtfSlaveAttribute));
+				this->checkifEqual("gdtfSlaveAttribute GetName() ", gdtfSlaveAttribute->GetPrettyName()	, "My attributePrettyName");
+
+				IGdtfAttributePtr linkedAttribute;
+				if(__checkVCOM(gdtfSlaveAttribute->GetMainAttribute(&linkedAttribute)))
 				{
-					IGdtfAttributePtr	gdtfMainAttribute;
-					__checkVCOM(gdtfActivationGroups->GetAttributeAt(i, &gdtfMainAttribute));
+					this->checkifEqual("Name Main Attribute", linkedAttribute->GetName() , "My MainAttributeName");
 
-					MvrString attributeName			= gdtfMainAttribute->GetName();
-					MvrString attributePrettyName	= gdtfMainAttribute->GetPrettyName();
-					this->checkifEqual("gdtfMainAttributeGetName "		, attributeName			, "My MainAttributeName");
-					this->checkifEqual("gdtfMainAttributeGetPrettyName ", attributePrettyName	, "My MainAttributePrettyName");
+					this->checkifEqual("Check Bind Behavoir", linkedAttribute->GetBoundObject(), (void*)&lyLinkTest );
 				}
+				
+
+				
 
 
-				size_t countAttributes = 0;
-				__checkVCOM(gdtfActivationGroups->GetAttributeCount(countAttributes));
-				for (size_t i = 0; i < countAttributes; i++)
-				{
-					IGdtfAttributePtr gdtfAttribute;
-					__checkVCOM(gdtfActivationGroups->GetAttributeAt(i, &gdtfAttribute));
+					
 
-					MvrString attributeName			= gdtfAttribute->GetName();
-					MvrString attributePrettyName	= gdtfAttribute->GetPrettyName();
-					this->checkifEqual("gdtfAttributeGetName "		, attributeName			, "My attributeName");
-					this->checkifEqual("gdtfAttributeGetPrettyName ", attributePrettyName	, "My attributePrettyName");
-				}
 			}
 		} // ActivationsGroups loop
 
