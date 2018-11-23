@@ -397,6 +397,267 @@ void GdtfUnittest::ReadFile()
 
 
 		//------------------------------------------------------------------------------    
+		// Fill with DMX
+		size_t dmxModesCount = 0;
+		__checkVCOM(gdtfRead->GetDmxModeCount(dmxModesCount));
+		for (size_t i = 0; i < dmxModesCount; i++)
+		{
+			IGdtfDmxModePtr gdtfDmxMode;
+			if (__checkVCOM(gdtfRead->GetDmxModeAt(i, &gdtfDmxMode)))
+			{
+				// Set the name
+				MvrString dmxModeName = gdtfDmxMode->GetName();
+
+				// Set the Geomytry
+				IGdtfGeometryPtr gdtfGeometry;
+				if (__checkVCOM(gdtfDmxMode->GetGeometry(&gdtfGeometry)))
+				{
+					MvrString dmxModeGeometry = gdtfGeometry->GetName();
+				}
+
+				//------------------------------------------------------------------------------ 
+				// Add the Dmx Channels
+				size_t countDmxChannels = 0;
+				__checkVCOM(gdtfDmxMode->GetDmxChannelCount(countDmxChannels));
+				for (size_t i = 0; i < countDmxChannels; i++)
+				{
+					IGdtfDmxChannelPtr gdtfDmxChannel;
+					__checkVCOM(gdtfDmxMode->GetDmxChannelAt(i, &gdtfDmxChannel));
+
+					// Set the name
+					MvrString dmxChannelName = gdtfDmxChannel->GetName();
+
+					// Set the geometry
+					MvrString	geometryName;
+					IGdtfGeometryPtr	geometryPtr;
+					if (__checkVCOM(gdtfDmxChannel->GetGeometry(&geometryPtr)))
+					{
+						geometryName = geometryPtr->GetName();
+					}
+
+					// Move In Black Frames
+					double moveInBlack = 0;
+					__checkVCOM(gdtfDmxChannel->GetMoveInBlackFrames(moveInBlack));
+
+					Sint32 dmxBreak = moveInBlack;
+
+					// Coarse
+					Sint32 coarse;
+					__checkVCOM(gdtfDmxChannel->GetCoarse(coarse));
+
+					// Fine
+					Sint32 fine;
+					__checkVCOM(gdtfDmxChannel->GetFine(fine));
+
+					// Ultra
+					Sint32 ultra;
+					__checkVCOM(gdtfDmxChannel->GetUltra(ultra));
+
+					// Uber
+					Sint32 uber;
+					__checkVCOM(gdtfDmxChannel->GetUber(uber));
+
+					// DMX Frequency
+					EGdtfDmxFrequency freq;
+					__checkVCOM(gdtfDmxChannel->GetDmxFrequency(freq));
+
+					// Default Value
+					GdtfDefines::DmxValue def;
+					__checkVCOM(gdtfDmxChannel->GetDefaultValue(def));
+
+					// Highlight
+					GdtfDefines::DmxValue highlight;
+					__checkVCOM(gdtfDmxChannel->GetHighlight(highlight));
+
+					bool hasHighlight = false;
+					__checkVCOM(gdtfDmxChannel->HasHighlight(hasHighlight));
+
+					// DMX Change Time Limit
+					double change;
+					__checkVCOM(gdtfDmxChannel->GetDmxChangeTimeLimit(change));
+
+					// DMX Break
+					Sint32 breakId;
+					__checkVCOM(gdtfDmxChannel->GetDmxBreak(breakId));
+
+					//------------------------------------------------------------------------------    
+					// Add the Logical Channels
+					size_t countLogicalChannels = 0;
+					__checkVCOM(gdtfDmxChannel->GetLogicalChannelCount(countLogicalChannels));
+					for (size_t j = 0; j < countLogicalChannels; j++)
+					{
+						IGdtfDmxLogicalChannelPtr gdtfLogicalChannel;
+						__checkVCOM(gdtfDmxChannel->GetLogicalChannelAt(j, &gdtfLogicalChannel));
+
+						// Set the name
+						MvrString logicalChannelName = gdtfLogicalChannel->GetName();
+
+						// Attribute
+						IGdtfAttributePtr gdtfAttribute;
+						if (__checkVCOM(gdtfLogicalChannel->GetAttribute(&gdtfAttribute)))
+						{
+							MvrString logicalChannelName = gdtfAttribute->GetName();
+						}
+
+						// DMX Snap
+						EGdtfDmxSnap snap;
+						__checkVCOM(gdtfLogicalChannel->GetDmxSnap(snap));
+
+						// DMX Master
+						EGdtfDmxMaster master;
+						__checkVCOM(gdtfLogicalChannel->GetDmxMaster(master));
+
+						//------------------------------------------------------------------------------    
+						// Add the Features 
+						size_t countFeatures = 0;
+						__checkVCOM(gdtfLogicalChannel->GetDmxFunctionCount(countFeatures));
+						for (size_t j = 0; j < countFeatures; j++)
+						{
+							IGdtfDmxChannelFunctionPtr gdtfFunction;
+							__checkVCOM(gdtfLogicalChannel->GetDmxFunctionAt(j, &gdtfFunction));
+
+							// Set the name
+							MvrString featureName = gdtfFunction->GetName();
+
+							// Attribute
+							IGdtfAttributePtr gdtfAttribute;
+							if (__checkVCOM(gdtfFunction->GetAttribute(&gdtfAttribute)))
+							{
+								MvrString attributeName = gdtfAttribute->GetName();
+							}
+
+							// Wheel
+							IGdtfWheelPtr gdtfWheel;
+							if (__checkVCOM(gdtfFunction->GetOnWheel(&gdtfWheel)))
+							{
+								MvrString wheelName = gdtfWheel->GetName();
+							}
+
+							// Emitter
+							IGdtfPhysicalEmitterPtr gdtfEmitter;
+							if (__checkVCOM(gdtfFunction->GetEmitter(&gdtfEmitter)))
+							{
+								MvrString emitterName = gdtfEmitter->GetName();
+							}
+
+							//OriginalAttrbute
+							MvrString ogAttribute = gdtfFunction->GetOriginalAttribute();
+
+							//Start Address
+							GdtfDefines::DMXAddress dmxStartAddress;
+							__checkVCOM(gdtfFunction->GetStartAddress(dmxStartAddress));
+
+							//physical Start
+							double physicalStart;
+							__checkVCOM(gdtfFunction->GetPhysicalStart(physicalStart));
+
+							//physical End
+							double physicalEnd;
+							__checkVCOM(gdtfFunction->GetPhysicalEnd(physicalEnd));
+
+							//real Fade
+							double realFade;
+							__checkVCOM(gdtfFunction->GetRealFade(realFade));
+
+							// DMX Invert
+							EGDTFDmxInvert dmxInv;
+							__checkVCOM(gdtfFunction->GetDMXInvert(dmxInv));
+
+							// Encoder Invert
+							EGDTFEncoderInvert encInv;
+							__checkVCOM(gdtfFunction->GetEncoderInvert(encInv));
+
+							//------------------------------------------------------------------------------    
+							// Add the ChannelSets 
+							size_t countChannelSets = 0;
+							__checkVCOM(gdtfFunction->GetDmxChannelSetCount(countChannelSets));
+
+
+							std::vector<IGdtfDmxChannelSetPtr> gdtfChannelSets;
+							for (size_t j = 0; j < countChannelSets; j++)
+							{
+								IGdtfDmxChannelSetPtr gdtfChannelSet;
+								__checkVCOM(gdtfFunction->GetDmxChannelSetAt(j, &gdtfChannelSet));
+
+								std::string channelSetName = gdtfChannelSet->GetName();
+								if (!channelSetName.empty()) { gdtfChannelSets.push_back(gdtfChannelSet); }
+							}
+
+							for (size_t j = 0; j < gdtfChannelSets.size(); j++)
+							{
+								IGdtfDmxChannelSetPtr gdtfChannelSet = gdtfChannelSets[j];
+
+								// Set the name
+								MvrString channelSetName = gdtfChannelSet->GetName();
+
+								GdtfDefines::DMXAddress startAddr;
+								__checkVCOM(gdtfChannelSet->GetDmxStartAddress(startAddr));
+
+								GdtfDefines::DMXAddress endAddr;
+								__checkVCOM(gdtfChannelSet->GetDmxEndAddress(endAddr));
+
+								double physicalStart;
+								__checkVCOM(gdtfChannelSet->GetPhysicalStart(physicalStart));
+
+								double physicalEnd;
+								__checkVCOM(gdtfChannelSet->GetPhysicalEnd(physicalEnd));
+								
+								bool isSet = false;
+								__checkVCOM(gdtfChannelSet->GetUsePhysicalFromParent(isSet));
+								
+								Sint32 wheelSlotIndex;
+								__checkVCOM(gdtfChannelSet->GetWheelSlot(wheelSlotIndex));
+							}
+						}
+					}
+				}
+
+
+				//------------------------------------------------------------------------------ 
+				// Add the Dmx Relations
+				size_t countRelations = 0;
+				__checkVCOM(gdtfDmxMode->GetDmxRelationCount(countRelations));
+				for (size_t i = 0; i < countRelations; i++)
+				{
+					IGdtfDmxRelationPtr gdtfRelation;
+					__checkVCOM(gdtfDmxMode->GetDmxRelationAt(i, &gdtfRelation));
+
+					// Set the name
+					MvrString dmxRelationName = gdtfRelation->GetName();
+
+					// Get Master Channel
+					IGdtfDmxChannelPtr	master;
+					MvrString	masterStr;
+					if (__checkVCOM(gdtfRelation->GetMasterChannel(&master)))
+					{
+						masterStr = master->GetName();
+					}
+
+					// Get Slave ChannelFunction
+					IGdtfDmxChannelFunctionPtr slave;
+					MvrString                slaveStr;
+					if (__checkVCOM(gdtfRelation->GetSlaveChannel(&slave)))
+					{
+						slaveStr = slave->GetName();
+					}
+					
+					// Relation Type
+					EGdtfDmxRelationType rel;
+					__checkVCOM(gdtfRelation->GetRelationType(rel));
+					
+					// DMX Start
+					Sint32 start;
+					__checkVCOM(gdtfRelation->GetDmxStart(start));
+				
+					// DMX End
+					Sint32 end;
+					__checkVCOM(gdtfRelation->GetDmxEnd(end));
+				}
+			}
+		}
+
+
+		//------------------------------------------------------------------------------    
 		// Fill Activation Groups Section
 		size_t countActivationsGroups = 0;
 		__checkVCOM(gdtfRead->GetActivationGroupCount(countActivationsGroups));
