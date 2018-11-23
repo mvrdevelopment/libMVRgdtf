@@ -60,6 +60,11 @@ void GdtfUnittest::WriteFile()
 		{
 			__checkVCOM(gdtfFeatureGroup->CreateFeature("My featureName", &gdtfFeature));
 		}
+
+		IGdtfAttributePtr gdtfMainAttribute;
+		if (__checkVCOM(gdtfWrite->CreateAttribute("Main", "Main", &gdtfMainAttribute)))
+		{
+		}
 		
 		IGdtfAttributePtr gdtfAttribute;
 		if (__checkVCOM(gdtfWrite->CreateAttribute("My nameAttribute", "My prettyNameAttribute", &gdtfAttribute)))
@@ -74,7 +79,8 @@ void GdtfUnittest::WriteFile()
 			cieCol.f_Y = 0.424242;
 			__checkVCOM(gdtfAttribute->SetColor(cieCol));	//TODO maybe
 
-			// Child TODO maybe
+			gdtfAttribute->SetMainAttribute(gdtfMainAttribute);
+			// TODO: CHeck if this comes thru
 		}
 
 		//------------------------------------------------------------------------------    
