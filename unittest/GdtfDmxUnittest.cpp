@@ -168,6 +168,55 @@ void GdtfDmxUnittest::ReadFile()
     IGdtfFixturePtr gdtfRead (IID_IGdtfFixture);
     if(__checkVCOM(gdtfRead->ReadFromFile(fPath.c_str())))
     {
+		//------------------------------------------------------------------------------ 
+		// Read the Attributes
+		size_t countAttributes = 0;
+		__checkVCOM(gdtfRead->GetAttributeCount(countAttributes));
+		this->checkifEqual("Check Count Attributes ", countAttributes, 1);
+
+		// Check Attribute
+		IGdtfAttributePtr	gdtfAttribute;
+		__checkVCOM(gdtfRead->GetAttributeAt(0, &gdtfAttribute));
+		this->checkifEqual("gdtAttribute GetName() ", gdtfAttribute->GetName(), "Attribute");
+		this->checkifEqual("gdtAttribute GetName() ", gdtfAttribute->GetPrettyName(), "Pretty");
+
+
+		//------------------------------------------------------------------------------    
+		// Extract Geometry & Models
+		size_t countModels = 0;
+		__checkVCOM(gdtfRead->GetModelCount(countModels));
+		for (size_t i = 0; i < countModels; i++)
+		{
+			IGdtfModelPtr gdtfModel;
+			if (__checkVCOM(gdtfRead->GetModelAt(i, &gdtfModel)))
+			{
+				MvrString  modelName = gdtfModel->GetName();
+				MvrString geometryFile = gdtfModel->Get3DSGeometryFile();
+				this->checkifEqual("gdtfModelGetName ", modelName, "Model");
+
+				// Height
+				double heightVal = 0.0;
+				__checkVCOM(gdtfModel->GetHeight(heightVal));
+				this->checkifEqual("gdtfModelGetHeight ", heightVal, 0);
+
+				// Width
+				double widthVal = 0.0;
+				__checkVCOM(gdtfModel->GetWidth(widthVal));
+				this->checkifEqual("gdtfModelGetWidth ", widthVal, 0);
+
+				// Length
+				double lengthVal = 0.0;
+				__checkVCOM(gdtfModel->GetLength(lengthVal));
+				this->checkifEqual("gdtfModelGetLength ", lengthVal, 0);
+
+				// PrimitiveType
+				EGdtfModel_PrimitiveType primitiveType = EGdtfModel_PrimitiveType::eGdtfModel_PrimitiveType_Undefined;
+				__checkVCOM(gdtfModel->GetPrimitiveType(primitiveType));
+				this->checkifEqual("gdtfModelGetPrimitiveType ", primitiveType, EGdtfModel_PrimitiveType::eGdtfModel_PrimitiveType_Undefined);
+			}
+		} // Models loop
+
+
 		//------------------------------------------------------------------
 		// Get DMX Mode
 		size_t countDmxModes;

@@ -418,7 +418,7 @@ void GdtfUnittest::ReadFile()
 				// Check Main Attribute
 				IGdtfAttributePtr	gdtfMainAttribute;
 				__checkVCOM(gdtfActivationGroups->GetAttributeAt(0, &gdtfMainAttribute));
-				this->checkifEqual("gdtfMainAttribute GetName()"		, gdtfMainAttribute->GetName()			, "My MainAttributeName");
+				this->checkifEqual("gdtfMainAttribute GetName()", gdtfMainAttribute->GetName(), "My MainAttributeName");
 
 				double lyLinkTest = 0;
 				gdtfMainAttribute->BindToObject( & lyLinkTest);
@@ -436,13 +436,6 @@ void GdtfUnittest::ReadFile()
 
 					this->checkifEqual("Check Bind Behavoir", linkedAttribute->GetBoundObject(), (void*)&lyLinkTest );
 				}
-				
-
-				
-
-
-					
-
 			}
 		} // ActivationsGroups loop
 
