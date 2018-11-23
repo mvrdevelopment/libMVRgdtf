@@ -20,8 +20,6 @@ bool Unittest::RunTest()
     std::cout << "============================================================================================" << std::endl;
     this->ExecuteTest();
 
-   
-   
    for(size_t i = 0; i < fFailedTests.size(); i++)
    {
        std::cout << fFailedTests[i].fMessage << std::endl;
@@ -54,7 +52,6 @@ void Unittest::checkifEqual(const std::string& check, const Uint32 val1, const U
 	test.fMessage += std::to_string(val2);
 
 	fFailedTests.push_back(test);
-
 };
 
 void Unittest::checkifEqual(const std::string& check, const double val1, const double val2)
@@ -72,7 +69,6 @@ void Unittest::checkifEqual(const std::string& check, const double val1, const d
 	test.fMessage += std::to_string(val2);
 
 	fFailedTests.push_back(test);
-
 };
 
 void Unittest::checkifEqual(const std::string& check, const size_t val1, const size_t val2)
@@ -90,7 +86,6 @@ void Unittest::checkifEqual(const std::string& check, const size_t val1, const s
 	test.fMessage += std::to_string(val2);
 
 	fFailedTests.push_back(test);
-
 };
 
 void Unittest::checkifEqual(const std::string& check, const VectorworksMVR::GdtfDefines::EGdtfModel_PrimitiveType val1, const VectorworksMVR::GdtfDefines::EGdtfModel_PrimitiveType val2)
@@ -108,7 +103,6 @@ void Unittest::checkifEqual(const std::string& check, const VectorworksMVR::Gdtf
 	test.fMessage += std::to_string(val2);
 
 	fFailedTests.push_back(test);
-
 };
 
 void Unittest::checkifEqual(const std::string& check, const std::string& aspected, const std::string& result)
@@ -146,5 +140,4 @@ bool Unittest::checkVCOM(VectorworksMVR::VCOMError error, const std::string& che
     fFailedTests.push_back(test);
 
     return false;
-
 };

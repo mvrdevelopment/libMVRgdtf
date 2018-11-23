@@ -22,7 +22,6 @@ GdtfUnittest::GdtfUnittest(const std::string& currentDir)
 
 GdtfUnittest::~GdtfUnittest()
 {
-    
 }
 
 bool GdtfUnittest::ExecuteTest()
@@ -40,8 +39,8 @@ void GdtfUnittest::WriteFile()
 	// Create Pointer to GDTF Interface
 	IGdtfFixturePtr gdtfWrite (IID_IGdtfFixture);
 
-    MvrUUID uuid (225204211, 177198167, 1575790, 96627);
-	MvrUUID linkedUuid (2227440, 1542265, 1573622, 2328410);
+    MvrUUID uuid		(225204211	, 177198167	, 1575790	, 96627);
+	MvrUUID linkedUuid	(2227440	, 1542265	, 1573622	, 2328410);
     if(__checkVCOM(gdtfWrite->OpenForWrite(fPath.c_str(),"My FixtureName","My Manufacturer", uuid)))
     {
 		__checkVCOM(gdtfWrite->SetFixtureTypeDescription("My Description"));
@@ -61,13 +60,22 @@ void GdtfUnittest::WriteFile()
 			__checkVCOM(gdtfFeatureGroup->CreateFeature("My featureName", &gdtfFeature));
 		}
 
-		IGdtfAttributePtr gdtfMainAttribute;
-		if (__checkVCOM(gdtfWrite->CreateAttribute("Main", "Main", &gdtfMainAttribute)))
+		IGdtfAttributePtr		gdtfMainAttribute;
+		if (__checkVCOM(gdtfWrite->CreateAttribute("My MainAttributeName", "My MainAttributePrettyName", &gdtfMainAttribute)))
 		{
+			__checkVCOM(gdtfMainAttribute->SetActivationGroup(gdtfActGroup));
+			__checkVCOM(gdtfMainAttribute->SetFeature(gdtfFeature));
+			__checkVCOM(gdtfMainAttribute->SetPhysicalUnit(EGdtfPhysicalUnit::Acceleration));
+
+			CieColor cieCol;
+			cieCol.fx	= 0.1;
+			cieCol.fy	= 0.2;
+			cieCol.f_Y	= 0.3;
+			__checkVCOM(gdtfMainAttribute->SetColor(cieCol));
 		}
 		
-		IGdtfAttributePtr gdtfAttribute;
-		if (__checkVCOM(gdtfWrite->CreateAttribute("My nameAttribute", "My prettyNameAttribute", &gdtfAttribute)))
+		IGdtfAttributePtr		gdtfAttribute;
+		if (__checkVCOM(gdtfWrite->CreateAttribute("My attributeName", "My attributePrettyName", &gdtfAttribute)))
 		{
 			__checkVCOM(gdtfAttribute->SetActivationGroup(gdtfActGroup));
 			__checkVCOM(gdtfAttribute->SetFeature(gdtfFeature));
@@ -77,9 +85,9 @@ void GdtfUnittest::WriteFile()
 			cieCol.fx  = 1.0;
 			cieCol.fy  = 0.5;
 			cieCol.f_Y = 0.424242;
-			__checkVCOM(gdtfAttribute->SetColor(cieCol));	//TODO maybe
+			__checkVCOM(gdtfAttribute->SetColor(cieCol));
 
-			gdtfAttribute->SetMainAttribute(gdtfMainAttribute);
+			__checkVCOM(gdtfAttribute->SetMainAttribute(gdtfMainAttribute));
 			// TODO: CHeck if this comes thru
 		}
 
@@ -124,7 +132,7 @@ void GdtfUnittest::WriteFile()
 		color.fx = 1.0;
 		color.fy = 0.5;
 		color.f_Y = 0.424242;
-		if (__checkVCOM(gdtfWrite->CreateEmitter("My nameEmitter", color, &gdtfEmitter)))
+		if (__checkVCOM(gdtfWrite->CreateEmitter("My emitterName", color, &gdtfEmitter)))
 		{
 			IGdtfMeasurementPointPtr gdtfMeasurement;
 			__checkVCOM(gdtfEmitter->CreateMeasurementPoint(100, 200, &gdtfMeasurement));
@@ -134,7 +142,7 @@ void GdtfUnittest::WriteFile()
 		//------------------------------------------------------------------------------------------------------------------
 		// Handle Models
 		IGdtfModelPtr gdtfModel;
-		if (__checkVCOM(gdtfWrite->CreateModel("My nameModel", &gdtfModel)))
+		if (__checkVCOM(gdtfWrite->CreateModel("My modelName", &gdtfModel)))
 		{
 			__checkVCOM(gdtfModel->Set3DSGeometryFile("My file3DSGeometry"));
 			__checkVCOM(gdtfModel->SetHeight(10));
@@ -143,9 +151,9 @@ void GdtfUnittest::WriteFile()
 			__checkVCOM(gdtfModel->SetPrimitiveType(EGdtfModel_PrimitiveType::eGdtfModel_PrimitiveType_Sphere));
 		}
 
+
 		//------------------------------------------------------------------------------------------------------------------
 		// Handle Geometry
-		
 		STransformMatrix ma;
 		ma.ux = 1;ma.vx = 4;ma.wx = 7;ma.ox = 10;
 		ma.uy = 2;ma.vy = 5;ma.wy = 8;ma.oy = 11;
@@ -171,12 +179,12 @@ void GdtfUnittest::WriteFile()
 		//------------------------------------------------------------------------------
 		// Get dmxModes
 		IGdtfDmxModePtr gdtfDmxMode;
-		if (__checkVCOM(gdtfWrite->CreateDmxMode("My nameDmxMode", &gdtfDmxMode)))
+		if (__checkVCOM(gdtfWrite->CreateDmxMode("My DmxModeName", &gdtfDmxMode)))
 		{
 			__checkVCOM(gdtfDmxMode->SetGeometry(childGeo));
 			
 			IGdtfDmxChannelPtr gdtfDmxChannel;
-			if (__checkVCOM(gdtfDmxMode->CreateDmxChannel("My nameDmxChannel", &gdtfDmxChannel)))
+			if (__checkVCOM(gdtfDmxMode->CreateDmxChannel("My DmxChannelName", &gdtfDmxChannel)))
 			{
 				__checkVCOM(gdtfDmxChannel->SetCoarse(1));
 				__checkVCOM(gdtfDmxChannel->SetFine(2));
@@ -237,28 +245,27 @@ void GdtfUnittest::ReadFile()
     if(__checkVCOM(gdtfRead->ReadFromFile(fPath.c_str())))
     {
 		// Check Fixture Name
-		MvrString fixtureName = gdtfRead->GetName();
-		this->checkifEqual("GetName ", fixtureName, "My FixtureName");
-		MvrString fixtureShortName = gdtfRead->GetShortName();
-		this->checkifEqual("GetShortName ", fixtureShortName, "My shortName");
-		MvrString manufacturer = gdtfRead->GetManufacturer();
-		this->checkifEqual("GetManufacturer ", manufacturer, "My Manufacturer");
-		MvrString description = gdtfRead->GetFixtureTypeDescription();
-		this->checkifEqual("GetFixtureTypeDescription ", description, "My Description");
+		MvrString fixtureName		= gdtfRead->GetName();
+		MvrString fixtureShortName	= gdtfRead->GetShortName();
+		MvrString manufacturer		= gdtfRead->GetManufacturer();
+		MvrString description		= gdtfRead->GetFixtureTypeDescription();
+		this->checkifEqual("GetName "					, fixtureName		, "My FixtureName");
+		this->checkifEqual("GetShortName "				, fixtureShortName	, "My shortName");
+		this->checkifEqual("GetManufacturer "			, manufacturer		, "My Manufacturer");
+		this->checkifEqual("GetFixtureTypeDescription "	, description		, "My Description");
 
 		MvrUUID fixtureId(0,0,0,0);
 		__checkVCOM(gdtfRead->GetFixtureGUID(fixtureId));
-		this->checkifEqual("GetFixtureGUID uuid.a ", fixtureId.a, 225204211);
-		this->checkifEqual("GetFixtureGUID uuid.b ", fixtureId.b, 177198167);
-		this->checkifEqual("GetFixtureGUID uuid.c ", fixtureId.c, 1575790);
-		this->checkifEqual("GetFixtureGUID uuid.d ", fixtureId.d, 96627);
+		this->checkifEqual("GetFixtureGUID uuid.a "		, fixtureId.a		, 225204211);
+		this->checkifEqual("GetFixtureGUID uuid.b "		, fixtureId.b		, 177198167);
+		this->checkifEqual("GetFixtureGUID uuid.c "		, fixtureId.c		, 1575790);
+		this->checkifEqual("GetFixtureGUID uuid.d "		, fixtureId.d		, 96627);
 		
-		// TODO, how does the path to look exactly, i guess nothing fancy
 		// Get the Image from GDTF File
-		MvrString pngFileName = gdtfRead->GetFixtureThumbnail();
-		this->checkifEqual("GetFixtureThumbnail ", pngFileName, "My thumbnail");
-		MvrString fullPath = gdtfRead->GetFixtureThumbnail();
-		this->checkifEqual("GetFixtureThumbnail ", fullPath, "My thumbnail");
+		MvrString pngFileName		= gdtfRead->GetFixtureThumbnail();
+		MvrString fullPath			= gdtfRead->GetFixtureThumbnail();
+		this->checkifEqual("GetFixtureThumbnail "		, pngFileName		, "My thumbnail");
+		this->checkifEqual("GetFixtureThumbnail "		, fullPath			, "My thumbnail");
 
 		MvrUUID linkedUuid(0, 0, 0, 0);
 		bool hasLinkedFixture = false;
@@ -353,7 +360,7 @@ void GdtfUnittest::ReadFile()
 			if (__checkVCOM(gdtfRead->GetEmitterAt(i, &gdtfEmitter)))
 			{
 				MvrString emitterName = gdtfEmitter->GetName();
-				this->checkifEqual("gdtfEmitterGetName ", emitterName, "My nameEmitter");
+				this->checkifEqual("gdtfEmitterGetName ", emitterName, "My emitterName");
 
 				CieColor color;
 				color.fx = 0;
@@ -368,26 +375,20 @@ void GdtfUnittest::ReadFile()
 				__checkVCOM(gdtfEmitter->GetMeasurementPointCount(measurementsCount));
 				for (size_t j = 0; j < measurementsCount; j++)
 				{
-					// Todo: loop unsauber, da nur ein object und hardcoded 100 und 200
 					IGdtfMeasurementPointPtr emitterMeasurement;
 					if (__checkVCOM(gdtfEmitter->GetMeasurementPointAt(j, &emitterMeasurement)))
 					{
 						double waveLength_Val = 0;
 						__checkVCOM(emitterMeasurement->GetWaveLength(waveLength_Val));
-						this->checkifEqual("GetWaveLength ", waveLength_Val, 100);
+						this->checkifEqual("GetWaveLength ", waveLength_Val, 100);		// only for object valid, because of hardcoded wavelength and energy
 
 						double energy_Val = 0;
 						__checkVCOM(emitterMeasurement->GetEnergy(energy_Val));
-						this->checkifEqual("GetEnergy ", energy_Val, 200);
+						this->checkifEqual("GetEnergy ", energy_Val, 200);				// only for object valid, because of hardcoded wavelength and energy
 					}
 				} // measurements loop
 			}
 		} // emitter loop
-
-
-		//------------------------------------------------------------------------------    
-		// DMX Section
-		// seems like done by moritz
 
 
 		//------------------------------------------------------------------------------    
@@ -405,7 +406,20 @@ void GdtfUnittest::ReadFile()
 
 				//------------------------------------------------------------------------------ 
 				// Add the Attributes
-				// Todo add attributes in write
+				size_t countMainAttributes = 0;
+				__checkVCOM(gdtfActivationGroups->GetAttributeCount(countMainAttributes));
+				for (size_t i = 0; i < countMainAttributes; i++)
+				{
+					IGdtfAttributePtr	gdtfMainAttribute;
+					__checkVCOM(gdtfActivationGroups->GetAttributeAt(i, &gdtfMainAttribute));
+
+					MvrString attributeName			= gdtfMainAttribute->GetName();
+					MvrString attributePrettyName	= gdtfMainAttribute->GetPrettyName();
+					this->checkifEqual("gdtfMainAttributeGetName "		, attributeName			, "My MainAttributeName");
+					this->checkifEqual("gdtfMainAttributeGetPrettyName ", attributePrettyName	, "My MainAttributePrettyName");
+				}
+
+
 				size_t countAttributes = 0;
 				__checkVCOM(gdtfActivationGroups->GetAttributeCount(countAttributes));
 				for (size_t i = 0; i < countAttributes; i++)
@@ -415,8 +429,8 @@ void GdtfUnittest::ReadFile()
 
 					MvrString attributeName			= gdtfAttribute->GetName();
 					MvrString attributePrettyName	= gdtfAttribute->GetPrettyName();
-					this->checkifEqual("gdtfAttributeGetName "		, attributeName			, "My nameAttribute");
-					this->checkifEqual("gdtfAttributeGetPrettyName ", attributePrettyName	, "My prettyNameAttribute");
+					this->checkifEqual("gdtfAttributeGetName "		, attributeName			, "My attributeName");
+					this->checkifEqual("gdtfAttributeGetPrettyName ", attributePrettyName	, "My attributePrettyName");
 				}
 			}
 		} // ActivationsGroups loop
@@ -431,7 +445,6 @@ void GdtfUnittest::ReadFile()
 			IGdtfFeatureGroupPtr gdtfFeatureGroup;
 			if (__checkVCOM(gdtfRead->GetFeatureGroupAt(i, &gdtfFeatureGroup)))
 			{
-				// Set the name / pretty name
 				MvrString featureGroupName	= gdtfFeatureGroup->GetName();
 				MvrString prettyName		= gdtfFeatureGroup->GetPrettyName();
 				this->checkifEqual("gdtfFeatureGroupGetName "		, featureGroupName	, "My featureGroupName");
@@ -449,38 +462,9 @@ void GdtfUnittest::ReadFile()
 					// Set the name
 					MvrString featureName = gdtfFeature->GetName();
 					this->checkifEqual("gdtfFeatureGetName ", featureName, "My featureName");
-
-					/*//------------------------------------------------------------------------------ 
-					// Add the Attributes
-					size_t countAttributes = 0;
-					__checkVCOM(gdtfFeature->GetAttributeCount(countAttributes));
-					for (size_t i = 0; i < countAttributes; i++)
-					{
-						IGdtfAttributePtr gdtfAttribute;
-						__checkVCOM(gdtfFeature->GetAttributeAt(i, &gdtfAttribute));
-
-						MvrString attributeName = gdtfAttribute->GetName();
-						this->checkifEqual("gdtfAttributeGetName ", attributeName, "My nameAttribute");
-					} // Attributes loop*/
-				}// Features loop
+				}
 			}
 		} // FeatureGroups loops
-
-
-		// TODO
-		////------------------------------------------------------------------------------    
-		//// Fill Array Section
-		//size_t countAttributes = 0;
-		//__checkVCOM(gdtfRead->GetAttributeCount(countAttributes));
-		//for (size_t i = 0; i < countAttributes; i++)
-		//{
-		//	VectorworksMVR::IGdtfAttributePtr gdtfAttribute;
-		//	if (__checkVCOM(gdtfRead->GetAttributeAt(i, &gdtfAttribute)))
-		//	{
-		//		MvrString attributeName = gdtfAttribute->GetName();
-		//		this->checkifEqual("gdtfAttributeGetName ", attributeName, "My WheelSlot1Wheel1");
-		//	}
-		//} // Attributes loop
 
 
 		//------------------------------------------------------------------------------    
@@ -492,28 +476,10 @@ void GdtfUnittest::ReadFile()
 			IGdtfModelPtr gdtfModel;
 			if (__checkVCOM(gdtfRead->GetModelAt(i, &gdtfModel)))
 			{
-				// Set the name
-				MvrString  modelName = gdtfModel->GetName();
-				this->checkifEqual("gdtfModelGetName ", modelName, "My nameModel");
-
-				// Put the 3DS file in Session file
+				MvrString  modelName	= gdtfModel->GetName();
 				MvrString geometryFile	= gdtfModel->Get3DSGeometryFile();
-				this->checkifEqual("gdtfModelGet3DSGeometryFile ", geometryFile, "My file3DSGeometry");
-				// TODO: not implemented yet
-				/*MvrString fullPath		= gdtfModel->Get3DSGeometryFileFullPath();
-				this->checkifEqual("gdtfModelGet3DSGeometryFileFullPath ", fullPath, "My WheelSlot1Wheel1");*/
-
-				//TODO
-				/*if (!geometryFile.empty())
-				{
-					geometryFile	+= ".3ds";
-					fullPath		+= ".3ds";
-					ASSERT(DuplicateFile(fullPath, geometryFile, sessionFolder));
-				}
-
-				// Set the geometry File
-				MvrString geomFileEntry = geometryFile.c_str();
-				*/
+				this->checkifEqual("gdtfModelGetName "				, modelName		, "My modelName");
+				this->checkifEqual("gdtfModelGet3DSGeometryFile "	, geometryFile	, "My file3DSGeometry");
 
 				// Height
 				double heightVal = 0.0;
@@ -570,6 +536,5 @@ void GdtfUnittest::ReadFile()
 				this->checkifEqual("Geo Link Inner", "My Inner Geo", refedGeo->GetName());
 			}
 		}
-
     }
 }
