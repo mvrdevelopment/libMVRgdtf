@@ -315,7 +315,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetOnWhee
 	if ( ! wheelImpl)	{ return kVCOMError_Failed; }
 	
 	SceneData::GdtfWheelPtr scWheel = wheelImpl->GetPointer();
-	if (  scWheel)		{ return kVCOMError_Failed; }
+	if ( ! scWheel)		{ return kVCOMError_Failed; }
 	
 	fFunction->SetWheel(scWheel);
 	
