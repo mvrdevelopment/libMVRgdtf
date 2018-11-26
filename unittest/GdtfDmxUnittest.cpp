@@ -251,7 +251,7 @@ void GdtfDmxUnittest::ReadFile()
 
 		Sint32 dmxBreakChannel1 = 0;
 		__checkVCOM(bit8channel->GetDmxBreak(dmxBreakChannel1));
-		this->checkifEqualSint32("Check DMX Break Channel 1 - Default Value", 1, dmxBreakChannel1);
+		this->checkifEqual("Check DMX Break Channel 1 - Default Value", 1, dmxBreakChannel1);
 
 		//----------------------------------------------------------------
 		// Read 16 bit Channel
@@ -260,7 +260,7 @@ void GdtfDmxUnittest::ReadFile()
 
 		Sint32 dmxBreakChannel2 = 0;
 		__checkVCOM(bit16channel->GetDmxBreak(dmxBreakChannel2));
-		this->checkifEqualSint32("Check DMX Break Channel 2 - Overwrite", dmxBreakChannel2, 0);
+		this->checkifEqual("Check DMX Break Channel 2 - Overwrite", dmxBreakChannel2, 0);
 
 		IGdtfDmxLogicalChannelPtr bit16LogicalChannel;
 		__checkVCOM(bit16channel->GetLogicalChannelAt(0, &bit16LogicalChannel));
