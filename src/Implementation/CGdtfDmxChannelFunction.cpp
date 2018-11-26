@@ -332,7 +332,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetEmitte
 	if ( ! emitterImpl)	{ return kVCOMError_Failed; }
 	
 	SceneData::GdtfPhysicalEmitter* gdtfEmitter = emitterImpl->GetPointer();
-	if (gdtfEmitter)		{ return kVCOMError_Failed; }
+	if ( ! gdtfEmitter)		{ return kVCOMError_Failed; }
 	
 	fFunction->SetEmitter (gdtfEmitter);
 	
