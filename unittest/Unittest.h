@@ -26,6 +26,7 @@ protected:
 
 public:
     void checkifEqual(const std::string& check, const Uint32 val1, const Uint32 val2);
+    void checkifEqualSint32(const std::string& check, const Sint32 val1, const Sint32 val2);
 	void checkifEqual(const std::string& check, const double val1, const double val2);
 	void checkifEqual(const std::string& check, const size_t val1, const size_t val2);
     void checkifEqual(const std::string& check, void* val1, void* val2);
