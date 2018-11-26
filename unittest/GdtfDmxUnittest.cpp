@@ -192,7 +192,7 @@ void GdtfDmxUnittest::ReadFile()
 
 		Sint32 dmxBreakChannel1 = 0;
 		__checkVCOM(bit8channel->GetDmxBreak(dmxBreakChannel1));
-		this->checkifEqualSint32("Check DMX Break Channel 1 - Default Value", dmxBreakChannel1, 0);
+		this->checkifEqualSint32("Check DMX Break Channel 1 - Default Value", 1, dmxBreakChannel1);
 
 		//----------------------------------------------------------------
 		// Read 16 bit Channel
