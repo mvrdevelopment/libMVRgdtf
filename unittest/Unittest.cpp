@@ -46,15 +46,15 @@ void Unittest::checkifEqual(const std::string& check, const Uint32 val1, const U
 
 	UnittestFailObject test;
 	test.fMessage += check;
-	test.fMessage += "Aspected: ";
-	test.fMessage += std::to_string(val1);
 	test.fMessage += " Result: ";
+	test.fMessage += std::to_string(val1);
+	test.fMessage += " Expected: ";
 	test.fMessage += std::to_string(val2);
 
 	fFailedTests.push_back(test);
 };
 
-void Unittest::checkifEqualSint32(const std::string& check, const Sint32 val1, const Sint32 val2)
+void Unittest::checkifEqual(const std::string& check, const Sint32 val1, const Sint32 val2)
 {
 	if (val1 == val2) return;
 
@@ -63,14 +63,13 @@ void Unittest::checkifEqualSint32(const std::string& check, const Sint32 val1, c
 
 	UnittestFailObject test;
 	test.fMessage += check;
-	test.fMessage += "Aspected: ";
-	test.fMessage += std::to_string(val1);
 	test.fMessage += " Result: ";
+	test.fMessage += std::to_string(val1);
+	test.fMessage += " Expected: ";
 	test.fMessage += std::to_string(val2);
 
 	fFailedTests.push_back(test);
 };
-
 
 void Unittest::checkifEqual(const std::string& check, const double val1, const double val2)
 {
@@ -81,9 +80,9 @@ void Unittest::checkifEqual(const std::string& check, const double val1, const d
 
 	UnittestFailObject test;
 	test.fMessage += check;
-	test.fMessage += "Aspected: ";
-	test.fMessage += std::to_string(val1);
 	test.fMessage += " Result: ";
+	test.fMessage += std::to_string(val1);
+	test.fMessage += " Expected: ";
 	test.fMessage += std::to_string(val2);
 
 	fFailedTests.push_back(test);
@@ -103,6 +102,42 @@ void Unittest::checkifEqual(const std::string& check, const size_t val1, const s
 	fFailedTests.push_back(test);
 };
 
+/*
+void Unittest::checkifEqual(const std::string& check, const VectorworksMVR::GdtfDefines::DmxValue val1, const VectorworksMVR::GdtfDefines::DmxValue val2)
+{
+	if (val1 == val2) return;
+
+	// Else Log the error
+	fFailed = true;
+
+	UnittestFailObject test;
+	test.fMessage += check;
+	test.fMessage += " Result: ";
+	test.fMessage += std::to_string(val1);
+	test.fMessage += " Expected: ";
+	test.fMessage += std::to_string(val2);
+
+	fFailedTests.push_back(test);
+};
+
+void Unittest::checkifEqual(const std::string& check, const VectorworksMVR::GdtfDefines::DMXAddress val1, const VectorworksMVR::GdtfDefines::DMXAddress val2)
+{
+	if (val1 == val2) return;
+
+	// Else Log the error
+	fFailed = true;
+
+	UnittestFailObject test;
+	test.fMessage += check;
+	test.fMessage += " Result: ";
+	test.fMessage += std::to_string(val1);
+	test.fMessage += " Expected: ";
+	test.fMessage += std::to_string(val2);
+
+	fFailedTests.push_back(test);
+};
+*/
+
 void Unittest::checkifEqual(const std::string& check, const VectorworksMVR::GdtfDefines::EGdtfModel_PrimitiveType val1, const VectorworksMVR::GdtfDefines::EGdtfModel_PrimitiveType val2)
 {
 	if (val1 == val2) return;
@@ -112,9 +147,9 @@ void Unittest::checkifEqual(const std::string& check, const VectorworksMVR::Gdtf
 
 	UnittestFailObject test;
 	test.fMessage += check;
-	test.fMessage += "Aspected: ";
-	test.fMessage += std::to_string(val1);
 	test.fMessage += " Result: ";
+	test.fMessage += std::to_string(val1);
+	test.fMessage += " Expected: ";
 	test.fMessage += std::to_string(val2);
 
 	fFailedTests.push_back(test);
@@ -129,9 +164,9 @@ void Unittest::checkifEqual(const std::string& check, const std::string& aspecte
 
 	UnittestFailObject test;
 	test.fMessage += check;
-	test.fMessage += "Aspected: ";
-	test.fMessage += aspected;
 	test.fMessage += " Result: ";
+	test.fMessage += aspected;
+	test.fMessage += " Expected: ";
 	test.fMessage += result;
 
 	fFailedTests.push_back(test);
@@ -149,7 +184,7 @@ bool Unittest::checkVCOM(VectorworksMVR::VCOMError error, const std::string& che
     UnittestFailObject test;
     test.fMessage += "VCOM Failed: ";
     test.fMessage += check;
-    test.fMessage += " Result: ";
+    test.fMessage += " Expected: ";
     test.fMessage += error;
 
     fFailedTests.push_back(test);
@@ -166,9 +201,9 @@ void Unittest::checkifEqual(const std::string& check, void* val1, void* val2)
 
 	UnittestFailObject test;
 	test.fMessage += check;
-	test.fMessage += "Aspected: ";
-	test.fMessage += (Uint64)val1;
 	test.fMessage += " Result: ";
+	test.fMessage += (Uint64)val1;
+	test.fMessage += " Expected: ";
 	test.fMessage += (Uint64)val1;
 
 	fFailedTests.push_back(test);

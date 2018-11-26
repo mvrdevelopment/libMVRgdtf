@@ -106,7 +106,7 @@ void MvrUnittest::ReadFile()
     {
         size_t count = 0;
         __checkVCOM(mvrRead->GetDataProviderObjectCount(count));
-        checkifEqual("CountProvider ",count, 1);
+        checkifEqual("CountProvider ",count, size_t(1));
 
         for(size_t i = 0; i <count; i++)
         {
@@ -123,11 +123,11 @@ void MvrUnittest::ReadFile()
 
         // TODO
         __checkVCOM(mvrRead->GetSymDefCount(count));
-        checkifEqual("CountSymDef ",count, 1);
+        checkifEqual("CountSymDef ",count, size_t(1));
 
         // TODO
         __checkVCOM(mvrRead->GetPositionObjectCount(count));
-        checkifEqual("CountPosition ",count, 1);
+        checkifEqual("CountPosition ",count, size_t(1));
 
         //------------------------------------------------------------------------------------------------
 	    // Read Layers
