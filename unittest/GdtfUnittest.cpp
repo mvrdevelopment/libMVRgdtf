@@ -218,6 +218,7 @@ void GdtfUnittest::WriteFile()
 						__checkVCOM(gdftChannelFunction->SetRealFade(4));
 						__checkVCOM(gdftChannelFunction->SetDMXInvert(EGDTFDmxInvert::eGDTFDmxInvert_No));
 						__checkVCOM(gdftChannelFunction->SetEncoderInvert(EGDTFEncoderInvert::eGDTFEncoderInvert_Yes));
+						__checkVCOM(gdftChannelFunction->SetOnWheel(gdtfWheelObj));
 
 						IGdtfDmxChannelSetPtr gdtfChannelSet;
 						if (__checkVCOM(gdftChannelFunction->CreateDmxChannelSet("My nameDmxChannelSet", 1, 2, &gdtfChannelSet)))
@@ -549,7 +550,7 @@ void GdtfUnittest::ReadFile()
 								if (__checkVCOM(gdtfFunction->GetOnWheel(&gdtfWheel)))
 								{
 									MvrString wheelName = gdtfWheel->GetName();
-									this->checkifEqual("gdtfWheelGetName ", wheelName, "My Wheel??");
+									this->checkifEqual("gdtfWheelGetName ", wheelName, "My Wheel1");
 								}
 
 								// Emitter
