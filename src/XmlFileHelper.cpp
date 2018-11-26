@@ -203,7 +203,13 @@ using namespace SceneData;
 	return valueStr;
 }
 
+/*static*/ bool GdtfConverter::ConvertDmxBreak(const TXString& value, Sint32& intValue)
+{
+    if(value.IsEmpty()) return false;
 
+	intValue = value.atoi();
+	return true;
+}
 
 /*static*/ bool GdtfConverter::ConvertInteger(const TXString& value, Sint8& intValue)
 {
@@ -297,6 +303,14 @@ bool SceneData::GdtfConverter::ConvertIntegerArray(TXString values, TSint32Array
 }
 
 /*static*/ TXString GdtfConverter::ConvertInteger(size_t value)
+{	
+	// Otherwise return the value
+	TXString valueStr;
+	valueStr << value;
+	return valueStr;
+}
+
+/*static*/ TXString GdtfConverter::ConvertDmxBreak(Sint32 value)
 {	
 	// Otherwise return the value
 	TXString valueStr;
