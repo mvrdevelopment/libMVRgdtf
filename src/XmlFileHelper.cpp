@@ -203,7 +203,14 @@ using namespace SceneData;
 	return valueStr;
 }
 
+/*static*/ bool GdtfConverter::ConvertDmxBreak(const TXString& value, Sint32& intValue)
+{
+    if(value.IsEmpty()) return false;
+    if(value == XML_GDTF_DMXChannelDMXBreak_OverwriteValue) { intValue = 0; }
 
+	intValue = value.atoi();
+	return true;
+}
 
 /*static*/ bool GdtfConverter::ConvertInteger(const TXString& value, Sint8& intValue)
 {
@@ -299,6 +306,17 @@ bool SceneData::GdtfConverter::ConvertIntegerArray(TXString values, TSint32Array
 /*static*/ TXString GdtfConverter::ConvertInteger(size_t value)
 {	
 	// Otherwise return the value
+	TXString valueStr;
+	valueStr << value;
+	return valueStr;
+}
+
+/*static*/ TXString GdtfConverter::ConvertDmxBreak(Sint32 value)
+{	
+	// If it is not set then it is Overwrite value
+    if(value == 0){ return TXString( XML_GDTF_DMXChannelDMXBreak_OverwriteValue );}
+    
+    // Otherwise return the value
 	TXString valueStr;
 	valueStr << value;
 	return valueStr;

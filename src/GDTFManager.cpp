@@ -2159,7 +2159,7 @@ void GdtfDmxChannel::OnPrintToFile(IXMLFileNodePtr pNode)
 	EGdtfChannelBitResolution chanelReso = GetChannelBitResolution();
 	// ------------------------------------------------------------------------------------
 	// Print node attributes
-	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelDMXBreak,			GdtfConverter::ConvertInteger(fDmxBreak));
+	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelDMXBreak,			GdtfConverter::ConvertDmxBreak(fDmxBreak));
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelCoarse,				GdtfConverter::ConvertInteger(fCoarse ,		fCoarseNone));
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFine,				GdtfConverter::ConvertInteger(fFine,		fFineNone));
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelUltra,				GdtfConverter::ConvertInteger(fUltra,		fUltraNone));	
@@ -2187,7 +2187,7 @@ void GdtfDmxChannel::OnReadFromNode(const IXMLFileNodePtr& pNode)
 		
 	// ------------------------------------------------------------------------------------
 	// Print node attributes
-	TXString dmxBreak;	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelDMXBreak,			dmxBreak);	GdtfConverter::ConvertInteger(dmxBreak,		fDmxBreak);
+	TXString dmxBreak;	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelDMXBreak,			dmxBreak);	GdtfConverter::ConvertDmxBreak(dmxBreak,		fDmxBreak);
 	//
 	TXString coarse;	
 	if (pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelCoarse, coarse) == kVCOMError_NoError) 
