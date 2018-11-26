@@ -687,7 +687,8 @@ void GdtfUnittest::ReadFile()
 					GdtfDefines::DmxValue start;
 					if (__checkVCOM(gdtfRelation->GetDmxStart(start)))
 					{
-						this->checkifEqual("gdtfRelationGetDmxStart ", start, GdtfDefines::DmxValue(1234));
+						// TODO: This will be removed for GDTF 0.88
+						//this->checkifEqual("gdtfRelationGetDmxStart ", start, GdtfDefines::DmxValue(1234));
 					}
 
 					// DMX End
