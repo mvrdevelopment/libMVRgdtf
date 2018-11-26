@@ -67,6 +67,7 @@ void GdtfDmxUnittest::WriteFile()
 		__checkVCOM(mode->CreateDmxChannel("8bit Channel", &bit8channel));
 		__checkVCOM(bit8channel->SetGeometry(geometry));
 		bit8channel->SetCoarse(1);
+		//bit8channel->SetDmxBreak(1); This is the default
 
 		// First Logical Channel
 		IGdtfDmxLogicalChannelPtr bit8LogicalChannel1;
@@ -139,6 +140,7 @@ void GdtfDmxUnittest::WriteFile()
 		__checkVCOM(bit16channel->SetGeometry(geometry));
 		bit16channel->SetCoarse(1);
 		bit16channel->SetFine(2);
+		bit16channel->SetDmxBreak(0);
 
 		IGdtfDmxLogicalChannelPtr bit16LogicalChannel;
 		bit16channel->CreateLogicalChannel("Log1", &bit16LogicalChannel);
@@ -188,10 +190,18 @@ void GdtfDmxUnittest::ReadFile()
 		__checkVCOM(mode->GetDmxChannelAt(0, &bit8channel));
 		Check8bitChannel(bit8channel);
 
+		Sint32 dmxBreakChannel1 = 0;
+		__checkVCOM(bit8channel->GetDmxBreak(dmxBreakChannel1));
+		this->checkifEqualSint32("Check DMX Break Channel 1 - Default Value", 1, dmxBreakChannel1);
+
 		//----------------------------------------------------------------
 		// Read 16 bit Channel
 		IGdtfDmxChannelPtr bit16channel;
 		__checkVCOM(mode->GetDmxChannelAt(1, &bit16channel));
+
+		Sint32 dmxBreakChannel2 = 0;
+		__checkVCOM(bit16channel->GetDmxBreak(dmxBreakChannel2));
+		this->checkifEqualSint32("Check DMX Break Channel 2 - Overwrite", dmxBreakChannel2, 0);
 
 		IGdtfDmxLogicalChannelPtr bit16LogicalChannel;
 		__checkVCOM(bit16channel->GetLogicalChannelAt(0, &bit16LogicalChannel));

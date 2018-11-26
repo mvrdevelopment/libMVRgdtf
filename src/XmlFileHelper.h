@@ -59,6 +59,7 @@ namespace SceneData
 		static TXString	ConvertColor(const CCieColor& color);
 		static TXString	ConvertDouble(double value);
 		static TXString	ConvertInteger(Sint32 value);
+        static TXString	ConvertDmxBreak(Sint32 value);
 		static TXString	ConvertInteger(size_t value);
 		static TXString	ConvertInteger(Sint32 value, bool noneValue);
         static TXString	ConvertIntegerArray (TSint32Array& values);
@@ -100,6 +101,7 @@ namespace SceneData
 		static bool		ConvertPrimitiveType(								const TXString& value,			EGdtfModel_PrimitiveType& type);
 		static bool		ConvertLampeType(									const TXString& value,			EGdtfLampType& lampType);
 		static bool		ConvertInteger(										const TXString& value,			Sint32&	intValue);
+        static bool		ConvertDmxBreak(									const TXString& value,			Sint32&	intValue);
 		static bool		ConvertInteger(										const TXString& value,			Sint8& intValue);
 		static bool		ConvertInteger(										const TXString& value,			size_t& intValue);
 		static bool		ConvertInteger(										const TXString& value,			Sint32&	intValue,						bool& noneValue);

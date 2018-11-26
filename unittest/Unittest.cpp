@@ -54,6 +54,24 @@ void Unittest::checkifEqual(const std::string& check, const Uint32 val1, const U
 	fFailedTests.push_back(test);
 };
 
+void Unittest::checkifEqualSint32(const std::string& check, const Sint32 val1, const Sint32 val2)
+{
+	if (val1 == val2) return;
+
+	// Else Log the error
+	fFailed = true;
+
+	UnittestFailObject test;
+	test.fMessage += check;
+	test.fMessage += "Aspected: ";
+	test.fMessage += std::to_string(val1);
+	test.fMessage += " Result: ";
+	test.fMessage += std::to_string(val2);
+
+	fFailedTests.push_back(test);
+};
+
+
 void Unittest::checkifEqual(const std::string& check, const double val1, const double val2)
 {
 	if (val1 == val2) return;
