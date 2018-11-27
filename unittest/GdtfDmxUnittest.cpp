@@ -169,6 +169,7 @@ void GdtfDmxUnittest::WriteFile()
 
 		IGdtfDmxLogicalChannelPtr logicalChannel24bit;
 		__checkVCOM(bit24channel->CreateLogicalChannel("Logical Channel", &logicalChannel24bit));
+		logicalChannel24bit->SetAttribute(attribute);
 
 		IGdtfDmxChannelFunctionPtr function24bit_1;
 		__checkVCOM(logicalChannel24bit->CreateDmxFunction("Log 1", & function24bit_1));
