@@ -158,6 +158,31 @@ void GdtfDmxUnittest::WriteFile()
 		bit16Function->CreateDmxChannelSet("My Name3", 128, 4501, &bit16ChannelSet3);
 
 
+		//----------------------------------------------------------------
+		// Write 24 bit Channel - With Mode Relation
+		IGdtfDmxChannelPtr bit24channel;
+		__checkVCOM(mode->CreateDmxChannel("24bit Channel", &bit24channel));
+		__checkVCOM(bit24channel->SetGeometry(geometry));
+		bit24channel->SetCoarse(3);
+		bit24channel->SetFine(4);
+		bit24channel->SetUltra(5);
+
+		IGdtfDmxLogicalChannelPtr logicalChannel24bit;
+		__checkVCOM(bit24channel->CreateLogicalChannel("Logical Channel", &logicalChannel24bit));
+
+		IGdtfDmxChannelFunctionPtr function24bit_1;
+		__checkVCOM(logicalChannel24bit->CreateDmxFunction("Log 1", & function24bit_1));
+		__checkVCOM(function24bit_1->SetStartAddress(0));
+
+		IGdtfDmxChannelFunctionPtr function24bit_2;
+		__checkVCOM(logicalChannel24bit->CreateDmxFunction("Log 2", & function24bit_2));
+		__checkVCOM(function24bit_2->SetStartAddress(0));
+
+		IGdtfDmxChannelFunctionPtr function24bit_3;
+		__checkVCOM(logicalChannel24bit->CreateDmxFunction("Log 3", & function24bit_3));
+		__checkVCOM(function24bit_3->SetStartAddress(0));
+
+
         __checkVCOM(gdtfWrite->Close());
     }
 }
@@ -240,7 +265,7 @@ void GdtfDmxUnittest::ReadFile()
 
 		size_t countChannels = 0;
 		__checkVCOM(mode->GetDmxChannelCount(countChannels));
-		this->checkifEqual("Check Count DMX Channels", countChannels, size_t(2));
+		this->checkifEqual("Check Count DMX Channels", countChannels, size_t(3));
 		
 
 		//----------------------------------------------------------------
@@ -297,6 +322,11 @@ void GdtfDmxUnittest::ReadFile()
 		__checkVCOM(bit16Function->GetDmxChannelSetAt(5, &bit16ChannelSet6));
 		this->CheckChannelSet(bit16ChannelSet6, "",4502,65535);
 
+				//----------------------------------------------------------------
+		// Read 8 bit Channel
+		IGdtfDmxChannelPtr bit24channel;
+		__checkVCOM(mode->GetDmxChannelAt(2, &bit24channel));
+		Check24bitChannel(bit24channel);
 	}
 
 }
@@ -467,4 +497,37 @@ void GdtfDmxUnittest::Check8bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxCh
 	IGdtfDmxChannelSetPtr bit8ChannelSet21;
 	__checkVCOM(bit8Function4->GetDmxChannelSetAt(5, &bit8ChannelSet21));
 	this->CheckChannelSet(bit8ChannelSet21, "My Name12",230,255);
+}
+
+void GdtfDmxUnittest::Check24bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxChannel)
+{
+	// ---------------------------------------------------------------------------
+	// Get Logical Channels
+	size_t count = 0;
+	__checkVCOM(dmxChannel->GetLogicalChannelCount(count));
+	this->checkifEqual("Count Logical Channels", count, size_t(1));
+
+	IGdtfDmxLogicalChannelPtr logicalChannel;
+	__checkVCOM(dmxChannel->GetLogicalChannelAt(0, &logicalChannel));
+
+	// ---------------------------------------------------------------------------
+	// Get Functions
+	__checkVCOM(logicalChannel->GetDmxFunctionCount(count));
+	this->checkifEqual("Count Function Count", count, size_t(3));
+
+	GdtfDefines::DmxValue max24bit = (256*256*256) - 1;
+
+	IGdtfDmxChannelFunctionPtr bit8Function1;
+	__checkVCOM(logicalChannel->GetDmxFunctionAt(0, &bit8Function1));
+	CheckFunction(bit8Function1, "Log 1", 0, max24bit);
+
+	IGdtfDmxChannelFunctionPtr bit8Function2;
+	__checkVCOM(logicalChannel->GetDmxFunctionAt(1, &bit8Function2));
+	CheckFunction(bit8Function2, "Log 2", 0, max24bit);
+
+	IGdtfDmxChannelFunctionPtr bit8Function3;
+	__checkVCOM(logicalChannel->GetDmxFunctionAt(2, &bit8Function3));
+	CheckFunction(bit8Function3, "Log 3", 0, max24bit);
+
+
 }
