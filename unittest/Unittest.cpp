@@ -97,7 +97,10 @@ void Unittest::checkifEqual(const std::string& check, const size_t val1, const s
 
 	UnittestFailObject test;
 	test.fMessage += check;
-	test.fMessage += " FAILED";
+	test.fMessage += " Result: ";
+	test.fMessage += std::to_string(val1);
+	test.fMessage += " Expected: ";
+	test.fMessage += std::to_string(val2);
 
 	fFailedTests.push_back(test);
 };
@@ -192,7 +195,7 @@ bool Unittest::checkVCOM(VectorworksMVR::VCOMError error, const std::string& che
     return false;
 };
 
-void Unittest::checkifEqual(const std::string& check, void* val1, void* val2)
+void Unittest::checkifEqualPtr(const std::string& check, void* val1, void* val2)
 {
 	if (val1 == val2) return;
 

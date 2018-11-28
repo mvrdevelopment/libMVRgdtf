@@ -175,6 +175,9 @@ void GdtfUnittest::WriteFile()
 		__checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometryReference, "My Ref to Inner Obj", gdtfModel, ma, &geoRef2));
 		__checkVCOM(geoRef2->SetGeometryReference(innerChild));
 
+		IGdtfBreakPtr gdtfBreak;
+		__checkVCOM(geoRef2->CreateBreak(3,4,& gdtfBreak));
+
 
 		//------------------------------------------------------------------------------
 		// Get dmxModes
@@ -740,7 +743,7 @@ void GdtfUnittest::ReadFile()
 				{
 					this->checkifEqual("Name Main Attribute", linkedAttribute->GetName() , "My MainAttributeName");
 
-					this->checkifEqual("Check Bind Behavoir", linkedAttribute->GetBoundObject(), (void*)&lyLinkTest );
+					this->checkifEqualPtr("Check Bind Behavoir", linkedAttribute->GetBoundObject(), (void*)&lyLinkTest );
 				}
 			}
 		} // ActivationsGroups loop
@@ -845,6 +848,22 @@ void GdtfUnittest::ReadFile()
 			{
 				this->checkifEqual("Geo Link Inner", "My Inner Geo", refedGeo->GetName());
 			}
+
+			size_t breakCount = 0;
+			__checkVCOM(geo3->GetBreakCount(breakCount));
+
+			this->checkifEqual("Get Break Count", (size_t)1 , breakCount);
+
+			IGdtfBreakPtr gdtfBreak;
+			__checkVCOM(geo3->GetBreakAt(0, & gdtfBreak));
+
+			DMXAddress adress = 0;
+			__checkVCOM(gdtfBreak->GetDmxAddress(adress));
+			this->checkifEqual("Check Adress", (DMXAddress)4,adress);
+
+			Sint32 breakId = 0;
+			__checkVCOM(gdtfBreak->GetDmxBreak(breakId));
+			this->checkifEqual("Check Adress", (Sint32)3,breakId);
 		}
     }
 }

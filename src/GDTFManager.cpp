@@ -1817,15 +1817,7 @@ void GdtfGeometryReference::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// Call the parent
 	GdtfGeometry::OnReadFromNode(pNode);
 	
-	//------------------------------------------------------------------------------------
-	// Read the content
-	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_BreakNodeName, [this] (IXMLFileNodePtr pNode) -> void
-								 {
-									 GdtfBreakPtr breakObj = new GdtfBreak();
-									 breakObj->ReadFromNode(pNode);
-									 fBreaks.push_back(breakObj);
-								 }
-								 );
+	// The breaks are read in the parent OnReadFromNode
 
 	pNode->GetNodeAttributeValue(XML_GDTF_GeometryReferenceLinkedGeo, fUnresolvedGeoRef); 
 
