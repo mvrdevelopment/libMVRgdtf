@@ -22,5 +22,7 @@ private:
     void CheckFunction(VectorworksMVR::IGdtfDmxChannelFunctionPtr& function, std::string name, VectorworksMVR::GdtfDefines::DmxValue start, VectorworksMVR::GdtfDefines::DmxValue end);
 
     void Check8bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxChannel);
+    void Check24bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxChannel);
+
 
 };

@@ -814,6 +814,7 @@ namespace SceneData
 		GdtfDmxChannel*					GetParentDMXChannel() const;
 
         void                            SetNextFunction(GdtfDmxChannelFunction* next);
+        GdtfDmxChannelFunction*         GetNextFunction() const;
 
 		
 		void							SetWheel(GdtfWheelPtr newWhl);
