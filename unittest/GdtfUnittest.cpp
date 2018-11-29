@@ -779,6 +779,25 @@ void GdtfUnittest::ReadFile()
 			}
 		} // FeatureGroups loops
 
+		//------------------------------------------------------------------------------    
+		// Check Attributes
+		size_t countAttributes = 0;
+		__checkVCOM(gdtfRead->GetAttributeCount(countAttributes));
+		this->checkifEqual("Check Attribute Count ", (size_t) 2, countAttributes);
+
+		for(size_t i = 0; i < countAttributes; i++)
+		{
+			IGdtfAttributePtr attribute;
+			__checkVCOM(gdtfRead->GetAttributeAt(i, & attribute));
+
+			EGdtfPhysicalUnit unit;
+			__checkVCOM(attribute->GetPhysicalUnit(unit));
+			this->checkifEqual("Check Physical Unit ", (Sint32)unit, (Sint32)EGdtfPhysicalUnit::Acceleration);
+
+						this->checkifEqual("Check Attribute Name ", "My MainAttributeName", attribute->GetName());
+
+
+		}
 
 		//------------------------------------------------------------------------------    
 		// Extract Geometry & Models
