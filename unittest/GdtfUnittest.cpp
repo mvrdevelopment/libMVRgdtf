@@ -787,16 +787,27 @@ void GdtfUnittest::ReadFile()
 
 		for(size_t i = 0; i < countAttributes; i++)
 		{
-			IGdtfAttributePtr attribute;
-			__checkVCOM(gdtfRead->GetAttributeAt(i, & attribute));
+			if (countAttributes == 0)
+			{
+				IGdtfAttributePtr attribute;
+				__checkVCOM(gdtfRead->GetAttributeAt(i, &attribute));
 
-			EGdtfPhysicalUnit unit;
-			__checkVCOM(attribute->GetPhysicalUnit(unit));
-			this->checkifEqual("Check Physical Unit ", (Sint32)unit, (Sint32)EGdtfPhysicalUnit::Acceleration);
+				EGdtfPhysicalUnit unit;
+				__checkVCOM(attribute->GetPhysicalUnit(unit));
+				this->checkifEqual("Check Physical Unit ", (Sint32)unit, (Sint32)EGdtfPhysicalUnit::Acceleration);
+				this->checkifEqual("Check Attribute Name ", "My MainAttributeName", attribute->GetName());
+			}
 
-						this->checkifEqual("Check Attribute Name ", "My MainAttributeName", attribute->GetName());
+			if (countAttributes == 1)
+			{
+				IGdtfAttributePtr attribute;
+				__checkVCOM(gdtfRead->GetAttributeAt(i, &attribute));
 
-
+				EGdtfPhysicalUnit unit;
+				__checkVCOM(attribute->GetPhysicalUnit(unit));
+				this->checkifEqual("Check Physical Unit ", (Sint32)unit, (Sint32)EGdtfPhysicalUnit::Angle);
+				this->checkifEqual("Check Attribute Name ", "My attributeName", attribute->GetName());
+			}
 		}
 
 		//------------------------------------------------------------------------------    
