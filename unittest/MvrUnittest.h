@@ -17,4 +17,5 @@ private:
     void ReadFile();
 
     std::string fPath;
+	std::string gdtfPath;
 };

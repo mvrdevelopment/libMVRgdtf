@@ -14,6 +14,7 @@ MvrUnittest::MvrUnittest(const std::string& currentDir)
 {
     fPath = currentDir;
     fPath += std::string("/testMvr.mvr");
+	gdtfPath = currentDir;
 
     std::cout << "Export File to" << fPath << std::endl; 
 }
@@ -36,6 +37,10 @@ void MvrUnittest::WriteFile()
 	//------------------------------------------------------------------------------------------------
 	// Create Pointer to MVR Interface
 	IMediaRessourceVectorInterfacePtr mvrWrite( IID_MediaRessourceVectorInterface );
+
+	// Set the libary folder for GDTF files, during export the Interface will look in this
+	// folder if there is gdtf file that is needed by MVR, and then add it to the ZIP file
+	__checkVCOM(mvrWrite->AddGdtfFolderLocation(gdtfPath.c_str()));
 
 	//------------------------------------------------------------------------------------------------
 	// Open file for write
@@ -70,29 +75,53 @@ void MvrUnittest::WriteFile()
         //------------------------------------------------------------------------------------------------
         // Now write content
         ISceneObjPtr layer1 = nullptr;
-        if(__checkVCOM(mvrWrite->CreateLayerObject(MvrUUID(465143117, 742747285, 1361655924, 1172316535), "My Layer 1", & layer1)))
-        {
+		__checkVCOM(mvrWrite->CreateLayerObject(MvrUUID(465143117, 742747285, 1361655924, 1172316535), "My Layer 1", &layer1));
 
-            // Create Focus Point
-            ISceneObjPtr focusPoint = nullptr;
-            if(__checkVCOM(mvrWrite->CreateFocusPoint(MvrUUID(1998334672, 457193269, 1786021763, 1463564339), STransformMatrix(), "My FocusPoint", layer1, & focusPoint)))
-            {
-                __checkVCOM(focusPoint->AddSymbol(STransformMatrix(), symDef1));
-                __checkVCOM(focusPoint->SetClass(clas1));
-            }
+		// Create Focus Point
+		ISceneObjPtr focusPoint = nullptr;
+		if (__checkVCOM(mvrWrite->CreateFocusPoint(MvrUUID(1998334672, 457193269, 1786021763, 1463564339), STransformMatrix(), "My FocusPoint", layer1, &focusPoint)))
+		{
+			__checkVCOM(focusPoint->AddSymbol(STransformMatrix(), symDef1));
+			__checkVCOM(focusPoint->SetClass(clas1));
+		}
+			
+		// And place some fixtures on it
+		ISceneObjPtr fixture1 = nullptr;
+		if (__checkVCOM(mvrWrite->CreateFixture(MvrUUID(1808353427, 683171502, 518343034, 1766902383), STransformMatrix(), "My Fixture Name", layer1, &fixture1)))
+		{
+			__checkVCOM(fixture1->SetGdtfName("Martin@Mac Aura XB"));
+			__checkVCOM(fixture1->SetGdtfMode("My fancy other GDTF DMX Mode"));
+			__checkVCOM(fixture1->AddAdress(352, 0));
+			__checkVCOM(fixture1->AddAdress(5684, 1));
+			__checkVCOM(fixture1->SetFocusPoint(focusPoint));
+			__checkVCOM(fixture1->SetPosition(position));
+			__checkVCOM(fixture1->SetClass(clas2));
+		}
 
-            // And place some fixtures on it
-            ISceneObjPtr fixture1 = nullptr;
-			// TODO Next issues a problem with opening gdtf file, which is not found
-            if(__checkVCOM(mvrWrite->CreateFixture(MvrUUID(1808353427, 683171502, 518343034, 1766902383), STransformMatrix(), "My Fixture Name", layer1, & fixture1)))
-            {
-                __checkVCOM(fixture1->SetGdtfName("Martin@Mac Aura XB"));
-                __checkVCOM(fixture1->SetGdtfMode("My fancy other GDTF DMX Mode"));
-                __checkVCOM(fixture1->AddAdress(352, 0));
-                __checkVCOM(fixture1->AddAdress(5684, 1));
-                __checkVCOM(fixture1->SetFocusPoint(focusPoint));
-            }
-        }
+		// And another fixture
+		ISceneObjPtr fixture2 = nullptr;
+		if (__checkVCOM(mvrWrite->CreateFixture(MvrUUID(1136161871, 1699151080, 751939975, 1748783014), STransformMatrix(), "My Fixture Name", layer1, &fixture2)))
+		{
+			__checkVCOM(fixture2->SetGdtfName("Martin@Mac Aura XB"));
+			__checkVCOM(fixture2->SetGdtfMode("My fancy other GDTF DMX Mode"));
+			__checkVCOM(fixture2->AddAdress(352, 0));
+			__checkVCOM(fixture2->AddAdress(5684, 1));
+			__checkVCOM(fixture2->SetFocusPoint(focusPoint));
+		}
+
+		// Create second Layer
+		ISceneObjPtr layer2 = nullptr;
+		__checkVCOM(mvrWrite->CreateLayerObject(MvrUUID(465143117, 742747285, 1361655924, 1172316535), "My Layer 2", &layer2));
+
+		ISceneObjPtr fixture3 = nullptr;
+		if (__checkVCOM(mvrWrite->CreateFixture(MvrUUID(1136161871, 1699151080, 751939975, 1748783014), STransformMatrix(), "My Fixture Name", layer2, &fixture3)))
+		{
+			__checkVCOM(fixture3->SetGdtfName("Martin@Mac Aura XB"));
+			__checkVCOM(fixture3->SetGdtfMode("My fancy other GDTF DMX Mode"));
+			__checkVCOM(fixture3->AddAdress(352, 0));
+			__checkVCOM(fixture3->AddAdress(5684, 1));
+			__checkVCOM(fixture3->SetFocusPoint(focusPoint));
+		}
     }
 	__checkVCOM(mvrWrite->Close());
 }
@@ -104,6 +133,24 @@ void MvrUnittest::ReadFile()
 	IMediaRessourceVectorInterfacePtr mvrRead( IID_MediaRessourceVectorInterface );
     if(__checkVCOM(mvrRead->OpenForRead(fPath.c_str())))
     {
+
+		MvrUUID layerUUID1		(225204211, 177198167, 1575790, 96627);
+		MvrUUID focusPointUUID1	(225204211, 177198167, 1575790, 96627);
+		MvrUUID symbolUUID1		(225204211, 177198167, 1575790, 96627);
+		MvrUUID symdefUUID1		(225204211, 177198167, 1575790, 96627);
+		MvrUUID fixtureUUID1	(225204211, 177198167, 1575790, 96627);
+		MvrUUID focusUUID1		(225204211, 177198167, 1575790, 96627);
+		MvrUUID positionUUID1	(225204211, 177198167, 1575790, 96627);
+
+		MvrUUID fixtureUUID2	(225204211, 177198167, 1575790, 96627);
+		MvrUUID focusUUID2		(225204211, 177198167, 1575790, 96627);
+
+		MvrUUID positionUUID2	(225204211, 177198167, 1575790, 96627);
+		MvrUUID symdefUUID2		(225204211, 177198167, 1575790, 96627);
+		MvrUUID classUUID1		(225204211, 177198167, 1575790, 96627);
+		MvrUUID classUUID2		(225204211, 177198167, 1575790, 96627);
+		
+		
         size_t count = 0;
         __checkVCOM(mvrRead->GetDataProviderObjectCount(count));
         checkifEqual("CountProvider ",count, size_t(1));
@@ -122,19 +169,23 @@ void MvrUnittest::ReadFile()
         }
 
         // TODO
-        __checkVCOM(mvrRead->GetSymDefCount(count));
-        checkifEqual("CountSymDef ",count, size_t(1));
+		if (__checkVCOM(mvrRead->GetSymDefCount(count)))
+		{
+			checkifEqual("CountSymDef ", count, size_t(1));
 
-        // TODO
-        __checkVCOM(mvrRead->GetPositionObjectCount(count));
-        checkifEqual("CountPosition ",count, size_t(1));
+			//------------------------------------------------------------------------------------------------
+			// Read Layers
+			ISceneObjPtr readLayer = nullptr;
+			if (__checkVCOM(mvrRead->GetFirstLayer(&readLayer)))
+			{
+				checkifEqual("Layer name", readLayer->GetName(), "My Layer 1");
+			}
 
-        //------------------------------------------------------------------------------------------------
-	    // Read Layers
-	    ISceneObjPtr readLayer = nullptr;
-        if(__checkVCOM(mvrRead->GetFirstLayer(&readLayer)))
-        {
-            checkifEqual("Layer name", readLayer->GetName(), "My Layer 1");
-        }
+
+			// TODO
+			__checkVCOM(mvrRead->GetPositionObjectCount(count));
+			checkifEqual("CountPosition ", count, size_t(1));
+
+		}
     }
 }
