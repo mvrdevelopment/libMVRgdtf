@@ -98,74 +98,6 @@ namespace VectorworksMVR
 	};
 	typedef VCOMPtr<IClass>	IClassPtr;
 	
-
-	//-------------------------------------------------------------------------------------------------------------
-	enum class EGeometryFaceInfo
-	{
-		LineABVisible		= 0x04,
-		LineBCVisible		= 0x02,
-		LineCAVisible		= 0x01,
-		LineAllVisible		= 0x07
-	};
-
-	//-------------------------------------------------------------------------------------------------------------
-	typedef size_t(*TImportBufferCallback)(Uint16 fileID, void* inBuffer, size_t readBytesCnt, void* userData);	// return bytes read < readBytesCnt; readBytesCnt is the max bytes that can be read from inBuffer
-	typedef size_t(*TExportBufferCallback)(Uint16 fileID, void* outBuffer, size_t writeBytesCnt, void* userData);		// return bytes written < writeBytesCnt; writeBytesCnt is the max bytes that can be written to outBuffer
-
-	//-------------------------------------------------------------------------------------------------------------
-	struct GeometryTexture
-	{
-		TImportBufferCallback	fFileCallback_Import;	// A callback that will be called when importing/exporting the texture file
-		TExportBufferCallback	fFileCallback_Export;	//   providing or requesting the bytes in chunks
-		Uint16					fFileCallbackID;		// The ID that will be provided to the callback.
-														//   this can be utilized when the same callback will be used for several texture files
-		void*					fFileCallbackUserData;	// The user data passed it to the callback
-
-		std::string	fName;			// The texture 8.3 file name including extension
-		Uint16		fTilingFlags;
-		float		fBlurring;
-		float		fUOffset;
-		float		fUTiling;
-		float		fVOffset;
-		float		fVTiling;
-		float		fRotation;
-
-		GeometryTexture() { fTilingFlags = 0; fBlurring = fUOffset = fUTiling = fVOffset = fVTiling = fRotation = 0; fFileCallback_Import = nullptr; fFileCallback_Export = nullptr; fFileCallbackID = 0; fFileCallbackUserData = nullptr; }
-	};
-
-	//-------------------------------------------------------------------------------------------------------------
-	class DYNAMIC_ATTRIBUTE IGeometryReceiver
-	{
-	public:
-		virtual	~IGeometryReceiver() {}
-
-		class Material
-		{
-		public:
-			virtual ~Material() {}
-
-			virtual const std::string&		GetMaterialName() const = 0;
-
-			virtual float					GetTransparencyPercentage() const = 0;
-
-			virtual const RGBColor&			GetAmbientColor() const = 0;
-			virtual const RGBColor&			GetDiffuseColor() const = 0;
-			virtual const RGBColor&			GetSpecularColor() const = 0;
-
-			virtual bool					HasTexture() const = 0;
-			virtual void					GetTexture(GeometryTexture& outTexture) const = 0;
-			virtual void					GetTextureMask(GeometryTexture& outTexture) const = 0;
-		};
-
-		virtual void BeginObject(Sint16 objectID, Sint16 parentObjectID) = 0;	// parentObjectID = Uint64(-1) when object at root
-		virtual void SetVerticesCount(size_t cnt) = 0;
-		virtual void SetVertex(size_t vertexIndex, double x, double y, double z, double u, double v) = 0;
-		virtual void SetFacesCount(size_t cnt) = 0;
-		virtual void SetFace(size_t faceIndex, size_t vertexAIndex, size_t vertexBIndex, size_t vertexCIndex, EGeometryFaceInfo info) = 0;
-		virtual void SetFaceMaterial(size_t faceIndex, const IGeometryReceiver::Material* material) = 0;
-		virtual void EndObject() = 0;
-	};
-	
 	//-------------------------------------------------------------------------------------------------------------
 	class DYNAMIC_ATTRIBUTE IGeometryReference : public IVWUnknown
 	{
@@ -177,44 +109,13 @@ namespace VectorworksMVR
 	};
 	typedef VCOMPtr<IGeometryReference>	IGeometryReferencePtr;
 	
-	//-------------------------------------------------------------------------------------------------------------
-	class DYNAMIC_ATTRIBUTE IGeometryProvider
-	{
-	public:
-		virtual	~IGeometryProvider() {}
 
-		class Material
-		{
-		public:
-			virtual ~Material() {}
-
-			virtual void	SetMaterialName(const std::string& name) = 0;
-
-			virtual void	SetTransparencyPercentage(float value) = 0;
-
-			virtual void	SetAmbientColor(const RGBColor& clr) = 0;
-			virtual void	SetDiffuseColor(const RGBColor& clr) = 0;
-			virtual void	SetSpecularColor(const RGBColor& clr) = 0;
-
-			virtual void	SetTexture(const GeometryTexture& texture) = 0;
-			virtual void	SetTextureMask(const GeometryTexture& texture) = 0;
-		};
-
-		virtual void GetObjects(std::vector<Sint16>& outObjectIDs, Sint16 parentObjectID=-1) = 0;
-
-		virtual void BeginObject(Sint16 id) = 0;
-		virtual void GetVerticesCount(size_t& outCnt) = 0;
-		virtual void GetVertex(size_t vertexIndex, double& outX, double& outY, double& outZ, double& outU, double& outV) = 0;
-		virtual void GetFacesCount(size_t& outCnt) = 0;
-		virtual void GetFace(size_t faceIndex, size_t& outVertexAIndex, size_t& outVertexBIndex, size_t& outVertexCIndex, EGeometryFaceInfo& outInfo) = 0;
-		virtual void GetFaceMaterial(size_t faceIndex, IGeometryProvider::Material* material) = 0;
-		virtual void EndObject() = 0;
-	};
 
 	//-------------------------------------------------------------------------------------------------------------
 	class DYNAMIC_ATTRIBUTE ISymDef : public IVWUnknown
 	{
 	public:
+        virtual VCOMError VCOM_CALLTYPE		GetGuid(MvrUUID& guid) = 0;
 		virtual MvrString VCOM_CALLTYPE		GetName() = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetGeometryCount(size_t& outCount) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetGeometryAt(size_t at, IGeometryReference** outGeometryRef) = 0;
