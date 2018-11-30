@@ -68,6 +68,9 @@ void GdtfDmxUnittest::WriteFile()
 		bit8channel->SetCoarse(1);
 		//bit8channel->SetDmxBreak(1); This is the default
 
+		//bit8channel->SetHighlight();
+		// The default values is none, so we check of this comes in
+
 		// First Logical Channel
 		IGdtfDmxLogicalChannelPtr bit8LogicalChannel1;
 		bit8channel->CreateLogicalChannel("Log1", &bit8LogicalChannel1);
@@ -140,6 +143,7 @@ void GdtfDmxUnittest::WriteFile()
 		bit16channel->SetCoarse(1);
 		bit16channel->SetFine(2);
 		bit16channel->SetDmxBreak(0);
+		bit16channel->SetHighlight(256);
 
 		IGdtfDmxLogicalChannelPtr bit16LogicalChannel;
 		bit16channel->CreateLogicalChannel("Log1", &bit16LogicalChannel);
@@ -279,6 +283,10 @@ void GdtfDmxUnittest::ReadFile()
 		__checkVCOM(bit8channel->GetDmxBreak(dmxBreakChannel1));
 		this->checkifEqual("Check DMX Break Channel 1 - Default Value", 1, dmxBreakChannel1);
 
+		bool hasHighlight = 0;
+		__checkVCOM(bit8channel->HasHighlight(hasHighlight));
+		this->checkifEqual("Check DMX Break Channel 1 - Highlight", false, hasHighlight);
+
 		//----------------------------------------------------------------
 		// Read 16 bit Channel
 		IGdtfDmxChannelPtr bit16channel;
@@ -287,6 +295,14 @@ void GdtfDmxUnittest::ReadFile()
 		Sint32 dmxBreakChannel2 = 0;
 		__checkVCOM(bit16channel->GetDmxBreak(dmxBreakChannel2));
 		this->checkifEqual("Check DMX Break Channel 2 - Overwrite", dmxBreakChannel2, 0);
+
+		DmxValue highlight16bit = 0;
+		__checkVCOM(bit16channel->GetHighlight(highlight16bit));
+		this->checkifEqual("Check DMX Break Channel 2 - Highlight", (DmxValue)256, highlight16bit);
+
+		bool hasHighlight16bit = false;
+		__checkVCOM(bit16channel->HasHighlight(hasHighlight16bit));
+		this->checkifEqual("Check DMX Break Channel 2 - Highlight", true, hasHighlight16bit);
 
 		IGdtfDmxLogicalChannelPtr bit16LogicalChannel;
 		__checkVCOM(bit16channel->GetLogicalChannelAt(0, &bit16LogicalChannel));

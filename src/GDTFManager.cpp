@@ -2117,7 +2117,7 @@ void GdtfDmxChannel::SetDefaultValue(DmxValue defaultValue)
 	fDefaultValue = defaultValue;
 }
 
-void GdtfDmxChannel::SetHighlight(DMXAddress highlight)
+void GdtfDmxChannel::SetHighlight(DmxValue highlight)
 {
 	fHeighlight = highlight;
 	fHeighlightNone = false;
@@ -2309,12 +2309,12 @@ EGdtfDmxFrequency GdtfDmxChannel::GetFrequency() const
 {
 	return fFrequenz;
 }
-DMXAddress GdtfDmxChannel::GetDefaultValue() const
+DmxValue GdtfDmxChannel::GetDefaultValue() const
 {
 	return fDefaultValue;
 }
 
-DMXAddress GdtfDmxChannel::GetHighlight() const
+DmxValue GdtfDmxChannel::GetHighlight() const
 {
 	return fHeighlight;
 }
@@ -2377,7 +2377,8 @@ DmxValue SceneData::GdtfDmxChannel::GetChannelMaxDmx()
 		case VectorworksMVR::GdtfDefines::eGdtfChannelBitResolution_8: maxVal = 256 ; break;
 		case VectorworksMVR::GdtfDefines::eGdtfChannelBitResolution_16:maxVal = 256 * 256; break;
 		case VectorworksMVR::GdtfDefines::eGdtfChannelBitResolution_24:maxVal = 256 * 256 * 256; break;
-		case VectorworksMVR::GdtfDefines::eGdtfChannelBitResolution_32:maxVal = 256 * 256 * 256 * 256; break;
+		case VectorworksMVR::GdtfDefines::eGdtfChannelBitResolution_32:maxVal = 4294967296; break; 
+		/* The compiler gives a warning here, if we do a normal calculation here, so we just pick the value (256 * 256 * 256 * 256)*/
 	}
 	
 	return (maxVal - 1);
@@ -2708,7 +2709,7 @@ void GdtfDmxChannelFunction::OnPrintToFile(IXMLFileNodePtr pNode)
 		GdtfDmxChannelSetPtr first  = fChannelSets[i-1];
 		GdtfDmxChannelSetPtr second = fChannelSets[ i ];
 		
-		DMXAddress diff = second ->GetDmxStart() - first->GetDmxEnd();
+		DmxValue diff = second ->GetDmxStart() - first->GetDmxEnd();
 		
 		if (diff > 1)
 		{
@@ -2990,7 +2991,7 @@ void GdtfDmxChannelSet::SetDmxStart(DmxValue start)
 	fDmxStart = start;
 }
 
-void GdtfDmxChannelSet::SetDmxEnd(DMXAddress end)
+void GdtfDmxChannelSet::SetDmxEnd(DmxValue end)
 {
 	fDmxEnd = end;
 }
@@ -3084,7 +3085,7 @@ DmxValue GdtfDmxChannelSet::GetDmxStart() const
 	return fDmxStart;
 }
 
-DMXAddress GdtfDmxChannelSet::GetDmxEnd() const
+DmxValue GdtfDmxChannelSet::GetDmxEnd() const
 {
 	if(fNextChannelSet == nullptr && fDmxEnd == -1) {  return fParentChnlFunction->GetEndAdress(); }
 	return fDmxEnd;
@@ -7739,10 +7740,17 @@ void SceneData::GdtfMacroVisualValue::OnPrintToFile(IXMLFileNodePtr pNode)
 	//------------------------------------------------------------------------------------
 	// Call the parent
 	GdtfObject::OnPrintToFile(pNode);
+
+	EGdtfChannelBitResolution resolution = EGdtfChannelBitResolution::eGdtfChannelBitResolution_8;
+	ASSERTN(kEveryone, fChannelFunctionRef != nullptr);
+	if(fChannelFunctionRef)
+	{
+		fChannelFunctionRef->GetParentDMXChannel()->GetChannelBitResolution();
+	}
 	
 	//------------------------------------------------------------------------------------
 	// Print the attributes
-	pNode->SetNodeAttributeValue(XML_GDTF_MacroVisualValue_AttrValue, GdtfConverter::ConvertInteger(fDmxValue));
+	pNode->SetNodeAttributeValue(XML_GDTF_MacroVisualValue_AttrValue, GdtfConverter::ConvertDMXValue(fDmxValue, resolution));
 	pNode->SetNodeAttributeValue(XML_GDTF_MacroVisualValue_AttrChanFunc, fChannelFunctionRef->GetNodeReference() );
 }
 
@@ -7751,10 +7759,19 @@ void SceneData::GdtfMacroVisualValue::OnReadFromNode(const IXMLFileNodePtr & pNo
 	//------------------------------------------------------------------------------------
 	// Call the parent
 	GdtfObject::OnReadFromNode(pNode);
+
+
+	EGdtfChannelBitResolution resolution = EGdtfChannelBitResolution::eGdtfChannelBitResolution_8;
+	ASSERTN(kEveryone, fChannelFunctionRef != nullptr);
+	if(fChannelFunctionRef)
+	{
+		fChannelFunctionRef->GetParentDMXChannel()->GetChannelBitResolution();
+	}
+
 	//------------------------------------------------------------------------------------
 	// Get the attribute
 	TXString dmxValStr; pNode->GetNodeAttributeValue(XML_GDTF_MacroVisualValue_AttrValue, dmxValStr);
-	GdtfConverter::ConvertInteger(dmxValStr, fDmxValue);
+	GdtfConverter::ConvertDMXValue(dmxValStr, resolution ,fDmxValue);
 	//
 	pNode->GetNodeAttributeValue(XML_GDTF_MacroVisualValue_AttrChanFunc, fUnresolvedChannelFunctionRef);
 }

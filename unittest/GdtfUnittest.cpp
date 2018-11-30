@@ -570,9 +570,9 @@ void GdtfUnittest::ReadFile()
 								this->checkifEqual("gdtfFunctionGetOriginalAttribute ", ogAttribute, "My orginalAttribute");
 
 								//Start Address
-								GdtfDefines::DMXAddress dmxStartAddress;
+								GdtfDefines::DmxValue dmxStartAddress;
 								__checkVCOM(gdtfFunction->GetStartAddress(dmxStartAddress));
-								this->checkifEqual("gdtfFunctionGetStartAddress ", dmxStartAddress, GdtfDefines::DMXAddress(1));
+								this->checkifEqual("gdtfFunctionGetStartAddress ", dmxStartAddress, GdtfDefines::DmxValue(1));
 
 								//physical Start
 								double physicalStart;
@@ -622,13 +622,13 @@ void GdtfUnittest::ReadFile()
 									MvrString channelSetName = gdtfChannelSet->GetName();
 									this->checkifEqual("gdtfChannelSetGetName ", channelSetName, "My nameDmxChannelSet");
 
-									GdtfDefines::DMXAddress startAddr;
+									GdtfDefines::DmxValue startAddr;
 									__checkVCOM(gdtfChannelSet->GetDmxStartAddress(startAddr));
-									this->checkifEqual("gdtfChannelSetGetDmxStartAddress ", startAddr, GdtfDefines::DMXAddress(1));
+									this->checkifEqual("gdtfChannelSetGetDmxStartAddress ", startAddr, (GdtfDefines::DmxValue)1);
 
-									GdtfDefines::DMXAddress endAddr;
+									GdtfDefines::DmxValue endAddr;
 									__checkVCOM(gdtfChannelSet->GetDmxEndAddress(endAddr));
-									this->checkifEqual("gdtfChannelSetGetDmxEndAddress ", endAddr, GdtfDefines::DMXAddress(2));
+									this->checkifEqual("gdtfChannelSetGetDmxEndAddress ", endAddr, (GdtfDefines::DmxValue)2);
 
 									double physicalStart;
 									__checkVCOM(gdtfChannelSet->GetPhysicalStart(physicalStart));

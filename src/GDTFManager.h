@@ -92,7 +92,7 @@ namespace SceneData
 	};
 	
 	//------------------------------------------------------------------------------------
-	// Attributes
+	// Attribute Definitions
 	
 	
 	//------------------------------------------------------------------------------------
@@ -122,9 +122,9 @@ namespace SceneData
 		void								AddLinkedAttribute(GdtfAttribute* attr);
 		
 	protected:
-		virtual	TXString				GetNodeName();
-		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
-		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+		virtual	TXString				    GetNodeName();
+		virtual	void					    OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					    OnReadFromNode(const IXMLFileNodePtr& pNode);
 
 		
 		
@@ -133,7 +133,7 @@ namespace SceneData
 	typedef std::vector<GdtfActivationGroupPtr>	TGdtfActivationGroupArray;
 		
 	//------------------------------------------------------------------------------------
-	// Feature
+	// Feature Groups
 	class GdtfFeature : public GdtfObject
 	{
 	public:
@@ -291,8 +291,6 @@ namespace SceneData
 	typedef GdtfWheelSlotPrismFacet*				GdtfWheelSlotPrismFacetPtr;
 	typedef std::vector<GdtfWheelSlotPrismFacetPtr>	TGdtfWheelSlotPrismFacetArray;
 	
-	//------------------------------------------------------------------------------------
-	// Wheel Definition
 	class GdtfWheelSlot : public GdtfObject
 	{
 	public:
@@ -703,10 +701,6 @@ namespace SceneData
 	
 	//------------------------------------------------------------------------------------
 	// DMX Definition
-	
-
-
-	
 	class GdtfDmxChannelSet : public GdtfObject
 	{
 	public:
@@ -716,8 +710,8 @@ namespace SceneData
 		
 	private:
 		TXString			fUniqueName;
-		DMXAddress			fDmxStart;
-		DMXAddress			fDmxEnd;
+		DmxValue			fDmxStart;
+		DmxValue			fDmxEnd;
 		bool				fSetPhysical;
 		double				fPhysicalStart;
 		double				fPhysicalEnd;
@@ -732,7 +726,7 @@ namespace SceneData
 		//
         const TXString&                 GetName() const;
         DmxValue                        GetDmxStart() const;
-        DMXAddress                      GetDmxEnd() const;
+        DmxValue                        GetDmxEnd() const;
         double                          GetPhysicalStart() const;
         double                          GetPhysicalEnd() const;        
 		Sint32							GetWheelSlot();
@@ -742,7 +736,7 @@ namespace SceneData
 		// Setter
 		void							SetName(const TXString& name);
 		void							SetDmxStart(DmxValue start);
-		void							SetDmxEnd(DMXAddress end);
+		void							SetDmxEnd(DmxValue end);
 		void							SetPhysicalStart(double start);
 		void							SetPhysicalEnd(double end);		
 		void							SetWheelSlot(Sint32 slotIndex);
@@ -927,8 +921,8 @@ namespace SceneData
         Sint32								GetUltra() const;
 		Sint32								GetUber() const;
         EGdtfDmxFrequency					GetFrequency() const;
-        DMXAddress							GetDefaultValue() const;
-        DMXAddress							GetHighlight() const;
+        DmxValue							GetDefaultValue() const;
+        DmxValue							GetHighlight() const;
 		bool								HasHighlight() const;
         double                              GetMoveInBlackFrames() const;
         double								GetDmxChangeTimeLimit() const;				
@@ -945,8 +939,8 @@ namespace SceneData
 		void								SetDmxUltra(Sint32 ultra);
 		void								SetDmxUber(Sint32 uber);
 		void								SetFrequency(EGdtfDmxFrequency frequency);
-		void								SetDefaultValue(DMXAddress defaultValue);
-		void								SetHighlight(DMXAddress highlight);
+		void								SetDefaultValue(DmxValue defaultValue);
+		void								SetHighlight(DmxValue highlight);
 		void								SetMoveInBlackFrames(double moveInBlackFrames);
 		void								SetDmxChangeTimeLimit(double changeLimit);
 		void								SetModel(GdtfModelPtr ptr);
@@ -976,8 +970,8 @@ namespace SceneData
 		GdtfDmxChannelPtr			fMasterDmxChannel;
 		GdtfDmxChannelFunctionPtr	fSlaveChannelFunction;
 		EGdtfDmxRelationType		fRelationType;
-		DMXAddress					fDmxStart;
-		DMXAddress					fDmdEnd;
+		DmxValue					fDmxStart;
+		DmxValue					fDmdEnd;
 		
 		// Pointer Resolve
 		TXString					fUnresolvedDmxStart;

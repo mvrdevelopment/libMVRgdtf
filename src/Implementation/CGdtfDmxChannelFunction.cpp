@@ -83,7 +83,7 @@ MvrString VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetOriginalAttribute()
 
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetStartAddress(DMXAddress& address)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetStartAddress(DmxValue& address)
 {
 	// Check Pointer
 	if ( ! fFunction) { return kVCOMError_NotInitialized; }
@@ -93,7 +93,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetStartA
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetEndAddress(DMXAddress& address)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetEndAddress(DmxValue& address)
 {
 	// Check Pointer
 	if ( ! fFunction) { return kVCOMError_NotInitialized; }

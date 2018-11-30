@@ -344,11 +344,14 @@ TXString SceneData::GdtfConverter::ConvertDMXAdress(DMXAddress value)
 bool SceneData::GdtfConverter::ConvertDMXAdress(const TXString& value, DMXAddress & intValue)
 /* Convert String to DMXAdress*/
 {
-	/* Absolute DMX address (size 4 bytes); 
-	  Alternative format: Universe � integer universe number, starting with 1;  XXX check this
-	  Address: address within universe from 1 to 512. Format: integer */
-	
-	return ConvertInteger(value, intValue);
+    if(value.IsEmpty()) {intValue = 1; return false;}
+
+	intValue = value.atoi();
+
+    ASSERTN(kEveryone, intValue > 0);
+    ASSERTN(kEveryone, intValue < 513);
+
+    return true;
 }
 
 bool SplitStr(const TXString& str, TXString& part1, TXString& part2, size_t splitPos, bool includeSplitPos=false)

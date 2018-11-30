@@ -567,8 +567,8 @@ namespace VectorworksMVR
     {
 	public:
         virtual MvrString VCOM_CALLTYPE     GetName() = 0;
-        virtual VCOMError VCOM_CALLTYPE     GetDmxStartAddress(GdtfDefines::DMXAddress& address) = 0;
-        virtual VCOMError VCOM_CALLTYPE     GetDmxEndAddress(GdtfDefines::DMXAddress& address) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetDmxStartAddress(GdtfDefines::DmxValue& address) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetDmxEndAddress(GdtfDefines::DmxValue& address) = 0;
 		
         virtual VCOMError VCOM_CALLTYPE     GetPhysicalStart(double& start) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetPhysicalEnd(double& end) = 0;        
@@ -591,8 +591,8 @@ namespace VectorworksMVR
 		
         virtual VCOMError VCOM_CALLTYPE     GetAttribute(IGdtfAttribute** attribute) = 0;
         virtual MvrString VCOM_CALLTYPE     GetOriginalAttribute() = 0;
-        virtual VCOMError VCOM_CALLTYPE     GetStartAddress(GdtfDefines::DMXAddress& address) = 0;
-		virtual VCOMError VCOM_CALLTYPE     GetEndAddress(GdtfDefines::DMXAddress& address) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetStartAddress(GdtfDefines::DmxValue& address) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetEndAddress(GdtfDefines::DmxValue& address) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetPhysicalStart(double& start) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetPhysicalEnd(double& end) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetRealFade(double& fade) = 0;        

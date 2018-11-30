@@ -105,6 +105,43 @@ void Unittest::checkifEqual(const std::string& check, const size_t val1, const s
 	fFailedTests.push_back(test);
 };
 
+#ifdef GS_MAC
+	// Under Win and Linux there is a problem with double declaration of DMXValue (Uint64 type) and size_t (also Uint64 type)
+	// OSX needs that extra declaration
+	void Unittest::checkifEqual(const std::string& check, const VectorworksMVR::GdtfDefines::DmxValue val1, const VectorworksMVR::GdtfDefines::DmxValue val2)
+{
+	if (val1 == val2) return;
+
+	// Else Log the error
+	fFailed = true;
+
+	UnittestFailObject test;
+	test.fMessage += check;
+	test.fMessage += " Result: ";
+	test.fMessage += std::to_string(val1);
+	test.fMessage += " Expected: ";
+	test.fMessage += std::to_string(val2);
+
+	fFailedTests.push_back(test);
+};
+#endif
+void Unittest::checkifEqual(const std::string& check, const VectorworksMVR::GdtfDefines::DMXAddress val1, const VectorworksMVR::GdtfDefines::DMXAddress val2)
+{
+	if (val1 == val2) return;
+
+	// Else Log the error
+	fFailed = true;
+
+	UnittestFailObject test;
+	test.fMessage += check;
+	test.fMessage += " Result: ";
+	test.fMessage += std::to_string(val1);
+	test.fMessage += " Expected: ";
+	test.fMessage += std::to_string(val2);
+
+	fFailedTests.push_back(test);
+};
+
 /*
 void Unittest::checkifEqual(const std::string& check, const VectorworksMVR::GdtfDefines::DmxValue val1, const VectorworksMVR::GdtfDefines::DmxValue val2)
 {
