@@ -23,5 +23,5 @@ matrix:
         - CMD //C "runMSBuild.bat"
 
 script:
-- make -j 8
+- make
 - make test
