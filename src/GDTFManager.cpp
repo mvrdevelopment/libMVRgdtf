@@ -3915,6 +3915,7 @@ void GdtfFixture::ResolveAllReferences()
 	ResolveGeometryRefs();
 	ResolveAttribRefs();
 	ResolveDmxModeRefs();	
+	ResolveDMXModeMasters();	
 }
 
 void GdtfFixture::ResolveGeometryRefs()
@@ -4047,6 +4048,37 @@ void GdtfFixture::ResolveDmxModeRefs()
 	}	
 }
 
+void GdtfFixture::ResolveDMXModeMasters()
+{	
+	for (GdtfDmxModePtr mode : fDmxModes)
+	{
+		for(GdtfDmxChannelPtr channel : mode->GetChannelArray())
+		{
+			for(GdtfDmxLogicalChannelPtr logicalChannel : channel->GetLogicalChannelArray())
+			{
+				for(GdtfDmxChannelFunctionPtr function : logicalChannel->GetDmxChannelFunctions())
+				{
+					// ----------------------------------------------------------------------------------------
+					// DmxChanelFunction Mode Master Channel (Optional)
+					TXString unresolvedModeMaster = function->getUnresolvedModeMasterRef();
+					if(! unresolvedModeMaster.IsEmpty())
+					{
+						bool resolved = false;
+						GdtfDmxChannelPtr channelPtr = getDmxChannelByRef(unresolvedModeMaster);
+						if(! resolved && channelPtr){ function->SetModeMaster_Channel(channelPtr); resolved = true; }
+
+						GdtfDmxChannelFunctionPtr functionPtr = getDmxFunctionByRef(unresolvedModeMaster);
+						if(! resolved && functionPtr) { function->SetModeMaster_Function(functionPtr);resolved = true; }
+
+						ASSERTN(kEveryone, resolved);
+						
+					}
+				}
+			}
+		}
+	}	
+}
+
 void GdtfFixture::ResolveDmxRelationRefs(GdtfDmxModePtr dmxMode)
 {
 	for (GdtfDmxRelationPtr rel : dmxMode->GetDmxRelations())
@@ -4162,22 +4194,6 @@ void GdtfFixture::ResolveDmxChanelFunctionRefs(GdtfDmxLogicalChannelPtr dmxLogCh
 		{
 			GdtfPhysicalEmitterPtr emtPtr = getEmiterByRef(unresolvedEmitterRef);
 			chnlFunc->SetEmitter(emtPtr);
-		}
-
-		// ----------------------------------------------------------------------------------------
-		// DmxChanelFunction Mode Master Channel (Optional)
-		TXString unresolvedModeMaster = chnlFunc->getUnresolvedModeMasterRef();
-		if(! unresolvedModeMaster.IsEmpty())
-		{
-			bool resolved = false;
-			GdtfDmxChannelPtr channelPtr = getDmxChannelByRef(unresolvedModeMaster);
-			if(! resolved && channelPtr){ chnlFunc->SetModeMaster_Channel(channelPtr); resolved = true; }
-
-			GdtfDmxChannelFunctionPtr functionPtr = getDmxFunctionByRef(unresolvedModeMaster);
-			if(! resolved && functionPtr) { chnlFunc->SetModeMaster_Function(functionPtr);resolved = true; }
-
-			ASSERTN(kEveryone, resolved);
-			
 		}
 	}
 }

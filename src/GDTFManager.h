@@ -2497,6 +2497,7 @@ protected:
 		
 		void ResolveAttribRefs();		
 		void ResolveDmxModeRefs();
+        void ResolveDMXModeMasters();
 		void ResolveDmxRelationRefs(GdtfDmxModePtr dmxMode);
 		void ResolveDmxChannelRefs(GdtfDmxModePtr dmxMode);
 		GdtfGeometryPtr ResolveGeometryRef(const TXString& unresolvedGeoRef, const TGdtfGeometryArray& geometryArray);
