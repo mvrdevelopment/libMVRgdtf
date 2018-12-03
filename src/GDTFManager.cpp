@@ -2575,6 +2575,11 @@ GdtfDmxChannelFunction::GdtfDmxChannelFunction(GdtfDmxLogicalChannel* parent)
 	fAttribute				= nullptr;
 	fParentLogicalChannel	= parent;
 	fNextFunction			= nullptr;
+
+	fModeMaster_Channel		= nullptr;
+	fModeMaster_Function	= nullptr;
+	fDmxModeStart			= 0;
+	fDmxModeEnd				= 0;
 }
 
 GdtfDmxChannelFunction::GdtfDmxChannelFunction(const TXString& name, GdtfDmxLogicalChannel* parent)
@@ -2591,6 +2596,11 @@ GdtfDmxChannelFunction::GdtfDmxChannelFunction(const TXString& name, GdtfDmxLogi
 	fAttribute				= nullptr;
 	fParentLogicalChannel	= parent;
 	fNextFunction			= nullptr;
+
+	fModeMaster_Channel		= nullptr;
+	fModeMaster_Function	= nullptr;
+	fDmxModeStart			= 0;
+	fDmxModeEnd				= 0;
 }
 
 GdtfDmxChannelFunction::~GdtfDmxChannelFunction()
@@ -2671,15 +2681,16 @@ void GdtfDmxChannelFunction::OnPrintToFile(IXMLFileNodePtr pNode)
 	
 	
 	// Read Mode Master
-	ASSERTN(kEveryone, !(fModeMaster_Channel != nullptr & fModeMaster_Function != nullptr));
 	if(fModeMaster_Channel)
 	{
+		ASSERTN(kEveryone, (fModeMaster_Function == nullptr));
 		pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeMaster,				fModeMaster_Channel->GetNodeReference());	
 		pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeFrom,				GdtfConverter::ConvertDMXValue(fDmxModeStart, chanelReso));	
 		pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeTo,					GdtfConverter::ConvertDMXValue(fDmxModeEnd, chanelReso));	
 	}
 	if(fModeMaster_Function)
 	{
+		ASSERTN(kEveryone, (fModeMaster_Channel == nullptr));
 		pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeMaster,				fModeMaster_Function->GetNodeReference());	
 		pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeFrom,				GdtfConverter::ConvertDMXValue(fDmxModeStart, chanelReso));	
 		pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeTo,					GdtfConverter::ConvertDMXValue(fDmxModeEnd, chanelReso));	
