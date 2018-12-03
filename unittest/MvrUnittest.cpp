@@ -201,11 +201,10 @@ void MvrUnittest::ReadFile()
 			{
 				ESceneObjType type;
 				__checkVCOM(sceneObj->GetType(type));
-				
 				if (type == ESceneObjType::FocusPoint)
 				{
 					ISceneObjPtr focusPointObj;
-					sceneObj->GetFocusPoint(&focusPointObj);
+					__checkVCOM(sceneObj->GetFocusPoint(&focusPointObj));
 					if(i==0 && j==0)
 					{		
 						checkifEqual("GetFocusPoint name", focusPointObj->GetName(), "My FocusPoint");
@@ -217,8 +216,8 @@ void MvrUnittest::ReadFile()
 					}
 				}
 
-				// if (type == ESceneObjType::Fixture)
-				// {
+				//if (type == ESceneObjType::Fixture)
+				//{
 				// 	// Read the GDTF File
 				// 	IGdtfFixturePtr fixture;
 				// 	if (__checkVCOM(sceneObj->GetGdtfFixture( & fixture)))
@@ -326,7 +325,7 @@ void MvrUnittest::ReadFile()
 				// 			}
 				// 		}
 				// 	} // End Read Gdtf File
-				// }
+				//}
 							
 				//------------------------------------------------------------------------
 				// Step to next Obj
@@ -342,7 +341,7 @@ void MvrUnittest::ReadFile()
 			readLayer = nextLayer;
 		}
 
-        // TODO
+       // TODO
 		if (__checkVCOM(mvrRead->GetSymDefCount(count)))
 		{
 			checkifEqual("CountSymDef ", count, size_t(1));
@@ -354,7 +353,7 @@ void MvrUnittest::ReadFile()
 		}
 		//------------------------------------------------------------------------------------------------
 		// Traverse SymbolDefs
-		//TODO Symdef Position Class UUID?
+		//	TODO Symdef Position Class UUID?
 
 		size_t  countSymbols = 0;
 		__checkVCOM(mvrRead->GetSymDefCount(countSymbols));
@@ -380,8 +379,6 @@ void MvrUnittest::ReadFile()
 				checkifEqual("Get GeometryFileName", geoRef->GetFileForGeometry(), "empty.3ds");
 				//_P(fileForGeom);
 			}
-
-					virtual VCOMError VCOM_CALLTYPE		GetClass(IClass** outClass) = 0;
 
 		}
     }
