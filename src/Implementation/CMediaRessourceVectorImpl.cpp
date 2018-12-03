@@ -1155,7 +1155,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetNextObje
 	
 	
 	// If no next object is there, just return ok
-	if (scNextObj == nullptr)	{ return kVCOMError_NoError; }
+	if (scNextObj == nullptr)	{ return kVCOMError_NotSet; }
 	
 	//---------------------------------------------------------------------------
 	// Initialize Object

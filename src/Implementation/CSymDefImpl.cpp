@@ -21,6 +21,19 @@ VectorworksMVR::CSymDefImpl::~CSymDefImpl()
 	fContext	= nullptr;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CSymDefImpl::GetGuid(MvrUUID& outGuid)
+{
+    // Check if this is initialized
+    ASSERTN(kEveryone, fPtr);
+    if (!fPtr) return kVCOMError_NotInitialized;
+
+    // Otherise return data
+    fPtr->getGuid().GetUuidObj().GetUUID(outGuid.a, outGuid.b, outGuid.c, outGuid.d);
+
+
+    return kVCOMError_NoError;
+}
+
 MvrString VectorworksMVR::CSymDefImpl::GetName()
 {
 	// Check if this is initialized
