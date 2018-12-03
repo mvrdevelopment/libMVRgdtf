@@ -45,9 +45,14 @@ void GdtfDmxUnittest::WriteFile()
     {
 		//----------------------------------------------------------------
 		// Create Attribute
-		IGdtfAttributePtr attribute;
-		__checkVCOM(gdtfWrite->CreateAttribute("Attribute","Pretty", &attribute));
+		IGdtfAttributePtr attribute1;
+		__checkVCOM(gdtfWrite->CreateAttribute("Attribute1","Pretty", &attribute1));
 
+		IGdtfAttributePtr attribute2;
+		__checkVCOM(gdtfWrite->CreateAttribute("Attribute2","Pretty", &attribute2));
+
+		IGdtfAttributePtr attribute3;
+		__checkVCOM(gdtfWrite->CreateAttribute("Attribute3","Pretty", &attribute3));
 
 		//----------------------------------------------------------------
 		// Create Model
@@ -74,8 +79,8 @@ void GdtfDmxUnittest::WriteFile()
 
 		// First Logical Channel
 		IGdtfDmxLogicalChannelPtr bit8LogicalChannel1;
-		bit8channel->CreateLogicalChannel(attribute, &bit8LogicalChannel1);
-		bit8LogicalChannel1->SetAttribute(attribute);
+		bit8channel->CreateLogicalChannel(attribute1, &bit8LogicalChannel1);
+		bit8LogicalChannel1->SetAttribute(attribute1);
 
 		IGdtfDmxChannelFunctionPtr bit8Function1;
 		bit8LogicalChannel1->CreateDmxFunction("Function1", &bit8Function1);
@@ -106,8 +111,8 @@ void GdtfDmxUnittest::WriteFile()
 
 		// Second Logical Channel
 		IGdtfDmxLogicalChannelPtr bit8LogicalChannel2;
-		bit8channel->CreateLogicalChannel(attribute, &bit8LogicalChannel2);
-		bit8LogicalChannel2->SetAttribute(attribute);
+		bit8channel->CreateLogicalChannel(attribute1, &bit8LogicalChannel2);
+		bit8LogicalChannel2->SetAttribute(attribute1);
 
 		IGdtfDmxChannelFunctionPtr bit8Function3;
 		bit8LogicalChannel2->CreateDmxFunction("Function3", &bit8Function3);
@@ -147,8 +152,8 @@ void GdtfDmxUnittest::WriteFile()
 		bit16channel->SetHighlight(256);
 
 		IGdtfDmxLogicalChannelPtr bit16LogicalChannel;
-		bit16channel->CreateLogicalChannel(attribute, &bit16LogicalChannel);
-		bit16LogicalChannel->SetAttribute(attribute);
+		bit16channel->CreateLogicalChannel(attribute2, &bit16LogicalChannel);
+		bit16LogicalChannel->SetAttribute(attribute2);
 
 		IGdtfDmxChannelFunctionPtr bit16Function;
 		bit16LogicalChannel->CreateDmxFunction("Function", &bit16Function);
@@ -175,8 +180,8 @@ void GdtfDmxUnittest::WriteFile()
 		bit24channel->SetUltra(5);
 
 		IGdtfDmxLogicalChannelPtr logicalChannel24bit;
-		__checkVCOM(bit24channel->CreateLogicalChannel(attribute, &logicalChannel24bit));
-		logicalChannel24bit->SetAttribute(attribute);
+		__checkVCOM(bit24channel->CreateLogicalChannel(attribute3, &logicalChannel24bit));
+		logicalChannel24bit->SetAttribute(attribute3);
 
 		IGdtfDmxChannelFunctionPtr function24bit_1;
 		__checkVCOM(logicalChannel24bit->CreateDmxFunction("Log 1", & function24bit_1));
@@ -191,7 +196,7 @@ void GdtfDmxUnittest::WriteFile()
 		__checkVCOM(function24bit_3->SetStartAddress(0));
 
 
-		__checkVCOM(function24bit_3->SetModeMasterChannel(bit16channel, 0, 179));
+		__checkVCOM(function24bit_3->SetModeMasterChannel(bit16channel, 80, 179));
 
         __checkVCOM(gdtfWrite->Close());
     }
@@ -208,13 +213,24 @@ void GdtfDmxUnittest::ReadFile()
 		// Read the Attributes
 		size_t countAttributes = 0;
 		__checkVCOM(gdtfRead->GetAttributeCount(countAttributes));
-		this->checkifEqual("Check Count Attributes ", countAttributes, size_t(1));
+		this->checkifEqual("Check Count Attributes ", countAttributes, size_t(3));
 
 		// Check Attribute
-		IGdtfAttributePtr	gdtfAttribute;
-		__checkVCOM(gdtfRead->GetAttributeAt(0, &gdtfAttribute));
-		this->checkifEqual("gdtfAttribute GetName() ", gdtfAttribute->GetName(), "Attribute");
-		this->checkifEqual("gdtfAttribute GetName() ", gdtfAttribute->GetPrettyName(), "Pretty");
+		IGdtfAttributePtr	gdtfAttribute1;
+		__checkVCOM(gdtfRead->GetAttributeAt(0, &gdtfAttribute1));
+		this->checkifEqual("gdtfAttribute GetName() ", gdtfAttribute1->GetName(), "Attribute1");
+		this->checkifEqual("gdtfAttribute GetName() ", gdtfAttribute1->GetPrettyName(), "Pretty");
+
+		IGdtfAttributePtr	gdtfAttribute2;
+		__checkVCOM(gdtfRead->GetAttributeAt(1, &gdtfAttribute2));
+		this->checkifEqual("gdtfAttribute GetName() ", gdtfAttribute2->GetName(), "Attribute2");
+		this->checkifEqual("gdtfAttribute GetName() ", gdtfAttribute2->GetPrettyName(), "Pretty");
+
+		IGdtfAttributePtr	gdtfAttribute3;
+		__checkVCOM(gdtfRead->GetAttributeAt(2, &gdtfAttribute3));
+		this->checkifEqual("gdtfAttribute GetName() ", gdtfAttribute3->GetName(), "Attribute3");
+		this->checkifEqual("gdtfAttribute GetName() ", gdtfAttribute3->GetPrettyName(), "Pretty");
+
 
 
 		//------------------------------------------------------------------------------    
@@ -574,7 +590,7 @@ void GdtfDmxUnittest::Check24bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxC
 
 	__checkVCOM(bit8Function3->GetModeMasterChannel(&gdtfChannel, start, end));
 
-	this->checkifEqual("Check ModeMaster Channel Start ",start, (DmxValue)0);
+	this->checkifEqual("Check ModeMaster Channel Start ",start, (DmxValue)80);
 	this->checkifEqual("Check ModeMaster Channel End ",  end,   (DmxValue)179);
 
 	__checkVCOM_NotSet(bit8Function3->GetModeMasterFunction(&gdtfFunction, start, end));

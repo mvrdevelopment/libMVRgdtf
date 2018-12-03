@@ -2944,7 +2944,7 @@ DmxValue GdtfDmxChannelFunction::GetModeMasterDmxStart() const
 
 DmxValue GdtfDmxChannelFunction::GetModeMasterDmxEnd() const
 {
-	return fDmxModeStart;
+	return fDmxModeEnd;
 }
 
 void GdtfDmxChannelFunction::ResolveModeMasterDmx(EGdtfChannelBitResolution resolution)
@@ -2974,7 +2974,7 @@ void GdtfDmxChannelFunction::SetModeMasterDmxStart(DmxValue start)
 
 void GdtfDmxChannelFunction::SetModeMasterDmxEnd(DmxValue end)
 {
-	fDmxModeStart = end;
+	fDmxModeEnd = end;
 }
 
 void GdtfDmxChannelFunction::SetEmitter(GdtfPhysicalEmitter* newEmit)
