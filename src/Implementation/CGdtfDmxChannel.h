@@ -43,7 +43,7 @@ namespace VectorworksMVR
 		
         virtual VCOMError VCOM_CALLTYPE     GetLogicalChannelCount(size_t& count);
         virtual VCOMError VCOM_CALLTYPE     GetLogicalChannelAt(size_t at, IGdtfDmxLogicalChannel** channel);
-		virtual VCOMError VCOM_CALLTYPE     CreateLogicalChannel(MvrString name, IGdtfDmxLogicalChannel** channel);
+		virtual VCOMError VCOM_CALLTYPE     CreateLogicalChannel(IGdtfAttribute* attribute, IGdtfDmxLogicalChannel** channel);
 		
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr);
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject();

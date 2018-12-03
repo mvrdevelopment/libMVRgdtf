@@ -150,14 +150,21 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxModeImpl::GetDmxChannelAt(size
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxModeImpl::CreateDmxChannel(MvrString name, IGdtfDmxChannel** channel)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxModeImpl::CreateDmxChannel(IGdtfGeometry* geometry, IGdtfDmxChannel** channel)
 {
 	// Check Pointer
 	if ( ! fDmxMode) return kVCOMError_NotInitialized;
+    if( ! geometry)  return kVCOMError_InvalidArg;
+
+    CGdtfGeometryImpl* geometryImpl = dynamic_cast<CGdtfGeometryImpl*>(geometry);
+    if(! geometryImpl) return kVCOMError_Failed;
+
+    SceneData::GdtfGeometry* gdtfGeometry = geometryImpl->GetPointer();
+    if(!gdtfGeometry) { return kVCOMError_Failed; }
 	
 	// Check if no Overflow
-	TXString vwName (name);
-	SceneData::GdtfDmxChannel*	gdtfDmxChannel = fDmxMode->AddChannel(vwName);
+ 	SceneData::GdtfDmxChannel*	gdtfDmxChannel = fDmxMode->AddChannel();
+    gdtfDmxChannel->SetGeomRef(gdtfGeometry);
 	
 	//---------------------------------------------------------------------------
 	// Initialize Object

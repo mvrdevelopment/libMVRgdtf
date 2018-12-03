@@ -22,7 +22,7 @@ namespace VectorworksMVR
 		
         virtual VCOMError VCOM_CALLTYPE     GetDmxChannelCount(size_t& count);
         virtual VCOMError VCOM_CALLTYPE     GetDmxChannelAt(size_t at, IGdtfDmxChannel** channel);
-		virtual VCOMError VCOM_CALLTYPE     CreateDmxChannel(MvrString name, IGdtfDmxChannel** channel);
+		virtual VCOMError VCOM_CALLTYPE     CreateDmxChannel(IGdtfGeometry* geometry, IGdtfDmxChannel** channel);
 		
         
         virtual VCOMError VCOM_CALLTYPE     GetDmxRelationCount(size_t& count);

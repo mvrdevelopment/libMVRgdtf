@@ -19,11 +19,6 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetMasterChannel(IGdtfDmxChannel** master);
         virtual VCOMError VCOM_CALLTYPE     GetSlaveChannel(IGdtfDmxChannelFunction** slave);
         virtual VCOMError VCOM_CALLTYPE     GetRelationType(EGdtfDmxRelationType& relation);
-        virtual VCOMError VCOM_CALLTYPE     GetDmxStart(DmxValue& start);
-        virtual VCOMError VCOM_CALLTYPE     GetDmxEnd(DmxValue& end);
-
-		virtual VCOMError VCOM_CALLTYPE     SetDmxStart(DmxValue start);
-		virtual VCOMError VCOM_CALLTYPE     SetDmxEnd(DmxValue end);
 		
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr);
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject();

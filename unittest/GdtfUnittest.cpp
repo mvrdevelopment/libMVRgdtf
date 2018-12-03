@@ -188,7 +188,7 @@ void GdtfUnittest::WriteFile()
 			
 			IGdtfDmxChannelPtr 			gdtfDmxChannel;
 			IGdtfDmxChannelFunctionPtr	gdftChannelFunction;
-			if (__checkVCOM(gdtfDmxMode->CreateDmxChannel("My nameGeometry_My attributeName", &gdtfDmxChannel)))
+			if (__checkVCOM(gdtfDmxMode->CreateDmxChannel(childGeo, &gdtfDmxChannel)))
 			{
 				__checkVCOM(gdtfDmxChannel->SetCoarse(1));
 				__checkVCOM(gdtfDmxChannel->SetFine(2));
@@ -203,7 +203,7 @@ void GdtfUnittest::WriteFile()
 				__checkVCOM(gdtfDmxChannel->SetGeometry(childGeo));
 
 				IGdtfDmxLogicalChannelPtr gdtfLogicalChannel;
-				if (__checkVCOM(gdtfDmxChannel->CreateLogicalChannel("My attributeName", &gdtfLogicalChannel)))
+				if (__checkVCOM(gdtfDmxChannel->CreateLogicalChannel(gdtfAttribute, &gdtfLogicalChannel)))
 				{
 					__checkVCOM(gdtfLogicalChannel->SetAttribute(gdtfAttribute));
 					__checkVCOM(gdtfLogicalChannel->SetDmxMaster(EGdtfDmxMaster::eGdtfDmxMaster_Grand));
@@ -686,20 +686,6 @@ void GdtfUnittest::ReadFile()
 					__checkVCOM(gdtfRelation->GetRelationType(rel));
 					this->checkifEqual("gdtfRelationGetRelationType ", rel, EGdtfDmxRelationType::eGdtfDmxRelationType_Override);
 					
-					// DMX Start
-					GdtfDefines::DmxValue start;
-					if (__checkVCOM(gdtfRelation->GetDmxStart(start)))
-					{
-						// TODO: This will be removed for GDTF 0.88
-						//this->checkifEqual("gdtfRelationGetDmxStart ", start, GdtfDefines::DmxValue(1234));
-					}
-
-					// DMX End
-					GdtfDefines::DmxValue end;
-					if (__checkVCOM(gdtfRelation->GetDmxEnd(end)))
-					{
-						//this->checkifEqual("gdtfRelationGetDmxEnd ", end, GdtfDefines::DmxValue(1234));
-					}
 				}
 			}
 		}

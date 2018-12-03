@@ -43,6 +43,12 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetDmxChannelSetCount(size_t& count);
         virtual VCOMError VCOM_CALLTYPE     GetDmxChannelSetAt(size_t at, IGdtfDmxChannelSet** set);
 		virtual VCOMError VCOM_CALLTYPE     CreateDmxChannelSet(MvrString name, DMXAddress start, DMXAddress end, IGdtfDmxChannelSet** set);
+
+        // Mode Master from GDTF 0.88
+		virtual VCOMError VCOM_CALLTYPE     GetModeMasterChannel(IGdtfDmxChannel** outChannel, DmxValue& start, DmxValue& end);
+		virtual VCOMError VCOM_CALLTYPE     GetModeMasterFunction(IGdtfDmxChannelFunction** outFunction, DmxValue& start, DmxValue& end);
+		virtual VCOMError VCOM_CALLTYPE     SetModeMasterChannel(IGdtfDmxChannel* channel, DmxValue start, DmxValue end);
+		virtual VCOMError VCOM_CALLTYPE     SetModeMasterFunction(IGdtfDmxChannelFunction* function, DmxValue start, DmxValue end);
 		
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr);
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject();
