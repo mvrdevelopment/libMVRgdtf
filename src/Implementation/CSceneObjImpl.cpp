@@ -438,6 +438,12 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetFocusPoint(ISceneObj
 	ASSERTN(kEveryone, scFixture);
 	if	( scFixture == nullptr) { return kVCOMError_Failed; }
 	
+    SceneData::SceneDataFocusPointPtr focus = scFixture->GetFocusPoint();
+    
+    if ( ! focus) 
+    {
+        return kVCOMError_NotSet;
+    }
 	
 	//---------------------------------------------------------------------------
 	// Initialize Object
@@ -450,7 +456,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetFocusPoint(ISceneObj
 		CSceneObjImpl* pResultInterface = dynamic_cast<CSceneObjImpl* >(pFocusPoint);
 		if (pResultInterface)
 		{
-			pResultInterface->SetPointer(scFixture->GetFocusPoint(), fContext);
+			pResultInterface->SetPointer(focus, fContext);
 		}
 		else
 		{
