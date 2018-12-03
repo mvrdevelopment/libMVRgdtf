@@ -3009,6 +3009,11 @@ TXString GdtfDmxChannelFunction::getUnresolvedEmitterRef() const
 	return fUnresolvedEmitterRef;
 }
 
+TXString GdtfDmxChannelFunction::getUnresolvedModeMasterRef() const
+{
+	return fUnresolvedModeMaster;
+}
+
 GdtfDmxChannel * SceneData::GdtfDmxChannelFunction::GetParentDMXChannel() const
 {
 	return fParentLogicalChannel->GetParentDMXChannel();
@@ -3869,6 +3874,42 @@ GdtfPhysicalEmitterPtr GdtfFixture::getEmiterByRef(const TXString& ref)
 	return nullptr;
 }
 
+GdtfDmxChannelFunctionPtr GdtfFixture::getDmxFunctionByRef(const TXString& ref)
+{
+	for (GdtfDmxModePtr mode : fDmxModes)
+	{
+		for(GdtfDmxChannelPtr channel : mode->GetChannelArray())
+		{
+			for(GdtfDmxLogicalChannelPtr logicalChannel : channel->GetLogicalChannelArray())
+			{
+				for(GdtfDmxChannelFunctionPtr function : logicalChannel->GetDmxChannelFunctions())
+				{
+					if(function->GetNodeReference() == ref) { return function; }
+				}
+			}
+		}
+	}
+	
+	// When this line is reached nothing was found.
+	DSTOP ((kEveryone, "Failed to resolve GdtfDmxChannelFunctionPtr."));
+	return nullptr;
+}
+
+GdtfDmxChannelPtr GdtfFixture::getDmxChannelByRef(const TXString& ref)
+{
+	for (GdtfDmxModePtr mode : fDmxModes)
+	{
+		for(GdtfDmxChannelPtr channel : mode->GetChannelArray())
+		{
+			if(channel->GetNodeReference() == ref) { return channel; }
+		}
+	}
+	
+	// When this line is reached nothing was found.
+	DSTOP ((kEveryone, "Failed to resolve GdtfDmxChannelPtr."));
+	return nullptr;
+}
+
 void GdtfFixture::ResolveAllReferences()
 {
 	ResolveGeometryRefs();
@@ -4121,6 +4162,22 @@ void GdtfFixture::ResolveDmxChanelFunctionRefs(GdtfDmxLogicalChannelPtr dmxLogCh
 		{
 			GdtfPhysicalEmitterPtr emtPtr = getEmiterByRef(unresolvedEmitterRef);
 			chnlFunc->SetEmitter(emtPtr);
+		}
+
+		// ----------------------------------------------------------------------------------------
+		// DmxChanelFunction Mode Master Channel (Optional)
+		TXString unresolvedModeMaster = chnlFunc->getUnresolvedModeMasterRef();
+		if(! unresolvedModeMaster.IsEmpty())
+		{
+			bool resolved = false;
+			GdtfDmxChannelPtr channelPtr = getDmxChannelByRef(unresolvedModeMaster);
+			if(! resolved && channelPtr){ chnlFunc->SetModeMaster_Channel(channelPtr); resolved = true; }
+
+			GdtfDmxChannelFunctionPtr functionPtr = getDmxFunctionByRef(unresolvedModeMaster);
+			if(! resolved && functionPtr) { chnlFunc->SetModeMaster_Function(functionPtr);resolved = true; }
+
+			ASSERTN(kEveryone, resolved);
+			
 		}
 	}
 }

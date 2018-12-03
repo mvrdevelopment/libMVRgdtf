@@ -819,6 +819,7 @@ namespace SceneData
 		TXString						getUnresolvedAttrRef() const;
 		TXString						getUnresolvedWheelRef() const;
 		TXString						getUnresolvedEmitterRef() const;
+        TXString						getUnresolvedModeMasterRef() const;
 		GdtfDmxChannel*					GetParentDMXChannel() const;
 
         void                            SetNextFunction(GdtfDmxChannelFunction* next);
@@ -2480,10 +2481,12 @@ protected:
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
 		        
-        GdtfAttributePtr getAttributeByRef(const TXString& ref);
-        GdtfWheelPtr getWheelByRef(const TXString& ref);		
-		GdtfPhysicalEmitterPtr getEmiterByRef(const TXString& ref);
-		
+        GdtfAttributePtr            getAttributeByRef(const TXString& ref);
+        GdtfWheelPtr                getWheelByRef(const TXString& ref);		
+		GdtfPhysicalEmitterPtr      getEmiterByRef(const TXString& ref);
+        GdtfDmxChannelFunctionPtr   getDmxFunctionByRef(const TXString& ref);
+		GdtfDmxChannelPtr           getDmxChannelByRef(const TXString& ref);
+
 		//
 		void AutoGenerateNames(GdtfDmxModePtr dmxMode);
 		
