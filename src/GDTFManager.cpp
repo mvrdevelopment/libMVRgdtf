@@ -2677,15 +2677,15 @@ void GdtfDmxChannelFunction::OnPrintToFile(IXMLFileNodePtr pNode)
 	{
 		ASSERTN(kEveryone, (fModeMaster_Function == nullptr));
 		pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeMaster,				fModeMaster_Channel->GetNodeReference());	
-		pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeFrom,				GdtfConverter::ConvertDMXValue(fDmxModeStart, chanelReso));	
-		pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeTo,					GdtfConverter::ConvertDMXValue(fDmxModeEnd, chanelReso));	
+		pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeFrom,				GdtfConverter::ConvertDMXValue(fDmxModeStart, fModeMaster_Channel->GetChannelBitResolution()));	
+		pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeTo,					GdtfConverter::ConvertDMXValue(fDmxModeEnd,   fModeMaster_Channel->GetChannelBitResolution()));	
 	}
 	if(fModeMaster_Function)
 	{
 		ASSERTN(kEveryone, (fModeMaster_Channel == nullptr));
 		pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeMaster,				fModeMaster_Function->GetNodeReference());	
-		pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeFrom,				GdtfConverter::ConvertDMXValue(fDmxModeStart, chanelReso));	
-		pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeTo,					GdtfConverter::ConvertDMXValue(fDmxModeEnd, chanelReso));	
+		pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeFrom,				GdtfConverter::ConvertDMXValue(fDmxModeStart, fModeMaster_Function->GetParentDMXChannel()->GetChannelBitResolution()));	
+		pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeTo,					GdtfConverter::ConvertDMXValue(fDmxModeEnd,   fModeMaster_Function->GetParentDMXChannel()->GetChannelBitResolution()));	
 	}
 
 	// ------------------------------------------------------------------------------------
@@ -2945,6 +2945,12 @@ DmxValue GdtfDmxChannelFunction::GetModeMasterDmxStart() const
 DmxValue GdtfDmxChannelFunction::GetModeMasterDmxEnd() const
 {
 	return fDmxModeStart;
+}
+
+void GdtfDmxChannelFunction::ResolveModeMasterDmx(EGdtfChannelBitResolution resolution)
+{
+	GdtfConverter::ConvertDMXValue(fUnresolvedDmxModeStart, resolution, fDmxModeStart);
+	GdtfConverter::ConvertDMXValue(fUnresolvedDmxModeEnd, resolution, fDmxModeEnd);
 }
 
 void GdtfDmxChannelFunction::SetModeMaster_Channel(GdtfDmxChannel* channel)
@@ -4051,12 +4057,28 @@ void GdtfFixture::ResolveDMXModeMasters()
 					TXString unresolvedModeMaster = function->getUnresolvedModeMasterRef();
 					if(! unresolvedModeMaster.IsEmpty())
 					{
-						bool resolved = false;
+						bool 						resolved 	= false;
+						EGdtfChannelBitResolution 	resolution 	= EGdtfChannelBitResolution::eGdtfChannelBitResolution_8;
+
 						GdtfDmxChannelPtr channelPtr = getDmxChannelByRef(unresolvedModeMaster);
-						if(! resolved && channelPtr){ function->SetModeMaster_Channel(channelPtr); resolved = true; }
+						if(! resolved && channelPtr)
+						{ 
+							function->SetModeMaster_Channel(channelPtr); 
+							resolved = true; 
+							resolution = channelPtr->GetChannelBitResolution(); 
+						}
 
 						GdtfDmxChannelFunctionPtr functionPtr = getDmxFunctionByRef(unresolvedModeMaster);
-						if(! resolved && functionPtr) { function->SetModeMaster_Function(functionPtr);resolved = true; }
+						if(! resolved && functionPtr) 
+						{ 
+							function->SetModeMaster_Function(functionPtr);
+							resolved = true; 
+							resolution = functionPtr->GetParentDMXChannel()->GetChannelBitResolution();
+						}
+
+						if(resolved) { function->ResolveModeMasterDmx(resolution); }
+
+
 
 						ASSERTN(kEveryone, resolved);
 						
