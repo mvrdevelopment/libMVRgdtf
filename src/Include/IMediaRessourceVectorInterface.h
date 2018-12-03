@@ -620,8 +620,8 @@ namespace VectorworksMVR
 		// Mode Master from GDTF 0.88
 		virtual VCOMError VCOM_CALLTYPE     GetModeMasterChannel(IGdtfDmxChannel** outChannel, GdtfDefines::DmxValue& start, GdtfDefines::DmxValue& end) = 0;
 		virtual VCOMError VCOM_CALLTYPE     GetModeMasterFunction(IGdtfDmxChannelFunction** outFunction, GdtfDefines::DmxValue& start, GdtfDefines::DmxValue& end) = 0;
-		virtual VCOMError VCOM_CALLTYPE     SetModeMasterChannel(IGdtfDmxChannel* channel, GdtfDefines::DmxValue& start, GdtfDefines::DmxValue& end) = 0;
-		virtual VCOMError VCOM_CALLTYPE     SetModeMasterFunction(IGdtfDmxChannelFunction* function, GdtfDefines::DmxValue& start, GdtfDefines::DmxValue& end) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetModeMasterChannel(IGdtfDmxChannel* channel, GdtfDefines::DmxValue start, GdtfDefines::DmxValue end) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetModeMasterFunction(IGdtfDmxChannelFunction* function, GdtfDefines::DmxValue start, GdtfDefines::DmxValue end) = 0;
 
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;

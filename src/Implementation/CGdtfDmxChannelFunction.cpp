@@ -584,7 +584,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetModeMa
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetModeMasterChannel(IGdtfDmxChannel* channel, DmxValue& start, DmxValue& end)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetModeMasterChannel(IGdtfDmxChannel* channel, DmxValue start, DmxValue end)
 {
 	// Check Pointer
 	if ( ! fFunction)	{ return kVCOMError_NotInitialized; }
@@ -604,7 +604,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetModeMa
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetModeMasterFunction(IGdtfDmxChannelFunction* function, DmxValue& start, DmxValue& end)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetModeMasterFunction(IGdtfDmxChannelFunction* function, DmxValue start, DmxValue end)
 {
 	// Check Pointer
 	if ( ! fFunction)	{ return kVCOMError_NotInitialized; }

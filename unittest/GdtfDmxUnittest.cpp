@@ -162,6 +162,8 @@ void GdtfDmxUnittest::WriteFile()
 		bit16Function->CreateDmxChannelSet("My Name3", 128, 4501, &bit16ChannelSet3);
 
 
+		__checkVCOM(bit16Function->SetModeMasterFunction(bit8Function4, 15, 78));
+
 		//----------------------------------------------------------------
 		// Write 24 bit Channel - With Mode Relation
 		IGdtfDmxChannelPtr bit24channel;
@@ -187,6 +189,8 @@ void GdtfDmxUnittest::WriteFile()
 		__checkVCOM(logicalChannel24bit->CreateDmxFunction("Log 3", & function24bit_3));
 		__checkVCOM(function24bit_3->SetStartAddress(0));
 
+
+		__checkVCOM(function24bit_3->SetModeMasterChannel(bit16channel, 0, 179));
 
         __checkVCOM(gdtfWrite->Close());
     }
