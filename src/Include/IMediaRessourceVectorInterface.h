@@ -682,7 +682,7 @@ namespace VectorworksMVR
 		
         virtual VCOMError VCOM_CALLTYPE     GetLogicalChannelCount(size_t& count) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetLogicalChannelAt(size_t at, IGdtfDmxLogicalChannel** channel) = 0;
-		virtual VCOMError VCOM_CALLTYPE     CreateLogicalChannel(MvrString name, IGdtfDmxLogicalChannel** channel) = 0;
+		virtual VCOMError VCOM_CALLTYPE     CreateLogicalChannel(IGdtfAttribute* attribute, IGdtfDmxLogicalChannel** channel) = 0;
 		
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
@@ -712,7 +712,7 @@ namespace VectorworksMVR
         
         virtual VCOMError VCOM_CALLTYPE     GetDmxChannelCount(size_t& count) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetDmxChannelAt(size_t at, IGdtfDmxChannel** channel) = 0;
-		virtual VCOMError VCOM_CALLTYPE     CreateDmxChannel(MvrString name, IGdtfDmxChannel** channel) = 0;
+		virtual VCOMError VCOM_CALLTYPE     CreateDmxChannel(IGdtfGeometry* geometry, IGdtfDmxChannel** channel) = 0;
         
         virtual VCOMError VCOM_CALLTYPE     GetDmxRelationCount(size_t& count) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetDmxRelationAt(size_t at, IGdtfDmxRelation** relation) = 0;

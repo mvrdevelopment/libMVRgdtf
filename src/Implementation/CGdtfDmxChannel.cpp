@@ -5,7 +5,7 @@
 #include "CGdtfDmxChannel.h"
 #include "CGdtfGeometry.h"
 #include "CGdtfDmxLogicalChannel.h"
-
+#include "CGdtfAttribute.h"
 
 using namespace VectorWorks::Filing;
 
@@ -355,16 +355,20 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::GetLogicalChannel
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::CreateLogicalChannel(MvrString name, IGdtfDmxLogicalChannel** channel)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::CreateLogicalChannel(IGdtfAttribute* attribute, IGdtfDmxLogicalChannel** channel)
 {
 	// Check Pointer
-	if ( ! fChannel) { return kVCOMError_NotInitialized; }
+	if ( ! fChannel)  { return kVCOMError_NotInitialized; }
+	if ( ! attribute) { return kVCOMError_InvalidArg; }
+	
+	CGdtfAttributeImpl* attributeImpl = dynamic_cast<CGdtfAttributeImpl*>(attribute);
+	if( ! attributeImpl) { return kVCOMError_Failed; }
 
+	SceneData::GdtfAttributePtr scAttribute = attributeImpl->GetPointer();
+	if( ! scAttribute) { return kVCOMError_Failed; }
 	
-	// Create logical channel
-	TXString vwName (name);
-	
-	SceneData::GdtfDmxLogicalChannel*	gdtfDmxLogicalChannel = fChannel->AddLogicalChannel(vwName);
+	SceneData::GdtfDmxLogicalChannel*	gdtfDmxLogicalChannel = fChannel->AddLogicalChannel();
+	gdtfDmxLogicalChannel->SetAttribute(scAttribute);
 	
 	//---------------------------------------------------------------------------
 	// Initialize Object

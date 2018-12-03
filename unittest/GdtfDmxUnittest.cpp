@@ -64,7 +64,7 @@ void GdtfDmxUnittest::WriteFile()
 		//----------------------------------------------------------------
 		// Write 8 bit Channel
 		IGdtfDmxChannelPtr bit8channel;
-		__checkVCOM(mode->CreateDmxChannel("8bit Channel", &bit8channel));
+		__checkVCOM(mode->CreateDmxChannel(geometry, &bit8channel));
 		__checkVCOM(bit8channel->SetGeometry(geometry));
 		bit8channel->SetCoarse(1);
 		//bit8channel->SetDmxBreak(1); This is the default
@@ -74,7 +74,7 @@ void GdtfDmxUnittest::WriteFile()
 
 		// First Logical Channel
 		IGdtfDmxLogicalChannelPtr bit8LogicalChannel1;
-		bit8channel->CreateLogicalChannel("Log1", &bit8LogicalChannel1);
+		bit8channel->CreateLogicalChannel(attribute, &bit8LogicalChannel1);
 		bit8LogicalChannel1->SetAttribute(attribute);
 
 		IGdtfDmxChannelFunctionPtr bit8Function1;
@@ -106,7 +106,7 @@ void GdtfDmxUnittest::WriteFile()
 
 		// Second Logical Channel
 		IGdtfDmxLogicalChannelPtr bit8LogicalChannel2;
-		bit8channel->CreateLogicalChannel("Log2", &bit8LogicalChannel2);
+		bit8channel->CreateLogicalChannel(attribute, &bit8LogicalChannel2);
 		bit8LogicalChannel2->SetAttribute(attribute);
 
 		IGdtfDmxChannelFunctionPtr bit8Function3;
@@ -139,7 +139,7 @@ void GdtfDmxUnittest::WriteFile()
 		//----------------------------------------------------------------
 		// Write 16 bit Channel
 		IGdtfDmxChannelPtr bit16channel;
-		__checkVCOM(mode->CreateDmxChannel("8bit Channel", &bit16channel));
+		__checkVCOM(mode->CreateDmxChannel(geometry, &bit16channel));
 		__checkVCOM(bit16channel->SetGeometry(geometry));
 		bit16channel->SetCoarse(1);
 		bit16channel->SetFine(2);
@@ -147,7 +147,7 @@ void GdtfDmxUnittest::WriteFile()
 		bit16channel->SetHighlight(256);
 
 		IGdtfDmxLogicalChannelPtr bit16LogicalChannel;
-		bit16channel->CreateLogicalChannel("Log1", &bit16LogicalChannel);
+		bit16channel->CreateLogicalChannel(attribute, &bit16LogicalChannel);
 		bit16LogicalChannel->SetAttribute(attribute);
 
 		IGdtfDmxChannelFunctionPtr bit16Function;
@@ -168,14 +168,14 @@ void GdtfDmxUnittest::WriteFile()
 		//----------------------------------------------------------------
 		// Write 24 bit Channel - With Mode Relation
 		IGdtfDmxChannelPtr bit24channel;
-		__checkVCOM(mode->CreateDmxChannel("24bit Channel", &bit24channel));
+		__checkVCOM(mode->CreateDmxChannel(geometry, &bit24channel));
 		__checkVCOM(bit24channel->SetGeometry(geometry));
 		bit24channel->SetCoarse(3);
 		bit24channel->SetFine(4);
 		bit24channel->SetUltra(5);
 
 		IGdtfDmxLogicalChannelPtr logicalChannel24bit;
-		__checkVCOM(bit24channel->CreateLogicalChannel("Logical Channel", &logicalChannel24bit));
+		__checkVCOM(bit24channel->CreateLogicalChannel(attribute, &logicalChannel24bit));
 		logicalChannel24bit->SetAttribute(attribute);
 
 		IGdtfDmxChannelFunctionPtr function24bit_1;

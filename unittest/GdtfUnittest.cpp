@@ -188,7 +188,7 @@ void GdtfUnittest::WriteFile()
 			
 			IGdtfDmxChannelPtr 			gdtfDmxChannel;
 			IGdtfDmxChannelFunctionPtr	gdftChannelFunction;
-			if (__checkVCOM(gdtfDmxMode->CreateDmxChannel("My nameGeometry_My attributeName", &gdtfDmxChannel)))
+			if (__checkVCOM(gdtfDmxMode->CreateDmxChannel(childGeo, &gdtfDmxChannel)))
 			{
 				__checkVCOM(gdtfDmxChannel->SetCoarse(1));
 				__checkVCOM(gdtfDmxChannel->SetFine(2));
@@ -203,7 +203,7 @@ void GdtfUnittest::WriteFile()
 				__checkVCOM(gdtfDmxChannel->SetGeometry(childGeo));
 
 				IGdtfDmxLogicalChannelPtr gdtfLogicalChannel;
-				if (__checkVCOM(gdtfDmxChannel->CreateLogicalChannel("My attributeName", &gdtfLogicalChannel)))
+				if (__checkVCOM(gdtfDmxChannel->CreateLogicalChannel(gdtfAttribute, &gdtfLogicalChannel)))
 				{
 					__checkVCOM(gdtfLogicalChannel->SetAttribute(gdtfAttribute));
 					__checkVCOM(gdtfLogicalChannel->SetDmxMaster(EGdtfDmxMaster::eGdtfDmxMaster_Grand));
