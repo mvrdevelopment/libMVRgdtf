@@ -2935,6 +2935,50 @@ const TGdtfDmxChannelSetArray GdtfDmxChannelFunction::GetChannelSets()
 	return fChannelSets;
 }
 
+GdtfDmxChannel* GdtfDmxChannelFunction::GetModeMaster_Channel() const
+{
+	return fModeMaster_Channel;
+}
+
+GdtfDmxChannelFunction* GdtfDmxChannelFunction::GetModeMaster_Function() const
+{
+	return fModeMaster_Function;
+}
+
+DmxValue GdtfDmxChannelFunction::GetModeMasterDmxStart() const
+{
+	return fDmxModeStart;
+}
+
+DmxValue GdtfDmxChannelFunction::GetModeMasterDmxEnd() const
+{
+	return fDmxModeStart;
+}
+
+void GdtfDmxChannelFunction::SetModeMaster_Channel(GdtfDmxChannel* channel)
+{
+	ASSERTN(kEveryone, fModeMaster_Function == nullptr);
+	fModeMaster_Function = nullptr;
+	fModeMaster_Channel = channel;
+}
+
+void GdtfDmxChannelFunction::SetModeMaster_Function(GdtfDmxChannelFunction* function)
+{
+	ASSERTN(kEveryone, fModeMaster_Channel == nullptr);
+	fModeMaster_Channel = nullptr;
+	fModeMaster_Function = function;
+}
+
+void GdtfDmxChannelFunction::SetModeMasterDmxStart(DmxValue start)
+{
+	fDmxModeStart = start;
+}
+
+void GdtfDmxChannelFunction::SetModeMasterDmxEnd(DmxValue end)
+{
+	fDmxModeStart = end;
+}
+
 void GdtfDmxChannelFunction::SetEmitter(GdtfPhysicalEmitter* newEmit)
 {
 	fEmitter = newEmit;

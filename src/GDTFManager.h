@@ -807,6 +807,11 @@ namespace SceneData
         GdtfPhysicalEmitter*            GetEmitter() const;
         EGDTFDmxInvert                  GetDmxInvert()const;
         EGDTFEncoderInvert              GetEncoderInvert() const;        
+
+        GdtfDmxChannel*                 GetModeMaster_Channel() const;
+        GdtfDmxChannelFunction*         GetModeMaster_Function() const;
+        DmxValue                        GetModeMasterDmxStart() const;
+        DmxValue                        GetModeMasterDmxEnd() const;
         
         //
 		const TGdtfDmxChannelSetArray	GetChannelSets();		
@@ -830,7 +835,12 @@ namespace SceneData
 		void							SetRealFade(double fade);				
 		void							SetEmitter(GdtfPhysicalEmitter* newEmit);
         void                            SetDmxInvert(EGDTFDmxInvert dmxInvert);
-        void                            SetEncoderInvert(EGDTFEncoderInvert encoderInvert);        
+        void                            SetEncoderInvert(EGDTFEncoderInvert encoderInvert);     
+
+        void                            SetModeMaster_Channel(GdtfDmxChannel* channel);
+        void                            SetModeMaster_Function(GdtfDmxChannelFunction* function);
+        void                            SetModeMasterDmxStart(DmxValue start);
+        void                            SetModeMasterDmxEnd(DmxValue end);   
 
 		//
 		GdtfDmxChannelSet*				AddChannelSet(const TXString& name);
