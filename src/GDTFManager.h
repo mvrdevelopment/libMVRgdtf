@@ -970,19 +970,14 @@ namespace SceneData
 		GdtfDmxChannelPtr			fMasterDmxChannel;
 		GdtfDmxChannelFunctionPtr	fSlaveChannelFunction;
 		EGdtfDmxRelationType		fRelationType;
-		DmxValue					fDmxStart;
-		DmxValue					fDmdEnd;
 		
 		// Pointer Resolve
-		TXString					fUnresolvedDmxStart;
-		TXString					fUnresolvedDmxEnd;
 		TXString					fUnresolvedMasterRef;
 		TXString					fUnresolvedSlaveRef;
 		
 	public:
 		TXString					GetUnresolvedMasterRef() const;
 		TXString					GetUnresolvedSlaveRef() const;
-		void						ResolveDmxRange();
         		
 	public:
 		// Getter

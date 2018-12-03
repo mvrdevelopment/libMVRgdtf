@@ -393,12 +393,11 @@ const Sint32 kMVR_MinorVersion = 1;
 #define XML_GDTF_DMXRelationNodeName					"Relation"
 #define XML_GDTF_DMXRelationName						"Name"
 #define XML_GDTF_DMXRelationMaster						"Master"
-#define XML_GDTF_DMXRelationSlave						"Slave"
+#define XML_GDTF_DMXRelationSlave						"Follower"
 #define XML_GDTF_DMXRelationType						"Type"
 #define XML_GDTF_DMXRelationDMXFrom						"DMXFrom"
 #define XML_GDTF_DMXRelationDMXTo						"DMXTo"
 
-#define XML_GDTF_DMXMasterEnum_Mode						"Mode"
 #define XML_GDTF_DMXMasterEnum_Multiply					"Multiply"
 #define XML_GDTF_DMXMasterEnum_Override					"Override"
 

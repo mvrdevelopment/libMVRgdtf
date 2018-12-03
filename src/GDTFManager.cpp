@@ -3117,9 +3117,7 @@ GdtfDmxRelation::GdtfDmxRelation()
 {
 	fMasterDmxChannel		= nullptr;
 	fSlaveChannelFunction	= nullptr;
-	fDmxStart				= 0;
-	fDmdEnd					= 0;
-	fRelationType			= EGdtfDmxRelationType::eGdtfDmxRelationType_Mode;
+	fRelationType			= EGdtfDmxRelationType::eGdtfDmxRelationType_Override;
 
 }
 
@@ -3128,23 +3126,11 @@ GdtfDmxRelation::GdtfDmxRelation(GdtfDmxChannelPtr master, GdtfDmxChannelFunctio
 	fUniqueName				= name;
 	fMasterDmxChannel		= master;
 	fSlaveChannelFunction	= slave;
-	fDmxStart				= 0;
-	fDmdEnd					= 0;
-	fRelationType			= EGdtfDmxRelationType::eGdtfDmxRelationType_Mode;
+	fRelationType			= EGdtfDmxRelationType::eGdtfDmxRelationType_Override;
 }
 
 GdtfDmxRelation::~GdtfDmxRelation()
 {
-}
-
-void GdtfDmxRelation::ResolveDmxRange()
-{
-	ASSERTN(kEveryone, fMasterDmxChannel != nullptr);
-	if (fMasterDmxChannel)
-	{
-		GdtfConverter::ConvertDMXValue(fUnresolvedDmxStart,	fMasterDmxChannel->GetChannelBitResolution(),	fDmxStart);
-		GdtfConverter::ConvertDMXValue(fUnresolvedDmxEnd,   fMasterDmxChannel->GetChannelBitResolution(),	fDmdEnd);
-	}
 }
 
 void GdtfDmxRelation::SetName(const TXString& name)
@@ -3157,16 +3143,6 @@ void GdtfDmxRelation::SetRelationType(EGdtfDmxRelationType type)
 	fRelationType = type;
 }
 
-void GdtfDmxRelation::SetDmxStart(DmxValue start)
-{
-	fDmxStart = start;
-}
-
-void GdtfDmxRelation::SetDmxEnd(DmxValue end)
-{
-	fDmdEnd = end;
-}
-
 void GdtfDmxRelation::OnPrintToFile(IXMLFileNodePtr pNode)
 {
 	//------------------------------------------------------------------------------------
@@ -3177,10 +3153,7 @@ void GdtfDmxRelation::OnPrintToFile(IXMLFileNodePtr pNode)
 	// ------------------------------------------------------------------------------------
 	// Print node attributes
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXRelationName,				fUniqueName);
-	pNode->SetNodeAttributeValue(XML_GDTF_DMXRelationType,				GdtfConverter::ConvertRelationEnum(fRelationType));
-	pNode->SetNodeAttributeValue(XML_GDTF_DMXRelationDMXFrom,			GdtfConverter::ConvertDMXValue (fRelationType, chanelReso) );
-	pNode->SetNodeAttributeValue(XML_GDTF_DMXRelationDMXTo,				GdtfConverter::ConvertDMXValue (fDmdEnd, chanelReso));
-	if (fMasterDmxChannel) { pNode->SetNodeAttributeValue(XML_GDTF_DMXRelationMaster,			fMasterDmxChannel->GetNodeReference());}
+	if (fMasterDmxChannel) 		{ pNode->SetNodeAttributeValue(XML_GDTF_DMXRelationMaster,			fMasterDmxChannel->GetNodeReference());}
 	if (fSlaveChannelFunction)  { pNode->SetNodeAttributeValue(XML_GDTF_DMXRelationSlave,			fSlaveChannelFunction->GetNodeReference());}
 
 }
@@ -3196,10 +3169,7 @@ void GdtfDmxRelation::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	pNode->GetNodeAttributeValue(XML_GDTF_DMXRelationName,	 fUniqueName);
 	pNode->GetNodeAttributeValue(XML_GDTF_DMXRelationMaster, fUnresolvedMasterRef);
 	pNode->GetNodeAttributeValue(XML_GDTF_DMXRelationSlave,	 fUnresolvedSlaveRef);
-	
     TXString type;		pNode->GetNodeAttributeValue(XML_GDTF_DMXRelationType,		type);		GdtfConverter::ConvertRelationEnum(type,	fRelationType); 
-	pNode->GetNodeAttributeValue(XML_GDTF_DMXRelationDMXFrom,	fUnresolvedDmxStart);
-	pNode->GetNodeAttributeValue(XML_GDTF_DMXRelationDMXTo,		fUnresolvedDmxEnd);
 }
 
 EGdtfObjectType GdtfDmxRelation::GetObjectType()
@@ -3250,16 +3220,6 @@ TXString GdtfDmxRelation::GetUnresolvedSlaveRef() const
 EGdtfDmxRelationType GdtfDmxRelation::GetRelationType() const
 {
 	return fRelationType;
-}
-
-DmxValue GdtfDmxRelation::GetDmxStart() const
-{
-	return fDmxStart;
-}
-
-DmxValue GdtfDmxRelation::GetDmxEnd() const
-{
-	return fDmdEnd;
 }
 
 //------------------------------------------------------------------------------------
@@ -3981,7 +3941,6 @@ void GdtfFixture::ResolveDmxRelationRefs(GdtfDmxModePtr dmxMode)
 		rel->SetMasterChannel(master);
         rel->SetSlaveChannel(slave);
 
-		rel->ResolveDmxRange();
 	}	
 }
 

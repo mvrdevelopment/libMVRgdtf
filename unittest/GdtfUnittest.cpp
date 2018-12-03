@@ -686,20 +686,6 @@ void GdtfUnittest::ReadFile()
 					__checkVCOM(gdtfRelation->GetRelationType(rel));
 					this->checkifEqual("gdtfRelationGetRelationType ", rel, EGdtfDmxRelationType::eGdtfDmxRelationType_Override);
 					
-					// DMX Start
-					GdtfDefines::DmxValue start;
-					if (__checkVCOM(gdtfRelation->GetDmxStart(start)))
-					{
-						// TODO: This will be removed for GDTF 0.88
-						//this->checkifEqual("gdtfRelationGetDmxStart ", start, GdtfDefines::DmxValue(1234));
-					}
-
-					// DMX End
-					GdtfDefines::DmxValue end;
-					if (__checkVCOM(gdtfRelation->GetDmxEnd(end)))
-					{
-						//this->checkifEqual("gdtfRelationGetDmxEnd ", end, GdtfDefines::DmxValue(1234));
-					}
 				}
 			}
 		}
