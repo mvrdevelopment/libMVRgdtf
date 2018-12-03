@@ -204,7 +204,6 @@ namespace VectorworksMVR
 		
 		enum EGdtfDmxRelationType // Default is missing
 		{
-			eGdtfDmxRelationType_Mode       = 0,
 			eGdtfDmxRelationType_Multiply   = 1,
 			eGdtfDmxRelationType_Override   = 2,
 		};

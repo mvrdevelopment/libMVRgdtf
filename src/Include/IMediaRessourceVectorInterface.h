@@ -68,6 +68,7 @@ namespace VectorworksMVR
     class IGdtf_FTRDM;
 	class IGdtfRDMParameter;
 	class IGdtfFeatureGroup;
+	class IGdtfDmxChannel;
 
 	//-------------------------------------------------------------------------------------------------------------
 	class DYNAMIC_ATTRIBUTE ISceneDataProvider : public IVWUnknown
@@ -616,6 +617,12 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetDmxChannelSetAt(size_t at, IGdtfDmxChannelSet** set) = 0;
 		virtual VCOMError VCOM_CALLTYPE     CreateDmxChannelSet(MvrString name, GdtfDefines::DMXAddress start, GdtfDefines::DMXAddress end, IGdtfDmxChannelSet** set) = 0;
 		
+		// Mode Master from GDTF 0.88
+		virtual VCOMError VCOM_CALLTYPE     GetModeMasterChannel(IGdtfDmxChannel** outChannel, GdtfDefines::DmxValue& start, GdtfDefines::DmxValue& end) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetModeMasterFunction(IGdtfDmxChannelFunction** outFunction, GdtfDefines::DmxValue& start, GdtfDefines::DmxValue& end) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetModeMasterChannel(IGdtfDmxChannel* channel, GdtfDefines::DmxValue start, GdtfDefines::DmxValue end) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetModeMasterFunction(IGdtfDmxChannelFunction* function, GdtfDefines::DmxValue start, GdtfDefines::DmxValue end) = 0;
+
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
     };
@@ -675,7 +682,7 @@ namespace VectorworksMVR
 		
         virtual VCOMError VCOM_CALLTYPE     GetLogicalChannelCount(size_t& count) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetLogicalChannelAt(size_t at, IGdtfDmxLogicalChannel** channel) = 0;
-		virtual VCOMError VCOM_CALLTYPE     CreateLogicalChannel(MvrString name, IGdtfDmxLogicalChannel** channel) = 0;
+		virtual VCOMError VCOM_CALLTYPE     CreateLogicalChannel(IGdtfAttribute* attribute, IGdtfDmxLogicalChannel** channel) = 0;
 		
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
@@ -689,11 +696,6 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetMasterChannel(IGdtfDmxChannel** master) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetSlaveChannel(IGdtfDmxChannelFunction** slave) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetRelationType(GdtfDefines::EGdtfDmxRelationType& relation) = 0;
-        virtual VCOMError VCOM_CALLTYPE     GetDmxStart(GdtfDefines::DmxValue& start) = 0;
-        virtual VCOMError VCOM_CALLTYPE     GetDmxEnd(GdtfDefines::DmxValue& end) = 0;
-
-		virtual VCOMError VCOM_CALLTYPE     SetDmxStart(GdtfDefines::DmxValue start)= 0;
-		virtual VCOMError VCOM_CALLTYPE     SetDmxEnd(GdtfDefines::DmxValue end)= 0;
 
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
@@ -710,7 +712,7 @@ namespace VectorworksMVR
         
         virtual VCOMError VCOM_CALLTYPE     GetDmxChannelCount(size_t& count) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetDmxChannelAt(size_t at, IGdtfDmxChannel** channel) = 0;
-		virtual VCOMError VCOM_CALLTYPE     CreateDmxChannel(MvrString name, IGdtfDmxChannel** channel) = 0;
+		virtual VCOMError VCOM_CALLTYPE     CreateDmxChannel(IGdtfGeometry* geometry, IGdtfDmxChannel** channel) = 0;
         
         virtual VCOMError VCOM_CALLTYPE     GetDmxRelationCount(size_t& count) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetDmxRelationAt(size_t at, IGdtfDmxRelation** relation) = 0;

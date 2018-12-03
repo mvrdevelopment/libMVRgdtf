@@ -354,6 +354,11 @@ const Sint32 kMVR_MinorVersion = 1;
 #define XML_GDTF_DMXChannelDMXInvert					"DMXInvert"
 #define XML_GDTF_DMXChannelEncoderInvert				"EncoderInvert"
 
+#define XML_GDTF_DMXChannelFuntionModeMaster			"ModeMaster"
+#define XML_GDTF_DMXChannelFuntionModeFrom				"ModeFrom"
+#define XML_GDTF_DMXChannelFuntionModeTo				"ModeTo"
+
+
 #define XML_GDTF_DMXChannelEncoderInvertEnum_Yes		"Yes"
 #define XML_GDTF_DMXChannelEncoderInvertEnum_No			"No"
 
@@ -393,12 +398,11 @@ const Sint32 kMVR_MinorVersion = 1;
 #define XML_GDTF_DMXRelationNodeName					"Relation"
 #define XML_GDTF_DMXRelationName						"Name"
 #define XML_GDTF_DMXRelationMaster						"Master"
-#define XML_GDTF_DMXRelationSlave						"Slave"
+#define XML_GDTF_DMXRelationSlave						"Follower"
 #define XML_GDTF_DMXRelationType						"Type"
 #define XML_GDTF_DMXRelationDMXFrom						"DMXFrom"
 #define XML_GDTF_DMXRelationDMXTo						"DMXTo"
 
-#define XML_GDTF_DMXMasterEnum_Mode						"Mode"
 #define XML_GDTF_DMXMasterEnum_Multiply					"Multiply"
 #define XML_GDTF_DMXMasterEnum_Override					"Override"
 

@@ -7,6 +7,7 @@
 #include "CGdtfWheel.h"
 #include "CGdtfDmxChannelSet.h"
 #include "CGdtfPhysicalEmitter.h"
+#include "CGdtfDmxChannel.h"
 
 using namespace VectorWorks::Filing;
 
@@ -486,4 +487,139 @@ void* VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetBoundObject()
 	if(!fFunction) return nullptr;
 	
 	return fFunction->GetBind();
+}
+
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetModeMasterChannel(IGdtfDmxChannel** outChannel, DmxValue& start, DmxValue& end)
+{
+	// Check Pointer
+	if ( ! fFunction) { return kVCOMError_NotInitialized; }
+	
+	
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	SceneData::GdtfDmxChannelPtr	gdtfChannel = fFunction->GetModeMaster_Channel();
+    if( ! gdtfChannel) { return kVCOMError_NotSet;}
+
+    start   = fFunction->GetModeMasterDmxStart();
+    end     = fFunction->GetModeMasterDmxEnd();
+	
+	// Query Interface
+	CGdtfDmxChannelImpl*			pChannelImpl = nullptr;
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDmxChannel, (IVWUnknown**) & pChannelImpl)))
+	{
+		// Check Casting
+		CGdtfDmxChannelImpl* pResultInterface = dynamic_cast<CGdtfDmxChannelImpl* >(pChannelImpl);
+		if (pResultInterface)
+		{
+			pResultInterface->setPointer(gdtfChannel);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incomming Object
+	if (*outChannel)
+	{
+		(*outChannel)->Release();
+		*outChannel		= NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*outChannel	= pChannelImpl;
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetModeMasterFunction(IGdtfDmxChannelFunction** outFunction, DmxValue& start, DmxValue& end)
+{
+	// Check Pointer
+	if ( ! fFunction) { return kVCOMError_NotInitialized; }
+	
+	
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	SceneData::GdtfDmxChannelFunctionPtr	gdtfFunction = fFunction->GetModeMaster_Function();
+    if( ! gdtfFunction) { return kVCOMError_NotSet;}
+
+    start   = fFunction->GetModeMasterDmxStart();
+    end     = fFunction->GetModeMasterDmxEnd();
+	
+	// Query Interface
+	CGdtfDmxChannelFunctionImpl*			pFunctionImpl = nullptr;
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDmxChannelFunction, (IVWUnknown**) & pFunctionImpl)))
+	{
+		// Check Casting
+		CGdtfDmxChannelFunctionImpl* pResultInterface = dynamic_cast<CGdtfDmxChannelFunctionImpl* >(pFunctionImpl);
+		if (pResultInterface)
+		{
+			pResultInterface->setPointer(gdtfFunction);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incomming Object
+	if (*outFunction)
+	{
+		(*outFunction)->Release();
+		*outFunction		= NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*outFunction	= pFunctionImpl;
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetModeMasterChannel(IGdtfDmxChannel* channel, DmxValue start, DmxValue end)
+{
+	// Check Pointer
+	if ( ! fFunction)	{ return kVCOMError_NotInitialized; }
+	if ( ! channel)		{ return kVCOMError_InvalidArg; }
+	
+	CGdtfDmxChannelImpl* channelImpl = dynamic_cast<CGdtfDmxChannelImpl*>(channel);
+	if ( ! channelImpl)	{ return kVCOMError_Failed; }
+	
+	SceneData::GdtfDmxChannelPtr scChannel = channelImpl->getPointer();
+	if ( ! scChannel)		{ return kVCOMError_Failed; }
+	
+	fFunction->SetModeMaster_Channel(scChannel);
+    fFunction->SetModeMasterDmxStart(start);
+    fFunction->SetModeMasterDmxEnd(end);
+
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetModeMasterFunction(IGdtfDmxChannelFunction* function, DmxValue start, DmxValue end)
+{
+	// Check Pointer
+	if ( ! fFunction)	{ return kVCOMError_NotInitialized; }
+	if ( ! function)		{ return kVCOMError_InvalidArg; }
+	
+	CGdtfDmxChannelFunctionImpl* functionImpl = dynamic_cast<CGdtfDmxChannelFunctionImpl*>(function);
+	if ( ! functionImpl)	{ return kVCOMError_Failed; }
+	
+	SceneData::GdtfDmxChannelFunctionPtr scFunction = functionImpl->getPointer();
+	if ( ! scFunction)		{ return kVCOMError_Failed; }
+	
+	fFunction->SetModeMaster_Function(scFunction);
+    fFunction->SetModeMasterDmxStart(start);
+    fFunction->SetModeMasterDmxEnd(end);
+
+	
+	return kVCOMError_NoError;
 }

@@ -124,44 +124,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxRelationImpl::GetRelationType(
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxRelationImpl::GetDmxStart(DmxValue &start)
-{
-	// Check Pointer
-	if ( ! fRelation) { return kVCOMError_NotInitialized; }
-	
-    start = fRelation->GetDmxStart();
-    
-    return kVCOMError_NoError;
-}
-
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxRelationImpl::GetDmxEnd(DmxValue &end)
-{
-	// Check Pointer
-	if ( ! fRelation) { return kVCOMError_NotInitialized; }
-	
-    end = fRelation->GetDmxEnd();
-    
-    return kVCOMError_NoError;
-}
-
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxRelationImpl::SetDmxStart(DmxValue start)
-{
-	if ( ! fRelation) { return kVCOMError_NotInitialized; }
-	
-    fRelation->SetDmxStart(start);
-        
-    return kVCOMError_NoError;
-}
-
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxRelationImpl::SetDmxEnd(DmxValue end)
-{
-	if ( ! fRelation) { return kVCOMError_NotInitialized; }
-	    
-    fRelation->SetDmxEnd(end);
-
-    return kVCOMError_NoError;    
-}
-
 void VectorworksMVR::CGdtfDmxRelationImpl::setPointer(SceneData::GdtfDmxRelation *relation)
 {
     fRelation = relation;
