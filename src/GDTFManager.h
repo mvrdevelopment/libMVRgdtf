@@ -762,14 +762,20 @@ namespace SceneData
 		TXString				fName;
 		GdtfAttribute*		    fAttribute;
 		TXString				fOrignalAttribute;
-		DmxValue				fAdressStart;   // This is DMXFrom
-		double					fPhysicalStart;	// Units?????
-		double					fPhysicalEnd;	// Units?????
-		double					fRealFade;		// Units?????		
+		DmxValue				fAdressStart;   
+		double					fPhysicalStart;
+		double					fPhysicalEnd;
+		double					fRealFade;			
 		GdtfWheelPtr			fOnWheel;
 		GdtfPhysicalEmitter*	fEmitter;
 		EGDTFDmxInvert			fDmxInvert;
 		EGDTFEncoderInvert		fEncoderInvert;
+
+        GdtfDmxChannel*         fModeMaster_Channel;
+        GdtfDmxChannelFunction* fModeMaster_Function;
+        DmxValue                fDmxModeStart;
+        DmxValue                fDmxModeEnd;
+
 		//
 		TGdtfDmxChannelSetArray	fChannelSets;		
 		
@@ -777,6 +783,9 @@ namespace SceneData
 		TXString				fUnresolvedAttrRef;
 		TXString				fUnresolvedWheelRef;
 		TXString				fUnresolvedEmitterRef;
+        TXString                fUnresolvedDmxModeStart;
+        TXString                fUnresolvedDmxModeEnd;
+        TXString                fUnresolvedModeMaster;
 		
 		// Parent Logical Channel
 		GdtfDmxLogicalChannel*	fParentLogicalChannel;

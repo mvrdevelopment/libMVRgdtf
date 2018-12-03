@@ -2670,6 +2670,21 @@ void GdtfDmxChannelFunction::OnPrintToFile(IXMLFileNodePtr pNode)
 	if (fEmitter)			{ pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelEmitter,						fEmitter->GetNodeReference() ); };
 	
 	
+	// Read Mode Master
+	ASSERTN(kEveryone, !(fModeMaster_Channel != nullptr & fModeMaster_Function != nullptr));
+	if(fModeMaster_Channel)
+	{
+		pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeMaster,				fModeMaster_Channel->GetNodeReference());	
+		pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeFrom,				GdtfConverter::ConvertDMXValue(fDmxModeStart, chanelReso));	
+		pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeTo,					GdtfConverter::ConvertDMXValue(fDmxModeEnd, chanelReso));	
+	}
+	if(fModeMaster_Function)
+	{
+		pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeMaster,				fModeMaster_Function->GetNodeReference());	
+		pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeFrom,				GdtfConverter::ConvertDMXValue(fDmxModeStart, chanelReso));	
+		pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeTo,					GdtfConverter::ConvertDMXValue(fDmxModeEnd, chanelReso));	
+	}
+
 	// ------------------------------------------------------------------------------------
 	// Prepare No Feature Channel Set
 	TGdtfDmxChannelSetArray tempArr;
@@ -2766,10 +2781,15 @@ void GdtfDmxChannelFunction::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	TXString realFade;	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionRealFade,			realFade);	GdtfConverter::ConvertDouble(realFade,		fRealFade);
 	TXString dmxInvert;	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelDMXInvert,					dmxInvert);	GdtfConverter::ConvertDMXInvertEnum(dmxInvert,		fDmxInvert);
 	TXString encInvert;	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelEncoderInvert,				encInvert);	GdtfConverter::ConvertEncoderInvertEnum(encInvert,	fEncoderInvert);
-	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionAttribute, fUnresolvedAttrRef);	
-	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionWheelRef, fUnresolvedWheelRef);
-	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelEmitter, fUnresolvedEmitterRef);
-	
+	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionAttribute, 	fUnresolvedAttrRef);	
+	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionWheelRef, 	fUnresolvedWheelRef);
+	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelEmitter, 			fUnresolvedEmitterRef);
+
+	// Read Mode Master
+	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeMaster,				fUnresolvedModeMaster);	
+	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeFrom,				fUnresolvedDmxModeStart);	
+	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeTo,					fUnresolvedDmxModeEnd);	
+
 	// ------------------------------------------------------------------------------------
 	// GdtfDmxChannelSet
 	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_DMXChannelSetNodeName, [this] (IXMLFileNodePtr objNode) -> void

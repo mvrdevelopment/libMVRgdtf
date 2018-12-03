@@ -354,6 +354,11 @@ const Sint32 kMVR_MinorVersion = 1;
 #define XML_GDTF_DMXChannelDMXInvert					"DMXInvert"
 #define XML_GDTF_DMXChannelEncoderInvert				"EncoderInvert"
 
+#define XML_GDTF_DMXChannelFuntionModeMaster			"ModeMaster"
+#define XML_GDTF_DMXChannelFuntionModeFrom				"ModeFrom"
+#define XML_GDTF_DMXChannelFuntionModeTo				"ModeTo"
+
+
 #define XML_GDTF_DMXChannelEncoderInvertEnum_Yes		"Yes"
 #define XML_GDTF_DMXChannelEncoderInvertEnum_No			"No"
 
