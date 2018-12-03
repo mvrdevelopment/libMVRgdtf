@@ -41,6 +41,8 @@ public:
 	void checkifEqual(const std::string& check, const VectorworksMVR::GdtfDefines::EGdtfModel_PrimitiveType val1, const VectorworksMVR::GdtfDefines::EGdtfModel_PrimitiveType val2);
     void checkifEqual(const std::string& check, const std::string& val1, const std::string& val2);
     bool checkVCOM(VectorworksMVR::VCOMError error, const std::string& check);
+    bool checkVCOM_NotSet(VectorworksMVR::VCOMError error, const std::string& check);
+
 
 private:
     bool                fFailed;

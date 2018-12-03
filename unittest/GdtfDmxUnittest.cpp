@@ -11,6 +11,7 @@ using namespace VectorworksMVR::GdtfDefines;
 
 
 #define __checkVCOM(x) this->checkVCOM(x, #x)
+#define __checkVCOM_NotSet(x) this->checkVCOM_NotSet(x, #x)
 
 GdtfDmxUnittest::GdtfDmxUnittest(const std::string& currentDir)
 {
@@ -343,6 +344,20 @@ void GdtfDmxUnittest::ReadFile()
 		__checkVCOM(bit16Function->GetDmxChannelSetAt(5, &bit16ChannelSet6));
 		this->CheckChannelSet(bit16ChannelSet6, "",4502,65535);
 
+
+		// Check Mode Master Function here
+		IGdtfDmxChannelPtr 			gdtfChannel;
+		IGdtfDmxChannelFunctionPtr 	gdtfFunction;
+		DmxValue					start;
+		DmxValue					end;
+		__checkVCOM(bit16Function->GetModeMasterFunction(&gdtfFunction, start, end));
+
+		this->checkifEqual("Check ModeMaster Function Start ",start, (DmxValue)15);
+		this->checkifEqual("Check ModeMaster Function End ",  end,   (DmxValue)78);
+
+		__checkVCOM_NotSet(bit16Function->GetModeMasterChannel(&gdtfChannel, start, end));
+
+
 				//----------------------------------------------------------------
 		// Read 8 bit Channel
 		IGdtfDmxChannelPtr bit24channel;
@@ -550,5 +565,18 @@ void GdtfDmxUnittest::Check24bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxC
 	__checkVCOM(logicalChannel->GetDmxFunctionAt(2, &bit8Function3));
 	CheckFunction(bit8Function3, "Log 3", 0, max24bit);
 
+
+	// Check ModeMaster
+	IGdtfDmxChannelPtr 			gdtfChannel;
+	IGdtfDmxChannelFunctionPtr 	gdtfFunction;
+	DmxValue					start;
+	DmxValue					end;
+
+	__checkVCOM(bit8Function3->GetModeMasterChannel(&gdtfChannel, start, end));
+
+	this->checkifEqual("Check ModeMaster Channel Start ",start, (DmxValue)0);
+	this->checkifEqual("Check ModeMaster Channel End ",  end,   (DmxValue)179);
+
+	__checkVCOM_NotSet(bit8Function3->GetModeMasterFunction(&gdtfFunction, start, end));
 
 }

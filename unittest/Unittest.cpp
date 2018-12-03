@@ -224,7 +224,25 @@ bool Unittest::checkVCOM(VectorworksMVR::VCOMError error, const std::string& che
     UnittestFailObject test;
     test.fMessage += "VCOM Failed: ";
     test.fMessage += check;
-    test.fMessage += " Expected: ";
+    test.fMessage += " Return Value: ";
+    test.fMessage += error;
+
+    fFailedTests.push_back(test);
+
+    return false;
+};
+
+bool Unittest::checkVCOM_NotSet(VectorworksMVR::VCOMError error, const std::string& check)
+{
+    if(kVCOMError_NotSet == error) return true;
+
+    // Else Log the error
+    fFailed = true;
+
+    UnittestFailObject test;
+    test.fMessage += "VCOM NotSet Failed: ";
+    test.fMessage += check;
+    test.fMessage += " Return Value: ";
     test.fMessage += error;
 
     fFailedTests.push_back(test);
