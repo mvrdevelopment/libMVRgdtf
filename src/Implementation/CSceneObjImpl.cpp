@@ -437,8 +437,8 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetFocusPoint(ISceneObj
 
 	ASSERTN(kEveryone, scFixture);
 	if	( scFixture == nullptr) { return kVCOMError_Failed; }
-	
-    SceneData::SceneDataFocusPointPtr focus = scFixture->GetFocusPoint();
+	    
+    SceneData::SceneDataFocusPointObjPtr focus = scFixture->GetFocusPoint();
     
     if ( ! focus) 
     {
