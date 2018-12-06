@@ -3233,6 +3233,8 @@ void GdtfDmxRelation::OnPrintToFile(IXMLFileNodePtr pNode)
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXRelationName,				fUniqueName);
 	if (fMasterDmxChannel) 		{ pNode->SetNodeAttributeValue(XML_GDTF_DMXRelationMaster,			fMasterDmxChannel->GetNodeReference());}
 	if (fSlaveChannelFunction)  { pNode->SetNodeAttributeValue(XML_GDTF_DMXRelationSlave,			fSlaveChannelFunction->GetNodeReference());}
+	pNode->SetNodeAttributeValue(XML_GDTF_DMXRelationType,		GdtfConverter::ConvertRelationEnum(fRelationType));
+
 
 }
 
