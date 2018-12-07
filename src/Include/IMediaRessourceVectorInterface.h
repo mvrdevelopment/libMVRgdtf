@@ -505,7 +505,7 @@ namespace VectorworksMVR
 
 		virtual VCOMError VCOM_CALLTYPE     SetAttribute(IGdtfAttribute* attribute) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetOriginalAttribute(MvrString attr) = 0;
-		virtual VCOMError VCOM_CALLTYPE     SetStartAddress(GdtfDefines::DMXAddress address) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetStartAddress(GdtfDefines::DmxValue address) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetPhysicalStart(double start) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetPhysicalEnd(double end) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetRealFade(double fade) = 0;		
@@ -516,7 +516,7 @@ namespace VectorworksMVR
 
         virtual VCOMError VCOM_CALLTYPE     GetDmxChannelSetCount(size_t& count) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetDmxChannelSetAt(size_t at, IGdtfDmxChannelSet** set) = 0;
-		virtual VCOMError VCOM_CALLTYPE     CreateDmxChannelSet(MvrString name, GdtfDefines::DMXAddress start, GdtfDefines::DMXAddress end, IGdtfDmxChannelSet** set) = 0;
+		virtual VCOMError VCOM_CALLTYPE     CreateDmxChannelSet(MvrString name, GdtfDefines::DmxValue start, GdtfDefines::DmxValue end, IGdtfDmxChannelSet** set) = 0;
 		
 		// Mode Master from GDTF 0.88
 		virtual VCOMError VCOM_CALLTYPE     GetModeMasterChannel(IGdtfDmxChannel** outChannel, GdtfDefines::DmxValue& start, GdtfDefines::DmxValue& end) = 0;

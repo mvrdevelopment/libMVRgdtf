@@ -269,7 +269,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetOrigin
 	
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetStartAddress(DMXAddress address)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetStartAddress(DmxValue address)
 {
 	// Check Pointer
 	if ( ! fFunction) { return kVCOMError_NotInitialized; }
@@ -414,7 +414,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetDmxCha
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::CreateDmxChannelSet(MvrString name, DMXAddress start, DMXAddress end, IGdtfDmxChannelSet** set)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::CreateDmxChannelSet(MvrString name, DmxValue start, DmxValue end, IGdtfDmxChannelSet** set)
 {
 	// Check Pointer
 	if ( ! fFunction) { return kVCOMError_NotInitialized; }
