@@ -237,7 +237,7 @@ void GdtfUnittest::WriteFile()
 
 			// Add Relation
 			IGdtfDmxRelationPtr relation;
-			__checkVCOM(gdtfDmxMode->CreateDmxRelation("Relation", EGdtfDmxRelationType::eGdtfDmxRelationType_Override, gdtfDmxChannel, gdftChannelFunction, & relation));
+			__checkVCOM(gdtfDmxMode->CreateDmxRelation("Relation", EGdtfDmxRelationType::eGdtfDmxRelationType_Multiply, gdtfDmxChannel, gdftChannelFunction, & relation));
 		}
 
 
@@ -684,7 +684,7 @@ void GdtfUnittest::ReadFile()
 					// Relation Type
 					EGdtfDmxRelationType rel;
 					__checkVCOM(gdtfRelation->GetRelationType(rel));
-					this->checkifEqual("gdtfRelationGetRelationType ", rel, EGdtfDmxRelationType::eGdtfDmxRelationType_Override);
+					this->checkifEqual("gdtfRelationGetRelationType ", rel, EGdtfDmxRelationType::eGdtfDmxRelationType_Multiply);
 					
 				}
 			}
