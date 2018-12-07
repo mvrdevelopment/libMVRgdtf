@@ -269,7 +269,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetOrigin
 	
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetStartAddress(DMXAddress address)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetStartAddress(DmxValue address)
 {
 	// Check Pointer
 	if ( ! fFunction) { return kVCOMError_NotInitialized; }
