@@ -30,7 +30,7 @@ namespace VectorworksMVR
 
 		virtual VCOMError VCOM_CALLTYPE     SetAttribute(IGdtfAttribute* attribute);
 		virtual VCOMError VCOM_CALLTYPE     SetOriginalAttribute(MvrString attr);
-		virtual VCOMError VCOM_CALLTYPE     SetStartAddress(DMXAddress address);
+		virtual VCOMError VCOM_CALLTYPE     SetStartAddress(DmxValue address);
 		virtual VCOMError VCOM_CALLTYPE     SetPhysicalStart(double start);
 		virtual VCOMError VCOM_CALLTYPE     SetPhysicalEnd(double end);
 		virtual VCOMError VCOM_CALLTYPE     SetRealFade(double fade);

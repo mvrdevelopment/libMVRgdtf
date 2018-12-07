@@ -505,7 +505,7 @@ namespace VectorworksMVR
 
 		virtual VCOMError VCOM_CALLTYPE     SetAttribute(IGdtfAttribute* attribute) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetOriginalAttribute(MvrString attr) = 0;
-		virtual VCOMError VCOM_CALLTYPE     SetStartAddress(GdtfDefines::DMXAddress address) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetStartAddress(GdtfDefines::DmxValue address) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetPhysicalStart(double start) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetPhysicalEnd(double end) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetRealFade(double fade) = 0;		
