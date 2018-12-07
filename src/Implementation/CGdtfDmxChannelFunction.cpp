@@ -414,7 +414,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetDmxCha
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::CreateDmxChannelSet(MvrString name, DMXAddress start, DMXAddress end, IGdtfDmxChannelSet** set)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::CreateDmxChannelSet(MvrString name, DmxValue start, DmxValue end, IGdtfDmxChannelSet** set)
 {
 	// Check Pointer
 	if ( ! fFunction) { return kVCOMError_NotInitialized; }
