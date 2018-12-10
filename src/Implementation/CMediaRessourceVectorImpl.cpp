@@ -1104,7 +1104,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetFirstChi
 	
 	//---------------------------------------------------------------------------
 	// Check of there are childs and get first object
-	if (scGroupObj->GetChildArray().size() == 0){ return kVCOMError_NoError; }
+	if (scGroupObj->GetChildArray().size() == 0){ return kVCOMError_NoObj; }
 	
 	SceneData::SceneDataObjWithMatrixPtr	child	= scGroupObj->GetChildArray().at(0);
 	
