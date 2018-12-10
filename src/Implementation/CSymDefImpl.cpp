@@ -113,7 +113,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSymDefImpl::GetGeometryAt(size_t at, 
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CSymDefImpl::AddGeometry(const STransformMatrix& scMatrix)
+VectorworksMVR::VCOMError VectorworksMVR::CSymDefImpl::AddGeometry(const STransformMatrix& scMatrix, MvrString fileName)
 {
 	//---------------------------------------------------------------------------
 	// Create the new object, and set the file name
@@ -124,7 +124,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSymDefImpl::AddGeometry(const STransf
 	VWTransformMatrix ma;
 	Utility::ConvertMatrix(scMatrix, ma);
 	geometryObject->SetTransformMatrix(ma);
-		
+    geometryObject->SetFileName(fileName);
 		
 	//---------------------------------------------------------------------------
 	// Simply add it to the the array, deletion will be handeld by the container
