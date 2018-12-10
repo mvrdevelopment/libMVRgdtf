@@ -2088,7 +2088,6 @@ bool SceneDataExchange::AddNeededGdtfFile(const TXString& gdtfName)
 	
 	
 	//-------------------------------------------------------------------------------------------------
-	// Check if this is already
 	fRequiredGdtfFiles.push_back(gdtfName);
 	
 	return false;
@@ -2481,7 +2480,7 @@ void SceneDataExchange::ProcessGroup(const IXMLFileNodePtr& node, SceneDataGroup
 	
 }
 
-bool SceneDataExchange::AddFileToZip(const IFileIdentifierPtr& file)
+void SceneDataExchange::AddFileToZip(const IFileIdentifierPtr& file)
 {
     fGeometryFiles.push_back(file);
 }

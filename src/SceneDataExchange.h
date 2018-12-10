@@ -669,7 +669,7 @@ namespace SceneData
 	public:
 		bool WriteToFile(const IFileIdentifierPtr&);
 		bool AddNeededGdtfFile(const TXString& gdtfName);
-        bool AddFileToZip(const IFileIdentifierPtr& file);
+        void AddFileToZip(const IFileIdentifierPtr& file);
 		void AddLocationForGdtfFiles(IFolderIdentifierPtr folder);
 		
 	private:
