@@ -23,6 +23,31 @@ SceneData::SceneDataExchange* VectorworksMVR::CMediaRessourceVectorImpl::GetExch
 	return & fExchangeObj;
 }
 
+
+VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::AddFileToMvrFile(MvrString fullPath)
+{
+    TXString strFullPath(fullPath);
+
+    // Create the file pointer on the full path
+    IFileIdentifierPtr file(IID_FileIdentifier);
+    file->Set(strFullPath);
+
+    bool fileExisis = false;
+    file->ExistsOnDisk(fileExisis);
+
+    // Check if the file exists
+    if (!fileExisis) { return kVCOMError_Failed; }
+
+    TXString fileName;
+    file->GetFileName(fileName);
+
+
+
+    // Read From File
+    return kVCOMError_NoError;
+}
+
+
 VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::AddGdtfFolderLocation(MvrString fullPathToFolder)
 {
 	TXString path (fullPathToFolder);

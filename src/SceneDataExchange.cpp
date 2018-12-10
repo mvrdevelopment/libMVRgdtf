@@ -1954,7 +1954,7 @@ bool SceneDataExchange::WriteToFile(const IFileIdentifierPtr& file)
 	// Add the 3DS file
 	for (size_t i = 0; i < fGeometryFiles.size(); i++)
 	{
-		SceneDataZip::AddFileToZip(zipfile, fGeometryFiles.at(i), true, true);
+		SceneDataZip::AddFileToZip(zipfile, fGeometryFiles.at(i), false, false);
 	}
 	
 	//-------------------------------------------------------------------------------------------------
@@ -2479,4 +2479,9 @@ void SceneDataExchange::ProcessGroup(const IXMLFileNodePtr& node, SceneDataGroup
 		}
 	}
 	
+}
+
+bool SceneDataExchange::AddFileToZip(const IFileIdentifierPtr& file)
+{
+    fGeometryFiles.push_back(file);
 }
