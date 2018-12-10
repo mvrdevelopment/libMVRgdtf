@@ -41,9 +41,9 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::AddFileToMv
     TXString fileName;
     file->GetFileName(fileName);
 
+    fExchangeObj.AddFileToZip(file);
 
-
-    // Read From File
+    // 
     return kVCOMError_NoError;
 }
 
