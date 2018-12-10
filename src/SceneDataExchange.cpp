@@ -114,9 +114,8 @@ void SceneDataGeometryObj::SetFileName(const TXString& fileName)
 	fFileName = fileName;
 }
 void SceneDataGeometryObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
-{
-	// TODO
-	SetFileName("empty.3ds");
+{	
+	SetFileName(fFileName + ".3ds");
 	
 	pNode->SetNodeAttributeValue(XML_Val_GeometryObjectAttrFile, GetFileName());
 	
