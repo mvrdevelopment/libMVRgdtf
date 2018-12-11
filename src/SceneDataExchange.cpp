@@ -1937,24 +1937,10 @@ bool SceneDataExchange::WriteToFile(const IFileIdentifierPtr& file)
     SceneDataZip::AddFileToZip(zipfile, zipXmlBuffer, filename, true);
 	
 	//-------------------------------------------------------------------------------------------------
-	// Find all the texture files here
-	fWorkingFolder->EnumerateContents(nullptr, [this] (IFileIdentifier* pFileID) -> EFolderContentListenerResult
-	{
-		TXString extension;
-		pFileID->GetFileExtension(extension);
-		if(extension.MakeLower() == "png")
-		{
-			this->fGeometryFiles.push_back(pFileID);
-		}
-		
-		return eFolderContentListenerResult_Continue;
-	}, false);
-	
-	//-------------------------------------------------------------------------------------------------
 	// Add the 3DS file
-	for (size_t i = 0; i < fGeometryFiles.size(); i++)
+	for (size_t i = 0; i < fFilesToAdd.size(); i++)
 	{
-		SceneDataZip::AddFileToZip(zipfile, fGeometryFiles.at(i), false, false);
+		SceneDataZip::AddFileToZip(zipfile, fFilesToAdd.at(i), false/*Checksum*/, false/*Delete*/);
 	}
 	
 	//-------------------------------------------------------------------------------------------------
@@ -2482,5 +2468,5 @@ void SceneDataExchange::ProcessGroup(const IXMLFileNodePtr& node, SceneDataGroup
 
 void SceneDataExchange::AddFileToZip(const IFileIdentifierPtr& file)
 {
-    fGeometryFiles.push_back(file);
+    fFilesToAdd.push_back(file);
 }
