@@ -2696,8 +2696,6 @@ void GdtfDmxChannelFunction::OnPrintToFile(IXMLFileNodePtr pNode)
 	// Sort from low to high
 	std::sort(fChannelSets.begin(), fChannelSets.end(), [](const GdtfDmxChannelSetPtr & a, const GdtfDmxChannelSetPtr & b) -> bool { return a->GetDmxStart() < b->GetDmxStart(); });
 	
-
-	
 	// If it has channel sets, process first obj
 	if(hasChannelSets)
 	{
@@ -2712,13 +2710,6 @@ void GdtfDmxChannelFunction::OnPrintToFile(IXMLFileNodePtr pNode)
 		
 		// add the first one
 		tempArr.push_back(firstChannelSet);
-	}
-	// Otherwise just add empty No Feature
-	else
-	{
-		GdtfDmxChannelSetPtr noFeature = new GdtfDmxChannelSet("", this);
-		noFeature->SetDmxStart(this->GetStartAdress());
-		tempArr.push_back(noFeature);
 	}
 	
 	// Process the spaces between the channel sets
