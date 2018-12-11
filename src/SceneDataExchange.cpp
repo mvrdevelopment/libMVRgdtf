@@ -114,7 +114,10 @@ void SceneDataGeometryObj::SetFileName(const TXString& fileName)
 	fFileName = fileName;
 }
 void SceneDataGeometryObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
-{		
+{	
+	// Call Parent
+	SceneDataGeoInstanceObj::OnPrintToFile(pNode, exchange);
+
 	pNode->SetNodeAttributeValue(XML_Val_GeometryObjectAttrFile, GetFileName());
 }
 
