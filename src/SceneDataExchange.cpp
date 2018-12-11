@@ -114,11 +114,8 @@ void SceneDataGeometryObj::SetFileName(const TXString& fileName)
 	fFileName = fileName;
 }
 void SceneDataGeometryObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
-{	
-	SetFileName(fFileName);
-	
+{		
 	pNode->SetNodeAttributeValue(XML_Val_GeometryObjectAttrFile, GetFileName());
-	
 }
 
 void SceneDataGeometryObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
@@ -126,10 +123,7 @@ void SceneDataGeometryObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDat
 	// Call Parent
 	SceneDataGeoInstanceObj::OnReadFromNode(pNode, exchange);
 	
-	TXString file;
-	pNode->GetNodeAttributeValue(XML_Val_GeometryObjectAttrFile, file);
-	
-	SetFileName(file);
+	pNode->GetNodeAttributeValue(XML_Val_GeometryObjectAttrFile, fFileName);	
 }
 
 TXString SceneDataGeometryObj::GetNodeName()
