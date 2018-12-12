@@ -132,7 +132,7 @@ namespace VectorworksMVR
 	const VCOMError		kVCOMError_WrongGeometryType	      = 462;
     const VCOMError     kVCOMError_WrongRDMParameterValueType = 463;
 	const VCOMError     kVCOMError_SlaveMasterNotInSameMode   = 464;
-
+    const VCOMError     kVCOMError_NoObj                      = 465;
 
 	// ---------------------------------------------------------------------------------------------------
 	extern "C" VCOMError EXPORT_MVR_CLASS VWQueryInterface(const VWIID& iid, IVWUnknown** outInterface);

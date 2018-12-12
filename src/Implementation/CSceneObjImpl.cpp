@@ -138,7 +138,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetGeometryAt(size_t at
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::AddGeometry(const STransformMatrix& scMatrix)
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::AddGeometry(const STransformMatrix& scMatrix, MvrString fileName)
 {
 	//---------------------------------------------------------------------------
 	// Create the new object, and set the file name
@@ -149,7 +149,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::AddGeometry(const STran
 	VWTransformMatrix ma;
 	Utility::ConvertMatrix(scMatrix, ma);
 	geometryObject->SetTransformMatrix(ma);
-	
+    geometryObject->SetFileName(fileName);
 	
 	//---------------------------------------------------------------------------
 	// Simply add it to the the array, deletion will be handeld by the container
