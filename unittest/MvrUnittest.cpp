@@ -180,10 +180,7 @@ void MvrUnittest::ReadFile()
 			{
 				checkifEqual("Layer name", readLayer->GetName(), "My Layer 1");
 				__checkVCOM(readLayer->GetGuid(resultUUID));
-				this->checkifEqual("GetLayerGuid uuid.a ", resultUUID.a, layerUUID1.a);
-				this->checkifEqual("GetLayerGuid uuid.b ", resultUUID.b, layerUUID1.b);
-				this->checkifEqual("GetLayerGuid uuid.c ", resultUUID.c, layerUUID1.c);
-				this->checkifEqual("GetLayerGuid uuid.d ", resultUUID.d, layerUUID1.d);
+				this->checkifEqual("GetLayerGuid layerUUID1 ", resultUUID, layerUUID1);
 			}
 			
 			//Get Data Layer 2
@@ -192,10 +189,6 @@ void MvrUnittest::ReadFile()
 				checkifEqual("Layer name", readLayer->GetName(), "My Layer 2");
 				__checkVCOM(readLayer->GetGuid(resultUUID));
 				this->checkifEqual("GetLayerGuid uuid ", resultUUID, layerUUID2);
-				this->checkifEqual("GetLayerGuid uuid.a ", resultUUID.a, layerUUID2.a);
-				this->checkifEqual("GetLayerGuid uuid.b ", resultUUID.b, layerUUID2.b);
-				this->checkifEqual("GetLayerGuid uuid.c ", resultUUID.c, layerUUID2.c);
-				this->checkifEqual("GetLayerGuid uuid.d ", resultUUID.d, layerUUID2.d);
 			}
 			
 			int j(0);
@@ -211,10 +204,7 @@ void MvrUnittest::ReadFile()
 					{		
 						checkifEqual("GetFocusPoint name", sceneObj->GetName(), "My FocusPoint");
 						__checkVCOM(sceneObj->GetGuid(resultUUID));
-						this->checkifEqual("GetFocusPointGuid uuid.a ", resultUUID.a, focusPointUUID.a);
-						this->checkifEqual("GetFocusPointGuid uuid.b ", resultUUID.b, focusPointUUID.b);
-						this->checkifEqual("GetFocusPointGuid uuid.c ", resultUUID.c, focusPointUUID.c);
-						this->checkifEqual("GetFocusPointGuid uuid.d ", resultUUID.d, focusPointUUID.d);
+						this->checkifEqual("GetFocusPointGuid focusPointUUID ", resultUUID, focusPointUUID);
 					}
 				}
 
@@ -230,10 +220,7 @@ void MvrUnittest::ReadFile()
 				// 			// Get Fixture1
 				// 			checkifEqual("Fixture1 name ", fixture->GetName(), "My Fixture1 Name");
 				// 			__checkVCOM(fixture->GetFixtureGUID(resultUUID));
-				// 			this->checkifEqual("GetFixtureGuid uuid.a ", resultUUID.a, fixtureUUID1.a);
-				// 			this->checkifEqual("GetFixtureGuid uuid.b ", resultUUID.b, fixtureUUID1.b);
-				// 			this->checkifEqual("GetFixtureGuid uuid.c ", resultUUID.c, fixtureUUID1.c);
-				// 			this->checkifEqual("GetFixtureGuid uuid.d ", resultUUID.d, fixtureUUID1.d);
+				// 			this->checkifEqual("GetFixtureGuid fixtureUUID1 ", resultUUID, fixtureUUID1);
 				// 			checkifEqual("GetGdtfName", 	 sceneObj->GetGdtfName(), "Martin@Mac Aura XB1");
 				// 			checkifEqual("GetGdtfMode", 	 sceneObj->GetGdtfMode(), "Mode 1 v1.1");
 				// 			ISceneObjPtr focusObj;
@@ -264,10 +251,7 @@ void MvrUnittest::ReadFile()
 				// 			// Get Fixture2
 				// 			checkifEqual("Fixture1 name ", fixture->GetName(), "My Fixture2 Name");
 				// 			__checkVCOM(fixture->GetFixtureGUID(resultUUID));
-				// 			this->checkifEqual("GetFixtureGuid uuid.a ", resultUUID.a, fixtureUUID2.a);
-				// 			this->checkifEqual("GetFixtureGuid uuid.b ", resultUUID.b, fixtureUUID2.b);
-				// 			this->checkifEqual("GetFixtureGuid uuid.c ", resultUUID.c, fixtureUUID2.c);
-				// 			this->checkifEqual("GetFixtureGuid uuid.d ", resultUUID.d, fixtureUUID2.d);
+				// 			this->checkifEqual("GetFixtureGuid fixtureUUID2 ", resultUUID, fixtureUUID2);
 				// 			checkifEqual("GetGdtfName", 	 sceneObj->GetGdtfName(), "Martin@Mac Aura XB2");
 				// 			checkifEqual("GetGdtfMode", 	 sceneObj->GetGdtfMode(), "My fancy other GDTF DMX Mode");
 				// 			ISceneObjPtr focusObj;
@@ -298,10 +282,7 @@ void MvrUnittest::ReadFile()
 				// 			// Get Fixture3
 				// 			checkifEqual("Fixture1 name ", fixture->GetName(), "My Fixture3 Name");
 				// 			__checkVCOM(fixture->GetFixtureGUID(resultUUID));
-				// 			this->checkifEqual("GetFixtureGuid uuid.a ", resultUUID.a, fixtureUUID3.a);
-				// 			this->checkifEqual("GetFixtureGuid uuid.b ", resultUUID.b, fixtureUUID3.b);
-				// 			this->checkifEqual("GetFixtureGuid uuid.c ", resultUUID.c, fixtureUUID3.c);
-				// 			this->checkifEqual("GetFixtureGuid uuid.d ", resultUUID.d, fixtureUUID3.d);
+				// 			this->checkifEqual("GetFixtureGuid fixtureUUID3 ", resultUUID, fixtureUUID3);
 				// 			checkifEqual("GetGdtfName", 	 sceneObj->GetGdtfName(), "Martin@Mac Aura XB3");
 				// 			checkifEqual("GetGdtfMode", 	 sceneObj->GetGdtfMode(), "My fancy other GDTF DMX Mode2");
 				// 			ISceneObjPtr focusObj;

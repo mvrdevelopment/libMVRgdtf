@@ -178,9 +178,26 @@ void Unittest::checkifEqual(const std::string& check, const VectorworksMVR::Gdtf
 };
 */
 
+void Unittest::checkifEqual(const std::string& check, const VectorworksMVR::GdtfDefines::EGdtfModel_PrimitiveType val1, const VectorworksMVR::GdtfDefines::EGdtfModel_PrimitiveType val2)
+{
+	if ( val1 == val2 ) return;
+
+	// Else Log the error
+	fFailed = true;
+
+	UnittestFailObject test;
+	test.fMessage += check;
+	test.fMessage += " Result: ";
+	test.fMessage += std::to_string(val1);
+	test.fMessage += " Expected: ";
+	test.fMessage += std::to_string(val2);
+
+	fFailedTests.push_back(test);
+};
+
 void Unittest::checkifEqual(const std::string& check, const VectorworksMVR::MvrUUID val1, const VectorworksMVR::MvrUUID val2)
 {
-	if ( val1.a == val2.a || val1.b == val2.b || val1.c == val2.c || val1.d == val2.d) return;
+	if ( val1.a == val2.a && val1.b == val2.b && val1.c == val2.c && val1.d == val2.d) return;
 
 	// Else Log the error
 	fFailed = true;
@@ -218,7 +235,6 @@ void Unittest::checkifEqual(const std::string& check, const std::string& aspecte
 	fFailedTests.push_back(test);
 
 };
-
 
 bool Unittest::checkVCOM(VectorworksMVR::VCOMError error, const std::string& check)
 {
