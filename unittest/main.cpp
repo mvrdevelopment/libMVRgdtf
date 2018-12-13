@@ -29,14 +29,14 @@ int main(int argc, char* argv[])
 	std::string base;
 	GetFolderAppDataPath(base);
 
-	MvrUnittest mvrTest(base);
-	bool mvrOK = mvrTest.RunTest();
-
 	GdtfUnittest gdtfTest(base);
 	bool gdtfOk = gdtfTest.RunTest();
 
 	GdtfDmxUnittest gdtfDmxTest(base);
 	bool gdtfDmxOk = gdtfDmxTest.RunTest();
+
+	MvrUnittest mvrTest(base);
+	bool mvrOK = mvrTest.RunTest();
 
 	return (mvrOK || gdtfOk || gdtfDmxOk);
 }
