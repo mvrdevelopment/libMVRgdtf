@@ -23,6 +23,28 @@ SceneData::SceneDataExchange* VectorworksMVR::CMediaRessourceVectorImpl::GetExch
 	return & fExchangeObj;
 }
 
+
+VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::AddFileToMvrFile(MvrString fullPath)
+{
+    TXString strFullPath(fullPath);
+
+    // Create the file pointer on the full path
+    IFileIdentifierPtr file(IID_FileIdentifier);
+    file->Set(strFullPath);
+
+    bool fileExisis = false;
+    file->ExistsOnDisk(fileExisis);
+
+    // Check if the file exists
+    if (!fileExisis) { return kVCOMError_Failed; }
+
+    fExchangeObj.AddFileToZip(file);
+
+    // 
+    return kVCOMError_NoError;
+}
+
+
 VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::AddGdtfFolderLocation(MvrString fullPathToFolder)
 {
 	TXString path (fullPathToFolder);
@@ -1079,7 +1101,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetFirstChi
 	
 	//---------------------------------------------------------------------------
 	// Check of there are childs and get first object
-	if (scGroupObj->GetChildArray().size() == 0){ return kVCOMError_NoError; }
+	if (scGroupObj->GetChildArray().size() == 0){ return kVCOMError_NoObj; }
 	
 	SceneData::SceneDataObjWithMatrixPtr	child	= scGroupObj->GetChildArray().at(0);
 	
@@ -1155,7 +1177,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetNextObje
 	
 	
 	// If no next object is there, just return ok
-	if (scNextObj == nullptr)	{ return kVCOMError_NoError; }
+	if (scNextObj == nullptr)	{ return kVCOMError_NotSet; }
 	
 	//---------------------------------------------------------------------------
 	// Initialize Object

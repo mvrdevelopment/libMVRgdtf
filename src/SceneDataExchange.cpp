@@ -114,12 +114,11 @@ void SceneDataGeometryObj::SetFileName(const TXString& fileName)
 	fFileName = fileName;
 }
 void SceneDataGeometryObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
-{
-	// TODO
-	SetFileName("empty.3ds");
-	
+{	
+	// Call Parent
+	SceneDataGeoInstanceObj::OnPrintToFile(pNode, exchange);
+
 	pNode->SetNodeAttributeValue(XML_Val_GeometryObjectAttrFile, GetFileName());
-	
 }
 
 void SceneDataGeometryObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
@@ -127,10 +126,7 @@ void SceneDataGeometryObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDat
 	// Call Parent
 	SceneDataGeoInstanceObj::OnReadFromNode(pNode, exchange);
 	
-	TXString file;
-	pNode->GetNodeAttributeValue(XML_Val_GeometryObjectAttrFile, file);
-	
-	SetFileName(file);
+	pNode->GetNodeAttributeValue(XML_Val_GeometryObjectAttrFile, fFileName);	
 }
 
 TXString SceneDataGeometryObj::GetNodeName()
@@ -1937,24 +1933,10 @@ bool SceneDataExchange::WriteToFile(const IFileIdentifierPtr& file)
     SceneDataZip::AddFileToZip(zipfile, zipXmlBuffer, filename, true);
 	
 	//-------------------------------------------------------------------------------------------------
-	// Find all the texture files here
-	fWorkingFolder->EnumerateContents(nullptr, [this] (IFileIdentifier* pFileID) -> EFolderContentListenerResult
-	{
-		TXString extension;
-		pFileID->GetFileExtension(extension);
-		if(extension.MakeLower() == "png")
-		{
-			this->fGeometryFiles.push_back(pFileID);
-		}
-		
-		return eFolderContentListenerResult_Continue;
-	}, false);
-	
-	//-------------------------------------------------------------------------------------------------
 	// Add the 3DS file
-	for (size_t i = 0; i < fGeometryFiles.size(); i++)
+	for (size_t i = 0; i < fFilesToAdd.size(); i++)
 	{
-		SceneDataZip::AddFileToZip(zipfile, fGeometryFiles.at(i), true, true);
+		SceneDataZip::AddFileToZip(zipfile, fFilesToAdd.at(i), false/*Checksum*/, false/*Delete*/);
 	}
 	
 	//-------------------------------------------------------------------------------------------------
@@ -2088,7 +2070,6 @@ bool SceneDataExchange::AddNeededGdtfFile(const TXString& gdtfName)
 	
 	
 	//-------------------------------------------------------------------------------------------------
-	// Check if this is already
 	fRequiredGdtfFiles.push_back(gdtfName);
 	
 	return false;
@@ -2479,4 +2460,9 @@ void SceneDataExchange::ProcessGroup(const IXMLFileNodePtr& node, SceneDataGroup
 		}
 	}
 	
+}
+
+void SceneDataExchange::AddFileToZip(const IFileIdentifierPtr& file)
+{
+    fFilesToAdd.push_back(file);
 }

@@ -16,8 +16,8 @@ namespace VectorworksMVR
         virtual ~CGdtfDmxChannelSetImpl();
         
         virtual MvrString VCOM_CALLTYPE     GetName();
-        virtual VCOMError VCOM_CALLTYPE     GetDmxStartAddress(DMXAddress& address);
-        virtual VCOMError VCOM_CALLTYPE     GetDmxEndAddress(DMXAddress& address);
+        virtual VCOMError VCOM_CALLTYPE     GetDmxStartAddress(DmxValue& address);
+        virtual VCOMError VCOM_CALLTYPE     GetDmxEndAddress(DmxValue& address);
 		
         virtual VCOMError VCOM_CALLTYPE     GetPhysicalStart(double& start);
         virtual VCOMError VCOM_CALLTYPE     GetPhysicalEnd(double& end);        

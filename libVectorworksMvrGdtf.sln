@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libVectorworksMvrGdtf", "libVectorworksMvrGdtf.vcx\libVectorworksMvrGdtf.vcxproj", "{BF7C7ABD-E7E9-4110-AA85-A8452D47126B}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libVectorworksMvrGdtfTestApp", "libVectorworksMvrGdtf.vcx\libVectorworksMvrGdtfTestApp.vcxproj", "{6658C878-A33C-4AFA-B10C-E4FF5ECDDC9D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BF7C7ABD-E7E9-4110-AA85-A8452D47126B} = {BF7C7ABD-E7E9-4110-AA85-A8452D47126B}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

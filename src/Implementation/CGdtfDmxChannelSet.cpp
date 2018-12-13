@@ -26,7 +26,7 @@ MvrString VectorworksMVR::CGdtfDmxChannelSetImpl::GetName()
     return fChannelSet->GetName().GetCharPtr();
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelSetImpl::GetDmxStartAddress(DMXAddress &address)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelSetImpl::GetDmxStartAddress(DmxValue &address)
 {
 	// Check Pointer
 	if ( ! fChannelSet) { return kVCOMError_NotInitialized; }
@@ -36,7 +36,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelSetImpl::GetDmxStartAdd
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelSetImpl::GetDmxEndAddress(DMXAddress &address)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelSetImpl::GetDmxEndAddress(DmxValue &address)
 {
 	// Check Pointer
 	if ( ! fChannelSet) { return kVCOMError_NotInitialized; }

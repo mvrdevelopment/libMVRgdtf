@@ -18,8 +18,8 @@ namespace VectorworksMVR
         virtual MvrString VCOM_CALLTYPE     GetName();		
         virtual VCOMError VCOM_CALLTYPE     GetAttribute(IGdtfAttribute** attribute);
         virtual MvrString VCOM_CALLTYPE     GetOriginalAttribute();
-        virtual VCOMError VCOM_CALLTYPE     GetStartAddress(DMXAddress& address);
-        virtual VCOMError VCOM_CALLTYPE     GetEndAddress(GdtfDefines::DMXAddress& address);
+        virtual VCOMError VCOM_CALLTYPE     GetStartAddress(DmxValue& address);
+        virtual VCOMError VCOM_CALLTYPE     GetEndAddress(DmxValue& address);
         virtual VCOMError VCOM_CALLTYPE     GetPhysicalStart(double& start);
         virtual VCOMError VCOM_CALLTYPE     GetPhysicalEnd(double& end);
         virtual VCOMError VCOM_CALLTYPE     GetRealFade(double& fade);        
@@ -30,7 +30,7 @@ namespace VectorworksMVR
 
 		virtual VCOMError VCOM_CALLTYPE     SetAttribute(IGdtfAttribute* attribute);
 		virtual VCOMError VCOM_CALLTYPE     SetOriginalAttribute(MvrString attr);
-		virtual VCOMError VCOM_CALLTYPE     SetStartAddress(DMXAddress address);
+		virtual VCOMError VCOM_CALLTYPE     SetStartAddress(DmxValue address);
 		virtual VCOMError VCOM_CALLTYPE     SetPhysicalStart(double start);
 		virtual VCOMError VCOM_CALLTYPE     SetPhysicalEnd(double end);
 		virtual VCOMError VCOM_CALLTYPE     SetRealFade(double fade);
@@ -42,7 +42,13 @@ namespace VectorworksMVR
 		
         virtual VCOMError VCOM_CALLTYPE     GetDmxChannelSetCount(size_t& count);
         virtual VCOMError VCOM_CALLTYPE     GetDmxChannelSetAt(size_t at, IGdtfDmxChannelSet** set);
-		virtual VCOMError VCOM_CALLTYPE     CreateDmxChannelSet(MvrString name, DMXAddress start, DMXAddress end, IGdtfDmxChannelSet** set);
+		virtual VCOMError VCOM_CALLTYPE     CreateDmxChannelSet(MvrString name, DmxValue start, DmxValue end, IGdtfDmxChannelSet** set);
+
+        // Mode Master from GDTF 0.88
+		virtual VCOMError VCOM_CALLTYPE     GetModeMasterChannel(IGdtfDmxChannel** outChannel, DmxValue& start, DmxValue& end);
+		virtual VCOMError VCOM_CALLTYPE     GetModeMasterFunction(IGdtfDmxChannelFunction** outFunction, DmxValue& start, DmxValue& end);
+		virtual VCOMError VCOM_CALLTYPE     SetModeMasterChannel(IGdtfDmxChannel* channel, DmxValue start, DmxValue end);
+		virtual VCOMError VCOM_CALLTYPE     SetModeMasterFunction(IGdtfDmxChannelFunction* function, DmxValue start, DmxValue end);
 		
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr);
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject();

@@ -71,7 +71,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::OpenForWrite(MvrStri
 	fFixtureObject->SetGuid(vwUuid);
 	
 	fZipFile = IZIPFilePtr(IID_ZIPFile);
-	fZipFile->OpenWrite(file);
+	fZipFile->OpenNewWrite(file, false);
 	
 	
 	// Read From File

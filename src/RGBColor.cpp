@@ -68,7 +68,7 @@ bool CRGBColor::operator!=(const CRGBColor& clr) const
 
 Uint8 CRGBColor::GetRed() const
 {
-	return (this->red >> 8) & 0xFF;
+	return (this->red >> 7 >> 1) & 0xFF;
 }
 
 void CRGBColor::SetRed(Uint8 red)
@@ -78,7 +78,7 @@ void CRGBColor::SetRed(Uint8 red)
 
 Uint8 CRGBColor::GetGreen() const
 {
-	return (this->green >> 8) & 0xFF;
+	return (this->green >> 7 >> 1) & 0xFF;
 }
 
 void CRGBColor::SetGreen(Uint8 green)
@@ -88,7 +88,7 @@ void CRGBColor::SetGreen(Uint8 green)
 
 Uint8 CRGBColor::GetBlue() const
 {
-	return (this->blue >> 8) & 0xFF;
+	return (this->blue >> 7 >> 1) & 0xFF;
 }
 
 void CRGBColor::SetBlue(Uint8 blue)
@@ -98,9 +98,9 @@ void CRGBColor::SetBlue(Uint8 blue)
 
 void CRGBColor::GetColor(Uint8& r, Uint8& g, Uint8& b) const
 {
-	r = this->red >> 8;
-	g = this->green >> 8;
-	b = this->blue >> 8;
+	r = this->red >> 7 >> 1;
+	g = this->green >> 7 >> 1;
+	b = this->blue >> 7 >> 1;
 }
 
 void CRGBColor::SetColor(Uint8 r, Uint8 g, Uint8 b)

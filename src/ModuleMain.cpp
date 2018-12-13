@@ -48,12 +48,6 @@
 #include "Wrapper/TDQuickDraw.h"
 #include "Wrapper/UTranslateFiles.h"
 #include "Wrapper/ZIPFileImpl.h"
-//#include "Wrapper/Include/ApplicationFolders.h"
-
-
-//------------------------------------------------------------------
-// These are not relevant as it is not a Vectorworks plugin. But, it's needed to link agains VWSDK
-const char * DefaultPluginVWRIdentifier() { return "VectorworksMVR"; } 
 
 //------------------------------------------------------------------
 extern "C" VectorworksMVR::VCOMError VW_EXPORT VWQueryInterface(const VectorworksMVR::VWIID& iid, VectorworksMVR::IVWUnknown** outInterface)

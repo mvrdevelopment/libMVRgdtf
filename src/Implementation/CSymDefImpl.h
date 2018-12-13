@@ -15,11 +15,12 @@ namespace VectorworksMVR
 		virtual ~CSymDefImpl();
 		
 	public:
+        virtual VCOMError VCOM_CALLTYPE		GetGuid(MvrUUID& outGuid);
 		virtual MvrString VCOM_CALLTYPE		GetName();
 		virtual VCOMError VCOM_CALLTYPE		GetGeometryCount(size_t& outCount) ;
 		virtual VCOMError VCOM_CALLTYPE		GetGeometryAt(size_t at, IGeometryReference** outGeometryRef) ;
 		
-		virtual VCOMError VCOM_CALLTYPE		AddGeometry(const STransformMatrix& geometry);
+		virtual VCOMError VCOM_CALLTYPE		AddGeometry(const STransformMatrix& geometry, MvrString fileName);
 		virtual VCOMError VCOM_CALLTYPE		AddSymbol(const STransformMatrix& geometry, ISymDef* symDef);
 		
 		// Implementation

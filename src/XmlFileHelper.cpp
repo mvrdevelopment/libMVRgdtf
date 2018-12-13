@@ -344,11 +344,14 @@ TXString SceneData::GdtfConverter::ConvertDMXAdress(DMXAddress value)
 bool SceneData::GdtfConverter::ConvertDMXAdress(const TXString& value, DMXAddress & intValue)
 /* Convert String to DMXAdress*/
 {
-	/* Absolute DMX address (size 4 bytes); 
-	  Alternative format: Universe � integer universe number, starting with 1;  XXX check this
-	  Address: address within universe from 1 to 512. Format: integer */
-	
-	return ConvertInteger(value, intValue);
+    if(value.IsEmpty()) {intValue = 1; return false;}
+
+	intValue = value.atoi();
+
+    ASSERTN(kEveryone, intValue > 0);
+    ASSERTN(kEveryone, intValue < 513);
+
+    return true;
 }
 
 bool SplitStr(const TXString& str, TXString& part1, TXString& part2, size_t splitPos, bool includeSplitPos=false)
@@ -1045,23 +1048,21 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 {
 	switch (value)
 	{
-		case eGdtfDmxRelationType_Mode:		return XML_GDTF_DMXMasterEnum_Mode;
 		case eGdtfDmxRelationType_Multiply:	return XML_GDTF_DMXMasterEnum_Multiply;
 		case eGdtfDmxRelationType_Override:	return XML_GDTF_DMXMasterEnum_Override;
         default: DSTOP((kEveryone, "ConvertRelationEnum: Invalid Input-Value"));
 	}	
 	
 	// Return default value
-	return XML_GDTF_DMXMasterEnum_Mode;
+	return XML_GDTF_DMXMasterEnum_Override;
 }
 
 /*static*/ bool GdtfConverter::ConvertRelationEnum(const TXString& value, EGdtfDmxRelationType& relation)
 {
-	if		(value == XML_GDTF_DMXMasterEnum_Mode)		{ relation = eGdtfDmxRelationType_Mode;			}
-	else if (value == XML_GDTF_DMXMasterEnum_Multiply)	{ relation = eGdtfDmxRelationType_Multiply;		}
+	if      (value == XML_GDTF_DMXMasterEnum_Multiply)	{ relation = eGdtfDmxRelationType_Multiply;		}
 	else if (value == XML_GDTF_DMXMasterEnum_Override)	{ relation = eGdtfDmxRelationType_Override;		}
-	else if (value == "")								{ relation = eGdtfDmxRelationType_Mode;			}
-	else												{ relation = eGdtfDmxRelationType_Mode; DSTOP((kEveryone, "Unaspected Input for EGdtfDmxRelationType Enum"));}
+	else if (value == "")								{ relation = eGdtfDmxRelationType_Override;			}
+	else												{ relation = eGdtfDmxRelationType_Override; DSTOP((kEveryone, "Unaspected Input for EGdtfDmxRelationType Enum"));}
 	
 	// Return true
 	return true;

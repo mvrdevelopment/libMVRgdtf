@@ -12,10 +12,23 @@ matrix:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-    # Xcode 9.4 Clang
+    - env: Ubuntu Build
+      sudo: required
+      dist: xenial
+      compiler: clang
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+    # Xcode 9.4 g++
     - env: OSX build
       osx_image: xcode9.4
       os: osx
+      # Xcode 9.4 Clang
+    - env: OSX build
+      osx_image: xcode9.4
+      os: osx
+      compiler: clang
     # Windows 2016 Server
     - env: Windows 2016 Server
       os: windows

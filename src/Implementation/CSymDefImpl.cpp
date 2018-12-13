@@ -21,6 +21,19 @@ VectorworksMVR::CSymDefImpl::~CSymDefImpl()
 	fContext	= nullptr;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CSymDefImpl::GetGuid(MvrUUID& outGuid)
+{
+    // Check if this is initialized
+    ASSERTN(kEveryone, fPtr);
+    if (!fPtr) return kVCOMError_NotInitialized;
+
+    // Otherise return data
+    fPtr->getGuid().GetUuidObj().GetUUID(outGuid.a, outGuid.b, outGuid.c, outGuid.d);
+
+
+    return kVCOMError_NoError;
+}
+
 MvrString VectorworksMVR::CSymDefImpl::GetName()
 {
 	// Check if this is initialized
@@ -100,7 +113,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSymDefImpl::GetGeometryAt(size_t at, 
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CSymDefImpl::AddGeometry(const STransformMatrix& scMatrix)
+VectorworksMVR::VCOMError VectorworksMVR::CSymDefImpl::AddGeometry(const STransformMatrix& scMatrix, MvrString fileName)
 {
 	//---------------------------------------------------------------------------
 	// Create the new object, and set the file name
@@ -111,7 +124,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSymDefImpl::AddGeometry(const STransf
 	VWTransformMatrix ma;
 	Utility::ConvertMatrix(scMatrix, ma);
 	geometryObject->SetTransformMatrix(ma);
-		
+    geometryObject->SetFileName(fileName);
 		
 	//---------------------------------------------------------------------------
 	// Simply add it to the the array, deletion will be handeld by the container

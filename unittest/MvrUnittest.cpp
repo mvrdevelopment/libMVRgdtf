@@ -63,7 +63,7 @@ void MvrUnittest::WriteFile()
         ISymDefPtr symDef1 = nullptr;
         if(__checkVCOM(mvrWrite->CreateSymDefObject(MvrUUID(122079618, 11832014, 669376348, 947930087), "Symbol Definition for the FocusPoint", & symDef1)))
         {
-            __checkVCOM(symDef1->AddGeometry(STransformMatrix()));
+            __checkVCOM(symDef1->AddGeometry(STransformMatrix(), "My3DSFile"));
         }
         
         IClassPtr clas1 = nullptr;

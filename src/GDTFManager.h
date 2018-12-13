@@ -80,7 +80,7 @@ namespace SceneData
 		
 	public:
 		virtual EGdtfObjectType			GetObjectType() = 0;
-		virtual TXString				GetNodeReference() const;
+		virtual TXString				GetNodeReference();
 		
 	protected:
 		virtual	TXString				GetNodeName() = 0;
@@ -92,7 +92,7 @@ namespace SceneData
 	};
 	
 	//------------------------------------------------------------------------------------
-	// Attributes
+	// Attribute Definitions
 	
 	
 	//------------------------------------------------------------------------------------
@@ -114,7 +114,7 @@ namespace SceneData
 	public:
         const TXString&						GetName() const;
 		virtual EGdtfObjectType				GetObjectType();
-		virtual TXString					GetNodeReference() const;
+		virtual TXString					GetNodeReference();
 		
 		void								SetName(const TXString& name);
 	
@@ -122,9 +122,9 @@ namespace SceneData
 		void								AddLinkedAttribute(GdtfAttribute* attr);
 		
 	protected:
-		virtual	TXString				GetNodeName();
-		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
-		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+		virtual	TXString				    GetNodeName();
+		virtual	void					    OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					    OnReadFromNode(const IXMLFileNodePtr& pNode);
 
 		
 		
@@ -133,7 +133,7 @@ namespace SceneData
 	typedef std::vector<GdtfActivationGroupPtr>	TGdtfActivationGroupArray;
 		
 	//------------------------------------------------------------------------------------
-	// Feature
+	// Feature Groups
 	class GdtfFeature : public GdtfObject
 	{
 	public:
@@ -156,7 +156,7 @@ namespace SceneData
 		
 	public:
 		virtual EGdtfObjectType			GetObjectType();
-		virtual TXString				GetNodeReference() const;
+		virtual TXString				GetNodeReference();
 		
 	protected:
 		virtual	TXString				GetNodeName();
@@ -245,7 +245,7 @@ namespace SceneData
         void                            SetColor(const CCieColor & col);
 		
 		virtual EGdtfObjectType			GetObjectType();
-		virtual TXString				GetNodeReference() const;
+		virtual TXString				GetNodeReference();
 
 		const TXString&					GetUnresolvedActGroup() const;
 		const TXString&					GetUnresolvedFeature() const;
@@ -291,8 +291,6 @@ namespace SceneData
 	typedef GdtfWheelSlotPrismFacet*				GdtfWheelSlotPrismFacetPtr;
 	typedef std::vector<GdtfWheelSlotPrismFacetPtr>	TGdtfWheelSlotPrismFacetArray;
 	
-	//------------------------------------------------------------------------------------
-	// Wheel Definition
 	class GdtfWheelSlot : public GdtfObject
 	{
 	public:
@@ -322,7 +320,7 @@ namespace SceneData
 		void							SetColor(const CCieColor& color);
 		GdtfWheelSlotPrismFacet*		AddPrismFacet();
 
-		virtual TXString				GetNodeReference() const;
+		virtual TXString				GetNodeReference();
 
         
 	public:
@@ -359,7 +357,7 @@ namespace SceneData
 
 		const TGdtfWheelSlotArray&	GetWheelSlotArray() const;
 		bool						IsGoboWheel() const;
-		virtual TXString			GetNodeReference() const;
+		virtual TXString			GetNodeReference();
 		
 		
 		GdtfFixture*				GetParentFixture() const;
@@ -418,7 +416,7 @@ namespace SceneData
 		
 	public:
 		virtual EGdtfObjectType			GetObjectType();
-		virtual TXString				GetNodeReference() const;
+		virtual TXString				GetNodeReference();
 		
 	protected:
 		virtual	TXString				GetNodeName();
@@ -462,7 +460,7 @@ namespace SceneData
 		GdtfModelPtr						GetModelRef() const;
 		void								GetTransformMatrix(VWTransformMatrix& ma) const;        
         const std::vector<GdtfGeometry*>	GetInternalGeometries();
-		virtual TXString					GetNodeReference() const;
+		virtual TXString					GetNodeReference();
 		// Setter	
 		void								SetName(const TXString& name);
 		void								SetModel(GdtfModelPtr model);
@@ -703,10 +701,6 @@ namespace SceneData
 	
 	//------------------------------------------------------------------------------------
 	// DMX Definition
-	
-
-
-	
 	class GdtfDmxChannelSet : public GdtfObject
 	{
 	public:
@@ -716,8 +710,8 @@ namespace SceneData
 		
 	private:
 		TXString			fUniqueName;
-		DMXAddress			fDmxStart;
-		DMXAddress			fDmxEnd;
+		DmxValue			fDmxStart;
+		DmxValue			fDmxEnd;
 		bool				fSetPhysical;
 		double				fPhysicalStart;
 		double				fPhysicalEnd;
@@ -732,7 +726,7 @@ namespace SceneData
 		//
         const TXString&                 GetName() const;
         DmxValue                        GetDmxStart() const;
-        DMXAddress                      GetDmxEnd() const;
+        DmxValue                        GetDmxEnd() const;
         double                          GetPhysicalStart() const;
         double                          GetPhysicalEnd() const;        
 		Sint32							GetWheelSlot();
@@ -742,7 +736,7 @@ namespace SceneData
 		// Setter
 		void							SetName(const TXString& name);
 		void							SetDmxStart(DmxValue start);
-		void							SetDmxEnd(DMXAddress end);
+		void							SetDmxEnd(DmxValue end);
 		void							SetPhysicalStart(double start);
 		void							SetPhysicalEnd(double end);		
 		void							SetWheelSlot(Sint32 slotIndex);
@@ -768,14 +762,20 @@ namespace SceneData
 		TXString				fName;
 		GdtfAttribute*		    fAttribute;
 		TXString				fOrignalAttribute;
-		DmxValue				fAdressStart;   // This is DMXFrom
-		double					fPhysicalStart;	// Units?????
-		double					fPhysicalEnd;	// Units?????
-		double					fRealFade;		// Units?????		
+		DmxValue				fAdressStart;   
+		double					fPhysicalStart;
+		double					fPhysicalEnd;
+		double					fRealFade;			
 		GdtfWheelPtr			fOnWheel;
 		GdtfPhysicalEmitter*	fEmitter;
 		EGDTFDmxInvert			fDmxInvert;
 		EGDTFEncoderInvert		fEncoderInvert;
+
+        GdtfDmxChannel*         fModeMaster_Channel;
+        GdtfDmxChannelFunction* fModeMaster_Function;
+        DmxValue                fDmxModeStart;
+        DmxValue                fDmxModeEnd;
+
 		//
 		TGdtfDmxChannelSetArray	fChannelSets;		
 		
@@ -783,6 +783,9 @@ namespace SceneData
 		TXString				fUnresolvedAttrRef;
 		TXString				fUnresolvedWheelRef;
 		TXString				fUnresolvedEmitterRef;
+        TXString                fUnresolvedDmxModeStart;
+        TXString                fUnresolvedDmxModeEnd;
+        TXString                fUnresolvedModeMaster;
 		
 		// Parent Logical Channel
 		GdtfDmxLogicalChannel*	fParentLogicalChannel;
@@ -790,7 +793,7 @@ namespace SceneData
 
 	public:
 		virtual EGdtfObjectType			GetObjectType();
-		virtual TXString				GetNodeReference() const;
+		virtual TXString				GetNodeReference();
 		//
         const TXString&					GetName() const;
         GdtfAttribute*				    GetAttribute();
@@ -804,6 +807,11 @@ namespace SceneData
         GdtfPhysicalEmitter*            GetEmitter() const;
         EGDTFDmxInvert                  GetDmxInvert()const;
         EGDTFEncoderInvert              GetEncoderInvert() const;        
+
+        GdtfDmxChannel*                 GetModeMaster_Channel() const;
+        GdtfDmxChannelFunction*         GetModeMaster_Function() const;
+        DmxValue                        GetModeMasterDmxStart() const;
+        DmxValue                        GetModeMasterDmxEnd() const;
         
         //
 		const TGdtfDmxChannelSetArray	GetChannelSets();		
@@ -811,7 +819,9 @@ namespace SceneData
 		TXString						getUnresolvedAttrRef() const;
 		TXString						getUnresolvedWheelRef() const;
 		TXString						getUnresolvedEmitterRef() const;
+        TXString						getUnresolvedModeMasterRef() const;
 		GdtfDmxChannel*					GetParentDMXChannel() const;
+        void						    ResolveModeMasterDmx(EGdtfChannelBitResolution resolution);
 
         void                            SetNextFunction(GdtfDmxChannelFunction* next);
         GdtfDmxChannelFunction*         GetNextFunction() const;
@@ -827,7 +837,12 @@ namespace SceneData
 		void							SetRealFade(double fade);				
 		void							SetEmitter(GdtfPhysicalEmitter* newEmit);
         void                            SetDmxInvert(EGDTFDmxInvert dmxInvert);
-        void                            SetEncoderInvert(EGDTFEncoderInvert encoderInvert);        
+        void                            SetEncoderInvert(EGDTFEncoderInvert encoderInvert);     
+
+        void                            SetModeMaster_Channel(GdtfDmxChannel* channel);
+        void                            SetModeMaster_Function(GdtfDmxChannelFunction* function);
+        void                            SetModeMasterDmxStart(DmxValue start);
+        void                            SetModeMasterDmxEnd(DmxValue end);   
 
 		//
 		GdtfDmxChannelSet*				AddChannelSet(const TXString& name);
@@ -844,7 +859,6 @@ namespace SceneData
 	{
 	public:
 		GdtfDmxLogicalChannel(GdtfDmxChannel* parent);
-		GdtfDmxLogicalChannel(const TXString& name, GdtfDmxChannel* parent);
 		~GdtfDmxLogicalChannel();
 	private:
 		TXString					fName_AutoGenerated;
@@ -861,9 +875,9 @@ namespace SceneData
 	public:
 
 		virtual EGdtfObjectType				GetObjectType();
-		virtual TXString					GetNodeReference() const;
+		virtual TXString					GetNodeReference();
 		
-        const TXString&						GetName() const;
+        const TXString&						GetName();
         GdtfAttribute*						GetAttribute();
 		EGdtfDmxSnap						GetDmxSnap() const;
 		EGdtfDmxMaster						GetDmxMaster() const;
@@ -893,7 +907,6 @@ namespace SceneData
 	{
 	public:
 		GdtfDmxChannel(GdtfDmxMode* parent);
-		GdtfDmxChannel(GdtfDmxMode* parent, const TXString& name);
 		~GdtfDmxChannel();
 	private:
 		TXString					fName_AutoGenerated;
@@ -918,17 +931,17 @@ namespace SceneData
 		
 	public:
 		virtual EGdtfObjectType				GetObjectType();
-		virtual TXString					GetNodeReference() const;
+		virtual TXString					GetNodeReference();
 		
-        const TXString&						GetName() const;
+        const TXString&						GetName();
         Sint32								GetDmxBreak() const;
         Sint32								GetCoarse() const;
         Sint32								GetFine() const;
         Sint32								GetUltra() const;
 		Sint32								GetUber() const;
         EGdtfDmxFrequency					GetFrequency() const;
-        DMXAddress							GetDefaultValue() const;
-        DMXAddress							GetHighlight() const;
+        DmxValue							GetDefaultValue() const;
+        DmxValue							GetHighlight() const;
 		bool								HasHighlight() const;
         double                              GetMoveInBlackFrames() const;
         double								GetDmxChangeTimeLimit() const;				
@@ -945,12 +958,12 @@ namespace SceneData
 		void								SetDmxUltra(Sint32 ultra);
 		void								SetDmxUber(Sint32 uber);
 		void								SetFrequency(EGdtfDmxFrequency frequency);
-		void								SetDefaultValue(DMXAddress defaultValue);
-		void								SetHighlight(DMXAddress highlight);
+		void								SetDefaultValue(DmxValue defaultValue);
+		void								SetHighlight(DmxValue highlight);
 		void								SetMoveInBlackFrames(double moveInBlackFrames);
 		void								SetDmxChangeTimeLimit(double changeLimit);
 		void								SetModel(GdtfModelPtr ptr);
-		GdtfDmxLogicalChannel*				AddLogicalChannel(const TXString& name);
+		GdtfDmxLogicalChannel*				AddLogicalChannel();
 		void								SetGeomRef(GdtfGeometryPtr newGeom);
 
         // Get Parent
@@ -976,19 +989,14 @@ namespace SceneData
 		GdtfDmxChannelPtr			fMasterDmxChannel;
 		GdtfDmxChannelFunctionPtr	fSlaveChannelFunction;
 		EGdtfDmxRelationType		fRelationType;
-		DMXAddress					fDmxStart;
-		DMXAddress					fDmdEnd;
 		
 		// Pointer Resolve
-		TXString					fUnresolvedDmxStart;
-		TXString					fUnresolvedDmxEnd;
 		TXString					fUnresolvedMasterRef;
 		TXString					fUnresolvedSlaveRef;
 		
 	public:
 		TXString					GetUnresolvedMasterRef() const;
 		TXString					GetUnresolvedSlaveRef() const;
-		void						ResolveDmxRange();
         		
 	public:
 		// Getter
@@ -1043,7 +1051,7 @@ namespace SceneData
 		const TGdtfDmxRelationArray GetDmxRelations();
 		
 		void						SetName(const TXString& name);
-		GdtfDmxChannelPtr			AddChannel(const TXString& name);
+		GdtfDmxChannelPtr			AddChannel();
 		void						SetGeomRef(GdtfGeometryPtr ptr);
 		void						SetModel(GdtfGeometryPtr ptr);
 		GdtfDmxRelation*			AddDmxRelation(GdtfDmxChannel* master, GdtfDmxChannelFunctionPtr slave, const TXString &name);
@@ -2250,7 +2258,7 @@ protected:
         const TXString&						GetName() const;
         CCieColor							GetColor() const;
         const TGdtfMeasurementPointArray    GetMeasurementPoints();
-		virtual TXString					GetNodeReference() const;
+		virtual TXString					GetNodeReference();
 		
 		void							SetName(const TXString& name);
 		void							SetColor(CCieColor color);
@@ -2472,10 +2480,12 @@ protected:
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
 		        
-        GdtfAttributePtr getAttributeByRef(const TXString& ref);
-        GdtfWheelPtr getWheelByRef(const TXString& ref);		
-		GdtfPhysicalEmitterPtr getEmiterByRef(const TXString& ref);
-		
+        GdtfAttributePtr            getAttributeByRef(const TXString& ref);
+        GdtfWheelPtr                getWheelByRef(const TXString& ref);		
+		GdtfPhysicalEmitterPtr      getEmiterByRef(const TXString& ref);
+        GdtfDmxChannelFunctionPtr   getDmxFunctionByRef(const TXString& ref);
+		GdtfDmxChannelPtr           getDmxChannelByRef(const TXString& ref);
+
 		//
 		void AutoGenerateNames(GdtfDmxModePtr dmxMode);
 		
@@ -2486,6 +2496,7 @@ protected:
 		
 		void ResolveAttribRefs();		
 		void ResolveDmxModeRefs();
+        void ResolveDMXModeMasters();
 		void ResolveDmxRelationRefs(GdtfDmxModePtr dmxMode);
 		void ResolveDmxChannelRefs(GdtfDmxModePtr dmxMode);
 		GdtfGeometryPtr ResolveGeometryRef(const TXString& unresolvedGeoRef, const TGdtfGeometryArray& geometryArray);

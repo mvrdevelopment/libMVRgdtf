@@ -188,7 +188,7 @@ void GdtfUnittest::WriteFile()
 			
 			IGdtfDmxChannelPtr 			gdtfDmxChannel;
 			IGdtfDmxChannelFunctionPtr	gdftChannelFunction;
-			if (__checkVCOM(gdtfDmxMode->CreateDmxChannel("My nameGeometry_My attributeName", &gdtfDmxChannel)))
+			if (__checkVCOM(gdtfDmxMode->CreateDmxChannel(childGeo, &gdtfDmxChannel)))
 			{
 				__checkVCOM(gdtfDmxChannel->SetCoarse(1));
 				__checkVCOM(gdtfDmxChannel->SetFine(2));
@@ -203,7 +203,7 @@ void GdtfUnittest::WriteFile()
 				__checkVCOM(gdtfDmxChannel->SetGeometry(childGeo));
 
 				IGdtfDmxLogicalChannelPtr gdtfLogicalChannel;
-				if (__checkVCOM(gdtfDmxChannel->CreateLogicalChannel("My attributeName", &gdtfLogicalChannel)))
+				if (__checkVCOM(gdtfDmxChannel->CreateLogicalChannel(gdtfAttribute, &gdtfLogicalChannel)))
 				{
 					__checkVCOM(gdtfLogicalChannel->SetAttribute(gdtfAttribute));
 					__checkVCOM(gdtfLogicalChannel->SetDmxMaster(EGdtfDmxMaster::eGdtfDmxMaster_Grand));
@@ -237,7 +237,7 @@ void GdtfUnittest::WriteFile()
 
 			// Add Relation
 			IGdtfDmxRelationPtr relation;
-			__checkVCOM(gdtfDmxMode->CreateDmxRelation("Relation", EGdtfDmxRelationType::eGdtfDmxRelationType_Override, gdtfDmxChannel, gdftChannelFunction, & relation));
+			__checkVCOM(gdtfDmxMode->CreateDmxRelation("Relation", EGdtfDmxRelationType::eGdtfDmxRelationType_Multiply, gdtfDmxChannel, gdftChannelFunction, & relation));
 		}
 
 
@@ -570,9 +570,9 @@ void GdtfUnittest::ReadFile()
 								this->checkifEqual("gdtfFunctionGetOriginalAttribute ", ogAttribute, "My orginalAttribute");
 
 								//Start Address
-								GdtfDefines::DMXAddress dmxStartAddress;
+								GdtfDefines::DmxValue dmxStartAddress;
 								__checkVCOM(gdtfFunction->GetStartAddress(dmxStartAddress));
-								this->checkifEqual("gdtfFunctionGetStartAddress ", dmxStartAddress, GdtfDefines::DMXAddress(1));
+								this->checkifEqual("gdtfFunctionGetStartAddress ", dmxStartAddress, GdtfDefines::DmxValue(1));
 
 								//physical Start
 								double physicalStart;
@@ -622,13 +622,13 @@ void GdtfUnittest::ReadFile()
 									MvrString channelSetName = gdtfChannelSet->GetName();
 									this->checkifEqual("gdtfChannelSetGetName ", channelSetName, "My nameDmxChannelSet");
 
-									GdtfDefines::DMXAddress startAddr;
+									GdtfDefines::DmxValue startAddr;
 									__checkVCOM(gdtfChannelSet->GetDmxStartAddress(startAddr));
-									this->checkifEqual("gdtfChannelSetGetDmxStartAddress ", startAddr, GdtfDefines::DMXAddress(1));
+									this->checkifEqual("gdtfChannelSetGetDmxStartAddress ", startAddr, (GdtfDefines::DmxValue)1);
 
-									GdtfDefines::DMXAddress endAddr;
+									GdtfDefines::DmxValue endAddr;
 									__checkVCOM(gdtfChannelSet->GetDmxEndAddress(endAddr));
-									this->checkifEqual("gdtfChannelSetGetDmxEndAddress ", endAddr, GdtfDefines::DMXAddress(2));
+									this->checkifEqual("gdtfChannelSetGetDmxEndAddress ", endAddr, (GdtfDefines::DmxValue)2);
 
 									double physicalStart;
 									__checkVCOM(gdtfChannelSet->GetPhysicalStart(physicalStart));
@@ -684,22 +684,8 @@ void GdtfUnittest::ReadFile()
 					// Relation Type
 					EGdtfDmxRelationType rel;
 					__checkVCOM(gdtfRelation->GetRelationType(rel));
-					this->checkifEqual("gdtfRelationGetRelationType ", rel, EGdtfDmxRelationType::eGdtfDmxRelationType_Override);
+					this->checkifEqual("gdtfRelationGetRelationType ", rel, EGdtfDmxRelationType::eGdtfDmxRelationType_Multiply);
 					
-					// DMX Start
-					GdtfDefines::DmxValue start;
-					if (__checkVCOM(gdtfRelation->GetDmxStart(start)))
-					{
-						// TODO: This will be removed for GDTF 0.88
-						//this->checkifEqual("gdtfRelationGetDmxStart ", start, GdtfDefines::DmxValue(1234));
-					}
-
-					// DMX End
-					GdtfDefines::DmxValue end;
-					if (__checkVCOM(gdtfRelation->GetDmxEnd(end)))
-					{
-						//this->checkifEqual("gdtfRelationGetDmxEnd ", end, GdtfDefines::DmxValue(1234));
-					}
 				}
 			}
 		}
@@ -779,6 +765,36 @@ void GdtfUnittest::ReadFile()
 			}
 		} // FeatureGroups loops
 
+		//------------------------------------------------------------------------------    
+		// Check Attributes
+		size_t countAttributes = 0;
+		__checkVCOM(gdtfRead->GetAttributeCount(countAttributes));
+		this->checkifEqual("Check Attribute Count ", (size_t) 2, countAttributes);
+
+		for(size_t i = 0; i < countAttributes; i++)
+		{
+			if (countAttributes == 0)
+			{
+				IGdtfAttributePtr attribute;
+				__checkVCOM(gdtfRead->GetAttributeAt(i, &attribute));
+
+				EGdtfPhysicalUnit unit;
+				__checkVCOM(attribute->GetPhysicalUnit(unit));
+				this->checkifEqual("Check Physical Unit ", (Sint32)unit, (Sint32)EGdtfPhysicalUnit::Acceleration);
+				this->checkifEqual("Check Attribute Name ", "My MainAttributeName", attribute->GetName());
+			}
+
+			if (countAttributes == 1)
+			{
+				IGdtfAttributePtr attribute;
+				__checkVCOM(gdtfRead->GetAttributeAt(i, &attribute));
+
+				EGdtfPhysicalUnit unit;
+				__checkVCOM(attribute->GetPhysicalUnit(unit));
+				this->checkifEqual("Check Physical Unit ", (Sint32)unit, (Sint32)EGdtfPhysicalUnit::Angle);
+				this->checkifEqual("Check Attribute Name ", "My attributeName", attribute->GetName());
+			}
+		}
 
 		//------------------------------------------------------------------------------    
 		// Extract Geometry & Models
