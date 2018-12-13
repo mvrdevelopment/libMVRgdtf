@@ -191,6 +191,7 @@ void MvrUnittest::ReadFile()
 			{
 				checkifEqual("Layer name", readLayer->GetName(), "My Layer 2");
 				__checkVCOM(readLayer->GetGuid(resultUUID));
+				this->checkifEqual("GetLayerGuid uuid ", resultUUID, layerUUID2);
 				this->checkifEqual("GetLayerGuid uuid.a ", resultUUID.a, layerUUID2.a);
 				this->checkifEqual("GetLayerGuid uuid.b ", resultUUID.b, layerUUID2.b);
 				this->checkifEqual("GetLayerGuid uuid.c ", resultUUID.c, layerUUID2.c);
