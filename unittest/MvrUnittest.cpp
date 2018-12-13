@@ -196,132 +196,130 @@ void MvrUnittest::ReadFile()
 			{
 				ESceneObjType type;
 				__checkVCOM(sceneObj->GetType(type));
-				if (type == ESceneObjType::FocusPoint)
-				{
-					ISceneObjPtr focusPointObj;
-					__checkVCOM_Failed(sceneObj->GetFocusPoint(&focusPointObj));
-					if(i==0 && j==0)
-					{		
-						checkifEqual("GetFocusPoint name", sceneObj->GetName(), "My FocusPoint TEST");
-						__checkVCOM(sceneObj->GetGuid(resultUUID));
-						this->checkifEqual("GetFocusPointGuid focusPointUUID ", resultUUID, focusPointUUID);
-					}
-				}
+				
 
-				if (type == ESceneObjType::Fixture)
+				// ------------------------------------------------------------------------------
+				// Get Focus Point1
+				if(i==0 && j==0)
+				{	
+					
+					checkifEqual("ESceneObjType Type ", (Sint32)type ,(Sint32)ESceneObjType::FocusPoint);
+					checkifEqual("GetFocusPoint name", sceneObj->GetName(), "My FocusPoint");
+					__checkVCOM(sceneObj->GetGuid(resultUUID));
+					this->checkifEqual("GetFocusPointGuid focusPointUUID ", resultUUID, focusPointUUID);
+				}
+				
+
+				// ------------------------------------------------------------------------------
+				// Get Fixture1
+				if (i==0 && j==1)
+				{	
+					checkifEqual("ESceneObjType Type ", (Sint32)type ,(Sint32)ESceneObjType::Fixture);
+					checkifEqual("Fixture1 name ",		sceneObj->GetName(), 	 "My Fixture1 Name");
+					__checkVCOM(sceneObj->GetGuid(resultUUID));
+					this->checkifEqual("GetFixtureGuid fixtureUUID1 ", resultUUID, fixtureUUID1);
+					checkifEqual("GetGdtfName", 	 	sceneObj->GetGdtfName(), "Martin@Mac Aura XB1");
+					checkifEqual("GetGdtfMode", 	 	sceneObj->GetGdtfMode(), "Mode 1 v1.1");
+					// ISceneObjPtr focusObj;
+					// checkifEqual("GetFocusPoint", 	 sceneObj->GetFocusPoint(&sceneObj), );
+					// IPositionPtr position = nullptr;
+					// checkifEqual("GetPosition", 	 sceneObj->GetPosition(&position),);
+					// Sint32 unitNumb;
+					// checkifEqual("GetUnitNumber", 	 sceneObj->GetUnitNumber(unitNumb, );
+					// CieColor color;
+					// checkifEqual("GetColor", 		 sceneObj->GetColor(color), );
+					// Sint8 fixtureTypeId;
+					// checkifEqual("GetFixtureTypeId",  sceneObj->GetFixtureTypeId(fixtureTypeId), );
+					// size_t customId;
+					// checkifEqual("GetCustomId", 	 	 sceneObj->GetCustomId(customId), );
+					// size_t addressCount = 0;
+					// __checkVCOM(sceneObj->GetAdressCount(addressCount));
+					// for (size_t i = 0; i < addressCount; i++)
+					// {
+					// 	if (__checkVCOM(sceneObj->GetAdressAt(i, SDmxAdress& adress)))
+					// 	{
+					// 		// TODO
+					// 	}
+					// }
+				}
+				
+				// ------------------------------------------------------------------------------
+				// Get Fixture2
+				if (i==0 && j==2)
 				{
-					// Read the GDTF File
-					IGdtfFixturePtr fixture;
-					if (__checkVCOM_Failed(sceneObj->GetGdtfFixture( & fixture)))
-					{
-						// ------------------------------------------------------------------------------
-						// Get Fixture1
-						if (i==0 && j==1)
-						{	
-							
-							checkifEqual("Fixture1 name ", fixture->GetName(), "My Fixture1 Name");
-							__checkVCOM(fixture->GetFixtureGUID(resultUUID));
-							this->checkifEqual("GetFixtureGuid fixtureUUID1 ", resultUUID, fixtureUUID1);
-							checkifEqual("GetGdtfName", 	 sceneObj->GetGdtfName(), "Martin@Mac Aura XB1");
-							checkifEqual("GetGdtfMode", 	 sceneObj->GetGdtfMode(), "Mode 1 v1.1");
-							// ISceneObjPtr focusObj;
-							// checkifEqual("GetFocusPoint", 	 sceneObj->GetFocusPoint(&sceneObj), );
-							// IPositionPtr position = nullptr;
-							// checkifEqual("GetPosition", 	 sceneObj->GetPosition(&position),);
-							// Sint32 unitNumb;
-							// checkifEqual("GetUnitNumber", 	 sceneObj->GetUnitNumber(unitNumb, );
-							// CieColor color;
-							// checkifEqual("GetColor", 		 sceneObj->GetColor(color), );
-							// Sint8 fixtureTypeId;
-							// checkifEqual("GetFixtureTypeId",  sceneObj->GetFixtureTypeId(fixtureTypeId), );
-							// size_t customId;
-							// checkifEqual("GetCustomId", 	 	 sceneObj->GetCustomId(customId), );
-							// size_t addressCount = 0;
-							// __checkVCOM(sceneObj->GetAdressCount(addressCount));
-							// for (size_t i = 0; i < addressCount; i++)
-							// {
-							// 	if (__checkVCOM(sceneObj->GetAdressAt(i, SDmxAdress& adress)))
-							// 	{
-							// 		// TODO
-							// 	}
-							// }
-						}
-						
-						// if (i==0 && j==2)
-						// {
-						// 	// Get Fixture2
-						// 	checkifEqual("Fixture1 name ", fixture->GetName(), "My Fixture2 Name");
-						// 	__checkVCOM(fixture->GetFixtureGUID(resultUUID));
-						// 	this->checkifEqual("GetFixtureGuid fixtureUUID2 ", resultUUID, fixtureUUID2);
-						// 	checkifEqual("GetGdtfName", 	 sceneObj->GetGdtfName(), "Martin@Mac Aura XB2");
-						// 	checkifEqual("GetGdtfMode", 	 sceneObj->GetGdtfMode(), "My fancy other GDTF DMX Mode");
-						// 	ISceneObjPtr focusObj;
-						// 	checkifEqual("GetFocusPoint", 	 sceneObj->GetFocusPoint(&sceneObj), );
-						// 	IPositionPtr position = nullptr;
-						// 	checkifEqual("GetPosition", 	 sceneObj->GetPosition(&position),);
-						// 	// Sint32 unitNumb;
-						// 	// checkifEqual("GetUnitNumber", 	 sceneObj->GetUnitNumber(unitNumb, );
-						// 	// CieColor color;
-						// 	// checkifEqual("GetColor", 		 sceneObj->GetColor(color), );
-						// 	// Sint8 fixtureTypeId;
-						// 	// checkifEqual("GetFixtureTypeId",  sceneObj->GetFixtureTypeId(fixtureTypeId), );
-						// 	// size_t customId;
-						// 	// checkifEqual("GetCustomId", 	 	 sceneObj->GetCustomId(customId), );
-						// 	size_t addressCount = 0;
-						// 	__checkVCOM(sceneObj->GetAdressCount(addressCount));
-						// 	for (size_t i = 0; i < addressCount; i++)
-						// 	{
-						// 		if (__checkVCOM(sceneObj->GetAdressAt(i, SDmxAdress& adress)))
-						// 		{
-						// 			// TODO
-						// 		}
-						// 	}
-						// }
-						
-						// if (i==1 && j==0)
-						// {
-						// 	// Get Fixture3
-						// 	checkifEqual("Fixture1 name ", fixture->GetName(), "My Fixture3 Name");
-						// 	__checkVCOM(fixture->GetFixtureGUID(resultUUID));
-						// 	this->checkifEqual("GetFixtureGuid fixtureUUID3 ", resultUUID, fixtureUUID3);
-						// 	checkifEqual("GetGdtfName", 	 sceneObj->GetGdtfName(), "Martin@Mac Aura XB3");
-						// 	checkifEqual("GetGdtfMode", 	 sceneObj->GetGdtfMode(), "My fancy other GDTF DMX Mode2");
-						// 	ISceneObjPtr focusObj;
-						// 	checkifEqual("GetFocusPoint", 	 sceneObj->GetFocusPoint(&sceneObj), );
-						// 	IPositionPtr position = nullptr;
-						// 	checkifEqual("GetPosition", 	 sceneObj->GetPosition(&position),);
-						// 	// Sint32 unitNumb;
-						// 	// checkifEqual("GetUnitNumber", 	 sceneObj->GetUnitNumber(unitNumb, );
-						// 	// CieColor color;
-						// 	// checkifEqual("GetColor", 		 sceneObj->GetColor(color), );
-						// 	// Sint8 fixtureTypeId;
-						// 	// checkifEqual("GetFixtureTypeId",  sceneObj->GetFixtureTypeId(fixtureTypeId), );
-						// 	// size_t customId;
-						// 	// checkifEqual("GetCustomId", 	 	 sceneObj->GetCustomId(customId), );
-						// 	size_t addressCount = 0;
-						// 	__checkVCOM(sceneObj->GetAdressCount(addressCount));
-						// 	for (size_t i = 0; i < addressCount; i++)
-						// 	{
-						// 		if (__checkVCOM(sceneObj->GetAdressAt(i, SDmxAdress& adress)))
-						// 		{
-						// 			// TODO
-						// 		}
-						// 	}
-						// }
-					} // End Read Gdtf File
+					checkifEqual("ESceneObjType Type ", (Sint32)type ,(Sint32)ESceneObjType::Fixture);
+					checkifEqual("Fixture2 name ",		sceneObj->GetName(), 	 "My Fixture2 Name");
+					__checkVCOM(sceneObj->GetGuid(resultUUID));
+					this->checkifEqual("GetFixtureGuid fixtureUUID2 ", resultUUID, fixtureUUID2);
+					checkifEqual("GetGdtfName", 	 	sceneObj->GetGdtfName(), "Martin@Mac Aura XB2");
+					checkifEqual("GetGdtfMode", 	 	sceneObj->GetGdtfMode(), "My fancy other GDTF DMX Mode");
+					// ISceneObjPtr focusObj;
+					// checkifEqual("GetFocusPoint", 	 sceneObj->GetFocusPoint(&sceneObj), );
+					// IPositionPtr position = nullptr;
+					// checkifEqual("GetPosition", 	 sceneObj->GetPosition(&position),);
+					// Sint32 unitNumb;
+					// checkifEqual("GetUnitNumber", 	 sceneObj->GetUnitNumber(unitNumb, );
+					// CieColor color;
+					// checkifEqual("GetColor", 		 sceneObj->GetColor(color), );
+					// Sint8 fixtureTypeId;
+					// checkifEqual("GetFixtureTypeId",  sceneObj->GetFixtureTypeId(fixtureTypeId), );
+					// size_t customId;
+					// checkifEqual("GetCustomId", 	 	 sceneObj->GetCustomId(customId), );
+					// size_t addressCount = 0;
+					// __checkVCOM(sceneObj->GetAdressCount(addressCount));
+					// for (size_t i = 0; i < addressCount; i++)
+					// {
+					// 	if (__checkVCOM(sceneObj->GetAdressAt(i, SDmxAdress& adress)))
+					// 	{
+					// 		// TODO
+					// 	}
+					// }
+				}
+				
+				// ------------------------------------------------------------------------------
+				// Get Fixture3
+				if (i==1 && j==0)
+				{
+					checkifEqual("ESceneObjType Type ", (Sint32)type ,(Sint32)ESceneObjType::Fixture);
+					checkifEqual("Fixture3 name ", 		sceneObj->GetName(), 	 "My Fixture3 Name");
+					__checkVCOM(sceneObj->GetGuid(resultUUID));
+					this->checkifEqual("GetFixtureGuid fixtureUUID3 ", resultUUID, fixtureUUID3);
+					checkifEqual("GetGdtfName", 	 	sceneObj->GetGdtfName(), "Martin@Mac Aura XB3");
+					checkifEqual("GetGdtfMode", 	 	sceneObj->GetGdtfMode(), "My fancy other GDTF DMX Mode2");
+					// ISceneObjPtr focusObj;
+					// checkifEqual("GetFocusPoint", 	 sceneObj->GetFocusPoint(&sceneObj), );
+					// IPositionPtr position = nullptr;
+					// checkifEqual("GetPosition", 	 sceneObj->GetPosition(&position),);
+					// Sint32 unitNumb;
+					// checkifEqual("GetUnitNumber", 	 sceneObj->GetUnitNumber(unitNumb, );
+					// CieColor color;
+					// checkifEqual("GetColor", 		 sceneObj->GetColor(color), );
+					// Sint8 fixtureTypeId;
+					// checkifEqual("GetFixtureTypeId",  sceneObj->GetFixtureTypeId(fixtureTypeId), );
+					// size_t customId;
+					// checkifEqual("GetCustomId", 	 	 sceneObj->GetCustomId(customId), );
+					// size_t addressCount = 0;
+					// __checkVCOM(sceneObj->GetAdressCount(addressCount));
+					// for (size_t i = 0; i < addressCount; i++)
+					// {
+					// 	if (__checkVCOM(sceneObj->GetAdressAt(i, SDmxAdress& adress)))
+					// 	{
+					// 		// TODO
+					// 	}
+					// }
 				}
 							
 				//------------------------------------------------------------------------
 				// Step to next Obj
 				j++;
 				ISceneObjPtr next = nullptr;
-				__checkVCOM(mvrRead->GetNextObject(sceneObj, &next));
+				mvrRead->GetNextObject(sceneObj, &next);
 				sceneObj = next;
 			}
 			
 			i++;
 			ISceneObjPtr nextLayer = nullptr;
-			__checkVCOM(mvrRead->GetNextObject(readLayer, &nextLayer));
+			mvrRead->GetNextObject(readLayer, &nextLayer);
 			readLayer = nextLayer;
 		}
 
