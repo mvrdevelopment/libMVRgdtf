@@ -9,6 +9,7 @@
 using namespace VectorworksMVR;
 
 #define __checkVCOM(x) checkVCOM(x, #x)
+#define __checkVCOM_Failed(x) this->checkVCOM_NotSet(x, #x)
 
 MvrUnittest::MvrUnittest(const std::string& currentDir)
 {
@@ -204,11 +205,11 @@ void MvrUnittest::ReadFile()
 				if (type == ESceneObjType::FocusPoint)
 				{
 					ISceneObjPtr focusPointObj;
-					__checkVCOM(sceneObj->GetFocusPoint(&focusPointObj));
+					__checkVCOM_Failed(sceneObj->GetFocusPoint(&focusPointObj));
 					if(i==0 && j==0)
 					{		
-						checkifEqual("GetFocusPoint name", focusPointObj->GetName(), "My FocusPoint");
-						__checkVCOM(focusPointObj->GetGuid(resultUUID));
+						checkifEqual("GetFocusPoint name", sceneObj->GetName(), "My FocusPoint");
+						__checkVCOM(sceneObj->GetGuid(resultUUID));
 						this->checkifEqual("GetFocusPointGuid uuid.a ", resultUUID.a, focusPointUUID.a);
 						this->checkifEqual("GetFocusPointGuid uuid.b ", resultUUID.b, focusPointUUID.b);
 						this->checkifEqual("GetFocusPointGuid uuid.c ", resultUUID.c, focusPointUUID.c);

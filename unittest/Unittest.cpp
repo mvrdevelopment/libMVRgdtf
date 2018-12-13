@@ -250,6 +250,25 @@ bool Unittest::checkVCOM_NotSet(VectorworksMVR::VCOMError error, const std::stri
     return false;
 };
 
+bool Unittest::checkVCOM_Failed(VectorworksMVR::VCOMError error, const std::string& check)
+{
+	if (kVCOMError_NoError != error) return true;
+
+	// Else Log the error
+	fFailed = true;
+
+	UnittestFailObject test;
+	test.fMessage += "VCOM Failed FAILED: ";
+	test.fMessage += check;
+	test.fMessage += " Return Value: ";
+	test.fMessage += std::to_string(error);;
+
+	fFailedTests.push_back(test);
+
+	return false;
+};
+
+
 void Unittest::checkifEqualPtr(const std::string& check, void* val1, void* val2)
 {
 	if (val1 == val2) return;
