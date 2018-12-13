@@ -218,6 +218,27 @@ void Unittest::checkifEqual(const std::string& check, const VectorworksMVR::MvrU
 	fFailedTests.push_back(test);
 };
 
+void Unittest::checkifEqual(const std::string& check, const VectorworksMVR::CieColor val1, const VectorworksMVR::CieColor val2)
+{
+	if ( val1.fx == val2.fx && val1.fy == val2.fy && val1.f_Y == val2.f_Y ) return;
+
+	// Else Log the error
+	fFailed = true;
+
+	UnittestFailObject test;
+	test.fMessage += check;
+	test.fMessage += " Result: ";
+	test.fMessage += "(" + std::to_string(val1.fx) + "), ";
+	test.fMessage += "(" + std::to_string(val1.fy) + "), ";
+	test.fMessage += "(" + std::to_string(val1.f_Y) + "), ";
+	test.fMessage += " Expected: ";
+	test.fMessage += "(" + std::to_string(val2.fx) + "), ";
+	test.fMessage += "(" + std::to_string(val2.fy) + "), ";
+	test.fMessage += "(" + std::to_string(val2.f_Y) + "), ";
+
+	fFailedTests.push_back(test);
+};
+
 void Unittest::checkifEqual(const std::string& check, const std::string& aspected, const std::string& result)
 {
 	if (aspected == result) return;

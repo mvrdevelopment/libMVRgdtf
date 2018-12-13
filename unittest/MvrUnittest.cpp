@@ -64,7 +64,7 @@ void MvrUnittest::WriteFile()
         ISymDefPtr symDef1 = nullptr;
         if(__checkVCOM(mvrWrite->CreateSymDefObject(MvrUUID(122079618, 11832014, 669376348, 947930087), "Symbol Definition for the FocusPoint", & symDef1)))
         {
-            __checkVCOM(symDef1->AddGeometry(STransformMatrix(), "My3DSFile"));
+            __checkVCOM(symDef1->AddGeometry(STransformMatrix(), "My3DSFile.3ds"));
         }
         
         IClassPtr clas1 = nullptr;
@@ -220,27 +220,58 @@ void MvrUnittest::ReadFile()
 					this->checkifEqual("GetFixtureGuid fixtureUUID1 ", resultUUID, fixtureUUID1);
 					checkifEqual("GetGdtfName", 	 	sceneObj->GetGdtfName(), "Martin@Mac Aura XB1");
 					checkifEqual("GetGdtfMode", 	 	sceneObj->GetGdtfMode(), "Mode 1 v1.1");
-					// ISceneObjPtr focusObj;
-					// checkifEqual("GetFocusPoint", 	 sceneObj->GetFocusPoint(&sceneObj), );
-					// IPositionPtr position = nullptr;
-					// checkifEqual("GetPosition", 	 sceneObj->GetPosition(&position),);
-					// Sint32 unitNumb;
-					// checkifEqual("GetUnitNumber", 	 sceneObj->GetUnitNumber(unitNumb, );
-					// CieColor color;
-					// checkifEqual("GetColor", 		 sceneObj->GetColor(color), );
-					// Sint8 fixtureTypeId;
-					// checkifEqual("GetFixtureTypeId",  sceneObj->GetFixtureTypeId(fixtureTypeId), );
-					// size_t customId;
-					// checkifEqual("GetCustomId", 	 	 sceneObj->GetCustomId(customId), );
-					// size_t addressCount = 0;
-					// __checkVCOM(sceneObj->GetAdressCount(addressCount));
-					// for (size_t i = 0; i < addressCount; i++)
-					// {
-					// 	if (__checkVCOM(sceneObj->GetAdressAt(i, SDmxAdress& adress)))
-					// 	{
-					// 		// TODO
-					// 	}
-					// }
+
+					ISceneObjPtr focus;
+					if(__checkVCOM(sceneObj->GetFocusPoint( & focus)))
+					{
+						checkifEqual("GetFocusPoint", focus->GetName(), "My FocusPoint");
+					}
+
+					IPositionPtr position;
+					if(__checkVCOM(sceneObj->GetPosition(&position)))
+					{
+						checkifEqual("GetPosition", position->GetName(), "My Position");
+					}
+
+					Sint32 unitNumb;
+					sceneObj->GetUnitNumber(unitNumb);
+					checkifEqual("GetUnitNumber", unitNumb, 0);
+
+					CieColor resultColor;
+					CieColor color;
+					color.fx  = 0;
+					color.fy  = 0;
+					color.f_Y = 0;
+					sceneObj->GetColor(resultColor);
+					checkifEqual("GetColor", resultColor, color);
+
+					Sint8 fixtureTypeId;
+					sceneObj->GetFixtureTypeId(fixtureTypeId);
+					checkifEqual("GetFixtureTypeId", fixtureTypeId, 0);
+
+					size_t customId;
+					sceneObj->GetCustomId(customId);
+					checkifEqual("GetCustomId", customId, (size_t)0);
+
+					size_t addressCount = 0;
+					__checkVCOM(sceneObj->GetAdressCount(addressCount));
+					for (size_t z = 0; z < addressCount; z++)
+					{
+						SDmxAdress adress;
+						if (__checkVCOM( sceneObj->GetAdressAt(z, adress) ))
+						{
+							if(z==0)
+							{
+								checkifEqual("Check fAbsuluteAdress ",	adress.fAbsuluteAdress, (size_t)1542);
+								checkifEqual("Check fBreakId ", 	 	adress.fBreakId, 		(size_t)0);
+							}
+							else if(z==1)
+							{
+								checkifEqual("Check fAbsuluteAdress ",	adress.fAbsuluteAdress, (size_t)25);
+								checkifEqual("Check fBreakId ", 	 	adress.fBreakId, 		(size_t)1);
+							}
+						}
+					}
 				}
 				
 				// ------------------------------------------------------------------------------
@@ -253,27 +284,52 @@ void MvrUnittest::ReadFile()
 					this->checkifEqual("GetFixtureGuid fixtureUUID2 ", resultUUID, fixtureUUID2);
 					checkifEqual("GetGdtfName", 	 	sceneObj->GetGdtfName(), "Martin@Mac Aura XB2");
 					checkifEqual("GetGdtfMode", 	 	sceneObj->GetGdtfMode(), "My fancy other GDTF DMX Mode");
-					// ISceneObjPtr focusObj;
-					// checkifEqual("GetFocusPoint", 	 sceneObj->GetFocusPoint(&sceneObj), );
-					// IPositionPtr position = nullptr;
-					// checkifEqual("GetPosition", 	 sceneObj->GetPosition(&position),);
-					// Sint32 unitNumb;
-					// checkifEqual("GetUnitNumber", 	 sceneObj->GetUnitNumber(unitNumb, );
-					// CieColor color;
-					// checkifEqual("GetColor", 		 sceneObj->GetColor(color), );
-					// Sint8 fixtureTypeId;
-					// checkifEqual("GetFixtureTypeId",  sceneObj->GetFixtureTypeId(fixtureTypeId), );
-					// size_t customId;
-					// checkifEqual("GetCustomId", 	 	 sceneObj->GetCustomId(customId), );
-					// size_t addressCount = 0;
-					// __checkVCOM(sceneObj->GetAdressCount(addressCount));
-					// for (size_t i = 0; i < addressCount; i++)
-					// {
-					// 	if (__checkVCOM(sceneObj->GetAdressAt(i, SDmxAdress& adress)))
-					// 	{
-					// 		// TODO
-					// 	}
-					// }
+					
+					ISceneObjPtr focus;
+					if(__checkVCOM(sceneObj->GetFocusPoint( & focus)))
+					{
+						checkifEqual("GetFocusPoint", focus->GetName(), "My FocusPoint");
+					}
+
+					Sint32 unitNumb;
+					sceneObj->GetUnitNumber(unitNumb);
+					checkifEqual("GetUnitNumber", unitNumb, 0);
+
+					CieColor resultColor;
+					CieColor color;
+					color.fx  = 0;
+					color.fy  = 0;
+					color.f_Y = 0;
+					sceneObj->GetColor(resultColor);
+					checkifEqual("GetColor", resultColor, color);
+
+					Sint8 fixtureTypeId;
+					sceneObj->GetFixtureTypeId(fixtureTypeId);
+					checkifEqual("GetFixtureTypeId", fixtureTypeId, 0);
+
+					size_t customId;
+					sceneObj->GetCustomId(customId);
+					checkifEqual("GetCustomId", customId, (size_t)0);
+					
+					size_t addressCount = 0;
+					__checkVCOM(sceneObj->GetAdressCount(addressCount));
+					for (size_t z = 0; z < addressCount; z++)
+					{
+						SDmxAdress adress;
+						if (__checkVCOM( sceneObj->GetAdressAt(z, adress) ))
+						{
+							if(z==0)
+							{
+								checkifEqual("Check fAbsuluteAdress ",	adress.fAbsuluteAdress, (size_t)352);
+								checkifEqual("Check fBreakId ", 	 	adress.fBreakId, 		(size_t)0);
+							}
+							else if(z==1)
+							{
+								checkifEqual("Check fAbsuluteAdress ",	adress.fAbsuluteAdress, (size_t)5684);
+								checkifEqual("Check fBreakId ", 	 	adress.fBreakId, 		(size_t)1);
+							}
+						}
+					}
 				}
 				
 				// ------------------------------------------------------------------------------
@@ -286,27 +342,52 @@ void MvrUnittest::ReadFile()
 					this->checkifEqual("GetFixtureGuid fixtureUUID3 ", resultUUID, fixtureUUID3);
 					checkifEqual("GetGdtfName", 	 	sceneObj->GetGdtfName(), "Martin@Mac Aura XB3");
 					checkifEqual("GetGdtfMode", 	 	sceneObj->GetGdtfMode(), "My fancy other GDTF DMX Mode2");
-					// ISceneObjPtr focusObj;
-					// checkifEqual("GetFocusPoint", 	 sceneObj->GetFocusPoint(&sceneObj), );
-					// IPositionPtr position = nullptr;
-					// checkifEqual("GetPosition", 	 sceneObj->GetPosition(&position),);
-					// Sint32 unitNumb;
-					// checkifEqual("GetUnitNumber", 	 sceneObj->GetUnitNumber(unitNumb, );
-					// CieColor color;
-					// checkifEqual("GetColor", 		 sceneObj->GetColor(color), );
-					// Sint8 fixtureTypeId;
-					// checkifEqual("GetFixtureTypeId",  sceneObj->GetFixtureTypeId(fixtureTypeId), );
-					// size_t customId;
-					// checkifEqual("GetCustomId", 	 	 sceneObj->GetCustomId(customId), );
-					// size_t addressCount = 0;
-					// __checkVCOM(sceneObj->GetAdressCount(addressCount));
-					// for (size_t i = 0; i < addressCount; i++)
-					// {
-					// 	if (__checkVCOM(sceneObj->GetAdressAt(i, SDmxAdress& adress)))
-					// 	{
-					// 		// TODO
-					// 	}
-					// }
+					
+					ISceneObjPtr focus;
+					if(__checkVCOM(sceneObj->GetFocusPoint( & focus)))
+					{
+						checkifEqual("GetFocusPoint", focus->GetName(), "My FocusPoint");
+					}
+
+					Sint32 unitNumb;
+					sceneObj->GetUnitNumber(unitNumb);
+					checkifEqual("GetUnitNumber", unitNumb, 0);
+
+					CieColor resultColor;
+					CieColor color;
+					color.fx  = 0;
+					color.fy  = 0;
+					color.f_Y = 0;
+					sceneObj->GetColor(resultColor);
+					checkifEqual("GetColor", resultColor, color);
+
+					Sint8 fixtureTypeId;
+					sceneObj->GetFixtureTypeId(fixtureTypeId);
+					checkifEqual("GetFixtureTypeId", fixtureTypeId, 0);
+
+					size_t customId;
+					sceneObj->GetCustomId(customId);
+					checkifEqual("GetCustomId", customId, (size_t)0);
+					
+					size_t addressCount = 0;
+					__checkVCOM(sceneObj->GetAdressCount(addressCount));
+					for (size_t z = 0; z < addressCount; z++)
+					{
+						SDmxAdress adress;
+						if (__checkVCOM( sceneObj->GetAdressAt(z, adress) ))
+						{
+							if(z==0)
+							{
+								checkifEqual("Check fAbsuluteAdress ",	adress.fAbsuluteAdress, (size_t)352);
+								checkifEqual("Check fBreakId ", 	 	adress.fBreakId, 		(size_t)0);
+							}
+							else if(z==1)
+							{
+								checkifEqual("Check fAbsuluteAdress ",	adress.fAbsuluteAdress, (size_t)5684);
+								checkifEqual("Check fBreakId ", 	 	adress.fBreakId, 		(size_t)1);
+							}
+						}
+					}
 				}
 							
 				//------------------------------------------------------------------------
@@ -323,45 +404,55 @@ void MvrUnittest::ReadFile()
 			readLayer = nextLayer;
 		}
 
-    //    // TODO
-	// 	if (__checkVCOM(mvrRead->GetSymDefCount(count)))
-	// 	{
-	// 		checkifEqual("CountSymDef ", count, size_t(1));
+		//------------------------------------------------------------------------------------------------
+		// Traverse SymbolDefs
+		// Symdef Position Class UUID?
 
-	// 		// TODO
-	// 		__checkVCOM(mvrRead->GetPositionObjectCount(count));
-	// 		checkifEqual("CountPosition ", count, size_t(1));
-
-	// 	}
-	// 	//------------------------------------------------------------------------------------------------
-	// 	// Traverse SymbolDefs
-	// 	//	TODO Symdef Position Class UUID?
-
-	// 	size_t  countSymbols = 0;
-	// 	__checkVCOM(mvrRead->GetSymDefCount(countSymbols));
-		
-	// 	for (size_t i = 0; i <countSymbols; i++)
-	// 	{
-	// 		ISymDefPtr symDef = nullptr;
-	// 		__checkVCOM(mvrRead->GetSymDefAt(i, & symDef));
+		size_t  countSymbols = 0;
+		__checkVCOM(mvrRead->GetSymDefCount(countSymbols));
+		for (size_t i = 0; i <countSymbols; i++)
+		{
+			ISymDefPtr symDef = nullptr;
+			__checkVCOM(mvrRead->GetSymDefAt(i, & symDef));
 			
-	// 		checkifEqual("GetSymDef name", symDef->GetName(), "Symbol Definition for the FocusPoint");
+			checkifEqual("GetSymDef name", symDef->GetName(), "Symbol Definition for the FocusPoint");
 
-	// 		size_t geoCount = 0;
-	// 		__checkVCOM(symDef->GetGeometryCount(geoCount));
+			size_t geoCount = 0;
+			__checkVCOM(symDef->GetGeometryCount(geoCount));
 			
-	// 		for (size_t j = 0; j < geoCount; j++)
-	// 		{
-	// 			IGeometryReferencePtr geoRef = nullptr;
-	// 			__checkVCOM(symDef->GetGeometryAt(j, & geoRef));
+			for (size_t j = 0; j < geoCount; j++)
+			{
+				IGeometryReferencePtr geoRef = nullptr;
+				__checkVCOM(symDef->GetGeometryAt(j, & geoRef));
 
 				
-	// 			// First way to get a file is to just get the path to the file
-	// 			// You can use the own importer to read this file
-	// 			checkifEqual("Get GeometryFileName", geoRef->GetFileForGeometry(), "empty.3ds");
-	// 			//_P(fileForGeom);
-	// 		}
+				// First way to get a file is to just get the path to the file
+				// You can use the own importer to read this file
+				checkifEqual("Get GeometryFileName", geoRef->GetFileForGeometry(), "/home/redblue/MVR_Export/My3DSFile.3ds");
+				//_P(fileForGeom);
+			}
 
-	//	}
+		}
+
+		size_t countClasses = 0;
+		__checkVCOM(mvrRead->GetClassCount(countClasses));
+		IClassPtr clas = nullptr;
+		for (size_t c = 0; c < countClasses; c++)
+		{
+			__checkVCOM(mvrRead->GetClassAt(c, & clas));
+			__checkVCOM(clas->GetGuid(resultUUID));
+
+			if(c==0)
+			{
+			checkifEqual("GetClassName", clas->GetName(), "My first Class");
+			checkifEqual("GetClassUUID", resultUUID, classUUID1);
+			}
+			else if(c==1)
+			{
+			checkifEqual("GetClassName", clas->GetName(), "My second Class");
+			checkifEqual("GetClassUUID", resultUUID, classUUID2);
+			}
+		}
+
     }
 }
