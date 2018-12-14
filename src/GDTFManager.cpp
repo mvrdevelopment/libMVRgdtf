@@ -38,6 +38,7 @@ void GdtfObject::ReadFromNode(const IXMLFileNodePtr& pNode)
 	ASSERTN(kEveryone, nodeName == GetNodeName());
 	
 	this->OnReadFromNode(pNode);
+	this->OnErrorCheck(pNode);
 }
 
 void GdtfObject::OnPrintToFile(IXMLFileNodePtr pNode)
@@ -46,6 +47,11 @@ void GdtfObject::OnPrintToFile(IXMLFileNodePtr pNode)
 }
 
 void GdtfObject::OnReadFromNode(const IXMLFileNodePtr& pNode)
+{
+	// Nothing to read here
+}
+
+void GdtfObject::OnErrorCheck(const IXMLFileNodePtr& pNode)
 {
 	// Nothing to read here
 }
@@ -113,6 +119,28 @@ void GdtfActivationGroup::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// Get the attributes
 	pNode->GetNodeAttributeValue(XML_GDTF_AttributeName,			fName);
 
+}
+
+void GdtfActivationGroup::OnErrorCheck(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnErrorCheck(pNode);
+	
+	//------------------------------------------------------------------------------------
+	// Get the attributes
+	TXStringArray nodeAttributes;
+	pNode->GetNodeAttributes(nodeAttributes);
+	if ( nodeAttributes.size() == 1 )
+	{
+		if (nodeAttributes.at(0) == XML_GDTF_ActivationGroupName) return;
+	}
+	else
+	{
+		// TODO
+		// private member access on AddError
+		// GdtfFixture::AddError();
+	}
 }
 
 EGdtfObjectType GdtfActivationGroup::GetObjectType()
@@ -4635,6 +4663,44 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	}
 }
 
+void GdtfActivationGroup::OnErrorCheck(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnErrorCheck(pNode);
+	
+	//------------------------------------------------------------------------------------
+	// Get the attributes
+	TXStringArray nodeAttributes;
+	pNode->GetNodeAttributes(nodeAttributes);
+	if ( nodeAttributes.size() >= 6 && nodeAttributes.size() <= 7)
+	{
+		if( 	std::find(nodeAttributes.begin(), nodeAttributes.end(), XML_GDTF_FixtureName)			!= nodeAttributes.end() &&
+				std::find(nodeAttributes.begin(), nodeAttributes.end(), XML_GDTF_FixtureShortName)		!= nodeAttributes.end() &&
+				std::find(nodeAttributes.begin(), nodeAttributes.end(), XML_GDTF_FixtureManufacturer)	!= nodeAttributes.end() &&
+				std::find(nodeAttributes.begin(), nodeAttributes.end(), XML_GDTF_FixtureDescription)	!= nodeAttributes.end() &&
+				std::find(nodeAttributes.begin(), nodeAttributes.end(), XML_GDTF_FixtureTypeID)			!= nodeAttributes.end() &&
+				std::find(nodeAttributes.begin(), nodeAttributes.end(), XML_GDTF_LinkedUuid)			!= nodeAttributes.end()    )
+		{
+			if ( nodeAttributes.size() == 7 && std::find(nodeAttributes.begin(), nodeAttributes.end(), XML_GDTF_FixtureName) != nodeAttributes.end()) return;
+		}
+		else
+		{
+		// TODO
+		// wrong attributes
+		// private member access on AddError
+		// GdtfFixture::AddError();
+		}
+	}
+	else
+	{
+		// TODO
+		// too much or too less
+		// private member access on AddError
+		// GdtfFixture::AddError();
+	}
+}
+
 EGdtfObjectType GdtfFixture::GetObjectType()
 {
 	return EGdtfObjectType::eGdtfFixture;
@@ -5035,6 +5101,10 @@ void GdtfFixture::SetLinkedGuid(const VWFC::Tools::VWUUID& uuid)
 void GdtfFixture::SetPNGFile(const GdtfPNGFile& png)
 {
 	fTumbnail = png;
+}
+
+static void	AddError()
+{
 }
 
 SceneData::GdtfDMXProfile::GdtfDMXProfile()

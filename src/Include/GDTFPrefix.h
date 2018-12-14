@@ -87,6 +87,11 @@ namespace VectorworksMVR
             eGdtfMacroVisualValue       = 67,
 
 		};
+
+        enum class EGdtfParsingError
+        {
+            eWrongAttribute = 0,
+        };
 		
 		enum class EGdtfPhysicalUnit
 		{

@@ -4,6 +4,7 @@
 #pragma once
 #include "Prefix/StdAfx.h"
 #include "CieColor.h"
+#include "GdtfError.h"
 #include "Include/GDTFPrefix.h"
 
 using namespace VectorWorks::Filing;
@@ -87,6 +88,7 @@ namespace SceneData
 		
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
 
 		
 	};
@@ -125,6 +127,7 @@ namespace SceneData
 		virtual	TXString				    GetNodeName();
 		virtual	void					    OnPrintToFile(IXMLFileNodePtr pNode);
 		virtual	void					    OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					    OnErrorCheck(const IXMLFileNodePtr& pNode);
 
 		
 		
@@ -2406,6 +2409,9 @@ protected:
 		TVWArray_IFileIdentifier		fLocalFiles;
 		bool							fReaded;
 		IFolderIdentifierPtr			fWorkingFolder;
+        TGdtfParsingErrorArray          fParsingErrors;
+
+        static void                     AddError();
 		
 	public:
 		//----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2479,6 +2485,8 @@ protected:
 		virtual	TXString				GetNodeName();
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void			        OnErrorCheck(const IXMLFileNodePtr& pNode);
+
 		        
         GdtfAttributePtr            getAttributeByRef(const TXString& ref);
         GdtfWheelPtr                getWheelByRef(const TXString& ref);		
