@@ -54,3 +54,7 @@ x64/Debug/libVectorworksMvrGdtf.dll
 x64/Release/libVectorworksMvrGdtf.lib
 x64/Release/libVectorworksMvrGdtf.dll
 x64/Debug/testGdtf.gdtf.zip
+
+libs/lin/release/libVectorworksMvrGdtf\.a
+
+x64/Release/vectorworksMvrGdtfTestApp

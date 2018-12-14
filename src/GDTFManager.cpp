@@ -53,7 +53,7 @@ void GdtfObject::OnReadFromNode(const IXMLFileNodePtr& pNode)
 
 void GdtfObject::OnErrorCheck(const IXMLFileNodePtr& pNode)
 {
-	// Nothing to read here
+	// Nothing to check here
 }
 
 void GdtfObject::SetBind(void* ptr)
@@ -4663,42 +4663,50 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	}
 }
 
-void GdtfActivationGroup::OnErrorCheck(const IXMLFileNodePtr& pNode)
+void GdtfFixture::OnErrorCheck(const IXMLFileNodePtr& pNode)
 {
 	//------------------------------------------------------------------------------------
 	// Call the parent
 	GdtfObject::OnErrorCheck(pNode);
+
+	TXStringArray needed;
+	TXStringArray optional;
+	needed.push_back(XML_GDTF_FixtureName);
+	needed.push_back(XML_GDTF_FixtureShortName);
+	needed.push_back(XML_GDTF_FixtureManufacturer);
+	needed.push_back(XML_GDTF_FixtureDescription);
+	needed.push_back(XML_GDTF_FixtureTypeID);
+	needed.push_back(XML_GDTF_LinkedUuid);
+	optional.push_back(XML_GDTF_FixtureThumbnail);
+
+	GdtfParsingError::CheckAttributesList(pNode, needed, optional);
 	
 	//------------------------------------------------------------------------------------
 	// Get the attributes
-	TXStringArray nodeAttributes;
-	pNode->GetNodeAttributes(nodeAttributes);
-	if ( nodeAttributes.size() >= 6 && nodeAttributes.size() <= 7)
-	{
-		if( 	std::find(nodeAttributes.begin(), nodeAttributes.end(), XML_GDTF_FixtureName)			!= nodeAttributes.end() &&
-				std::find(nodeAttributes.begin(), nodeAttributes.end(), XML_GDTF_FixtureShortName)		!= nodeAttributes.end() &&
-				std::find(nodeAttributes.begin(), nodeAttributes.end(), XML_GDTF_FixtureManufacturer)	!= nodeAttributes.end() &&
-				std::find(nodeAttributes.begin(), nodeAttributes.end(), XML_GDTF_FixtureDescription)	!= nodeAttributes.end() &&
-				std::find(nodeAttributes.begin(), nodeAttributes.end(), XML_GDTF_FixtureTypeID)			!= nodeAttributes.end() &&
-				std::find(nodeAttributes.begin(), nodeAttributes.end(), XML_GDTF_LinkedUuid)			!= nodeAttributes.end()    )
-		{
-			if ( nodeAttributes.size() == 7 && std::find(nodeAttributes.begin(), nodeAttributes.end(), XML_GDTF_FixtureName) != nodeAttributes.end()) return;
-		}
-		else
-		{
-		// TODO
-		// wrong attributes
-		// private member access on AddError
-		// GdtfFixture::AddError();
-		}
-	}
-	else
-	{
-		// TODO
-		// too much or too less
-		// private member access on AddError
-		// GdtfFixture::AddError();
-	}
+	// CheckAttributesList(pNode, needed, optional);
+	// if ( nodeAttributes.size() >= 6 && nodeAttributes.size() <= 7)
+	// {
+	// 	if( 	std::find(nodeAttributes.begin(), nodeAttributes.end(), XML_GDTF_FixtureName)			!= nodeAttributes.end() &&
+	// 			std::find(nodeAttributes.begin(), nodeAttributes.end(), XML_GDTF_FixtureShortName)		!= nodeAttributes.end() &&
+	// 			std::find(nodeAttributes.begin(), nodeAttributes.end(), XML_GDTF_FixtureManufacturer)	!= nodeAttributes.end() &&
+	// 			std::find(nodeAttributes.begin(), nodeAttributes.end(), XML_GDTF_FixtureDescription)	!= nodeAttributes.end() &&
+	// 			std::find(nodeAttributes.begin(), nodeAttributes.end(), XML_GDTF_FixtureTypeID)			!= nodeAttributes.end() &&
+	// 			std::find(nodeAttributes.begin(), nodeAttributes.end(), XML_GDTF_LinkedUuid)			!= nodeAttributes.end()    )
+	// 	{
+	// 		if ( nodeAttributes.size() == 7 && std::find(nodeAttributes.begin(), nodeAttributes.end(), XML_GDTF_FixtureName) != nodeAttributes.end()) return;
+	// 	}
+	// 	else
+	// 	{
+
+	// 	}
+	// }
+	// else
+	// {
+	// 	// TODO
+	// 	// too much or too less
+	// 	// private member access on AddError
+	// 	// GdtfFixture::AddError();
+	// }
 }
 
 EGdtfObjectType GdtfFixture::GetObjectType()
