@@ -29,6 +29,8 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetDmxFunctionCount(size_t& count);
         virtual VCOMError VCOM_CALLTYPE     GetDmxFunctionAt(size_t at, IGdtfDmxChannelFunction** function);
 		virtual VCOMError VCOM_CALLTYPE     CreateDmxFunction(MvrString name, IGdtfDmxChannelFunction** function);
+
+        virtual VCOMError VCOM_CALLTYPE     GetParentDmxChannel(IGdtfDmxChannel** parent);
 		
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr);
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject();

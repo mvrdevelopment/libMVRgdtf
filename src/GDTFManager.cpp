@@ -3439,6 +3439,11 @@ GdtfDmxChannel * SceneData::GdtfDmxChannelFunction::GetParentDMXChannel() const
 	return fParentLogicalChannel->GetParentDMXChannel();
 }
 
+GdtfDmxLogicalChannel * SceneData::GdtfDmxChannelFunction::GetParentLogicalChannel() const
+{
+	return fParentLogicalChannel;
+}
+
 GdtfDmxChannelFunction* SceneData::GdtfDmxChannelFunction::GetNextFunction() const
 {
 	return fNextFunction;
@@ -4422,18 +4427,15 @@ GdtfPhysicalEmitterPtr GdtfFixture::getEmiterByRef(const TXString& ref)
 	return nullptr;
 }
 
-GdtfDmxChannelFunctionPtr GdtfFixture::getDmxFunctionByRef(const TXString& ref)
+GdtfDmxChannelFunctionPtr GdtfFixture::getDmxFunctionByRef(const TXString& ref, GdtfDmxModePtr mode)
 {
-	for (GdtfDmxModePtr mode : fDmxModes)
+	for(GdtfDmxChannelPtr channel : mode->GetChannelArray())
 	{
-		for(GdtfDmxChannelPtr channel : mode->GetChannelArray())
+		for(GdtfDmxLogicalChannelPtr logicalChannel : channel->GetLogicalChannelArray())
 		{
-			for(GdtfDmxLogicalChannelPtr logicalChannel : channel->GetLogicalChannelArray())
+			for(GdtfDmxChannelFunctionPtr function : logicalChannel->GetDmxChannelFunctions())
 			{
-				for(GdtfDmxChannelFunctionPtr function : logicalChannel->GetDmxChannelFunctions())
-				{
-					if(function->GetNodeReference() == ref) { return function; }
-				}
+				if(function->GetNodeReference() == ref) { return function; }
 			}
 		}
 	}
@@ -4441,16 +4443,13 @@ GdtfDmxChannelFunctionPtr GdtfFixture::getDmxFunctionByRef(const TXString& ref)
 	return nullptr;
 }
 
-GdtfDmxChannelPtr GdtfFixture::getDmxChannelByRef(const TXString& ref)
+GdtfDmxChannelPtr GdtfFixture::getDmxChannelByRef(const TXString& ref, GdtfDmxModePtr mode)
 {
-	for (GdtfDmxModePtr mode : fDmxModes)
+	for(GdtfDmxChannelPtr channel : mode->GetChannelArray())
 	{
-		for(GdtfDmxChannelPtr channel : mode->GetChannelArray())
-		{
-			if(channel->GetNodeReference() == ref) { return channel; }
-		}
+		if(channel->GetNodeReference() == ref) { return channel; }
 	}
-	
+
 	return nullptr;
 }
 
@@ -4610,7 +4609,7 @@ void GdtfFixture::ResolveDMXModeMasters()
 						bool 						resolved 	= false;
 						EGdtfChannelBitResolution 	resolution 	= EGdtfChannelBitResolution::eGdtfChannelBitResolution_8;
 
-						GdtfDmxChannelPtr channelPtr = getDmxChannelByRef(unresolvedModeMaster);
+						GdtfDmxChannelPtr channelPtr = getDmxChannelByRef(unresolvedModeMaster, mode);
 						if(! resolved && channelPtr)
 						{ 
 							function->SetModeMaster_Channel(channelPtr); 
@@ -4618,7 +4617,7 @@ void GdtfFixture::ResolveDMXModeMasters()
 							resolution = channelPtr->GetChannelBitResolution(); 
 						}
 
-						GdtfDmxChannelFunctionPtr functionPtr = getDmxFunctionByRef(unresolvedModeMaster);
+						GdtfDmxChannelFunctionPtr functionPtr = getDmxFunctionByRef(unresolvedModeMaster, mode);
 						if(! resolved && functionPtr) 
 						{ 
 							function->SetModeMaster_Function(functionPtr);
