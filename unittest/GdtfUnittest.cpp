@@ -506,6 +506,12 @@ void GdtfUnittest::ReadFile()
 						IGdtfDmxLogicalChannelPtr gdtfLogicalChannel;
 						__checkVCOM(gdtfDmxChannel->GetLogicalChannelAt(j, &gdtfLogicalChannel));
 
+						IGdtfDmxChannelPtr parentChannel;
+						__checkVCOM(gdtfLogicalChannel->GetParentDmxChannel( & parentChannel));
+						{
+							this->checkifEqual("Test Get Parent Channel", parentChannel->GetName(), gdtfDmxChannel->GetName());
+						}
+
 						// Set the name
 						MvrString logicalChannelName = gdtfLogicalChannel->GetName();
 						this->checkifEqual("gdtfLogicalChannelGetName ", logicalChannelName, "My attributeName");
@@ -537,6 +543,12 @@ void GdtfUnittest::ReadFile()
 							IGdtfDmxChannelFunctionPtr gdtfFunction;
 							if (__checkVCOM(gdtfLogicalChannel->GetDmxFunctionAt(j, &gdtfFunction)))
 							{
+								IGdtfDmxLogicalChannelPtr parentLogicalChannel;
+								__checkVCOM(gdtfFunction->GetParentLogicalChannel( & parentLogicalChannel));
+								{
+									this->checkifEqual("Test Get Parent Logical Channel", parentLogicalChannel->GetName(), gdtfLogicalChannel->GetName());
+								}
+
 								// Set the name
 								MvrString featureName = gdtfFunction->GetName();
 								this->checkifEqual("gdtfFunctionGetName ", featureName, "My nameDmxFunction");
