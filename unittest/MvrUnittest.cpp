@@ -428,8 +428,9 @@ void MvrUnittest::ReadFile()
 				
 				// First way to get a file is to just get the path to the file
 				// You can use the own importer to read this file
-				checkifEqual("Get GeometryFileName", geoRef->GetFileForGeometry(), "/home/redblue/MVR_Export/My3DSFile.3ds");
-				//_P(fileForGeom);
+				std::string path = gdtfPath;
+				path += "/MVR_Export/My3DSFile.3ds";
+				checkifEqual("Get GeometryFileName", geoRef->GetFileForGeometry(), path);
 			}
 
 		}
