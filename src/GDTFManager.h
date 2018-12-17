@@ -2455,7 +2455,13 @@ protected:
 		IFolderIdentifierPtr			fWorkingFolder;
         TGdtfParsingErrorArray          fParsingErrors;
 
-        static void                     AddError();
+public:
+        static void                     AddError(const GdtfParsingError& error);
+        static TGdtfParsingErrorArray*  __ERROR_CONTAINER_POINTER;
+        
+private:
+        TGdtfParsingErrorArray          fErrorContainer;
+        
 		
 	public:
 		//----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2521,6 +2527,8 @@ protected:
         const TGdtf_CRIGroupArray&              GetCRIGroupArray();
 		
 		GdtfProtocols&							GetProtocollContainer();
+
+        
         
 	public:
 		virtual EGdtfObjectType			GetObjectType();

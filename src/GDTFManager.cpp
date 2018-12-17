@@ -4218,10 +4218,14 @@ double GdtfMeasurementPoint::GetEnergy()
 
 //------------------------------------------------------------------------------------
 // GdtfFixture
+TGdtfParsingErrorArray* GdtfFixture::__ERROR_CONTAINER_POINTER = nullptr;
+
 GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 {
 	fReaded			= false;
 	fHasLinkedGuid	= false;
+	ASSERTN(kEveryone, __ERROR_CONTAINER_POINTER == nullptr);
+	__ERROR_CONTAINER_POINTER = & this->fErrorContainer; 
 	
 	//-------------------------------------------------------------------------------------------------
 	// Working Directory
@@ -4319,6 +4323,16 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 	
 	
 	fReaded = true;
+	__ERROR_CONTAINER_POINTER = nullptr;
+}
+
+/*static*/ void	GdtfFixture::AddError(const GdtfParsingError& error)
+{
+	
+	if(__ERROR_CONTAINER_POINTER)
+	{
+		__ERROR_CONTAINER_POINTER->push_back(error);
+	}
 }
 
 void GdtfFixture::AutoGenerateNames(GdtfDmxModePtr dmxMode)
@@ -5601,10 +5615,6 @@ void GdtfFixture::SetLinkedGuid(const VWFC::Tools::VWUUID& uuid)
 void GdtfFixture::SetPNGFile(const GdtfPNGFile& png)
 {
 	fTumbnail = png;
-}
-
-static void	AddError()
-{
 }
 
 SceneData::GdtfDMXProfile::GdtfDMXProfile()

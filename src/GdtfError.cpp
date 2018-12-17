@@ -4,6 +4,7 @@
 #include "GdtfError.h"
 #include "XmlFileHelper.h"
 #include <algorithm>
+#include "GDTFManager.h"
 
 //------------------------------------------------------------------------------------
 // Parsing Errors
@@ -31,9 +32,8 @@ GdtfParsingError::~GdtfParsingError()
         }
         else
         {
-            // TODO
-            // wrong attributes
-            // GdtfFixture::AddError(); or parse some error
+            GdtfParsingError error;
+            SceneData::GdtfFixture::AddError(error);
         }
     }
     
@@ -47,9 +47,12 @@ GdtfParsingError::~GdtfParsingError()
     }
 
     // Check if AttributesList has still elements
-    if ( nodeAttributes.size()) return;
+    if ( nodeAttributes.size() > 0) return;
 
-    // TODO
-    // Error created, parse that or specifically error
+    for (const TXString& nodeName : nodeAttributes)
+    {
+            GdtfParsingError error;
+            SceneData::GdtfFixture::AddError(error);
+    }
 
 }
