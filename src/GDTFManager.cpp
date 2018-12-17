@@ -4196,11 +4196,6 @@ void GdtfMeasurementPoint::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
 }
 
-const TXString & SceneData::GdtfMacro::GetName() const
-{
-    return fName;
-}
-
 EGdtfObjectType GdtfMeasurementPoint::GetObjectType()
 {
 	return EGdtfObjectType::eGdtfMeasurementPoint;
