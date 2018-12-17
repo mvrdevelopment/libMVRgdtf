@@ -3008,6 +3008,11 @@ GdtfDmxChannel * SceneData::GdtfDmxChannelFunction::GetParentDMXChannel() const
 	return fParentLogicalChannel->GetParentDMXChannel();
 }
 
+GdtfDmxLogicalChannel * SceneData::GdtfDmxChannelFunction::GetParentLogicalChannel() const
+{
+	return fParentLogicalChannel;
+}
+
 GdtfDmxChannelFunction* SceneData::GdtfDmxChannelFunction::GetNextFunction() const
 {
 	return fNextFunction;

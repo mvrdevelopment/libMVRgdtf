@@ -821,6 +821,7 @@ namespace SceneData
 		TXString						getUnresolvedEmitterRef() const;
         TXString						getUnresolvedModeMasterRef() const;
 		GdtfDmxChannel*					GetParentDMXChannel() const;
+        GdtfDmxLogicalChannel*			GetParentLogicalChannel() const;
         void						    ResolveModeMasterDmx(EGdtfChannelBitResolution resolution);
 
         void                            SetNextFunction(GdtfDmxChannelFunction* next);
