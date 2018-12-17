@@ -261,6 +261,9 @@
     <ClCompile Include="..\src\XmlFileHelper.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\GdtfError.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\XMLLib\ErrorHandler.h">
@@ -555,6 +558,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\src\GSUtil.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\GdtfError.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

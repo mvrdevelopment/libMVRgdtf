@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="..\src\BasicMath.X.cpp" />
     <ClCompile Include="..\src\CieColor.cpp" />
+    <ClCompile Include="..\src\GdtfError.cpp" />
     <ClCompile Include="..\src\GDTFManager.cpp" />
     <ClCompile Include="..\src\GSString.cpp" />
     <ClCompile Include="..\src\HashManager.cpp" />
@@ -102,6 +103,7 @@
     <ClInclude Include="..\src\BasicMath.X.h" />
     <ClInclude Include="..\src\CieColor.h" />
     <ClInclude Include="..\src\FolderSpecifiers.h" />
+    <ClInclude Include="..\src\GdtfError.h" />
     <ClInclude Include="..\src\GDTFManager.h" />
     <ClInclude Include="..\src\GSDebug.h" />
     <ClInclude Include="..\src\GSIntTypes.h" />
