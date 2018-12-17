@@ -5,6 +5,8 @@
 #include "Prefix/StdAfx.h"
 #include "Include/GDTFPrefix.h"
 
+using namespace VectorWorks::Filing;
+
 //------------------------------------------------------------------------------------
 // Parsing Errors
 class GdtfParsingError
@@ -19,7 +21,7 @@ private:
 	void	CheckValidValue()	const;
 	
 public:
-	static void	CheckAttributesList(IXMLFileNodePtr pNode, const TXStringArray& needed, const TXStringArray& optional) const;
+	static void	CheckNodeAttributes(IXMLFileNodePtr pNode, const TXStringArray& needed, const TXStringArray& optional);
 };
 
 typedef std::vector<GdtfParsingError> TGdtfParsingErrorArray;

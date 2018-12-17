@@ -17,7 +17,7 @@ GdtfParsingError::~GdtfParsingError()
 {
 }
 
-static void    GdtfParsingError::CheckAttributesList(IXMLFileNodePtr pNode, const TXStringArray& needed, const TXStringArray& optional) const
+/*static*/ void GdtfParsingError::CheckNodeAttributes(IXMLFileNodePtr pNode, const TXStringArray& needed, const TXStringArray& optional) 
 {
    	TXStringArray nodeAttributes;
 	pNode->GetNodeAttributes(nodeAttributes);
@@ -35,19 +35,6 @@ static void    GdtfParsingError::CheckAttributesList(IXMLFileNodePtr pNode, cons
             // wrong attributes
             // GdtfFixture::AddError(); or parse some error
         }
-
-        // -----------------------------------------------------------
-        // // Version 1 | just the original idea
-        // if (std::find(nodeAttributes.begin(), nodeAttributes.end(), attribute) != nodeAttributes.end())
-        // {
-        //     ptrdiff_t pos = std::find(nodeAttributes.begin(), nodeAttributes.end(), attribute);
-        //     nodeAttributes.erase(pos);
-        // }
-        // // Version 2 | smarter
-        // auto itr = std::find(v.begin(), v.end(), rnames);
-        // if (itr != v.end()) v.erase(itr);
-        // -----------------------------------------------------------
-
     }
     
     // Check optional Attributes
