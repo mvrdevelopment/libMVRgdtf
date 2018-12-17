@@ -180,7 +180,7 @@ void Unittest::checkifEqual(const std::string& check, const VectorworksMVR::Gdtf
 
 void Unittest::checkifEqual(const std::string& check, const VectorworksMVR::GdtfDefines::EGdtfModel_PrimitiveType val1, const VectorworksMVR::GdtfDefines::EGdtfModel_PrimitiveType val2)
 {
-	if (val1 == val2) return;
+	if ( val1 == val2 ) return;
 
 	// Else Log the error
 	fFailed = true;
@@ -191,6 +191,50 @@ void Unittest::checkifEqual(const std::string& check, const VectorworksMVR::Gdtf
 	test.fMessage += std::to_string(val1);
 	test.fMessage += " Expected: ";
 	test.fMessage += std::to_string(val2);
+
+	fFailedTests.push_back(test);
+};
+
+void Unittest::checkifEqual(const std::string& check, const VectorworksMVR::MvrUUID val1, const VectorworksMVR::MvrUUID val2)
+{
+	if ( val1.a == val2.a && val1.b == val2.b && val1.c == val2.c && val1.d == val2.d) return;
+
+	// Else Log the error
+	fFailed = true;
+
+	UnittestFailObject test;
+	test.fMessage += check;
+	test.fMessage += " Result: ";
+	test.fMessage += std::to_string(val1.a)+".";
+	test.fMessage += std::to_string(val1.b)+".";
+	test.fMessage += std::to_string(val1.c)+".";
+	test.fMessage += std::to_string(val1.d);
+	test.fMessage += " Expected: ";
+	test.fMessage += std::to_string(val2.a)+".";
+	test.fMessage += std::to_string(val2.b)+".";
+	test.fMessage += std::to_string(val2.c)+".";
+	test.fMessage += std::to_string(val2.d);
+
+	fFailedTests.push_back(test);
+};
+
+void Unittest::checkifEqual(const std::string& check, const VectorworksMVR::CieColor val1, const VectorworksMVR::CieColor val2)
+{
+	if ( val1.fx == val2.fx && val1.fy == val2.fy && val1.f_Y == val2.f_Y ) return;
+
+	// Else Log the error
+	fFailed = true;
+
+	UnittestFailObject test;
+	test.fMessage += check;
+	test.fMessage += " Result: ";
+	test.fMessage += "(" + std::to_string(val1.fx) + "), ";
+	test.fMessage += "(" + std::to_string(val1.fy) + "), ";
+	test.fMessage += "(" + std::to_string(val1.f_Y) + "), ";
+	test.fMessage += " Expected: ";
+	test.fMessage += "(" + std::to_string(val2.fx) + "), ";
+	test.fMessage += "(" + std::to_string(val2.fy) + "), ";
+	test.fMessage += "(" + std::to_string(val2.f_Y) + "), ";
 
 	fFailedTests.push_back(test);
 };
@@ -212,7 +256,6 @@ void Unittest::checkifEqual(const std::string& check, const std::string& aspecte
 	fFailedTests.push_back(test);
 
 };
-
 
 bool Unittest::checkVCOM(VectorworksMVR::VCOMError error, const std::string& check)
 {
@@ -249,6 +292,25 @@ bool Unittest::checkVCOM_NotSet(VectorworksMVR::VCOMError error, const std::stri
 
     return false;
 };
+
+bool Unittest::checkVCOM_Failed(VectorworksMVR::VCOMError error, const std::string& check)
+{
+	if (kVCOMError_NoError != error) return true;
+
+	// Else Log the error
+	fFailed = true;
+
+	UnittestFailObject test;
+	test.fMessage += "VCOM Failed FAILED: ";
+	test.fMessage += check;
+	test.fMessage += " Return Value: ";
+	test.fMessage += std::to_string(error);;
+
+	fFailedTests.push_back(test);
+
+	return false;
+};
+
 
 void Unittest::checkifEqualPtr(const std::string& check, void* val1, void* val2)
 {

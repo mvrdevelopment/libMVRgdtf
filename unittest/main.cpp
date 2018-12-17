@@ -29,14 +29,14 @@ int main(int argc, char* argv[])
 	std::string base;
 	GetFolderAppDataPath(base);
 
-	MvrUnittest mvrTest(base);
-	bool mvrOK = mvrTest.RunTest();
-
 	GdtfUnittest gdtfTest(base);
 	bool gdtfOk = gdtfTest.RunTest();
 
 	GdtfDmxUnittest gdtfDmxTest(base);
 	bool gdtfDmxOk = gdtfDmxTest.RunTest();
+
+	MvrUnittest mvrTest(base);
+	bool mvrOK = mvrTest.RunTest();
 
 	return (mvrOK || gdtfOk || gdtfDmxOk);
 }
@@ -46,7 +46,7 @@ bool GetFolderAppDataPath(std::string& outPath)
 	//--------------------------------------------------------
 	// Implementation for Windows
 #ifdef _WINDOWS
-    /*
+    
     // Leave this empty for now
 	// Beware, brain-compiled code ahead!
 	wchar_t buffer[MAX_PATH];
@@ -57,7 +57,7 @@ bool GetFolderAppDataPath(std::string& outPath)
 	if(!result) return false;
     std::wstring ws(buffer);
 	outPath = std::string(ws.begin(), ws.end());
-    */
+    
 #elif _LINUX
 	// LINUX_IMPLEMENTATION - done
 	struct passwd *pw = getpwuid(getuid());

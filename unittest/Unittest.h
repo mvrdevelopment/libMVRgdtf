@@ -40,8 +40,11 @@ public:
 	//void checkifEqual(const std::string& check, const VectorworksMVR::GdtfDefines::DMXAddress val1, const VectorworksMVR::GdtfDefines::DMXAddress val2);
 	void checkifEqual(const std::string& check, const VectorworksMVR::GdtfDefines::EGdtfModel_PrimitiveType val1, const VectorworksMVR::GdtfDefines::EGdtfModel_PrimitiveType val2);
     void checkifEqual(const std::string& check, const std::string& val1, const std::string& val2);
+    void checkifEqual(const std::string& check, const VectorworksMVR::MvrUUID val1, const VectorworksMVR::MvrUUID val2);
+    void checkifEqual(const std::string& check, const VectorworksMVR::CieColor val1, const VectorworksMVR::CieColor val2);
     bool checkVCOM(VectorworksMVR::VCOMError error, const std::string& check);
     bool checkVCOM_NotSet(VectorworksMVR::VCOMError error, const std::string& check);
+	bool checkVCOM_Failed(VectorworksMVR::VCOMError error, const std::string& check);
 
 
 private:
