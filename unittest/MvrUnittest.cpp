@@ -14,7 +14,12 @@ using namespace VectorworksMVR;
 MvrUnittest::MvrUnittest(const std::string& currentDir)
 {
     fPath = currentDir;
+#ifdef _WINDOWS
+    fPath += std::string("\\testMvr.mvr");
+#else
     fPath += std::string("/testMvr.mvr");
+#endif
+
 	gdtfPath = currentDir;
 
     std::cout << "Export File to" << fPath << std::endl; 
@@ -429,7 +434,13 @@ void MvrUnittest::ReadFile()
 				// First way to get a file is to just get the path to the file
 				// You can use the own importer to read this file
 				std::string path = gdtfPath;
-				path += "/MVR_Export/My3DSFile.3ds";
+#ifdef _WINDOWS
+                path += "\\MVR_Export\\My3DSFile.3ds";
+#else
+                path += "/MVR_Export/My3DSFile.3ds";
+#endif
+
+				
 				checkifEqual("Get GeometryFileName", geoRef->GetFileForGeometry(), path);
 			}
 
