@@ -10,6 +10,7 @@ using namespace VWFC;
 #include "GDTFManager.h"
 #include "XmlFileHelper.h"
 #include "HashManager.h"
+#include "GdtfError.h"
 
 using namespace SceneData;
 
@@ -92,7 +93,12 @@ using namespace SceneData;
 {
 	// First check if theinValuelength is as aspected
 	ASSERTN(kEveryone, inValue.GetLength() == 47 || inValue.GetLength() == 0);
-	if (inValue.GetLength() != 47)	{ return false; }
+	if (inValue.GetLength() != 47)	
+    {
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_UuidHasWrongFormat);
+        SceneData::GdtfFixture::AddError(error); 
+        return false; 
+    }
 	
 	// Remove white space
 	TXString value = inValue;

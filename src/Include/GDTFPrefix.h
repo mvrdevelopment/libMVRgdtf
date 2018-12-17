@@ -91,6 +91,8 @@ namespace VectorworksMVR
         enum class EGdtfParsingError
         {
             eWrongAttribute = 0,
+            eMissingMandatoryAttribute = 1,
+            eValueError_UuidHasWrongFormat = 2,
         };
 		
 		enum class EGdtfPhysicalUnit

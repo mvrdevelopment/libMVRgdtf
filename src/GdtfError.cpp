@@ -10,8 +10,9 @@
 // Parsing Errors
 //------------------------------------------------------------------------------------
 // GdtfObject
-GdtfParsingError::GdtfParsingError()
+GdtfParsingError::GdtfParsingError(GdtfDefines::EGdtfParsingError type)
 {
+    fErrorType = type;
 }
 
 GdtfParsingError::~GdtfParsingError()
@@ -32,7 +33,8 @@ GdtfParsingError::~GdtfParsingError()
         }
         else
         {
-            GdtfParsingError error;
+            GdtfParsingError error (GdtfDefines::EGdtfParsingError::eMissingMandatoryAttribute);
+            error.fAttributeNodeName = attribute;
             SceneData::GdtfFixture::AddError(error);
         }
     }
@@ -51,7 +53,8 @@ GdtfParsingError::~GdtfParsingError()
 
     for (const TXString& nodeName : nodeAttributes)
     {
-            GdtfParsingError error;
+            GdtfParsingError error(GdtfDefines::EGdtfParsingError::eWrongAttribute);
+            error.fAttributeNodeName = nodeName;
             SceneData::GdtfFixture::AddError(error);
     }
 

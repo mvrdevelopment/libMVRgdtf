@@ -12,11 +12,12 @@ using namespace VectorWorks::Filing;
 class GdtfParsingError
 {
 public:
-	GdtfParsingError();
+	GdtfParsingError(GdtfDefines::EGdtfParsingError type);
     ~GdtfParsingError();
 	
 private:
 	GdtfDefines::EGdtfParsingError fErrorType;
+	TXString					   fAttributeNodeName;
 	
 	void	CheckValidValue()	const;
 	
