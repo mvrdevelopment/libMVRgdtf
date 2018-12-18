@@ -90,9 +90,25 @@ namespace VectorworksMVR
 
         enum class EGdtfParsingError
         {
-            eWrongAttribute = 0,
-            eMissingMandatoryAttribute = 1,
-            eValueError_UuidHasWrongFormat = 2,
+            eWrongAttribute                                 = 0,
+            eMissingMandatoryAttribute                      = 1,
+            eValueError_UuidHasWrongFormat                  = 2,
+            eValueError_ColorHasWrongFormat                 = 3,
+            eValueError_DmxAdressHasWrongValue              = 4,
+            eValueError_EnumNoMatchingEntry                 = 5,
+            eValueError_EGdtfSpecialEnumNoMatchingEntry     = 6,
+            eValueError_DmxValueHasWrongValue               = 7,
+            eValueError_MatrixFormatError                   = 8,
+            // eValueError_EGdtfSpecialEnumNoEntry     = 7,
+            // eValueError_EGdtfSpecialEnumNoEntry     = 7,
+            // eValueError_EGdtfSpecialEnumNoEntry     = 7,
+            // eValueError_EGdtfSpecialEnumNoEntry     = 7,
+            // eValueError_EGdtfSpecialEnumNoEntry     = 7,
+            // eValueError_EGdtfSpecialEnumNoEntry     = 7,
+            // eValueError_EGdtfSpecialEnumNoEntry     = 7,
+            // eValueError_EGdtfSpecialEnumNoEntry     = 7,
+            
+
         };
 		
 		enum class EGdtfPhysicalUnit
@@ -103,21 +119,21 @@ namespace VectorworksMVR
 			Mass			= 3,	// kg
 			Time			= 4,	// s
 			Temperatur		= 5,	// K
-			LuminousItensity= 6,	//cd
-			Angle			= 7,	//degree
+			LuminousItensity= 6,	// cd
+			Angle			= 7,	// degree
 			Force			= 8,	// Newton
 			Frequeny		= 9,	// 1/s
 			Current			= 10,	// A
 			Voltage			= 12,	// V
 			Power			= 13,	// W
 			Energy			= 14,	// J
-			Area			= 15,	//m^2
+			Area			= 15,	// m^2
 			Volume			= 16,	// m^3
 			Speed			= 17,	// m/s
-			Acceleration	= 18,	//m/s^2
+			Acceleration	= 18,	// m/s^2
 			AngularSpeed	= 19,	// degree/s
-			AngularAccc		= 20,	//degree/s^2
-			WaveLength		= 21,	//nm
+			AngularAccc		= 20,	// degree/s^2
+			WaveLength		= 21,	// nm
 			ColorComponent	= 22
 		};
 		

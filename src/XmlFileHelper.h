@@ -141,6 +141,8 @@ namespace SceneData
 	private:
 		static bool		Deserialize(const TXString& value, std::vector<double>& doubleArr);
 		static bool		Deserialize(const TXString& value, TSint32Array& doubleArr);
+        static DmxValue GetChannelMaxDmx(const EGdtfChannelBitResolution chanlReso);
+
 	};
 	
 	class SceneDataZip
