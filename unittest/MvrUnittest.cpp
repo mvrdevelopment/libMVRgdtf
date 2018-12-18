@@ -20,9 +20,9 @@ MvrUnittest::MvrUnittest(const std::string& currentDir)
     fPath += std::string("/testMvr.mvr");
 #endif
 
-	gdtfPath = currentDir;
-
-    std::cout << "Export File to" << fPath << std::endl; 
+    gdtfPath = currentDir;
+    std::cout << "GDTF Search Path " << gdtfPath << std::endl;
+    std::cout << "Export File to "   << fPath    << std::endl; 
 }
 
 MvrUnittest::~MvrUnittest()

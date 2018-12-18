@@ -16,7 +16,11 @@ using namespace VectorworksMVR::GdtfDefines;
 GdtfDmxUnittest::GdtfDmxUnittest(const std::string& currentDir)
 {
     fPath = currentDir;
+#ifdef _WINDOWS
+    fPath += std::string("\\testDmx.gdtf");
+#else
     fPath += std::string("/testDmx.gdtf");
+#endif
 
     std::cout << "Export File to" << fPath << std::endl; 
 }
