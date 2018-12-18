@@ -348,6 +348,9 @@ void MvrUnittest::ReadFile()
 					checkifEqual("GetGdtfName", 	 	sceneObj->GetGdtfName(), "Martin@Mac Aura XB3");
 					checkifEqual("GetGdtfMode", 	 	sceneObj->GetGdtfMode(), "My fancy other GDTF DMX Mode2");
 					
+					IClassPtr mvrClass;
+					__checkVCOM_Failed(sceneObj->GetClass(& mvrClass));
+					
 					ISceneObjPtr focus;
 					if(__checkVCOM(sceneObj->GetFocusPoint( & focus)))
 					{
