@@ -370,7 +370,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetGdtfFixture(IGdtfFix
 		CGdtfFixtureImpl* pResultInterface = dynamic_cast<CGdtfFixtureImpl* >(pGdtfFixture);
 		if (pResultInterface)
 		{
-			read = pResultInterface->ReadFromFile(gdtfFile);
+			read = VCOM_SUCCEEDED( pResultInterface->ReadFromFile(gdtfFile) );
 		}
 		else
 		{
