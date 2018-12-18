@@ -254,6 +254,12 @@ void GdtfUnittest::ReadFile()
 	IGdtfFixturePtr gdtfRead (IID_IGdtfFixture);
     if(__checkVCOM(gdtfRead->ReadFromFile(fPath.c_str())))
     {
+		//Check those written UUIDs´
+		MvrUUID fixtureUUID	(225204211, 177198167, 	1575790, 	96627);
+		MvrUUID linkedUUID	(2227440, 	1542265, 	1573622,	2328410);
+		MvrUUID resultUUID	(0,0,0,0);
+
+
 		// Check Fixture Name
 		MvrString fixtureName		= gdtfRead->GetName();
 		MvrString fixtureShortName	= gdtfRead->GetShortName();
@@ -264,12 +270,8 @@ void GdtfUnittest::ReadFile()
 		this->checkifEqual("GetManufacturer "			, manufacturer		, "My Manufacturer");
 		this->checkifEqual("GetFixtureTypeDescription "	, description		, "My Description");
 
-		MvrUUID fixtureId(0,0,0,0);
-		__checkVCOM(gdtfRead->GetFixtureGUID(fixtureId));
-		this->checkifEqual("GetFixtureGUID uuid.a "		, fixtureId.a		, Uint32(225204211));
-		this->checkifEqual("GetFixtureGUID uuid.b "		, fixtureId.b		, Uint32(177198167));
-		this->checkifEqual("GetFixtureGUID uuid.c "		, fixtureId.c		, Uint32(1575790));
-		this->checkifEqual("GetFixtureGUID uuid.d "		, fixtureId.d		, Uint32(96627));
+		__checkVCOM(gdtfRead->GetFixtureGUID(resultUUID));
+		this->checkifEqual("GetFixtureGUID fixtureUUID ", fixtureUUID, resultUUID);
 		
 		// Get the Image from GDTF File
 		MvrString pngFileName		= gdtfRead->GetFixtureThumbnail();
@@ -277,14 +279,10 @@ void GdtfUnittest::ReadFile()
 		this->checkifEqual("GetFixtureThumbnail "		, pngFileName		, "My thumbnail");
 		this->checkifEqual("GetFixtureThumbnail "		, fullPath			, "My thumbnail");
 
-		MvrUUID linkedUuid(0, 0, 0, 0);
 		bool hasLinkedFixture = false;
 		__checkVCOM(gdtfRead->HasLinkedFixtureGUID(hasLinkedFixture));
-		__checkVCOM(gdtfRead->GetLinkedFixtureGUID(linkedUuid));
-		this->checkifEqual("GetFixtureGUID linkedUuid.a ", linkedUuid.a, Uint32(2227440));
-		this->checkifEqual("GetFixtureGUID linkedUuid.b ", linkedUuid.b, Uint32(1542265));
-		this->checkifEqual("GetFixtureGUID linkedUuid.c ", linkedUuid.c, Uint32(1573622));
-		this->checkifEqual("GetFixtureGUID linkedUuid.d ", linkedUuid.d, Uint32(2328410));
+		__checkVCOM(gdtfRead->GetLinkedFixtureGUID(resultUUID));
+		this->checkifEqual("GetFixtureGUID linkedUuid ", linkedUUID, resultUUID);
 
 
 		//--------------------------------------------------------------------------------
@@ -506,6 +504,12 @@ void GdtfUnittest::ReadFile()
 						IGdtfDmxLogicalChannelPtr gdtfLogicalChannel;
 						__checkVCOM(gdtfDmxChannel->GetLogicalChannelAt(j, &gdtfLogicalChannel));
 
+						IGdtfDmxChannelPtr parentChannel;
+						__checkVCOM(gdtfLogicalChannel->GetParentDmxChannel( & parentChannel));
+						{
+							this->checkifEqual("Test Get Parent Channel", parentChannel->GetName(), gdtfDmxChannel->GetName());
+						}
+
 						// Set the name
 						MvrString logicalChannelName = gdtfLogicalChannel->GetName();
 						this->checkifEqual("gdtfLogicalChannelGetName ", logicalChannelName, "My attributeName");
@@ -537,6 +541,12 @@ void GdtfUnittest::ReadFile()
 							IGdtfDmxChannelFunctionPtr gdtfFunction;
 							if (__checkVCOM(gdtfLogicalChannel->GetDmxFunctionAt(j, &gdtfFunction)))
 							{
+								IGdtfDmxLogicalChannelPtr parentLogicalChannel;
+								__checkVCOM(gdtfFunction->GetParentLogicalChannel( & parentLogicalChannel));
+								{
+									this->checkifEqual("Test Get Parent Logical Channel", parentLogicalChannel->GetName(), gdtfLogicalChannel->GetName());
+								}
+
 								// Set the name
 								MvrString featureName = gdtfFunction->GetName();
 								this->checkifEqual("gdtfFunctionGetName ", featureName, "My nameDmxFunction");

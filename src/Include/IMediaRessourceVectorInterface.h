@@ -69,6 +69,7 @@ namespace VectorworksMVR
 	class IGdtfRDMParameter;
 	class IGdtfFeatureGroup;
 	class IGdtfDmxChannel;
+    class IGdtfDmxLogicalChannel;
 
 	//-------------------------------------------------------------------------------------------------------------
 	class DYNAMIC_ATTRIBUTE ISceneDataProvider : public IVWUnknown
@@ -526,6 +527,8 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE     SetModeMasterChannel(IGdtfDmxChannel* channel, GdtfDefines::DmxValue start, GdtfDefines::DmxValue end) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetModeMasterFunction(IGdtfDmxChannelFunction* function, GdtfDefines::DmxValue start, GdtfDefines::DmxValue end) = 0;
 
+        virtual VCOMError VCOM_CALLTYPE     GetParentLogicalChannel(IGdtfDmxLogicalChannel** parent) = 0;
+
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
     };
@@ -547,6 +550,8 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetDmxFunctionCount(size_t& count) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetDmxFunctionAt(size_t at, IGdtfDmxChannelFunction** function) = 0;
 		virtual VCOMError VCOM_CALLTYPE     CreateDmxFunction(MvrString name, IGdtfDmxChannelFunction** function) = 0;
+
+        virtual VCOMError VCOM_CALLTYPE     GetParentDmxChannel(IGdtfDmxChannel** parent) = 0;
 		
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;

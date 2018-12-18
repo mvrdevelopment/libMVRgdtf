@@ -8,6 +8,7 @@
 #include "CGdtfDmxChannelSet.h"
 #include "CGdtfPhysicalEmitter.h"
 #include "CGdtfDmxChannel.h"
+#include "CGdtfDmxLogicalChannel.h"
 
 using namespace VectorWorks::Filing;
 
@@ -622,4 +623,48 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetModeMa
 
 	
 	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetParentLogicalChannel(IGdtfDmxLogicalChannel** parent)
+{
+	// Check Pointer
+	if ( ! fFunction) { return kVCOMError_NotInitialized; }
+    
+    //---------------------------------------------------------------------------
+    // Initialize Object
+	SceneData::GdtfDmxLogicalChannelPtr	gdtfLogicalChannel = fFunction->GetParentLogicalChannel();
+	if ( ! gdtfLogicalChannel)	{ return kVCOMError_Failed; }
+	
+    CGdtfDmxLogicalChannelImpl*			pLogicalChannel = nullptr;
+    
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDmxLogicalChannel, (IVWUnknown**) & pLogicalChannel)))
+    {
+        // Check Casting
+        CGdtfDmxLogicalChannelImpl* pResultInterface = dynamic_cast<CGdtfDmxLogicalChannelImpl* >(pLogicalChannel);
+        if (pResultInterface)
+        {
+            pResultInterface->setPointer(gdtfLogicalChannel);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+    
+    //---------------------------------------------------------------------------
+    // Check Incomming Object
+    if (*parent)
+    {
+        (*parent)->Release();
+        *parent		= NULL;
+    }
+    
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *parent	= pLogicalChannel;
+    
+    return kVCOMError_NoError;
 }
