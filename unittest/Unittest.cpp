@@ -328,3 +328,16 @@ void Unittest::checkifEqualPtr(const std::string& check, void* val1, void* val2)
 
 	fFailedTests.push_back(test);
 };
+
+void Unittest::PrintParsingError(const std::string& check, const Sint32 val1)
+{
+	// Else Log the error
+	fFailed = true;
+
+	UnittestFailObject test;
+	test.fMessage += check;
+	test.fMessage += " Code: ";
+	test.fMessage += std::to_string(val1);
+
+	fFailedTests.push_back(test);
+};

@@ -88,7 +88,7 @@ namespace VectorworksMVR
 
 		};
 
-        enum class EGdtfParsingError
+        enum class EGdtfParsingError : Sint32
         {
             eWrongAttribute                                 = 0,
             eMissingMandatoryAttribute                      = 1,

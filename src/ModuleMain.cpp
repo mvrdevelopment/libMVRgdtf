@@ -114,7 +114,7 @@ extern "C" VectorworksMVR::VCOMError VW_EXPORT VWQueryInterface(const Vectorwork
         resultInterface = new VectorworksMVR::CGdtfBreakImpl();
     else if (iid == VectorworksMVR::IID_GdtfWheelSlotPrismFacet)
         resultInterface = new CGdtfWheelSlotPrismFacetImpl();
-    else if (iid == VectorworksMVR::IID_IParsingError)
+    else if (iid == VectorworksMVR::IID_GdtfXmlParsingError)
         resultInterface = new CGdtfXmlParsingErrorImpl();
 	else if (iid == VectorWorks::Filing::IID_FileIdentifier)
 		resultInterface = new CFileIdentifier();

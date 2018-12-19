@@ -2747,18 +2747,7 @@ EGdtfChannelBitResolution SceneData::GdtfDmxChannel::GetChannelBitResolution()
 
 DmxValue SceneData::GdtfDmxChannel::GetChannelMaxDmx()
 {
-	DmxValue maxVal = 0;
-	switch (this->GetChannelBitResolution())
-	{
-		case VectorworksMVR::GdtfDefines::eGdtfChannelBitResolution_8: maxVal = 256 ; break;
-		case VectorworksMVR::GdtfDefines::eGdtfChannelBitResolution_16:maxVal = 256 * 256; break;
-		case VectorworksMVR::GdtfDefines::eGdtfChannelBitResolution_24:maxVal = 256 * 256 * 256; break;
-		case VectorworksMVR::GdtfDefines::eGdtfChannelBitResolution_32:maxVal = 4294967296; break; 
-		/* The compiler gives a warning here, if we do a normal calculation here, so we just pick the value (256 * 256 * 256 * 256)*/
-	}
-	
-	return (maxVal - 1);
-
+	return GdtfConverter::GetChannelMaxDmx(this->GetChannelBitResolution());
 }
 
 //------------------------------------------------------------------------------------

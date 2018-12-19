@@ -418,18 +418,13 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString& strValue, EGdtfCh
 
 	// Find first entry
 	ptrdiff_t splitPos = strValue.Find("/");
-	if (splitPos = -1)
+	if (splitPos == -1)
     {
         GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_DmxValueHasWrongValue);
         SceneData::GdtfFixture::AddError(error);
         return false;
     }
-    if ( GetChannelMaxDmx(chanlReso) < intValue)
-    {
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_DmxValueHasWrongValue);
-        SceneData::GdtfFixture::AddError(error);
-        return false;
-    }
+
 
 	SplitStr(strValue, firstPart, secndPart, (size_t)splitPos);
 	//-----------------------------------------------------------------------------------
@@ -531,6 +526,13 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString& strValue, EGdtfCh
 	    // We can take the value as it is defined in the document without scaling it to another BitResolution.
 		intValue = dmxValueRaw; 
 	}
+
+    if ( GetChannelMaxDmx(chanlReso) < intValue)
+    {
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_DmxValueHasWrongValue);
+        SceneData::GdtfFixture::AddError(error);
+        return false;
+    }
 
 	return true;
 }
@@ -2350,6 +2352,8 @@ DmxValue GdtfConverter::GetChannelMaxDmx(EGdtfChannelBitResolution chanlReso)
 		case VectorworksMVR::GdtfDefines::eGdtfChannelBitResolution_32:maxVal = 4294967296; break; 
 		/* The compiler gives a warning here, if we do a normal calculation here, so we just pick the value (256 * 256 * 256 * 256)*/
 	}
+
+    ASSERTN(kEveryone, maxVal != 0);
 	
 	return (maxVal - 1);
 

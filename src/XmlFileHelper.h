@@ -132,6 +132,8 @@ namespace SceneData
         static bool     ConvertRDMValue_SLOT_INFO_SlotLabelIDEnum(			const TXString& value,			EGdtf_RDMValue_SLOT_INFO_SlotLabelID& val);        
         static bool     ConvertEGdtfColorSampleEnum(						const TXString& inVal,			EGdtfColorSample& outVal);
 
+        static DmxValue GetChannelMaxDmx(const EGdtfChannelBitResolution chanlReso);
+
 		typedef		std::function<void(IXMLFileNodePtr objNode)>	TProcessNodeCall;
 		static void		TraverseNodes(IXMLFileNodePtr root, const TXString& childContainerNodeName,const TXString& childNodeName, TProcessNodeCall processNodeFunction);
 		
@@ -141,7 +143,7 @@ namespace SceneData
 	private:
 		static bool		Deserialize(const TXString& value, std::vector<double>& doubleArr);
 		static bool		Deserialize(const TXString& value, TSint32Array& doubleArr);
-        static DmxValue GetChannelMaxDmx(const EGdtfChannelBitResolution chanlReso);
+       
 
 	};
 	

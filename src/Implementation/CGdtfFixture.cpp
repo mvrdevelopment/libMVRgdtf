@@ -1749,7 +1749,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetParsingErrorAt(si
     CGdtfXmlParsingErrorImpl* pParsingErrorObj = nullptr;
 
     // Query Interface
-    if (VCOM_SUCCEEDED(VWQueryInterface(IID_IParsingError, (IVWUnknown**)& pParsingErrorObj)))
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfXmlParsingError, (IVWUnknown**)& pParsingErrorObj)))
     {
         // Check Casting
         CGdtfXmlParsingErrorImpl* pResultInterface = dynamic_cast<CGdtfXmlParsingErrorImpl*>(pParsingErrorObj);

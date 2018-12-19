@@ -225,6 +225,19 @@ void GdtfDmxUnittest::ReadFile()
     IGdtfFixturePtr gdtfRead (IID_IGdtfFixture);
     if(__checkVCOM(gdtfRead->ReadFromFile(fPath.c_str())))
     {
+
+		// Print Parsing Errors
+		size_t countParsingErrors = 0;
+		__checkVCOM(gdtfRead->GetParsingErrorCount(countParsingErrors));
+		for(size_t i = 0; i < countParsingErrors; i++)
+		{
+			GdtfDefines::EGdtfParsingError errorType;
+			IGdtfXmlParsingErrorPtr error;
+			__checkVCOM(gdtfRead->GetParsingErrorAt( i, &error));
+			__checkVCOM(error->GetErrorType(errorType));
+			PrintParsingError("Parsing Error", (Sint32)errorType);
+		}
+
 		//------------------------------------------------------------------------------ 
 		// Read the Attributes
 		size_t countAttributes = 0;
