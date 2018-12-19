@@ -99,15 +99,9 @@ namespace VectorworksMVR
             eValueError_EGdtfSpecialEnumNoMatchingEntry     = 6,
             eValueError_DmxValueHasWrongValue               = 7,
             eValueError_MatrixFormatError                   = 8,
-            // eValueError_EGdtfSpecialEnumNoEntry     = 7,
-            // eValueError_EGdtfSpecialEnumNoEntry     = 7,
-            // eValueError_EGdtfSpecialEnumNoEntry     = 7,
-            // eValueError_EGdtfSpecialEnumNoEntry     = 7,
-            // eValueError_EGdtfSpecialEnumNoEntry     = 7,
-            // eValueError_EGdtfSpecialEnumNoEntry     = 7,
-            // eValueError_EGdtfSpecialEnumNoEntry     = 7,
-            // eValueError_EGdtfSpecialEnumNoEntry     = 7,
-            
+            eValueError_RDMParamNoMatchingEntry             = 9,
+            eMissingFile                                    = 10,
+            eValueError_WrongFormat                         = 11,
 
         };
 		
