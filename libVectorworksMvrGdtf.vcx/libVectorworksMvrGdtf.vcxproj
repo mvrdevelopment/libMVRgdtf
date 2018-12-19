@@ -65,6 +65,7 @@
     <ClCompile Include="..\src\Implementation\CGdtfWheel.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfWheelSlot.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfWheelSlotPrismFacet.cpp" />
+    <ClCompile Include="..\src\Implementation\CGdtfXmlParsingError.cpp" />
     <ClCompile Include="..\src\Implementation\CGeometryReferenceImpl.cpp" />
     <ClCompile Include="..\src\Implementation\CMediaRessourceVectorImpl.cpp" />
     <ClCompile Include="..\src\Implementation\CPositionImpl.cpp" />
@@ -151,6 +152,7 @@
     <ClInclude Include="..\src\Implementation\CGdtfWheel.h" />
     <ClInclude Include="..\src\Implementation\CGdtfWheelSlot.h" />
     <ClInclude Include="..\src\Implementation\CGdtfWheelSlotPrismFacet.h" />
+    <ClInclude Include="..\src\Implementation\CGdtfXmlParsingError.h" />
     <ClInclude Include="..\src\Implementation\CGeometryReferenceImpl.h" />
     <ClInclude Include="..\src\Implementation\CMediaRessourceVectorImpl.h" />
     <ClInclude Include="..\src\Implementation\CPositionImpl.h" />
