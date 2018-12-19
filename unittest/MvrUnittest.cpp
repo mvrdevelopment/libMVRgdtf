@@ -20,9 +20,9 @@ MvrUnittest::MvrUnittest(const std::string& currentDir)
     fPath += std::string("/testMvr.mvr");
 #endif
 
-	gdtfPath = currentDir;
-
-    std::cout << "Export File to" << fPath << std::endl; 
+    gdtfPath = currentDir;
+    std::cout << "GDTF Search Path " << gdtfPath << std::endl;
+    std::cout << "Export File to "   << fPath    << std::endl; 
 }
 
 MvrUnittest::~MvrUnittest()
@@ -95,8 +95,8 @@ void MvrUnittest::WriteFile()
 		ISceneObjPtr fixture1 = nullptr;
 		if (__checkVCOM(mvrWrite->CreateFixture(MvrUUID(1808353427, 683171502, 518343034, 1766902383), STransformMatrix(), "My Fixture1 Name", layer1, &fixture1)))
 		{
-			__checkVCOM(fixture1->SetGdtfName("Martin@Mac Aura XB1"));
-			__checkVCOM(fixture1->SetGdtfMode("Mode 1 v1.1"));
+			__checkVCOM(fixture1->SetGdtfName("testGdtf.gdtf"));
+			__checkVCOM(fixture1->SetGdtfMode("My DmxModeName"));
 			__checkVCOM(fixture1->AddAdress(1542, 0));
 			__checkVCOM(fixture1->AddAdress(25, 1));
 			__checkVCOM(fixture1->SetFocusPoint(focusPoint));
@@ -108,8 +108,8 @@ void MvrUnittest::WriteFile()
 		ISceneObjPtr fixture2 = nullptr;
 		if (__checkVCOM(mvrWrite->CreateFixture(MvrUUID(1136161871, 1699151080, 751939975, 1748783014), STransformMatrix(), "My Fixture2 Name", layer1, &fixture2)))
 		{
-			__checkVCOM(fixture2->SetGdtfName("Martin@Mac Aura XB2"));
-			__checkVCOM(fixture2->SetGdtfMode("My fancy other GDTF DMX Mode"));
+			__checkVCOM(fixture2->SetGdtfName("testGdtf.gdtf"));
+			__checkVCOM(fixture2->SetGdtfMode("My DmxModeName"));
 			__checkVCOM(fixture2->AddAdress(352, 0));
 			__checkVCOM(fixture2->AddAdress(5684, 1));
 			__checkVCOM(fixture2->SetFocusPoint(focusPoint));
@@ -122,12 +122,13 @@ void MvrUnittest::WriteFile()
 		ISceneObjPtr fixture3 = nullptr;
 		if (__checkVCOM(mvrWrite->CreateFixture(MvrUUID(1136161871, 1699151080, 751939975, 1748773014), STransformMatrix(), "My Fixture3 Name", layer2, &fixture3)))
 		{
-			__checkVCOM(fixture3->SetGdtfName("Martin@Mac Aura XB3"));
-			__checkVCOM(fixture3->SetGdtfMode("My fancy other GDTF DMX Mode2"));
+			__checkVCOM(fixture3->SetGdtfName("testGdtf.gdtf"));
+			__checkVCOM(fixture3->SetGdtfMode("My DmxModeName"));
 			__checkVCOM(fixture3->AddAdress(352, 0));
 			__checkVCOM(fixture3->AddAdress(5684, 1));
 			__checkVCOM(fixture3->SetFocusPoint(focusPoint));
 		}
+
     }
 	__checkVCOM(mvrWrite->Close());
 }
@@ -223,8 +224,8 @@ void MvrUnittest::ReadFile()
 					checkifEqual("Fixture1 name ",		sceneObj->GetName(), 	 "My Fixture1 Name");
 					__checkVCOM(sceneObj->GetGuid(resultUUID));
 					this->checkifEqual("GetFixtureGuid fixtureUUID1 ", resultUUID, fixtureUUID1);
-					checkifEqual("GetGdtfName", 	 	sceneObj->GetGdtfName(), "Martin@Mac Aura XB1");
-					checkifEqual("GetGdtfMode", 	 	sceneObj->GetGdtfMode(), "Mode 1 v1.1");
+					checkifEqual("GetGdtfName", 	 	sceneObj->GetGdtfName(), "testGdtf.gdtf");
+					checkifEqual("GetGdtfMode", 	 	sceneObj->GetGdtfMode(), "My DmxModeName");
 
 					ISceneObjPtr focus;
 					if(__checkVCOM(sceneObj->GetFocusPoint( & focus)))
@@ -277,6 +278,9 @@ void MvrUnittest::ReadFile()
 							}
 						}
 					}
+
+					IGdtfFixturePtr gdtfLinkedFixture;
+					__checkVCOM(sceneObj->GetGdtfFixture( & gdtfLinkedFixture));
 				}
 				
 				// ------------------------------------------------------------------------------
@@ -287,8 +291,8 @@ void MvrUnittest::ReadFile()
 					checkifEqual("Fixture2 name ",		sceneObj->GetName(), 	 "My Fixture2 Name");
 					__checkVCOM(sceneObj->GetGuid(resultUUID));
 					this->checkifEqual("GetFixtureGuid fixtureUUID2 ", resultUUID, fixtureUUID2);
-					checkifEqual("GetGdtfName", 	 	sceneObj->GetGdtfName(), "Martin@Mac Aura XB2");
-					checkifEqual("GetGdtfMode", 	 	sceneObj->GetGdtfMode(), "My fancy other GDTF DMX Mode");
+					checkifEqual("GetGdtfName", 	 	sceneObj->GetGdtfName(), "testGdtf.gdtf");
+					checkifEqual("GetGdtfMode", 	 	sceneObj->GetGdtfMode(), "My DmxModeName");
 					
 					ISceneObjPtr focus;
 					if(__checkVCOM(sceneObj->GetFocusPoint( & focus)))
@@ -345,8 +349,11 @@ void MvrUnittest::ReadFile()
 					checkifEqual("Fixture3 name ", 		sceneObj->GetName(), 	 "My Fixture3 Name");
 					__checkVCOM(sceneObj->GetGuid(resultUUID));
 					this->checkifEqual("GetFixtureGuid fixtureUUID3 ", resultUUID, fixtureUUID3);
-					checkifEqual("GetGdtfName", 	 	sceneObj->GetGdtfName(), "Martin@Mac Aura XB3");
-					checkifEqual("GetGdtfMode", 	 	sceneObj->GetGdtfMode(), "My fancy other GDTF DMX Mode2");
+					checkifEqual("GetGdtfName", 	 	sceneObj->GetGdtfName(), "testGdtf.gdtf");
+					checkifEqual("GetGdtfMode", 	 	sceneObj->GetGdtfMode(), "My DmxModeName");
+					
+					IClassPtr mvrClass;
+					__checkVCOM_Failed(sceneObj->GetClass(& mvrClass));
 					
 					ISceneObjPtr focus;
 					if(__checkVCOM(sceneObj->GetFocusPoint( & focus)))

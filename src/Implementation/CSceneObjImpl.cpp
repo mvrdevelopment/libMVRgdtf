@@ -224,6 +224,8 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetClass(IClass** outCl
 	ASSERTN(kEveryone, scObj);
 	if	( scObj == nullptr) { return kVCOMError_Failed; }
 	
+	SceneData::SceneDataClassObjPtr scClass = scObj->GetClass();
+	if(! scClass) { return kVCOMError_NotSet; }
 	
 	//---------------------------------------------------------------------------
 	// Initialize Object
@@ -236,7 +238,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetClass(IClass** outCl
 		CClassImpl* pResultInterface = dynamic_cast<CClassImpl* >(pClass);
 		if (pResultInterface)
 		{
-			pResultInterface->SetPointer(scObj->GetClass());
+			pResultInterface->SetPointer(scClass);
 		}
 		else
 		{
@@ -368,7 +370,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetGdtfFixture(IGdtfFix
 		CGdtfFixtureImpl* pResultInterface = dynamic_cast<CGdtfFixtureImpl* >(pGdtfFixture);
 		if (pResultInterface)
 		{
-			read = pResultInterface->ReadFromFile(gdtfFile);
+			read = VCOM_SUCCEEDED( pResultInterface->ReadFromFile(gdtfFile) );
 		}
 		else
 		{
