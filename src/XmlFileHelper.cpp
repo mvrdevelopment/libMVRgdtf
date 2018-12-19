@@ -95,8 +95,12 @@ using namespace SceneData;
 	ASSERTN(kEveryone, inValue.GetLength() == 47 || inValue.GetLength() == 0);
 	if (inValue.GetLength() != 47)	
     {
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_UuidHasWrongFormat);
-        SceneData::GdtfFixture::AddError(error); 
+        if(inValue.GetLength() != 0)
+        {
+            GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_UuidHasWrongFormat);
+            SceneData::GdtfFixture::AddError(error); 
+        }
+
         return false; 
     }
 	
@@ -842,11 +846,6 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 		strVal.Delete(0, pos + 2);
 		pos = strVal.Find("}{");
 	}
-	if (strVal.Find("}{") == -1)
-    {
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_MatrixFormatError);
-        SceneData::GdtfFixture::AddError(error);
-    }
 
 	// Apped the rest
 	lines.push_back(strVal);
