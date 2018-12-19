@@ -335,9 +335,10 @@ void Unittest::PrintParsingError(const std::string& check, const Sint32 val1)
 	fFailed = true;
 
 	UnittestFailObject test;
-	test.fMessage += check;
 	test.fMessage += " Code: ";
 	test.fMessage += std::to_string(val1);
+	test.fMessage += " Message: ";
+	test.fMessage += check;
 
 	fFailedTests.push_back(test);
 };

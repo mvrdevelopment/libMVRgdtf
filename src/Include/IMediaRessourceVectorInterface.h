@@ -1190,6 +1190,7 @@ namespace VectorworksMVR
     {
 		public:
         virtual VCOMError VCOM_CALLTYPE     GetErrorType(GdtfDefines::EGdtfParsingError& error) = 0;
+        virtual MvrString VCOM_CALLTYPE     GetErrorMessage() = 0;
     };
     typedef VCOMPtr<IGdtfXmlParsingError>	IGdtfXmlParsingErrorPtr;
 

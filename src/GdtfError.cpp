@@ -24,10 +24,18 @@ GdtfDefines::EGdtfParsingError GdtfParsingError::GetError() const
     return fErrorType;
 }
 
+const TXString& GdtfParsingError::GetErrorMessage() const
+{
+    return fAttributeNodeName;
+}
+
 /*static*/ void GdtfParsingError::CheckNodeAttributes(IXMLFileNodePtr pNode, const TXStringArray& needed, const TXStringArray& optional) 
 {
    	TXStringArray nodeAttributes;
 	pNode->GetNodeAttributes(nodeAttributes);
+
+    TXString nodeName;
+    pNode->GetNodeName(nodeName);
 
     // Check required Attributes
     for(const TXString &attribute : needed)
@@ -39,7 +47,7 @@ GdtfDefines::EGdtfParsingError GdtfParsingError::GetError() const
         else
         {
             GdtfParsingError error (GdtfDefines::EGdtfParsingError::eMissingMandatoryAttribute);
-            error.fAttributeNodeName = attribute;
+            error.fAttributeNodeName = attribute + " " + nodeName;
             SceneData::GdtfFixture::AddError(error);
         }
     }
@@ -53,13 +61,10 @@ GdtfDefines::EGdtfParsingError GdtfParsingError::GetError() const
         }
     }
 
-    // Check if AttributesList has still elements
-    if ( nodeAttributes.size() > 0) return;
-
-    for (const TXString& nodeName : nodeAttributes)
+    for (const TXString& attribute : nodeAttributes)
     {
             GdtfParsingError error(GdtfDefines::EGdtfParsingError::eWrongAttribute);
-            error.fAttributeNodeName = nodeName;
+            error.fAttributeNodeName = attribute + " " + nodeName;
             SceneData::GdtfFixture::AddError(error);
     }
 

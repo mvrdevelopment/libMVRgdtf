@@ -43,19 +43,31 @@ void GdtfDmxUnittest::WriteFile()
     MvrUUID uuid (225204211, 177198167, 1575790, 96627);
     if(__checkVCOM(gdtfWrite->OpenForWrite(fPath.c_str(),"My FixtureName","My Manufacturer", uuid)))
     {
+		// Feature Groups
+		IGdtfFeatureGroupPtr featureGroup;
+		__checkVCOM(gdtfWrite->CreateFeatureGroup("FeatureGroup","FeatureGroup", &featureGroup));
+
+
+		IGdtfFeaturePtr feature;
+		__checkVCOM(featureGroup->CreateFeature("Feature", & feature));
+
 		//----------------------------------------------------------------
 		// Create Attribute
 		IGdtfAttributePtr attribute1;
 		__checkVCOM(gdtfWrite->CreateAttribute("Attribute1","Pretty", &attribute1));
+		attribute1->SetFeature(feature);
 
 		IGdtfAttributePtr attribute2;
 		__checkVCOM(gdtfWrite->CreateAttribute("Attribute2","Pretty", &attribute2));
+		attribute2->SetFeature(feature);
 
 		IGdtfAttributePtr attribute3;
 		__checkVCOM(gdtfWrite->CreateAttribute("Attribute3","Pretty", &attribute3));
+		attribute3->SetFeature(feature);
 
 		IGdtfAttributePtr attribute4;
 		__checkVCOM(gdtfWrite->CreateAttribute("Attribute4","Pretty", &attribute4));
+		attribute4->SetFeature(feature);
 
 		//----------------------------------------------------------------
 		// Create Model
@@ -88,6 +100,7 @@ void GdtfDmxUnittest::WriteFile()
 		IGdtfDmxChannelFunctionPtr bit8Function1;
 		bit8LogicalChannel1->CreateDmxFunction("Function1", &bit8Function1);
 		bit8Function1->SetStartAddress(0);
+		bit8Function1->SetAttribute(attribute1);
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet1;
 		bit8Function1->CreateDmxChannelSet("My Name1", 15, 60, &bit8ChannelSet1);
@@ -102,6 +115,7 @@ void GdtfDmxUnittest::WriteFile()
 		IGdtfDmxChannelFunctionPtr bit8Function2;
 		bit8LogicalChannel1->CreateDmxFunction("Function2", &bit8Function2);
 		bit8Function2->SetStartAddress(100);
+		bit8Function2->SetAttribute(attribute1);
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet4;
 		bit8Function2->CreateDmxChannelSet("My Name4", 100, 120, &bit8ChannelSet4);
@@ -120,6 +134,7 @@ void GdtfDmxUnittest::WriteFile()
 		IGdtfDmxChannelFunctionPtr bit8Function3;
 		bit8LogicalChannel2->CreateDmxFunction("Function3", &bit8Function3);
 		bit8Function3->SetStartAddress(170);
+		bit8Function3->SetAttribute(attribute1);
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet7;
 		bit8Function3->CreateDmxChannelSet("My Name7", 170, 170, &bit8ChannelSet7);
@@ -134,6 +149,7 @@ void GdtfDmxUnittest::WriteFile()
 		IGdtfDmxChannelFunctionPtr bit8Function4;
 		bit8LogicalChannel2->CreateDmxFunction("Function4", &bit8Function4);
 		bit8Function4->SetStartAddress(200);
+		bit8Function4->SetAttribute(attribute1);
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet10;
 		bit8Function4->CreateDmxChannelSet("My Name10", 210, 210, &bit8ChannelSet10);
@@ -160,6 +176,7 @@ void GdtfDmxUnittest::WriteFile()
 
 		IGdtfDmxChannelFunctionPtr bit16Function;
 		bit16LogicalChannel->CreateDmxFunction("Function", &bit16Function);
+		bit16Function->SetAttribute(attribute1);
 
 		IGdtfDmxChannelSetPtr bit16ChannelSet1;
 		bit16Function->CreateDmxChannelSet("My Name1", 15, 60, &bit16ChannelSet1);
@@ -184,19 +201,22 @@ void GdtfDmxUnittest::WriteFile()
 
 		IGdtfDmxLogicalChannelPtr logicalChannel24bit;
 		__checkVCOM(bit24channel->CreateLogicalChannel(attribute3, &logicalChannel24bit));
-		logicalChannel24bit->SetAttribute(attribute3);
+		__checkVCOM(logicalChannel24bit->SetAttribute(attribute3));
 
 		IGdtfDmxChannelFunctionPtr function24bit_1;
 		__checkVCOM(logicalChannel24bit->CreateDmxFunction("Log 1", & function24bit_1));
 		__checkVCOM(function24bit_1->SetStartAddress(0));
+		__checkVCOM(function24bit_1->SetAttribute(attribute1));
 
 		IGdtfDmxChannelFunctionPtr function24bit_2;
 		__checkVCOM(logicalChannel24bit->CreateDmxFunction("Log 2", & function24bit_2));
 		__checkVCOM(function24bit_2->SetStartAddress(0));
+		__checkVCOM(function24bit_2->SetAttribute(attribute1));
 
 		IGdtfDmxChannelFunctionPtr function24bit_3;
 		__checkVCOM(logicalChannel24bit->CreateDmxFunction("Log 3", & function24bit_3));
 		__checkVCOM(function24bit_3->SetStartAddress(0));
+		__checkVCOM(function24bit_3->SetAttribute(attribute1));
 
 
 		__checkVCOM(function24bit_3->SetModeMasterChannel(bit16channel, 80, 179));
@@ -212,7 +232,8 @@ void GdtfDmxUnittest::WriteFile()
 
 		IGdtfDmxChannelFunctionPtr bit8_1Function1;
 		bit8_1LogicalChannel1->CreateDmxFunction("Function1", &bit8_1Function1);
-		bit8Function1->SetStartAddress(0);
+		bit8_1Function1->SetStartAddress(0);
+		bit8_1Function1->SetAttribute(attribute1);
 
         __checkVCOM(gdtfWrite->Close());
     }
@@ -235,7 +256,7 @@ void GdtfDmxUnittest::ReadFile()
 			IGdtfXmlParsingErrorPtr error;
 			__checkVCOM(gdtfRead->GetParsingErrorAt( i, &error));
 			__checkVCOM(error->GetErrorType(errorType));
-			PrintParsingError("Parsing Error", (Sint32)errorType);
+			PrintParsingError(error->GetErrorMessage(), (Sint32)errorType);
 		}
 
 		//------------------------------------------------------------------------------ 

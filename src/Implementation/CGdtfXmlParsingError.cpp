@@ -30,7 +30,15 @@ VCOMError VectorworksMVR::CGdtfXmlParsingErrorImpl::GetErrorType(GdtfDefines::EG
 	return kVCOMError_NoError;
 }
 
+MvrString VectorworksMVR::CGdtfXmlParsingErrorImpl::GetErrorMessage()
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) return "";
+	
+	return fPtr->GetErrorMessage().GetCharPtr();
 
+}
 
 void VectorworksMVR::CGdtfXmlParsingErrorImpl::SetPointer(GdtfParsingError* pointer)
 {

@@ -23,6 +23,7 @@ private:
 
 public:
 	GdtfDefines::EGdtfParsingError	GetError() const;
+	const TXString&					GetErrorMessage() const;
 	
 public:
 	static void	CheckNodeAttributes(IXMLFileNodePtr pNode, const TXStringArray& needed, const TXStringArray& optional);

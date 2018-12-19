@@ -17,6 +17,8 @@ namespace VectorworksMVR
 		
 	public:
 		virtual VCOMError VCOM_CALLTYPE     GetErrorType(GdtfDefines::EGdtfParsingError& error);
+		virtual MvrString VCOM_CALLTYPE     GetErrorMessage();
+
 		
 		
 		// Implementation

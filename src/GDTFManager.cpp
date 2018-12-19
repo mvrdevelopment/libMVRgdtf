@@ -458,6 +458,7 @@ void GdtfAttribute::OnPrintToFile(IXMLFileNodePtr pNode)
 	// Call the parent
 	GdtfObject::OnPrintToFile(pNode);
 	
+	ASSERTN(kEveryone, fFeature);
 	
 	//------------------------------------------------------------------------------------
 	// Print the attributes
@@ -3045,6 +3046,8 @@ void GdtfDmxChannelFunction::OnPrintToFile(IXMLFileNodePtr pNode)
 	GdtfObject::OnPrintToFile(pNode);
 	
 	EGdtfChannelBitResolution chanelReso = GetParentDMXChannel()->GetChannelBitResolution();
+
+	ASSERTN(kEveryone, fAttribute!= nullptr);
 	// ------------------------------------------------------------------------------------
 	// Print node attributes
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionName,				fName);
@@ -3211,7 +3214,6 @@ void GdtfDmxChannelFunction::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	//------------------------------------------------------------------------------------
 	// Create needed and optional Attribute Arrays
 	TXStringArray needed;
-	TXStringArray optional;
 	needed.push_back(XML_GDTF_DMXChannelFuntionName);
 	needed.push_back(XML_GDTF_DMXChannelFuntionAttribute);
 	needed.push_back(XML_GDTF_DMXChannelFuntionOriginalAttribute);
@@ -3219,13 +3221,17 @@ void GdtfDmxChannelFunction::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	needed.push_back(XML_GDTF_DMXChannelFuntionPhysicalFrom);
 	needed.push_back(XML_GDTF_DMXChannelFuntionPhysicalTo);
 	needed.push_back(XML_GDTF_DMXChannelFuntionRealFade);
-	optional.push_back(XML_GDTF_DMXChannelFuntionWheelRef);
-	optional.push_back(XML_GDTF_DMXChannelEmitter);
 	needed.push_back(XML_GDTF_DMXChannelDMXInvert);
 	needed.push_back(XML_GDTF_DMXChannelEncoderInvert);
-	needed.push_back(XML_GDTF_DMXChannelFuntionModeMaster);
-	needed.push_back(XML_GDTF_DMXChannelFuntionModeFrom);
-	needed.push_back(XML_GDTF_DMXChannelFuntionModeTo);
+
+
+	TXStringArray optional;
+	optional.push_back(XML_GDTF_DMXChannelFuntionWheelRef);
+	optional.push_back(XML_GDTF_DMXChannelEmitter);	
+	optional.push_back(XML_GDTF_DMXChannelFuntionModeMaster);
+	optional.push_back(XML_GDTF_DMXChannelFuntionModeFrom);
+	optional.push_back(XML_GDTF_DMXChannelFuntionModeTo);
+
 	
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
@@ -3566,9 +3572,19 @@ void GdtfDmxChannelSet::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	TXStringArray optional;
 	needed.push_back(XML_GDTF_DMXChannelSetName);
 	needed.push_back(XML_GDTF_DMXChannelSetDMXFrom);
-	needed.push_back(XML_GDTF_DMXChannelSetPhysicalFrom);
-	needed.push_back(XML_GDTF_DMXChannelSetPhysicalTo);
 	optional.push_back(XML_GDTF_DMXChannelSetWheelSlotIndexRef);
+
+	if(fSetPhysical)
+	{
+		needed.push_back(XML_GDTF_DMXChannelSetPhysicalFrom);
+		needed.push_back(XML_GDTF_DMXChannelSetPhysicalTo);
+
+	}
+	else
+	{
+		optional.push_back(XML_GDTF_DMXChannelSetPhysicalFrom);
+		optional.push_back(XML_GDTF_DMXChannelSetPhysicalTo);
+	}
 	
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
