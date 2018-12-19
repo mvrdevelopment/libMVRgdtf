@@ -20,6 +20,9 @@ private:
 	TXString					   fAttributeNodeName;
 	
 	void	CheckValidValue()	const;
+
+public:
+	GdtfDefines::EGdtfParsingError	GetError() const;
 	
 public:
 	static void	CheckNodeAttributes(IXMLFileNodePtr pNode, const TXStringArray& needed, const TXStringArray& optional);

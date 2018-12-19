@@ -19,6 +19,11 @@ GdtfParsingError::~GdtfParsingError()
 {
 }
 
+GdtfDefines::EGdtfParsingError GdtfParsingError::GetError() const
+{
+    return fErrorType;
+}
+
 /*static*/ void GdtfParsingError::CheckNodeAttributes(IXMLFileNodePtr pNode, const TXStringArray& needed, const TXStringArray& optional) 
 {
    	TXStringArray nodeAttributes;

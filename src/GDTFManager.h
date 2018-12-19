@@ -2459,6 +2459,7 @@ protected:
 public:
         static void                     AddError(const GdtfParsingError& error);
         static TGdtfParsingErrorArray*  __ERROR_CONTAINER_POINTER;
+        TGdtfParsingErrorArray&         GetParsingErrorArray();
         
 private:
         TGdtfParsingErrorArray          fErrorContainer;

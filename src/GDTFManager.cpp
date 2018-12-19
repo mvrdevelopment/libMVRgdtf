@@ -4340,6 +4340,11 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 	}
 }
 
+TGdtfParsingErrorArray& GdtfFixture::GetParsingErrorArray()
+{
+	return fErrorContainer;
+}
+
 void GdtfFixture::AutoGenerateNames(GdtfDmxModePtr dmxMode)
 {
 		for (GdtfDmxChannelPtr dmxChannel : dmxMode->GetChannelArray())

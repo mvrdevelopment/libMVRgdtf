@@ -19,6 +19,8 @@
 #include "CGdtfDmxProfile.h"
 #include "CGdtfCRIGroup.h"
 #include "CGdtfFTRDM.h"
+#include "CGdtfXmlParsingError.h"
+#include "GdtfError.h"
 
 using namespace VectorWorks::Filing;
 
@@ -1530,106 +1532,106 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateCRIGroup(doubl
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetDMXProfileCount(size_t &count)
- {
-     if (!fFixtureObject) { return kVCOMError_NotInitialized; }
+{
+    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
 
-     count = fFixtureObject->GetDmxProfileArray().size();
+    count = fFixtureObject->GetDmxProfileArray().size();
 
-     return kVCOMError_NoError;
- }
-
-
- VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetDMXProfileAt(size_t at, VectorworksMVR::IGdtfDMXProfile** value)
- {
-     // Check if Set
-     if (!fFixtureObject) { return kVCOMError_NotInitialized; }
-
-     // Check if no Overflow
-     if (at >= fFixtureObject->GetDmxProfileArray().size()) { return kVCOMError_OutOfBounds; }
+    return kVCOMError_NoError;
+}
 
 
-     SceneData::GdtfDMXProfile* gdtfDMXProfile = fFixtureObject->GetDmxProfileArray()[at];
-     
-     //---------------------------------------------------------------------------
-     // Initialize Object
-     CGdtfDMXProfileImpl* pDMXProfileObj = nullptr;
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetDMXProfileAt(size_t at, VectorworksMVR::IGdtfDMXProfile** value)
+{
+    // Check if Set
+    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
 
-     // Query Interface
-     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDMXProfile, (IVWUnknown**)& pDMXProfileObj)))
-     {
-         // Check Casting
-         CGdtfDMXProfileImpl* pResultInterface = dynamic_cast<CGdtfDMXProfileImpl*>(pDMXProfileObj);
-         if (pResultInterface)
-         {
-             pResultInterface->SetPointer(gdtfDMXProfile);
-         }
-         else
-         {
-             pResultInterface->Release();
-             pResultInterface = nullptr;
-             return kVCOMError_NoInterface;
-         }
-     }
-
-     //---------------------------------------------------------------------------
-     // Check Incomming Object
-     if (*value)
-     {
-         (*value)->Release();
-         *value = NULL;
-     }
-
-     //---------------------------------------------------------------------------
-     // Set Out Value
-     *value = pDMXProfileObj;
-
-     return kVCOMError_NoError;
- }
+    // Check if no Overflow
+    if (at >= fFixtureObject->GetDmxProfileArray().size()) { return kVCOMError_OutOfBounds; }
 
 
- VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateDMXProfile(VectorworksMVR::IGdtfDMXProfile **outVal)
- {
-     // Check if Set
-     if (!fFixtureObject) { return kVCOMError_NotInitialized; }
+    SceneData::GdtfDMXProfile* gdtfDMXProfile = fFixtureObject->GetDmxProfileArray()[at];
+    
+    //---------------------------------------------------------------------------
+    // Initialize Object
+    CGdtfDMXProfileImpl* pDMXProfileObj = nullptr;
+
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDMXProfile, (IVWUnknown**)& pDMXProfileObj)))
+    {
+        // Check Casting
+        CGdtfDMXProfileImpl* pResultInterface = dynamic_cast<CGdtfDMXProfileImpl*>(pDMXProfileObj);
+        if (pResultInterface)
+        {
+            pResultInterface->SetPointer(gdtfDMXProfile);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+
+    //---------------------------------------------------------------------------
+    // Check Incomming Object
+    if (*value)
+    {
+        (*value)->Release();
+        *value = NULL;
+    }
+
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *value = pDMXProfileObj;
+
+    return kVCOMError_NoError;
+}
 
 
-     SceneData::GdtfDMXProfile* gdtfDMXProfile = fFixtureObject->AddDmxProfile();
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateDMXProfile(VectorworksMVR::IGdtfDMXProfile **outVal)
+{
+    // Check if Set
+    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
 
-     //---------------------------------------------------------------------------
-     // Initialize Object
-     CGdtfDMXProfileImpl* pDMXProfileObj = nullptr;
 
-     // Query Interface
-     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDMXProfile, (IVWUnknown**)& pDMXProfileObj)))
-     {
-         // Check Casting
-         CGdtfDMXProfileImpl* pResultInterface = dynamic_cast<CGdtfDMXProfileImpl*>(pDMXProfileObj);
-         if (pResultInterface)
-         {
-             pResultInterface->SetPointer(gdtfDMXProfile);
-         }
-         else
-         {
-             pResultInterface->Release();
-             pResultInterface = nullptr;
-             return kVCOMError_NoInterface;
-         }
-     }
+    SceneData::GdtfDMXProfile* gdtfDMXProfile = fFixtureObject->AddDmxProfile();
 
-     //---------------------------------------------------------------------------
-     // Check Incomming Object
-     if (*outVal)
-     {
-         (*outVal)->Release();
-         *outVal = NULL;
-     }
+    //---------------------------------------------------------------------------
+    // Initialize Object
+    CGdtfDMXProfileImpl* pDMXProfileObj = nullptr;
 
-     //---------------------------------------------------------------------------
-     // Set Out Value
-     *outVal = pDMXProfileObj;
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDMXProfile, (IVWUnknown**)& pDMXProfileObj)))
+    {
+        // Check Casting
+        CGdtfDMXProfileImpl* pResultInterface = dynamic_cast<CGdtfDMXProfileImpl*>(pDMXProfileObj);
+        if (pResultInterface)
+        {
+            pResultInterface->SetPointer(gdtfDMXProfile);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
 
-     return kVCOMError_NoError;
- }
+    //---------------------------------------------------------------------------
+    // Check Incomming Object
+    if (*outVal)
+    {
+        (*outVal)->Release();
+        *outVal = NULL;
+    }
+
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *outVal = pDMXProfileObj;
+
+    return kVCOMError_NoError;
+}
 
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetRDM(IGdtf_FTRDM ** value)
@@ -1719,4 +1721,61 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateRDM(Vectorwork
 	*outFTRDM = pRdm;
 	
 	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetParsingErrorCount(size_t &count)
+{
+    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
+
+    count = fFixtureObject->GetParsingErrorArray().size();
+
+    return kVCOMError_NoError;
+}
+
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetParsingErrorAt(size_t at, IGdtfXmlParsingError** value)
+{
+    // Check if Set
+    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
+
+    // Check if no Overflow
+    if (at >= fFixtureObject->GetParsingErrorArray().size()) { return kVCOMError_OutOfBounds; }
+
+
+    GdtfParsingError* gdtfParsingError = & fFixtureObject->GetParsingErrorArray()[at];
+    
+    //---------------------------------------------------------------------------
+    // Initialize Object
+    CGdtfXmlParsingErrorImpl* pParsingErrorObj = nullptr;
+
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_IParsingError, (IVWUnknown**)& pParsingErrorObj)))
+    {
+        // Check Casting
+        CGdtfXmlParsingErrorImpl* pResultInterface = dynamic_cast<CGdtfXmlParsingErrorImpl*>(pParsingErrorObj);
+        if (pResultInterface)
+        {
+            pResultInterface->SetPointer(gdtfParsingError);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+
+    //---------------------------------------------------------------------------
+    // Check Incomming Object
+    if (*value)
+    {
+        (*value)->Release();
+        *value = NULL;
+    }
+
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *value = pParsingErrorObj;
+
+    return kVCOMError_NoError;
 }

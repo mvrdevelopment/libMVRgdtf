@@ -34,6 +34,7 @@
 #include "Implementation/CGdtfBreak.h"
 #include "Implementation/CGdtfWheelSlotPrismFacet.h"
 #include "Implementation/CGeometryReferenceImpl.h"
+#include "Implementation/CGdtfXmlParsingError.h"
 
 // XML
 #include "XMLLib/XMLFileNodeImpl.h"
@@ -113,6 +114,8 @@ extern "C" VectorworksMVR::VCOMError VW_EXPORT VWQueryInterface(const Vectorwork
         resultInterface = new VectorworksMVR::CGdtfBreakImpl();
     else if (iid == VectorworksMVR::IID_GdtfWheelSlotPrismFacet)
         resultInterface = new CGdtfWheelSlotPrismFacetImpl();
+    else if (iid == VectorworksMVR::IID_IParsingError)
+        resultInterface = new CGdtfXmlParsingErrorImpl();
 	else if (iid == VectorWorks::Filing::IID_FileIdentifier)
 		resultInterface = new CFileIdentifier();
 	else if (iid == VectorWorks::Filing::IID_FolderIdentifier )

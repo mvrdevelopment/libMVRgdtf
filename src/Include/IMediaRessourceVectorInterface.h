@@ -70,6 +70,7 @@ namespace VectorworksMVR
 	class IGdtfFeatureGroup;
 	class IGdtfDmxChannel;
     class IGdtfDmxLogicalChannel;
+    class IGdtfXmlParsingError;
 
 	//-------------------------------------------------------------------------------------------------------------
 	class DYNAMIC_ATTRIBUTE ISceneDataProvider : public IVWUnknown
@@ -844,7 +845,7 @@ namespace VectorworksMVR
         
         virtual MvrString VCOM_CALLTYPE		GetName() = 0;
         virtual MvrString VCOM_CALLTYPE     GetManufacturer() = 0;
-		 virtual VCOMError VCOM_CALLTYPE    GetFixtureGUID(MvrUUID& uuid) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetFixtureGUID(MvrUUID& uuid) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetLinkedFixtureGUID(MvrUUID& uuid) = 0;
 		virtual VCOMError VCOM_CALLTYPE		HasLinkedFixtureGUID(bool& has) = 0;
 		
@@ -920,7 +921,7 @@ namespace VectorworksMVR
 
         // Parsing Errors TODO
         virtual VCOMError VCOM_CALLTYPE		GetParsingErrorCount(size_t& count) = 0;
-        virtual VCOMError VCOM_CALLTYPE		GetParsingErrorAt(size_t at, VectorworksMVR::IGdtfCRIGroup** value) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetParsingErrorAt(size_t at, IGdtfXmlParsingError** value) = 0;
 
 		
 	};
@@ -1188,9 +1189,9 @@ namespace VectorworksMVR
     class DYNAMIC_ATTRIBUTE IGdtfXmlParsingError : public IVWUnknown
     {
 		public:
-        virtual MvrString VCOM_CALLTYPE     GetErrorType(GdtfDefines::EGdtfParsingError& error) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetErrorType(GdtfDefines::EGdtfParsingError& error) = 0;
     };
-    typedef VCOMPtr<IGdtfPhysicalEmitter>	IGdtfPhysicalEmitterPtr;
+    typedef VCOMPtr<IGdtfXmlParsingError>	IGdtfXmlParsingErrorPtr;
 
 
 }
