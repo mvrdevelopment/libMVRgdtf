@@ -354,7 +354,7 @@ void GdtfDmxUnittest::ReadFile()
 		
 
 		//----------------------------------------------------------------
-		// Read 8 bit Channel
+		// Check 8 bit Channel
 		IGdtfDmxChannelPtr bit8channel;
 		__checkVCOM(mode->GetDmxChannelAt(0, &bit8channel));
 		Check8bitChannel(bit8channel);
@@ -433,14 +433,14 @@ void GdtfDmxUnittest::ReadFile()
 		__checkVCOM_NotSet(bit16Function->GetModeMasterChannel(&gdtfChannel, start, end));
 
 
-			//----------------------------------------------------------------
-		// Read 8 bit Channel
+		//----------------------------------------------------------------
+		// Check 24 bit Channel
 		IGdtfDmxChannelPtr bit24channel;
 		__checkVCOM(mode->GetDmxChannelAt(2, &bit24channel));
 		Check24bitChannel(bit24channel);
 
 		//----------------------------------------------------------------
-		// Read 8 bit Channel
+		// Read 8 bit Channel2
 		IGdtfDmxChannelPtr bit8channel2;
 		__checkVCOM(mode->GetDmxChannelAt(3, &bit8channel2));
 
@@ -460,11 +460,6 @@ void GdtfDmxUnittest::ReadFile()
 		this->checkifEqual("Check Count DMX Channels", countChannelSets, size_t(0));
 
 	}
-
-
-
-
-
 }
 
 void GdtfDmxUnittest::CheckChannelSet(IGdtfDmxChannelSetPtr& channelSet, std::string name, DmxValue start, DmxValue end)
@@ -480,7 +475,7 @@ void GdtfDmxUnittest::CheckChannelSet(IGdtfDmxChannelSetPtr& channelSet, std::st
 	this->checkifEqual("Check End ",  end, thisEnd);
 }
 
-void GdtfDmxUnittest::CheckFunction(VectorworksMVR::IGdtfDmxChannelFunctionPtr& function, std::string name, VectorworksMVR::GdtfDefines::DmxValue start, VectorworksMVR::GdtfDefines::DmxValue end)
+void GdtfDmxUnittest::CheckFunction(VectorworksMVR::IGdtfDmxChannelFunctionPtr& function, std::string name, DmxValue start, DmxValue end)
 {
 	this->checkifEqual("Check Name ", name, function->GetName());
 
