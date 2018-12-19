@@ -363,9 +363,41 @@ void GdtfDmxUnittest::ReadFile()
 		__checkVCOM(bit8channel->GetDmxBreak(dmxBreakChannel1));
 		this->checkifEqual("Check DMX Break Channel 1 - Default Value", 1, dmxBreakChannel1);
 
+		Sint32 dmxCoarseChannel1 = 0;
+		__checkVCOM(bit8channel->GetCoarse(dmxCoarseChannel1));
+		this->checkifEqual("Check DMX Coarse Channel 1 - Default Value", 1, dmxCoarseChannel1);
+
+		Sint32 dmxFineChannel1 = 0;
+		__checkVCOM(bit8channel->GetFine(dmxFineChannel1));
+		this->checkifEqual("Check DMX Fine Channel 1 - Default Value", 0, dmxFineChannel1);
+
+		Sint32 dmxUltraChannel1 = 0;
+		__checkVCOM(bit8channel->GetUltra(dmxUltraChannel1));
+		this->checkifEqual("Check DMX Ultra Channel 1 - Default Value", 0, dmxUltraChannel1);
+
+		Sint32 dmxUberChannel1 = 0;
+		__checkVCOM(bit8channel->GetUber(dmxUberChannel1));
+		this->checkifEqual("Check DMX Uber Channel 1 - Default Value", 0, dmxUberChannel1);
+
+		GdtfDefines::EGdtfDmxFrequency dmxFrequencyChannel1;
+		__checkVCOM(bit8channel->GetDmxFrequency(dmxFrequencyChannel1));
+		this->checkifEqual("Check DMX Frequency Channel 1 - Default Value", eGdtfDmxFrequency_30, dmxFrequencyChannel1);
+
+		DmxValue dmxDefaultValueChannel1 = 0;
+		__checkVCOM(bit8channel->GetDefaultValue(dmxDefaultValueChannel1));
+		this->checkifEqual("Check DMX Uber Channel 1 - Default Value", (DmxValue)0, dmxDefaultValueChannel1);
+
 		bool hasHighlight = 0;
 		__checkVCOM(bit8channel->HasHighlight(hasHighlight));
 		this->checkifEqual("Check DMX Break Channel 1 - Highlight", false, hasHighlight);
+
+		double dmxMibFadeChannel1 = 0;
+		__checkVCOM(bit8channel->GetMoveInBlackFrames(dmxMibFadeChannel1));
+		this->checkifEqual("Check DMX Uber Channel 1 - Default Value", (double)0, dmxMibFadeChannel1);
+
+		double dmxChangeTimeLimit1 = 0;
+		__checkVCOM(bit8channel->GetDmxChangeTimeLimit(dmxChangeTimeLimit1));
+		this->checkifEqual("Check DMX ChangeTimeLimit Channel 1 - Default Value", (double)0, dmxChangeTimeLimit1);
 
 		//----------------------------------------------------------------
 		// Read 16 bit Channel
