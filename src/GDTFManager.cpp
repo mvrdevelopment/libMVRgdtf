@@ -36,6 +36,7 @@ void GdtfObject::ReadFromNode(const IXMLFileNodePtr& pNode)
 	TXString nodeName;
 	pNode->GetNodeName(nodeName);
 	ASSERTN(kEveryone, nodeName == GetNodeName());
+	if ( !(nodeName == GetNodeName()) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eWrongNodeName); SceneData::GdtfFixture::AddError(error); }
 	
 	this->OnReadFromNode(pNode);
 	this->OnErrorCheck(pNode);
@@ -174,7 +175,8 @@ TXString GdtfActivationGroup::GetNodeReference()
 GdtfFeature::GdtfFeature(GdtfFeatureGroup* parent)
 {    
 	ASSERTN (kEveryone, parent);
-
+	if ( !(parent) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFeature); SceneData::GdtfFixture::AddError(error); }
+	
 	fParent = parent;
 }
 
@@ -431,9 +433,11 @@ void GdtfAttribute::SetPrettyName(const TXString &name)
 void GdtfAttribute::SetActivationGroup(GdtfActivationGroupPtr ptr)
 {
 	ASSERTN(kEveryone, fActivationGroup == nullptr);
+	if ( !(fActivationGroup == nullptr) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eAttribute); SceneData::GdtfFixture::AddError(error); }
 	fActivationGroup = ptr;
 	
 	ASSERTN(kEveryone, ptr != nullptr);
+	if ( !(ptr != nullptr) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eAttribute); SceneData::GdtfFixture::AddError(error); }
 	if (ptr) { ptr->AddLinkedAttribute(this); }
 }
 
@@ -459,7 +463,8 @@ void GdtfAttribute::OnPrintToFile(IXMLFileNodePtr pNode)
 	GdtfObject::OnPrintToFile(pNode);
 	
 	ASSERTN(kEveryone, fFeature);
-	
+	if ( !(fFeature) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eAttribute); SceneData::GdtfFixture::AddError(error); }
+
 	//------------------------------------------------------------------------------------
 	// Print the attributes
 	pNode->SetNodeAttributeValue(XML_GDTF_AttributeName,				fName);
@@ -548,9 +553,11 @@ GdtfFeaturePtr GdtfAttribute::GetFeature() const
 void GdtfAttribute::SetFeature(GdtfFeaturePtr newFeat)
 {
 	ASSERTN(kEveryone, fFeature == nullptr);
+	if ( !(fFeature == nullptr) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eAttribute); SceneData::GdtfFixture::AddError(error); }
 	fFeature = newFeat;
 	
 	ASSERTN(kEveryone, newFeat != nullptr);
+	if ( !(newFeat != nullptr) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eAttribute); SceneData::GdtfFixture::AddError(error); }
 	if (newFeat) { newFeat->AddLinkedAttribute(this); }
 }
 
@@ -858,6 +865,7 @@ const TXString&	GdtfWheelSlot::GetGoboFileFullPath()
 	fWheelParent->GetParentFixture()->GetWorkingFolder(folder);
 	
 	ASSERTN(kEveryone, folder != nullptr);
+	if ( !(folder != nullptr) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eWheelSlot); SceneData::GdtfFixture::AddError(error); }
 	if (folder) { folder->GetFullPath(workingFolder); }
 	
 	// Set to store
@@ -1124,6 +1132,7 @@ const TXString& GdtfModel::GetGeometryFileFullPath()
 	fParentFixture->GetWorkingFolder(folder);
 	
 	ASSERTN(kEveryone, folder != nullptr);
+	if ( !(folder != nullptr) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eModel); SceneData::GdtfFixture::AddError(error); }
 	if (folder) { folder->GetFullPath(workingFolder); }
 	
 	// Set to store
@@ -1282,6 +1291,7 @@ void GdtfGeometry::OnPrintToFile(IXMLFileNodePtr pNode)
 	pNode->SetNodeAttributeValue(XML_GDTF_GeometryMatrix,			GdtfConverter::ConvertMatrix(fMatrix, true));
 
 	ASSERTN(kEveryone, fModelReference != nullptr);
+	if ( !(fModelReference != nullptr) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eGeometry); SceneData::GdtfFixture::AddError(error); }
 	if (fModelReference) { pNode->SetNodeAttributeValue(XML_GDTF_GeometryModelRef,			fModelReference->GetNodeReference()); }
 	
 	// ------------------------------------------------------------------------------------
@@ -1332,6 +1342,7 @@ void GdtfGeometry::OnReadFromNode(const IXMLFileNodePtr& pNode)
 										  {
 											  // This is only allowed in Geometry Refs
 											  ASSERTN(kEveryone, this->GetObjectType() == eGdtfGeometryReference);
+											  if ( !(this->GetObjectType() == eGdtfGeometryReference) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eGeometry); SceneData::GdtfFixture::AddError(error); }
 											  if (this->GetObjectType() == eGdtfGeometryReference)
 											  {
 												  GdtfBreakPtr breakObj = new GdtfBreak();
@@ -1344,6 +1355,7 @@ void GdtfGeometry::OnReadFromNode(const IXMLFileNodePtr& pNode)
 										  }
 										  
 										  ASSERTN(kEveryone, geometry != nullptr);
+										  if ( !(geometry != nullptr) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eGeometry); SceneData::GdtfFixture::AddError(error); }
 										  if (geometry)
 										  {
 											  geometry->ReadFromNode(objNode);
@@ -1390,6 +1402,7 @@ TXString GdtfGeometry::GetUnresolvedModelRef() const
 void GdtfGeometry::SetUnresolvedModelRef(GdtfModelPtr ref)
 {
 	ASSERTN(kEveryone, ref != nullptr);
+	if ( !(ref != nullptr) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eGeometry); SceneData::GdtfFixture::AddError(error); }
 	fModelReference = ref;
 }
 
@@ -2401,6 +2414,7 @@ GdtfDmxChannel::GdtfDmxChannel(GdtfDmxMode* parent)
 	fGeomRef				= nullptr;
 
 	ASSERTN(kEveryone, parent != nullptr);
+	if ( !(parent != nullptr) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eDmxChannel); SceneData::GdtfFixture::AddError(error); }
 	fParent = parent;
 }
 
@@ -2651,7 +2665,10 @@ const TXString& GdtfDmxChannel::GetName()
 		this->SetName(dmxChannelName);
 
 		ASSERTN(kEveryone, fGeomRef != nullptr);
+		if ( !(fGeomRef != nullptr) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eDmxChannel); SceneData::GdtfFixture::AddError(error); }
 		ASSERTN(kEveryone, fLogicalChannels.size() > 0);
+		if ( !(fLogicalChannels.size() > 0) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eDmxChannel); SceneData::GdtfFixture::AddError(error); }
+
 	}
 
 	return fName_AutoGenerated;
@@ -2791,6 +2808,7 @@ void GdtfDmxLogicalChannel::SetDmxMaster(EGdtfDmxMaster master)
 void GdtfDmxLogicalChannel::SetNextLogicalChannel(GdtfDmxLogicalChannel* next)
 {
 	ASSERTN(kEveryone, fNextLogicalChannel == nullptr);
+	if ( !(fNextLogicalChannel == nullptr) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eDmxLogicalChannel); SceneData::GdtfFixture::AddError(error); }
 	fNextLogicalChannel = next;
 }
 
@@ -2906,6 +2924,7 @@ const TXString& GdtfDmxLogicalChannel::GetName()
 		TXString name;
 		if(fAttribute){ name +=fAttribute->GetName(); }
 		ASSERTN(kEveryone, fAttribute != nullptr);
+		if ( !(fAttribute != nullptr) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eDmxLogicalChannel); SceneData::GdtfFixture::AddError(error); }
 		
 
 		this->SetName(name);
@@ -2994,6 +3013,7 @@ GdtfDmxChannelFunction::~GdtfDmxChannelFunction()
 void GdtfDmxChannelFunction::SetNextFunction(GdtfDmxChannelFunction* next)
 {
 	ASSERTN(kEveryone, fNextFunction == nullptr);
+	if ( !(fNextFunction == nullptr) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eDmxChannelFunction); SceneData::GdtfFixture::AddError(error); }
 	fNextFunction = next;
 }
 
@@ -3048,6 +3068,7 @@ void GdtfDmxChannelFunction::OnPrintToFile(IXMLFileNodePtr pNode)
 	EGdtfChannelBitResolution chanelReso = GetParentDMXChannel()->GetChannelBitResolution();
 
 	ASSERTN(kEveryone, fAttribute!= nullptr);
+	if ( !(fAttribute!= nullptr) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eDmxChannelFunction); SceneData::GdtfFixture::AddError(error); }
 	// ------------------------------------------------------------------------------------
 	// Print node attributes
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionName,				fName);
@@ -3069,6 +3090,7 @@ void GdtfDmxChannelFunction::OnPrintToFile(IXMLFileNodePtr pNode)
 	if(fModeMaster_Channel)
 	{
 		ASSERTN(kEveryone, (fModeMaster_Function == nullptr));
+		if ( !(fModeMaster_Function == nullptr) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eDmxChannelFunction); SceneData::GdtfFixture::AddError(error); }
 		pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeMaster,				fModeMaster_Channel->GetNodeReference());	
 		pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeFrom,				GdtfConverter::ConvertDMXValue(fDmxModeStart, fModeMaster_Channel->GetChannelBitResolution()));	
 		pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeTo,					GdtfConverter::ConvertDMXValue(fDmxModeEnd,   fModeMaster_Channel->GetChannelBitResolution()));	
@@ -3076,6 +3098,7 @@ void GdtfDmxChannelFunction::OnPrintToFile(IXMLFileNodePtr pNode)
 	if(fModeMaster_Function)
 	{
 		ASSERTN(kEveryone, (fModeMaster_Channel == nullptr));
+		if ( !(fModeMaster_Channel == nullptr) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eDmxChannelFunction); SceneData::GdtfFixture::AddError(error); }
 		pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeMaster,				fModeMaster_Function->GetNodeReference());	
 		pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeFrom,				GdtfConverter::ConvertDMXValue(fDmxModeStart, fModeMaster_Function->GetParentDMXChannel()->GetChannelBitResolution()));	
 		pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeTo,					GdtfConverter::ConvertDMXValue(fDmxModeEnd,   fModeMaster_Function->GetParentDMXChannel()->GetChannelBitResolution()));	
@@ -3373,6 +3396,7 @@ void GdtfDmxChannelFunction::ResolveModeMasterDmx(EGdtfChannelBitResolution reso
 void GdtfDmxChannelFunction::SetModeMaster_Channel(GdtfDmxChannel* channel)
 {
 	ASSERTN(kEveryone, fModeMaster_Function == nullptr);
+	if ( !(fModeMaster_Function == nullptr) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eDmxChannelFunction); SceneData::GdtfFixture::AddError(error); }
 	fModeMaster_Function = nullptr;
 	fModeMaster_Channel = channel;
 }
@@ -3380,6 +3404,7 @@ void GdtfDmxChannelFunction::SetModeMaster_Channel(GdtfDmxChannel* channel)
 void GdtfDmxChannelFunction::SetModeMaster_Function(GdtfDmxChannelFunction* function)
 {
 	ASSERTN(kEveryone, fModeMaster_Channel == nullptr);
+	if ( !(fModeMaster_Channel == nullptr) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eDmxChannelFunction); SceneData::GdtfFixture::AddError(error); }
 	fModeMaster_Channel = nullptr;
 	fModeMaster_Function = function;
 }
@@ -3478,6 +3503,7 @@ GdtfDmxChannelSet::~GdtfDmxChannelSet()
 void GdtfDmxChannelSet::SetNextChannelSet(GdtfDmxChannelSet* next)
 {
 	ASSERTN(kEveryone, fNextChannelSet == nullptr);
+	if ( !(fNextChannelSet == nullptr) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eDmxChannelSet); SceneData::GdtfFixture::AddError(error); }
 	fNextChannelSet = next;
 }
 
@@ -4235,6 +4261,7 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 	fReaded			= false;
 	fHasLinkedGuid	= false;
 	ASSERTN(kEveryone, __ERROR_CONTAINER_POINTER == nullptr);
+	if ( !(__ERROR_CONTAINER_POINTER == nullptr) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixture); SceneData::GdtfFixture::AddError(error); }
 	__ERROR_CONTAINER_POINTER = & this->fErrorContainer; 
 	
 	//-------------------------------------------------------------------------------------------------
@@ -4254,7 +4281,8 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 	//---------------------------------------------------------------------------------------------
 	// check if this was good
 	fWorkingFolder->ExistsOnDisk(exists);
-	ASSERTN(kEveryone, exists = true);
+	ASSERTN(kEveryone, exists == true);
+	if ( !(exists == true) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixture); SceneData::GdtfFixture::AddError(error); }
 	
 	
 	//-------------------------------------------------------------------------------------------------
@@ -4305,7 +4333,11 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 		fReaded = false;
 		return;
 	}
-	if (hasCheckSum) { ASSERTN(kEveryone, checksumIsFine == true); }
+	if (hasCheckSum)
+	{
+		ASSERTN(kEveryone, checksumIsFine == true);
+		if ( !(checksumIsFine == true) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixture); SceneData::GdtfFixture::AddError(error); }
+	}
 	
 	
 	//-------------------------------------------------------------------------------------------------
@@ -4357,6 +4389,7 @@ void GdtfFixture::AutoGenerateNames(GdtfDmxModePtr dmxMode)
 			//------------------------------------------------------------------------------------------------
 			//  Create Names for DMX Channel
 			ASSERTN(kEveryone, dmxChannel->GetGeomRef());
+			if ( !(dmxChannel->GetGeomRef()) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixture); SceneData::GdtfFixture::AddError(error); }
 			if ( ! dmxChannel->GetGeomRef()) { continue; }
 			
 			TXString geometryRef = dmxChannel->GetGeomRef()->GetName();
@@ -4367,6 +4400,7 @@ void GdtfFixture::AutoGenerateNames(GdtfDmxModePtr dmxMode)
 				//------------------------------------------------------------------------------------------------
 				//  Create Names for Logical Channels
 				ASSERTN(kEveryone, !logicalChannel->GetUnresolvedAttribRef().IsEmpty());
+				if ( !(!logicalChannel->GetUnresolvedAttribRef().IsEmpty()) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixture); SceneData::GdtfFixture::AddError(error); }
 				logicalChannel->SetName(logicalChannel->GetUnresolvedAttribRef());
 				
 				// Set first Attribute
@@ -4381,6 +4415,7 @@ void GdtfFixture::AutoGenerateNames(GdtfDmxModePtr dmxMode)
 					if (function->GetName().IsEmpty())
 					{
 						ASSERTN(kEveryone, !function->getUnresolvedAttrRef().IsEmpty());
+						if ( !(!function->getUnresolvedAttrRef().IsEmpty()) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixture); SceneData::GdtfFixture::AddError(error); }
 						TXString functionName = function->getUnresolvedAttrRef();
 						
 						functionName += " ";
@@ -4495,6 +4530,7 @@ void GdtfFixture::ResolveGeometryRefs_Recursive(GdtfGeometryPtr geometry)
 		}
 		
 		ASSERTN(kEveryone, linkedModel != nullptr);
+		if ( !(linkedModel != nullptr) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixture); SceneData::GdtfFixture::AddError(error); }
 		if (linkedModel)	{ geometry->SetUnresolvedModelRef( linkedModel ); }
 	}
 
@@ -4504,10 +4540,12 @@ void GdtfFixture::ResolveGeometryRefs_Recursive(GdtfGeometryPtr geometry)
 	{
 		GdtfGeometryReferencePtr geoRef = dynamic_cast<GdtfGeometryReferencePtr>(geometry);
 		ASSERTN(kEveryone, geoRef != nullptr);
+		if ( !(geoRef != nullptr) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixture); SceneData::GdtfFixture::AddError(error); }
 		if(geoRef)
 		{
 			GdtfGeometryPtr geo = this->ResolveGeometryRef(geoRef->GetUnresolvedLinkedGeometry(), fGeometries);
 			ASSERTN(kEveryone, geo != nullptr);
+			if ( !(geo != nullptr) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixture); SceneData::GdtfFixture::AddError(error); }
 			geoRef->SetLinkedGeometry(geo);
 		}
 	}
@@ -4535,6 +4573,7 @@ void GdtfFixture::ResolveAttribRefs()
 			}
 			
 			ASSERTN(kEveryone, actGrpPtr != nullptr);
+			if ( !(actGrpPtr != nullptr) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixture); SceneData::GdtfFixture::AddError(error); }
 			if (actGrpPtr)	{ attr->SetActivationGroup (actGrpPtr); }
 		}
 		
@@ -4552,6 +4591,7 @@ void GdtfFixture::ResolveAttribRefs()
 			}
 		}
 		ASSERTN(kEveryone, featPtr != nullptr);
+		if ( !(featPtr != nullptr) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixture); SceneData::GdtfFixture::AddError(error); }
 		if (featPtr != nullptr)	{ attr->SetFeature (featPtr); }
 		
 		
@@ -4563,6 +4603,7 @@ void GdtfFixture::ResolveAttribRefs()
 			GdtfAttributePtr mainAttribute = getAttributeByRef(mainAttributeRef);
 			
 			ASSERTN(kEveryone, mainAttribute != nullptr);
+			if ( !(mainAttribute != nullptr) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixture); SceneData::GdtfFixture::AddError(error); }
 			if (mainAttribute != nullptr)	{ attr->SetMainAttribute(mainAttribute); }
 
 		}
@@ -4587,6 +4628,7 @@ void GdtfFixture::ResolveDmxModeRefs()
 			
 			// Check if there is a
 			ASSERTN(kEveryone, geomPtr != nullptr);
+			if ( !(geomPtr != nullptr) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixture); SceneData::GdtfFixture::AddError(error); }
 			if (geomPtr != nullptr) { dmxMode->SetGeomRef(geomPtr);		 }
 		}
 		
@@ -4640,6 +4682,7 @@ void GdtfFixture::ResolveDMXModeMasters()
 
 
 						ASSERTN(kEveryone, resolved);
+						if ( !(resolved) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixture); SceneData::GdtfFixture::AddError(error); }
 						
 					}
 				}
@@ -4670,6 +4713,7 @@ void GdtfFixture::ResolveDmxChannelRefs(GdtfDmxModePtr dmxMode)
 		GdtfGeometryPtr geomPtr = nullptr;
 		TXString unresolvedGeoRef	= chnl->GetUnresolvedGeomRef();
 		ASSERTN(kEveryone, ! unresolvedGeoRef.IsEmpty() );
+		if ( !(! unresolvedGeoRef.IsEmpty()) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixture); SceneData::GdtfFixture::AddError(error); }
 		if (!unresolvedGeoRef.IsEmpty())
 		{
 			for (GdtfGeometryPtr geom : fGeometries)
@@ -4681,6 +4725,7 @@ void GdtfFixture::ResolveDmxChannelRefs(GdtfDmxModePtr dmxMode)
 			}
 			
 			ASSERTN(kEveryone, geomPtr != nullptr);
+			if ( !(geomPtr != nullptr) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixture); SceneData::GdtfFixture::AddError(error); }
 			if (geomPtr){ chnl->SetGeomRef (geomPtr); }
 		}
 		
@@ -4723,6 +4768,7 @@ void GdtfFixture::ResolveDmxLogicalChanRefs(GdtfDmxChannelPtr dmxChnl)
 			}
 			
 			ASSERTN(kEveryone, attrPtr != nullptr);
+			if ( !(attrPtr != nullptr) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixture); SceneData::GdtfFixture::AddError(error); }
 			if (attrPtr != nullptr)	{ logChnl->SetAttribute(attrPtr); }
 		}
 		
@@ -5107,6 +5153,7 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 							 else															{ DSTOP((kEveryone,"There is a node that was not aspected!")); }
 							 
 							 ASSERTN(kEveryone, geometry != nullptr);
+							if ( !(geometry != nullptr) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixture); SceneData::GdtfFixture::AddError(error); }
 							 if (geometry)
 							 {
 								 geometry->ReadFromNode(objNode);
@@ -5580,6 +5627,7 @@ const GdtfPNGFile& GdtfFixture::GetPNGFileFullPath()
 	TXString				workingFolder;
 	
 	ASSERTN(kEveryone, fWorkingFolder != nullptr);
+	if ( !(fWorkingFolder != nullptr) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixture); SceneData::GdtfFixture::AddError(error); }
 	if (fWorkingFolder) { fWorkingFolder->GetFullPath(workingFolder); }
 	
 	// Set to store
@@ -8802,6 +8850,7 @@ void SceneData::GdtfMacroVisualValue::OnPrintToFile(IXMLFileNodePtr pNode)
 
 	EGdtfChannelBitResolution resolution = EGdtfChannelBitResolution::eGdtfChannelBitResolution_8;
 	ASSERTN(kEveryone, fChannelFunctionRef != nullptr);
+	if ( !(fChannelFunctionRef != nullptr) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixture); SceneData::GdtfFixture::AddError(error); }
 	if(fChannelFunctionRef)
 	{
 		fChannelFunctionRef->GetParentDMXChannel()->GetChannelBitResolution();
@@ -8822,6 +8871,7 @@ void SceneData::GdtfMacroVisualValue::OnReadFromNode(const IXMLFileNodePtr & pNo
 
 	EGdtfChannelBitResolution resolution = EGdtfChannelBitResolution::eGdtfChannelBitResolution_8;
 	ASSERTN(kEveryone, fChannelFunctionRef != nullptr);
+	if ( !(fChannelFunctionRef != nullptr) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixture); SceneData::GdtfFixture::AddError(error); }
 	if(fChannelFunctionRef)
 	{
 		fChannelFunctionRef->GetParentDMXChannel()->GetChannelBitResolution();

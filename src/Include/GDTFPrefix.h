@@ -102,7 +102,18 @@ namespace VectorworksMVR
             eValueError_RDMParamNoMatchingEntry             = 9,
             eMissingFile                                    = 10,
             eValueError_WrongFormat                         = 11,
-
+            eWrongNodeName                                  = 12,
+            eFeature                                        = 13,
+            eAttribute                                      = 14,
+            eWheelSlot                                      = 15,
+            eModel                                          = 16,
+            eGeometry                                       = 17,
+            eDmxChannel                                     = 18,
+            eDmxLogicalChannel                              = 19,
+            eDmxChannelFunction                             = 20,
+            eDmxChannelSet                                  = 21,
+            eFixture                                        = 22,
+            
         };
 		
 		enum class EGdtfPhysicalUnit
