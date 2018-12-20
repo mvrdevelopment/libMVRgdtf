@@ -1178,3 +1178,17 @@ VCOMError CXMLFileNodeImpl::SetNodeName(const TXString &newName)
 	return error;
 }
 
+VCOMError CXMLFileNodeImpl::GetLineNumber(size_t& line, size_t& column)
+{
+	ASSERTN( kEveryone, fRefCnt > 0 );
+	if ( fRefCnt <= 0 )
+		return kVCOMError_NotInitialized;
+	if ( fpNode == NULL || fpDomDocument == NULL )
+		return kVCOMError_NotInitialized;
+
+	line = 0;
+	column = 0;
+	
+	return kVCOMError_NoError;
+}
+

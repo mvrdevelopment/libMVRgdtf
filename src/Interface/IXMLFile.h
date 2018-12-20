@@ -87,6 +87,7 @@ namespace VectorWorks
 			virtual VCOMError VCOM_CALLTYPE	GetNodeAttributes(TXStringArray& outArrNodeAttributes) = 0;
             virtual VCOMError VCOM_CALLTYPE CreateChildNodeBeforeIndex(const TXString& name, size_t index, IXMLFileNode** ppOutNode) = 0;
             virtual VCOMError VCOM_CALLTYPE AddCopyOfExistingNodeBeforeIndex(const IXMLFileNode * existingNode, size_t index, IXMLFileNode** ppOutNode) = 0;
+			virtual VCOMError VCOM_CALLTYPE   GetLineNumber(size_t& line, size_t& column) = 0;
 		};
 
 		// ----------------------------------------------------------------------------------------------------
