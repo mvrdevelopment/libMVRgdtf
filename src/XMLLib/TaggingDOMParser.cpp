@@ -2,48 +2,23 @@
 
 #include "TaggingDOMParser.h"
 
-TaggingDOMParser::TaggingDOMParser()
+TaggingDOMParser::~TaggingDOMParser()
 {
-    std::cout << "INIT TaggingDOMParser" << std::endl;
 }
 
-void TaggingDOMParser::startElement(
-    const XMLElementDecl &elemDecl,
-    const unsigned int uriId,
-    const XMLCh *const prefixName,
-    const RefVectorOf< XMLAttr > &attrList,
-    const unsigned int attrCount,
-    const bool isEmpty,
-    const bool isRoot
-    ) 
+void TaggingDOMParser::endElement
+    (
+        const   XMLElementDecl& elemDecl
+        , const unsigned int    urlId
+        , const bool            isRoot
+        , const XMLCh* const    elemPrefix
+    )
 {
-    std::cout << "startElement" << std::endl;
+        TXString txchars  = elemDecl.getBaseName();
+
+        const Locator* locator = getScanner()->getLocator();
+        std::cout << "endElement " << txchars.GetCharPtr() << " LineNumber " << locator->getLineNumber() << std::endl;
 
     // supercall
-    XercesDOMParser::startElement(elemDecl, uriId, prefixName, attrList, attrCount, isEmpty, isRoot);
-
-}
-
-void TaggingDOMParser::startDocument() 
-{
-        std::cout << "startDocument" << std::endl;
-
-    // supercall
-    XercesDOMParser::startDocument();
-
-}
-
-void TaggingDOMParser::docCharacters
-(
-    const   XMLCh* const    chars
-    , const XMLSize_t       length
-    , const bool            cdataSection
-)
-{
-    TXString txchars (chars, length);
-    const Locator* locator = getScanner()->getLocator();
-    std::cout << "docCharacters " << txchars.GetCharPtr() << " LineNumber " << locator->getLineNumber() << std::endl;
-
-    // supercall
-    XercesDOMParser::docCharacters(chars, length, cdataSection);
+    XercesDOMParser::endElement(elemDecl, urlId, isRoot, elemPrefix);
 };
