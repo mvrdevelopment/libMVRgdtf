@@ -18,6 +18,8 @@ public:
 private:
 	GdtfDefines::EGdtfParsingError fErrorType;
 	TXString					   fAttributeNodeName;
+	size_t						   fLineNumber;
+	size_t						   fColumn;
 	
 	void	CheckValidValue()	const;
 

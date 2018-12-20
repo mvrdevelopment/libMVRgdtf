@@ -4,6 +4,7 @@
 
 #include "XMLFileImpl.h"
 #include "XMLFileNodeImpl.h"
+#include "TaggingDOMParser.h"
 
 using namespace VectorWorks::Filing;
 using namespace XML;
@@ -1176,5 +1177,31 @@ VCOMError CXMLFileNodeImpl::SetNodeName(const TXString &newName)
 	
 	
 	return error;
+}
+
+VCOMError CXMLFileNodeImpl::GetLineNumber(size_t& line, size_t& column)
+{
+	ASSERTN( kEveryone, fRefCnt > 0 );
+	if ( fRefCnt <= 0 )
+		return kVCOMError_NotInitialized;
+	if ( fpNode == NULL || fpDomDocument == NULL )
+		return kVCOMError_NotInitialized;
+
+
+
+	void* taggedData = fpNode->getUserData(tagKey);
+
+	Tag* tagObj = (Tag*)taggedData;
+
+	if(tagObj)
+	{
+		line 	= tagObj->lineNumber;
+		column 	= tagObj->columnNumber;
+
+		return kVCOMError_NoError;
+
+	}
+	
+	return kVCOMError_Failed;
 }
 

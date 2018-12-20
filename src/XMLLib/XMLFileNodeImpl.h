@@ -50,6 +50,7 @@ namespace XML
 		virtual VCOMError 	VCOM_CALLTYPE	GetNodeAttributes(TXStringArray& outArrNodeAttributes);
         virtual VCOMError 	VCOM_CALLTYPE	CreateChildNodeBeforeIndex(const TXString& name, size_t index, IXMLFileNode** ppOutNode);
         virtual VCOMError   VCOM_CALLTYPE   AddCopyOfExistingNodeBeforeIndex(const IXMLFileNode* existingNode, size_t index, IXMLFileNode** ppOutNode);
+		virtual VCOMError   VCOM_CALLTYPE   GetLineNumber(size_t& line, size_t& column);
 		
 	// IVWUnknown
 	public:

@@ -2,6 +2,7 @@
 
 #include "XMLFileImpl.h"
 #include "XMLFileNodeImpl.h"
+#include "TaggingDOMParser.h"
 
 using namespace VectorWorks::Filing;
 using namespace XML;
@@ -9,11 +10,10 @@ using namespace VWFC::Tools;
 
 /*static*/ VCOMError	CXMLFileImpl::fLastError;
 
-#if BUG
 class XmlDomErrorHandler: public HandlerBase
 {
 public:
-    XmlDomErrorHandler(ErrorHandler* defaultHandler) : defaultHandler(defaultHandler) {}
+    XmlDomErrorHandler(ErrorHandler* defaultHandler) : defaultHandler(defaultHandler) { }
     ~XmlDomErrorHandler()
     {
         // someone needs to clean up any chained handlers; may as well be here.
@@ -22,31 +22,30 @@ public:
     
     void fatalError(const SAXParseException &ex) override
     {
-        msg(__FUNCTION__, ex);
-        if (defaultHandler) defaultHandler->fatalError(ex); // chain to any prior handler
+        //msg(__FUNCTION__, ex);
+        //if (defaultHandler) defaultHandler->fatalError(ex); // chain to any prior handler
     }
     
     void error(const SAXParseException &ex) override
     {
-        msg(__FUNCTION__, ex);
-        if (defaultHandler) defaultHandler->error(ex);      // chain to any prior handler
+        //msg(__FUNCTION__, ex);
+        //if (defaultHandler) defaultHandler->error(ex);      // chain to any prior handler
     }
     
     void warning(const SAXParseException &ex) override
     {
-        msg(__FUNCTION__, ex);
-        if (defaultHandler) defaultHandler->warning(ex);    // chain to any prior handler
+        //msg(__FUNCTION__, ex);
+        //if (defaultHandler) defaultHandler->warning(ex);    // chain to any prior handler
     }
 private:
     void msg(const char* const type, const SAXParseException &ex)
     {
         TXString temp(ex.getMessage());
-        DMSG((kRBerge, "%s: %s\n", type, (const char *)temp));
+        //DMSG((kEveryone, "%s: %s\n", type, (const char *)temp));
     }
     
     ErrorHandler* defaultHandler;
 };
-#endif
 
 // ----------------------------------------------------------------------------------------------------
 CXMLFileImpl::CXMLFileImpl()
@@ -217,30 +216,25 @@ VCOMError CXMLFileImpl::ReadFile(IFileIdentifier* pFileID)
 	fLastError			= kVCOMError_XMLFile_Parser;
 	fpDomDocument		= NULL;
 	fpDocRoot			= NULL;
-#if BUG
     ErrorHandler* errorHandler = NULL;
-#endif
 
 
 	if ( fpXercesDOMParser )
     {
-#if BUG
         errorHandler = fpXercesDOMParser->getErrorHandler();
         fpXercesDOMParser->setErrorHandler(NULL);
         if (errorHandler)
             delete errorHandler;
-#endif
 		delete fpXercesDOMParser;
     }
 
-	fpXercesDOMParser	= new XercesDOMParser();
+	fpXercesDOMParser	= new TaggingDOMParser();
+	fpXercesDOMParser->useScanner(XMLUni::fgWFXMLScanner);
 
 	if ( fpXercesDOMParser != NULL ) {
 		try {
-#if BUG
             errorHandler = fpXercesDOMParser->getErrorHandler();    // Null now, but someday maybe...
             fpXercesDOMParser->setErrorHandler(new XmlDomErrorHandler(errorHandler));
-#endif
 
 #ifdef GS_LIN
             // LINUX_IMPLEMENTATION - done
@@ -288,29 +282,23 @@ VCOMError CXMLFileImpl::ReadBuffer(IXMLFileIOBuffer* pInputBuffer, EXMLEncoding 
 	fLastError			= kVCOMError_XMLFile_Parser;
 	fpDomDocument		= NULL;
 	fpDocRoot			= NULL;
-#if BUG
     ErrorHandler* errorHandler = NULL;
-#endif
 
 
     if ( fpXercesDOMParser )
     {
-#if BUG
         errorHandler = fpXercesDOMParser->getErrorHandler();
         fpXercesDOMParser->setErrorHandler(NULL);
         if (errorHandler)
             delete errorHandler;
-#endif
         delete fpXercesDOMParser;
     }
 
-	fpXercesDOMParser	= new XercesDOMParser();
+	fpXercesDOMParser	= new TaggingDOMParser();
 
 	if ( fpXercesDOMParser != NULL ) {
-#if BUG
         errorHandler = fpXercesDOMParser->getErrorHandler();    // Null now, but someday maybe...
         fpXercesDOMParser->setErrorHandler(new XmlDomErrorHandler(errorHandler));
-#endif
 
 		size_t		xmlBufferSize		= 0;
 		if ( VCOM_SUCCEEDED( pInputBuffer->GetDataSize( xmlBufferSize ) ) ) {

@@ -12,7 +12,9 @@
 // GdtfObject
 GdtfParsingError::GdtfParsingError(GdtfDefines::EGdtfParsingError type)
 {
-    fErrorType = type;
+    fErrorType  = type;
+    fLineNumber = 0;
+    fColumn     = 0;
 }
 
 GdtfParsingError::~GdtfParsingError()
@@ -48,6 +50,7 @@ const TXString& GdtfParsingError::GetErrorMessage() const
         {
             GdtfParsingError error (GdtfDefines::EGdtfParsingError::eMissingMandatoryAttribute);
             error.fAttributeNodeName = attribute + " " + nodeName;
+            pNode->GetLineNumber(error.fLineNumber, error.fColumn);
             SceneData::GdtfFixture::AddError(error);
         }
     }
@@ -65,6 +68,7 @@ const TXString& GdtfParsingError::GetErrorMessage() const
     {
             GdtfParsingError error(GdtfDefines::EGdtfParsingError::eWrongAttribute);
             error.fAttributeNodeName = attribute + " " + nodeName;
+            pNode->GetLineNumber(error.fLineNumber, error.fColumn);
             SceneData::GdtfFixture::AddError(error);
     }
 
