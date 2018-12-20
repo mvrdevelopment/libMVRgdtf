@@ -358,46 +358,7 @@ void GdtfDmxUnittest::ReadFile()
 		IGdtfDmxChannelPtr bit8channel;
 		__checkVCOM(mode->GetDmxChannelAt(0, &bit8channel));
 		Check8bitChannel(bit8channel);
-
-		Sint32 dmxBreakChannel1 = 0;
-		__checkVCOM(bit8channel->GetDmxBreak(dmxBreakChannel1));
-		this->checkifEqual("Check DMX Break Channel 1 - Default Value", 1, dmxBreakChannel1);
-
-		Sint32 dmxCoarseChannel1 = 0;
-		__checkVCOM(bit8channel->GetCoarse(dmxCoarseChannel1));
-		this->checkifEqual("Check DMX Coarse Channel 1 - Default Value", 1, dmxCoarseChannel1);
-
-		Sint32 dmxFineChannel1 = 0;
-		__checkVCOM(bit8channel->GetFine(dmxFineChannel1));
-		this->checkifEqual("Check DMX Fine Channel 1 - Default Value", 0, dmxFineChannel1);
-
-		Sint32 dmxUltraChannel1 = 0;
-		__checkVCOM(bit8channel->GetUltra(dmxUltraChannel1));
-		this->checkifEqual("Check DMX Ultra Channel 1 - Default Value", 0, dmxUltraChannel1);
-
-		Sint32 dmxUberChannel1 = 0;
-		__checkVCOM(bit8channel->GetUber(dmxUberChannel1));
-		this->checkifEqual("Check DMX Uber Channel 1 - Default Value", 0, dmxUberChannel1);
-
-		GdtfDefines::EGdtfDmxFrequency dmxFrequencyChannel1;
-		__checkVCOM(bit8channel->GetDmxFrequency(dmxFrequencyChannel1));
-		this->checkifEqual("Check DMX Frequency Channel 1 - Default Value", eGdtfDmxFrequency_30, dmxFrequencyChannel1);
-
-		DmxValue dmxDefaultValueChannel1 = 0;
-		__checkVCOM(bit8channel->GetDefaultValue(dmxDefaultValueChannel1));
-		this->checkifEqual("Check DMX Uber Channel 1 - Default Value", (DmxValue)0, dmxDefaultValueChannel1);
-
-		bool hasHighlight = 0;
-		__checkVCOM(bit8channel->HasHighlight(hasHighlight));
-		this->checkifEqual("Check DMX Break Channel 1 - Highlight", false, hasHighlight);
-
-		double dmxMibFadeChannel1 = 0;
-		__checkVCOM(bit8channel->GetMoveInBlackFrames(dmxMibFadeChannel1));
-		this->checkifEqual("Check DMX Uber Channel 1 - Default Value", (double)0, dmxMibFadeChannel1);
-
-		double dmxChangeTimeLimit1 = 0;
-		__checkVCOM(bit8channel->GetDmxChangeTimeLimit(dmxChangeTimeLimit1));
-		this->checkifEqual("Check DMX ChangeTimeLimit Channel 1 - Default Value", (double)0, dmxChangeTimeLimit1);
+		CheckDmxChannel(bit8channel, 1, 1, 0, 0, 0,eGdtfDmxFrequency_30, (DmxValue)0, false ,(double)0, (double)0);
 
 		//----------------------------------------------------------------
 		// Read 16 bit Channel
@@ -494,31 +455,7 @@ void GdtfDmxUnittest::ReadFile()
 	}
 }
 
-void GdtfDmxUnittest::CheckChannelSet(IGdtfDmxChannelSetPtr& channelSet, std::string name, DmxValue start, DmxValue end)
-{
-	this->checkifEqual("Check Name ", name, channelSet->GetName());
 
-	DmxValue thisStart = 0;
-	__checkVCOM(channelSet->GetDmxStartAddress(thisStart));
-	this->checkifEqual("Check Start ", start, thisStart);
-
-	DmxValue thisEnd = 0;
-	__checkVCOM(channelSet->GetDmxEndAddress(thisEnd));
-	this->checkifEqual("Check End ",  end, thisEnd);
-}
-
-void GdtfDmxUnittest::CheckFunction(VectorworksMVR::IGdtfDmxChannelFunctionPtr& function, std::string name, DmxValue start, DmxValue end)
-{
-	this->checkifEqual("Check Name ", name, function->GetName());
-
-	DmxValue thisStart = 0;
-	__checkVCOM(function->GetStartAddress(thisStart));
-	this->checkifEqual("Check Start ", start, thisStart);
-
-	DmxValue thisEnd = 0;
-	__checkVCOM(function->GetEndAddress(thisEnd));
-	this->checkifEqual("Check End ",  end, thisEnd);
-}
 
 void GdtfDmxUnittest::Check8bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxChannel)
 {
@@ -706,4 +643,75 @@ void GdtfDmxUnittest::Check24bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxC
 
 	__checkVCOM_NotSet(bit8Function3->GetModeMasterFunction(&gdtfFunction, start, end));
 
+}
+
+void GdtfDmxUnittest::CheckDmxChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxChannel, Sint32 dmxBreak, Sint32 coarse,
+									  Sint32 fine, Sint32 ultra, Sint32 uber, EGdtfDmxFrequency frequency, DmxValue defaultValue,
+									  bool hasHighlight, double MibFade, double dmxChangeLimit)
+{
+	Sint32 thisDmxBreak = 0;
+	__checkVCOM(dmxChannel->GetDmxBreak(thisDmxBreak));
+	this->checkifEqual("Check DmxChannel DMXBreak - Default: 1 ", dmxBreak, thisDmxBreak);
+
+	Sint32 thisDmxCoarse = 0;
+	__checkVCOM(dmxChannel->GetCoarse(thisDmxCoarse));
+	this->checkifEqual("Check DmxChannel Coarse - Default: \"None\" ", coarse, thisDmxCoarse);
+
+	Sint32 thisDmxFine = 0;
+	__checkVCOM(dmxChannel->GetFine(thisDmxFine));
+	this->checkifEqual("Check DmxChannel Fine - Default: \"None\"  ", fine, thisDmxFine);
+
+	Sint32 thisDmxUltra = 0;
+	__checkVCOM(dmxChannel->GetUltra(thisDmxUltra));
+	this->checkifEqual("Check DmxChannel Ultra - Default: \"None\" ", ultra, thisDmxUltra);
+
+	Sint32 thisDmxUber = 0;
+	__checkVCOM(dmxChannel->GetUber(thisDmxUber));
+	this->checkifEqual("Check DmxChannel Uber - Default: \"None\"  ", uber, thisDmxUber);
+
+	GdtfDefines::EGdtfDmxFrequency thisDmxFrequency;
+	__checkVCOM(dmxChannel->GetDmxFrequency(thisDmxFrequency));
+	this->checkifEqual("Check DmxChannel Frequency - Default: \"30\" ", frequency, thisDmxFrequency);
+
+	DmxValue thisDmxDefaultValue = 0;
+	__checkVCOM(dmxChannel->GetDefaultValue(thisDmxDefaultValue));
+	this->checkifEqual("Check DmxChannel DefaultValue - Default: 0/1 ", defaultValue, thisDmxDefaultValue);
+
+	bool thisHasHighlight = 0;
+	__checkVCOM(dmxChannel->HasHighlight(thisHasHighlight));
+	this->checkifEqual("Check DmxChannel Highlight  - Default: \"None\"  ", hasHighlight, thisHasHighlight);
+
+	double thisDmxMibFade = 0;
+	__checkVCOM(dmxChannel->GetMoveInBlackFrames(thisDmxMibFade));
+	this->checkifEqual("Check DmxChannel MibFade - Default: 0 ", (double)0, thisDmxMibFade);
+
+	double thisDmxChangeTimeLimit = 0;
+	__checkVCOM(dmxChannel->GetDmxChangeTimeLimit(thisDmxChangeTimeLimit));
+	this->checkifEqual("Check DmxChannel DMXChangeTimeLimit  - Default: 0 ", (double)0, thisDmxChangeTimeLimit);
+}
+
+void GdtfDmxUnittest::CheckChannelSet(IGdtfDmxChannelSetPtr& channelSet, std::string name, DmxValue start, DmxValue end)
+{
+	this->checkifEqual("Check Name ", name, channelSet->GetName());
+
+	DmxValue thisStart = 0;
+	__checkVCOM(channelSet->GetDmxStartAddress(thisStart));
+	this->checkifEqual("Check Start ", start, thisStart);
+
+	DmxValue thisEnd = 0;
+	__checkVCOM(channelSet->GetDmxEndAddress(thisEnd));
+	this->checkifEqual("Check End ",  end, thisEnd);
+}
+
+void GdtfDmxUnittest::CheckFunction(VectorworksMVR::IGdtfDmxChannelFunctionPtr& function, std::string name, DmxValue start, DmxValue end)
+{
+	this->checkifEqual("Check Name ", name, function->GetName());
+
+	DmxValue thisStart = 0;
+	__checkVCOM(function->GetStartAddress(thisStart));
+	this->checkifEqual("Check Start ", start, thisStart);
+
+	DmxValue thisEnd = 0;
+	__checkVCOM(function->GetEndAddress(thisEnd));
+	this->checkifEqual("Check End ",  end, thisEnd);
 }

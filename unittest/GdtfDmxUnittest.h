@@ -17,7 +17,8 @@ private:
     void ReadFile();
 
     std::string fPath;
-    
+
+    void CheckDmxChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxChannel, Sint32 dmxBreak, Sint32 coarse, Sint32 fine, Sint32 ultra, Sint32 uber, VectorworksMVR::GdtfDefines::EGdtfDmxFrequency frequency, VectorworksMVR::GdtfDefines::DmxValue defaultValue, bool hasHighlight, double MibFade, double dmxChangeLimit);
     void CheckChannelSet(VectorworksMVR::IGdtfDmxChannelSetPtr& channelSet, std::string name, VectorworksMVR::GdtfDefines::DmxValue start, VectorworksMVR::GdtfDefines::DmxValue end);
     void CheckFunction(VectorworksMVR::IGdtfDmxChannelFunctionPtr& function, std::string name, VectorworksMVR::GdtfDefines::DmxValue start, VectorworksMVR::GdtfDefines::DmxValue end);
 
