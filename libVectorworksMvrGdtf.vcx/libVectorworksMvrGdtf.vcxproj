@@ -96,6 +96,7 @@
     <ClCompile Include="..\src\Wrapper\ZIPFileImpl.cpp" />
     <ClCompile Include="..\src\XmlFileHelper.cpp" />
     <ClCompile Include="..\src\XMLLib\ErrorHandler.cpp" />
+    <ClCompile Include="..\src\XMLLib\TaggingDOMParser.cpp" />
     <ClCompile Include="..\src\XMLLib\XMLCore.Xerces.cpp" />
     <ClCompile Include="..\src\XMLLib\XMLFileImpl.cpp" />
     <ClCompile Include="..\src\XMLLib\XMLFileNodeImpl.cpp" />
@@ -197,6 +198,7 @@
     <ClInclude Include="..\src\Wrapper\ZIPFileImpl.h" />
     <ClInclude Include="..\src\XmlFileHelper.h" />
     <ClInclude Include="..\src\XMLLib\ErrorHandler.h" />
+    <ClInclude Include="..\src\XMLLib\TaggingDOMParser.h" />
     <ClInclude Include="..\src\XMLLib\XercesSupport.h" />
     <ClInclude Include="..\src\XMLLib\XMLCore.Xerces.h" />
     <ClInclude Include="..\src\XMLLib\XMLFileImpl.h" />

@@ -267,6 +267,9 @@
     <ClCompile Include="..\src\Implementation\CGdtfXmlParsingError.cpp">
       <Filter>src\Implementation</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\XMLLib\TaggingDOMParser.cpp">
+      <Filter>src\XmlLib</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\XMLLib\ErrorHandler.h">
@@ -568,6 +571,9 @@
     </ClInclude>
     <ClInclude Include="..\src\Implementation\CGdtfXmlParsingError.h">
       <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\XMLLib\TaggingDOMParser.h">
+      <Filter>src\XmlLib</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
