@@ -16,6 +16,7 @@
 
 #include "xercesc/parsers/XercesDOMParser.hpp"
 #include "xercesc/parsers/SAXParser.hpp"
+#include "xercesc/internal/XMLScanner.hpp"
 
 #include "xercesc/dom/DOM.hpp"
 #include "xercesc/dom/DOMError.hpp"

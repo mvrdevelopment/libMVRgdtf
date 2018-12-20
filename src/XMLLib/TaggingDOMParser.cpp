@@ -41,7 +41,8 @@ void TaggingDOMParser::docCharacters
 )
 {
     TXString txchars (chars, length);
-    std::cout << "docCharacters " << txchars.GetCharPtr() << std::endl;
+    const Locator* locator = getScanner()->getLocator();
+    std::cout << "docCharacters " << txchars.GetCharPtr() << " LineNumber " << locator->getLineNumber() << std::endl;
 
     // supercall
     XercesDOMParser::docCharacters(chars, length, cdataSection);
