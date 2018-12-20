@@ -257,9 +257,14 @@ void GdtfDmxUnittest::ReadFile()
 		for(size_t i = 0; i < countParsingErrors; i++)
 		{
 			GdtfDefines::EGdtfParsingError errorType;
+			
+			size_t line   = 0;
+			size_t column = 0;
+
 			IGdtfXmlParsingErrorPtr error;
 			__checkVCOM(gdtfRead->GetParsingErrorAt( i, &error));
 			__checkVCOM(error->GetErrorType(errorType));
+			__checkVCOM(error->GetLineAndColumnNumber(line, column));
 			PrintParsingError(error->GetErrorMessage(), (Sint32)errorType);
 		}
 

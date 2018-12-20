@@ -31,6 +31,16 @@ const TXString& GdtfParsingError::GetErrorMessage() const
     return fAttributeNodeName;
 }
 
+size_t GdtfParsingError::GetLineNumber() const
+{
+    return fLineNumber;
+}
+
+size_t GdtfParsingError::GetColumnNumber() const
+{
+    return fColumn;
+}
+
 /*static*/ void GdtfParsingError::CheckNodeAttributes(IXMLFileNodePtr pNode, const TXStringArray& needed, const TXStringArray& optional) 
 {
    	TXStringArray nodeAttributes;

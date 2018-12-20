@@ -40,6 +40,18 @@ MvrString VectorworksMVR::CGdtfXmlParsingErrorImpl::GetErrorMessage()
 
 }
 
+VCOMError VectorworksMVR::CGdtfXmlParsingErrorImpl::GetLineAndColumnNumber(size_t& line, size_t& column)
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) return kVCOMError_Failed;
+	
+	line   =  fPtr->GetLineNumber();
+	column =  fPtr->GetColumnNumber();
+
+	return kVCOMError_NoError;
+}
+
 void VectorworksMVR::CGdtfXmlParsingErrorImpl::SetPointer(GdtfParsingError* pointer)
 {
 	fPtr		= pointer;

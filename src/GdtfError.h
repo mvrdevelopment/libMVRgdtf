@@ -26,7 +26,8 @@ private:
 public:
 	GdtfDefines::EGdtfParsingError	GetError() const;
 	const TXString&					GetErrorMessage() const;
-	
+	size_t							GetLineNumber() const;
+	size_t							GetColumnNumber() const;
 public:
 	static void	CheckNodeAttributes(IXMLFileNodePtr pNode, const TXStringArray& needed, const TXStringArray& optional);
 };
