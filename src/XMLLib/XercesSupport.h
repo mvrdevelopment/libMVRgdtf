@@ -21,6 +21,7 @@
 #include "xercesc/dom/DOM.hpp"
 #include "xercesc/dom/DOMError.hpp"
 #include "xercesc/dom/DOMErrorHandler.hpp"
+#include <xercesc/dom/DOMUserDataHandler.hpp>
 
 #include "xercesc/sax/HandlerBase.hpp"
 #include "xercesc/sax2/SAX2XMLReader.hpp"

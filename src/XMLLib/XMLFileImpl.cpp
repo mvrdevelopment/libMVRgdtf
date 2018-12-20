@@ -296,6 +296,7 @@ VCOMError CXMLFileImpl::ReadBuffer(IXMLFileIOBuffer* pInputBuffer, EXMLEncoding 
     }
 
 	fpXercesDOMParser	= new TaggingDOMParser();
+	fpXercesDOMParser->useScanner(XMLUni::fgWFXMLScanner)
 
 	if ( fpXercesDOMParser != NULL ) {
         errorHandler = fpXercesDOMParser->getErrorHandler();    // Null now, but someday maybe...
