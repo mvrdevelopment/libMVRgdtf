@@ -22,9 +22,8 @@ struct Tag {
         }
 
     public:
-        std::string systemID;
-        int lineNumber;
-        int columnNumber;
+        size_t lineNumber;
+        size_t columnNumber;
 
     private:
         int referenceCount;
@@ -56,5 +55,9 @@ class TaggingDOMParser : public XercesDOMParser
         Tag* createTag();
    
 
+};
+static const XMLCh        tagKey[] =
+{
+    chLatin_V, chLatin_W, chLatin_D, chLatin_a, chLatin_t, chLatin_a, chNull
 };
 

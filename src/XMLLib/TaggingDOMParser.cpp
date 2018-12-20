@@ -54,7 +54,11 @@ TaggingDOMParser::~TaggingDOMParser()
 {
 }
 
-const XMLCh tagKey = (XMLCh)"VWLineNumber";
+Tag* TaggingDOMParser::createTag()
+{
+    return new Tag();
+}
+
 
 
 void TaggingDOMParser::startElement
@@ -71,19 +75,14 @@ void TaggingDOMParser::startElement
     // supercall
     XercesDOMParser::startElement(elemDecl, urlId, elemPrefix, attrList, attrCount, isEmpty, isRoot);
     
-    TXString txchars  = elemDecl.getBaseName();
-
-    const Locator* locator = getScanner()->getLocator();
-    std::cout << "startElement " << txchars.GetCharPtr() << " LineNumber " << locator->getLineNumber() << std::endl;
-
-
     if(!isEmpty)
     {
+        const Locator* locator = getScanner()->getLocator();
         Tag* tag = createTag();
         tag->lineNumber   = locator->getLineNumber();
         tag->columnNumber = locator->getColumnNumber();
 
-        XercesDOMParser::fCurrentNode->setUserData(*tagKey, tag, dataHandler);
+        XercesDOMParser::fCurrentNode->setUserData(tagKey, tag, dataHandler);
 
         tag->link();
     }

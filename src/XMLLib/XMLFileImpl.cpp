@@ -13,8 +13,7 @@ using namespace VWFC::Tools;
 class XmlDomErrorHandler: public HandlerBase
 {
 public:
-    XmlDomErrorHandler(ErrorHandler* defaultHandler) : defaultHandler(defaultHandler) {        std::cout << "INIT HANDLER" << std::endl;
-}
+    XmlDomErrorHandler(ErrorHandler* defaultHandler) : defaultHandler(defaultHandler) { }
     ~XmlDomErrorHandler()
     {
         // someone needs to clean up any chained handlers; may as well be here.
