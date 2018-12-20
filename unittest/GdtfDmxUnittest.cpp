@@ -358,7 +358,6 @@ void GdtfDmxUnittest::ReadFile()
 		IGdtfDmxChannelPtr bit8channel;
 		__checkVCOM(mode->GetDmxChannelAt(0, &bit8channel));
 		Check8bitChannel(bit8channel);
-		CheckDmxChannel(bit8channel, 1, 1, 0, 0, 0,eGdtfDmxFrequency_30, (DmxValue)0, false ,(double)0, (double)0);
 
 		//----------------------------------------------------------------
 		// Read 16 bit Channel
@@ -459,6 +458,10 @@ void GdtfDmxUnittest::ReadFile()
 
 void GdtfDmxUnittest::Check8bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxChannel)
 {
+	// ---------------------------------------------------------------------------
+	// Check DMXChannel attributes
+	CheckDmxChannel(dmxChannel, 1, 1, 0, 0, 0,eGdtfDmxFrequency_30, (DmxValue)0, false ,(double)0, (double)0);
+	
 	// ---------------------------------------------------------------------------
 	// Get Logical Channels
 	size_t count = 0;
@@ -647,7 +650,7 @@ void GdtfDmxUnittest::Check24bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxC
 
 void GdtfDmxUnittest::CheckDmxChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxChannel, Sint32 dmxBreak, Sint32 coarse,
 									  Sint32 fine, Sint32 ultra, Sint32 uber, EGdtfDmxFrequency frequency, DmxValue defaultValue,
-									  bool hasHighlight, double MibFade, double dmxChangeLimit)
+									  DmxValue highlight, double MibFade, double dmxChangeLimit)
 {
 	Sint32 thisDmxBreak = 0;
 	__checkVCOM(dmxChannel->GetDmxBreak(thisDmxBreak));
@@ -679,7 +682,12 @@ void GdtfDmxUnittest::CheckDmxChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxCha
 
 	bool thisHasHighlight = 0;
 	__checkVCOM(dmxChannel->HasHighlight(thisHasHighlight));
-	this->checkifEqual("Check DmxChannel Highlight  - Default: \"None\"  ", hasHighlight, thisHasHighlight);
+	if (thisHasHighlight)
+	{
+		DmxValue thisHighlight = 0;
+		__checkVCOM(dmxChannel->GetHighlight(thisHighlight));
+		this->checkifEqual("Check DmxChannel HighlightValue  - Default: \"None\"  ", highlight, thisHighlight);
+	}
 
 	double thisDmxMibFade = 0;
 	__checkVCOM(dmxChannel->GetMoveInBlackFrames(thisDmxMibFade));
