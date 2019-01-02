@@ -20,12 +20,11 @@ BINDIR		= x64/Release
 LIBDIR_PRE	= libs
 LIBDIR_POST	= release
 
-
 # compiler, linker and options
-CXX					?= g++					# gnu c++ compiler on all platforms
-CXXFLAGS			= -g -std=c++11			# compiler options
-CXXFLAGSUNITTEST	= -g -std=c++11			# compiler options unit test
-#LDFLAGS			= -shared				# linker options
+CXX					?= g++									# gnu c++ compiler on all platforms
+CXXFLAGS			= -g -std=c++11							# compiler options
+CXXFLAGSUNITTEST	= -g -std=c++11	-DGITPATH=\"$(CURDIR)\"	# compiler options unit test
+#LDFLAGS			= -shared								# linker options
 
 
 XERCESLIBNAME	=

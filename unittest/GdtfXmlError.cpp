@@ -19,11 +19,12 @@ GdtfXmlErrorTest::GdtfXmlErrorTest(const std::string& currentDir)
 #ifdef _WINDOWS
     fPath += std::string("\\XMLBroken.gdtf");
 #else
-    fPath = std::string("/Users/moritzstaffel/Documents/DEV/libVectorworksMvrGdtf/unittest/files/XMLBroken.gdtf");
+	fPath = std::string(GITPATH);
+	fPath += "/unittest/files/XMLBroken.gdtf";
 #endif
 
 
-    std::cout << "Export File to" << fPath << std::endl; 
+    std::cout << "Export File to " << fPath << std::endl; 
 }
 
 GdtfXmlErrorTest::~GdtfXmlErrorTest()
