@@ -13,6 +13,7 @@ class GdtfParsingError
 {
 public:
 	GdtfParsingError(GdtfDefines::EGdtfParsingError type);
+	GdtfParsingError(GdtfDefines::EGdtfParsingError type, size_t lineNumber, size_t column);
     ~GdtfParsingError();
 	
 private:

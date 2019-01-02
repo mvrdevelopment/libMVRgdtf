@@ -48,7 +48,7 @@ void GdtfXmlErrorTest::ReadFile()
 	size_t countErrors = 0;
 	__checkVCOM(gdtfRead->GetParsingErrorCount(countErrors));
 
-	checkifEqual("Count Errors", countErrors, (size_t)1);
+	checkifEqual("Count Errors", countErrors, (size_t)3);
 
 	
 	for(size_t i = 0; i < countErrors; i++)
@@ -56,21 +56,31 @@ void GdtfXmlErrorTest::ReadFile()
 		IGdtfXmlParsingErrorPtr error;
 		__checkVCOM(gdtfRead->GetParsingErrorAt(i, & error));
 
-		GdtfDefines::EGdtfParsingError type;
-		__checkVCOM(error->GetErrorType(type));
+
 
 		if(i == 0)
 		{
-
+			ReadError(error);
 		}
-
 		if(i == 1)
 		{
-
+			ReadError(error);
 		}
-
-
-		std::cout <<  "Error Code "<< (Sint32)type << std::endl;
+		if(i == 2)
+		{
+			ReadError(error);
+		}
 	}
 	
+}
+
+void GdtfXmlErrorTest::ReadError(IGdtfXmlParsingErrorPtr& error)
+{
+	size_t lineNumber  = 0;
+	size_t colNumber   = 0;
+	__checkVCOM(error->GetLineAndColumnNumber(lineNumber, colNumber));
+
+	GdtfDefines::EGdtfParsingError type;
+	__checkVCOM(error->GetErrorType(type));
+
 }

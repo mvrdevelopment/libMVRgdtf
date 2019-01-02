@@ -17,6 +17,14 @@ GdtfParsingError::GdtfParsingError(GdtfDefines::EGdtfParsingError type)
     fColumn     = 0;
 }
 
+GdtfParsingError::GdtfParsingError(GdtfDefines::EGdtfParsingError type, size_t lineNumber, size_t column)
+{
+    fErrorType  = type;
+    fLineNumber = lineNumber;
+    fColumn     = column;
+}
+
+
 GdtfParsingError::~GdtfParsingError()
 {
 }

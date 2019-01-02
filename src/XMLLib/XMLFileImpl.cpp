@@ -3,6 +3,7 @@
 #include "XMLFileImpl.h"
 #include "XMLFileNodeImpl.h"
 #include "TaggingDOMParser.h"
+#include "../GDTFManager.h"
 
 using namespace VectorWorks::Filing;
 using namespace XML;
@@ -22,26 +23,30 @@ public:
     
     void fatalError(const SAXParseException &ex) override
     {
-        //msg(__FUNCTION__, ex);
-        //if (defaultHandler) defaultHandler->fatalError(ex); // chain to any prior handler
+		TXString temp(ex.getMessage());
+		std::cout << "fatalError: " << temp.GetCharPtr() << std::endl;
+
+		GdtfParsingError error (EGdtfParsingError::eXmlParsingError, ex.getLineNumber(), ex.getColumnNumber());
+		SceneData::GdtfFixture::AddError(error);
+
     }
     
     void error(const SAXParseException &ex) override
     {
-        //msg(__FUNCTION__, ex);
-        //if (defaultHandler) defaultHandler->error(ex);      // chain to any prior handler
+		TXString temp(ex.getMessage());
+		std::cout << "error: " << temp.GetCharPtr() << std::endl;
     }
     
     void warning(const SAXParseException &ex) override
     {
-        //msg(__FUNCTION__, ex);
-        //if (defaultHandler) defaultHandler->warning(ex);    // chain to any prior handler
+		TXString temp(ex.getMessage());
+		std::cout << "warning: " << temp.GetCharPtr() << std::endl;
     }
 private:
     void msg(const char* const type, const SAXParseException &ex)
     {
         TXString temp(ex.getMessage());
-        //DMSG((kEveryone, "%s: %s\n", type, (const char *)temp));
+		std::cout << "msg: " << temp.GetCharPtr() << std::endl;
     }
     
     ErrorHandler* defaultHandler;
@@ -74,12 +79,10 @@ CXMLFileImpl::~CXMLFileImpl()
 {
     if ( fpXercesDOMParser != NULL )
     {
-#if BUG
         ErrorHandler* errorHandler = fpXercesDOMParser->getErrorHandler();
         fpXercesDOMParser->setErrorHandler(NULL);
         if (errorHandler)
             delete errorHandler;
-#endif
         delete fpXercesDOMParser;
     }
 

@@ -113,6 +113,7 @@ namespace VectorworksMVR
             eDmxChannelFunction                             = 20,
             eDmxChannelSet                                  = 21,
             eFixture                                        = 22,
+            eXmlParsingError                                = 23,
             
         };
 		

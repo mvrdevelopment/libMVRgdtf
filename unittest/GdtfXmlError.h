@@ -4,6 +4,7 @@
 #pragma once
 #include "Unittest.h"
 
+
 class GdtfXmlErrorTest : public Unittest
 {
 public:
@@ -14,6 +15,7 @@ protected:
 
 private:
     void ReadFile();
+    void ReadError(VectorworksMVR::IGdtfXmlParsingErrorPtr& error);
 
     std::string fPath;
 };
