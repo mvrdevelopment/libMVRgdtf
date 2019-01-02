@@ -511,11 +511,11 @@ void GdtfAttribute::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	needed.push_back(XML_GDTF_AttributeName);
 	needed.push_back(XML_GDTF_AttributePrettyName);
 	needed.push_back(XML_GDTF_AttributeFeature);
-	needed.push_back(XML_GDTF_AttributePhysicalUnit);
-	needed.push_back(XML_GDTF_AttributeColor);
 	optional.push_back(XML_GDTF_AttributeActGroup);
 	optional.push_back(XML_GDTF_AttributefMainAttribute);
-	
+	optional.push_back(XML_GDTF_AttributePhysicalUnit);
+	optional.push_back(XML_GDTF_AttributeColor);
+
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
 	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
@@ -1095,12 +1095,12 @@ void GdtfModel::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	TXStringArray needed;
 	TXStringArray optional;
 	needed.push_back(XML_GDTF_ModelName);
-	needed.push_back(XML_GDTF_ModelLength);
-	needed.push_back(XML_GDTF_ModelWidth);
-	needed.push_back(XML_GDTF_ModelHeight);
-	needed.push_back(XML_GDTF_ModelPrimitiveType);
 	optional.push_back(XML_GDTF_ModelFile);
-	
+	optional.push_back(XML_GDTF_ModelLength);
+	optional.push_back(XML_GDTF_ModelWidth);
+	optional.push_back(XML_GDTF_ModelHeight);
+	optional.push_back(XML_GDTF_ModelPrimitiveType);
+
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
 	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
@@ -1514,9 +1514,9 @@ void GdtfGeometryAxis::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	needed.push_back(XML_GDTF_GeometryName);
 	needed.push_back(XML_GDTF_GeometryModelRef);
 	needed.push_back(XML_GDTF_GeometryMatrix);
-	needed.push_back(XML_GDTF_GeometryAxisFrom);
-	needed.push_back(XML_GDTF_GeometryAxisTo);
-	needed.push_back(XML_GDTF_GeometryAxisSpeed);
+	optional.push_back(XML_GDTF_GeometryAxisFrom);
+	optional.push_back(XML_GDTF_GeometryAxisTo);
+	optional.push_back(XML_GDTF_GeometryAxisSpeed);
 	
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
@@ -1923,15 +1923,15 @@ void GdtfGeometryLamp::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	needed.push_back(XML_GDTF_GeometryName);
 	needed.push_back(XML_GDTF_GeometryModelRef);
 	needed.push_back(XML_GDTF_GeometryMatrix);
-	needed.push_back(XML_GDTF_LampLampType);
-	needed.push_back(XML_GDTF_LampPowerConsumption);
-	needed.push_back(XML_GDTF_LampLuminousIntensity);
-	needed.push_back(XML_GDTF_ColorTemperature);
-	needed.push_back(XML_GDTF_BeamAngle);
-	needed.push_back(XML_GDTF_FieldAngle);
-	needed.push_back(XML_GDTF_BeamRadius);
-	needed.push_back(XML_GDTF_BeamType);
-	needed.push_back(XML_GDTF_BeamColorRenderingIndex);
+	optional.push_back(XML_GDTF_LampLampType);
+	optional.push_back(XML_GDTF_LampPowerConsumption);
+	optional.push_back(XML_GDTF_LampLuminousIntensity);
+	optional.push_back(XML_GDTF_ColorTemperature);
+	optional.push_back(XML_GDTF_BeamAngle);
+	optional.push_back(XML_GDTF_FieldAngle);
+	optional.push_back(XML_GDTF_BeamRadius);
+	optional.push_back(XML_GDTF_BeamType);
+	optional.push_back(XML_GDTF_BeamColorRenderingIndex);
 	
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
@@ -2053,8 +2053,8 @@ void GdtfBreak::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	// Create needed and optional Attribute Arrays
 	TXStringArray needed;
 	TXStringArray optional;
-	needed.push_back(XML_GDTF_BreakOffset);
-	needed.push_back(XML_GDTF_BreakDMXBreak);
+	optional.push_back(XML_GDTF_BreakOffset);
+	optional.push_back(XML_GDTF_BreakDMXBreak);
 	
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
@@ -2616,18 +2616,18 @@ void GdtfDmxChannel::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	// Create needed and optional Attribute Arrays
 	TXStringArray needed;
 	TXStringArray optional;
-	needed.push_back(XML_GDTF_DMXChannelDMXBreak);
-	needed.push_back(XML_GDTF_DMXChannelCoarse);
-	needed.push_back(XML_GDTF_DMXChannelFine);
-	needed.push_back(XML_GDTF_DMXChannelUltra);
-	needed.push_back(XML_GDTF_DMXChannelUber);
-	needed.push_back(XML_GDTF_DMXChannelFrequency);
-	needed.push_back(XML_GDTF_DMXChannelDefault);
-	needed.push_back(XML_GDTF_DMXChannelHighlight);
-	needed.push_back(XML_GDTF_DMXChannelMibFadeFrames);
-	needed.push_back(XML_GDTF_DMXChannelDMXChangeTimeLimit);
 	needed.push_back(XML_GDTF_DMXChannelGeometry);
-	
+	optional.push_back(XML_GDTF_DMXChannelDMXBreak);
+	optional.push_back(XML_GDTF_DMXChannelCoarse);
+	optional.push_back(XML_GDTF_DMXChannelFine);
+	optional.push_back(XML_GDTF_DMXChannelUltra);
+	optional.push_back(XML_GDTF_DMXChannelUber);
+	optional.push_back(XML_GDTF_DMXChannelFrequency);
+	optional.push_back(XML_GDTF_DMXChannelDefault);
+	optional.push_back(XML_GDTF_DMXChannelHighlight);
+	optional.push_back(XML_GDTF_DMXChannelMibFadeFrames);
+	optional.push_back(XML_GDTF_DMXChannelDMXChangeTimeLimit);
+
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
 	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
@@ -2894,8 +2894,8 @@ void GdtfDmxLogicalChannel::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	TXStringArray needed;
 	TXStringArray optional;
 	needed.push_back(XML_GDTF_DMXLogicalChannelAttribute);
-	needed.push_back(XML_GDTF_DMXLogicalChannelSnap);
-	needed.push_back(XML_GDTF_DMXLogicalChannelMaster);
+	optional.push_back(XML_GDTF_DMXLogicalChannelSnap);
+	optional.push_back(XML_GDTF_DMXLogicalChannelMaster);
 	
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
@@ -3238,22 +3238,21 @@ void GdtfDmxChannelFunction::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	// Create needed and optional Attribute Arrays
 	TXStringArray needed;
 	needed.push_back(XML_GDTF_DMXChannelFuntionName);
-	needed.push_back(XML_GDTF_DMXChannelFuntionAttribute);
-	needed.push_back(XML_GDTF_DMXChannelFuntionOriginalAttribute);
-	needed.push_back(XML_GDTF_DMXChannelFuntionDMXFrom);
-	needed.push_back(XML_GDTF_DMXChannelFuntionPhysicalFrom);
-	needed.push_back(XML_GDTF_DMXChannelFuntionPhysicalTo);
-	needed.push_back(XML_GDTF_DMXChannelFuntionRealFade);
-	needed.push_back(XML_GDTF_DMXChannelDMXInvert);
-	needed.push_back(XML_GDTF_DMXChannelEncoderInvert);
-
 
 	TXStringArray optional;
+	optional.push_back(XML_GDTF_DMXChannelFuntionAttribute);
+	optional.push_back(XML_GDTF_DMXChannelFuntionOriginalAttribute);
+	optional.push_back(XML_GDTF_DMXChannelFuntionDMXFrom);
+	optional.push_back(XML_GDTF_DMXChannelFuntionPhysicalFrom);
+	optional.push_back(XML_GDTF_DMXChannelFuntionPhysicalTo);
 	optional.push_back(XML_GDTF_DMXChannelFuntionWheelRef);
 	optional.push_back(XML_GDTF_DMXChannelEmitter);	
 	optional.push_back(XML_GDTF_DMXChannelFuntionModeMaster);
 	optional.push_back(XML_GDTF_DMXChannelFuntionModeFrom);
 	optional.push_back(XML_GDTF_DMXChannelFuntionModeTo);
+	optional.push_back(XML_GDTF_DMXChannelFuntionRealFade);
+	optional.push_back(XML_GDTF_DMXChannelDMXInvert);
+	optional.push_back(XML_GDTF_DMXChannelEncoderInvert);
 
 	
 	//------------------------------------------------------------------------------------
@@ -3596,8 +3595,8 @@ void GdtfDmxChannelSet::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	// Create needed and optional Attribute Arrays
 	TXStringArray needed;
 	TXStringArray optional;
-	needed.push_back(XML_GDTF_DMXChannelSetName);
-	needed.push_back(XML_GDTF_DMXChannelSetDMXFrom);
+	optional.push_back(XML_GDTF_DMXChannelSetName);
+	optional.push_back(XML_GDTF_DMXChannelSetDMXFrom);
 	optional.push_back(XML_GDTF_DMXChannelSetWheelSlotIndexRef);
 
 	if(fSetPhysical)
@@ -3850,9 +3849,9 @@ void GdtfRevision::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	// Create needed and optional Attribute Arrays
 	TXStringArray needed;
 	TXStringArray optional;
-	needed.push_back(XML_GDTF_RevisionText);
 	needed.push_back(XML_GDTF_RevisionDate);
-	
+	optional.push_back(XML_GDTF_RevisionText);
+
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
 	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
@@ -4121,7 +4120,7 @@ void GdtfMacro::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	// Create needed and optional Attribute Arrays
 	TXStringArray needed;
 	TXStringArray optional;
-	needed.push_back(XML_GDTF_MacroDMX);
+	needed.push_back(XML_GDTF_MacroName);
 	
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
@@ -5263,8 +5262,8 @@ void GdtfFixture::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	needed.push_back(XML_GDTF_FixtureManufacturer);
 	needed.push_back(XML_GDTF_FixtureDescription);
 	needed.push_back(XML_GDTF_FixtureTypeID);
-	needed.push_back(XML_GDTF_LinkedUuid);
 	optional.push_back(XML_GDTF_FixtureThumbnail);
+	optional.push_back(XML_GDTF_LinkedUuid);
 
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
@@ -5809,7 +5808,7 @@ void SceneData::GdtfCRIGroup::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	// Create needed and optional Attribute Arrays
 	TXStringArray needed;
 	TXStringArray optional;
-	needed.push_back(XML_GDTF_ColorRenderingIndexGrou_AttrColorTemp);
+	optional.push_back(XML_GDTF_ColorRenderingIndexGrou_AttrColorTemp);
 
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
@@ -5900,8 +5899,8 @@ void SceneData::GdtfCRI::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	// Create needed and optional Attribute Arrays
 	TXStringArray needed;
 	TXStringArray optional;
-	needed.push_back(XML_GDTF_ColorRenderingIndex_AttrCES);
-	needed.push_back(XML_GDTF_ColorRenderingIndex_AttrColorTemp);
+	optional.push_back(XML_GDTF_ColorRenderingIndex_AttrCES);
+	optional.push_back(XML_GDTF_ColorRenderingIndex_AttrColorTemp);
 
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
@@ -6420,7 +6419,6 @@ void SceneData::GdtfRDMParameter::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	TXStringArray needed;
 	TXStringArray optional;
 	needed.push_back(XML_GDTF_RDMParam_AttrName);
-	needed.push_back(XML_GDTF_RDMParam_AttrPID);
 	needed.push_back(XML_GDTF_RDMParam_AttrType);
 	needed.push_back(XML_GDTF_RDMParam_AttrDataType);
 	needed.push_back(XML_GDTF_RDMParam_AttrCommand);
@@ -6430,6 +6428,7 @@ void SceneData::GdtfRDMParameter::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	needed.push_back(XML_GDTF_RDMParam_AttrMaxValue);
 	needed.push_back(XML_GDTF_RDMParam_AttrPDLSize);
 	needed.push_back(XML_GDTF_RDMParam_AttrDescription);
+	optional.push_back(XML_GDTF_RDMParam_AttrPID);
 
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
@@ -7977,7 +7976,7 @@ void SceneData::GdtfRDMValue_SENSOR_DEFINITION::OnErrorCheck(const IXMLFileNodeP
 	needed.push_back(XML_GDTF_RDMValue_SENSOR_DEFINITION_AttrNormalMaxValue);
 	needed.push_back(XML_GDTF_RDMValue_SENSOR_DEFINITION_AttrLowesHighestDetectionSupported);
 	needed.push_back(XML_GDTF_RDMValue_SENSOR_DEFINITION_AttrRecordValueSupported);
-	needed.push_back(XML_GDTF_RDMValue_SENSOR_DEFINITION_Attr_Description);
+	optional.push_back(XML_GDTF_RDMValue_SENSOR_DEFINITION_Attr_Description);
 
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
@@ -8499,7 +8498,7 @@ void SceneData::GdtfMacroDMXStep::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	// Create needed and optional Attribute Arrays
 	TXStringArray needed;
 	TXStringArray optional;
-	needed.push_back(XML_GDTF_MacroDMXStepDuration);
+	optional.push_back(XML_GDTF_MacroDMXStepDuration);
 
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
@@ -8777,9 +8776,9 @@ void SceneData::GdtfMacroVisualStep::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	// Create needed and optional Attribute Arrays
 	TXStringArray needed;
 	TXStringArray optional;
-	needed.push_back(XML_GDTF_MacroVisualStep_AttrDuration);
-	needed.push_back(XML_GDTF_MacroVisualStep_AttrFade);
-	needed.push_back(XML_GDTF_MacroVisualStep_AttrDelay);
+	optional.push_back(XML_GDTF_MacroVisualStep_AttrDuration);
+	optional.push_back(XML_GDTF_MacroVisualStep_AttrFade);
+	optional.push_back(XML_GDTF_MacroVisualStep_AttrDelay);
 
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
