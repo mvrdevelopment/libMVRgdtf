@@ -15,7 +15,7 @@ protected:
 
 private:
     void ReadFile();
-    void ReadError(VectorworksMVR::IGdtfXmlParsingErrorPtr& error);
+    void ReadError(VectorworksMVR::IGdtfXmlParsingErrorPtr& error, size_t lineNumber, size_t colNumber, VectorworksMVR::GdtfDefines::EGdtfParsingError errorType);
 
     std::string fPath;
 };

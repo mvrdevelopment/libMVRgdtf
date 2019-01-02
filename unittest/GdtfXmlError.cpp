@@ -45,7 +45,7 @@ void GdtfXmlErrorTest::ReadFile()
 	//------------------------------------------------------------------------------    
 	// Read Fixture Information
 	IGdtfFixturePtr gdtfRead (IID_IGdtfFixture);
-    __checkVCOMFailed(gdtfRead->ReadFromFile(fPath.c_str()));
+    __checkVCOM(gdtfRead->ReadFromFile(fPath.c_str()));
 
 	size_t countErrors = 0;
 	__checkVCOM(gdtfRead->GetParsingErrorCount(countErrors));
@@ -62,27 +62,32 @@ void GdtfXmlErrorTest::ReadFile()
 
 		if(i == 0)
 		{
-			ReadError(error);
+			ReadError(error, 0, 0, GdtfDefines::EGdtfParsingError::eFixture);
+		
 		}
 		if(i == 1)
 		{
-			ReadError(error);
+			ReadError(error, 27, 7, GdtfDefines::EGdtfParsingError::eXmlParsingError);
 		}
 		if(i == 2)
 		{
-			ReadError(error);
+			ReadError(error, 0, 0, GdtfDefines::EGdtfParsingError::eValueError_MatrixFormatError);
 		}
 	}
 	
 }
 
-void GdtfXmlErrorTest::ReadError(IGdtfXmlParsingErrorPtr& error)
+void GdtfXmlErrorTest::ReadError(IGdtfXmlParsingErrorPtr& error, size_t lineNumber, size_t colNumber, GdtfDefines::EGdtfParsingError errorType)
 {
-	size_t lineNumber  = 0;
-	size_t colNumber   = 0;
-	__checkVCOM(error->GetLineAndColumnNumber(lineNumber, colNumber));
+	size_t thisLineNumber  = 0;
+	size_t thisColNumber   = 0;
+	if(__checkVCOM(error->GetLineAndColumnNumber(thisLineNumber, thisColNumber)))
+	{
+		this->checkifEqual("lineNumber ", 	thisLineNumber, lineNumber);
+		this->checkifEqual("colNumber ", 	thisColNumber, 	colNumber); 
+	}
 
-	GdtfDefines::EGdtfParsingError type;
-	__checkVCOM(error->GetErrorType(type));
+	GdtfDefines::EGdtfParsingError thisErrorType;
+	if(__checkVCOM(error->GetErrorType(thisErrorType))) { this->checkifEqual("errorType ", (Sint32)thisErrorType, (Sint32)errorType); }
 
 }
