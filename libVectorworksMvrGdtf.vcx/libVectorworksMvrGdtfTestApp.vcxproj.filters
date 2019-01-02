@@ -30,6 +30,9 @@
     <ClCompile Include="..\unittest\GdtfDmxUnittest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\unittest\GdtfXmlError.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\unittest\MvrUnittest.h">
@@ -45,6 +48,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\unittest\GdtfDmxUnittest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\unittest\GdtfXmlError.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
