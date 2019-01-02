@@ -27,7 +27,6 @@
 *.exe
 *.out
 *.app
-*.gdtf
 *.mvr
 
 # etc
