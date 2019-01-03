@@ -605,7 +605,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	else
     {
         type = eGdtfModel_PrimitiveType_Undefined; DSTOP((kEveryone, "Unaspected Input for Primitive Type Enum"));
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_EnumNoMatchingEntry);
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertPrimitiveType);
         SceneData::GdtfFixture::AddError(error);
     }
 	
@@ -662,7 +662,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	else												
     {
         special = EGdtfSpecial::None; DSTOP((kEveryone, "Unaspected Input for EGdtfSpecial Enum"));
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_EnumNoMatchingEntry);
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertSpecialAttr);
         SceneData::GdtfFixture::AddError(error);
     }
 	
@@ -732,7 +732,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	else
     {
         unit = EGdtfPhysicalUnit::None; DSTOP((kEveryone, "Unaspected Input for EGdtfPhysicalUnit Enum"));
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_EnumNoMatchingEntry);
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertPhysicalUnit);
         SceneData::GdtfFixture::AddError(error); 
     }
 	
@@ -748,7 +748,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	else													
     {
         unit = EGdtfBeamType::eGdtfBeamType_Wash; DSTOP((kEveryone, "Unaspected Input for EGdtfBeamType Enum"));
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_EnumNoMatchingEntry);
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertBeamType);
         SceneData::GdtfFixture::AddError(error); 
     }
 	
@@ -1035,7 +1035,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	else
     {
         lampType = eGdtfLampType_Dischange; DSTOP((kEveryone, "Unaspected Input for Lamp Type Enum"));
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_EnumNoMatchingEntry);
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertLampeType);
         SceneData::GdtfFixture::AddError(error);
     }
 	
@@ -1081,7 +1081,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	else
     {
         freq = eGdtfDmxFrequency_30; DSTOP((kEveryone, "Unaspected Input for Lamp Type Enum"));
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_EnumNoMatchingEntry);
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertFrequenz);
         SceneData::GdtfFixture::AddError(error);
     }
 	
@@ -1115,7 +1115,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	else
     {
         snap = eGdtfDmxMaster_No; DSTOP((kEveryone, "Unaspected Input for EGdtfDmxSnap Enum"));
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_EnumNoMatchingEntry);
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertSnap);
         SceneData::GdtfFixture::AddError(error);
     }
 	
@@ -1147,7 +1147,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	else
     {
         master = eGdtfDmxMaster_None; DSTOP((kEveryone, "Unaspected Input for EGdtfDmxMaster Enum"));
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_EnumNoMatchingEntry);
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertMaster);
         SceneData::GdtfFixture::AddError(error);
     }
 	
@@ -1177,7 +1177,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	else
     {
         relation = eGdtfDmxRelationType_Override; DSTOP((kEveryone, "Unaspected Input for EGdtfDmxRelationType Enum"));
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_EnumNoMatchingEntry);
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertRelation);
         SceneData::GdtfFixture::AddError(error);
     }
 	
@@ -1208,7 +1208,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	else
     {
         dmx = eGDTFDmxInvert_No; DSTOP((kEveryone, "Unaspected Input for EGDTFDmxInvert Enum"));
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_EnumNoMatchingEntry);
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertDMXInvert);
         SceneData::GdtfFixture::AddError(error);
     }
 	
@@ -1237,7 +1237,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	else
     {
         enc = eGDTFEncoderInvert_No; DSTOP((kEveryone, "Unaspected Input for EGDTFEncoderInvert Enum"));
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_EnumNoMatchingEntry);
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertEncoderInvert);
         SceneData::GdtfFixture::AddError(error);
     }
 	
@@ -1268,7 +1268,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
     { 
         val = EGdtf_RDMParam_Type::RDM; 
         DSTOP((kEveryone, "Unaspected Input for ConvertRDMParamTypeEnum Enum"));
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_EnumNoMatchingEntry);
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertRDMParamType);
         SceneData::GdtfFixture::AddError(error);
     } // TODO: Theres no default value at the moment check this later again. (19.10)
 
@@ -1312,7 +1312,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
     { 
         val = EGdtf_RDMParam_DataType::DS_NOT_DEFINED; // TODO: Theres no default value at the moment check this later again. (19.10)
         DSTOP((kEveryone, "Unaspected Input for EGDTFvaloderInvert Enum"));
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_EnumNoMatchingEntry);
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertRDMParamDataType);
         SceneData::GdtfFixture::AddError(error);
     }
 
@@ -1344,7 +1344,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
     {
         val = EGdtf_RDMParam_Command::None;; // TODO: Theres no default value at the moment check this later again. (19.10)
         DSTOP((kEveryone, "Unaspected Input for Convert_RDMParam_CommandEnum Enum"));
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_RDMParamNoMatchingEntry);
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertRDMParamCommand);
         SceneData::GdtfFixture::AddError(error);
     }
 
@@ -1428,7 +1428,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
     {
         val = EGdtf_RDMParam_SensorUnit::UNITS_NONE;   // TODO: Theres no default value at the moment check this later again. (19.10)
         DSTOP((kEveryone, "Unaspected Input for Convert_RDMParam_SensorUnitEnum Enum"));
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_RDMParamNoMatchingEntry);
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertRDMParamSensorUnit);
         SceneData::GdtfFixture::AddError(error);
     }
 
@@ -1495,7 +1495,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
     {
         val = EGdtf_RDMParam_SensorUnitPrefix::PREFIX_NONE;   // TODO: Theres no default value at the moment check this later again. (19.10)
         DSTOP((kEveryone, "Unaspected Input for Convert_RDMParam_SensorUnitPrefixEnum Enum"));
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_RDMParamNoMatchingEntry);
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertRDMParamSensorUnitPrefix);
         SceneData::GdtfFixture::AddError(error);
     }
 
@@ -1524,7 +1524,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
     {
         val = EGdtf_RDMValueBool_Value::eYes;   // TODO: Theres no default value at the moment check this later again. (19.10)
         DSTOP((kEveryone, "Unaspected Input for ConvertEGdtf_RDMValueBool_ValueEnum Enum"));
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_RDMParamNoMatchingEntry);
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertRDMValueBoolValue);
         SceneData::GdtfFixture::AddError(error);
     }
         
@@ -1556,7 +1556,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
     {
         val = EGdtf_RDMValue_ThresholdOperator::Is;   // TODO: Theres no default value at the moment check this later again. (19.10)
         DSTOP((kEveryone, "Unaspected Input for ConvertEGdtf_RDMValue_ThresholdOperatorEnum Enum"));
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_RDMParamNoMatchingEntry);
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertRDMValueThresholdOperator);
         SceneData::GdtfFixture::AddError(error);
     }
 
@@ -1651,7 +1651,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
     {
         val = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_TEMPERATURE;   // TODO: Theres no default value at the moment check this later again. (19.10)
         DSTOP((kEveryone, "Unaspected Input for ConvertRDMValue_SENSOR_DEFINITION_TypeEnum Enum"));
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_RDMParamNoMatchingEntry);
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertRDMValueSensorDefinitionType);
         SceneData::GdtfFixture::AddError(error);
     }
        
@@ -1678,7 +1678,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
     {
         val = val = EGdtf_RDMValue_LowesHighestDetectionSupported::eYES;   // TODO: Theres no default value at the moment check this later again. (19.10)
         DSTOP((kEveryone, "Unaspected Input for Convert_RDMValue_LowesHighestDetectionSupportedEnum."));
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_RDMParamNoMatchingEntry);
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertRDMValueLowesHighestDetectionSupported);
         SceneData::GdtfFixture::AddError(error);
     }
 
@@ -1706,7 +1706,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
     {
         val = EGdtf_RDMValue_RecordValueSupported::eYES;   // TODO: Theres no default value at the moment check this later again. (19.10)
         DSTOP((kEveryone, "Unaspected Input for Convert_RDMValue_RecordValueSupportedEnum"));
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_RDMParamNoMatchingEntry);
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertRDMValueRecordValueSupported);
         SceneData::GdtfFixture::AddError(error);
     }
 
@@ -1748,7 +1748,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
     {
         val = EGdtf_RDMValue_SLOT_INFO_Type::ST_PRIMARY;   // TODO: Theres no default value at the moment check this later again. (19.10)
         DSTOP((kEveryone, "Unaspected Input for ConvertRDMValue_SLOT_INFO_TypeEnum"));
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_RDMParamNoMatchingEntry);
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertRDMValueSlotInfoType);
         SceneData::GdtfFixture::AddError(error);
     }
 
@@ -1857,8 +1857,8 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
     else
     {
         val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_INTENSITY;   // TODO: Theres no default value at the moment check this later again. (19.10)
-        DSTOP((kEveryone, "Unaspected Input for ConvertRDMValue_SLOT_INFO_SlotLabelIDEnum"));
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_RDMParamNoMatchingEntry);
+        DSTOP((kEveryone, "Unexpected Input for ConvertRDMValue_SLOT_INFO_SlotLabelIDEnum"));
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertRDMValueSlotInfoSlotLabelID);
         SceneData::GdtfFixture::AddError(error);
     }
 
@@ -2078,7 +2078,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
     else if (inVal == XML_GDTF_ColorSample_99) { outVal = EGdtfColorSample::CES_99; }
 
     DSTOP((kEveryone, "Unknown Value for EGdtfColorSample"));
-    GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_EnumNoMatchingEntry);
+    GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertColorSample);
     SceneData::GdtfFixture::AddError(error);
        
     return true;
@@ -2129,7 +2129,7 @@ bool SceneDataZip::GetFile(const TXString &fileName, const IFolderIdentifierPtr 
 		return true;
 	}
 	
-    GdtfParsingError error (GdtfDefines::EGdtfParsingError::eMissingFile);
+    GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFailedToReadDescription);
     SceneData::GdtfFixture::AddError(error);
 	return false;
 }
@@ -2222,7 +2222,7 @@ void SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, ISceneDataZipBuffer& buffe
 	ptrdiff_t pos = strVal.Find(",");
     if (strVal.Find(",") == -1)
     {
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_WrongFormat);
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoCommaFound);
         SceneData::GdtfFixture::AddError(error);
     }
 	while (pos > 0 )

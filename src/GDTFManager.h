@@ -66,13 +66,16 @@ namespace SceneData
 		virtual ~GdtfObject();
 		
 	private:
-		void*		fBindValue;
+		void*		    fBindValue;
+        IXMLFileNodePtr fNode;
 		
 		
 	public:
 		// Write
 		void			WriteToNode(IXMLFileNodePtr pContainerNode);
 		void			ReadFromNode(const IXMLFileNodePtr& pNode);
+
+        void			GetNode(IXMLFileNodePtr& pNode);
 		
 		
 		// Bind Behavoir

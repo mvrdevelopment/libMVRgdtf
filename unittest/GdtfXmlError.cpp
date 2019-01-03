@@ -81,7 +81,7 @@ void GdtfXmlErrorTest::ReadNonExistingFile()
 		IGdtfXmlParsingErrorPtr error;
 		__checkVCOM(gdtfRead->GetParsingErrorAt(i, & error));
 
-		if(i == 0) { ReadError(error, 0, 0, GdtfDefines::EGdtfParsingError::eMissingFile); }
+		if(i == 0) { ReadError(error, 0, 0, GdtfDefines::EGdtfParsingError::eFailedToReadDescription); }
 	}
 	
 }

@@ -9,19 +9,18 @@
 //------------------------------------------------------------------------------------
 // Parsing Errors
 //------------------------------------------------------------------------------------
-// GdtfObject
-GdtfParsingError::GdtfParsingError(GdtfDefines::EGdtfParsingError type)
-{
-    fErrorType  = type;
-    fLineNumber = 0;
-    fColumn     = 0;
-}
-
 GdtfParsingError::GdtfParsingError(GdtfDefines::EGdtfParsingError type, size_t lineNumber, size_t column)
 {
-    fErrorType  = type;
-    fLineNumber = lineNumber;
-    fColumn     = column;
+    fErrorType          = type;
+    fLineNumber         = lineNumber;
+    fColumn             = column;
+}
+
+GdtfParsingError::GdtfParsingError(GdtfDefines::EGdtfParsingError type, const IXMLFileNodePtr& pNode)
+{
+    fErrorType          = type;
+    fNodePtr            = pNode;
+    pNode->GetLineNumber(fLineNumber, fColumn);
 }
 
 
@@ -71,7 +70,7 @@ size_t GdtfParsingError::GetColumnNumber() const
         }
         else
         {
-            GdtfParsingError error (GdtfDefines::EGdtfParsingError::eMissingMandatoryAttribute);
+            GdtfParsingError error (GdtfDefines::EGdtfParsingError::eNodeMissingMandatoryAttribute);
             error.fAttributeNodeName = attribute + " " + nodeName;
             pNode->GetLineNumber(error.fLineNumber, error.fColumn);
             SceneData::GdtfFixture::AddError(error);
@@ -89,7 +88,7 @@ size_t GdtfParsingError::GetColumnNumber() const
 
     for (const TXString& attribute : nodeAttributes)
     {
-            GdtfParsingError error(GdtfDefines::EGdtfParsingError::eWrongAttribute);
+            GdtfParsingError error (GdtfDefines::EGdtfParsingError::eNodeWrongAttribute);
             error.fAttributeNodeName = attribute + " " + nodeName;
             pNode->GetLineNumber(error.fLineNumber, error.fColumn);
             SceneData::GdtfFixture::AddError(error);
