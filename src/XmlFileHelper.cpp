@@ -798,6 +798,8 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	return value;
 }
 
+// TODO
+// look carefully for each parsing call in ConvertMatrix
 /*static*/ bool GdtfConverter::ConvertMatrix(const TXString& value, VWTransformMatrix& matrix)
 {
 	// ----------------------------------------------------------------
@@ -846,8 +848,11 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 		strVal.Delete(0, pos + 2);
 		pos = strVal.Find("}{");
 	}
+    // TODO
+    // a thought from deniz: could be my mistake, somehow in some cases there is the "}{" pattern not left anymore, when pos variable has passed last "}{" sequence
     if (strVal.Find("}{") == -1)
     {
+        // std::cout << strVal.Find("}{") << std::endl;
         GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_MatrixFormatMissingMiddleBrackets, 0, 0);
         SceneData::GdtfFixture::AddError(error); 
     }
@@ -923,6 +928,8 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	return value;
 }
 
+// TODO
+// look carefully for each parsing call in ConvertRota
 /*static*/ bool GdtfConverter::ConvertRotation(const TXString& value, VWTransformMatrix& matrix)
 {
 	// ----------------------------------------------------------------
