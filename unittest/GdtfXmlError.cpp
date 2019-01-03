@@ -34,25 +34,24 @@ GdtfXmlErrorTest::~GdtfXmlErrorTest()
 
 bool GdtfXmlErrorTest::ExecuteTest()
 {
-	std::cout << "=                                        GdtfErrorTest                                      =" << std::endl;
-    ReadFile();
+	std::cout << "=                                        GdtfErrorTest                                    =" << std::endl;
+    ReadDamagedFile();
+	ReadNonExistingFile();
 
     return true;
 }
 
-void GdtfXmlErrorTest::ReadFile()
+void GdtfXmlErrorTest::ReadDamagedFile()
 {
 	//------------------------------------------------------------------------------    
-	// Read Fixture Information
+	// Read Existing File with damaged structure
 	IGdtfFixturePtr gdtfRead (IID_IGdtfFixture);
     __checkVCOM(gdtfRead->ReadFromFile(fPath.c_str()));
 
 	size_t countErrors = 0;
 	__checkVCOM(gdtfRead->GetParsingErrorCount(countErrors));
-
 	checkifEqual("Count Errors", countErrors, (size_t)3);
 
-	
 	for(size_t i = 0; i < countErrors; i++)
 	{
 		IGdtfXmlParsingErrorPtr error;
@@ -60,19 +59,30 @@ void GdtfXmlErrorTest::ReadFile()
 
 
 
-		if(i == 0)
-		{
-			ReadError(error, 0, 0, GdtfDefines::EGdtfParsingError::eFixture);
-		
-		}
-		if(i == 1)
-		{
-			ReadError(error, 27, 7, GdtfDefines::EGdtfParsingError::eXmlParsingError);
-		}
-		if(i == 2)
-		{
-			ReadError(error, 0, 0, GdtfDefines::EGdtfParsingError::eValueError_MatrixFormatError);
-		}
+		if(i == 0) { ReadError(error, 0, 0, GdtfDefines::EGdtfParsingError::eFixture); }
+		if(i == 1) { ReadError(error, 27, 7, GdtfDefines::EGdtfParsingError::eXmlParsingError); }
+		if(i == 2) { ReadError(error, 0, 0, GdtfDefines::EGdtfParsingError::eValueError_MatrixFormatError); }
+	}
+	
+}
+
+void GdtfXmlErrorTest::ReadNonExistingFile()
+{
+	//------------------------------------------------------------------------------    
+	// Read Existing File with damaged structure
+	IGdtfFixturePtr gdtfRead (IID_IGdtfFixture);
+    __checkVCOMFailed(gdtfRead->ReadFromFile(""));
+
+	size_t countErrors = 0;
+	__checkVCOM(gdtfRead->GetParsingErrorCount(countErrors));
+	checkifEqual("Count Errors", countErrors, (size_t)1);
+
+	for(size_t i = 0; i < countErrors; i++)
+	{
+		IGdtfXmlParsingErrorPtr error;
+		__checkVCOM(gdtfRead->GetParsingErrorAt(i, & error));
+
+		if(i == 0) { ReadError(error, 0, 0, GdtfDefines::EGdtfParsingError::eMissingFile); }
 	}
 	
 }

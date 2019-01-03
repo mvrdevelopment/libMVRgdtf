@@ -14,7 +14,8 @@ protected:
     bool virtual ExecuteTest();
 
 private:
-    void ReadFile();
+    void ReadDamagedFile();
+    void ReadNonExistingFile();
     void ReadError(VectorworksMVR::IGdtfXmlParsingErrorPtr& error, size_t lineNumber, size_t colNumber, VectorworksMVR::GdtfDefines::EGdtfParsingError errorType);
 
     std::string fPath;
