@@ -816,7 +816,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	if (strVal.GetAt(0) == '{') { strVal.Delete(0,1); }
     else
     {
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_MatrixFormatError, 0, 0);
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_MatrixFormatMissingFirstBracket, 0, 0);
         SceneData::GdtfFixture::AddError(error); 
     }
 	
@@ -825,7 +825,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	if (strVal.GetLast() == '}') { strVal.DeleteLast(); }
     else
     {
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_MatrixFormatError, 0, 0);
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_MatrixFormatMissingLastBracket, 0, 0);
         SceneData::GdtfFixture::AddError(error);
     }
 	
@@ -846,6 +846,11 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 		strVal.Delete(0, pos + 2);
 		pos = strVal.Find("}{");
 	}
+    if (strVal.Find("}{") == -1)
+    {
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_MatrixFormatMissingMiddleBrackets, 0, 0);
+        SceneData::GdtfFixture::AddError(error); 
+    }
 
 	// Apped the rest
 	lines.push_back(strVal);
@@ -853,7 +858,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	if (lines.size() != 4)
 	{
 		DSTOP((kEveryone,"Failed to split the Matrix into vertices"));
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_MatrixFormatError, 0, 0);
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_MatrixFormatTooMuchOrTooLessLines, 0, 0);
         SceneData::GdtfFixture::AddError(error);
 		return false;
 	}
@@ -869,6 +874,8 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 		if (arr.size() < 3 || arr.size() > 4)
 		{
 			DSTOP((kEveryone, "Unexpected Format of Matrix"));
+            GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_MatrixFormatTooMuchOrTooLessEntries, 0, 0);
+            SceneData::GdtfFixture::AddError(error);
 			continue;
 		}
 		
@@ -929,7 +936,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	if (strVal.GetAt(0) == '{')		{ strVal.Delete(0,1); }
 	else
     {
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_MatrixFormatError, 0, 0);
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_MatrixRotationFormatMissingFirstBracket, 0, 0);
         SceneData::GdtfFixture::AddError(error); 
     }
 	
@@ -938,7 +945,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	if (strVal.GetLast() == '}')	{ strVal.DeleteLast(); }
 	else
     {
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_MatrixFormatError, 0, 0);
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_MatrixRotationFormatMissingLastBracket, 0, 0);
         SceneData::GdtfFixture::AddError(error); 
     }
 
@@ -961,7 +968,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	}
     if (strVal.Find("}{") == -1)
     {
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_MatrixFormatError, 0, 0);
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_MatrixRotationFormatMissingMiddleBrackets, 0, 0);
         SceneData::GdtfFixture::AddError(error); 
     }
 	
@@ -971,7 +978,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	if (lines.size() != 3)
 	{
 		DSTOP((kEveryone,"Failed to split the Matrix into vertices"));
-		GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_MatrixFormatError, 0, 0);
+		GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_MatrixRotationTooMuchOrTooLessLines, 0, 0);
         SceneData::GdtfFixture::AddError(error);
         return false;
 	}
@@ -986,7 +993,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 		if (arr.size() != 3)
 		{
 			DSTOP((kEveryone, "Unexpected amount of entries in Matrix"));
-            GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_MatrixFormatError, 0, 0);
+            GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_MatrixRotationTooMuchOrTooLessEntries, 0, 0);
             SceneData::GdtfFixture::AddError(error);
 			continue;
 		}

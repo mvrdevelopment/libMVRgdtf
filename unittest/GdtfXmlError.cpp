@@ -60,7 +60,9 @@ void GdtfXmlErrorTest::ReadDamagedFile()
 
 		if(i == 0) { ReadError(error, 0, 0, GdtfDefines::EGdtfParsingError::eFixtureChecksumError); }
 		if(i == 1) { ReadError(error, 27, 7, GdtfDefines::EGdtfParsingError::eXmlParsingError); }
-		if(i == 2) { ReadError(error, 0, 0, GdtfDefines::EGdtfParsingError::eValueError_MatrixFormatError); }
+		// TODO
+		// why is it a middle bracket error??
+		if(i == 2) { ReadError(error, 0, 0, GdtfDefines::EGdtfParsingError::eValueError_MatrixRotationFormatMissingMiddleBrackets); }
 	}
 	
 }
