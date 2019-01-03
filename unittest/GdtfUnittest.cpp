@@ -22,7 +22,7 @@ GdtfUnittest::GdtfUnittest(const std::string& currentDir)
 #endif
 
 
-    std::cout << "Export File to" << fPath << std::endl; 
+    std::cout << "Export File to " << fPath << std::endl; 
 }
 
 GdtfUnittest::~GdtfUnittest()

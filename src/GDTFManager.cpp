@@ -4,6 +4,7 @@
 #include "GDTFManager.h"
 #include "SceneDataExchange.h"
 #include "XmlFileHelper.h"
+#include "HashManager.h"
 #include <iostream>
 
 using namespace SceneData;
@@ -4303,6 +4304,7 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 		ISceneDataZipBuffer buffer;
 		
 		zipfile->GetFile(outPath, &buffer);
+		//std::cout << "OUTPATH " << outPath.GetCharPtr() << std::endl;
 		
 		if (outPath == "description.xml")
         {
@@ -4355,15 +4357,14 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 	
 	if ( ! xmlFileBuffer.IsSet() )
 	{
-		DSTOP((kEveryone, "Failed to get gdtf file."));
+		GdtfParsingError error (GdtfDefines::EGdtfParsingError::eNoGdtfFile); 
 		fReaded = false;
 		return;
 	}
 	
 	if (xmlFileSHA256Buffer.IsSet())
 	{
-		ASSERTN(kEveryone, !(checksumIsFine == true));
-		if ( !(checksumIsFine == true) ) 
+		if ( !(HashManager::HashManager::CheckHashForBuffer(xmlFileBuffer, xmlFileSHA256Buffer) == true) )
 		{ 
 			GdtfParsingError error (GdtfDefines::EGdtfParsingError::eChecksumError); 
 			SceneData::GdtfFixture::AddError(error); 

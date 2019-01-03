@@ -132,6 +132,7 @@ namespace VectorworksMVR
             eFixtureUnresolvedChannelFunctionRef            = 39,
             eXmlParsingError                                = 40,
             eChecksumError                                  = 41,
+            eNoGdtfFile                                     = 42,
             
         };
 		

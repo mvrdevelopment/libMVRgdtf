@@ -22,7 +22,7 @@ GdtfDmxUnittest::GdtfDmxUnittest(const std::string& currentDir)
     fPath += std::string("/testDmx.gdtf");
 #endif
 
-    std::cout << "Export File to" << fPath << std::endl; 
+    std::cout << "Export File to " << fPath << std::endl; 
 }
 
 GdtfDmxUnittest::~GdtfDmxUnittest()
