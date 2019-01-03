@@ -2112,8 +2112,6 @@ bool SceneDataExchange::ReadFromFile(const IFileIdentifierPtr& file)
 		
 		zipfile->GetFile(outPath, &buffer);
 		
-		
-        
         if (outPath == "GeneralSceneDescription.xml")
         {
 			// Read the data
@@ -2171,13 +2169,8 @@ bool SceneDataExchange::ReadFromFile(const IFileIdentifierPtr& file)
 		// Read from Scene Description
 		ReadFromGeneralSceneDescription(xmlFileBuffer);
     }
-	
 
-	
-
-
-	return true;
-	
+	return true;	
 }
 
 
