@@ -39,6 +39,11 @@ const TXString& GdtfParsingError::GetErrorMessage() const
     return fAttributeNodeName;
 }
 
+const TXString& GdtfParsingError::GetNodeName() const
+{
+    return fNodeName;
+}
+
 size_t GdtfParsingError::GetLineNumber() const
 {
     return fLineNumber;

@@ -18,6 +18,7 @@ namespace VectorworksMVR
 	public:
 		virtual VCOMError VCOM_CALLTYPE     GetErrorType(GdtfDefines::EGdtfParsingError& error);
 		virtual MvrString VCOM_CALLTYPE     GetErrorMessage();
+		virtual MvrString VCOM_CALLTYPE     GetNodeName();
 		virtual VCOMError VCOM_CALLTYPE     GetLineAndColumnNumber(size_t& line, size_t& column);
 
 

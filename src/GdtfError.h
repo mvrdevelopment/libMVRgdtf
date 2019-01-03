@@ -19,6 +19,7 @@ public:
 private:
 	GdtfDefines::EGdtfParsingError fErrorType;
 	TXString					   fAttributeNodeName;
+	TXString					   fNodeName;
 	size_t						   fLineNumber;
 	size_t						   fColumn;
 	
@@ -27,6 +28,8 @@ private:
 public:
 	GdtfDefines::EGdtfParsingError	GetError() const;
 	const TXString&					GetErrorMessage() const;
+	const TXString&					GetNodeName() const;
+
 	size_t							GetLineNumber() const;
 	size_t							GetColumnNumber() const;
 public:

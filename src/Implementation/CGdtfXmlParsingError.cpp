@@ -40,6 +40,16 @@ MvrString VectorworksMVR::CGdtfXmlParsingErrorImpl::GetErrorMessage()
 
 }
 
+MvrString VectorworksMVR::CGdtfXmlParsingErrorImpl::GetNodeName()
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) return "";
+	
+	return fPtr->GetNodeName().GetCharPtr();
+
+}
+
 VCOMError VectorworksMVR::CGdtfXmlParsingErrorImpl::GetLineAndColumnNumber(size_t& line, size_t& column)
 {
 	// Check if this is initialized
