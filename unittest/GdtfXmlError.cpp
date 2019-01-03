@@ -99,5 +99,4 @@ void GdtfXmlErrorTest::ReadError(IGdtfXmlParsingErrorPtr& error, size_t lineNumb
 
 	GdtfDefines::EGdtfParsingError thisErrorType;
 	if(__checkVCOM(error->GetErrorType(thisErrorType))) { this->checkifEqual("errorType ", (Sint32)thisErrorType, (Sint32)errorType); }
-
 }
