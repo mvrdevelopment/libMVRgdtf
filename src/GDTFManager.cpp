@@ -4362,7 +4362,7 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 	
 	if (xmlFileSHA256Buffer.IsSet())
 	{
-		ASSERTN(kEveryone, checksumIsFine == true);
+		ASSERTN(kEveryone, !(checksumIsFine == true));
 		if ( !(checksumIsFine == true) ) 
 		{ 
 			GdtfParsingError error (GdtfDefines::EGdtfParsingError::eChecksumError); 
