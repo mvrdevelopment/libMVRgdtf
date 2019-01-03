@@ -48,6 +48,8 @@ public:
     void PrintParsingError(const std::string& check, const Sint32 val1);
 
 
+    void PrintParsingErrorList(VectorworksMVR::IGdtfFixturePtr& fixture);
+
 private:
     bool                fFailed;
     TUnittestFailArray  fFailedTests;

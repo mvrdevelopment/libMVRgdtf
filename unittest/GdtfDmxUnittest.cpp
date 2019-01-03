@@ -250,24 +250,6 @@ void GdtfDmxUnittest::ReadFile()
     IGdtfFixturePtr gdtfRead (IID_IGdtfFixture);
     if(__checkVCOM(gdtfRead->ReadFromFile(fPath.c_str())))
     {
-
-		// Print Parsing Errors
-		size_t countParsingErrors = 0;
-		__checkVCOM(gdtfRead->GetParsingErrorCount(countParsingErrors));
-		for(size_t i = 0; i < countParsingErrors; i++)
-		{
-			GdtfDefines::EGdtfParsingError errorType;
-			
-			size_t line   = 0;
-			size_t column = 0;
-
-			IGdtfXmlParsingErrorPtr error;
-			__checkVCOM(gdtfRead->GetParsingErrorAt( i, &error));
-			__checkVCOM(error->GetErrorType(errorType));
-			__checkVCOM(error->GetLineAndColumnNumber(line, column));
-			PrintParsingError(error->GetErrorMessage(), (Sint32)errorType);
-		}
-
 		//------------------------------------------------------------------------------ 
 		// Read the Attributes
 		size_t countAttributes = 0;
@@ -457,6 +439,8 @@ void GdtfDmxUnittest::ReadFile()
 		this->checkifEqual("Check Count DMX Channels", countChannelSets, size_t(0));
 
 	}
+
+	PrintParsingErrorList(gdtfRead);
 }
 
 

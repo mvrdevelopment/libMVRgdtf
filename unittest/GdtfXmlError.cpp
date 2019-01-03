@@ -34,7 +34,7 @@ GdtfXmlErrorTest::~GdtfXmlErrorTest()
 
 bool GdtfXmlErrorTest::ExecuteTest()
 {
-	std::cout << "=                                        GdtfXMLErrorTest                                    =" << std::endl;
+	std::cout << "=                                        GdtfXMLErrorTest                                  =" << std::endl;
     ReadDamagedFile();
 	ReadNonExistingFile();
 

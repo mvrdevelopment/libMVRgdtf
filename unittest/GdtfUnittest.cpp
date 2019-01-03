@@ -897,4 +897,6 @@ void GdtfUnittest::ReadFile()
 			this->checkifEqual("Check Adress", (Sint32)3,breakId);
 		}
     }
+
+	PrintParsingErrorList(gdtfRead);
 }

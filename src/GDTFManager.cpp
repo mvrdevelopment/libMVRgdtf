@@ -4364,7 +4364,7 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 	
 	if (xmlFileSHA256Buffer.IsSet())
 	{
-		if ( !(HashManager::HashManager::CheckHashForBuffer(xmlFileBuffer, xmlFileSHA256Buffer) == true) )
+		if ( HashManager::HashManager::CheckHashForBuffer(xmlFileBuffer, xmlFileSHA256Buffer) == false )
 		{ 
 			GdtfParsingError error (GdtfDefines::EGdtfParsingError::eChecksumError); 
 			SceneData::GdtfFixture::AddError(error); 
