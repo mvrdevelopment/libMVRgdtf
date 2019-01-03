@@ -70,8 +70,8 @@ size_t GdtfParsingError::GetColumnNumber() const
         }
         else
         {
-            GdtfParsingError error (GdtfDefines::EGdtfParsingError::eNodeMissingMandatoryAttribute);
-            error.fAttributeNodeName = attribute + " " + nodeName;
+            GdtfParsingError error (GdtfDefines::EGdtfParsingError::eNodeMissingMandatoryAttribute, pNode);
+            error.fAttributeNodeName = "Attribute: " + attribute + ", Node: " + nodeName;
             pNode->GetLineNumber(error.fLineNumber, error.fColumn);
             SceneData::GdtfFixture::AddError(error);
         }
@@ -88,10 +88,10 @@ size_t GdtfParsingError::GetColumnNumber() const
 
     for (const TXString& attribute : nodeAttributes)
     {
-            GdtfParsingError error (GdtfDefines::EGdtfParsingError::eNodeWrongAttribute);
-            error.fAttributeNodeName = attribute + " " + nodeName;
-            pNode->GetLineNumber(error.fLineNumber, error.fColumn);
-            SceneData::GdtfFixture::AddError(error);
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eNodeWrongAttribute, pNode);
+        error.fAttributeNodeName = "Attribute: " + attribute + ", Node: " + nodeName;
+        pNode->GetLineNumber(error.fLineNumber, error.fColumn);
+        SceneData::GdtfFixture::AddError(error);
     }
 
 }

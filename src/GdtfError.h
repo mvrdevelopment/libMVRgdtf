@@ -22,7 +22,7 @@ private:
 	TXString					   fNodeName;
 	size_t						   fLineNumber;
 	size_t						   fColumn;
-	IXMLFileNodePtr 			   fNodePtr;
+	IXMLFileNodePtr 			   	fNodePtr;
 	
 	void	CheckValidValue()	const;
 

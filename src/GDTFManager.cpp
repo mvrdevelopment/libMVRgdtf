@@ -42,7 +42,7 @@ void GdtfObject::ReadFromNode(const IXMLFileNodePtr& pNode)
 	TXString nodeName;
 	pNode->GetNodeName(nodeName);
 	ASSERTN(kEveryone, nodeName == GetNodeName());
-	if (nodeName != GetNodeName()) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eNodeWrongName, &pnode); SceneData::GdtfFixture::AddError(error); }
+	if (nodeName != GetNodeName()) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eNodeWrongName, pNode); SceneData::GdtfFixture::AddError(error); }
 	
 	this->OnReadFromNode(pNode);
 	this->OnErrorCheck(pNode);
@@ -882,8 +882,12 @@ const TXString&	GdtfWheelSlot::GetGoboFileFullPath()
 	fWheelParent->GetParentFixture()->GetWorkingFolder(folder);
 	
 	ASSERTN(kEveryone, folder != nullptr);
-	if (folder == nullptr) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eWheelSlotMissingPNGDirectory); SceneData::GdtfFixture::AddError(error); }
 	if (folder) { folder->GetFullPath(workingFolder); }
+	else
+	{
+		GdtfParsingError error (GdtfDefines::EGdtfParsingError::eWheelSlotMissingPNGDirectory, 0, 0);
+		SceneData::GdtfFixture::AddError(error);
+	}
 	
 	// Set to store
 	fGoboFile = workingFolder + fGobo;
@@ -1149,8 +1153,12 @@ const TXString& GdtfModel::GetGeometryFileFullPath()
 	fParentFixture->GetWorkingFolder(folder);
 	
 	ASSERTN(kEveryone, folder != nullptr);
-	if (folder == nullptr) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eModelMissingGeometryDirectory); SceneData::GdtfFixture::AddError(error); }
 	if (folder) { folder->GetFullPath(workingFolder); }
+	else
+	{
+		GdtfParsingError error (GdtfDefines::EGdtfParsingError::eModelMissingGeometryDirectory, 0, 0);
+		SceneData::GdtfFixture::AddError(error);
+	}
 	
 	// Set to store
 	fFullPath = workingFolder + fGeometryFile;
@@ -1308,8 +1316,12 @@ void GdtfGeometry::OnPrintToFile(IXMLFileNodePtr pNode)
 	pNode->SetNodeAttributeValue(XML_GDTF_GeometryMatrix,			GdtfConverter::ConvertMatrix(fMatrix, true));
 
 	ASSERTN(kEveryone, fModelReference != nullptr);
-	if (fModelReference == nullptr) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eGeometryMissingModelReference); SceneData::GdtfFixture::AddError(error); }
-	if (fModelReference) { pNode->SetNodeAttributeValue(XML_GDTF_GeometryModelRef,			fModelReference->GetNodeReference()); }
+	if (fModelReference) { pNode->SetNodeAttributeValue(XML_GDTF_GeometryModelRef,	fModelReference->GetNodeReference()); }
+	else
+	{
+		GdtfParsingError error (GdtfDefines::EGdtfParsingError::eGeometryMissingModelReference, pNode);
+		SceneData::GdtfFixture::AddError(error);
+	}
 	
 	// ------------------------------------------------------------------------------------
 	// Print Internal geometry
@@ -1339,47 +1351,55 @@ void GdtfGeometry::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// ------------------------------------------------------------------------------------
 	// Print geometries
 	GdtfConverter::TraverseMultiNodes(pNode, "", [this] (IXMLFileNodePtr objNode,const TXString& childNodeName) -> void
-									  {
-										  bool hasBreak = false;;
-										  
-										  GdtfGeometryPtr geometry = nullptr;
-										  if	  (childNodeName == XML_GDTF_GeometryAxisNodeName)		{ geometry = new GdtfGeometryAxis(this);}
-										  else if (childNodeName == XML_GDTF_GeometryNodeName)			{ geometry = new GdtfGeometry(this);}
-										  else if (childNodeName == XML_GDTF_FilterBeamNodeName)		{ geometry = new GdtfGeometryBeamFilter(this);}
-										  else if (childNodeName == XML_GDTF_FilterColorNodeName)		{ geometry = new GdtfGeometryColorFilter(this);}
-										  else if (childNodeName == XML_GDTF_FilterGoboNodeName)		{ geometry = new GdtfGeometryGoboFilter(this);}
-										  else if (childNodeName == XML_GDTF_FilterShaperNodeName)		{ geometry = new GdtfGeometryShaperFilter(this);}
-										  else if (childNodeName == XML_GDTF_LampNodeName)				{ geometry = new GdtfGeometryLamp(this);}
-										  else if (childNodeName == XML_GDTF_GeometryReferenceNodeName)	{ geometry = new GdtfGeometryReference(this);}
-										  else if (childNodeName == XML_GDTF_BreakNodeName)				{ hasBreak = true; }
-										  else															{ DSTOP((kEveryone,"There is a node that was not aspected!")); }
-										  
-										  
-										  if (hasBreak)
-										  {
-											  // This is only allowed in Geometry Refs
-											  ASSERTN(kEveryone, this->GetObjectType() == eGdtfGeometryReference);
-											  if (this->GetObjectType() != eGdtfGeometryReference) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eGeometryIsNotGeometryReferenceType); SceneData::GdtfFixture::AddError(error); }
-											  if (this->GetObjectType() == eGdtfGeometryReference)
-											  {
-												  GdtfBreakPtr breakObj = new GdtfBreak();
-												  breakObj->ReadFromNode(objNode);
-												  
-												  GdtfGeometryReferencePtr refGeo = dynamic_cast<GdtfGeometryReferencePtr>(this);
-												  refGeo->fBreaks.push_back(breakObj);
-												  return;
-											  }
-										  }
-										  
-										  ASSERTN(kEveryone, geometry != nullptr);
-										  if (geometry == nullptr) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eGeometryMissingGeometryObject); SceneData::GdtfFixture::AddError(error); }
-										  if (geometry)
-										  {
-											  geometry->ReadFromNode(objNode);
-											  fInternalGeometries.push_back(geometry);
-										  }
-										  return;
-									  });
+									{
+										bool hasBreak = false;;
+										
+										GdtfGeometryPtr geometry = nullptr;
+										if	  (childNodeName == XML_GDTF_GeometryAxisNodeName)			{ geometry = new GdtfGeometryAxis(this);}
+										else if (childNodeName == XML_GDTF_GeometryNodeName)			{ geometry = new GdtfGeometry(this);}
+										else if (childNodeName == XML_GDTF_FilterBeamNodeName)			{ geometry = new GdtfGeometryBeamFilter(this);}
+										else if (childNodeName == XML_GDTF_FilterColorNodeName)			{ geometry = new GdtfGeometryColorFilter(this);}
+										else if (childNodeName == XML_GDTF_FilterGoboNodeName)			{ geometry = new GdtfGeometryGoboFilter(this);}
+										else if (childNodeName == XML_GDTF_FilterShaperNodeName)		{ geometry = new GdtfGeometryShaperFilter(this);}
+										else if (childNodeName == XML_GDTF_LampNodeName)				{ geometry = new GdtfGeometryLamp(this);}
+										else if (childNodeName == XML_GDTF_GeometryReferenceNodeName)	{ geometry = new GdtfGeometryReference(this);}
+										else if (childNodeName == XML_GDTF_BreakNodeName)				{ hasBreak = true; }
+										else															{ DSTOP((kEveryone,"There is a node that was not aspected!")); }
+										
+										
+										if (hasBreak)
+										{
+											// This is only allowed in Geometry Refs
+											ASSERTN(kEveryone, this->GetObjectType() == eGdtfGeometryReference);
+											if (this->GetObjectType() == eGdtfGeometryReference)
+											{
+												GdtfBreakPtr breakObj = new GdtfBreak();
+												breakObj->ReadFromNode(objNode);
+												
+												GdtfGeometryReferencePtr refGeo = dynamic_cast<GdtfGeometryReferencePtr>(this);
+												refGeo->fBreaks.push_back(breakObj);
+												return;
+											}
+											else
+											{
+												GdtfParsingError error (GdtfDefines::EGdtfParsingError::eGeometryIsNotGeometryReferenceType, objNode);
+												SceneData::GdtfFixture::AddError(error);
+											}
+										}
+										
+										ASSERTN(kEveryone, geometry != nullptr);
+										if (geometry)
+										{
+											geometry->ReadFromNode(objNode);
+											fInternalGeometries.push_back(geometry);
+										}
+										else
+										{
+											GdtfParsingError error (GdtfDefines::EGdtfParsingError::eGeometryMissingGeometryObject, objNode);
+											SceneData::GdtfFixture::AddError(error);
+										}
+										return;
+									});
 }
 
 void GdtfGeometry::OnErrorCheck(const IXMLFileNodePtr& pNode)
@@ -2946,10 +2966,15 @@ const TXString& GdtfDmxLogicalChannel::GetName()
 	if(fName_AutoGenerated.IsEmpty())
 	{
 		TXString name;
-		if(fAttribute){ name +=fAttribute->GetName(); }
 		ASSERTN(kEveryone, fAttribute != nullptr);
-		if (fAttribute == nullptr) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eDmxLogicalChannelMissingName); SceneData::GdtfFixture::AddError(error); }
-		
+		if(fAttribute){ name +=fAttribute->GetName(); }
+		else
+		{
+			IXMLFileNodePtr node;
+			fAttribute->GetNode(node);
+			GdtfParsingError error (GdtfDefines::EGdtfParsingError::eDmxLogicalChannelMissingName, node);
+			SceneData::GdtfFixture::AddError(error);
+		}
 
 		this->SetName(name);
 	}
@@ -3037,7 +3062,12 @@ GdtfDmxChannelFunction::~GdtfDmxChannelFunction()
 void GdtfDmxChannelFunction::SetNextFunction(GdtfDmxChannelFunction* next)
 {
 	ASSERTN(kEveryone, fNextFunction == nullptr);
-	if (fNextFunction != nullptr) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eDmxChannelFunctionMissingNextFunction); SceneData::GdtfFixture::AddError(error); }
+	// TODO
+	// if (fNextFunction != nullptr)
+	// {
+	// 	GdtfParsingError error (GdtfDefines::EGdtfParsingError::eDmxChannelFunctionMissingNextFunction, pNode);
+	// 	SceneData::GdtfFixture::AddError(error);
+	// }
 	fNextFunction = next;
 }
 
@@ -3113,10 +3143,17 @@ void GdtfDmxChannelFunction::OnPrintToFile(IXMLFileNodePtr pNode)
 	
 	// Read Mode Master
 	// TODO
+	// function and channel sometimes switched in marked area?
+	// ###############################################################################################################################
+	// BEGIN
 	if(fModeMaster_Channel)
 	{
 		ASSERTN(kEveryone, (fModeMaster_Function == nullptr));
-		if (fModeMaster_Function != nullptr) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eDmxChannelFunctionMissingModeMasterChannel); SceneData::GdtfFixture::AddError(error); }
+		if (fModeMaster_Function != nullptr)
+		{
+			GdtfParsingError error (GdtfDefines::EGdtfParsingError::eDmxChannelFunctionMissingModeMasterChannel, pNode);
+			SceneData::GdtfFixture::AddError(error);
+		}
 		pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeMaster,				fModeMaster_Channel->GetNodeReference());	
 		pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeFrom,				GdtfConverter::ConvertDMXValue(fDmxModeStart, fModeMaster_Channel->GetChannelBitResolution()));	
 		pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeTo,					GdtfConverter::ConvertDMXValue(fDmxModeEnd,   fModeMaster_Channel->GetChannelBitResolution()));	
@@ -3124,11 +3161,17 @@ void GdtfDmxChannelFunction::OnPrintToFile(IXMLFileNodePtr pNode)
 	if(fModeMaster_Function)
 	{
 		ASSERTN(kEveryone, (fModeMaster_Channel == nullptr));
-		if ( !(fModeMaster_Channel == nullptr) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eDmxChannelFunctionMissingModeMasterFunction); SceneData::GdtfFixture::AddError(error); }
+		if (fModeMaster_Channel != nullptr)
+		{	
+			GdtfParsingError error (GdtfDefines::EGdtfParsingError::eDmxChannelFunctionMissingModeMasterFunction, pNode);
+			SceneData::GdtfFixture::AddError(error);
+		}
 		pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeMaster,				fModeMaster_Function->GetNodeReference());	
 		pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeFrom,				GdtfConverter::ConvertDMXValue(fDmxModeStart, fModeMaster_Function->GetParentDMXChannel()->GetChannelBitResolution()));	
 		pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeTo,					GdtfConverter::ConvertDMXValue(fDmxModeEnd,   fModeMaster_Function->GetParentDMXChannel()->GetChannelBitResolution()));	
 	}
+	// END 
+	// ###############################################################################################################################
 
 	// ------------------------------------------------------------------------------------
 	// Prepare No Feature Channel Set
@@ -4289,7 +4332,11 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 	fReaded			= false;
 	fHasLinkedGuid	= false;
 	ASSERTN(kEveryone, __ERROR_CONTAINER_POINTER == nullptr);
-	if (__ERROR_CONTAINER_POINTER != nullptr) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureErrorContainerPointer); SceneData::GdtfFixture::AddError(error); }
+	if (__ERROR_CONTAINER_POINTER != nullptr)
+	{	
+		GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureErrorContainerPointer, 0, 0);
+		SceneData::GdtfFixture::AddError(error);
+	}
 	__ERROR_CONTAINER_POINTER = & this->fErrorContainer; 
 	
 	//-------------------------------------------------------------------------------------------------
@@ -4310,8 +4357,6 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 	// check if this was good
 	fWorkingFolder->ExistsOnDisk(exists);
 	ASSERTN(kEveryone, exists == true);
-	if (exists == false) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureWorkingDirDoesNotExist); SceneData::GdtfFixture::AddError(error); }
-	
 	
 	//-------------------------------------------------------------------------------------------------
 	// Create a ZIP File
@@ -4385,7 +4430,8 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 	
 	if (! xmlFileBuffer.IsSet())
 	{
-		GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureNoGdtfFileInXmlBuffer); 
+		GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureNoGdtfFileInXmlBuffer, 0, 0);
+		SceneData::GdtfFixture::AddError(error); 
 		fReaded = false;
 		return;
 	}
@@ -4393,8 +4439,8 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 	if (xmlFileSHA256Buffer.IsSet())
 	{
 		if (HashManager::HashManager::CheckHashForBuffer(xmlFileBuffer, xmlFileSHA256Buffer) == false)
-		{ 
-			GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureChecksumError); 
+		{
+			GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureChecksumError, 0, 0); 
 			SceneData::GdtfFixture::AddError(error); 
 		}
 	}
@@ -4459,8 +4505,14 @@ void GdtfFixture::AutoGenerateNames(GdtfDmxModePtr dmxMode)
 			//------------------------------------------------------------------------------------------------
 			//  Create Names for DMX Channel
 			ASSERTN(kEveryone, dmxChannel->GetGeomRef());
-			if (! dmxChannel->GetGeomRef()) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureDMXChannelMissingName); SceneData::GdtfFixture::AddError(error); }
-			if (! dmxChannel->GetGeomRef()) { continue; }
+			if (! dmxChannel->GetGeomRef())
+			{
+				IXMLFileNodePtr node;
+				dmxChannel->GetNode(node);		
+				GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureDMXChannelMissingName, node);
+				SceneData::GdtfFixture::AddError(error); 
+				continue;
+			}
 			
 			TXString geometryRef = dmxChannel->GetGeomRef()->GetName();
 			TXString firstAttr;
@@ -4470,7 +4522,13 @@ void GdtfFixture::AutoGenerateNames(GdtfDmxModePtr dmxMode)
 				//------------------------------------------------------------------------------------------------
 				//  Create Names for Logical Channels
 				ASSERTN(kEveryone, !logicalChannel->GetUnresolvedAttribRef().IsEmpty());
-				if (logicalChannel->GetUnresolvedAttribRef().IsEmpty()) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureLogicalChannelMissingName); SceneData::GdtfFixture::AddError(error); }
+				if (logicalChannel->GetUnresolvedAttribRef().IsEmpty())
+				{
+					IXMLFileNodePtr node;
+					logicalChannel->GetNode(node);		
+					GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureLogicalChannelMissingName, node);
+					SceneData::GdtfFixture::AddError(error);
+				}
 				logicalChannel->SetName(logicalChannel->GetUnresolvedAttribRef());
 				
 				// Set first Attribute
@@ -5291,11 +5349,15 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 							else															{ DSTOP((kEveryone,"There is a node that was not aspected!")); }
 							
 							ASSERTN(kEveryone, geometry != nullptr);
-							if (geometry == nullptr) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eNodeWrongName, objNode); SceneData::GdtfFixture::AddError(error); }
 							if (geometry)
 							{
 								geometry->ReadFromNode(objNode);
 								fGeometries.push_back(geometry);
+							}
+							else
+							{
+								GdtfParsingError error (GdtfDefines::EGdtfParsingError::eNodeWrongName, objNode);
+								SceneData::GdtfFixture::AddError(error);
 							}
 							return;
 						});
@@ -6535,7 +6597,7 @@ void SceneData::GdtfRDMParameter::OnReadFromNode(const IXMLFileNodePtr & pNode)
 										  else if (nodeName == XML_GDTF_RDMValue_DMX_PERSONALITY_DESCRIPTION)	{ paramValPtr = new GdtfGdtfRDMValue_DMX_PERSONALITY_DESCRIPTION(); }
 										  else if (nodeName == XML_GDTF_RDMValue_SLOT_INFO)						{ paramValPtr = new GdtfRDMValue_SLOT_INFO(); }
 										  else if (nodeName == XML_GDTF_RDMValue_STATUS_ID_DESCRIPTION)			{ paramValPtr = new GdtfRDMValue_STATUS_ID_DESCRIPTION();  }
-										  else																	{ DSTOP((kEveryone, "Unaspected Node in RDM Parameter"));}
+										  else																	{ DSTOP((kEveryone, "Unexpected Node in RDM Parameter"));}
 										  
 										  
 										  if (paramValPtr)
@@ -8987,10 +9049,14 @@ void SceneData::GdtfMacroVisualValue::OnPrintToFile(IXMLFileNodePtr pNode)
 
 	EGdtfChannelBitResolution resolution = EGdtfChannelBitResolution::eGdtfChannelBitResolution_8;
 	ASSERTN(kEveryone, fChannelFunctionRef != nullptr);
-	if(fChannelFunctionRef == nullptr) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureUnresolvedChannelFunctionRef,pNode); SceneData::GdtfFixture::AddError(error); }
 	if(fChannelFunctionRef)
 	{
 		fChannelFunctionRef->GetParentDMXChannel()->GetChannelBitResolution();
+	}
+	else
+	{
+		GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureUnresolvedChannelFunctionRef, pNode);
+		SceneData::GdtfFixture::AddError(error);
 	}
 	
 	//------------------------------------------------------------------------------------
@@ -9008,14 +9074,14 @@ void SceneData::GdtfMacroVisualValue::OnReadFromNode(const IXMLFileNodePtr& pNod
 
 	EGdtfChannelBitResolution resolution = EGdtfChannelBitResolution::eGdtfChannelBitResolution_8;
 	ASSERTN(kEveryone, fChannelFunctionRef != nullptr);
-	if(fChannelFunctionRef == nullptr) 
-	{ 
-		GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureUnresolvedChannelFunctionRef, pNode); 
-		SceneData::GdtfFixture::AddError(error); 
-	}
 	if(fChannelFunctionRef)
 	{
 		fChannelFunctionRef->GetParentDMXChannel()->GetChannelBitResolution();
+	}
+	else
+	{
+		GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureUnresolvedChannelFunctionRef, pNode); 
+		SceneData::GdtfFixture::AddError(error);
 	}
 
 	//------------------------------------------------------------------------------------
