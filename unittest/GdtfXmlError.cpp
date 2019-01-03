@@ -18,7 +18,7 @@ GdtfXmlErrorTest::GdtfXmlErrorTest(const std::string& currentDir)
     fPath = currentDir;
 #ifdef _WINDOWS
     fPath = std::string(GITPATH);
-    fPath += std::string("\\unittest\\files\\XMLBroken.gdtf");
+    fPath += std::string("\\files\\XMLBroken.gdtf");
 #else
 	fPath = std::string(GITPATH);
 	fPath += "/unittest/files/XMLBroken.gdtf";
