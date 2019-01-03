@@ -23,8 +23,8 @@ public:
     
     void fatalError(const SAXParseException &ex) override
     {
-		TXString temp(ex.getMessage());
-		std::cout << "fatalError: " << temp.GetCharPtr() << std::endl;
+		//TXString temp(ex.getMessage());
+		//std::cout << "fatalError: " << temp.GetCharPtr() << std::endl;
 
 		GdtfParsingError error (EGdtfParsingError::eXmlParsingError, ex.getLineNumber(), ex.getColumnNumber());
 		SceneData::GdtfFixture::AddError(error);
@@ -33,20 +33,20 @@ public:
     
     void error(const SAXParseException &ex) override
     {
-		TXString temp(ex.getMessage());
-		std::cout << "error: " << temp.GetCharPtr() << std::endl;
+		//TXString temp(ex.getMessage());
+		//std::cout << "error: " << temp.GetCharPtr() << std::endl;
     }
     
     void warning(const SAXParseException &ex) override
     {
-		TXString temp(ex.getMessage());
-		std::cout << "warning: " << temp.GetCharPtr() << std::endl;
+		//TXString temp(ex.getMessage());
+		//std::cout << "warning: " << temp.GetCharPtr() << std::endl;
     }
 private:
     void msg(const char* const type, const SAXParseException &ex)
     {
-        TXString temp(ex.getMessage());
-		std::cout << "msg: " << temp.GetCharPtr() << std::endl;
+        //TXString temp(ex.getMessage());
+		//std::cout << "msg: " << temp.GetCharPtr() << std::endl;
     }
     
     ErrorHandler* defaultHandler;
