@@ -4288,6 +4288,9 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 	// Create a ZIP File
 	IZIPFilePtr zipfile ( IID_ZIPFile );
 	zipfile->OpenRead(inZipFile);
+
+	ISceneDataZipBuffer xmlFileBuffer;
+    ISceneDataZipBuffer xmlFileSHA256Buffer;
 	
 	
 	//-------------------------------------------------------------------------------------------------
@@ -4301,16 +4304,44 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 		
 		zipfile->GetFile(outPath, &buffer);
 		
+		if (outPath == "description.xml")
+        {
+			// Read the data
+			size_t	size = 0;							buffer.GetDataSize(size);
+			void*	data = malloc(size * sizeof(char));	buffer.CopyDataInto(data, size);
+			
+			// Set the buffer object
+            xmlFileBuffer.SetData(data, size);
+			
+			// House keeping
+			std::free(data);
+        }
+        else if (outPath == "description.checksum.txt")
+        {
+			// Read the data
+            size_t	size = 0;							buffer.GetDataSize(size);
+            void*	data = malloc(size * sizeof(char));	buffer.CopyDataInto(data, size);
+			
+			// Set the buffer object
+            xmlFileSHA256Buffer.SetData(data, size);
+			
+			// House keeping
+			std::free(data);
+        }
+		else
+		{
+			// Prepare pointer to the new files
+			IFileIdentifierPtr file (IID_FileIdentifier);
+			file->Set(fWorkingFolder, outPath);
+			
+			// dump buffer into file
+			buffer.WriteToFile(file);
+			
+			// Add it into the file list
+			fLocalFiles.push_back(file);
+		}
 		
-		// Prepare pointer to the new files
-		IFileIdentifierPtr file (IID_FileIdentifier);
-		file->Set(fWorkingFolder, outPath);
-		
-		// dump buffer into file
-		buffer.WriteToFile(file);
-		
-		// Add it into the file list
-		fLocalFiles.push_back(file);
+
 		
 		//
 		inPath = outPath;
@@ -4326,24 +4357,38 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 	// Decompress the files
 	IFileIdentifierPtr gdtfFile (IID_FileIdentifier);
 	
-	if ( ! SceneDataZip::GetFile(XML_GDTF_GDTFFILENAME, fWorkingFolder, gdtfFile, hasCheckSum, checksumIsFine, true))
+	if ( ! xmlFileBuffer.IsSet() )
 	{
 		DSTOP((kEveryone, "Failed to get gdtf file."));
 		fReaded = false;
 		return;
 	}
-	if (hasCheckSum)
+	
+	if (xmlFileSHA256Buffer.IsSet())
 	{
-		ASSERTN(kEveryone, checksumIsFine == true);
-		if ( !(checksumIsFine == true) ) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixture); SceneData::GdtfFixture::AddError(error); }
+		if ( !(checksumIsFine == true) ) 
+		{ 
+			GdtfParsingError error (GdtfDefines::EGdtfParsingError::eChecksumError); 
+			SceneData::GdtfFixture::AddError(error); 
+		}
 	}
 	
 	
 	//-------------------------------------------------------------------------------------------------
 	// Read XML
 	IXMLFilePtr xmlFile (IID_XMLFile);
+
+	size_t	size = 0;								xmlFileBuffer.GetDataSize(size);
+    void*	data = malloc(size * sizeof(char));		xmlFileBuffer.CopyDataInto(data, size);
 	
-	if (VCOM_SUCCEEDED(xmlFile->ReadFile( gdtfFile )))
+	// Set the data
+    IXMLFileIOBufferImpl xmlBuffer;
+    xmlBuffer.SetData(data, size);
+	
+	// Housekeeping
+	std::free(data);
+	
+	if (VCOM_SUCCEEDED(xmlFile->ReadBuffer( &xmlBuffer, EXMLEncoding::eXMLEncoding_UTF8)))
 	{
 		IXMLFileNodePtr rootNode;
 		if (VCOM_SUCCEEDED(xmlFile->GetRootNode( & rootNode)))
