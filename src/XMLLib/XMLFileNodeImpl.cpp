@@ -1181,6 +1181,9 @@ VCOMError CXMLFileNodeImpl::SetNodeName(const TXString &newName)
 
 VCOMError CXMLFileNodeImpl::GetLineNumber(size_t& line, size_t& column)
 {
+	line 	= 0;
+	column 	= 0;
+	
 	ASSERTN( kEveryone, fRefCnt > 0 );
 	if ( fRefCnt <= 0 )
 		return kVCOMError_NotInitialized;
