@@ -798,8 +798,6 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 	return value;
 }
 
-// TODO
-// look carefully for each parsing call in ConvertMatrix
 /*static*/ bool GdtfConverter::ConvertMatrix(const TXString& value, const IXMLFileNodePtr& node,VWTransformMatrix& matrix)
 {
 	// ----------------------------------------------------------------
@@ -883,7 +881,6 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 			matrix.fMatrix.mat[i][0] = arr [0];
 			matrix.fMatrix.mat[i][1] = arr [1];
 			matrix.fMatrix.mat[i][2] = arr [2];
-
 		}
 		// ----------------------------------------------------------------
 		// Set the matrix for a 4x4 matrix
@@ -899,14 +896,9 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 				// This is the offset part
 				matrix.fMatrix.mat[3][i] = arr [3];
 			}
-
-
 		}
-
-
 	}
 
-	
 	return true;
 }
 
@@ -1011,9 +1003,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 		case eGdtfLampType_LED:			return XML_GDTF_LampTypeEnum_Discharge;
 		case eGdtfLampType_Halogen:		return XML_GDTF_LampTypeEnum_Halogen;
 		case eGdtfLampType_Tungsten:	return XML_GDTF_LampTypeEnum_Tungsten;
-		case eGdtfLampType_Dischange:	return XML_GDTF_LampTypeEnum_LED;
-			
-			
+		case eGdtfLampType_Dischange:	return XML_GDTF_LampTypeEnum_LED;	
 	}
 	
 	// Make Assert

@@ -232,7 +232,6 @@ VCOMError CXMLFileImpl::ReadFile(IFileIdentifier* pFileID)
     }
 
 	fpXercesDOMParser	= new TaggingDOMParser();
-	fpXercesDOMParser->useScanner(XMLUni::fgWFXMLScanner);
 
 	if ( fpXercesDOMParser != NULL ) {
 		try {

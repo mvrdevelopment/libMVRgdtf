@@ -4296,9 +4296,7 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 	{
 		// This is the current file that we are reading
 		ISceneDataZipBuffer buffer;
-		
 		zipfile->GetFile(outPath, &buffer);
-		//std::cout << "OUTPATH " << outPath.GetCharPtr() << std::endl;
 		
 		if (outPath == "description.xml")
         {
