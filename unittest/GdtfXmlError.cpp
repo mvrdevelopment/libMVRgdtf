@@ -50,19 +50,15 @@ void GdtfXmlErrorTest::ReadDamagedFile()
 
 	size_t countErrors = 0;
 	__checkVCOM(gdtfRead->GetParsingErrorCount(countErrors));
-	checkifEqual("Count Errors", countErrors, (size_t)3);
+	checkifEqual("Count Errors", countErrors, (size_t)2);
 
 	for(size_t i = 0; i < countErrors; i++)
 	{
 		IGdtfXmlParsingErrorPtr error;
 		__checkVCOM(gdtfRead->GetParsingErrorAt(i, & error));
 
-
 		if(i == 0) { ReadError(error, 0, 0, GdtfDefines::EGdtfParsingError::eFixtureChecksumError); }
 		if(i == 1) { ReadError(error, 27, 7, GdtfDefines::EGdtfParsingError::eXmlParsingError); }
-		// TODO
-		// why is it a middle bracket error??
-		if(i == 2) { ReadError(error, 0, 0, GdtfDefines::EGdtfParsingError::eValueError_MatrixRotationFormatMissingMiddleBrackets); }
 	}
 	
 }

@@ -365,13 +365,13 @@ bool SceneData::GdtfConverter::ConvertDMXAdress(const TXString& value, const IXM
 
     ASSERTN(kEveryone, intValue > 0);
     ASSERTN(kEveryone, intValue < 513);
-	if (intValue > 0)	
+	if (intValue <= 0)	
     {
         GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_DmxAdressHasWrongValue, 0, 0);
         SceneData::GdtfFixture::AddError(error); 
         return false; 
     }
-	if (intValue < 513)	
+	if (intValue > 512)	
     {
         GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_DmxAdressHasWrongValue, 0, 0);
         SceneData::GdtfFixture::AddError(error); 
@@ -965,11 +965,6 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 		strVal.Delete(0, pos + 2);
 		pos = strVal.Find("}{");
 	}
-    if (strVal.Find("}{") == -1)
-    {
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_MatrixRotationFormatMissingMiddleBrackets, node);
-        SceneData::GdtfFixture::AddError(error); 
-    }
 	
 	// Apped the rest
 	lines.push_back(strVal);
