@@ -10,6 +10,7 @@ using namespace VWFC;
 #include "GDTFManager.h"
 #include "XmlFileHelper.h"
 #include "HashManager.h"
+#include "GdtfError.h"
 
 using namespace SceneData;
 
@@ -88,11 +89,20 @@ using namespace SceneData;
 	
 }
 
-/*static*/ bool GdtfConverter::ConvertUUID(const TXString& inValue, VWFC::Tools::VWUUID& uuid)
+/*static*/ bool GdtfConverter::ConvertUUID(const TXString& inValue, const IXMLFileNodePtr& node, VWFC::Tools::VWUUID& uuid)
 {
 	// First check if theinValuelength is as aspected
 	ASSERTN(kEveryone, inValue.GetLength() == 47 || inValue.GetLength() == 0);
-	if (inValue.GetLength() != 47)	{ return false; }
+	if (inValue.GetLength() != 47)	
+    {
+        if(inValue.GetLength() != 0)
+        {
+            GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_UuidHasWrongFormat, node);
+            SceneData::GdtfFixture::AddError(error); 
+        }
+
+        return false; 
+    }
 	
 	// Remove white space
 	TXString value = inValue;
@@ -150,7 +160,7 @@ using namespace SceneData;
 	return (TXString() << color.Get_x() << "," << color.Get_y() << "," << color.Get_Y_luminance() );
 }
 
-/*static*/ bool GdtfConverter::ConvertColor(const TXString& value, CCieColor& color)
+/*static*/ bool GdtfConverter::ConvertColor(const TXString& value, const IXMLFileNodePtr& node, CCieColor& color)
 {
 	// ------------------------------------------------------------
 	// Check if the string is empty, use the default color
@@ -163,14 +173,19 @@ using namespace SceneData;
 	// Prepare Array
 	std::vector<double> d_arr;
 	
-	Deserialize(strVal, d_arr);
+	Deserialize(strVal,node,  d_arr);
 	
 	
 	// ------------------------------------------------------------
 	// Check if you have three valies
 	ASSERTN(kEveryone, d_arr.size() == 3);
-	if (d_arr.size() != 3) { color = CCieColor(); return false; }
-	
+	if (d_arr.size() != 3)
+    {
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_ColorHasWrongFormat, node);
+        SceneData::GdtfFixture::AddError(error);
+        color = CCieColor();
+        return false;
+    }
 	
 	// Set Out Color and return true
 	color = CCieColor(d_arr[0],d_arr[1],d_arr[2]);
@@ -185,7 +200,7 @@ using namespace SceneData;
 	return valueStr;
 }
 
-/*static*/ bool GdtfConverter::ConvertDouble(const TXString& value, double& doubleValue)
+/*static*/ bool GdtfConverter::ConvertDouble(const TXString& value, const IXMLFileNodePtr& node,double& doubleValue)
 {
 	if(value.IsEmpty()) { return false; }
 	
@@ -203,16 +218,16 @@ using namespace SceneData;
 	return valueStr;
 }
 
-/*static*/ bool GdtfConverter::ConvertDmxBreak(const TXString& value, Sint32& intValue)
+/*static*/ bool GdtfConverter::ConvertDmxBreak(const TXString& value, const IXMLFileNodePtr& node,Sint32& intValue)
 {
     if(value.IsEmpty()) return false;
-    if(value == XML_GDTF_DMXChannelDMXBreak_OverwriteValue) { intValue = 0; }
+    if(value == XML_GDTF_DMXChannelDMXBreak_OverwriteValue) { intValue = 0; return true; }
 
 	intValue = value.atoi();
 	return true;
 }
 
-/*static*/ bool GdtfConverter::ConvertInteger(const TXString& value, Sint8& intValue)
+/*static*/ bool GdtfConverter::ConvertInteger(const TXString& value, const IXMLFileNodePtr& node,Sint8& intValue)
 {
     if(value.IsEmpty()) return false;
 
@@ -220,7 +235,7 @@ using namespace SceneData;
 	return true;
 }
 
-/*static*/ bool GdtfConverter::ConvertInteger(const TXString& value, size_t& intValue)
+/*static*/ bool GdtfConverter::ConvertInteger(const TXString& value, const IXMLFileNodePtr& node,size_t& intValue)
 {
     if(value.IsEmpty()) return false;
 	
@@ -228,7 +243,7 @@ using namespace SceneData;
 	return true;
 }
 
-/*static*/ bool GdtfConverter::ConvertInteger(const TXString& value, Sint32& intValue)
+/*static*/ bool GdtfConverter::ConvertInteger(const TXString& value, const IXMLFileNodePtr& node,Sint32& intValue)
 {
     if(value.IsEmpty()) return false;
 	
@@ -288,7 +303,7 @@ TXString SceneData::GdtfConverter::ConvertIntegerArray(TSint32Array & values)
     return arrayStr;
 }
 
-bool SceneData::GdtfConverter::ConvertIntegerArray(TXString values, TSint32Array & intArray)
+bool SceneData::GdtfConverter::ConvertIntegerArray(TXString values, const IXMLFileNodePtr& node, TSint32Array & intArray)
 /* Takes string in the format: "{Int, Int, ... Int}" and fills the values into the IntArray. */
 {
     TXString intArrayString = values;
@@ -299,7 +314,7 @@ bool SceneData::GdtfConverter::ConvertIntegerArray(TXString values, TSint32Array
     values.Replace("}", "");
 
     // Seperate the string by ","
-    GdtfConverter::Deserialize(values, intArray);
+    GdtfConverter::Deserialize(values, node, intArray);
     return true;
 }
 
@@ -332,16 +347,16 @@ TXString SceneData::GdtfConverter::ConvertDMXAdress(DMXAddress value)
 	return ConvertInteger(value);
 }
 
-/*static*/ bool GdtfConverter::ConvertInteger(const TXString& value, Sint32& intValue, bool& noneValue)
+/*static*/ bool GdtfConverter::ConvertInteger(const TXString& value, const IXMLFileNodePtr& node,Sint32& intValue, bool& noneValue)
 {
 	noneValue = false;
 	
 	if (value == XML_GDTF_DMXFChannel_NONEVALUE)		{ noneValue = true; intValue = 0; return true; ; }
 	
-	return ConvertInteger(value, intValue);;
+	return ConvertInteger(value, node, intValue);;
 }
 
-bool SceneData::GdtfConverter::ConvertDMXAdress(const TXString& value, DMXAddress & intValue)
+bool SceneData::GdtfConverter::ConvertDMXAdress(const TXString& value, const IXMLFileNodePtr& node,DMXAddress & intValue)
 /* Convert String to DMXAdress*/
 {
     if(value.IsEmpty()) {intValue = 1; return false;}
@@ -350,6 +365,18 @@ bool SceneData::GdtfConverter::ConvertDMXAdress(const TXString& value, DMXAddres
 
     ASSERTN(kEveryone, intValue > 0);
     ASSERTN(kEveryone, intValue < 513);
+	if (intValue <= 0)	
+    {
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_DmxAdressHasWrongValue, node);
+        SceneData::GdtfFixture::AddError(error); 
+        return false; 
+    }
+	if (intValue > 512)	
+    {
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_DmxAdressHasWrongValue, node);
+        SceneData::GdtfFixture::AddError(error); 
+        return false; 
+    }
 
     return true;
 }
@@ -386,7 +413,7 @@ bool SplitStr(const TXString& str, TXString& part1, TXString& part2, size_t spli
 	return true;
 }
 
-bool SceneData::GdtfConverter::ConvertDMXValue(const TXString& strValue, EGdtfChannelBitResolution chanlReso, DmxValue & intValue)
+bool SceneData::GdtfConverter::ConvertDMXValue(const TXString& strValue, const IXMLFileNodePtr& node, EGdtfChannelBitResolution chanlReso, DmxValue & intValue)
 /* Converts a string to a DmxValue. returns succes of the opeation as bool (XXX this is always true at the moment.)*/
 {
 	// Split the String ("ValRaw/bytetSpecifier")
@@ -395,7 +422,14 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString& strValue, EGdtfCh
 
 	// Find first entry
 	ptrdiff_t splitPos = strValue.Find("/");
-	
+	if (splitPos == -1)
+    {
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_DmxValueHasWrongValue, node);
+        SceneData::GdtfFixture::AddError(error);
+        return false;
+    }
+
+
 	SplitStr(strValue, firstPart, secndPart, (size_t)splitPos);
 	//-----------------------------------------------------------------------------------
 	
@@ -497,10 +531,17 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString& strValue, EGdtfCh
 		intValue = dmxValueRaw; 
 	}
 
+    if ( GetChannelMaxDmx(chanlReso) < intValue)
+    {
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_DmxValueHasWrongValue, node);
+        SceneData::GdtfFixture::AddError(error);
+        return false;
+    }
+
 	return true;
 }
 
-bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfChannelBitResolution chanlReso, DmxValue & intValue, bool & noneValue)
+bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const IXMLFileNodePtr& node, EGdtfChannelBitResolution chanlReso, DmxValue & intValue, bool & noneValue)
 /* Converts a string to a DmxValue */
 {	
 	noneValue = false; 
@@ -511,7 +552,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 		return true;
 	}
 
-	ConvertDMXValue(strValue, chanlReso, intValue);
+	ConvertDMXValue(strValue, node, chanlReso, intValue);
 
 	return true;
 }
@@ -548,7 +589,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 }
 
 
-/*static*/ bool GdtfConverter::ConvertPrimitiveType(const TXString& value, EGdtfModel_PrimitiveType& type)
+/*static*/ bool GdtfConverter::ConvertPrimitiveType(const TXString& value, const IXMLFileNodePtr& node, EGdtfModel_PrimitiveType& type)
 {
 	if		(value == XML_GDTF_PrimitiveTypeEnum_Cube)			{ type = eGdtfModel_PrimitiveType_Cube;		}
 	else if (value == XML_GDTF_PrimitiveTypeEnum_Sphere)		{ type = eGdtfModel_PrimitiveType_Sphere;	}
@@ -561,7 +602,12 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	else if (value == XML_GDTF_PrimitiveTypeEnum_Undefined)		{ type = eGdtfModel_PrimitiveType_Undefined; }
     else if (value == XML_GDTF_PrimitiveTypeEnum_Pigtail)		{ type = eGdtfModel_PrimitiveType_Pigtail; }
 	else if (value == "")										{ type = eGdtfModel_PrimitiveType_Undefined; }
-	else														{ type = eGdtfModel_PrimitiveType_Undefined; DSTOP((kEveryone, "Unaspected Input for Primitive Type Enum"));}
+	else
+    {
+        type = eGdtfModel_PrimitiveType_Undefined; DSTOP((kEveryone, "Unexpected Input for Primitive Type Enum"));
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertPrimitiveType, node);
+        SceneData::GdtfFixture::AddError(error);
+    }
 	
 	// Return true
 	return true;
@@ -587,14 +633,15 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 		case EGdtfSpecial::Zoom:		return XML_EGdtfSpecialEnum_Zoom;
 		case EGdtfSpecial::Dummy:		return XML_EGdtfSpecialEnum_Dummy;
 			
-		default: DSTOP((kEveryone,"EGdtfSpecial enum is not implemented!"));			
+		default:                        DSTOP((kEveryone,"EGdtfSpecial enum is not implemented!"));
+
 	}
 	
 	// Return default value
 	return XML_GDTFPhysicalUnitEnum_None;
 }
 
-/*static*/ bool GdtfConverter::ConvertSpecialAttrEnum(const TXString& value, EGdtfSpecial& special)
+/*static*/ bool GdtfConverter::ConvertSpecialAttrEnum(const TXString& value, const IXMLFileNodePtr& node,EGdtfSpecial& special)
 {
 	if		(value == XML_GDTFPhysicalUnitEnum_None)	{ special = EGdtfSpecial::None;			}
 	else if (value == XML_EGdtfSpecialEnum_Dimmer)		{ special = EGdtfSpecial::Dimmer;		}
@@ -612,7 +659,12 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	else if (value == XML_EGdtfSpecialEnum_Zoom)		{ special = EGdtfSpecial::Zoom;			}
 	else if (value == XML_EGdtfSpecialEnum_Dummy)		{ special = EGdtfSpecial::Dummy;		}
 	else if (value == "")								{ special = EGdtfSpecial::None; }
-	else												{ special = EGdtfSpecial::None; DSTOP((kEveryone, "Unaspected Input for EGdtfSpecial Enum"));}
+	else												
+    {
+        special = EGdtfSpecial::None; DSTOP((kEveryone, "Unexpected Input for EGdtfSpecial Enum"));
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertSpecialAttr, node);
+        SceneData::GdtfFixture::AddError(error);
+    }
 	
 	// Return true
 	return true;
@@ -652,7 +704,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	return XML_GDTFPhysicalUnitEnum_None;
 }
 
-/*static*/ bool GdtfConverter::ConvertPhysicalUnitEnum(const TXString& value, EGdtfPhysicalUnit& unit)
+/*static*/ bool GdtfConverter::ConvertPhysicalUnitEnum(const TXString& value, const IXMLFileNodePtr& node,EGdtfPhysicalUnit& unit)
 {
 	if		(value == XML_GDTFPhysicalUnitEnum_None)			{ unit = EGdtfPhysicalUnit::None;			 }
 	else if (value == XML_GDTFPhysicalUnitEnum_Percent)			{ unit = EGdtfPhysicalUnit::Percent;		 }
@@ -677,18 +729,28 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	else if (value == XML_GDTFPhysicalUnitEnum_WaveLength)		{ unit = EGdtfPhysicalUnit::WaveLength;		 }
 	else if (value == XML_GDTFPhysicalUnitEnum_ColorComponent)	{ unit = EGdtfPhysicalUnit::ColorComponent;	 }
 	else if (value == "")										{ unit = EGdtfPhysicalUnit::None;			 }
-	else														{ unit = EGdtfPhysicalUnit::None; DSTOP((kEveryone, "Unaspected Input for EGdtfPhysicalUnit Enum"));}
+	else
+    {
+        unit = EGdtfPhysicalUnit::None; DSTOP((kEveryone, "Unexpected Input for EGdtfPhysicalUnit Enum"));
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertPhysicalUnit, node);
+        SceneData::GdtfFixture::AddError(error); 
+    }
 	
 	// Return true
 	return true;
 }
-/*static*/ bool GdtfConverter::ConvertBeamType(const TXString& value, EGdtfBeamType& unit)
+/*static*/ bool GdtfConverter::ConvertBeamType(const TXString& value, const IXMLFileNodePtr& node,EGdtfBeamType& unit)
 {
 	if		(value == XML_GDTF_BeamTypeEnum_Wash)			{ unit = EGdtfBeamType::eGdtfBeamType_Wash;		 }
 	else if (value == XML_GDTF_BeamTypeEnum_Spot)			{ unit = EGdtfBeamType::eGdtfBeamType_Spot;		 }
 	else if (value == XML_GDTF_BeamTypeEnum_None)			{ unit = EGdtfBeamType::eGdtfBeamType_None;		 }
 	else if (value == "")									{ unit = EGdtfBeamType::eGdtfBeamType_Wash;		 }
-	else													{ unit = EGdtfBeamType::eGdtfBeamType_Wash; DSTOP((kEveryone, "Unaspected Input for EGdtfBeamType Enum"));}
+	else													
+    {
+        unit = EGdtfBeamType::eGdtfBeamType_Wash; DSTOP((kEveryone, "Unexpected Input for EGdtfBeamType Enum"));
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertBeamType, node);
+        SceneData::GdtfFixture::AddError(error); 
+    }
 	
 	// Return true
 	return true;
@@ -736,7 +798,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	return value;
 }
 
-/*static*/ bool GdtfConverter::ConvertMatrix(const TXString& value, VWTransformMatrix& matrix)
+/*static*/ bool GdtfConverter::ConvertMatrix(const TXString& value, const IXMLFileNodePtr& node,VWTransformMatrix& matrix)
 {
 	// ----------------------------------------------------------------
 	// If the String is empty, use the DefaultMaterix
@@ -751,17 +813,27 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	// ----------------------------------------------------------------
 	// Delete first element
 	ASSERTN(kEveryone, strVal.GetAt(0) == '{');
-	if (strVal.GetAt(0) == '{')		{ strVal.Delete(0,1); }
+	if (strVal.GetAt(0) == '{') { strVal.Delete(0,1); }
+    else
+    {
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_MatrixFormatMissingFirstBracket, node);
+        SceneData::GdtfFixture::AddError(error); 
+    }
 	
 	// Delete last element
 	ASSERTN(kEveryone, strVal.GetLast() == '}');
-	if (strVal.GetLast() == '}')	{ strVal.DeleteLast(); }
+	if (strVal.GetLast() == '}') { strVal.DeleteLast(); }
+    else
+    {
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_MatrixFormatMissingLastBracket, node);
+        SceneData::GdtfFixture::AddError(error);
+    }
 	
 	// ----------------------------------------------------------------
 	// Split into parts
 	std::vector<TXString> lines;
 	ptrdiff_t pos = strVal.Find("}{");
-	while (pos > 0 )
+    while (pos > 0 )
 	{
 		// Copy string
 		TXString strValInner;
@@ -774,13 +846,15 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 		strVal.Delete(0, pos + 2);
 		pos = strVal.Find("}{");
 	}
-	
+
 	// Apped the rest
 	lines.push_back(strVal);
 
 	if (lines.size() != 4)
 	{
 		DSTOP((kEveryone,"Failed to split the Matrix into vertices"));
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_MatrixFormatTooMuchOrTooLessLines, node);
+        SceneData::GdtfFixture::AddError(error);
 		return false;
 	}
 	
@@ -789,12 +863,14 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	for (size_t i = 0; i < lines.size(); i++)
 	{
 		std::vector<double> arr;
-		Deserialize(lines.at(i), arr);
+		Deserialize(lines.at(i), node, arr);
 		
 		// Use this for 4x4 matrix and 4x3 matrix
 		if (arr.size() < 3 || arr.size() > 4)
 		{
-			DSTOP((kEveryone, "Unaspected Format of Matrix"));
+			DSTOP((kEveryone, "Unexpected Format of Matrix"));
+            GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_MatrixFormatTooMuchOrTooLessEntries, node);
+            SceneData::GdtfFixture::AddError(error);
 			continue;
 		}
 		
@@ -805,7 +881,6 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 			matrix.fMatrix.mat[i][0] = arr [0];
 			matrix.fMatrix.mat[i][1] = arr [1];
 			matrix.fMatrix.mat[i][2] = arr [2];
-
 		}
 		// ----------------------------------------------------------------
 		// Set the matrix for a 4x4 matrix
@@ -821,14 +896,9 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 				// This is the offset part
 				matrix.fMatrix.mat[3][i] = arr [3];
 			}
-
-
 		}
-
-
 	}
 
-	
 	return true;
 }
 
@@ -842,7 +912,9 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	return value;
 }
 
-/*static*/ bool GdtfConverter::ConvertRotation(const TXString& value, VWTransformMatrix& matrix)
+// TODO
+// look carefully for each parsing call in ConvertRota
+/*static*/ bool GdtfConverter::ConvertRotation(const TXString& value, const IXMLFileNodePtr& node, VWTransformMatrix& matrix)
 {
 	// ----------------------------------------------------------------
 	// Split string
@@ -853,12 +925,21 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	// Delete first element
 	ASSERTN(kEveryone, strVal.GetAt(0) == '{');
 	if (strVal.GetAt(0) == '{')		{ strVal.Delete(0,1); }
-	
+	else
+    {
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_MatrixRotationFormatMissingFirstBracket, node);
+        SceneData::GdtfFixture::AddError(error); 
+    }
 	
 	// Delete second last element
 	ASSERTN(kEveryone, strVal.GetLast() == '}');
 	if (strVal.GetLast() == '}')	{ strVal.DeleteLast(); }
-	
+	else
+    {
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_MatrixRotationFormatMissingLastBracket, node);
+        SceneData::GdtfFixture::AddError(error); 
+    }
+
 	// ----------------------------------------------------------------
 	// Split into parts
 	TXStringArray lines;
@@ -883,7 +964,9 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	if (lines.size() != 3)
 	{
 		DSTOP((kEveryone,"Failed to split the Matrix into vertices"));
-		return false;
+		GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_MatrixRotationTooMuchOrTooLessLines, node);
+        SceneData::GdtfFixture::AddError(error);
+        return false;
 	}
 	
 	// ----------------------------------------------------------------
@@ -891,11 +974,13 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	for (size_t i = 0; i < lines.size(); i++)
 	{
 		std::vector<double> arr;
-		Deserialize(lines.at(i), arr);
+		Deserialize(lines.at(i), node, arr);
 		
 		if (arr.size() != 3)
 		{
-			DSTOP((kEveryone, "Unaspected amount of entries in Matrix"));
+			DSTOP((kEveryone, "Unexpected amount of entries in Matrix"));
+            GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_MatrixRotationTooMuchOrTooLessEntries, node);
+            SceneData::GdtfFixture::AddError(error);
 			continue;
 		}
 		
@@ -918,9 +1003,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 		case eGdtfLampType_LED:			return XML_GDTF_LampTypeEnum_Discharge;
 		case eGdtfLampType_Halogen:		return XML_GDTF_LampTypeEnum_Halogen;
 		case eGdtfLampType_Tungsten:	return XML_GDTF_LampTypeEnum_Tungsten;
-		case eGdtfLampType_Dischange:	return XML_GDTF_LampTypeEnum_LED;
-			
-			
+		case eGdtfLampType_Dischange:	return XML_GDTF_LampTypeEnum_LED;	
 	}
 	
 	// Make Assert
@@ -933,14 +1016,19 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	return XML_GDTF_LampTypeEnum_Discharge;
 }
 
-/*static*/ bool GdtfConverter::ConvertLampeType(const TXString& value, EGdtfLampType& lampType)
+/*static*/ bool GdtfConverter::ConvertLampeType(const TXString& value, const IXMLFileNodePtr& node,EGdtfLampType& lampType)
 {
 	if		(value == XML_GDTF_LampTypeEnum_Discharge)	{ lampType = eGdtfLampType_Dischange;	}
 	else if (value == XML_GDTF_LampTypeEnum_Halogen)	{ lampType = eGdtfLampType_Halogen;		}
 	else if (value == XML_GDTF_LampTypeEnum_Tungsten)	{ lampType = eGdtfLampType_Tungsten;	}
 	else if (value == XML_GDTF_LampTypeEnum_LED)		{ lampType = eGdtfLampType_LED;			}
 	else if (value == "")								{ lampType = eGdtfLampType_Dischange;	}
-	else												{ lampType = eGdtfLampType_Dischange; DSTOP((kEveryone, "Unaspected Input for Lamp Type Enum"));}
+	else
+    {
+        lampType = eGdtfLampType_Dischange; DSTOP((kEveryone, "Unexpected Input for Lamp Type Enum"));
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertLampeType, node);
+        SceneData::GdtfFixture::AddError(error);
+    }
 	
 	// Return true
 	return true;
@@ -971,7 +1059,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	return XML_GDTF_DMXFrequencyEnum_30;
 }
 
-/*static*/ bool GdtfConverter::ConvertFrequenz(const TXString& value, EGdtfDmxFrequency& freq)
+/*static*/ bool GdtfConverter::ConvertFrequenz(const TXString& value, const IXMLFileNodePtr& node,EGdtfDmxFrequency& freq)
 {
 	
 	if		(value == XML_GDTF_DMXFrequencyEnum_60)		{ freq = eGdtfDmxFrequency_60;		}
@@ -981,7 +1069,12 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	else if (value == XML_GDTF_DMXFrequencyEnum_Slow2)	{ freq = eGdtfDmxFrequency_Slow2;	}
 	else if (value == XML_GDTF_DMXFrequencyEnum_Slow3)	{ freq = eGdtfDmxFrequency_Slow3;	}
 	else if (value == "")								{ freq = eGdtfDmxFrequency_30;		}
-	else												{ freq = eGdtfDmxFrequency_30; DSTOP((kEveryone, "Unaspected Input for Lamp Type Enum"));}
+	else
+    {
+        freq = eGdtfDmxFrequency_30; DSTOP((kEveryone, "Unexpected Input for Lamp Type Enum"));
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertFrequenz, node);
+        SceneData::GdtfFixture::AddError(error);
+    }
 	
 	// Return true
 	return true;	
@@ -1003,14 +1096,19 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	return XML_GDTF_DMXSnapEnum_No;
 }
 
-/*static*/ bool GdtfConverter::ConvertSnapEnum(const TXString& value, EGdtfDmxSnap& snap)
+/*static*/ bool GdtfConverter::ConvertSnapEnum(const TXString& value, const IXMLFileNodePtr& node,EGdtfDmxSnap& snap)
 {
 	if		(value == XML_GDTF_DMXSnapEnum_No)	{ snap = eGdtfDmxMaster_No;		}
 	else if (value == XML_GDTF_DMXSnapEnum_On)	{ snap = eGdtfDmxMaster_On;		}
 	else if (value == XML_GDTF_DMXSnapEnum_Off)	{ snap = eGdtfDmxMaster_Off;	}
 	else if (value == XML_GDTF_DMXSnapEnum_Yes)	{ snap = eGdtfDmxMaster_Yes;	}
 	else if (value == "")						{ snap = eGdtfDmxMaster_No;		}
-	else										{ snap = eGdtfDmxMaster_No; DSTOP((kEveryone, "Unaspected Input for EGdtfDmxSnap Enum"));}
+	else
+    {
+        snap = eGdtfDmxMaster_No; DSTOP((kEveryone, "Unexpected Input for EGdtfDmxSnap Enum"));
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertSnap, node);
+        SceneData::GdtfFixture::AddError(error);
+    }
 	
 	// Return true
 	return true;
@@ -1031,13 +1129,18 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	return XML_GDTF_DMXMasterEnum_None;
 }
 
-/*static*/ bool GdtfConverter::ConvertMasterEnum(const TXString& value, EGdtfDmxMaster& master)
+/*static*/ bool GdtfConverter::ConvertMasterEnum(const TXString& value, const IXMLFileNodePtr& node,EGdtfDmxMaster& master)
 {
 	if		(value == XML_GDTF_DMXMasterEnum_None)	{ master = eGdtfDmxMaster_None;	}
 	else if (value == XML_GDTF_DMXMasterEnum_Grand)	{ master = eGdtfDmxMaster_Grand;}
 	else if (value == XML_GDTF_DMXMasterEnum_Group)	{ master = eGdtfDmxMaster_Group;}
 	else if (value == "")							{ master = eGdtfDmxMaster_None;	}
-	else											{ master = eGdtfDmxMaster_None; DSTOP((kEveryone, "Unaspected Input for EGdtfDmxMaster Enum"));}
+	else
+    {
+        master = eGdtfDmxMaster_None; DSTOP((kEveryone, "Unexpected Input for EGdtfDmxMaster Enum"));
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertMaster, node);
+        SceneData::GdtfFixture::AddError(error);
+    }
 	
 	// Return true
 	return true;
@@ -1057,12 +1160,17 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	return XML_GDTF_DMXMasterEnum_Override;
 }
 
-/*static*/ bool GdtfConverter::ConvertRelationEnum(const TXString& value, EGdtfDmxRelationType& relation)
+/*static*/ bool GdtfConverter::ConvertRelationEnum(const TXString& value, const IXMLFileNodePtr& node,EGdtfDmxRelationType& relation)
 {
 	if      (value == XML_GDTF_DMXMasterEnum_Multiply)	{ relation = eGdtfDmxRelationType_Multiply;		}
 	else if (value == XML_GDTF_DMXMasterEnum_Override)	{ relation = eGdtfDmxRelationType_Override;		}
 	else if (value == "")								{ relation = eGdtfDmxRelationType_Override;			}
-	else												{ relation = eGdtfDmxRelationType_Override; DSTOP((kEveryone, "Unaspected Input for EGdtfDmxRelationType Enum"));}
+	else
+    {
+        relation = eGdtfDmxRelationType_Override; DSTOP((kEveryone, "Unexpected Input for EGdtfDmxRelationType Enum"));
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertRelation, node);
+        SceneData::GdtfFixture::AddError(error);
+    }
 	
 	// Return true
 	return true;
@@ -1083,12 +1191,17 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	return XML_GDTF_DMXChannelDmxInvertEnum_No;
 }
 
-/*static*/ bool GdtfConverter::ConvertDMXInvertEnum(const TXString& value, EGDTFDmxInvert& dmx)
+/*static*/ bool GdtfConverter::ConvertDMXInvertEnum(const TXString& value, const IXMLFileNodePtr& node,EGDTFDmxInvert& dmx)
 {
 	if		(value == XML_GDTF_DMXChannelDmxInvertEnum_No)	{ dmx = eGDTFDmxInvert_No;		}
 	else if (value == XML_GDTF_DMXChannelDmxnvertEnum_Yes)	{ dmx = eGDTFDmxInvert_Yes;		}
 	else if (value == "")									{ dmx = eGDTFDmxInvert_No;		}
-	else													{ dmx = eGDTFDmxInvert_No; DSTOP((kEveryone, "Unaspected Input for EGDTFDmxInvert Enum"));}
+	else
+    {
+        dmx = eGDTFDmxInvert_No; DSTOP((kEveryone, "Unexpected Input for EGDTFDmxInvert Enum"));
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertDMXInvert, node);
+        SceneData::GdtfFixture::AddError(error);
+    }
 	
 	// Return true
 	return true;
@@ -1107,12 +1220,17 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 	return XML_GDTF_DMXChannelEncoderInvertEnum_No;
 }
 
-/*static*/ bool GdtfConverter::ConvertEncoderInvertEnum(const TXString& value, EGDTFEncoderInvert&			enc)
+/*static*/ bool GdtfConverter::ConvertEncoderInvertEnum(const TXString& value, const IXMLFileNodePtr& node,EGDTFEncoderInvert&			enc)
 {
 	if		(value == XML_GDTF_DMXChannelEncoderInvertEnum_No)	{ enc = eGDTFEncoderInvert_No;		}
 	else if (value == XML_GDTF_DMXChannelEncoderInvertEnum_Yes)	{ enc = eGDTFEncoderInvert_Yes;		}
 	else if (value == "")										{ enc = eGDTFEncoderInvert_No;		}
-	else														{ enc = eGDTFEncoderInvert_No; DSTOP((kEveryone, "Unaspected Input for EGDTFEncoderInvert Enum"));}
+	else
+    {
+        enc = eGDTFEncoderInvert_No; DSTOP((kEveryone, "Unexpected Input for EGDTFEncoderInvert Enum"));
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertEncoderInvert, node);
+        SceneData::GdtfFixture::AddError(error);
+    }
 	
 	// Return true
 	return true;	
@@ -1132,7 +1250,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
     return XML_GDTF_RDMParamTypeEnum_RDM; // TODO: Theres no default value at the moment check this later again. (19.10)
 }
 
-/*static*/ bool GdtfConverter::ConvertRDMParamTypeEnum(const TXString& value, EGdtf_RDMParam_Type&			val)
+/*static*/ bool GdtfConverter::ConvertRDMParamTypeEnum(const TXString& value, const IXMLFileNodePtr& node,EGdtf_RDMParam_Type&			val)
 {
     if (value == XML_GDTF_RDMParamTypeEnum_RDM)              { val = EGdtf_RDMParam_Type::RDM;}
     else if (value == XML_GDTF_RDMParamTypeEnum_FixtureType) { val = EGdtf_RDMParam_Type::FixtureType;}
@@ -1140,7 +1258,9 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
     else 
     { 
         val = EGdtf_RDMParam_Type::RDM; 
-        DSTOP((kEveryone, "Unaspected Input for ConvertRDMParamTypeEnum Enum")); 
+        DSTOP((kEveryone, "Unexpected Input for ConvertRDMParamTypeEnum Enum"));
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertRDMParamType, node);
+        SceneData::GdtfFixture::AddError(error);
     } // TODO: Theres no default value at the moment check this later again. (19.10)
 
     return true;
@@ -1167,7 +1287,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
     return XML_GDTF_RDMParam_DataTypeEnum_DS_NOT_DEFINED; // TODO: Theres no default value at the moment check this later again. (19.10)
 }
 
-/*static*/ bool GdtfConverter::Convert_RDMParamDataTypeEnum(const TXString& value, EGdtf_RDMParam_DataType& val)
+/*static*/ bool GdtfConverter::Convert_RDMParamDataTypeEnum(const TXString& value, const IXMLFileNodePtr& node,EGdtf_RDMParam_DataType& val)
 {
     if      (value == XML_GDTF_RDMParam_DataTypeEnum_DS_NOT_DEFINED)    { val = EGdtf_RDMParam_DataType::DS_NOT_DEFINED; }
     else if (value == XML_GDTF_RDMParam_DataTypeEnum_DS_BIT_FIELD)      { val = EGdtf_RDMParam_DataType::DS_BIT_FIELD ; }
@@ -1182,7 +1302,9 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
     else 
     { 
         val = EGdtf_RDMParam_DataType::DS_NOT_DEFINED; // TODO: Theres no default value at the moment check this later again. (19.10)
-        DSTOP((kEveryone, "Unaspected Input for EGDTFvaloderInvert Enum"));        
+        DSTOP((kEveryone, "Unexpected Input for EGDTFvaloderInvert Enum"));
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertRDMParamDataType, node);
+        SceneData::GdtfFixture::AddError(error);
     }
 
     return true;
@@ -1203,7 +1325,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
     return XML_GDTF_RDMParam_Command_None; // TODO: Theres no default value at the moment check this later again. (19.10)
 }
 
-/*static*/ bool GdtfConverter::Convert_RDMParam_CommandEnum(const TXString& value, EGdtf_RDMParam_Command&			val)
+/*static*/ bool GdtfConverter::Convert_RDMParam_CommandEnum(const TXString& value, const IXMLFileNodePtr& node,EGdtf_RDMParam_Command&			val)
 {
     if      (value == XML_GDTF_RDMParam_Command_None)       { val = EGdtf_RDMParam_Command::None; }
     else if (value == XML_GDTF_RDMParam_Command_CC_GET)     { val = EGdtf_RDMParam_Command::CC_GET; }
@@ -1212,7 +1334,9 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
     else
     {
         val = EGdtf_RDMParam_Command::None;; // TODO: Theres no default value at the moment check this later again. (19.10)
-        DSTOP((kEveryone, "Unaspected Input for Convert_RDMParam_CommandEnum Enum"));
+        DSTOP((kEveryone, "Unexpected Input for Convert_RDMParam_CommandEnum Enum"));
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertRDMParamCommand, node);
+        SceneData::GdtfFixture::AddError(error);
     }
 
     return true;
@@ -1259,7 +1383,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
     return XML_GDTF_RDMParam_SensorUnit_UNITS_NONE;  // TODO: Theres no default value at the moment check this later again. (19.10)
 }
 
-/*static*/ bool GdtfConverter::Convert_RDMParam_SensorUnitEnum(const TXString& value, EGdtf_RDMParam_SensorUnit&	val)
+/*static*/ bool GdtfConverter::Convert_RDMParam_SensorUnitEnum(const TXString& value, const IXMLFileNodePtr& node,EGdtf_RDMParam_SensorUnit&	val)
 {
     if      (value == XML_GDTF_RDMParam_SensorUnit_UNITS_NONE)                        { val = EGdtf_RDMParam_SensorUnit::UNITS_NONE;}
     else if (value == XML_GDTF_RDMParam_SensorUnit_UNITS_CENTIGRADE)                  { val = EGdtf_RDMParam_SensorUnit::UNITS_CENTIGRADE;}
@@ -1294,7 +1418,9 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
     else
     {
         val = EGdtf_RDMParam_SensorUnit::UNITS_NONE;   // TODO: Theres no default value at the moment check this later again. (19.10)
-        DSTOP((kEveryone, "Unaspected Input for Convert_RDMParam_SensorUnitEnum Enum"));
+        DSTOP((kEveryone, "Unexpected Input for Convert_RDMParam_SensorUnitEnum Enum"));
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertRDMParamSensorUnit, node);
+        SceneData::GdtfFixture::AddError(error);
     }
 
     // Return true
@@ -1333,7 +1459,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
     return XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_NONE; // TODO: Theres no default value at the moment check this later again. (19.10)
 }
 
-/*static*/ bool GdtfConverter::Convert_RDMParam_SensorUnitPrefixEnum(const TXString& value, EGdtf_RDMParam_SensorUnitPrefix& val)
+/*static*/ bool GdtfConverter::Convert_RDMParam_SensorUnitPrefixEnum(const TXString& value, const IXMLFileNodePtr& node,EGdtf_RDMParam_SensorUnitPrefix& val)
 {    
     if      (value == XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_NONE)   { val =  EGdtf_RDMParam_SensorUnitPrefix::PREFIX_NONE;}
     else if (value == XML_GDTF_RDMParam_SensorUnitPrefix_PREFIX_DECI)   { val =  EGdtf_RDMParam_SensorUnitPrefix::PREFIX_DECI;}
@@ -1359,7 +1485,9 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
     else
     {
         val = EGdtf_RDMParam_SensorUnitPrefix::PREFIX_NONE;   // TODO: Theres no default value at the moment check this later again. (19.10)
-        DSTOP((kEveryone, "Unaspected Input for Convert_RDMParam_SensorUnitPrefixEnum Enum"));
+        DSTOP((kEveryone, "Unexpected Input for Convert_RDMParam_SensorUnitPrefixEnum Enum"));
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertRDMParamSensorUnitPrefix, node);
+        SceneData::GdtfFixture::AddError(error);
     }
 
     return true;
@@ -1379,14 +1507,16 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
     return XML_GDTF_RDMValueBool_Value_YES; // TODO: Theres no default value at the moment check this later again. (19.10)
 }
 
-/*static*/ bool GdtfConverter::ConvertEGdtf_RDMValueBool_ValueEnum(const TXString& value, EGdtf_RDMValueBool_Value&	val)
+/*static*/ bool GdtfConverter::ConvertEGdtf_RDMValueBool_ValueEnum(const TXString& value, const IXMLFileNodePtr& node,EGdtf_RDMValueBool_Value&	val)
 {
     if      (value == XML_GDTF_RDMValueBool_Value_YES) { val = EGdtf_RDMValueBool_Value::eYes; }
     else if (value == XML_GDTF_RDMValueBool_Value_NO)  { val = EGdtf_RDMValueBool_Value::eNo; }
     else
     {
         val = EGdtf_RDMValueBool_Value::eYes;   // TODO: Theres no default value at the moment check this later again. (19.10)
-        DSTOP((kEveryone, "Unaspected Input for ConvertEGdtf_RDMValueBool_ValueEnum Enum"));
+        DSTOP((kEveryone, "Unexpected Input for ConvertEGdtf_RDMValueBool_ValueEnum Enum"));
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertRDMValueBoolValue, node);
+        SceneData::GdtfFixture::AddError(error);
     }
         
     return true;
@@ -1407,7 +1537,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
     return XML_GDTF_ThresholdOperator_Is; // TODO: Theres no default value at the moment check this later again. (19.10)
 }
 
-/*static*/ bool GdtfConverter::ConvertEGdtf_RDMValue_ThresholdOperatorEnum(const TXString& value, EGdtf_RDMValue_ThresholdOperator& val)
+/*static*/ bool GdtfConverter::ConvertEGdtf_RDMValue_ThresholdOperatorEnum(const TXString& value, const IXMLFileNodePtr& node,EGdtf_RDMValue_ThresholdOperator& val)
 {
     if      (value == XML_GDTF_ThresholdOperator_Is)      { val = EGdtf_RDMValue_ThresholdOperator::Is; }
     else if (value == XML_GDTF_ThresholdOperator_IsNot)   { val = EGdtf_RDMValue_ThresholdOperator::IsNot; }
@@ -1416,7 +1546,9 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
     else
     {
         val = EGdtf_RDMValue_ThresholdOperator::Is;   // TODO: Theres no default value at the moment check this later again. (19.10)
-        DSTOP((kEveryone, "Unaspected Input for ConvertEGdtf_RDMValue_ThresholdOperatorEnum Enum"));
+        DSTOP((kEveryone, "Unexpected Input for ConvertEGdtf_RDMValue_ThresholdOperatorEnum Enum"));
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertRDMValueThresholdOperator, node);
+        SceneData::GdtfFixture::AddError(error);
     }
 
     // Return true
@@ -1469,7 +1601,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
     return XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_TEMPERATURE; // TODO: Theres no default value at the moment check this later again. (19.10)
 }
 
-/*static*/ bool GdtfConverter::ConvertRDMValue_SENSOR_DEFINITION_TypeEnum(const TXString& value, EGdtf_RDMValue_SENSOR_DEFINITION_TYPE&			val)
+/*static*/ bool GdtfConverter::ConvertRDMValue_SENSOR_DEFINITION_TypeEnum(const TXString& value, const IXMLFileNodePtr& node,EGdtf_RDMValue_SENSOR_DEFINITION_TYPE&			val)
 {    
     if      (value == XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_TEMPERATURE)           { val = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_TEMPERATURE; }
     else if (value == XML_GDTF_RDMValue_SENSOR_DEFINITION_TYPE_ENUM_SEND_VOLTAGE)               { val = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_VOLTAGE; }
@@ -1509,7 +1641,9 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
     else
     {
         val = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_TEMPERATURE;   // TODO: Theres no default value at the moment check this later again. (19.10)
-        DSTOP((kEveryone, "Unaspected Input for ConvertRDMValue_SENSOR_DEFINITION_TypeEnum Enum"));
+        DSTOP((kEveryone, "Unexpected Input for ConvertRDMValue_SENSOR_DEFINITION_TypeEnum Enum"));
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertRDMValueSensorDefinitionType, node);
+        SceneData::GdtfFixture::AddError(error);
     }
        
     return true;
@@ -1527,14 +1661,16 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
     return XML_GDTF_RDMValue_LowesHighestDetectionSupported_ENUM_YES; // TODO: Theres no default value at the moment check this later again. (19.10)
 }
 
-/*static*/ bool GdtfConverter::Convert_RDMValue_LowesHighestDetectionSupportedEnum(const TXString& value, EGdtf_RDMValue_LowesHighestDetectionSupported&			val)
+/*static*/ bool GdtfConverter::Convert_RDMValue_LowesHighestDetectionSupportedEnum(const TXString& value, const IXMLFileNodePtr& node,EGdtf_RDMValue_LowesHighestDetectionSupported&			val)
 {
     if      (value == XML_GDTF_RDMValue_LowesHighestDetectionSupported_ENUM_YES) { val = EGdtf_RDMValue_LowesHighestDetectionSupported::eYES; }
     else if (value == XML_GDTF_RDMValue_LowesHighestDetectionSupported_ENUM_NO)  { val = EGdtf_RDMValue_LowesHighestDetectionSupported::eNO; }
     else
     {
         val = val = EGdtf_RDMValue_LowesHighestDetectionSupported::eYES;   // TODO: Theres no default value at the moment check this later again. (19.10)
-        DSTOP((kEveryone, "Unaspected Input for Convert_RDMValue_LowesHighestDetectionSupportedEnum."));
+        DSTOP((kEveryone, "Unexpected Input for Convert_RDMValue_LowesHighestDetectionSupportedEnum."));
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertRDMValueLowesHighestDetectionSupported, node);
+        SceneData::GdtfFixture::AddError(error);
     }
 
     return true;
@@ -1553,14 +1689,16 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
     return XML_GDTF_RDMValue_RecordValueSupported_ENUM_YES; // TODO: Theres no default value at the moment check this later again. (19.10)
 }
 
-/*static*/ bool GdtfConverter::Convert_RDMValue_RecordValueSupportedEnum(const TXString& value, EGdtf_RDMValue_RecordValueSupported& val)
+/*static*/ bool GdtfConverter::Convert_RDMValue_RecordValueSupportedEnum(const TXString& value, const IXMLFileNodePtr& node,EGdtf_RDMValue_RecordValueSupported& val)
 {
     if      (value == XML_GDTF_RDMValue_RecordValueSupported_ENUM_YES) { val = EGdtf_RDMValue_RecordValueSupported::eYES; }
     else if (value == XML_GDTF_RDMValue_RecordValueSupported_ENUM_NO)  { val = EGdtf_RDMValue_RecordValueSupported::eNO; }
     else
     {
         val = EGdtf_RDMValue_RecordValueSupported::eYES;   // TODO: Theres no default value at the moment check this later again. (19.10)
-        DSTOP((kEveryone, "Unaspected Input for Convert_RDMValue_RecordValueSupportedEnum"));
+        DSTOP((kEveryone, "Unexpected Input for Convert_RDMValue_RecordValueSupportedEnum"));
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertRDMValueRecordValueSupported, node);
+        SceneData::GdtfFixture::AddError(error);
     }
 
     return true;
@@ -1586,7 +1724,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
     return XML_GDTF_SLOT_INFO_Type_ENUM_ST_PRIMARY; // TODO: Theres no default value at the moment check this later again. (19.10)
 }
 
-/*static*/ bool GdtfConverter::ConvertRDMValue_SLOT_INFO_TypeEnum(const TXString& value, EGdtf_RDMValue_SLOT_INFO_Type&	val)
+/*static*/ bool GdtfConverter::ConvertRDMValue_SLOT_INFO_TypeEnum(const TXString& value, const IXMLFileNodePtr& node,EGdtf_RDMValue_SLOT_INFO_Type&	val)
 {
     if      (value == XML_GDTF_SLOT_INFO_Type_ENUM_ST_PRIMARY) { val = EGdtf_RDMValue_SLOT_INFO_Type::ST_PRIMARY; }
     else if (value == XML_GDTF_SLOT_INFO_Type_ENUM_ST_SEC_FINE) { val = EGdtf_RDMValue_SLOT_INFO_Type::ST_SEC_FINE; }
@@ -1600,7 +1738,9 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
     else
     {
         val = EGdtf_RDMValue_SLOT_INFO_Type::ST_PRIMARY;   // TODO: Theres no default value at the moment check this later again. (19.10)
-        DSTOP((kEveryone, "Unaspected Input for ConvertRDMValue_SLOT_INFO_TypeEnum"));
+        DSTOP((kEveryone, "Unexpected Input for ConvertRDMValue_SLOT_INFO_TypeEnum"));
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertRDMValueSlotInfoType, node);
+        SceneData::GdtfFixture::AddError(error);
     }
 
     return true;
@@ -1660,56 +1800,58 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
 }
 
 
-/*static*/ bool GdtfConverter::ConvertRDMValue_SLOT_INFO_SlotLabelIDEnum(const TXString& value, EGdtf_RDMValue_SLOT_INFO_SlotLabelID&	val)
+/*static*/ bool GdtfConverter::ConvertRDMValue_SLOT_INFO_SlotLabelIDEnum(const TXString& value, const IXMLFileNodePtr& node,EGdtf_RDMValue_SLOT_INFO_SlotLabelID&	val)
 {           
-     if      (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_INTENSITY) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_INTENSITY; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_INTENSITY_MASTER) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_INTENSITY_MASTER; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_PAN) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_PAN; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_TILT) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_TILT; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_WHEEL) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_WHEEL; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_SUB_CYAN) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_SUB_CYAN; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_SUB_YELLOW) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_SUB_YELLOW; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_SUB_MAGENTA) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_SUB_MAGENTA; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_ADD_RED) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_ADD_RED; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_ADD_GREEN) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_ADD_GREEN; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_ADD_BLUE) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_ADD_BLUE; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_CORRECTION) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_CORRECTION; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_SCROLL) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_SCROLL; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_SEMAPHORE) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_SEMAPHORE; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_ADD_AMBER) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_ADD_AMBER; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_ADD_WHITE) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_ADD_WHITE; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_ADD_WARM_WHITE) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_ADD_WARM_WHITE; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_ADD_COOL_WHITE) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_ADD_COOL_WHITE; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_SUB_UV) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_SUB_UV; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_HUE) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_HUE; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_SATURATION) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_SATURATION; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_STATIC_GOBO_WHEEL) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_STATIC_GOBO_WHEEL; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_ROTO_GOBO_WHEEL) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_ROTO_GOBO_WHEEL; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_PRISM_WHEEL) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_PRISM_WHEEL; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_EFFECTS_WHEEL) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_EFFECTS_WHEEL; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_BEAM_SIZE_IRIS) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_BEAM_SIZE_IRIS; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_EDGE) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_EDGE; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_FROST) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_FROST; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_STROBE) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_STROBE; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_ZOOM) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_ZOOM; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_FRAMING_SHUTTER) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_FRAMING_SHUTTER; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_SHUTTER_ROTATE) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_SHUTTER_ROTATE; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_DOUSER) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_DOUSER; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_BARN_DOOR) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_BARN_DOOR; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_LAMP_CONTROL) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_LAMP_CONTROL; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_FIXTURE_CONTROL) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_FIXTURE_CONTROL; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_FIXTURE_SPEED) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_FIXTURE_SPEED; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_MACRO) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_MACRO; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_POWER_CONTROL) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_POWER_CONTROL; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_FAN_CONTROL) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_FAN_CONTROL; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_HEATER_CONTROL) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_HEATER_CONTROL; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_FOUNTAIN_CONTROL) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_FOUNTAIN_CONTROL; }
-     else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_UNDEFINED) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_UNDEFINED; }    
-     else
-     {
-         val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_INTENSITY;   // TODO: Theres no default value at the moment check this later again. (19.10)
-         DSTOP((kEveryone, "Unaspected Input for ConvertRDMValue_SLOT_INFO_SlotLabelIDEnum"));
-     }
+    if      (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_INTENSITY) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_INTENSITY; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_INTENSITY_MASTER) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_INTENSITY_MASTER; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_PAN) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_PAN; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_TILT) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_TILT; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_WHEEL) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_WHEEL; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_SUB_CYAN) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_SUB_CYAN; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_SUB_YELLOW) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_SUB_YELLOW; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_SUB_MAGENTA) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_SUB_MAGENTA; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_ADD_RED) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_ADD_RED; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_ADD_GREEN) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_ADD_GREEN; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_ADD_BLUE) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_ADD_BLUE; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_CORRECTION) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_CORRECTION; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_SCROLL) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_SCROLL; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_SEMAPHORE) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_SEMAPHORE; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_ADD_AMBER) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_ADD_AMBER; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_ADD_WHITE) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_ADD_WHITE; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_ADD_WARM_WHITE) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_ADD_WARM_WHITE; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_ADD_COOL_WHITE) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_ADD_COOL_WHITE; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_SUB_UV) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_SUB_UV; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_HUE) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_HUE; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_COLOR_SATURATION) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_COLOR_SATURATION; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_STATIC_GOBO_WHEEL) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_STATIC_GOBO_WHEEL; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_ROTO_GOBO_WHEEL) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_ROTO_GOBO_WHEEL; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_PRISM_WHEEL) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_PRISM_WHEEL; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_EFFECTS_WHEEL) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_EFFECTS_WHEEL; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_BEAM_SIZE_IRIS) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_BEAM_SIZE_IRIS; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_EDGE) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_EDGE; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_FROST) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_FROST; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_STROBE) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_STROBE; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_ZOOM) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_ZOOM; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_FRAMING_SHUTTER) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_FRAMING_SHUTTER; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_SHUTTER_ROTATE) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_SHUTTER_ROTATE; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_DOUSER) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_DOUSER; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_BARN_DOOR) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_BARN_DOOR; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_LAMP_CONTROL) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_LAMP_CONTROL; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_FIXTURE_CONTROL) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_FIXTURE_CONTROL; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_FIXTURE_SPEED) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_FIXTURE_SPEED; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_MACRO) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_MACRO; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_POWER_CONTROL) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_POWER_CONTROL; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_FAN_CONTROL) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_FAN_CONTROL; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_HEATER_CONTROL) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_HEATER_CONTROL; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_FOUNTAIN_CONTROL) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_FOUNTAIN_CONTROL; }
+    else if (value == XML_GDTF_SLOT_INFO_SlotLabelID_ENUM_SD_UNDEFINED) { val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_UNDEFINED; }    
+    else
+    {
+        val = EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_INTENSITY;   // TODO: Theres no default value at the moment check this later again. (19.10)
+        DSTOP((kEveryone, "Unexpected Input for ConvertRDMValue_SLOT_INFO_SlotLabelIDEnum"));
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertRDMValueSlotInfoSlotLabelID, node);
+        SceneData::GdtfFixture::AddError(error);
+    }
 
     return true;
 }
@@ -1824,7 +1966,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
     return XML_GDTF_ColorSample_1;
 }
 
-/*static*/ bool GdtfConverter::ConvertEGdtfColorSampleEnum(const TXString& inVal, EGdtfColorSample& outVal)
+/*static*/ bool GdtfConverter::ConvertEGdtfColorSampleEnum(const TXString& inVal, const IXMLFileNodePtr& node, EGdtfColorSample& outVal)
 {    
     if      (inVal == XML_GDTF_ColorSample_1)  { outVal = EGdtfColorSample::CES_01; }
     else if (inVal == XML_GDTF_ColorSample_2)  { outVal = EGdtfColorSample::CES_02; }
@@ -1927,6 +2069,8 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, EGdtfC
     else if (inVal == XML_GDTF_ColorSample_99) { outVal = EGdtfColorSample::CES_99; }
 
     DSTOP((kEveryone, "Unknown Value for EGdtfColorSample"));
+    GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertColorSample, node);
+    SceneData::GdtfFixture::AddError(error);
        
     return true;
 }
@@ -1976,6 +2120,8 @@ bool SceneDataZip::GetFile(const TXString &fileName, const IFolderIdentifierPtr 
 		return true;
 	}
 	
+    GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFailedToReadDescription);
+    SceneData::GdtfFixture::AddError(error);
 	return false;
 }
 
@@ -2058,13 +2204,20 @@ void SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, ISceneDataZipBuffer& buffe
 
 
 
-/*static*/ bool GdtfConverter::Deserialize(const TXString& value, std::vector<double>& doubleArr)
+/*static*/ bool GdtfConverter::Deserialize(const TXString& value, const IXMLFileNodePtr& node,std::vector<double>& doubleArr)
 {
 	// Split string
 	TXString strVal = value;
 	
 	// Find first entry
 	ptrdiff_t pos = strVal.Find(",");
+    if (strVal.Find(",") == -1)
+    {
+        // TODO
+        // (line column)
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoCommaFound, node);
+        SceneData::GdtfFixture::AddError(error);
+    }
 	while (pos > 0 )
 	{
 		// Copy string
@@ -2080,6 +2233,7 @@ void SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, ISceneDataZipBuffer& buffe
 		pos = strVal.Find(",");
 	}
 	
+	
 	// Delete and find next
 	TXString con(strVal);
 	doubleArr.push_back(con.atof());
@@ -2087,7 +2241,7 @@ void SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, ISceneDataZipBuffer& buffe
 	return true;
 }
 
-/*static*/ bool GdtfConverter::Deserialize(const TXString& value, TSint32Array & intArray)
+/*static*/ bool GdtfConverter::Deserialize(const TXString& value, const IXMLFileNodePtr& node, TSint32Array & intArray)
 {
 	// Split string
 	TXString strVal = value;
@@ -2179,6 +2333,23 @@ void GdtfConverter::TraverseMultiNodes(IXMLFileNodePtr root, const TXString& chi
 	}
 }
 
+DmxValue GdtfConverter::GetChannelMaxDmx(EGdtfChannelBitResolution chanlReso)
+{
+	DmxValue maxVal = 0;
+	switch (chanlReso)
+	{
+		case VectorworksMVR::GdtfDefines::eGdtfChannelBitResolution_8: maxVal = 256 ; break;
+		case VectorworksMVR::GdtfDefines::eGdtfChannelBitResolution_16:maxVal = 256 * 256; break;
+		case VectorworksMVR::GdtfDefines::eGdtfChannelBitResolution_24:maxVal = 256 * 256 * 256; break;
+		case VectorworksMVR::GdtfDefines::eGdtfChannelBitResolution_32:maxVal = 4294967296; break; 
+		/* The compiler gives a warning here, if we do a normal calculation here, so we just pick the value (256 * 256 * 256 * 256)*/
+	}
+
+    ASSERTN(kEveryone, maxVal != 0);
+	
+	return (maxVal - 1);
+
+}
 ISceneDataZipBuffer::ISceneDataZipBuffer()
 {
     fpZIPDataBuffer = NULL;

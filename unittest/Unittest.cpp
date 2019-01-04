@@ -328,3 +328,37 @@ void Unittest::checkifEqualPtr(const std::string& check, void* val1, void* val2)
 
 	fFailedTests.push_back(test);
 };
+
+void Unittest::PrintParsingError(const std::string& check, const Sint32 val1)
+{
+	// Else Log the error
+	fFailed = true;
+
+	UnittestFailObject test;
+	test.fMessage += " Code: ";
+	test.fMessage += std::to_string(val1);
+	test.fMessage += " Message: ";
+	test.fMessage += check;
+
+	fFailedTests.push_back(test);
+};
+
+void Unittest::PrintParsingErrorList(VectorworksMVR::IGdtfFixturePtr& fixture)
+{
+	// Print Parsing Errors
+	size_t countParsingErrors = 0;
+	fixture->GetParsingErrorCount(countParsingErrors);
+	for(size_t i = 0; i < countParsingErrors; i++)
+	{
+		GdtfDefines::EGdtfParsingError errorType;
+		
+		size_t line   = 0;
+		size_t column = 0;
+
+		IGdtfXmlParsingErrorPtr error;
+		fixture->GetParsingErrorAt( i, &error);
+		error->GetErrorType(errorType);
+		error->GetLineAndColumnNumber(line, column);
+		PrintParsingError(error->GetErrorMessage(), (Sint32)errorType);
+	}
+};

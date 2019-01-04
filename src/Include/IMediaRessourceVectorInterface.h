@@ -70,6 +70,7 @@ namespace VectorworksMVR
 	class IGdtfFeatureGroup;
 	class IGdtfDmxChannel;
     class IGdtfDmxLogicalChannel;
+    class IGdtfXmlParsingError;
 
 	//-------------------------------------------------------------------------------------------------------------
 	class DYNAMIC_ATTRIBUTE ISceneDataProvider : public IVWUnknown
@@ -844,7 +845,7 @@ namespace VectorworksMVR
         
         virtual MvrString VCOM_CALLTYPE		GetName() = 0;
         virtual MvrString VCOM_CALLTYPE     GetManufacturer() = 0;
-		 virtual VCOMError VCOM_CALLTYPE    GetFixtureGUID(MvrUUID& uuid) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetFixtureGUID(MvrUUID& uuid) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetLinkedFixtureGUID(MvrUUID& uuid) = 0;
 		virtual VCOMError VCOM_CALLTYPE		HasLinkedFixtureGUID(bool& has) = 0;
 		
@@ -917,6 +918,11 @@ namespace VectorworksMVR
 		// Protocoll
 		virtual VCOMError VCOM_CALLTYPE GetRDM(IGdtf_FTRDM ** newFTRDM) = 0;
 		virtual VCOMError VCOM_CALLTYPE CreateRDM(VectorworksMVR::IGdtf_FTRDM ** outFTRDM) = 0;
+
+        // Parsing Errors
+        virtual VCOMError VCOM_CALLTYPE		GetParsingErrorCount(size_t& count) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetParsingErrorAt(size_t at, IGdtfXmlParsingError** value) = 0;
+
 		
 	};
     typedef VCOMPtr<IGdtfFixture>	IGdtfFixturePtr;
@@ -1179,6 +1185,16 @@ namespace VectorworksMVR
         virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
     };
     typedef VCOMPtr<IGdtfRDMParameterNotification>	IGdtfRDMParameterNotificationPtr;
+
+    class DYNAMIC_ATTRIBUTE IGdtfXmlParsingError : public IVWUnknown
+    {
+		public:
+        virtual VCOMError VCOM_CALLTYPE     GetErrorType(GdtfDefines::EGdtfParsingError& error) = 0;
+        virtual MvrString VCOM_CALLTYPE     GetErrorMessage() = 0;
+        virtual MvrString VCOM_CALLTYPE     GetNodeName() = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetLineAndColumnNumber(size_t& line, size_t& column) = 0;
+    };
+    typedef VCOMPtr<IGdtfXmlParsingError>	IGdtfXmlParsingErrorPtr;
 
 
 }

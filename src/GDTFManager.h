@@ -4,6 +4,7 @@
 #pragma once
 #include "Prefix/StdAfx.h"
 #include "CieColor.h"
+#include "GdtfError.h"
 #include "Include/GDTFPrefix.h"
 
 using namespace VectorWorks::Filing;
@@ -65,13 +66,16 @@ namespace SceneData
 		virtual ~GdtfObject();
 		
 	private:
-		void*		fBindValue;
+		void*		    fBindValue;
+        IXMLFileNodePtr fNode;
 		
 		
 	public:
 		// Write
 		void			WriteToNode(IXMLFileNodePtr pContainerNode);
 		void			ReadFromNode(const IXMLFileNodePtr& pNode);
+
+        void			GetNode(IXMLFileNodePtr& pNode);
 		
 		
 		// Bind Behavoir
@@ -87,7 +91,7 @@ namespace SceneData
 		
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
-
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
 		
 	};
 	
@@ -125,9 +129,8 @@ namespace SceneData
 		virtual	TXString				    GetNodeName();
 		virtual	void					    OnPrintToFile(IXMLFileNodePtr pNode);
 		virtual	void					    OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					    OnErrorCheck(const IXMLFileNodePtr& pNode);
 
-		
-		
 	};
 	typedef GdtfActivationGroup*				GdtfActivationGroupPtr;
 	typedef std::vector<GdtfActivationGroupPtr>	TGdtfActivationGroupArray;
@@ -162,7 +165,8 @@ namespace SceneData
 		virtual	TXString				GetNodeName();
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
-		
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+
 	};
 
     typedef GdtfFeature*                GdtfFeaturePtr;
@@ -197,7 +201,8 @@ namespace SceneData
 		virtual	TXString				GetNodeName();
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
-		
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+
 	};	
 	typedef GdtfFeatureGroup*				GdtfFeatureGroupPtr;
 	typedef std::vector<GdtfFeatureGroupPtr>TGdtfFeatureGroupArray;
@@ -255,7 +260,8 @@ namespace SceneData
 		virtual	TXString				GetNodeName();
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
-		
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+
 	};
 	typedef GdtfAttribute*				GdtfAttributePtr;
 	typedef std::vector<GdtfAttribute*> TGdtfAttributeArray;
@@ -286,6 +292,7 @@ namespace SceneData
 		virtual	TXString				GetNodeName();
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
 		
 	};
 	typedef GdtfWheelSlotPrismFacet*				GdtfWheelSlotPrismFacetPtr;
@@ -330,6 +337,7 @@ namespace SceneData
 		virtual	TXString				GetNodeName();
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
 		
 	};
 	typedef GdtfWheelSlot*					GdtfWheelSlotPtr;
@@ -370,6 +378,7 @@ namespace SceneData
 		virtual	TXString				GetNodeName();
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
 		
 	};
 	typedef GdtfWheel*                  GdtfWheelPtr;
@@ -422,6 +431,7 @@ namespace SceneData
 		virtual	TXString				GetNodeName();
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);	
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
 				
 	};
 	typedef GdtfModel*					GdtfModelPtr;
@@ -479,7 +489,8 @@ namespace SceneData
 		virtual	TXString				GetNodeName();
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
-		
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+
 	public:
 		virtual EGdtfObjectType			GetObjectType();
 		
@@ -520,6 +531,7 @@ namespace SceneData
 		virtual	TXString				GetNodeName();
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
 	};
 	
 	class GdtfGeometryBeamFilter : public GdtfGeometry
@@ -537,6 +549,7 @@ namespace SceneData
 		virtual	TXString				GetNodeName();
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual void                    OnErrorCheck(const IXMLFileNodePtr& pNode);
 	};
 	
 	class GdtfGeometryColorFilter : public GdtfGeometry
@@ -554,6 +567,7 @@ namespace SceneData
 		virtual	TXString				GetNodeName();
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
 	};
 	
 	class GdtfGeometryGoboFilter : public GdtfGeometry
@@ -571,6 +585,7 @@ namespace SceneData
 		virtual	TXString				GetNodeName();
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
 	};
 	
 	class GdtfGeometryShaperFilter : public GdtfGeometry
@@ -588,6 +603,7 @@ namespace SceneData
 		virtual	TXString				GetNodeName();
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
 	};	
 	
 	class GdtfGeometryLamp : public GdtfGeometry
@@ -638,6 +654,7 @@ namespace SceneData
 		virtual	TXString				GetNodeName();
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
 	};
 	
 	class GdtfBreak : public GdtfObject
@@ -664,6 +681,7 @@ namespace SceneData
 		virtual	TXString				GetNodeName();
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
 	};
 	typedef GdtfBreak*				GdtfBreakPtr;
 	typedef std::vector<GdtfBreak*> TGdtfBreakArray;
@@ -696,6 +714,7 @@ namespace SceneData
 		virtual	TXString				GetNodeName();
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
 	};
 	typedef GdtfGeometryReference*		GdtfGeometryReferencePtr;
 	
@@ -747,7 +766,8 @@ namespace SceneData
 		virtual	TXString				GetNodeName();
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
-		
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+
 	};
 	typedef GdtfDmxChannelSet*				GdtfDmxChannelSetPtr;
 	typedef std::vector<GdtfDmxChannelSet*>	TGdtfDmxChannelSetArray;
@@ -851,7 +871,8 @@ namespace SceneData
 		virtual	TXString				GetNodeName();
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
-		
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+
 	};
 	typedef GdtfDmxChannelFunction*					GdtfDmxChannelFunctionPtr;
 	typedef std::vector<GdtfDmxChannelFunctionPtr>	TGdtfDmxChannelFuntionArray;
@@ -899,6 +920,7 @@ namespace SceneData
 		virtual	TXString				GetNodeName();
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
 
 	};
 	typedef GdtfDmxLogicalChannel*				GdtfDmxLogicalChannelPtr;
@@ -974,7 +996,8 @@ namespace SceneData
 		virtual	TXString				GetNodeName();
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
-		
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+
 	};
 	typedef GdtfDmxChannel*					GdtfDmxChannelPtr;
 	typedef std::vector<GdtfDmxChannelPtr>	TGdtfDmxChannelArray;
@@ -1021,7 +1044,8 @@ namespace SceneData
 		virtual	TXString				GetNodeName();
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
-		
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+
 	};
 	typedef GdtfDmxRelation*				GdtfDmxRelationPtr;
 	typedef std::vector<GdtfDmxRelation*>	TGdtfDmxRelationArray;
@@ -1065,7 +1089,8 @@ namespace SceneData
 		virtual	TXString				GetNodeName();
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
-		
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+
 	};
 	typedef GdtfDmxMode*				GdtfDmxModePtr;
 	typedef std::vector<GdtfDmxMode*>	TGdtfDmxModeArray;	
@@ -1096,6 +1121,8 @@ namespace SceneData
 		virtual	TXString				GetNodeName();
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+
 	};
 	typedef GdtfRevision*	GdtfRevisionPtr;
 	typedef std::vector<GdtfRevision*>	TGdtfRevisionArray;
@@ -1142,6 +1169,7 @@ namespace SceneData
         virtual	TXString				GetNodeName();
         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
         virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
     };
     typedef GdtfProtocols*	GdtfProtocolsPtr;    
 
@@ -1166,7 +1194,7 @@ namespace SceneData
         // Getter
         Sint32                        GetManufacturerID() const;
         Sint32                        GetDeviceModelID()  const;
-        const TSint32Array&             GetSoftwareVersIDs() const;        
+        const TSint32Array&           GetSoftwareVersIDs() const;        
         const TGdtfRDMParameterArray& GetRDMParametersArray() const;
         GdtfRDMNotifications*         GetRDMNotifications() const;
         // Setter
@@ -1191,6 +1219,7 @@ namespace SceneData
         virtual	TXString				GetNodeName();
         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
         virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
     };
     typedef GdtfFTRDM*	GdtfFTRDMPtr;    
 
@@ -1265,6 +1294,7 @@ namespace SceneData
         virtual	TXString				GetNodeName();
         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
         virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual void                    OnErrorCheck(const IXMLFileNodePtr& pNode);
     };
 
     class GdtfRDMParameterNotification : public GdtfObject
@@ -1292,6 +1322,7 @@ namespace SceneData
         virtual	TXString				GetNodeName();
         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
         virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual void                    OnErrorCheck(const IXMLFileNodePtr& pNode);
     };
     typedef GdtfRDMParameterNotification*	GdtfRDMParameterNotificationPtr;
     typedef std::vector<GdtfRDMParameterNotification*>	TGdtfRDMParameterNotificationArray;
@@ -1322,6 +1353,7 @@ namespace SceneData
         virtual	TXString				     GetNodeName();
         virtual	void					     OnPrintToFile(IXMLFileNodePtr pNode);
         virtual	void					     OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual void                         OnErrorCheck(const IXMLFileNodePtr& pNode);
     }; 
     typedef GdtfRDMSensorNotification*	GdtfRDMSensorNotificationPtr;
     typedef std::vector<GdtfRDMSensorNotification*>	TGdtfRDMSensorNotificationArray;
@@ -1352,6 +1384,7 @@ namespace SceneData
         virtual	TXString				        GetNodeName();
         virtual	void					        OnPrintToFile(IXMLFileNodePtr pNode);
         virtual	void					        OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual void                            OnErrorCheck(const IXMLFileNodePtr& pNode);
     };
     typedef GdtfRDMNotifications*	GdtfRDMNotificationsPtr;   
 
@@ -1455,6 +1488,7 @@ protected:
 
         virtual	void					    OnPrintToFile(IXMLFileNodePtr pNode);
         virtual	void					    OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual void                        OnErrorCheck(const IXMLFileNodePtr& pNode);
     };    
 
     class GdtfRDMValueBool : public GdtfRDMParameterValue
@@ -1479,6 +1513,7 @@ protected:
         virtual	TXString				GetNodeName();
         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
         virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual void                    OnErrorCheck(const IXMLFileNodePtr& pNode);
     };
     typedef GdtfRDMValueBool*	GdtfRDMValueBoolPtr;
 
@@ -1652,6 +1687,7 @@ protected:
         virtual	TXString				GetNodeName();
         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
         virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual void                    OnErrorCheck(const IXMLFileNodePtr& pNode);
     };
     typedef GdtfGdtfRDMValue_DMX_PERSONALITY_DESCRIPTION*	GdtfGdtfRDMValue_DMX_PERSONALITY_DESCRIPTIONPtr;    
     
@@ -1714,6 +1750,7 @@ protected:
         virtual	TXString				GetNodeName();
         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
         virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual void                    OnErrorCheck(const IXMLFileNodePtr& pNode);
     };
     
     class GdtfRDMValue_SLOT_INFO : public GdtfRDMParameterValue
@@ -1746,6 +1783,7 @@ protected:
         virtual	TXString				GetNodeName();
         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
         virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual void                    OnErrorCheck(const IXMLFileNodePtr& pNode);
     };
     typedef GdtfRDMValue_SLOT_INFO*	GdtfGdtfRDMValue_SLOT_INFOPtr;
 
@@ -1772,6 +1810,7 @@ protected:
         virtual	TXString				GetNodeName();
         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
         virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual void                    OnErrorCheck(const IXMLFileNodePtr& pNode);
     };
     typedef GdtfRDMValue_STATUS_ID_DESCRIPTION*	GdtfRDMValue_STATUS_ID_DESCRIPTIONPtr;
          
@@ -1815,6 +1854,7 @@ protected:
         virtual	TXString				GetNodeName();
         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
         virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual void                    OnErrorCheck(const IXMLFileNodePtr& pNode);
     };
     typedef GdtfRDMValue_RealTimeClock*	GdtfRDMValue_RealTimeClockPtr;
     
@@ -1850,6 +1890,7 @@ protected:
         virtual	TXString				GetNodeName();
         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
         virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual void                    OnErrorCheck(const IXMLFileNodePtr& pNode);
     };
     typedef GdtfRDMValueSensor*	GdtfRDMValueSensorPtr;
 
@@ -2039,7 +2080,8 @@ protected:
 	protected:
 		virtual	TXString				GetNodeName();
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
-		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);		
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
 	};
 	typedef GdtfMacro*					GdtfMacroPtr;
 	typedef std::vector<GdtfMacroPtr>	TGdtfMacroArray;
@@ -2070,6 +2112,7 @@ protected:
         virtual	TXString				GetNodeName();
         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
         virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual void                    OnErrorCheck(const IXMLFileNodePtr& pNode);
     };
     typedef GdtfMacroDMXValue*	GdtfMacroDMXValuePtr;
     typedef std::vector<GdtfMacroDMXValue*>	TGdtfMacroDMXValueArray;
@@ -2099,6 +2142,7 @@ protected:
         virtual	TXString				GetNodeName();
         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
         virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual void                    OnErrorCheck(const IXMLFileNodePtr& pNode);
     };
     typedef GdtfMacroDMXStep*	GdtfMacroDMXStepPtr;
     typedef std::vector<GdtfMacroDMXStep*>	TGdtfMacroDMXStepArray;
@@ -2148,6 +2192,7 @@ protected:
         virtual	TXString			GetNodeName();
         virtual	void				OnPrintToFile(IXMLFileNodePtr pNode);
         virtual	void				OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual void                OnErrorCheck(const IXMLFileNodePtr& pNode);
     };
 
     typedef GdtfMacroVisualValue*	GdtfMacroVisualValuePtr;
@@ -2185,6 +2230,7 @@ protected:
         virtual	TXString				GetNodeName();
         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
         virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual void                    OnErrorCheck(const IXMLFileNodePtr& pNode);
     };
     typedef GdtfMacroVisualStep*	GdtfMacroVisualStepPtr;
     typedef std::vector<GdtfMacroVisualStep*>	TGdtfMacroVisualStepArray;
@@ -2235,7 +2281,8 @@ protected:
 		virtual	TXString				GetNodeName();
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
-		
+		virtual void                    OnErrorCheck(const IXMLFileNodePtr& pNode);
+
 	};
 	typedef GdtfMeasurementPoint*				GdtfMeasurementPointPtr;
 	typedef std::vector<GdtfMeasurementPoint*>	TGdtfMeasurementPointArray;
@@ -2269,7 +2316,8 @@ protected:
 		virtual	TXString				GetNodeName();
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
-		
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+
 	};
 	typedef GdtfPhysicalEmitter*				GdtfPhysicalEmitterPtr;
 	typedef std::vector<GdtfPhysicalEmitter*>	TGdtfPhysicalEmitterArray;
@@ -2298,6 +2346,7 @@ protected:
         virtual	TXString				GetNodeName();
         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
         virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual void                    OnErrorCheck(const IXMLFileNodePtr& pNode);
     };
     typedef GdtfCRI*	GdtfCRIPtr;
     typedef std::vector<GdtfCRI*>	TGdtf_CRIArray;
@@ -2328,6 +2377,7 @@ protected:
         virtual	TXString				GetNodeName();
         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
         virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual void                    OnErrorCheck(const IXMLFileNodePtr& pNode);
     };
     typedef GdtfCRIGroup*	GdtfCRIGroupPtr;
     typedef std::vector<GdtfCRIGroup*>	TGdtf_CRIGroupArray;
@@ -2407,6 +2457,16 @@ protected:
 		TVWArray_IFileIdentifier		fLocalFiles;
 		bool							fReaded;
 		IFolderIdentifierPtr			fWorkingFolder;
+        TGdtfParsingErrorArray          fParsingErrors;
+
+public:
+        static void                     AddError(const GdtfParsingError& error);
+        static TGdtfParsingErrorArray*  __ERROR_CONTAINER_POINTER;
+        TGdtfParsingErrorArray&         GetParsingErrorArray();
+        
+private:
+        TGdtfParsingErrorArray          fErrorContainer;
+        
 		
 	public:
 		//----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2472,6 +2532,8 @@ protected:
         const TGdtf_CRIGroupArray&              GetCRIGroupArray();
 		
 		GdtfProtocols&							GetProtocollContainer();
+
+        
         
 	public:
 		virtual EGdtfObjectType			GetObjectType();
@@ -2480,6 +2542,8 @@ protected:
 		virtual	TXString				GetNodeName();
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void			        OnErrorCheck(const IXMLFileNodePtr& pNode);
+
 		        
         GdtfAttributePtr            getAttributeByRef(const TXString& ref);
         GdtfWheelPtr                getWheelByRef(const TXString& ref);		

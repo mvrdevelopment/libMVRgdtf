@@ -95,6 +95,10 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE GetRDM(IGdtf_FTRDM ** newFTRDM);
 		virtual VCOMError VCOM_CALLTYPE CreateRDM(VectorworksMVR::IGdtf_FTRDM ** outFTRDM);
         
+		// Parsing Errors
+        virtual VCOMError VCOM_CALLTYPE		GetParsingErrorCount(size_t& count);
+        virtual VCOMError VCOM_CALLTYPE		GetParsingErrorAt(size_t at, IGdtfXmlParsingError** value);
+
 		//Internal
 		VectorworksMVR::VCOMError			ReadFromFile(IFileIdentifierPtr file);
 		

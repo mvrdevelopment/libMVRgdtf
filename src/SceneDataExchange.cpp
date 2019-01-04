@@ -13,7 +13,8 @@ SceneDataGUID::SceneDataGUID(const TXString& uuid)
 {
 	ASSERTN(kEveryone, uuid != "");
 	
-	GdtfConverter::ConvertUUID(uuid, _uuid);
+	// TODO
+	GdtfConverter::ConvertUUID(uuid, nullptr,  _uuid);
 	_type	= eNormal;
 }
 
@@ -673,7 +674,7 @@ void SceneDataObjWithMatrix::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneD
 		pMatrixNode->GetNodeValue(value);
 		
 		//
-		GdtfConverter::ConvertMatrix(value, fMatrix);
+		GdtfConverter::ConvertMatrix(value, pNode, fMatrix);
 		
 	}
 	else
@@ -1157,14 +1158,14 @@ void SceneDataFixtureObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneData
 	// Read the UnitNumber
 	IXMLFileNodePtr pUnitNumberNode;
 	TXString		unitNumber;
-	if ( VCOM_SUCCEEDED( pNode->GetChildNode( XML_Val_FixtureUnitNumber, & pUnitNumberNode ) ) )	{ pUnitNumberNode->GetNodeValue(unitNumber);		GdtfConverter::ConvertInteger(unitNumber, fUnitNumber); }
+	if ( VCOM_SUCCEEDED( pNode->GetChildNode( XML_Val_FixtureUnitNumber, & pUnitNumberNode ) ) )	{ pUnitNumberNode->GetNodeValue(unitNumber);		GdtfConverter::ConvertInteger(unitNumber, pNode, fUnitNumber); }
 	
 	
 	//--------------------------------------------------------------------------------------------
 	// Read the FixtureTypeId
 	IXMLFileNodePtr pFixtureTypeId;
 	TXString		fixtureTypeStr;
-	if ( VCOM_SUCCEEDED( pNode->GetChildNode( XML_Val_FixtureTypeId, & pFixtureTypeId ) ) )			{ pFixtureTypeId->GetNodeValue(fixtureTypeStr);		GdtfConverter::ConvertInteger(fixtureTypeStr, this->fFixtureTypeId); }
+	if ( VCOM_SUCCEEDED( pNode->GetChildNode( XML_Val_FixtureTypeId, & pFixtureTypeId ) ) )			{ pFixtureTypeId->GetNodeValue(fixtureTypeStr);		GdtfConverter::ConvertInteger(fixtureTypeStr, pNode, this->fFixtureTypeId); }
 	
 	
 
@@ -1172,7 +1173,7 @@ void SceneDataFixtureObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneData
 	// Read the Custom Id
 	IXMLFileNodePtr pCustomId;
 	TXString		customIdStr;
-	if ( VCOM_SUCCEEDED( pNode->GetChildNode( XML_Val_FixtureCustomid, & pCustomId ) ) )			{ pCustomId->GetNodeValue(customIdStr);			GdtfConverter::ConvertInteger(customIdStr, this->fCustomId); }
+	if ( VCOM_SUCCEEDED( pNode->GetChildNode( XML_Val_FixtureCustomid, & pCustomId ) ) )			{ pCustomId->GetNodeValue(customIdStr);			GdtfConverter::ConvertInteger(customIdStr, pNode, this->fCustomId); }
 	
 	
 	//--------------------------------------------------------------------------------------------
@@ -1185,8 +1186,8 @@ void SceneDataFixtureObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneData
 									 Sint32 breakId		= 0; TXString breakIdStr;
 									 
 									 // Read and Convert
-									 pNode->GetNodeValue(dmxStr);											GdtfConverter::ConvertInteger(dmxStr,		dmx);
-									 pNode->GetNodeAttributeValue(XML_Val_FixtureAttrBreak, breakIdStr);	GdtfConverter::ConvertInteger(breakIdStr,	breakId);
+									 pNode->GetNodeValue(dmxStr);											GdtfConverter::ConvertInteger(dmxStr, pNode,		dmx);
+									 pNode->GetNodeAttributeValue(XML_Val_FixtureAttrBreak, breakIdStr);	GdtfConverter::ConvertInteger(breakIdStr, pNode,	breakId);
 									 
 									 fAdresses.push_back(SceneDataDmxAdress(dmx, breakId));
 								 }
@@ -1200,7 +1201,7 @@ void SceneDataFixtureObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneData
 	{
 		TXString colorStr;
 		pColorNode->GetNodeValue(colorStr);
-		GdtfConverter::ConvertColor(colorStr,fColor);
+		GdtfConverter::ConvertColor(colorStr, pNode,fColor);
 			
 	}
 	
@@ -2112,8 +2113,6 @@ bool SceneDataExchange::ReadFromFile(const IFileIdentifierPtr& file)
 		
 		zipfile->GetFile(outPath, &buffer);
 		
-		
-        
         if (outPath == "GeneralSceneDescription.xml")
         {
 			// Read the data
@@ -2171,13 +2170,8 @@ bool SceneDataExchange::ReadFromFile(const IFileIdentifierPtr& file)
 		// Read from Scene Description
 		ReadFromGeneralSceneDescription(xmlFileBuffer);
     }
-	
 
-	
-
-
-	return true;
-	
+	return true;	
 }
 
 

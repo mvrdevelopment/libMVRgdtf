@@ -87,6 +87,67 @@ namespace VectorworksMVR
             eGdtfMacroVisualValue       = 67,
 
 		};
+
+        enum class EGdtfParsingError : Sint32
+        {
+            
+            eNodeMissingMandatoryAttribute                  = 0, // A Attribute but is mandatory is missing
+            eNodeWrongAttribute                             = 1, // A Attribute that as not aspected is in the node
+            eNodeWrongName                                  = 2, // A Node that was not aspected is a child of the node
+            eGeometryMissingModelReference                  = 4, // A Geometry doesn't have a linked model
+            eBreakObjectInNonGeometryReference              = 5, // A Break Node is in a non Geometry Reference Node
+            eFixtureNoGdtfFileInXmlBuffer                   = 6, // No GDTF File found in path
+            eFixtureChecksumError                           = 7, // A file in the zip archive has a different checksum
+            eFixtureDMXChannelMissingGeometryLink           = 8, // A DmxChannel has no Link to a Geometry
+            eFixtureLogicalChannelMissingAttribute          = 9, // A LogicalChannel has no Link to a Attribute
+            eFixtureChannelFunctionMissingAttribute         = 10, // A Function has no Link to a Attribute
+            eGeometryUnresolvedModel                        = 11, // A Geometry has no Link to Model
+            eGeometryReferenceUnresolvedLink                = 12, // A GeometryReference has no Link to another Geometry
+            eAttributeUnresolvedActivationGroup             = 13, // A Link to Activation Group for an Attribute could not be resolved
+            eAttributeUnresolvedFeature                     = 14, // A Link to Feature for an Attribute could not be resolved
+            eAttributeUnresolvedMainAttribute               = 15, // A Link to MainAttribute for an Attribute could not be resolved
+            eDmxModeUnresolvedGeometry                      = 16, // A Link to Geometry for an DmxMode could not be resolved or is not set
+            eDMXModeMastersUnresolved                       = 17, // A ModeMaster Relation could not be resolved
+            eValueError_UuidHasWrongFormat                  = 18,
+            eValueError_ColorHasWrongFormat                 = 19,
+            eValueError_DmxAdressHasWrongValue              = 20,
+            eValueError_DmxValueHasWrongValue               = 21,
+            eValueError_NoMatchInEnum_ConvertPrimitiveType                              = 22,
+            eValueError_NoMatchInEnum_ConvertSpecialAttr                                = 23,
+            eValueError_NoMatchInEnum_ConvertPhysicalUnit                               = 24,
+            eValueError_NoMatchInEnum_ConvertBeamType                                   = 25,
+            eValueError_NoMatchInEnum_ConvertLampeType                                  = 26,
+            eValueError_NoMatchInEnum_ConvertFrequenz                                   = 27,
+            eValueError_NoMatchInEnum_ConvertSnap                                       = 28,
+            eValueError_NoMatchInEnum_ConvertMaster                                     = 29,
+            eValueError_NoMatchInEnum_ConvertRelation                                   = 30,
+            eValueError_NoMatchInEnum_ConvertDMXInvert                                  = 31,
+            eValueError_NoMatchInEnum_ConvertEncoderInvert                              = 32,
+            eValueError_NoMatchInEnum_ConvertRDMParamType                               = 33,
+            eValueError_NoMatchInEnum_ConvertRDMParamDataType                           = 34,
+            eValueError_NoMatchInEnum_ConvertRDMParamCommand                            = 35,
+            eValueError_NoMatchInEnum_ConvertRDMParamSensorUnit                         = 36,
+            eValueError_NoMatchInEnum_ConvertRDMParamSensorUnitPrefix                   = 37,
+            eValueError_NoMatchInEnum_ConvertRDMValueBoolValue                          = 38,
+            eValueError_NoMatchInEnum_ConvertRDMValueThresholdOperator                  = 39,
+            eValueError_NoMatchInEnum_ConvertRDMValueSensorDefinitionType               = 40,
+            eValueError_NoMatchInEnum_ConvertRDMValueLowesHighestDetectionSupported     = 41,
+            eValueError_NoMatchInEnum_ConvertRDMValueRecordValueSupported               = 42,
+            eValueError_NoMatchInEnum_ConvertRDMValueSlotInfoType                       = 43,
+            eValueError_NoMatchInEnum_ConvertRDMValueSlotInfoSlotLabelID                = 44,
+            eValueError_NoMatchInEnum_ConvertColorSample                                = 45,
+            eValueError_MatrixFormatMissingFirstBracket             = 46,           
+            eValueError_MatrixFormatMissingLastBracket              = 47,
+            eValueError_MatrixFormatTooMuchOrTooLessLines           = 48,
+            eValueError_MatrixFormatTooMuchOrTooLessEntries         = 49,
+            eValueError_MatrixRotationFormatMissingFirstBracket     = 50,
+            eValueError_MatrixRotationFormatMissingLastBracket      = 51,
+            eValueError_MatrixRotationTooMuchOrTooLessLines         = 52,
+            eValueError_MatrixRotationTooMuchOrTooLessEntries       = 53,
+            eValueError_NoCommaFound        = 54,
+            eFailedToReadDescription        = 55, // The description.xml in not found in the zip archive
+            eXmlParsingError                = 56, // The XML file structure is damaged
+        };
 		
 		enum class EGdtfPhysicalUnit
 		{
@@ -96,21 +157,21 @@ namespace VectorworksMVR
 			Mass			= 3,	// kg
 			Time			= 4,	// s
 			Temperatur		= 5,	// K
-			LuminousItensity= 6,	//cd
-			Angle			= 7,	//degree
+			LuminousItensity= 6,	// cd
+			Angle			= 7,	// degree
 			Force			= 8,	// Newton
 			Frequeny		= 9,	// 1/s
 			Current			= 10,	// A
 			Voltage			= 12,	// V
 			Power			= 13,	// W
 			Energy			= 14,	// J
-			Area			= 15,	//m^2
+			Area			= 15,	// m^2
 			Volume			= 16,	// m^3
 			Speed			= 17,	// m/s
-			Acceleration	= 18,	//m/s^2
+			Acceleration	= 18,	// m/s^2
 			AngularSpeed	= 19,	// degree/s
-			AngularAccc		= 20,	//degree/s^2
-			WaveLength		= 21,	//nm
+			AngularAccc		= 20,	// degree/s^2
+			WaveLength		= 21,	// nm
 			ColorComponent	= 22
 		};
 		

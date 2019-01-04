@@ -951,7 +951,7 @@ void VectorworksMVR::CSceneObjImpl::SetPointer(SceneData::SceneDataObjWithMatrix
 		case SceneData::eVideoScreen:	fType = ESceneObjType::VideoScreen; break;
 			
 		default:
-			DSTOP((kEveryone, "Unaspected input!"));
+			DSTOP((kEveryone, "Unexpected input!"));
 			break;
 	}
 	

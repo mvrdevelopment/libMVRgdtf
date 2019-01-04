@@ -22,7 +22,7 @@ GdtfDmxUnittest::GdtfDmxUnittest(const std::string& currentDir)
     fPath += std::string("/testDmx.gdtf");
 #endif
 
-    std::cout << "Export File to" << fPath << std::endl; 
+    std::cout << "Export File to " << fPath << std::endl; 
 }
 
 GdtfDmxUnittest::~GdtfDmxUnittest()
@@ -47,19 +47,31 @@ void GdtfDmxUnittest::WriteFile()
     MvrUUID uuid (225204211, 177198167, 1575790, 96627);
     if(__checkVCOM(gdtfWrite->OpenForWrite(fPath.c_str(),"My FixtureName","My Manufacturer", uuid)))
     {
+		// Feature Groups
+		IGdtfFeatureGroupPtr featureGroup;
+		__checkVCOM(gdtfWrite->CreateFeatureGroup("FeatureGroup","FeatureGroup", &featureGroup));
+
+
+		IGdtfFeaturePtr feature;
+		__checkVCOM(featureGroup->CreateFeature("Feature", & feature));
+
 		//----------------------------------------------------------------
 		// Create Attribute
 		IGdtfAttributePtr attribute1;
 		__checkVCOM(gdtfWrite->CreateAttribute("Attribute1","Pretty", &attribute1));
+		attribute1->SetFeature(feature);
 
 		IGdtfAttributePtr attribute2;
 		__checkVCOM(gdtfWrite->CreateAttribute("Attribute2","Pretty", &attribute2));
+		attribute2->SetFeature(feature);
 
 		IGdtfAttributePtr attribute3;
 		__checkVCOM(gdtfWrite->CreateAttribute("Attribute3","Pretty", &attribute3));
+		attribute3->SetFeature(feature);
 
 		IGdtfAttributePtr attribute4;
 		__checkVCOM(gdtfWrite->CreateAttribute("Attribute4","Pretty", &attribute4));
+		attribute4->SetFeature(feature);
 
 		//----------------------------------------------------------------
 		// Create Model
@@ -92,6 +104,7 @@ void GdtfDmxUnittest::WriteFile()
 		IGdtfDmxChannelFunctionPtr bit8Function1;
 		bit8LogicalChannel1->CreateDmxFunction("Function1", &bit8Function1);
 		bit8Function1->SetStartAddress(0);
+		bit8Function1->SetAttribute(attribute1);
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet1;
 		bit8Function1->CreateDmxChannelSet("My Name1", 15, 60, &bit8ChannelSet1);
@@ -106,6 +119,7 @@ void GdtfDmxUnittest::WriteFile()
 		IGdtfDmxChannelFunctionPtr bit8Function2;
 		bit8LogicalChannel1->CreateDmxFunction("Function2", &bit8Function2);
 		bit8Function2->SetStartAddress(100);
+		bit8Function2->SetAttribute(attribute1);
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet4;
 		bit8Function2->CreateDmxChannelSet("My Name4", 100, 120, &bit8ChannelSet4);
@@ -124,6 +138,7 @@ void GdtfDmxUnittest::WriteFile()
 		IGdtfDmxChannelFunctionPtr bit8Function3;
 		bit8LogicalChannel2->CreateDmxFunction("Function3", &bit8Function3);
 		bit8Function3->SetStartAddress(170);
+		bit8Function3->SetAttribute(attribute1);
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet7;
 		bit8Function3->CreateDmxChannelSet("My Name7", 170, 170, &bit8ChannelSet7);
@@ -138,6 +153,7 @@ void GdtfDmxUnittest::WriteFile()
 		IGdtfDmxChannelFunctionPtr bit8Function4;
 		bit8LogicalChannel2->CreateDmxFunction("Function4", &bit8Function4);
 		bit8Function4->SetStartAddress(200);
+		bit8Function4->SetAttribute(attribute1);
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet10;
 		bit8Function4->CreateDmxChannelSet("My Name10", 210, 210, &bit8ChannelSet10);
@@ -164,6 +180,7 @@ void GdtfDmxUnittest::WriteFile()
 
 		IGdtfDmxChannelFunctionPtr bit16Function;
 		bit16LogicalChannel->CreateDmxFunction("Function", &bit16Function);
+		bit16Function->SetAttribute(attribute1);
 
 		IGdtfDmxChannelSetPtr bit16ChannelSet1;
 		bit16Function->CreateDmxChannelSet("My Name1", 15, 60, &bit16ChannelSet1);
@@ -188,19 +205,22 @@ void GdtfDmxUnittest::WriteFile()
 
 		IGdtfDmxLogicalChannelPtr logicalChannel24bit;
 		__checkVCOM(bit24channel->CreateLogicalChannel(attribute3, &logicalChannel24bit));
-		logicalChannel24bit->SetAttribute(attribute3);
+		__checkVCOM(logicalChannel24bit->SetAttribute(attribute3));
 
 		IGdtfDmxChannelFunctionPtr function24bit_1;
 		__checkVCOM(logicalChannel24bit->CreateDmxFunction("Log 1", & function24bit_1));
 		__checkVCOM(function24bit_1->SetStartAddress(0));
+		__checkVCOM(function24bit_1->SetAttribute(attribute1));
 
 		IGdtfDmxChannelFunctionPtr function24bit_2;
 		__checkVCOM(logicalChannel24bit->CreateDmxFunction("Log 2", & function24bit_2));
 		__checkVCOM(function24bit_2->SetStartAddress(0));
+		__checkVCOM(function24bit_2->SetAttribute(attribute1));
 
 		IGdtfDmxChannelFunctionPtr function24bit_3;
 		__checkVCOM(logicalChannel24bit->CreateDmxFunction("Log 3", & function24bit_3));
 		__checkVCOM(function24bit_3->SetStartAddress(0));
+		__checkVCOM(function24bit_3->SetAttribute(attribute1));
 
 
 		__checkVCOM(function24bit_3->SetModeMasterChannel(bit16channel, 80, 179));
@@ -216,7 +236,8 @@ void GdtfDmxUnittest::WriteFile()
 
 		IGdtfDmxChannelFunctionPtr bit8_1Function1;
 		bit8_1LogicalChannel1->CreateDmxFunction("Function1", &bit8_1Function1);
-		bit8Function1->SetStartAddress(0);
+		bit8_1Function1->SetStartAddress(0);
+		bit8_1Function1->SetAttribute(attribute1);
 
         __checkVCOM(gdtfWrite->Close());
     }
@@ -320,18 +341,10 @@ void GdtfDmxUnittest::ReadFile()
 		
 
 		//----------------------------------------------------------------
-		// Read 8 bit Channel
+		// Check 8 bit Channel
 		IGdtfDmxChannelPtr bit8channel;
 		__checkVCOM(mode->GetDmxChannelAt(0, &bit8channel));
 		Check8bitChannel(bit8channel);
-
-		Sint32 dmxBreakChannel1 = 0;
-		__checkVCOM(bit8channel->GetDmxBreak(dmxBreakChannel1));
-		this->checkifEqual("Check DMX Break Channel 1 - Default Value", 1, dmxBreakChannel1);
-
-		bool hasHighlight = 0;
-		__checkVCOM(bit8channel->HasHighlight(hasHighlight));
-		this->checkifEqual("Check DMX Break Channel 1 - Highlight", false, hasHighlight);
 
 		//----------------------------------------------------------------
 		// Read 16 bit Channel
@@ -399,14 +412,14 @@ void GdtfDmxUnittest::ReadFile()
 		__checkVCOM_NotSet(bit16Function->GetModeMasterChannel(&gdtfChannel, start, end));
 
 
-			//----------------------------------------------------------------
-		// Read 8 bit Channel
+		//----------------------------------------------------------------
+		// Check 24 bit Channel
 		IGdtfDmxChannelPtr bit24channel;
 		__checkVCOM(mode->GetDmxChannelAt(2, &bit24channel));
 		Check24bitChannel(bit24channel);
 
 		//----------------------------------------------------------------
-		// Read 8 bit Channel
+		// Read 8 bit Channel2
 		IGdtfDmxChannelPtr bit8channel2;
 		__checkVCOM(mode->GetDmxChannelAt(3, &bit8channel2));
 
@@ -427,40 +440,17 @@ void GdtfDmxUnittest::ReadFile()
 
 	}
 
-
-
-
-
+	PrintParsingErrorList(gdtfRead);
 }
 
-void GdtfDmxUnittest::CheckChannelSet(IGdtfDmxChannelSetPtr& channelSet, std::string name, DmxValue start, DmxValue end)
-{
-	this->checkifEqual("Check Name ", name, channelSet->GetName());
 
-	DmxValue thisStart = 0;
-	__checkVCOM(channelSet->GetDmxStartAddress(thisStart));
-	this->checkifEqual("Check Start ", start, thisStart);
-
-	DmxValue thisEnd = 0;
-	__checkVCOM(channelSet->GetDmxEndAddress(thisEnd));
-	this->checkifEqual("Check End ",  end, thisEnd);
-}
-
-void GdtfDmxUnittest::CheckFunction(VectorworksMVR::IGdtfDmxChannelFunctionPtr& function, std::string name, VectorworksMVR::GdtfDefines::DmxValue start, VectorworksMVR::GdtfDefines::DmxValue end)
-{
-	this->checkifEqual("Check Name ", name, function->GetName());
-
-	DmxValue thisStart = 0;
-	__checkVCOM(function->GetStartAddress(thisStart));
-	this->checkifEqual("Check Start ", start, thisStart);
-
-	DmxValue thisEnd = 0;
-	__checkVCOM(function->GetEndAddress(thisEnd));
-	this->checkifEqual("Check End ",  end, thisEnd);
-}
 
 void GdtfDmxUnittest::Check8bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxChannel)
 {
+	// ---------------------------------------------------------------------------
+	// Check DMXChannel attributes
+	CheckDmxChannel(dmxChannel, 1, 1, 0, 0, 0,eGdtfDmxFrequency_30, (DmxValue)0, false ,(double)0, (double)0);
+
 	// ---------------------------------------------------------------------------
 	// Get Logical Channels
 	size_t count = 0;
@@ -483,19 +473,19 @@ void GdtfDmxUnittest::Check8bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxCh
 
 	IGdtfDmxChannelFunctionPtr bit8Function1;
 	__checkVCOM(bit8LogicalChannel1->GetDmxFunctionAt(0, &bit8Function1));
-	CheckFunction(bit8Function1, "Function1", 0, 99);
+	CheckFunction(bit8Function1, "Function1", "Attribute1", 0, 99);
 
 	IGdtfDmxChannelFunctionPtr bit8Function2;
 	__checkVCOM(bit8LogicalChannel1->GetDmxFunctionAt(1, &bit8Function2));
-	CheckFunction(bit8Function2, "Function2", 100, 169);
+	CheckFunction(bit8Function2, "Function2", "Attribute1", 100, 169);
 
 	IGdtfDmxChannelFunctionPtr bit8Function3;
 	__checkVCOM(bit8LogicalChannel2->GetDmxFunctionAt(0, &bit8Function3));
-	CheckFunction(bit8Function3, "Function3", 170, 199);
+	CheckFunction(bit8Function3, "Function3", "Attribute1", 170, 199);
 
 	IGdtfDmxChannelFunctionPtr bit8Function4;
 	__checkVCOM(bit8LogicalChannel2->GetDmxFunctionAt(1, &bit8Function4));
-	CheckFunction(bit8Function4, "Function4", 200, 255);
+	CheckFunction(bit8Function4, "Function4", "Attribute1", 200, 255);
 
 	// ---------------------------------------------------------------------------
 	// Check Channel Set Count bit8Function1
@@ -621,15 +611,15 @@ void GdtfDmxUnittest::Check24bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxC
 
 	IGdtfDmxChannelFunctionPtr bit8Function1;
 	__checkVCOM(logicalChannel->GetDmxFunctionAt(0, &bit8Function1));
-	CheckFunction(bit8Function1, "Log 1", 0, max24bit);
+	CheckFunction(bit8Function1, "Log 1", "Attribute1", 0, max24bit);
 
 	IGdtfDmxChannelFunctionPtr bit8Function2;
 	__checkVCOM(logicalChannel->GetDmxFunctionAt(1, &bit8Function2));
-	CheckFunction(bit8Function2, "Log 2", 0, max24bit);
+	CheckFunction(bit8Function2, "Log 2", "Attribute1", 0, max24bit);
 
 	IGdtfDmxChannelFunctionPtr bit8Function3;
 	__checkVCOM(logicalChannel->GetDmxFunctionAt(2, &bit8Function3));
-	CheckFunction(bit8Function3, "Log 3", 0, max24bit);
+	CheckFunction(bit8Function3, "Log 3", "Attribute1", 0, max24bit);
 
 
 	// Check ModeMaster
@@ -645,4 +635,82 @@ void GdtfDmxUnittest::Check24bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxC
 
 	__checkVCOM_NotSet(bit8Function3->GetModeMasterFunction(&gdtfFunction, start, end));
 
+}
+
+void GdtfDmxUnittest::CheckDmxChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxChannel, Sint32 dmxBreak, Sint32 coarse,
+									  Sint32 fine, Sint32 ultra, Sint32 uber, EGdtfDmxFrequency frequency, DmxValue defaultValue,
+									  DmxValue highlight, double MibFade, double dmxChangeLimit)
+{
+	Sint32 thisDmxBreak = 0;
+	__checkVCOM(dmxChannel->GetDmxBreak(thisDmxBreak));
+	this->checkifEqual("Check DmxChannel DMXBreak - Default: 1 ", dmxBreak, thisDmxBreak);
+
+	Sint32 thisDmxCoarse = 0;
+	__checkVCOM(dmxChannel->GetCoarse(thisDmxCoarse));
+	this->checkifEqual("Check DmxChannel Coarse - Default: \"None\" ", coarse, thisDmxCoarse);
+
+	Sint32 thisDmxFine = 0;
+	__checkVCOM(dmxChannel->GetFine(thisDmxFine));
+	this->checkifEqual("Check DmxChannel Fine - Default: \"None\"  ", fine, thisDmxFine);
+
+	Sint32 thisDmxUltra = 0;
+	__checkVCOM(dmxChannel->GetUltra(thisDmxUltra));
+	this->checkifEqual("Check DmxChannel Ultra - Default: \"None\" ", ultra, thisDmxUltra);
+
+	Sint32 thisDmxUber = 0;
+	__checkVCOM(dmxChannel->GetUber(thisDmxUber));
+	this->checkifEqual("Check DmxChannel Uber - Default: \"None\"  ", uber, thisDmxUber);
+
+	GdtfDefines::EGdtfDmxFrequency thisDmxFrequency;
+	__checkVCOM(dmxChannel->GetDmxFrequency(thisDmxFrequency));
+	this->checkifEqual("Check DmxChannel Frequency - Default: \"30\" ", frequency, thisDmxFrequency);
+
+	DmxValue thisDmxDefaultValue = 0;
+	__checkVCOM(dmxChannel->GetDefaultValue(thisDmxDefaultValue));
+	this->checkifEqual("Check DmxChannel DefaultValue - Default: 0/1 ", defaultValue, thisDmxDefaultValue);
+
+	bool thisHasHighlight = 0;
+	__checkVCOM(dmxChannel->HasHighlight(thisHasHighlight));
+	if (thisHasHighlight)
+	{
+		DmxValue thisHighlight = 0;
+		__checkVCOM(dmxChannel->GetHighlight(thisHighlight));
+		this->checkifEqual("Check DmxChannel HighlightValue  - Default: \"None\"  ", highlight, thisHighlight);
+	}
+
+	double thisDmxMibFade = 0;
+	__checkVCOM(dmxChannel->GetMoveInBlackFrames(thisDmxMibFade));
+	this->checkifEqual("Check DmxChannel MibFade - Default: 0 ", (double)0, thisDmxMibFade);
+
+	double thisDmxChangeTimeLimit = 0;
+	__checkVCOM(dmxChannel->GetDmxChangeTimeLimit(thisDmxChangeTimeLimit));
+	this->checkifEqual("Check DmxChannel DMXChangeTimeLimit  - Default: 0 ", (double)0, thisDmxChangeTimeLimit);
+}
+
+void GdtfDmxUnittest::CheckChannelSet(IGdtfDmxChannelSetPtr& channelSet, std::string name, DmxValue start, DmxValue end)
+{
+	this->checkifEqual("Check Name ", name, channelSet->GetName());
+
+	DmxValue thisStart = 0;
+	__checkVCOM(channelSet->GetDmxStartAddress(thisStart));
+	this->checkifEqual("Check Start ", start, thisStart);
+
+	DmxValue thisEnd = 0;
+	__checkVCOM(channelSet->GetDmxEndAddress(thisEnd));
+	this->checkifEqual("Check End ",  end, thisEnd);
+}
+
+void GdtfDmxUnittest::CheckFunction(VectorworksMVR::IGdtfDmxChannelFunctionPtr& function, std::string name, std::string attributeName, DmxValue start, DmxValue end)
+{
+	this->checkifEqual("Check Name ", name, function->GetName());
+	IGdtfAttributePtr gdtfAttribute;
+	if (__checkVCOM(function->GetAttribute(&gdtfAttribute))) { this->checkifEqual("gdtfAttributeGetName ", attributeName, gdtfAttribute->GetName()); }
+
+	DmxValue thisStart = 0;
+	__checkVCOM(function->GetStartAddress(thisStart));
+	this->checkifEqual("Check Start ", start, thisStart);
+
+	DmxValue thisEnd = 0;
+	__checkVCOM(function->GetEndAddress(thisEnd));
+	this->checkifEqual("Check End ",  end, thisEnd);
 }
