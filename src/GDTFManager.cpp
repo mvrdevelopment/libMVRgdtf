@@ -3236,10 +3236,8 @@ void GdtfDmxChannelFunction::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	//------------------------------------------------------------------------------------
 	// Create needed and optional Attribute Arrays
 	TXStringArray needed;
-	needed.push_back(XML_GDTF_DMXChannelFuntionName);
-
 	TXStringArray optional;
-	optional.push_back(XML_GDTF_DMXChannelFuntionAttribute);
+	optional.push_back(XML_GDTF_DMXChannelFuntionName);
 	optional.push_back(XML_GDTF_DMXChannelFuntionOriginalAttribute);
 	optional.push_back(XML_GDTF_DMXChannelFuntionDMXFrom);
 	optional.push_back(XML_GDTF_DMXChannelFuntionPhysicalFrom);
