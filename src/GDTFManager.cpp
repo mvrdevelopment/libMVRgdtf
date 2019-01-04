@@ -2207,6 +2207,7 @@ void GdtfGeometryReference::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	TXStringArray optional;
 	needed.push_back(XML_GDTF_GeometryName);
 	needed.push_back(XML_GDTF_GeometryModelRef);
+	needed.push_back(XML_GDTF_GeometryReferenceLinkedGeo);
 	needed.push_back(XML_GDTF_GeometryMatrix);
 
 	//------------------------------------------------------------------------------------
