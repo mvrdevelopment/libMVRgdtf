@@ -9,6 +9,13 @@
 //------------------------------------------------------------------------------------
 // Parsing Errors
 //------------------------------------------------------------------------------------
+GdtfParsingError::GdtfParsingError(GdtfDefines::EGdtfParsingError type)
+{
+    fErrorType          = type;
+    fLineNumber         = 0;
+    fColumn             = 0;
+}
+
 GdtfParsingError::GdtfParsingError(GdtfDefines::EGdtfParsingError type, size_t lineNumber, size_t column)
 {
     fErrorType          = type;
@@ -19,8 +26,8 @@ GdtfParsingError::GdtfParsingError(GdtfDefines::EGdtfParsingError type, size_t l
 GdtfParsingError::GdtfParsingError(GdtfDefines::EGdtfParsingError type, const IXMLFileNodePtr& pNode)
 {
     fErrorType          = type;
-    fNodePtr            = pNode;
     pNode->GetLineNumber(fLineNumber, fColumn);
+    pNode->GetNodeName(fNodeName);
 }
 
 
@@ -35,7 +42,7 @@ GdtfDefines::EGdtfParsingError GdtfParsingError::GetError() const
 
 const TXString& GdtfParsingError::GetErrorMessage() const
 {
-    return fAttributeNodeName;
+    return fErrorMessage;
 }
 
 const TXString& GdtfParsingError::GetNodeName() const
@@ -58,9 +65,6 @@ size_t GdtfParsingError::GetColumnNumber() const
    	TXStringArray nodeAttributes;
 	pNode->GetNodeAttributes(nodeAttributes);
 
-    TXString nodeName;
-    pNode->GetNodeName(nodeName);
-
     // Check required Attributes
     for(const TXString &attribute : needed)
     {
@@ -71,8 +75,7 @@ size_t GdtfParsingError::GetColumnNumber() const
         else
         {
             GdtfParsingError error (GdtfDefines::EGdtfParsingError::eNodeMissingMandatoryAttribute, pNode);
-            error.fAttributeNodeName = "Attribute: " + attribute + ", Node: " + nodeName;
-            pNode->GetLineNumber(error.fLineNumber, error.fColumn);
+            error.fErrorMessage = attribute;
             SceneData::GdtfFixture::AddError(error);
         }
     }
@@ -89,8 +92,7 @@ size_t GdtfParsingError::GetColumnNumber() const
     for (const TXString& attribute : nodeAttributes)
     {
         GdtfParsingError error (GdtfDefines::EGdtfParsingError::eNodeWrongAttribute, pNode);
-        error.fAttributeNodeName = "Attribute: " + attribute + ", Node: " + nodeName;
-        pNode->GetLineNumber(error.fLineNumber, error.fColumn);
+        error.fErrorMessage = attribute;
         SceneData::GdtfFixture::AddError(error);
     }
 

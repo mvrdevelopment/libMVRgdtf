@@ -12,20 +12,18 @@ using namespace VectorWorks::Filing;
 class GdtfParsingError
 {
 public:
+	GdtfParsingError(GdtfDefines::EGdtfParsingError type);
 	GdtfParsingError(GdtfDefines::EGdtfParsingError type, size_t lineNumber, size_t column);
 	GdtfParsingError(GdtfDefines::EGdtfParsingError type, const IXMLFileNodePtr& node);
     ~GdtfParsingError();
 	
 private:
 	GdtfDefines::EGdtfParsingError fErrorType;
-	TXString					   fAttributeNodeName;
+	TXString					   fErrorMessage;
 	TXString					   fNodeName;
 	size_t						   fLineNumber;
 	size_t						   fColumn;
-	IXMLFileNodePtr 			   fNodePtr;
 	
-	void	CheckValidValue()	const;
-
 public:
 	GdtfDefines::EGdtfParsingError	GetError() const;
 	const TXString&					GetErrorMessage() const;

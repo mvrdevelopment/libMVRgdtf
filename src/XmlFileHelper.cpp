@@ -2130,7 +2130,7 @@ bool SceneDataZip::GetFile(const TXString &fileName, const IFolderIdentifierPtr 
 		return true;
 	}
 	
-    GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFailedToReadDescription, 0, 0);
+    GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFailedToReadDescription);
     SceneData::GdtfFixture::AddError(error);
 	return false;
 }

@@ -883,11 +883,6 @@ const TXString&	GdtfWheelSlot::GetGoboFileFullPath()
 	
 	ASSERTN(kEveryone, folder != nullptr);
 	if (folder) { folder->GetFullPath(workingFolder); }
-	else
-	{
-		GdtfParsingError error (GdtfDefines::EGdtfParsingError::eWheelSlotMissingPNGDirectory, 0, 0);
-		SceneData::GdtfFixture::AddError(error);
-	}
 	
 	// Set to store
 	fGoboFile = workingFolder + fGobo;
@@ -1154,11 +1149,6 @@ const TXString& GdtfModel::GetGeometryFileFullPath()
 	
 	ASSERTN(kEveryone, folder != nullptr);
 	if (folder) { folder->GetFullPath(workingFolder); }
-	else
-	{
-		GdtfParsingError error (GdtfDefines::EGdtfParsingError::eModelMissingGeometryDirectory, 0, 0);
-		SceneData::GdtfFixture::AddError(error);
-	}
 	
 	// Set to store
 	fFullPath = workingFolder + fGeometryFile;
@@ -4336,11 +4326,6 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 	fReaded			= false;
 	fHasLinkedGuid	= false;
 	ASSERTN(kEveryone, __ERROR_CONTAINER_POINTER == nullptr);
-	if (__ERROR_CONTAINER_POINTER != nullptr)
-	{	
-		GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureErrorContainerPointer, 0, 0);
-		SceneData::GdtfFixture::AddError(error);
-	}
 	__ERROR_CONTAINER_POINTER = & this->fErrorContainer; 
 	
 	//-------------------------------------------------------------------------------------------------
@@ -4434,7 +4419,7 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 	
 	if (! xmlFileBuffer.IsSet())
 	{
-		GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureNoGdtfFileInXmlBuffer, 0, 0);
+		GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureNoGdtfFileInXmlBuffer);
 		SceneData::GdtfFixture::AddError(error); 
 		fReaded = false;
 		return;
@@ -4444,7 +4429,7 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 	{
 		if (HashManager::HashManager::CheckHashForBuffer(xmlFileBuffer, xmlFileSHA256Buffer) == false)
 		{
-			GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureChecksumError, 0, 0); 
+			GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureChecksumError); 
 			SceneData::GdtfFixture::AddError(error); 
 		}
 	}
