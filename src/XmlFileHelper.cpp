@@ -848,14 +848,6 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 		strVal.Delete(0, pos + 2);
 		pos = strVal.Find("}{");
 	}
-    // TODO
-    // a thought from deniz: could be my mistake, somehow in some cases there is the "}{" pattern not left anymore, when pos variable has passed last "}{" sequence
-    if (strVal.Find("}{") == -1)
-    {
-        // std::cout << strVal.Find("}{") << std::endl;
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_MatrixFormatMissingMiddleBrackets, node);
-        SceneData::GdtfFixture::AddError(error); 
-    }
 
 	// Apped the rest
 	lines.push_back(strVal);
