@@ -919,7 +919,7 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE GetRDM(IGdtf_FTRDM ** newFTRDM) = 0;
 		virtual VCOMError VCOM_CALLTYPE CreateRDM(VectorworksMVR::IGdtf_FTRDM ** outFTRDM) = 0;
 
-        // Parsing Errors TODO
+        // Parsing Errors
         virtual VCOMError VCOM_CALLTYPE		GetParsingErrorCount(size_t& count) = 0;
         virtual VCOMError VCOM_CALLTYPE		GetParsingErrorAt(size_t at, IGdtfXmlParsingError** value) = 0;
 
