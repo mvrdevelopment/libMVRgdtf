@@ -27,6 +27,7 @@ void GdtfObject::WriteToNode(IXMLFileNodePtr pContainerNode)
 	if ( VCOM_SUCCEEDED( pContainerNode->CreateChildNode( this->GetNodeName(), & pNode ) ) )
 	{
 		// Store Node
+		ASSERTN(kEveryone, fNode == nullptr);
 		fNode = pNode;
 		//-------------------------------------------------------------------------------------
 		// Now Print Everything
@@ -42,7 +43,6 @@ void GdtfObject::ReadFromNode(const IXMLFileNodePtr& pNode)
 	TXString nodeName;
 	pNode->GetNodeName(nodeName);
 	ASSERTN(kEveryone, nodeName == GetNodeName());
-	if (nodeName != GetNodeName()) { GdtfParsingError error (GdtfDefines::EGdtfParsingError::eNodeWrongName, pNode); SceneData::GdtfFixture::AddError(error); }
 	
 	this->OnReadFromNode(pNode);
 	this->OnErrorCheck(pNode);
@@ -1294,11 +1294,6 @@ void GdtfGeometry::OnPrintToFile(IXMLFileNodePtr pNode)
 
 	ASSERTN(kEveryone, fModelReference != nullptr);
 	if (fModelReference) { pNode->SetNodeAttributeValue(XML_GDTF_GeometryModelRef,	fModelReference->GetNodeReference()); }
-	else
-	{
-		GdtfParsingError error (GdtfDefines::EGdtfParsingError::eGeometryMissingModelReference, pNode);
-		SceneData::GdtfFixture::AddError(error);
-	}
 	
 	// ------------------------------------------------------------------------------------
 	// Print Internal geometry
