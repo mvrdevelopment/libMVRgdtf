@@ -136,6 +136,19 @@ void MvrUnittest::WriteFile()
 		{
 			checkifEqual("Layer One Name", firstLayerWritten->GetName(), layer1->GetName());
 			
+			// Get first Object
+			ISceneObjPtr firstChild;
+			if(__checkVCOM(mvrWrite->GetFirstChild(firstLayerWritten, & firstChild)))
+			{
+				checkifEqual("Check First Child", firstChild->GetName(), focusPoint->GetName());
+
+				ISceneObjPtr secondChild;
+				if(__checkVCOM(mvrWrite->GetNextObject(firstChild, & secondChild)))
+				{
+					checkifEqual("Check Second Child", secondChild->GetName(), fixture1->GetName());
+				}		
+			}
+
 			ISceneObjPtr secondLayerWritten;
 			if(mvrWrite->GetNextObject(firstLayerWritten, & secondLayerWritten))
 			{
