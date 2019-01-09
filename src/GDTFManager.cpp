@@ -4450,16 +4450,17 @@ void GdtfFixture::AutoGenerateNames(GdtfDmxModePtr dmxMode)
 					//
 					if (function->GetName().IsEmpty())
 					{
-						ASSERTN(kEveryone, !function->getUnresolvedAttrRef().IsEmpty());
-						if (function->getUnresolvedAttrRef().IsEmpty())
+						ASSERTN(kEveryone, function->GetAttribute() != nullptr);
+						if (function->GetAttribute() == nullptr)
 						{
 							IXMLFileNodePtr node;
 							function->GetNode(node);
 							GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureChannelFunctionMissingAttribute, node);
 							SceneData::GdtfFixture::AddError(error);
+							continue;
 						}
-						TXString functionName = function->getUnresolvedAttrRef();
-						
+						TXString functionName; 
+						functionName += function->GetAttribute()->GetName();
 						functionName += " ";
 						functionName += TXString().itoa(channelFunctionNumber);
 						
