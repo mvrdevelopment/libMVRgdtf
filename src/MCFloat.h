@@ -226,9 +226,9 @@ enum {
 };
 
 
-inline bool IsNAN		(double v) { return _isnan(v); }
-inline bool IsFinite	(double v) { return _finite(v); }
-inline bool IsInfinite	(double v) { return !_finite(v); }
+inline bool IsNAN		(double v) { return _isnan(v)!=0; }
+inline bool IsFinite	(double v) { return _finite(v)!=0; }
+inline bool IsInfinite	(double v) { return !_finite(v)==0; }
 	   Sint32 FPClassify	(double v);
 
 ////////////////////////////////////////
