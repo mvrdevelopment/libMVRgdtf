@@ -4429,18 +4429,18 @@ void GdtfFixture::AutoGenerateNames(GdtfDmxModePtr dmxMode)
 				continue;
 			}
 			
-			TXString geometryRef = dmxChannel->GetGeomRef()->GetName();
-			TXString firstAttr;
+			TXString 			geometryRef = dmxChannel->GetGeomRef()->GetName();
+			GdtfAttributePtr 	firstAttr = nullptr;
 			
 			for (GdtfDmxLogicalChannelPtr logicalChannel : dmxChannel->GetLogicalChannelArray())
 			{
 				//------------------------------------------------------------------------------------------------
 				//  Create Names for Logical Channels
-				ASSERTN(kEveryone, !logicalChannel->GetUnresolvedAttribRef().IsEmpty());
-				logicalChannel->SetName(logicalChannel->GetUnresolvedAttribRef());
+				ASSERTN(kEveryone, logicalChannel->GetAttribute() != nullptr);
+				logicalChannel->SetName(logicalChannel->GetAttribute()->GetName());
 				
 				// Set first Attribute
-				if (firstAttr.IsEmpty()) { firstAttr = logicalChannel->GetUnresolvedAttribRef(); }
+				if (firstAttr == nullptr) { firstAttr = logicalChannel->GetAttribute(); }
 				
 				//------------------------------------------------------------------------------------------------
 				//  Create Names for Channel Functions
@@ -4472,7 +4472,8 @@ void GdtfFixture::AutoGenerateNames(GdtfDmxModePtr dmxMode)
 			
 			//------------------------------------------------------------------------------------------------
 			//  Set the DMX Name
-			dmxChannel->SetName(geometryRef + "_" + firstAttr);
+			ASSERTN(kEveryone, firstAttr);
+			dmxChannel->SetName(geometryRef + "_" + firstAttr->GetName());
 		}
 }
 
