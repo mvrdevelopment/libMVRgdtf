@@ -14,6 +14,7 @@
 #define __FP__
 
 #pragma warning(disable:4786)
+#pragma warning( disable : 4800)
 #endif	// _WINDOWS
 
 #include "GSTypes.h"
