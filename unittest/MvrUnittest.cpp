@@ -129,6 +129,21 @@ void MvrUnittest::WriteFile()
 			__checkVCOM(fixture3->SetFocusPoint(focusPoint));
 		}
 
+
+		// Check Next Object behavoir
+		ISceneObjPtr firstLayerWritten;
+		if(__checkVCOM(mvrWrite->GetFirstLayer( & firstLayerWritten)))
+		{
+			checkifEqual("Layer One Name", firstLayerWritten->GetName(), layer1->GetName());
+			
+			ISceneObjPtr secondLayerWritten;
+			if(mvrWrite->GetNextObject(firstLayerWritten, & secondLayerWritten))
+			{
+				checkifEqual("Layer Two Name", secondLayerWritten->GetName(), layer2->GetName());
+			}
+		}
+
+
     }
 	__checkVCOM(mvrWrite->Close());
 }
