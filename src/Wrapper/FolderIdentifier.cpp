@@ -441,7 +441,7 @@ VCOMError CFolderIdentifier::GetAttributes(SAttributes& outAttributes)
 	StorageAttributes	attr;
 	if ( folderID.GetFolderContextAttributes( attr ) ) {
 		//Determine if the permission flags are valid.
-		const bool		bPermissionFlagsAreValid = attr & kStorageAttrPermFlagsValid;
+		const bool		bPermissionFlagsAreValid = (attr & kStorageAttrPermFlagsValid) == kStorageAttrPermFlagsValid;
 		
 		//Determine if the file is read-only. In order for
 		//a file to be read only, it must have file read
@@ -451,13 +451,13 @@ VCOMError CFolderIdentifier::GetAttributes(SAttributes& outAttributes)
 		const StorageAttributes kWriteMask		= kStorageAttrWrite | (bPermissionFlagsAreValid ? kStorageAttrPermWrite : 0);
 
 		outAttributes.fbReadOnly		= folderID.IsFolderReadOnly();
-		outAttributes.fbHidden			= attr & kStorageAttrHidden;
-		outAttributes.fbSystem			= attr & kStorageAttrSystem;
-		outAttributes.fbTemporary		= attr & kStorageAttrTemporary;
-		outAttributes.fbEncrypted		= attr & kStorageAttrEncrypted;
-		outAttributes.fbArchive			= attr & kStorageAttrArchive;
-		outAttributes.fbDirectory		= attr & kStorageAttrDirectory;
-		outAttributes.fbCanRead			= attr & kReadMask;
+		outAttributes.fbHidden			= (attr & kStorageAttrHidden) == kStorageAttrHidden;
+		outAttributes.fbSystem			= (attr & kStorageAttrSystem) == kStorageAttrSystem;
+		outAttributes.fbTemporary		= (attr & kStorageAttrTemporary) == kStorageAttrTemporary;
+		outAttributes.fbEncrypted		= (attr & kStorageAttrEncrypted) == kStorageAttrEncrypted;
+		outAttributes.fbArchive			= (attr & kStorageAttrArchive) == kStorageAttrArchive;
+		outAttributes.fbDirectory		= (attr & kStorageAttrDirectory) == kStorageAttrDirectory;
+		outAttributes.fbCanRead			= (attr & kReadMask) == kReadMask;
 		outAttributes.fbCanWrite		= (attr & kWriteMask) == kWriteMask;
 		outAttributes.fbCanExecute		= bPermissionFlagsAreValid && (attr & kStorageAttrPermExecute);
 		outAttributes.fbCanBrowse		= bPermissionFlagsAreValid && (attr & kStorageAttrPermBrowse);
