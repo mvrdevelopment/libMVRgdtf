@@ -8,6 +8,7 @@
 #include "GdtfUnittest.h"
 #include "GdtfDmxUnittest.h"
 #include "GdtfXmlError.h"
+#include "GdtfFunctionModeMaster.h"
 
 #if defined(_WINDOWS)
 # include <Shlobj.h>
@@ -42,7 +43,10 @@ int main(int argc, char* argv[])
 	GdtfXmlErrorTest errorTest(base);
 	bool errorOk = errorTest.RunTest();
 
-	return (mvrOK || gdtfOk || gdtfDmxOk || errorOk);
+	GdtfFunctionModeMasterTest modeMasterTest(base);
+	bool modeMasterOk = modeMasterTest.RunTest();
+
+	return (mvrOK || gdtfOk || gdtfDmxOk || errorOk || modeMasterOk);
 }
 
 bool GetFolderAppDataPath(std::string& outPath)

@@ -33,6 +33,12 @@
     <ClCompile Include="..\unittest\GdtfXmlError.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\unittest\GdtfFunctionModeMaster.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\unittest\GdtfUnittestHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\unittest\MvrUnittest.h">
@@ -52,6 +58,12 @@
     </ClInclude>
     <ClInclude Include="..\unittest\GdtfXmlError.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\unittest\GdtfFunctionModeMaster.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\unittest\GdtfUnittestHandler.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

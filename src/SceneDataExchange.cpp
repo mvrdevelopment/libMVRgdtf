@@ -1552,9 +1552,7 @@ SceneDataLayerObjPtr SceneDataExchange::CreateLayerObject(const SceneDataGUID& g
 {
 	SceneDataLayerObjPtr newLayer =  new SceneDataLayerObj(guid);
 	newLayer->setName(name);
-	fChildObjs.push_back(newLayer);
-
-
+	
 	if(fChildObjs.size() > 0)
 	{
 		SceneDataLayerObjPtr lastLayer = dynamic_cast<SceneDataLayerObjPtr>(fChildObjs.back());
@@ -1562,6 +1560,7 @@ SceneDataLayerObjPtr SceneDataExchange::CreateLayerObject(const SceneDataGUID& g
 		if(lastLayer)	{ lastLayer->SetNextLayer(newLayer); }
 	}	
 
+	fChildObjs.push_back(newLayer); 
 	
 	return newLayer;
 }
@@ -1574,7 +1573,6 @@ SceneDataLayerObjPtr SceneDataExchange::ReadLayerObject(const SceneDataGUID& gui
 	
 	// Create the new Layer
 	SceneDataLayerObjPtr newLayer =  new SceneDataLayerObj(guid);
-	fChildObjs.push_back(newLayer);
 	
 	// Set the Next Object properlly
 	if (before)
@@ -1585,6 +1583,9 @@ SceneDataLayerObjPtr SceneDataExchange::ReadLayerObject(const SceneDataGUID& gui
 		if (lastLayer) { lastLayer->SetNextLayer(newLayer); }
 		
 	}
+
+	fChildObjs.push_back(newLayer);
+
 	
 	// Read stuff
 	newLayer->ReadFromNode(node, this);

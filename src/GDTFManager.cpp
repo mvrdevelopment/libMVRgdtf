@@ -3270,7 +3270,34 @@ TXString GdtfDmxChannelFunction::GetNodeName()
 
 TXString GdtfDmxChannelFunction::GetNodeReference()
 {
-	return fParentLogicalChannel->GetNodeReference() + "." + GetName();
+	TXString functionName = GetName();
+	if(functionName.IsEmpty())
+	{
+		ASSERTN(kEveryone, GetAttribute() != nullptr);
+		if(GetAttribute() != nullptr)
+		{
+			functionName = GetAttribute()->GetName();
+			functionName += " ";
+			functionName << GetNumberInParent();
+		}
+		
+	}
+	return fParentLogicalChannel->GetNodeReference() + "." + functionName;
+}
+
+size_t GdtfDmxChannelFunction::GetNumberInParent() const
+{
+	size_t count = fParentLogicalChannel->GetDmxChannelFunctions().size();
+	for(size_t i = 0; i < count; i++)
+	{
+		if(fParentLogicalChannel->GetDmxChannelFunctions()[i] == this)
+		{
+			return (i+1);
+		}
+	}
+	
+	DSTOP("Failed to get GetNumberInParent");
+	return 1;
 }
 
 const TXString& GdtfDmxChannelFunction::GetName() const
@@ -4344,61 +4371,52 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 	
 	//-------------------------------------------------------------------------------------------------
 	// Decompress the files
-	IFileIdentifierPtr gdtfFile (IID_FileIdentifier);
-	
-	if (! xmlFileBuffer.IsSet())
+	fReaded = xmlFileBuffer.IsSet();
+	if ( ! fReaded)
 	{
 		GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureNoGdtfFileInXmlBuffer);
 		SceneData::GdtfFixture::AddError(error); 
 		fReaded = false;
-		return;
 	}
-	
-	if (xmlFileSHA256Buffer.IsSet())
+	else
 	{
-		if (HashManager::HashManager::CheckHashForBuffer(xmlFileBuffer, xmlFileSHA256Buffer) == false)
+		if (xmlFileSHA256Buffer.IsSet())
 		{
-			GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureChecksumError); 
-			SceneData::GdtfFixture::AddError(error); 
-		}
-	}
-	
-	
-	//-------------------------------------------------------------------------------------------------
-	// Read XML
-	IXMLFilePtr xmlFile (IID_XMLFile);
-
-	size_t	size = 0;								xmlFileBuffer.GetDataSize(size);
-    void*	data = malloc(size * sizeof(char));		xmlFileBuffer.CopyDataInto(data, size);
-	
-	// Set the data
-    IXMLFileIOBufferImpl xmlBuffer;
-    xmlBuffer.SetData(data, size);
-	
-	// Housekeeping
-	std::free(data);
-	
-	if (VCOM_SUCCEEDED(xmlFile->ReadBuffer( &xmlBuffer, EXMLEncoding::eXMLEncoding_UTF8)))
-	{
-		IXMLFileNodePtr rootNode;
-		if (VCOM_SUCCEEDED(xmlFile->GetRootNode( & rootNode)))
-		{
-			IXMLFileNodePtr fixtureNode;
-			if (VCOM_SUCCEEDED(rootNode->GetChildNode(XML_GDTF_FixtureNodeName, & fixtureNode)))
+			if (HashManager::HashManager::CheckHashForBuffer(xmlFileBuffer, xmlFileSHA256Buffer) == false)
 			{
-				//---------------------------------------------------------------------------------------------
-				// Read Stuff
-				this->ReadFromNode(fixtureNode);
-				
-				
+				GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureChecksumError); 
+				SceneData::GdtfFixture::AddError(error); 
+			}
+		}
 
-				this->ResolveAllReferences();		
+		IXMLFilePtr xmlFile (IID_XMLFile);
+
+		size_t	size = 0;								xmlFileBuffer.GetDataSize(size);
+		void*	data = malloc(size * sizeof(char));		xmlFileBuffer.CopyDataInto(data, size);
+		
+		// Set the data
+		IXMLFileIOBufferImpl xmlBuffer;
+		xmlBuffer.SetData(data, size);
+		
+		// Housekeeping
+		std::free(data);
+		
+		if (VCOM_SUCCEEDED(xmlFile->ReadBuffer( &xmlBuffer, EXMLEncoding::eXMLEncoding_UTF8)))
+		{
+			IXMLFileNodePtr rootNode;
+			if (VCOM_SUCCEEDED(xmlFile->GetRootNode( & rootNode)))
+			{
+				IXMLFileNodePtr fixtureNode;
+				if (VCOM_SUCCEEDED(rootNode->GetChildNode(XML_GDTF_FixtureNodeName, & fixtureNode)))
+				{
+					//---------------------------------------------------------------------------------------------
+					// Read Stuff
+					this->ReadFromNode(fixtureNode);
+					this->ResolveAllReferences();		
+				}
 			}
 		}
 	}
-	
-	
-	fReaded = true;
 	__ERROR_CONTAINER_POINTER = nullptr;
 }
 
@@ -4422,25 +4440,20 @@ void GdtfFixture::AutoGenerateNames(GdtfDmxModePtr dmxMode)
 		{
 			//------------------------------------------------------------------------------------------------
 			//  Create Names for DMX Channel
-			ASSERTN(kEveryone, dmxChannel->GetGeomRef());
-			if (! dmxChannel->GetGeomRef())
-			{
-				// Error comes later
-				continue;
-			}
+			ASSERTN(kEveryone, dmxChannel->GetGeomRef() != nullptr);
+			if (dmxChannel->GetGeomRef() == nullptr){ /* Error comes later*/ continue; }
 			
-			TXString geometryRef = dmxChannel->GetGeomRef()->GetName();
-			TXString firstAttr;
+			GdtfAttributePtr 	firstAttr = nullptr;
 			
 			for (GdtfDmxLogicalChannelPtr logicalChannel : dmxChannel->GetLogicalChannelArray())
 			{
 				//------------------------------------------------------------------------------------------------
 				//  Create Names for Logical Channels
-				ASSERTN(kEveryone, !logicalChannel->GetUnresolvedAttribRef().IsEmpty());
-				logicalChannel->SetName(logicalChannel->GetUnresolvedAttribRef());
+				ASSERTN(kEveryone, logicalChannel->GetAttribute() != nullptr);
+				logicalChannel->SetName(logicalChannel->GetAttribute()->GetName());
 				
 				// Set first Attribute
-				if (firstAttr.IsEmpty()) { firstAttr = logicalChannel->GetUnresolvedAttribRef(); }
+				if (firstAttr == nullptr) { firstAttr = logicalChannel->GetAttribute(); }
 				
 				//------------------------------------------------------------------------------------------------
 				//  Create Names for Channel Functions
@@ -4450,16 +4463,17 @@ void GdtfFixture::AutoGenerateNames(GdtfDmxModePtr dmxMode)
 					//
 					if (function->GetName().IsEmpty())
 					{
-						ASSERTN(kEveryone, !function->getUnresolvedAttrRef().IsEmpty());
-						if (function->getUnresolvedAttrRef().IsEmpty())
+						ASSERTN(kEveryone, function->GetAttribute() != nullptr);
+						if (function->GetAttribute() == nullptr)
 						{
 							IXMLFileNodePtr node;
 							function->GetNode(node);
 							GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureChannelFunctionMissingAttribute, node);
 							SceneData::GdtfFixture::AddError(error);
+							continue;
 						}
-						TXString functionName = function->getUnresolvedAttrRef();
-						
+						TXString functionName; 
+						functionName += function->GetAttribute()->GetName();
 						functionName += " ";
 						functionName += TXString().itoa(channelFunctionNumber);
 						
@@ -4472,7 +4486,10 @@ void GdtfFixture::AutoGenerateNames(GdtfDmxModePtr dmxMode)
 			
 			//------------------------------------------------------------------------------------------------
 			//  Set the DMX Name
-			dmxChannel->SetName(geometryRef + "_" + firstAttr);
+			ASSERTN(kEveryone, firstAttr != nullptr);
+			ASSERTN(kEveryone, dmxChannel->GetGeomRef() != nullptr);
+			if(firstAttr) { dmxChannel->SetName(dmxChannel->GetGeomRef()->GetName() + "_" + firstAttr->GetName()); }
+			
 		}
 }
 
