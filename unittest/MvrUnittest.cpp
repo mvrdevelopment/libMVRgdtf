@@ -134,25 +134,25 @@ void MvrUnittest::WriteFile()
 		ISceneObjPtr firstLayerWritten;
 		if(__checkVCOM(mvrWrite->GetFirstLayer( & firstLayerWritten)))
 		{
-			checkifEqual("Layer One Name", firstLayerWritten->GetName(), layer1->GetName());
+			checkifEqual("Layer One Name", firstLayerWritten->GetName(), "My Layer 1");
 			
 			// Get first Object
 			ISceneObjPtr firstChild;
 			if(__checkVCOM(mvrWrite->GetFirstChild(firstLayerWritten, & firstChild)))
 			{
-				checkifEqual("Check First Child", firstChild->GetName(), focusPoint->GetName());
+				checkifEqual("Check First Child", firstChild->GetName(), "My FocusPoint");
 
 				ISceneObjPtr secondChild;
 				if(__checkVCOM(mvrWrite->GetNextObject(firstChild, & secondChild)))
 				{
-					checkifEqual("Check Second Child", secondChild->GetName(), fixture1->GetName());
+					checkifEqual("Check Second Child", secondChild->GetName(), "My Fixture1 Name");
 				}		
 			}
 
 			ISceneObjPtr secondLayerWritten;
-			if(mvrWrite->GetNextObject(firstLayerWritten, & secondLayerWritten))
+			if(__checkVCOM(mvrWrite->GetNextObject(firstLayerWritten, & secondLayerWritten)))
 			{
-				checkifEqual("Layer Two Name", secondLayerWritten->GetName(), layer2->GetName());
+				checkifEqual("Layer Two Name", secondLayerWritten->GetName(), "My Layer 2");
 			}
 		}
 
