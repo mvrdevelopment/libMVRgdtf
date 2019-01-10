@@ -17,14 +17,6 @@ using namespace VectorworksMVR::GdtfDefines;
 GdtfUnitTest::GdtfUnitTest(const std::string& currentDir)
 {
 	fPath = currentDir;
-#ifdef _WINDOWS
-    fPath += std::string("\\");
-#else
-    fPath += std::string("/");
-#endif
-	fPath += this->GetUnitTestName();
-
-    std::cout << "Export File to " << fPath << std::endl; 
 }
 
 GdtfUnitTest::~GdtfUnitTest()
@@ -33,18 +25,30 @@ GdtfUnitTest::~GdtfUnitTest()
 
 bool GdtfUnitTest::ExecuteTest()
 {
+#ifdef _WINDOWS
+    fPath += std::string("\\");
+#else
+    fPath += std::string("/");
+#endif
+	fPath += this->GetUnitTestName();
+	fPath += std::string(".gdtf");
+
 	std::cout << "=                                     GdtfUnitTest::" << this->GetUnitTestName() << "                           =" << std::endl;
+	std::cout << "Export File to " << fPath << std::endl; 
+
 
 	// Prepare Write Fixture
 	IGdtfFixturePtr writeFixture (IID_IGdtfFixture);
 	MvrUUID uuid (225204211, 177198167, 1575790, 96627);
     __checkVCOM(writeFixture->OpenForWrite(fPath.c_str(),"My FixtureName","My Manufacturer", uuid));
     WriteFile(writeFixture);
+	__checkVCOM(writeFixture->Close());
 
 	// Prepare Read Fixture
 	IGdtfFixturePtr readFixture (IID_IGdtfFixture);
 	__checkVCOM(readFixture->ReadFromFile(fPath.c_str()));
     ReadFile(readFixture);
+	PrintParsingErrorList(readFixture);
 
     return true;
 }

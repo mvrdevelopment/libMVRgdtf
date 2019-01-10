@@ -11,7 +11,7 @@ public:
     GdtfUnitTest(const std::string& currentDir);
     virtual ~GdtfUnitTest();
 protected:
-    bool virtual        ExecuteTest();
+    bool                ExecuteTest();
     std::string virtual GetUnitTestName() = 0;
 
 private:
