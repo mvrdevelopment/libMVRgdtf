@@ -4422,14 +4422,9 @@ void GdtfFixture::AutoGenerateNames(GdtfDmxModePtr dmxMode)
 		{
 			//------------------------------------------------------------------------------------------------
 			//  Create Names for DMX Channel
-			ASSERTN(kEveryone, dmxChannel->GetGeomRef());
-			if (! dmxChannel->GetGeomRef())
-			{
-				// Error comes later
-				continue;
-			}
+			ASSERTN(kEveryone, dmxChannel->GetGeomRef() != nullptr);
+			if (dmxChannel->GetGeomRef() == nullptr){ /* Error comes later*/ continue; }
 			
-			TXString 			geometryRef = dmxChannel->GetGeomRef()->GetName();
 			GdtfAttributePtr 	firstAttr = nullptr;
 			
 			for (GdtfDmxLogicalChannelPtr logicalChannel : dmxChannel->GetLogicalChannelArray())
@@ -4473,8 +4468,10 @@ void GdtfFixture::AutoGenerateNames(GdtfDmxModePtr dmxMode)
 			
 			//------------------------------------------------------------------------------------------------
 			//  Set the DMX Name
-			ASSERTN(kEveryone, firstAttr);
-			dmxChannel->SetName(geometryRef + "_" + firstAttr->GetName());
+			ASSERTN(kEveryone, firstAttr != nullptr);
+			ASSERTN(kEveryone, dmxChannel->GetGeomRef() != nullptr);
+			if(firstAttr) { dmxChannel->SetName(dmxChannel->GetGeomRef()->GetName() + "_" + firstAttr->GetName()); }
+			
 		}
 }
 
