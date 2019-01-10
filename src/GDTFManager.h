@@ -832,6 +832,8 @@ namespace SceneData
         GdtfDmxChannelFunction*         GetModeMaster_Function() const;
         DmxValue                        GetModeMasterDmxStart() const;
         DmxValue                        GetModeMasterDmxEnd() const;
+
+        size_t					        GetNumberInParent() const;
         
         //
 		const TGdtfDmxChannelSetArray	GetChannelSets();		
