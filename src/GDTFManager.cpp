@@ -4371,61 +4371,52 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 	
 	//-------------------------------------------------------------------------------------------------
 	// Decompress the files
-	IFileIdentifierPtr gdtfFile (IID_FileIdentifier);
-	
-	if (! xmlFileBuffer.IsSet())
+	fReaded = xmlFileBuffer.IsSet();
+	if ( ! fReaded)
 	{
 		GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureNoGdtfFileInXmlBuffer);
 		SceneData::GdtfFixture::AddError(error); 
 		fReaded = false;
-		return;
 	}
-	
-	if (xmlFileSHA256Buffer.IsSet())
+	else
 	{
-		if (HashManager::HashManager::CheckHashForBuffer(xmlFileBuffer, xmlFileSHA256Buffer) == false)
+		if (xmlFileSHA256Buffer.IsSet())
 		{
-			GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureChecksumError); 
-			SceneData::GdtfFixture::AddError(error); 
-		}
-	}
-	
-	
-	//-------------------------------------------------------------------------------------------------
-	// Read XML
-	IXMLFilePtr xmlFile (IID_XMLFile);
-
-	size_t	size = 0;								xmlFileBuffer.GetDataSize(size);
-    void*	data = malloc(size * sizeof(char));		xmlFileBuffer.CopyDataInto(data, size);
-	
-	// Set the data
-    IXMLFileIOBufferImpl xmlBuffer;
-    xmlBuffer.SetData(data, size);
-	
-	// Housekeeping
-	std::free(data);
-	
-	if (VCOM_SUCCEEDED(xmlFile->ReadBuffer( &xmlBuffer, EXMLEncoding::eXMLEncoding_UTF8)))
-	{
-		IXMLFileNodePtr rootNode;
-		if (VCOM_SUCCEEDED(xmlFile->GetRootNode( & rootNode)))
-		{
-			IXMLFileNodePtr fixtureNode;
-			if (VCOM_SUCCEEDED(rootNode->GetChildNode(XML_GDTF_FixtureNodeName, & fixtureNode)))
+			if (HashManager::HashManager::CheckHashForBuffer(xmlFileBuffer, xmlFileSHA256Buffer) == false)
 			{
-				//---------------------------------------------------------------------------------------------
-				// Read Stuff
-				this->ReadFromNode(fixtureNode);
-				
-				
+				GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureChecksumError); 
+				SceneData::GdtfFixture::AddError(error); 
+			}
+		}
 
-				this->ResolveAllReferences();		
+		IXMLFilePtr xmlFile (IID_XMLFile);
+
+		size_t	size = 0;								xmlFileBuffer.GetDataSize(size);
+		void*	data = malloc(size * sizeof(char));		xmlFileBuffer.CopyDataInto(data, size);
+		
+		// Set the data
+		IXMLFileIOBufferImpl xmlBuffer;
+		xmlBuffer.SetData(data, size);
+		
+		// Housekeeping
+		std::free(data);
+		
+		if (VCOM_SUCCEEDED(xmlFile->ReadBuffer( &xmlBuffer, EXMLEncoding::eXMLEncoding_UTF8)))
+		{
+			IXMLFileNodePtr rootNode;
+			if (VCOM_SUCCEEDED(xmlFile->GetRootNode( & rootNode)))
+			{
+				IXMLFileNodePtr fixtureNode;
+				if (VCOM_SUCCEEDED(rootNode->GetChildNode(XML_GDTF_FixtureNodeName, & fixtureNode)))
+				{
+					//---------------------------------------------------------------------------------------------
+					// Read Stuff
+					this->ReadFromNode(fixtureNode);
+					this->ResolveAllReferences();		
+				}
 			}
 		}
 	}
-	
-	
-	fReaded = true;
 	__ERROR_CONTAINER_POINTER = nullptr;
 }
 
