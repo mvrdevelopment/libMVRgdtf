@@ -1552,9 +1552,7 @@ SceneDataLayerObjPtr SceneDataExchange::CreateLayerObject(const SceneDataGUID& g
 {
 	SceneDataLayerObjPtr newLayer =  new SceneDataLayerObj(guid);
 	newLayer->setName(name);
-	fChildObjs.push_back(newLayer);
-
-
+	
 	if(fChildObjs.size() > 0)
 	{
 		SceneDataLayerObjPtr lastLayer = dynamic_cast<SceneDataLayerObjPtr>(fChildObjs.back());
@@ -1562,6 +1560,7 @@ SceneDataLayerObjPtr SceneDataExchange::CreateLayerObject(const SceneDataGUID& g
 		if(lastLayer)	{ lastLayer->SetNextLayer(newLayer); }
 	}	
 
+	fChildObjs.push_back(newLayer); 
 	
 	return newLayer;
 }
