@@ -46,17 +46,20 @@ void GdtfFunctionModeMasterTest::WriteFile(VectorworksMVR::IGdtfFixturePtr& fixt
     IGdtfModelPtr model;
     fixture->CreateModel("Model", &model);
 
-    IGdtfGeometryPtr geometry;
-    fixture->CreateGeometry(EGdtfObjectType::eGdtfGeometry, "Geometry", model, STransformMatrix(), &geometry);
+    IGdtfGeometryPtr geometry1;
+    fixture->CreateGeometry(EGdtfObjectType::eGdtfGeometry, "Geometry1", model, STransformMatrix(), &geometry1);
+
+    IGdtfGeometryPtr geometry2;
+    fixture->CreateGeometry(EGdtfObjectType::eGdtfGeometry, "Geometry2", model, STransformMatrix(), &geometry2);
 
     IGdtfDmxModePtr mode;
     fixture->CreateDmxMode("Mode1", & mode);    
-    mode->SetGeometry(geometry);
+    mode->SetGeometry(geometry1);
 
     //--------------------------------------------------------------------------------------------------------
     // Channel 1
     IGdtfDmxChannelPtr channel1;
-    mode->CreateDmxChannel(geometry, &channel1);
+    mode->CreateDmxChannel(geometry1, &channel1);
 
     IGdtfDmxLogicalChannelPtr log1;
     channel1->CreateLogicalChannel(attribute, &log1);
@@ -70,7 +73,7 @@ void GdtfFunctionModeMasterTest::WriteFile(VectorworksMVR::IGdtfFixturePtr& fixt
     //--------------------------------------------------------------------------------------------------------
     // Channel 2
     IGdtfDmxChannelPtr channel2;
-    mode->CreateDmxChannel(geometry, &channel2);
+    mode->CreateDmxChannel(geometry2, &channel2);
 
     IGdtfDmxLogicalChannelPtr log_2;
     channel2->CreateLogicalChannel(attribute, &log_2);

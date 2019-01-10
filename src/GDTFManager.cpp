@@ -3270,7 +3270,24 @@ TXString GdtfDmxChannelFunction::GetNodeName()
 
 TXString GdtfDmxChannelFunction::GetNodeReference()
 {
-	return fParentLogicalChannel->GetNodeReference() + "." + GetName();
+	TXString functionName = GetName();
+	if(functionName.IsEmpty())
+	{
+		ASSERTN(kEveryone, GetAttribute() != nullptr);
+		if(GetAttribute() != nullptr)
+		{
+			functionName = GetAttribute()->GetName();
+			functionName += " ";
+			functionName << GetNumberInParent();
+		}
+		
+	}
+	return fParentLogicalChannel->GetNodeReference() + "." + functionName;
+}
+
+size_t GdtfDmxChannelFunction::GetNumberInParent() const
+{
+	return 1;
 }
 
 const TXString& GdtfDmxChannelFunction::GetName() const
