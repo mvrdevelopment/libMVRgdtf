@@ -20,7 +20,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\unittest\GdtfDmxUnittest.cpp" />
+    <ClCompile Include="..\unittest\GdtfFunctionModeMaster.cpp" />
     <ClCompile Include="..\unittest\GdtfUnittest.cpp" />
+    <ClCompile Include="..\unittest\GdtfUnittestHandler.cpp" />
     <ClCompile Include="..\unittest\GdtfXmlError.cpp" />
     <ClCompile Include="..\unittest\main.cpp" />
     <ClCompile Include="..\unittest\MvrUnittest.cpp" />
@@ -28,7 +30,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\unittest\GdtfDmxUnittest.h" />
+    <ClInclude Include="..\unittest\GdtfFunctionModeMaster.h" />
     <ClInclude Include="..\unittest\GdtfUnittest.h" />
+    <ClInclude Include="..\unittest\GdtfUnittestHandler.h" />
     <ClInclude Include="..\unittest\GdtfXmlError.h" />
     <ClInclude Include="..\unittest\main.h" />
     <ClInclude Include="..\unittest\MvrUnittest.h" />
