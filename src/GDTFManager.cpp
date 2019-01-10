@@ -3287,6 +3287,16 @@ TXString GdtfDmxChannelFunction::GetNodeReference()
 
 size_t GdtfDmxChannelFunction::GetNumberInParent() const
 {
+	size_t count = fParentLogicalChannel->GetDmxChannelFunctions().size();
+	for(size_t i = 0; i < count; i++)
+	{
+		if(fParentLogicalChannel->GetDmxChannelFunctions()[i] == this)
+		{
+			return (i+1);
+		}
+	}
+	
+	DSTOP("Failed to get GetNumberInParent");
 	return 1;
 }
 
