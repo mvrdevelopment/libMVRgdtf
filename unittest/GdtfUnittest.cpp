@@ -904,13 +904,7 @@ void GdtfUnittest::ReadFile()
 			this->checkifEqual("Check Adress", (Sint32)3,breakId);
 		}
 
-		//// Add Revision
-		//IGdtfRevisionPtr rev;
-		//STime timestamp;
-		//timestamp.fYear = 2020; timestamp.fMonth = 12; timestamp.fDay = 2;
-		//timestamp.fHour = 22; timestamp.fMinute = 33; timestamp.fSecond = 44;
-		//__checkVCOM(gdtfWrite->CreateRevision("Revision TestText", timestamp, &rev));
-
+		//--------------------------------------------------------------------------------
 		// Read Revision
 		size_t countRevs = 0;
 		__checkVCOM(gdtfRead->GetRevisionCount(countRevs));
@@ -921,7 +915,6 @@ void GdtfUnittest::ReadFile()
 
 		this->checkifEqual("Check RevText", rev->GetText(), "Revision TestText");
 		this->checkifEqual("Revision TestText", rev->GetDate(), "2.12.2020 22:33:44");
-
     }
 
 	PrintParsingErrorList(gdtfRead);
