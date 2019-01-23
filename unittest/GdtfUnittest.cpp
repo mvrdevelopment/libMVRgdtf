@@ -245,6 +245,13 @@ void GdtfUnittest::WriteFile()
 			__checkVCOM(gdtfDmxMode->CreateDmxRelation("Relation", EGdtfDmxRelationType::eGdtfDmxRelationType_Multiply, gdtfDmxChannel, gdftChannelFunction, & relation));
 		}
 
+		// Add Revision
+		IGdtfRevisionPtr rev;
+		STime timestamp;
+		timestamp.fYear = 2020; timestamp.fMonth = 12; timestamp.fDay = 2;
+		timestamp.fHour = 22; timestamp.fMinute = 33; timestamp.fSecond = 44;
+		__checkVCOM(gdtfWrite->CreateRevision("Revision TestText", timestamp, &rev));
+
 
 		//------------------------------------------------------------------------------    
 		// Close the stream and dump to disk
@@ -259,7 +266,7 @@ void GdtfUnittest::ReadFile()
 	IGdtfFixturePtr gdtfRead (IID_IGdtfFixture);
     if(__checkVCOM(gdtfRead->ReadFromFile(fPath.c_str())))
     {
-		//Check those written UUIDs´
+		//Check those written UUIDs
 		MvrUUID fixtureUUID	(225204211, 177198167, 	1575790, 	96627);
 		MvrUUID linkedUUID	(2227440, 	1542265, 	1573622,	2328410);
 		MvrUUID resultUUID	(0,0,0,0);
@@ -896,6 +903,25 @@ void GdtfUnittest::ReadFile()
 			__checkVCOM(gdtfBreak->GetDmxBreak(breakId));
 			this->checkifEqual("Check Adress", (Sint32)3,breakId);
 		}
+
+		//// Add Revision
+		//IGdtfRevisionPtr rev;
+		//STime timestamp;
+		//timestamp.fYear = 2020; timestamp.fMonth = 12; timestamp.fDay = 2;
+		//timestamp.fHour = 22; timestamp.fMinute = 33; timestamp.fSecond = 44;
+		//__checkVCOM(gdtfWrite->CreateRevision("Revision TestText", timestamp, &rev));
+
+		// Read Revision
+		size_t countRevs = 0;
+		__checkVCOM(gdtfRead->GetRevisionCount(countRevs));
+		this->checkifEqual("Revision Count ", countRevs, size_t(1));
+
+		IGdtfRevisionPtr rev;
+		__checkVCOM(gdtfRead->GetRevisionAt(0, &rev));
+
+		this->checkifEqual("Check RevText", rev->GetText(), "Revision TestText");
+		this->checkifEqual("Revision TestText", rev->GetDate(), "2.12.2020 22:33:44");
+
     }
 
 	PrintParsingErrorList(gdtfRead);

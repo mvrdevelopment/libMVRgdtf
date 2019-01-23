@@ -43,6 +43,16 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfRevisionImpl::SetText(MvrString t
     return kVCOMError_NoError;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfRevisionImpl::SetDate(STime date)
+{
+	// Check if valid
+	if(!fRevision) { return kVCOMError_NotInitialized; }
+    
+    fRevision->SetDate(date);
+
+    return kVCOMError_NoError;
+}
+
 void VectorworksMVR::CGdtfRevisionImpl::setPointer(SceneData::GdtfRevision *revision)
 {
     fRevision = revision;

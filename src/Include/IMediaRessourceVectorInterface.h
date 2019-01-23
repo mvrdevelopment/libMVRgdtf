@@ -26,6 +26,16 @@ namespace VectorworksMVR
 		double wx,wy,wz;
 		double ox,oy,oz;
 	};
+
+    struct STime
+	{
+		Uint16 fYear;
+        Uint8  fMonth;
+        Uint8  fDay;
+        Uint8  fHour;
+        Uint8  fMinute;
+        Uint8  fSecond;
+	};
 	
 	struct SDmxAdress
 	{
@@ -208,7 +218,7 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		CreateClassObject(		 const MvrUUID& guid,		MvrString name,		IClass** outclass) = 0;
 		
 		// Then you can generate all other objects
-		virtual VCOMError VCOM_CALLTYPE		CreateLayerObject(	const MvrUUID& guid,								  MvrString name,								ISceneObj**	outLayerObj) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateLayerObject(	const MvrUUID& guid,								 MvrString name,								ISceneObj**	outLayerObj) = 0;
 		virtual VCOMError VCOM_CALLTYPE		CreateGroupObject(	const MvrUUID& guid, const STransformMatrix& offset,					ISceneObj* addToContainer,	ISceneObj**	outGroupObj) = 0;
 		virtual VCOMError VCOM_CALLTYPE		CreateFixture(		const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outFixture) = 0;
 		virtual VCOMError VCOM_CALLTYPE		CreateSceneObject(	const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outSceneObj) = 0;
@@ -639,6 +649,7 @@ namespace VectorworksMVR
         virtual MvrString VCOM_CALLTYPE     GetDate() = 0;
 
         virtual VCOMError VCOM_CALLTYPE     SetText(MvrString txt)  = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetDate(STime date)  = 0;
     };
 	typedef VCOMPtr<IGdtfRevision>	IGdtfRevisionPtr;
     
@@ -890,7 +901,7 @@ namespace VectorworksMVR
         
         virtual VCOMError VCOM_CALLTYPE		GetRevisionCount(size_t& count) = 0;
         virtual VCOMError VCOM_CALLTYPE		GetRevisionAt(size_t at, IGdtfRevision** revision ) = 0;
-		virtual VCOMError VCOM_CALLTYPE     CreateRevision(MvrString text,IGdtfRevision** macro) = 0;
+		virtual VCOMError VCOM_CALLTYPE     CreateRevision(MvrString text, STime date, IGdtfRevision** macro) = 0;
 		
         
         virtual VCOMError VCOM_CALLTYPE		GetPresetCount(size_t& count) = 0;

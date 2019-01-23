@@ -18,7 +18,8 @@ namespace VectorworksMVR
         virtual MvrString VCOM_CALLTYPE     GetText();
         virtual MvrString VCOM_CALLTYPE     GetDate();
 
-        virtual VCOMError VCOM_CALLTYPE     SetText(MvrString txt);       
+        virtual VCOMError VCOM_CALLTYPE     SetText(MvrString txt);
+        virtual VCOMError VCOM_CALLTYPE     SetDate(STime date);    
 
     private:
         SceneData::GdtfRevision* fRevision;

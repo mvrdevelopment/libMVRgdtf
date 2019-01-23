@@ -3895,7 +3895,12 @@ TXString GdtfRevision::GetNodeName()
 void GdtfRevision::SetText(const TXString& text)
 {
 	fText = text;
-	fDate = "";
+}
+
+void GdtfRevision::SetDate(const STime& revDate)
+{
+	fDate = TXString().itoa(revDate.fDay)  + "." + TXString().itoa(revDate.fMonth)  + "." + TXString().itoa(revDate.fYear) 	+ " "
+		  + TXString().itoa(revDate.fHour) + ":" + TXString().itoa(revDate.fMinute) + ":" + TXString().itoa(revDate.fSecond);
 }
 
 const TXString& GdtfRevision::GetDate() const
@@ -5454,10 +5459,11 @@ bool GdtfFixture::ExportToFile(IZIPFilePtr& zipfile)
 }
 
 
-GdtfRevisionPtr GdtfFixture::AddRevision(const TXString& text)
+GdtfRevisionPtr GdtfFixture::AddRevision(const TXString& text, const STime& date)
 {
-	GdtfRevision* revision = new GdtfRevision();;
+	GdtfRevision* revision = new GdtfRevision();
 	revision->SetText(text);
+	revision->SetDate(date);
 	
 	fRevisions.push_back(revision);
 	
