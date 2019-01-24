@@ -30,13 +30,13 @@ VCOMError VectorworksMVR::CGdtfRevisionImpl::GetDate(STime & date)
 	// Check if valid
 	if (!fRevision) { return kVCOMError_NotInitialized; }
 	
-	STime local = fRevision->GetDate();
-	date.fYear = local.fYear;
-	date.fYear = local.fYear;
-	date.fYear = local.fYear;
-	date.fYear = local.fYear;
-	date.fYear = local.fYear;
-	date.fYear = local.fYear;
+	STime local  = fRevision->GetDate();
+	date.fYear 	 = local.fYear;
+	date.fMonth  = local.fMonth;
+	date.fDay 	 = local.fDay;
+	date.fHour 	 = local.fHour;
+	date.fMinute = local.fMinute;
+	date.fSecond = local.fSecond;
 
 	return kVCOMError_NoError;
 }
