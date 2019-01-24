@@ -71,22 +71,7 @@ void Unittest::checkifEqual(const std::string& check, const Sint32 val1, const S
 	fFailedTests.push_back(test);
 };
 
-//void Unittest::checkifEqual(const std::string& check, const Uint16 val1, const Uint16 val2)
-//{
-//	if (val1 == val2) return;
-//
-//	// Else Log the error
-//	fFailed = true;
-//
-//	UnittestFailObject test;
-//	test.fMessage += check;
-//	test.fMessage += " Result: ";
-//	test.fMessage += std::to_string(val1);
-//	test.fMessage += " Expected: ";
-//	test.fMessage += std::to_string(val2);
-//
-//	fFailedTests.push_back(test);
-//};
+
 
 void Unittest::checkifEqual(const std::string& check, const Uint8 val1, const Uint8 val2)
 {
@@ -176,42 +161,6 @@ void Unittest::checkifEqual(const std::string& check, const VectorworksMVR::Gdtf
 
 	fFailedTests.push_back(test);
 };
-
-/*
-void Unittest::checkifEqual(const std::string& check, const VectorworksMVR::GdtfDefines::DmxValue val1, const VectorworksMVR::GdtfDefines::DmxValue val2)
-{
-	if (val1 == val2) return;
-
-	// Else Log the error
-	fFailed = true;
-
-	UnittestFailObject test;
-	test.fMessage += check;
-	test.fMessage += " Result: ";
-	test.fMessage += std::to_string(val1);
-	test.fMessage += " Expected: ";
-	test.fMessage += std::to_string(val2);
-
-	fFailedTests.push_back(test);
-};
-
-void Unittest::checkifEqual(const std::string& check, const VectorworksMVR::GdtfDefines::DMXAddress val1, const VectorworksMVR::GdtfDefines::DMXAddress val2)
-{
-	if (val1 == val2) return;
-
-	// Else Log the error
-	fFailed = true;
-
-	UnittestFailObject test;
-	test.fMessage += check;
-	test.fMessage += " Result: ";
-	test.fMessage += std::to_string(val1);
-	test.fMessage += " Expected: ";
-	test.fMessage += std::to_string(val2);
-
-	fFailedTests.push_back(test);
-};
-*/
 
 void Unittest::checkifEqual(const std::string& check, const VectorworksMVR::GdtfDefines::EGdtfModel_PrimitiveType val1, const VectorworksMVR::GdtfDefines::EGdtfModel_PrimitiveType val2)
 {
