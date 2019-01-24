@@ -155,6 +155,46 @@ using namespace SceneData;
 	
 }
 
+/*static*/ TXString GdtfConverter::ConvertDate(const STime& date)
+{
+	return (TXString() << date.fDay << "." << date.fMonth << "." << date.fYear << " " << date.fHour << ":" << date.fMinute << ":" << date.fSecond);
+}
+
+/*static*/ bool GdtfConverter::ConvertDate(const TXString& value, const IXMLFileNodePtr& node, STime& date)
+{
+	// ------------------------------------------------------------
+	// Check if the string is empty, use the 0 date
+	if (value.IsEmpty()) { date.fYear = 0; date.fMonth = 0; date.fDay = 0; date.fHour = 0; date.fMinute = 0; date.fSecond = 0; return true; }
+	
+	// ------------------------------------------------------------
+	// Split string
+	TXString strVal = value;
+	
+	// Prepare Array
+	std::vector<double> d_arr;
+	
+	Deserialize(strVal,node,  d_arr);
+	
+	
+	// ------------------------------------------------------------
+	// Check if you have three valies
+	ASSERTN(kEveryone, d_arr.size() == 6);
+	if (d_arr.size() != 6)
+    {
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_DateHasWrongFormat, node);
+        SceneData::GdtfFixture::AddError(error);
+		date.fYear = 0; date.fMonth = 0; date.fDay = 0; date.fHour = 0; date.fMinute = 0; date.fSecond = 0;
+		return false;
+    }
+	
+	// Set Out Date and return true
+	date.fDay = d_arr[0]; date.fMonth = d_arr[1]; date.fYear = d_arr[2]; date.fHour = d_arr[3]; date.fMinute = d_arr[4]; date.fSecond = d_arr[5];
+	
+	return true;
+}
+
+
+
 /*static*/ TXString GdtfConverter::ConvertColor(const CCieColor& color)
 {
 	return (TXString() << color.Get_x() << "," << color.Get_y() << "," << color.Get_Y_luminance() );

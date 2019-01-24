@@ -56,6 +56,7 @@ namespace SceneData
         //-----------------------------------------------------------------------------
         // Convert to String functions:
 		static TXString	ConvertUUID(const VWFC::Tools::VWUUID& uuid);
+		static TXString	ConvertDate(const STime& date);
 		static TXString	ConvertColor(const CCieColor& color);
 		static TXString	ConvertDouble(double value);
 		static TXString	ConvertInteger(Sint32 value);
@@ -95,6 +96,7 @@ namespace SceneData
         //-----------------------------------------------------------------------------
         // Convert from String functions:
         static bool		ConvertUUID(										const TXString& value, const IXMLFileNodePtr& node,			VWFC::Tools::VWUUID& uuid);
+		static bool		ConvertDate(										const TXString& value, const IXMLFileNodePtr& node,			STime& date);
 		static bool		ConvertColor(										const TXString& value, const IXMLFileNodePtr& node,			CCieColor& color);
 		static bool		ConvertDouble(										const TXString& value, const IXMLFileNodePtr& node,			double& doubleValue);
 		static bool		ConvertMatrix(										const TXString& value, const IXMLFileNodePtr& node,			VWTransformMatrix& ma);

@@ -3830,7 +3830,13 @@ EGdtfDmxRelationType GdtfDmxRelation::GetRelationType() const
 GdtfRevision::GdtfRevision()
 {
     fText = "";
-    fDate = "";
+	fDateS.fYear	= 0;
+	fDateS.fMonth	= 0;
+	fDateS.fDay		= 0;
+	fDateS.fHour	= 0;
+	fDateS.fMinute	= 0;
+	fDateS.fSecond	= 0;
+    
 }
 
 GdtfRevision::~GdtfRevision()
@@ -3847,7 +3853,7 @@ void GdtfRevision::OnPrintToFile(IXMLFileNodePtr pNode)
 	// ------------------------------------------------------------------------------------
 	// Print node attributes
 	pNode->SetNodeAttributeValue(XML_GDTF_RevisionText,			fText);
-	pNode->SetNodeAttributeValue(XML_GDTF_RevisionDate,			fDate);
+	pNode->SetNodeAttributeValue(XML_GDTF_RevisionDate,			SceneData::GdtfConverter::ConvertDate(fDateS));
 	
 }
 
@@ -3861,7 +3867,7 @@ void GdtfRevision::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// ------------------------------------------------------------------------------------
 	// Print node attributes
 	pNode->GetNodeAttributeValue(XML_GDTF_RevisionText,			fText);
-	pNode->GetNodeAttributeValue(XML_GDTF_RevisionDate,			fDate);
+	TXString date;		pNode->GetNodeAttributeValue(XML_GDTF_RevisionText, date);		GdtfConverter::ConvertDate(date, pNode, fDateS);
 }
 
 void GdtfRevision::OnErrorCheck(const IXMLFileNodePtr& pNode)
@@ -3897,15 +3903,14 @@ void GdtfRevision::SetText(const TXString& text)
 	fText = text;
 }
 
-void GdtfRevision::SetDate(const STime& revDate)
+void GdtfRevision::SetDate(const STime& date)
 {
-	fDate = TXString().itoa(revDate.fDay)  + "." + TXString().itoa(revDate.fMonth)  + "." + TXString().itoa(revDate.fYear) 	+ " "
-		  + TXString().itoa(revDate.fHour) + ":" + TXString().itoa(revDate.fMinute) + ":" + TXString().itoa(revDate.fSecond);
+	fDateS = date;
 }
 
-const TXString& GdtfRevision::GetDate() const
+const STime& GdtfRevision::GetDate() const
 {
-	return fDate;
+	return fDateS;
 }
 
 const TXString& GdtfRevision::GetText() const

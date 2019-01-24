@@ -1107,18 +1107,18 @@ namespace SceneData
 		
 	private:
 		TXString	fText;
-		TXString    fDate;
+		STime       fDateS;
 		
 	public:
 		virtual EGdtfObjectType			GetObjectType();
 		
 	public:
         // Getter
-		const TXString& GetDate() const;
+		const STime&    GetDate() const;
 		const TXString&	GetText() const;
         // Setter        
 		void			SetText(const TXString& text);
-        void            SetDate(const STime& revDate);
+        void            SetDate(const STime& date);
 		
 	protected:
 		virtual	TXString				GetNodeName();

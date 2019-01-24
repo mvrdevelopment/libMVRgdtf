@@ -913,9 +913,19 @@ void GdtfUnittest::ReadFile()
 		IGdtfRevisionPtr rev;
 		__checkVCOM(gdtfRead->GetRevisionAt(0, &rev));
 
+		STime expTimestamp;
+		__checkVCOM(rev->GetDate(expTimestamp));
+		//timestamp.fYear = 2020; timestamp.fMonth = 12; timestamp.fDay = 2;
+		//timestamp.fHour = 22; timestamp.fMinute = 33; timestamp.fSecond = 44;
+
 		this->checkifEqual("Check RevText", rev->GetText(), "Revision TestText");
-		this->checkifEqual("Revision TestText", rev->GetDate(), "2.12.2020 22:33:44");
-    }
+		this->checkifEqual("Check RevDatefYear",	expTimestamp.fYear, Uint16(2020));
+		this->checkifEqual("Check RevDatefMonth",	expTimestamp.fMonth, Uint8(12));
+		this->checkifEqual("Check RevDatefDay",		expTimestamp.fDay, Uint8(2));
+		this->checkifEqual("Check RevDatefHour",	expTimestamp.fHour, Uint8(22));
+		this->checkifEqual("Check RevDatefMinute",	expTimestamp.fMinute, Uint8(33));
+		this->checkifEqual("Check RevDatefSecond",	expTimestamp.fSecond, Uint8(44));
+}
 
 	PrintParsingErrorList(gdtfRead);
 }

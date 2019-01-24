@@ -25,12 +25,20 @@ MvrString VectorworksMVR::CGdtfRevisionImpl::GetText()
 	return fRevision->GetText().GetCharPtr();
 }
 
-MvrString VectorworksMVR::CGdtfRevisionImpl::GetDate()
+VCOMError VectorworksMVR::CGdtfRevisionImpl::GetDate(STime & date)
 {
 	// Check if valid
-	if(!fRevision) return "";
+	if (!fRevision) { return kVCOMError_NotInitialized; }
 	
-    return fRevision->GetDate().GetCharPtr();
+	STime local = fRevision->GetDate();
+	date.fYear = local.fYear;
+	date.fYear = local.fYear;
+	date.fYear = local.fYear;
+	date.fYear = local.fYear;
+	date.fYear = local.fYear;
+	date.fYear = local.fYear;
+
+	return kVCOMError_NoError;
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfRevisionImpl::SetText(MvrString txt)

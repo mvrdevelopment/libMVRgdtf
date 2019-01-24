@@ -646,7 +646,7 @@ namespace VectorworksMVR
     {
 		public:
         virtual MvrString VCOM_CALLTYPE     GetText() = 0;
-        virtual MvrString VCOM_CALLTYPE     GetDate() = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetDate(STime& date) = 0;
 
         virtual VCOMError VCOM_CALLTYPE     SetText(MvrString txt)  = 0;
         virtual VCOMError VCOM_CALLTYPE     SetDate(STime date)  = 0;
