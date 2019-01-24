@@ -3866,8 +3866,8 @@ void GdtfRevision::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	
 	// ------------------------------------------------------------------------------------
 	// Print node attributes
-	pNode->GetNodeAttributeValue(XML_GDTF_RevisionText,			fText);
-	TXString date;		pNode->GetNodeAttributeValue(XML_GDTF_RevisionText, date);		GdtfConverter::ConvertDate(date, pNode, fDateS);
+						pNode->GetNodeAttributeValue(XML_GDTF_RevisionText,		fText);
+	TXString date;		pNode->GetNodeAttributeValue(XML_GDTF_RevisionDate, 	date);		GdtfConverter::ConvertDate(date, pNode, fDateS);
 }
 
 void GdtfRevision::OnErrorCheck(const IXMLFileNodePtr& pNode)

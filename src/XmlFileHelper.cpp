@@ -2346,7 +2346,7 @@ void SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, ISceneDataZipBuffer& buffe
         ASSERTN(kEveryone, calender.size() == 3);
 
         TSint32Array time;
-		Deserialize(strValCalender, node, time, ':');
+		Deserialize(strValClock, node, time, ':');
         ASSERTN(kEveryone, time.size() == 3);
 
         if(time.size() == 3 && calender.size() == 3)
@@ -2354,9 +2354,6 @@ void SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, ISceneDataZipBuffer& buffe
             intArray.insert(intArray.end(), calender.begin(), calender.end());
             intArray.insert(intArray.end(), time.begin(), time.end());
         }
-        // Delete and find next
-	    intArray.push_back(strVal.atoi());
-
 	}
 
 	
