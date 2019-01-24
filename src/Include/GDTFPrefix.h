@@ -147,6 +147,7 @@ namespace VectorworksMVR
             eValueError_NoCommaFound        = 54,
             eFailedToReadDescription        = 55, // The description.xml in not found in the zip archive
             eXmlParsingError                = 56, // The XML file structure is damaged
+			eValueError_DateHasWrongFormat	= 57,
         };
 		
 		enum class EGdtfPhysicalUnit

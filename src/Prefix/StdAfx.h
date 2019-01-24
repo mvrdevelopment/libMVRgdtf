@@ -70,6 +70,7 @@ using namespace VWFC::Tools;
 
 // Needed typedefs
 typedef std::vector<Sint32> TSint32Array;
+typedef std::vector<Uint16> TUint16Array;
 
 
 //

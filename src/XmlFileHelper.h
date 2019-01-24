@@ -56,6 +56,7 @@ namespace SceneData
         //-----------------------------------------------------------------------------
         // Convert to String functions:
 		static TXString	ConvertUUID(const VWFC::Tools::VWUUID& uuid);
+		static TXString	ConvertDate(const STime& date);
 		static TXString	ConvertColor(const CCieColor& color);
 		static TXString	ConvertDouble(double value);
 		static TXString	ConvertInteger(Sint32 value);
@@ -95,6 +96,7 @@ namespace SceneData
         //-----------------------------------------------------------------------------
         // Convert from String functions:
         static bool		ConvertUUID(										const TXString& value, const IXMLFileNodePtr& node,			VWFC::Tools::VWUUID& uuid);
+		static bool		ConvertDate(										const TXString& value, const IXMLFileNodePtr& node,			STime& date);
 		static bool		ConvertColor(										const TXString& value, const IXMLFileNodePtr& node,			CCieColor& color);
 		static bool		ConvertDouble(										const TXString& value, const IXMLFileNodePtr& node,			double& doubleValue);
 		static bool		ConvertMatrix(										const TXString& value, const IXMLFileNodePtr& node,			VWTransformMatrix& ma);
@@ -143,8 +145,9 @@ namespace SceneData
 		
 	private:
 		static bool		Deserialize(const TXString& value, const IXMLFileNodePtr& node, std::vector<double>& doubleArr);
-		static bool		Deserialize(const TXString& value, const IXMLFileNodePtr& node, TSint32Array& doubleArr);
-       
+		static bool		Deserialize(const TXString& value, const IXMLFileNodePtr& node, TSint32Array& intArray, TXChar seperator = ',');
+		static bool		DeserializeDate(const TXString& value, const IXMLFileNodePtr& node, TSint32Array& intArray);
+
 
 	};
 	

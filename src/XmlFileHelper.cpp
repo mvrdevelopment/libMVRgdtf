@@ -155,6 +155,58 @@ using namespace SceneData;
 	
 }
 
+/*static*/ TXString GdtfConverter::ConvertDate(const STime& date)
+{
+	TXString result;
+	result += TXString().itoa(date.fDay);
+	result += ".";
+	result += TXString().itoa(date.fMonth);
+	result += ".";
+	result += TXString().itoa(date.fYear);
+	result += " ";
+	result += TXString().itoa(date.fHour);
+	result += ":";
+	result += TXString().itoa(date.fMinute);
+	result += ":";
+	result += TXString().itoa(date.fSecond);
+	return result;
+}
+
+/*static*/ bool GdtfConverter::ConvertDate(const TXString& value, const IXMLFileNodePtr& node, STime& date)
+{
+	// ------------------------------------------------------------
+	// Check if the string is empty, use the 0 date
+	if (value.IsEmpty()) { date.fYear = 0; date.fMonth = 0; date.fDay = 0; date.fHour = 0; date.fMinute = 0; date.fSecond = 0; return true; }
+	
+	// ------------------------------------------------------------
+	// Split string
+	TXString strVal = value;
+	
+	// Prepare Array
+	TSint32Array d_arr;
+	
+	DeserializeDate(strVal,node,  d_arr);
+	
+	
+	// ------------------------------------------------------------
+	// Check if you have three valies
+	ASSERTN(kEveryone, d_arr.size() == 6);
+	if (d_arr.size() != 6)
+    {
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_DateHasWrongFormat, node);
+        SceneData::GdtfFixture::AddError(error);
+		date.fYear = 0; date.fMonth = 0; date.fDay = 0; date.fHour = 0; date.fMinute = 0; date.fSecond = 0;
+		return false;
+    }
+	
+	// Set Out Date and return true
+	date.fDay = d_arr[0]; date.fMonth = d_arr[1]; date.fYear = d_arr[2]; date.fHour = d_arr[3]; date.fMinute = d_arr[4]; date.fSecond = d_arr[5];
+	
+	return true;
+}
+
+
+
 /*static*/ TXString GdtfConverter::ConvertColor(const CCieColor& color)
 {
 	return (TXString() << color.Get_x() << "," << color.Get_y() << "," << color.Get_Y_luminance() );
@@ -2241,13 +2293,13 @@ void SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, ISceneDataZipBuffer& buffe
 	return true;
 }
 
-/*static*/ bool GdtfConverter::Deserialize(const TXString& value, const IXMLFileNodePtr& node, TSint32Array & intArray)
+/*static*/ bool GdtfConverter::Deserialize(const TXString& value, const IXMLFileNodePtr& node, TSint32Array & intArray, TXChar seperatorChar)
 {
 	// Split string
 	TXString strVal = value;
 	
 	// Find first entry
-	ptrdiff_t pos = strVal.Find(",");
+	ptrdiff_t pos = strVal.Find(seperatorChar);
 	while (pos > 0 )
 	{
 		// Copy string
@@ -2259,12 +2311,53 @@ void SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, ISceneDataZipBuffer& buffe
 		
 		// Delete and find next
 		strVal.Delete(0, pos + 1);
-		pos = strVal.Find(",");
+		pos = strVal.Find(seperatorChar);
 	}
 	
 	// Delete and find next
 	intArray.push_back(strVal.atoi());
 	
+	return true;
+}
+
+/*static*/ bool GdtfConverter::DeserializeDate(const TXString& value, const IXMLFileNodePtr& node, TSint32Array& intArray)
+{
+	// Split string
+	TXString strVal = value;
+	size_t strLength = strVal.GetLength();
+
+    // Format linke
+    // 2.12.2020 22:33:44
+
+    //--------------------------------------------------------------------------------
+	// Split Date and time
+	ptrdiff_t pos = strVal.Find(" ");
+    ASSERTN(kEveryone, pos > 0);
+	if (pos > 0)
+	{
+		// Copy Strings in container
+		TXString strValCalender;
+        for (ptrdiff_t i = 0; i < pos; i++) {strValCalender += strVal.GetAt(i); }
+		TXString strValClock;
+		for (ptrdiff_t i = pos+1 ; i < strLength; i++) { strValClock += strVal.GetAt(i);}
+
+        TSint32Array calender;
+		Deserialize(strValCalender, node, calender, '.');
+        ASSERTN(kEveryone, calender.size() == 3);
+
+        TSint32Array time;
+		Deserialize(strValClock, node, time, ':');
+        ASSERTN(kEveryone, time.size() == 3);
+
+        if(time.size() == 3 && calender.size() == 3)
+        {
+            intArray.insert(intArray.end(), calender.begin(), calender.end());
+            intArray.insert(intArray.end(), time.begin(), time.end());
+        }
+	}
+
+	
+
 	return true;
 }
 

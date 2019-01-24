@@ -3830,7 +3830,13 @@ EGdtfDmxRelationType GdtfDmxRelation::GetRelationType() const
 GdtfRevision::GdtfRevision()
 {
     fText = "";
-    fDate = "";
+	fDateS.fYear	= 0;
+	fDateS.fMonth	= 0;
+	fDateS.fDay		= 0;
+	fDateS.fHour	= 0;
+	fDateS.fMinute	= 0;
+	fDateS.fSecond	= 0;
+    
 }
 
 GdtfRevision::~GdtfRevision()
@@ -3847,7 +3853,7 @@ void GdtfRevision::OnPrintToFile(IXMLFileNodePtr pNode)
 	// ------------------------------------------------------------------------------------
 	// Print node attributes
 	pNode->SetNodeAttributeValue(XML_GDTF_RevisionText,			fText);
-	pNode->SetNodeAttributeValue(XML_GDTF_RevisionDate,			fDate);
+	pNode->SetNodeAttributeValue(XML_GDTF_RevisionDate,			SceneData::GdtfConverter::ConvertDate(fDateS));
 	
 }
 
@@ -3860,8 +3866,8 @@ void GdtfRevision::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	
 	// ------------------------------------------------------------------------------------
 	// Print node attributes
-	pNode->GetNodeAttributeValue(XML_GDTF_RevisionText,			fText);
-	pNode->GetNodeAttributeValue(XML_GDTF_RevisionDate,			fDate);
+						pNode->GetNodeAttributeValue(XML_GDTF_RevisionText,		fText);
+	TXString date;		pNode->GetNodeAttributeValue(XML_GDTF_RevisionDate, 	date);		GdtfConverter::ConvertDate(date, pNode, fDateS);
 }
 
 void GdtfRevision::OnErrorCheck(const IXMLFileNodePtr& pNode)
@@ -3895,12 +3901,21 @@ TXString GdtfRevision::GetNodeName()
 void GdtfRevision::SetText(const TXString& text)
 {
 	fText = text;
-	fDate = "";
 }
 
-const TXString& GdtfRevision::GetDate() const
+void GdtfRevision::SetDate(const STime& date)
 {
-	return fDate;
+	fDateS.fYear	= date.fYear;
+	fDateS.fMonth	= date.fMonth;
+	fDateS.fDay		= date.fDay;
+	fDateS.fHour	= date.fHour;
+	fDateS.fMinute	= date.fMinute;
+	fDateS.fSecond	= date.fSecond;
+}
+
+const STime& GdtfRevision::GetDate() const
+{
+	return fDateS;
 }
 
 const TXString& GdtfRevision::GetText() const
@@ -5454,10 +5469,11 @@ bool GdtfFixture::ExportToFile(IZIPFilePtr& zipfile)
 }
 
 
-GdtfRevisionPtr GdtfFixture::AddRevision(const TXString& text)
+GdtfRevisionPtr GdtfFixture::AddRevision(const TXString& text, const STime& date)
 {
-	GdtfRevision* revision = new GdtfRevision();;
+	GdtfRevision* revision = new GdtfRevision();
 	revision->SetText(text);
+	revision->SetDate(date);
 	
 	fRevisions.push_back(revision);
 	

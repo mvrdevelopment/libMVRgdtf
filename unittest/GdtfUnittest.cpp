@@ -245,6 +245,13 @@ void GdtfUnittest::WriteFile()
 			__checkVCOM(gdtfDmxMode->CreateDmxRelation("Relation", EGdtfDmxRelationType::eGdtfDmxRelationType_Multiply, gdtfDmxChannel, gdftChannelFunction, & relation));
 		}
 
+		// Add Revision
+		IGdtfRevisionPtr rev;
+		STime timestamp;
+		timestamp.fYear = 2020; timestamp.fMonth = 12; timestamp.fDay = 2;
+		timestamp.fHour = 22; timestamp.fMinute = 33; timestamp.fSecond = 44;
+		__checkVCOM(gdtfWrite->CreateRevision("Revision TestText", timestamp, &rev));
+
 
 		//------------------------------------------------------------------------------    
 		// Close the stream and dump to disk
@@ -259,7 +266,7 @@ void GdtfUnittest::ReadFile()
 	IGdtfFixturePtr gdtfRead (IID_IGdtfFixture);
     if(__checkVCOM(gdtfRead->ReadFromFile(fPath.c_str())))
     {
-		//Check those written UUIDs´
+		//Check those written UUIDs
 		MvrUUID fixtureUUID	(225204211, 177198167, 	1575790, 	96627);
 		MvrUUID linkedUUID	(2227440, 	1542265, 	1573622,	2328410);
 		MvrUUID resultUUID	(0,0,0,0);
@@ -896,7 +903,29 @@ void GdtfUnittest::ReadFile()
 			__checkVCOM(gdtfBreak->GetDmxBreak(breakId));
 			this->checkifEqual("Check Adress", (Sint32)3,breakId);
 		}
-    }
+
+		//--------------------------------------------------------------------------------
+		// Read Revision
+		size_t countRevs = 0;
+		__checkVCOM(gdtfRead->GetRevisionCount(countRevs));
+		this->checkifEqual("Revision Count ", countRevs, size_t(1));
+
+		IGdtfRevisionPtr rev;
+		__checkVCOM(gdtfRead->GetRevisionAt(0, &rev));
+
+		STime expTimestamp;
+		__checkVCOM(rev->GetDate(expTimestamp));
+		//timestamp.fYear = 2020; timestamp.fMonth = 12; timestamp.fDay = 2;
+		//timestamp.fHour = 22; timestamp.fMinute = 33; timestamp.fSecond = 44;
+
+		this->checkifEqual("Check RevText", rev->GetText(), "Revision TestText");
+		this->checkifEqual("Check RevDatefYear",	expTimestamp.fYear, Uint16(2020));
+		this->checkifEqual("Check RevDatefMonth",	expTimestamp.fMonth, Uint16(12));
+		this->checkifEqual("Check RevDatefDay",		expTimestamp.fDay, Uint16(2));
+		this->checkifEqual("Check RevDatefHour",	expTimestamp.fHour, Uint16(22));
+		this->checkifEqual("Check RevDatefMinute",	expTimestamp.fMinute, Uint16(33));
+		this->checkifEqual("Check RevDatefSecond",	expTimestamp.fSecond, Uint16(44));
+}
 
 	PrintParsingErrorList(gdtfRead);
 }
