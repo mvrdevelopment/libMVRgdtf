@@ -157,7 +157,19 @@ using namespace SceneData;
 
 /*static*/ TXString GdtfConverter::ConvertDate(const STime& date)
 {
-	return (TXString() << date.fDay << "." << date.fMonth << "." << date.fYear << " " << date.fHour << ":" << date.fMinute << ":" << date.fSecond);
+	TXString result;
+	result += TXString().itoa(date.fDay);
+	result += ".";
+	result += TXString().itoa(date.fMonth);
+	result += ".";
+	result += TXString().itoa(date.fYear);
+	result += " ";
+	result += TXString().itoa(date.fHour);
+	result += ":";
+	result += TXString().itoa(date.fMinute);
+	result += ":";
+	result += TXString().itoa(date.fSecond);
+	return result;
 }
 
 /*static*/ bool GdtfConverter::ConvertDate(const TXString& value, const IXMLFileNodePtr& node, STime& date)
@@ -171,7 +183,7 @@ using namespace SceneData;
 	TXString strVal = value;
 	
 	// Prepare Array
-	std::vector<double> d_arr;
+	TSint32Array d_arr;
 	
 	Deserialize(strVal,node,  d_arr);
 	
