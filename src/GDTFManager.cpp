@@ -3905,7 +3905,12 @@ void GdtfRevision::SetText(const TXString& text)
 
 void GdtfRevision::SetDate(const STime& date)
 {
-	fDateS = date;
+	fDateS.fYear	= date.fYear;
+	fDateS.fMonth	= date.fMonth;
+	fDateS.fDay		= date.fDay;
+	fDateS.fHour	= date.fHour;
+	fDateS.fMinute	= date.fMinute;
+	fDateS.fSecond	= date.fSecond;
 }
 
 const STime& GdtfRevision::GetDate() const
