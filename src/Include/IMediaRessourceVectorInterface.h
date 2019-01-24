@@ -29,12 +29,12 @@ namespace VectorworksMVR
 
     struct STime
 	{
-		Uint16 fYear;
-        Uint8  fMonth;
-        Uint8  fDay;
-        Uint8  fHour;
-        Uint8  fMinute;
-        Uint8  fSecond;
+		Uint16	fYear;
+		Uint16  fMonth;
+		Uint16  fDay;
+		Uint16  fHour;
+		Uint16  fMinute;
+		Uint16  fSecond;
 	};
 	
 	struct SDmxAdress

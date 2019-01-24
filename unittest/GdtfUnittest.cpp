@@ -920,11 +920,11 @@ void GdtfUnittest::ReadFile()
 
 		this->checkifEqual("Check RevText", rev->GetText(), "Revision TestText");
 		this->checkifEqual("Check RevDatefYear",	expTimestamp.fYear, Uint16(2020));
-		this->checkifEqual("Check RevDatefMonth",	expTimestamp.fMonth, Uint8(12));
-		this->checkifEqual("Check RevDatefDay",		expTimestamp.fDay, Uint8(2));
-		this->checkifEqual("Check RevDatefHour",	expTimestamp.fHour, Uint8(22));
-		this->checkifEqual("Check RevDatefMinute",	expTimestamp.fMinute, Uint8(33));
-		this->checkifEqual("Check RevDatefSecond",	expTimestamp.fSecond, Uint8(44));
+		this->checkifEqual("Check RevDatefMonth",	expTimestamp.fMonth, Uint16(12));
+		this->checkifEqual("Check RevDatefDay",		expTimestamp.fDay, Uint16(2));
+		this->checkifEqual("Check RevDatefHour",	expTimestamp.fHour, Uint16(22));
+		this->checkifEqual("Check RevDatefMinute",	expTimestamp.fMinute, Uint16(33));
+		this->checkifEqual("Check RevDatefSecond",	expTimestamp.fSecond, Uint16(44));
 }
 
 	PrintParsingErrorList(gdtfRead);

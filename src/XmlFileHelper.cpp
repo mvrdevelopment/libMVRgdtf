@@ -183,9 +183,9 @@ using namespace SceneData;
 	TXString strVal = value;
 	
 	// Prepare Array
-	TSint32Array d_arr;
+	TUint16Array d_arr;
 	
-	Deserialize(strVal,node,  d_arr);
+	DeserializeDate(strVal,node,  d_arr);
 	
 	
 	// ------------------------------------------------------------
@@ -2317,6 +2317,69 @@ void SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, ISceneDataZipBuffer& buffe
 	// Delete and find next
 	intArray.push_back(strVal.atoi());
 	
+	return true;
+}
+
+/*static*/ bool GdtfConverter::DeserializeDate(const TXString& value, const IXMLFileNodePtr& node, TUint16Array& intArray)
+{
+	// Split string
+	TXString strVal = value;
+	size_t strLength = strVal.GetLength();
+
+
+	// Find split position
+	ptrdiff_t pos = strVal.Find(" ");
+	if (pos > 0)
+	{
+		// Copy string
+		TXString strValCalender;
+		TXString strValClock;
+		for (ptrdiff_t i = 0; i < pos; i++)
+		{
+			strValCalender += strVal.GetAt(i);
+		}
+
+		for (ptrdiff_t i = pos+1 ; i < strLength; i++)
+		{
+			strValClock += strVal.GetAt(i);
+		}
+
+		// Go through calender string
+		ptrdiff_t posCal = strValCalender.Find(".");
+		while (posCal > 0)
+		{
+			// Copy string
+			TXString strValInner;
+			for (ptrdiff_t i = 0; i < posCal; i++) { strValInner += strVal.GetAt(i); }
+
+			// Try to cast
+			intArray.push_back(strValInner.atoi());
+
+			// Delete and find next
+			strValCalender.Delete(0, posCal + 1);
+			posCal = strValCalender.Find(".");
+		}
+
+		// Go through clock string
+		ptrdiff_t posClock = strValClock.Find(":");
+		while (posClock > 0)
+		{
+			// Copy string
+			TXString strValInner;
+			for (ptrdiff_t i = 0; i < posClock; i++) { strValInner += strVal.GetAt(i); }
+
+			// Try to cast
+			intArray.push_back(strValInner.atoi());
+
+			// Delete and find next
+			strValClock.Delete(0, posClock + 1);
+			posClock = strValClock.Find(":");
+		}
+	}
+
+	// Delete and find next
+	intArray.push_back(strVal.atoi());
+
 	return true;
 }
 
