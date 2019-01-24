@@ -183,7 +183,7 @@ using namespace SceneData;
 	TXString strVal = value;
 	
 	// Prepare Array
-	TUint16Array d_arr;
+	TSint32Array d_arr;
 	
 	DeserializeDate(strVal,node,  d_arr);
 	
@@ -2293,13 +2293,13 @@ void SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, ISceneDataZipBuffer& buffe
 	return true;
 }
 
-/*static*/ bool GdtfConverter::Deserialize(const TXString& value, const IXMLFileNodePtr& node, TSint32Array & intArray)
+/*static*/ bool GdtfConverter::Deserialize(const TXString& value, const IXMLFileNodePtr& node, TSint32Array & intArray, TXChar seperatorChar)
 {
 	// Split string
 	TXString strVal = value;
 	
 	// Find first entry
-	ptrdiff_t pos = strVal.Find(",");
+	ptrdiff_t pos = strVal.Find(seperatorChar);
 	while (pos > 0 )
 	{
 		// Copy string
@@ -2311,7 +2311,7 @@ void SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, ISceneDataZipBuffer& buffe
 		
 		// Delete and find next
 		strVal.Delete(0, pos + 1);
-		pos = strVal.Find(",");
+		pos = strVal.Find(seperatorChar);
 	}
 	
 	// Delete and find next
@@ -2320,65 +2320,46 @@ void SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, ISceneDataZipBuffer& buffe
 	return true;
 }
 
-/*static*/ bool GdtfConverter::DeserializeDate(const TXString& value, const IXMLFileNodePtr& node, TUint16Array& intArray)
+/*static*/ bool GdtfConverter::DeserializeDate(const TXString& value, const IXMLFileNodePtr& node, TSint32Array& intArray)
 {
 	// Split string
 	TXString strVal = value;
 	size_t strLength = strVal.GetLength();
 
+    // Format linke
+    // 2.12.2020 22:33:44
 
-	// Find split position
+    //--------------------------------------------------------------------------------
+	// Split Date and time
 	ptrdiff_t pos = strVal.Find(" ");
+    ASSERTN(kEveryone, pos > 0);
 	if (pos > 0)
 	{
-		// Copy string
+		// Copy Strings in container
 		TXString strValCalender;
+        for (ptrdiff_t i = 0; i < pos; i++) {strValCalender += strVal.GetAt(i); }
 		TXString strValClock;
-		for (ptrdiff_t i = 0; i < pos; i++)
-		{
-			strValCalender += strVal.GetAt(i);
-		}
+		for (ptrdiff_t i = pos+1 ; i < strLength; i++) { strValClock += strVal.GetAt(i);}
 
-		for (ptrdiff_t i = pos+1 ; i < strLength; i++)
-		{
-			strValClock += strVal.GetAt(i);
-		}
+        TSint32Array calender;
+		Deserialize(strValCalender, node, calender, '.');
+        ASSERTN(kEveryone, calender.size() == 3);
 
-		// Go through calender string
-		ptrdiff_t posCal = strValCalender.Find(".");
-		while (posCal > 0)
-		{
-			// Copy string
-			TXString strValInner;
-			for (ptrdiff_t i = 0; i < posCal; i++) { strValInner += strVal.GetAt(i); }
+        TSint32Array time;
+		Deserialize(strValCalender, node, time, ':');
+        ASSERTN(kEveryone, time.size() == 3);
 
-			// Try to cast
-			intArray.push_back(strValInner.atoi());
+        if(time.size() == 3 && calender.size() == 3)
+        {
+            intArray.insert(intArray.end(), calender.begin(), calender.end());
+            intArray.insert(intArray.end(), time.begin(), time.end());
+        }
+        // Delete and find next
+	    intArray.push_back(strVal.atoi());
 
-			// Delete and find next
-			strValCalender.Delete(0, posCal + 1);
-			posCal = strValCalender.Find(".");
-		}
-
-		// Go through clock string
-		ptrdiff_t posClock = strValClock.Find(":");
-		while (posClock > 0)
-		{
-			// Copy string
-			TXString strValInner;
-			for (ptrdiff_t i = 0; i < posClock; i++) { strValInner += strVal.GetAt(i); }
-
-			// Try to cast
-			intArray.push_back(strValInner.atoi());
-
-			// Delete and find next
-			strValClock.Delete(0, posClock + 1);
-			posClock = strValClock.Find(":");
-		}
 	}
 
-	// Delete and find next
-	intArray.push_back(strVal.atoi());
+	
 
 	return true;
 }

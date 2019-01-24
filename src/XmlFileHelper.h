@@ -145,8 +145,8 @@ namespace SceneData
 		
 	private:
 		static bool		Deserialize(const TXString& value, const IXMLFileNodePtr& node, std::vector<double>& doubleArr);
-		static bool		Deserialize(const TXString& value, const IXMLFileNodePtr& node, TSint32Array& intArray);
-		static bool		DeserializeDate(const TXString& value, const IXMLFileNodePtr& node, TUint16Array& intArray);
+		static bool		Deserialize(const TXString& value, const IXMLFileNodePtr& node, TSint32Array& intArray, TXChar seperator = ',');
+		static bool		DeserializeDate(const TXString& value, const IXMLFileNodePtr& node, TSint32Array& intArray);
 
 
 	};
