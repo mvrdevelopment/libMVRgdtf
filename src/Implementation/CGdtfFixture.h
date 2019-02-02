@@ -69,7 +69,7 @@ namespace VectorworksMVR
         
         virtual VCOMError VCOM_CALLTYPE		GetRevisionCount(size_t& count);
         virtual VCOMError VCOM_CALLTYPE		GetRevisionAt(size_t at, IGdtfRevision** revision );
-		virtual VCOMError VCOM_CALLTYPE     CreateRevision(MvrString text,IGdtfRevision** revision);
+		virtual VCOMError VCOM_CALLTYPE     CreateRevision(MvrString text, STime date, IGdtfRevision** revision);
         
         virtual VCOMError VCOM_CALLTYPE		GetPresetCount(size_t& count);
         virtual VCOMError VCOM_CALLTYPE		GetPresetAt(size_t at, IGdtfUserPreset** preset );

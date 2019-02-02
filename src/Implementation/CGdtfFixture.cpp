@@ -1072,14 +1072,14 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetRevisionAt(size_t
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateRevision(MvrString text,IGdtfRevision** revision)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateRevision(MvrString text, STime date, IGdtfRevision** revision)
 {
 	// Check if Set
 	if(!fFixtureObject) {return kVCOMError_NotInitialized;}
 	
 	TXString vwText (text);
 	
-	SceneData::GdtfRevision* gdtfRevision = fFixtureObject->AddRevision(vwText);
+	SceneData::GdtfRevision* gdtfRevision = fFixtureObject->AddRevision(vwText, date);
 	
 	
 	//---------------------------------------------------------------------------

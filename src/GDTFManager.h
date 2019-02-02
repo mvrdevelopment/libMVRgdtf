@@ -1107,17 +1107,18 @@ namespace SceneData
 		
 	private:
 		TXString	fText;
-		TXString	fDate;
+		STime       fDateS;
 		
 	public:
 		virtual EGdtfObjectType			GetObjectType();
 		
 	public:
         // Getter
-		const TXString&	GetDate() const;
+		const STime&    GetDate() const;
 		const TXString&	GetText() const;
         // Setter        
-		void			SetText(const TXString& text);        
+		void			SetText(const TXString& text);
+        void            SetDate(const STime& date);
 		
 	protected:
 		virtual	TXString				GetNodeName();
@@ -2493,7 +2494,7 @@ private:
 	public:
 		//----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		// Add calls
-		GdtfRevisionPtr			AddRevision(const TXString& text);
+		GdtfRevisionPtr			AddRevision(const TXString& text, const STime& date);
 		GdtfAttributePtr		AddAttribute(const TXString& name, const TXString& prettyName);
 		
 		GdtfModelPtr			AddModel(const TXString& name);

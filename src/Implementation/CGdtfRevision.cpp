@@ -25,12 +25,20 @@ MvrString VectorworksMVR::CGdtfRevisionImpl::GetText()
 	return fRevision->GetText().GetCharPtr();
 }
 
-MvrString VectorworksMVR::CGdtfRevisionImpl::GetDate()
+VCOMError VectorworksMVR::CGdtfRevisionImpl::GetDate(STime & date)
 {
 	// Check if valid
-	if(!fRevision) return "";
+	if (!fRevision) { return kVCOMError_NotInitialized; }
 	
-    return fRevision->GetDate().GetCharPtr();
+	STime local  = fRevision->GetDate();
+	date.fYear 	 = local.fYear;
+	date.fMonth  = local.fMonth;
+	date.fDay 	 = local.fDay;
+	date.fHour 	 = local.fHour;
+	date.fMinute = local.fMinute;
+	date.fSecond = local.fSecond;
+
+	return kVCOMError_NoError;
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfRevisionImpl::SetText(MvrString txt)
@@ -39,6 +47,16 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfRevisionImpl::SetText(MvrString t
 	if(!fRevision) { return kVCOMError_NotInitialized; }
     
     fRevision->SetText(txt);
+
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfRevisionImpl::SetDate(STime date)
+{
+	// Check if valid
+	if(!fRevision) { return kVCOMError_NotInitialized; }
+    
+    fRevision->SetDate(date);
 
     return kVCOMError_NoError;
 }
