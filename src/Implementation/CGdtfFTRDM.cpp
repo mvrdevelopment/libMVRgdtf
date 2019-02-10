@@ -159,17 +159,17 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtf_FTRDMImpl::GetRDMParameterAt(siz
 
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtf_FTRDMImpl::CreateRDMParameter(VectorworksMVR::IGdtfRDMParameter **outVal,
-    const TXString & name,
-    Sint32 PID, 
-    EGdtf_RDMParam_Type Type, 
-    EGdtf_RDMParam_DataType dataType, 
-    EGdtf_RDMParam_Command command,
-    EGdtf_RDMParam_SensorUnit sensorUnit, 
-    EGdtf_RDMParam_SensorUnitPrefix sensorUnitPrefix, 
-    Sint32 minValue, 
-    Sint32 maxValue, 
-    Sint32 PDLSize, 
-    const TXString & description)
+                MvrString name,
+                Sint32 PID, 
+                GdtfDefines::EGdtf_RDMParam_Type Type,
+                GdtfDefines::EGdtf_RDMParam_DataType dataType,
+                GdtfDefines::EGdtf_RDMParam_Command command,
+                GdtfDefines::EGdtf_RDMParam_SensorUnit sensorUnit,
+                GdtfDefines::EGdtf_RDMParam_SensorUnitPrefix sensorUnitPrefix,
+                Sint32 minValue,
+                Sint32 maxValue, 
+                Sint32 PDLSize, 
+                MvrString description)
 {
     // Check if Set
     if (!f_FtRDM) { return kVCOMError_NotInitialized; }

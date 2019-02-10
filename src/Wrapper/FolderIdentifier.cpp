@@ -216,8 +216,8 @@ TXString CFolderIdentifier::GetFullPath() const
 	for(size_t i=0; i<count; i++) {
 		TXString		strPart	= farrFolderHierarchy.at( i );
 
-		bool	bIsWinDevice	= false;
 #ifdef _WINDOWS
+		bool	bIsWinDevice	= false;
 		bIsWinDevice	= strPart.GetLength() == 2 && strPart[1] == ':';
 #endif
 		
@@ -659,12 +659,11 @@ bool CFolderIdentifier::EnumerateContentsHandler(IFolderContentListener* pListen
 
 		TXString	rootFolder			= folder.GetFullPath();
 
-		DIR* dp;
-		struct dirent* dirp;
-		if ( dp = opendir( rootFolder.operator const char*() ) )
+		DIR* dp = opendir( rootFolder.operator const char*() );
+		if ( dp )
 		{
-			struct dirent* dirp;
-			while ( dirp = readdir( dp ) )
+			struct dirent* dirp = readdir( dp );
+			while ( dirp )
 			{
 				bool		bIsDots		= false;
 				if ( dirp->d_name[0] == '.' ) {

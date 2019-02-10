@@ -749,7 +749,7 @@ namespace VectorworksMVR
 
         virtual VCOMError VCOM_CALLTYPE     GetVisualValueCount(size_t& outCount) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetVisualValueAt(size_t at, IGdtfMacroVisualValue**  outVal) = 0;
-        virtual VCOMError VCOM_CALLTYPE     CreateVisualValue(IGdtfMacroVisualValue** outVal) = 0;
+        virtual VCOMError VCOM_CALLTYPE     CreateVisualValue(GdtfDefines::DmxValue dmxVal, IGdtfDmxChannelFunction* channelFunction, IGdtfMacroVisualValue ** outVal) = 0;
 
         virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
         virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;

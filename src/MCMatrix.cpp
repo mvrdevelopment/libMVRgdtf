@@ -183,22 +183,6 @@ Boolean GS_API XMatrix2Matrix(const TransformXMatrix& source, TransformMatrix& d
 }
 #endif // GS_SDK_VW8_COMPATIBLE
 //////////////////////////////////////////////////
-static bool operator==(const TransformMatrix& matrix1, const TransformMatrix& matrix2)
-//
-// Simple comparison between two matrices, I haven't
-// put it in the header because we haven't needed it
-// before.
-//
-{
-	GS_ASSERTDOUBLEALIGNMENT(&matrix1);
-	GS_ASSERTDOUBLEALIGNMENT(&matrix2);
-
-	return ( matrix1.v2.offset == matrix2.v2.offset
-			&& matrix1.v2.i == matrix2.v2.i
-			&& matrix1.v2.j == matrix2.v2.j
-			&& matrix1.v2.k == matrix2.v2.k );
-}
-
 #if BUG
 //////////////////////////////////////////////////
 void BugVerifyTransformMatrix(const TransformMatrix& matrix)
@@ -1531,7 +1515,9 @@ bool GS_API CalcTransformFromOneTriToAnother(TransformMatrix& outMatrix,
 
 		Sint32 LUDecomposition(double* arrMatrix, double* _rResult, double &_rdEven_Odd, Sint32 *_pRowIndex, double dZeroEpsilon ) const
 		{
+
 			Sint32		i, iMax, j, k;
+			iMax = 0;
 //			long double	dBig, dDum, dSum, dTemp;  // [MAF Cleanup, 12/22/05]
 			double dBig, dDum, dSum, dTemp;
 			double Vec[4];
