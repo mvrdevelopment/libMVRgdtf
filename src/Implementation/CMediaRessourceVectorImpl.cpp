@@ -1211,7 +1211,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetNextObje
 
 VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetAttachedFileCount(size_t& outCount)
 {
-	outCount = 0;
+	outCount = fExchangeObj.GetAttachedFileCount();
 
     // 
     return kVCOMError_NoError;
@@ -1219,5 +1219,14 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetAttached
 
 MvrString VectorworksMVR::CMediaRessourceVectorImpl::GetAttachedFileCountAt(size_t at)
 {
+	IFileIdentifierPtr file;
+	if(fExchangeObj.GetAttachedFileCountAt(at, file))
+	{
+		// TODO: we need to store this string longer...
+		TXString fullPath;
+		file->GetFileFullPath(fullPath);
+		return fullPath.GetCharPtr();
+	}
+
     return "";
 }
