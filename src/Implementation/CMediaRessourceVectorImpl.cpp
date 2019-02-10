@@ -740,7 +740,14 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::OpenForRead
 	// Initialize & Read
 	fExchangeObj.InitializeForImport();
 	
-	if (fExchangeObj.ReadFromFile(fPath))	{ return kVCOMError_NoError; }
+	if (fExchangeObj.ReadFromFile(fPath))	
+	{ 
+		// Prepare the Attached File Count
+		fullPathStorage.clear();
+		fullPathStorage.resize(fExchangeObj.GetAttachedFileCount(), TXString());
+
+		return kVCOMError_NoError; 
+	}
 	
 	// If the file could not be read, we return a no file error
 	return kVCOMError_FileNotFound;
@@ -1222,10 +1229,8 @@ MvrString VectorworksMVR::CMediaRessourceVectorImpl::GetAttachedFileCountAt(size
 	IFileIdentifierPtr file;
 	if(fExchangeObj.GetAttachedFileCountAt(at, file))
 	{
-		// TODO: we need to store this string longer...
-		TXString fullPath;
-		file->GetFileFullPath(fullPath);
-		return fullPath.GetCharPtr();
+		file->GetFileFullPath(fullPathStorage[at]);
+		return fullPathStorage[at].GetCharPtr();
 	}
 
     return "";

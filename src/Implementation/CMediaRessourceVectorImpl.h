@@ -28,6 +28,10 @@ namespace VectorworksMVR
 		bool							fWriteMode;
 		bool							fReadMode;
 
+		// This array is just to store the additional file path
+		TXStringArray 					fullPathStorage;
+
+
 		//----------------------------------------------------------------------------------------
 		// methods to write a file
 	public:
