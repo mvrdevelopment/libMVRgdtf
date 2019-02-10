@@ -682,6 +682,9 @@ namespace SceneData
 		// Read calls
 	public:
 		bool ReadFromFile(const IFileIdentifierPtr&);
+
+		size_t 	GetAttachedFileCount();
+		bool	GetAttachedFileCountAt(size_t at, IFileIdentifierPtr& outFile);
 		
 		
 	private:

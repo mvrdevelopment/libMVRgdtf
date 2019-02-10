@@ -1208,3 +1208,16 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetNextObje
 	*outNextObj		= pSceneObject;
 	return kVCOMError_NoError;
 }
+
+VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetAttachedFileCount(size_t& outCount)
+{
+	outCount = 0;
+
+    // 
+    return kVCOMError_NoError;
+}
+
+MvrString VectorworksMVR::CMediaRessourceVectorImpl::GetAttachedFileCountAt(size_t at)
+{
+    return "";
+}

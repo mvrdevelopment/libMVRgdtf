@@ -250,6 +250,11 @@ namespace VectorworksMVR
 		// Get Class objs
 		virtual VCOMError VCOM_CALLTYPE		GetClassCount(size_t& outCount) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetClassAt(size_t at, IClass** outClass ) = 0;
+
+        // Get File Traversel
+        virtual VCOMError VCOM_CALLTYPE		GetAttachedFileCount(size_t& outCount) = 0;
+		virtual MvrString VCOM_CALLTYPE		GetAttachedFileCountAt(size_t at ) = 0;
+
 		
 		// Traversel call for object tree
 		virtual VCOMError VCOM_CALLTYPE		GetFirstLayer(ISceneObj** firstLayer ) = 0;

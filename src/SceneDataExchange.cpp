@@ -2470,3 +2470,16 @@ void SceneDataExchange::AddFileToZip(const IFileIdentifierPtr& file)
 {
     fFilesToAdd.push_back(file);
 }
+
+size_t SceneDataExchange::GetAttachedFileCount()
+{
+    return fFilesInZip.size();
+}
+
+bool SceneDataExchange::GetAttachedFileCountAt(size_t at, IFileIdentifierPtr& outFile)
+{
+	bool retVal = (at < fFilesInZip.size());
+	if(retVal)	{ outFile = fFilesInZip.at(at); }
+
+    return retVal;
+}
