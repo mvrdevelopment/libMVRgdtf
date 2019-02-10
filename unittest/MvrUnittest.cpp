@@ -199,6 +199,15 @@ void MvrUnittest::ReadFile()
         }
 
 		//------------------------------------------------------------------------------------------------
+		// Check File Getters
+		size_t countFiles = size_t(-1);
+		__checkVCOM(mvrRead->GetAttachedFileCount(countFiles));
+		checkifEqual("Check File Count in MVR",countFiles , (size_t)2);
+
+		checkifEqual("File 1 Name", mvrRead->GetAttachedFileCountAt(0), "testGdtf.checksum.txt");
+		checkifEqual("File 2 Name", mvrRead->GetAttachedFileCountAt(1), "testGdtf.gdtf");
+
+		//------------------------------------------------------------------------------------------------
 		// Read Layers
 		ISceneObjPtr readLayer = nullptr;
 		__checkVCOM(mvrRead->GetFirstLayer(&readLayer));
