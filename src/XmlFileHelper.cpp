@@ -337,7 +337,7 @@ TXString SceneData::GdtfConverter::ConvertIntegerArray(TSint32Array & values)
     arrayStr = "{";
 
     // Add the Values
-    for (int idx = 0; idx < values.size(); idx++)
+    for (size_t idx = 0; idx < values.size(); idx++)
     {        
         arrayStr += TXString().ToStringInt(values.at(idx));
         
@@ -1719,7 +1719,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
     else if (value == XML_GDTF_RDMValue_LowesHighestDetectionSupported_ENUM_NO)  { val = EGdtf_RDMValue_LowesHighestDetectionSupported::eNO; }
     else
     {
-        val = val = EGdtf_RDMValue_LowesHighestDetectionSupported::eYES;   // TODO: Theres no default value at the moment check this later again. (19.10)
+        val = EGdtf_RDMValue_LowesHighestDetectionSupported::eYES;   // TODO: Theres no default value at the moment check this later again. (19.10)
         DSTOP((kEveryone, "Unexpected Input for Convert_RDMValue_LowesHighestDetectionSupportedEnum."));
         GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertRDMValueLowesHighestDetectionSupported, node);
         SceneData::GdtfFixture::AddError(error);
@@ -2339,7 +2339,7 @@ void SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, ISceneDataZipBuffer& buffe
 		TXString strValCalender;
         for (ptrdiff_t i = 0; i < pos; i++) {strValCalender += strVal.GetAt(i); }
 		TXString strValClock;
-		for (ptrdiff_t i = pos+1 ; i < strLength; i++) { strValClock += strVal.GetAt(i);}
+		for (size_t i = pos+1 ; i < strLength; i++) { strValClock += strVal.GetAt(i);}
 
         TSint32Array calender;
 		Deserialize(strValCalender, node, calender, '.');
@@ -2488,8 +2488,8 @@ VCOMError ISceneDataZipBuffer::SetData(void* pBuffer, size_t bufferSize)
 
 
 
-VCOMError ISceneDataZipBuffer::WriteToFile(IFileIdentifierPtr file) {
-    bool bOk = false;
+VCOMError ISceneDataZipBuffer::WriteToFile(IFileIdentifierPtr file) 
+{
     if ( file )
     {
         IRawOSFilePtr pFile( IID_RawOSFile );
@@ -2501,9 +2501,7 @@ VCOMError ISceneDataZipBuffer::WriteToFile(IFileIdentifierPtr file) {
             this->CopyDataInto( writeData, dataSize );
             pFile->Write( 0, (Uint64)dataSize, (void*)writeData );
             pFile->Close();
-            
-            bOk = true;
-            
+                        
             if ( writeData )
                 delete [] writeData;
         }

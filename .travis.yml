@@ -22,13 +22,12 @@ matrix:
             - ubuntu-toolchain-r-test
     # Xcode 9.4 g++
     - env: OSX build
-      osx_image: xcode9.4
+      osx_image: xcode8.3
       os: osx
       # Xcode 9.4 Clang
     - env: OSX build
-      osx_image: xcode9.4
+      osx_image: xcode10.1
       os: osx
-      compiler: clang
     # Windows 2016 Server
     - env: Windows 2016 Server
       os: windows

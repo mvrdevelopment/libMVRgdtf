@@ -213,7 +213,7 @@ inline void TranslateBitPosition32(Sint32 *pBit)
 	#else
 		// Translate the bit position of a bit in a Motorola Sint32 to its
 		// position in a Motorola Sint32.
-		#pragma unused(pBit)
+		// #pragma unused(pBit)
 	#endif
 }
 //

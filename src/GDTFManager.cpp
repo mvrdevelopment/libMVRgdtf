@@ -3668,7 +3668,7 @@ DmxValue GdtfDmxChannelSet::GetDmxStart() const
 
 DmxValue GdtfDmxChannelSet::GetDmxEnd() const
 {
-	if(fNextChannelSet == nullptr && fDmxEnd == -1) {  return fParentChnlFunction->GetEndAdress(); }
+	if(fNextChannelSet == nullptr && fDmxEnd == size_t(-1)) {  return fParentChnlFunction->GetEndAdress(); }
 	return fDmxEnd;
 }
 
@@ -3730,7 +3730,6 @@ void GdtfDmxRelation::OnPrintToFile(IXMLFileNodePtr pNode)
 	// Call the parent
 	GdtfObject::OnPrintToFile(pNode);
 	
-	EGdtfChannelBitResolution chanelReso = fMasterDmxChannel->GetChannelBitResolution();
 	// ------------------------------------------------------------------------------------
 	// Print node attributes
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXRelationName,				fUniqueName);
@@ -4378,12 +4377,7 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 		}
 		inPath = outPath;
 	}
-	
-	//-------------------------------------------------------------------------------------------------
-	// Prepare bools for checksum checks
-	bool hasCheckSum	= false;
-	bool checksumIsFine = false;
-	
+		
 	//-------------------------------------------------------------------------------------------------
 	// Decompress the files
 	fReaded = xmlFileBuffer.IsSet();
@@ -6681,7 +6675,7 @@ void SceneData::GdtfRDMValue_RealTimeClock::SetSecond(Sint32 val)
 
 void SceneData::GdtfRDMValue_RealTimeClock::SetThresholdOperator(EGdtf_RDMValue_ThresholdOperator val)
 {
-	fThresholdOperator = fThresholdOperator;
+	fThresholdOperator = val;
 }
 
 TXString SceneData::GdtfRDMValue_RealTimeClock::GetNodeName()

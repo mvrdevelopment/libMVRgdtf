@@ -342,7 +342,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetGdtfFixture(IGdtfFix
 	// Now get the GDTF File
 	TXString gdtfName = fixture->GetGdtfFile();
 	
-	if (gdtfName.Find(".gdtf") == size_t(-1)) { gdtfName += ".gdtf";}
+	if (gdtfName.Find(".gdtf") == ptrdiff_t(-1)) { gdtfName += ".gdtf";}
 	
 	IFolderIdentifierPtr workingFolder = fContext->GetWorkingFolder();
 	

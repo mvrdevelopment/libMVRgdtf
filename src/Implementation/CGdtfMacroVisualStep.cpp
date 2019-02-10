@@ -132,7 +132,7 @@ VectorworksMVR::VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfMacroVisualStepImpl
 }
 
 
-VectorworksMVR::VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfMacroVisualStepImpl::CreateVisualValue(DmxValue& dmxVal, IGdtfDmxChannelFunction* channelFunction, IGdtfMacroVisualValue ** outVal)
+VectorworksMVR::VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfMacroVisualStepImpl::CreateVisualValue(DmxValue dmxVal, IGdtfDmxChannelFunction* channelFunction, IGdtfMacroVisualValue ** outVal)
 {   
     // Check if Set
     if (!fMacroVisualStep) { return kVCOMError_NotInitialized; }

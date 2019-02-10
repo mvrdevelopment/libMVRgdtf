@@ -9,10 +9,6 @@
 using namespace VectorWorks::Filing;
 using namespace XML;
 
-#if GS_MAC
-	const size_t kBufferSizeModifierForInternationalRobustness = 4; // See Discussion for function ConvertFromTextToUnicode
-#endif
-
 // ----------------------------------------------------------------------------------------------------
 CXMLFileNodeImpl::CXMLFileNodeImpl()
 {
@@ -994,7 +990,7 @@ VCOMError CXMLFileNodeImpl::CreateChildNodeBeforeIndex(const TXString& name, siz
                 DOMNodeList *list = fpNode->getChildNodes();
                 size_t listLength = list->getLength();
                 
-				int nodeIndex = 0;
+				size_t nodeIndex = 0;
 				bool bInserted = false;
 				
 				for(size_t listItemIndex = 0; listItemIndex < listLength; listItemIndex++)
@@ -1090,7 +1086,7 @@ VCOMError CXMLFileNodeImpl::AddCopyOfExistingNodeBeforeIndex(const IXMLFileNode*
             
             if (index < listLength)
             {
-                int nodeIndex = 0;
+                size_t nodeIndex = 0;
                 
                 for(size_t listItemIndex = 0; listItemIndex < listLength; listItemIndex++)
                 {

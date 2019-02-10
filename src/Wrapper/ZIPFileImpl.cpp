@@ -1,7 +1,14 @@
 #include "Prefix/StdAfx.h"
 
 #include "ZIPFileImpl.h"
+
+#pragma GCC diagnostic push 
+#pragma GCC diagnostic ignored "-Wattributes"
+#pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #include "Minizip/Source/miniz.c"
+#pragma GCC diagnostic pop
+
+
 #include "TDQuickDraw.h"
 
 using namespace VectorWorks::Filing;
@@ -22,7 +29,7 @@ const int				kLongLength					= 4;
 
 const int				kLocalFileHeaderLength		= 30;
 const int				kCentralFileHeaderLength	= 46;
-const int				kEndHeaderLength			= 22;
+//const int				kEndHeaderLength			= 22;
 
 const int				kMinimumZipFileSize			= 22;
 const int				kMaxWBITS					= 15;	

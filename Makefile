@@ -22,8 +22,8 @@ LIBDIR_POST	= release
 
 # compiler, linker and options
 CXX					?= g++									# gnu c++ compiler on all platforms
-CXXFLAGS			= -g -std=c++11							# compiler options
-CXXFLAGSUNITTEST	= -g -std=c++11	-DGITPATH=\"$(CURDIR)\"	# compiler options unit test
+CXXFLAGS			= -std=c++11							# compiler options
+CXXFLAGSUNITTEST	= -std=c++11	-DGITPATH=\"$(CURDIR)\"	# compiler options unit test
 #LDFLAGS			= -shared								# linker options
 
 
@@ -31,6 +31,16 @@ XERCESLIBNAME	=
 XERCESLIBPATH	=
 
 LINKWITHLIBS    =
+
+# Optimization levels and Debug behavoir
+DEBUG ?= 0
+ifeq ($(DEBUG), 1)
+    CXXFLAGS 			+= -g
+	CXXFLAGSUNITTEST 	+= -g
+else
+    CXXFLAGS 			+= -O3 -Wall -Werror
+	CXXFLAGSUNITTEST 	+= -O3
+endif
 
 # Library: set platform compiler, linker and e.t.c. options
 # Windows

@@ -25,18 +25,18 @@ namespace VectorworksMVR
         
         virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetRDMParameterCount(size_t& count);        
         virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetRDMParameterAt(size_t at, VectorworksMVR::IGdtfRDMParameter **RDMParameter);
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateRDMParameter(IGdtfRDMParameter **outVal,
-                const TXString & name, 
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateRDMParameter(VectorworksMVR::IGdtfRDMParameter **outVal,
+                MvrString name,
                 Sint32 PID, 
-                EGdtf_RDMParam_Type Type, 
-                EGdtf_RDMParam_DataType dataType, 
-                EGdtf_RDMParam_Command command,
-                EGdtf_RDMParam_SensorUnit sensorUnit, 
-                EGdtf_RDMParam_SensorUnitPrefix sensorUnitPrefix, 
-                Sint32 minValue, 
+                GdtfDefines::EGdtf_RDMParam_Type Type,
+                GdtfDefines::EGdtf_RDMParam_DataType dataType,
+                GdtfDefines::EGdtf_RDMParam_Command command,
+                GdtfDefines::EGdtf_RDMParam_SensorUnit sensorUnit,
+                GdtfDefines::EGdtf_RDMParam_SensorUnitPrefix sensorUnitPrefix,
+                Sint32 minValue,
                 Sint32 maxValue, 
                 Sint32 PDLSize, 
-                const TXString & description);
+                MvrString description);
 
         virtual VCOMError VCOM_CALLTYPE     GetRDMNotifications(VectorworksMVR::IGdtfRDMNotifications ** outRDMNotifications);
 
