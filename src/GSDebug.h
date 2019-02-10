@@ -932,9 +932,9 @@ inline Bool8 VerifyStop(Bool8 b) { STOP(); return b; }	// Special function since
 
 	Bool8 __IsHandleLocked(GSHandle h);
 
-//	#define ASSERTLOCKED(toWhom,h) \
+//	#define ASSERTLOCKED(toWhom,h) 
 //			( h?(__IsHandleLocked((GSHandle)h) ? (void)0 : (void)_Assert(toWhom,THIS_FILE,__LINE__,"\"" #h " locked\"")) : (void)0 )
-//	#define ASSERTUNLOCKED(toWhom,h) \
+//	#define ASSERTUNLOCKED(toWhom,h) 
 //			( h?(__IsHandleLocked((GSHandle)h) ? (void)_Assert(toWhom,THIS_FILE,__LINE__,"\"" #h " unlocked\"") : (void)0) : (void)0 )
 
 	// The concept of locked/unlocked handles no longer exists

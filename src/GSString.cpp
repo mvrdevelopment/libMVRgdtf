@@ -207,7 +207,7 @@ TXString::TXString(const UCChar* src, size_t numUCChars)
 	if (src)
 	{
 		// Determine the length of characters to use.
-		int length = 0;
+		size_t length = 0;
 		while (length < numUCChars && src[length] != 0) ++length;
 
 		stdUStr.assign((const TXChar*)src, length);
@@ -255,7 +255,7 @@ TXString::TXString(const wchar_t* src, size_t numWChars)
 	if (src)
 	{
 		// Determine the length of characters to use.
-		int length = 0;
+		size_t length = 0;
 		while (length < numWChars && src[length] != 0) ++length;
 
 #if GS_WIN
@@ -471,9 +471,11 @@ TXString& TXString::operator=(const wchar_t* src)
 #if GS_WIN
 		stdUStr = src;
 #elif GS_LIN
-		stdUStr = std::move(TXString(src).stdUStr);
+		TXString tx (src);
+		stdUStr = std::move(tx.stdUStr);
 #else
-		stdUStr = std::move(TXString(src).stdUStr);
+		TXString tx (src);
+		stdUStr = std::move(tx.stdUStr);
 #endif
 	}
 	else
@@ -1338,7 +1340,7 @@ TXString& TXString::TrimInvalidCharacters()
 // Replaces all 'oldStr' with 'newSTr'. If 'bIgnoreCase' is true, case is ignored.
 TXString& TXString::Replace(const TXString& oldStr, const TXString& newStr, bool bIgnoreCase /* false */)
 {
-	int dstStartPos = 0;
+	size_t dstStartPos = 0;
 
 	if (bIgnoreCase)
 	{
@@ -1348,26 +1350,26 @@ TXString& TXString::Replace(const TXString& oldStr, const TXString& newStr, bool
 		TXString lowerOldStr(oldStr);
 		lowerOldStr.MakeLower();
 
-		int srcStartPos = 0;
+		size_t srcStartPos = 0;
 
 		// For keeping the position in the destination
-		const int delta = (int)newStr.stdUStr.length() - (int)oldStr.stdUStr.length();
-		int deltaSum = 0;
+		const size_t delta = (size_t)newStr.stdUStr.length() - (int)oldStr.stdUStr.length();
+		size_t deltaSum = 0;
 
-		while ((srcStartPos = (int)lowerSrcStr.stdUStr.find(lowerOldStr.stdUStr, srcStartPos)) != StdUStr::npos)
+		while ((srcStartPos = (size_t)lowerSrcStr.stdUStr.find(lowerOldStr.stdUStr, srcStartPos)) != StdUStr::npos)
 		{
 			dstStartPos = srcStartPos + deltaSum;
 			stdUStr.replace(dstStartPos, oldStr.stdUStr.length(), newStr.stdUStr);
 			deltaSum += delta;
-			srcStartPos += (int)oldStr.stdUStr.length();
+			srcStartPos += (size_t)oldStr.stdUStr.length();
 		}
 	}
 	else
 	{
-		while ((dstStartPos = (int)stdUStr.find(oldStr.stdUStr, dstStartPos)) != StdUStr::npos)
+		while ((dstStartPos = (size_t)stdUStr.find(oldStr.stdUStr, dstStartPos)) != StdUStr::npos)
 		{
 			stdUStr.replace(dstStartPos, oldStr.stdUStr.length(), newStr.stdUStr);
-			dstStartPos += (int)newStr.stdUStr.length();
+			dstStartPos += (size_t)newStr.stdUStr.length();
 		}
 	}
 
@@ -2303,7 +2305,7 @@ void TXString::PrepareCharBuffer(ETXEncoding encoding) const
     }
 
     // Length of the char buffer. Four bytes for each character is enough. 1 for terminal character.
-    int len = (int)stdUStr.length() * 4 + 1;
+    size_t len = (size_t)stdUStr.length() * 4 + 1;
 
     if (len > charBufSize)
     {
@@ -2325,7 +2327,7 @@ void TXString::PrepareCharBuffer(ETXEncoding encoding) const
     // (CodePage, Flags, WideCharStr, WideCharCount, MultiByteStr, MultiByteCount, DefaultChar, UsedDefaultChar)
     WideCharToMultiByte(codePage, 0, stdUStr.c_str(), -1, charPtr, len, (codePage == CP_UTF8) ? NULL : "?", NULL);
 #elif GS_LIN
-	int len = (int)stdUStr.length() * 4 + 1;
+	size_t len = (size_t)stdUStr.length() * 4 + 1;
 
 	if (len > charBufSize)
 	{
@@ -2527,7 +2529,7 @@ inline void utf32ToTXCharBuffer(char32_t input, TXChar* output)
 // char32_t* to TXChar*. 'output' needs one extra element to store terminating character.
 void utf32BufferToTXCharBuffer(const char32_t* input, TXChar* output, size_t numInputChars)
 {
-	for (int i = 0; i < numInputChars && input[i] != 0; ++i) {
+	for (size_t i = 0; i < numInputChars && input[i] != 0; ++i) {
 		if (input[i] <= 0xFFFFUL)
 		{
 			*output++ = (TXChar)input[i];
@@ -2553,7 +2555,7 @@ static const char32_t SURROGATE_OFFSET = 0x10000 - (0xD800 << 10) - 0xDC00;
 
 inline void txCharBufferToUtf32Buffer(const TXChar* input, char32_t* output, size_t bufElemNum /* -1 */)
 {
-	int outputIndex = 0;
+	size_t outputIndex = 0;
 	size_t len = bufElemNum - 1;
 
 	while (outputIndex < len && *input != 0) {

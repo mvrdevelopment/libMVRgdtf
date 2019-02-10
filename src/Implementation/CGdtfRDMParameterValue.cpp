@@ -440,7 +440,7 @@ VectorworksMVR::VCOMError  VectorworksMVR::CGdtfRDMParameterValueImpl::GetStatus
 }
 
 
-VectorworksMVR::VCOMError  VectorworksMVR::CGdtfRDMParameterValueImpl::GetStatusDescription(TXString & value)
+VectorworksMVR::VCOMError  VectorworksMVR::CGdtfRDMParameterValueImpl::GetStatusDescription(MvrString value)
 {
     // Check Pointer
     if (!fRDMParamValue) return kVCOMError_NotInitialized;
@@ -470,7 +470,7 @@ VectorworksMVR::VCOMError  VectorworksMVR::CGdtfRDMParameterValueImpl::SetStatus
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError  VectorworksMVR::CGdtfRDMParameterValueImpl::SetStatusDescription(TXString & value)
+VectorworksMVR::VCOMError  VectorworksMVR::CGdtfRDMParameterValueImpl::SetStatusDescription(MvrString value)
 {
     // Check Pointer
     if (!fRDMParamValue) return kVCOMError_NotInitialized;

@@ -132,7 +132,7 @@ void VectorworksMVR::CGeometryReferenceImpl::SetPointer(SceneData::SceneDataGeoI
 void VectorworksMVR::CGeometryReferenceImpl::GetPointer(SceneData::SceneDataGeoInstanceObjPtr& pointer, bool& isSymbol)
 {
 	pointer		= fPtr;
-	isSymbol	= isSymbol;
+	isSymbol	= fIsSymbol;
 }
 
 

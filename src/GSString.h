@@ -525,7 +525,7 @@ private:
 	// For char buffer. TXString might be better to return a std::string instead of
 	// returning const char* in the future.
 	mutable char* charPtr;
-	mutable int charBufSize;
+	mutable size_t charBufSize;
 	void PrepareCharBuffer(ETXEncoding e = ETXEncoding::eUTF8) const;
 
 #if GS_MAC || GS_LIN

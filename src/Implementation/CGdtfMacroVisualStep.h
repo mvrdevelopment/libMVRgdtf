@@ -24,7 +24,7 @@ namespace VectorworksMVR
 
         virtual VCOMError VCOM_CALLTYPE     GetVisualValueCount(size_t& outCount);
         virtual VCOMError VCOM_CALLTYPE     GetVisualValueAt(size_t at, IGdtfMacroVisualValue**  outVal);
-        virtual VCOMError VCOM_CALLTYPE     CreateVisualValue(DmxValue& dmxVal, IGdtfDmxChannelFunction* channelFunction, IGdtfMacroVisualValue ** outVal);
+        virtual VCOMError VCOM_CALLTYPE     CreateVisualValue(DmxValue dmxVal, IGdtfDmxChannelFunction* channelFunction, IGdtfMacroVisualValue ** outVal);
 
         virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr);
         virtual void*	  VCOM_CALLTYPE     GetBoundObject();

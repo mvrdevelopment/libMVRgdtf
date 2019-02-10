@@ -84,10 +84,10 @@ namespace VectorworksMVR
         //RDMValue_STATUS_ID_DESCRIPTION
         //  Getter        
        virtual VCOMError VCOM_CALLTYPE  GetStatusID(StatusID& value) ;
-       virtual VCOMError VCOM_CALLTYPE  GetStatusDescription(TXString& value) ;
+       virtual VCOMError VCOM_CALLTYPE  GetStatusDescription(MvrString value) ;
         //  Setter       
        virtual VCOMError VCOM_CALLTYPE  SetStatusID(StatusID value);
-       virtual VCOMError VCOM_CALLTYPE  SetStatusDescription( TXString& value);
+       virtual VCOMError VCOM_CALLTYPE  SetStatusDescription( MvrString value);
         //-----------------------------------------------------------------------------
         //RDMValue_REAL_TIME_CLOCK
         //  Getter        
