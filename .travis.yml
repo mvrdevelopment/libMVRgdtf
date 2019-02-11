@@ -8,24 +8,16 @@ matrix:
     - env: Ubuntu Build
       sudo: required
       dist: xenial
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
     - env: Ubuntu Build
       sudo: required
       dist: xenial
       compiler: clang
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
     # Xcode 9.4 g++
-    - env: OSX build
+    - env: OSX_VERSION=10.10
       osx_image: xcode8.3
       os: osx
       # Xcode 9.4 Clang
-    - env: OSX build
+    - env: OSX_VERSION=10.14
       osx_image: xcode10.1
       os: osx
     # Windows 2016 Server

@@ -42,6 +42,9 @@ else
 	CXXFLAGSUNITTEST 	+= -O3
 endif
 
+# OSX defaults
+OSX_VERSION		?= 10.10
+
 # Library: set platform compiler, linker and e.t.c. options
 # Windows
 ifeq ($(OS),Windows_NT)
@@ -65,7 +68,7 @@ else
     endif
 # Mac
     ifeq ($(UNAME_S),Darwin)
-		CXXFLAGS		+= -DGS_MAC=1 -D__APPLE__ -MMD -MP #-fPIC
+		CXXFLAGS		+= -DGS_MAC=1 -D__APPLE__ -MMD -MP -mmacosx-version-min=$(OSX_VERSION)
 		LDFLAGS			+=
 		libExt			= .a
 		LIBDIR_PLAT		= mac
@@ -92,7 +95,7 @@ else
     endif
 # Mac
     ifeq ($(UNAME_S),Darwin)
-		CXXFLAGSUNITTEST	+= -DGS_MAC=1 -D__APPLE__ -MMD -MP
+		CXXFLAGSUNITTEST	+= -DGS_MAC=1 -D__APPLE__ -MMD -MP -mmacosx-version-min=$(OSX_VERSION)
 		UnitTestExt			=
     endif
 endif
