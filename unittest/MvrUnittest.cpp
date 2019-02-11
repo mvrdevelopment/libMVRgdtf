@@ -199,6 +199,25 @@ void MvrUnittest::ReadFile()
         }
 
 		//------------------------------------------------------------------------------------------------
+		// Check File Getters
+		size_t countFiles = size_t(-1);
+		__checkVCOM(mvrRead->GetAttachedFileCount(countFiles));
+		checkifEqual("Check File Count in MVR",countFiles , (size_t)2);
+
+
+		std::string path = gdtfPath;
+#ifdef _WINDOWS
+		path += "\\MVR_Export\\";
+#else
+		path += "/MVR_Export/";
+#endif
+		std::string file1 = path + std::string("testGdtf.gdtf");
+		std::string file2 = path + std::string("testGdtf.checksum.txt");
+
+		checkifEqual("File 1 Name", mvrRead->GetAttachedFileCountAt(0), file1.c_str());
+		checkifEqual("File 2 Name", mvrRead->GetAttachedFileCountAt(1), file2.c_str());
+
+		//------------------------------------------------------------------------------------------------
 		// Read Layers
 		ISceneObjPtr readLayer = nullptr;
 		__checkVCOM(mvrRead->GetFirstLayer(&readLayer));
