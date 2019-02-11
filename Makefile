@@ -65,7 +65,8 @@ else
     endif
 # Mac
     ifeq ($(UNAME_S),Darwin)
-		CXXFLAGS		+= -DGS_MAC=1 -D__APPLE__ -MMD -MP #-fPIC
+		OSX_VERSION		?= 10.10
+		CXXFLAGS		+= -DGS_MAC=1 -D__APPLE__ -MMD -MP -mmacosx-version-min=$(OSX_VERSION)
 		LDFLAGS			+=
 		libExt			= .a
 		LIBDIR_PLAT		= mac
