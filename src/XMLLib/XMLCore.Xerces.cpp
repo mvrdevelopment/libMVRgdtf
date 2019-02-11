@@ -466,7 +466,7 @@ short DOMData::ReadXMLFile(short whichPath, const TXString&  fileName)
 				retVal = ConvertDOMErrorToVSError(toCatch.code);	// Get DOM error code
 			}
 			
-			catch (const SAXParseException& toCatch) {
+			catch (const SAXParseException& /*toCatch*/) {
 				//toCatch;
 				retVal = kParserError; //ConvertDOMErrorToVSError(toCatch.code);	// Get DOM error code
 			}

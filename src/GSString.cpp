@@ -2044,7 +2044,7 @@ TXString& TXString::ftoa(Real64 value, Sint32 precision)
 /*static*/ bool TXString::IsPunctuation(TXChar aTXChar)
 {
 #if GS_WIN
-	return iswpunct(aTXChar);
+	return iswpunct(aTXChar) != 0;
 #elif GS_LIN
 	// LINUX_IMPLEMENTATION - done
 	return std::ispunct(aTXChar);
@@ -2057,7 +2057,7 @@ TXString& TXString::ftoa(Real64 value, Sint32 precision)
 /*static*/ bool TXString::IsWhitespace(TXChar aTXChar)
 {
 #if GS_WIN
-	return iswspace(aTXChar);
+	return iswspace(aTXChar) != 0;
 #elif GS_LIN
 	// LINUX_IMPLEMENTATION - done
 	return std::isspace(aTXChar);

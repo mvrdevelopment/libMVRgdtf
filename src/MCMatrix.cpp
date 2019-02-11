@@ -1774,9 +1774,9 @@ bool RayCubeIntersection(const WorldCube& inwc, const Ray& inRay,
 		wcE.back	-= EpsilonForCoord(inwc.back);
 		wcE.front	+= EpsilonForCoord(inwc.front);
 
-		bool bParallelX = NormalizedValueIsNearlyZero(inRay.direction.x);
-		bool bParallelY = NormalizedValueIsNearlyZero(inRay.direction.y);
-		bool bParallelZ = NormalizedValueIsNearlyZero(inRay.direction.z);
+		Boolean bParallelX = NormalizedValueIsNearlyZero(inRay.direction.x);
+		Boolean bParallelY = NormalizedValueIsNearlyZero(inRay.direction.y);
+		Boolean bParallelZ = NormalizedValueIsNearlyZero(inRay.direction.z);
 
 		WorldPt3 wpt3[2];
 		double a[2];
