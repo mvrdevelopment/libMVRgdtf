@@ -84,16 +84,6 @@ SceneDataGeometryObj::~SceneDataGeometryObj()
 	
 }
 
-void SceneDataGeometryObj::GetTransformMatrix(VWTransformMatrix& matrix) const
-{
-	matrix = fMatrix;
-}
-
-void SceneDataGeometryObj::SetTransformMatrix(const VWTransformMatrix& matrix)
-{
-	fMatrix = matrix;
-}
-
 const TXString& SceneDataGeometryObj::GetFileName() const
 {
 	return fFileName;

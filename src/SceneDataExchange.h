@@ -324,13 +324,10 @@ namespace SceneData
 		
 		
 	private:
-		VWTransformMatrix		fMatrix;
 		TXString				fFileName;
 		TXString				fFileFullPath;
 		
 	public:
-		void			GetTransformMatrix(VWTransformMatrix& matrix) const;
-		void			SetTransformMatrix(const VWTransformMatrix& matrix);
 		const TXString&	GetFileName() const;
 		void			SetFileName(const TXString& fileName);
 		const TXString& GetFileFullPath(SceneDataExchange* exchange);
