@@ -69,7 +69,20 @@ void MvrUnittest::WriteFile()
         ISymDefPtr symDef1 = nullptr;
         if(__checkVCOM(mvrWrite->CreateSymDefObject(MvrUUID(122079618, 11832014, 669376348, 947930087), "Symbol Definition for the FocusPoint", & symDef1)))
         {
-            __checkVCOM(symDef1->AddGeometry(STransformMatrix(), "My3DSFile.3ds"));
+			STransformMatrix mx;
+			mx.ox = 1;
+			mx.oy = 2;
+			mx.oz = 3;
+			mx.ux = 4;
+			mx.uy = 5;
+			mx.uz = 6;
+			mx.vx = 7;
+			mx.vy = 8;
+			mx.vz = 9;
+			mx.wx = 10;
+			mx.wy = 11;
+			mx.wz = 12;
+            __checkVCOM(symDef1->AddGeometry(mx, "My3DSFile.3ds"));
         }
         
         IClassPtr clas1 = nullptr;
@@ -496,6 +509,22 @@ void MvrUnittest::ReadFile()
 
 				
 				checkifEqual("Get GeometryFileName", geoRef->GetFileForGeometry(), path);
+
+				STransformMatrix mx;
+				__checkVCOM(geoRef->GetTransfromMatrix(mx));
+				
+				checkifEqual("mx.ox", mx.ox, (double)1);
+				checkifEqual("mx.oy", mx.oy, (double)2);
+				checkifEqual("mx.oz", mx.oz, (double)3);
+				checkifEqual("mx.ux", mx.ux, (double)4);
+				checkifEqual("mx.uy", mx.uy, (double)5);
+				checkifEqual("mx.uz", mx.uz, (double)6);
+				checkifEqual("mx.vx", mx.vx, (double)7);
+				checkifEqual("mx.vy", mx.vy, (double)8);
+				checkifEqual("mx.vz", mx.vz, (double)9);
+				checkifEqual("mx.wx", mx.wx, (double)10);
+				checkifEqual("mx.wy", mx.wy, (double)11);
+				checkifEqual("mx.wz", mx.wz, (double)12);
 			}
 
 		}
