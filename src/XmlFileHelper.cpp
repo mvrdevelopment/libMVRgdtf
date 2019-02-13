@@ -26,129 +26,81 @@ using namespace SceneData;
 	
 	// First check if the length is as aspected
 	ASSERTN(kEveryone, vwUuid.GetLength() == 36);
+
 	
-	//------------------------------------------------------
-	// This is how GDTF need the UUID values
-	//70 8B CD 59 9E 14 00 00 C1 52 36 54 9A 84 55 B0
-	
-	TXString outVal;
-	
-	// Do the mapping
-	outVal += vwUuid.GetAt(0);
-	outVal += vwUuid.GetAt(1);
-	outVal += " ";
-	outVal += vwUuid.GetAt(2);
-	outVal += vwUuid.GetAt(3);
-	outVal += " ";
-	outVal += vwUuid.GetAt(4);
-	outVal += vwUuid.GetAt(5);
-	outVal += " ";
-	outVal += vwUuid.GetAt(6);
-	outVal += vwUuid.GetAt(7);
-	outVal += " ";
-	outVal += vwUuid.GetAt(9);	// 8 = "-"
-	outVal += vwUuid.GetAt(10);
-	outVal += " ";
-	outVal += vwUuid.GetAt(11);
-	outVal += vwUuid.GetAt(12);
-	outVal += " ";
-	outVal += vwUuid.GetAt(14);// 13 = "-"
-	outVal += vwUuid.GetAt(15);
-	outVal += " ";
-	outVal += vwUuid.GetAt(16);
-	outVal += vwUuid.GetAt(17);
-	outVal += " ";
-	outVal += vwUuid.GetAt(19);// 18 = "-"
-	outVal += vwUuid.GetAt(20);
-	outVal += " ";
-	outVal += vwUuid.GetAt(21);
-	outVal += vwUuid.GetAt(22);
-	outVal += " ";
-	outVal += vwUuid.GetAt(24);// 23 = "-"
-	outVal += vwUuid.GetAt(25);
-	outVal += " ";
-	outVal += vwUuid.GetAt(26);
-	outVal += vwUuid.GetAt(27);
-	outVal += " ";
-	outVal += vwUuid.GetAt(28);
-	outVal += vwUuid.GetAt(29);
-	outVal += " ";
-	outVal += vwUuid.GetAt(30);
-	outVal += vwUuid.GetAt(31);
-	outVal +=  " ";
-	outVal += vwUuid.GetAt(32);
-	outVal += vwUuid.GetAt(33);
-	outVal += " ";
-	outVal += vwUuid.GetAt(34);
-	outVal += vwUuid.GetAt(35);
-	
-	// Just check if this was aspected
-	ASSERTN(kEveryone, outVal.GetLength() == 47);
-	
-	return outVal;
+	return vwUuid;
 	
 }
 
 /*static*/ bool GdtfConverter::ConvertUUID(const TXString& inValue, const IXMLFileNodePtr& node, VWFC::Tools::VWUUID& uuid)
 {
 	// First check if theinValuelength is as aspected
-	ASSERTN(kEveryone, inValue.GetLength() == 47 || inValue.GetLength() == 0);
-	if (inValue.GetLength() != 47)	
+    TXString uuidForRead;
+	if (inValue.GetLength() == 47)	
     {
-        if(inValue.GetLength() != 0)
-        {
-            GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_UuidHasWrongFormat, node);
-            SceneData::GdtfFixture::AddError(error); 
-        }
+        // Remove white space
+        TXString value = inValue;
+	    value.Replace(" ", "");
+	
+        uuidForRead.SetLength(38);
+        uuidForRead[0] = '{';
+        uuidForRead[1] = value[0];
+        uuidForRead[2] = value[1];
+        uuidForRead[3] = value[2];
+        uuidForRead[4] = value[3];
+        uuidForRead[5] = value[4];
+        uuidForRead[6] = value[5];
+        uuidForRead[7] = value[6];
+        uuidForRead[8] = value[7];
+        uuidForRead[9] = '-';
+        uuidForRead[10] = value[8];
+        uuidForRead[11] = value[9];
+        uuidForRead[12] = value[10];
+        uuidForRead[13] = value[11];
+        uuidForRead[14] = '-';
+        uuidForRead[15] = value[12];
+        uuidForRead[16] = value[13];
+        uuidForRead[17] = value[14];
+        uuidForRead[18] = value[15];
+        uuidForRead[19] = '-';
+        uuidForRead[20] = value[16];
+        uuidForRead[21] = value[17];
+        uuidForRead[22] = value[18];
+        uuidForRead[23] = value[19];
+        uuidForRead[24] = '-';
+        uuidForRead[25] = value[20];
+        uuidForRead[26] = value[21];
+        uuidForRead[27] = value[22];
+        uuidForRead[28] = value[23];
+        uuidForRead[29] = value[24];
+        uuidForRead[30] = value[25];
+        uuidForRead[31] = value[26];
+        uuidForRead[32] = value[27];
+        uuidForRead[33] = value[28];
+        uuidForRead[34] = value[29];
+        uuidForRead[35] = value[30];
+        uuidForRead[36] = value[31];
+        uuidForRead[37] = '}';
 
-        return false; 
     }
-	
-	// Remove white space
-	TXString value = inValue;
-	value.Replace(" ", "");
-	
-	TXString uuidForRead (38);
-	
-	uuidForRead[0] = '{';
-	uuidForRead[1] = value[0];
-	uuidForRead[2] = value[1];
-	uuidForRead[3] = value[2];
-	uuidForRead[4] = value[3];
-	uuidForRead[5] = value[4];
-	uuidForRead[6] = value[5];
-	uuidForRead[7] = value[6];
-	uuidForRead[8] = value[7];
-	uuidForRead[9] = '-';
-	uuidForRead[10] = value[8];
-	uuidForRead[11] = value[9];
-	uuidForRead[12] = value[10];
-	uuidForRead[13] = value[11];
-	uuidForRead[14] = '-';
-	uuidForRead[15] = value[12];
-	uuidForRead[16] = value[13];
-	uuidForRead[17] = value[14];
-	uuidForRead[18] = value[15];
-	uuidForRead[19] = '-';
-	uuidForRead[20] = value[16];
-	uuidForRead[21] = value[17];
-	uuidForRead[22] = value[18];
-	uuidForRead[23] = value[19];
-	uuidForRead[24] = '-';
-	uuidForRead[25] = value[20];
-	uuidForRead[26] = value[21];
-	uuidForRead[27] = value[22];
-	uuidForRead[28] = value[23];
-	uuidForRead[29] = value[24];
-	uuidForRead[30] = value[25];
-	uuidForRead[31] = value[26];
-	uuidForRead[32] = value[27];
-	uuidForRead[33] = value[28];
-	uuidForRead[34] = value[29];
-	uuidForRead[35] = value[30];
-	uuidForRead[36] = value[31];
-	uuidForRead[37] = '}';
-	
+    else if(inValue.GetLength() == 36)
+    {
+        uuidForRead += '{';
+        uuidForRead += inValue;
+        uuidForRead += '}';
+    }
+    else if(inValue.GetLength() == 0)
+    {
+        uuid = VWUUID();
+        return true;
+    }
+    else
+    {
+        DSTOP((kEveryone, "Invalid UUID Formar"));
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_UuidHasWrongFormat, node);
+        SceneData::GdtfFixture::AddError(error); 
+    }
+    
 	uuid = VWUUID(uuidForRead);
 	
 	return true;
