@@ -35,13 +35,14 @@ using namespace SceneData;
 /*static*/ bool GdtfConverter::ConvertUUID(const TXString& inValue, const IXMLFileNodePtr& node, VWFC::Tools::VWUUID& uuid)
 {
 	// First check if theinValuelength is as aspected
-    TXString uuidForRead (38);
+    TXString uuidForRead;
 	if (inValue.GetLength() == 47)	
     {
         // Remove white space
         TXString value = inValue;
 	    value.Replace(" ", "");
 	
+        uuidForRead.SetLength(38);
         uuidForRead[0] = '{';
         uuidForRead[1] = value[0];
         uuidForRead[2] = value[1];
