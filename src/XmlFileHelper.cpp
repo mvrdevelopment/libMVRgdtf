@@ -125,9 +125,9 @@ using namespace SceneData;
 	TXString result;
 	result += IntToString2Digits(date.fYear);
 	result += "-";
-	result += IntToString2Digits(date.fDay);
-	result += "-";
 	result += IntToString2Digits(date.fMonth);
+	result += "-";
+    result += IntToString2Digits(date.fDay);	
 	
     result += "T";
 
