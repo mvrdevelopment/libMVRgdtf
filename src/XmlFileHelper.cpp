@@ -684,7 +684,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 		case EGdtfPhysicalUnit::Mass:					return XML_GDTFPhysicalUnitEnum_Mass;
 		case EGdtfPhysicalUnit::Time:					return XML_GDTFPhysicalUnitEnum_Time;
 		case EGdtfPhysicalUnit::Temperatur:				return XML_GDTFPhysicalUnitEnum_Temperatur;
-		case EGdtfPhysicalUnit::LuminousItensity:		return XML_GDTFPhysicalUnitEnum_LuminousItensity;
+		case EGdtfPhysicalUnit::LuminousItensity:		return XML_GDTFPhysicalUnitEnum_LuminousFlux;
 		case EGdtfPhysicalUnit::Angle:					return XML_GDTFPhysicalUnitEnum_Angle;
 		case EGdtfPhysicalUnit::Force:					return XML_GDTFPhysicalUnitEnum_Force;
 		case EGdtfPhysicalUnit::Frequeny:				return XML_GDTFPhysicalUnitEnum_Frequeny;
@@ -716,7 +716,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 	else if (value == XML_GDTFPhysicalUnitEnum_Mass)			{ unit = EGdtfPhysicalUnit::Mass;			 }
 	else if (value == XML_GDTFPhysicalUnitEnum_Time)			{ unit = EGdtfPhysicalUnit::Time;			 }
 	else if (value == XML_GDTFPhysicalUnitEnum_Temperatur)		{ unit = EGdtfPhysicalUnit::Temperatur;		 }
-	else if (value == XML_GDTFPhysicalUnitEnum_LuminousItensity){ unit = EGdtfPhysicalUnit::LuminousItensity;}
+	else if (value == XML_GDTFPhysicalUnitEnum_LuminousFlux)    { unit = EGdtfPhysicalUnit::LuminousItensity;}
 	else if (value == XML_GDTFPhysicalUnitEnum_Angle)			{ unit = EGdtfPhysicalUnit::Angle;			 }
 	else if (value == XML_GDTFPhysicalUnitEnum_Force)			{ unit = EGdtfPhysicalUnit::Force;			 }
 	else if (value == XML_GDTFPhysicalUnitEnum_Frequeny)		{ unit = EGdtfPhysicalUnit::Frequeny;		 }
