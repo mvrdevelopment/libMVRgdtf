@@ -141,6 +141,7 @@ using namespace SceneData;
 }
 
 /*static*/ bool GdtfConverter::ConvertDate(const TXString& value, const IXMLFileNodePtr& node, STime& date)
+/* Convert from UTC Format (yyyy-mm-ddThh:mm:ss) */
 {
 	// ------------------------------------------------------------
 	// Check if the string is empty, use the 0 date
@@ -153,7 +154,7 @@ using namespace SceneData;
 	// Prepare Array
 	TSint32Array d_arr;
 	
-	DeserializeDate(strVal,node,  d_arr);
+	DeserializeUTC_Date(strVal, node,  d_arr);
 	
 	
 	// ------------------------------------------------------------
@@ -167,8 +168,9 @@ using namespace SceneData;
 		return false;
     }
 	
-	// Set Out Date and return true
-	date.fDay = d_arr[0]; date.fMonth = d_arr[1]; date.fYear = d_arr[2]; date.fHour = d_arr[3]; date.fMinute = d_arr[4]; date.fSecond = d_arr[5];
+	// Set Out Date
+	date.fYear = d_arr[0]; date.fMonth  = d_arr[1]; date.fDay    = d_arr[2]; 
+    date.fHour = d_arr[3]; date.fMinute = d_arr[4]; date.fSecond = d_arr[5];
 	
 	return true;
 }
@@ -2288,31 +2290,34 @@ void SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, ISceneDataZipBuffer& buffe
 	return true;
 }
 
-/*static*/ bool GdtfConverter::DeserializeDate(const TXString& value, const IXMLFileNodePtr& node, TSint32Array& intArray)
+/*static*/ bool GdtfConverter::DeserializeUTC_Date(const TXString& value, const IXMLFileNodePtr& node, TSint32Array& intArray)
+/* Convert from UTC Format (yyyy-mm-ddThh:mm:ss) to intArray */
 {
 	// Split string
 	TXString strVal = value;
 	size_t strLength = strVal.GetLength();
 
-    // Format linke
-    // 2.12.2020 22:33:44
+    ASSERTN(kEveryone, strLength == 19); // UTC Strings always have a length of 19 chars!
 
     //--------------------------------------------------------------------------------
 	// Split Date and time
-	ptrdiff_t pos = strVal.Find(" ");
+	ptrdiff_t pos = strVal.Find("T");
     ASSERTN(kEveryone, pos > 0);
 	if (pos > 0)
 	{
 		// Copy Strings in container
 		TXString strValCalender;
         for (ptrdiff_t i = 0; i < pos; i++) {strValCalender += strVal.GetAt(i); }
-		TXString strValClock;
+		
+        TXString strValClock;
 		for (size_t i = pos+1 ; i < strLength; i++) { strValClock += strVal.GetAt(i);}
-
+        
+        // Date
         TSint32Array calender;
-		Deserialize(strValCalender, node, calender, '.');
+		Deserialize(strValCalender, node, calender, '-');
         ASSERTN(kEveryone, calender.size() == 3);
-
+        
+        // Time
         TSint32Array time;
 		Deserialize(strValClock, node, time, ':');
         ASSERTN(kEveryone, time.size() == 3);
@@ -2322,9 +2327,7 @@ void SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, ISceneDataZipBuffer& buffe
             intArray.insert(intArray.end(), calender.begin(), calender.end());
             intArray.insert(intArray.end(), time.begin(), time.end());
         }
-	}
-
-	
+	}	
 
 	return true;
 }
