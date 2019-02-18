@@ -1437,10 +1437,7 @@ const std::vector<GdtfGeometry*> GdtfGeometry::GetInternalGeometries()
 TXString GdtfGeometry::GetNodeReference()
 {
 	TXString nodeRef;
-
-	if (fParent)	{ nodeRef = fParent->GetNodeReference() + "." + GetName(); }
-	else			{ nodeRef = GetName();}
-
+	nodeRef = GetName();
 	return nodeRef;
 }
 
