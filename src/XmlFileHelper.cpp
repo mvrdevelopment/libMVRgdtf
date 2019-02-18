@@ -114,10 +114,8 @@ using namespace SceneData;
     {
         return "0" + TXString().itoa(value);
     }
-    else 
-    {
-        return TXString().itoa(value);
-    }
+
+    return TXString().itoa(value);    
 }
 
 /*static*/ TXString GdtfConverter::ConvertDate(const STime& date)
