@@ -95,7 +95,7 @@ namespace SceneData
 
         //-----------------------------------------------------------------------------
         // Convert from String functions:
-        static bool		ConvertUUID(										const TXString& value, const IXMLFileNodePtr& node,			VWFC::Tools::VWUUID& uuid);
+        static bool		ConvertUUID(										const TXString& value, const IXMLFileNodePtr& node,			VWFC::Tools::VWUUID& uuid);        
 		static bool		ConvertDate(										const TXString& value, const IXMLFileNodePtr& node,			STime& date);
 		static bool		ConvertColor(										const TXString& value, const IXMLFileNodePtr& node,			CCieColor& color);
 		static bool		ConvertDouble(										const TXString& value, const IXMLFileNodePtr& node,			double& doubleValue);
@@ -148,6 +148,7 @@ namespace SceneData
 		static bool		Deserialize(const TXString& value, const IXMLFileNodePtr& node, TSint32Array& intArray, TXChar seperator = ',');
 		static bool		DeserializeDate(const TXString& value, const IXMLFileNodePtr& node, TSint32Array& intArray);
 
+        static TXString IntToString2Digits(Sint64 value);
 
 	};
 	

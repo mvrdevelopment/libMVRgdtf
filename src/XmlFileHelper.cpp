@@ -107,21 +107,39 @@ using namespace SceneData;
 	
 }
 
+/*static*/ TXString GdtfConverter::IntToString2Digits(Sint64 value) 
+/* Converts the int to an string with 2 digits. If the int has only one digit the string will get a leading "0".*/ 
+{
+    if (value < 10)
+    {
+        return "0" + TXString().itoa(value);
+    }
+    else 
+    {
+        return TXString().itoa(value);
+    }
+}
+
 /*static*/ TXString GdtfConverter::ConvertDate(const STime& date)
+/* Return the date in UTC Format:  	yyyy-mm-ddThh:mm:ss 
+*/
 {
 	TXString result;
-	result += TXString().itoa(date.fDay);
-	result += ".";
-	result += TXString().itoa(date.fMonth);
-	result += ".";
-	result += TXString().itoa(date.fYear);
-	result += " ";
-	result += TXString().itoa(date.fHour);
+	result += IntToString2Digits(date.fYear);
+	result += "-";
+	result += IntToString2Digits(date.fDay);
+	result += "-";
+	result += IntToString2Digits(date.fMonth);
+	
+    result += "T";
+
+	result += IntToString2Digits(date.fHour);
 	result += ":";
-	result += TXString().itoa(date.fMinute);
+	result += IntToString2Digits(date.fMinute);
 	result += ":";
-	result += TXString().itoa(date.fSecond);
-	return result;
+	result += IntToString2Digits(date.fSecond);
+	
+    return result;
 }
 
 /*static*/ bool GdtfConverter::ConvertDate(const TXString& value, const IXMLFileNodePtr& node, STime& date)
