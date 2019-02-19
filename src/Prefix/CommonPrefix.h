@@ -316,8 +316,6 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_DMXChannelUber                 "Uber"
 #define XML_GDTF_DMXChannelDefault				"Default"
 #define XML_GDTF_DMXChannelHighlight			"Highlight"
-#define XML_GDTF_DMXChannelMibFadeFrames		"MibFade"
-#define XML_GDTF_DMXChannelDMXChangeTimeLimit	"DMXChangeTimeLimit"
 #define XML_GDTF_DMXChannelGeometry				"Geometry"
 
 #define XML_GDTF_DMXFChannel_NONEVALUE			    "None"
@@ -334,6 +332,9 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_DMXLogicalChannelAttribute		"Attribute"
 #define XML_GDTF_DMXLogicalChannelSnap			"Snap"
 #define XML_GDTF_DMXLogicalChannelMaster		"Master"
+#define XML_GDTF_DMXLogicalChannelMibFadeFrames		    "MibFade"
+#define XML_GDTF_DMXLogicalChannelDMXChangeTimeLimit    "DMXChangeTimeLimit"
+
 
 #define XML_GDTF_DMXSnapEnum_Yes				"Yes"
 #define XML_GDTF_DMXSnapEnum_No					"No"
