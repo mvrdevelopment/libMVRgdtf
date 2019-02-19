@@ -789,7 +789,6 @@ namespace SceneData
 		GdtfWheelPtr			fOnWheel;
 		GdtfPhysicalEmitter*	fEmitter;
 		EGDTFDmxInvert			fDmxInvert;
-		EGDTFEncoderInvert		fEncoderInvert;
 
         GdtfDmxChannel*         fModeMaster_Channel;
         GdtfDmxChannelFunction* fModeMaster_Function;
@@ -825,8 +824,6 @@ namespace SceneData
         double							GetRealFade() const;        
         GdtfWheelPtr					GetOnWheel() const;
         GdtfPhysicalEmitter*            GetEmitter() const;
-        EGDTFDmxInvert                  GetDmxInvert()const;
-        EGDTFEncoderInvert              GetEncoderInvert() const;        
 
         GdtfDmxChannel*                 GetModeMaster_Channel() const;
         GdtfDmxChannelFunction*         GetModeMaster_Function() const;
@@ -859,8 +856,7 @@ namespace SceneData
 		void							SetPhysicalEnd(double end);
 		void							SetRealFade(double fade);				
 		void							SetEmitter(GdtfPhysicalEmitter* newEmit);
-        void                            SetDmxInvert(EGDTFDmxInvert dmxInvert);
-        void                            SetEncoderInvert(EGDTFEncoderInvert encoderInvert);     
+        void                            SetDmxInvert(EGDTFDmxInvert dmxInvert);        
 
         void                            SetModeMaster_Channel(GdtfDmxChannel* channel);
         void                            SetModeMaster_Function(GdtfDmxChannelFunction* function);

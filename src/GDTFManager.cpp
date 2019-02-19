@@ -2956,8 +2956,7 @@ GdtfDmxChannelFunction::GdtfDmxChannelFunction(GdtfDmxLogicalChannel* parent)
 	fPhysicalEnd			= 1;
 	fRealFade				= 0;
 	fOnWheel				= nullptr;
-	fEmitter				= nullptr;
-	fEncoderInvert			= EGDTFEncoderInvert::eGDTFEncoderInvert_No;
+	fEmitter				= nullptr;	
 	fDmxInvert				= EGDTFDmxInvert::eGDTFDmxInvert_No;
 	fAttribute				= nullptr;
 	fParentLogicalChannel	= parent;
@@ -2977,8 +2976,7 @@ GdtfDmxChannelFunction::GdtfDmxChannelFunction(const TXString& name, GdtfDmxLogi
 	fPhysicalEnd			= 1;
 	fRealFade				= 0;
 	fOnWheel				= nullptr;
-	fEmitter				= nullptr;
-	fEncoderInvert			= EGDTFEncoderInvert::eGDTFEncoderInvert_No;
+	fEmitter				= nullptr;				
 	fDmxInvert				= EGDTFDmxInvert::eGDTFDmxInvert_No;	
 	fAttribute				= nullptr;
 	fParentLogicalChannel	= parent;
@@ -3350,16 +3348,6 @@ GdtfPhysicalEmitter * SceneData::GdtfDmxChannelFunction::GetEmitter() const
     return fEmitter;
 }
 
-EGDTFDmxInvert SceneData::GdtfDmxChannelFunction::GetDmxInvert() const
-{
-    return fDmxInvert;
-}
-
-EGDTFEncoderInvert SceneData::GdtfDmxChannelFunction::GetEncoderInvert() const
-{
-    return fEncoderInvert;
-}
-
 void GdtfDmxChannelFunction::SetWheel(GdtfWheelPtr newWhl)
 {
 	fOnWheel = newWhl;
@@ -3431,11 +3419,6 @@ void GdtfDmxChannelFunction::SetEmitter(GdtfPhysicalEmitter* newEmit)
 void SceneData::GdtfDmxChannelFunction::SetDmxInvert(EGDTFDmxInvert dmxInvert)
 {
     fDmxInvert = dmxInvert;
-}
-
-void SceneData::GdtfDmxChannelFunction::SetEncoderInvert(EGDTFEncoderInvert encoderInvert)
-{
-    fEncoderInvert = encoderInvert;
 }
 
 TXString GdtfDmxChannelFunction::getUnresolvedAttrRef() const
