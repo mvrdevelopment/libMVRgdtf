@@ -5453,7 +5453,7 @@ bool GdtfFixture::ExportToFile(IZIPFilePtr& zipfile)
 	
 	//------------------------------------------------------------------------------------
 	// Add tp ZIP
-	SceneDataZip::AddFileToZip(zipfile, zipXmlBuffer, TXString(XML_GDTF_GDTFFILENAME) , true);
+	SceneDataZip::AddFileToZip(zipfile, zipXmlBuffer, TXString(XML_GDTF_GDTFFILENAME) );
 
 	
 	return true;

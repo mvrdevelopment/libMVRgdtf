@@ -2146,7 +2146,7 @@ bool SceneDataZip::GetFile(const TXString &fileName, const IFolderIdentifierPtr 
     SceneData::GdtfFixture::AddError(error);
 	return false;
 }
-
+ 
 
 bool SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, const IFileIdentifierPtr& file, bool createChecksum, bool deleteFile, bool mustExist)
 {
@@ -2184,7 +2184,7 @@ bool SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, const IFileIdentifierPtr& 
 		
 		
 		// Just call this again for this, but do not create a checksum for the checksum...
-		AddFileToZip(zipFile, hashBuffer,fileNameCheckSum, false);
+		AddFileToZip(zipFile, hashBuffer,fileNameCheckSum);
 		
 	}
 	
@@ -2198,32 +2198,12 @@ bool SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, const IFileIdentifierPtr& 
 	
 }
 
-void SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, ISceneDataZipBuffer& buffer,const TXString &name , bool createChecksum)
+void SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, ISceneDataZipBuffer& buffer,const TXString &name)
 {
     //-------------------------------------------------------------------------------------------------
     // Write the  file
     zipFile->AddFile(name, &buffer);
-    
-    if (createChecksum)
-    {
-        // Extract the filename
-        ptrdiff_t	pos							= name.ReverseFind(".");
-        TXString	fileNamewithoutExtension	= name.Mid(0,pos);
-
-        TXString checksumFileName;
-        checksumFileName += fileNamewithoutExtension;
-        checksumFileName += ".checksum.txt";
-
-        // Create the hash
-        ISceneDataZipBuffer hashBuffer;
-        HashManager::HashManager::CreateHashForBuffer(buffer, hashBuffer);
-        
-
-        // Just call this again for this, but do not create a checksum for the checksum...
-        AddFileToZip(zipFile, hashBuffer, checksumFileName , false);
-    }
 }
-
 
 
 /*static*/ bool GdtfConverter::Deserialize(const TXString& value, const IXMLFileNodePtr& node,std::vector<double>& doubleArr)

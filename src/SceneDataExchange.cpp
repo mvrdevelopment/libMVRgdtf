@@ -1931,7 +1931,7 @@ bool SceneDataExchange::WriteToFile(const IFileIdentifierPtr& file)
     zipXmlBuffer.SetData(data, size);
 	
 	// Add the xml zipfile buffer
-    SceneDataZip::AddFileToZip(zipfile, zipXmlBuffer, filename, true);
+    SceneDataZip::AddFileToZip(zipfile, zipXmlBuffer, filename);
 	
 	//-------------------------------------------------------------------------------------------------
 	// Add the 3DS file
