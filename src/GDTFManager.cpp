@@ -6019,13 +6019,6 @@ void SceneData::GdtfFTRDM::OnPrintToFile(IXMLFileNodePtr pNode)
 	pNode->SetNodeAttributeValue(XML_GDTF_FTRDM_AttrDeviceModelID,  GdtfConverter::ConvertInteger(fDeviceModelID)  );
 	pNode->SetNodeAttributeValue(XML_GDTF_FTRDM_AttrSoftwareVersionIDs, GdtfConverter::ConvertIntegerArray(fSoftwareVersIDs) );
 	//------------------------------------------------------------------------------------
-	// Print the childs
-	for (GdtfRDMParameter* rdmParam : fRDMParameters)
-	{
-		rdmParam->WriteToNode(pNode);
-	}
-	
-	if (fRDMNotifications) { fRDMNotifications->WriteToNode(pNode); };
 }
 
 void SceneData::GdtfFTRDM::OnReadFromNode(const IXMLFileNodePtr & pNode)
@@ -6044,29 +6037,6 @@ void SceneData::GdtfFTRDM::OnReadFromNode(const IXMLFileNodePtr & pNode)
 	
 	TXString softwareIDsStr;  pNode->GetNodeAttributeValue(XML_GDTF_FTRDM_AttrSoftwareVersionIDs, softwareIDsStr);
 	GdtfConverter::ConvertIntegerArray ( softwareIDsStr, pNode, fSoftwareVersIDs);
-	//------------------------------------------------------------------------------------
-	// Read the childs
-	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_RDMParameterS, [this](IXMLFileNodePtr objNode) -> void
-								 {
-									 // Now we are in the <RDMParameters>(pure container) and need to go one deeper to read the <RDMParameter>.
-									 GdtfConverter::TraverseNodes(objNode, "", XML_GDTF_RDMParameter, [this](IXMLFileNodePtr objNode) -> void
-																  {
-																	  GdtfRDMParameter* rdmParam = new GdtfRDMParameter();
-																	  
-																	  rdmParam->ReadFromNode(objNode);
-																	  
-																	  fRDMParameters.push_back(rdmParam);
-																	  return;
-																  } );
-								 } );
-	
-	// Single childs:
-	IXMLFileNode* rdmNotifysNode;
-	if (VCOM_SUCCEEDED(pNode->GetChildNode(XML_GDTF_RDMNotifications, &rdmNotifysNode)))
-	{
-		fRDMNotifications = new GdtfRDMNotifications();
-		fRDMNotifications->ReadFromNode(rdmNotifysNode);
-	}
 }
 
 void SceneData::GdtfFTRDM::OnErrorCheck(const IXMLFileNodePtr& pNode)
@@ -6092,7 +6062,6 @@ SceneData::GdtfFTRDM::GdtfFTRDM()
 {
 	fManufacturerID = 0;
 	fDeviceModelID  = 0;
-	fRDMNotifications = nullptr;
 }
 
 SceneData::GdtfFTRDM::GdtfFTRDM(Sint32 manufacturerID, Sint32 deviceModelID) : GdtfFTRDM()
@@ -6102,10 +6071,7 @@ SceneData::GdtfFTRDM::GdtfFTRDM(Sint32 manufacturerID, Sint32 deviceModelID) : G
 }
 
 SceneData::GdtfFTRDM::~GdtfFTRDM()
-{
-	for (GdtfRDMParameterPtr ptr : fRDMParameters) { delete ptr; }
-	
-	if (fRDMNotifications) { delete fRDMNotifications; }
+{	
 }
 
 EGdtfObjectType SceneData::GdtfFTRDM::GetObjectType()
@@ -6128,16 +6094,6 @@ const TSint32Array& SceneData::GdtfFTRDM::GetSoftwareVersIDs() const
 	return fSoftwareVersIDs;
 }
 
-const TGdtfRDMParameterArray & SceneData::GdtfFTRDM::GetRDMParametersArray() const
-{
-	return fRDMParameters;
-}
-
-GdtfRDMNotifications* SceneData::GdtfFTRDM::GetRDMNotifications() const
-{
-	return fRDMNotifications;
-}
-
 void SceneData::GdtfFTRDM::SetManufacturerID(Sint32 val)
 {
 	fManufacturerID = val;
@@ -6148,41 +6104,6 @@ void SceneData::GdtfFTRDM::SetDeviceModelID(Sint32 val)
 	fDeviceModelID = val;
 }
 
-GdtfRDMParameterPtr SceneData::GdtfFTRDM::AddRDMParameter(
-    const TXString& name,
-    Sint32 PID,
-    EGdtf_RDMParam_Type              Type,
-    EGdtf_RDMParam_DataType          dataType,
-    EGdtf_RDMParam_Command           command,
-    EGdtf_RDMParam_SensorUnit        sensorUnit,
-    EGdtf_RDMParam_SensorUnitPrefix  sensorUnitPrefix,
-    Sint32                           minValue,
-    Sint32                           maxValue,
-    Sint32                           PDLSize,
-    const TXString&                        description)
-{
-	GdtfRDMParameter* rdmParamPtr = new GdtfRDMParameter(
-														 name,
-														 PID,
-														 Type,
-														 dataType,
-														 command,
-														 sensorUnit,
-														 sensorUnitPrefix,
-														 minValue,
-														 maxValue,
-														 PDLSize,
-														 description);
-	
-	fRDMParameters.push_back( rdmParamPtr);
-	
-	return rdmParamPtr;
-}
-
-void SceneData::GdtfFTRDM::SetRDMNotifications(GdtfRDMNotifications * notifications)
-{
-	fRDMNotifications = notifications;
-}
 
 void SceneData::GdtfFTRDM::AddSoftwareVersID(Sint32 ID)
 {
