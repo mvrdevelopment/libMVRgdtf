@@ -824,6 +824,7 @@ namespace SceneData
         double							GetRealFade() const;        
         GdtfWheelPtr					GetOnWheel() const;
         GdtfPhysicalEmitter*            GetEmitter() const;
+        EGDTFDmxInvert                  GetDmxInvert()const;
 
         GdtfDmxChannel*                 GetModeMaster_Channel() const;
         GdtfDmxChannelFunction*         GetModeMaster_Function() const;

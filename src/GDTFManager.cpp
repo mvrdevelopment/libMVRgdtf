@@ -3353,6 +3353,11 @@ void GdtfDmxChannelFunction::SetWheel(GdtfWheelPtr newWhl)
 	fOnWheel = newWhl;
 }
 
+EGDTFDmxInvert SceneData::GdtfDmxChannelFunction::GetDmxInvert() const
+{
+    return fDmxInvert;
+}
+
 const TGdtfDmxChannelSetArray GdtfDmxChannelFunction::GetChannelSets()
 {
 	return fChannelSets;
