@@ -232,16 +232,6 @@ namespace VectorworksMVR
 			eGdtfBeamType_None  = 2,
 		};
 		
-		enum EGdtfDmxFrequency
-		{
-			eGdtfDmxFrequency_30	= 0,
-			eGdtfDmxFrequency_15	= 1,
-			eGdtfDmxFrequency_60	= 2,
-			eGdtfDmxFrequency_Slow1 = 3,
-			eGdtfDmxFrequency_Slow2 = 4,
-			eGdtfDmxFrequency_Slow3 = 5,
-		};
-		
 		enum EGdtfDmxMaster
 		{
 			eGdtfDmxMaster_None		= 0,
