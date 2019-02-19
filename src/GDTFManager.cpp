@@ -2414,8 +2414,6 @@ GdtfDmxChannel::GdtfDmxChannel(GdtfDmxMode* parent)
 	fUber					= 0;    fUberNone		= true;	
 	fDefaultValue			= 0;
 	fHeighlight				= 0;	fHeighlightNone = true;
-	fMoveInBlackFrames		= 0;
-	fDmxChangeTimeLimit		= 0;
 	fGeomRef				= nullptr;
 
 	ASSERTN(kEveryone, parent != nullptr);
@@ -2755,7 +2753,8 @@ GdtfDmxLogicalChannel::GdtfDmxLogicalChannel(GdtfDmxChannel* parent)
 	fDmxMaster				= eGdtfDmxMaster_None;
 	fParentDmxChannel		= parent;
 	fNextLogicalChannel		= nullptr;
-
+	fMoveInBlackFrames		= 0;
+	fDmxChangeTimeLimit		= 0;
 }
 
 GdtfDmxLogicalChannel::~GdtfDmxLogicalChannel()
