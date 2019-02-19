@@ -929,11 +929,6 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetDMXProfileCount(size_t& count) = 0;
 		virtual VCOMError VCOM_CALLTYPE		CreateDMXProfile(VectorworksMVR::IGdtfDMXProfile** outVal) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetDMXProfileAt(size_t at, VectorworksMVR::IGdtfDMXProfile** value) = 0;
-		
-		
-		// Protocoll
-		virtual VCOMError VCOM_CALLTYPE GetRDM(IGdtf_FTRDM ** newFTRDM) = 0;
-		virtual VCOMError VCOM_CALLTYPE CreateRDM(VectorworksMVR::IGdtf_FTRDM ** outFTRDM) = 0;
 
         // Parsing Errors
         virtual VCOMError VCOM_CALLTYPE		GetParsingErrorCount(size_t& count) = 0;
