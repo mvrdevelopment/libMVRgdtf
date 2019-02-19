@@ -449,7 +449,7 @@ void GdtfDmxUnittest::Check8bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxCh
 {
 	// ---------------------------------------------------------------------------
 	// Check DMXChannel attributes
-	CheckDmxChannel(dmxChannel, 1, 1, 0, 0, 0,eGdtfDmxFrequency_30, (DmxValue)0, false ,(double)0, (double)0);
+	CheckDmxChannel(dmxChannel, 1, 1, 0, 0, 0, (DmxValue)0, false ,(double)0, (double)0);
 
 	// ---------------------------------------------------------------------------
 	// Get Logical Channels
@@ -638,7 +638,7 @@ void GdtfDmxUnittest::Check24bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxC
 }
 
 void GdtfDmxUnittest::CheckDmxChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxChannel, Sint32 dmxBreak, Sint32 coarse,
-									  Sint32 fine, Sint32 ultra, Sint32 uber, EGdtfDmxFrequency frequency, DmxValue defaultValue,
+									  Sint32 fine, Sint32 ultra, Sint32 uber, DmxValue defaultValue,
 									  DmxValue highlight, double MibFade, double dmxChangeLimit)
 {
 	Sint32 thisDmxBreak = 0;
@@ -660,10 +660,6 @@ void GdtfDmxUnittest::CheckDmxChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxCha
 	Sint32 thisDmxUber = 0;
 	__checkVCOM(dmxChannel->GetUber(thisDmxUber));
 	this->checkifEqual("Check DmxChannel Uber - Default: \"None\"  ", uber, thisDmxUber);
-
-	GdtfDefines::EGdtfDmxFrequency thisDmxFrequency;
-	__checkVCOM(dmxChannel->GetDmxFrequency(thisDmxFrequency));
-	this->checkifEqual("Check DmxChannel Frequency - Default: \"30\" ", frequency, thisDmxFrequency);
 
 	DmxValue thisDmxDefaultValue = 0;
 	__checkVCOM(dmxChannel->GetDefaultValue(thisDmxDefaultValue));

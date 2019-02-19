@@ -478,11 +478,6 @@ void GdtfUnittest::ReadFile()
 					__checkVCOM(gdtfDmxChannel->GetUber(uber));
 					this->checkifEqual("gdtfDmxChannelGetUber ", uber, 4);
 
-					// DMX Frequency
-					EGdtfDmxFrequency freq;
-					__checkVCOM(gdtfDmxChannel->GetDmxFrequency(freq));
-					this->checkifEqual("gdtfDmxChannelGetDmxFrequency ", freq, EGdtfDmxFrequency::eGdtfDmxFrequency_30);
-
 					// Default Value
 					GdtfDefines::DmxValue def;
 					__checkVCOM(gdtfDmxChannel->GetDefaultValue(def));
