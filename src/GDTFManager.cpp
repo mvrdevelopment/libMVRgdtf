@@ -2411,8 +2411,7 @@ GdtfDmxChannel::GdtfDmxChannel(GdtfDmxMode* parent)
 	fCoarse					= 0;	fCoarseNone		= true;
 	fFine					= 0;	fFineNone		= true;
 	fUltra					= 0;	fUltraNone		= true;
-	fUber					= 0;    fUberNone		= true;
-	fFrequenz				= eGdtfDmxFrequency_30;
+	fUber					= 0;    fUberNone		= true;	
 	fDefaultValue			= 0;
 	fHeighlight				= 0;	fHeighlightNone = true;
 	fMoveInBlackFrames		= 0;
@@ -2461,11 +2460,6 @@ void SceneData::GdtfDmxChannel::SetDmxUber(Sint32 uber)
 {
 	fUber = uber;
 	if(fUber > 0) {fUberNone = false;}
-}
-
-void GdtfDmxChannel::SetFrequency(EGdtfDmxFrequency frequency)
-{
-	fFrequenz = frequency;
 }
 
 void GdtfDmxChannel::SetDefaultValue(DmxValue defaultValue)
@@ -2697,10 +2691,6 @@ Sint32 GdtfDmxChannel::GetUber() const
 	return fUber;
 }
 
-EGdtfDmxFrequency GdtfDmxChannel::GetFrequency() const
-{
-	return fFrequenz;
-}
 DmxValue GdtfDmxChannel::GetDefaultValue() const
 {
 	return fDefaultValue;

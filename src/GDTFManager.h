@@ -939,8 +939,7 @@ namespace SceneData
 		Sint32						fCoarse;		bool fCoarseNone;			// None is not defined as value???
 		Sint32						fFine;			bool fFineNone;				// None is not defined as value???
 		Sint32						fUltra;			bool fUltraNone;			// None is not defined as value???
-		Sint32                      fUber;			bool fUberNone;
-		EGdtfDmxFrequency			fFrequenz;
+		Sint32                      fUber;			bool fUberNone;		
 		DmxValue					fDefaultValue;
 		DmxValue					fHeighlight;	bool fHeighlightNone;
 		double						fMoveInBlackFrames;							//is frames here the best unit
@@ -963,8 +962,7 @@ namespace SceneData
         Sint32								GetCoarse() const;
         Sint32								GetFine() const;
         Sint32								GetUltra() const;
-		Sint32								GetUber() const;
-        EGdtfDmxFrequency					GetFrequency() const;
+		Sint32								GetUber() const;        
         DmxValue							GetDefaultValue() const;
         DmxValue							GetHighlight() const;
 		bool								HasHighlight() const;
@@ -981,8 +979,7 @@ namespace SceneData
 		void								SetDmxCoarse(Sint32 coarse);
 		void								SetDmxFine(Sint32 fine);
 		void								SetDmxUltra(Sint32 ultra);
-		void								SetDmxUber(Sint32 uber);
-		void								SetFrequency(EGdtfDmxFrequency frequency);
+		void								SetDmxUber(Sint32 uber);		
 		void								SetDefaultValue(DmxValue defaultValue);
 		void								SetHighlight(DmxValue highlight);
 		void								SetMoveInBlackFrames(double moveInBlackFrames);
