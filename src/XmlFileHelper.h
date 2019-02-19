@@ -157,5 +157,7 @@ namespace SceneData
 	public:
 		static bool AddFileToZip(IZIPFilePtr& zipFile, const IFileIdentifierPtr& file, ERessourceType resType, bool deleteFile, bool mustExist = true);
         static void AddFileToZip(IZIPFilePtr& zipFile, ISceneDataZipBuffer& buffer,const TXString &name);		
+
+        static TXString GetResourceSubFolder(ERessourceType resType);
 	};
 }

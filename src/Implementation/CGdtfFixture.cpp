@@ -101,6 +101,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::AddFileToGdtfFile(Mv
     // Append the SubFoldername for resources.
     switch (resType)  // XXX TODO: Make function get SubFolder for Type.
     {
+        ä
     case ERessourceType::ImageWheel:
         fileName = "/wheels/" + fileName;
         break;

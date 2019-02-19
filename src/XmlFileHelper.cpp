@@ -2138,6 +2138,25 @@ void SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, ISceneDataZipBuffer& buffe
     zipFile->AddFile(name, &buffer);
 }
 
+TXString SceneData::SceneDataZip::GetResourceSubFolder(ERessourceType resType)
+{    
+    switch (resType) 
+    {
+    case ERessourceType::ImageWheel:
+        return "/wheels/";
+        break;
+    case ERessourceType::Model3DS:
+        return "/models/3ds/";
+        break;
+    case ERessourceType::ModelSVG:
+        return "/models/svg/";
+        break;
+    case ERessourceType::RessoureFixture:
+        return  "";
+        break;
+    }    
+}
+
 
 /*static*/ bool GdtfConverter::Deserialize(const TXString& value, const IXMLFileNodePtr& node,std::vector<double>& doubleArr)
 {
