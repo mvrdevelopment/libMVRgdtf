@@ -1934,10 +1934,26 @@ bool SceneDataExchange::WriteToFile(const IFileIdentifierPtr& file)
     SceneDataZip::AddFileToZip(zipfile, zipXmlBuffer, filename);
 	
 	//-------------------------------------------------------------------------------------------------	
+    // Add the Resources
+
 	for (size_t i = 0; i < f3DS_FilesToAdd.size(); i++)
-	{
-        // if (3ds) XXX
+	{        
 		SceneDataZip::AddFileToZip(zipfile, f3DS_FilesToAdd.at(i), false/*Delete*/);
+	}
+
+	for (size_t i = 0; i < fSVG_FilesToAdd.size(); i++)
+	{        
+		SceneDataZip::AddFileToZip(zipfile, fSVG_FilesToAdd.at(i), false/*Delete*/);
+	}
+
+	for (size_t i = 0; i < fWheel_Image_FilesToAdd.size(); i++)
+	{        
+		SceneDataZip::AddFileToZip(zipfile, fWheel_Image_FilesToAdd.at(i), false/*Delete*/);
+	}
+
+	for (size_t i = 0; i < fFixtureResources_FilesToAdd.size(); i++)
+	{        
+		SceneDataZip::AddFileToZip(zipfile, fFixtureResources_FilesToAdd.at(i), false/*Delete*/);
 	}
 	
 	//-------------------------------------------------------------------------------------------------
