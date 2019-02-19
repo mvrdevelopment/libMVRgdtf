@@ -856,7 +856,7 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE		ReadFromFile(MvrString fullPath) = 0;
 		
 		virtual VCOMError VCOM_CALLTYPE		OpenForWrite(MvrString fullPath, MvrString name, MvrString manufacturer, const MvrUUID& uuid) = 0;
-		virtual VCOMError VCOM_CALLTYPE		AddFileToGdtfFile(MvrString fullPath) = 0;
+		virtual VCOMError VCOM_CALLTYPE		AddFileToGdtfFile(MvrString fullPath, GdtfDefines::ERessourceType resType) = 0;
 		virtual VCOMError VCOM_CALLTYPE		Close() = 0;
         
         virtual MvrString VCOM_CALLTYPE		GetName() = 0;

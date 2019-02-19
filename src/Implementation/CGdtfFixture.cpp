@@ -80,12 +80,12 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::OpenForWrite(MvrStri
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::AddFileToGdtfFile(MvrString fullPath)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::AddFileToGdtfFile(MvrString fullPath, ERessourceType resType)
 {
 	if(!fFixtureObject) { return kVCOMError_Failed; }
 	if(!fZipFile)		{ return kVCOMError_Failed; }
 	TXString strFullPath ( fullPath );
-	
+
 	// Create the file pointer on the full path
 	IFileIdentifierPtr file (IID_FileIdentifier);
 	file->Set(strFullPath);
@@ -96,11 +96,26 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::AddFileToGdtfFile(Mv
 	// Check if the file exists
 	if (!fileExisis) { return kVCOMError_Failed; }
 	
-	TXString fileName;
-	file->GetFileName(fileName);
+	TXString fileName; file->GetFileName(fileName);
 	
-	fZipFile->AddFile(fileName, file);
-	
+    // Append the SubFoldername for resources.
+    switch (resType) 
+    {
+    case ERessourceType::ImageWheel:
+        fileName = "/wheels/" + fileName;
+        break;
+    case ERessourceType::Model3DS:
+        fileName = "/models/3ds/" + fileName;
+        break;
+    case ERessourceType::ModelSVG:
+        fileName = "/models/svg/" + fileName;
+        break;
+    case ERessourceType::RessoureFixture:
+        fileName = "" + fileName; // XXX ?
+        break;
+    }
+
+	fZipFile->AddFile(fileName, file);	
 	
 	// Read From File
 	return kVCOMError_NoError;
