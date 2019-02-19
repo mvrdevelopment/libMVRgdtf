@@ -15,6 +15,14 @@ namespace VectorworksMVR
         // This is used for a DMX Value defining. GDTF currently supports of to 32bit values, so the maximum value will be 2^32 - 1
         // We always store this in a 64bit values, to make this more simple. 
         typedef Uint64		DmxValue;    
+
+        enum class ERessourceType
+        {
+            ModelSVG,
+            Model3DS,
+            ImageWheel,
+            RessoureFixture,
+        };
 		
 		enum EGdtfObjectType
 		{
