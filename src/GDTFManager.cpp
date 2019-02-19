@@ -2613,9 +2613,6 @@ void GdtfDmxChannel::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	optional.push_back(XML_GDTF_DMXChannelUber);	
 	optional.push_back(XML_GDTF_DMXChannelDefault);
 	optional.push_back(XML_GDTF_DMXChannelHighlight);
-	optional.push_back(XML_GDTF_DMXChannelMibFadeFrames);
-	optional.push_back(XML_GDTF_DMXChannelDMXChangeTimeLimit);
-
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
 	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
@@ -2880,7 +2877,8 @@ void GdtfDmxLogicalChannel::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	needed.push_back(XML_GDTF_DMXLogicalChannelAttribute);
 	optional.push_back(XML_GDTF_DMXLogicalChannelSnap);
 	optional.push_back(XML_GDTF_DMXLogicalChannelMaster);
-	
+    optional.push_back(XML_GDTF_DMXLogicalChannelMibFadeFrames);
+	optional.push_back(XML_GDTF_DMXLogicalChannelDMXChangeTimeLimit);	
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
 	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
