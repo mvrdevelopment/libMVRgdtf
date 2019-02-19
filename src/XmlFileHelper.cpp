@@ -1056,52 +1056,6 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 	return true;
 }
 
-/*static*/ TXString GdtfConverter::ConvertFrequenz(EGdtfDmxFrequency value)
-{
-	switch (value)
-	{
-		case eGdtfDmxFrequency_60:		return XML_GDTF_DMXFrequencyEnum_60;
-		case eGdtfDmxFrequency_15:		return XML_GDTF_DMXFrequencyEnum_15;
-		case eGdtfDmxFrequency_30:		return XML_GDTF_DMXFrequencyEnum_30;
-		case eGdtfDmxFrequency_Slow1:	return XML_GDTF_DMXFrequencyEnum_Slow1;
-		case eGdtfDmxFrequency_Slow2:	return XML_GDTF_DMXFrequencyEnum_Slow2;
-		case eGdtfDmxFrequency_Slow3:	return XML_GDTF_DMXFrequencyEnum_Slow3;
-			
-	}
-	
-	// Make Assert
-	ASSERTN(kEveryone,	value == eGdtfDmxFrequency_60 ||
-			value == eGdtfDmxFrequency_15 ||
-			value == eGdtfDmxFrequency_30 ||
-			value == eGdtfDmxFrequency_Slow1 ||
-			value == eGdtfDmxFrequency_Slow2 ||
-			value == eGdtfDmxFrequency_Slow3);
-	
-	// Return default value
-	return XML_GDTF_DMXFrequencyEnum_30;
-}
-
-/*static*/ bool GdtfConverter::ConvertFrequenz(const TXString& value, const IXMLFileNodePtr& node,EGdtfDmxFrequency& freq)
-{
-	
-	if		(value == XML_GDTF_DMXFrequencyEnum_60)		{ freq = eGdtfDmxFrequency_60;		}
-	else if (value == XML_GDTF_DMXFrequencyEnum_15)		{ freq = eGdtfDmxFrequency_15;		}
-	else if (value == XML_GDTF_DMXFrequencyEnum_30)		{ freq = eGdtfDmxFrequency_30;		}
-	else if (value == XML_GDTF_DMXFrequencyEnum_Slow1)	{ freq = eGdtfDmxFrequency_Slow1;	}
-	else if (value == XML_GDTF_DMXFrequencyEnum_Slow2)	{ freq = eGdtfDmxFrequency_Slow2;	}
-	else if (value == XML_GDTF_DMXFrequencyEnum_Slow3)	{ freq = eGdtfDmxFrequency_Slow3;	}
-	else if (value == "")								{ freq = eGdtfDmxFrequency_30;		}
-	else
-    {
-        freq = eGdtfDmxFrequency_30; DSTOP((kEveryone, "Unexpected Input for Lamp Type Enum"));
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertFrequenz, node);
-        SceneData::GdtfFixture::AddError(error);
-    }
-	
-	// Return true
-	return true;	
-}
-
 /*static*/ TXString GdtfConverter::ConvertSnapEnum(EGdtfDmxSnap value)
 {
 	switch (value)
