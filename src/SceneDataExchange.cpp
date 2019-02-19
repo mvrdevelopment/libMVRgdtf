@@ -1938,22 +1938,22 @@ bool SceneDataExchange::WriteToFile(const IFileIdentifierPtr& file)
 
 	for (size_t i = 0; i < f3DS_FilesToAdd.size(); i++)
 	{        
-		SceneDataZip::AddFileToZip(zipfile, f3DS_FilesToAdd.at(i), false/*Delete*/);
+		SceneDataZip::AddFileToZip(zipfile, f3DS_FilesToAdd.at(i),  ERessourceType::Model3DS, false/*Delete*/);
 	}
 
 	for (size_t i = 0; i < fSVG_FilesToAdd.size(); i++)
 	{        
-		SceneDataZip::AddFileToZip(zipfile, fSVG_FilesToAdd.at(i), false/*Delete*/);
+		SceneDataZip::AddFileToZip(zipfile, fSVG_FilesToAdd.at(i), ERessourceType::ModelSVG, false/*Delete*/);
 	}
 
 	for (size_t i = 0; i < fWheel_Image_FilesToAdd.size(); i++)
 	{        
-		SceneDataZip::AddFileToZip(zipfile, fWheel_Image_FilesToAdd.at(i), false/*Delete*/);
+		SceneDataZip::AddFileToZip(zipfile, fWheel_Image_FilesToAdd.at(i), ERessourceType::ImageWheel, false/*Delete*/);
 	}
 
 	for (size_t i = 0; i < fFixtureResources_FilesToAdd.size(); i++)
 	{        
-		SceneDataZip::AddFileToZip(zipfile, fFixtureResources_FilesToAdd.at(i), false/*Delete*/);
+		SceneDataZip::AddFileToZip(zipfile, fFixtureResources_FilesToAdd.at(i), ERessourceType::RessoureFixture, false/*Delete*/);
 	}
 	
 	//-------------------------------------------------------------------------------------------------
@@ -1968,7 +1968,7 @@ bool SceneDataExchange::WriteToFile(const IFileIdentifierPtr& file)
 			IFileIdentifierPtr gdtfFilePtr (IID_FileIdentifier);
 			gdtfFilePtr->Set(folder, gdtfFileName);
 			
-			if		(SceneDataZip::AddFileToZip(zipfile, gdtfFilePtr, false/*Delete*/, false/*ASSERT*/))	{ exported = true;  break; }
+			if		(SceneDataZip::AddFileToZip(zipfile, gdtfFilePtr, ERessourceType::RessoureFixture, false/*Delete*/, false/*ASSERT*/))	{ exported = true;  break; }
 		}
 	
 		

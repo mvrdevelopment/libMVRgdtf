@@ -2098,7 +2098,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 }
  
 
-bool SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, const IFileIdentifierPtr& file, bool deleteFile, bool mustExist)
+bool SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, const IFileIdentifierPtr& file, ERessourceType resType, bool deleteFile, bool mustExist)
 {
 	//-------------------------------------------------------------------------------------------------
 	// Check if there is a pointer
