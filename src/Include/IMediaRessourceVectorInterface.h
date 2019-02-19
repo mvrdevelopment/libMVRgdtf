@@ -556,11 +556,15 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetAttribute(IGdtfAttribute** attribute) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetDmxSnap(GdtfDefines::EGdtfDmxSnap& snap) = 0;
 		virtual VCOMError VCOM_CALLTYPE     GetDmxMaster(GdtfDefines::EGdtfDmxMaster& master) = 0;		
+        virtual VCOMError VCOM_CALLTYPE     GetMoveInBlackFrames(double& frames) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetDmxChangeTimeLimit(double& changeTimeLimit) = 0;
 
 		virtual VCOMError VCOM_CALLTYPE     SetAttribute(IGdtfAttribute* attribute) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetDmxSnap(GdtfDefines::EGdtfDmxSnap snap) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetDmxMaster(GdtfDefines::EGdtfDmxMaster master) = 0;
-		
+		virtual VCOMError VCOM_CALLTYPE     SetMoveInBlackFrames(double frames) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetDmxChangeTimeLimit(double changeTimeLimit) = 0;		
+
         virtual VCOMError VCOM_CALLTYPE     GetDmxFunctionCount(size_t& count) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetDmxFunctionAt(size_t at, IGdtfDmxChannelFunction** function) = 0;
 		virtual VCOMError VCOM_CALLTYPE     CreateDmxFunction(MvrString name, IGdtfDmxChannelFunction** function) = 0;
@@ -585,8 +589,6 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetDefaultValue(GdtfDefines::DmxValue& defaultValue) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetHighlight(GdtfDefines::DmxValue& highlight) = 0;
 		virtual VCOMError VCOM_CALLTYPE     HasHighlight(bool& highlight) = 0;
-        virtual VCOMError VCOM_CALLTYPE     GetMoveInBlackFrames(double& frames) = 0;
-        virtual VCOMError VCOM_CALLTYPE     GetDmxChangeTimeLimit(double& changeTimeLimit) = 0;
 		virtual VCOMError VCOM_CALLTYPE     GetGeometry(IGdtfGeometry** model) = 0;
 		
 		virtual VCOMError VCOM_CALLTYPE     SetDmxBreak(Sint32 dmxBreak) = 0;
@@ -596,8 +598,6 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE     SetUber (Sint32  uber) = 0;				
 		virtual VCOMError VCOM_CALLTYPE     SetDefaultValue(GdtfDefines::DmxValue defaultValue) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetHighlight(GdtfDefines::DmxValue highlight) = 0;
-		virtual VCOMError VCOM_CALLTYPE     SetMoveInBlackFrames(double frames) = 0;
-		virtual VCOMError VCOM_CALLTYPE     SetDmxChangeTimeLimit(double changeTimeLimit) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetGeometry(IGdtfGeometry* model) = 0;
 		
         virtual VCOMError VCOM_CALLTYPE     GetLogicalChannelCount(size_t& count) = 0;
