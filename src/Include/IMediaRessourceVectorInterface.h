@@ -1009,25 +1009,6 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE SetDeviceModelID(Sint32 value) = 0;
         virtual VCOMError VCOM_CALLTYPE AddSoftwareID(Sint32 softID) = 0;
         
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetRDMParameterCount(size_t& count) = 0;        
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetRDMParameterAt(size_t at, VectorworksMVR::IGdtfRDMParameter **RDMParameter) = 0;
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateRDMParameter(VectorworksMVR::IGdtfRDMParameter **outVal,
-                MvrString name,
-                Sint32 PID, 
-                GdtfDefines::EGdtf_RDMParam_Type Type,
-                GdtfDefines::EGdtf_RDMParam_DataType dataType,
-                GdtfDefines::EGdtf_RDMParam_Command command,
-                GdtfDefines::EGdtf_RDMParam_SensorUnit sensorUnit,
-                GdtfDefines::EGdtf_RDMParam_SensorUnitPrefix sensorUnitPrefix,
-                Sint32 minValue,
-                Sint32 maxValue, 
-                Sint32 PDLSize, 
-                MvrString description) = 0;
-
-        virtual VCOMError VCOM_CALLTYPE     GetRDMNotifications(VectorworksMVR::IGdtfRDMNotifications ** outRDMNotifications) = 0;
-
-        virtual VCOMError VCOM_CALLTYPE     SetRDMNotifications(IGdtfRDMNotifications * newRDMNotifications) = 0;
-
         virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
         virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
     };
