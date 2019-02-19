@@ -2562,14 +2562,9 @@ void GdtfDmxChannel::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	if(VCOM_SUCCEEDED(pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelHighlight,			highlight)	))
 	{
 		GdtfConverter::ConvertDMXValue(highlight, pNode, this->GetChannelBitResolution(), fHeighlight, fHeighlightNone);
-	}
+	}	
 	
-	
-	//
-	TXString mib;		pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelMibFadeFrames,		mib);		GdtfConverter::ConvertDouble(mib, 		pNode,	fMoveInBlackFrames);
-	TXString timelimit;	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelDMXChangeTimeLimit,	timelimit);	GdtfConverter::ConvertDouble(timelimit, pNode,	fDmxChangeTimeLimit);
-	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelGeometry, fUnresolvedGeomRef);
-	
+	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelGeometry, fUnresolvedGeomRef);	
 	
 	// ------------------------------------------------------------------------------------
 	// LogicalChannels	
@@ -2848,6 +2843,9 @@ void GdtfDmxLogicalChannel::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	pNode->GetNodeAttributeValue(XML_GDTF_DMXLogicalChannelAttribute, fUnresolvedAttribRef);
 	TXString snap; 	pNode->GetNodeAttributeValue(XML_GDTF_DMXLogicalChannelSnap,	snap);		GdtfConverter::ConvertSnapEnum(snap, 	 pNode, fSnap);
 	TXString master;pNode->GetNodeAttributeValue(XML_GDTF_DMXLogicalChannelMaster,	master);	GdtfConverter::ConvertMasterEnum(master, pNode,	fDmxMaster);
+	//
+	TXString mib;		pNode->GetNodeAttributeValue(XML_GDTF_DMXLogicalChannelMibFadeFrames,		mib);		GdtfConverter::ConvertDouble(mib, 		pNode,	fMoveInBlackFrames);
+	TXString timelimit;	pNode->GetNodeAttributeValue(XML_GDTF_DMXLogicalChannelDMXChangeTimeLimit,	timelimit);	GdtfConverter::ConvertDouble(timelimit, pNode,	fDmxChangeTimeLimit);
 	
 	// ------------------------------------------------------------------------------------
 	// Read LogicalChannels
