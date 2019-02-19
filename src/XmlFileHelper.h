@@ -76,8 +76,7 @@ namespace SceneData
 		static TXString	ConvertPhysicalUnitEnum(EGdtfPhysicalUnit value);
 		static TXString	ConvertSpecialAttrEnum(EGdtfSpecial value);
 		static TXString ConvertBeamType(EGdtfBeamType value);
-		static TXString ConvertDMXInvertEnum(EGDTFDmxInvert value);
-		static TXString ConvertEncoderInvertEnum(EGDTFEncoderInvert value);
+		static TXString ConvertDMXInvertEnum(EGDTFDmxInvert value);		
         static TXString ConvertRDMParamTypeEnum(EGdtf_RDMParam_Type value);
         static TXString Convert_RDMParamDataTypeEnum(EGdtf_RDMParam_DataType value);		
         static TXString Convert_RDMParam_CommandEnum(EGdtf_RDMParam_Command value);
@@ -117,8 +116,7 @@ namespace SceneData
 		static bool		ConvertPhysicalUnitEnum(							const TXString& value, const IXMLFileNodePtr& node,			EGdtfPhysicalUnit& unit);
 		static bool		ConvertSpecialAttrEnum(								const TXString& value, const IXMLFileNodePtr& node,			EGdtfSpecial& special);
 		static bool		ConvertBeamType(									const TXString& value, const IXMLFileNodePtr& node,			EGdtfBeamType& type);
-		static bool		ConvertDMXInvertEnum(								const TXString& value, const IXMLFileNodePtr& node,			EGDTFDmxInvert&	dmx);
-		static bool		ConvertEncoderInvertEnum(							const TXString& value, const IXMLFileNodePtr& node,			EGDTFEncoderInvert&	enc);
+		static bool		ConvertDMXInvertEnum(								const TXString& value, const IXMLFileNodePtr& node,			EGDTFDmxInvert&	dmx);		
         static bool     ConvertRDMParamTypeEnum(							const TXString& value, const IXMLFileNodePtr& node,			EGdtf_RDMParam_Type& val);
         static bool     Convert_RDMParamDataTypeEnum(						const TXString& value, const IXMLFileNodePtr& node,			EGdtf_RDMParam_DataType& val);
         static bool     Convert_RDMParam_CommandEnum(						const TXString& value, const IXMLFileNodePtr& node,			EGdtf_RDMParam_Command&	val);

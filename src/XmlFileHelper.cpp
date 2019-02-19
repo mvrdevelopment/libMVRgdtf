@@ -1183,35 +1183,6 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 	return true;
 }
 
-/*static*/ TXString GdtfConverter::ConvertEncoderInvertEnum(EGDTFEncoderInvert value)
-{
-	switch (value)
-	{
-		case eGDTFEncoderInvert_No:			return XML_GDTF_DMXChannelEncoderInvertEnum_No;
-		case eGDTFEncoderInvert_Yes:		return XML_GDTF_DMXChannelEncoderInvertEnum_Yes;
-        default: DSTOP((kEveryone, "ConvertEncoderInvertEnum: Invalid Input-Value"));
-	}	
-	
-	// Return default value
-	return XML_GDTF_DMXChannelEncoderInvertEnum_No;
-}
-
-/*static*/ bool GdtfConverter::ConvertEncoderInvertEnum(const TXString& value, const IXMLFileNodePtr& node,EGDTFEncoderInvert&			enc)
-{
-	if		(value == XML_GDTF_DMXChannelEncoderInvertEnum_No)	{ enc = eGDTFEncoderInvert_No;		}
-	else if (value == XML_GDTF_DMXChannelEncoderInvertEnum_Yes)	{ enc = eGDTFEncoderInvert_Yes;		}
-	else if (value == "")										{ enc = eGDTFEncoderInvert_No;		}
-	else
-    {
-        enc = eGDTFEncoderInvert_No; DSTOP((kEveryone, "Unexpected Input for EGDTFEncoderInvert Enum"));
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertEncoderInvert, node);
-        SceneData::GdtfFixture::AddError(error);
-    }
-	
-	// Return true
-	return true;	
-}
-
 /*static*/ TXString GdtfConverter::ConvertRDMParamTypeEnum(EGdtf_RDMParam_Type value)
 {           
     switch (value)
