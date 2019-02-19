@@ -57,7 +57,6 @@
     <ClCompile Include="..\src\Implementation\CGdtfFeature.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfFeatureGroup.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfFixture.cpp" />
-    <ClCompile Include="..\src\Implementation\CGdtfFTRDM.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfGeometry.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfMacro.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfMacroDMX.cpp" />
@@ -69,13 +68,6 @@
     <ClCompile Include="..\src\Implementation\CGdtfMeasurementPoint.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfModel.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfPhysicalEmitter.cpp" />
-    <ClCompile Include="..\src\Implementation\CGdtfRDMAbsentNotification.cpp" />
-    <ClCompile Include="..\src\Implementation\CGdtfRDMNotifications.cpp" />
-    <ClCompile Include="..\src\Implementation\CGdtfRDMParameter.cpp" />
-    <ClCompile Include="..\src\Implementation\CGdtfRDMParameterNotification.cpp" />
-    <ClCompile Include="..\src\Implementation\CGdtfRDMParameterValue.cpp" />
-    <ClCompile Include="..\src\Implementation\CGdtfRDMSensorNotification.cpp" />
-    <ClCompile Include="..\src\Implementation\CGdtfRDMValueSensor.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfRevision.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfUserPreset.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfWheel.cpp" />
@@ -145,7 +137,6 @@
     <ClInclude Include="..\src\Implementation\CGdtfFeature.h" />
     <ClInclude Include="..\src\Implementation\CGdtfFeatureGroup.h" />
     <ClInclude Include="..\src\Implementation\CGdtfFixture.h" />
-    <ClInclude Include="..\src\Implementation\CGdtfFTRDM.h" />
     <ClInclude Include="..\src\Implementation\CGdtfGeometry.h" />
     <ClInclude Include="..\src\Implementation\CGdtfMacro.h" />
     <ClInclude Include="..\src\Implementation\CGdtfMacroDMX.h" />
@@ -157,13 +148,6 @@
     <ClInclude Include="..\src\Implementation\CGdtfMeasurementPoint.h" />
     <ClInclude Include="..\src\Implementation\CGdtfModel.h" />
     <ClInclude Include="..\src\Implementation\CGdtfPhysicalEmitter.h" />
-    <ClInclude Include="..\src\Implementation\CGdtfRDMAbsentNotification.h" />
-    <ClInclude Include="..\src\Implementation\CGdtfRDMNotifications.h" />
-    <ClInclude Include="..\src\Implementation\CGdtfRDMParameter.h" />
-    <ClInclude Include="..\src\Implementation\CGdtfRDMParameterNotification.h" />
-    <ClInclude Include="..\src\Implementation\CGdtfRDMParameterValue.h" />
-    <ClInclude Include="..\src\Implementation\CGdtfRDMSensorNotification.h" />
-    <ClInclude Include="..\src\Implementation\CGdtfRDMValueSensor.h" />
     <ClInclude Include="..\src\Implementation\CGdtfRevision.h" />
     <ClInclude Include="..\src\Implementation\CGdtfUserPreset.h" />
     <ClInclude Include="..\src\Implementation\CGdtfWheel.h" />
