@@ -2082,6 +2082,8 @@ TXString SceneData::SceneDataZip::GetResourceSubFolder(ERessourceType resType)
         return  "";
         break;
     }    
+
+    return  "";
 }
 
 
