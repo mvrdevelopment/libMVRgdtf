@@ -1158,9 +1158,8 @@ namespace SceneData
         ~GdtfFTRDM();
     private:
         // Attributes
-        Sint32      fManufacturerID;  // Manufacturer ESTA ID; Size: 2 bytes
-        Sint32      fDeviceModelID;   // Unique device model ID; Size: 2 bytes        
-        // Childs
+        Sint32        fManufacturerID;  // Manufacturer ESTA ID; Size: 2 bytes
+        Sint32        fDeviceModelID;   // Unique device model ID; Size: 2 bytes        
         TSint32Array  fSoftwareVersIDs; // Array of software versions IDs; Size of each version: 4 bytes        
     public:
         virtual EGdtfObjectType			GetObjectType();
