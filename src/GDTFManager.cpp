@@ -2508,8 +2508,6 @@ void GdtfDmxChannel::OnPrintToFile(IXMLFileNodePtr pNode)
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelUber,				GdtfConverter::ConvertInteger(fUber,		fUberNone));		
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelDefault,			GdtfConverter::ConvertDMXValue(fDefaultValue, chanelReso));
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelHighlight,			GdtfConverter::ConvertDMXValue(fHeighlight,	chanelReso, fHeighlightNone));
-	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelMibFadeFrames,		GdtfConverter::ConvertDouble(fMoveInBlackFrames));
-	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelDMXChangeTimeLimit,	GdtfConverter::ConvertDouble(fDmxChangeTimeLimit));	
 	if (fGeomRef) { pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelGeometry,			fGeomRef->GetNodeReference()); }
 	
 	// ------------------------------------------------------------------------------------
@@ -2828,7 +2826,8 @@ void GdtfDmxLogicalChannel::OnPrintToFile(IXMLFileNodePtr pNode)
 	if (fAttribute) {pNode->SetNodeAttributeValue(XML_GDTF_DMXLogicalChannelAttribute, fAttribute->GetNodeReference()); };
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXLogicalChannelSnap,		GdtfConverter::ConvertSnapEnum(fSnap));
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXLogicalChannelMaster,		GdtfConverter::ConvertMasterEnum(fDmxMaster));
-	
+	pNode->SetNodeAttributeValue(XML_GDTF_DMXLogicalChannelMibFadeFrames,		GdtfConverter::ConvertDouble(fMoveInBlackFrames));
+	pNode->SetNodeAttributeValue(XML_GDTF_DMXLogicalChannelDMXChangeTimeLimit,	GdtfConverter::ConvertDouble(fDmxChangeTimeLimit));		
 	// ------------------------------------------------------------------------------------
 	// LogicalChannels
 	for (GdtfDmxChannelFunctionPtr functionObj : fFunctions)

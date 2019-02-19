@@ -892,6 +892,8 @@ namespace SceneData
 		
 		GdtfDmxChannel*  			fParentDmxChannel;
         GdtfDmxLogicalChannel*      fNextLogicalChannel;
+		double						fMoveInBlackFrames;							//is frames here the best unit
+		double						fDmxChangeTimeLimit;		
 		
 	public:
 
@@ -939,8 +941,6 @@ namespace SceneData
 		Sint32                      fUber;			bool fUberNone;		
 		DmxValue					fDefaultValue;
 		DmxValue					fHeighlight;	bool fHeighlightNone;
-		double						fMoveInBlackFrames;							//is frames here the best unit
-		double						fDmxChangeTimeLimit;		
 		GdtfGeometryPtr				fGeomRef;
 		TXString					fUnresolvedGeomRef;
 		//
