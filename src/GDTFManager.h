@@ -1178,10 +1178,8 @@ namespace SceneData
         // Attributes
         Sint32      fManufacturerID;  // Manufacturer ESTA ID; Size: 2 bytes
         Sint32      fDeviceModelID;   // Unique device model ID; Size: 2 bytes        
-        TSint32Array  fSoftwareVersIDs; // Array of software versions IDs; Size of each version: 4 bytes
         // Childs
-        TGdtfRDMParameterArray   fRDMParameters;     // Instead of using the <RDMParameterS> we directly use a list off <RDMParameter> here.
-        GdtfRDMNotifications*    fRDMNotifications;
+        TSint32Array  fSoftwareVersIDs; // Array of software versions IDs; Size of each version: 4 bytes        
     public:
         virtual EGdtfObjectType			GetObjectType();
 
@@ -1190,26 +1188,10 @@ namespace SceneData
         Sint32                        GetManufacturerID() const;
         Sint32                        GetDeviceModelID()  const;
         const TSint32Array&           GetSoftwareVersIDs() const;        
-        const TGdtfRDMParameterArray& GetRDMParametersArray() const;
-        GdtfRDMNotifications*         GetRDMNotifications() const;
         // Setter
         void SetManufacturerID(Sint32 val);
         void SetDeviceModelID(Sint32 val);
         void AddSoftwareVersID(Sint32 ID);
-        GdtfRDMParameterPtr AddRDMParameter(
-            const TXString& name, 
-            Sint32 PID,            
-            EGdtf_RDMParam_Type              Type,
-            EGdtf_RDMParam_DataType          dataType,
-            EGdtf_RDMParam_Command           command,
-            EGdtf_RDMParam_SensorUnit        sensorUnit,
-            EGdtf_RDMParam_SensorUnitPrefix  sensorUnitPrefix,        
-            Sint32                           minValue,        
-            Sint32                           maxValue,
-            Sint32                           PDLSize,
-            const TXString&                        description);
-        
-        void SetRDMNotifications(GdtfRDMNotifications* notifications);
     protected:
         virtual	TXString				GetNodeName();
         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
