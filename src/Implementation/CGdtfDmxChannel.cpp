@@ -77,16 +77,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::GetUber(Sint32& u
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::GetDmxFrequency(EGdtfDmxFrequency &frequency)
-{
-	// Check Pointer
-	if ( ! fChannel) { return kVCOMError_NotInitialized; }
-	
-    frequency = fChannel->GetFrequency();
-    
-    return kVCOMError_NoError;
-}
-
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::GetDefaultValue(DmxValue &defaultValue)
 {
 	// Check Pointer
@@ -228,16 +218,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::SetUber(Sint32 ub
 	if ( ! fChannel) { return kVCOMError_NotInitialized; }
 	
 	fChannel->SetDmxUber(uber);
-	
-	return kVCOMError_NoError;
-}
-
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::SetDmxFrequency(EGdtfDmxFrequency frequency)
-{
-	// Check Pointer
-	if ( ! fChannel) { return kVCOMError_NotInitialized; }
-	
-	fChannel->SetFrequency(frequency);
 	
 	return kVCOMError_NoError;
 }

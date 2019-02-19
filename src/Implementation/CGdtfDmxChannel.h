@@ -20,8 +20,7 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetCoarse(Sint32& coarse);
         virtual VCOMError VCOM_CALLTYPE     GetFine(Sint32& fine);
         virtual VCOMError VCOM_CALLTYPE     GetUltra(Sint32& ultra);
-		virtual VCOMError VCOM_CALLTYPE	    GetUber(Sint32& uber);
-        virtual VCOMError VCOM_CALLTYPE     GetDmxFrequency(EGdtfDmxFrequency& frequency);
+		virtual VCOMError VCOM_CALLTYPE	    GetUber(Sint32& uber);        
         virtual VCOMError VCOM_CALLTYPE     GetDefaultValue(DmxValue& defaultValue);
         virtual VCOMError VCOM_CALLTYPE     GetHighlight(DmxValue& highlight);
 		virtual VCOMError VCOM_CALLTYPE     HasHighlight(bool& highlight);
@@ -33,8 +32,7 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE     SetCoarse(Sint32 coarse);
 		virtual VCOMError VCOM_CALLTYPE     SetFine(Sint32 fine);
 		virtual VCOMError VCOM_CALLTYPE     SetUltra(Sint32 ultra);
-		virtual VCOMError VCOM_CALLTYPE     SetUber(Sint32 uber);
-		virtual VCOMError VCOM_CALLTYPE     SetDmxFrequency(EGdtfDmxFrequency frequency);
+		virtual VCOMError VCOM_CALLTYPE     SetUber(Sint32 uber);		
 		virtual VCOMError VCOM_CALLTYPE     SetDefaultValue(DmxValue defaultValue);
 		virtual VCOMError VCOM_CALLTYPE     SetHighlight(DmxValue highlight);
 		virtual VCOMError VCOM_CALLTYPE     SetMoveInBlackFrames(double frames);
