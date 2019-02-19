@@ -99,7 +99,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::AddFileToGdtfFile(Mv
 	TXString fileName; file->GetFileName(fileName);
 	
     // Append the SubFoldername for resources.
-    switch (resType) 
+    switch (resType)  // XXX TODO: Make function get SubFolder for Type.
     {
     case ERessourceType::ImageWheel:
         fileName = "/wheels/" + fileName;

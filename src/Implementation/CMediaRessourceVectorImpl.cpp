@@ -38,7 +38,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::AddFileToMv
     // Check if the file exists
     if (!fileExisis) { return kVCOMError_Failed; }
 
-    fExchangeObj.AddFileToZip(file);
+    fExchangeObj.AddFileToZip(file, );
 
     // 
     return kVCOMError_NoError;

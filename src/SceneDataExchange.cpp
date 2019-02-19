@@ -1934,10 +1934,10 @@ bool SceneDataExchange::WriteToFile(const IFileIdentifierPtr& file)
     SceneDataZip::AddFileToZip(zipfile, zipXmlBuffer, filename);
 	
 	//-------------------------------------------------------------------------------------------------	
-	for (size_t i = 0; i < fSVG_FilesToAdd.size(); i++)
+	for (size_t i = 0; i < f3DS_FilesToAdd.size(); i++)
 	{
         // if (3ds) XXX
-		SceneDataZip::AddFileToZip(zipfile, fSVG_FilesToAdd.at(i), false/*Delete*/);
+		SceneDataZip::AddFileToZip(zipfile, f3DS_FilesToAdd.at(i), false/*Delete*/);
 	}
 	
 	//-------------------------------------------------------------------------------------------------
@@ -2456,9 +2456,9 @@ void SceneDataExchange::ProcessGroup(const IXMLFileNodePtr& node, SceneDataGroup
 	
 }
 
-void SceneDataExchange::AddFileToZip(const IFileIdentifierPtr& file)
+void SceneDataExchange::AddFileToZip(const IFileIdentifierPtr& file, ERessourceType resType)
 {
-    fSVG_FilesToAdd.push_back(file);
+    f3DS_FilesToAdd.push_back(file);
 }
 
 size_t SceneDataExchange::GetAttachedFileCount()
