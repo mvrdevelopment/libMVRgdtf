@@ -77,14 +77,7 @@ namespace SceneData
 		static TXString	ConvertSpecialAttrEnum(EGdtfSpecial value);
 		static TXString ConvertBeamType(EGdtfBeamType value);
 		static TXString ConvertDMXInvertEnum(EGDTFDmxInvert value);		
-        static TXString ConvertRDMParamTypeEnum(EGdtf_RDMParam_Type value);
-        static TXString Convert_RDMParamDataTypeEnum(EGdtf_RDMParam_DataType value);		
-        static TXString Convert_RDMParam_CommandEnum(EGdtf_RDMParam_Command value);
-        static TXString Convert_RDMParam_SensorUnitEnum(EGdtf_RDMParam_SensorUnit value);        
-        static TXString Convert_RDMParam_SensorUnitPrefixEnum(EGdtf_RDMParam_SensorUnitPrefix value);
-        static TXString ConvertRDMValue_SLOT_INFO_TypeEnum(EGdtf_RDMValue_SLOT_INFO_Type value);
-        static TXString ConvertRDMValue_SLOT_INFO_SlotLabelIDEnum(EGdtf_RDMValue_SLOT_INFO_SlotLabelID value);
-        static TXString ConvertEGdtfColorSampleEnum(							  EGdtfColorSample value);
+        static TXString ConvertEGdtfColorSampleEnum(EGdtfColorSample value);
 
         //-----------------------------------------------------------------------------
         // Convert from String functions:
