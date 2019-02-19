@@ -906,17 +906,19 @@ namespace SceneData
 		EGdtfDmxMaster						GetDmxMaster() const;
         const TGdtfDmxChannelFuntionArray	GetDmxChannelFunctions();		
 		TXString							GetUnresolvedAttribRef() const;
-
-		GdtfDmxChannel*						GetParentDMXChannel() const;
-        void						        SetNextLogicalChannel(GdtfDmxLogicalChannel* next) ;
+		GdtfDmxChannel*						GetParentDMXChannel() const;        
 		GdtfDmxLogicalChannel*			    GetNextLogicalChannel() ;
+        double                              GetMoveInBlackFrames() const;
+        double								GetDmxChangeTimeLimit() const;				
 
 		void								SetName(const TXString& name);
 		void								SetAttribute(GdtfAttributePtr newAttr);
 		void								SetDmxSnap(EGdtfDmxSnap snap);
 		void								SetDmxMaster(EGdtfDmxMaster master);
 		GdtfDmxChannelFunctionPtr			AddDmxChannelFunction(const TXString& name);
-		
+        void						        SetNextLogicalChannel(GdtfDmxLogicalChannel* next) ;
+        void								SetMoveInBlackFrames(double moveInBlackFrames);
+        void								SetDmxChangeTimeLimit(double changeLimit);
 	protected:
 		virtual	TXString				GetNodeName();
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
@@ -963,8 +965,6 @@ namespace SceneData
         DmxValue							GetDefaultValue() const;
         DmxValue							GetHighlight() const;
 		bool								HasHighlight() const;
-        double                              GetMoveInBlackFrames() const;
-        double								GetDmxChangeTimeLimit() const;				
         const TGdtfDmxLogicalChannelArray	GetLogicalChannelArray();
 		GdtfGeometryPtr						GetGeomRef();
 		TXString							GetUnresolvedGeomRef() const;
@@ -979,8 +979,6 @@ namespace SceneData
 		void								SetDmxUber(Sint32 uber);		
 		void								SetDefaultValue(DmxValue defaultValue);
 		void								SetHighlight(DmxValue highlight);
-		void								SetMoveInBlackFrames(double moveInBlackFrames);
-		void								SetDmxChangeTimeLimit(double changeLimit);
 		void								SetModel(GdtfModelPtr ptr);
 		GdtfDmxLogicalChannel*				AddLogicalChannel();
 		void								SetGeomRef(GdtfGeometryPtr newGeom);

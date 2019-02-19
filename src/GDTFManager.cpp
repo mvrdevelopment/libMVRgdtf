@@ -2471,16 +2471,6 @@ void GdtfDmxChannel::SetHighlight(DmxValue highlight)
 	fHeighlightNone = false;
 }
 
-void GdtfDmxChannel::SetMoveInBlackFrames(double moveInBlackFrames)
-{
-	fMoveInBlackFrames = moveInBlackFrames;
-}
-
-void GdtfDmxChannel::SetDmxChangeTimeLimit(double changeLimit)
-{
-	fDmxChangeTimeLimit = changeLimit;
-}
-
 GdtfDmxLogicalChannel* GdtfDmxChannel::AddLogicalChannel()
 {
 	GdtfDmxLogicalChannel* channel = new GdtfDmxLogicalChannel(this);
@@ -2694,16 +2684,6 @@ bool GdtfDmxChannel::HasHighlight() const
 	return !fHeighlightNone;
 }
 
-double GdtfDmxChannel::GetMoveInBlackFrames() const
-{
-	return fMoveInBlackFrames;
-}
-
-double GdtfDmxChannel::GetDmxChangeTimeLimit() const
-{
-	return fDmxChangeTimeLimit;
-}
-
 void GdtfDmxChannel::SetGeomRef(GdtfGeometryPtr newGeom)
 {
 	fGeomRef = newGeom;
@@ -2788,9 +2768,29 @@ void GdtfDmxLogicalChannel::SetNextLogicalChannel(GdtfDmxLogicalChannel* next)
 	fNextLogicalChannel = next;
 }
 
+void SceneData::GdtfDmxLogicalChannel::SetMoveInBlackFrames(double moveInBlackFrames)
+{
+    fMoveInBlackFrames = moveInBlackFrames;
+}
+
+void SceneData::GdtfDmxLogicalChannel::SetDmxChangeTimeLimit(double changeLimit)
+{
+    fDmxChangeTimeLimit = changeLimit;
+}
+
 GdtfDmxLogicalChannelPtr GdtfDmxLogicalChannel::GetNextLogicalChannel()
 {
 	return fNextLogicalChannel;
+}
+
+double SceneData::GdtfDmxLogicalChannel::GetMoveInBlackFrames() const
+{
+    return fMoveInBlackFrames;
+}
+
+double SceneData::GdtfDmxLogicalChannel::GetDmxChangeTimeLimit() const
+{
+    return fDmxChangeTimeLimit;
 }
 
 GdtfDmxChannelFunctionPtr GdtfDmxLogicalChannel::AddDmxChannelFunction(const TXString &name)
