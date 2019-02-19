@@ -2458,7 +2458,21 @@ void SceneDataExchange::ProcessGroup(const IXMLFileNodePtr& node, SceneDataGroup
 
 void SceneDataExchange::AddFileToZip(const IFileIdentifierPtr& file, ERessourceType resType)
 {
-    f3DS_FilesToAdd.push_back(file);
+    switch (resType)  
+    {
+    case ERessourceType::ImageWheel:
+        fWheel_Image_FilesToAdd.push_back(file);
+        break;
+    case ERessourceType::Model3DS:
+        f3DS_FilesToAdd.push_back(file);
+        break;
+    case ERessourceType::ModelSVG:
+        fSVG_FilesToAdd.push_back(file);
+        break;
+    case ERessourceType::RessoureFixture:
+        fFixtureResources_FilesToAdd.push_back(file);
+        break;
+    }        
 }
 
 size_t SceneDataExchange::GetAttachedFileCount()

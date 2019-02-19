@@ -594,11 +594,12 @@ namespace SceneData
 		// File Operation Handeling
 		IFolderIdentifierPtr				fWorkingFolder;
 		bool								fUndoStarted;
-		
+		//
         TFileIdentifierPtrArray				f3DS_FilesToAdd;
         TFileIdentifierPtrArray				fSVG_FilesToAdd;
-        TFileIdentifierPtrArray				fStep_FilesToAdd;
-
+        TFileIdentifierPtrArray				fWheel_Image_FilesToAdd;
+        TFileIdentifierPtrArray				fFixtureResources_FilesToAdd;
+        //
 		TFileIdentifierPtrArray				fFilesInZip;
 		TXStringArray						fRequiredGdtfFiles;
 		TFolderIdentifierArray				fGdtfFolderLocations;

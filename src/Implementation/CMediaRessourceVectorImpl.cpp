@@ -24,7 +24,7 @@ SceneData::SceneDataExchange* VectorworksMVR::CMediaRessourceVectorImpl::GetExch
 }
 
 
-VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::AddFileToMvrFile(MvrString fullPath)
+VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::AddFileToMvrFile(MvrString fullPath, ERessourceType resType)
 {
     TXString strFullPath(fullPath);
 
@@ -38,7 +38,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::AddFileToMv
     // Check if the file exists
     if (!fileExisis) { return kVCOMError_Failed; }
 
-    fExchangeObj.AddFileToZip(file, );
+    fExchangeObj.AddFileToZip(file, resType);
 
     // 
     return kVCOMError_NoError;
