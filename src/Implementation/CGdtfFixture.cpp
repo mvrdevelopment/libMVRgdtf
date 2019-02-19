@@ -99,22 +99,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::AddFileToGdtfFile(Mv
 	TXString fileName; file->GetFileName(fileName);
 	
     // Append the SubFoldername for resources.
-    switch (resType)  // XXX TODO: Make function get SubFolder for Type.
-    {
-        ä
-    case ERessourceType::ImageWheel:
-        fileName = "/wheels/" + fileName;
-        break;
-    case ERessourceType::Model3DS:
-        fileName = "/models/3ds/" + fileName;
-        break;
-    case ERessourceType::ModelSVG:
-        fileName = "/models/svg/" + fileName;
-        break;
-    case ERessourceType::RessoureFixture:
-        fileName = "" + fileName; // XXX ?
-        break;
-    }
+    fileName = SceneData::SceneDataZip::GetResourceSubFolder(resType) + fileName;
 
 	fZipFile->AddFile(fileName, file);	
 	
