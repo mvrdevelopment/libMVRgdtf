@@ -202,8 +202,6 @@ void GdtfUnittest::WriteFile()
 				__checkVCOM(gdtfDmxChannel->SetDefaultValue(5));
 				__checkVCOM(gdtfDmxChannel->SetHighlight(6));
 				__checkVCOM(gdtfDmxChannel->SetDmxBreak(7));
-				__checkVCOM(gdtfDmxChannel->SetMoveInBlackFrames(8));
-				__checkVCOM(gdtfDmxChannel->SetDmxChangeTimeLimit(9));
 				__checkVCOM(gdtfDmxChannel->SetGeometry(childGeo));
 
 				IGdtfDmxLogicalChannelPtr gdtfLogicalChannel;
@@ -212,6 +210,8 @@ void GdtfUnittest::WriteFile()
 					__checkVCOM(gdtfLogicalChannel->SetAttribute(gdtfAttribute));
 					__checkVCOM(gdtfLogicalChannel->SetDmxMaster(EGdtfDmxMaster::eGdtfDmxMaster_Grand));
 					__checkVCOM(gdtfLogicalChannel->SetDmxSnap(EGdtfDmxSnap::eGdtfDmxMaster_On));
+				    __checkVCOM(gdtfLogicalChannel->SetMoveInBlackFrames(8));
+				    __checkVCOM(gdtfLogicalChannel->SetDmxChangeTimeLimit(9));
 
 					
 					if (__checkVCOM(gdtfLogicalChannel->CreateDmxFunction("My nameDmxFunction", &gdftChannelFunction)))
@@ -451,11 +451,6 @@ void GdtfUnittest::ReadFile()
 						this->checkifEqual("geometryPtrGetName ", geometryName, "My nameGeometry");
 					}
 
-					// Move In Black Frames
-					double moveInBlack = 0;
-					__checkVCOM(gdtfDmxChannel->GetMoveInBlackFrames(moveInBlack));
-					this->checkifEqual("gdtfDmxChannelGetMoveInBlackFrames ", moveInBlack, double(8));
-
 					// Coarse
 					Sint32 coarse;
 					__checkVCOM(gdtfDmxChannel->GetCoarse(coarse));
@@ -489,11 +484,6 @@ void GdtfUnittest::ReadFile()
 					bool hasHighlight = false;
 					__checkVCOM(gdtfDmxChannel->HasHighlight(hasHighlight));
 					this->checkifEqual("gdtfDmxChannelHasHighlight ", hasHighlight, 1);
-
-					// DMX Change Time Limit
-					double change;
-					__checkVCOM(gdtfDmxChannel->GetDmxChangeTimeLimit(change));
-					this->checkifEqual("gdtfDmxChannelGetDmxChangeTimeLimit ", change, double(9));
 
 					// DMX Break
 					Sint32 breakId;
@@ -536,6 +526,16 @@ void GdtfUnittest::ReadFile()
 						EGdtfDmxMaster master;
 						__checkVCOM(gdtfLogicalChannel->GetDmxMaster(master));
 						this->checkifEqual("gdtfLogicalChannelGetDmxMaster ", master, EGdtfDmxMaster::eGdtfDmxMaster_Grand);
+
+					    // Move In Black Frames
+					    double moveInBlack = 0;
+					    __checkVCOM(gdtfLogicalChannel->GetMoveInBlackFrames(moveInBlack));
+					    this->checkifEqual("gdtfDmxChannelGetMoveInBlackFrames ", moveInBlack, double(8) );
+
+					    // DMX Change Time Limit
+					    double change;
+					    __checkVCOM(gdtfLogicalChannel->GetDmxChangeTimeLimit(change));
+					    this->checkifEqual("gdtfDmxChannelGetDmxChangeTimeLimit ", change, double(9));
 
 						//------------------------------------------------------------------------------    
 						// Add the Features 
