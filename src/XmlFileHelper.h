@@ -82,11 +82,6 @@ namespace SceneData
         static TXString Convert_RDMParam_CommandEnum(EGdtf_RDMParam_Command value);
         static TXString Convert_RDMParam_SensorUnitEnum(EGdtf_RDMParam_SensorUnit value);        
         static TXString Convert_RDMParam_SensorUnitPrefixEnum(EGdtf_RDMParam_SensorUnitPrefix value);
-        static TXString ConvertEGdtf_RDMValueBool_ValueEnum(EGdtf_RDMValueBool_Value value);
-        static TXString ConvertEGdtf_RDMValue_ThresholdOperatorEnum(EGdtf_RDMValue_ThresholdOperator value);		
-        static TXString ConvertRDMValue_SENSOR_DEFINITION_TypeEnum(EGdtf_RDMValue_SENSOR_DEFINITION_TYPE value);
-        static TXString Convert_RDMValue_LowesHighestDetectionSupportedEnum(EGdtf_RDMValue_LowesHighestDetectionSupported value);
-        static TXString Convert_RDMValue_RecordValueSupportedEnum(EGdtf_RDMValue_RecordValueSupported value);
         static TXString ConvertRDMValue_SLOT_INFO_TypeEnum(EGdtf_RDMValue_SLOT_INFO_Type value);
         static TXString ConvertRDMValue_SLOT_INFO_SlotLabelIDEnum(EGdtf_RDMValue_SLOT_INFO_SlotLabelID value);
         static TXString ConvertEGdtfColorSampleEnum(							  EGdtfColorSample value);
@@ -117,18 +112,6 @@ namespace SceneData
 		static bool		ConvertSpecialAttrEnum(								const TXString& value, const IXMLFileNodePtr& node,			EGdtfSpecial& special);
 		static bool		ConvertBeamType(									const TXString& value, const IXMLFileNodePtr& node,			EGdtfBeamType& type);
 		static bool		ConvertDMXInvertEnum(								const TXString& value, const IXMLFileNodePtr& node,			EGDTFDmxInvert&	dmx);		
-        static bool     ConvertRDMParamTypeEnum(							const TXString& value, const IXMLFileNodePtr& node,			EGdtf_RDMParam_Type& val);
-        static bool     Convert_RDMParamDataTypeEnum(						const TXString& value, const IXMLFileNodePtr& node,			EGdtf_RDMParam_DataType& val);
-        static bool     Convert_RDMParam_CommandEnum(						const TXString& value, const IXMLFileNodePtr& node,			EGdtf_RDMParam_Command&	val);
-        static bool     Convert_RDMParam_SensorUnitEnum(					const TXString& value, const IXMLFileNodePtr& node,			EGdtf_RDMParam_SensorUnit& val);
-        static bool     Convert_RDMParam_SensorUnitPrefixEnum(				const TXString& value, const IXMLFileNodePtr& node,			EGdtf_RDMParam_SensorUnitPrefix& val);
-        static bool     ConvertEGdtf_RDMValueBool_ValueEnum(				const TXString& value, const IXMLFileNodePtr& node,			EGdtf_RDMValueBool_Value& val);
-        static bool     ConvertEGdtf_RDMValue_ThresholdOperatorEnum(		const TXString& value, const IXMLFileNodePtr& node,			EGdtf_RDMValue_ThresholdOperator& val);
-        static bool     ConvertRDMValue_SENSOR_DEFINITION_TypeEnum(			const TXString& value, const IXMLFileNodePtr& node,			EGdtf_RDMValue_SENSOR_DEFINITION_TYPE& val);
-        static bool     Convert_RDMValue_LowesHighestDetectionSupportedEnum(const TXString& value, const IXMLFileNodePtr& node,			EGdtf_RDMValue_LowesHighestDetectionSupported& val);
-        static bool     Convert_RDMValue_RecordValueSupportedEnum(			const TXString& value, const IXMLFileNodePtr& node,			EGdtf_RDMValue_RecordValueSupported& val);
-        static bool     ConvertRDMValue_SLOT_INFO_TypeEnum(					const TXString& value, const IXMLFileNodePtr& node,			EGdtf_RDMValue_SLOT_INFO_Type& val);
-        static bool     ConvertRDMValue_SLOT_INFO_SlotLabelIDEnum(			const TXString& value, const IXMLFileNodePtr& node,			EGdtf_RDMValue_SLOT_INFO_SlotLabelID& val);        
         static bool     ConvertEGdtfColorSampleEnum(						const TXString& inVal, const IXMLFileNodePtr& node,			EGdtfColorSample& outVal);
 
         static DmxValue GetChannelMaxDmx(const EGdtfChannelBitResolution chanlReso);
