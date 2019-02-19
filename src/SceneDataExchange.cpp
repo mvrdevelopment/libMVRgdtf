@@ -1937,7 +1937,7 @@ bool SceneDataExchange::WriteToFile(const IFileIdentifierPtr& file)
 	// Add the 3DS file
 	for (size_t i = 0; i < fFilesToAdd.size(); i++)
 	{
-		SceneDataZip::AddFileToZip(zipfile, fFilesToAdd.at(i), false/*Checksum*/, false/*Delete*/);
+		SceneDataZip::AddFileToZip(zipfile, fFilesToAdd.at(i), false/*Delete*/);
 	}
 	
 	//-------------------------------------------------------------------------------------------------
@@ -1952,7 +1952,7 @@ bool SceneDataExchange::WriteToFile(const IFileIdentifierPtr& file)
 			IFileIdentifierPtr gdtfFilePtr (IID_FileIdentifier);
 			gdtfFilePtr->Set(folder, gdtfFileName);
 			
-			if		(SceneDataZip::AddFileToZip(zipfile, gdtfFilePtr,  true/*Checksum*/, false/*Delete*/, false/*ASSERT*/))	{ exported = true;  break; }
+			if		(SceneDataZip::AddFileToZip(zipfile, gdtfFilePtr, false/*Delete*/, false/*ASSERT*/))	{ exported = true;  break; }
 		}
 	
 		

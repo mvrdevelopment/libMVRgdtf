@@ -2148,7 +2148,7 @@ bool SceneDataZip::GetFile(const TXString &fileName, const IFolderIdentifierPtr 
 }
  
 
-bool SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, const IFileIdentifierPtr& file, bool createChecksum, bool deleteFile, bool mustExist)
+bool SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, const IFileIdentifierPtr& file, bool deleteFile, bool mustExist)
 {
 	//-------------------------------------------------------------------------------------------------
 	// Check if there is a pointer
@@ -2170,23 +2170,6 @@ bool SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, const IFileIdentifierPtr& 
 	//-------------------------------------------------------------------------------------------------
 	// Write the  file
 	zipFile->AddFile(nameFile, file);
-	
-	if (createChecksum)
-	{
-		SceneData::ISceneDataZipBuffer hashBuffer;
-		HashManager::HashManager::CreateHashForFile(file, hashBuffer);
-		
-		// Create file name for checksum
-		TXString fileNameCheckSum;
-		file->GetFileNameWithoutExtension(fileNameCheckSum);
-		
-		fileNameCheckSum += ".checksum.txt";
-		
-		
-		// Just call this again for this, but do not create a checksum for the checksum...
-		AddFileToZip(zipFile, hashBuffer,fileNameCheckSum);
-		
-	}
 	
 	//-------------------------------------------------------------------------------------------------
 	// HouseKeeping
