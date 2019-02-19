@@ -2096,56 +2096,6 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
        
     return true;
 }
-
-
-bool SceneDataZip::GetFile(const TXString &fileName, const IFolderIdentifierPtr &workingFolder, IFileIdentifierPtr& outFile, bool& hasCheckSum, bool& checksumIsFine, bool checkSumCheck )
-{
-	// Preset out values
-	hasCheckSum		= false;
-	checksumIsFine	= false;
-	
-	// Make a pointer to that file
-	IFileIdentifierPtr file (IID_FileIdentifier);
-	file->Set(workingFolder, fileName);
-	
-	// Check if the files exists
-	bool fileExists = false;
-	file->ExistsOnDisk(fileExists);
-	
-	// If the file is there to something usefull with it
-	if (fileExists)
-	{
-        if(checkSumCheck)
-        {
-			// Prepare a pointer to the file
-			IFileIdentifierPtr checksumFile (IID_FileIdentifier);
-			
-			// Create the Filename for the checksum
-			TXString filenameWithoutExtension;
-			file->GetFileNameWithoutExtension(filenameWithoutExtension);
-			
-			// Check if the file is there
-			bool placeholderBool1 = false;
-			bool placeholderBool2 = false;
-			hasCheckSum = GetFile(TXString() << filenameWithoutExtension << ".checksum.txt", workingFolder, checksumFile, placeholderBool1, placeholderBool2, false);
-			
-
-			if (hasCheckSum)
-			{
-				checksumIsFine = HashManager::HashManager::CheckHashForFile(file, checksumFile);
-			}
-		}
-
-		// Set Out File Ptrb
-		outFile = file;
-		
-		return true;
-	}
-	
-    GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFailedToReadDescription);
-    SceneData::GdtfFixture::AddError(error);
-	return false;
-}
  
 
 bool SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, const IFileIdentifierPtr& file, bool deleteFile, bool mustExist)

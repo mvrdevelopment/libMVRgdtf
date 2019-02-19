@@ -156,7 +156,6 @@ namespace SceneData
 	{
 	public:
 		static bool AddFileToZip(IZIPFilePtr& zipFile, const IFileIdentifierPtr& file, bool deleteFile, bool mustExist = true);
-        static void AddFileToZip(IZIPFilePtr& zipFile, ISceneDataZipBuffer& buffer,const TXString &name);
-		static bool GetFile(const TXString& fileName,const IFolderIdentifierPtr& workingFolder, IFileIdentifierPtr& outFile, bool& hasCheckSum, bool& checksumIsFine, bool checkSumCheck );
+        static void AddFileToZip(IZIPFilePtr& zipFile, ISceneDataZipBuffer& buffer,const TXString &name);		
 	};
 }
