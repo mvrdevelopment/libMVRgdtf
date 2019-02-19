@@ -583,8 +583,7 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetCoarse(Sint32& coarse) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetFine(Sint32& fine) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetUltra(Sint32& ultra) = 0;
-		virtual VCOMError VCOM_CALLTYPE     GetUber(Sint32& uber) = 0;
-        virtual VCOMError VCOM_CALLTYPE     GetDmxFrequency(GdtfDefines::EGdtfDmxFrequency& frequency) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetUber(Sint32& uber) = 0;        
         virtual VCOMError VCOM_CALLTYPE     GetDefaultValue(GdtfDefines::DmxValue& defaultValue) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetHighlight(GdtfDefines::DmxValue& highlight) = 0;
 		virtual VCOMError VCOM_CALLTYPE     HasHighlight(bool& highlight) = 0;
@@ -596,8 +595,7 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE     SetCoarse(Sint32 coarse) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetFine(Sint32 fine) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetUltra(Sint32 ultra) = 0;
-		virtual VCOMError VCOM_CALLTYPE     SetUber (Sint32  uber) = 0;		
-		virtual VCOMError VCOM_CALLTYPE     SetDmxFrequency(GdtfDefines::EGdtfDmxFrequency frequency) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetUber (Sint32  uber) = 0;				
 		virtual VCOMError VCOM_CALLTYPE     SetDefaultValue(GdtfDefines::DmxValue defaultValue) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetHighlight(GdtfDefines::DmxValue highlight) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetMoveInBlackFrames(double frames) = 0;
@@ -942,7 +940,7 @@ namespace VectorworksMVR
 	class DYNAMIC_ATTRIBUTE IGdtfRDMValueSensor : public IVWUnknown
 	{
 	public:
-		// Getter
+		// Getter 
 		virtual VCOMError VCOM_CALLTYPE  GetValue(Sint32& outVal) = 0;
 		virtual VCOMError VCOM_CALLTYPE  GetLowest(Sint32& outVal) = 0;
 		virtual VCOMError VCOM_CALLTYPE  GetHighest(Sint32& outVal) = 0;
