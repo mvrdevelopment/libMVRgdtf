@@ -199,7 +199,6 @@ void GdtfUnittest::WriteFile()
 				__checkVCOM(gdtfDmxChannel->SetFine(2));
 				__checkVCOM(gdtfDmxChannel->SetUltra(3));
 				__checkVCOM(gdtfDmxChannel->SetUber(4));
-				__checkVCOM(gdtfDmxChannel->SetDmxFrequency(EGdtfDmxFrequency::eGdtfDmxFrequency_30));
 				__checkVCOM(gdtfDmxChannel->SetDefaultValue(5));
 				__checkVCOM(gdtfDmxChannel->SetHighlight(6));
 				__checkVCOM(gdtfDmxChannel->SetDmxBreak(7));
