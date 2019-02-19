@@ -2511,8 +2511,7 @@ void GdtfDmxChannel::OnPrintToFile(IXMLFileNodePtr pNode)
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelCoarse,				GdtfConverter::ConvertInteger(fCoarse ,		fCoarseNone));
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFine,				GdtfConverter::ConvertInteger(fFine,		fFineNone));
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelUltra,				GdtfConverter::ConvertInteger(fUltra,		fUltraNone));	
-	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelUber,				GdtfConverter::ConvertInteger(fUber,		fUberNone));	
-	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFrequency,			GdtfConverter::ConvertFrequenz(fFrequenz));
+	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelUber,				GdtfConverter::ConvertInteger(fUber,		fUberNone));		
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelDefault,			GdtfConverter::ConvertDMXValue(fDefaultValue, chanelReso));
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelHighlight,			GdtfConverter::ConvertDMXValue(fHeighlight,	chanelReso, fHeighlightNone));
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelMibFadeFrames,		GdtfConverter::ConvertDouble(fMoveInBlackFrames));
@@ -2560,8 +2559,6 @@ void GdtfDmxChannel::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	{
 		GdtfConverter::ConvertInteger(uber, pNode, fUber, fUberNone);
 	}
-	//
-	TXString freq;		pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFrequency,			freq);		GdtfConverter::ConvertFrequenz(freq, pNode,		fFrequenz);
 	//
 	TXString defVal;	
 	if (pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelDefault, defVal) == kVCOMError_NoError)
@@ -2626,8 +2623,7 @@ void GdtfDmxChannel::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	optional.push_back(XML_GDTF_DMXChannelCoarse);
 	optional.push_back(XML_GDTF_DMXChannelFine);
 	optional.push_back(XML_GDTF_DMXChannelUltra);
-	optional.push_back(XML_GDTF_DMXChannelUber);
-	optional.push_back(XML_GDTF_DMXChannelFrequency);
+	optional.push_back(XML_GDTF_DMXChannelUber);	
 	optional.push_back(XML_GDTF_DMXChannelDefault);
 	optional.push_back(XML_GDTF_DMXChannelHighlight);
 	optional.push_back(XML_GDTF_DMXChannelMibFadeFrames);

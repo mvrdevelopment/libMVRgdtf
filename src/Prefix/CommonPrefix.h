@@ -314,7 +314,6 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_DMXChannelFine					"Fine"
 #define XML_GDTF_DMXChannelUltra				"Ultra"
 #define XML_GDTF_DMXChannelUber                 "Uber"
-#define XML_GDTF_DMXChannelFrequency			"Frequency"
 #define XML_GDTF_DMXChannelDefault				"Default"
 #define XML_GDTF_DMXChannelHighlight			"Highlight"
 #define XML_GDTF_DMXChannelMibFadeFrames		"MibFade"
