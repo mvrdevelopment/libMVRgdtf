@@ -183,6 +183,10 @@ void GdtfUnittest::WriteFile()
 		IGdtfBreakPtr gdtfBreak;
 		__checkVCOM(geoRef2->CreateBreak(3,4,& gdtfBreak));
 
+        // Beam Geometry
+        IGdtfGeometryPtr beamGeo;
+        __checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometryBeamFilter, "My Beam Geometry", gdtfModel, ma, &beamGeo));
+        
 
 		//------------------------------------------------------------------------------
 		// Get dmxModes
