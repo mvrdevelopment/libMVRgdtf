@@ -6113,6 +6113,8 @@ void SceneData::GdtfFTRDM::AddSoftwareVersID(Sint32 ID)
 
 SceneData::GdtfDMXPersonality::GdtfDMXPersonality()
 {
+    fValue = 0;
+    fDMXMode = "";
 }
 
 SceneData::GdtfDMXPersonality::~GdtfDMXPersonality()
