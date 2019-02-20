@@ -169,8 +169,8 @@ void GdtfUnittest::WriteFile()
 		__checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometry, "My nameGeometry", gdtfModel, ma, &childGeo));
 
 		// Create Child in Child
-		IGdtfGeometryPtr innerChild;
-		__checkVCOM(childGeo->CreateGeometry(EGdtfObjectType::eGdtfGeometry, "My Inner Geo", gdtfModel, ma, &innerChild));
+		IGdtfGeometryPtr innerChildGeo;
+		__checkVCOM(childGeo->CreateGeometry(EGdtfObjectType::eGdtfGeometry, "My Inner Geo", gdtfModel, ma, &innerChildGeo));
 
 		IGdtfGeometryPtr geoRef1;
 		__checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometryReference, "My Reference", gdtfModel, ma, &geoRef1));
@@ -178,7 +178,7 @@ void GdtfUnittest::WriteFile()
 
 		IGdtfGeometryPtr geoRef2;
 		__checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometryReference, "My Ref to Inner Obj", gdtfModel, ma, &geoRef2));
-		__checkVCOM(geoRef2->SetGeometryReference(innerChild));
+		__checkVCOM(geoRef2->SetGeometryReference(innerChildGeo));
 
 		IGdtfBreakPtr gdtfBreak;
 		__checkVCOM(geoRef2->CreateBreak(3,4,& gdtfBreak));
