@@ -14,10 +14,13 @@ namespace VectorworksMVR
         CGdtfDMXPersonalityImpl();
         virtual ~CGdtfDMXPersonalityImpl();
 
-        // DMXPersonality_Optional virtual VCOMError VCOM_CALLTYPE     GetDMXPersonalityCount(size_t& outCount);
-        // DMXPersonality_Optional virtual VCOMError VCOM_CALLTYPE     GetDMXPersonalityAt(size_t at, IGdtfDMXPersonality**  outDMXPersonality);
-        // DMXPersonality_Optional virtual VCOMError VCOM_CALLTYPE     CreateDMXPersonality (IGdtfDMXPersonality** outDMXPersonality);		
-
+        // Getter        
+        virtual VCOMError VCOM_CALLTYPE		GetValue(size_t& outValue) const;        
+        virtual MvrString VCOM_CALLTYPE     GetDMXMode() const;
+        // Setter       
+        virtual VCOMError VCOM_CALLTYPE     SetValue(size_t val);
+        virtual VCOMError VCOM_CALLTYPE     SetDMXMode(MvrString modeName);
+        //    
         virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr);
         virtual void*	  VCOM_CALLTYPE     GetBoundObject();
     private:

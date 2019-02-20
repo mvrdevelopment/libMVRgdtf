@@ -4,15 +4,55 @@
 #include "Prefix/StdAfx.h"
 #include "CGdtfDMXPersonality.h"
 
-VectorworksMVR::CGdtfDMXPersonalityImpl::CGdtfDMXPersonalityImpl()
+using namespace VectorworksMVR;
+
+CGdtfDMXPersonalityImpl::CGdtfDMXPersonalityImpl()
 {
 }
 
-VectorworksMVR::CGdtfDMXPersonalityImpl::~CGdtfDMXPersonalityImpl()
+CGdtfDMXPersonalityImpl::~CGdtfDMXPersonalityImpl()
 {
 }
 
-VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfDMXPersonalityImpl::BindToObject(void * objAddr)
+VCOMError VCOM_CALLTYPE CGdtfDMXPersonalityImpl::GetValue(size_t& outValue) const
+{
+    // Check Data
+    if (!fDMXPersonality) return kVCOMError_NotInitialized;
+
+    outValue = fDMXPersonality->GetValue();
+
+    return kVCOMError_NoError;    
+}
+
+MvrString VCOM_CALLTYPE CGdtfDMXPersonalityImpl::GetDMXMode() const
+{
+    // Check Data
+    if (!fDMXPersonality) { return ""; }
+
+    return  fDMXPersonality->GetDMXMode().GetCharPtr();    
+}
+
+VCOMError VCOM_CALLTYPE CGdtfDMXPersonalityImpl::SetValue(size_t val)
+{
+    // Check Pointer
+    if (!fDMXPersonality) return kVCOMError_NotInitialized;
+
+    fDMXPersonality->SetValue(val);
+
+    return kVCOMError_NoError;
+}
+
+VCOMError VCOM_CALLTYPE CGdtfDMXPersonalityImpl::SetDMXMode(MvrString modeName)
+{
+    // Check Pointer
+    if (!fDMXPersonality) return kVCOMError_NotInitialized;
+
+    fDMXPersonality->SetDMXMode (modeName);
+
+    return kVCOMError_NoError;
+}
+
+VCOMError VCOM_CALLTYPE CGdtfDMXPersonalityImpl::BindToObject(void * objAddr)
 {   
     // Check if valid
     if ( ! fDMXPersonality) return kVCOMError_NotInitialized;
@@ -21,7 +61,7 @@ VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfDMXPersonalityImpl::BindToObject(vo
     return kVCOMError_NoError;
 }
 
-void *VCOM_CALLTYPE VectorworksMVR::CGdtfDMXPersonalityImpl::GetBoundObject()
+void *VCOM_CALLTYPE CGdtfDMXPersonalityImpl::GetBoundObject()
 {  
     // Check if valid
     if ( ! fDMXPersonality) return nullptr;
@@ -29,12 +69,12 @@ void *VCOM_CALLTYPE VectorworksMVR::CGdtfDMXPersonalityImpl::GetBoundObject()
     return fDMXPersonality->GetBind();
 }
 
-void VectorworksMVR::CGdtfDMXPersonalityImpl::SetPointer(SceneData::GdtfDMXPersonality * dmxPersonality)
+void CGdtfDMXPersonalityImpl::SetPointer(SceneData::GdtfDMXPersonality * dmxPersonality)
 {
     fDMXPersonality = dmxPersonality;
 }
 
-SceneData::GdtfDMXPersonality * VectorworksMVR::CGdtfDMXPersonalityImpl::GetPointer()
+SceneData::GdtfDMXPersonality * CGdtfDMXPersonalityImpl::GetPointer()
 {
     return fDMXPersonality;
 }
