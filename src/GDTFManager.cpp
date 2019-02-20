@@ -4697,7 +4697,10 @@ void GdtfFixture::ResolveDmxModeRefs()
 		{
 			for (GdtfGeometryPtr geo : fGeometries)
 			{
-				if (geo->GetNodeReference() == unresolvedgeomRef) { geomPtr = geo; break; }
+				if (geo->GetNodeReference() == unresolvedgeomRef) 
+                { 
+                    geomPtr = geo; break; 
+                }
 			}
 		}
 
