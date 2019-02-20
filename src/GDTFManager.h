@@ -2479,7 +2479,7 @@ private:
         GdtfFixtureGUID		GetGuid() const;
 		GdtfFixtureGUID		GetLinkedGuid() const;
 		bool				HasLinkedGuid() const;
-        const GdtfPNGFile&  GetPNGFile() const;
+        const TXString&     GetThumbnailName() const;
 		const GdtfPNGFile&  GetPNGFileFullPath();		
         // Setter
 		void				SetName(const TXString& name);

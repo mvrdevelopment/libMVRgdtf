@@ -5723,7 +5723,7 @@ bool GdtfFixture::HasLinkedGuid() const
 	return fHasLinkedGuid;
 }
 
-const GdtfPNGFile& GdtfFixture::GetPNGFile() const
+const TXString& GdtfFixture::GetThumbnailName() const
 {
     return fTumbnail;
 }

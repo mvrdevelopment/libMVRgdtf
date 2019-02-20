@@ -209,7 +209,7 @@ MvrString VectorworksMVR::CGdtfFixtureImpl::GetFixtureThumbnail()
     if(!fFixtureObject) {return "";}
 	
     
-    return fFixtureObject->GetPNGFile().GetCharPtr();
+    return fFixtureObject->GetThumbnailName().GetCharPtr();
 }
 
 MvrString VectorworksMVR::CGdtfFixtureImpl::GetFixtureThumbnailFullPath()
