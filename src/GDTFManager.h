@@ -1181,6 +1181,30 @@ namespace SceneData
     };
     typedef GdtfFTRDM*	GdtfFTRDMPtr;    
 
+    class GdtfDMXPersonality : public GdtfObject
+    {
+    public:
+        GdtfDMXPersonality();
+        ~GdtfDMXPersonality();
+    private:
+        // XXX TXString				fName;
+
+    public:
+        virtual EGdtfObjectType			GetObjectType();
+
+    public:
+        // Getter        
+        // XXX const TXString&		        GetName() const;
+        // Setter       
+        // XXX void						SetName(const TXString& name);
+    protected:
+        virtual	TXString				GetNodeName();
+        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+    };
+    typedef GdtfDMXPersonality*	GdtfDMXPersonalityPtr;
+    typedef std::vector<GdtfDMXPersonality*>	TGdtfDMXPersonalityArray; // XXX check if needed?
+    
     class GdtfArtNet : public GdtfObject
     {
     public:

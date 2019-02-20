@@ -6110,6 +6110,60 @@ void SceneData::GdtfFTRDM::AddSoftwareVersID(Sint32 ID)
 	fSoftwareVersIDs.push_back(ID);
 }
 
+
+SceneData::GdtfDMXPersonality::GdtfDMXPersonality()
+{
+}
+
+SceneData::GdtfDMXPersonality::~GdtfDMXPersonality()
+{
+}
+
+EGdtfObjectType SceneData::GdtfDMXPersonality::GetObjectType()
+{
+    return EGdtfObjectType::eGdtfDMXPersonality;
+}
+
+void GdtfDMXPersonality::OnPrintToFile(IXMLFileNodePtr pNode)
+{
+    //------------------------------------------------------------------------------------
+    // Call the parent
+    GdtfObject::OnPrintToFile(pNode);
+
+    //------------------------------------------------------------------------------------
+    // Print the attributes
+    pNode->SetNodeAttributeValue(XML_GDTF_DMXPersonality, fDMXPersonality);
+
+    //------------------------------------------------------------------------------------
+    // Print the childs
+    for (GdtfFeature* feature : fFeatures)
+    {
+        feature->WriteToNode(pNode);
+    }
+}
+
+void GdtfDMXPersonality::OnReadFromNode(const IXMLFileNodePtr& pNode)
+{
+    //------------------------------------------------------------------------------------
+    // Call the parent
+    GdtfObject::OnReadFromNode(pNode);
+
+    //------------------------------------------------------------------------------------
+    // Get the attributes	
+    pNode->GetNodeAttributeValue(XML_GDTF_DMXPersonality, fDMXPersonality);
+
+    // Read the childs
+    GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_DMXPersonality, [this](IXMLFileNodePtr objNode) -> void
+    {
+        GdtfFeaturePtr featureDMXPersonality = new GdtfFeature(this);
+
+        featureDMXPersonality->ReadFromNode(objNode);
+
+        fFeaturesDMXPersonality.push_back(featureDMXPersonality);
+        return;
+    });
+}
+
 SceneData::GdtfProtocols::GdtfProtocols()
 {
 	fRDM              = nullptr;
