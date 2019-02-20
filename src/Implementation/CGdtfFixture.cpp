@@ -848,7 +848,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateGeometry(EGdtf
 	if( modelInterface)
 	{
 		scModel = modelInterface->GetPointer();
-		if ( ! scModel) { return kVCOMError_Failed; }
 	}
 	
 	

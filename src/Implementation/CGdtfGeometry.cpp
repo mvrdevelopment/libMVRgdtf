@@ -169,7 +169,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::CreateGeometry(EGdt
 	if( modelInterface)
 	{
 		scModel = modelInterface->GetPointer();
-		if ( ! scModel) { return kVCOMError_Failed; }
 	}
 	
 	//---------------------------------------------------------------------------
