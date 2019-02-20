@@ -20,12 +20,11 @@ namespace VectorworksMVR
 
         virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr);
         virtual void*	  VCOM_CALLTYPE     GetBoundObject();
-
     private:
         SceneData::GdtfDMXPersonality* fDMXPersonality;
 
     public:
-        void					        SetPointer(SceneData::GdtfDMXPersonality* DMXPersonality);
+        void					        SetPointer(SceneData::GdtfDMXPersonality* dmxPersonality);
         SceneData::GdtfDMXPersonality*	GetPointer();
 
     };
