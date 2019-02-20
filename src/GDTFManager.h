@@ -38,7 +38,7 @@ namespace SceneData
     class GdtfDmxMode;
     class GdtfSoftwareVersionID;
     typedef std::vector<GdtfSoftwareVersionID*>	TGdtfSoftwareVersionIDArray;
-
+    typedef GdtfSoftwareVersionID*	GdtfSoftwareVersionIDPtr;
     //-----------------------------------------------------------------------------
 	//------------------------------------------------------------------------------------
 	// Attributes	
@@ -1175,7 +1175,7 @@ namespace SceneData
         // Setter
         void                                SetManufacturerID(Sint32 val);
         void                                SetDeviceModelID(Sint32 val);
-        void                                AddSoftwareVersID(size_t value);
+        GdtfSoftwareVersionIDPtr            AddSoftwareVersID(size_t value);
     protected:
         virtual	TXString				GetNodeName();
         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);

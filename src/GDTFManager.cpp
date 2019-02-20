@@ -6118,11 +6118,14 @@ void SceneData::GdtfFTRDM::SetDeviceModelID(Sint32 val)
 	fDeviceModelID = val;
 }
 
-void SceneData::GdtfFTRDM::AddSoftwareVersID(size_t value)
+
+GdtfSoftwareVersionIDPtr SceneData::GdtfFTRDM::AddSoftwareVersID(size_t value)
 {
     GdtfSoftwareVersionIDPtr softID = new GdtfSoftwareVersionID(value);
 	
     fSoftwareVersionIDArray.push_back(softID);
+
+    return softID;
 }
 
 SceneData::GdtfDMXPersonality::GdtfDMXPersonality()
