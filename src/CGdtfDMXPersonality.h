@@ -8,7 +8,7 @@
 
 namespace VectorworksMVR
 {
-    class CGdtfDMXPersonalityImpl : public VectorworksMVR::VCOMImpl<IGdtfDMXPersonality>
+    class CGdtfDMXPersonalityImpl : public VCOMImpl<IGdtfDMXPersonality>
     {
     public:
         CGdtfDMXPersonalityImpl();
