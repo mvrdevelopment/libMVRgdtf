@@ -1195,9 +1195,11 @@ namespace SceneData
 
     public:
         // Getter        
-        // XXX const TXString&		        GetName() const;
+        size_t		                    GetValue() const;
+        const TXString&		            GetDMXMode() const;
         // Setter       
-        // XXX void						    SetName(const TXString& name);
+        void                            SetValue(size_t val);
+        void						    SetDMXMode(const TXString& modeName);
     protected:
         virtual	TXString				GetNodeName();
         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);

@@ -6124,6 +6124,26 @@ EGdtfObjectType SceneData::GdtfDMXPersonality::GetObjectType()
     return EGdtfObjectType::eGdtfDMXPersonality;
 }
 
+size_t SceneData::GdtfDMXPersonality::GetValue() const
+{
+    return fValue;
+}
+
+const TXString & SceneData::GdtfDMXPersonality::GetDMXMode() const
+{
+    return fDMXMode;
+}
+
+void SceneData::GdtfDMXPersonality::SetValue(size_t val)
+{
+    fValue = val;
+}
+
+void SceneData::GdtfDMXPersonality::SetDMXMode(const TXString & modeName)
+{
+    fDMXMode = modeName;
+}
+
 TXString SceneData::GdtfDMXPersonality::GetNodeName()
 {
     return XML_GDTF_DMXPersonalityNodeNam;
