@@ -2488,7 +2488,7 @@ private:
 		void				SetFixtureTypeDescription(const TXString& desc);
 		void				SetGuid(const VWFC::Tools::VWUUID& uuid);
 		void				SetLinkedGuid(const VWFC::Tools::VWUUID& uuid);
-		void				SetThumbnail(const TXString& fileName);
+		void				SetThumbnailName(const TXString& fileName);
 	public:
 		//----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		// Add calls

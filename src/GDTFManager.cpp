@@ -5774,7 +5774,7 @@ void GdtfFixture::SetLinkedGuid(const VWFC::Tools::VWUUID& uuid)
 	fLinkedGuid = uuid;
 }
 
-void GdtfFixture::SetThumbnail(const TXString& fileName)
+void GdtfFixture::SetThumbnailName(const TXString& fileName)
 {
 	fTumbnail = fileName;
 }
