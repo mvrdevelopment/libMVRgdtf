@@ -6118,7 +6118,7 @@ SceneData::GdtfDMXPersonality::GdtfDMXPersonality()
 }
 
 SceneData::GdtfDMXPersonality::~GdtfDMXPersonality()
-{
+{     
 }
 
 EGdtfObjectType SceneData::GdtfDMXPersonality::GetObjectType()
@@ -7060,10 +7060,12 @@ void SceneData::GdtfMacroVisualValue::OnErrorCheck(const IXMLFileNodePtr& pNode)
 
 SceneData::GdtfSoftwareVersionID::GdtfSoftwareVersionID()
 {
+    fValue = 0;
 }
 
 SceneData::GdtfSoftwareVersionID::~GdtfSoftwareVersionID()
 {
+     for (GdtfDMXPersonalityPtr obj		: fDmxPersonalityArray){ delete obj; }
 }
 
 EGdtfObjectType SceneData::GdtfSoftwareVersionID::GetObjectType()
@@ -7073,13 +7075,46 @@ EGdtfObjectType SceneData::GdtfSoftwareVersionID::GetObjectType()
 
 TXString SceneData::GdtfSoftwareVersionID::GetNodeName()
 {
-    return XML_GDTF_SoftwareVersionID;
+    return XML_GDTF_SoftwareVersionID_NodeNam;
 }
 
 void SceneData::GdtfSoftwareVersionID::OnPrintToFile(IXMLFileNodePtr pNode)
 {
+    //------------------------------------------------------------------------------------
+    // Call the parent
+    GdtfObject::OnPrintToFile(pNode);
+
+    //------------------------------------------------------------------------------------
+    // Print the attributes
+    pNode->SetNodeAttributeValue(XML_GDTF_SoftwareVersionID_Value, GdtfConverter::ConvertInteger(fValue));
+
+    //------------------------------------------------------------------------------------
+    // Print the childs
+    for (GdtfDMXPersonalityPtr dmxPerso: fDmxPersonalityArray)
+    {
+        dmxPerso->WriteToNode(pNode);
+    }
 }
 
 void SceneData::GdtfSoftwareVersionID::OnReadFromNode(const IXMLFileNodePtr & pNode)
 {
+    //------------------------------------------------------------------------------------
+    // Call the parent
+    GdtfObject::OnReadFromNode(pNode);
+
+    //------------------------------------------------------------------------------------
+    // Get the attributes
+    TXString valueStr; pNode->GetNodeAttributeValue(XML_GDTF_SoftwareVersionID_Value, valueStr);
+    GdtfConverter::ConvertInteger( valueStr, pNode, fValue);
+
+    // Read the childs
+    GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_DMXPersonalityNodeNam, [this](IXMLFileNodePtr objNode) -> void
+    {
+        GdtfDMXPersonalityPtr dmxPerso = new GdtfDMXPersonality();
+
+        dmxPerso->ReadFromNode(objNode);
+
+        fDmxPersonalityArray.push_back(dmxPerso);
+        return;
+    });
 }

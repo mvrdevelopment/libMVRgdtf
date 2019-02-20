@@ -1160,7 +1160,9 @@ namespace SceneData
         // Attributes
         Sint32        fManufacturerID;  // Manufacturer ESTA ID; Size: 2 bytes
         Sint32        fDeviceModelID;   // Unique device model ID; Size: 2 bytes        
-        TSint32Array  fSoftwareVersIDs; // Array of software versions IDs; Size of each version: 4 bytes        
+        
+        // XXX make Array of GdtfSoftware... don't forget to clean in dtor
+        TSint32Array  fSoftwareVersIDs; // Array of software versions IDs; Size of each version: 4 bytes       
     public:
         virtual EGdtfObjectType			GetObjectType();
 
@@ -1207,14 +1209,15 @@ namespace SceneData
     typedef GdtfDMXPersonality*	GdtfDMXPersonalityPtr;
     typedef std::vector<GdtfDMXPersonality*>	TGdtfDMXPersonalityArray;
     
+
     class GdtfSoftwareVersionID : public GdtfObject
     {
     public:
         GdtfSoftwareVersionID();
         ~GdtfSoftwareVersionID();
     private:
-        size_t fValue;        
-        TGdtfDMXPersonalityArray    dmxPersonalityArray;
+        size_t                      fValue;        
+        TGdtfDMXPersonalityArray    fDmxPersonalityArray;
 
     public:
         virtual EGdtfObjectType			GetObjectType();
@@ -1223,14 +1226,15 @@ namespace SceneData
         // Getter        
         // XXX const TXString&		        GetName() const;
         // Setter       
-        // XXX void						SetName(const TXString& name);
+        // XXX void						    SetName(const TXString& name);
     protected:
         virtual	TXString				GetNodeName();
         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
         virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
     };
     typedef GdtfSoftwareVersionID*	GdtfSoftwareVersionIDPtr;
-    typedef std::vector<GdtfSoftwareVersionID*>	TGdtfSoftwareVersionIDArray; // XXX check if needed?    
+    typedef std::vector<GdtfSoftwareVersionID*>	TGdtfSoftwareVersionIDArray;
+
 
     class GdtfArtNet : public GdtfObject
     {
