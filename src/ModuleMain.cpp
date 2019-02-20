@@ -36,6 +36,7 @@
 #include "Implementation/CGeometryReferenceImpl.h"
 #include "Implementation/CGdtfXmlParsingError.h"
 
+
 // XML
 #include "XMLLib/XMLFileNodeImpl.h"
 #include "XMLLib/XMLFileImpl.h"
