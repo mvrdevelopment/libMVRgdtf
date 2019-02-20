@@ -2424,7 +2424,7 @@ protected:
 		TXString		fManufacturer;
 		TXString		fFixtureTypeDescription;
 		GdtfFixtureGUID	fGuid;
-		GdtfPNGFile		fTumbnail;
+		TXString		fTumbnail;
 		TXString		fTumbnailFullPath;
 		GdtfFixtureGUID	fLinkedGuid;
 		bool			fHasLinkedGuid;
@@ -2488,7 +2488,7 @@ private:
 		void				SetFixtureTypeDescription(const TXString& desc);
 		void				SetGuid(const VWFC::Tools::VWUUID& uuid);
 		void				SetLinkedGuid(const VWFC::Tools::VWUUID& uuid);
-		void				SetPNGFile(const GdtfPNGFile& png);
+		void				SetThumbnail(const TXString& fileName);
 	public:
 		//----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		// Add calls

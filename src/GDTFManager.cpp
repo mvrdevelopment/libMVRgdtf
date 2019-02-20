@@ -5774,9 +5774,9 @@ void GdtfFixture::SetLinkedGuid(const VWFC::Tools::VWUUID& uuid)
 	fLinkedGuid = uuid;
 }
 
-void GdtfFixture::SetPNGFile(const GdtfPNGFile& png)
+void GdtfFixture::SetThumbnail(const TXString& fileName)
 {
-	fTumbnail = png;
+	fTumbnail = fileName;
 }
 
 SceneData::GdtfDMXProfile::GdtfDMXProfile()
