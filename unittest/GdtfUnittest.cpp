@@ -149,7 +149,7 @@ void GdtfUnittest::WriteFile()
 		IGdtfModelPtr gdtfModel;
 		if (__checkVCOM(gdtfWrite->CreateModel("My modelName", &gdtfModel)))
 		{
-			__checkVCOM(gdtfModel->Set3DSGeometryFile("My file3DSGeometry"));
+			__checkVCOM(gdtfModel->SetGeometryFile("My file3DSGeometry"));
 			__checkVCOM(gdtfModel->SetHeight(10));
 			__checkVCOM(gdtfModel->SetWidth(20));
 			__checkVCOM(gdtfModel->SetLength(30));
@@ -816,7 +816,7 @@ void GdtfUnittest::ReadFile()
 			if (__checkVCOM(gdtfRead->GetModelAt(i, &gdtfModel)))
 			{
 				MvrString  modelName	= gdtfModel->GetName();
-				MvrString geometryFile	= gdtfModel->Get3DSGeometryFile();
+				MvrString geometryFile	= gdtfModel->GetGeometryFile();
 				this->checkifEqual("gdtfModelGetName "				, modelName		, "My modelName");
 				this->checkifEqual("gdtfModelGet3DSGeometryFile "	, geometryFile	, "My file3DSGeometry");
 
