@@ -212,12 +212,20 @@ MvrString VectorworksMVR::CGdtfFixtureImpl::GetFixtureThumbnail()
     return fFixtureObject->GetThumbnailName().GetCharPtr();
 }
 
-MvrString VectorworksMVR::CGdtfFixtureImpl::GetFixtureThumbnailFullPath()
+MvrString VectorworksMVR::CGdtfFixtureImpl::GetFixtureThumbnail_PNG_FullPath()
 {
 	if(!fFixtureObject) {return "";}
 	
 	
 	return fFixtureObject->GetPNGThumnailFullPath().GetCharPtr();
+}
+
+MvrString VCOM_CALLTYPE VectorworksMVR::CGdtfFixtureImpl::GetFixtureThumbnail_SVG_FullPath()
+{
+	if(!fFixtureObject) {return "";}
+	
+	
+	return fFixtureObject->GetSVGThumnailFullPath().GetCharPtr();
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::SetFixtureTypeDescription(MvrString descrip)
