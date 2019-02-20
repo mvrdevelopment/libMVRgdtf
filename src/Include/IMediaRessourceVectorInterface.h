@@ -964,6 +964,17 @@ namespace VectorworksMVR
         virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
     };
     typedef VCOMPtr<IGdtfDMXPersonality>	IGdtfDMXPersonalityPtr;
+    
+    
+    class DYNAMIC_ATTRIBUTE IGdtfSoftwareVersionID : public IVWUnknown
+    {
+    public:
+        // XXX: TODO: Getter//Setter
+
+        virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+        virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+    };
+    typedef VCOMPtr<IGdtfSoftwareVersionID>	IGdtfSoftwareVersionIDPtr;
 
 
     class DYNAMIC_ATTRIBUTE IGdtfXmlParsingError : public IVWUnknown
