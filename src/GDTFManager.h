@@ -413,14 +413,16 @@ namespace SceneData
         double                          GetWidth() const;
         double                          GetHeight() const;
         EGdtfModel_PrimitiveType		GetPrimitiveType() const;
-		const TXString&					GetGeometryFile() const;
-		const TXString&					GetGeometryFileFullPath();
+        //
+		const TXString&					GetGeometryFileName() const;
+		const TXString&					GetGeometryFile_3DS_FullPath();
+        const TXString&				    GetGeometryFile_SVG_FullPath();
 		// Setter
 		void						    SetName(const TXString& name);
 		void					    	SetLength(const double& length);
 		void						    SetWidth(const double& width);
 		void						    SetHeight(const double& height);
-		void						    SetPrimitiveType(const EGdtfModel_PrimitiveType& type);
+		void						    SetPrimitiveType(const EGdtfModel_PrimitiveType& type);        
 		void						    SetGeometryFile(const TXString& file);
 		
 	public:

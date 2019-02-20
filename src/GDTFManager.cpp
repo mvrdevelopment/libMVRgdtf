@@ -1128,7 +1128,7 @@ const TXString& GdtfModel::GetGeometryFile() const
 	return fGeometryFile;
 }
 
-const TXString& GdtfModel::GetGeometryFileFullPath()
+const TXString& GdtfModel::GetGeometryFile_3DS_FullPath()
 {
 	TXString				workingFolder;
 	IFolderIdentifierPtr	folder;
@@ -1142,6 +1142,11 @@ const TXString& GdtfModel::GetGeometryFileFullPath()
 	
 	// Return
 	return fFullPath;
+}
+
+const TXString & SceneData::GdtfModel::GetGeometryFile_SVG_FullPath()
+{
+    // TODO: insert return statement here
 }
 
 const TXString& GdtfModel::GetName() const
