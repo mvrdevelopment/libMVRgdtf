@@ -1045,7 +1045,7 @@ void GdtfModel::SetPrimitiveType(const EGdtfModel_PrimitiveType &type)
 	fPrimitiveType = type;
 }
 
-void GdtfModel::SetGeometryFile(const Gdtf3DSFile &file)
+void GdtfModel::SetGeometryFile(const TXString &file)
 {
 	fGeometryFile = file;
 }

@@ -401,7 +401,7 @@ namespace SceneData
 		double						fWidth;
 		double						fHeight;
 		EGdtfModel_PrimitiveType	fPrimitiveType;
-		Gdtf3DSFile					fGeometryFile;
+		TXString					fGeometryFile;
 		TXString					fFullPath;
 		//
 		GdtfFixture*				fParentFixture;
@@ -421,7 +421,7 @@ namespace SceneData
 		void						    SetWidth(const double& width);
 		void						    SetHeight(const double& height);
 		void						    SetPrimitiveType(const EGdtfModel_PrimitiveType& type);
-		void						    SetGeometryFile(const Gdtf3DSFile& file);
+		void						    SetGeometryFile(const TXString& file);
 		
 	public:
 		virtual EGdtfObjectType			GetObjectType();
