@@ -6124,6 +6124,11 @@ EGdtfObjectType SceneData::GdtfDMXPersonality::GetObjectType()
     return EGdtfObjectType::eGdtfDMXPersonality;
 }
 
+TXString SceneData::GdtfDMXPersonality::GetNodeName()
+{
+    return XML_GDTF_DMXPersonalityNodeNam;
+}
+
 void GdtfDMXPersonality::OnPrintToFile(IXMLFileNodePtr pNode)
 {
     //------------------------------------------------------------------------------------
@@ -6132,14 +6137,8 @@ void GdtfDMXPersonality::OnPrintToFile(IXMLFileNodePtr pNode)
 
     //------------------------------------------------------------------------------------
     // Print the attributes
-    pNode->SetNodeAttributeValue(XML_GDTF_DMXPersonality, fDMXPersonality);
-
-    //------------------------------------------------------------------------------------
-    // Print the childs
-    for (GdtfFeature* feature : fFeatures)
-    {
-        feature->WriteToNode(pNode);
-    }
+    pNode->SetNodeAttributeValue(XML_GDTF_DMXPersonalityValue, GdtfConverter::ConvertInteger(fValue));
+    pNode->SetNodeAttributeValue(XML_GDTF_DMXPersonalityDMXMode, fDMXMode);
 }
 
 void GdtfDMXPersonality::OnReadFromNode(const IXMLFileNodePtr& pNode)
@@ -6150,18 +6149,11 @@ void GdtfDMXPersonality::OnReadFromNode(const IXMLFileNodePtr& pNode)
 
     //------------------------------------------------------------------------------------
     // Get the attributes	
-    pNode->GetNodeAttributeValue(XML_GDTF_DMXPersonality, fDMXPersonality);
+    TXString valueStr;
+    pNode->GetNodeAttributeValue(XML_GDTF_DMXPersonalityValue, valueStr);
+    GdtfConverter::ConvertInteger(valueStr, pNode, fValue);
 
-    // Read the childs
-    GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_DMXPersonality, [this](IXMLFileNodePtr objNode) -> void
-    {
-        GdtfFeaturePtr featureDMXPersonality = new GdtfFeature(this);
-
-        featureDMXPersonality->ReadFromNode(objNode);
-
-        fFeaturesDMXPersonality.push_back(featureDMXPersonality);
-        return;
-    });
+    pNode->GetNodeAttributeValue(XML_GDTF_DMXPersonalityDMXMode, fDMXMode);
 }
 
 SceneData::GdtfProtocols::GdtfProtocols()

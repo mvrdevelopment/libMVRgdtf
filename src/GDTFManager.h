@@ -1187,8 +1187,9 @@ namespace SceneData
         GdtfDMXPersonality();
         ~GdtfDMXPersonality();
     private:
-        // XXX TXString				fName;
-
+        // TODO:  Getter/Setter
+        size_t    fValue;
+        TXString  fDMXMode;
     public:
         virtual EGdtfObjectType			GetObjectType();
 
@@ -1196,7 +1197,7 @@ namespace SceneData
         // Getter        
         // XXX const TXString&		        GetName() const;
         // Setter       
-        // XXX void						SetName(const TXString& name);
+        // XXX void						    SetName(const TXString& name);
     protected:
         virtual	TXString				GetNodeName();
         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
