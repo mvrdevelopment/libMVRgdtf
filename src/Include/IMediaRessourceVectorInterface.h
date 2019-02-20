@@ -969,7 +969,12 @@ namespace VectorworksMVR
     class DYNAMIC_ATTRIBUTE IGdtfSoftwareVersionID : public IVWUnknown
     {
     public:
-        // XXX: TODO: Getter//Setter
+        virtual VCOMError VCOM_CALLTYPE     GetValue(size_t& outVal)= 0;
+        virtual VCOMError VCOM_CALLTYPE     SetValue(size_t  value)= 0;
+
+        virtual VCOMError VCOM_CALLTYPE     GetDMXPersonalityCount(size_t& outCount)= 0;
+        virtual VCOMError VCOM_CALLTYPE     GetDMXPersonalityAt(size_t at, IGdtfDMXPersonality**  outValue)= 0;
+        virtual VCOMError VCOM_CALLTYPE     CreateDMXPersonality(size_t dmxPersonalityValue, MvrString dmxModeName, IGdtfDMXPersonality** outValue)= 0;		
 
         virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
         virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;

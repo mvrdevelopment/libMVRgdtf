@@ -12,7 +12,11 @@ namespace VectorworksMVR
     {
     public:
         CGdtfSoftwareVersionIDImpl();
-        virtual ~CGdtfSoftwareVersionIDImpl();
+        ~CGdtfSoftwareVersionIDImpl();
+    
+    public:
+        virtual VCOMError VCOM_CALLTYPE     GetValue (size_t& outVal);
+        virtual VCOMError VCOM_CALLTYPE     SetValue (size_t  value);
 
         virtual VCOMError VCOM_CALLTYPE     GetDMXPersonalityCount(size_t& outCount);
         virtual VCOMError VCOM_CALLTYPE     GetDMXPersonalityAt(size_t at, IGdtfDMXPersonality**  outValue);

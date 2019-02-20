@@ -16,6 +16,27 @@ CGdtfSoftwareVersionIDImpl::~CGdtfSoftwareVersionIDImpl()
 {
 }
 
+VCOMError CGdtfSoftwareVersionIDImpl::GetValue(size_t& outVal)
+{
+    // Check Data
+    if (!fSoftwareVersionID) return kVCOMError_NotInitialized;
+
+    outVal = fSoftwareVersionID->GetValue();
+
+    return kVCOMError_NoError;
+}
+
+
+VCOMError CGdtfSoftwareVersionIDImpl::SetValue(size_t value)
+{
+    // Check Pointer
+    if (!fSoftwareVersionID) return kVCOMError_NotInitialized;
+
+    fSoftwareVersionID->SetValue(value);
+
+    return kVCOMError_NoError;
+}
+
 
 VCOMError VCOM_CALLTYPE CGdtfSoftwareVersionIDImpl::GetDMXPersonalityCount(size_t & outCount)
 {
@@ -82,7 +103,7 @@ VCOMError VCOM_CALLTYPE CGdtfSoftwareVersionIDImpl::CreateDMXPersonality(size_t 
     if (!fSoftwareVersionID) { return kVCOMError_NotInitialized; }
 
 
-    SceneData::GdtfDMXPersonality* gdtfDMXPersonality = fSoftwareVersionID->AddDMXPersonality(value, dmxModeName);
+    SceneData::GdtfDMXPersonality* gdtfDMXPersonality = fSoftwareVersionID->AddDMXPersonality(dmxPersonalityValue, dmxModeName);
 
     //---------------------------------------------------------------------------
     // Initialize Object
