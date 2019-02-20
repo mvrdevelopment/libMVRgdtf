@@ -8,6 +8,7 @@ using namespace VectorworksMVR;
 
 CGdtfDMXPersonalityImpl::CGdtfDMXPersonalityImpl()
 {
+    fDMXPersonality = nullptr;
 }
 
 CGdtfDMXPersonalityImpl::~CGdtfDMXPersonalityImpl()
