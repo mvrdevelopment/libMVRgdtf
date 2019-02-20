@@ -245,7 +245,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::SetFixtureThumbnail(
 	if(!fFixtureObject) {return kVCOMError_NotInitialized;}
 	
 	TXString vwThumb (thubnail);
-	fFixtureObject->SetPNGFile(vwThumb);
+	fFixtureObject->SetThumbnail(vwThumb);
 	
 	return kVCOMError_NoError;
 }
