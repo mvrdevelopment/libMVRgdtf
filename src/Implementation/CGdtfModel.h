@@ -20,15 +20,17 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetWidth(double& width);
         virtual VCOMError VCOM_CALLTYPE     GetHeight(double& height);
         virtual VCOMError VCOM_CALLTYPE     GetPrimitiveType(EGdtfModel_PrimitiveType& type);
-        virtual MvrString VCOM_CALLTYPE     Get3DSGeometryFile();
-		virtual MvrString VCOM_CALLTYPE     Get3DSGeometryFileFullPath();
+        //        
+        virtual MvrString VCOM_CALLTYPE     GetGeometryFileName();
+		virtual MvrString VCOM_CALLTYPE     GetGeometryFile_3DS_FullPath();
+        virtual MvrString VCOM_CALLTYPE     GetGeometryFile_SVG_FullPath();
 		
         virtual VCOMError VCOM_CALLTYPE     SetName(MvrString name);
 		virtual VCOMError VCOM_CALLTYPE     SetLength(double length);
 		virtual VCOMError VCOM_CALLTYPE     SetWidth(double width);
 		virtual VCOMError VCOM_CALLTYPE     SetHeight(double height);
 		virtual VCOMError VCOM_CALLTYPE     SetPrimitiveType(EGdtfModel_PrimitiveType type);
-		virtual VCOMError VCOM_CALLTYPE     Set3DSGeometryFile(MvrString path);
+		virtual VCOMError VCOM_CALLTYPE     SetGeometryFile(MvrString path);
 		
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr);
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject();
