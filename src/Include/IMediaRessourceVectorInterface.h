@@ -77,6 +77,7 @@ namespace VectorworksMVR
 	class IGdtfDmxChannel;
     class IGdtfDmxLogicalChannel;
     class IGdtfXmlParsingError;
+    class IGdtfSoftwareVersionID;
 
 	//-------------------------------------------------------------------------------------------------------------
 	class DYNAMIC_ATTRIBUTE ISceneDataProvider : public IVWUnknown
