@@ -36,7 +36,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\BasicMath.X.cpp" />
-    <ClCompile Include="..\src\CGdtfFTRDM.cpp" />
     <ClCompile Include="..\src\CieColor.cpp" />
     <ClCompile Include="..\src\GdtfError.cpp" />
     <ClCompile Include="..\src\GDTFManager.cpp" />
@@ -59,6 +58,7 @@
     <ClCompile Include="..\src\Implementation\CGdtfFeature.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfFeatureGroup.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfFixture.cpp" />
+    <ClCompile Include="..\src\Implementation\CGdtfFTRDM.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfGeometry.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfMacro.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfMacroDMX.cpp" />
@@ -114,7 +114,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\BasicMath.X.h" />
-    <ClInclude Include="..\src\CGdtfFTRDM.h" />
     <ClInclude Include="..\src\CieColor.h" />
     <ClInclude Include="..\src\FolderSpecifiers.h" />
     <ClInclude Include="..\src\GdtfError.h" />
@@ -142,6 +141,7 @@
     <ClInclude Include="..\src\Implementation\CGdtfFeature.h" />
     <ClInclude Include="..\src\Implementation\CGdtfFeatureGroup.h" />
     <ClInclude Include="..\src\Implementation\CGdtfFixture.h" />
+    <ClInclude Include="..\src\Implementation\CGdtfFTRDM.h" />
     <ClInclude Include="..\src\Implementation\CGdtfGeometry.h" />
     <ClInclude Include="..\src\Implementation\CGdtfMacro.h" />
     <ClInclude Include="..\src\Implementation\CGdtfMacroDMX.h" />
