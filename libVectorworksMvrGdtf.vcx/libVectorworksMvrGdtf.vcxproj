@@ -36,7 +36,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\BasicMath.X.cpp" />
-    <ClCompile Include="..\src\CGdtfDMXPersonality.cpp" />
     <ClCompile Include="..\src\CGdtfFTRDM.cpp" />
     <ClCompile Include="..\src\CieColor.cpp" />
     <ClCompile Include="..\src\GdtfError.cpp" />
@@ -54,6 +53,7 @@
     <ClCompile Include="..\src\Implementation\CGdtfDmxChannelSet.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfDmxLogicalChannel.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfDmxMode.cpp" />
+    <ClCompile Include="..\src\Implementation\CGdtfDMXPersonality.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfDmxProfile.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfDmxRelation.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfFeature.cpp" />
@@ -113,7 +113,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\BasicMath.X.h" />
-    <ClInclude Include="..\src\CGdtfDMXPersonality.h" />
     <ClInclude Include="..\src\CGdtfFTRDM.h" />
     <ClInclude Include="..\src\CieColor.h" />
     <ClInclude Include="..\src\FolderSpecifiers.h" />
@@ -136,6 +135,7 @@
     <ClInclude Include="..\src\Implementation\CGdtfDmxChannelSet.h" />
     <ClInclude Include="..\src\Implementation\CGdtfDmxLogicalChannel.h" />
     <ClInclude Include="..\src\Implementation\CGdtfDmxMode.h" />
+    <ClInclude Include="..\src\Implementation\CGdtfDMXPersonality.h" />
     <ClInclude Include="..\src\Implementation\CGdtfDmxProfile.h" />
     <ClInclude Include="..\src\Implementation\CGdtfDmxRelation.h" />
     <ClInclude Include="..\src\Implementation\CGdtfFeature.h" />

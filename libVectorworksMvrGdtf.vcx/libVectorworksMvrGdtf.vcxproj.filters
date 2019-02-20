@@ -249,7 +249,7 @@
     <ClCompile Include="..\src\CGdtfFTRDM.cpp">
       <Filter>src\Implementation</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\CGdtfDMXPersonality.cpp">
+    <ClCompile Include="..\src\Implementation\CGdtfDMXPersonality.cpp">
       <Filter>src\Implementation</Filter>
     </ClCompile>
   </ItemGroup>
@@ -536,7 +536,7 @@
     <ClInclude Include="..\src\CGdtfFTRDM.h">
       <Filter>src\Implementation</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\CGdtfDMXPersonality.h">
+    <ClInclude Include="..\src\Implementation\CGdtfDMXPersonality.h">
       <Filter>src\Implementation</Filter>
     </ClInclude>
   </ItemGroup>
