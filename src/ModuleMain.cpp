@@ -36,7 +36,7 @@
 #include "Implementation/CGeometryReferenceImpl.h"
 #include "Implementation/CGdtfXmlParsingError.h"
 #include "Implementation/CGdtfDMXPersonality.h"
-
+#include "Implementation/CGdtfSoftwareVersionID.h"
 
 // XML
 #include "XMLLib/XMLFileNodeImpl.h"
@@ -120,6 +120,8 @@ extern "C" VectorworksMVR::VCOMError VW_EXPORT VWQueryInterface(const Vectorwork
         resultInterface = new CGdtfXmlParsingErrorImpl();
     else if (iid == VectorworksMVR::IID_GdtfDMXPersonality)
         resultInterface = new CGdtfDMXPersonalityImpl();
+    else if (iid == VectorworksMVR::IID_GdtfSoftwareVersionID)
+        resultInterface = new CGdtfSoftwareVersionIDImpl();
 	else if (iid == VectorWorks::Filing::IID_FileIdentifier)
 		resultInterface = new CFileIdentifier();
 	else if (iid == VectorWorks::Filing::IID_FolderIdentifier )
