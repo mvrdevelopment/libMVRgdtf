@@ -936,13 +936,14 @@ namespace VectorworksMVR
     public:
         virtual VCOMError VCOM_CALLTYPE GetManufacturerID(Sint32& outVal) = 0;        
         virtual VCOMError VCOM_CALLTYPE GetDeviceModelID(Sint32& outVal) = 0;
-		
-		virtual VCOMError VCOM_CALLTYPE GetSoftwareIDAt(size_t at ,Sint32& outVal) = 0;
-		virtual VCOMError VCOM_CALLTYPE GetSoftwareIDCount(size_t& count) = 0;
+
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetSoftwareVersionIDCount(size_t& count) = 0;
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateSoftwareVersionID(size_t value, VectorworksMVR::IGdtfSoftwareVersionID** outVal) = 0;
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetSoftwareVersionIDAt(size_t at, VectorworksMVR::IGdtfSoftwareVersionID** value) = 0;
 
         virtual VCOMError VCOM_CALLTYPE SetManufacturerID(Sint32 value) = 0;
         virtual VCOMError VCOM_CALLTYPE SetDeviceModelID(Sint32 value) = 0;
-        virtual VCOMError VCOM_CALLTYPE AddSoftwareID(Sint32 softID) = 0;
+
         
         virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
         virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
