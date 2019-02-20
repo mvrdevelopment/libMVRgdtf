@@ -7057,3 +7057,29 @@ void SceneData::GdtfMacroVisualValue::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	// Check Attributes for node
 	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
 }
+
+SceneData::GdtfSoftwareVersionID::GdtfSoftwareVersionID()
+{
+}
+
+SceneData::GdtfSoftwareVersionID::~GdtfSoftwareVersionID()
+{
+}
+
+EGdtfObjectType SceneData::GdtfSoftwareVersionID::GetObjectType()
+{
+    return EGdtfObjectType::eGdtfSoftwareVersionID;
+}
+
+TXString SceneData::GdtfSoftwareVersionID::GetNodeName()
+{
+    return XML_GDTF_SoftwareVersionID;
+}
+
+void SceneData::GdtfSoftwareVersionID::OnPrintToFile(IXMLFileNodePtr pNode)
+{
+}
+
+void SceneData::GdtfSoftwareVersionID::OnReadFromNode(const IXMLFileNodePtr & pNode)
+{
+}

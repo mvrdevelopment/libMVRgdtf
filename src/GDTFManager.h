@@ -1205,8 +1205,33 @@ namespace SceneData
         virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
     };
     typedef GdtfDMXPersonality*	GdtfDMXPersonalityPtr;
-    typedef std::vector<GdtfDMXPersonality*>	TGdtfDMXPersonalityArray; // XXX check if needed?
+    typedef std::vector<GdtfDMXPersonality*>	TGdtfDMXPersonalityArray;
     
+    class GdtfSoftwareVersionID : public GdtfObject
+    {
+    public:
+        GdtfSoftwareVersionID();
+        ~GdtfSoftwareVersionID();
+    private:
+        size_t fValue;        
+        TGdtfDMXPersonalityArray    dmxPersonalityArray;
+
+    public:
+        virtual EGdtfObjectType			GetObjectType();
+
+    public:
+        // Getter        
+        // XXX const TXString&		        GetName() const;
+        // Setter       
+        // XXX void						SetName(const TXString& name);
+    protected:
+        virtual	TXString				GetNodeName();
+        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+    };
+    typedef GdtfSoftwareVersionID*	GdtfSoftwareVersionIDPtr;
+    typedef std::vector<GdtfSoftwareVersionID*>	TGdtfSoftwareVersionIDArray; // XXX check if needed?    
+
     class GdtfArtNet : public GdtfObject
     {
     public:
