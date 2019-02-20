@@ -249,6 +249,9 @@
     <ClCompile Include="..\src\CGdtfFTRDM.cpp">
       <Filter>src\Implementation</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\CGdtfDMXPersonality.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\XMLLib\ErrorHandler.h">
@@ -531,6 +534,9 @@
       <Filter>src\XmlLib</Filter>
     </ClInclude>
     <ClInclude Include="..\src\CGdtfFTRDM.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CGdtfDMXPersonality.h">
       <Filter>src\Implementation</Filter>
     </ClInclude>
   </ItemGroup>

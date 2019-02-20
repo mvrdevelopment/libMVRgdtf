@@ -36,6 +36,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\BasicMath.X.cpp" />
+    <ClCompile Include="..\src\CGdtfDMXPersonality.cpp" />
     <ClCompile Include="..\src\CGdtfFTRDM.cpp" />
     <ClCompile Include="..\src\CieColor.cpp" />
     <ClCompile Include="..\src\GdtfError.cpp" />
@@ -112,6 +113,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\BasicMath.X.h" />
+    <ClInclude Include="..\src\CGdtfDMXPersonality.h" />
     <ClInclude Include="..\src\CGdtfFTRDM.h" />
     <ClInclude Include="..\src\CieColor.h" />
     <ClInclude Include="..\src\FolderSpecifiers.h" />
