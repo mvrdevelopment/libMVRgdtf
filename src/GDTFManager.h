@@ -1169,13 +1169,13 @@ namespace SceneData
 
     public:
         // Getter
-        Sint32                        GetManufacturerID() const;
-        Sint32                        GetDeviceModelID()  const;
-        const TSint32Array&           GetSoftwareVersIDs() const;        
+        Sint32                              GetManufacturerID() const;
+        Sint32                              GetDeviceModelID()  const;
+        TGdtfSoftwareVersionIDArray         GetSoftwareVersIDs() const;        
         // Setter
-        void SetManufacturerID(Sint32 val);
-        void SetDeviceModelID(Sint32 val);
-        void AddSoftwareVersID(Sint32 ID);
+        void                                SetManufacturerID(Sint32 val);
+        void                                SetDeviceModelID(Sint32 val);
+        void                                AddSoftwareVersID(size_t value);
     protected:
         virtual	TXString				GetNodeName();
         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
@@ -1216,6 +1216,7 @@ namespace SceneData
     {
     public:
         GdtfSoftwareVersionID();
+        GdtfSoftwareVersionID(size_t value);
         ~GdtfSoftwareVersionID();
     private:
         size_t                      fValue;        

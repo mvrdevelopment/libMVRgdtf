@@ -6103,7 +6103,7 @@ Sint32 SceneData::GdtfFTRDM::GetDeviceModelID() const
 	return fDeviceModelID;
 }
 
-const TSint32Array& SceneData::GdtfFTRDM::GetSoftwareVersIDs() const
+TGdtfSoftwareVersionIDArray SceneData::GdtfFTRDM::GetSoftwareVersIDs() const
 {
 	return fSoftwareVersionIDArray;
 }
@@ -6118,12 +6118,12 @@ void SceneData::GdtfFTRDM::SetDeviceModelID(Sint32 val)
 	fDeviceModelID = val;
 }
 
-
-void SceneData::GdtfFTRDM::AddSoftwareVersID(Sint32 ID)
+void SceneData::GdtfFTRDM::AddSoftwareVersID(size_t value)
 {
-	fSoftwareVersionIDArray.push_back(ID);
+    GdtfSoftwareVersionIDPtr softID = new GdtfSoftwareVersionID(value);
+	
+    fSoftwareVersionIDArray.push_back(softID);
 }
-
 
 SceneData::GdtfDMXPersonality::GdtfDMXPersonality()
 {
@@ -7081,6 +7081,11 @@ void SceneData::GdtfMacroVisualValue::OnErrorCheck(const IXMLFileNodePtr& pNode)
 SceneData::GdtfSoftwareVersionID::GdtfSoftwareVersionID()
 {
     fValue = 0;
+}
+
+SceneData::GdtfSoftwareVersionID::GdtfSoftwareVersionID(size_t value)
+{
+    fValue = value;
 }
 
 SceneData::GdtfSoftwareVersionID::~GdtfSoftwareVersionID()
