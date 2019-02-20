@@ -816,7 +816,7 @@ void GdtfUnittest::ReadFile()
 			if (__checkVCOM(gdtfRead->GetModelAt(i, &gdtfModel)))
 			{
 				MvrString  modelName	= gdtfModel->GetName();
-				MvrString geometryFile	= gdtfModel->GetGeometryFile();
+				MvrString geometryFile	= gdtfModel->GetGeometryFileName();
 				this->checkifEqual("gdtfModelGetName "				, modelName		, "My modelName");
 				this->checkifEqual("gdtfModelGet3DSGeometryFile "	, geometryFile	, "My file3DSGeometry");
 

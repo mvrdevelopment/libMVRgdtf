@@ -289,7 +289,7 @@ void GdtfDmxUnittest::ReadFile()
 			if (__checkVCOM(gdtfRead->GetModelAt(i, &gdtfModel)))
 			{
 				MvrString  modelName = gdtfModel->GetName();
-				MvrString geometryFile = gdtfModel->GetGeometryFile();
+				MvrString geometryFile = gdtfModel->GetGeometryFileName();
 				this->checkifEqual("gdtfModelGetName ", modelName, "Model");
 
 				// Height
