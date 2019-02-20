@@ -94,6 +94,7 @@ namespace VectorworksMVR
             eGdtfMacroVisualStep        = 66,
             eGdtfMacroVisualValue       = 67,
             eGdtfDMXPersonality         = 68, 
+            eGdtfSoftwareVersionID      = 69,
 		};
 
         enum class EGdtfParsingError : Sint32
