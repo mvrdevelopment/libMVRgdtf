@@ -840,14 +840,16 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateGeometry(EGdtf
 	// Check Input
 	if (!model)			{ return kVCOMError_InvalidArg;  }
 	
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 	// Extract Model
+	SceneData::GdtfModelPtr scModel = nullptr;
+
 	CGdtfModelImpl* modelInterface = dynamic_cast<CGdtfModelImpl*>(model);
-	if( ! modelInterface) { return kVCOMError_Failed;  }
-	
-	
-	SceneData::GdtfModelPtr scModel = modelInterface->GetPointer();
-	if ( ! scModel) { return kVCOMError_Failed; }
+	if( modelInterface)
+	{
+		scModel = modelInterface->GetPointer();
+		if ( ! scModel) { return kVCOMError_Failed; }
+	}
 	
 	
 	//---------------------------------------------------------------------------
