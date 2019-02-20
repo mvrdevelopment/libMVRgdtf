@@ -6016,9 +6016,13 @@ void SceneData::GdtfFTRDM::OnPrintToFile(IXMLFileNodePtr pNode)
 	//------------------------------------------------------------------------------------
 	// Print the attributes
 	pNode->SetNodeAttributeValue(XML_GDTF_FTRDM_AttrManufacturerID, GdtfConverter::ConvertInteger(fManufacturerID) );
-	pNode->SetNodeAttributeValue(XML_GDTF_FTRDM_AttrDeviceModelID,  GdtfConverter::ConvertInteger(fDeviceModelID)  );
-	pNode->SetNodeAttributeValue(XML_GDTF_FTRDM_AttrSoftwareVersionIDs, GdtfConverter::ConvertIntegerArray(fSoftwareVersIDs) );
+	pNode->SetNodeAttributeValue(XML_GDTF_FTRDM_AttrDeviceModelID,  GdtfConverter::ConvertInteger(fDeviceModelID)  );	 
 	//------------------------------------------------------------------------------------
+    // Print the Childs
+	for (GdtfSoftwareVersionIDPtr softID : fSoftwareVersionIDArray)
+	{
+		softID->WriteToNode(pNode);
+	}
 }
 
 void SceneData::GdtfFTRDM::OnReadFromNode(const IXMLFileNodePtr & pNode)
@@ -6034,9 +6038,18 @@ void SceneData::GdtfFTRDM::OnReadFromNode(const IXMLFileNodePtr & pNode)
 	
 	TXString deviceModelStr;  pNode->GetNodeAttributeValue(XML_GDTF_FTRDM_AttrDeviceModelID, deviceModelStr);
 	GdtfConverter::ConvertInteger(deviceModelStr, pNode, fDeviceModelID);
-	
-	TXString softwareIDsStr;  pNode->GetNodeAttributeValue(XML_GDTF_FTRDM_AttrSoftwareVersionIDs, softwareIDsStr);
-	GdtfConverter::ConvertIntegerArray ( softwareIDsStr, pNode, fSoftwareVersIDs);
+    
+    //------------------------------------------------------------------------------------
+	// Read the childs
+	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_SoftwareVersionID_NodeNam, [this](IXMLFileNodePtr objNode) -> void
+								 {
+									 GdtfSoftwareVersionIDPtr  softID = new GdtfSoftwareVersionID();
+									 
+									 softID->ReadFromNode(objNode);
+									 
+									 fSoftwareVersionIDArray.push_back(softID);
+									 return;
+								 });	
 }
 
 void SceneData::GdtfFTRDM::OnErrorCheck(const IXMLFileNodePtr& pNode)
@@ -6071,7 +6084,8 @@ SceneData::GdtfFTRDM::GdtfFTRDM(Sint32 manufacturerID, Sint32 deviceModelID) : G
 }
 
 SceneData::GdtfFTRDM::~GdtfFTRDM()
-{	
+{	    
+     for (GdtfSoftwareVersionID* obj : fSoftwareVersionIDArray){ delete obj; }
 }
 
 EGdtfObjectType SceneData::GdtfFTRDM::GetObjectType()
@@ -6091,7 +6105,7 @@ Sint32 SceneData::GdtfFTRDM::GetDeviceModelID() const
 
 const TSint32Array& SceneData::GdtfFTRDM::GetSoftwareVersIDs() const
 {
-	return fSoftwareVersIDs;
+	return fSoftwareVersionIDArray;
 }
 
 void SceneData::GdtfFTRDM::SetManufacturerID(Sint32 val)
@@ -6107,7 +6121,7 @@ void SceneData::GdtfFTRDM::SetDeviceModelID(Sint32 val)
 
 void SceneData::GdtfFTRDM::AddSoftwareVersID(Sint32 ID)
 {
-	fSoftwareVersIDs.push_back(ID);
+	fSoftwareVersionIDArray.push_back(ID);
 }
 
 

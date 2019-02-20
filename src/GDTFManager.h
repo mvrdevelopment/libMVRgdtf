@@ -36,6 +36,8 @@ namespace SceneData
     class GdtfOpenSoundControl;
     class GdtfCITP;
     class GdtfDmxMode;
+    class GdtfSoftwareVersionID;
+    typedef std::vector<GdtfSoftwareVersionID*>	TGdtfSoftwareVersionIDArray;
 
     //-----------------------------------------------------------------------------
 	//------------------------------------------------------------------------------------
@@ -1161,8 +1163,7 @@ namespace SceneData
         Sint32        fManufacturerID;  // Manufacturer ESTA ID; Size: 2 bytes
         Sint32        fDeviceModelID;   // Unique device model ID; Size: 2 bytes        
         
-        // XXX make Array of GdtfSoftware... don't forget to clean in dtor
-        TSint32Array  fSoftwareVersIDs; // Array of software versions IDs; Size of each version: 4 bytes       
+        TGdtfSoftwareVersionIDArray     fSoftwareVersionIDArray;
     public:
         virtual EGdtfObjectType			GetObjectType();
 
