@@ -1050,6 +1050,17 @@ void GdtfModel::SetGeometryFile(const TXString &file)
 	fGeometryFile = file;
 }
 
+TXString SceneData::GdtfModel::GetWorkingFolder()
+{
+ 	TXString				workingFolder;
+	IFolderIdentifierPtr	folder;
+	fParentFixture->GetWorkingFolder(folder);
+	
+	ASSERTN(kEveryone, folder != nullptr);
+	if (folder) { folder->GetFullPath(workingFolder); }
+
+    return workingFolder; 
+}
 
 void GdtfModel::OnPrintToFile(IXMLFileNodePtr pNode)
 {
@@ -1123,30 +1134,25 @@ TXString GdtfModel::GetNodeReference()
 	return GetName();
 }
 
-const TXString& GdtfModel::GetGeometryFile() const
+const TXString& GdtfModel::GetGeometryFileName() const
 {
 	return fGeometryFile;
 }
 
 const TXString& GdtfModel::GetGeometryFile_3DS_FullPath()
 {
-	TXString				workingFolder;
-	IFolderIdentifierPtr	folder;
-	fParentFixture->GetWorkingFolder(folder);
-	
-	ASSERTN(kEveryone, folder != nullptr);
-	if (folder) { folder->GetFullPath(workingFolder); }
-	
 	// Set to store
-	fFullPath = workingFolder + fGeometryFile;
+	fFullPath3DS = GetWorkingFolder() + fGeometryFile + ".3ds";	
 	
-	// Return
-	return fFullPath;
+	return fFullPath3DS;
 }
 
 const TXString & SceneData::GdtfModel::GetGeometryFile_SVG_FullPath()
 {
-    // TODO: insert return statement here
+	// Set to store
+	fFullPathSVG = GetWorkingFolder() + fGeometryFile + ".svg";	
+	
+	return fFullPathSVG;
 }
 
 const TXString& GdtfModel::GetName() const
