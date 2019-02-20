@@ -2425,7 +2425,8 @@ protected:
 		TXString		fFixtureTypeDescription;
 		GdtfFixtureGUID	fGuid;
 		TXString		fTumbnail;
-		TXString		fTumbnailFullPath;
+		TXString		fTumbnailFullPath_PNG;
+        TXString		fTumbnailFullPath_SVG;
 		GdtfFixtureGUID	fLinkedGuid;
 		bool			fHasLinkedGuid;
 
@@ -2480,7 +2481,8 @@ private:
 		GdtfFixtureGUID		GetLinkedGuid() const;
 		bool				HasLinkedGuid() const;
         const TXString&     GetThumbnailName() const;
-		const GdtfPNGFile&  GetPNGFileFullPath();		
+		const GdtfPNGFile&  GetPNGThumnailFullPath();		
+        const GdtfPNGFile&  GetSVGThumnailFullPath();
         // Setter
 		void				SetName(const TXString& name);
 		void				SetShortName(const TXString& shortName);
@@ -2545,6 +2547,7 @@ private:
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
         virtual	void			        OnErrorCheck(const IXMLFileNodePtr& pNode);
 
+        TXString                       getWorkingFolder();
 		        
         GdtfAttributePtr            getAttributeByRef(const TXString& ref);
         GdtfWheelPtr                getWheelByRef(const TXString& ref);		

@@ -5376,6 +5376,16 @@ void GdtfFixture::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
 }
 
+TXString SceneData::GdtfFixture::getWorkingFolder()
+{
+	TXString				workingFolder;
+	
+	ASSERTN(kEveryone, fWorkingFolder != nullptr);
+	if (fWorkingFolder) { fWorkingFolder->GetFullPath(workingFolder); }
+    
+    return workingFolder;
+}
+
 EGdtfObjectType GdtfFixture::GetObjectType()
 {
 	return EGdtfObjectType::eGdtfFixture;
@@ -5728,18 +5738,20 @@ const TXString& GdtfFixture::GetThumbnailName() const
     return fTumbnail;
 }
 
-const GdtfPNGFile& GdtfFixture::GetPNGFileFullPath()
+const GdtfPNGFile& GdtfFixture::GetPNGThumnailFullPath()
 {
-	TXString				workingFolder;
-	
-	ASSERTN(kEveryone, fWorkingFolder != nullptr);
-	if (fWorkingFolder) { fWorkingFolder->GetFullPath(workingFolder); }
-	
 	// Set to store
-	fTumbnailFullPath = workingFolder + fTumbnail;
-	
-	// Return
-	return fTumbnailFullPath;
+	fTumbnailFullPath_PNG = getWorkingFolder() + fTumbnail + ".3ds";
+
+	return fTumbnailFullPath_PNG;
+}
+
+const GdtfPNGFile & SceneData::GdtfFixture::GetSVGThumnailFullPath()
+{
+	// Set to store
+	fTumbnailFullPath_SVG = getWorkingFolder() + fTumbnail + ".svg";	
+
+	return fTumbnailFullPath_SVG;
 }
 
 
