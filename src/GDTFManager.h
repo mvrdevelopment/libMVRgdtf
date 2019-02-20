@@ -1186,8 +1186,7 @@ namespace SceneData
     public:
         GdtfDMXPersonality();
         ~GdtfDMXPersonality();
-    private:
-        // TODO:  Getter/Setter
+    private:        
         size_t    fValue;
         TXString  fDMXMode;
     public:
