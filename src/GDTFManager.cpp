@@ -6117,6 +6117,12 @@ SceneData::GdtfDMXPersonality::GdtfDMXPersonality()
     fDMXMode = "";
 }
 
+SceneData::GdtfDMXPersonality::GdtfDMXPersonality(size_t value, const TXString & dmxModeName)
+{
+    fValue   = value;
+    fDMXMode = dmxModeName;
+}
+
 SceneData::GdtfDMXPersonality::~GdtfDMXPersonality()
 {     
 }
@@ -7071,6 +7077,29 @@ SceneData::GdtfSoftwareVersionID::~GdtfSoftwareVersionID()
 EGdtfObjectType SceneData::GdtfSoftwareVersionID::GetObjectType()
 {
     return EGdtfObjectType::eGdtfSoftwareVersionID;
+}
+
+size_t SceneData::GdtfSoftwareVersionID::GetValue() const
+{
+    return fValue;
+}
+
+const TGdtfDMXPersonalityArray SceneData::GdtfSoftwareVersionID::GetDMXPersonalityArray()
+{
+    return fDmxPersonalityArray;
+}
+
+void SceneData::GdtfSoftwareVersionID::SetValue(size_t val)
+{
+    fValue = val;
+}
+
+GdtfDMXPersonalityPtr SceneData::GdtfSoftwareVersionID::AddDMXPersonality(size_t value, const TXString & dmxModeName)
+{
+    GdtfDMXPersonalityPtr dmxPerso = new GdtfDMXPersonality(value, dmxModeName);
+    fDmxPersonalityArray.push_back(dmxPerso);
+
+    return dmxPerso;
 }
 
 TXString SceneData::GdtfSoftwareVersionID::GetNodeName()

@@ -1187,6 +1187,7 @@ namespace SceneData
     {
     public:
         GdtfDMXPersonality();
+        GdtfDMXPersonality(size_t value, const TXString & dmxModeName);
         ~GdtfDMXPersonality();
     private:        
         size_t    fValue;
@@ -1224,9 +1225,11 @@ namespace SceneData
 
     public:
         // Getter        
-        // XXX const TXString&		        GetName() const;
+        size_t		                    GetValue() const;
+        const TGdtfDMXPersonalityArray  GetDMXPersonalityArray();
         // Setter       
-        // XXX void						    SetName(const TXString& name);
+        void						    SetValue(size_t val);
+        GdtfDMXPersonalityPtr           AddDMXPersonality(size_t value, const TXString& dmxModeName);
     protected:
         virtual	TXString				GetNodeName();
         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
