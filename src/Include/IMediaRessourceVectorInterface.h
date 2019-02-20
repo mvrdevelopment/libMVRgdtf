@@ -948,6 +948,20 @@ namespace VectorworksMVR
         virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
     };
     typedef VCOMPtr<IGdtf_FTRDM>	IGdtfTRDMPtr;
+    
+    
+    class DYNAMIC_ATTRIBUTE IGdtfDMXPersonality : public IVWUnknown
+    {
+    public:
+        virtual MvrString VCOM_CALLTYPE     GetName() = 0;
+        
+        // DMXPersonality: TODO: Getter SEtter
+
+        virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+        virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+    };
+    typedef VCOMPtr<IGdtfDMXPersonality>	IGdtfDMXPersonalityPtr;
+
 
     class DYNAMIC_ATTRIBUTE IGdtfXmlParsingError : public IVWUnknown
     {
