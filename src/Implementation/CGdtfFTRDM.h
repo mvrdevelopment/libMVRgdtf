@@ -17,7 +17,7 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE GetDeviceModelID(Sint32& outVal);
 		
         virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetSoftwareVersionIDCount(size_t& count);
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateSoftwareVersionID(VectorworksMVR::IGdtfSoftwareVersionID** outVal);
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateSoftwareVersionID(size_t value, VectorworksMVR::IGdtfSoftwareVersionID** outVal);
         virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetSoftwareVersionIDAt(size_t at, VectorworksMVR::IGdtfSoftwareVersionID** value);
 
         virtual VCOMError VCOM_CALLTYPE SetManufacturerID(Sint32 value);
