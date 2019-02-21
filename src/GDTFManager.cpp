@@ -5137,11 +5137,9 @@ void GdtfFixture::OnPrintToFile(IXMLFileNodePtr pNode)
 		}
 	}
 	
-
-	
 	// ------------------------------------------------------------------------------------
-	// Print RDM	
-	// This is missing today
+	// Print Prorocols
+    fProtocollContainer.WriteToNode(pNode);	
 }
 
 void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
