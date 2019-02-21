@@ -80,7 +80,7 @@ namespace VectorworksMVR
             eRDMValue_STATUS_ID_DESCRIPTION             = 52,
             eGdtfRDMValue_REAL_TIME_CLOCK               = 53,
             eGdtfRDMSensorNotification                  = 54,
-            eGdtfValueSensor                            = 55,
+            eGdtfValueSensor                            = 55,            
             eGdtfArtNet                                 = 56,
             eGdtf_sACN                                  = 57,
             eGdtfKiNET                                  = 58,
@@ -93,7 +93,8 @@ namespace VectorworksMVR
             eGdtfMacroVisual            = 65,  
             eGdtfMacroVisualStep        = 66,
             eGdtfMacroVisualValue       = 67,
-
+            eGdtfDMXPersonality         = 68, 
+            eGdtfSoftwareVersionID      = 69,
 		};
 
         enum class EGdtfParsingError : Sint32
