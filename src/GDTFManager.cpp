@@ -6115,8 +6115,7 @@ void SceneData::GdtfFTRDM::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	TXStringArray needed;
 	TXStringArray optional;
 	needed.push_back(XML_GDTF_FTRDM_AttrManufacturerID);
-	needed.push_back(XML_GDTF_FTRDM_AttrDeviceModelID);
-	needed.push_back(XML_GDTF_FTRDM_AttrSoftwareVersionIDs);
+	needed.push_back(XML_GDTF_FTRDM_AttrDeviceModelID);	
 
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
