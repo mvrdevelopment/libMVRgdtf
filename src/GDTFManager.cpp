@@ -5741,22 +5741,40 @@ const TXString& GdtfFixture::GetThumbnailName() const
     return fTumbnail;
 }
 
+TXString GdtfFixture::GetFullThumbNailPath (const TXString& fileExtension) 
+{
+	// Set to store
+	TXString fullPath = getWorkingFolder() + fTumbnail + fileExtension;
+
+    // Check if file exists:
+    IFileIdentifierPtr file (IID_FileIdentifier);
+    file->Set(fullPath);
+    
+    bool exists;  file->ExistsOnDisk(exists);
+    
+    if (! exists)
+    {
+        "";
+    }
+
+	return fullPath;
+}
+
 const GdtfPNGFile& GdtfFixture::GetPNGThumnailFullPath()
 {
 	// Set to store
-	fTumbnailFullPath_PNG = getWorkingFolder() + fTumbnail + ".3ds";
+    fTumbnailFullPath_PNG = GetFullThumbNailPath(".png");
 
 	return fTumbnailFullPath_PNG;
 }
 
-const GdtfPNGFile & SceneData::GdtfFixture::GetSVGThumnailFullPath()
+const TXString & SceneData::GdtfFixture::GetSVGThumnailFullPath()
 {
 	// Set to store
-	fTumbnailFullPath_SVG = getWorkingFolder() + fTumbnail + ".svg";	
+    fTumbnailFullPath_PNG = GetFullThumbNailPath(".3ds");
 
-	return fTumbnailFullPath_SVG;
+	return fTumbnailFullPath_PNG;
 }
-
 
 void GdtfFixture::SetName(const TXString& name)
 {

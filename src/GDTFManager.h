@@ -1818,6 +1818,7 @@ public:
         static TGdtfParsingErrorArray*  __ERROR_CONTAINER_POINTER;
         TGdtfParsingErrorArray&         GetParsingErrorArray();
         
+        TXString                        GetFullThumbNailPath(const TXString & fileExtension);
 private:
         TGdtfParsingErrorArray          fErrorContainer;
         
@@ -1832,9 +1833,9 @@ private:
         GdtfFixtureGUID		GetGuid() const;
 		GdtfFixtureGUID		GetLinkedGuid() const;
 		bool				HasLinkedGuid() const;
-        const TXString&     GetThumbnailName() const;
+        const TXString&     GetThumbnailName() const;        
 		const GdtfPNGFile&  GetPNGThumnailFullPath();		
-        const GdtfPNGFile&  GetSVGThumnailFullPath();
+        const TXString&     GetSVGThumnailFullPath();
         // Setter
 		void				SetName(const TXString& name);
 		void				SetShortName(const TXString& shortName);
