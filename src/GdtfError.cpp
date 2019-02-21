@@ -65,6 +65,8 @@ size_t GdtfParsingError::GetColumnNumber() const
    	TXStringArray nodeAttributes;
 	pNode->GetNodeAttributes(nodeAttributes);
 
+    TXString nodeNam; pNode->GetNodeName(nodeNam);
+
     // Check required Attributes
     for(const TXString &attribute : needed)
     {
@@ -75,7 +77,7 @@ size_t GdtfParsingError::GetColumnNumber() const
         else
         {
             GdtfParsingError error (GdtfDefines::EGdtfParsingError::eNodeMissingMandatoryAttribute, pNode);
-            error.fErrorMessage = attribute;
+            error.fErrorMessage =  nodeNam + " missing Attribute " + attribute;
             SceneData::GdtfFixture::AddError(error);
         }
     }
