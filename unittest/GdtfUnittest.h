@@ -17,8 +17,8 @@ private:
     std::string fTestGdtf_Path;
     char        fSystemSeperator;
 
-    void WriteFile();
-    void ReadFile();
+    void        WriteFile();
+    void        ReadFile();
     
     // Test Resources
     std::string GetTestPNG_ThumbNail();
