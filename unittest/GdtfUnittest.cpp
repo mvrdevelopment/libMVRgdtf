@@ -50,7 +50,7 @@ void GdtfUnittest::WriteFile()
     {
 		__checkVCOM(gdtfWrite->SetFixtureTypeDescription("My Description"));
 		__checkVCOM(gdtfWrite->SetShortName("My shortName"));
-		__checkVCOM(gdtfWrite->SetFixtureThumbnail("My thumbnail"));
+		__checkVCOM(gdtfWrite->SetFixtureThumbnail("MyThumbnail"));
 		__checkVCOM(gdtfWrite->SetLinkedFixtureGUID(linkedUuid));
 
 		//------------------------------------------------------------------------------    
@@ -287,11 +287,17 @@ void GdtfUnittest::ReadFile()
 		__checkVCOM(gdtfRead->GetFixtureGUID(resultUUID));
 		this->checkifEqual("GetFixtureGUID fixtureUUID ", fixtureUUID, resultUUID);
 		
-		// Get the Image from GDTF File
+        //-----------------------------------------------------------------------------
+		// Get the Thumbnail-Image from GDTF File
 		MvrString pngFileName		= gdtfRead->GetFixtureThumbnail();
-		MvrString fullPath			= gdtfRead->GetFixtureThumbnail();
-		this->checkifEqual("GetFixtureThumbnail "		, pngFileName		, "My thumbnail");
-		this->checkifEqual("GetFixtureThumbnail "		, fullPath			, "My thumbnail");
+		MvrString fullPath_PNG		= gdtfRead->GetFixtureThumbnail_PNG_FullPath();
+        MvrString fullPath_SVG      = gdtfRead->GetFixtureThumbnail_SVG_FullPath();
+
+		this->checkifEqual("GetFixtureThumbnail "		, pngFileName,  "MyThumbnail"); 
+        // The files do not exist in the example gdtf so we await that the paths are empty.
+		this->checkifEqual("GetFixtureThumbnail "		, fullPath_PNG, ""); 
+        this->checkifEqual("GetFixtureThumbnail "		, fullPath_SVG, "");
+        //-----------------------------------------------------------------------------
 
 		bool hasLinkedFixture = false;
 		__checkVCOM(gdtfRead->HasLinkedFixtureGUID(hasLinkedFixture));
