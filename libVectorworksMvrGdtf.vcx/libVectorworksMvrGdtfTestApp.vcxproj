@@ -43,6 +43,7 @@
     <ClCompile Include="..\unittest\main.cpp" />
     <ClCompile Include="..\unittest\MvrUnittest.cpp" />
     <ClCompile Include="..\unittest\Unittest.cpp" />
+    <ClCompile Include="..\unittest\Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\unittest\GdtfDmxUnittest.h" />
@@ -53,6 +54,7 @@
     <ClInclude Include="..\unittest\main.h" />
     <ClInclude Include="..\unittest\MvrUnittest.h" />
     <ClInclude Include="..\unittest\Unittest.h" />
+    <ClInclude Include="..\unittest\Utility.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
