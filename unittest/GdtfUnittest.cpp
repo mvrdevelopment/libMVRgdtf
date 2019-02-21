@@ -58,7 +58,7 @@ void GdtfUnittest::WriteFile()
         __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestWheel_PNG().c_str(),     ERessourceType::ImageWheel) );
         __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTest3DS_Model().c_str(),     ERessourceType::Model3DS) );
         __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestSVG_Model().c_str(),     ERessourceType::ModelSVG) );
-
+        
 		//------------------------------------------------------------------------------    
 		// Set Attributes
 		IGdtfActivationGroupPtr gdtfActGroup;
