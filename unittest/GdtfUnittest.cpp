@@ -297,13 +297,15 @@ void GdtfUnittest::ReadFile()
 		// Get the Thumbnail-Image from GDTF File
 		MvrString pngFileName		= gdtfRead->GetFixtureThumbnail();
 		MvrString fullPath_PNG		= gdtfRead->GetFixtureThumbnail_PNG_FullPath();
-        MvrString fullPath_SVG      = gdtfRead->GetFixtureThumbnail_SVG_FullPath();
+        MvrString fullPath_SVG      = gdtfRead->GetFixtureThumbnail_SVG_FullPath();        
 
 		this->checkifEqual("GetFixtureThumbnail "		, pngFileName,  "MyThumbnail"); 
+        
         // The files do not exist in the example gdtf so we await that the paths are empty.
 		this->checkifEqual("GetFixtureThumbnail "		, fullPath_PNG, GetTestPNG_ThumbNail() ); 
-        this->checkifEqual("GetFixtureThumbnail "		, fullPath_SVG, GetTestSVG_ThumbNail() );
+        this->checkifEqual("GetFixtureThumbnail "		, fullPath_SVG, GetTestSVG_ThumbNail() );        
         //-----------------------------------------------------------------------------
+        // XXX: TODO: Check the WheelImg, and the Test model svg / 3ds
 
 		bool hasLinkedFixture = false;
 		__checkVCOM(gdtfRead->HasLinkedFixtureGUID(hasLinkedFixture));
