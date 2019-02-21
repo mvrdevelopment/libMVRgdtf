@@ -45,8 +45,19 @@ int main(int argc, char* argv[])
 
 	GdtfFunctionModeMasterTest modeMasterTest(base);
 	bool modeMasterOk = modeMasterTest.RunTest();
+    
+    bool finalResult = (mvrOK || gdtfOk || gdtfDmxOk || errorOk || modeMasterOk);
 
-	return (mvrOK || gdtfOk || gdtfDmxOk || errorOk || modeMasterOk);
+    if (finalResult) 
+    {
+        std::cout << ":-)  All test finished succesfull.";
+    }
+    else 
+    {
+        std::cout << ": (  There was an Error.";
+    }
+
+    return finalResult;
 }
 
 bool GetFolderAppDataPath(std::string& outPath)
