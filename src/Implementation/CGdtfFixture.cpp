@@ -1701,7 +1701,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateRDM(Vectorwork
 	CGdtf_FTRDMImpl* pRdm = nullptr;
 	
 	// Query Interface
-	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDMXProfile, (IVWUnknown**)& pRdm)))
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfTRDM, (IVWUnknown**)& pRdm)))
 	{
 		// Check Casting
 		CGdtf_FTRDMImpl* pResultInterface = dynamic_cast<CGdtf_FTRDMImpl*>(pRdm);
