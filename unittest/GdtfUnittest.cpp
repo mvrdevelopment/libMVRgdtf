@@ -41,7 +41,7 @@ void GdtfUnittest::WriteFile()
 	//------------------------------------------------------------------------------------------------
 	// Create Pointer to GDTF Interface
 	IGdtfFixturePtr gdtfWrite (IID_IGdtfFixture);
-
+    
     MvrUUID uuid		(225204211	, 177198167	, 1575790	, 96627);
 	MvrUUID linkedUuid	(2227440	, 1542265	, 1573622	, 2328410);
     if(__checkVCOM(gdtfWrite->OpenForWrite(fTestGdtf_Path.c_str(),"My FixtureName","My Manufacturer", uuid)))
@@ -260,6 +260,17 @@ void GdtfUnittest::WriteFile()
 		timestamp.fHour = 22; timestamp.fMinute = 33; timestamp.fSecond = 44;
 		__checkVCOM(gdtfWrite->CreateRevision("Revision TestText", timestamp, &rev));
 
+        //------------------------------------------------------------------------------    
+        // Add RDM 
+        IGdtfTRDMPtr rdm;
+        gdtfWrite->CreateRDM(&rdm);
+        rdm->SetDeviceModelID(666);
+
+        IGdtfSoftwareVersionIDPtr softID;
+        rdm->CreateSoftwareVersionID( 22, &softID);
+        
+        IGdtfDMXPersonalityPtr dmxPerso;
+        softID->CreateDMXPersonality( 11, "DmxModeNam", &dmxPerso);        
 
 		//------------------------------------------------------------------------------    
 		// Close the stream and dump to disk
