@@ -1896,7 +1896,7 @@ void GdtfGeometryLamp::OnPrintToFile(IXMLFileNodePtr pNode)
 	// Print node attributes
 	pNode->SetNodeAttributeValue(XML_GDTF_LampLampType,				GdtfConverter::ConvertLampeType(fLampType));
 	pNode->SetNodeAttributeValue(XML_GDTF_LampPowerConsumption,		GdtfConverter::ConvertDouble(fPowerConsuption));
-	pNode->SetNodeAttributeValue(XML_GDTF_LampLuminousFlux,	GdtfConverter::ConvertDouble(fLuminousIntensity));
+	pNode->SetNodeAttributeValue(XML_GDTF_LampLuminousFlux,	        GdtfConverter::ConvertDouble(fLuminousIntensity));
 	pNode->SetNodeAttributeValue(XML_GDTF_ColorTemperature,			GdtfConverter::ConvertDouble(fColorTemperature));
 	pNode->SetNodeAttributeValue(XML_GDTF_BeamAngle,				GdtfConverter::ConvertDouble(fBeamAngle));
 	pNode->SetNodeAttributeValue(XML_GDTF_BeamRadius,				GdtfConverter::ConvertDouble(fBeamRadius));
