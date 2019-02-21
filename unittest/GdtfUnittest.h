@@ -22,6 +22,6 @@ private:
 
     char GetSysSeparator();
 
-    std::string GetTestPNGFile();
-    std::string GetTestSVGsFile();
+    std::string GetTestPNG_ThumbNail();
+    std::string GetTestSVG_ThumbNail();
 };
