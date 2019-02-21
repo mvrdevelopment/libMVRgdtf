@@ -275,7 +275,7 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_LampNodeName					"Beam"
 #define XML_GDTF_LampLampType					"LampType"
 #define XML_GDTF_LampPowerConsumption			"PowerConsumption"
-#define XML_GDTF_LampLuminousIntensity			"LuminousIntensity"
+#define XML_GDTF_LampLuminousFlux			    "LuminousFlux"
 #define XML_GDTF_ColorTemperature				"ColorTemperature"
 #define XML_GDTF_BeamAngle						"BeamAngle"
 #define XML_GDTF_BeamRadius						"BeamRadius"

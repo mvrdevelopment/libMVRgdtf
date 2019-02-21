@@ -1896,7 +1896,7 @@ void GdtfGeometryLamp::OnPrintToFile(IXMLFileNodePtr pNode)
 	// Print node attributes
 	pNode->SetNodeAttributeValue(XML_GDTF_LampLampType,				GdtfConverter::ConvertLampeType(fLampType));
 	pNode->SetNodeAttributeValue(XML_GDTF_LampPowerConsumption,		GdtfConverter::ConvertDouble(fPowerConsuption));
-	pNode->SetNodeAttributeValue(XML_GDTF_LampLuminousIntensity,	GdtfConverter::ConvertDouble(fLuminousIntensity));
+	pNode->SetNodeAttributeValue(XML_GDTF_LampLuminousFlux,	GdtfConverter::ConvertDouble(fLuminousIntensity));
 	pNode->SetNodeAttributeValue(XML_GDTF_ColorTemperature,			GdtfConverter::ConvertDouble(fColorTemperature));
 	pNode->SetNodeAttributeValue(XML_GDTF_BeamAngle,				GdtfConverter::ConvertDouble(fBeamAngle));
 	pNode->SetNodeAttributeValue(XML_GDTF_BeamRadius,				GdtfConverter::ConvertDouble(fBeamRadius));
@@ -1917,7 +1917,7 @@ void GdtfGeometryLamp::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// Print node attributes
 	TXString lampType;	pNode->GetNodeAttributeValue(XML_GDTF_LampLampType,				lampType);	GdtfConverter::ConvertLampeType(lampType, 	pNode,	fLampType);
 	TXString power;		pNode->GetNodeAttributeValue(XML_GDTF_LampPowerConsumption,		power);		GdtfConverter::ConvertDouble(power, 		pNode,	fPowerConsuption);
-	TXString lum;		pNode->GetNodeAttributeValue(XML_GDTF_LampLuminousIntensity,	lum);		GdtfConverter::ConvertDouble(lum, 			pNode,	fLuminousIntensity);
+	TXString lum;		pNode->GetNodeAttributeValue(XML_GDTF_LampLuminousFlux,	lum);		GdtfConverter::ConvertDouble(lum, 			pNode,	fLuminousIntensity);
 	TXString colorTemp;	pNode->GetNodeAttributeValue(XML_GDTF_ColorTemperature,			colorTemp);	GdtfConverter::ConvertDouble(colorTemp, 	pNode,	fColorTemperature);
 	TXString angle;		pNode->GetNodeAttributeValue(XML_GDTF_BeamAngle,				angle);		GdtfConverter::ConvertDouble(angle, 		pNode,	fBeamAngle);
 	TXString radius;	pNode->GetNodeAttributeValue(XML_GDTF_BeamRadius,				radius);	GdtfConverter::ConvertDouble(radius, 		pNode,	fBeamRadius);
@@ -1941,7 +1941,7 @@ void GdtfGeometryLamp::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	needed.push_back(XML_GDTF_GeometryMatrix);
 	optional.push_back(XML_GDTF_LampLampType);
 	optional.push_back(XML_GDTF_LampPowerConsumption);
-	optional.push_back(XML_GDTF_LampLuminousIntensity);
+	optional.push_back(XML_GDTF_LampLuminousFlux);
 	optional.push_back(XML_GDTF_ColorTemperature);
 	optional.push_back(XML_GDTF_BeamAngle);
 	optional.push_back(XML_GDTF_FieldAngle);
