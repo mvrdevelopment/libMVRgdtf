@@ -48,13 +48,13 @@ int main(int argc, char* argv[])
     
     bool errorOcurred = (mvrFailed || gdtfFailed || gdtfDmxFailed || errorFailed || modeMasterFailed);
 
-    if (errorOcurred) 
+    if (! errorOcurred) 
     {
-        std::cout << ":-)  All test finished succesfull.";
+        std::cout << " :-)  All test finished succesfull.";
     }
     else 
     {
-        std::cout << ": (  There was an Error.";
+        std::cout << " :-(  There was an Error.";
     }
 
     return errorOcurred;
