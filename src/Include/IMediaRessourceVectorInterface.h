@@ -72,15 +72,12 @@ namespace VectorworksMVR
     class IGdtfMacroDMXValue;
     class IGdtfMacroVisualStep;
     class IGdtfMacroVisualValue;
-    class IGDtfIGdtfRDMAbsentNotification;
-    class IGdtfRDMAbsentNotification;
-    class IGdtfRDMParameterNotification;
     class IGdtf_FTRDM;
-	class IGdtfRDMParameter;
 	class IGdtfFeatureGroup;
 	class IGdtfDmxChannel;
     class IGdtfDmxLogicalChannel;
     class IGdtfXmlParsingError;
+    class IGdtfSoftwareVersionID;
 
 	//-------------------------------------------------------------------------------------------------------------
 	class DYNAMIC_ATTRIBUTE ISceneDataProvider : public IVWUnknown
@@ -937,264 +934,58 @@ namespace VectorworksMVR
 	};
     typedef VCOMPtr<IGdtfFixture>	IGdtfFixturePtr;
     const   VWIID IID_IGdtfFixture = { 0x8f7bba09, 0x0753, 0x4971, {0xa9, 0x1b, 0x51, 0xce, 0x96, 0xd2, 0xb6, 0x3f}};
-	
-	class DYNAMIC_ATTRIBUTE IGdtfRDMValueSensor : public IVWUnknown
-	{
-	public:
-		// Getter 
-		virtual VCOMError VCOM_CALLTYPE  GetValue(Sint32& outVal) = 0;
-		virtual VCOMError VCOM_CALLTYPE  GetLowest(Sint32& outVal) = 0;
-		virtual VCOMError VCOM_CALLTYPE  GetHighest(Sint32& outVal) = 0;
-		virtual VCOMError VCOM_CALLTYPE  GetRecorded(Sint32& outVal) = 0;
-		virtual VCOMError VCOM_CALLTYPE  GetThresholdOperator(GdtfDefines::EGdtf_RDMValue_ThresholdOperator& outVal) = 0;
-		// Setter
-		virtual VCOMError VCOM_CALLTYPE  SetValue(Sint32 val) = 0;
-		virtual VCOMError VCOM_CALLTYPE  SetLowest(Sint32 val) = 0;
-		virtual VCOMError VCOM_CALLTYPE  SetHighest(Sint32 val) = 0;
-		virtual VCOMError VCOM_CALLTYPE  SetRecorded(Sint32 val) = 0;
-		virtual VCOMError VCOM_CALLTYPE  SetThresholdOperator(GdtfDefines::EGdtf_RDMValue_ThresholdOperator val) = 0;
-		//
-		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
-		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
-	};
-	typedef VCOMPtr<IGdtfRDMValueSensor>	IGdtfRDMValueSensorPtr;
-	
-	class DYNAMIC_ATTRIBUTE IGdtfRDMSensorNotification : public IVWUnknown
-	{
-	public:
-		virtual VCOMError VCOM_CALLTYPE GetSensorOffset(Sint32& outVal) = 0;
-		virtual VCOMError VCOM_CALLTYPE SetSensorOffset(Sint32 value) = 0;
-		
-		virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetValueSensorCount(size_t& count) = 0;
-		virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateValueSensor(Sint32 value,
-																		Sint32 lowest,
-																		Sint32 highest,
-																		Sint32 recorded,
-																		GdtfDefines::EGdtf_RDMValue_ThresholdOperator thresholdOperator,
-																		IGdtfRDMValueSensor** outVal) = 0;
-		
-		virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetValueSensorAt(size_t at, IGdtfRDMValueSensor** value) = 0;
-		
-		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
-		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
-	};
-	typedef VCOMPtr<IGdtfRDMSensorNotification>	IGdtfRDMSensorNotificationPtr;
-
-    class DYNAMIC_ATTRIBUTE IGdtfRDMNotifications : public IVWUnknown
-    {
-    public:
-        virtual VCOMError GetRDMAbsentNotification(VectorworksMVR::IGdtfRDMAbsentNotification ** outRDMAbsentNotification) = 0;
-        virtual VCOMError SetRDMAbsentNotification(IGdtfRDMAbsentNotification * newRDMAbsentNotification) = 0;
-
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetRDMParameterNotificationCount(size_t& count) = 0;
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateRDMParameterNotification(Sint32 PID, VectorworksMVR::IGdtfRDMParameterNotification** outVal) = 0;
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetRDMParameterNotificationAt(size_t at, VectorworksMVR::IGdtfRDMParameterNotification** value) = 0;
-
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetSensorNotificationCount(size_t& count) = 0;
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateSensorNotification(Sint32 sensorOffset, VectorworksMVR::IGdtfRDMSensorNotification**outVal) = 0;
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetSensorNotificationAt(size_t at, VectorworksMVR::IGdtfRDMSensorNotification **SensorNotification) = 0;
-
-        virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
-        virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
-    };
-    typedef VCOMPtr<IGdtfRDMNotifications>	IGdtfRDMNotificationsPtr;
 
     class DYNAMIC_ATTRIBUTE IGdtf_FTRDM : public IVWUnknown
     {
     public:
         virtual VCOMError VCOM_CALLTYPE GetManufacturerID(Sint32& outVal) = 0;        
         virtual VCOMError VCOM_CALLTYPE GetDeviceModelID(Sint32& outVal) = 0;
-		
-		virtual VCOMError VCOM_CALLTYPE GetSoftwareIDAt(size_t at ,Sint32& outVal) = 0;
-		virtual VCOMError VCOM_CALLTYPE GetSoftwareIDCount(size_t& count) = 0;
+
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetSoftwareVersionIDCount(size_t& count) = 0;
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateSoftwareVersionID(size_t value, VectorworksMVR::IGdtfSoftwareVersionID** outVal) = 0;
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetSoftwareVersionIDAt(size_t at, VectorworksMVR::IGdtfSoftwareVersionID** value) = 0;
 
         virtual VCOMError VCOM_CALLTYPE SetManufacturerID(Sint32 value) = 0;
         virtual VCOMError VCOM_CALLTYPE SetDeviceModelID(Sint32 value) = 0;
-        virtual VCOMError VCOM_CALLTYPE AddSoftwareID(Sint32 softID) = 0;
+
         
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetRDMParameterCount(size_t& count) = 0;        
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetRDMParameterAt(size_t at, VectorworksMVR::IGdtfRDMParameter **RDMParameter) = 0;
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateRDMParameter(VectorworksMVR::IGdtfRDMParameter **outVal,
-                MvrString name,
-                Sint32 PID, 
-                GdtfDefines::EGdtf_RDMParam_Type Type,
-                GdtfDefines::EGdtf_RDMParam_DataType dataType,
-                GdtfDefines::EGdtf_RDMParam_Command command,
-                GdtfDefines::EGdtf_RDMParam_SensorUnit sensorUnit,
-                GdtfDefines::EGdtf_RDMParam_SensorUnitPrefix sensorUnitPrefix,
-                Sint32 minValue,
-                Sint32 maxValue, 
-                Sint32 PDLSize, 
-                MvrString description) = 0;
-
-        virtual VCOMError VCOM_CALLTYPE     GetRDMNotifications(VectorworksMVR::IGdtfRDMNotifications ** outRDMNotifications) = 0;
-
-        virtual VCOMError VCOM_CALLTYPE     SetRDMNotifications(IGdtfRDMNotifications * newRDMNotifications) = 0;
-
         virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
         virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
     };
     typedef VCOMPtr<IGdtf_FTRDM>	IGdtfTRDMPtr;
-
-    class DYNAMIC_ATTRIBUTE IGdtfRDMParameterValue : public IVWUnknown
-    {
-    public:        
-        virtual VCOMError VCOM_CALLTYPE  GetRDMValueType(GdtfDefines::EGdtfObjectType& type) = 0;
-
-        // TODO: ThresholdOperator is a attribute NUMERIC_VALUES and RDMValueBool and RDMValue_REAL_TIME_CLOCK. So it can be used by both types. 
-        virtual VCOMError VCOM_CALLTYPE  GetThresholdOperator(GdtfDefines::EGdtf_RDMValue_ThresholdOperator value) = 0;
-        virtual VCOMError VCOM_CALLTYPE  SetThresholdOperator(GdtfDefines::EGdtf_RDMValue_ThresholdOperator value) = 0;
-
-        // PersonalityDescription is an attribut of RDMValue_DMX_PERSONALITY_DESCRIPTION and RDMValue_SENSOR_DEFINITION
-        virtual MvrString VCOM_CALLTYPE  GetPersonalityDescription() = 0;
-        virtual VCOMError VCOM_CALLTYPE  SetPersonalityDescription(MvrString value) = 0;
-
-        /* NUMERIC_VALUES
-        RDMValue_UNSIGNED_BYTE
-        RDMValue_SIGNED_BYTE
-        RDMValue_UNSIGNED_WORD
-        RDMValue_SIGNED_WORD
-        RDMValue_UNSIGNED_DWORD
-        RDMValue_SIGNED_DWORD
-        RDMValue_ASCII */
-
-        virtual VCOMError VCOM_CALLTYPE  GetValue(Sint32& value) = 0;
-        virtual VCOMError VCOM_CALLTYPE  SetValue(Sint32 value) = 0;
-
-        //-----------------------------------------------------------------------------
-        //RDMValueBool
-        virtual VCOMError VCOM_CALLTYPE  GetBoolValue(GdtfDefines::EGdtf_RDMValueBool_Value& value) = 0;
-        virtual VCOMError VCOM_CALLTYPE  SetBoolValue(GdtfDefines::EGdtf_RDMValueBool_Value value) = 0;
-        //-----------------------------------------------------------------------------
-        //RDMValue_DMX_PERSONALITY_DESCRIPTION        
-        virtual VCOMError VCOM_CALLTYPE  GetFootPrint(Sint32& value) = 0;
-
-        virtual VCOMError VCOM_CALLTYPE  SetFootPrint(Sint32 value) = 0;
-        //-----------------------------------------------------------------------------
-        //RDMValue_SENSOR_DEFINITION
-        // Getter   
-        virtual VCOMError VCOM_CALLTYPE  GetSensorDefiniType(GdtfDefines::EGdtf_RDMValue_SENSOR_DEFINITION_TYPE& value) = 0;
-        virtual VCOMError VCOM_CALLTYPE  GetSensorUnit(GdtfDefines::EGdtf_RDMParam_SensorUnit& value) = 0;
-        virtual VCOMError VCOM_CALLTYPE  GetSensorUnitPrefix(GdtfDefines::EGdtf_RDMParam_SensorUnitPrefix& value) = 0;
-        virtual VCOMError VCOM_CALLTYPE  GetRangeMinValue(Sint32& value) = 0;
-        virtual VCOMError VCOM_CALLTYPE  GetRangeMaxValue(Sint32& value) = 0;
-        virtual VCOMError VCOM_CALLTYPE  GetNormalMinValue(Sint32& value) = 0;
-        virtual VCOMError VCOM_CALLTYPE  GetNormalMaxValue(Sint32& value) = 0;
-        virtual VCOMError VCOM_CALLTYPE  GetLowesHighestDetectionSupported(GdtfDefines::EGdtf_RDMValue_LowesHighestDetectionSupported& value) = 0;
-        virtual VCOMError VCOM_CALLTYPE  GetRecordValueSupported(GdtfDefines::EGdtf_RDMValue_RecordValueSupported& value) = 0;
-        // Setter       
-        virtual VCOMError VCOM_CALLTYPE  SetSensorDefiniType(GdtfDefines::EGdtf_RDMValue_SENSOR_DEFINITION_TYPE value) = 0;
-        virtual VCOMError VCOM_CALLTYPE  SetSensorUnit(GdtfDefines::EGdtf_RDMParam_SensorUnit value) = 0;
-        virtual VCOMError VCOM_CALLTYPE  SetSensorUnitPrefix(GdtfDefines::EGdtf_RDMParam_SensorUnitPrefix value) = 0;
-        virtual VCOMError VCOM_CALLTYPE  SetRangeMinValue(Sint32 value) = 0;
-        virtual VCOMError VCOM_CALLTYPE  SetRangeMaxValue(Sint32 value) = 0;
-        virtual VCOMError VCOM_CALLTYPE  SetNormalMinValue(Sint32 value) = 0;
-        virtual VCOMError VCOM_CALLTYPE  SetNormalMaxValue(Sint32 value) = 0;
-        virtual VCOMError VCOM_CALLTYPE  SetLowesHighestDetectionSupported(GdtfDefines::EGdtf_RDMValue_LowesHighestDetectionSupported value) = 0;
-        virtual VCOMError VCOM_CALLTYPE  SetRecordValueSupported(GdtfDefines::EGdtf_RDMValue_RecordValueSupported value) = 0;
-        //-----------------------------------------------------------------------------
-        //RDMValue_SLOT_INFO
-        //  Getter        
-        virtual VCOMError VCOM_CALLTYPE  GetDmxOffset(Sint32& value) = 0;
-        virtual VCOMError VCOM_CALLTYPE  GetSlotInfoType(GdtfDefines::EGdtf_RDMValue_SLOT_INFO_Type& value) = 0;
-        virtual VCOMError VCOM_CALLTYPE  GetSlotLabelID(GdtfDefines::EGdtf_RDMValue_SLOT_INFO_SlotLabelID& value) = 0;
-        //  Setter       
-        virtual VCOMError VCOM_CALLTYPE  SetDmxOffset(Sint32 value) = 0;
-        virtual VCOMError VCOM_CALLTYPE  SetSlotInfoType(GdtfDefines::EGdtf_RDMValue_SLOT_INFO_Type value) = 0;
-        virtual VCOMError VCOM_CALLTYPE  SetSlotLabelID(GdtfDefines::EGdtf_RDMValue_SLOT_INFO_SlotLabelID value) = 0;
-        //-----------------------------------------------------------------------------
-        //RDMValue_STATUS_ID_DESCRIPTION
-        //  Getter        
-        virtual VCOMError VCOM_CALLTYPE  GetStatusID(Sint32& value) = 0;
-        virtual VCOMError VCOM_CALLTYPE  GetStatusDescription(MvrString value) = 0;
-        //  Setter       
-        virtual VCOMError VCOM_CALLTYPE  SetStatusID(Sint32 value) = 0;
-        virtual VCOMError VCOM_CALLTYPE  SetStatusDescription(MvrString value) = 0;
-        //-----------------------------------------------------------------------------
-        //RDMValue_REAL_TIME_CLOCK
-        //  Getter        
-        virtual VCOMError VCOM_CALLTYPE  GetYear(Sint32& value) = 0;
-        virtual VCOMError VCOM_CALLTYPE  GetMonth(Sint32& value) = 0;
-        virtual VCOMError VCOM_CALLTYPE  GetDay(Sint32& value) = 0;
-        virtual VCOMError VCOM_CALLTYPE  GetHours(Sint32& value) = 0;
-        virtual VCOMError VCOM_CALLTYPE  GetMinute(Sint32& value) = 0;
-        virtual VCOMError VCOM_CALLTYPE  GetSecond(Sint32& value) = 0;
-        //  Setter
-        virtual VCOMError VCOM_CALLTYPE  SetYear(Sint32 value) = 0;
-        virtual VCOMError VCOM_CALLTYPE  SetMonth(Sint32 value) = 0;
-        virtual VCOMError VCOM_CALLTYPE  SetDay(Sint32 value) = 0;
-        virtual VCOMError VCOM_CALLTYPE  SetHours(Sint32 value) = 0;
-        virtual VCOMError VCOM_CALLTYPE  SetMinute(Sint32 value) = 0;
-        virtual VCOMError VCOM_CALLTYPE  SetSecond(Sint32 value) = 0;
-
-        //-----------------------------------------------------------------------------
-        virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
-        virtual void*	  VCOM_CALLTYPE    GetBoundObject() = 0;
-
-    };
-    typedef VCOMPtr<IGdtfRDMParameterValue>	IGdtfRDMParameterValuePtr;
-
-    class DYNAMIC_ATTRIBUTE IGdtfRDMParameter : public IVWUnknown
+    
+    
+    class DYNAMIC_ATTRIBUTE IGdtfDMXPersonality : public IVWUnknown
     {
     public:
-        // Getter
-        virtual VCOMError VCOM_CALLTYPE GetName(MvrString& outVal) = 0;
-        virtual VCOMError VCOM_CALLTYPE GetPID(Sint32& outVal) = 0;
-        virtual VCOMError VCOM_CALLTYPE GetType(GdtfDefines::EGdtf_RDMParam_Type& outVal) = 0;
-        virtual VCOMError VCOM_CALLTYPE GetDataType(GdtfDefines::EGdtf_RDMParam_DataType& outVal) = 0;
-        virtual VCOMError VCOM_CALLTYPE GetCommand(GdtfDefines::EGdtf_RDMParam_Command& outVal) = 0;
-        virtual VCOMError VCOM_CALLTYPE GetSensorUnit(GdtfDefines::EGdtf_RDMParam_SensorUnit& outVal) = 0;
-        virtual VCOMError VCOM_CALLTYPE GetSensorUnitPrefix(GdtfDefines::EGdtf_RDMParam_SensorUnitPrefix& outVal) = 0;
-        virtual VCOMError VCOM_CALLTYPE GetMinValue(Sint32& outVal) = 0;
-        virtual VCOMError VCOM_CALLTYPE GetMaxValue(Sint32& outVal) = 0;
-        virtual VCOMError VCOM_CALLTYPE GetDescription(MvrString& outVal) = 0;
-        // Setter
-        virtual VCOMError VCOM_CALLTYPE SetName(const MvrString& value) = 0;
-        virtual VCOMError VCOM_CALLTYPE SetPID(Sint32 value) = 0;
-        virtual VCOMError VCOM_CALLTYPE SetType(GdtfDefines::EGdtf_RDMParam_Type value) = 0;
-        virtual VCOMError VCOM_CALLTYPE SetDataType(GdtfDefines::EGdtf_RDMParam_DataType value) = 0;
-        virtual VCOMError VCOM_CALLTYPE SetCommand(GdtfDefines::EGdtf_RDMParam_Command value) = 0;        
-        virtual VCOMError VCOM_CALLTYPE SetSensorUnit(GdtfDefines::EGdtf_RDMParam_SensorUnit value) = 0;
-        virtual VCOMError VCOM_CALLTYPE SetSensorUnitPrefix(GdtfDefines::EGdtf_RDMParam_SensorUnitPrefix value) = 0;
-        virtual VCOMError VCOM_CALLTYPE SetMinValue(Sint32 value) = 0;
-        virtual VCOMError VCOM_CALLTYPE SetMaxValue(Sint32 value) = 0;
-        virtual VCOMError VCOM_CALLTYPE GetPDLSize(Sint32& outVal) = 0;
-        virtual VCOMError VCOM_CALLTYPE SetPDLSize(Sint32 value) = 0;
-        virtual VCOMError VCOM_CALLTYPE SetDescription(const MvrString& value) = 0;
-        // Arrays
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetRDMParameterValueCount(size_t& count) = 0;
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateRDMParameterValue(GdtfDefines::EGdtfObjectType type, VectorworksMVR::IGdtfRDMParameterValue** outVal) = 0;
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetRDMParameterValueAt(size_t at, VectorworksMVR::IGdtfRDMParameterValue** value) = 0;
+        // Getter        
+        virtual VCOMError VCOM_CALLTYPE		GetValue(size_t& outValue) const  = 0;
+        virtual MvrString VCOM_CALLTYPE     GetDMXMode() const = 0;
+        // Setter       
+        virtual VCOMError VCOM_CALLTYPE     SetValue(size_t val) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetDMXMode(MvrString modeName) = 0;
         //
         virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
         virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
     };
-    typedef VCOMPtr<IGdtfRDMParameter>	IGdtfRDMParameterPtr;
-
-    class DYNAMIC_ATTRIBUTE IGdtfRDMAbsentNotification : public IVWUnknown
+    typedef VCOMPtr<IGdtfDMXPersonality>	IGdtfDMXPersonalityPtr;
+    
+    
+    class DYNAMIC_ATTRIBUTE IGdtfSoftwareVersionID : public IVWUnknown
     {
     public:
-        virtual MvrString VCOM_CALLTYPE     GetName() = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetValue(size_t& outVal)= 0;
+        virtual VCOMError VCOM_CALLTYPE     SetValue(size_t  value)= 0;
+
+        virtual VCOMError VCOM_CALLTYPE     GetDMXPersonalityCount(size_t& outCount)= 0;
+        virtual VCOMError VCOM_CALLTYPE     GetDMXPersonalityAt(size_t at, IGdtfDMXPersonality**  outValue)= 0;
+        virtual VCOMError VCOM_CALLTYPE     CreateDMXPersonality(size_t dmxPersonalityValue, MvrString dmxModeName, IGdtfDMXPersonality** outValue)= 0;		
 
         virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
         virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
     };
-    typedef VCOMPtr<IGdtfRDMAbsentNotification>	IGdtfRDMAbsentNotificationPtr;
+    typedef VCOMPtr<IGdtfSoftwareVersionID>	IGdtfSoftwareVersionIDPtr;
 
-    class DYNAMIC_ATTRIBUTE IGdtfRDMParameterNotification : public IVWUnknown
-    {
-    public:
-        virtual VCOMError VCOM_CALLTYPE GetPID(Sint32& outVal) = 0;
-        virtual VCOMError VCOM_CALLTYPE SetPID(Sint32 value) = 0;
-        // Arrays
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetRDMParameterValueCount(size_t& count) = 0;
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateRDMParameterValue(GdtfDefines::EGdtfObjectType type, VectorworksMVR::IGdtfRDMParameterValue** outVal) = 0;
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetRDMParameterValueAt(size_t at, VectorworksMVR::IGdtfRDMParameterValue** value) = 0;
-        //        
-        virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
-        virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
-    };
-    typedef VCOMPtr<IGdtfRDMParameterNotification>	IGdtfRDMParameterNotificationPtr;
 
     class DYNAMIC_ATTRIBUTE IGdtfXmlParsingError : public IVWUnknown
     {

@@ -3,20 +3,21 @@
 //-----------------------------------------------------------------------------
 #include "Prefix/StdAfx.h"
 #include "CGdtfFTRDM.h"
-#include "CGdtfRDMParameter.h"
-#include "CGdtfRDMNotifications.h"
+#include "CGdtfSoftwareVersionID.h"
 
-VectorworksMVR::CGdtf_FTRDMImpl::CGdtf_FTRDMImpl()
+using namespace VectorworksMVR;
+
+CGdtf_FTRDMImpl::CGdtf_FTRDMImpl()
 {
 	f_FtRDM = nullptr;
 };
 
-VectorworksMVR::CGdtf_FTRDMImpl::~CGdtf_FTRDMImpl()
+CGdtf_FTRDMImpl::~CGdtf_FTRDMImpl()
 {
     
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtf_FTRDMImpl::GetManufacturerID(Sint32& outVal)
+VCOMError CGdtf_FTRDMImpl::GetManufacturerID(Sint32& outVal)
 {
     // Check Data
     if (!f_FtRDM) return kVCOMError_NotInitialized;
@@ -26,7 +27,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtf_FTRDMImpl::GetManufacturerID(Sin
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtf_FTRDMImpl::SetManufacturerID(Sint32 value)
+VCOMError CGdtf_FTRDMImpl::SetManufacturerID(Sint32 value)
 {
     // Check Pointer
     if (!f_FtRDM) return kVCOMError_NotInitialized;
@@ -37,7 +38,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtf_FTRDMImpl::SetManufacturerID(Sin
 }
 
 
-VectorworksMVR::VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtf_FTRDMImpl::BindToObject(void * objAddr)
+VCOMError VCOM_CALLTYPE CGdtf_FTRDMImpl::BindToObject(void * objAddr)
 {
     // Check if valid
     if (!f_FtRDM) return kVCOMError_NotInitialized;
@@ -47,7 +48,7 @@ VectorworksMVR::VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtf_FTRDMImpl::BindToO
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtf_FTRDMImpl::GetDeviceModelID(Sint32& outVal)
+VCOMError CGdtf_FTRDMImpl::GetDeviceModelID(Sint32& outVal)
 {
 
     // Check Data
@@ -58,81 +59,40 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtf_FTRDMImpl::GetDeviceModelID(Sint
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtf_FTRDMImpl::SetDeviceModelID(Sint32 value)
+VCOMError CGdtf_FTRDMImpl::GetSoftwareVersionIDCount(size_t &count)
 {
-    // Check Pointer
-    if (!f_FtRDM) return kVCOMError_NotInitialized;
-
-    f_FtRDM->SetDeviceModelID (value);
-
-    return kVCOMError_NoError;
-}
-
-VectorworksMVR::VCOMError VectorworksMVR::CGdtf_FTRDMImpl::GetSoftwareIDCount(size_t& count)
-{
-    // Check Data
-    if (!f_FtRDM) return kVCOMError_NotInitialized;
+    if (!f_FtRDM) { return kVCOMError_NotInitialized; }
 
     count = f_FtRDM->GetSoftwareVersIDs().size();
 
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtf_FTRDMImpl::GetSoftwareIDAt(size_t at, Sint32& outVal)
-{
-	// Check Data
-	if (!f_FtRDM) return kVCOMError_NotInitialized;
-	
-	if(f_FtRDM->GetSoftwareVersIDs().size() <= (at + 1)) { return  kVCOMError_OutOfBounds; }
-	
-	outVal = f_FtRDM->GetSoftwareVersIDs().at(at);
-	
-	return kVCOMError_NoError;
-}
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtf_FTRDMImpl::AddSoftwareID(Sint32 softID)
-{
-    // Check Pointer
-    if (!f_FtRDM) return kVCOMError_NotInitialized;
-
-    f_FtRDM->AddSoftwareVersID(softID);
-
-    return kVCOMError_NoError;
-}
-
-
-VectorworksMVR::VCOMError VectorworksMVR::CGdtf_FTRDMImpl::GetRDMParameterCount(size_t &count)
-{
-    if (!f_FtRDM) { return kVCOMError_NotInitialized; }
-
-    count = f_FtRDM->GetRDMParametersArray().size();
-
-    return kVCOMError_NoError;
-}
-
-VectorworksMVR::VCOMError VectorworksMVR::CGdtf_FTRDMImpl::GetRDMParameterAt(size_t at, VectorworksMVR::IGdtfRDMParameter **RDMParameter)
+VCOMError CGdtf_FTRDMImpl::GetSoftwareVersionIDAt(size_t at, IGdtfSoftwareVersionID** value)
 {
     // Check if Set
     if (!f_FtRDM) { return kVCOMError_NotInitialized; }
 
     // Check if no Overflow
-    if (at >= f_FtRDM->GetRDMParametersArray().size()) { return kVCOMError_OutOfBounds; }
+    if (at >= f_FtRDM->GetSoftwareVersIDs().size()) { return kVCOMError_OutOfBounds; }
 
 
-    SceneData::GdtfRDMParameter* gdtfRDMParameter = f_FtRDM->GetRDMParametersArray()[at];
-    
+    SceneData::GdtfSoftwareVersionID* gdtfSoftwareVersionID = f_FtRDM->GetSoftwareVersIDs()[at];
+
+
     //---------------------------------------------------------------------------
-    // Initialize Object    
-    CGdtfRDMParameterImpl* pRDMParameterObj = nullptr;
+    // Initialize Object
+    CGdtfSoftwareVersionIDImpl* pSoftwareVersionIDObj = nullptr;
 
     // Query Interface
-    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfRDMParameter, (IVWUnknown**)& pRDMParameterObj)))
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfSoftwareVersionID, (IVWUnknown**)& pSoftwareVersionIDObj)))
     {
         // Check Casting
-        CGdtfRDMParameterImpl* pResultInterface = dynamic_cast<CGdtfRDMParameterImpl*>(pRDMParameterObj);
+        CGdtfSoftwareVersionIDImpl* pResultInterface = dynamic_cast<CGdtfSoftwareVersionIDImpl*>(pSoftwareVersionIDObj);
         if (pResultInterface)
         {
-            pResultInterface->SetPointer(gdtfRDMParameter);
+            pResultInterface->SetPointer(gdtfSoftwareVersionID);
         }
         else
         {
@@ -144,62 +104,40 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtf_FTRDMImpl::GetRDMParameterAt(siz
 
     //---------------------------------------------------------------------------
     // Check Incomming Object
-    if (*RDMParameter)
+    if (*value)
     {
-        (*RDMParameter)->Release();
-        *RDMParameter = NULL;
+        (*value)->Release();
+        *value = NULL;
     }
 
     //---------------------------------------------------------------------------
     // Set Out Value
-    *RDMParameter = pRDMParameterObj;
+    *value = pSoftwareVersionIDObj;
 
     return kVCOMError_NoError;
 }
 
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtf_FTRDMImpl::CreateRDMParameter(VectorworksMVR::IGdtfRDMParameter **outVal,
-                MvrString name,
-                Sint32 PID, 
-                GdtfDefines::EGdtf_RDMParam_Type Type,
-                GdtfDefines::EGdtf_RDMParam_DataType dataType,
-                GdtfDefines::EGdtf_RDMParam_Command command,
-                GdtfDefines::EGdtf_RDMParam_SensorUnit sensorUnit,
-                GdtfDefines::EGdtf_RDMParam_SensorUnitPrefix sensorUnitPrefix,
-                Sint32 minValue,
-                Sint32 maxValue, 
-                Sint32 PDLSize, 
-                MvrString description)
+VCOMError CGdtf_FTRDMImpl::CreateSoftwareVersionID(size_t value, IGdtfSoftwareVersionID **outVal)
 {
     // Check if Set
     if (!f_FtRDM) { return kVCOMError_NotInitialized; }
 
-    
-    SceneData::GdtfRDMParameter* gdtfRDMParameter = f_FtRDM->AddRDMParameter(
-        name, 
-        PID, 
-        Type, 
-        dataType, 
-        command,
-        sensorUnit, 
-        sensorUnitPrefix, 
-        minValue, 
-        maxValue, 
-        PDLSize, 
-        description);
+
+    SceneData::GdtfSoftwareVersionID* gdtfSoftwareVersionID = f_FtRDM->AddSoftwareVersID(value);
 
     //---------------------------------------------------------------------------
     // Initialize Object
-    CGdtfRDMParameterImpl* pRDMParameterObj = nullptr;
+    CGdtfSoftwareVersionIDImpl* pSoftwareVersionIDObj = nullptr;
 
     // Query Interface
-    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfRDMParameter, (IVWUnknown**)& pRDMParameterObj)))
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfSoftwareVersionID, (IVWUnknown**)& pSoftwareVersionIDObj)))
     {
         // Check Casting
-        CGdtfRDMParameterImpl* pResultInterface = dynamic_cast<CGdtfRDMParameterImpl*>(pRDMParameterObj);
+        CGdtfSoftwareVersionIDImpl* pResultInterface = dynamic_cast<CGdtfSoftwareVersionIDImpl*>(pSoftwareVersionIDObj);
         if (pResultInterface)
         {
-            pResultInterface->SetPointer(gdtfRDMParameter);
+            pResultInterface->SetPointer(gdtfSoftwareVersionID);
         }
         else
         {
@@ -219,76 +157,23 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtf_FTRDMImpl::CreateRDMParameter(Ve
 
     //---------------------------------------------------------------------------
     // Set Out Value
-    *outVal = pRDMParameterObj;
+    *outVal = pSoftwareVersionIDObj;
 
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtf_FTRDMImpl::GetRDMNotifications(VectorworksMVR::IGdtfRDMNotifications **outRDMNotifications)
+
+VCOMError CGdtf_FTRDMImpl::SetDeviceModelID(Sint32 value)
 {
     // Check Pointer
-    if (!f_FtRDM) { return kVCOMError_NotInitialized; }
+    if (!f_FtRDM) return kVCOMError_NotInitialized;
 
-    //---------------------------------------------------------------------------
-    // Initialize Object             
-    SceneData::GdtfRDMNotifications*	gdtfRDMNotifications = f_FtRDM->GetRDMNotifications();
-    if (!gdtfRDMNotifications) { return kVCOMError_NotSet; }
-
-    CGdtfRDMNotificationsImpl*		pRDMNotificationsObj = nullptr;
-
-    // Query Interface
-    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfRDMNotifications, (IVWUnknown**)& pRDMNotificationsObj)))
-    {
-        // Check Casting
-        CGdtfRDMNotificationsImpl* pResultInterface = dynamic_cast<CGdtfRDMNotificationsImpl*>(pRDMNotificationsObj);
-        if (pResultInterface)
-        {
-            pResultInterface->SetPointer(gdtfRDMNotifications);
-        }
-        else
-        {
-            pResultInterface->Release();
-            pResultInterface = nullptr;
-            return kVCOMError_NoInterface;
-        }
-    }
-
-    //---------------------------------------------------------------------------
-    // Check Incomming Object
-    if (*outRDMNotifications)
-    {
-        (*outRDMNotifications)->Release();
-        *outRDMNotifications = NULL;
-    }
-
-    //---------------------------------------------------------------------------
-    // Set Out Value
-    *outRDMNotifications = pRDMNotificationsObj;
+    f_FtRDM->SetDeviceModelID (value);
 
     return kVCOMError_NoError;
 }
 
-
-VectorworksMVR::VCOMError VectorworksMVR::CGdtf_FTRDMImpl::SetRDMNotifications(IGdtfRDMNotifications * newRDMNotifications)
-{
-    if (!f_FtRDM) { return kVCOMError_NotInitialized; }
-    if (!newRDMNotifications) { return kVCOMError_InvalidArg; }
-
-    // Cast
-    CGdtfRDMNotificationsImpl* RDMNotificationsImpl = dynamic_cast<CGdtfRDMNotificationsImpl*>(newRDMNotifications);
-    if (!RDMNotificationsImpl) { return kVCOMError_Failed; }
-
-    // Set Object
-    SceneData::GdtfRDMNotifications* gdtfRDMNotifications = RDMNotificationsImpl->GetPointer();
-    if (!gdtfRDMNotifications) { return kVCOMError_Failed; }
-
-    f_FtRDM->SetRDMNotifications(gdtfRDMNotifications);
-
-    return kVCOMError_NoError;
-}
-
-
-void *VCOM_CALLTYPE VectorworksMVR::CGdtf_FTRDMImpl::GetBoundObject()
+void *VCOM_CALLTYPE CGdtf_FTRDMImpl::GetBoundObject()
 {
     // Check if valid
     if (!f_FtRDM) return nullptr;
@@ -296,12 +181,12 @@ void *VCOM_CALLTYPE VectorworksMVR::CGdtf_FTRDMImpl::GetBoundObject()
     return f_FtRDM->GetBind();
 }
 
-void VectorworksMVR::CGdtf_FTRDMImpl::SetPointer(SceneData::GdtfFTRDM * value)
+void CGdtf_FTRDMImpl::SetPointer(SceneData::GdtfFTRDM * value)
 {
     f_FtRDM = value;
 }
 
-SceneData::GdtfFTRDM * VectorworksMVR::CGdtf_FTRDMImpl::GetPointer()
+SceneData::GdtfFTRDM * CGdtf_FTRDMImpl::GetPointer()
 {
     return f_FtRDM;
 }
