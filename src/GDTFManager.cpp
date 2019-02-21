@@ -6439,8 +6439,15 @@ void SceneData::GdtfProtocols::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	//------------------------------------------------------------------------------------
 	// Create needed and optional Attribute Arrays
 	TXStringArray needed;
-	TXStringArray optional;
-
+	
+    TXStringArray optional;
+    optional.push_back(XML_GDTF_FTRDM);
+    optional.push_back(XML_GDTF_ArtNet);
+    optional.push_back(XML_GDTF_sACN);        
+    optional.push_back(XML_GDTF_KiNET);          
+    optional.push_back(XML_GDTF_PosiStageNet);
+    optional.push_back(XML_GDTF_OpenSoundControl);
+    optional.push_back(XML_GDTF_CITP);
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
 	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
