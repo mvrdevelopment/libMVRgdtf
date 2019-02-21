@@ -965,27 +965,28 @@ void GdtfUnittest::ReadFile()
         //------------------------------------------------------------------------------    
         // Read SoftwareVersionID
         size_t softIdCount;
-        rdm->GetSoftwareVersionIDCount(softIdCount);
+        __checkVCOM (rdm->GetSoftwareVersionIDCount(softIdCount));
         this->checkifEqual("SoftwareVersionID count", Sint32(softIdCount), Sint32(1));
                 
         IGdtfSoftwareVersionIDPtr softID;
         rdm->GetSoftwareVersionIDAt(0, &softID);
 
         size_t softIDVal;
-        softID->GetValue(softIDVal);
+        __checkVCOM (softID->GetValue(softIDVal));
         this->checkifEqual("SoftwareVersionID Value", Sint32(softIDVal), Sint32(22));
 
         //------------------------------------------------------------------------------    
         // Read DMXPersonality
         size_t dmxPersCount;
-        softID->GetDMXPersonalityCount(dmxPersCount);
+        __checkVCOM (softID->GetDMXPersonalityCount(dmxPersCount) );
         this->checkifEqual("DMXPersonality count", Sint32(dmxPersCount), Sint32(1));
 
-        size_t softIDValue;
-        softID->GetValue(softIDValue);
-        this->checkifEqual("DMXPersonality Value", Sint32(softIDValue), Sint32(11));
+        IGdtfDMXPersonalityPtr dmxPerso;
+        size_t dmxPersoVal;
+        __checkVCOM (dmxPerso->GetValue(dmxPersoVal));
+        this->checkifEqual("DMXPersonality Value", Sint32(dmxPersoVal), Sint32(11));
 
-        softID->G
+        this->checkifEqual("DMXPersonality DMXModeName", dmxPerso->GetDMXMode(), "DmxModeNam");
 }
 
 	PrintParsingErrorList(gdtfRead);
