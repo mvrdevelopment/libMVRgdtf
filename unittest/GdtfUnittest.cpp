@@ -260,17 +260,17 @@ void GdtfUnittest::WriteFile()
 		timestamp.fHour = 22; timestamp.fMinute = 33; timestamp.fSecond = 44;
 		__checkVCOM(gdtfWrite->CreateRevision("Revision TestText", timestamp, &rev));
 
-        //------------------------------------------------------------------------------    
-        // Add RDM 
+        ////------------------------------------------------------------------------------    
+        //// Add RDM 
         IGdtfTRDMPtr rdm;
-        gdtfWrite->CreateRDM(&rdm);
-        rdm->SetDeviceModelID(666);
+        __checkVCOM (gdtfWrite->CreateRDM(&rdm) );        
+        __checkVCOM (rdm->SetDeviceModelID(6) );
 
         IGdtfSoftwareVersionIDPtr softID;
-        rdm->CreateSoftwareVersionID( 22, &softID);
+        __checkVCOM (rdm->CreateSoftwareVersionID( 22, &softID));
         
         IGdtfDMXPersonalityPtr dmxPerso;
-        softID->CreateDMXPersonality( 11, "DmxModeNam", &dmxPerso);        
+        __checkVCOM (softID->CreateDMXPersonality( 11, "DmxModeNam", &dmxPerso));
 
 		//------------------------------------------------------------------------------    
 		// Close the stream and dump to disk
