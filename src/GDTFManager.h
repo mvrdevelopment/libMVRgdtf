@@ -385,8 +385,9 @@ namespace SceneData
 		double						fWidth;
 		double						fHeight;
 		EGdtfModel_PrimitiveType	fPrimitiveType;
-		Gdtf3DSFile					fGeometryFile;
-		TXString					fFullPath;
+		TXString					fGeometryFile;  // FileName without the extension.
+		TXString					fFullPath3DS;
+        TXString					fFullPathSVG;
 		//
 		GdtfFixture*				fParentFixture;
 		
@@ -397,15 +398,20 @@ namespace SceneData
         double                          GetWidth() const;
         double                          GetHeight() const;
         EGdtfModel_PrimitiveType		GetPrimitiveType() const;
-		const TXString&					GetGeometryFile() const;
-		const TXString&					GetGeometryFileFullPath();
+        //
+		const TXString&					GetGeometryFileName() const;
+		const TXString&					GetGeometryFile_3DS_FullPath();
+        const TXString&				    GetGeometryFile_SVG_FullPath();
 		// Setter
 		void						    SetName(const TXString& name);
 		void					    	SetLength(const double& length);
 		void						    SetWidth(const double& width);
 		void						    SetHeight(const double& height);
-		void						    SetPrimitiveType(const EGdtfModel_PrimitiveType& type);
-		void						    SetGeometryFile(const Gdtf3DSFile& file);
+		void						    SetPrimitiveType(const EGdtfModel_PrimitiveType& type);        
+		void						    SetGeometryFile(const TXString& file);
+    
+    private: 
+        TXString                        GetWorkingFolder();
 		
 	public:
 		virtual EGdtfObjectType			GetObjectType();
@@ -1770,8 +1776,9 @@ namespace SceneData
 		TXString		fManufacturer;
 		TXString		fFixtureTypeDescription;
 		GdtfFixtureGUID	fGuid;
-		GdtfPNGFile		fTumbnail;
-		TXString		fTumbnailFullPath;
+		TXString		fTumbnail;
+		TXString		fTumbnailFullPath_PNG;
+        TXString		fTumbnailFullPath_SVG;
 		GdtfFixtureGUID	fLinkedGuid;
 		bool			fHasLinkedGuid;
 
@@ -1825,8 +1832,9 @@ private:
         GdtfFixtureGUID		GetGuid() const;
 		GdtfFixtureGUID		GetLinkedGuid() const;
 		bool				HasLinkedGuid() const;
-        const GdtfPNGFile&  GetPNGFile() const;
-		const GdtfPNGFile&  GetPNGFileFullPath();		
+        const TXString&     GetThumbnailName() const;
+		const GdtfPNGFile&  GetPNGThumnailFullPath();		
+        const GdtfPNGFile&  GetSVGThumnailFullPath();
         // Setter
 		void				SetName(const TXString& name);
 		void				SetShortName(const TXString& shortName);
@@ -1834,7 +1842,7 @@ private:
 		void				SetFixtureTypeDescription(const TXString& desc);
 		void				SetGuid(const VWFC::Tools::VWUUID& uuid);
 		void				SetLinkedGuid(const VWFC::Tools::VWUUID& uuid);
-		void				SetPNGFile(const GdtfPNGFile& png);
+		void				SetThumbnailName(const TXString& fileName);
 	public:
 		//----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		// Add calls
@@ -1891,6 +1899,7 @@ private:
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
         virtual	void			        OnErrorCheck(const IXMLFileNodePtr& pNode);
 
+        TXString                       getWorkingFolder();
 		        
         GdtfAttributePtr            getAttributeByRef(const TXString& ref);
         GdtfWheelPtr                getWheelByRef(const TXString& ref);		

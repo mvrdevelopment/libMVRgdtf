@@ -209,15 +209,23 @@ MvrString VectorworksMVR::CGdtfFixtureImpl::GetFixtureThumbnail()
     if(!fFixtureObject) {return "";}
 	
     
-    return fFixtureObject->GetPNGFile().GetCharPtr();
+    return fFixtureObject->GetThumbnailName().GetCharPtr();
 }
 
-MvrString VectorworksMVR::CGdtfFixtureImpl::GetFixtureThumbnailFullPath()
+MvrString VectorworksMVR::CGdtfFixtureImpl::GetFixtureThumbnail_PNG_FullPath()
 {
 	if(!fFixtureObject) {return "";}
 	
 	
-	return fFixtureObject->GetPNGFileFullPath().GetCharPtr();
+	return fFixtureObject->GetPNGThumnailFullPath().GetCharPtr();
+}
+
+MvrString VCOM_CALLTYPE VectorworksMVR::CGdtfFixtureImpl::GetFixtureThumbnail_SVG_FullPath()
+{
+	if(!fFixtureObject) {return "";}
+	
+	
+	return fFixtureObject->GetSVGThumnailFullPath().GetCharPtr();
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::SetFixtureTypeDescription(MvrString descrip)
@@ -245,7 +253,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::SetFixtureThumbnail(
 	if(!fFixtureObject) {return kVCOMError_NotInitialized;}
 	
 	TXString vwThumb (thubnail);
-	fFixtureObject->SetPNGFile(vwThumb);
+	fFixtureObject->SetThumbnailName(vwThumb);
 	
 	return kVCOMError_NoError;
 }

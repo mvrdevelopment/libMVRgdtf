@@ -1045,11 +1045,22 @@ void GdtfModel::SetPrimitiveType(const EGdtfModel_PrimitiveType &type)
 	fPrimitiveType = type;
 }
 
-void GdtfModel::SetGeometryFile(const Gdtf3DSFile &file)
+void GdtfModel::SetGeometryFile(const TXString &file)
 {
 	fGeometryFile = file;
 }
 
+TXString SceneData::GdtfModel::GetWorkingFolder()
+{
+ 	TXString				workingFolder;
+	IFolderIdentifierPtr	folder;
+	fParentFixture->GetWorkingFolder(folder);
+	
+	ASSERTN(kEveryone, folder != nullptr);
+	if (folder) { folder->GetFullPath(workingFolder); }
+
+    return workingFolder; 
+}
 
 void GdtfModel::OnPrintToFile(IXMLFileNodePtr pNode)
 {
@@ -1123,25 +1134,25 @@ TXString GdtfModel::GetNodeReference()
 	return GetName();
 }
 
-const TXString& GdtfModel::GetGeometryFile() const
+const TXString& GdtfModel::GetGeometryFileName() const
 {
 	return fGeometryFile;
 }
 
-const TXString& GdtfModel::GetGeometryFileFullPath()
+const TXString& GdtfModel::GetGeometryFile_3DS_FullPath()
 {
-	TXString				workingFolder;
-	IFolderIdentifierPtr	folder;
-	fParentFixture->GetWorkingFolder(folder);
-	
-	ASSERTN(kEveryone, folder != nullptr);
-	if (folder) { folder->GetFullPath(workingFolder); }
-	
 	// Set to store
-	fFullPath = workingFolder + fGeometryFile;
+	fFullPath3DS = GetWorkingFolder() + fGeometryFile + ".3ds";	
 	
-	// Return
-	return fFullPath;
+	return fFullPath3DS;
+}
+
+const TXString & SceneData::GdtfModel::GetGeometryFile_SVG_FullPath()
+{
+	// Set to store
+	fFullPathSVG = GetWorkingFolder() + fGeometryFile + ".svg";	
+	
+	return fFullPathSVG;
 }
 
 const TXString& GdtfModel::GetName() const
@@ -4686,7 +4697,10 @@ void GdtfFixture::ResolveDmxModeRefs()
 		{
 			for (GdtfGeometryPtr geo : fGeometries)
 			{
-				if (geo->GetNodeReference() == unresolvedgeomRef) { geomPtr = geo; break; }
+				if (geo->GetNodeReference() == unresolvedgeomRef) 
+                { 
+                    geomPtr = geo; break; 
+                }
 			}
 		}
 
@@ -5365,6 +5379,16 @@ void GdtfFixture::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
 }
 
+TXString SceneData::GdtfFixture::getWorkingFolder()
+{
+	TXString				workingFolder;
+	
+	ASSERTN(kEveryone, fWorkingFolder != nullptr);
+	if (fWorkingFolder) { fWorkingFolder->GetFullPath(workingFolder); }
+    
+    return workingFolder;
+}
+
 EGdtfObjectType GdtfFixture::GetObjectType()
 {
 	return EGdtfObjectType::eGdtfFixture;
@@ -5712,23 +5736,25 @@ bool GdtfFixture::HasLinkedGuid() const
 	return fHasLinkedGuid;
 }
 
-const GdtfPNGFile& GdtfFixture::GetPNGFile() const
+const TXString& GdtfFixture::GetThumbnailName() const
 {
     return fTumbnail;
 }
 
-const GdtfPNGFile& GdtfFixture::GetPNGFileFullPath()
+const GdtfPNGFile& GdtfFixture::GetPNGThumnailFullPath()
 {
-	TXString				workingFolder;
-	
-	ASSERTN(kEveryone, fWorkingFolder != nullptr);
-	if (fWorkingFolder) { fWorkingFolder->GetFullPath(workingFolder); }
-	
 	// Set to store
-	fTumbnailFullPath = workingFolder + fTumbnail;
-	
-	// Return
-	return fTumbnailFullPath;
+	fTumbnailFullPath_PNG = getWorkingFolder() + fTumbnail + ".3ds";
+
+	return fTumbnailFullPath_PNG;
+}
+
+const GdtfPNGFile & SceneData::GdtfFixture::GetSVGThumnailFullPath()
+{
+	// Set to store
+	fTumbnailFullPath_SVG = getWorkingFolder() + fTumbnail + ".svg";	
+
+	return fTumbnailFullPath_SVG;
 }
 
 
@@ -5763,9 +5789,9 @@ void GdtfFixture::SetLinkedGuid(const VWFC::Tools::VWUUID& uuid)
 	fLinkedGuid = uuid;
 }
 
-void GdtfFixture::SetPNGFile(const GdtfPNGFile& png)
+void GdtfFixture::SetThumbnailName(const TXString& fileName)
 {
-	fTumbnail = png;
+	fTumbnail = fileName;
 }
 
 SceneData::GdtfDMXProfile::GdtfDMXProfile()

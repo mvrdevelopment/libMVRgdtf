@@ -149,7 +149,7 @@ void GdtfUnittest::WriteFile()
 		IGdtfModelPtr gdtfModel;
 		if (__checkVCOM(gdtfWrite->CreateModel("My modelName", &gdtfModel)))
 		{
-			__checkVCOM(gdtfModel->Set3DSGeometryFile("My file3DSGeometry"));
+			__checkVCOM(gdtfModel->SetGeometryFile("My file3DSGeometry"));
 			__checkVCOM(gdtfModel->SetHeight(10));
 			__checkVCOM(gdtfModel->SetWidth(20));
 			__checkVCOM(gdtfModel->SetLength(30));
@@ -169,8 +169,8 @@ void GdtfUnittest::WriteFile()
 		__checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometry, "My nameGeometry", gdtfModel, ma, &childGeo));
 
 		// Create Child in Child
-		IGdtfGeometryPtr innerChild;
-		__checkVCOM(childGeo->CreateGeometry(EGdtfObjectType::eGdtfGeometry, "My Inner Geo", gdtfModel, ma, &innerChild));
+		IGdtfGeometryPtr innerChildGeo;
+		__checkVCOM(childGeo->CreateGeometry(EGdtfObjectType::eGdtfGeometry, "My Inner Geo", gdtfModel, ma, &innerChildGeo));
 
 		IGdtfGeometryPtr geoRef1;
 		__checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometryReference, "My Reference", gdtfModel, ma, &geoRef1));
@@ -178,11 +178,15 @@ void GdtfUnittest::WriteFile()
 
 		IGdtfGeometryPtr geoRef2;
 		__checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometryReference, "My Ref to Inner Obj", gdtfModel, ma, &geoRef2));
-		__checkVCOM(geoRef2->SetGeometryReference(innerChild));
+		__checkVCOM(geoRef2->SetGeometryReference(innerChildGeo));
 
 		IGdtfBreakPtr gdtfBreak;
 		__checkVCOM(geoRef2->CreateBreak(3,4,& gdtfBreak));
 
+        // Beam Geometry
+        IGdtfGeometryPtr beamGeo;
+        __checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometryBeamFilter, "My Beam Geometry", gdtfModel, ma, &beamGeo));
+        
 
 		//------------------------------------------------------------------------------
 		// Get dmxModes
@@ -816,7 +820,7 @@ void GdtfUnittest::ReadFile()
 			if (__checkVCOM(gdtfRead->GetModelAt(i, &gdtfModel)))
 			{
 				MvrString  modelName	= gdtfModel->GetName();
-				MvrString geometryFile	= gdtfModel->Get3DSGeometryFile();
+				MvrString geometryFile	= gdtfModel->GetGeometryFileName();
 				this->checkifEqual("gdtfModelGetName "				, modelName		, "My modelName");
 				this->checkifEqual("gdtfModelGet3DSGeometryFile "	, geometryFile	, "My file3DSGeometry");
 
@@ -847,7 +851,7 @@ void GdtfUnittest::ReadFile()
 		// Geometry Section
 		size_t countGeo = 0;
 		__checkVCOM(gdtfRead->GetGeometryCount(countGeo));
-		this->checkifEqual("Geometry Count ", countGeo, size_t(3));
+		this->checkifEqual("Geometry Count ", countGeo, size_t(4));
 
 		IGdtfGeometryPtr geo1;
 		__checkVCOM(gdtfRead->GetGeometryAt(0, &geo1));

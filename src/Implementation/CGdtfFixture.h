@@ -26,11 +26,13 @@ namespace VectorworksMVR
         virtual MvrString VCOM_CALLTYPE     GetManufacturer();
         virtual MvrString VCOM_CALLTYPE     GetFixtureTypeDescription();
         virtual VCOMError VCOM_CALLTYPE     GetFixtureGUID(MvrUUID& uuid);
+        
         virtual MvrString VCOM_CALLTYPE     GetFixtureThumbnail();
-		virtual MvrString VCOM_CALLTYPE     GetFixtureThumbnailFullPath();
+		virtual MvrString VCOM_CALLTYPE     GetFixtureThumbnail_PNG_FullPath();
+        virtual MvrString VCOM_CALLTYPE     GetFixtureThumbnail_SVG_FullPath();
+
 		virtual VCOMError VCOM_CALLTYPE		GetLinkedFixtureGUID(MvrUUID& uuid);
 		virtual VCOMError VCOM_CALLTYPE		HasLinkedFixtureGUID(bool& has);
-
 		
 		
 		virtual VCOMError VCOM_CALLTYPE     SetFixtureTypeDescription(MvrString descrip);

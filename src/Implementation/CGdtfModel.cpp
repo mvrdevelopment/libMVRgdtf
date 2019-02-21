@@ -65,20 +65,28 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfModelImpl::GetPrimitiveType(EGdtf
     return kVCOMError_NoError;
 }
 
-MvrString VectorworksMVR::CGdtfModelImpl::Get3DSGeometryFile()
+MvrString VectorworksMVR::CGdtfModelImpl::GetGeometryFileName()
 {
 	// Check Pointer
 	if ( ! fModel) return "";
 	
-    return fModel->GetGeometryFile().GetCharPtr();
+    return fModel->GetGeometryFileName().GetCharPtr();
 }
 
-MvrString VectorworksMVR::CGdtfModelImpl::Get3DSGeometryFileFullPath()
+MvrString VectorworksMVR::CGdtfModelImpl::GetGeometryFile_3DS_FullPath()
 {
 	// Check Pointer
 	if ( ! fModel) return "";
 	
-	return fModel->GetGeometryFileFullPath().GetCharPtr();
+	return fModel->GetGeometryFile_3DS_FullPath().GetCharPtr();
+}
+
+MvrString VectorworksMVR::CGdtfModelImpl::GetGeometryFile_SVG_FullPath()
+{
+	// Check Pointer
+	if ( ! fModel) return "";
+	
+	return fModel->GetGeometryFile_SVG_FullPath().GetCharPtr();
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfModelImpl::SetName(MvrString name)
@@ -130,7 +138,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfModelImpl::SetPrimitiveType(EGdtf
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfModelImpl::Set3DSGeometryFile(MvrString path)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfModelImpl::SetGeometryFile(MvrString path)
 {
 	// Check Pointer
 	if ( ! fModel) return kVCOMError_NotInitialized;

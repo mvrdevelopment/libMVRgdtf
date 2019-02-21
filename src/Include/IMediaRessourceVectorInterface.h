@@ -392,15 +392,17 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetWidth(double& width) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetHeight(double& height) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetPrimitiveType(GdtfDefines::EGdtfModel_PrimitiveType& type) = 0;
-        virtual MvrString VCOM_CALLTYPE     Get3DSGeometryFile() = 0;
-		virtual MvrString VCOM_CALLTYPE     Get3DSGeometryFileFullPath() = 0;
+        virtual MvrString VCOM_CALLTYPE     GetGeometryFileName() = 0;
+		virtual MvrString VCOM_CALLTYPE     GetGeometryFile_3DS_FullPath() = 0;
+        virtual MvrString VCOM_CALLTYPE     GetGeometryFile_SVG_FullPath() = 0;
+
                 
         virtual VCOMError VCOM_CALLTYPE     SetName(MvrString name) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetLength(double length) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetWidth(double width) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetHeight(double height) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetPrimitiveType(GdtfDefines::EGdtfModel_PrimitiveType type) = 0;
-		virtual VCOMError VCOM_CALLTYPE     Set3DSGeometryFile(MvrString path) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetGeometryFile(MvrString path) = 0;
 		
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
@@ -861,7 +863,8 @@ namespace VectorworksMVR
 		virtual MvrString VCOM_CALLTYPE     GetFixtureTypeDescription() = 0;
 		virtual MvrString VCOM_CALLTYPE		GetShortName() = 0;
         virtual MvrString VCOM_CALLTYPE     GetFixtureThumbnail() = 0;
-		virtual MvrString VCOM_CALLTYPE     GetFixtureThumbnailFullPath() = 0;
+		virtual MvrString VCOM_CALLTYPE     GetFixtureThumbnail_PNG_FullPath() = 0;
+        virtual MvrString VCOM_CALLTYPE     GetFixtureThumbnail_SVG_FullPath() = 0;
 		
 		virtual VCOMError VCOM_CALLTYPE     SetFixtureTypeDescription(MvrString descrip) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetShortName(MvrString shortName) = 0;

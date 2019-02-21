@@ -1464,6 +1464,7 @@ TXString SceneData::SceneDataZip::GetResourceSubFolder(ERessourceType resType)
     }    
 
     DSTOP((kEveryone, "Unaspected Enum for GetResourceSubFolder(ERessourceType resType)"));
+
     return  "";
 }
 
