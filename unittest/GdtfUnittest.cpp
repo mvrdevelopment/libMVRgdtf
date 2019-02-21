@@ -296,8 +296,8 @@ void GdtfUnittest::ReadFile()
 
 		this->checkifEqual("GetFixtureThumbnail "		, pngFileName,  "MyThumbnail"); 
         // The files do not exist in the example gdtf so we await that the paths are empty.
-		this->checkifEqual("GetFixtureThumbnail "		, fullPath_PNG, ""); 
-        this->checkifEqual("GetFixtureThumbnail "		, fullPath_SVG, "");
+		this->checkifEqual("GetFixtureThumbnail "		, fullPath_PNG, GetTestPNG_ThumbNail() ); 
+        this->checkifEqual("GetFixtureThumbnail "		, fullPath_SVG, GetTestSVG_ThumbNail() );
         //-----------------------------------------------------------------------------
 
 		bool hasLinkedFixture = false;
