@@ -32,23 +32,23 @@ int main(int argc, char* argv[])
 	std::string base; GetFolderAppDataPath(base);    
 
 	GdtfUnittest gdtfTest(base);
-	bool gdtfOk = gdtfTest.RunTest();
+	bool gdtfFailed = gdtfTest.RunTest();
 
 	GdtfDmxUnittest gdtfDmxTest(base);
-	bool gdtfDmxOk = gdtfDmxTest.RunTest();
+	bool gdtfDmxFailed = gdtfDmxTest.RunTest();
 
 	MvrUnittest mvrTest(base);
-	bool mvrOK = mvrTest.RunTest();
+	bool mvrFailed = mvrTest.RunTest();
 
 	GdtfXmlErrorTest errorTest(base);
-	bool errorOk = errorTest.RunTest();
+	bool errorFailed = errorTest.RunTest();
 
 	GdtfFunctionModeMasterTest modeMasterTest(base);
-	bool modeMasterOk = modeMasterTest.RunTest();
+	bool modeMasterFailed = modeMasterTest.RunTest();
     
-    bool finalResult = (mvrOK || gdtfOk || gdtfDmxOk || errorOk || modeMasterOk);
+    bool errorOcurred = (mvrFailed || gdtfFailed || gdtfDmxFailed || errorFailed || modeMasterFailed);
 
-    if (finalResult) 
+    if (errorOcurred) 
     {
         std::cout << ":-)  All test finished succesfull.";
     }
@@ -57,7 +57,7 @@ int main(int argc, char* argv[])
         std::cout << ": (  There was an Error.";
     }
 
-    return finalResult;
+    return errorOcurred;
 }
 
 bool GetFolderAppDataPath(std::string& outPath)
