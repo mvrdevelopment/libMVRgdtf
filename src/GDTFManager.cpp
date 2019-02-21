@@ -4968,7 +4968,7 @@ void GdtfFixture::OnPrintToFile(IXMLFileNodePtr pNode)
 	pNode->SetNodeAttributeValue(XML_GDTF_FixtureManufacturer,	fManufacturer);
 	pNode->SetNodeAttributeValue(XML_GDTF_FixtureDescription,	fFixtureTypeDescription);
 	pNode->SetNodeAttributeValue(XML_GDTF_FixtureTypeID,		GdtfConverter::ConvertUUID(fGuid));
-	pNode->SetNodeAttributeValue(XML_GDTF_FixtureThumbnail,		fTumbnail);
+	pNode->SetNodeAttributeValue(XML_GDTF_FixtureThumbnail,		fTumbnailName);
 	
 	if(fHasLinkedGuid)
 	{
@@ -5151,7 +5151,7 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	pNode->GetNodeAttributeValue(XML_GDTF_FixtureManufacturer,				fManufacturer);
 	pNode->GetNodeAttributeValue(XML_GDTF_FixtureDescription,				fFixtureTypeDescription);
 	TXString uuid; pNode->GetNodeAttributeValue(XML_GDTF_FixtureTypeID,		uuid );	GdtfConverter::ConvertUUID(uuid, pNode, fGuid);
-	pNode->GetNodeAttributeValue(XML_GDTF_FixtureThumbnail,					fTumbnail);
+	pNode->GetNodeAttributeValue(XML_GDTF_FixtureThumbnail,					fTumbnailName);
 	
 	
 	TXString linkedUuid;
@@ -5738,13 +5738,13 @@ bool GdtfFixture::HasLinkedGuid() const
 
 const TXString& GdtfFixture::GetThumbnailName() const
 {
-    return fTumbnail;
+    return fTumbnailName;
 }
 
 TXString GdtfFixture::GetFullThumbNailPath (const TXString& fileExtension) 
 {
 	// Set to store
-	TXString fullPath = getWorkingFolder() + fTumbnail + fileExtension;
+	TXString fullPath = getWorkingFolder() + fTumbnailName + fileExtension;
 
     // Check if file exists:
     IFileIdentifierPtr file (IID_FileIdentifier);
@@ -5754,7 +5754,7 @@ TXString GdtfFixture::GetFullThumbNailPath (const TXString& fileExtension)
     
     if (! exists)
     {
-        "";
+        return "";
     }
 
 	return fullPath;
@@ -5771,9 +5771,9 @@ const GdtfPNGFile& GdtfFixture::GetPNGThumnailFullPath()
 const TXString & SceneData::GdtfFixture::GetSVGThumnailFullPath()
 {
 	// Set to store
-    fTumbnailFullPath_PNG = GetFullThumbNailPath(".3ds");
+    fTumbnailFullPath_SVG = GetFullThumbNailPath(".svg");
 
-	return fTumbnailFullPath_PNG;
+	return fTumbnailFullPath_SVG;
 }
 
 void GdtfFixture::SetName(const TXString& name)
@@ -5809,7 +5809,7 @@ void GdtfFixture::SetLinkedGuid(const VWFC::Tools::VWUUID& uuid)
 
 void GdtfFixture::SetThumbnailName(const TXString& fileName)
 {
-	fTumbnail = fileName;
+	fTumbnailName = fileName;
 }
 
 SceneData::GdtfDMXProfile::GdtfDMXProfile()
