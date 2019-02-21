@@ -6377,54 +6377,53 @@ void SceneData::GdtfProtocols::OnReadFromNode(const IXMLFileNodePtr & pNode)
 {
 	//------------------------------------------------------------------------------------
 	// Call the parent
-	GdtfObject::OnReadFromNode(pNode);
+	 GdtfObject::OnReadFromNode(pNode);
 	
 	//------------------------------------------------------------------------------------
-	// Read the childs
-	
-	IXMLFileNode* ftrdmNode;
+	// Read the childs	
+	IXMLFileNodePtr ftrdmNode;           // typedef VCOMPtr<IXMLFileNode>		IXMLFileNodePtr;
 	if (VCOM_SUCCEEDED( pNode->GetChildNode(XML_GDTF_FTRDM, &ftrdmNode)) )
 	{
 		fRDM = new GdtfFTRDM();
 		fRDM->ReadFromNode(ftrdmNode);
 	}
 	
-	IXMLFileNode* artNetNode;
+	IXMLFileNodePtr artNetNode;
 	if (VCOM_SUCCEEDED(pNode->GetChildNode(XML_GDTF_ArtNet, &artNetNode)))
 	{
 		fArtNet = new GdtfArtNet();
 		fArtNet->ReadFromNode(artNetNode);
 	}
 	
-	IXMLFileNode* sAcnNode;
+	IXMLFileNodePtr sAcnNode;
 	if (VCOM_SUCCEEDED(pNode->GetChildNode(XML_GDTF_sACN, &sAcnNode)))
 	{
 		fsACN = new GdtfsAcn();
 		fsACN->ReadFromNode(sAcnNode);
 	}
 	
-	IXMLFileNode* kinetNode;
+	IXMLFileNodePtr kinetNode;
 	if (VCOM_SUCCEEDED(pNode->GetChildNode(XML_GDTF_KiNET, &kinetNode)))
 	{
 		fKiNET = new GdtfKiNET();
 		fKiNET->ReadFromNode(kinetNode);
 	}
 	
-	IXMLFileNode* posiStageNetNode;
+	IXMLFileNodePtr posiStageNetNode;
 	if (VCOM_SUCCEEDED(pNode->GetChildNode(XML_GDTF_PosiStageNet, &posiStageNetNode)))
 	{
 		fPosiStageNet = new GdtfPosiStageNet();
 		fPosiStageNet->ReadFromNode(posiStageNetNode);
 	}
 	
-	IXMLFileNode* openSoundControlNode;
+	IXMLFileNodePtr openSoundControlNode;
 	if (VCOM_SUCCEEDED(pNode->GetChildNode(XML_GDTF_OpenSoundControl, &openSoundControlNode)))
 	{
 		fOpenSoundControl = new GdtfOpenSoundControl();
 		fOpenSoundControl->ReadFromNode(openSoundControlNode);
 	}
 	
-	IXMLFileNode* ctipNode;
+	IXMLFileNodePtr ctipNode;
 	if (VCOM_SUCCEEDED(pNode->GetChildNode(XML_GDTF_CITP, &ctipNode)))
 	{
 		fCITP = new GdtfCITP();
