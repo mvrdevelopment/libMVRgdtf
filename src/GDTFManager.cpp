@@ -4398,6 +4398,7 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 			}
 		}
 	}
+
 	__ERROR_CONTAINER_POINTER = nullptr;
 }
 
@@ -5352,6 +5353,10 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 											return;
 										});
 	}
+
+    // ------------------------------------------------------------------------------------
+	// Read Prorocols
+    fProtocollContainer.ReadFromNode(pNode);	
 }
 
 void GdtfFixture::OnErrorCheck(const IXMLFileNodePtr& pNode)
