@@ -96,7 +96,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::AddFileToGdtfFile(Mv
 	// Check if the file exists
 	if (!fileExisis) { return kVCOMError_Failed; }
 	
-	TXString fileName; file->GetFileName(fileName);
+	TXString fileName; file->GetFileNameWithoutExtension(fileName);
 	
     // Append the SubFoldername for resources.
     fileName = SceneData::SceneDataZip::GetResourceSubFolder(resType) + fileName;
