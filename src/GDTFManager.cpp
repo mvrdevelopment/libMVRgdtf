@@ -5161,8 +5161,7 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// Read Prorocols
     IXMLFileNodePtr protoNode;
     if (VCOM_SUCCEEDED(pNode->GetChildNode(XML_GDTF_Protocols, &protoNode))) 
-    {
-        TXString nam;  protoNode->GetNodeName(nam); // XXX TEST
+    {        
         fProtocollContainer.ReadFromNode(protoNode); 
     } 
 
