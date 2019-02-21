@@ -19,7 +19,11 @@ private:
 
     void WriteFile();
     void ReadFile();
-
+    
+    // Test Resources
     std::string GetTestPNG_ThumbNail();
     std::string GetTestSVG_ThumbNail();
+    std::string GetTestSVG_Model();
+    std::string GetTest3DS_Model();
+    std::string GetTestWheel_PNG();
 };

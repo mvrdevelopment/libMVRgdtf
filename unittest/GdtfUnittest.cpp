@@ -51,8 +51,11 @@ void GdtfUnittest::WriteFile()
 		__checkVCOM(gdtfWrite->SetFixtureThumbnail("MyThumbnail"));
 		__checkVCOM(gdtfWrite->SetLinkedFixtureGUID(linkedUuid));
 
-        __checkVCOM( gdtfWrite->AddFileToGdtfFile(GetTestPNG_ThumbNail().c_str(), ERessourceType::ImageWheel) ); // XXX is image wheel correct here
-        __checkVCOM( gdtfWrite->AddFileToGdtfFile(GetTestSVG_ThumbNail().c_str(), ERessourceType::ModelSVG)   );
+        __checkVCOM( gdtfWrite->AddFileToGdtfFile(GetTestPNG_ThumbNail().c_str(), ERessourceType::RessoureFixture) );
+        __checkVCOM( gdtfWrite->AddFileToGdtfFile(GetTestSVG_ThumbNail().c_str(), ERessourceType::RessoureFixture) );
+        __checkVCOM( gdtfWrite->AddFileToGdtfFile(.c_str(), ERessourceType::ImageWheel) );
+        __checkVCOM( gdtfWrite->AddFileToGdtfFile(.c_str(), ERessourceType::Model3DS) );
+        __checkVCOM( gdtfWrite->AddFileToGdtfFile(.c_str(), ERessourceType::ModelSVG) );
 
 		//------------------------------------------------------------------------------    
 		// Set Attributes
@@ -937,4 +940,19 @@ std::string GdtfUnittest::GetTestPNG_ThumbNail()
 std::string GdtfUnittest::GetTestSVG_ThumbNail()
 {
     return fCurrentDir + fSystemSeperator + "MyThumbnail.svg";
+}
+
+std::string GdtfUnittest::GetTestSVG_Model()
+{
+    return fCurrentDir + fSystemSeperator + "MyModel.svg";
+}
+
+std::string GdtfUnittest::GetTest3DS_Model()
+{
+    return fCurrentDir + fSystemSeperator + "MyModel.3ds";
+}
+
+std::string GdtfUnittest::GetTestWheel_PNG()
+{
+    return fCurrentDir + fSystemSeperator + "MWheel_Img1.png";
 }
