@@ -4,7 +4,7 @@
 #include "Unittest.h"
 #include "GdtfUnittest.h"
 #include <iostream>
-
+#include "Utility.h"
 #include "Include/VectorworksMVR.h"
 using namespace VectorworksMVR;
 using namespace VectorworksMVR::GdtfDefines;
@@ -14,9 +14,9 @@ using namespace VectorworksMVR::GdtfDefines;
 
 GdtfUnittest::GdtfUnittest(const std::string& currentDir)
 {
-    fSystemSeperator = GetSysSeparator();
+    fSystemSeperator = UnitTestUtil::GetSysSeparator();
 
-    fCurrentDir = currentDir;
+    fCurrentDir = currentDir + UnitTestUtil::GetSysSeparator() + "GDTF_Folder";;
 
     fTestGdtf_Path = fCurrentDir + fSystemSeperator + "testGdtf.gdtf";
 
@@ -927,15 +927,6 @@ void GdtfUnittest::ReadFile()
 }
 
 	PrintParsingErrorList(gdtfRead);
-}
-
-char GdtfUnittest::GetSysSeparator()
-{
-#ifdef _WINDOWS
-    return '\\';
-#else
-    return '/';
-#endif
 }
 
 std::string GdtfUnittest::GetTestPNG_ThumbNail()

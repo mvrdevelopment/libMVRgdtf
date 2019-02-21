@@ -9,6 +9,7 @@
 #include "GdtfDmxUnittest.h"
 #include "GdtfXmlError.h"
 #include "GdtfFunctionModeMaster.h"
+#include "Utility.h"
 
 #if defined(_WINDOWS)
 # include <Shlobj.h>
@@ -27,9 +28,8 @@ bool GetFolderAppDataPath(std::string& outPath);
 
 int main(int argc, char* argv[])
 {
-	// Get Current dir
-	std::string base;
-	GetFolderAppDataPath(base);
+	// Get Current dir    
+	std::string base; GetFolderAppDataPath(base);    
 
 	GdtfUnittest gdtfTest(base);
 	bool gdtfOk = gdtfTest.RunTest();

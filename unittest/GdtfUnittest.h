@@ -20,8 +20,6 @@ private:
     void WriteFile();
     void ReadFile();
 
-    char GetSysSeparator();
-
     std::string GetTestPNG_ThumbNail();
     std::string GetTestSVG_ThumbNail();
 };
