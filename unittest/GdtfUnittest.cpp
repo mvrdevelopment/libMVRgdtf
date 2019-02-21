@@ -260,16 +260,21 @@ void GdtfUnittest::WriteFile()
 		timestamp.fHour = 22; timestamp.fMinute = 33; timestamp.fSecond = 44;
 		__checkVCOM(gdtfWrite->CreateRevision("Revision TestText", timestamp, &rev));
 
-        ////------------------------------------------------------------------------------    
-        //// Add RDM 
+        //------------------------------------------------------------------------------    
+        // Add RDM 
         IGdtfTRDMPtr rdm;
         __checkVCOM (gdtfWrite->CreateRDM(&rdm) );        
         __checkVCOM (rdm->SetDeviceModelID(1) );
         __checkVCOM (rdm->SetManufacturerID(2) );        
 
+        //------------------------------------------------------------------------------    
+        // Add SoftwareVersionID
         IGdtfSoftwareVersionIDPtr softID;
         __checkVCOM (rdm->CreateSoftwareVersionID( 22, &softID));        
-        
+
+        //------------------------------------------------------------------------------    
+        // Add DMXPersonality
+
         IGdtfDMXPersonalityPtr dmxPerso;
         __checkVCOM (softID->CreateDMXPersonality( 11, "DmxModeNam", &dmxPerso));        
 
@@ -943,6 +948,44 @@ void GdtfUnittest::ReadFile()
 		this->checkifEqual("Check RevDatefHour",	expTimestamp.fHour, Uint16(22));
 		this->checkifEqual("Check RevDatefMinute",	expTimestamp.fMinute, Uint16(33));
 		this->checkifEqual("Check RevDatefSecond",	expTimestamp.fSecond, Uint16(44));
+
+        //------------------------------------------------------------------------------    
+        // Read RDM         
+        IGdtfTRDMPtr rdm;
+        __checkVCOM (gdtfRead->GetRDM(&rdm));
+        
+        Sint32 devModID;
+        __checkVCOM (rdm->GetDeviceModelID(devModID));
+        this->checkifEqual("Check DeviceModelID", devModID, 1);
+
+        Sint32 manID;
+        __checkVCOM (rdm->GetManufacturerID(manID));
+        this->checkifEqual("Check ManufacturerID", manID, 1);
+        
+        //------------------------------------------------------------------------------    
+        // Read SoftwareVersionID
+        size_t softIdCount;
+        rdm->GetSoftwareVersionIDCount(softIdCount);
+        this->checkifEqual("SoftwareVersionID count", Sint32(softIdCount), Sint32(1));
+                
+        IGdtfSoftwareVersionIDPtr softID;
+        rdm->GetSoftwareVersionIDAt(0, &softID);
+
+        size_t softIDVal;
+        softID->GetValue(softIDVal);
+        this->checkifEqual("SoftwareVersionID Value", Sint32(softIDVal), Sint32(22));
+
+        //------------------------------------------------------------------------------    
+        // Read DMXPersonality
+        size_t dmxPersCount;
+        softID->GetDMXPersonalityCount(dmxPersCount);
+        this->checkifEqual("DMXPersonality count", Sint32(dmxPersCount), Sint32(1));
+
+        size_t softIDValue;
+        softID->GetValue(softIDValue);
+        this->checkifEqual("DMXPersonality Value", Sint32(softIDValue), Sint32(11));
+
+        softID->G
 }
 
 	PrintParsingErrorList(gdtfRead);
