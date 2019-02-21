@@ -982,6 +982,8 @@ void GdtfUnittest::ReadFile()
         this->checkifEqual("DMXPersonality count", Sint32(dmxPersCount), Sint32(1));
 
         IGdtfDMXPersonalityPtr dmxPerso;
+        __checkVCOM (softID->GetDMXPersonalityAt(0, &dmxPerso));
+        
         size_t dmxPersoVal;
         __checkVCOM (dmxPerso->GetValue(dmxPersoVal));
         this->checkifEqual("DMXPersonality Value", Sint32(dmxPersoVal), Sint32(11));
