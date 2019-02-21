@@ -186,7 +186,7 @@ void GdtfUnittest::WriteFile()
         // Beam Geometry
         IGdtfGeometryPtr beamGeo;
         __checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometryBeamFilter, "My Beam Geometry", gdtfModel, ma, &beamGeo));
-        
+        beamGeo->SetLuminousIntensity(5);
 
 		//------------------------------------------------------------------------------
 		// Get dmxModes
