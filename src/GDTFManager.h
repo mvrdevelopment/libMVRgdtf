@@ -1776,7 +1776,7 @@ namespace SceneData
 		TXString		fManufacturer;
 		TXString		fFixtureTypeDescription;
 		GdtfFixtureGUID	fGuid;
-		TXString		fTumbnail;
+		TXString		fTumbnailName;
 		TXString		fTumbnailFullPath_PNG;
         TXString		fTumbnailFullPath_SVG;
 		GdtfFixtureGUID	fLinkedGuid;
