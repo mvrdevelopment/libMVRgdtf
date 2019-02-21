@@ -51,11 +51,13 @@ void GdtfUnittest::WriteFile()
 		__checkVCOM(gdtfWrite->SetFixtureThumbnail("MyThumbnail"));
 		__checkVCOM(gdtfWrite->SetLinkedFixtureGUID(linkedUuid));
 
-        __checkVCOM( gdtfWrite->AddFileToGdtfFile(GetTestPNG_ThumbNail().c_str(), ERessourceType::RessoureFixture) );
-        __checkVCOM( gdtfWrite->AddFileToGdtfFile(GetTestSVG_ThumbNail().c_str(), ERessourceType::RessoureFixture) );
-        __checkVCOM( gdtfWrite->AddFileToGdtfFile(.c_str(), ERessourceType::ImageWheel) );
-        __checkVCOM( gdtfWrite->AddFileToGdtfFile(.c_str(), ERessourceType::Model3DS) );
-        __checkVCOM( gdtfWrite->AddFileToGdtfFile(.c_str(), ERessourceType::ModelSVG) );
+        //------------------------------------------------------------------------------    
+        // Add Test Resources
+        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestPNG_ThumbNail().c_str(), ERessourceType::RessoureFixture) );
+        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestSVG_ThumbNail().c_str(), ERessourceType::RessoureFixture) );
+        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestWheel_PNG().c_str(),     ERessourceType::ImageWheel) );
+        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTest3DS_Model().c_str(),     ERessourceType::Model3DS) );
+        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestSVG_Model().c_str(),     ERessourceType::ModelSVG) );
 
 		//------------------------------------------------------------------------------    
 		// Set Attributes
