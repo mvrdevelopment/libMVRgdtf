@@ -13,8 +13,15 @@ protected:
     bool virtual ExecuteTest();
 
 private:
+    std::string fCurrentDir;
+    std::string fTestGdtf_Path;
+    char        fSystemSeperator;
+
     void WriteFile();
     void ReadFile();
 
-    std::string fPath;
+    char GetSysSeparator();
+
+    std::string GetTestPNGFile();
+    std::string GetTestSVGsFile();
 };

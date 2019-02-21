@@ -14,15 +14,13 @@ using namespace VectorworksMVR::GdtfDefines;
 
 GdtfUnittest::GdtfUnittest(const std::string& currentDir)
 {
-    fPath = currentDir;
-#ifdef _WINDOWS
-    fPath += std::string("\\testGdtf.gdtf");
-#else
-    fPath += std::string("/testGdtf.gdtf");
-#endif
+    fSystemSeperator = GetSysSeparator();
 
+    fCurrentDir = currentDir;
 
-    std::cout << "Export File to " << fPath << std::endl; 
+    fTestGdtf_Path = fCurrentDir + fSystemSeperator + "testGdtf.gdtf";
+
+    std::cout << "Export File to " << fTestGdtf_Path << std::endl; 
 }
 
 GdtfUnittest::~GdtfUnittest()
@@ -46,12 +44,15 @@ void GdtfUnittest::WriteFile()
 
     MvrUUID uuid		(225204211	, 177198167	, 1575790	, 96627);
 	MvrUUID linkedUuid	(2227440	, 1542265	, 1573622	, 2328410);
-    if(__checkVCOM(gdtfWrite->OpenForWrite(fPath.c_str(),"My FixtureName","My Manufacturer", uuid)))
+    if(__checkVCOM(gdtfWrite->OpenForWrite(fTestGdtf_Path.c_str(),"My FixtureName","My Manufacturer", uuid)))
     {
 		__checkVCOM(gdtfWrite->SetFixtureTypeDescription("My Description"));
 		__checkVCOM(gdtfWrite->SetShortName("My shortName"));
 		__checkVCOM(gdtfWrite->SetFixtureThumbnail("MyThumbnail"));
 		__checkVCOM(gdtfWrite->SetLinkedFixtureGUID(linkedUuid));
+
+        __checkVCOM( gdtfWrite->AddFileToGdtfFile(GetTestPNG_ThumbNail().c_str(), ERessourceType::ImageWheel) ); // XXX is image wheel correct here
+        __checkVCOM( gdtfWrite->AddFileToGdtfFile(GetTestSVG_ThumbNail().c_str(), ERessourceType::ModelSVG)   );
 
 		//------------------------------------------------------------------------------    
 		// Set Attributes
@@ -266,7 +267,7 @@ void GdtfUnittest::ReadFile()
 	//------------------------------------------------------------------------------    
 	// Read Fixture Information
 	IGdtfFixturePtr gdtfRead (IID_IGdtfFixture);
-    if(__checkVCOM(gdtfRead->ReadFromFile(fPath.c_str())))
+    if(__checkVCOM(gdtfRead->ReadFromFile(fTestGdtf_Path.c_str())))
     {
 		//Check those written UUIDs
 		MvrUUID fixtureUUID	(225204211, 177198167, 	1575790, 	96627);
@@ -926,4 +927,23 @@ void GdtfUnittest::ReadFile()
 }
 
 	PrintParsingErrorList(gdtfRead);
+}
+
+char GdtfUnittest::GetSysSeparator()
+{
+#ifdef _WINDOWS
+    return '\\';
+#else
+    return '/';
+#endif
+}
+
+std::string GdtfUnittest::GetTestPNG_ThumbNail()
+{
+    return fCurrentDir + fSystemSeperator + "MyThumbnail.png";
+}
+
+std::string GdtfUnittest::GetTestSVG_ThumbNail()
+{
+    return fCurrentDir + fSystemSeperator + "MyThumbnail.svg";
 }
