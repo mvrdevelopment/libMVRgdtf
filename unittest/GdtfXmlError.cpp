@@ -15,17 +15,17 @@ using namespace VectorworksMVR::GdtfDefines;
 
 GdtfXmlErrorTest::GdtfXmlErrorTest(const std::string& currentDir)
 {
-    fPath = currentDir;
+    fErrorGdtf_Path = currentDir;
 #ifdef _WINDOWS
-    fPath = std::string(GITPATH);
-    fPath += std::string("\\files\\XMLBroken.gdtf");
+    fErrorGdtf_Path = std::string(GITPATH);
+    fErrorGdtf_Path += std::string("\\files\\XMLBroken.gdtf");
 #else
 	fPath = std::string(GITPATH);
 	fPath += "/unittest/files/XMLBroken.gdtf";
 #endif
 
 
-    std::cout << "Export File to " << fPath << std::endl; 
+    std::cout << "Export File to " << fErrorGdtf_Path << std::endl; 
 }
 
 GdtfXmlErrorTest::~GdtfXmlErrorTest()
@@ -46,7 +46,7 @@ void GdtfXmlErrorTest::ReadDamagedFile()
 	//------------------------------------------------------------------------------    
 	// Read Existing File with damaged structure
 	IGdtfFixturePtr gdtfRead (IID_IGdtfFixture);
-    __checkVCOM(gdtfRead->ReadFromFile(fPath.c_str()));
+    __checkVCOM(gdtfRead->ReadFromFile(fErrorGdtf_Path.c_str()));
 
 	size_t countErrors = 0;
 	__checkVCOM(gdtfRead->GetParsingErrorCount(countErrors));
