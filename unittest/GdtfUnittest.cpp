@@ -960,7 +960,7 @@ void GdtfUnittest::ReadFile()
 
         Sint32 manID;
         __checkVCOM (rdm->GetManufacturerID(manID));
-        this->checkifEqual("Check ManufacturerID", manID, 1);
+        this->checkifEqual("Check ManufacturerID", manID, 2);
         
         //------------------------------------------------------------------------------    
         // Read SoftwareVersionID
