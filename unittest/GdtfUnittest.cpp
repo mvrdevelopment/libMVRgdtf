@@ -264,13 +264,14 @@ void GdtfUnittest::WriteFile()
         //// Add RDM 
         IGdtfTRDMPtr rdm;
         __checkVCOM (gdtfWrite->CreateRDM(&rdm) );        
-        __checkVCOM (rdm->SetDeviceModelID(6) );
+        __checkVCOM (rdm->SetDeviceModelID(1) );
+        __checkVCOM (rdm->SetManufacturerID(2) );        
 
         IGdtfSoftwareVersionIDPtr softID;
-        __checkVCOM (rdm->CreateSoftwareVersionID( 22, &softID));
+        __checkVCOM (rdm->CreateSoftwareVersionID( 22, &softID));        
         
         IGdtfDMXPersonalityPtr dmxPerso;
-        __checkVCOM (softID->CreateDMXPersonality( 11, "DmxModeNam", &dmxPerso));
+        __checkVCOM (softID->CreateDMXPersonality( 11, "DmxModeNam", &dmxPerso));        
 
 		//------------------------------------------------------------------------------    
 		// Close the stream and dump to disk
