@@ -1450,13 +1450,13 @@ TXString SceneData::SceneDataZip::GetResourceSubFolder(ERessourceType resType)
     switch (resType) 
     {
     case ERessourceType::ImageWheel:
-        return "/wheels/";
+        return "wheels/";
         break;
     case ERessourceType::Model3DS:
-        return "/models/3ds/";
+        return "models/3ds/";
         break;
     case ERessourceType::ModelSVG:
-        return "/models/svg/";
+        return "models/svg/";
         break;
     case ERessourceType::RessoureFixture:
         return  "";
