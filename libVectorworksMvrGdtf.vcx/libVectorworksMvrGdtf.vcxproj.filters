@@ -255,7 +255,7 @@
     <ClCompile Include="..\src\Implementation\CGdtfFTRDM.cpp">
       <Filter>src\Implementation</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Implementation\Utility.cpp">
+    <ClCompile Include="..\src\Utility.cpp">
       <Filter>src\Utility</Filter>
     </ClCompile>
   </ItemGroup>
@@ -545,7 +545,7 @@
     <ClInclude Include="..\src\Implementation\CGdtfFTRDM.h">
       <Filter>src\Implementation</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Implementation\Utility.h">
+    <ClInclude Include="..\src\Utility.h">
       <Filter>src\Utility</Filter>
     </ClInclude>
   </ItemGroup>

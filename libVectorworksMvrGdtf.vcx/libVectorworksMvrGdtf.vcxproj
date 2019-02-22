@@ -83,7 +83,6 @@
     <ClCompile Include="..\src\Implementation\CSceneDataProviderImpl.cpp" />
     <ClCompile Include="..\src\Implementation\CSceneObjImpl.cpp" />
     <ClCompile Include="..\src\Implementation\CSymDefImpl.cpp" />
-    <ClCompile Include="..\src\Implementation\Utility.cpp" />
     <ClCompile Include="..\src\MCCoordTypes.cpp" />
     <ClCompile Include="..\src\MCFloat.cpp" />
     <ClCompile Include="..\src\MCMatrix.cpp" />
@@ -91,6 +90,7 @@
     <ClCompile Include="..\src\RGBColor.cpp" />
     <ClCompile Include="..\src\SceneDataExchange.cpp" />
     <ClCompile Include="..\src\sha256\sha256.cpp" />
+    <ClCompile Include="..\src\Utility.cpp" />
     <ClCompile Include="..\src\UUID.cpp" />
     <ClCompile Include="..\src\VWLine2D.cpp" />
     <ClCompile Include="..\src\VWLine3D.cpp" />
@@ -166,7 +166,6 @@
     <ClInclude Include="..\src\Implementation\CSceneDataProviderImpl.h" />
     <ClInclude Include="..\src\Implementation\CSceneObjImpl.h" />
     <ClInclude Include="..\src\Implementation\CSymDefImpl.h" />
-    <ClInclude Include="..\src\Implementation\Utility.h" />
     <ClInclude Include="..\src\Include\GDTFPrefix.h" />
     <ClInclude Include="..\src\Include\IMediaRessourceVectorInterface.h" />
     <ClInclude Include="..\src\Include\VectorworksMVR.h" />
@@ -187,6 +186,7 @@
     <ClInclude Include="..\src\RGBColor.h" />
     <ClInclude Include="..\src\SceneDataExchange.h" />
     <ClInclude Include="..\src\sha256\sha256.h" />
+    <ClInclude Include="..\src\Utility.h" />
     <ClInclude Include="..\src\UUID.h" />
     <ClInclude Include="..\src\VWLine2D.h" />
     <ClInclude Include="..\src\VWLine3D.h" />

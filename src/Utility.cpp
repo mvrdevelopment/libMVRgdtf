@@ -25,3 +25,13 @@ Converts a VWTransformMatrix to a STransformMatrix.
     smatrix.wx = vwmatrix.fMatrix.mat[2][0]; smatrix.wy = vwmatrix.fMatrix.mat[2][1]; smatrix.wz = vwmatrix.fMatrix.mat[2][2];
     smatrix.ox = vwmatrix.fMatrix.mat[3][0]; smatrix.oy = vwmatrix.fMatrix.mat[3][1]; smatrix.oz = vwmatrix.fMatrix.mat[3][2];
 }
+
+
+std::string SystemUtil::GetSeparator()
+{
+#ifdef _WINDOWS
+    return "\\";
+#else
+    return "/";
+#endif
+}
