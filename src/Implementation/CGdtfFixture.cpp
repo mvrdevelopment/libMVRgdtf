@@ -863,7 +863,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateGeometry(EGdtf
 	// Create geometry
 	TXString			vwName (name);
 	VWTransformMatrix	ma;
-	Utility::ConvertMatrix(mat, ma);
+	GdtfUtil::ConvertMatrix(mat, ma);
 	
 	SceneData::GdtfGeometry* gdtfGeometry = nullptr;
 	

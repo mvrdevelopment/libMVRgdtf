@@ -4,7 +4,7 @@
 #pragma once
 #include "Prefix/StdAfx.h"
 
-class Utility
+class GdtfUtil
 {   
 public:
     static void ConvertMatrix (const VectorworksMVR::STransformMatrix & smatrix, VWTransformMatrix & vwmatrix);

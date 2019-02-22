@@ -122,7 +122,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSymDefImpl::AddGeometry(const STransf
 	//---------------------------------------------------------------------------
 	// Set Transfrom Matrix
 	VWTransformMatrix ma;
-	Utility::ConvertMatrix(scMatrix, ma);
+	GdtfUtil::ConvertMatrix(scMatrix, ma);
 	geometryObject->SetTransformMatrix(ma);
     geometryObject->SetFileName(fileName);
 		
@@ -164,7 +164,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSymDefImpl::AddSymbol(const STransfor
 	
 	// Set Transfrom Matrix
 	VWTransformMatrix ma;
-	Utility::ConvertMatrix(geometry,  ma);
+	GdtfUtil::ConvertMatrix(geometry,  ma);
 	newSymbolObj->SetTransformMatrix(ma);
 	
 	// Set SymbolDef

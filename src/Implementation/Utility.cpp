@@ -4,7 +4,7 @@
 #include "Prefix/StdAfx.h"
 #include "Utility.h"
 
-/*static*/ void Utility::ConvertMatrix(const VectorworksMVR::STransformMatrix & smatrix, VWTransformMatrix & vwmatrix)
+/*static*/ void GdtfUtil::ConvertMatrix(const VectorworksMVR::STransformMatrix & smatrix, VWTransformMatrix & vwmatrix)
 /* 
 Converts a STransformMatrix to a VWTransformMatrix.
 */
@@ -15,7 +15,7 @@ Converts a STransformMatrix to a VWTransformMatrix.
     vwmatrix.fMatrix.mat[3][0] = smatrix.ox; vwmatrix.fMatrix.mat[3][1] = smatrix.oy; vwmatrix.fMatrix.mat[3][2] = smatrix.oz;
 }
 
-/*static*/ void Utility::ConvertMatrix(const VWTransformMatrix & vwmatrix, VectorworksMVR::STransformMatrix & smatrix)
+/*static*/ void GdtfUtil::ConvertMatrix(const VWTransformMatrix & vwmatrix, VectorworksMVR::STransformMatrix & smatrix)
 /*
 Converts a VWTransformMatrix to a STransformMatrix.
 */

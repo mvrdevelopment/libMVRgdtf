@@ -34,7 +34,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotPrismFacetImpl::GetTrans
 	// Check Data
 	if( ! fPrismFacet) return kVCOMError_NotInitialized;
     
-    Utility::ConvertMatrix(fPrismFacet->GetTransformMatrix(), transformMatrix);
+    GdtfUtil::ConvertMatrix(fPrismFacet->GetTransformMatrix(), transformMatrix);
 
     return kVCOMError_NoError;
 }
@@ -57,7 +57,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotPrismFacetImpl::SetTrans
 	if( ! fPrismFacet) return kVCOMError_NotInitialized;
 	
     VWTransformMatrix vwMatrix;
-    Utility::ConvertMatrix(transformMatrix, vwMatrix);
+    GdtfUtil::ConvertMatrix(transformMatrix, vwMatrix);
 
     fPrismFacet->SetTransformMatrix(vwMatrix);
 

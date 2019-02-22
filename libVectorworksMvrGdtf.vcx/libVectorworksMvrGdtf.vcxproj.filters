@@ -25,6 +25,9 @@
     <Filter Include="src\Wrapper">
       <UniqueIdentifier>{b9f64660-55d4-4675-b964-2e9130ed5581}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Utility">
+      <UniqueIdentifier>{a5540437-07f3-4128-aa9f-26ce22a2dfdd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\XMLLib\ErrorHandler.cpp">
@@ -177,9 +180,6 @@
     <ClCompile Include="..\src\Implementation\CSymDefImpl.cpp">
       <Filter>src\Implementation</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Implementation\Utility.cpp">
-      <Filter>src\Implementation</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\BasicMath.X.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -254,6 +254,9 @@
     </ClCompile>
     <ClCompile Include="..\src\Implementation\CGdtfFTRDM.cpp">
       <Filter>src\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Implementation\Utility.cpp">
+      <Filter>src\Utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -449,9 +452,6 @@
     <ClInclude Include="..\src\Implementation\CSymDefImpl.h">
       <Filter>src\Implementation</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Implementation\Utility.h">
-      <Filter>src\Implementation</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Implementation\CClassImpl.h">
       <Filter>src\Implementation</Filter>
     </ClInclude>
@@ -544,6 +544,9 @@
     </ClInclude>
     <ClInclude Include="..\src\Implementation\CGdtfFTRDM.h">
       <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Implementation\Utility.h">
+      <Filter>src\Utility</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

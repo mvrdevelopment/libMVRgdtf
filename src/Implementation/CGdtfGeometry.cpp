@@ -90,7 +90,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetTransformMatrix(
     
     fGeometry->GetTransformMatrix(ma);
     
-	Utility::ConvertMatrix(ma, transformMatrix);
+	GdtfUtil::ConvertMatrix(ma, transformMatrix);
 	
     return kVCOMError_NoError;
 }
@@ -175,7 +175,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::CreateGeometry(EGdt
 	// Create geometry
 	TXString			vwName (name);
 	VWTransformMatrix	ma;
-	Utility::ConvertMatrix(mat, ma);
+	GdtfUtil::ConvertMatrix(mat, ma);
 	
 	
 	
@@ -520,7 +520,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetTransformMatrix(
 	if( ! fGeometry) return kVCOMError_NotInitialized;	
 	
     VWTransformMatrix vwMatrix;
-    Utility::ConvertMatrix(transformMatrix, vwMatrix);
+    GdtfUtil::ConvertMatrix(transformMatrix, vwMatrix);
 
     fGeometry->SetTransformMatrix(vwMatrix);
 
