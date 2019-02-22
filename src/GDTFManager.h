@@ -1763,8 +1763,8 @@ namespace SceneData
 	// GdtfFixture Definition
 	class GdtfFixture : public GdtfObject
 	{
-	public:
-		GdtfFixture(IFileIdentifierPtr file);
+	public:        
+        GdtfFixture(IFileIdentifierPtr file);
 		GdtfFixture();
 		~GdtfFixture();
 		
@@ -1932,5 +1932,8 @@ private:
 		
 		bool							IsReaded();
 		void							GetWorkingFolder(IFolderIdentifierPtr& folder);
-	};
+    private:
+        TXString ExtractFolderFromPath(TXString & path);
+	};    
+ 
 }

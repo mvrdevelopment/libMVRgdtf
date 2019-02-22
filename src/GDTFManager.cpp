@@ -6,6 +6,7 @@
 #include "XmlFileHelper.h"
 #include "HashManager.h"
 #include <iostream>
+#include "Utility.h"
 
 using namespace SceneData;
 
@@ -4264,6 +4265,34 @@ double GdtfMeasurementPoint::GetEnergy()
 //------------------------------------------------------------------------------------
 // GdtfFixture
 TGdtfParsingErrorArray* GdtfFixture::__ERROR_CONTAINER_POINTER = nullptr;
+
+
+TXString GdtfFixture::ExtractFolderFromPath(TXString& path) 
+/* 
+   Deletes the folder part from the incoming string so that only the fileNam remains and returns it. 
+   This function expects "/" as seperator example folderA/folderB/file.png 
+*/
+{
+    TXString folder = "";
+    const TXString sep = "/";
+
+    //-----------------------------------------------------------------------------
+    ptrdiff_t pos = path.Find(sep);
+
+    while (pos > 0 )
+	{
+		// Copy string		
+		for (ptrdiff_t i = 0; i < pos; i++)	{ folder += path.GetAt(i); }		
+		
+		// Delete and find next
+		path.Delete(0, pos + 1);
+		pos = path.Find(sep);
+	}	
+
+    folder.Replace(sep, SystemUtil::GetSeparator() ); 
+
+    return folder;
+}
 
 GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 {
