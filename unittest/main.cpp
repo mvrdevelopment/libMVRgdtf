@@ -54,7 +54,7 @@ int main(int argc, char* argv[])
     }
     else 
     {
-        std::cout << " :-(  There was an Error.";
+        UnitTestUtil::print_Ascii_BUG();        
     }
 
     return errorOcurred;
