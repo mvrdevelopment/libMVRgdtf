@@ -4378,9 +4378,9 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
             //-----------------------------------------------------------------------------
             
             targetFolder->Set(workingFolderPath + SystemUtil::GetSeparator() + subFolder);
-            TXString fp; targetFolder->GetFullPath(fp); // XXX tEst
+            TXString fullPath; targetFolder->GetFullPath(fullPath);
             
-            SystemUtil::CreateFolderDefinitlyOnDisk(fp);            
+            SystemUtil::CreateFolderDefinitlyOnDisk(fullPath);            
             
 			file->Set(targetFolder, fileNameWithoutFolder);
 			
