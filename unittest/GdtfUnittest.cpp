@@ -320,11 +320,14 @@ void GdtfUnittest::ReadFile()
 
 		this->checkifEqual("GetFixtureThumbnail "		, thumbFileName,  "MyThumbnail"); 
         
-        // Check if the Files have been unpacked correctly.
+        // Check if the Resource Files have been unpacked correctly.
 		this->checkifEqual("GetFixtureThumbnail "		, fullPath_PNG, fAppDataFolder + fSystemSeperator + "MyThumbnail.png" ); 
         this->checkifEqual("GetFixtureThumbnail "		, fullPath_SVG, fAppDataFolder + fSystemSeperator + "MyThumbnail.svg");        
+        
+        this->checkifTrue("Testwheel PNG exists.", UnitTestUtil::FileExists (fAppDataFolder + fSystemSeperator + "wheels" + fSystemSeperator + "MWheel_Img1.png") );
+        this->checkifTrue("Testmodel 3DS exits.", UnitTestUtil::FileExists (fAppDataFolder + fSystemSeperator + "models" + fSystemSeperator + "3ds" + fSystemSeperator + "MyModel.3ds") );
+        this->checkifTrue("Testmodel SVG exits.", UnitTestUtil::FileExists (fAppDataFolder + fSystemSeperator + "models" + fSystemSeperator + "svg" + fSystemSeperator + "MyModel.svg") );        
         //-----------------------------------------------------------------------------
-        // XXX: TODO: Check the WheelImg, and the Test model svg / 3ds
 
 		bool hasLinkedFixture = false;
 		__checkVCOM(gdtfRead->HasLinkedFixtureGUID(hasLinkedFixture));
