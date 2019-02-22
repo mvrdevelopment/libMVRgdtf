@@ -4368,14 +4368,16 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 			// Prepare pointer to the new files
 			IFileIdentifierPtr file (IID_FileIdentifier);
             
+            //-----------------------------------------------------------------------------
             // If the FileName contains a folder we have to remove it and append it to the working folder.            
             IFolderIdentifierPtr targetFolder = (IID_FolderIdentifier);
             TXString workingFolderPath; fWorkingFolder->GetFullPath(workingFolderPath);
             
             TXString fileNameWithoutFolder = fileName; 
             TXString subFolder = ExtractFolderFromPath(fileNameWithoutFolder);
+            //-----------------------------------------------------------------------------
             
-            targetFolder->Set(workingFolderPath + "\\" + subFolder +  "\\");
+            targetFolder->Set(workingFolderPath + SystemUtil::GetSeparator() + subFolder + SystemUtil::GetSeparator() );
             targetFolder->CreateOnDisk();
             
 			file->Set(targetFolder, fileNameWithoutFolder);
