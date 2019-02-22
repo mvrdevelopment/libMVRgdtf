@@ -4331,15 +4331,15 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 	
 	//-------------------------------------------------------------------------------------------------
 	// Decompress the files
-	TXString outPath				= "";
+	TXString fileName				= "";
 	TXString inPath					= "";
-	while (VCOM_SUCCEEDED( zipfile->GetNextFile(inPath, outPath)))
+	while (VCOM_SUCCEEDED( zipfile->GetNextFile(inPath, fileName)))
 	{
 		// This is the current file that we are reading
 		ISceneDataZipBuffer buffer;
-		zipfile->GetFile(outPath, &buffer);
+		zipfile->GetFile(fileName, &buffer);
 		
-		if (outPath == "description.xml")
+		if (fileName == "description.xml")
         {
 			// Read the data
 			size_t	size = 0;							buffer.GetDataSize(size);
@@ -4351,7 +4351,7 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 			// House keeping
 			std::free(data);
         }
-        else if (outPath == "description.checksum.txt")
+        else if (fileName == "description.checksum.txt") // XXX TODO: remove checksum
         {
 			// Read the data
             size_t	size = 0;							buffer.GetDataSize(size);
@@ -4367,7 +4367,18 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 		{
 			// Prepare pointer to the new files
 			IFileIdentifierPtr file (IID_FileIdentifier);
-			file->Set(fWorkingFolder, outPath);
+            
+            // If the FileName contains a folder we have to remove it and append it to the working folder.            
+            IFolderIdentifierPtr targetFolder = (IID_FolderIdentifier);
+            TXString workingFolderPath; fWorkingFolder->GetFullPath(workingFolderPath);
+            
+            TXString fileNameWithoutFolder = fileName; 
+            TXString subFolder = ExtractFolderFromPath(fileNameWithoutFolder);
+            
+            targetFolder->Set(workingFolderPath + "\\" + subFolder +  "\\");
+            targetFolder->CreateOnDisk();
+            
+			file->Set(targetFolder, fileNameWithoutFolder);
 			
 			// dump buffer into file
 			buffer.WriteToFile(file);
@@ -4376,7 +4387,7 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 			fLocalFiles.push_back(file);
 
 		}
-		inPath = outPath;
+		inPath = fileName;
 	}
 		
 	//-------------------------------------------------------------------------------------------------
