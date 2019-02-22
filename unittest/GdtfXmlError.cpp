@@ -4,6 +4,7 @@
 #include "Unittest.h"
 #include "GdtfXmlError.h"
 #include <iostream>
+#include "Utility.h"
 
 #include "Include/VectorworksMVR.h"
 using namespace VectorworksMVR;
@@ -15,15 +16,7 @@ using namespace VectorworksMVR::GdtfDefines;
 
 GdtfXmlErrorTest::GdtfXmlErrorTest(const std::string& currentDir)
 {
-    fErrorGdtf_Path = currentDir;
-#ifdef _WINDOWS
-    fErrorGdtf_Path = std::string(GITPATH);
-    fErrorGdtf_Path += std::string("\\files\\XMLBroken.gdtf");
-#else
-	fErrorGdtf_Path = std::string(GITPATH);
-	fErrorGdtf_Path += "/unittest/files/XMLBroken.gdtf";
-#endif
-
+    fErrorGdtf_Path = UnitTestUtil::GetTestResoucreFolder() + UnitTestUtil::GetSysSeparator() + "XMLBroken.gdtf";
 
     std::cout << "Export File to " << fErrorGdtf_Path << std::endl; 
 }
