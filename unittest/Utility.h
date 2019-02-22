@@ -10,7 +10,9 @@ class UnitTestUtil
 public:
     static std::string GetSysSeparator();
     static std::string GetTestResourceFolder();
-    static bool        GetFolderAppDataPath(std::string & outPath);
+    
+    static bool        GetFolderAppDataLocal(std::string & outPath);
+    std::string        GetFolderAppData_GdtfFolder();
 
     static bool FileExists(std::string fullPath);
 

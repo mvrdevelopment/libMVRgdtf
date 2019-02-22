@@ -17,21 +17,21 @@ using namespace VectorworksMVR;
 int main(int argc, char* argv[])
 {
 	// Get Current dir    
-	std::string base; UnitTestUtil::GetFolderAppDataPath(base);
+	std::string gdtfBase; UnitTestUtil::GetFolderAppDataPath(gdtfBase);
 
-	GdtfUnittest gdtfTest(base);
+	GdtfUnittest gdtfTest(gdtfBase);
 	bool gdtfFailed = gdtfTest.RunTest();
 
-	GdtfDmxUnittest gdtfDmxTest(base);
+	GdtfDmxUnittest gdtfDmxTest(gdtfBase);
 	bool gdtfDmxFailed = gdtfDmxTest.RunTest();
 
-	MvrUnittest mvrTest(base);
+	MvrUnittest mvrTest(gdtfBase);
 	bool mvrFailed = mvrTest.RunTest();
 
-	GdtfXmlErrorTest errorTest(base);
+	GdtfXmlErrorTest errorTest(gdtfBase);
 	bool errorFailed = errorTest.RunTest();
 
-	GdtfFunctionModeMasterTest modeMasterTest(base);
+	GdtfFunctionModeMasterTest modeMasterTest(gdtfBase);
 	bool modeMasterFailed = modeMasterTest.RunTest();
     
     bool errorOcurred = (mvrFailed || gdtfFailed || gdtfDmxFailed || errorFailed || modeMasterFailed);

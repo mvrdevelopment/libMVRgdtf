@@ -35,7 +35,14 @@ std::string UnitTestUtil::GetTestResourceFolder()
     return std::string(GITPATH) + sep + "files";
 }
 
-bool UnitTestUtil::GetFolderAppDataPath(std::string& outPath)
+std::string UnitTestUtil::GetFolderAppData_GdtfFolder() 
+{
+    std::string path; GetFolderAppDataLocal(path);
+
+    return path;
+}
+
+bool UnitTestUtil::GetFolderAppDataLocal(std::string& outPath)
 {
 	//--------------------------------------------------------
 	// Implementation for Windows
@@ -62,9 +69,7 @@ bool UnitTestUtil::GetFolderAppDataPath(std::string& outPath)
 	//Implementation for OSX
 	const char *homeDir = getenv("HOME");
 	outPath = std::string(homeDir);
-#endif	
-    
-    // XXX: This leads to an Error in the MVRTEst: outPath += GetSysSeparator() + "GDTF_Folder";
+#endif	    
 
 	return true;
 }
