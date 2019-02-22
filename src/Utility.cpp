@@ -74,6 +74,7 @@ bool SystemUtil::CreateFolderDefinitlyOnDisk(const TXString& folderPath)
                 return false;
             }
         }
+        else 
         {
             // Could not find a seperator in the folder path. This should not happen.
             DSTOP((kEveryone, "Could not find a seperator in the folder path."));
