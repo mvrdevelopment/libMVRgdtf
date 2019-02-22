@@ -12,9 +12,9 @@ public:
     static std::string GetTestResourceFolder();
     
     static bool        GetFolderAppDataLocal(std::string & outPath);
-    std::string        GetFolderAppData_GdtfFolder();
+    static std::string GetFolderAppData_GdtfFolder();
 
-    static bool FileExists(std::string fullPath);
+    static bool         FileExists(std::string fullPath);
 
     static void print_Ascii_BUG ();
     static void print_Ascii_DEER();

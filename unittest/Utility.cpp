@@ -38,6 +38,7 @@ std::string UnitTestUtil::GetTestResourceFolder()
 std::string UnitTestUtil::GetFolderAppData_GdtfFolder() 
 {
     std::string path; GetFolderAppDataLocal(path);
+    path += GetSysSeparator() + "GDTF_Folder";
 
     return path;
 }
@@ -84,36 +85,36 @@ bool UnitTestUtil::FileExists(std::string fullPath)
 
 void UnitTestUtil::print_Ascii_BUG()
 {
-std::cout <<"  ,--.       ,---. "<< std::endl;
-std::cout <<"  /    '.    /     \\ "<< std::endl;
-std::cout <<"         \\  ; "<< std::endl;
-std::cout <<"          \\-| "<< std::endl;
-std::cout <<"         (o o)      (/    An ERROR occured."<< std::endl;
-std::cout <<"         /'v'     ,-' "<< std::endl;
-std::cout <<" ,------/ >< \\---' "<< std::endl;
-std::cout <<"/)     ;  --  : "<< std::endl;
-std::cout <<"   ,---| ---- |--. "<< std::endl;
-std::cout <<"  ;    | ---- |   : "<< std::endl;
-std::cout <<" (|  ,-| ---- |-. |) "<< std::endl;
-std::cout <<"    | /| ---- |\\ | "<< std::endl;
-std::cout <<"    |/ | ---- | \\| "<< std::endl;
-std::cout <<"    \\  : ---- ;  | "<< std::endl;
-std::cout <<"     \\  \\ -- /  / "<< std::endl;
-std::cout <<"     ;   \\  /  : "<< std::endl;
-std::cout <<"    /   / \\/ \\  \\ "<< std::endl;
-std::cout <<"   /)           (\\"<< std::endl;
+std::cout <<"                           ,--.       ,---. "<< std::endl;
+std::cout <<"                           /    '.    /     \\ "<< std::endl;
+std::cout <<"                                  \\  ; "<< std::endl;
+std::cout <<"                                   \\-| "<< std::endl;
+std::cout <<"     An ERROR occured.            (o o)      (/"<< std::endl;
+std::cout <<"                                  /'v'     ,-' "<< std::endl;
+std::cout <<"                          ,------/ >< \\---' "<< std::endl;
+std::cout <<"                         /)     ;  --  : "<< std::endl;
+std::cout <<"                            ,---| ---- |--. "<< std::endl;
+std::cout <<"                           ;    | ---- |   : "<< std::endl;
+std::cout <<"                          (|  ,-| ---- |-. |) "<< std::endl;
+std::cout <<"                             | /| ---- |\\ | "<< std::endl;
+std::cout <<"                             |/ | ---- | \\| "<< std::endl;
+std::cout <<"                             \\  : ---- ;  | "<< std::endl;
+std::cout <<"                              \\  \\ -- /  / "<< std::endl;
+std::cout <<"                              ;   \\  /  : "<< std::endl;
+std::cout <<"                             /   / \\/ \\  \\ "<< std::endl;
+std::cout <<"                            /)           (\\"<< std::endl;
 }
 
 void UnitTestUtil::print_Ascii_DEER()
 {
-std::cout <<"\\|/    \\|/"<< std::endl;
-std::cout <<"  \\    /"<< std::endl;
-std::cout <<"   \\_/  ___   ___"<< std::endl;
-std::cout <<"   o o-'   '''   '  All Tests succeded!"<< std::endl;
-std::cout <<"    O -.         |\\"<< std::endl;
-std::cout <<"        | |'''| |"<< std::endl;
-std::cout <<"         ||   | |"<< std::endl;
-std::cout <<"         ||    ||"<< std::endl;
-std::cout <<"         "     ""<< std::endl;
+std::cout <<"                         \\|/    \\|/"<< std::endl;
+std::cout <<"                           \\    /"<< std::endl;
+std::cout <<"                            \\_/  ___   ___"<< std::endl;
+std::cout <<"     All Tests succeded!    o o-'   '''   '"<< std::endl;
+std::cout <<"                             O -.         |\\"<< std::endl;
+std::cout <<"                                 | |'''| |"<< std::endl;
+std::cout <<"                                  ||   | |"<< std::endl;
+std::cout <<"                                  ||    ||"<< std::endl;
+std::cout <<"                                  "     ""<< std::endl;
 }
 

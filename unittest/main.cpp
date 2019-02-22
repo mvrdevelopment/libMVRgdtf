@@ -17,7 +17,8 @@ using namespace VectorworksMVR;
 int main(int argc, char* argv[])
 {
 	// Get Current dir    
-	std::string gdtfBase; UnitTestUtil::GetFolderAppDataPath(gdtfBase);
+    std::string gdtfBase = UnitTestUtil::GetFolderAppData_GdtfFolder();
+    std::string mvrBase;   UnitTestUtil::GetFolderAppDataLocal( mvrBase);
 
 	GdtfUnittest gdtfTest(gdtfBase);
 	bool gdtfFailed = gdtfTest.RunTest();
@@ -25,7 +26,7 @@ int main(int argc, char* argv[])
 	GdtfDmxUnittest gdtfDmxTest(gdtfBase);
 	bool gdtfDmxFailed = gdtfDmxTest.RunTest();
 
-	MvrUnittest mvrTest(gdtfBase);
+	MvrUnittest mvrTest(mvrBase);
 	bool mvrFailed = mvrTest.RunTest();
 
 	GdtfXmlErrorTest errorTest(gdtfBase);
