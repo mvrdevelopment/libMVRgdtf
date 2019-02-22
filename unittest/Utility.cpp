@@ -16,6 +16,6 @@ std::string UnitTestUtil::GetTestResoucreFolder()
 {
     std::string sep = GetSysSeparator();
 
-    return std::string(GITPATH) + sep +  + "unittest" + sep + "files";
+    return std::string(GITPATH) + sep + "files";
 }
 
