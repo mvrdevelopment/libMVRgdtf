@@ -1419,7 +1419,7 @@ bool SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, const IFileIdentifierPtr& 
 	
 	//-------------------------------------------------------------------------------------------------
 	// Add the files that will be stored
-	TXString nameFile;	file->GetFileNameWithoutExtension(nameFile);
+	TXString nameFile;	file->GetFileName(nameFile);
 	
     // Append the SubFoldername for resources.
     nameFile = SceneData::SceneDataZip::GetResourceSubFolder(resType) + nameFile;
