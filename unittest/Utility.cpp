@@ -32,22 +32,22 @@ bool UnitTestUtil::FileExists(std::string fullPath)
 void UnitTestUtil::print_Ascii_BUG()
 {
 std::cout <<"  ,--.       ,---. "<< std::endl;
-std::cout <<"  /    '.    /     \ "<< std::endl;
-std::cout <<"         \  ; "<< std::endl;
-std::cout <<"          \-| "<< std::endl;
-std::cout <<"         (o o)      (/ "<< std::endl;
+std::cout <<"  /    '.    /     \\ "<< std::endl;
+std::cout <<"         \\  ; "<< std::endl;
+std::cout <<"          \\-| "<< std::endl;
+std::cout <<"         (o o)      (/    An ERROR occured."<< std::endl;
 std::cout <<"         /'v'     ,-' "<< std::endl;
-std::cout <<" ,------/ >< \---' "<< std::endl;
+std::cout <<" ,------/ >< \\---' "<< std::endl;
 std::cout <<"/)     ;  --  : "<< std::endl;
 std::cout <<"   ,---| ---- |--. "<< std::endl;
 std::cout <<"  ;    | ---- |   : "<< std::endl;
 std::cout <<" (|  ,-| ---- |-. |) "<< std::endl;
-std::cout <<"    | /| ---- |\ | "<< std::endl;
-std::cout <<"    |/ | ---- | \| "<< std::endl;
-std::cout <<"    \  : ---- ;  | "<< std::endl;
-std::cout <<"     \  \ -- /  / "<< std::endl;
-std::cout <<"     ;   \  /  : "<< std::endl;
-std::cout <<"    /   / \/ \  \ "<< std::endl;
+std::cout <<"    | /| ---- |\\ | "<< std::endl;
+std::cout <<"    |/ | ---- | \\| "<< std::endl;
+std::cout <<"    \\  : ---- ;  | "<< std::endl;
+std::cout <<"     \\  \\ -- /  / "<< std::endl;
+std::cout <<"     ;   \\  /  : "<< std::endl;
+std::cout <<"    /   / \\/ \\  \\ "<< std::endl;
 std::cout <<"   /)           (\\"<< std::endl;
 }
 
