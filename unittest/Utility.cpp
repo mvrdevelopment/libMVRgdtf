@@ -16,7 +16,7 @@ std::string UnitTestUtil::GetSysSeparator()
 }
 
 
-std::string UnitTestUtil::GetTestResoucreFolder()
+std::string UnitTestUtil::GetTestResourceFolder()
 {
     std::string sep = GetSysSeparator();
 

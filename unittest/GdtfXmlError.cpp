@@ -16,7 +16,7 @@ using namespace VectorworksMVR::GdtfDefines;
 
 GdtfXmlErrorTest::GdtfXmlErrorTest(const std::string& currentDir)
 {
-    fErrorGdtf_Path = UnitTestUtil::GetTestResoucreFolder() + UnitTestUtil::GetSysSeparator() + "XMLBroken.gdtf";
+    fErrorGdtf_Path = UnitTestUtil::GetTestResourceFolder() + UnitTestUtil::GetSysSeparator() + "XMLBroken.gdtf";
 
     std::cout << "Export File to " << fErrorGdtf_Path << std::endl; 
 }
