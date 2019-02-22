@@ -13,9 +13,10 @@ protected:
     bool virtual ExecuteTest();
 
 private:
-    std::string fCurrentDir;
+    std::string fAppDataFolder;
     std::string fTestGdtf_Path;
-    char        fSystemSeperator;
+    std::string fTestResourcesPath;
+    std::string fSystemSeperator;
 
     void        WriteFile();
     void        ReadFile();

@@ -16,9 +16,11 @@ GdtfUnittest::GdtfUnittest(const std::string& currentDir)
 {
     fSystemSeperator = UnitTestUtil::GetSysSeparator();
 
-    fAppDataDir = currentDir + UnitTestUtil::GetSysSeparator() + "GDTF_Folder";;
+    fAppDataFolder = currentDir + UnitTestUtil::GetSysSeparator() + "GDTF_Folder";;
 
-    fTestGdtf_Path = fAppDataDir + fSystemSeperator + "testGdtf.gdtf";
+    fTestGdtf_Path = fAppDataFolder + fSystemSeperator + "testGdtf.gdtf";
+
+    fTestResourcesPath = fSystemSeperator  + "unittest" + fSystemSeperator + "files" + fSystemSeperator;
 
     std::cout << "Export File to " << fTestGdtf_Path << std::endl; 
 }
@@ -996,25 +998,25 @@ void GdtfUnittest::ReadFile()
 
 std::string GdtfUnittest::GetTestPNG_ThumbNail()
 {
-    return fAppDataDir + fSystemSeperator + "MyThumbnail.png";
+    return fTestResourcesPath + fSystemSeperator + "MyThumbnail.png";
 }
 
 std::string GdtfUnittest::GetTestSVG_ThumbNail()
 {
-    return fAppDataDir + fSystemSeperator + "MyThumbnail.svg";
+    return fTestResourcesPath + fSystemSeperator + "MyThumbnail.svg";
 }
 
 std::string GdtfUnittest::GetTestSVG_Model()
 {
-    return fAppDataDir + fSystemSeperator + "MyModel.svg";
+    return fTestResourcesPath + fSystemSeperator + "MyModel.svg";
 }
 
 std::string GdtfUnittest::GetTest3DS_Model()
 {
-    return fAppDataDir + fSystemSeperator + "MyModel.3ds";
+    return fTestResourcesPath + fSystemSeperator + "MyModel.3ds";
 }
 
 std::string GdtfUnittest::GetTestWheel_PNG()
 {
-    return fAppDataDir + fSystemSeperator + "MWheel_Img1.png";
+    return fTestResourcesPath + fSystemSeperator + "MWheel_Img1.png";
 }

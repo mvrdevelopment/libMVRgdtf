@@ -3,12 +3,12 @@
 //-----------------------------------------------------------------------------
 #include "Utility.h"
 
-char UnitTestUtil::GetSysSeparator()
+std::string UnitTestUtil::GetSysSeparator()
 {
 #ifdef _WINDOWS
-    return '\\';
+    return "\\";
 #else
-    return '/';
+    return "/";
 #endif
 }
 
