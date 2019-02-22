@@ -50,7 +50,7 @@ int main(int argc, char* argv[])
 
     if (! errorOcurred) 
     {
-        std::cout << " :-)  All test finished succesfull.";
+        UnitTestUtil::print_Ascii_DEER();
     }
     else 
     {

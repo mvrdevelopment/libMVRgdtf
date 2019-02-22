@@ -51,3 +51,16 @@ std::cout <<"    /   / \\/ \\  \\ "<< std::endl;
 std::cout <<"   /)           (\\"<< std::endl;
 }
 
+void UnitTestUtil::print_Ascii_DEER()
+{
+std::cout <<"\\|/    \\|/"<< std::endl;
+std::cout <<"  \\    /"<< std::endl;
+std::cout <<"   \\_/  ___   ___"<< std::endl;
+std::cout <<"   o o-'   '''   '  All Tests succeded!"<< std::endl;
+std::cout <<"    O -.         |\\"<< std::endl;
+std::cout <<"        | |'''| |"<< std::endl;
+std::cout <<"         ||   | |"<< std::endl;
+std::cout <<"         ||    ||"<< std::endl;
+std::cout <<"         "     ""<< std::endl;
+}
+
