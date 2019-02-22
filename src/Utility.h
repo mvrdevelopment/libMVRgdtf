@@ -2,7 +2,9 @@
 //----- Copyright deersoft 2015 - 2017 www.deersoft.de
 //-----------------------------------------------------------------------------
 #pragma once
-#include "Prefix/StdAfx.h"
+
+using VectorWorks::Filing::IFolderIdentifierPtr; 
+using VectorWorks::Filing::IID_FolderIdentifier;
 
 class GdtfUtil
 {   
@@ -15,4 +17,5 @@ class SystemUtil
 {
 public:
     static std::string GetSeparator();
+    static bool CreateFolderDefinitlyOnDisk(const TXString& folderPath);
 };

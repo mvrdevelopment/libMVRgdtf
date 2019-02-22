@@ -3,6 +3,7 @@
 //-----------------------------------------------------------------------------
 #include "Prefix/StdAfx.h"
 #include "Utility.h"
+#include <string>
 
 /*static*/ void GdtfUtil::ConvertMatrix(const VectorworksMVR::STransformMatrix & smatrix, VWTransformMatrix & vwmatrix)
 /* 
@@ -34,4 +35,59 @@ std::string SystemUtil::GetSeparator()
 #else
     return "/";
 #endif
+}
+
+bool SystemUtil::CreateFolderDefinitlyOnDisk(const TXString& folderPath)
+{
+    IFolderIdentifierPtr folder = (IID_FolderIdentifier);
+    folder->Set(folderPath);
+    
+    bool exists;  folder->ExistsOnDisk(exists);
+    
+    if (exists) 
+    {
+        // Nothing to to do!
+        return true;
+    }
+
+    // Try to create the Folder; This only works when all the ParentFolder exists.
+    folder->CreateOnDisk();
+
+    // Check if this was succesfull
+    folder->ExistsOnDisk(exists);
+
+    if (! exists) 
+    {
+        ptrdiff_t pos = folderPath.ReverseFind( GetSeparator() );
+
+        if (pos > 0)
+        {
+            TXString parentFolder = folderPath.Left(pos);
+            
+            if ( ! parentFolder.IsEmpty()) 
+            {
+                // Try to create the Parent folder; Remove the last folder from the path if possible.
+                SystemUtil::CreateFolderDefinitlyOnDisk(parentFolder);
+            }
+            else 
+            {
+                return false;
+            }
+        }
+        {
+            // Could not find a seperator in the folder path. This should not happen.
+            DSTOP((kEveryone, "Could not find a seperator in the folder path."));
+            return false;
+        }
+    }
+    else 
+    {
+        return true;
+    }
+
+    // Now all the Parentfolders should  and we can try to create the top folder again:
+    folder->CreateOnDisk();
+    folder->ExistsOnDisk(exists);
+    
+    return exists;
 }

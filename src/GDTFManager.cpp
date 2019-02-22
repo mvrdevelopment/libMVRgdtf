@@ -4282,7 +4282,7 @@ TXString GdtfFixture::ExtractFolderFromPath(TXString& path)
     while (pos > 0 )
 	{
 		// Copy string		
-		for (ptrdiff_t i = 0; i < pos; i++)	{ folder += path.GetAt(i); }		
+		for (ptrdiff_t i = 0; i <= pos; i++)	{ folder += path.GetAt(i); }		
 		
 		// Delete and find next
 		path.Delete(0, pos + 1);
@@ -4377,8 +4377,10 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
             TXString subFolder = ExtractFolderFromPath(fileNameWithoutFolder);
             //-----------------------------------------------------------------------------
             
-            targetFolder->Set(workingFolderPath + SystemUtil::GetSeparator() + subFolder + SystemUtil::GetSeparator() );
-            targetFolder->CreateOnDisk();
+            targetFolder->Set(workingFolderPath + SystemUtil::GetSeparator() + subFolder);
+            TXString fp; targetFolder->GetFullPath(fp); // XXX tEst
+            
+            SystemUtil::CreateFolderDefinitlyOnDisk(fp);            
             
 			file->Set(targetFolder, fileNameWithoutFolder);
 			
