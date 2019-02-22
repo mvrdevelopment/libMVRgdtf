@@ -9,5 +9,6 @@ class UnitTestUtil
 
 public:
     static std::string GetSysSeparator();
+    static std::string GetTestResoucreFolder();
 };
 

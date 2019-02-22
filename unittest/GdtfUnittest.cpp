@@ -20,7 +20,7 @@ GdtfUnittest::GdtfUnittest(const std::string& currentDir)
 
     fTestGdtf_Path = fAppDataFolder + fSystemSeperator + "testGdtf.gdtf";
 
-    fTestResourcesPath = fSystemSeperator  + "unittest" + fSystemSeperator + "files" + fSystemSeperator;
+    fTestResourcesPath = UnitTestUtil::GetTestResoucreFolder();
 
     std::cout << "Export File to " << fTestGdtf_Path << std::endl; 
 }
