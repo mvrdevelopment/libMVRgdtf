@@ -320,9 +320,9 @@ void GdtfUnittest::ReadFile()
 
 		this->checkifEqual("GetFixtureThumbnail "		, thumbFileName,  "MyThumbnail"); 
         
-        // The files do not exist in the example gdtf so we await that the paths are empty.
-		this->checkifEqual("GetFixtureThumbnail "		, fullPath_PNG, GetTestPNG_ThumbNail() ); 
-        this->checkifEqual("GetFixtureThumbnail "		, fullPath_SVG, GetTestSVG_ThumbNail() );        
+        // Check if the Files have been unpacked correctly.
+		this->checkifEqual("GetFixtureThumbnail "		, fullPath_PNG, fAppDataFolder + fSystemSeperator + "MyThumbnail.png" ); 
+        this->checkifEqual("GetFixtureThumbnail "		, fullPath_SVG, fAppDataFolder + fSystemSeperator + "MyThumbnail.svg");        
         //-----------------------------------------------------------------------------
         // XXX: TODO: Check the WheelImg, and the Test model svg / 3ds
 
