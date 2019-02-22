@@ -16,7 +16,7 @@ GdtfUnittest::GdtfUnittest(const std::string& currentDir)
 {
     fSystemSeperator = UnitTestUtil::GetSysSeparator();
 
-    fAppDataFolder = currentDir + UnitTestUtil::GetSysSeparator() + "GDTF_Folder";;
+    fAppDataFolder = currentDir;
 
     fTestGdtf_Path = fAppDataFolder + fSystemSeperator + "testGdtf.gdtf";
 
