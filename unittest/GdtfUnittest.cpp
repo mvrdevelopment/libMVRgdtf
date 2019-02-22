@@ -314,11 +314,11 @@ void GdtfUnittest::ReadFile()
 		
         //-----------------------------------------------------------------------------
 		// Get the Thumbnail-Image from GDTF File
-		MvrString pngFileName		= gdtfRead->GetFixtureThumbnail();
+		MvrString thumbFileName		= gdtfRead->GetFixtureThumbnail();
 		MvrString fullPath_PNG		= gdtfRead->GetFixtureThumbnail_PNG_FullPath();
         MvrString fullPath_SVG      = gdtfRead->GetFixtureThumbnail_SVG_FullPath();        
 
-		this->checkifEqual("GetFixtureThumbnail "		, pngFileName,  "MyThumbnail"); 
+		this->checkifEqual("GetFixtureThumbnail "		, thumbFileName,  "MyThumbnail"); 
         
         // The files do not exist in the example gdtf so we await that the paths are empty.
 		this->checkifEqual("GetFixtureThumbnail "		, fullPath_PNG, GetTestPNG_ThumbNail() ); 
