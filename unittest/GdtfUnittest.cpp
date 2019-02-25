@@ -993,8 +993,9 @@ void GdtfUnittest::ReadFile()
         size_t dmxPersoVal;
         __checkVCOM (dmxPerso->GetValue(dmxPersoVal));
         this->checkifEqual("DMXPersonality Value", Sint32(dmxPersoVal), Sint32(11));
-
-        this->checkifEqual("DMXPersonality DMXModeName", dmxPerso->GetDMXMode(), "DmxModeNam");
+        
+        IGdtfDmxModePtr dmxMode; dmxPerso->GetDmxMode(&dmxMode);
+        this->checkifEqual("DMXPersonality.DMXModeName ", dmxMode->GetName, "My DmxModeName");
 }
 
 	PrintParsingErrorList(gdtfRead);
