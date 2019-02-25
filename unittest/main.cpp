@@ -20,8 +20,8 @@ int main(int argc, char* argv[])
     std::string gdtfBase = UnitTestUtil::GetFolderAppData_GdtfFolder();
     std::string mvrBase;   UnitTestUtil::GetFolderAppDataLocal( mvrBase);
 
-    std::cout << "The gdtf base is: " << gdtfBase; // XXX TEST
-    std::cout << "The MVR base is:  " << mvrBase;  // XXX TEST
+    std::cout << "The gdtf base is: " << gdtfBase << std::endl; // XXX TEST
+    std::cout << "The MVR base is:  " << mvrBase<< std::endl;   // XXX TEST
 
 	GdtfUnittest gdtfTest(gdtfBase);
 	bool gdtfFailed = gdtfTest.RunTest();
