@@ -6305,7 +6305,7 @@ void GdtfDMXPersonality::OnPrintToFile(IXMLFileNodePtr pNode)
     //------------------------------------------------------------------------------------
     // Print the attributes
     pNode->SetNodeAttributeValue(XML_GDTF_DMXPersonalityValue, GdtfConverter::ConvertInteger(fValue));
-    pNode->SetNodeAttributeValue(XML_GDTF_DMXPersonalityDMXMode, fDMXMode_Unresolved);
+    pNode->SetNodeAttributeValue(XML_GDTF_DMXPersonalityDMXMode, fDMXMode->GetModeName() );
 }
 
 void GdtfDMXPersonality::OnReadFromNode(const IXMLFileNodePtr& pNode)
