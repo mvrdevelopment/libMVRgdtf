@@ -4343,6 +4343,9 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
             TXString workingFolderPath; fWorkingFolder->GetFullPath(workingFolderPath);
             
             TXString fileNameWithoutFolder = fileName; 
+            
+            // The function CZIPFileImpl::GetNextFile always returns the filename with the folderstructure "/" seperated!
+            fileNameWithoutFolder = fileNameWithoutFolder.Replace("/", SystemUtil::GetSeparator());
             TXString subFolder = SystemUtil::ExtractFolderFromPath(fileNameWithoutFolder);            
             
             //-----------------------------------------------------------------
