@@ -1929,9 +1929,7 @@ private:
 		bool							ExportToFile(IZIPFilePtr& zipfile);
 		
 		bool							IsReaded();
-		void							GetWorkingFolder(IFolderIdentifierPtr& folder);
-    private:
-        TXString ExtractFolderFromPath(TXString & path);
+		void							GetWorkingFolder(IFolderIdentifierPtr& folder);        
 	};    
  
 }
