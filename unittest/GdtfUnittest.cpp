@@ -53,9 +53,6 @@ void GdtfUnittest::WriteFile()
 
         //------------------------------------------------------------------------------    
         // Add Test Resources
-        std::string s = GetTestPNG_ThumbNail(); // XXX TEST
-        std::cout << "Thumbnail Source:  " << s << std::endl;
-
         __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestPNG_ThumbNail().c_str(), ERessourceType::RessoureFixture) );
         __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestSVG_ThumbNail().c_str(), ERessourceType::RessoureFixture) );
         __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestWheel_PNG().c_str(),     ERessourceType::ImageWheel) );
