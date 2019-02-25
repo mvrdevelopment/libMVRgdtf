@@ -11,6 +11,7 @@ using namespace VWFC;
 #include "XmlFileHelper.h"
 #include "HashManager.h"
 #include "GdtfError.h"
+#include "Utility.h"
 
 using namespace SceneData;
 
@@ -1452,13 +1453,13 @@ TXString SceneData::SceneDataZip::GetResourceSubFolder(ERessourceType resType)
     switch (resType) 
     {
     case ERessourceType::ImageWheel:
-        return "wheels/";
+        return "wheels" + TXString(kSeperator);
         break;
     case ERessourceType::Model3DS:
-        return "models/3ds/";
+        return "models" + TXString(kSeperator) + "3ds" + TXString(kSeperator);
         break;
     case ERessourceType::ModelSVG:
-        return "models/svg/";
+        return "models" + TXString(kSeperator) + "svg" + TXString(kSeperator);
         break;
     case ERessourceType::RessoureFixture:
         return  "";
