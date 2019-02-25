@@ -409,10 +409,6 @@ namespace SceneData
 		void						    SetHeight(const double& height);
 		void						    SetPrimitiveType(const EGdtfModel_PrimitiveType& type);        
 		void						    SetGeometryFile(const TXString& file);
-    
-    private: 
-        TXString                        GetWorkingFolder();
-		
 	public:
 		virtual EGdtfObjectType			GetObjectType();
 		virtual TXString				GetNodeReference();
@@ -1899,8 +1895,6 @@ private:
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
         virtual	void			        OnErrorCheck(const IXMLFileNodePtr& pNode);
-
-        TXString                       getWorkingFolder();
 		        
         GdtfAttributePtr            getAttributeByRef(const TXString& ref);
         GdtfWheelPtr                getWheelByRef(const TXString& ref);		

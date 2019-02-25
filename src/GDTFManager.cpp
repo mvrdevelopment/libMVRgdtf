@@ -1051,18 +1051,6 @@ void GdtfModel::SetGeometryFile(const TXString &file)
 	fGeometryFile = file;
 }
 
-TXString SceneData::GdtfModel::GetWorkingFolder()
-{
- 	TXString				workingFolder;
-	IFolderIdentifierPtr	folder;
-	fParentFixture->GetWorkingFolder(folder);
-	
-	ASSERTN(kEveryone, folder != nullptr);
-	if (folder) { folder->GetFullPath(workingFolder); }
-
-    return workingFolder; 
-}
-
 void GdtfModel::OnPrintToFile(IXMLFileNodePtr pNode)
 {
 	//------------------------------------------------------------------------------------
@@ -1142,8 +1130,19 @@ const TXString& GdtfModel::GetGeometryFileName() const
 
 const TXString& GdtfModel::GetGeometryFile_3DS_FullPath()
 {
+	fFullPath3DS = "";
 	// Set to store
-	fFullPath3DS = GetWorkingFolder() + fGeometryFile + ".3ds";	
+	IFolderIdentifierPtr folder (IID_FolderIdentifier);
+	fParentFixture->GetWorkingFolder(folder);
+
+	IFileIdentifierPtr file (IID_FileIdentifier);
+	file->Set(folder, fGeometryFile + ".3ds");
+
+	bool fileExists = false;
+	if(VCOM_SUCCEEDED(file->ExistsOnDisk(fileExists)) && fileExists)
+	{
+		file->GetFileFullPath(fFullPath3DS);
+	}
 	
 	return fFullPath3DS;
 }
@@ -1151,7 +1150,19 @@ const TXString& GdtfModel::GetGeometryFile_3DS_FullPath()
 const TXString & SceneData::GdtfModel::GetGeometryFile_SVG_FullPath()
 {
 	// Set to store
-	fFullPathSVG = GetWorkingFolder() + fGeometryFile + ".svg";	
+	fFullPathSVG = "";
+	// Set to store
+	IFolderIdentifierPtr folder (IID_FolderIdentifier);
+	fParentFixture->GetWorkingFolder(folder);
+
+	IFileIdentifierPtr file (IID_FileIdentifier);
+	file->Set(folder, fGeometryFile + ".svg");
+
+	bool fileExists = false;
+	if(VCOM_SUCCEEDED(file->ExistsOnDisk(fileExists)) && fileExists)
+	{
+		file->GetFileFullPath(fFullPathSVG);
+	}
 	
 	return fFullPathSVG;
 }
@@ -5440,16 +5451,6 @@ void GdtfFixture::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
 }
 
-TXString SceneData::GdtfFixture::getWorkingFolder()
-{
-	TXString				workingFolder;
-	
-	ASSERTN(kEveryone, fWorkingFolder != nullptr);
-	if (fWorkingFolder) { fWorkingFolder->GetFullPath(workingFolder); }
-    
-    return workingFolder;
-}
-
 EGdtfObjectType GdtfFixture::GetObjectType()
 {
 	return EGdtfObjectType::eGdtfFixture;
@@ -5805,18 +5806,18 @@ const TXString& GdtfFixture::GetThumbnailName() const
 TXString GdtfFixture::GetFullThumbNailPath (const TXString& fileExtension) 
 {
 	// Set to store
-	TXString fullPath = getWorkingFolder() + fTumbnailName + fileExtension;
+	TXString fileName = fTumbnailName + fileExtension;
 
     // Check if file exists:
     IFileIdentifierPtr file (IID_FileIdentifier);
-    file->Set(fullPath);
+    file->Set(fWorkingFolder, fileName);
     
-    bool exists;  file->ExistsOnDisk(exists);
-    
-    if (! exists)
-    {
-        return "";
-    }
+    bool exists = false;  
+	VCOM_SUCCEEDED(file->ExistsOnDisk(exists));
+    if ( ! exists)	{ return ""; }
+
+	TXString fullPath;
+	file->GetFileFullPath(fullPath);
 
 	return fullPath;
 }
