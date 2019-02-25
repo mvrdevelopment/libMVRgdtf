@@ -6213,13 +6213,15 @@ GdtfSoftwareVersionIDPtr SceneData::GdtfFTRDM::AddSoftwareVersID(size_t value)
 SceneData::GdtfDMXPersonality::GdtfDMXPersonality()
 {
     fValue = 0;
+    fDMXMode = nullptr;
     fDMXMode_Unresolved = "";
 }
 
-SceneData::GdtfDMXPersonality::GdtfDMXPersonality(size_t value, const TXString & dmxModeName)
+SceneData::GdtfDMXPersonality::GdtfDMXPersonality(size_t value, GdtfDmxModePtr dmxMode)
 {
     fValue   = value;
-    fDMXMode_Unresolved = dmxModeName;
+    fDMXMode = dmxMode;
+    fDMXMode_Unresolved = "";
 }
 
 SceneData::GdtfDMXPersonality::~GdtfDMXPersonality()
@@ -6246,9 +6248,9 @@ void SceneData::GdtfDMXPersonality::SetValue(size_t val)
     fValue = val;
 }
 
-void SceneData::GdtfDMXPersonality::SetDMXMode(const TXString & modeName)
+void SceneData::GdtfDMXPersonality::SetDMXMode(GdtfDmxModePtr mode)
 {
-    fDMXMode_Unresolved = modeName; // XXX Change param to DMXModePtr
+    fDMXMode = mode;
 }
 
 TXString SceneData::GdtfDMXPersonality::GetNodeName()
