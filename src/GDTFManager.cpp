@@ -6238,6 +6238,11 @@ size_t SceneData::GdtfDMXPersonality::GetValue() const
     return fValue;
 }
 
+const TXString & SceneData::GdtfDMXPersonality::GetUnresolvedDMXMode() const
+{
+    return fDMXMode_Unresolved;
+}
+
 GdtfDmxModePtr SceneData::GdtfDMXPersonality::GetDMXMode() const
 {
     return fDMXMode;

@@ -1203,6 +1203,7 @@ namespace SceneData
         // Getter        
         size_t		                    GetValue() const;
         GdtfDmxModePtr		            GetDMXMode() const;
+        const TXString&				    GetUnresolvedDMXMode() const;
         // Setter       
         void                            SetValue(size_t val);
         void						    SetDMXMode(GdtfDmxModePtr mode);
