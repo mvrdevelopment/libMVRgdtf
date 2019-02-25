@@ -1292,7 +1292,6 @@ void GdtfGeometry::OnPrintToFile(IXMLFileNodePtr pNode)
 	
 	pNode->SetNodeAttributeValue(XML_GDTF_GeometryMatrix,			GdtfConverter::ConvertMatrix(fMatrix, true));
 
-	ASSERTN(kEveryone, fModelReference != nullptr);
 	if (fModelReference) { pNode->SetNodeAttributeValue(XML_GDTF_GeometryModelRef,	fModelReference->GetNodeReference()); }
 	
 	// ------------------------------------------------------------------------------------
@@ -1383,11 +1382,12 @@ void GdtfGeometry::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	//------------------------------------------------------------------------------------
 	// Create needed and optional Attribute Arrays
 	TXStringArray needed;
-	TXStringArray optional;
 	needed.push_back(XML_GDTF_GeometryName);
-	needed.push_back(XML_GDTF_GeometryModelRef);
 	needed.push_back(XML_GDTF_GeometryMatrix);
 	
+	TXStringArray optional;
+	optional.push_back(XML_GDTF_GeometryModelRef);
+
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
 	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);

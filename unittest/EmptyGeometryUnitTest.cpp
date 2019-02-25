@@ -38,8 +38,9 @@ void GdtfEmptyModelTest::WriteFile(VectorworksMVR::IGdtfFixturePtr& fixture)
 
     if(geometry1)
     {
-        IGdtfGeometryPtr geometry2;
-        __checkVCOM(geometry1->CreateGeometry(EGdtfObjectType::eGdtfGeometry, "Geometry2", nullptr, STransformMatrix(), &geometry2));
+        IGdtfGeometryPtr     geometry2;
+        IGdtfModelPtr       model;
+        __checkVCOM(geometry1->CreateGeometry(EGdtfObjectType::eGdtfGeometry, "Geometry2", model, STransformMatrix(), &geometry2));
 
     }
 
@@ -51,11 +52,14 @@ void GdtfEmptyModelTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
     __checkVCOM(fixture->GetGeometryCount(count_top_Level));
     checkifEqual("Top Level Geometry Count", count_top_Level, (size_t)1);
 
+    IGdtfModelPtr model;
+
     if(count_top_Level == 1)
     {
         IGdtfGeometryPtr geometry1;
         __checkVCOM(fixture->GetGeometryAt(0, &geometry1));
         checkifEqual("Second Level Geometry Name", geometry1->GetName(), "Geometry1");
+        __checkVCOM_NotSet(geometry1->GetModel( & model));
 
 
         size_t second_level = 0;
@@ -67,6 +71,7 @@ void GdtfEmptyModelTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
             IGdtfGeometryPtr geometry2;
             __checkVCOM(geometry1->GetInternalGeometryAt(0, &geometry2));
             checkifEqual("Second Level Geometry Name", geometry2->GetName(), "Geometry2");
+            __checkVCOM_NotSet(geometry2->GetModel( & model));
 
         }
     }
