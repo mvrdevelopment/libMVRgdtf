@@ -15,9 +15,7 @@ class UnitTestUtil
 
 public:
     static std::string GetTestResourceFolder();
-    
     static bool        GetFolderAppDataLocal(std::string & outPath);
-    static std::string GetFolderAppData_GdtfFolder();
 
     static bool         FileExists(std::string fullPath);
 };
