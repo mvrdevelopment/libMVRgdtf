@@ -3,9 +3,6 @@
 //-----------------------------------------------------------------------------
 #pragma once
 
-using VectorWorks::Filing::IFolderIdentifierPtr; 
-using VectorWorks::Filing::IID_FolderIdentifier;
-
 class GdtfUtil
 {   
 public:

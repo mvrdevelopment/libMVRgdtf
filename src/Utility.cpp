@@ -5,6 +5,10 @@
 #include "Utility.h"
 #include <string>
 
+using VectorWorks::Filing::IFolderIdentifierPtr; 
+using VectorWorks::Filing::IID_FolderIdentifier;
+
+
 /*static*/ void GdtfUtil::ConvertMatrix(const VectorworksMVR::STransformMatrix & smatrix, VWTransformMatrix & vwmatrix)
 /* 
 Converts a STransformMatrix to a VWTransformMatrix.
