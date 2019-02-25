@@ -36,6 +36,7 @@ namespace VectorworksMVR
         SceneData::GdtfDmxMode* fDmxMode;
         
     public:
+        SceneData::GdtfDmxMode* getPointer();
         void setPointer(SceneData::GdtfDmxMode* dmxMode);
         
     };

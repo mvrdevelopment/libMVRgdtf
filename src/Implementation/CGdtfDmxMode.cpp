@@ -328,6 +328,11 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxModeImpl::CreateDmxRelation(Mv
     
 }
 
+SceneData::GdtfDmxMode* VectorworksMVR::CGdtfDmxModeImpl::getPointer()
+{
+    return fDmxMode;
+}
+
 void VectorworksMVR::CGdtfDmxModeImpl::setPointer(SceneData::GdtfDmxMode *dmxMode)
 {
     fDmxMode = dmxMode;
