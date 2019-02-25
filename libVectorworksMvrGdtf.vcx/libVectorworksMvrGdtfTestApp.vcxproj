@@ -35,6 +35,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\unittest\EmptyGeometryUnitTest.cpp" />
     <ClCompile Include="..\unittest\GdtfDmxUnittest.cpp" />
     <ClCompile Include="..\unittest\GdtfFunctionModeMaster.cpp" />
     <ClCompile Include="..\unittest\GdtfUnittest.cpp" />
@@ -45,6 +46,7 @@
     <ClCompile Include="..\unittest\Unittest.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\unittest\EmptyGeometryUnitTest.h" />
     <ClInclude Include="..\unittest\GdtfDmxUnittest.h" />
     <ClInclude Include="..\unittest\GdtfFunctionModeMaster.h" />
     <ClInclude Include="..\unittest\GdtfUnittest.h" />
