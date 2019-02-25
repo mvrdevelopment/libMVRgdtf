@@ -45,6 +45,9 @@
     <ClCompile Include="..\unittest\Utility.cpp">
       <Filter>Util</Filter>
     </ClCompile>
+    <ClCompile Include="..\unittest\EmptyGeometryUnitTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\unittest\MvrUnittest.h">
@@ -73,6 +76,9 @@
     </ClInclude>
     <ClInclude Include="..\unittest\Utility.h">
       <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\unittest\EmptyGeometryUnitTest.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

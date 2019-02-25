@@ -10,6 +10,8 @@
 #include "GdtfXmlError.h"
 #include "GdtfFunctionModeMaster.h"
 #include "Utility.h"
+#include "EmptyGeometryUnitTest.h"
+
 
 
 using namespace VectorworksMVR;					
@@ -37,19 +39,11 @@ int main(int argc, char* argv[])
 
 	GdtfFunctionModeMasterTest modeMasterTest(gdtfBase);
 	bool modeMasterFailed = modeMasterTest.RunTest();
-    
-    bool errorOcurred = (mvrFailed || gdtfFailed || gdtfDmxFailed || errorFailed || modeMasterFailed);
 
-    if (! errorOcurred) 
-    {
-        UnitTestUtil::print_Ascii_DEER();
-    }
-    else 
-    {
-        UnitTestUtil::print_Ascii_BUG();        
-    }
+    GdtfEmptyModelTest test1 (gdtfBase);
+	bool test1_ok = test1.RunTest();
 
-    return errorOcurred;
+    return  (mvrFailed || gdtfFailed || gdtfDmxFailed || errorFailed || modeMasterFailed || test1_ok);
 }
 
 

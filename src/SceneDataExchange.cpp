@@ -2116,7 +2116,6 @@ bool SceneDataExchange::ReadFromFile(const IFileIdentifierPtr& file)
 	
 	// Prepare
     ISceneDataZipBuffer xmlFileBuffer;
-    ISceneDataZipBuffer xmlFileSHA256Buffer;
 	
 	//-------------------------------------------------------------------------------------------------
 	// Decompress the files
@@ -2137,18 +2136,6 @@ bool SceneDataExchange::ReadFromFile(const IFileIdentifierPtr& file)
 			
 			// Set the buffer object
             xmlFileBuffer.SetData(data, size);
-			
-			// House keeping
-			std::free(data);
-        }
-        else if (outPath == "GeneralSceneDescription.checksum.txt")
-        {
-			// Read the data
-            size_t	size = 0;							buffer.GetDataSize(size);
-            void*	data = malloc(size * sizeof(char));	buffer.CopyDataInto(data, size);
-			
-			// Set the buffer object
-            xmlFileSHA256Buffer.SetData(data, size);
 			
 			// House keeping
 			std::free(data);
@@ -2180,9 +2167,6 @@ bool SceneDataExchange::ReadFromFile(const IFileIdentifierPtr& file)
 	ASSERTN(kEveryone, xmlFileBuffer.IsSet());
     if (xmlFileBuffer.IsSet())
     {
-		// Check the checksum
-		ASSERTN(kEveryone, HashManager::HashManager::CheckHashForBuffer(xmlFileBuffer, xmlFileSHA256Buffer) == true);
-		
 		// Read from Scene Description
 		ReadFromGeneralSceneDescription(xmlFileBuffer);
     }

@@ -1051,18 +1051,6 @@ void GdtfModel::SetGeometryFile(const TXString &file)
 	fGeometryFile = file;
 }
 
-TXString SceneData::GdtfModel::GetWorkingFolder()
-{
- 	TXString				workingFolder;
-	IFolderIdentifierPtr	folder;
-	fParentFixture->GetWorkingFolder(folder);
-	
-	ASSERTN(kEveryone, folder != nullptr);
-	if (folder) { folder->GetFullPath(workingFolder); }
-
-    return workingFolder; 
-}
-
 void GdtfModel::OnPrintToFile(IXMLFileNodePtr pNode)
 {
 	//------------------------------------------------------------------------------------
@@ -1142,8 +1130,19 @@ const TXString& GdtfModel::GetGeometryFileName() const
 
 const TXString& GdtfModel::GetGeometryFile_3DS_FullPath()
 {
+	fFullPath3DS = "";
 	// Set to store
-	fFullPath3DS = GetWorkingFolder() + fGeometryFile + ".3ds";	
+	IFolderIdentifierPtr folder (IID_FolderIdentifier);
+	fParentFixture->GetWorkingFolder(folder);
+
+	IFileIdentifierPtr file (IID_FileIdentifier);
+	file->Set(folder, fGeometryFile + ".3ds");
+
+	bool fileExists = false;
+	if(VCOM_SUCCEEDED(file->ExistsOnDisk(fileExists)) && fileExists)
+	{
+		file->GetFileFullPath(fFullPath3DS);
+	}
 	
 	return fFullPath3DS;
 }
@@ -1151,7 +1150,19 @@ const TXString& GdtfModel::GetGeometryFile_3DS_FullPath()
 const TXString & SceneData::GdtfModel::GetGeometryFile_SVG_FullPath()
 {
 	// Set to store
-	fFullPathSVG = GetWorkingFolder() + fGeometryFile + ".svg";	
+	fFullPathSVG = "";
+	// Set to store
+	IFolderIdentifierPtr folder (IID_FolderIdentifier);
+	fParentFixture->GetWorkingFolder(folder);
+
+	IFileIdentifierPtr file (IID_FileIdentifier);
+	file->Set(folder, fGeometryFile + ".svg");
+
+	bool fileExists = false;
+	if(VCOM_SUCCEEDED(file->ExistsOnDisk(fileExists)) && fileExists)
+	{
+		file->GetFileFullPath(fFullPathSVG);
+	}
 	
 	return fFullPathSVG;
 }
@@ -1304,7 +1315,6 @@ void GdtfGeometry::OnPrintToFile(IXMLFileNodePtr pNode)
 	
 	pNode->SetNodeAttributeValue(XML_GDTF_GeometryMatrix,			GdtfConverter::ConvertMatrix(fMatrix, true));
 
-	ASSERTN(kEveryone, fModelReference != nullptr);
 	if (fModelReference) { pNode->SetNodeAttributeValue(XML_GDTF_GeometryModelRef,	fModelReference->GetNodeReference()); }
 	
 	// ------------------------------------------------------------------------------------
@@ -1395,11 +1405,12 @@ void GdtfGeometry::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	//------------------------------------------------------------------------------------
 	// Create needed and optional Attribute Arrays
 	TXStringArray needed;
-	TXStringArray optional;
 	needed.push_back(XML_GDTF_GeometryName);
-	needed.push_back(XML_GDTF_GeometryModelRef);
 	needed.push_back(XML_GDTF_GeometryMatrix);
 	
+	TXStringArray optional;
+	optional.push_back(XML_GDTF_GeometryModelRef);
+
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
 	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
@@ -4326,9 +4337,7 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 	zipfile->OpenRead(inZipFile);
 
 	ISceneDataZipBuffer xmlFileBuffer;
-    ISceneDataZipBuffer xmlFileSHA256Buffer;
-	
-	
+		
 	//-------------------------------------------------------------------------------------------------
 	// Decompress the files
 	TXString fileName				= "";
@@ -4347,18 +4356,6 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 			
 			// Set the buffer object
             xmlFileBuffer.SetData(data, size);
-			
-			// House keeping
-			std::free(data);
-        }
-        else if (fileName == "description.checksum.txt") // XXX TODO: remove checksum
-        {
-			// Read the data
-            size_t	size = 0;							buffer.GetDataSize(size);
-            void*	data = malloc(size * sizeof(char));	buffer.CopyDataInto(data, size);
-			
-			// Set the buffer object
-            xmlFileSHA256Buffer.SetData(data, size);
 			
 			// House keeping
 			std::free(data);
@@ -4414,15 +4411,6 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 	}
 	else
 	{
-		if (xmlFileSHA256Buffer.IsSet())
-		{
-			if (HashManager::HashManager::CheckHashForBuffer(xmlFileBuffer, xmlFileSHA256Buffer) == false)
-			{
-				GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureChecksumError); 
-				SceneData::GdtfFixture::AddError(error); 
-			}
-		}
-
 		IXMLFilePtr xmlFile (IID_XMLFile);
 
 		size_t	size = 0;								xmlFileBuffer.GetDataSize(size);
@@ -5440,16 +5428,6 @@ void GdtfFixture::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
 }
 
-TXString SceneData::GdtfFixture::getWorkingFolder()
-{
-	TXString				workingFolder;
-	
-	ASSERTN(kEveryone, fWorkingFolder != nullptr);
-	if (fWorkingFolder) { fWorkingFolder->GetFullPath(workingFolder); }
-    
-    return workingFolder;
-}
-
 EGdtfObjectType GdtfFixture::GetObjectType()
 {
 	return EGdtfObjectType::eGdtfFixture;
@@ -5805,18 +5783,18 @@ const TXString& GdtfFixture::GetThumbnailName() const
 TXString GdtfFixture::GetFullThumbNailPath (const TXString& fileExtension) 
 {
 	// Set to store
-	TXString fullPath = getWorkingFolder() + fTumbnailName + fileExtension;
+	TXString fileName = fTumbnailName + fileExtension;
 
     // Check if file exists:
     IFileIdentifierPtr file (IID_FileIdentifier);
-    file->Set(fullPath);
+    file->Set(fWorkingFolder, fileName);
     
-    bool exists;  file->ExistsOnDisk(exists);
-    
-    if (! exists)
-    {
-        return "";
-    }
+    bool exists = false;  
+	VCOM_SUCCEEDED(file->ExistsOnDisk(exists));
+    if ( ! exists)	{ return ""; }
+
+	TXString fullPath;
+	file->GetFileFullPath(fullPath);
 
 	return fullPath;
 }
