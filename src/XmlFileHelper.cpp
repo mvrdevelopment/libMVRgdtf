@@ -110,6 +110,8 @@ using namespace SceneData;
 /*static*/ TXString GdtfConverter::IntToString2Digits(Sint64 value) 
 /* Converts the int to an string with 2 digits. If the int has only one digit the string will get a leading "0".*/ 
 {
+    ASSERTN(kEveryone ,value < 100);
+
     if (value < 10)
     {
         return "0" + TXString().itoa(value);
