@@ -982,7 +982,7 @@ namespace VectorworksMVR
 
         virtual VCOMError VCOM_CALLTYPE     GetDMXPersonalityCount(size_t& outCount)= 0;
         virtual VCOMError VCOM_CALLTYPE     GetDMXPersonalityAt(size_t at, IGdtfDMXPersonality**  outValue)= 0;
-        virtual VCOMError VCOM_CALLTYPE     CreateDMXPersonality(size_t dmxPersonalityValue, MvrString dmxModeName, IGdtfDMXPersonality** outValue)= 0;		
+        virtual VCOMError VCOM_CALLTYPE     CreateDMXPersonality(size_t dmxPersonalityValue, IGdtfDmxMode* dmxMode, IGdtfDMXPersonality** outValue)= 0;		
 
         virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
         virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;

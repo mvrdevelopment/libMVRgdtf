@@ -97,13 +97,15 @@ VCOMError VCOM_CALLTYPE CGdtfSoftwareVersionIDImpl::GetDMXPersonalityAt(size_t a
 }
 
 
-VCOMError VCOM_CALLTYPE CGdtfSoftwareVersionIDImpl::CreateDMXPersonality(size_t dmxPersonalityValue, MvrString dmxModeName, IGdtfDMXPersonality **outVal)
+VCOMError VCOM_CALLTYPE CGdtfSoftwareVersionIDImpl::CreateDMXPersonality(size_t dmxPersonalityValue, IGdtfDmxMode* dmxMode, IGdtfDMXPersonality **outVal)
 {
     // Check if Set
     if (!fSoftwareVersionID) { return kVCOMError_NotInitialized; }
 
 
-    SceneData::GdtfDMXPersonality* gdtfDMXPersonality = fSoftwareVersionID->AddDMXPersonality(dmxPersonalityValue, dmxModeName);
+    CGdtfDmxModeImpl* mode = dynamic_cast<CGdtfDmxModeImpl*>(dmxMode);
+
+    SceneData::GdtfDMXPersonality* gdtfDMXPersonality = fSoftwareVersionID->AddDMXPersonality(dmxPersonalityValue, mode->getPointer() );
 
     //---------------------------------------------------------------------------
     // Initialize Object
