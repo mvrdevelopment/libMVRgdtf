@@ -31,16 +31,6 @@ Converts a VWTransformMatrix to a STransformMatrix.
     smatrix.ox = vwmatrix.fMatrix.mat[3][0]; smatrix.oy = vwmatrix.fMatrix.mat[3][1]; smatrix.oz = vwmatrix.fMatrix.mat[3][2];
 }
 
-
-std::string SystemUtil::GetSeparator()
-{
-#ifdef _WINDOWS
-    return "\\";
-#else
-    return "/";
-#endif
-}
-
 bool SystemUtil::CreateFolderDefinitlyOnDisk(const TXString& folderPath)
 {
     IFolderIdentifierPtr folder = (IID_FolderIdentifier);
@@ -62,7 +52,7 @@ bool SystemUtil::CreateFolderDefinitlyOnDisk(const TXString& folderPath)
 
     if (! exists) 
     {
-        ptrdiff_t pos = folderPath.ReverseFind( GetSeparator() );
+        ptrdiff_t pos = folderPath.ReverseFind( kSeperator );
 
         if (pos > 0)
         {
@@ -102,11 +92,10 @@ TXString SystemUtil::ExtractFolderFromPath(TXString& path)
    Deletes the folder part from the incoming string so that only the fileNam remains and returns it.    
 */
 {
-    TXString folder = "";
-    const TXString sep = GetSeparator();
+    TXString folder = "";    
 
     //-----------------------------------------------------------------------------
-    ptrdiff_t pos = path.Find(sep);
+    ptrdiff_t pos = path.Find(kSeperator);
 
     while (pos > 0 )
 	{
@@ -115,10 +104,8 @@ TXString SystemUtil::ExtractFolderFromPath(TXString& path)
 		
 		// Delete and find next
 		path.Delete(0, pos + 1);
-		pos = path.Find(sep);
+		pos = path.Find(kSeperator);
 	}	
-
-    folder.Replace(sep, SystemUtil::GetSeparator() ); 
 
     return folder;
 }

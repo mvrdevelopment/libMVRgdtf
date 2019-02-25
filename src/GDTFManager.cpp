@@ -4345,7 +4345,7 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
             TXString fileNameWithoutFolder = fileName; 
             
             // The function CZIPFileImpl::GetNextFile always returns the filename with the folderstructure "/" seperated!
-            fileNameWithoutFolder = fileNameWithoutFolder.Replace("/", SystemUtil::GetSeparator());
+            fileNameWithoutFolder = fileNameWithoutFolder.Replace("/", TXString(kSeperator) );
             TXString subFolder = SystemUtil::ExtractFolderFromPath(fileNameWithoutFolder);            
             
             //-----------------------------------------------------------------
@@ -4354,11 +4354,11 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
             // until this is solved we just merge the name together by replaceing the sep: (AB)
             // afterwards at the sep at the beginning again (/AB).
 
-            subFolder = subFolder.Replace(SystemUtil::GetSeparator(), "");
-            subFolder = SystemUtil::GetSeparator() + subFolder;
+            subFolder = subFolder.Replace(TXString(kSeperator), "");
+            subFolder = kSeperator + subFolder;
             //-----------------------------------------------------------------------------
 
-            targetFolder->Set(workingFolderPath + SystemUtil::GetSeparator() + subFolder);
+            targetFolder->Set(workingFolderPath + kSeperator + subFolder);
             TXString fullPath; targetFolder->GetFullPath(fullPath);
 
             SystemUtil::CreateFolderDefinitlyOnDisk(fullPath);            

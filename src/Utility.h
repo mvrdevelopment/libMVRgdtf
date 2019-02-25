@@ -3,6 +3,12 @@
 //-----------------------------------------------------------------------------
 #pragma once
 
+#ifdef _WINDOWS
+#define kSeperator '\\'
+#else
+#define kSeperator '/'
+#endif
+
 class GdtfUtil
 {   
 public:
@@ -13,7 +19,6 @@ public:
 class SystemUtil
 {
 public:
-    static std::string GetSeparator();
     static bool CreateFolderDefinitlyOnDisk(const TXString& folderPath);
     static TXString ExtractFolderFromPath(TXString & path);
 };
