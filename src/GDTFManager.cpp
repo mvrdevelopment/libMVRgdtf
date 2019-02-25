@@ -4337,9 +4337,7 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 	zipfile->OpenRead(inZipFile);
 
 	ISceneDataZipBuffer xmlFileBuffer;
-    ISceneDataZipBuffer xmlFileSHA256Buffer;
-	
-	
+		
 	//-------------------------------------------------------------------------------------------------
 	// Decompress the files
 	TXString fileName				= "";
@@ -4358,18 +4356,6 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 			
 			// Set the buffer object
             xmlFileBuffer.SetData(data, size);
-			
-			// House keeping
-			std::free(data);
-        }
-        else if (fileName == "description.checksum.txt") // XXX TODO: remove checksum
-        {
-			// Read the data
-            size_t	size = 0;							buffer.GetDataSize(size);
-            void*	data = malloc(size * sizeof(char));	buffer.CopyDataInto(data, size);
-			
-			// Set the buffer object
-            xmlFileSHA256Buffer.SetData(data, size);
 			
 			// House keeping
 			std::free(data);
@@ -4425,15 +4411,6 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 	}
 	else
 	{
-		if (xmlFileSHA256Buffer.IsSet())
-		{
-			if (HashManager::HashManager::CheckHashForBuffer(xmlFileBuffer, xmlFileSHA256Buffer) == false)
-			{
-				GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureChecksumError); 
-				SceneData::GdtfFixture::AddError(error); 
-			}
-		}
-
 		IXMLFilePtr xmlFile (IID_XMLFile);
 
 		size_t	size = 0;								xmlFileBuffer.GetDataSize(size);
