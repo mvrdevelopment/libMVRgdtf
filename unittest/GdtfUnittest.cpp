@@ -279,7 +279,7 @@ void GdtfUnittest::WriteFile()
         // Add DMXPersonality
 
         IGdtfDMXPersonalityPtr dmxPerso;
-        __checkVCOM (softID->CreateDMXPersonality( 11, "DmxModeNam", &dmxPerso));        
+        __checkVCOM (softID->CreateDMXPersonality( 11, gdtfDmxMode, &dmxPerso));        
 
 		//------------------------------------------------------------------------------    
 		// Close the stream and dump to disk
