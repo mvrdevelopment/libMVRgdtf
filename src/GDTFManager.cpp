@@ -4585,7 +4585,8 @@ void GdtfFixture::ResolveAllReferences()
 	ResolveGeometryRefs();
 	ResolveAttribRefs();
 	ResolveDmxModeRefs();	
-	ResolveDMXModeMasters();	
+	ResolveDMXModeMasters();
+    ResolveDMXPersonalityRefs();
 }
 
 void GdtfFixture::ResolveGeometryRefs()
@@ -4816,6 +4817,38 @@ void GdtfFixture::ResolveDMXModeMasters()
 			}
 		}
 	}	
+}
+
+
+GdtfDmxModePtr GdtfFixture::ResolveDMXMode(const TXString& unresolvedDMXmode)
+{
+    for (GdtfDmxModePtr dmxMode : fDmxModes) 
+    {
+        if (dmxMode->GetModeName() == unresolvedDMXmode) 
+        {
+            return dmxMode;
+        }    
+    }
+    
+    return nullptr;
+}
+
+void GdtfFixture::ResolveDMXPersonalityRefs() 
+{
+    GdtfFTRDM* rdm =  fProtocollContainer.GetRDM();
+
+    for (GdtfSoftwareVersionID* softID : rdm->GetSoftwareVersIDs() ) 
+    {
+        for (GdtfDMXPersonality* dmxPerso : softID->GetDMXPersonalityArray() ) 
+        {
+            GdtfDmxModePtr dmxMode =  ResolveDMXMode(dmxPerso->GetUnresolvedDMXMode()); 
+            
+            if (dmxMode != nullptr) 
+            {
+                dmxPerso->SetDMXMode(dmxMode);
+            }
+        }
+    }
 }
 
 void GdtfFixture::ResolveDmxRelationRefs(GdtfDmxModePtr dmxMode)
