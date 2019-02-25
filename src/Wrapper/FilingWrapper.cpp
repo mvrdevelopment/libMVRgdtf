@@ -171,11 +171,12 @@ bool TFolderIdentifier::RevealInOS()
 	{
 		// remove the dir and return true
 		rmdir(ptr);
+        result = TFolderIdentifier::eFolderExists; // XXX Test
 	}
 	else
 	{
 		// If this fails, there is some other problem
-		result = TFolderIdentifier::eFolderExists;
+		result = TFolderIdentifier::eFolderDoesNotExists; // XXX Test
 	}
 #endif
 	
