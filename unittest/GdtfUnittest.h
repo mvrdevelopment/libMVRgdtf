@@ -15,8 +15,7 @@ protected:
 private:
     std::string fAppDataFolder;
     std::string fTestGdtf_Path;
-    std::string fTestResourcesFolder;
-    std::string fSystemSeperator;
+    std::string fTestResourcesFolder;    
 
     void        WriteFile();
     void        ReadFile();

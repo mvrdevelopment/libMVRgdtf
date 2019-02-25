@@ -319,12 +319,12 @@ void GdtfUnittest::ReadFile()
 		this->checkifEqual("GetFixtureThumbnail "		, thumbFileName,  "MyThumbnail"); 
         
         // Check if the Resource Files have been unpacked correctly.
-		this->checkifEqual("GetFixtureThumbnail "		, fullPath_PNG, fAppDataFolder + fSystemSeperator + "MyThumbnail.png" ); 
-        this->checkifEqual("GetFixtureThumbnail "		, fullPath_SVG, fAppDataFolder + fSystemSeperator + "MyThumbnail.svg");        
+		this->checkifEqual("GetFixtureThumbnail "		, fullPath_PNG, fAppDataFolder + kSeparator + "MyThumbnail.png" ); 
+        this->checkifEqual("GetFixtureThumbnail "		, fullPath_SVG, fAppDataFolder + kSeparator + "MyThumbnail.svg");        
         
-        this->checkifTrue("Testwheel PNG exists.", UnitTestUtil::FileExists (fAppDataFolder + fSystemSeperator + "wheels" + fSystemSeperator + "MWheel_Img1.png") );
-        this->checkifTrue("Testmodel 3DS exits.", UnitTestUtil::FileExists (fAppDataFolder + fSystemSeperator + "models" + fSystemSeperator + "3ds" + fSystemSeperator + "MyModel.3ds") );
-        this->checkifTrue("Testmodel SVG exits.", UnitTestUtil::FileExists (fAppDataFolder + fSystemSeperator + "models" + fSystemSeperator + "svg" + fSystemSeperator + "MyModel.svg") );        
+        this->checkifTrue("Testwheel PNG exists.", UnitTestUtil::FileExists (fAppDataFolder + kSeparator + "wheels" + kSeparator + "MWheel_Img1.png") );
+        this->checkifTrue("Testmodel 3DS exits.", UnitTestUtil::FileExists (fAppDataFolder + kSeparator + "models" + kSeparator + "3ds" + kSeparator + "MyModel.3ds") );
+        this->checkifTrue("Testmodel SVG exits.", UnitTestUtil::FileExists (fAppDataFolder + kSeparator + "models" + kSeparator + "svg" + kSeparator + "MyModel.svg") );        
         //-----------------------------------------------------------------------------
 
 		bool hasLinkedFixture = false;
@@ -999,25 +999,25 @@ void GdtfUnittest::ReadFile()
 
 std::string GdtfUnittest::GetTestPNG_ThumbNail()
 {
-    return fTestResourcesFolder + fSystemSeperator + "MyThumbnail.png";
+    return fTestResourcesFolder + kSeparator + "MyThumbnail.png";
 }
 
 std::string GdtfUnittest::GetTestSVG_ThumbNail()
 {
-    return fTestResourcesFolder + fSystemSeperator + "MyThumbnail.svg";
+    return fTestResourcesFolder + kSeparator + "MyThumbnail.svg";
 }
 
 std::string GdtfUnittest::GetTestSVG_Model()
 {
-    return fTestResourcesFolder + fSystemSeperator + "MyModel.svg";
+    return fTestResourcesFolder + kSeparator + "MyModel.svg";
 }
 
 std::string GdtfUnittest::GetTest3DS_Model()
 {
-    return fTestResourcesFolder + fSystemSeperator + "MyModel.3ds";
+    return fTestResourcesFolder + kSeparator + "MyModel.3ds";
 }
 
 std::string GdtfUnittest::GetTestWheel_PNG()
 {
-    return fTestResourcesFolder + fSystemSeperator + "MWheel_Img1.png";
+    return fTestResourcesFolder + kSeparator + "MWheel_Img1.png";
 }
