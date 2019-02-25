@@ -95,12 +95,11 @@ bool SystemUtil::CreateFolderDefinitlyOnDisk(const TXString& folderPath)
 
 TXString SystemUtil::ExtractFolderFromPath(TXString& path) 
 /* 
-   Deletes the folder part from the incoming string so that only the fileNam remains and returns it. 
-   This function expects "/" as seperator example folderA/folderB/file.png 
+   Deletes the folder part from the incoming string so that only the fileNam remains and returns it.    
 */
 {
     TXString folder = "";
-    const TXString sep = "/";
+    const TXString sep = GetSeparator();
 
     //-----------------------------------------------------------------------------
     ptrdiff_t pos = path.Find(sep);
