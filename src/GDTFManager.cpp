@@ -7199,9 +7199,9 @@ void SceneData::GdtfSoftwareVersionID::SetValue(size_t val)
     fValue = val;
 }
 
-GdtfDMXPersonalityPtr SceneData::GdtfSoftwareVersionID::AddDMXPersonality(size_t value, const TXString & dmxModeName)
+GdtfDMXPersonalityPtr SceneData::GdtfSoftwareVersionID::AddDMXPersonality(size_t value, GdtfDmxModePtr dmxMode)
 {
-    GdtfDMXPersonalityPtr dmxPerso = new GdtfDMXPersonality(value, dmxModeName);
+    GdtfDMXPersonalityPtr dmxPerso = new GdtfDMXPersonality(value, dmxMode);
     fDmxPersonalityArray.push_back(dmxPerso);
 
     return dmxPerso;
