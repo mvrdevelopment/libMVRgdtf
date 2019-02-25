@@ -4837,15 +4837,18 @@ void GdtfFixture::ResolveDMXPersonalityRefs()
 {
     GdtfFTRDM* rdm =  fProtocollContainer.GetRDM();
 
-    for (GdtfSoftwareVersionID* softID : rdm->GetSoftwareVersIDs() ) 
+    if (rdm)
     {
-        for (GdtfDMXPersonality* dmxPerso : softID->GetDMXPersonalityArray() ) 
+        for (GdtfSoftwareVersionID* softID : rdm->GetSoftwareVersIDs() ) 
         {
-            GdtfDmxModePtr dmxMode =  ResolveDMXMode(dmxPerso->GetUnresolvedDMXMode()); 
-            
-            if (dmxMode != nullptr) 
+            for (GdtfDMXPersonality* dmxPerso : softID->GetDMXPersonalityArray() ) 
             {
-                dmxPerso->SetDMXMode(dmxMode);
+                GdtfDmxModePtr dmxMode =  ResolveDMXMode(dmxPerso->GetUnresolvedDMXMode()); 
+            
+                if (dmxMode != nullptr) 
+                {
+                    dmxPerso->SetDMXMode(dmxMode);
+                }
             }
         }
     }
@@ -6218,7 +6221,7 @@ Sint32 SceneData::GdtfFTRDM::GetDeviceModelID() const
 	return fDeviceModelID;
 }
 
-TGdtfSoftwareVersionIDArray SceneData::GdtfFTRDM::GetSoftwareVersIDs() const
+const TGdtfSoftwareVersionIDArray& SceneData::GdtfFTRDM::GetSoftwareVersIDs() const
 {
 	return fSoftwareVersionIDArray;
 }
@@ -7227,7 +7230,7 @@ size_t SceneData::GdtfSoftwareVersionID::GetValue() const
     return fValue;
 }
 
-const TGdtfDMXPersonalityArray SceneData::GdtfSoftwareVersionID::GetDMXPersonalityArray()
+const TGdtfDMXPersonalityArray& SceneData::GdtfSoftwareVersionID::GetDMXPersonalityArray()
 {
     return fDmxPersonalityArray;
 }

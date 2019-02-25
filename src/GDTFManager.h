@@ -1173,7 +1173,7 @@ namespace SceneData
         // Getter
         Sint32                              GetManufacturerID() const;
         Sint32                              GetDeviceModelID()  const;
-        TGdtfSoftwareVersionIDArray         GetSoftwareVersIDs() const;        
+        const TGdtfSoftwareVersionIDArray&  GetSoftwareVersIDs() const;        
         // Setter
         void                                SetManufacturerID(Sint32 val);
         void                                SetDeviceModelID(Sint32 val);
@@ -1232,7 +1232,7 @@ namespace SceneData
     public:
         // Getter        
         size_t		                    GetValue() const;
-        const TGdtfDMXPersonalityArray  GetDMXPersonalityArray();
+        const TGdtfDMXPersonalityArray& GetDMXPersonalityArray();
         // Setter       
         void						    SetValue(size_t val);
         GdtfDMXPersonalityPtr           AddDMXPersonality(size_t value, GdtfDmxModePtr dmxMode);
