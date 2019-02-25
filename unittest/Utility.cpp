@@ -18,27 +18,16 @@
 #endif
 
 
-std::string UnitTestUtil::GetSysSeparator()
-{
-#ifdef _WINDOWS
-    return "\\";
-#else
-    return "/";
-#endif
-}
-
-
 std::string UnitTestUtil::GetTestResourceFolder()
 {
-    std::string sep = GetSysSeparator();
-
-    return std::string(GITPATH) + sep + "files";
+    return std::string(GITPATH) + kSeparator + "files";
 }
 
 std::string UnitTestUtil::GetFolderAppData_GdtfFolder() 
 {
     std::string path; GetFolderAppDataLocal(path);
-    path += GetSysSeparator() + "GDTF_Folder";
+    path += kSeparator;
+    path += "GDTF_Folder";
 
     return path;
 }

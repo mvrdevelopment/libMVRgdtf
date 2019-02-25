@@ -14,11 +14,9 @@ using namespace VectorworksMVR::GdtfDefines;
 
 GdtfUnittest::GdtfUnittest(const std::string& currentDir)
 {
-    fSystemSeperator = UnitTestUtil::GetSysSeparator();
-
     fAppDataFolder = currentDir;
 
-    fTestGdtf_Path = fAppDataFolder + fSystemSeperator + "testGdtf.gdtf";
+    fTestGdtf_Path = fAppDataFolder + kSeparator + "testGdtf.gdtf";
 
     fTestResourcesFolder = UnitTestUtil::GetTestResourceFolder();
 
