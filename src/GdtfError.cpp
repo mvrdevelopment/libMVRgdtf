@@ -77,7 +77,7 @@ size_t GdtfParsingError::GetColumnNumber() const
         else
         {
             GdtfParsingError error (GdtfDefines::EGdtfParsingError::eNodeMissingMandatoryAttribute, pNode);
-            error.fErrorMessage =  nodeNam + " is missing Attribute " + attribute;
+            error.fErrorMessage = attribute;
             SceneData::GdtfFixture::AddError(error);
         }
     }
