@@ -63,9 +63,7 @@ size_t GdtfParsingError::GetColumnNumber() const
 /*static*/ void GdtfParsingError::CheckNodeAttributes(IXMLFileNodePtr pNode, const TXStringArray& needed, const TXStringArray& optional) 
 {
    	TXStringArray nodeAttributes;
-	pNode->GetNodeAttributes(nodeAttributes);
-
-    TXString nodeNam; pNode->GetNodeName(nodeNam);
+	pNode->GetNodeAttributes(nodeAttributes);    
 
     // Check required Attributes
     for(const TXString &attribute : needed)
