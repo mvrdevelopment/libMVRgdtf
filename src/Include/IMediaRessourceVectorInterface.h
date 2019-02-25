@@ -963,10 +963,10 @@ namespace VectorworksMVR
     public:
         // Getter        
         virtual VCOMError VCOM_CALLTYPE		GetValue(size_t& outValue) const  = 0;
-        virtual MvrString VCOM_CALLTYPE     GetDMXMode() const = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetDmxMode(IGdtfDmxMode **outDmxMode) = 0;
         // Setter       
         virtual VCOMError VCOM_CALLTYPE     SetValue(size_t val) = 0;
-        virtual VCOMError VCOM_CALLTYPE     SetDMXMode(MvrString modeName) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetDmxMode (IGdtfDmxMode * newDmxMode) = 0;
         //
         virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
         virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
