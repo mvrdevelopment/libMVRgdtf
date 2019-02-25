@@ -157,10 +157,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::CreateGeometry(EGdt
 {
 	// Check if Set
 	if(!fGeometry) { return kVCOMError_NotInitialized;}
-	
-	// Check Input
-	if (!model)		{ return kVCOMError_InvalidArg;  }
-	
+		
 	//---------------------------------------------------------------------------
 	// Extract Model
 	SceneData::GdtfModelPtr scModel = nullptr;

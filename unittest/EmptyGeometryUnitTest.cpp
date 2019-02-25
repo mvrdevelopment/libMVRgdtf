@@ -55,7 +55,7 @@ void GdtfEmptyModelTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
     {
         IGdtfGeometryPtr geometry1;
         __checkVCOM(fixture->GetGeometryAt(0, &geometry1));
-        checkifEqual("Second Level Geometry Name", geometry1->GetName(), "Geometry2");
+        checkifEqual("Second Level Geometry Name", geometry1->GetName(), "Geometry1");
 
 
         size_t second_level = 0;

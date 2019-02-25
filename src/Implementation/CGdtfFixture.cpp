@@ -836,10 +836,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateGeometry(EGdtf
 {
 	// Check if Set
 	if(!fFixtureObject) { return kVCOMError_NotInitialized;}
-	
-	// Check Input
-	if (!model)			{ return kVCOMError_InvalidArg;  }
-	
+		
     //---------------------------------------------------------------------------
 	// Extract Model
 	SceneData::GdtfModelPtr scModel = nullptr;
