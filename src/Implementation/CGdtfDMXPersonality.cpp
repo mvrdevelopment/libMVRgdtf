@@ -25,12 +25,48 @@ VCOMError VCOM_CALLTYPE CGdtfDMXPersonalityImpl::GetValue(size_t& outValue) cons
     return kVCOMError_NoError;    
 }
 
-MvrString VCOM_CALLTYPE CGdtfDMXPersonalityImpl::GetDMXMode() const
+VCOMError VCOM_CALLTYPE CGdtfDMXPersonalityImpl::GetDmxMode(IGdtfDmxMode **outDmxMode)
 {
-    // Check Data
-    if (!fDMXPersonality) { return ""; }
+    // Check Pointer
+    if (!fDMXPersonality) { return kVCOMError_NotInitialized; }
 
-    return  fDMXPersonality->GetDMXMode().GetCharPtr();    
+    //---------------------------------------------------------------------------
+    // Initialize Object
+    SceneData::GdtfDmxMode*	gdtfDmxMode = fDMXPersonality->GetDMXMode();
+    if (!gdtfDmxMode) { return kVCOMError_NotSet; }
+
+    CGdtfDmxModeImpl*		pDmxModeObj = nullptr;
+
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDmxMode, (IVWUnknown**)& pDmxModeObj)))
+    {
+        // Check Casting
+        CGdtfDmxModeImpl* pResultInterface = dynamic_cast<CGdtfDmxModeImpl*>(pDmxModeObj);
+        if (pResultInterface)
+        {
+            pResultInterface->setPointer(gdtfDmxMode);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+
+    //---------------------------------------------------------------------------
+    // Check Incomming Object
+    if (*outDmxMode)
+    {
+        (*outDmxMode)->Release();
+        *outDmxMode = NULL;
+    }
+
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *outDmxMode = pDmxModeObj;
+
+    return kVCOMError_NoError;
 }
 
 VCOMError VCOM_CALLTYPE CGdtfDMXPersonalityImpl::SetValue(size_t val)
@@ -43,12 +79,21 @@ VCOMError VCOM_CALLTYPE CGdtfDMXPersonalityImpl::SetValue(size_t val)
     return kVCOMError_NoError;
 }
 
-VCOMError VCOM_CALLTYPE CGdtfDMXPersonalityImpl::SetDMXMode(MvrString modeName)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDMXPersonalityImpl::SetDmxMode (IGdtfDmxMode * newDmxMode)
 {
-    // Check Pointer
-    if (!fDMXPersonality) return kVCOMError_NotInitialized;
+    if (!fDMXPersonality) { return kVCOMError_NotInitialized; }
+    if (!newDmxMode) { return kVCOMError_InvalidArg; }
 
-    fDMXPersonality->SetDMXMode (modeName);
+    // Cast
+    CGdtfDmxModeImpl* DmxModeImpl = dynamic_cast<CGdtfDmxModeImpl*>(newDmxMode);
+    if (!DmxModeImpl) { return kVCOMError_Failed; }
+
+    // Set Object
+    SceneData::GdtfDmxMode* gdtfDmxMode = DmxModeImpl->getPointer();
+
+    if (!gdtfDmxMode) { return kVCOMError_Failed; }
+
+    fDMXPersonality->SetDMXMode (gdtfDmxMode);
 
     return kVCOMError_NoError;
 }
