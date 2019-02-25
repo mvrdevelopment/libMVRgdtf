@@ -23,15 +23,6 @@ std::string UnitTestUtil::GetTestResourceFolder()
     return std::string(GITPATH) + kSeparator + "unittest" + kSeparator + "files";
 }
 
-std::string UnitTestUtil::GetFolderAppData_GdtfFolder() 
-{
-    std::string path; GetFolderAppDataLocal(path);
-    path += kSeparator;
-    path += "GDTF_Folder";
-
-    return path;
-}
-
 bool UnitTestUtil::GetFolderAppDataLocal(std::string& outPath)
 {
 	//--------------------------------------------------------

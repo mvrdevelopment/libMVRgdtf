@@ -19,28 +19,25 @@ using namespace VectorworksMVR;
 int main(int argc, char* argv[])
 {
 	// Get Current dir    
-    std::string gdtfBase = UnitTestUtil::GetFolderAppData_GdtfFolder();
-    std::string mvrBase;   UnitTestUtil::GetFolderAppDataLocal( mvrBase);
+    std::string base;   
+    UnitTestUtil::GetFolderAppDataLocal( base);
 
-    std::cout << "The gdtf base is: " << gdtfBase << std::endl; // XXX TEST
-    std::cout << "The MVR base is:  " << mvrBase<< std::endl;   // XXX TEST
-
-	GdtfUnittest gdtfTest(gdtfBase);
+	GdtfUnittest gdtfTest(base);
 	bool gdtfFailed = gdtfTest.RunTest();
 
-	GdtfDmxUnittest gdtfDmxTest(gdtfBase);
+	GdtfDmxUnittest gdtfDmxTest(base);
 	bool gdtfDmxFailed = gdtfDmxTest.RunTest();
 
-	MvrUnittest mvrTest(mvrBase);
+	MvrUnittest mvrTest(base);
 	bool mvrFailed = mvrTest.RunTest();
 
-	GdtfXmlErrorTest errorTest(gdtfBase);
+	GdtfXmlErrorTest errorTest(base);
 	bool errorFailed = errorTest.RunTest();
 
-	GdtfFunctionModeMasterTest modeMasterTest(gdtfBase);
+	GdtfFunctionModeMasterTest modeMasterTest(base);
 	bool modeMasterFailed = modeMasterTest.RunTest();
 
-    GdtfEmptyModelTest test1 (gdtfBase);
+    GdtfEmptyModelTest test1 (base);
 	bool test1_ok = test1.RunTest();
 
     return  (mvrFailed || gdtfFailed || gdtfDmxFailed || errorFailed || modeMasterFailed || test1_ok);

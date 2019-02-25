@@ -53,9 +53,6 @@ void GdtfUnittest::WriteFile()
 
         //------------------------------------------------------------------------------    
         // Add Test Resources
-        std::string s = GetTestPNG_ThumbNail(); // XXX TEST
-        std::cout << "Thumbnail Source:  " << s << std::endl;
-
         __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestPNG_ThumbNail().c_str(), ERessourceType::RessoureFixture) );
         __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestSVG_ThumbNail().c_str(), ERessourceType::RessoureFixture) );
         __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestWheel_PNG().c_str(),     ERessourceType::ImageWheel) );
@@ -322,12 +319,11 @@ void GdtfUnittest::ReadFile()
 		this->checkifEqual("GetFixtureThumbnail "		, thumbFileName,  "MyThumbnail"); 
         
         // Check if the Resource Files have been unpacked correctly.
-		this->checkifEqual("GetFixtureThumbnail "		, fullPath_PNG, fAppDataFolder + kSeparator + "MyThumbnail.png" ); 
-        this->checkifEqual("GetFixtureThumbnail "		, fullPath_SVG, fAppDataFolder + kSeparator + "MyThumbnail.svg");        
+		this->checkifEqual("GetFixtureThumbnail "		, fullPath_PNG, fAppDataFolder + kSeparator + "GDTF_Folder" + kSeparator + "MyThumbnail.png" ); 
+        this->checkifEqual("GetFixtureThumbnail "		, fullPath_SVG, fAppDataFolder + kSeparator + "GDTF_Folder" + kSeparator + "MyThumbnail.svg");        
         
-        this->checkifTrue("Testwheel PNG exists.", UnitTestUtil::FileExists (fAppDataFolder + kSeparator + "wheels" + kSeparator + "MWheel_Img1.png") );
-        this->checkifTrue("Testmodel 3DS exits.", UnitTestUtil::FileExists (fAppDataFolder + kSeparator + "models3ds" + kSeparator + "MyModel.3ds") );  // Temp. solution XXX merged the folders togertehr 
-        this->checkifTrue("Testmodel SVG exits.", UnitTestUtil::FileExists (fAppDataFolder + kSeparator + "modelssvg" + kSeparator + "MyModel.svg") );  // Temp. solution XXX merged the folders togertehr 
+        this->checkifTrue("Testwheel PNG exists.", UnitTestUtil::FileExists (fullPath_PNG) );
+        this->checkifTrue("Testmodel SVG exits.", UnitTestUtil::FileExists (fullPath_SVG) );
         //-----------------------------------------------------------------------------
 
 		bool hasLinkedFixture = false;
