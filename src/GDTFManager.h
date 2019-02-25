@@ -1193,15 +1193,16 @@ namespace SceneData
         GdtfDMXPersonality(size_t value, const TXString & dmxModeName);
         ~GdtfDMXPersonality();
     private:        
-        size_t    fValue;
-        TXString  fDMXMode;
+        size_t          fValue;
+        TXString        fDMXMode_Unresolved;
+        GdtfDmxModePtr  fDMXMode;
     public:
         virtual EGdtfObjectType			GetObjectType();
 
     public:
         // Getter        
         size_t		                    GetValue() const;
-        const TXString&		            GetDMXMode() const;
+        GdtfDmxModePtr		            GetDMXMode() const;
         // Setter       
         void                            SetValue(size_t val);
         void						    SetDMXMode(const TXString& modeName);

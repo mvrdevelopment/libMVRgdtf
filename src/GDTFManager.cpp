@@ -6213,13 +6213,13 @@ GdtfSoftwareVersionIDPtr SceneData::GdtfFTRDM::AddSoftwareVersID(size_t value)
 SceneData::GdtfDMXPersonality::GdtfDMXPersonality()
 {
     fValue = 0;
-    fDMXMode = "";
+    fDMXMode_Unresolved = "";
 }
 
 SceneData::GdtfDMXPersonality::GdtfDMXPersonality(size_t value, const TXString & dmxModeName)
 {
     fValue   = value;
-    fDMXMode = dmxModeName;
+    fDMXMode_Unresolved = dmxModeName;
 }
 
 SceneData::GdtfDMXPersonality::~GdtfDMXPersonality()
@@ -6236,7 +6236,7 @@ size_t SceneData::GdtfDMXPersonality::GetValue() const
     return fValue;
 }
 
-const TXString & SceneData::GdtfDMXPersonality::GetDMXMode() const
+GdtfDmxModePtr SceneData::GdtfDMXPersonality::GetDMXMode() const
 {
     return fDMXMode;
 }
@@ -6248,7 +6248,7 @@ void SceneData::GdtfDMXPersonality::SetValue(size_t val)
 
 void SceneData::GdtfDMXPersonality::SetDMXMode(const TXString & modeName)
 {
-    fDMXMode = modeName;
+    fDMXMode_Unresolved = modeName; // XXX Change param to DMXModePtr
 }
 
 TXString SceneData::GdtfDMXPersonality::GetNodeName()
@@ -6265,7 +6265,7 @@ void GdtfDMXPersonality::OnPrintToFile(IXMLFileNodePtr pNode)
     //------------------------------------------------------------------------------------
     // Print the attributes
     pNode->SetNodeAttributeValue(XML_GDTF_DMXPersonalityValue, GdtfConverter::ConvertInteger(fValue));
-    pNode->SetNodeAttributeValue(XML_GDTF_DMXPersonalityDMXMode, fDMXMode);
+    pNode->SetNodeAttributeValue(XML_GDTF_DMXPersonalityDMXMode, fDMXMode_Unresolved);
 }
 
 void GdtfDMXPersonality::OnReadFromNode(const IXMLFileNodePtr& pNode)
@@ -6280,7 +6280,7 @@ void GdtfDMXPersonality::OnReadFromNode(const IXMLFileNodePtr& pNode)
     pNode->GetNodeAttributeValue(XML_GDTF_DMXPersonalityValue, valueStr);
     GdtfConverter::ConvertInteger(valueStr, pNode, fValue);
 
-    pNode->GetNodeAttributeValue(XML_GDTF_DMXPersonalityDMXMode, fDMXMode);
+    pNode->GetNodeAttributeValue(XML_GDTF_DMXPersonalityDMXMode, fDMXMode_Unresolved);
 }
 
 SceneData::GdtfProtocols::GdtfProtocols()
