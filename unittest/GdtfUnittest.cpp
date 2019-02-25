@@ -999,25 +999,30 @@ void GdtfUnittest::ReadFile()
 
 std::string GdtfUnittest::GetTestPNG_ThumbNail()
 {
-    return fTestResourcesFolder + kSeparator + "MyThumbnail.png";
+    std::string path = fTestResourcesFolder + kSeparator + "MyThumbnail.png";
+    return path;
 }
 
 std::string GdtfUnittest::GetTestSVG_ThumbNail()
 {
-    return fTestResourcesFolder + kSeparator + "MyThumbnail.svg";
+    std::string path = fTestResourcesFolder + kSeparator + "MyThumbnail.svg";
+    return path;
 }
 
 std::string GdtfUnittest::GetTestSVG_Model()
 {
-    return fTestResourcesFolder + kSeparator + "MyModel.svg";
+    std::string path = fTestResourcesFolder + kSeparator + "MyModel.svg";
+    return path;
 }
 
 std::string GdtfUnittest::GetTest3DS_Model()
 {
-    return fTestResourcesFolder + kSeparator + "MyModel.3ds";
+    std::string path = fTestResourcesFolder + kSeparator + "MyModel.3ds";
+    return path;
 }
 
 std::string GdtfUnittest::GetTestWheel_PNG()
 {
-    return fTestResourcesFolder + kSeparator + "MWheel_Img1.png";
+    std::string path = fTestResourcesFolder + kSeparator + "MWheel_Img1.png";
+    return path;
 }
