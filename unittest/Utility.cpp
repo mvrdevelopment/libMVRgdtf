@@ -64,46 +64,8 @@ bool UnitTestUtil::GetFolderAppDataLocal(std::string& outPath)
 	return true;
 }
 
-
 bool UnitTestUtil::FileExists(std::string fullPath)
 {
     std::ifstream f(fullPath.c_str());
     return f.good();
 }
-
-
-void UnitTestUtil::print_Ascii_BUG()
-{
-std::cout <<"                           ,--.       ,---. "<< std::endl;
-std::cout <<"                           /    '.    /     \\ "<< std::endl;
-std::cout <<"                                  \\  ; "<< std::endl;
-std::cout <<"                                   \\-| "<< std::endl;
-std::cout <<"     An ERROR occured.            (o o)      (/"<< std::endl;
-std::cout <<"                                  /'v'     ,-' "<< std::endl;
-std::cout <<"                          ,------/ >< \\---' "<< std::endl;
-std::cout <<"                         /)     ;  --  : "<< std::endl;
-std::cout <<"                            ,---| ---- |--. "<< std::endl;
-std::cout <<"                           ;    | ---- |   : "<< std::endl;
-std::cout <<"                          (|  ,-| ---- |-. |) "<< std::endl;
-std::cout <<"                             | /| ---- |\\ | "<< std::endl;
-std::cout <<"                             |/ | ---- | \\| "<< std::endl;
-std::cout <<"                             \\  : ---- ;  | "<< std::endl;
-std::cout <<"                              \\  \\ -- /  / "<< std::endl;
-std::cout <<"                              ;   \\  /  : "<< std::endl;
-std::cout <<"                             /   / \\/ \\  \\ "<< std::endl;
-std::cout <<"                            /)           (\\"<< std::endl;
-}
-
-void UnitTestUtil::print_Ascii_DEER()
-{
-std::cout <<"                         \\|/    \\|/"<< std::endl;
-std::cout <<"                           \\    /"<< std::endl;
-std::cout <<"                            \\_/  ___   ___"<< std::endl;
-std::cout <<"     All Tests succeded!    o o-'   '''   '"<< std::endl;
-std::cout <<"                             O -.         |\\"<< std::endl;
-std::cout <<"                                 | |'''| |"<< std::endl;
-std::cout <<"                                  ||   | |"<< std::endl;
-std::cout <<"                                  ||    ||"<< std::endl;
-std::cout <<"                                  "     ""<< std::endl;
-}
-
