@@ -4374,12 +4374,21 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
             TXString workingFolderPath; fWorkingFolder->GetFullPath(workingFolderPath);
             
             TXString fileNameWithoutFolder = fileName; 
-            TXString subFolder = ExtractFolderFromPath(fileNameWithoutFolder);
-            //-----------------------------------------------------------------------------
+            TXString subFolder = ExtractFolderFromPath(fileNameWithoutFolder);            
             
+            //-----------------------------------------------------------------
+            // Temp. Solution XXX
+            // WE have Problems to generate two subFolders (like /A/B) in mac. 
+            // until this is solved we just merge the name together by replaceing the sep: (AB)
+            // afterwards at the sep at the beginning again (/AB).
+
+            subFolder = subFolder.Replace(SystemUtil::GetSeparator(), "");
+            subFolder = SystemUtil::GetSeparator() + subFolder;
+            //-----------------------------------------------------------------------------
+
             targetFolder->Set(workingFolderPath + SystemUtil::GetSeparator() + subFolder);
             TXString fullPath; targetFolder->GetFullPath(fullPath);
-            
+
             SystemUtil::CreateFolderDefinitlyOnDisk(fullPath);            
             
 			file->Set(targetFolder, fileNameWithoutFolder);
