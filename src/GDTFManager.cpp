@@ -4334,35 +4334,27 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
         }
 		else
 		{
-			// Prepare pointer to the new files
-			IFileIdentifierPtr file (IID_FileIdentifier);
-            
-            //-----------------------------------------------------------------------------
-            // If the FileName contains a folder we have to remove it and append it to the working folder.            
-            IFolderIdentifierPtr targetFolder = (IID_FolderIdentifier);
-            TXString workingFolderPath; fWorkingFolder->GetFullPath(workingFolderPath);
-            
+			//-----------------------------------------------------------------------------
+			// Prepare pointer to the new files            
             TXString fileNameWithoutFolder = fileName; 
             
             // The function CZIPFileImpl::GetNextFile always returns the filename with the folderstructure "/" seperated!
             fileNameWithoutFolder = fileNameWithoutFolder.Replace("/", TXString(kSeperator) );
             TXString subFolder = SystemUtil::ExtractFolderFromPath(fileNameWithoutFolder);            
             
-            //-----------------------------------------------------------------
-            // Temp. Solution XXX
-            // WE have Problems to generate two subFolders (like /A/B) in mac. 
-            // until this is solved we just merge the name together by replaceing the sep: (AB)
-            // afterwards at the sep at the beginning again (/AB).
 
             subFolder = subFolder.Replace(TXString(kSeperator), "");
             subFolder = kSeperator + subFolder;
             //-----------------------------------------------------------------------------
-
-            targetFolder->Set(workingFolderPath + kSeperator + subFolder);
-            TXString fullPath; targetFolder->GetFullPath(fullPath);
-
-            SystemUtil::CreateFolderDefinitlyOnDisk(fullPath);            
+			IFolderIdentifierPtr targetFolder (IID_FolderIdentifier);
+            targetFolder->Set(fWorkingFolder, subFolder);
             
+			bool exists = false;
+			targetFolder->ExistsOnDisk(exists);
+			if( ! exists )	{ targetFolder->CreateOnDisk(); }
+			
+            
+			IFileIdentifierPtr file (IID_FileIdentifier);
 			file->Set(targetFolder, fileNameWithoutFolder);
 			
 			// dump buffer into file
