@@ -2652,8 +2652,6 @@ TXString GdtfDmxChannel::GetUnresolvedGeomRef() const
 	return fUnresolvedGeomRef;
 }
 
-#include <iostream>
-
 EGdtfChannelBitResolution SceneData::GdtfDmxChannel::GetChannelBitResolution()
 {
 	// 0 is false, everything else is true
