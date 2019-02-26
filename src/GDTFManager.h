@@ -499,19 +499,9 @@ namespace SceneData
 		~GdtfGeometryAxis();
 		
 	private:
-		double	fAngleStart;	// Unit ?? -> Degree
-		double	fAngleEnd;		// Unit ?? -> Degree
-		double	fSpeed;			// Unit ?? -> mm/s
 		
 	public:
 		virtual EGdtfObjectType			GetObjectType();
-        double                          GetStartAngle();
-        double                          GetEndAngle();
-        double                          GetSpeed();
-		
-		void							SetStartAngle(double start);
-		void							SetEndAngle(double end);
-		void							SetSpeed(double speed);
 		
 	protected:
 		virtual	TXString				GetNodeName();

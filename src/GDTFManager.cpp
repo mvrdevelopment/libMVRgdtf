@@ -1469,36 +1469,17 @@ TXString GdtfGeometry::GetNodeReference()
 GdtfGeometryAxis::GdtfGeometryAxis(GdtfGeometry* parent) 
 				: GdtfGeometry(parent)
 {
-	fAngleStart = 0;
-	fAngleEnd	= 0;
-	fSpeed		= 0;	
+	
 }
 
 GdtfGeometryAxis::GdtfGeometryAxis(const TXString& name, GdtfModelPtr refToModel,const VWTransformMatrix& ma, GdtfGeometry* parent)
 				: GdtfGeometry(name,refToModel,ma, parent)
 {
-	fAngleStart = 0;
-	fAngleEnd	= 0;
-	fSpeed		= 0;
+
 }
 
 GdtfGeometryAxis::~GdtfGeometryAxis()
 {
-}
-
-void GdtfGeometryAxis::SetStartAngle(double start)
-{
-	fAngleStart = start;
-}
-
-void GdtfGeometryAxis::SetEndAngle(double end)
-{
-	fAngleEnd = end;
-}
-
-void GdtfGeometryAxis::SetSpeed(double speed)
-{
-	fSpeed = speed;
 }
 
 void GdtfGeometryAxis::OnPrintToFile(IXMLFileNodePtr pNode)
@@ -1507,12 +1488,6 @@ void GdtfGeometryAxis::OnPrintToFile(IXMLFileNodePtr pNode)
 	// Call the parent
 	GdtfGeometry::OnPrintToFile(pNode);
 	
-	
-	// ------------------------------------------------------------------------------------
-	// Print node attributes
-	pNode->SetNodeAttributeValue(XML_GDTF_GeometryAxisFrom,			GdtfConverter::ConvertDouble(fAngleStart));
-	pNode->SetNodeAttributeValue(XML_GDTF_GeometryAxisTo,			GdtfConverter::ConvertDouble(fAngleEnd));
-	pNode->SetNodeAttributeValue(XML_GDTF_GeometryAxisSpeed,		GdtfConverter::ConvertDouble(fSpeed));
 
 }
 
@@ -1522,11 +1497,6 @@ void GdtfGeometryAxis::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// Call the parent
 	GdtfGeometry::OnReadFromNode(pNode);
 	
-	// Read Axis from
-	TXString angleStart;	pNode->GetNodeAttributeValue(XML_GDTF_GeometryAxisFrom,		angleStart);	GdtfConverter::ConvertDouble(angleStart,pNode,	fAngleStart);
-	TXString angleEnd;		pNode->GetNodeAttributeValue(XML_GDTF_GeometryAxisTo,		angleEnd);		GdtfConverter::ConvertDouble(angleEnd, 	pNode,	fAngleEnd);
-	TXString speed;			pNode->GetNodeAttributeValue(XML_GDTF_GeometryAxisSpeed,	speed);			GdtfConverter::ConvertDouble(speed,	 	pNode,	fSpeed);
-
 }
 
 void GdtfGeometryAxis::OnErrorCheck(const IXMLFileNodePtr& pNode)
@@ -1542,9 +1512,6 @@ void GdtfGeometryAxis::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	needed.push_back(XML_GDTF_GeometryName);
 	needed.push_back(XML_GDTF_GeometryModelRef);
 	needed.push_back(XML_GDTF_GeometryMatrix);
-	optional.push_back(XML_GDTF_GeometryAxisFrom);
-	optional.push_back(XML_GDTF_GeometryAxisTo);
-	optional.push_back(XML_GDTF_GeometryAxisSpeed);
 	
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
@@ -1619,21 +1586,6 @@ EGdtfObjectType GdtfGeometryBeamFilter::GetObjectType()
 TXString GdtfGeometryBeamFilter::GetNodeName()
 {
 	return XML_GDTF_FilterBeamNodeName;
-}
-
-double GdtfGeometryAxis::GetStartAngle()
-{
-	return fAngleStart;
-}
-
-double GdtfGeometryAxis::GetEndAngle()
-{
-	return fAngleEnd;
-}
-
-double GdtfGeometryAxis::GetSpeed()
-{
-	return fSpeed;
 }
 
 //------------------------------------------------------------------------------------

@@ -260,9 +260,6 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_GeometryMatrix					"Position"
 
 #define XML_GDTF_GeometryAxisNodeName			"Axis"
-#define XML_GDTF_GeometryAxisFrom				"From"
-#define XML_GDTF_GeometryAxisTo					"To"
-#define XML_GDTF_GeometryAxisSpeed				"Speed"
 
 #define XML_GDTF_FilterBeamNodeName				"FilterBeam"
 
