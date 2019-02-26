@@ -19,6 +19,5 @@ public:
 class SystemUtil
 {
 public:
-    static bool CreateFolderDefinitlyOnDisk(const TXString& folderPath);
     static TXString ExtractFolderFromPath(TXString & path);
 };

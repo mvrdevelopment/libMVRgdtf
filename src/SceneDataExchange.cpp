@@ -2460,19 +2460,13 @@ void SceneDataExchange::AddFileToZip(const IFileIdentifierPtr& file, ERessourceT
 {
     switch (resType)  
     {
-    case ERessourceType::ImageWheel:
-        fWheel_Image_FilesToAdd.push_back(file);
-        break;
-    case ERessourceType::Model3DS:
-        f3DS_FilesToAdd.push_back(file);
-        break;
-    case ERessourceType::ModelSVG:
-        fSVG_FilesToAdd.push_back(file);
-        break;
-    case ERessourceType::RessoureFixture:
-        fFixtureResources_FilesToAdd.push_back(file);
-        break;
+		case ERessourceType::ImageWheel: 		fWheel_Image_FilesToAdd.push_back(file); return;
+		case ERessourceType::Model3DS: 			f3DS_FilesToAdd.push_back(file); return;
+		case ERessourceType::ModelSVG: 			fSVG_FilesToAdd.push_back(file); return;
+		case ERessourceType::RessoureFixture: 	fFixtureResources_FilesToAdd.push_back(file);return;
     }        
+
+	DSTOP((kEveryone, "Unaspected ERessourceType Enum for AddFileToZip"));
 }
 
 size_t SceneDataExchange::GetAttachedFileCount()

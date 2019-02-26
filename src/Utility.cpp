@@ -31,62 +31,6 @@ Converts a VWTransformMatrix to a STransformMatrix.
     smatrix.ox = vwmatrix.fMatrix.mat[3][0]; smatrix.oy = vwmatrix.fMatrix.mat[3][1]; smatrix.oz = vwmatrix.fMatrix.mat[3][2];
 }
 
-bool SystemUtil::CreateFolderDefinitlyOnDisk(const TXString& folderPath)
-{
-    IFolderIdentifierPtr folder = (IID_FolderIdentifier);
-    folder->Set(folderPath);
-    
-    bool exists;  folder->ExistsOnDisk(exists);
-    
-    if (exists) 
-    {
-        // Nothing to to do!
-        return true;
-    }
-
-    // Try to create the Folder; This only works when all the ParentFolder exists.
-    folder->CreateOnDisk();
-
-    // Check if this was succesfull
-    folder->ExistsOnDisk(exists);
-
-    if (! exists) 
-    {
-        ptrdiff_t pos = folderPath.ReverseFind( kSeperator );
-
-        if (pos > 0)
-        {
-            TXString parentFolder = folderPath.Left(pos);
-            
-            if ( ! parentFolder.IsEmpty()) 
-            {
-                // Try to create the Parent folder; Remove the last folder from the path if possible.
-                SystemUtil::CreateFolderDefinitlyOnDisk(parentFolder);
-            }
-            else 
-            {
-                return false;
-            }
-        }
-        else 
-        {
-            // Could not find a seperator in the folder path. This should not happen.
-            DSTOP((kEveryone, "Could not find a seperator in the folder path."));
-            return false;
-        }
-    }
-    else 
-    {
-        return true;
-    }
-
-    // Now all the Parentfolders should  and we can try to create the top folder again:
-    folder->CreateOnDisk();
-    folder->ExistsOnDisk(exists);
-    
-    return exists;
-}
-
 TXString SystemUtil::ExtractFolderFromPath(TXString& path) 
 /* 
    Deletes the folder part from the incoming string so that only the fileNam remains and returns it.    
