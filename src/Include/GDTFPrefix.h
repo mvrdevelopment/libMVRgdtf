@@ -244,13 +244,6 @@ namespace VectorworksMVR
 			
 		};
 		
-		enum EGDTFDmxInvert
-		{
-			eGDTFDmxInvert_No       = 0, //Default
-			eGDTFDmxInvert_Yes      = 1,
-			
-		};
-		
 		enum EGdtfDmxRelationType // Default is missing
 		{
 			eGdtfDmxRelationType_Multiply   = 1,
