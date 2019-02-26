@@ -3764,7 +3764,8 @@ EGdtfDmxRelationType GdtfDmxRelation::GetRelationType() const
 // GdtfRevision
 GdtfRevision::GdtfRevision()
 {
-    fText = "";
+    fText 			= "";
+	fUserId 		= 0;
 	fDateS.fYear	= 0;
 	fDateS.fMonth	= 0;
 	fDateS.fDay		= 0;
@@ -3789,6 +3790,7 @@ void GdtfRevision::OnPrintToFile(IXMLFileNodePtr pNode)
 	// Print node attributes
 	pNode->SetNodeAttributeValue(XML_GDTF_RevisionText,			fText);
 	pNode->SetNodeAttributeValue(XML_GDTF_RevisionDate,			SceneData::GdtfConverter::ConvertDate(fDateS));
+	pNode->SetNodeAttributeValue(XML_GDTF_RevisionUserId,		SceneData::GdtfConverter::ConvertInteger(fUserId));
 	
 }
 
@@ -3803,6 +3805,8 @@ void GdtfRevision::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// Print node attributes
 						pNode->GetNodeAttributeValue(XML_GDTF_RevisionText,		fText);
 	TXString date;		pNode->GetNodeAttributeValue(XML_GDTF_RevisionDate, 	date);		GdtfConverter::ConvertDate(date, pNode, fDateS);
+	TXString userid;	pNode->GetNodeAttributeValue(XML_GDTF_RevisionUserId, 	userid);	GdtfConverter::ConvertInteger(userid, pNode, fUserId);
+
 }
 
 void GdtfRevision::OnErrorCheck(const IXMLFileNodePtr& pNode)
@@ -3817,6 +3821,7 @@ void GdtfRevision::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	TXStringArray optional;
 	needed.push_back(XML_GDTF_RevisionDate);
 	optional.push_back(XML_GDTF_RevisionText);
+	optional.push_back(XML_GDTF_RevisionUserId);
 
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
@@ -3856,6 +3861,16 @@ const STime& GdtfRevision::GetDate() const
 const TXString& GdtfRevision::GetText() const
 {
 	return fText;
+}
+
+size_t GdtfRevision::GetUserId() const
+{
+	return fUserId;
+}
+
+void GdtfRevision::SetUserId(size_t value) 
+{
+	fUserId = value;
 }
 
 //------------------------------------------------------------------------------------

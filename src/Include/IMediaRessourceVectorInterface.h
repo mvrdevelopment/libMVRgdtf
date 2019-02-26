@@ -641,6 +641,10 @@ namespace VectorworksMVR
 
         virtual VCOMError VCOM_CALLTYPE     SetText(MvrString txt)  = 0;
         virtual VCOMError VCOM_CALLTYPE     SetDate(STime date)  = 0;
+
+		// GDTF 1.0
+		virtual VCOMError VCOM_CALLTYPE     GetUserId(size_t& userId) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetUserId(size_t userId) = 0;
     };
 	typedef VCOMPtr<IGdtfRevision>	IGdtfRevisionPtr;
     
