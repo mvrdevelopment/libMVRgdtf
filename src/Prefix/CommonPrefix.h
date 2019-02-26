@@ -346,7 +346,6 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_DMXChannelFuntionRealFade				"RealFade"
 #define XML_GDTF_DMXChannelFuntionWheelRef				"Wheel"
 #define XML_GDTF_DMXChannelEmitter						"Emitter"
-#define XML_GDTF_DMXChannelDMXInvert					"DMXInvert"
 
 #define XML_GDTF_DMXChannelFuntionModeMaster			"ModeMaster"
 #define XML_GDTF_DMXChannelFuntionModeFrom				"ModeFrom"

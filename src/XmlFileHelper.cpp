@@ -1157,35 +1157,6 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 	
 }
 
-/*static*/ TXString GdtfConverter::ConvertDMXInvertEnum(EGDTFDmxInvert value)
-{
-	switch (value)
-	{
-		case eGDTFDmxInvert_No:			return XML_GDTF_DMXChannelDmxInvertEnum_No;
-		case eGDTFDmxInvert_Yes:		return XML_GDTF_DMXChannelDmxnvertEnum_Yes;
-        default: DSTOP((kEveryone, "ConvertDMXInvertEnum: Invalid Input-Value"));
-	}	
-	
-	// Return default value
-	return XML_GDTF_DMXChannelDmxInvertEnum_No;
-}
-
-/*static*/ bool GdtfConverter::ConvertDMXInvertEnum(const TXString& value, const IXMLFileNodePtr& node,EGDTFDmxInvert& dmx)
-{
-	if		(value == XML_GDTF_DMXChannelDmxInvertEnum_No)	{ dmx = eGDTFDmxInvert_No;		}
-	else if (value == XML_GDTF_DMXChannelDmxnvertEnum_Yes)	{ dmx = eGDTFDmxInvert_Yes;		}
-	else if (value == "")									{ dmx = eGDTFDmxInvert_No;		}
-	else
-    {
-        dmx = eGDTFDmxInvert_No; DSTOP((kEveryone, "Unexpected Input for EGDTFDmxInvert Enum"));
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertDMXInvert, node);
-        SceneData::GdtfFixture::AddError(error);
-    }
-	
-	// Return true
-	return true;
-}
-
 /*static*/ TXString GdtfConverter::ConvertDmxOffset(DMXAddress coarse, DMXAddress fine, DMXAddress ultra, DMXAddress uber)
 {
 	TSint32Array array;
