@@ -25,7 +25,6 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetRealFade(double& fade);        
         virtual VCOMError VCOM_CALLTYPE     GetOnWheel(IGdtfWheel** wheel);
         virtual VCOMError VCOM_CALLTYPE     GetEmitter(IGdtfPhysicalEmitter** emitter);
-        virtual VCOMError VCOM_CALLTYPE     GetDMXInvert(EGDTFDmxInvert& dmxInvert);        
 
 		virtual VCOMError VCOM_CALLTYPE     SetAttribute(IGdtfAttribute* attribute);
 		virtual VCOMError VCOM_CALLTYPE     SetOriginalAttribute(MvrString attr);
@@ -35,7 +34,6 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE     SetRealFade(double fade);
 		virtual VCOMError VCOM_CALLTYPE     SetOnWheel(IGdtfWheel* wheel);
         virtual VCOMError VCOM_CALLTYPE     SetEmitter(IGdtfPhysicalEmitter* emitter);
-        virtual VCOMError VCOM_CALLTYPE     SetDMXInvert(EGDTFDmxInvert dmxInvert);        
 
 		
         virtual VCOMError VCOM_CALLTYPE     GetDmxChannelSetCount(size_t& count);

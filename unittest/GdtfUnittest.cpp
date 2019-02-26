@@ -233,7 +233,6 @@ void GdtfUnittest::WriteFile()
 						__checkVCOM(gdftChannelFunction->SetPhysicalStart(2));
 						__checkVCOM(gdftChannelFunction->SetPhysicalEnd(3));
 						__checkVCOM(gdftChannelFunction->SetRealFade(4));
-						__checkVCOM(gdftChannelFunction->SetDMXInvert(EGDTFDmxInvert::eGDTFDmxInvert_No));
 						__checkVCOM(gdftChannelFunction->SetOnWheel(gdtfWheelObj));
 						__checkVCOM(gdftChannelFunction->SetEmitter(gdtfEmitter));
 
@@ -641,11 +640,6 @@ void GdtfUnittest::ReadFile()
 								double realFade;
 								__checkVCOM(gdtfFunction->GetRealFade(realFade));
 								this->checkifEqual("gdtfFunctionGetRealFade ", realFade, double(4));
-
-								// DMX Invert
-								EGDTFDmxInvert dmxInv;
-								__checkVCOM(gdtfFunction->GetDMXInvert(dmxInv));
-								this->checkifEqual("gdtfFunctionGetDMXInvert ", dmxInv, EGDTFDmxInvert::eGDTFDmxInvert_No);
 
 								//------------------------------------------------------------------------------    
 								// Add the ChannelSets 
