@@ -4336,15 +4336,15 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 		{
 			//-----------------------------------------------------------------------------
 			// Prepare pointer to the new files            
-            TXString fileNameWithoutFolder = fileName; 
             
-            // The function CZIPFileImpl::GetNextFile always returns the filename with the folderstructure "/" seperated!
-            fileNameWithoutFolder = fileNameWithoutFolder.Replace("/", TXString(kSeperator) );
-            TXString subFolder = SystemUtil::ExtractFolderFromPath(fileNameWithoutFolder);            
+            // Seperate filename und folder
+            TXString fileNameWithoutFolder = TXString(fileName).Replace("/", TXString(kSeperator) );
+            TXString subFolder 			   = SystemUtil::ExtractFolderFromPath(fileNameWithoutFolder);            
             
-
+			// flatten the folder structure
             subFolder = subFolder.Replace(TXString(kSeperator), "");
             subFolder = kSeperator + subFolder;
+			
             //-----------------------------------------------------------------------------
 			IFolderIdentifierPtr targetFolder (IID_FolderIdentifier);
             targetFolder->Set(fWorkingFolder, subFolder);
