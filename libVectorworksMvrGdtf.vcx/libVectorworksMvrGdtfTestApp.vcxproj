@@ -44,6 +44,7 @@
     <ClCompile Include="..\unittest\main.cpp" />
     <ClCompile Include="..\unittest\MvrUnittest.cpp" />
     <ClCompile Include="..\unittest\Unittest.cpp" />
+    <ClCompile Include="..\unittest\Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\unittest\EmptyGeometryUnitTest.h" />
@@ -55,13 +56,14 @@
     <ClInclude Include="..\unittest\main.h" />
     <ClInclude Include="..\unittest\MvrUnittest.h" />
     <ClInclude Include="..\unittest\Unittest.h" />
+    <ClInclude Include="..\unittest\Utility.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{6658C878-A33C-4AFA-B10C-E4FF5ECDDC9D}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>libVectorworksMvrGdtfTestApp</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+	<WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>    
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -100,7 +102,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
-	<WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -114,7 +116,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
-	<WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -288,7 +290,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_WINDOWS;GITPATH="$(SolutionDir.Replace('\', '\\'))unittest"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_WINDOWS;GITPATH="$(SolutionDir.Replace('\', '\\'))"</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir)src</AdditionalIncludeDirectories>

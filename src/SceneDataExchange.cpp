@@ -1931,13 +1931,29 @@ bool SceneDataExchange::WriteToFile(const IFileIdentifierPtr& file)
     zipXmlBuffer.SetData(data, size);
 	
 	// Add the xml zipfile buffer
-    SceneDataZip::AddFileToZip(zipfile, zipXmlBuffer, filename, true);
+    SceneDataZip::AddFileToZip(zipfile, zipXmlBuffer, filename);
 	
-	//-------------------------------------------------------------------------------------------------
-	// Add the 3DS file
-	for (size_t i = 0; i < fFilesToAdd.size(); i++)
-	{
-		SceneDataZip::AddFileToZip(zipfile, fFilesToAdd.at(i), false/*Checksum*/, false/*Delete*/);
+	//-------------------------------------------------------------------------------------------------	
+    // Add the Resources
+
+	for (size_t i = 0; i < f3DS_FilesToAdd.size(); i++)
+	{        
+		SceneDataZip::AddFileToZip(zipfile, f3DS_FilesToAdd.at(i),  ERessourceType::Model3DS, false/*Delete*/);
+	}
+
+	for (size_t i = 0; i < fSVG_FilesToAdd.size(); i++)
+	{        
+		SceneDataZip::AddFileToZip(zipfile, fSVG_FilesToAdd.at(i), ERessourceType::ModelSVG, false/*Delete*/);
+	}
+
+	for (size_t i = 0; i < fWheel_Image_FilesToAdd.size(); i++)
+	{        
+		SceneDataZip::AddFileToZip(zipfile, fWheel_Image_FilesToAdd.at(i), ERessourceType::ImageWheel, false/*Delete*/);
+	}
+
+	for (size_t i = 0; i < fFixtureResources_FilesToAdd.size(); i++)
+	{        
+		SceneDataZip::AddFileToZip(zipfile, fFixtureResources_FilesToAdd.at(i), ERessourceType::RessoureFixture, false/*Delete*/);
 	}
 	
 	//-------------------------------------------------------------------------------------------------
@@ -1952,7 +1968,7 @@ bool SceneDataExchange::WriteToFile(const IFileIdentifierPtr& file)
 			IFileIdentifierPtr gdtfFilePtr (IID_FileIdentifier);
 			gdtfFilePtr->Set(folder, gdtfFileName);
 			
-			if		(SceneDataZip::AddFileToZip(zipfile, gdtfFilePtr,  true/*Checksum*/, false/*Delete*/, false/*ASSERT*/))	{ exported = true;  break; }
+			if		(SceneDataZip::AddFileToZip(zipfile, gdtfFilePtr, ERessourceType::RessoureFixture, false/*Delete*/, false/*ASSERT*/))	{ exported = true;  break; }
 		}
 	
 		
@@ -2100,7 +2116,6 @@ bool SceneDataExchange::ReadFromFile(const IFileIdentifierPtr& file)
 	
 	// Prepare
     ISceneDataZipBuffer xmlFileBuffer;
-    ISceneDataZipBuffer xmlFileSHA256Buffer;
 	
 	//-------------------------------------------------------------------------------------------------
 	// Decompress the files
@@ -2121,18 +2136,6 @@ bool SceneDataExchange::ReadFromFile(const IFileIdentifierPtr& file)
 			
 			// Set the buffer object
             xmlFileBuffer.SetData(data, size);
-			
-			// House keeping
-			std::free(data);
-        }
-        else if (outPath == "GeneralSceneDescription.checksum.txt")
-        {
-			// Read the data
-            size_t	size = 0;							buffer.GetDataSize(size);
-            void*	data = malloc(size * sizeof(char));	buffer.CopyDataInto(data, size);
-			
-			// Set the buffer object
-            xmlFileSHA256Buffer.SetData(data, size);
 			
 			// House keeping
 			std::free(data);
@@ -2164,9 +2167,6 @@ bool SceneDataExchange::ReadFromFile(const IFileIdentifierPtr& file)
 	ASSERTN(kEveryone, xmlFileBuffer.IsSet());
     if (xmlFileBuffer.IsSet())
     {
-		// Check the checksum
-		ASSERTN(kEveryone, HashManager::HashManager::CheckHashForBuffer(xmlFileBuffer, xmlFileSHA256Buffer) == true);
-		
 		// Read from Scene Description
 		ReadFromGeneralSceneDescription(xmlFileBuffer);
     }
@@ -2456,9 +2456,17 @@ void SceneDataExchange::ProcessGroup(const IXMLFileNodePtr& node, SceneDataGroup
 	
 }
 
-void SceneDataExchange::AddFileToZip(const IFileIdentifierPtr& file)
+void SceneDataExchange::AddFileToZip(const IFileIdentifierPtr& file, ERessourceType resType)
 {
-    fFilesToAdd.push_back(file);
+    switch (resType)  
+    {
+		case ERessourceType::ImageWheel: 		fWheel_Image_FilesToAdd.push_back(file); return;
+		case ERessourceType::Model3DS: 			f3DS_FilesToAdd.push_back(file); return;
+		case ERessourceType::ModelSVG: 			fSVG_FilesToAdd.push_back(file); return;
+		case ERessourceType::RessoureFixture: 	fFixtureResources_FilesToAdd.push_back(file);return;
+    }        
+
+	DSTOP((kEveryone, "Unaspected ERessourceType Enum for AddFileToZip"));
 }
 
 size_t SceneDataExchange::GetAttachedFileCount()

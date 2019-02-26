@@ -16,31 +16,13 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE GetManufacturerID(Sint32& outVal);        
         virtual VCOMError VCOM_CALLTYPE GetDeviceModelID(Sint32& outVal);
 		
-		virtual VCOMError VCOM_CALLTYPE GetSoftwareIDAt(size_t at, Sint32& outVal);
-		virtual VCOMError VCOM_CALLTYPE GetSoftwareIDCount(size_t& count);
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetSoftwareVersionIDCount(size_t& count);
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateSoftwareVersionID(size_t value, VectorworksMVR::IGdtfSoftwareVersionID** outVal);
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetSoftwareVersionIDAt(size_t at, VectorworksMVR::IGdtfSoftwareVersionID** value);
 
         virtual VCOMError VCOM_CALLTYPE SetManufacturerID(Sint32 value);
         virtual VCOMError VCOM_CALLTYPE SetDeviceModelID(Sint32 value);
-        virtual VCOMError VCOM_CALLTYPE AddSoftwareID(Sint32 softID);
-        
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetRDMParameterCount(size_t& count);        
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetRDMParameterAt(size_t at, VectorworksMVR::IGdtfRDMParameter **RDMParameter);
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateRDMParameter(VectorworksMVR::IGdtfRDMParameter **outVal,
-                MvrString name,
-                Sint32 PID, 
-                GdtfDefines::EGdtf_RDMParam_Type Type,
-                GdtfDefines::EGdtf_RDMParam_DataType dataType,
-                GdtfDefines::EGdtf_RDMParam_Command command,
-                GdtfDefines::EGdtf_RDMParam_SensorUnit sensorUnit,
-                GdtfDefines::EGdtf_RDMParam_SensorUnitPrefix sensorUnitPrefix,
-                Sint32 minValue,
-                Sint32 maxValue, 
-                Sint32 PDLSize, 
-                MvrString description);
 
-        virtual VCOMError VCOM_CALLTYPE     GetRDMNotifications(VectorworksMVR::IGdtfRDMNotifications ** outRDMNotifications);
-
-        virtual VCOMError VCOM_CALLTYPE     SetRDMNotifications(IGdtfRDMNotifications * newRDMNotifications);
 
         virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr);
         virtual void*	  VCOM_CALLTYPE     GetBoundObject();

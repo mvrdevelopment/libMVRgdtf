@@ -594,7 +594,12 @@ namespace SceneData
 		// File Operation Handeling
 		IFolderIdentifierPtr				fWorkingFolder;
 		bool								fUndoStarted;
-		TFileIdentifierPtrArray				fFilesToAdd;
+		//
+        TFileIdentifierPtrArray				f3DS_FilesToAdd;
+        TFileIdentifierPtrArray				fSVG_FilesToAdd;
+        TFileIdentifierPtrArray				fWheel_Image_FilesToAdd;
+        TFileIdentifierPtrArray				fFixtureResources_FilesToAdd;
+        //
 		TFileIdentifierPtrArray				fFilesInZip;
 		TXStringArray						fRequiredGdtfFiles;
 		TFolderIdentifierArray				fGdtfFolderLocations;
@@ -666,7 +671,7 @@ namespace SceneData
 	public:
 		bool WriteToFile(const IFileIdentifierPtr&);
 		bool AddNeededGdtfFile(const TXString& gdtfName);
-        void AddFileToZip(const IFileIdentifierPtr& file);
+        void AddFileToZip(const IFileIdentifierPtr& file, ERessourceType resType);
 		void AddLocationForGdtfFiles(IFolderIdentifierPtr folder);
 		
 	private:

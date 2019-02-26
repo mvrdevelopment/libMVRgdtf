@@ -20,11 +20,14 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetAttribute(IGdtfAttribute** attribute);
         virtual VCOMError VCOM_CALLTYPE     GetDmxSnap(EGdtfDmxSnap& snap);
 		virtual VCOMError VCOM_CALLTYPE     GetDmxMaster(EGdtfDmxMaster& master);
+        virtual VCOMError VCOM_CALLTYPE     GetMoveInBlackFrames(double& frames);
+        virtual VCOMError VCOM_CALLTYPE     GetDmxChangeTimeLimit(double& changeTimeLimit);
 
 		virtual VCOMError VCOM_CALLTYPE     SetAttribute(IGdtfAttribute* attribute);
 		virtual VCOMError VCOM_CALLTYPE     SetDmxSnap(EGdtfDmxSnap snap);
 		virtual VCOMError VCOM_CALLTYPE     SetDmxMaster(EGdtfDmxMaster master);
-
+        virtual VCOMError VCOM_CALLTYPE     SetMoveInBlackFrames(double frames);
+        virtual VCOMError VCOM_CALLTYPE     SetDmxChangeTimeLimit(double changeTimeLimit);
 		
         virtual VCOMError VCOM_CALLTYPE     GetDmxFunctionCount(size_t& count);
         virtual VCOMError VCOM_CALLTYPE     GetDmxFunctionAt(size_t at, IGdtfDmxChannelFunction** function);

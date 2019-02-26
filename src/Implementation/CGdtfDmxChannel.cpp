@@ -77,16 +77,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::GetUber(Sint32& u
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::GetDmxFrequency(EGdtfDmxFrequency &frequency)
-{
-	// Check Pointer
-	if ( ! fChannel) { return kVCOMError_NotInitialized; }
-	
-    frequency = fChannel->GetFrequency();
-    
-    return kVCOMError_NoError;
-}
-
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::GetDefaultValue(DmxValue &defaultValue)
 {
 	// Check Pointer
@@ -115,26 +105,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::HasHighlight(bool
 	highlight = fChannel->HasHighlight();
 	
 	return kVCOMError_NoError;
-}
-
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::GetMoveInBlackFrames(double &frames)
-{
-	// Check Pointer
-	if ( ! fChannel) { return kVCOMError_NotInitialized; }
-	
-    frames = fChannel->GetMoveInBlackFrames();
-    
-    return kVCOMError_NoError;
-}
-
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::GetDmxChangeTimeLimit(double &changeTimeLimit)
-{
-	// Check Pointer
-	if ( ! fChannel) { return kVCOMError_NotInitialized; }
-	
-    changeTimeLimit = fChannel->GetDmxChangeTimeLimit();
-    
-    return kVCOMError_NoError;
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::GetGeometry(VectorworksMVR::IGdtfGeometry **geo)
@@ -232,16 +202,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::SetUber(Sint32 ub
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::SetDmxFrequency(EGdtfDmxFrequency frequency)
-{
-	// Check Pointer
-	if ( ! fChannel) { return kVCOMError_NotInitialized; }
-	
-	fChannel->SetFrequency(frequency);
-	
-	return kVCOMError_NoError;
-}
-
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::SetDefaultValue(DmxValue defaultValue)
 {
 	// Check Pointer
@@ -262,25 +222,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::SetHighlight(DmxV
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::SetMoveInBlackFrames(double frames)
-{
-	// Check Pointer
-	if ( ! fChannel) { return kVCOMError_NotInitialized; }
-	
-	fChannel->SetMoveInBlackFrames(frames);
-	
-	return kVCOMError_NoError;
-}
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::SetDmxChangeTimeLimit(double changeTimeLimit)
-{
-	// Check Pointer
-	if ( ! fChannel) { return kVCOMError_NotInitialized; }
-	
-	fChannel->SetDmxChangeTimeLimit(changeTimeLimit);
-	
-	return kVCOMError_NoError;
-}
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::SetGeometry(IGdtfGeometry* geo)
 {

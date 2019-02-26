@@ -227,15 +227,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetDMXInv
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetEncoderInvert(EGDTFEncoderInvert & encoderInvert)
-{
-	// Check Pointer
-	if ( ! fFunction) { return kVCOMError_NotInitialized; }
-	
-    encoderInvert = fFunction->GetEncoderInvert();
-    
-    return kVCOMError_NoError;
-}
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetAttribute(IGdtfAttribute* attribute)
 {
@@ -346,16 +337,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetDMXInv
 	if ( ! fFunction) { return kVCOMError_NotInitialized; }
 	
     fFunction->SetDmxInvert(dmxInvert);
-	
-    return kVCOMError_NoError;
-}
-
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetEncoderInvert(EGDTFEncoderInvert encoderInvert)
-{
-	// Check Pointer
-	if ( ! fFunction) { return kVCOMError_NotInitialized; }
-	
-    fFunction->SetEncoderInvert(encoderInvert);
 	
     return kVCOMError_NoError;
 }

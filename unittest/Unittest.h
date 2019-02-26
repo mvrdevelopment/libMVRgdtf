@@ -20,6 +20,8 @@ public:
 public:
     bool RunTest();
 
+    void checkifTrue(const std::string & check, const bool b);
+
 protected:
     bool virtual ExecuteTest() = 0;
 
