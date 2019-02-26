@@ -2418,16 +2418,22 @@ void GdtfDmxChannel::SetDmxCoarse(Sint32 coarse)
 
 void GdtfDmxChannel::SetDmxFine(Sint32 fine)
 {
+	ASSERTN(kEveryone, fCoarse > 0);
 	fFine = fine;
 }
 
 void GdtfDmxChannel::SetDmxUltra(Sint32 ultra)
 {
+	ASSERTN(kEveryone, fCoarse > 0);
+	ASSERTN(kEveryone, fFine > 0);
 	fUltra = ultra;
 }
 
 void SceneData::GdtfDmxChannel::SetDmxUber(Sint32 uber)
 {
+	ASSERTN(kEveryone, fCoarse > 0);
+	ASSERTN(kEveryone, fFine > 0);
+	ASSERTN(kEveryone, fUber > 0);
 	fUber = uber;
 }
 
