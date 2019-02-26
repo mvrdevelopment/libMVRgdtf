@@ -126,7 +126,7 @@ using namespace SceneData;
 */
 {
 	TXString result;
-	result += IntToString2Digits(date.fYear);
+	result += TXString().itoa(date.fYear);
 	result += "-";
 	result += IntToString2Digits(date.fMonth);
 	result += "-";
