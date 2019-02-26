@@ -61,6 +61,26 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfRevisionImpl::SetDate(STime date)
     return kVCOMError_NoError;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfRevisionImpl::GetUserId(size_t& userId)
+{
+	// Check if valid
+	if(!fRevision) { return kVCOMError_NotInitialized; }
+    
+    userId = fRevision->GetUserId();
+
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfRevisionImpl::SetUserId(size_t userId)
+{
+	// Check if valid
+	if(!fRevision) { return kVCOMError_NotInitialized; }
+    
+    fRevision->SetUserId(userId);
+
+    return kVCOMError_NoError;
+}
+
 void VectorworksMVR::CGdtfRevisionImpl::setPointer(SceneData::GdtfRevision *revision)
 {
     fRevision = revision;
