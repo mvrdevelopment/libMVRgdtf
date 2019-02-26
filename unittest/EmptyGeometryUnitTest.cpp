@@ -31,6 +31,8 @@ void GdtfEmptyModelTest::WriteFile(VectorworksMVR::IGdtfFixturePtr& fixture)
 {  
     //--------------------------------------------------------------------------------------------------------
     // Create Needed Stuff
+    IGdtfModelPtr       filledModel;
+     __checkVCOM(fixture->CreateModel("Model",&filledModel));
 
     
     IGdtfGeometryPtr geometry1;
@@ -42,6 +44,10 @@ void GdtfEmptyModelTest::WriteFile(VectorworksMVR::IGdtfFixturePtr& fixture)
         IGdtfModelPtr       model;
         __checkVCOM(geometry1->CreateGeometry(EGdtfObjectType::eGdtfGeometry, "Geometry2", model, STransformMatrix(), &geometry2));
 
+        IGdtfGeometryPtr     geometry3;
+        
+        __checkVCOM(geometry1->CreateGeometry(EGdtfObjectType::eGdtfGeometryReference, "Geometry3", filledModel, STransformMatrix(), &geometry3));
+        __checkVCOM(geometry3->SetGeometryReference(geometry1));
     }
 
 }
@@ -64,14 +70,25 @@ void GdtfEmptyModelTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
 
         size_t second_level = 0;
         __checkVCOM(geometry1->GetInternalGeometryCount(second_level));
-        checkifEqual("Second Level Geometry Count", second_level, (size_t)1);
+        checkifEqual("Second Level Geometry Count", second_level, (size_t)2);
 
-        if(second_level == 1)
+        if(second_level == 2)
         {
             IGdtfGeometryPtr geometry2;
             __checkVCOM(geometry1->GetInternalGeometryAt(0, &geometry2));
             checkifEqual("Second Level Geometry Name", geometry2->GetName(), "Geometry2");
             __checkVCOM_NotSet(geometry2->GetModel( & model));
+
+            IGdtfGeometryPtr geometry3;
+            __checkVCOM(geometry1->GetInternalGeometryAt(1, &geometry3));
+            checkifEqual("Second Level Geometry Name", geometry3->GetName(), "Geometry3");
+            
+            IGdtfModelPtr linkedModel;
+            
+            __checkVCOM(geometry3->GetModel( & linkedModel));
+             checkifEqual("Model Name", linkedModel->GetName(), "Model");
+
+
 
         }
     }
