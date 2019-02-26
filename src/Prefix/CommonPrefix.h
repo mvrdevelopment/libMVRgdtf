@@ -307,10 +307,8 @@ const Sint32 kMVR_MinorVersion = 4;
 
 #define XML_GDTF_DMXChannelNodeName				"DMXChannel"
 #define XML_GDTF_DMXChannelDMXBreak				"DMXBreak"
-#define XML_GDTF_DMXChannelCoarse				"Coarse"
-#define XML_GDTF_DMXChannelFine					"Fine"
-#define XML_GDTF_DMXChannelUltra				"Ultra"
-#define XML_GDTF_DMXChannelUber                 "Uber"
+#define XML_GDTF_DMXChannelOffset				"Offset"
+
 #define XML_GDTF_DMXChannelDefault				"Default"
 #define XML_GDTF_DMXChannelHighlight			"Highlight"
 #define XML_GDTF_DMXChannelGeometry				"Geometry"

@@ -1186,6 +1186,16 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 	return true;
 }
 
+/*static*/ TXString GdtfConverter::ConvertDmxOffset(DMXAddress coarse, DMXAddress fine, DMXAddress ultra, DMXAddress uber)
+{
+	return "";
+}
+
+/*static*/ bool GdtfConverter::ConvertDmxOffset(const TXString& inVal, const IXMLFileNodePtr& node, DMXAddress& coarse, DMXAddress& fine, DMXAddress& ultra, DMXAddress& uber)
+{
+	return false;
+}
+
 /*static*/ TXString GdtfConverter::ConvertEGdtfColorSampleEnum(EGdtfColorSample value)
 {
     switch (value)

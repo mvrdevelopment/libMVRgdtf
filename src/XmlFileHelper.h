@@ -78,6 +78,8 @@ namespace SceneData
 		static TXString ConvertBeamType(EGdtfBeamType value);
 		static TXString ConvertDMXInvertEnum(EGDTFDmxInvert value);		
         static TXString ConvertEGdtfColorSampleEnum(EGdtfColorSample value);
+		static TXString ConvertDmxOffset(DMXAddress coarse, DMXAddress fine, DMXAddress ultra, DMXAddress uber);
+
 
         //-----------------------------------------------------------------------------
         // Convert from String functions:
@@ -106,6 +108,8 @@ namespace SceneData
 		static bool		ConvertBeamType(									const TXString& value, const IXMLFileNodePtr& node,			EGdtfBeamType& type);
 		static bool		ConvertDMXInvertEnum(								const TXString& value, const IXMLFileNodePtr& node,			EGDTFDmxInvert&	dmx);		
         static bool     ConvertEGdtfColorSampleEnum(						const TXString& inVal, const IXMLFileNodePtr& node,			EGdtfColorSample& outVal);
+		static bool 	ConvertDmxOffset(const TXString& inVal, const IXMLFileNodePtr& node, DMXAddress& coarse, DMXAddress& fine, DMXAddress& ultra, DMXAddress& uber);
+
 
         static DmxValue GetChannelMaxDmx(const EGdtfChannelBitResolution chanlReso);
 
