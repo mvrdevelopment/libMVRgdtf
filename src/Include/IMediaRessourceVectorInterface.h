@@ -855,12 +855,16 @@ namespace VectorworksMVR
 		
 		virtual MvrString VCOM_CALLTYPE     GetFixtureTypeDescription() = 0;
 		virtual MvrString VCOM_CALLTYPE		GetShortName() = 0;
+		virtual MvrString VCOM_CALLTYPE		GetLongName() = 0;
+
         virtual MvrString VCOM_CALLTYPE     GetFixtureThumbnail() = 0;
 		virtual MvrString VCOM_CALLTYPE     GetFixtureThumbnail_PNG_FullPath() = 0;
         virtual MvrString VCOM_CALLTYPE     GetFixtureThumbnail_SVG_FullPath() = 0;
 		
 		virtual VCOMError VCOM_CALLTYPE     SetFixtureTypeDescription(MvrString descrip) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetShortName(MvrString shortName) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetLongName(MvrString shortName) = 0;
+
 		virtual VCOMError VCOM_CALLTYPE     SetFixtureThumbnail(MvrString thubnail) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetLinkedFixtureGUID(const MvrUUID& uuid) = 0;
 		
