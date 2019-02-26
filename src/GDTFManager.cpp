@@ -2656,11 +2656,11 @@ TXString GdtfDmxChannel::GetUnresolvedGeomRef() const
 
 EGdtfChannelBitResolution SceneData::GdtfDmxChannel::GetChannelBitResolution()
 {
-
-	if		(  fFine  &&   fUltra &&    fUber)		{ return EGdtfChannelBitResolution::eGdtfChannelBitResolution_8; }
-	else if ((!fFine) &&   fUltra  &&   fUber )		{ return EGdtfChannelBitResolution::eGdtfChannelBitResolution_16; }
-	else if ((!fFine) && (!fUltra) &&   fUber )		{ return EGdtfChannelBitResolution::eGdtfChannelBitResolution_24; }
-	else if ((!fFine) && (!fUltra) && (!fUber))		{ return EGdtfChannelBitResolution::eGdtfChannelBitResolution_32; }
+	// 0 is false, everything else is true
+	if		( !fFine  &&  !fUltra &&    !fUber)		{ return EGdtfChannelBitResolution::eGdtfChannelBitResolution_8; }
+	else if (( fFine) &&  !fUltra  &&   !fUber )	{ return EGdtfChannelBitResolution::eGdtfChannelBitResolution_16; }
+	else if (( fFine) && ( fUltra) &&   !fUber )	{ return EGdtfChannelBitResolution::eGdtfChannelBitResolution_24; }
+	else if (( fFine) && ( fUltra) && (  fUber))	{ return EGdtfChannelBitResolution::eGdtfChannelBitResolution_32; }
     	
 	// Other states are invalid. This line should never be reached.
 	DSTOP((kEveryone, "Invalid state in GetChannelBitResolution()"));
