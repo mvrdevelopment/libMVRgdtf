@@ -6425,7 +6425,7 @@ void SceneData::GdtfProtocols::OnReadFromNode(const IXMLFileNodePtr & pNode)
 	
 	//------------------------------------------------------------------------------------
 	// Read the childs	
-	IXMLFileNodePtr ftrdmNode;           // typedef VCOMPtr<IXMLFileNode>		IXMLFileNodePtr;
+	IXMLFileNodePtr ftrdmNode;
 	if (VCOM_SUCCEEDED( pNode->GetChildNode(XML_GDTF_FTRDM, &ftrdmNode)) )
 	{
 		fRDM = new GdtfFTRDM();
