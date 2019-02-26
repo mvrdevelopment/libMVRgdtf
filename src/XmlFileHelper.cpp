@@ -1210,10 +1210,10 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 	{
 		for(size_t i = 0; i < array.size(); i++)
 		{
-			if(i==0) { coarse = array[i]; ASSERTN(kEveryone,coarse!= 0); }
-			if(i==1) { fine   = array[i]; ASSERTN(kEveryone,fine  != 0); }
-			if(i==2) { ultra  = array[i]; ASSERTN(kEveryone,ultra != 0); }
-			if(i==3) { uber   = array[i]; ASSERTN(kEveryone,uber  != 0); }
+			if(i==0) { coarse = array[i]; ASSERTN(kEveryone,coarse > 0); }
+			if(i==1) { fine   = array[i]; ASSERTN(kEveryone,fine   > 0); }
+			if(i==2) { ultra  = array[i]; ASSERTN(kEveryone,ultra  > 0); }
+			if(i==3) { uber   = array[i]; ASSERTN(kEveryone,uber   > 0); }
 		}
 		
 		return true;
