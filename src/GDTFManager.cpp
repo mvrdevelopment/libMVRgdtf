@@ -4344,7 +4344,7 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 			// flatten the folder structure
             subFolder = subFolder.Replace(TXString(kSeperator), "");
             subFolder = kSeperator + subFolder;
-			
+
             //-----------------------------------------------------------------------------
 			IFolderIdentifierPtr targetFolder (IID_FolderIdentifier);
             targetFolder->Set(fWorkingFolder, subFolder);
@@ -4812,10 +4812,15 @@ void GdtfFixture::ResolveDMXPersonalityRefs()
             {
                 GdtfDmxModePtr dmxMode =  ResolveDMXMode(dmxPerso->GetUnresolvedDMXMode()); 
             
-                if (dmxMode != nullptr) 
-                {
-                    dmxPerso->SetDMXMode(dmxMode);
-                }
+				ASSERTN(kEveryone, dmxMode != nullptr);
+                if (dmxMode != nullptr) { dmxPerso->SetDMXMode(dmxMode);  }
+				else
+				{
+					IXMLFileNodePtr node;
+					dmxPerso->GetNode(node);
+					GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_UnresolvedRdmPersonalityMode, node);
+					SceneData::GdtfFixture::AddError(error);
+				}
             }
         }
     }

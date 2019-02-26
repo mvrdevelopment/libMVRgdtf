@@ -131,19 +131,6 @@ namespace VectorworksMVR
             eValueError_NoMatchInEnum_ConvertMaster                                     = 29,
             eValueError_NoMatchInEnum_ConvertRelation                                   = 30,
             eValueError_NoMatchInEnum_ConvertDMXInvert                                  = 31,
-            eValueError_NoMatchInEnum_ConvertEncoderInvert                              = 32,
-            eValueError_NoMatchInEnum_ConvertRDMParamType                               = 33,
-            eValueError_NoMatchInEnum_ConvertRDMParamDataType                           = 34,
-            eValueError_NoMatchInEnum_ConvertRDMParamCommand                            = 35,
-            eValueError_NoMatchInEnum_ConvertRDMParamSensorUnit                         = 36,
-            eValueError_NoMatchInEnum_ConvertRDMParamSensorUnitPrefix                   = 37,
-            eValueError_NoMatchInEnum_ConvertRDMValueBoolValue                          = 38,
-            eValueError_NoMatchInEnum_ConvertRDMValueThresholdOperator                  = 39,
-            eValueError_NoMatchInEnum_ConvertRDMValueSensorDefinitionType               = 40,
-            eValueError_NoMatchInEnum_ConvertRDMValueLowesHighestDetectionSupported     = 41,
-            eValueError_NoMatchInEnum_ConvertRDMValueRecordValueSupported               = 42,
-            eValueError_NoMatchInEnum_ConvertRDMValueSlotInfoType                       = 43,
-            eValueError_NoMatchInEnum_ConvertRDMValueSlotInfoSlotLabelID                = 44,
             eValueError_NoMatchInEnum_ConvertColorSample                                = 45,
             eValueError_MatrixFormatMissingFirstBracket             = 46,           
             eValueError_MatrixFormatMissingLastBracket              = 47,
@@ -153,10 +140,11 @@ namespace VectorworksMVR
             eValueError_MatrixRotationFormatMissingLastBracket      = 51,
             eValueError_MatrixRotationTooMuchOrTooLessLines         = 52,
             eValueError_MatrixRotationTooMuchOrTooLessEntries       = 53,
-            eValueError_NoCommaFound        = 54,
-            eFailedToReadDescription        = 55, // The description.xml in not found in the zip archive
-            eXmlParsingError                = 56, // The XML file structure is damaged
-			eValueError_DateHasWrongFormat	= 57,
+            eValueError_NoCommaFound             = 54,
+            eFailedToReadDescription                = 55, // The description.xml in not found in the zip archive
+            eXmlParsingError                        = 56, // The XML file structure is damaged
+			eValueError_DateHasWrongFormat	        = 57,
+            eValueError_UnresolvedRdmPersonalityMode= 58,
         };
 		
 		enum class EGdtfPhysicalUnit
