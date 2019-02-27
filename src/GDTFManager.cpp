@@ -7216,6 +7216,11 @@ SceneData::GdtfPhysicalDescriptions::~GdtfPhysicalDescriptions()
 {
 }
 
+EGdtfObjectType SceneData::GdtfPhysicalDescriptions::GetObjectType()
+{
+    return EGdtfObjectType::eGdtfPhysicalDescription;
+}
+
 TXString SceneData::GdtfPhysicalDescriptions::GetNodeName()
 {
     return XML_GDTF_FixtureChildNodePhysicalDesrip;
@@ -7223,9 +7228,11 @@ TXString SceneData::GdtfPhysicalDescriptions::GetNodeName()
 
 void SceneData::GdtfPhysicalDescriptions::OnPrintToFile(IXMLFileNodePtr pNode)
 {
+     // TODO:
 }
 
 void SceneData::GdtfPhysicalDescriptions::OnReadFromNode(const IXMLFileNodePtr & pNode)
 {
+    // TODO:
 }
 
