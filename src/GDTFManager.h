@@ -340,19 +340,22 @@ namespace SceneData
         GdtfPhysicalDescriptions();
         ~GdtfPhysicalDescriptions();
     private:        
-        TGdtfPhysicalEmitterArray		fEmitters;   
-        TGdtfFilterArray                fFilters;
-        TGdtfDMXProfileArray            fDmxProfiles;
-        GdtfColorSpace                  fColors;
-        TGdtf_CRIGroupArray             fCRI_Groups;
+        GdtfColorSpace*                 fColorSpace;
+        //
+        TGdtfPhysicalEmitterArray		fEmitters;      // Emitter Collect
+        TGdtfFilterArray                fFilters;       // Filter Collect
+        TGdtfDMXProfileArray            fDmxProfiles;   // DMX Profile Collect        
+        TGdtf_CRIGroupArray             fCRI_Groups;    // Color Rendering Index Collect
     public:
         virtual EGdtfObjectType			GetObjectType();
 
     public:
+        // XXX TODO: Getter setter
         // Getter        
-        // XXX const TXString&		    GetName() const;
+        GdtfColorSpace*                 GetColorSpace();
         // Setter       
-        // XXX void						SetName(const TXString& name);
+        void                            SetColorSpace(GdtfColorSpace* val);
+
     protected:
         virtual	TXString				GetNodeName();
         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);

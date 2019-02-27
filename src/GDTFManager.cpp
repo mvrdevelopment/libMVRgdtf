@@ -7221,6 +7221,16 @@ EGdtfObjectType SceneData::GdtfPhysicalDescriptions::GetObjectType()
     return EGdtfObjectType::eGdtfPhysicalDescription;
 }
 
+GdtfColorSpace * SceneData::GdtfPhysicalDescriptions::GetColorSpace()
+{
+    return fColorSpace;
+}
+
+void SceneData::GdtfPhysicalDescriptions::SetColorSpace(GdtfColorSpace * val)
+{
+    fColorSpace = val;
+}
+
 TXString SceneData::GdtfPhysicalDescriptions::GetNodeName()
 {
     return XML_GDTF_FixtureChildNodePhysicalDesrip;
