@@ -361,10 +361,10 @@ namespace SceneData
         ~GdtfColorSpace();
     private:
         EGdtfColorSpace fColorSpace; 	// Enum 	Color Space. The defined values are "Custom", "sRGB", "ProPhoto" and "ANSI". Default Value: "sRGB"
-        CieColor        fRed;                  // ColorCIE 	Optional; CIE xyY of the Red Primary; this is used only if the ColorSpace is "Custom".
-        CieColor        fGreen;                // ColorCIE 	Optional; CIE xyY of the Green Primary; this is used only if the ColorSpace is "Custom".
-        CieColor        fBlue;	                // ColorCIE 	Optional; CIE xyY of the Blue Primary; this is used only if the ColorSpace is "Custom".
-        CieColor        fWhitePoint;           // WhitePoint 	ColorCIE 	Optional; CIE xyY of the White Point; this is used only if the ColorSpace is "Custom". 
+        CCieColor        fRed;                  // ColorCIE 	Optional; CIE xyY of the Red Primary; this is used only if the ColorSpace is "Custom".
+        CCieColor        fGreen;                // ColorCIE 	Optional; CIE xyY of the Green Primary; this is used only if the ColorSpace is "Custom".
+        CCieColor        fBlue;	                // ColorCIE 	Optional; CIE xyY of the Blue Primary; this is used only if the ColorSpace is "Custom".
+        CCieColor        fWhitePoint;           // WhitePoint 	ColorCIE 	Optional; CIE xyY of the White Point; this is used only if the ColorSpace is "Custom". 
     public:
         virtual EGdtfObjectType			GetObjectType();
 

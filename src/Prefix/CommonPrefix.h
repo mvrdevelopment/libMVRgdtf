@@ -230,7 +230,7 @@ const Sint32 kMVR_MinorVersion = 4;
 // ColorSpace Atributtes
 #define XML_GDTF_ColorSpace_ColorSpace "ColorSpace"
 #define XML_GDTF_ColorSpace_Red        "Red"
-#define XML_GDTF_ColorSpace_           "Green"
+#define XML_GDTF_ColorSpace_Green      "Green"
 #define XML_GDTF_ColorSpace_Blue	   "Blue"
 #define XML_GDTF_ColorSpace_WhitePoint "WhitePoint"
 //-----------------------------------------------------------------------------
