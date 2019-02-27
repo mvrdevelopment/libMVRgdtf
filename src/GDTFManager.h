@@ -406,7 +406,7 @@ namespace SceneData
         virtual EGdtfObjectType		GetObjectType();
 
     public:
-        // Getter        
+        // Getter   TODO: XXX     
         // XXX const TXString&		        GetName() const;
         // Setter       
         // XXX void						SetName(const TXString& name);
@@ -1688,7 +1688,34 @@ namespace SceneData
         virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
     };
     typedef GdtfMacroVisual*	GdtfMacroVisualPtr;
+       
+    class GdtfMeasurement : public GdtfObject
+    {
+    public:
+        GdtfMeasurement();
+        ~GdtfMeasurement();
+    private:
+        double fPhysical;
+        double fLuminousIntensity;
+        double fTransmission;
+        EGdtfInterpolationTo  fInterpolationTo; XXX
 
+    public:
+        virtual EGdtfObjectType			GetObjectType();
+
+    public:
+        // Getter        
+        // XXX const TXString&		        GetName() const;
+        // Setter       
+        // XXX void						    SetName(const TXString& name);
+    protected:
+        virtual	TXString				GetNodeName();
+        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+    };
+    typedef GdtfMeasurement*	GdtfMeasurementPtr;
+    typedef std::vector<GdtfMeasurement*>	TGdtfMeasurementArray; // XXX check if needed?
+        
 	//------------------------------------------------------------------------------------
 	// GdtfPhysicalDescription Definition
 	class GdtfMeasurementPoint : public GdtfObject

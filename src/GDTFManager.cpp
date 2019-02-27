@@ -7387,3 +7387,32 @@ void SceneData::GdtfFilter::OnReadFromNode(const IXMLFileNodePtr & pNode)
     //    return;
     //});
 }
+
+SceneData::GdtfMeasurement::GdtfMeasurement()
+{
+    fPhysical = 0;
+    fLuminousIntensity = 0;
+    fTransmission = 0;
+}
+
+SceneData::GdtfMeasurement::~GdtfMeasurement()
+{
+}
+
+EGdtfObjectType SceneData::GdtfMeasurement::GetObjectType()
+{
+    return EGdtfObjectType::eGdtfMeasurement;
+}
+
+TXString SceneData::GdtfMeasurement::GetNodeName()
+{
+    return XML_GDTF_MeasurementNodeName;
+}
+
+void SceneData::GdtfMeasurement::OnPrintToFile(IXMLFileNodePtr pNode)
+{
+}
+
+void SceneData::GdtfMeasurement::OnReadFromNode(const IXMLFileNodePtr & pNode)
+{
+}
