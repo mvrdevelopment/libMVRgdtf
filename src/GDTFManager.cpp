@@ -7398,6 +7398,7 @@ SceneData::GdtfMeasurement::GdtfMeasurement()
 
 SceneData::GdtfMeasurement::~GdtfMeasurement()
 {
+    for (GdtfMeasurementPoint* o : fMeasurementPoints) { delete o; };
 }
 
 EGdtfObjectType SceneData::GdtfMeasurement::GetObjectType()
