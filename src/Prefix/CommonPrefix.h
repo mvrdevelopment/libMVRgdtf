@@ -466,11 +466,12 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_MeasurementLuminousIntensity          "LuminousIntensity"
 #define XML_GDTF_MeasurementTransmission               "Transmission"
 #define XML_GDTF_MeasurementInterpolationTo            "InterpolationTo"
-//
-#define XML_GDTF_MeasurementWaveLegth					"WaveLength" // XXX obsolete?
-#define XML_GDTF_MeasurementEnergy						"Energy"     // XXX obsolete?
 //-----------------------------------------------------------------------------
-
+// MeasurementPoint
+#define XML_GDTF_MeasurementPointNode                   "MeasurementPoint"
+// MeasurementPoint Attribs.
+#define XML_GDTF_MeasurementWaveLegth					"WaveLength"
+#define XML_GDTF_MeasurementEnergy						"Energy"    
 //-----------------------------------------------------------------------------
 // InterpolationTo Enum
 #define XML_GDTF_InterpolationTo_Linear  "Linear" 

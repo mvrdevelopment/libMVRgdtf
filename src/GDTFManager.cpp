@@ -4189,7 +4189,7 @@ EGdtfObjectType GdtfMeasurementPoint::GetObjectType()
 
 TXString GdtfMeasurementPoint::GetNodeName()
 {
-	return XML_GDTF_MeasurementNodeName;
+	return XML_GDTF_MeasurementPointNode;
 }
 
 double GdtfMeasurementPoint::GetWavelength()
