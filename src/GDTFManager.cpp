@@ -7326,3 +7326,30 @@ void SceneData::GdtfColorSpace::OnReadFromNode(const IXMLFileNodePtr & pNode)
     GdtfConverter::ConvertColor(XML_GDTF_ColorSpace_Blue	  , pNode, fBlue);
     GdtfConverter::ConvertColor(XML_GDTF_ColorSpace_WhitePoint, pNode, fWhitePoint);      
 }
+
+SceneData::GdtfFilter::GdtfFilter()
+{
+}
+
+SceneData::GdtfFilter::~GdtfFilter()
+{
+}
+
+EGdtfObjectType SceneData::GdtfFilter::GetObjectType()
+{
+    return EGdtfObjectType::eGdtfFilter;
+}
+
+TXString SceneData::GdtfFilter::GetNodeName()
+{
+    return XML_GDTF_FilterNode;
+}
+
+void SceneData::GdtfFilter::OnPrintToFile(IXMLFileNodePtr pNode)
+{
+
+}
+
+void SceneData::GdtfFilter::OnReadFromNode(const IXMLFileNodePtr & pNode)
+{
+}

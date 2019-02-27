@@ -225,7 +225,7 @@ const Sint32 kMVR_MinorVersion = 4;
 
 //-----------------------------------------------------------------------------
 // ColorSpace
-#define XML_GDTF_ColorSpaceNode         "ColorSpace"    
+#define XML_GDTF_ColorSpaceNode         "ColorSpace"
 
 // ColorSpace Atributtes
 #define XML_GDTF_ColorSpace_ColorSpace "ColorSpace"
@@ -233,6 +233,12 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_ColorSpace_Green      "Green"
 #define XML_GDTF_ColorSpace_Blue	   "Blue"
 #define XML_GDTF_ColorSpace_WhitePoint "WhitePoint"
+//-----------------------------------------------------------------------------
+// Filter
+#define XML_GDTF_FilterNode             "Filter"
+// Filter Attribs
+#define XML_GDTF_Filter_Name            "Name"
+#define XML_GDTF_FilterColor            "Color"
 //-----------------------------------------------------------------------------
 
 #define XML_GDTF_WheelNodeName			"Wheel"

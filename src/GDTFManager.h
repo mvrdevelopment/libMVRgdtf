@@ -391,8 +391,32 @@ namespace SceneData
     };
     typedef GdtfColorSpace*	GdtfColorSpacePtr;
     typedef std::vector<GdtfColorSpace*>	TGdtfColorSpaceArray; // XXX check if needed?
-    
+           
+    class GdtfFilter : public GdtfObject
+    {
+    public:
+        GdtfFilter();
+        ~GdtfFilter();
+    private:
+        TXString  fName;
+        CCieColor fColor;
+        TGdtfMeasurementPointArray fMeasurementsArray;
+    public:
+        virtual EGdtfObjectType		GetObjectType();
 
+    public:
+        // Getter        
+        // XXX const TXString&		        GetName() const;
+        // Setter       
+        // XXX void						SetName(const TXString& name);
+    protected:
+        virtual	TXString				GetNodeName();
+        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+    };
+    typedef GdtfFilter*	GdtfFilterPtr;
+    typedef std::vector<GdtfFilter*>	TGdtfFilterArray; // XXX check if needed?
+       
 	class GdtfWheel : public GdtfObject
 	{
 	public:

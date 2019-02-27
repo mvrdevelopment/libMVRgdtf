@@ -96,6 +96,7 @@ namespace VectorworksMVR
             eGdtfDMXPersonality         = 68, 
             eGdtfSoftwareVersionID      = 69,
             eGdtfColorSpace             = 70,
+            eGdtfFilter                 = 71,
 		};
 
         enum class EGdtfParsingError : Sint32
