@@ -7367,9 +7367,9 @@ void SceneData::GdtfFilter::SetColor(CCieColor val)
     fColor = val;
 }
 
-GdtfMeasurementPoint * SceneData::GdtfFilter::CreateMeasurementPoint()
+GdtfMeasurement* SceneData::GdtfFilter::CreateMeasurement()
 {
-    GdtfMeasurementPoint* measurePt = new GdtfMeasurementPoint();
+    GdtfMeasurementPoint* measurePt = new GdtfMeasurement();
     return measurePt;
 }
 

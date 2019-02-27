@@ -413,7 +413,7 @@ namespace SceneData
         // Setter       
         void						    SetName(const TXString& name);
         void                            SetColor(CCieColor val);
-        GdtfMeasurementPoint*           CreateMeasurementPoint();
+        GdtfMeasurement*                CreateMeasurement();
     protected:
         virtual	TXString				GetNodeName();
         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
