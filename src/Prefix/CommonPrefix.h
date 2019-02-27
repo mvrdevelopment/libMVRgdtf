@@ -223,6 +223,8 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_FixtureChildNodePhysicalDesrip		"PhysicalDescriptions"
 #define XML_GDTF_FixtureChildNodeRDM				"FTRDM"
 
+#define XML_GDTF_ColorSpaceNode         "ColorSpace"    
+
 #define XML_GDTF_WheelNodeName			"Wheel"
 #define XML_GDTF_WheelName				"Name"
 
