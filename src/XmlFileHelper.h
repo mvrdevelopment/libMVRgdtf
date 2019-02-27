@@ -106,8 +106,8 @@ namespace SceneData
 		static bool		ConvertSpecialAttrEnum(								const TXString& value, const IXMLFileNodePtr& node,			EGdtfSpecial& special);
 		static bool		ConvertBeamType(									const TXString& value, const IXMLFileNodePtr& node,			EGdtfBeamType& type);
         static bool     ConvertEGdtfColorSampleEnum(						const TXString& inVal, const IXMLFileNodePtr& node,			EGdtfColorSample& outVal);
-        static TXString ConvertEGdtfColorSpace(EGdtfColorSample value);
-        static bool     ConvertEGdtfColorSpace(const TXString & inVal, const IXMLFileNodePtr & node, EGdtfColorSample & outVal);
+        static TXString ConvertEGdtfColorSpace(EGdtfColorSpace value);
+        static bool     ConvertEGdtfColorSpace(const TXString & inVal, const IXMLFileNodePtr & node, EGdtfColorSpace & outVal);
 
 		static bool 	ConvertDmxOffset(const TXString& inVal, const IXMLFileNodePtr& node, DMXAddress& coarse, DMXAddress& fine, DMXAddress& ultra, DMXAddress& uber);
 
