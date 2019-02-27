@@ -775,7 +775,18 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     SetEnergy(double energy) = 0;
     };
 	typedef VCOMPtr<IGdtfMeasurementPoint>	IGdtfMeasurementPointPtr;
-    
+        
+    class DYNAMIC_ATTRIBUTE IGdtfMeasurement : public IVWUnknown
+    {
+    public:
+        virtual MvrString VCOM_CALLTYPE     GetName() = 0;
+
+
+        virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+        virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+    };
+    typedef VCOMPtr<IGdtfMeasurement>	IGdtfMeasurementPtr;
+
     class DYNAMIC_ATTRIBUTE IGdtfPhysicalEmitter : public IVWUnknown
     {
 		public:
