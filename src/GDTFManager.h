@@ -2414,7 +2414,7 @@ protected:
 	class GdtfFixture : public GdtfObject
 	{
 	public:
-		GdtfFixture(IFileIdentifierPtr file);
+		GdtfFixture(IFileIdentifierPtr file, TXString folderName);
 		GdtfFixture();
 		~GdtfFixture();
 		

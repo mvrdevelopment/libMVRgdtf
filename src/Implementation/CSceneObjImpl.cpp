@@ -356,7 +356,9 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetGdtfFixture(IGdtfFix
 		return kVCOMError_FileNotFound;
 	}
 
-	
+	// Get working Folder
+	TXString workingFolderName;
+	gdtfFile->GetFileNameWithoutExtension(workingFolderName);
 	
 	//---------------------------------------------------------------------------
 	// Initialize Object
@@ -370,7 +372,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetGdtfFixture(IGdtfFix
 		CGdtfFixtureImpl* pResultInterface = dynamic_cast<CGdtfFixtureImpl* >(pGdtfFixture);
 		if (pResultInterface)
 		{
-			read = VCOM_SUCCEEDED( pResultInterface->ReadFromFile(gdtfFile) );
+			read = VCOM_SUCCEEDED( pResultInterface->ReadFromFile(gdtfFile, workingFolderName) );
 		}
 		else
 		{

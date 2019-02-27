@@ -4293,7 +4293,7 @@ double GdtfMeasurementPoint::GetEnergy()
 // GdtfFixture
 TGdtfParsingErrorArray* GdtfFixture::__ERROR_CONTAINER_POINTER = nullptr;
 
-GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
+GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile, TXString folderName)
 {
 	fReaded			= false;
 	fHasLinkedGuid	= false;
@@ -4302,8 +4302,10 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 	
 	//-------------------------------------------------------------------------------------------------
 	// Working Directory
+	if(folderName.IsEmpty()){ folderName = "GdtfGroup"; }
+
 	fWorkingFolder = (IID_FolderIdentifier);
-	fWorkingFolder->Set(EFolderSpecifier::kSpotlightFolder, true /*UserFolder*/, "GDTF_Folder");
+	fWorkingFolder->Set(EFolderSpecifier::kSpotlightFolder, true /*UserFolder*/, folderName);
 	
 	//---------------------------------------------------------------------------------------------
 	// Always start with a empty folder
