@@ -11,7 +11,7 @@ VectorworksMVR::CGdtfColorSpaceImpl::CGdtfColorSpaceImpl()
 }
 
 VectorworksMVR::CGdtfColorSpaceImpl::~CGdtfColorSpaceImpl()
-{
+{GdtfConv
 }
 
 VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::GetColorSpace(EGdtfColorSpace outVal)
@@ -24,7 +24,7 @@ VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::GetColorSpace(EGdtf
 	return kVCOMError_NoError;
 }
 
-VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::GetRed(CCieColor outVal)
+VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::GetRed(CieColor& outVal)
 {
 	//Check Pointer
 	if( ! fColorSpace)		return kVCOMError_NotInitialized;    
@@ -34,7 +34,7 @@ VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::GetRed(CCieColor ou
 	return kVCOMError_NoError;
 }
 
-VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::GetGreen(CCieColor outVal)
+VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::GetGreen(CieColor& outVal)
 {
 	//Check Pointer
 	if( ! fColorSpace)		return kVCOMError_NotInitialized;    
@@ -44,7 +44,7 @@ VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::GetGreen(CCieColor 
     return kVCOMError_NoError;
 }
 
-VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::GetBlue(CCieColor outVal)
+VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::GetBlue(CieColor& outVal)
 {
 	//Check Pointer
 	if( ! fColorSpace)		return kVCOMError_NotInitialized;    
@@ -62,7 +62,8 @@ VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::SetColorSpace(EGdtf
     return kVCOMError_NoError;
 }
 
-VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::SetRed(CCieColor val)
+VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::SetRed(C
+    ieColor val)
 {
 	//Check Pointer
 	if( ! fColorSpace)		return kVCOMError_NotInitialized;    
@@ -72,7 +73,7 @@ VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::SetRed(CCieColor va
 	return kVCOMError_NoError;
 }
 
-VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::SetGreen(CCieColor val)
+VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::SetGreen(CieColor& val)
 {
 	//Check Pointer
 	if( ! fColorSpace)		return kVCOMError_NotInitialized;    
@@ -82,7 +83,7 @@ VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::SetGreen(CCieColor 
 	return kVCOMError_NoError;
 }
 
-VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::SetBlue(CCieColor val)
+VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::SetBlue(CieColor& val)
 {
 	//Check Pointer
 	if( ! fColorSpace)		return kVCOMError_NotInitialized;    

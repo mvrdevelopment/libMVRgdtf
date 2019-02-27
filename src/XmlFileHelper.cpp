@@ -1192,6 +1192,22 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 	return false;
 }
 
+CCieColor SceneData::GdtfConverter::ConvertCColor(const CieColor & color)
+{
+    return CCieColor(color.fx, color.fy, color.f_Y);
+}
+
+CieColor SceneData::GdtfConverter::ConvertCColor(const CCieColor & color)
+{
+    CieColor colStruct;
+
+    colStruct.fx   = color.Get_x();
+    colStruct.fy   = color.Get_y();
+    colStruct.f_Y  = color.Get_Y_luminance();
+    
+    return colStruct;
+}
+
 /*static*/ TXString GdtfConverter::ConvertEGdtfColorSampleEnum(EGdtfColorSample value)
 {
     switch (value)

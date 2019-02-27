@@ -108,9 +108,11 @@ namespace SceneData
         static bool     ConvertEGdtfColorSampleEnum(						const TXString& inVal, const IXMLFileNodePtr& node,			EGdtfColorSample& outVal);
         static TXString ConvertEGdtfColorSpace(EGdtfColorSpace value);
         static bool     ConvertEGdtfColorSpace(const TXString & inVal, const IXMLFileNodePtr & node, EGdtfColorSpace & outVal);
-
-		static bool 	ConvertDmxOffset(const TXString& inVal, const IXMLFileNodePtr& node, DMXAddress& coarse, DMXAddress& fine, DMXAddress& ultra, DMXAddress& uber);
-
+		
+        static bool 	ConvertDmxOffset(const TXString& inVal, const IXMLFileNodePtr& node, DMXAddress& coarse, DMXAddress& fine, DMXAddress& ultra, DMXAddress& uber);
+        //-----------------------------------------------------------------------------
+        static CCieColor ConvertCColor (const CieColor& color);
+        static CieColor  ConvertCColor (const CCieColor& color);
 
         static DmxValue GetChannelMaxDmx(const EGdtfChannelBitResolution chanlReso);
 

@@ -16,14 +16,14 @@ namespace VectorworksMVR
 
         // Getter        
         virtual VCOMError VCOM_CALLTYPE GetColorSpace(EGdtfColorSpace outVal);
-        virtual VCOMError VCOM_CALLTYPE	GetRed (CCieColor outVal);
-        virtual VCOMError VCOM_CALLTYPE GetGreen(CCieColor outVal);
-        virtual VCOMError VCOM_CALLTYPE	GetBlue(CCieColor outVal);
+        virtual VCOMError VCOM_CALLTYPE	GetRed (CieColor& outVal);
+        virtual VCOMError VCOM_CALLTYPE GetGreen(CieColor& outVal);
+        virtual VCOMError VCOM_CALLTYPE	GetBlue(CCieColor& outVal);
         // Setter       
         virtual VCOMError VCOM_CALLTYPE SetColorSpace(EGdtfColorSpace val);
-        virtual VCOMError VCOM_CALLTYPE SetRed(CCieColor val);
-        virtual VCOMError VCOM_CALLTYPE SetGreen(CCieColor val);
-        virtual VCOMError VCOM_CALLTYPE SetBlue(CCieColor val);
+        virtual VCOMError VCOM_CALLTYPE SetRed(CieColor& val);
+        virtual VCOMError VCOM_CALLTYPE SetGreen(CieColor& val);
+        virtual VCOMError VCOM_CALLTYPE SetBlue(CieColor& val);
         //
         virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr);
         virtual void*	  VCOM_CALLTYPE     GetBoundObject();
