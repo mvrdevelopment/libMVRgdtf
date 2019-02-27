@@ -1698,7 +1698,7 @@ namespace SceneData
         double fPhysical;
         double fLuminousIntensity;
         double fTransmission;
-        EGdtfInterpolationTo  fInterpolationTo; XXX
+        EGdtfInterpolationTo  fInterpolationTo; 
 
     public:
         virtual EGdtfObjectType			GetObjectType();
