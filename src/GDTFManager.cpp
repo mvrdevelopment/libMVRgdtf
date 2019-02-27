@@ -7268,13 +7268,6 @@ void SceneData::GdtfColorSpace::OnPrintToFile(IXMLFileNodePtr pNode)
     pNode->SetNodeAttributeValue(XML_GDTF_ColorSpace_Green,      GdtfConverter::ConvertColor(fGreen) );
     pNode->SetNodeAttributeValue(XML_GDTF_ColorSpace_Blue,	     GdtfConverter::ConvertColor(fBlue) );
     pNode->SetNodeAttributeValue(XML_GDTF_ColorSpace_WhitePoint, GdtfConverter::ConvertColor(fWhitePoint) );
-
-    //------------------------------------------------------------------------------------
-    // Print the childs
-    for (GdtfFeature* feature : fFeatures)
-    {
-        feature->WriteToNode(pNode);
-    }
 }
 
 void SceneData::GdtfColorSpace::OnReadFromNode(const IXMLFileNodePtr & pNode)
