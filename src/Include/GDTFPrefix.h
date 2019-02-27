@@ -97,6 +97,7 @@ namespace VectorworksMVR
             eGdtfSoftwareVersionID      = 69,
             eGdtfColorSpace             = 70,
             eGdtfFilter                 = 71,
+            eGdtfMeasurement            = 72,
 		};
 
         enum class EGdtfParsingError : Sint32
@@ -583,6 +584,13 @@ namespace VectorworksMVR
             Custom = 1,
             ProPhoto = 2,
             ANSI = 3,
+        };
+
+        enum class EGdtfInterpolationTo
+        {
+            Linear = 0, 
+            Step   = 1, 
+            Log    = 2,
         };
 
 	}
