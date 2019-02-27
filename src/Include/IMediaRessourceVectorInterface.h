@@ -802,13 +802,12 @@ namespace VectorworksMVR
            
     class DYNAMIC_ATTRIBUTE IGdtfFilter : public IVWUnknown
     {
-    public:
-        virtual MvrString VCOM_CALLTYPE     GetName() = 0;
+    public:        
         // Getter
         virtual MvrString VCOM_CALLTYPE     GetName()= 0;
         virtual VCOMError VCOM_CALLTYPE     GetColor(CieColor outVal)= 0;
         // Setter
-        virtual VCOMError VCOM_CALLTYPE     SetName(const TXString& name)= 0;
+        virtual VCOMError VCOM_CALLTYPE     SetName(MvrString name)= 0;
         virtual VCOMError VCOM_CALLTYPE     SetColor(CieColor val)= 0;
         //
         virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetMeasurementCount(size_t& count)= 0;

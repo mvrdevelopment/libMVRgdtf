@@ -36,7 +36,7 @@ VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfFilterImpl::GetColor(CieColor outVa
     return kVCOMError_NoError;
 }
 
-VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfFilterImpl::SetName(const TXString & name)
+VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfFilterImpl::SetName(MvrString name)
 {
     // Check if valid
     if(!fFilter) return kVCOMError_NotInitialized;
