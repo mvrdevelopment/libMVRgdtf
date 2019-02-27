@@ -23,7 +23,7 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetMeasurementCount(size_t& count);
         virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateMeasurement(VectorworksMVR::IGdtfMeasurement** outVal);
         virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetMeasurementAt(size_t at, VectorworksMVR::IGdtfMeasurement** value);
-
+        //
 
         virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr);
         virtual void*	  VCOM_CALLTYPE     GetBoundObject();

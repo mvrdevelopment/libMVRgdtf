@@ -804,7 +804,17 @@ namespace VectorworksMVR
     {
     public:
         virtual MvrString VCOM_CALLTYPE     GetName() = 0;
-
+        // Getter
+        virtual MvrString VCOM_CALLTYPE     GetName()= 0;
+        virtual VCOMError VCOM_CALLTYPE     GetColor(CieColor outVal)= 0;
+        // Setter
+        virtual VCOMError VCOM_CALLTYPE     SetName(const TXString& name)= 0;
+        virtual VCOMError VCOM_CALLTYPE     SetColor(CieColor val)= 0;
+        //
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetMeasurementCount(size_t& count)= 0;
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateMeasurement(VectorworksMVR::IGdtfMeasurement** outVal)= 0;
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetMeasurementAt(size_t at, VectorworksMVR::IGdtfMeasurement** value)= 0;
+        //
         virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
         virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
     };
