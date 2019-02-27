@@ -1410,7 +1410,16 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
        
     return true;
 }
- 
+
+/*static*/ TXString GdtfConverter::ConvertEGdtfColorSpace(EGdtfColorSample value)
+{
+
+}
+
+/*static*/ bool GdtfConverter::ConvertEGdtfColorSpace(const TXString& inVal, const IXMLFileNodePtr& node, EGdtfColorSample& outVal)
+{
+
+}
 
 bool SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, const IFileIdentifierPtr& file, ERessourceType resType, bool deleteFile, bool mustExist)
 {
