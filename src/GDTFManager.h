@@ -406,11 +406,14 @@ namespace SceneData
     public:
         virtual EGdtfObjectType		GetObjectType();
 
-    public:
-        // Getter   TODO: XXX     
-        // XXX const TXString&		    GetName() const;
+    public:            
+        const TXString&		            GetName();
+        CCieColor                       GetColor();
+        const TGdtfMeasurementArray&    GetMeasurementsArray();
         // Setter       
-        // XXX void						SetName(const TXString& name);
+        void						    SetName(const TXString& name);
+        void                            SetColor(CCieColor val);
+        GdtfMeasurementPoint*           CreateMeasurementPoint();
     protected:
         virtual	TXString				GetNodeName();
         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);

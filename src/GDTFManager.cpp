@@ -7342,6 +7342,37 @@ EGdtfObjectType SceneData::GdtfFilter::GetObjectType()
     return EGdtfObjectType::eGdtfFilter;
 }
 
+const TXString & SceneData::GdtfFilter::GetName()
+{
+    return fName;
+}
+
+CCieColor SceneData::GdtfFilter::GetColor()
+{
+    return fColor;
+}
+
+const TGdtfMeasurementArray & SceneData::GdtfFilter::GetMeasurementsArray()
+{
+    return fMeasurementsArray;
+}
+
+void SceneData::GdtfFilter::SetName(const TXString & name)
+{
+    fName = name;
+}
+
+void SceneData::GdtfFilter::SetColor(CCieColor val)
+{
+    fColor = val;
+}
+
+GdtfMeasurementPoint * SceneData::GdtfFilter::CreateMeasurementPoint()
+{
+    GdtfMeasurementPoint* measurePt = new GdtfMeasurementPoint();
+    return measurePt;
+}
+
 TXString SceneData::GdtfFilter::GetNodeName()
 {
     return XML_GDTF_FilterNode;
