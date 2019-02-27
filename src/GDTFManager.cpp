@@ -2433,7 +2433,7 @@ void SceneData::GdtfDmxChannel::SetDmxUber(Sint32 uber)
 {
 	ASSERTN(kEveryone, fCoarse > 0);
 	ASSERTN(kEveryone, fFine > 0);
-	ASSERTN(kEveryone, fUber > 0);
+	ASSERTN(kEveryone, fUltra > 0);
 	fUber = uber;
 }
 
