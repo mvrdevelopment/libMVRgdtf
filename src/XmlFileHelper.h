@@ -63,7 +63,7 @@ namespace SceneData
         static TXString	ConvertDmxBreak(Sint32 value);
 		static TXString	ConvertInteger(size_t value);
 		static TXString	ConvertInteger(Sint32 value, bool noneValue);
-        static TXString	ConvertIntegerArray (TSint32Array& values);
+        static TXString	ConvertIntegerArray (TSint32Array& values, bool includeBrackets);
 		static TXString	ConvertDMXAdress(DMXAddress value);
 		static TXString	ConvertDMXValue(DmxValue value, EGdtfChannelBitResolution chanlReso, bool noneValue=false);		
 		static TXString	ConvertPrimitiveType(EGdtfModel_PrimitiveType value);

@@ -301,14 +301,13 @@ TXString SceneData::GdtfConverter::ConvertDMXValue(DmxValue value, EGdtfChannelB
 	return valueStr;
 }
 
-TXString SceneData::GdtfConverter::ConvertIntegerArray(TSint32Array & values)
+TXString SceneData::GdtfConverter::ConvertIntegerArray(TSint32Array & values, bool includeBrackets)
 /* Takes an Int-Array and returns it as string in the format: "{Int, Int, ... Int}" */
 {   
     TXString arrayStr;
     
-    // Begin the array Str
-    arrayStr = "{";
-
+	if(includeBrackets) { arrayStr += "{"; }
+    
     // Add the Values
     for (size_t idx = 0; idx < values.size(); idx++)
     {        
@@ -323,7 +322,7 @@ TXString SceneData::GdtfConverter::ConvertIntegerArray(TSint32Array & values)
     }    
 
     // CLose the Array Str
-    arrayStr += "}";
+	if(includeBrackets) { arrayStr += "}"; }
 
     return arrayStr;
 }
@@ -1166,7 +1165,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 	if(c && ultra  > 0) { array.push_back(ultra);  } else { c = false; }
 	if(c && uber   > 0) { array.push_back(uber);   } else { c = false; }
 	
-	return ConvertIntegerArray(array);
+	return ConvertIntegerArray(array, false);
 }
 
 /*static*/ bool GdtfConverter::ConvertDmxOffset(const TXString& inVal, const IXMLFileNodePtr& node, DMXAddress& coarse, DMXAddress& fine, DMXAddress& ultra, DMXAddress& uber)
