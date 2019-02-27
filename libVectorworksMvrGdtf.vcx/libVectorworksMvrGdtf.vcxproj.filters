@@ -261,6 +261,9 @@
     <ClCompile Include="..\src\Implementation\CGdtfColorSpace.cpp">
       <Filter>src\Implementation</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Implementation\CGdtfMeasurement.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\XMLLib\ErrorHandler.h">
@@ -552,6 +555,9 @@
       <Filter>src\Utility</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Implementation\CGdtfColorSpace.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Implementation\CGdtfMeasurement.h">
       <Filter>src\Implementation</Filter>
     </ClInclude>
   </ItemGroup>

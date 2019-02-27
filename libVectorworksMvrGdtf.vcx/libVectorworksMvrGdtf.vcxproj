@@ -68,6 +68,7 @@
     <ClCompile Include="..\src\Implementation\CGdtfMacroVisual.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfMacroVisualStep.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfMacroVisualValue.cpp" />
+    <ClCompile Include="..\src\Implementation\CGdtfMeasurement.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfMeasurementPoint.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfModel.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfPhysicalEmitter.cpp" />
@@ -152,6 +153,7 @@
     <ClInclude Include="..\src\Implementation\CGdtfMacroVisual.h" />
     <ClInclude Include="..\src\Implementation\CGdtfMacroVisualStep.h" />
     <ClInclude Include="..\src\Implementation\CGdtfMacroVisualValue.h" />
+    <ClInclude Include="..\src\Implementation\CGdtfMeasurement.h" />
     <ClInclude Include="..\src\Implementation\CGdtfMeasurementPoint.h" />
     <ClInclude Include="..\src\Implementation\CGdtfModel.h" />
     <ClInclude Include="..\src\Implementation\CGdtfPhysicalEmitter.h" />
