@@ -462,6 +462,13 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_MeasurementWaveLegth					"WaveLength"
 #define XML_GDTF_MeasurementEnergy						"Energy"
 
+//-----------------------------------------------------------------------------
+// InterpolationTo Enum
+#define XML_GDTF_InterpolAtionTo_Linear  "Linear" 
+#define XML_GDTF_InterpolAtionTo_Step    "Step"
+#define XML_GDTF_InterpolAtionTo_Log     "Log" 
+
+//-----------------------------------------------------------------------------
 #define XML_GDTF_ColorRenderingIndexCollect             "CRIs"
 #define XML_GDTF_ColorRenderingIndexGroup               "CRIGroup"
 #define XML_GDTF_ColorRenderingIndexGrou_AttrColorTemp  "ColorTemperature"
