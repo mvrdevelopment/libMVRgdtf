@@ -45,6 +45,7 @@
     <ClCompile Include="..\src\Implementation\CGdtfActivationGroup.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfAttribute.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfBreak.cpp" />
+    <ClCompile Include="..\src\Implementation\CGdtfColorSpace.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfCRI.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfCRIGroup.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfDmxChannel.cpp" />
@@ -128,6 +129,7 @@
     <ClInclude Include="..\src\Implementation\CGdtfActivationGroup.h" />
     <ClInclude Include="..\src\Implementation\CGdtfAttribute.h" />
     <ClInclude Include="..\src\Implementation\CGdtfBreak.h" />
+    <ClInclude Include="..\src\Implementation\CGdtfColorSpace.h" />
     <ClInclude Include="..\src\Implementation\CGdtfCRI.h" />
     <ClInclude Include="..\src\Implementation\CGdtfCRIGroup.h" />
     <ClInclude Include="..\src\Implementation\CGdtfDmxChannel.h" />
