@@ -793,6 +793,17 @@ namespace VectorworksMVR
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
     };
     typedef VCOMPtr<IGdtfPhysicalEmitter>	IGdtfPhysicalEmitterPtr;
+        
+    class DYNAMIC_ATTRIBUTE IGdtfColorSpace : public IVWUnknown
+    {
+    public:
+        virtual MvrString VCOM_CALLTYPE     GetName() = 0;
+
+
+        virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+        virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+    };
+    typedef VCOMPtr<IGdtfColorSpace>	IGdtfColorSpacePtr;
 
     class DYNAMIC_ATTRIBUTE IGdtfCRI : public IVWUnknown
     {
