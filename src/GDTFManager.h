@@ -18,7 +18,7 @@ typedef Sint32				StatusID;
 namespace SceneData
 {
 	// Forward declarations
-	class GdtfPhysicalEmitter;
+	class GdtfPhysicalEmitter; typedef std::vector<GdtfPhysicalEmitter*>	TGdtfPhysicalEmitterArray;
 	class GdtfFeatureGroup;
 	class GdtfAttribute;
 	class GdtfWheel;	
@@ -39,7 +39,10 @@ namespace SceneData
     class GdtfSoftwareVersionID;
     typedef std::vector<GdtfSoftwareVersionID*>	TGdtfSoftwareVersionIDArray;
     typedef GdtfSoftwareVersionID*	GdtfSoftwareVersionIDPtr;
-    //-----------------------------------------------------------------------------
+    
+    class GdtfDMXProfile; typedef std::vector<GdtfDMXProfile*>	TGdtfDMXProfileArray;
+    class Gdtf_CRIGroup;  typedef std::vector<GdtfCRIGroup*>	TGdtf_CRIGroupArray;
+    
 	//------------------------------------------------------------------------------------
 	// Attributes	
 	
@@ -1722,7 +1725,6 @@ namespace SceneData
 
 	};
 	typedef GdtfPhysicalEmitter*				GdtfPhysicalEmitterPtr;
-	typedef std::vector<GdtfPhysicalEmitter*>	TGdtfPhysicalEmitterArray;
 	
     class GdtfCRI : public GdtfObject
     {
@@ -1782,7 +1784,6 @@ namespace SceneData
         virtual void                    OnErrorCheck(const IXMLFileNodePtr& pNode);
     };
     typedef GdtfCRIGroup*	GdtfCRIGroupPtr;
-    typedef std::vector<GdtfCRIGroup*>	TGdtf_CRIGroupArray;
 
 	class GdtfDMXProfile : public GdtfObject
      {
@@ -1805,9 +1806,7 @@ namespace SceneData
          virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
      };
      typedef GdtfDMXProfile*	GdtfDMXProfilePtr;
-     typedef std::vector<GdtfDMXProfile*>	TGdtfDMXProfileArray;
 	
-
 	//------------------------------------------------------------------------------------
 	// GdtfFixture Definition
 	class GdtfFixture : public GdtfObject
