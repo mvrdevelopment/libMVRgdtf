@@ -1,7 +1,12 @@
-#include "CGdtfColorSpace.h"
 //-----------------------------------------------------------------------------
 //----- Copyright deersoft 2015 - 2017 www.deersoft.de
 //-----------------------------------------------------------------------------
+
+#include "Prefix/StdAfx.h"
+#include "CGdtfColorSpace.h"
+#include "XmlFileHelper.h"
+
+
 
 using namespace VectorworksMVR;
 
@@ -11,7 +16,7 @@ VectorworksMVR::CGdtfColorSpaceImpl::CGdtfColorSpaceImpl()
 }
 
 VectorworksMVR::CGdtfColorSpaceImpl::~CGdtfColorSpaceImpl()
-{GdtfConv
+{   
 }
 
 VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::GetColorSpace(EGdtfColorSpace outVal)
@@ -29,7 +34,7 @@ VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::GetRed(CieColor& ou
 	//Check Pointer
 	if( ! fColorSpace)		return kVCOMError_NotInitialized;    
 
-    outVal = fColorSpace->GetRed();
+    outVal = SceneData::GdtfConverter::ConvertCColor (fColorSpace->GetRed() );
 
 	return kVCOMError_NoError;
 }
@@ -39,7 +44,7 @@ VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::GetGreen(CieColor& 
 	//Check Pointer
 	if( ! fColorSpace)		return kVCOMError_NotInitialized;    
 
-    outVal = fColorSpace->GetGreen();
+    outVal = SceneData::GdtfConverter::ConvertCColor (fColorSpace->GetGreen() );
 
     return kVCOMError_NoError;
 }
@@ -49,7 +54,7 @@ VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::GetBlue(CieColor& o
 	//Check Pointer
 	if( ! fColorSpace)		return kVCOMError_NotInitialized;    
 
-    outVal = fColorSpace->GetBlue();
+    outVal = SceneData::GdtfConverter::ConvertCColor( fColorSpace->GetBlue() );
 
     return kVCOMError_NoError;
 }
@@ -62,13 +67,12 @@ VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::SetColorSpace(EGdtf
     return kVCOMError_NoError;
 }
 
-VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::SetRed(C
-    ieColor val)
+VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::SetRed(CieColor& val)
 {
 	//Check Pointer
 	if( ! fColorSpace)		return kVCOMError_NotInitialized;    
 
-    fColorSpace->SetRed(val);
+    fColorSpace->SetRed( SceneData::GdtfConverter::ConvertCColor (val) );
 
 	return kVCOMError_NoError;
 }
@@ -78,7 +82,7 @@ VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::SetGreen(CieColor& 
 	//Check Pointer
 	if( ! fColorSpace)		return kVCOMError_NotInitialized;    
 
-    fColorSpace->SetGreen(val);
+    fColorSpace->SetGreen( SceneData::GdtfConverter::ConvertCColor(val) );
 
 	return kVCOMError_NoError;
 }
@@ -88,7 +92,7 @@ VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::SetBlue(CieColor& v
 	//Check Pointer
 	if( ! fColorSpace)		return kVCOMError_NotInitialized;    
 
-    fColorSpace->SetBlue(val);
+    fColorSpace->SetBlue( SceneData::GdtfConverter::ConvertCColor(val) );
 
 	return kVCOMError_NoError;
 }

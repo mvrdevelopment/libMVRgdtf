@@ -18,7 +18,7 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE GetColorSpace(EGdtfColorSpace outVal);
         virtual VCOMError VCOM_CALLTYPE	GetRed (CieColor& outVal);
         virtual VCOMError VCOM_CALLTYPE GetGreen(CieColor& outVal);
-        virtual VCOMError VCOM_CALLTYPE	GetBlue(CCieColor& outVal);
+        virtual VCOMError VCOM_CALLTYPE	GetBlue(CieColor& outVal);
         // Setter       
         virtual VCOMError VCOM_CALLTYPE SetColorSpace(EGdtfColorSpace val);
         virtual VCOMError VCOM_CALLTYPE SetRed(CieColor& val);
