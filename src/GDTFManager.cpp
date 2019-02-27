@@ -7247,7 +7247,7 @@ SceneData::GdtfColorSpace::~GdtfColorSpace()
 
 EGdtfObjectType SceneData::GdtfColorSpace::GetObjectType()
 {
-    return EGdtfObjectType();
+    return EGdtfObjectType::eGdtfColorSpace;
 }
 
 TXString SceneData::GdtfColorSpace::GetNodeName()
