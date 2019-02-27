@@ -1418,7 +1418,16 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 
 /*static*/ bool GdtfConverter::ConvertEGdtfColorSpace(const TXString& inVal, const IXMLFileNodePtr& node, EGdtfColorSample& outVal)
 {
+     if        (inVal ==  XML_GDTF_ColorSpaceEnum_sRGB)     { outVal = EGdtfColorSpace::sRGB; }     
+     else if   (inVal == XML_GDTF_ColorSpaceEnum_Custom)    { outVal = EGdtfColorSpace::Custom; }
+     else if   (inVal == XML_GDTF_ColorSpaceEnum_ProPhoto)  { outVal = EGdtfColorSpace::ProPhoto; }
+     else if   (inVal == XML_GDTF_ColorSpaceEnumr_ANSI)     { outVal = EGdtfColorSpace::ANSI;  }
 
+    DSTOP((kEveryone, "Unknown Value for EGdtfColorSpace"));
+    GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertColorSample, node);
+    SceneData::GdtfFixture::AddError(error);
+       
+    return true;
 }
 
 bool SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, const IFileIdentifierPtr& file, ERessourceType resType, bool deleteFile, bool mustExist)
