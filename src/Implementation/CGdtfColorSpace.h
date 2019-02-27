@@ -8,13 +8,23 @@
 
 namespace VectorworksMVR
 {
-    class CGdtfColorSpaceImpl : public VectorworksMVR::VCOMImpl<IGdtfColorSpace>
+    class CGdtfColorSpaceImpl : public VCOMImpl<IGdtfColorSpace>
     {
     public:
         CGdtfColorSpaceImpl();
         virtual ~CGdtfColorSpaceImpl();
 
-
+        // Getter        
+        virtual VCOMError VCOM_CALLTYPE GetColorSpace(EGdtfColorSpace outVal);
+        virtual VCOMError VCOM_CALLTYPE	GetRed (CCieColor outVal);
+        virtual VCOMError VCOM_CALLTYPE GetGreen(CCieColor outVal);
+        virtual VCOMError VCOM_CALLTYPE	GetBlue(CCieColor outVal);
+        // Setter       
+        virtual VCOMError VCOM_CALLTYPE SetColorSpace(EGdtfColorSpace val);
+        virtual VCOMError VCOM_CALLTYPE SetRed(CCieColor val);
+        virtual VCOMError VCOM_CALLTYPE SetGreen(CCieColor val);
+        virtual VCOMError VCOM_CALLTYPE SetBlue(CCieColor val);
+        //
         virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr);
         virtual void*	  VCOM_CALLTYPE     GetBoundObject();
 
@@ -22,11 +32,11 @@ namespace VectorworksMVR
         SceneData::GdtfColorSpace* fColorSpace;
 
     public:
-        void					SetPointer(SceneData::GdtfColorSpace* ColorSpace);
+        void					    SetPointer(SceneData::GdtfColorSpace* ColorSpace);
         SceneData::GdtfColorSpace*	GetPointer();
 
     };
 
-    // const VWIID IID_GdtfColorSpace = { 0x09787bcb, 0x4526, 0x4e09,{ 0xb7, 0xca, 0x0b, 0xd2, 0x70, 0x6c, 0xb5, 0xfd } }; 
+    const VWIID IID_GdtfColorSpace = { 0x70988cb4, 0x1e9e, 0x4aa6, {0x8f, 0x35, 0x74, 0xd2, 0x0a, 0xef, 0xfe, 0x6c}};
 }
 
