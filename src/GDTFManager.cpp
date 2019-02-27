@@ -7207,3 +7207,25 @@ void SceneData::GdtfSoftwareVersionID::OnReadFromNode(const IXMLFileNodePtr & pN
         return;
     });
 }
+
+SceneData::GdtfPhysicalDescriptions::GdtfPhysicalDescriptions()
+{
+}
+
+SceneData::GdtfPhysicalDescriptions::~GdtfPhysicalDescriptions()
+{
+}
+
+TXString SceneData::GdtfPhysicalDescriptions::GetNodeName()
+{
+    return XML_GDTF_FixtureChildNodePhysicalDesrip;
+}
+
+void SceneData::GdtfPhysicalDescriptions::OnPrintToFile(IXMLFileNodePtr pNode)
+{
+}
+
+void SceneData::GdtfPhysicalDescriptions::OnReadFromNode(const IXMLFileNodePtr & pNode)
+{
+}
+

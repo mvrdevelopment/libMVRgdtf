@@ -327,6 +327,34 @@ namespace SceneData
 	typedef GdtfWheelSlot*					GdtfWheelSlotPtr;
 	typedef std::vector<GdtfWheelSlotPtr>	TGdtfWheelSlotArray;
 	
+    class GdtfPhysicalDescriptions : public GdtfObject
+    {
+    public:
+        GdtfPhysicalDescriptions();
+        ~GdtfPhysicalDescriptions();
+    private:
+        //TGdtfPhysicalEmitterArray fEmitters;
+        //fFilters;
+        //ColorSpace 	0 or 1 	Describes device color space
+        //DMXProfiles 	0 or 1 	Describes nonlinear correlation between DMX input and physical output of a channel.
+        //CRIs 	0 or 1 	Describes color rendering with IES TM-30-15 (99 color samples). 
+
+    public:
+        virtual EGdtfObjectType			GetObjectType();
+
+    public:
+        // Getter        
+        // XXX const TXString&		        GetName() const;
+        // Setter       
+        // XXX void						SetName(const TXString& name);
+    protected:
+        virtual	TXString				GetNodeName();
+        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+    };
+    typedef GdtfPhysicalDescriptions*	GdtfPhysicalDescriptionsPtr;
+
+
 	class GdtfWheel : public GdtfObject
 	{
 	public:
