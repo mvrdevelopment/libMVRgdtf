@@ -4944,6 +4944,7 @@ void GdtfFixture::OnPrintToFile(IXMLFileNodePtr pNode)
 	// Print node attributes
 	pNode->SetNodeAttributeValue(XML_GDTF_FixtureName,			fName);
 	pNode->SetNodeAttributeValue(XML_GDTF_FixtureShortName,		fShortName);
+	pNode->SetNodeAttributeValue(XML_GDTF_FixtureLongName,		fLongName);
 	pNode->SetNodeAttributeValue(XML_GDTF_FixtureManufacturer,	fManufacturer);
 	pNode->SetNodeAttributeValue(XML_GDTF_FixtureDescription,	fFixtureTypeDescription);
 	pNode->SetNodeAttributeValue(XML_GDTF_FixtureTypeID,		GdtfConverter::ConvertUUID(fGuid));
@@ -5125,6 +5126,7 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 {
 	pNode->GetNodeAttributeValue(XML_GDTF_FixtureName,						fName);
 	pNode->GetNodeAttributeValue(XML_GDTF_FixtureShortName,					fShortName);
+	pNode->GetNodeAttributeValue(XML_GDTF_FixtureLongName,					fLongName);
 	pNode->GetNodeAttributeValue(XML_GDTF_FixtureManufacturer,				fManufacturer);
 	pNode->GetNodeAttributeValue(XML_GDTF_FixtureDescription,				fFixtureTypeDescription);
 	TXString uuid; pNode->GetNodeAttributeValue(XML_GDTF_FixtureTypeID,		uuid );	GdtfConverter::ConvertUUID(uuid, pNode, fGuid);
@@ -5354,6 +5356,7 @@ void GdtfFixture::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	TXStringArray optional;
 	needed.push_back(XML_GDTF_FixtureName);
 	needed.push_back(XML_GDTF_FixtureShortName);
+	needed.push_back(XML_GDTF_FixtureLongName);
 	needed.push_back(XML_GDTF_FixtureManufacturer);
 	needed.push_back(XML_GDTF_FixtureDescription);
 	needed.push_back(XML_GDTF_FixtureTypeID);
@@ -5687,6 +5690,11 @@ const TXString& GdtfFixture::GetShortName() const
     return fShortName;
 }
 
+const TXString& GdtfFixture::GetLongName() const
+{
+    return fLongName;
+}
+
 const TXString& GdtfFixture::GetManufacturer() const
 {
     return fManufacturer;
@@ -5760,6 +5768,11 @@ void GdtfFixture::SetName(const TXString& name)
 void GdtfFixture::SetShortName(const TXString& shortName)
 {
 	fShortName = shortName;
+}
+
+void GdtfFixture::SetLongName(const TXString& longName)
+{
+	fLongName = longName;
 }
 
 void GdtfFixture::SetManufacturer(const TXString& manu)

@@ -1761,6 +1761,7 @@ namespace SceneData
 		// Parameters for a GdtfFixture
 		TXString		fName;
 		TXString		fShortName;
+		TXString		fLongName;
 		TXString		fManufacturer;
 		TXString		fFixtureTypeDescription;
 		GdtfFixtureGUID	fGuid;
@@ -1816,6 +1817,7 @@ private:
 		// Getter
 		const TXString&		GetName() const;
         const TXString&		GetShortName() const;
+		const TXString&		GetLongName() const;
         const TXString&		GetManufacturer() const;
         const TXString&		GetFixtureTypeDescription() const;
         GdtfFixtureGUID		GetGuid() const;
@@ -1827,6 +1829,7 @@ private:
         // Setter
 		void				SetName(const TXString& name);
 		void				SetShortName(const TXString& shortName);
+		void				SetLongName(const TXString& longName);
 		void				SetManufacturer(const TXString& manu);
 		void				SetFixtureTypeDescription(const TXString& desc);
 		void				SetGuid(const VWFC::Tools::VWUUID& uuid);

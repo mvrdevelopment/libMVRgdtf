@@ -23,6 +23,7 @@ namespace VectorworksMVR
 		
         virtual MvrString VCOM_CALLTYPE		GetName();
         virtual MvrString VCOM_CALLTYPE		GetShortName();
+		virtual MvrString VCOM_CALLTYPE		GetLongName();
         virtual MvrString VCOM_CALLTYPE     GetManufacturer();
         virtual MvrString VCOM_CALLTYPE     GetFixtureTypeDescription();
         virtual VCOMError VCOM_CALLTYPE     GetFixtureGUID(MvrUUID& uuid);
@@ -37,6 +38,7 @@ namespace VectorworksMVR
 		
 		virtual VCOMError VCOM_CALLTYPE     SetFixtureTypeDescription(MvrString descrip);
 		virtual VCOMError VCOM_CALLTYPE		SetShortName(MvrString shortName);
+		virtual VCOMError VCOM_CALLTYPE		SetLongName(MvrString longname);
 		virtual VCOMError VCOM_CALLTYPE     SetFixtureThumbnail(MvrString thubnail);
 		virtual VCOMError VCOM_CALLTYPE		SetLinkedFixtureGUID(const MvrUUID& uuid);
 		

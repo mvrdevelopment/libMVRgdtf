@@ -48,6 +48,7 @@ void GdtfUnittest::WriteFile()
     {
 		__checkVCOM(gdtfWrite->SetFixtureTypeDescription("My Description"));
 		__checkVCOM(gdtfWrite->SetShortName("My shortName"));
+		__checkVCOM(gdtfWrite->SetLongName("My Long Long Name"));
 		__checkVCOM(gdtfWrite->SetFixtureThumbnail("MyThumbnail"));
 		__checkVCOM(gdtfWrite->SetLinkedFixtureGUID(linkedUuid));
 
@@ -299,13 +300,16 @@ void GdtfUnittest::ReadFile()
 
 		// Check Fixture Name
 		MvrString fixtureName		= gdtfRead->GetName();
+		MvrString fixtureLongName	= gdtfRead->GetLongName();
 		MvrString fixtureShortName	= gdtfRead->GetShortName();
 		MvrString manufacturer		= gdtfRead->GetManufacturer();
 		MvrString description		= gdtfRead->GetFixtureTypeDescription();
+
 		this->checkifEqual("GetName "					, fixtureName		, "My FixtureName");
 		this->checkifEqual("GetShortName "				, fixtureShortName	, "My shortName");
 		this->checkifEqual("GetManufacturer "			, manufacturer		, "My Manufacturer");
 		this->checkifEqual("GetFixtureTypeDescription "	, description		, "My Description");
+		this->checkifEqual("GetLongName "	, fixtureLongName		, "My Long Long Name");
 
 		__checkVCOM(gdtfRead->GetFixtureGUID(resultUUID));
 		this->checkifEqual("GetFixtureGUID fixtureUUID ", fixtureUUID, resultUUID);

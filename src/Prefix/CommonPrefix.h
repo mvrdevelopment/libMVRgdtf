@@ -141,6 +141,7 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_FixtureNodeName		"FixtureType"
 #define XML_GDTF_FixtureName			"Name"
 #define XML_GDTF_FixtureShortName		"ShortName"
+#define XML_GDTF_FixtureLongName		"LongName"
 #define XML_GDTF_FixtureManufacturer	"Manufacturer"
 #define XML_GDTF_FixtureDescription		"Description"
 #define XML_GDTF_FixtureTypeID			"FixtureTypeID"

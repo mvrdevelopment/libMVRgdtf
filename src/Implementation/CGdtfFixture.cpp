@@ -155,6 +155,13 @@ MvrString VectorworksMVR::CGdtfFixtureImpl::GetShortName()
     return fFixtureObject->GetShortName().GetCharPtr();
 }
 
+MvrString VectorworksMVR::CGdtfFixtureImpl::GetLongName()
+{
+    if(!fFixtureObject) {return "";}
+	
+    return fFixtureObject->GetLongName().GetCharPtr();
+}
+
 MvrString VectorworksMVR::CGdtfFixtureImpl::GetManufacturer()
 {
     if(!fFixtureObject) {return "";}
@@ -244,6 +251,16 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::SetShortName(MvrStri
 	
 	TXString vwName (shortName);
 	fFixtureObject->SetShortName(vwName);
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::SetLongName(MvrString longname)
+{
+	if(!fFixtureObject) {return kVCOMError_NotInitialized;}
+	
+	TXString vwName (longname);
+	fFixtureObject->SetLongName(vwName);
 	
 	return kVCOMError_NoError;
 }
