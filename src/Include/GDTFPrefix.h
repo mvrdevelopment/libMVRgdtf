@@ -574,6 +574,15 @@ namespace VectorworksMVR
             CES_98,
             CES_99,
         };
+
+        enum class EGdtfColorSpace
+        {
+            sRGB = 0,
+            Custom = 1,
+            ProPhoto = 2,
+            ANSI = 3,
+        };
+
 	}
 }
 
