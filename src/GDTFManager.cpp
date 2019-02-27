@@ -7347,9 +7347,43 @@ TXString SceneData::GdtfFilter::GetNodeName()
 
 void SceneData::GdtfFilter::OnPrintToFile(IXMLFileNodePtr pNode)
 {
+    //------------------------------------------------------------------------------------
+    // Call the parent
+    GdtfObject::OnPrintToFile(pNode);
 
+    //------------------------------------------------------------------------------------
+    // Print the attributes
+    pNode->SetNodeAttributeValue(XML_GDTF_Filter_Name, fName);
+    pNode->SetNodeAttributeValue(XML_GDTF_FilterColor, GdtfConverter::ConvertColor(fColor));
+
+    //------------------------------------------------------------------------------------
+    // Print the childs
+    for (GdtfMeasurement* mes : fMeasurementsArray)
+    {
+        // mes->WriteToNode(pNode); // TODO XXX implement
+    }
 }
 
 void SceneData::GdtfFilter::OnReadFromNode(const IXMLFileNodePtr & pNode)
 {
+    //------------------------------------------------------------------------------------
+    // Call the parent
+    GdtfObject::OnReadFromNode(pNode);
+
+    //------------------------------------------------------------------------------------
+    // Get the attributes	
+    pNode->GetNodeAttributeValue(XML_GDTF_Filter_Name, fName);
+    GdtfConverter::ConvertColor(XML_GDTF_FilterColor, pNode, fColor);
+    
+    // XXX TODO: measurements
+    //// Read the childs
+    //GdtfConverter::TraverseNodes(pNode, "", XML_GDTFFilter, [this](IXMLFileNodePtr objNode) -> void
+    //{
+    //    GdtfFeaturePtr featureXXX = new GdtfFeature(this);
+
+    //    featureXXX->ReadFromNode(objNode);
+
+    //    fFeaturesXXX.push_back(featureXXX);
+    //    return;
+    //});
 }

@@ -399,9 +399,9 @@ namespace SceneData
         GdtfFilter();
         ~GdtfFilter();
     private:
-        TXString  fName;
-        CCieColor fColor;
-        TGdtfMeasurementPointArray fMeasurementsArray;
+        TXString              fName;
+        CCieColor             fColor;
+        TGdtfMeasurementArray fMeasurementsArray;
     public:
         virtual EGdtfObjectType		GetObjectType();
 
