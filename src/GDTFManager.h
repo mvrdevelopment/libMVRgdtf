@@ -400,11 +400,11 @@ namespace SceneData
         GdtfFilter();
         ~GdtfFilter();
     private:
-        TXString                    fName;
-        CCieColor                   fColor;
-        TGdtfMeasurementArray       fMeasurementsArray;
+        TXString                        fName;
+        CCieColor                       fColor;
+        TGdtfMeasurementArray           fMeasurementsArray;
     public:
-        virtual EGdtfObjectType		GetObjectType();
+        virtual EGdtfObjectType		    GetObjectType();
 
     public:            
         const TXString&		            GetName();

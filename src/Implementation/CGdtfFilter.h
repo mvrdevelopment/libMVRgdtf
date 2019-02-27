@@ -13,6 +13,13 @@ namespace VectorworksMVR
         CGdtfFilterImpl();
         virtual ~CGdtfFilterImpl();
 
+        // Getter
+        virtual MvrString VCOM_CALLTYPE     GetName();
+        virtual VCOMError VCOM_CALLTYPE     GetColor(CieColor outVal);
+        // Setter
+        virtual VCOMError VCOM_CALLTYPE     SetName(const TXString& name);
+        virtual VCOMError VCOM_CALLTYPE     SetColor(CieColor val);
+
 
         virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr);
         virtual void*	  VCOM_CALLTYPE     GetBoundObject();
