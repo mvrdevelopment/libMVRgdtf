@@ -554,3 +554,13 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_ColorSample_97 "CES97"
 #define XML_GDTF_ColorSample_98 "CES98"
 #define XML_GDTF_ColorSample_99 "CES99"
+
+//-----------------------------------------------------------------------------
+// ColorSpace Enum Vals
+#define XML_GDTF_ColorSpaceEnum "ColorSpace"
+
+#define XML_GDTF_ColorSpaceEnum_Custom    "Custom"
+#define XML_GDTF_ColorSpaceEnum_sRGB      "sRGB" 
+#define XML_GDTF_ColorSpaceEnum_ProPhoto  "ProPhoto"     
+#define XML_GDTF_ColorSpaceEnumr_ANSI      "ANSI"   
+//-----------------------------------------------------------------------------
