@@ -79,7 +79,7 @@ namespace SceneData
         static TXString ConvertEGdtfColorSampleEnum(EGdtfColorSample value);
 		static TXString ConvertDmxOffset(DMXAddress coarse, DMXAddress fine, DMXAddress ultra, DMXAddress uber);
         static TXString ConvertEGdtfColorSpace(EGdtfColorSpace value);
-
+        static TXString ConvertEGdtfInterpolationTo(EGdtfInterpolationTo value);
         //-----------------------------------------------------------------------------
         // Convert from String functions:
         static bool		ConvertUUID(										const TXString& value, const IXMLFileNodePtr& node,			VWFC::Tools::VWUUID& uuid);        
@@ -107,6 +107,7 @@ namespace SceneData
 		static bool		ConvertBeamType(									const TXString& value, const IXMLFileNodePtr& node,			EGdtfBeamType& type);
         static bool     ConvertEGdtfColorSampleEnum(						const TXString& inVal, const IXMLFileNodePtr& node,			EGdtfColorSample& outVal);        
         static bool     ConvertEGdtfColorSpace(const TXString & inVal, const IXMLFileNodePtr & node, EGdtfColorSpace & outVal);
+        static bool     ConvertEGdtfInterpolationTo(const TXString & inVal, const IXMLFileNodePtr & node, EGdtfInterpolationTo & outVal);
 		
         static bool 	ConvertDmxOffset(const TXString& inVal, const IXMLFileNodePtr& node, DMXAddress& coarse, DMXAddress& fine, DMXAddress& ultra, DMXAddress& uber);
         //-----------------------------------------------------------------------------
