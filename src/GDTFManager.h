@@ -366,8 +366,7 @@ namespace SceneData
         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
         virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
     };
-    typedef GdtfColorSpace*	GdtfColorSpacePtr;
-    typedef std::vector<GdtfColorSpace*>	TGdtfColorSpaceArray; // XXX check if needed?
+    typedef GdtfColorSpace*	GdtfColorSpacePtr;  
 
 
     class GdtfPhysicalDescriptions : public GdtfObject
@@ -1760,7 +1759,6 @@ namespace SceneData
         virtual	void					   OnReadFromNode(const IXMLFileNodePtr& pNode);
     };
     typedef GdtfMeasurement*	GdtfMeasurementPtr;
-    typedef std::vector<GdtfMeasurement*>	TGdtfMeasurementArray; // XXX check if needed?
         
 	//------------------------------------------------------------------------------------
 	// GdtfPhysicalDescription Definition
