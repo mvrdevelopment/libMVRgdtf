@@ -47,6 +47,8 @@ namespace SceneData
     
     class GdtfMeasurementPoint;
     class GdtfMeasurement; typedef std::vector<GdtfMeasurement*>	TGdtfMeasurementArray;
+    
+    class GdtfFilter; typedef std::vector<GdtfFilter*>	TGdtfFilterArray;
 	//------------------------------------------------------------------------------------
 	// Attributes	
 	
@@ -333,36 +335,7 @@ namespace SceneData
 	};
 	typedef GdtfWheelSlot*					GdtfWheelSlotPtr;
 	typedef std::vector<GdtfWheelSlotPtr>	TGdtfWheelSlotArray;
-	
-    class GdtfPhysicalDescriptions : public GdtfObject
-    {
-    public:
-        GdtfPhysicalDescriptions();
-        ~GdtfPhysicalDescriptions();
-    private:        
-        GdtfColorSpace*                 fColorSpace;
-        //
-        TGdtfPhysicalEmitterArray		fEmitters;      // Emitter Collect
-        TGdtfFilterArray                fFilters;       // Filter Collect
-        TGdtfDMXProfileArray            fDmxProfiles;   // DMX Profile Collect        
-        TGdtf_CRIGroupArray             fCRI_Groups;    // Color Rendering Index Collect
-    public:
-        virtual EGdtfObjectType			GetObjectType();
 
-    public:
-        // XXX TODO: Getter setter
-        // Getter        
-        GdtfColorSpace*                 GetColorSpace();
-        // Setter       
-        void                            SetColorSpace(GdtfColorSpace* val);
-
-    protected:
-        virtual	TXString				GetNodeName();
-        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
-        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
-    };
-    typedef GdtfPhysicalDescriptions*	GdtfPhysicalDescriptionsPtr;
-    
     class GdtfColorSpace : public GdtfObject
     {
     public:
@@ -395,6 +368,36 @@ namespace SceneData
     };
     typedef GdtfColorSpace*	GdtfColorSpacePtr;
     typedef std::vector<GdtfColorSpace*>	TGdtfColorSpaceArray; // XXX check if needed?
+
+
+    class GdtfPhysicalDescriptions : public GdtfObject
+    {
+    public:
+        GdtfPhysicalDescriptions();
+        ~GdtfPhysicalDescriptions();
+    private:        
+        GdtfColorSpace*                 fColorSpace;
+        //
+        TGdtfPhysicalEmitterArray		fEmitters;      // Emitter Collect
+        TGdtfFilterArray                fFilters;       // Filter Collect
+        TGdtfDMXProfileArray            fDmxProfiles;   // DMX Profile Collect        
+        TGdtf_CRIGroupArray             fCRI_Groups;    // Color Rendering Index Collect
+    public:
+        virtual EGdtfObjectType			GetObjectType();
+
+    public:
+        // XXX TODO: Getter setter
+        // Getter        
+        GdtfColorSpace*                 GetColorSpace();
+        // Setter       
+        void                            SetColorSpace(GdtfColorSpace* val);
+
+    protected:
+        virtual	TXString				GetNodeName();
+        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+    };
+    typedef GdtfPhysicalDescriptions*	GdtfPhysicalDescriptionsPtr;
            
     class GdtfFilter : public GdtfObject
     {
@@ -422,7 +425,6 @@ namespace SceneData
         virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
     };
     typedef GdtfFilter*	GdtfFilterPtr;
-    typedef std::vector<GdtfFilter*>	TGdtfFilterArray; // XXX check if needed?
        
 	class GdtfWheel : public GdtfObject
 	{
