@@ -4,6 +4,7 @@
 #include "Prefix/StdAfx.h"
 
 #include "CGdtfFilter.h"
+#include "CGdtfMeasurement.h"
 #include "XmlFileHelper.h"
 
 using namespace VectorworksMVR;
@@ -82,5 +83,110 @@ SceneData::GdtfFilter * VectorworksMVR::CGdtfFilterImpl::GetPointer()
 {
     return fFilter;
 }
+
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFilterImpl::GetMeasurementCount(size_t &count)
+{
+    if (!fFilter) { return kVCOMError_NotInitialized; }
+
+    count = fFilter->GetMeasurementsArray().size();
+
+    return kVCOMError_NoError;
+}
+
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFilterImpl::GetMeasurementAt(size_t at, VectorworksMVR::IGdtfMeasurement** value)
+{
+    // Check if Set
+    if (!fFilter) { return kVCOMError_NotInitialized; }
+
+    // Check if no Overflow
+    if (at >= fFilter->GetMeasurementsArray().size()) { return kVCOMError_OutOfBounds; }
+
+
+    SceneData::GdtfMeasurement* gdtfMeasurement = fFilter->GetMeasurementsArray()[at];
+
+
+    //---------------------------------------------------------------------------
+    // Initialize Object
+    CGdtfMeasurementImpl* pMeasurementObj = nullptr;
+
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfMeasurement, (IVWUnknown**)& pMeasurementObj)))
+    {
+        // Check Casting
+        CGdtfMeasurementImpl* pResultInterface = dynamic_cast<CGdtfMeasurementImpl*>(pMeasurementObj);
+        if (pResultInterface)
+        {
+            pResultInterface->SetPointer(gdtfMeasurement);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+
+    //---------------------------------------------------------------------------
+    // Check Incomming Object
+    if (*value)
+    {
+        (*value)->Release();
+        *value = NULL;
+    }
+
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *value = pMeasurementObj;
+
+    return kVCOMError_NoError;
+}
+
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFilterImpl::CreateMeasurement(VectorworksMVR::IGdtfMeasurement **outVal)
+{
+    // Check if Set
+    if (!fFilter) { return kVCOMError_NotInitialized; }
+    
+    SceneData::GdtfMeasurement* gdtfMeasurement = fFilter->CreateMeasurement();
+
+    //---------------------------------------------------------------------------
+    // Initialize Object
+    CGdtfMeasurementImpl* pMeasurementObj = nullptr;
+
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfMeasurement, (IVWUnknown**)& pMeasurementObj)))
+    {
+        // Check Casting
+        CGdtfMeasurementImpl* pResultInterface = dynamic_cast<CGdtfMeasurementImpl*>(pMeasurementObj);
+        if (pResultInterface)
+        {
+            pResultInterface->SetPointer(gdtfMeasurement);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+
+    //---------------------------------------------------------------------------
+    // Check Incomming Object
+    if (*outVal)
+    {
+        (*outVal)->Release();
+        *outVal = NULL;
+    }
+
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *outVal = pMeasurementObj;
+
+    return kVCOMError_NoError;
+}
+
+
 
 

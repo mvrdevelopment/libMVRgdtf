@@ -19,6 +19,10 @@ namespace VectorworksMVR
         // Setter
         virtual VCOMError VCOM_CALLTYPE     SetName(const TXString& name);
         virtual VCOMError VCOM_CALLTYPE     SetColor(CieColor val);
+        //
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetMeasurementCount(size_t& count);
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateMeasurement(VectorworksMVR::IGdtfMeasurement** outVal);
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetMeasurementAt(size_t at, VectorworksMVR::IGdtfMeasurement** value);
 
 
         virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr);
