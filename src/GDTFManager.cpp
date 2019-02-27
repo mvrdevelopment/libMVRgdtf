@@ -7252,11 +7252,29 @@ EGdtfObjectType SceneData::GdtfColorSpace::GetObjectType()
 
 TXString SceneData::GdtfColorSpace::GetNodeName()
 {
-    return TXString();
+    return XML_GDTF_ColorSpaceNode;
 }
 
 void SceneData::GdtfColorSpace::OnPrintToFile(IXMLFileNodePtr pNode)
 {
+    //------------------------------------------------------------------------------------
+    // Call the parent
+    GdtfObject::OnPrintToFile(pNode);
+
+    //------------------------------------------------------------------------------------
+    // Print the attributes        
+    pNode->SetNodeAttributeValue(XML_GDTF_ColorSpace_ColorSpace, GdtfConverter::ConvertEGdtfColorSpace(fColorSpace) );
+    pNode->SetNodeAttributeValue(XML_GDTF_ColorSpace_Red,        GdtfConverter::ConvertColor(fRed) );
+    pNode->SetNodeAttributeValue(XML_GDTF_ColorSpace_Green,      GdtfConverter::ConvertColor(fGreen) );
+    pNode->SetNodeAttributeValue(XML_GDTF_ColorSpace_Blue,	     GdtfConverter::ConvertColor(fBlue) );
+    pNode->SetNodeAttributeValue(XML_GDTF_ColorSpace_WhitePoint, GdtfConverter::ConvertColor(fWhitePoint) );
+
+    //------------------------------------------------------------------------------------
+    // Print the childs
+    for (GdtfFeature* feature : fFeatures)
+    {
+        feature->WriteToNode(pNode);
+    }
 }
 
 void SceneData::GdtfColorSpace::OnReadFromNode(const IXMLFileNodePtr & pNode)
