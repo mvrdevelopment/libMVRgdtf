@@ -458,9 +458,18 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_DMX_ProfileCollect                     "DMXProfiles"
 #define XML_GDTF_DMX_Profile                            "DMXProfile"
 
+//-----------------------------------------------------------------------------
+// Measurement
 #define XML_GDTF_MeasurementNodeName					"Measurement"
-#define XML_GDTF_MeasurementWaveLegth					"WaveLength"
-#define XML_GDTF_MeasurementEnergy						"Energy"
+// Measurement Attribs
+#define XML_GDTF_MeasurementPhysical                   "Physical"
+#define XML_GDTF_MeasurementLuminousIntensity          "LuminousIntensity"
+#define XML_GDTF_MeasurementTransmission               "Transmission"
+#define XML_GDTF_MeasurementInterpolationTo            "InterpolationTo"
+//
+#define XML_GDTF_MeasurementWaveLegth					"WaveLength" // XXX obsolete?
+#define XML_GDTF_MeasurementEnergy						"Energy"     // XXX obsolete?
+//-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
 // InterpolationTo Enum
