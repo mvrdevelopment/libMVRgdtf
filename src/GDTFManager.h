@@ -1695,13 +1695,14 @@ namespace SceneData
         GdtfMeasurement();
         ~GdtfMeasurement();
     private:
-        double fPhysical;
-        double fLuminousIntensity;
-        double fTransmission;
-        EGdtfInterpolationTo  fInterpolationTo; 
+        double                      fPhysical;
+        double                      fLuminousIntensity;
+        double                      fTransmission;
+        EGdtfInterpolationTo        fInterpolationTo;
 
+        TGdtfMeasurementPointArray  fMeasurementPoints;
     public:
-        virtual EGdtfObjectType			GetObjectType();
+        virtual EGdtfObjectType		GetObjectType();
 
     public:
         // Getter        

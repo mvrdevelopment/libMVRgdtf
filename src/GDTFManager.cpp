@@ -7393,6 +7393,7 @@ SceneData::GdtfMeasurement::GdtfMeasurement()
     fPhysical = 0;
     fLuminousIntensity = 0;
     fTransmission = 0;
+    fInterpolationTo = EGdtfInterpolationTo::Linear;
 }
 
 SceneData::GdtfMeasurement::~GdtfMeasurement()
@@ -7411,6 +7412,22 @@ TXString SceneData::GdtfMeasurement::GetNodeName()
 
 void SceneData::GdtfMeasurement::OnPrintToFile(IXMLFileNodePtr pNode)
 {
+    //------------------------------------------------------------------------------------
+    // Call the parent
+    GdtfObject::OnPrintToFile(pNode);
+
+    //------------------------------------------------------------------------------------
+    // Print the attributes 
+    pNode->SetNodeAttributeValue(XML_GDTF_MeasurementPhysical,          GdtfConverter::ConvertDouble(fPhysical) );
+    pNode->SetNodeAttributeValue(XML_GDTF_MeasurementLuminousIntensity, GdtfConverter::ConvertDouble(fLuminousIntensity) );
+    pNode->SetNodeAttributeValue(XML_GDTF_MeasurementTransmission,      GdtfConverter::ConvertDouble(fTransmission) );
+    pNode->SetNodeAttributeValue(XML_GDTF_MeasurementInterpolationTo,   GdtfConverter::ConvertEGdtfInterpolationTo(fInterpolationTo) );
+    //------------------------------------------------------------------------------------
+    // Print the childs
+    for (GdtfFeature* feature : fMeasurementPoints)
+    {
+        feature->WriteToNode(pNode);
+    }
 }
 
 void SceneData::GdtfMeasurement::OnReadFromNode(const IXMLFileNodePtr & pNode)
