@@ -360,19 +360,25 @@ namespace SceneData
         GdtfColorSpace();
         ~GdtfColorSpace();
     private:
-        EGdtfColorSpace fColorSpace; 	// Enum 	Color Space. The defined values are "Custom", "sRGB", "ProPhoto" and "ANSI". Default Value: "sRGB"
-        CCieColor        fRed;                  // ColorCIE 	Optional; CIE xyY of the Red Primary; this is used only if the ColorSpace is "Custom".
-        CCieColor        fGreen;                // ColorCIE 	Optional; CIE xyY of the Green Primary; this is used only if the ColorSpace is "Custom".
-        CCieColor        fBlue;	                // ColorCIE 	Optional; CIE xyY of the Blue Primary; this is used only if the ColorSpace is "Custom".
-        CCieColor        fWhitePoint;           // WhitePoint 	ColorCIE 	Optional; CIE xyY of the White Point; this is used only if the ColorSpace is "Custom". 
+        EGdtfColorSpace  fColorSpace;
+        CCieColor        fRed;                  // XXX CIE xyY of the Red Primary; this is used only if the ColorSpace is "Custom".
+        CCieColor        fGreen;                // CIE xyY of the Green Primary; this is used only if the ColorSpace is "Custom".
+        CCieColor        fBlue;	                // Optional; CIE xyY of the Blue Primary; this is used only if the ColorSpace is "Custom".
+        CCieColor        fWhitePoint;           // Optional; CIE xyY of the White Point; this is used only if the ColorSpace is "Custom". 
     public:
         virtual EGdtfObjectType			GetObjectType();
 
     public:
         // Getter        
-        // XXX const TXString&		        GetName() const;
+        EGdtfColorSpace		  GetColorSpace();
+        CCieColor		      GetRed();
+        CCieColor             GetGreen();
+        CCieColor		      GetBlue();
         // Setter       
-        // XXX void						    SetName(const TXString& name);
+        void        		            SetColorSpace(EGdtfColorSpace val);
+        void                            SetRed(CCieColor val);
+        void                            SetGreen(CCieColor val);
+        void    		                SetBlue(CCieColor val);
     protected:
         virtual	TXString				GetNodeName();
         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);

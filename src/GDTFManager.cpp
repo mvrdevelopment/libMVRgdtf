@@ -7250,6 +7250,46 @@ EGdtfObjectType SceneData::GdtfColorSpace::GetObjectType()
     return EGdtfObjectType::eGdtfColorSpace;
 }
 
+EGdtfColorSpace SceneData::GdtfColorSpace::GetColorSpace()
+{
+    return fColorSpace;
+}
+
+CCieColor SceneData::GdtfColorSpace::GetRed()
+{
+    return fRed;
+}
+
+CCieColor SceneData::GdtfColorSpace::GetGreen()
+{
+    return fGreen;
+}
+
+CCieColor SceneData::GdtfColorSpace::GetBlue()
+{
+    return fBlue;
+}
+
+void SceneData::GdtfColorSpace::SetColorSpace(EGdtfColorSpace val)
+{
+    fColorSpace = val;
+}
+
+void SceneData::GdtfColorSpace::SetRed(CCieColor val)
+{
+    fRed = val;
+}
+
+void SceneData::GdtfColorSpace::SetGreen(CCieColor val)
+{
+    fGreen = val;
+}
+
+void SceneData::GdtfColorSpace::SetBlue(CCieColor val)
+{
+    fBlue = val;
+}
+
 TXString SceneData::GdtfColorSpace::GetNodeName()
 {
     return XML_GDTF_ColorSpaceNode;
