@@ -7379,11 +7379,11 @@ void SceneData::GdtfFilter::OnReadFromNode(const IXMLFileNodePtr & pNode)
     //// Read the childs
     //GdtfConverter::TraverseNodes(pNode, "", XML_GDTFFilter, [this](IXMLFileNodePtr objNode) -> void
     //{
-    //    GdtfFeaturePtr featureXXX = new GdtfFeature(this);
+    //    GdtfFeaturePtr measurePt = new GdtfFeature(this);
 
-    //    featureXXX->ReadFromNode(objNode);
+    //    measurePt->ReadFromNode(objNode);
 
-    //    fFeaturesXXX.push_back(featureXXX);
+    //    fFeaturesXXX.push_back(measurePt);
     //    return;
     //});
 }
@@ -7432,4 +7432,32 @@ void SceneData::GdtfMeasurement::OnPrintToFile(IXMLFileNodePtr pNode)
 
 void SceneData::GdtfMeasurement::OnReadFromNode(const IXMLFileNodePtr & pNode)
 {
+    //------------------------------------------------------------------------------------
+    // Call the parent
+    GdtfObject::OnReadFromNode(pNode);
+
+    //------------------------------------------------------------------------------------
+    // Get the attributes	
+    TXString   physStr; pNode->GetNodeAttributeValue(XML_GDTF_MeasurementPhysical, physStr);
+    GdtfConverter::ConvertDouble( physStr, pNode, fPhysical);
+
+    TXString   lumiStr; pNode->GetNodeAttributeValue(XML_GDTF_MeasurementLuminousIntensity,  lumiStr);
+    GdtfConverter::ConvertDouble( lumiStr, pNode, fLuminousIntensity);
+
+    TXString   transmStr; pNode->GetNodeAttributeValue(XML_GDTF_MeasurementTransmission,  transmStr);    
+    GdtfConverter::ConvertDouble( transmStr, pNode, fTransmission);
+
+    TXString   interpolStr; pNode->GetNodeAttributeValue(XML_GDTF_MeasurementInterpolationTo, interpolStr);
+    GdtfConverter::ConvertEGdtfInterpolationTo(interpolStr, pNode, fInterpolationTo);
+
+    // Read the childs
+    GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_MeasurementPointNode, [this](IXMLFileNodePtr objNode) -> void
+    {
+        GdtfMeasurementPoint* measurePt = new GdtfMeasurementPoint();
+
+        measurePt->ReadFromNode(objNode);
+
+        fMeasurementPoints.push_back(measurePt);
+        return;
+    });
 }
