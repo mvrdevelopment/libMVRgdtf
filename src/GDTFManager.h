@@ -45,6 +45,7 @@ namespace SceneData
     class GdtfCRIGroup;  
     typedef std::vector<GdtfCRIGroup*>	TGdtf_CRIGroupArray;
     
+    class GdtfMeasurementPoint;
     class GdtfMeasurement; typedef std::vector<GdtfMeasurement*>	TGdtfMeasurementArray;
 	//------------------------------------------------------------------------------------
 	// Attributes	
@@ -1706,20 +1707,21 @@ namespace SceneData
 
     public:
         // Getter                
-        double               GetPhysical();
-        double               GetLuminousIntensity();
-        double               GetTransmission();
-        EGdtfInterpolationTo GetInterpolationTo();
+        double                             GetPhysical();
+        double                             GetLuminousIntensity();
+        double                             GetTransmission();
+        EGdtfInterpolationTo               GetInterpolationTo();
+        const TGdtfMeasurementPointArray&  GetMeasurementPointsArray();
         // Setter               
-        void                 SetPhysical(double val);
-        void                 SetLuminousIntensity(double val);
-        void                 SetTransmission(double val);
-        void                 SetInterpolationTo(EGdtfInterpolationTo val);
-
+        void                               SetPhysical(double val);
+        void                               SetLuminousIntensity(double val);
+        void                               SetTransmission(double val);
+        void                               SetInterpolationTo(EGdtfInterpolationTo val);
+        GdtfMeasurementPoint*              CreateMeasurementPoint();
     protected:
-        virtual	TXString				GetNodeName();
-        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
-        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	TXString				   GetNodeName();
+        virtual	void					   OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					   OnReadFromNode(const IXMLFileNodePtr& pNode);
     };
     typedef GdtfMeasurement*	GdtfMeasurementPtr;
     typedef std::vector<GdtfMeasurement*>	TGdtfMeasurementArray; // XXX check if needed?

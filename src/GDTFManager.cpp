@@ -7425,6 +7425,11 @@ EGdtfInterpolationTo SceneData::GdtfMeasurement::GetInterpolationTo()
     return fInterpolationTo;
 }
 
+const TGdtfMeasurementPointArray & SceneData::GdtfMeasurement::GetMeasurementPointsArray()
+{
+    return fMeasurementPoints;
+}
+
 void SceneData::GdtfMeasurement::SetPhysical(double val)
 {
     fPhysical = val;
@@ -7443,6 +7448,12 @@ void SceneData::GdtfMeasurement::SetTransmission(double val)
 void SceneData::GdtfMeasurement::SetInterpolationTo(EGdtfInterpolationTo val)
 {
     fInterpolationTo = val;
+}
+
+GdtfMeasurementPoint* SceneData::GdtfMeasurement::CreateMeasurementPoint()
+{
+    GdtfMeasurementPointPtr MeasurementPt = new GdtfMeasurementPoint();
+	return MeasurementPt;
 }
 
 TXString SceneData::GdtfMeasurement::GetNodeName()
