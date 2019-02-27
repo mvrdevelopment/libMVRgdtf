@@ -7424,9 +7424,9 @@ void SceneData::GdtfMeasurement::OnPrintToFile(IXMLFileNodePtr pNode)
     pNode->SetNodeAttributeValue(XML_GDTF_MeasurementInterpolationTo,   GdtfConverter::ConvertEGdtfInterpolationTo(fInterpolationTo) );
     //------------------------------------------------------------------------------------
     // Print the childs
-    for (GdtfFeature* feature : fMeasurementPoints)
+    for (GdtfMeasurementPoint* mesPt: fMeasurementPoints)
     {
-        feature->WriteToNode(pNode);
+        mesPt->WriteToNode(pNode);
     }
 }
 
