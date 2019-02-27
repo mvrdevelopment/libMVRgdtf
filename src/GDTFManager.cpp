@@ -7236,3 +7236,29 @@ void SceneData::GdtfPhysicalDescriptions::OnReadFromNode(const IXMLFileNodePtr &
     // TODO:
 }
 
+SceneData::GdtfColorSpace::GdtfColorSpace()
+{
+    fColorSpace = EGdtfColorSpace::sRGB;
+}
+
+SceneData::GdtfColorSpace::~GdtfColorSpace()
+{
+}
+
+EGdtfObjectType SceneData::GdtfColorSpace::GetObjectType()
+{
+    return EGdtfObjectType();
+}
+
+TXString SceneData::GdtfColorSpace::GetNodeName()
+{
+    return TXString();
+}
+
+void SceneData::GdtfColorSpace::OnPrintToFile(IXMLFileNodePtr pNode)
+{
+}
+
+void SceneData::GdtfColorSpace::OnReadFromNode(const IXMLFileNodePtr & pNode)
+{
+}

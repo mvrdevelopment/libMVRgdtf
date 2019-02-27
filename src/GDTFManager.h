@@ -332,19 +332,19 @@ namespace SceneData
     public:
         GdtfPhysicalDescriptions();
         ~GdtfPhysicalDescriptions();
-    private:
-        //TGdtfPhysicalEmitterArray fEmitters;
-        //fFilters;
-        //ColorSpace 	0 or 1 	Describes device color space
-        //DMXProfiles 	0 or 1 	Describes nonlinear correlation between DMX input and physical output of a channel.
-        //CRIs 	0 or 1 	Describes color rendering with IES TM-30-15 (99 color samples). 
+    private:        
+        TGdtfPhysicalEmitterArray		fEmitters;   
+        // TODO: fFilters
+        TGdtfDMXProfileArray            fDmxProfiles; //DMXProfiles 	0 or 1 	Describes nonlinear correlation between DMX input and physical output of a channel.
+        TGdtf_CRIGroupArray             fCRI_Groups;  //CRIs 	0 or 1 	Describes color rendering with IES TM-30-15 (99 color samples). 
+        // fColorSpace                                //ColorSpace 	0 or 1 	Describes device color space
 
     public:
         virtual EGdtfObjectType			GetObjectType();
 
     public:
         // Getter        
-        // XXX const TXString&		        GetName() const;
+        // XXX const TXString&		   GetName() const;
         // Setter       
         // XXX void						SetName(const TXString& name);
     protected:
@@ -353,7 +353,34 @@ namespace SceneData
         virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
     };
     typedef GdtfPhysicalDescriptions*	GdtfPhysicalDescriptionsPtr;
+    
+    class GdtfColorSpace : public GdtfObject
+    {
+    public:
+        GdtfColorSpace();
+        ~GdtfColorSpace();
+    private:
+        EGdtfColorSpace fColorSpace; 	// Enum 	Color Space. The defined values are "Custom", "sRGB", "ProPhoto" and "ANSI". Default Value: "sRGB"
+        CieColor fRed;                  // ColorCIE 	Optional; CIE xyY of the Red Primary; this is used only if the ColorSpace is "Custom".
+        CieColor fGreen;                // ColorCIE 	Optional; CIE xyY of the Green Primary; this is used only if the ColorSpace is "Custom".
+        CieColor fBlue;	                // ColorCIE 	Optional; CIE xyY of the Blue Primary; this is used only if the ColorSpace is "Custom".
+        CieColor fWhitePoint;           // WhitePoint 	ColorCIE 	Optional; CIE xyY of the White Point; this is used only if the ColorSpace is "Custom". 
+    public:
+        virtual EGdtfObjectType			GetObjectType();
 
+    public:
+        // Getter        
+        // XXX const TXString&		        GetName() const;
+        // Setter       
+        // XXX void						    SetName(const TXString& name);
+    protected:
+        virtual	TXString				GetNodeName();
+        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+    };
+    typedef GdtfColorSpace*	GdtfColorSpacePtr;
+    typedef std::vector<GdtfColorSpace*>	TGdtfColorSpaceArray; // XXX check if needed?
+    
 
 	class GdtfWheel : public GdtfObject
 	{
@@ -1816,9 +1843,9 @@ namespace SceneData
 		TGdtfUserPresetArray			fPresets;
 		TGdtfMacroArray					fMacros;
 		
-		TGdtfPhysicalEmitterArray		fEmitters;
-        TGdtfDMXProfileArray            fDmxProfiles;
-        TGdtf_CRIGroupArray             fCRI_Groups;
+		TGdtfPhysicalEmitterArray		fEmitters;    // TODO: XXX remove this later.
+        TGdtfDMXProfileArray            fDmxProfiles; // TODO: XXX remove this later.
+        TGdtf_CRIGroupArray             fCRI_Groups;  // TODO: XXX remove this later.
 		
 
 		GdtfProtocols					fProtocollContainer;
