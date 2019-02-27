@@ -7278,6 +7278,9 @@ void SceneData::GdtfColorSpace::OnReadFromNode(const IXMLFileNodePtr & pNode)
 
     //------------------------------------------------------------------------------------
     // Get the attributes	
+    TXString colorSpaceStr; pNode->GetNodeAttributeValue(XML_GDTF_ColorSpace_ColorSpace, colorSpaceStr);
+    GdtfConverter::ConvertEGdtfColorSpace( colorSpaceStr, pNode, fColorSpace);
+    
     GdtfConverter::ConvertColor(XML_GDTF_ColorSpace_Red       , pNode, fRed);
     GdtfConverter::ConvertColor(XML_GDTF_ColorSpace_Green     , pNode, fGreen);
     GdtfConverter::ConvertColor(XML_GDTF_ColorSpace_Blue	  , pNode, fBlue);
