@@ -799,7 +799,17 @@ namespace VectorworksMVR
         virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
     };
     typedef VCOMPtr<IGdtfMeasurement>	IGdtfMeasurementPtr;
+           
+    class DYNAMIC_ATTRIBUTE IGdtfFilter : public IVWUnknown
+    {
+    public:
+        virtual MvrString VCOM_CALLTYPE     GetName() = 0;
 
+        virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+        virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+    };
+    typedef VCOMPtr<IGdtfFilter>	IGdtfFilterPtr;
+       
     class DYNAMIC_ATTRIBUTE IGdtfPhysicalEmitter : public IVWUnknown
     {
 		public:
