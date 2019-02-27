@@ -225,7 +225,7 @@ using namespace SceneData;
 	return valueStr;
 }
 
-/*static*/ bool GdtfConverter::ConvertDouble(const TXString& value, const IXMLFileNodePtr& node,double& doubleValue)
+/*static*/ bool GdtfConverter::ConvertDouble(const TXString& value, const IXMLFileNodePtr& node,double& doubleValue) // TODO: XXX unused Param node
 {
 	if(value.IsEmpty()) { return false; }
 	
