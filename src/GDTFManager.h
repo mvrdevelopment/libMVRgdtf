@@ -40,8 +40,10 @@ namespace SceneData
     typedef std::vector<GdtfSoftwareVersionID*>	TGdtfSoftwareVersionIDArray;
     typedef GdtfSoftwareVersionID*	GdtfSoftwareVersionIDPtr;
     
-    class GdtfDMXProfile; typedef std::vector<GdtfDMXProfile*>	TGdtfDMXProfileArray;
-    class Gdtf_CRIGroup;  typedef std::vector<GdtfCRIGroup*>	TGdtf_CRIGroupArray;
+    class GdtfDMXProfile; 
+    typedef std::vector<GdtfDMXProfile*>	TGdtfDMXProfileArray;
+    class GdtfCRIGroup;  
+    typedef std::vector<GdtfCRIGroup*>	TGdtf_CRIGroupArray;
     
 	//------------------------------------------------------------------------------------
 	// Attributes	
