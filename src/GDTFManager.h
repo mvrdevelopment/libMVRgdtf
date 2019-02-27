@@ -1689,7 +1689,36 @@ namespace SceneData
         virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
     };
     typedef GdtfMacroVisual*	GdtfMacroVisualPtr;
-       
+
+	class GdtfMeasurementPoint : public GdtfObject
+	{
+	public:
+		GdtfMeasurementPoint();
+		~GdtfMeasurementPoint();
+		
+	private:
+		double			fWaveLength;	// Unit nm
+		double			fEngergy;		// Unit W/m^2*/nm		
+		
+	public:
+		virtual EGdtfObjectType			GetObjectType();
+        double                          GetWavelength();
+        double                          GetEnergy();
+		
+		void							SetWavelength(double wavelength);
+		void							SetEnergy(double energy);
+		
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+		virtual void                    OnErrorCheck(const IXMLFileNodePtr& pNode);
+
+	};
+	typedef GdtfMeasurementPoint*				GdtfMeasurementPointPtr;
+	typedef std::vector<GdtfMeasurementPoint*>	TGdtfMeasurementPointArray;
+    	
+
     class GdtfMeasurement : public GdtfObject
     {
     public:
@@ -1728,35 +1757,6 @@ namespace SceneData
         
 	//------------------------------------------------------------------------------------
 	// GdtfPhysicalDescription Definition
-	class GdtfMeasurementPoint : public GdtfObject
-	{
-	public:
-		GdtfMeasurementPoint();
-		~GdtfMeasurementPoint();
-		
-	private:
-		double			fWaveLength;	// Unit nm
-		double			fEngergy;		// Unit W/m^2*/nm		
-		
-	public:
-		virtual EGdtfObjectType			GetObjectType();
-        double                          GetWavelength();
-        double                          GetEnergy();
-		
-		void							SetWavelength(double wavelength);
-		void							SetEnergy(double energy);
-		
-	protected:
-		virtual	TXString				GetNodeName();
-		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
-		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
-		virtual void                    OnErrorCheck(const IXMLFileNodePtr& pNode);
-
-	};
-	typedef GdtfMeasurementPoint*				GdtfMeasurementPointPtr;
-	typedef std::vector<GdtfMeasurementPoint*>	TGdtfMeasurementPointArray;
-
-	
 	class GdtfPhysicalEmitter : public GdtfObject
 	{
 	public:
