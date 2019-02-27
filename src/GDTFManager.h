@@ -341,17 +341,16 @@ namespace SceneData
         ~GdtfPhysicalDescriptions();
     private:        
         TGdtfPhysicalEmitterArray		fEmitters;   
-        // TODO: fFilters
-        TGdtfDMXProfileArray            fDmxProfiles; //DMXProfiles 	0 or 1 	Describes nonlinear correlation between DMX input and physical output of a channel.
-        TGdtf_CRIGroupArray             fCRI_Groups;  //CRIs 	0 or 1 	Describes color rendering with IES TM-30-15 (99 color samples). 
-        // fColorSpace                                //ColorSpace 	0 or 1 	Describes device color space
-
+        TGdtfFilterArray                fFilters;
+        TGdtfDMXProfileArray            fDmxProfiles;
+        GdtfColorSpace                  fColors;
+        TGdtf_CRIGroupArray             fCRI_Groups;
     public:
         virtual EGdtfObjectType			GetObjectType();
 
     public:
         // Getter        
-        // XXX const TXString&		   GetName() const;
+        // XXX const TXString&		    GetName() const;
         // Setter       
         // XXX void						SetName(const TXString& name);
     protected:
