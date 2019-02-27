@@ -58,6 +58,7 @@
     <ClCompile Include="..\src\Implementation\CGdtfDmxRelation.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfFeature.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfFeatureGroup.cpp" />
+    <ClCompile Include="..\src\Implementation\CGdtfFilter.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfFixture.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfFTRDM.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfGeometry.cpp" />
@@ -143,6 +144,7 @@
     <ClInclude Include="..\src\Implementation\CGdtfDmxRelation.h" />
     <ClInclude Include="..\src\Implementation\CGdtfFeature.h" />
     <ClInclude Include="..\src\Implementation\CGdtfFeatureGroup.h" />
+    <ClInclude Include="..\src\Implementation\CGdtfFilter.h" />
     <ClInclude Include="..\src\Implementation\CGdtfFixture.h" />
     <ClInclude Include="..\src\Implementation\CGdtfFTRDM.h" />
     <ClInclude Include="..\src\Implementation\CGdtfGeometry.h" />
