@@ -7405,6 +7405,46 @@ EGdtfObjectType SceneData::GdtfMeasurement::GetObjectType()
     return EGdtfObjectType::eGdtfMeasurement;
 }
 
+double SceneData::GdtfMeasurement::GetPhysical()
+{
+    return fPhysical;
+}
+
+double SceneData::GdtfMeasurement::GetLuminousIntensity()
+{
+    return fLuminousIntensity;
+}
+
+double SceneData::GdtfMeasurement::GetTransmission()
+{
+    return fTransmission;
+}
+
+EGdtfInterpolationTo SceneData::GdtfMeasurement::GetInterpolationTo()
+{
+    return fInterpolationTo;
+}
+
+void SceneData::GdtfMeasurement::SetPhysical(double val)
+{
+    fPhysical = val;
+}
+
+void SceneData::GdtfMeasurement::SetLuminousIntensity(double val)
+{
+    fLuminousIntensity = val;
+}
+
+void SceneData::GdtfMeasurement::SetTransmission(double val)
+{
+    fTransmission = val;
+}
+
+void SceneData::GdtfMeasurement::SetInterpolationTo(EGdtfInterpolationTo val)
+{
+    fInterpolationTo = val;
+}
+
 TXString SceneData::GdtfMeasurement::GetNodeName()
 {
     return XML_GDTF_MeasurementNodeName;

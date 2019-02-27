@@ -1705,10 +1705,17 @@ namespace SceneData
         virtual EGdtfObjectType		GetObjectType();
 
     public:
-        // Getter        
-        // XXX const TXString&		        GetName() const;
-        // Setter       
-        // XXX void						    SetName(const TXString& name);
+        // Getter                
+        double               GetPhysical();
+        double               GetLuminousIntensity();
+        double               GetTransmission();
+        EGdtfInterpolationTo GetInterpolationTo();
+        // Setter               
+        void                 SetPhysical(double val);
+        void                 SetLuminousIntensity(double val);
+        void                 SetTransmission(double val);
+        void                 SetInterpolationTo(EGdtfInterpolationTo val);
+
     protected:
         virtual	TXString				GetNodeName();
         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
