@@ -13,11 +13,22 @@ namespace VectorworksMVR
     public:
         CGdtfMeasurementImpl();
         virtual ~CGdtfMeasurementImpl();
-
-        // Measurement_Optional virtual VCOMError VCOM_CALLTYPE     GetMeasurementCount(size_t& outCount);
-        // Measurement_Optional virtual VCOMError VCOM_CALLTYPE     GetMeasurementAt(size_t at, IGdtfMeasurement**  outMeasurement);
-        // Measurement_Optional virtual VCOMError VCOM_CALLTYPE     CreateMeasurement (IGdtfMeasurement** outMeasurement);		
-
+        
+        // Getter
+        virtual VCOMError VCOM_CALLTYPE    GetPhysical(double outVal);
+        virtual VCOMError VCOM_CALLTYPE    GetLuminousIntensity(double outVal);
+        virtual VCOMError VCOM_CALLTYPE    GetTransmission(double outVal);
+        virtual VCOMError VCOM_CALLTYPE    GetInterpolationTo(EGdtfInterpolationTo outVal);
+        // Setter               
+        virtual VCOMError VCOM_CALLTYPE    SetPhysical(double val);
+        virtual VCOMError VCOM_CALLTYPE    SetLuminousIntensity(double val);
+        virtual VCOMError VCOM_CALLTYPE    SetTransmission(double val);
+        virtual VCOMError VCOM_CALLTYPE    SetInterpolationTo(EGdtfInterpolationTo val);        
+        //
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetMeasurementPointCount(size_t& count);
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateMeasurementPoint(VectorworksMVR::IGdtfMeasurementPoint** outVal);
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetMeasurementPointAt(size_t at, VectorworksMVR::IGdtfMeasurementPoint** value);
+        //
         virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr);
         virtual void*	  VCOM_CALLTYPE     GetBoundObject();
 
