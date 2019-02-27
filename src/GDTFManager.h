@@ -45,6 +45,7 @@ namespace SceneData
     class GdtfCRIGroup;  
     typedef std::vector<GdtfCRIGroup*>	TGdtf_CRIGroupArray;
     
+    class GdtfMeasurement; typedef std::vector<GdtfMeasurement*>	TGdtfMeasurementArray;
 	//------------------------------------------------------------------------------------
 	// Attributes	
 	
