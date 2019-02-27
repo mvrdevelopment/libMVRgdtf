@@ -1428,7 +1428,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 
 /*static*/ bool GdtfConverter::ConvertEGdtfColorSpace(const TXString& inVal, const IXMLFileNodePtr& node, EGdtfColorSpace& outVal)
 {
-     if        (inVal == XML_GDTF_ColorSpaceEnum_sRGB)     { outVal = EGdtfColorSpace::sRGB; }     
+     if        (inVal == XML_GDTF_ColorSpaceEnum_sRGB)      { outVal = EGdtfColorSpace::sRGB; }     
      else if   (inVal == XML_GDTF_ColorSpaceEnum_Custom)    { outVal = EGdtfColorSpace::Custom; }
      else if   (inVal == XML_GDTF_ColorSpaceEnum_ProPhoto)  { outVal = EGdtfColorSpace::ProPhoto; }
      else if   (inVal == XML_GDTF_ColorSpaceEnumr_ANSI)     { outVal = EGdtfColorSpace::ANSI;  }
