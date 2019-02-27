@@ -1456,6 +1456,22 @@ CieColor SceneData::GdtfConverter::ConvertCColor(const CCieColor & color)
     return true;
 }
 
+/*static*/ TXString GdtfConverter::ConvertEGdtfInterpolationTo(EGdtfInterpolationTo value)
+{
+
+    switch (value)
+    {
+    case EGdtfInterpolationTo::Linear:  return XML_GDTF_InterpolationTo_Linear;
+    case EGdtfInterpolationTo::Step:    return XML_GDTF_InterpolationTo_Step;
+    case EGdtfInterpolationTo::Log:     return XML_GDTF_InterpolationTo_Step;
+    }
+
+	DSTOP((kEveryone, "Unknown Enum for EGdtfInterpolationTo"));
+
+    return XML_GDTF_InterpolationTo_Linear;
+}
+
+
 bool SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, const IFileIdentifierPtr& file, ERessourceType resType, bool deleteFile, bool mustExist)
 {
 	//-------------------------------------------------------------------------------------------------
