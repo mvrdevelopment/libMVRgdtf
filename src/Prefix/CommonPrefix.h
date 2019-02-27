@@ -464,9 +464,9 @@ const Sint32 kMVR_MinorVersion = 4;
 
 //-----------------------------------------------------------------------------
 // InterpolationTo Enum
-#define XML_GDTF_InterpolAtionTo_Linear  "Linear" 
-#define XML_GDTF_InterpolAtionTo_Step    "Step"
-#define XML_GDTF_InterpolAtionTo_Log     "Log" 
+#define XML_GDTF_InterpolationTo_Linear  "Linear" 
+#define XML_GDTF_InterpolationTo_Step    "Step"
+#define XML_GDTF_InterpolationTo_Log     "Log" 
 
 //-----------------------------------------------------------------------------
 #define XML_GDTF_ColorRenderingIndexCollect             "CRIs"
