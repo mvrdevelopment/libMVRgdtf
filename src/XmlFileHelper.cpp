@@ -301,14 +301,13 @@ TXString SceneData::GdtfConverter::ConvertDMXValue(DmxValue value, EGdtfChannelB
 	return valueStr;
 }
 
-TXString SceneData::GdtfConverter::ConvertIntegerArray(TSint32Array & values)
+TXString SceneData::GdtfConverter::ConvertIntegerArray(TSint32Array & values, bool includeBrackets)
 /* Takes an Int-Array and returns it as string in the format: "{Int, Int, ... Int}" */
 {   
     TXString arrayStr;
     
-    // Begin the array Str
-    arrayStr = "{";
-
+	if(includeBrackets) { arrayStr += "{"; }
+    
     // Add the Values
     for (size_t idx = 0; idx < values.size(); idx++)
     {        
@@ -323,7 +322,7 @@ TXString SceneData::GdtfConverter::ConvertIntegerArray(TSint32Array & values)
     }    
 
     // CLose the Array Str
-    arrayStr += "}";
+	if(includeBrackets) { arrayStr += "}"; }
 
     return arrayStr;
 }
@@ -1155,6 +1154,42 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 	return true;
 	
 	
+}
+
+/*static*/ TXString GdtfConverter::ConvertDmxOffset(DMXAddress coarse, DMXAddress fine, DMXAddress ultra, DMXAddress uber)
+{
+	TSint32Array array;
+	bool c = true;
+	if(c && coarse > 0) { array.push_back(coarse); } else { c = false; }
+	if(c && fine   > 0) { array.push_back(fine);   } else { c = false; }
+	if(c && ultra  > 0) { array.push_back(ultra);  } else { c = false; }
+	if(c && uber   > 0) { array.push_back(uber);   } else { c = false; }
+	
+	return ConvertIntegerArray(array, false);
+}
+
+/*static*/ bool GdtfConverter::ConvertDmxOffset(const TXString& inVal, const IXMLFileNodePtr& node, DMXAddress& coarse, DMXAddress& fine, DMXAddress& ultra, DMXAddress& uber)
+{
+	coarse 	= 0;
+	fine 	= 0;
+	ultra	= 0;
+	uber 	= 0;
+
+	TSint32Array array;
+	if(ConvertIntegerArray(inVal, node, array))
+	{
+		for(size_t i = 0; i < array.size(); i++)
+		{
+			if(i==0) { coarse = array[i]; ASSERTN(kEveryone,coarse > 0); }
+			if(i==1) { fine   = array[i]; ASSERTN(kEveryone,fine   > 0); }
+			if(i==2) { ultra  = array[i]; ASSERTN(kEveryone,ultra  > 0); }
+			if(i==3) { uber   = array[i]; ASSERTN(kEveryone,uber   > 0); }
+		}
+		
+		return true;
+	}
+	
+	return false;
 }
 
 /*static*/ TXString GdtfConverter::ConvertEGdtfColorSampleEnum(EGdtfColorSample value)

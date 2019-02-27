@@ -63,7 +63,7 @@ namespace SceneData
         static TXString	ConvertDmxBreak(Sint32 value);
 		static TXString	ConvertInteger(size_t value);
 		static TXString	ConvertInteger(Sint32 value, bool noneValue);
-        static TXString	ConvertIntegerArray (TSint32Array& values);
+        static TXString	ConvertIntegerArray (TSint32Array& values, bool includeBrackets);
 		static TXString	ConvertDMXAdress(DMXAddress value);
 		static TXString	ConvertDMXValue(DmxValue value, EGdtfChannelBitResolution chanlReso, bool noneValue=false);		
 		static TXString	ConvertPrimitiveType(EGdtfModel_PrimitiveType value);
@@ -77,6 +77,8 @@ namespace SceneData
 		static TXString	ConvertSpecialAttrEnum(EGdtfSpecial value);
 		static TXString ConvertBeamType(EGdtfBeamType value);
         static TXString ConvertEGdtfColorSampleEnum(EGdtfColorSample value);
+		static TXString ConvertDmxOffset(DMXAddress coarse, DMXAddress fine, DMXAddress ultra, DMXAddress uber);
+
 
         //-----------------------------------------------------------------------------
         // Convert from String functions:
@@ -104,6 +106,8 @@ namespace SceneData
 		static bool		ConvertSpecialAttrEnum(								const TXString& value, const IXMLFileNodePtr& node,			EGdtfSpecial& special);
 		static bool		ConvertBeamType(									const TXString& value, const IXMLFileNodePtr& node,			EGdtfBeamType& type);
         static bool     ConvertEGdtfColorSampleEnum(						const TXString& inVal, const IXMLFileNodePtr& node,			EGdtfColorSample& outVal);
+		static bool 	ConvertDmxOffset(const TXString& inVal, const IXMLFileNodePtr& node, DMXAddress& coarse, DMXAddress& fine, DMXAddress& ultra, DMXAddress& uber);
+
 
         static DmxValue GetChannelMaxDmx(const EGdtfChannelBitResolution chanlReso);
 
