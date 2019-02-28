@@ -7175,7 +7175,7 @@ void SceneData::GdtfPhysicalDescriptions::OnPrintToFile(IXMLFileNodePtr pNode)
     
     //------------------------------------------------------------------------------------
     // Print the attributes        
-    pNode->SetNodeAttributeValue(XML_GDTF_PhysicalDescriptionsAttrColorSpace,  fUnresolved_ColorSpace);    
+    fColorSpace.WriteToNode(pNode);
 
     // Print Emitters (physicalDescription child)
 	IXMLFileNodePtr emittersGroupNode;

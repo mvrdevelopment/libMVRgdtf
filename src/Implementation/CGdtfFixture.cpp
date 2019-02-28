@@ -1601,7 +1601,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetFilterAt(size_t a
     if (at >=  fFixtureObject->GetPhysicalDesciptionsContainer().GetFilterArray().size()) { return kVCOMError_OutOfBounds; }
 
 
-    SceneData::GdtfFilter* gdtfFilter = fFixtureObject->GetPhysicalDesciptionsContainer.GetFilterArray()[at];
+    SceneData::GdtfFilter* gdtfFilter = fFixtureObject->GetPhysicalDesciptionsContainer().GetFilterArray()[at];
 
 
     //---------------------------------------------------------------------------
@@ -1748,10 +1748,10 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetDMXProfileAt(size
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateDMXProfile(VectorworksMVR::IGdtfDMXProfile **outVal)
 {
     // Check if Set
-    if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
+    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
 
 
-    SceneData::GdtfDMXProfile* gdtfDMXProfile = fPhysicalDescriptions->AddDmxProfile();
+    SceneData::GdtfDMXProfile* gdtfDMXProfile = fFixtureObject->GetPhysicalDesciptionsContainer().AddDmxProfile();
 
     //---------------------------------------------------------------------------
     // Initialize Object
@@ -1791,9 +1791,9 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateDMXProfile(Vec
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetCRIGroupCount(size_t &count)
 {
-    if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
+    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
 
-    count = fPhysicalDescriptions->GetCRIGroupArray().size();
+    count = fFixtureObject->GetPhysicalDesciptionsContainer().GetCRIGroupArray().size();
 
     return kVCOMError_NoError;
 }
@@ -1802,13 +1802,13 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetCRIGroupCount(siz
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetCRIGroupAt(size_t at, VectorworksMVR::IGdtfCRIGroup** value)
 {
     // Check if Set
-    if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
+    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
 
     // Check if no Overflow
-    if (at >= fPhysicalDescriptions->GetCRIGroupArray().size()) { return kVCOMError_OutOfBounds; }
+    if (at >= fFixtureObject->GetPhysicalDesciptionsContainer().GetCRIGroupArray().size()) { return kVCOMError_OutOfBounds; }
 
 
-    SceneData::GdtfCRIGroup* gdtfCRIGroup = fPhysicalDescriptions->GetCRIGroupArray()[at];
+    SceneData::GdtfCRIGroup* gdtfCRIGroup = fFixtureObject->GetPhysicalDesciptionsContainer().GetCRIGroupArray()[at];
 
 
     //---------------------------------------------------------------------------
@@ -1851,10 +1851,10 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetCRIGroupAt(size_t
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateCRIGroup(double colorTemp, VectorworksMVR::IGdtfCRIGroup **outVal)
 {
     // Check if Set
-    if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
+    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
 
 
-    SceneData::GdtfCRIGroup* gdtfCRIGroup = fPhysicalDescriptions->AddCRIGroup(colorTemp);
+    SceneData::GdtfCRIGroup* gdtfCRIGroup = fFixtureObject->GetPhysicalDesciptionsContainer().AddCRIGroup(colorTemp);
 
     //---------------------------------------------------------------------------
     // Initialize Object
