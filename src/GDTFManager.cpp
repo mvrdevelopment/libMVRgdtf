@@ -5499,14 +5499,6 @@ GdtfActivationGroupPtr GdtfFixture::AddActivationGroup(const TXString& name)
 	return actGroup;
 }
 
-GdtfCRIGroupPtr SceneData::GdtfFixture::AddCRIGroup(double colorTsemp)
-{   
-    GdtfCRIGroupPtr criGroup = new GdtfCRIGroup(colorTsemp);
-    fCRI_Groups.push_back(criGroup);
-
-    return criGroup;
-}
-
 const TGdtfWheelArray& GdtfFixture::GetWheelArray()
 {
 	return fWheels;
@@ -7151,6 +7143,14 @@ GdtfDMXProfilePtr SceneData::GdtfPhysicalDescriptions::AddDmxProfile()
     fDmxProfiles.push_back(dmxProf);
     
     return dmxProf;
+}
+
+GdtfCRIGroupPtr SceneData::GdtfPhysicalDescriptions::AddCRIGroup(double colorTsemp)
+{
+    GdtfCRIGroupPtr criGroup = new GdtfCRIGroup(colorTsemp);
+    fCRI_Groups.push_back(criGroup);
+
+    return criGroup;
 }
 
 TXString SceneData::GdtfPhysicalDescriptions::GetNodeName()

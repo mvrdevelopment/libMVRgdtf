@@ -48,6 +48,7 @@ namespace SceneData
     typedef std::vector<GdtfDMXProfile*>	TGdtfDMXProfileArray;
 
     class GdtfCRIGroup;  
+    typedef GdtfCRIGroup*	GdtfCRIGroupPtr;
     typedef std::vector<GdtfCRIGroup*>	TGdtf_CRIGroupArray;
     
     class GdtfMeasurementPoint;
@@ -400,6 +401,7 @@ namespace SceneData
 
         GdtfPhysicalEmitterPtr	        AddEmitter(const TXString& name);
         GdtfDMXProfilePtr               AddDmxProfile();
+        GdtfCRIGroupPtr                 AddCRIGroup(double colorTsemp);
 
     protected:
         virtual	TXString				GetNodeName();
@@ -1862,7 +1864,6 @@ namespace SceneData
         virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
         virtual void                    OnErrorCheck(const IXMLFileNodePtr& pNode);
     };
-    typedef GdtfCRIGroup*	GdtfCRIGroupPtr;
 
 	class GdtfDMXProfile : public GdtfObject
      {
@@ -1996,8 +1997,7 @@ private:
 
 		GdtfUserPresetPtr		AddUserPreset();
 		GdtfFeatureGroupPtr		AddFeatureGroup(const TXString& name, const TXString& prettyName);
-		GdtfActivationGroupPtr	AddActivationGroup(const TXString& name);
-        GdtfCRIGroupPtr         AddCRIGroup(double colorTsemp);
+		GdtfActivationGroupPtr	AddActivationGroup(const TXString& name);        
 
 		//----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		// Read calls
