@@ -155,6 +155,11 @@ void GdtfUnittest::WriteFile()
             gdtfMeasurement->SetLuminousIntensity(2.34);
             gdtfMeasurement->SetTransmission(4.56);
             gdtfMeasurement->SetInterpolationTo(EGdtfInterpolationTo::Log);
+            
+            IGdtfMeasurementPointPtr gdtfMeasurPoint;
+            gdtfMeasurement->CreateMeasurementPoint(&gdtfMeasurPoint);
+            gdtfMeasurPoint->SetEnergy(1.23);
+            gdtfMeasurPoint->SetWaveLength(2.34);
 		}
 
 
@@ -444,7 +449,7 @@ void GdtfUnittest::ReadFile()
 				this->checkifEqual("gdtfEmitterColorFY ", color.f_Y, 0.424242);
 
 				size_t measurementsCount = 0;
-				__checkVCOM(gdtfEmitter->GetMeasurementCount(measurementsCount));
+				__checkVCOM(gdtfEmitter->GetMeasurementCount(measurementsCount));  // XXX TODO: check the count here!
 				for (size_t j = 0; j < measurementsCount; j++)
 				{
 					IGdtfMeasurementPtr emitterMeasurement;
@@ -462,14 +467,22 @@ void GdtfUnittest::ReadFile()
                         EGdtfInterpolationTo interpolationTo = EGdtfInterpolationTo::Linear; __checkVCOM(emitterMeasurement->GetInterpolationTo(interpolationTo));
                         this->checkifEqual("InterpolationTo",  size_t(interpolationTo), size_t(EGdtfInterpolationTo::Log) );
 
-                        // TODO: XXX
-						//double waveLength_Val = 0;
-						//__checkVCOM(emitterMeasurement->GetWaveLength(waveLength_Val));
-						//this->checkifEqual("GetWaveLength ", waveLength_Val, double(100));		// only for object valid, because of hardcoded wavelength and energy
+                        //-----------------------------------------------------------------------------
+                        // MeasurementPoint
+                        size_t mpCount; __checkVCOM(emitterMeasurement->GetMeasurementPointCount(mpCount));
+                        this->checkifEqual("MeasurementPoint Count", mpCount, size_t(1));
+                        
+                        IGdtfMeasurementPointPtr gdtfMeasurPoint;
+                        
+                        if (__checkVCOM(emitterMeasurement->GetMeasurementPointAt(0, &gdtfMeasurPoint)));                        
+                        
+						double waveLength_Val = 0;
+						__checkVCOM(gdtfMeasurPoint->GetWaveLength(waveLength_Val));
+						this->checkifEqual("GetWaveLength ", waveLength_Val, double(100));		// only for object valid, because of hardcoded wavelength and energy
 
-						//double energy_Val = 0;
-						//__checkVCOM(emitterMeasurement->GetEnergy(energy_Val));
-						//this->checkifEqual("GetEnergy ", energy_Val, double(200));				// only for object valid, because of hardcoded wavelength and energy
+						double energy_Val = 0;
+						__checkVCOM(gdtfMeasurPoint->GetEnergy(energy_Val));
+						this->checkifEqual("GetEnergy ", energy_Val, double(200));				// only for object valid, because of hardcoded wavelength and energy
 					}
 				} // measurements loop
 			}
