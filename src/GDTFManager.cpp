@@ -7217,7 +7217,18 @@ void SceneData::GdtfPhysicalDescriptions::OnPrintToFile(IXMLFileNodePtr pNode)
     //------------------------------------------------------------------------------------
     // Print the attributes        
     fColorSpace.WriteToNode(pNode);
-
+    
+    //------------------------------------------------------------------------------------
+    // Print Filter        
+    IXMLFileNodePtr filtersGroupNode;
+    if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_GDTF_FiltersCollect, &filtersGroupNode))) 
+    {
+        for (GdtfFilter* filter : fFilters)
+        {
+            filter->WriteToNode(pNode);
+        }
+    }
+    
     // Print Emitters (physicalDescription child)
 	IXMLFileNodePtr emittersGroupNode;
 	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_GDTF_PhysicalDescriptionsEmitterCollect, & emittersGroupNode)))
@@ -7258,8 +7269,20 @@ void SceneData::GdtfPhysicalDescriptions::OnPrintToFile(IXMLFileNodePtr pNode)
 void SceneData::GdtfPhysicalDescriptions::OnReadFromNode(const IXMLFileNodePtr & pNode)
 {
 	// ------------------------------------------------------------------------------------
-	// Read PhysicalDescription	
-	
+	// Read Filters
+	GdtfConverter::TraverseNodes(pNode, XML_GDTF_FiltersCollect, XML_GDTF_FilterNode, [this] (IXMLFileNodePtr objNode) -> void
+									{
+										// Create the object
+										GdtfFilterPtr filter = new GdtfFilter();
+										 
+										// Read from node
+										filter->ReadFromNode(objNode);
+										 
+										// Add to list
+										fFilters.push_back(filter);
+										return;
+									});
+
     // Read Emitters (PhysicalDescription Child)
 	GdtfConverter::TraverseNodes(pNode, XML_GDTF_PhysicalDescriptionsEmitterCollect, XML_GDTF_EmitterNodeName, [this] (IXMLFileNodePtr objNode) -> void
 									{
