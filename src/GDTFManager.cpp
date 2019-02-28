@@ -5634,7 +5634,7 @@ const TXString & SceneData::GdtfFixture::GetSVGThumnailFullPath()
 	return fTumbnailFullPath_SVG;
 }
 
-GdtfPhysicalDescriptions& SceneData::GdtfFixture::GetPhysicalDesciptions()
+GdtfPhysicalDescriptions& SceneData::GdtfFixture::GetPhysicalDesciptionsContainer()
 {
     return fPhysicalDesciptions;
 }
