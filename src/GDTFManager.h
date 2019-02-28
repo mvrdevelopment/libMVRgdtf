@@ -2021,7 +2021,8 @@ private:
         virtual	void			        OnErrorCheck(const IXMLFileNodePtr& pNode);
 		        
         GdtfAttributePtr            getAttributeByRef(const TXString& ref);
-        GdtfWheelPtr                getWheelByRef(const TXString& ref);		
+        GdtfWheelPtr                getWheelByRef(const TXString& ref);	
+        GdtfPhysicalEmitterPtr      getEmiterByRef(const TXString& ref);
         GdtfDmxChannelFunctionPtr   getDmxFunctionByRef(const TXString& ref, GdtfDmxModePtr mode);
 		GdtfDmxChannelPtr           getDmxChannelByRef(const TXString& ref, GdtfDmxModePtr mode);
 

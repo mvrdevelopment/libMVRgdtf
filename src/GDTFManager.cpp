@@ -4438,6 +4438,18 @@ GdtfWheelPtr GdtfFixture::getWheelByRef(const TXString& ref)
 	return nullptr;
 }
 
+GdtfPhysicalEmitterPtr GdtfFixture::getEmiterByRef(const TXString& ref)
+{
+	for (GdtfPhysicalEmitterPtr emt : fEmitters)
+	{
+		if (emt->GetNodeReference() == ref){ return emt;};
+	}
+
+	// When this line is reached nothing was found.
+	DSTOP ((kEveryone, "Failed to resolve GdtfPhysicalEmitterPtr."));
+	return nullptr;
+}
+
 GdtfDmxChannelFunctionPtr GdtfFixture::getDmxFunctionByRef(const TXString& ref, GdtfDmxModePtr mode)
 {
 	for(GdtfDmxChannelPtr channel : mode->GetChannelArray())
@@ -4873,15 +4885,13 @@ void GdtfFixture::ResolveDmxChanelFunctionRefs(GdtfDmxLogicalChannelPtr dmxLogCh
 			chnlFunc->SetWheel(whlPtr);
 		}
 		
-		// ----------------------------------------------------------------------------------------
-		// TODO XXX: Check this Later.
-        // DmxChanelFunction.PhysicalEmitter (Optional)
-		//TXString unresolvedEmitterRef = chnlFunc->getUnresolvedEmitterRef();
-		//if ( ! unresolvedEmitterRef.IsEmpty())
-		//{
-		//	GdtfPhysicalEmitterPtr emtPtr = getEmiterByRef(unresolvedEmitterRef);
-		//	chnlFunc->SetEmitter(emtPtr);
-		//}
+		// ----------------------------------------------------------------------------------------		
+		TXString unresolvedEmitterRef = chnlFunc->getUnresolvedEmitterRef();
+		if ( ! unresolvedEmitterRef.IsEmpty())
+		{
+			GdtfPhysicalEmitterPtr emtPtr = getEmiterByRef(unresolvedEmitterRef);
+			chnlFunc->SetEmitter(emtPtr);
+		}
 
 	}
 }
