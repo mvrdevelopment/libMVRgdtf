@@ -14,7 +14,7 @@ namespace VectorworksMVR
         CGdtfPhysicalDescriptionsImpl();
         virtual ~CGdtfPhysicalDescriptionsImpl();
                 
-        virtual VCOMError GetColorSpace(VectorworksMVR::IGdtfColorSpace ** outColorSpace);
+        virtual VCOMError GetColorSpace(VectorworksMVR::IGdtfColorSpace ** outColorSpace); // XXX TODO: Create Color
         virtual VCOMError SetColorSpace(IGdtfColorSpace * newColorSpace);
 
         virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetEmitterCount(size_t& count);
