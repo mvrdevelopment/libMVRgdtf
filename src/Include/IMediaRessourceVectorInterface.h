@@ -824,7 +824,24 @@ namespace VectorworksMVR
     public:
         virtual MvrString VCOM_CALLTYPE     GetName() = 0;
 
-        // TODO: Getter/Setter
+        virtual VCOMError GetColorSpace(VectorworksMVR::IGdtfColorSpace ** outColorSpace) = 0;
+        virtual VCOMError SetColorSpace(IGdtfColorSpace * newColorSpace)=0;
+
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetEmitterCount(size_t& count)=0;
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateEmitter(MvrString name, VectorworksMVR::IGdtfPhysicalEmitter** outVal) = 0;
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetEmitterAt(size_t at, VectorworksMVR::IGdtfPhysicalEmitter** value)=0;
+
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetFilterCount(size_t& count)=0;
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateFilter(VectorworksMVR::IGdtfFilter** outVal)=0;
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetFilterAt(size_t at, VectorworksMVR::IGdtfFilter** value)=0;
+
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetDMXProfileCount(size_t& count)=0;
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateDMXProfile(VectorworksMVR::IGdtfDMXProfile** outVal)=0;
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetDMXProfileAt(size_t at, VectorworksMVR::IGdtfDMXProfile** value)=0;
+
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetCRIGroupCount(size_t& count)=0;
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateCRIGroup(double colorTemp, VectorworksMVR::IGdtfCRIGroup** outVal)=0;
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetCRIGroupAt(size_t at, VectorworksMVR::IGdtfCRIGroup** value)=0;
 
         virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
         virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
