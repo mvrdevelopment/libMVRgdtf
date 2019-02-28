@@ -820,36 +820,7 @@ namespace VectorworksMVR
         virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
     };
     typedef VCOMPtr<IGdtfFilter>	IGdtfFilterPtr;
-        
-    class DYNAMIC_ATTRIBUTE IGdtfPhysicalDescriptions : public IVWUnknown
-    {
-    public:
-        virtual MvrString VCOM_CALLTYPE     GetName() = 0;
-
-        virtual VCOMError GetColorSpace(VectorworksMVR::IGdtfColorSpace ** outColorSpace) = 0;
-        virtual VCOMError SetColorSpace(IGdtfColorSpace * newColorSpace)=0;
-
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetEmitterCount(size_t& count)=0;
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateEmitter(MvrString name, VectorworksMVR::IGdtfPhysicalEmitter** outVal) = 0;
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetEmitterAt(size_t at, VectorworksMVR::IGdtfPhysicalEmitter** value)=0;
-
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetFilterCount(size_t& count)=0;
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateFilter(VectorworksMVR::IGdtfFilter** outVal)=0;
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetFilterAt(size_t at, VectorworksMVR::IGdtfFilter** value)=0;
-
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetDMXProfileCount(size_t& count)=0;
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateDMXProfile(VectorworksMVR::IGdtfDMXProfile** outVal)=0;
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetDMXProfileAt(size_t at, VectorworksMVR::IGdtfDMXProfile** value)=0;
-
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetCRIGroupCount(size_t& count)=0;
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateCRIGroup(double colorTemp, VectorworksMVR::IGdtfCRIGroup** outVal)=0;
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetCRIGroupAt(size_t at, VectorworksMVR::IGdtfCRIGroup** value)=0;
-
-        virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
-        virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
-    };
-    typedef VCOMPtr<IGdtfPhysicalDescriptions>	IGdtfPhysicalDescriptionsPtr;
-
+    
     class DYNAMIC_ATTRIBUTE IGdtfPhysicalEmitter : public IVWUnknown
     {
 		public:
@@ -944,18 +915,13 @@ namespace VectorworksMVR
         virtual MvrString VCOM_CALLTYPE     GetFixtureThumbnail() = 0;
 		virtual MvrString VCOM_CALLTYPE     GetFixtureThumbnail_PNG_FullPath() = 0;
         virtual MvrString VCOM_CALLTYPE     GetFixtureThumbnail_SVG_FullPath() = 0;
-
-        virtual VCOMError VCOM_CALLTYPE     GetPhysicalDescriptions(VectorworksMVR::IGdtfPhysicalDescriptions ** outPhysicalDescriptions)=0;
-		
-
+        
 		virtual VCOMError VCOM_CALLTYPE     SetFixtureTypeDescription(MvrString descrip) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetShortName(MvrString shortName) = 0;
 
 		virtual VCOMError VCOM_CALLTYPE     SetFixtureThumbnail(MvrString thubnail) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetLinkedFixtureGUID(const MvrUUID& uuid) = 0;
 		
-        virtual VCOMError VCOM_CALLTYPE     SetPhysicalDescriptions(IGdtfPhysicalDescriptions* val)=0;
-
         virtual VCOMError VCOM_CALLTYPE		GetActivationGroupCount(size_t& count) = 0;
         virtual VCOMError VCOM_CALLTYPE		GetActivationGroupAt(size_t at, IGdtfActivationGroup** activationGroup) = 0;
 		virtual VCOMError VCOM_CALLTYPE		CreateActivationGroup(MvrString name, IGdtfActivationGroup** activationGroup) = 0;
