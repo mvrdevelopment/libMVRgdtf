@@ -7564,8 +7564,9 @@ void SceneData::GdtfMeasurement::SetInterpolationTo(EGdtfInterpolationTo val)
 
 GdtfMeasurementPoint* SceneData::GdtfMeasurement::CreateMeasurementPoint()
 {
-    GdtfMeasurementPointPtr MeasurementPt = new GdtfMeasurementPoint();
-	return MeasurementPt;
+    GdtfMeasurementPointPtr mP = new GdtfMeasurementPoint();
+    fMeasurementPoints.push_back(mP);
+	return mP;
 }
 
 TXString SceneData::GdtfMeasurement::GetNodeName()
