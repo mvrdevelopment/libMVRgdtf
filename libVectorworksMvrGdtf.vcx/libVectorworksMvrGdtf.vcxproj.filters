@@ -267,9 +267,6 @@
     <ClCompile Include="..\src\Implementation\CGdtfFilter.cpp">
       <Filter>src\Implementation</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Implementation\CGdtfPhysicalDescriptions.cpp">
-      <Filter>src\Implementation</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\XMLLib\ErrorHandler.h">
@@ -567,9 +564,6 @@
       <Filter>src\Implementation</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Implementation\CGdtfFilter.h">
-      <Filter>src\Implementation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Implementation\CGdtfPhysicalDescriptions.h">
       <Filter>src\Implementation</Filter>
     </ClInclude>
   </ItemGroup>
