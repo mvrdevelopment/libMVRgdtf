@@ -456,6 +456,8 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_EmitterNodeName						"Emitter"
 #define XML_GDTF_EmitterName							"Name"
 #define XML_GDTF_EmitterColor							"Color"
+#define XML_GDTF_EmitterDominantWaveLength              "DominantWaveLength"
+#define XML_GDTF_EmitterDiodePart                       "DiodePart"
 
 #define XML_GDTF_DMX_ProfileCollect                     "DMXProfiles"
 #define XML_GDTF_DMX_Profile                            "DMXProfile"
