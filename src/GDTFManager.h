@@ -1913,8 +1913,15 @@ namespace SceneData
 		TXString		            fTumbnailName;
 		TXString		            fTumbnailFullPath_PNG;
         TXString		            fTumbnailFullPath_SVG;
-		GdtfFixtureGUID	            fLinkedGuid;
+		
+        GdtfFixtureGUID	            fLinkedGuid;
 		bool			            fHasLinkedGuid;
+        
+        GdtfProtocols				fProtocollContainer;
+        bool                        fHasProtocolls;
+
+        GdtfPhysicalDescriptions    fPhysicalDesciptions; 
+        bool			            fHasPhysicalDescriptions;
 		//------------------------------------------------
 		// Storage
         
@@ -1930,10 +1937,7 @@ namespace SceneData
 		TGdtfDmxModeArray				fDmxModes;
 		TGdtfRevisionArray				fRevisions;
 		TGdtfUserPresetArray			fPresets;
-		TGdtfMacroArray					fMacros;		        
-		GdtfProtocols					fProtocollContainer; // TODO: XXX init with nullptr and check existence when called!
-        GdtfPhysicalDescriptionsPtr     fPhysicalDesciptions; 
-
+		TGdtfMacroArray					fMacros;	
 		//------------------------------------------------
 		// Reading support
 		TVWArray_IFileIdentifier		fLocalFiles;
@@ -1965,7 +1969,7 @@ private:
         const TXString&             GetThumbnailName() const;        
 		const GdtfPNGFile&          GetPNGThumnailFullPath();		
         const TXString&             GetSVGThumnailFullPath();
-        GdtfPhysicalDescriptionsPtr GetPhysicalDesciptions();
+        GdtfPhysicalDescriptionsPtr GetPhysicalDesciptions(); // XXX TODO: Do we even need the getter and setter here?
         // Setter
 		void				SetName(const TXString& name);
 		void				SetShortName(const TXString& shortName);

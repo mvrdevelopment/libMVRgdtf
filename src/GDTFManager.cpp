@@ -4717,8 +4717,10 @@ GdtfDmxModePtr GdtfFixture::ResolveDMXMode(const TXString& unresolvedDMXmode)
     return nullptr;
 }
 
-void GdtfFixture::ResolveDMXPersonalityRefs() 
+void GdtfFixture::ResolveDMXPersonalityRefs()
 {
+    if ( ! fHasProtocolls) { return;}
+
     GdtfFTRDM* rdm =  fProtocollContainer.GetRDM();
 
     if (rdm)
@@ -4889,13 +4891,13 @@ void GdtfFixture::ResolveDmxChanelFunctionRefs(GdtfDmxLogicalChannelPtr dmxLogCh
 GdtfFixture::GdtfFixture()
 {
 	fReaded					= false;
-	fHasLinkedGuid			= false;
-    fPhysicalDesciptions    = nullptr;
+	fHasLinkedGuid			= false;    
+    fHasProtocolls          = false;
+    fHasPhysicalDescriptions = false;
 }
 
 GdtfFixture::~GdtfFixture()
-{
-    delete fPhysicalDesciptions;
+{   
 
     for (GdtfActivationGroupPtr obj		: fActivationGroups){ delete obj; }
     for (GdtfFeatureGroupPtr obj		: fFeatureGroups)   { delete obj; }
@@ -4999,11 +5001,9 @@ void GdtfFixture::OnPrintToFile(IXMLFileNodePtr pNode)
 	}
 	
 	// ------------------------------------------------------------------------------------
-	// Print PhysicalDescriptions
-    if (fPhysicalDesciptions) 
-    {
-        fPhysicalDesciptions->WriteToNode(pNode);
-    }	
+	// Print PhysicalDescriptions    
+    fPhysicalDesciptions.WriteToNode(pNode);
+    	
 	// ------------------------------------------------------------------------------------
 	// Print models
 	IXMLFileNodePtr models;
@@ -5072,7 +5072,7 @@ void GdtfFixture::OnPrintToFile(IXMLFileNodePtr pNode)
 	
 	// ------------------------------------------------------------------------------------
 	// Print Prorocols
-    fProtocollContainer.WriteToNode(pNode);	
+    if (fHasProtocolls) { fProtocollContainer.WriteToNode(pNode); }
 }
 
 void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
@@ -5095,6 +5095,7 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
     IXMLFileNodePtr protoNode;
     if (VCOM_SUCCEEDED(pNode->GetChildNode(XML_GDTF_Protocols, &protoNode))) 
     {        
+        fHasProtocolls = true;
         fProtocollContainer.ReadFromNode(protoNode); 
     } 
 
@@ -5102,8 +5103,7 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
     IXMLFileNodePtr physDescrNode;
     if (VCOM_SUCCEEDED(pNode->GetChildNode(XML_GDTF_FixtureChildNodePhysicalDesrip, &physDescrNode) ))
     {
-        fPhysicalDesciptions = new GdtfPhysicalDescriptions();
-        fPhysicalDesciptions->ReadFromNode(physDescrNode);
+        fPhysicalDesciptions.ReadFromNode(physDescrNode);
     }
 
     // ------------------------------------------------------------------------------------
@@ -5635,7 +5635,7 @@ const TXString & SceneData::GdtfFixture::GetSVGThumnailFullPath()
 
 GdtfPhysicalDescriptionsPtr SceneData::GdtfFixture::GetPhysicalDesciptions()
 {
-    return fPhysicalDesciptions;
+    return &fPhysicalDesciptions;
 }
 
 void GdtfFixture::SetName(const TXString& name)
@@ -5681,7 +5681,7 @@ void GdtfFixture::SetThumbnailName(const TXString& fileName)
 
 void SceneData::GdtfFixture::SetPhysicalDesciptions(GdtfPhysicalDescriptionsPtr val)
 {
-    fPhysicalDesciptions = val;
+    fPhysicalDesciptions = *val;
 }
 
 SceneData::GdtfDMXProfile::GdtfDMXProfile()
