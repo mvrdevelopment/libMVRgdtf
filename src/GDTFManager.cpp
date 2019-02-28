@@ -7148,6 +7148,13 @@ TXString SceneData::GdtfPhysicalDescriptions::GetNodeName()
 
 void SceneData::GdtfPhysicalDescriptions::OnPrintToFile(IXMLFileNodePtr pNode)
 {
+    //------------------------------------------------------------------------------------
+    // Call the parent
+    GdtfObject::OnPrintToFile(pNode);
+    
+    //------------------------------------------------------------------------------------
+    pNode->SetNodeAttributeValue(XML_GDTF_PhysicalDescriptionsAttrColorSpace,  fUnresolved_ColorSpace);    
+
     // Print Emitters (physicalDescription child)
 	IXMLFileNodePtr emittersGroupNode;
 	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_GDTF_PhysicalDescriptionsEmitterCollect, & emittersGroupNode)))

@@ -220,8 +220,10 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_FixtureChildNodeRevisions			"Revisions"
 #define XML_GDTF_FixtureChildNodePresets			"FTPresets"
 #define XML_GDTF_FixtureChildNodeMacros				"FTMacros"
-#define XML_GDTF_FixtureChildNodePhysicalDesrip		"PhysicalDescriptions"
 #define XML_GDTF_FixtureChildNodeRDM				"FTRDM"
+
+#define XML_GDTF_FixtureChildNodePhysicalDesrip		 "PhysicalDescriptions"
+#define XML_GDTF_PhysicalDescriptionsAttrColorSpace  "ColorSpace"
 
 //-----------------------------------------------------------------------------
 // ColorSpace
@@ -235,6 +237,7 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_ColorSpace_WhitePoint "WhitePoint"
 //-----------------------------------------------------------------------------
 // Filter
+#define XML_GDTF_FiltersCollect         "Filters"
 #define XML_GDTF_FilterNode             "Filter"
 // Filter Attribs
 #define XML_GDTF_Filter_Name            "Name"
@@ -449,8 +452,7 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_MacroNodeName							"FTMacro"
 #define XML_GDTF_UserPresetNodeName						"FTPreset"
 
-#define XML_GDTF_PhysicalDescriptionsEmitterCollect		"Emitters"
-
+#define XML_GDTF_PhysicalDescriptionsEmitterCollect	    "Emitters"
 #define XML_GDTF_EmitterNodeName						"Emitter"
 #define XML_GDTF_EmitterName							"Name"
 #define XML_GDTF_EmitterColor							"Color"
