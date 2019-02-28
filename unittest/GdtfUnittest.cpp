@@ -164,8 +164,24 @@ void GdtfUnittest::WriteFile()
             gdtfMeasurPoint->SetWaveLength(2.34);
 		}
 
+        //------------------------------------------------------------------------------------------------------------------
+        // Filters
 
-		//------------------------------------------------------------------------------------------------------------------
+        CieColor filterColor; 
+		filterColor.fx	= 0.1;
+		filterColor.fy	= 0.2;
+		filterColor.f_Y	= 0.3;
+
+        IGdtfFilterPtr gdtfFilter; gdtfWrite->CreateFilter( "My Filter", filterColor, &gdtfFilter);
+
+        // Filter.Measurements
+        // (The Meaurement attributes are check in the Emitter test.)        
+
+        IGdtfMeasurementPtr gdtfMeasure;  __checkVCOM(gdtfFilter->CreateMeasurement(&gdtfMeasure) );
+        IGdtfMeasurementPtr gdtfMeasure;  __checkVCOM(gdtfFilter->CreateMeasurement(&gdtfMeasure) );
+        IGdtfMeasurementPtr gdtfMeasure;  __checkVCOM(gdtfFilter->CreateMeasurement(&gdtfMeasure) );
+
+        //------------------------------------------------------------------------------------------------------------------
 		// Handle Models
 		IGdtfModelPtr gdtfModel;
 		if (__checkVCOM(gdtfWrite->CreateModel("My modelName", &gdtfModel)))
@@ -491,6 +507,27 @@ void GdtfUnittest::ReadFile()
 		} // emitter loop
 
 
+        //------------------------------------------------------------------------------------------------------------------
+        // Filters        
+        size_t filterCount; __checkVCOM(gdtfRead->GetFilterCount(filterCount));
+        IGdtfFilterPtr gdtfFilter; __checkVCOM(gdtfRead->GetFilterAt(0, &gdtfFilter));
+
+        MvrString filterNam = gdtfFilter->GetName();
+        this->checkifEqual("Filter Name", filterNam, "My Filter");
+                
+        CieColor filterColor;  __checkVCOM(gdtfFilter->GetColor(filterColor) );
+        
+        CieColor filterColorCompare; 
+		filterColorCompare.fx	= 0.1;
+		filterColorCompare.fy	= 0.2;
+		filterColorCompare.f_Y	= 0.3;
+
+        this->checkifEqual("Filter Color", filterColor, filterColorCompare);
+
+        // Filter.Measurements
+        // (The Meaurement attributes are check in the Emitter test.)
+        size_t measruementCount; __checkVCOM(gdtfFilter->GetMeasurementCount(measruementCount));
+        this->checkifEqual(" Filter.Measurements Count", measruementCount, 3);
 		//------------------------------------------------------------------------------    
 		// Fill with DMX
 		size_t dmxModesCount = 0;
