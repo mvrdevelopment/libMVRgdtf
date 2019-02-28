@@ -7,6 +7,7 @@
 #include "CGdtfPhysicalEmitter.h" 
 #include "CGdtfFilter.h"
 #include "CGdtfDMXProfile.h"
+#include  "CGdtfCRIGroup.h"
 
 CGdtfPhysicalDescriptionsImpl::CGdtfPhysicalDescriptionsImpl()
 {
@@ -420,7 +421,108 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::CreateD
     return kVCOMError_NoError;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::GetCRIGroupCount(size_t &count)
+{
+    if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
 
+    count = fPhysicalDescriptions->GetCRIGroupArray().size();
+
+    return kVCOMError_NoError;
+}
+
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::GetCRIGroupAt(size_t at, VectorworksMVR::IGdtfCRIGroup** value)
+{
+    // Check if Set
+    if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
+
+    // Check if no Overflow
+    if (at >= fPhysicalDescriptions->GetCRIGroupArray().size()) { return kVCOMError_OutOfBounds; }
+
+
+    SceneData::GdtfCRIGroup* gdtfCRIGroup = fPhysicalDescriptions->GetCRIGroupArray()[at];
+
+
+    //---------------------------------------------------------------------------
+    // Initialize Object
+    CGdtfCRIGroupImpl* pCRIGroupObj = nullptr;
+
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfCRIGroup, (IVWUnknown**)& pCRIGroupObj)))
+    {
+        // Check Casting
+        CGdtfCRIGroupImpl* pResultInterface = dynamic_cast<CGdtfCRIGroupImpl*>(pCRIGroupObj);
+        if (pResultInterface)
+        {
+            pResultInterface->SetPointer(gdtfCRIGroup);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+
+    //---------------------------------------------------------------------------
+    // Check Incomming Object
+    if (*value)
+    {
+        (*value)->Release();
+        *value = NULL;
+    }
+
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *value = pCRIGroupObj;
+
+    return kVCOMError_NoError;
+}
+
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::CreateCRIGroup(double colorTemp, VectorworksMVR::IGdtfCRIGroup **outVal)
+{
+    // Check if Set
+    if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
+
+
+    SceneData::GdtfCRIGroup* gdtfCRIGroup = fPhysicalDescriptions->AddCRIGroup(colorTemp);
+
+    //---------------------------------------------------------------------------
+    // Initialize Object
+    CGdtfCRIGroupImpl* pCRIGroupObj = nullptr;
+
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfCRIGroup, (IVWUnknown**)& pCRIGroupObj)))
+    {
+        // Check Casting
+        CGdtfCRIGroupImpl* pResultInterface = dynamic_cast<CGdtfCRIGroupImpl*>(pCRIGroupObj);
+        if (pResultInterface)
+        {
+            pResultInterface->SetPointer(gdtfCRIGroup);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+
+    //---------------------------------------------------------------------------
+    // Check Incomming Object
+    if (*outVal)
+    {
+        (*outVal)->Release();
+        *outVal = NULL;
+    }
+
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *outVal = pCRIGroupObj;
+
+    return kVCOMError_NoError;
+}
 
 
 
