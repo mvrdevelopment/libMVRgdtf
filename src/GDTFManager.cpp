@@ -5096,6 +5096,13 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
         fProtocollContainer.ReadFromNode(protoNode); 
     } 
 
+    // Read PhysicalDesciptions
+    IXMLFileNodePtr physDescrNode;
+    if (VCOM_SUCCEEDED(pNode->GetChildNode(XML_GDTF_FixtureChildNodePhysicalDesrip, &physDescrNode) ))
+    {
+        fPhysicalDesciptions->ReadFromNode(physDescrNode);
+    }
+
     // ------------------------------------------------------------------------------------
     // Read AttributeDefinitions
     
@@ -5239,9 +5246,6 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 									 fRevisions.push_back(rev);
 									 return;
 								 });
-	
-    fPhysicalDesciptions->ReadFromNode(pNode);
-
 	// ------------------------------------------------------------------------------------
 	// Read presets
     // -
