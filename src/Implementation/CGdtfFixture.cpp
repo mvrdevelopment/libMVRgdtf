@@ -20,7 +20,9 @@
 #include "CGdtfCRIGroup.h"
 #include "CGdtfFTRDM.h"
 #include "CGdtfXmlParsingError.h"
+#include "CGdtfPhysicalDescriptions.h"
 #include "GdtfError.h"
+
 
 using namespace VectorWorks::Filing;
 
@@ -234,6 +236,51 @@ MvrString VCOM_CALLTYPE VectorworksMVR::CGdtfFixtureImpl::GetFixtureThumbnail_SV
 	
 	return fFixtureObject->GetSVGThumnailFullPath().GetCharPtr();
 }
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetPhysicalDescriptions(VectorworksMVR::IGdtfPhysicalDescriptions **outPhysicalDescriptions)
+{
+    // Check Pointer
+    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
+
+    //---------------------------------------------------------------------------
+    // Initialize Object
+    SceneData::GdtfPhysicalDescriptions*	gdtfPhysicalDescriptions = &fFixtureObject->GetPhysicalDesciptions();
+    if (!gdtfPhysicalDescriptions) { return kVCOMError_NotSet; }
+
+    CGdtfPhysicalDescriptionsImpl*		pPhysicalDescriptionsObj = nullptr;
+
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfPhysicalDescriptions, (IVWUnknown**)& pPhysicalDescriptionsObj)))
+    {
+        // Check Casting
+        CGdtfPhysicalDescriptionsImpl* pResultInterface = dynamic_cast<CGdtfPhysicalDescriptionsImpl*>(pPhysicalDescriptionsObj);
+        if (pResultInterface)
+        {
+            pResultInterface->SetPointer(gdtfPhysicalDescriptions);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+
+    //---------------------------------------------------------------------------
+    // Check Incomming Object
+    if (*outPhysicalDescriptions)
+    {
+        (*outPhysicalDescriptions)->Release();
+        *outPhysicalDescriptions = NULL;
+    }
+
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *outPhysicalDescriptions = pPhysicalDescriptionsObj;
+
+    return kVCOMError_NoError;
+}
+
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::SetFixtureTypeDescription(MvrString descrip)
 {
