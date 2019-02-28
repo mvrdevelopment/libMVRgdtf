@@ -5252,57 +5252,11 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	
 	// ------------------------------------------------------------------------------------
 	// Read presets
-
+    // -
 	
 	// ------------------------------------------------------------------------------------
 	// Read macros
-
-	
-	// ------------------------------------------------------------------------------------
-	// Read PhysicalDescription
-	IXMLFileNodePtr physicalDescription;
-	if (VCOM_SUCCEEDED( pNode->GetChildNode(XML_GDTF_FixtureChildNodePhysicalDesrip, & physicalDescription)))
-	{
-        // Read Emitters (PhysicalDescription Child)
-		GdtfConverter::TraverseNodes(physicalDescription, XML_GDTF_PhysicalDescriptionsEmitterCollect, XML_GDTF_EmitterNodeName, [this] (IXMLFileNodePtr objNode) -> void
-									 {
-										 // Create the object
-										 GdtfPhysicalEmitterPtr emitter = new GdtfPhysicalEmitter();
-										 
-										 // Read from node
-										 emitter->ReadFromNode(objNode);
-										 
-										 // Add to list
-										 fEmitters.push_back(emitter);
-										 return;
-									 });
-        // Read DmxProfiles (PhysicalDescription Child) 
-        GdtfConverter::TraverseNodes(pNode, XML_GDTF_DMX_ProfileCollect, XML_GDTF_DMX_Profile, [this](IXMLFileNodePtr objNode) -> void
-        {
-            // Create the object
-            GdtfDMXProfilePtr dmxProfile = new GdtfDMXProfile();
-
-            // Read from node
-            dmxProfile->ReadFromNode(objNode);
-
-            // Add to list
-            fDmxProfiles.push_back(dmxProfile);
-            return;
-        });
-		
-		// ------------------------------------------------------------------------------------
-		GdtfConverter::TraverseNodes(physicalDescription, XML_GDTF_ColorRenderingIndexCollect, XML_GDTF_ColorRenderingIndexGroup, [this](IXMLFileNodePtr objNode) -> void
-										{
-											GdtfCRIGroupPtr criGroup = new GdtfCRIGroup();
-											
-											// Read from node
-											criGroup->ReadFromNode(objNode);
-											
-											fCRI_Groups.push_back(criGroup);
-											return;
-										});
-	}
-
+    // -
 }
 
 void GdtfFixture::OnErrorCheck(const IXMLFileNodePtr& pNode)
@@ -7245,7 +7199,49 @@ void SceneData::GdtfPhysicalDescriptions::OnPrintToFile(IXMLFileNodePtr pNode)
 
 void SceneData::GdtfPhysicalDescriptions::OnReadFromNode(const IXMLFileNodePtr & pNode)
 {
-    // TODO:
+	// ------------------------------------------------------------------------------------
+	// Read PhysicalDescription	
+	
+    // Read Emitters (PhysicalDescription Child)
+	GdtfConverter::TraverseNodes(pNode, XML_GDTF_PhysicalDescriptionsEmitterCollect, XML_GDTF_EmitterNodeName, [this] (IXMLFileNodePtr objNode) -> void
+									{
+										// Create the object
+										GdtfPhysicalEmitterPtr emitter = new GdtfPhysicalEmitter();
+										 
+										// Read from node
+										emitter->ReadFromNode(objNode);
+										 
+										// Add to list
+										fEmitters.push_back(emitter);
+										return;
+									});
+    // Read DmxProfiles (PhysicalDescription Child) 
+    GdtfConverter::TraverseNodes(pNode, XML_GDTF_DMX_ProfileCollect, XML_GDTF_DMX_Profile, [this](IXMLFileNodePtr objNode) -> void
+    {
+        // Create the object
+        GdtfDMXProfilePtr dmxProfile = new GdtfDMXProfile();
+
+        // Read from node
+        dmxProfile->ReadFromNode(objNode);
+
+        // Add to list
+        fDmxProfiles.push_back(dmxProfile);
+        return;
+    });
+		
+	// ------------------------------------------------------------------------------------
+    // Read CRIs
+	GdtfConverter::TraverseNodes(pNode, XML_GDTF_ColorRenderingIndexCollect, XML_GDTF_ColorRenderingIndexGroup, [this](IXMLFileNodePtr objNode) -> void
+									{
+										GdtfCRIGroupPtr criGroup = new GdtfCRIGroup();
+											
+										// Read from node
+										criGroup->ReadFromNode(objNode);
+											
+										fCRI_Groups.push_back(criGroup);
+										return;
+									});
+	
 }
 
 SceneData::GdtfColorSpace::GdtfColorSpace()
