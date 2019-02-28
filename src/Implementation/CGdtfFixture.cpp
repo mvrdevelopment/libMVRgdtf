@@ -20,7 +20,6 @@
 #include "CGdtfCRIGroup.h"
 #include "CGdtfFTRDM.h"
 #include "CGdtfXmlParsingError.h"
-#include "CGdtfPhysicalDescriptions.h"
 #include "GdtfError.h"
 
 
@@ -305,8 +304,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetActivationGroupAt
     if (at >=  fFixtureObject->GetActivationGroupArray().size()) { return kVCOMError_OutOfBounds;  }
     
     
-    SceneData::GdtfActivationGroup* gdtfActivationGroup = fFixtureObject->GetActivationGroupArray()[at];
-    
+    SceneData::GdtfActivationGroup* gdtfActivationGroup = fFixtureObject->GetActivationGroupArray()[at];    
     
     //---------------------------------------------------------------------------
     // Initialize Object
