@@ -399,7 +399,8 @@ namespace SceneData
         virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
     };
     typedef GdtfPhysicalDescriptions*	GdtfPhysicalDescriptionsPtr;
-           
+	typedef std::vector<GdtfPhysicalDescriptions*>	TGdtfPhysicalDescriptionsArray;
+
     class GdtfFilter : public GdtfObject
     {
     public:
@@ -1919,6 +1920,7 @@ namespace SceneData
 		TGdtfUserPresetArray			fPresets;
 		TGdtfMacroArray					fMacros;
 		
+        TGdtfPhysicalDescriptionsArray  fPhysicalDesciptions; 
 		TGdtfPhysicalEmitterArray		fEmitters;    // TODO: XXX remove this later.
         TGdtfDMXProfileArray            fDmxProfiles; // TODO: XXX remove this later.
         TGdtf_CRIGroupArray             fCRI_Groups;  // TODO: XXX remove this later.
