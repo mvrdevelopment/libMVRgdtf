@@ -824,6 +824,8 @@ namespace VectorworksMVR
     public:
         virtual MvrString VCOM_CALLTYPE     GetName() = 0;
 
+        // TODO: Getter/Setter
+
         virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
         virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
     };
