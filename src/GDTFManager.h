@@ -1920,7 +1920,7 @@ namespace SceneData
         GdtfFixtureGUID	            fLinkedGuid;
 		bool			            fHasLinkedGuid;
         
-        GdtfProtocols				fProtocollContainer; // XXX Check this implementation.
+        GdtfProtocols				fProtocollContainer;
         
 		//------------------------------------------------
 		// Storage
@@ -2043,7 +2043,7 @@ private:
 		void ResolveGeometryRefs_Recursive(GdtfGeometryPtr geometry);
 		
 		void            ResolveAttribRefs();		
-		void            ResolveDmxModeRefs();                // XXX Check
+		void            ResolveDmxModeRefs();
         void            ResolveDMXModeMasters();       
         void            ResolveDMXPersonalityRefs();
 		void            ResolveDmxRelationRefs(GdtfDmxModePtr dmxMode);
