@@ -1647,7 +1647,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateFilter(MvrStri
     if (!fFixtureObject) { return kVCOMError_NotInitialized; }
 
 
-    SceneData::GdtfFilter* gdtfFilter = fFixtureObject->GetPhysicalDesciptionsContainer().AddFilter();
+    SceneData::GdtfFilter* gdtfFilter = fFixtureObject->GetPhysicalDesciptionsContainer().AddFilter(name);
 
     //---------------------------------------------------------------------------
     // Initialize Object

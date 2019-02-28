@@ -401,7 +401,7 @@ namespace SceneData
         const TGdtf_CRIGroupArray&       GetCRIGroupArray();
         
         GdtfPhysicalEmitterPtr	        AddEmitter(const TXString& name, CCieColor color);
-        GdtfFilterPtr                   AddFilter();
+        GdtfFilterPtr                   AddFilter(const TXString& name,  CCieColor color);
         GdtfDMXProfilePtr               AddDmxProfile();
         GdtfCRIGroupPtr                 AddCRIGroup(double colorTsemp);
 

@@ -7136,9 +7136,9 @@ GdtfPhysicalEmitterPtr SceneData::GdtfPhysicalDescriptions::AddEmitter(const TXS
 	return emitter;
 }
 
-GdtfFilterPtr SceneData::GdtfPhysicalDescriptions::AddFilter()
+GdtfFilterPtr SceneData::GdtfPhysicalDescriptions::AddFilter(const TXString& name, CCieColor color)
 {
-    GdtfFilterPtr filter = new GdtfFilter();
+    GdtfFilterPtr filter = new GdtfFilter(name, color);
 
     fFilters.push_back(filter);
 
