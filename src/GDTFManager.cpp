@@ -4440,7 +4440,7 @@ GdtfWheelPtr GdtfFixture::getWheelByRef(const TXString& ref)
 
 GdtfPhysicalEmitterPtr GdtfFixture::getEmiterByRef(const TXString& ref)
 {
-	for (GdtfPhysicalEmitterPtr emt : fEmitters)
+	for (GdtfPhysicalEmitterPtr emt : fPhysicalDesciptions.GetPhysicalEmitterArray() )
 	{
 		if (emt->GetNodeReference() == ref){ return emt;};
 	}
