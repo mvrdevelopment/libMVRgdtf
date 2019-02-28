@@ -383,7 +383,7 @@ namespace SceneData
         GdtfPhysicalDescriptions();
         ~GdtfPhysicalDescriptions();
     private:        
-        GdtfColorSpace*                 fColorSpace;
+        GdtfColorSpace*                 fColorSpace; // Optional XXX add var has fColorSpace
         TXString                        fUnresolved_ColorSpace;
         //
         TGdtfPhysicalEmitterArray		fEmitters;      // Emitter Collect
