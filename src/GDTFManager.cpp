@@ -3888,9 +3888,10 @@ void GdtfPhysicalEmitter::OnPrintToFile(IXMLFileNodePtr pNode)
 	
 	// ------------------------------------------------------------------------------------
 	// Print node attributes
-	pNode->SetNodeAttributeValue(XML_GDTF_EmitterName,				fName);
-	pNode->SetNodeAttributeValue(XML_GDTF_EmitterColor,				GdtfConverter::ConvertColor(fColor));
-	
+	pNode->SetNodeAttributeValue(XML_GDTF_EmitterName,				 fName);
+	pNode->SetNodeAttributeValue(XML_GDTF_EmitterColor,				 GdtfConverter::ConvertColor(fColor) );
+    pNode->SetNodeAttributeValue(XML_GDTF_EmitterDominantWaveLength, GdtfConverter::ConvertDouble(fDominantWaveLength) );
+    pNode->SetNodeAttributeValue(XML_GDTF_EmitterDiodePart,          GdtfConverter::ConvertDouble(fDiodePart) );
 	//------------------------------------------------------------------------------------
 	// Write MeasurePoints
 	for (GdtfMeasurement* mes: fMeasurements)
