@@ -1970,7 +1970,7 @@ private:
 		const GdtfPNGFile&          GetPNGThumnailFullPath();		
         const TXString&             GetSVGThumnailFullPath();
         GdtfProtocols&				GetProtocollContainer();
-        GdtfPhysicalDescriptions&   GetPhysicalDesciptions();        
+        GdtfPhysicalDescriptions&   GetPhysicalDesciptionsContainer();        
         
         // Setter
 		void				SetName(const TXString& name);
