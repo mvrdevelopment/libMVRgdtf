@@ -177,9 +177,9 @@ void GdtfUnittest::WriteFile()
         // Filter.Measurements
         // (The Meaurement attributes are check in the Emitter test.)        
 
-        IGdtfMeasurementPtr gdtfMeasure;  __checkVCOM(gdtfFilter->CreateMeasurement(&gdtfMeasure) );
-        IGdtfMeasurementPtr gdtfMeasure;  __checkVCOM(gdtfFilter->CreateMeasurement(&gdtfMeasure) );
-        IGdtfMeasurementPtr gdtfMeasure;  __checkVCOM(gdtfFilter->CreateMeasurement(&gdtfMeasure) );
+        IGdtfMeasurementPtr gdtfMeasureA;  __checkVCOM(gdtfFilter->CreateMeasurement(&gdtfMeasureA));
+        IGdtfMeasurementPtr gdtfMeasureB;  __checkVCOM(gdtfFilter->CreateMeasurement(&gdtfMeasureB) );
+        IGdtfMeasurementPtr gdtfMeasureC;  __checkVCOM(gdtfFilter->CreateMeasurement(&gdtfMeasureC) );
 
         //------------------------------------------------------------------------------------------------------------------
 		// Handle Models
@@ -527,7 +527,7 @@ void GdtfUnittest::ReadFile()
         // Filter.Measurements
         // (The Meaurement attributes are check in the Emitter test.)
         size_t measruementCount; __checkVCOM(gdtfFilter->GetMeasurementCount(measruementCount));
-        this->checkifEqual(" Filter.Measurements Count", measruementCount, 3);
+        this->checkifEqual(" Filter.Measurements Count", measruementCount, size_t(3) );
 		//------------------------------------------------------------------------------    
 		// Fill with DMX
 		size_t dmxModesCount = 0;
