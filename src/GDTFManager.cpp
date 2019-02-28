@@ -4893,7 +4893,6 @@ GdtfFixture::GdtfFixture()
 	fReaded					= false;
 	fHasLinkedGuid			= false;    
     fHasProtocolls          = false;
-    fHasPhysicalDescriptions = false;
 }
 
 GdtfFixture::~GdtfFixture()
@@ -5002,7 +5001,7 @@ void GdtfFixture::OnPrintToFile(IXMLFileNodePtr pNode)
 	
 	// ------------------------------------------------------------------------------------
 	// Print PhysicalDescriptions    
-    if (fHasPhysicalDescriptions) { fPhysicalDesciptions.WriteToNode(pNode); }
+    fPhysicalDesciptions.WriteToNode(pNode);
     	
 	// ------------------------------------------------------------------------------------
 	// Print models
@@ -5103,7 +5102,6 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
     IXMLFileNodePtr physDescrNode;
     if (VCOM_SUCCEEDED(pNode->GetChildNode(XML_GDTF_FixtureChildNodePhysicalDesrip, &physDescrNode) ))
     {
-        fHasPhysicalDescriptions = true;
         fPhysicalDesciptions.ReadFromNode(physDescrNode);
     }
 
@@ -7102,15 +7100,12 @@ EGdtfObjectType SceneData::GdtfPhysicalDescriptions::GetObjectType()
     return EGdtfObjectType::eGdtfPhysicalDescription;
 }
 
-GdtfColorSpace * SceneData::GdtfPhysicalDescriptions::GetColorSpace()
+GdtfColorSpace& SceneData::GdtfPhysicalDescriptions::GetColorSpace()
 {
     return fColorSpace;
 }
 
-const TXString& SceneData::GdtfPhysicalDescriptions::GetUnresolvedColorSpace()
-{
-    return fUnresolved_ColorSpace;
-}
+
 
 const TGdtfPhysicalEmitterArray& SceneData::GdtfPhysicalDescriptions::GetPhysicalEmitterArray()
 {
@@ -7130,12 +7125,6 @@ const TGdtfDMXProfileArray& SceneData::GdtfPhysicalDescriptions::GetDmxProfileAr
 const TGdtf_CRIGroupArray & SceneData::GdtfPhysicalDescriptions::GetCRIGroupArray()
 {
     return fCRI_Groups;
-}
-
-
-void SceneData::GdtfPhysicalDescriptions::SetColorSpace(GdtfColorSpace * val)
-{
-    fColorSpace = val;
 }
 
 GdtfPhysicalEmitterPtr SceneData::GdtfPhysicalDescriptions::AddEmitter(const TXString & name)

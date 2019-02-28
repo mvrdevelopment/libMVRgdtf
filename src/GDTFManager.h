@@ -374,7 +374,6 @@ namespace SceneData
         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
         virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
     };
-    typedef GdtfColorSpace*	GdtfColorSpacePtr;  
 
 
     class GdtfPhysicalDescriptions : public GdtfObject
@@ -383,29 +382,23 @@ namespace SceneData
         GdtfPhysicalDescriptions();
         ~GdtfPhysicalDescriptions();
     private:        
-        GdtfColorSpace*                 fColorSpace;    // Optional XXX add var has fColorSpace
-        TXString                        fUnresolved_ColorSpace;
-        //
-        TGdtfPhysicalEmitterArray		fEmitters;      // Emitter Collect
-        TGdtfFilterArray                fFilters;       // Filter Collect
-        TGdtfDMXProfileArray            fDmxProfiles;   // DMX Profile Collect        
-        TGdtf_CRIGroupArray             fCRI_Groups;    // Color Rendering Index Collect
+        GdtfColorSpace                  fColorSpace;    
+        TGdtfPhysicalEmitterArray		fEmitters;      
+        TGdtfFilterArray                fFilters;       
+        TGdtfDMXProfileArray            fDmxProfiles;         
+        TGdtf_CRIGroupArray             fCRI_Groups; 
     public:
         virtual EGdtfObjectType			GetObjectType();
 
     public:        
         // Getter        
-        GdtfColorSpace*                  GetColorSpace();
-        const TXString&                  GetUnresolvedColorSpace();
+        GdtfColorSpace&                  GetColorSpace();
 
         const TGdtfPhysicalEmitterArray& GetPhysicalEmitterArray();
         const TGdtfFilterArray&          GetFilterArray();
         const TGdtfDMXProfileArray&      GetDmxProfileArray();
         const TGdtf_CRIGroupArray&       GetCRIGroupArray();
         
-        // Setter       
-        void                             SetColorSpace(GdtfColorSpace* val);
-
         GdtfPhysicalEmitterPtr	        AddEmitter(const TXString& name);
         GdtfFilterPtr                   AddFilter();
         GdtfDMXProfilePtr               AddDmxProfile();
@@ -422,6 +415,7 @@ namespace SceneData
     {
     public:
         GdtfFilter();
+        GdtfFilter(const TXString& name, const CCieColor& );
         ~GdtfFilter();
     private:
         TXString                        fName;
@@ -1920,8 +1914,7 @@ namespace SceneData
         GdtfProtocols				fProtocollContainer;
         bool                        fHasProtocolls;
 
-        GdtfPhysicalDescriptions    fPhysicalDesciptions; 
-        bool			            fHasPhysicalDescriptions;
+        
 		//------------------------------------------------
 		// Storage
         
@@ -1938,6 +1931,7 @@ namespace SceneData
 		TGdtfRevisionArray				fRevisions;
 		TGdtfUserPresetArray			fPresets;
 		TGdtfMacroArray					fMacros;	
+        GdtfPhysicalDescriptions        fPhysicalDesciptions; 
 		//------------------------------------------------
 		// Reading support
 		TVWArray_IFileIdentifier		fLocalFiles;
