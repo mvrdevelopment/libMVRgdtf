@@ -416,8 +416,7 @@ namespace SceneData
         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
         virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
     };
-    typedef GdtfPhysicalDescriptions*	GdtfPhysicalDescriptionsPtr;
-	typedef std::vector<GdtfPhysicalDescriptions*>	TGdtfPhysicalDescriptionsArray;
+    typedef GdtfPhysicalDescriptions*	GdtfPhysicalDescriptionsPtr;	
 
     class GdtfFilter : public GdtfObject
     {
@@ -1905,18 +1904,18 @@ namespace SceneData
 	private:
 		//------------------------------------------------
 		// Parameters for a GdtfFixture
-		TXString		fName;
-		TXString		fShortName;
-		TXString		fLongName;
-		TXString		fManufacturer;
-		TXString		fFixtureTypeDescription;
-		GdtfFixtureGUID	fGuid;
-		TXString		fTumbnailName;
-		TXString		fTumbnailFullPath_PNG;
-        TXString		fTumbnailFullPath_SVG;
-		GdtfFixtureGUID	fLinkedGuid;
-		bool			fHasLinkedGuid;
-
+		TXString		            fName;
+		TXString		            fShortName;
+		TXString		            fLongName;
+		TXString		            fManufacturer;
+		TXString		            fFixtureTypeDescription;
+		GdtfFixtureGUID	            fGuid;
+		TXString		            fTumbnailName;
+		TXString		            fTumbnailFullPath_PNG;
+        TXString		            fTumbnailFullPath_SVG;
+		GdtfFixtureGUID	            fLinkedGuid;
+		bool			            fHasLinkedGuid;
+        GdtfPhysicalDescriptionsPtr fPhysicalDesciptions; 
 		//------------------------------------------------
 		// Storage
         
@@ -1932,8 +1931,7 @@ namespace SceneData
 		TGdtfDmxModeArray				fDmxModes;
 		TGdtfRevisionArray				fRevisions;
 		TGdtfUserPresetArray			fPresets;
-		TGdtfMacroArray					fMacros;		
-        TGdtfPhysicalDescriptionsArray  fPhysicalDesciptions; 
+		TGdtfMacroArray					fMacros;		        
 		GdtfProtocols					fProtocollContainer;
 		
 		//------------------------------------------------
@@ -1956,17 +1954,18 @@ private:
 	public:
 		//----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		// Getter
-		const TXString&		GetName() const;
-        const TXString&		GetShortName() const;
-		const TXString&		GetLongName() const;
-        const TXString&		GetManufacturer() const;
-        const TXString&		GetFixtureTypeDescription() const;
-        GdtfFixtureGUID		GetGuid() const;
-		GdtfFixtureGUID		GetLinkedGuid() const;
-		bool				HasLinkedGuid() const;
-        const TXString&     GetThumbnailName() const;        
-		const GdtfPNGFile&  GetPNGThumnailFullPath();		
-        const TXString&     GetSVGThumnailFullPath();
+		const TXString&		        GetName() const;
+        const TXString&		        GetShortName() const;
+		const TXString&		        GetLongName() const;
+        const TXString&		        GetManufacturer() const;
+        const TXString&		        GetFixtureTypeDescription() const;
+        GdtfFixtureGUID		        GetGuid() const;
+		GdtfFixtureGUID		        GetLinkedGuid() const;
+		bool				        HasLinkedGuid() const;
+        const TXString&             GetThumbnailName() const;        
+		const GdtfPNGFile&          GetPNGThumnailFullPath();		
+        const TXString&             GetSVGThumnailFullPath();
+        GdtfPhysicalDescriptionsPtr GetPhysicalDesciptions();
         // Setter
 		void				SetName(const TXString& name);
 		void				SetShortName(const TXString& shortName);
@@ -1976,6 +1975,7 @@ private:
 		void				SetGuid(const VWFC::Tools::VWUUID& uuid);
 		void				SetLinkedGuid(const VWFC::Tools::VWUUID& uuid);
 		void				SetThumbnailName(const TXString& fileName);
+        void                SetPhysicalDesciptions(GdtfPhysicalDescriptionsPtr val);
 	public:
 		//----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		// Add calls

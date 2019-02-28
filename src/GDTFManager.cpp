@@ -4206,7 +4206,7 @@ double GdtfMeasurementPoint::GetEnergy()
 // GdtfFixture
 TGdtfParsingErrorArray* GdtfFixture::__ERROR_CONTAINER_POINTER = nullptr;
 
-GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
+GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile) : GdtfFixture()
 {
 	fReaded			= false;
 	fHasLinkedGuid	= false;
@@ -4890,6 +4890,7 @@ GdtfFixture::GdtfFixture()
 {
 	fReaded					= false;
 	fHasLinkedGuid			= false;
+    fPhysicalDesciptions    = nullptr;
 }
 
 GdtfFixture::~GdtfFixture()
@@ -4996,9 +4997,11 @@ void GdtfFixture::OnPrintToFile(IXMLFileNodePtr pNode)
 	}
 	
 	// ------------------------------------------------------------------------------------
-	// Print physicalDescription TODO XXX
-
-	
+	// Print PhysicalDescriptions
+    if (fPhysicalDesciptions) 
+    {
+        fPhysicalDesciptions->WriteToNode(pNode);
+    }	
 	// ------------------------------------------------------------------------------------
 	// Print models
 	IXMLFileNodePtr models;
@@ -5237,6 +5240,8 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 									 return;
 								 });
 	
+    fPhysicalDesciptions->ReadFromNode(pNode);
+
 	// ------------------------------------------------------------------------------------
 	// Read presets
     // -
@@ -5621,6 +5626,11 @@ const TXString & SceneData::GdtfFixture::GetSVGThumnailFullPath()
 	return fTumbnailFullPath_SVG;
 }
 
+GdtfPhysicalDescriptionsPtr SceneData::GdtfFixture::GetPhysicalDesciptions()
+{
+    return fPhysicalDesciptions;
+}
+
 void GdtfFixture::SetName(const TXString& name)
 {
 	fName = name;
@@ -5660,6 +5670,11 @@ void GdtfFixture::SetLinkedGuid(const VWFC::Tools::VWUUID& uuid)
 void GdtfFixture::SetThumbnailName(const TXString& fileName)
 {
 	fTumbnailName = fileName;
+}
+
+void SceneData::GdtfFixture::SetPhysicalDesciptions(GdtfPhysicalDescriptionsPtr val)
+{
+    fPhysicalDesciptions = val;
 }
 
 SceneData::GdtfDMXProfile::GdtfDMXProfile()
