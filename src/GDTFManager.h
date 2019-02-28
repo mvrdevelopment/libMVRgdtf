@@ -393,6 +393,8 @@ namespace SceneData
         // Setter       
         void                            SetColorSpace(GdtfColorSpace* val);
 
+        GdtfPhysicalEmitterPtr	        AddEmitter(const TXString& name);
+
     protected:
         virtual	TXString				GetNodeName();
         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
@@ -1986,7 +1988,6 @@ private:
 				
 		GdtfWheelPtr			AddWheel(TXString name);
 		GdtfDmxModePtr			AddDmxMode(const TXString& name);
-		GdtfPhysicalEmitterPtr	AddEmitter(const TXString& name);
 		GdtfMacroPtr			AddMacro(const TXString& name);
         GdtfDMXProfilePtr       AddDmxProfile();
 

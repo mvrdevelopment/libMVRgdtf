@@ -5463,15 +5463,6 @@ GdtfDmxMode* GdtfFixture::AddDmxMode(const TXString& name)
 	return mode;
 }
 
-GdtfPhysicalEmitterPtr GdtfFixture::AddEmitter(const TXString& name)
-{
-	GdtfPhysicalEmitterPtr emitter = new  GdtfPhysicalEmitter(name);
-	
-	fEmitters.push_back(emitter);
-	
-	return emitter;
-}
-
 GdtfDMXProfilePtr SceneData::GdtfFixture::AddDmxProfile()
 {
     GdtfDMXProfilePtr dmxProf = new GdtfDMXProfile();
@@ -7151,6 +7142,15 @@ const TXString& SceneData::GdtfPhysicalDescriptions::GetUnresolvedColorSpace()
 void SceneData::GdtfPhysicalDescriptions::SetColorSpace(GdtfColorSpace * val)
 {
     fColorSpace = val;
+}
+
+GdtfPhysicalEmitterPtr SceneData::GdtfPhysicalDescriptions::AddEmitter(const TXString & name)
+{
+	GdtfPhysicalEmitterPtr emitter = new  GdtfPhysicalEmitter(name);
+	
+	fEmitters.push_back(emitter);
+	
+	return emitter;
 }
 
 TXString SceneData::GdtfPhysicalDescriptions::GetNodeName()
