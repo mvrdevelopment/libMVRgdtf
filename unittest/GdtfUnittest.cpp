@@ -146,8 +146,12 @@ void GdtfUnittest::WriteFile()
 		color.f_Y = 0.424242;
 		if (__checkVCOM(gdtfWrite->CreateEmitter("My emitterName", color, &gdtfEmitter)))
 		{
-			IGdtfMeasurementPointPtr gdtfMeasurement;
-			__checkVCOM(gdtfEmitter->CreateMeasurementPoint(100, 200, &gdtfMeasurement));
+			IGdtfMeasurementPtr gdtfMeasurement;            
+			__checkVCOM(gdtfEmitter->CreateMeasurement(100, 200, &gdtfMeasurement));
+            gdtfMeasurement->SetPhysical(1.23);
+            gdtfMeasurement->SetLuminousIntensity(2.34);
+            gdtfMeasurement->SetTransmission(4.56);
+            gdtfMeasurement->SetInterpolationTo(EGdtfInterpolationTo::Log);
 		}
 
 
@@ -431,19 +435,32 @@ void GdtfUnittest::ReadFile()
 				this->checkifEqual("gdtfEmitterColorFY ", color.f_Y, 0.424242);
 
 				size_t measurementsCount = 0;
-				__checkVCOM(gdtfEmitter->GetMeasurementPointCount(measurementsCount));
+				__checkVCOM(gdtfEmitter->GetMeasurementCount(measurementsCount));
 				for (size_t j = 0; j < measurementsCount; j++)
 				{
-					IGdtfMeasurementPointPtr emitterMeasurement;
-					if (__checkVCOM(gdtfEmitter->GetMeasurementPointAt(j, &emitterMeasurement)))
+					IGdtfMeasurementPtr emitterMeasurement;
+					if (__checkVCOM(gdtfEmitter->GetMeasurementAt(j, &emitterMeasurement)))
 					{
-						double waveLength_Val = 0;
-						__checkVCOM(emitterMeasurement->GetWaveLength(waveLength_Val));
-						this->checkifEqual("GetWaveLength ", waveLength_Val, double(100));		// only for object valid, because of hardcoded wavelength and energy
+                        double physical; __checkVCOM( emitterMeasurement->GetPhysical(physical));
+                        this->checkifEqual("Physical",         physical, 1.23);
 
-						double energy_Val = 0;
-						__checkVCOM(emitterMeasurement->GetEnergy(energy_Val));
-						this->checkifEqual("GetEnergy ", energy_Val, double(200));				// only for object valid, because of hardcoded wavelength and energy
+                        double luminousIntensity; __checkVCOM(emitterMeasurement->GetLuminousIntensity(luminousIntensity));
+                        this->checkifEqual("LuminousIntensity",   luminousIntensity, 2.34);
+
+                        double transmission; __checkVCOM(emitterMeasurement->GetTransmission(transmission));
+                        this->checkifEqual("Transmission",  transmission,  4.56);
+
+                        EGdtfInterpolationTo interpolationTo; __checkVCOM(emitterMeasurement->GetInterpolationTo(interpolationTo));
+                        this->checkifEqual("InterpolationTo",  size_t(interpolationTo), size_t(EGdtfInterpolationTo::Log) );
+
+                        // TODO: XXX
+						//double waveLength_Val = 0;
+						//__checkVCOM(emitterMeasurement->GetWaveLength(waveLength_Val));
+						//this->checkifEqual("GetWaveLength ", waveLength_Val, double(100));		// only for object valid, because of hardcoded wavelength and energy
+
+						//double energy_Val = 0;
+						//__checkVCOM(emitterMeasurement->GetEnergy(energy_Val));
+						//this->checkifEqual("GetEnergy ", energy_Val, double(200));				// only for object valid, because of hardcoded wavelength and energy
 					}
 				} // measurements loop
 			}
