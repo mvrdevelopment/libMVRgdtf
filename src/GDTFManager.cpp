@@ -7129,7 +7129,7 @@ const TGdtf_CRIGroupArray & SceneData::GdtfPhysicalDescriptions::GetCRIGroupArra
 
 GdtfPhysicalEmitterPtr SceneData::GdtfPhysicalDescriptions::AddEmitter(const TXString & name, CCieColor color)
 {
-	GdtfPhysicalEmitterPtr emitter = new  GdtfPhysicalEmitter(name);
+	GdtfPhysicalEmitterPtr emitter = new  GdtfPhysicalEmitter(name, color);
 	
 	fEmitters.push_back(emitter);
 	
