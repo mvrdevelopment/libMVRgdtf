@@ -7126,12 +7126,14 @@ void SceneData::GdtfSoftwareVersionID::OnReadFromNode(const IXMLFileNodePtr & pN
 
 SceneData::GdtfPhysicalDescriptions::GdtfPhysicalDescriptions()
 {
-    // TODO XXX: init vars
 }
 
 SceneData::GdtfPhysicalDescriptions::~GdtfPhysicalDescriptions()
 {
-    // TODO XXX: free Pointers
+    for (GdtfPhysicalEmitter* o : fEmitters)    { delete o; }
+    for (GdtfFilter*          o : fFilters)     { delete o; }
+    for (GdtfDMXProfile*      o : fDmxProfiles) { delete o; }
+    for (GdtfCRIGroup*        o : fCRI_Groups)  { delete o; }
 }
 
 EGdtfObjectType SceneData::GdtfPhysicalDescriptions::GetObjectType()
