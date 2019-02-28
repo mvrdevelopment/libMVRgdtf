@@ -3863,7 +3863,7 @@ void GdtfPhysicalEmitter::SetColor(CCieColor color)
 	fColor = color;
 }
 
-void SceneData::GdtfPhysicalEmitter::SetDiodePart(double val)
+void SceneData::GdtfPhysicalEmitter::SetDiodePart(const TXString& val)
 {
     fDiodePart = val;
 }
@@ -3909,8 +3909,15 @@ void GdtfPhysicalEmitter::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// ------------------------------------------------------------------------------------
 	// Print node attributes
 	pNode->GetNodeAttributeValue(XML_GDTF_EmitterName,				fName);
-	TXString color;		pNode->GetNodeAttributeValue(XML_GDTF_EmitterColor,				color);		GdtfConverter::ConvertColor(color, pNode, fColor);
 	
+    TXString color;		   pNode->GetNodeAttributeValue(XML_GDTF_EmitterColor,	color);		
+    GdtfConverter::ConvertColor(color, pNode, fColor);
+
+    TXString waveLenStr;   pNode->GetNodeAttributeValue(XML_GDTF_EmitterDominantWaveLength,	waveLenStr);		
+    GdtfConverter::ConvertDouble(waveLenStr, pNode, fDominantWaveLength);
+
+    pNode->GetNodeAttributeValue(XML_GDTF_EmitterDiodePart, fDiodePart);
+
 	
 	// ------------------------------------------------------------------------------------
 	// Read MeasurePoints
@@ -3976,7 +3983,7 @@ TXString GdtfPhysicalEmitter::GetNodeReference()
 	return GetName();
 }
 
-double SceneData::GdtfPhysicalEmitter::GetDiodePart()
+const TXString& SceneData::GdtfPhysicalEmitter::GetDiodePart()
 {
     return fDiodePart;
 }

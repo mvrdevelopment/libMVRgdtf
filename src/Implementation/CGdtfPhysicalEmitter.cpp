@@ -140,14 +140,14 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalEmitterImpl::CreateMeasur
 	return kVCOMError_NoError;
 }
 
-VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfPhysicalEmitterImpl::GetDiodePart(double & outVal)
+MvrString VCOM_CALLTYPE VectorworksMVR::CGdtfPhysicalEmitterImpl::GetDiodePart()
 {
 	// Check if valid
-	if(!fEmitter) return kVCOMError_NotInitialized;
-
-    outVal = fEmitter->GetDiodePart();
-
-	return kVCOMError_NoError;}
+	if(!fEmitter) return "";
+	
+	// Return the name
+    return fEmitter->GetDiodePart().GetCharPtr();
+}
 
 VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfPhysicalEmitterImpl::GetDominantWaveLength(double & outVal)
 {
@@ -179,14 +179,14 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalEmitterImpl::SetColor(Cie
     return kVCOMError_NoError;
 }
 
-VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfPhysicalEmitterImpl::SetDiodePart(double val)
+VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfPhysicalEmitterImpl::SetDiodePart(MvrString val)
 {
 	// Check if valid
 	if(!fEmitter) return kVCOMError_NotInitialized;
 
     fEmitter->SetDiodePart(val);
 
-	return kVCOMError_NoError;
+	return kVCOMError_NoError;    
 }
 
 VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfPhysicalEmitterImpl::SetDominantWaveLength(double val)
