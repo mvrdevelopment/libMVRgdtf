@@ -7099,6 +7099,11 @@ const TGdtfPhysicalEmitterArray& SceneData::GdtfPhysicalDescriptions::GetPhysica
     return fEmitters;
 }
 
+const TGdtfFilterArray & SceneData::GdtfPhysicalDescriptions::GetFilterArray()
+{
+    return fFilters;
+}
+
 const TGdtfDMXProfileArray& SceneData::GdtfPhysicalDescriptions::GetDmxProfileArray()
 {
     return fDmxProfiles;

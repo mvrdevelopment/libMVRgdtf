@@ -393,14 +393,16 @@ namespace SceneData
     public:
         virtual EGdtfObjectType			GetObjectType();
 
-    public:
-        // XXX TODO: Getter setter
+    public:        
         // Getter        
         GdtfColorSpace*                  GetColorSpace();
         const TXString&                  GetUnresolvedColorSpace();
+
         const TGdtfPhysicalEmitterArray& GetPhysicalEmitterArray();
+        const TGdtfFilterArray&          GetFilterArray();
         const TGdtfDMXProfileArray&      GetDmxProfileArray();
         const TGdtf_CRIGroupArray&       GetCRIGroupArray();
+        
         // Setter       
         void                             SetColorSpace(GdtfColorSpace* val);
 
