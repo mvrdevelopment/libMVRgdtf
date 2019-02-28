@@ -1911,8 +1911,8 @@ namespace SceneData
         GdtfFixtureGUID	            fLinkedGuid;
 		bool			            fHasLinkedGuid;
         
-        GdtfProtocols				fProtocollContainer;
-        bool                        fHasProtocolls;
+        GdtfProtocols				fProtocollContainer; // XXX Check this implementation.
+        bool                        fHasProtocolls; 
 
         
 		//------------------------------------------------
