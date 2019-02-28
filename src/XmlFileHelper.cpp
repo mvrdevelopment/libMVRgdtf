@@ -1463,7 +1463,7 @@ CieColor SceneData::GdtfConverter::ConvertCColor(const CCieColor & color)
     {
     case EGdtfInterpolationTo::Linear:  return XML_GDTF_InterpolationTo_Linear;
     case EGdtfInterpolationTo::Step:    return XML_GDTF_InterpolationTo_Step;
-    case EGdtfInterpolationTo::Log:     return XML_GDTF_InterpolationTo_Step;
+    case EGdtfInterpolationTo::Log:     return XML_GDTF_InterpolationTo_Log;
     }
 
 	DSTOP((kEveryone, "Unknown Enum for EGdtfInterpolationTo"));
@@ -1476,7 +1476,7 @@ CieColor SceneData::GdtfConverter::ConvertCColor(const CCieColor & color)
 {
      if        (inVal == XML_GDTF_InterpolationTo_Linear)  { outVal = EGdtfInterpolationTo::Linear; }     
      else if   (inVal == XML_GDTF_InterpolationTo_Step)    { outVal = EGdtfInterpolationTo::Step; }
-     else if   (inVal == XML_GDTF_InterpolationTo_Step)    { outVal = EGdtfInterpolationTo::Log; }     
+     else if   (inVal == XML_GDTF_InterpolationTo_Log)    { outVal = EGdtfInterpolationTo::Log; }     
 
     DSTOP((kEveryone, "Unknown Value for EGdtfInterpolationTo"));
     GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertColorSample, node);
