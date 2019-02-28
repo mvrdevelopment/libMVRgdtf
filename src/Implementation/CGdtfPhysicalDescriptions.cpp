@@ -3,6 +3,7 @@
 //-----------------------------------------------------------------------------
 #include "Prefix/StdAfx.h"
 #include "CGdtfPhysicalDescriptions.h"
+#include "CGdtfColorSpace.h"
 
 
 CGdtfPhysicalDescriptionsImpl::CGdtfPhysicalDescriptionsImpl()
@@ -41,4 +42,69 @@ SceneData::GdtfPhysicalDescriptions * VectorworksMVR::CGdtfPhysicalDescriptionsI
 {
     return fPhysicalDescriptions;
 }
+
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::GetColorSpace(VectorworksMVR::IGdtfColorSpace **outColorSpace)
+{
+    // Check Pointer
+    if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
+
+    //---------------------------------------------------------------------------
+    // Initialize Object
+    SceneData::GdtfColorSpace*	gdtfColorSpace = fPhysicalDescriptions->GetColorSpace();
+    if (!gdtfColorSpace) { return kVCOMError_NotSet; }
+
+    CGdtfColorSpaceImpl*		pColorSpaceObj = nullptr;
+
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfColorSpace, (IVWUnknown**)& pColorSpaceObj)))
+    {
+        // Check Casting
+        CGdtfColorSpaceImpl* pResultInterface = dynamic_cast<CGdtfColorSpaceImpl*>(pColorSpaceObj);
+        if (pResultInterface)
+        {
+            pResultInterface->SetPointer(gdtfColorSpace);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+
+    //---------------------------------------------------------------------------
+    // Check Incomming Object
+    if (*outColorSpace)
+    {
+        (*outColorSpace)->Release();
+        *outColorSpace = NULL;
+    }
+
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *outColorSpace = pColorSpaceObj;
+
+    return kVCOMError_NoError;
+}
+
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::SetColorSpace (IGdtfColorSpace * newColorSpace)
+{
+    if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
+    if (!newColorSpace) { return kVCOMError_InvalidArg; }
+
+    // Cast
+    CGdtfColorSpaceImpl* ColorSpaceImpl = dynamic_cast<CGdtfColorSpaceImpl*>(newColorSpace);
+    if (!ColorSpaceImpl) { return kVCOMError_Failed; }
+
+    // Set Object
+    SceneData::GdtfColorSpace* gdtfColorSpace = ColorSpaceImpl->GetPointer();
+    if (!gdtfColorSpace) { return kVCOMError_Failed; }
+
+    fPhysicalDescriptions->SetColorSpace (gdtfColorSpace);
+
+    return kVCOMError_NoError;
+}
+
 

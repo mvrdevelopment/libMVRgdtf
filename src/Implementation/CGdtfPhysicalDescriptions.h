@@ -13,6 +13,9 @@ namespace VectorworksMVR
     public:
         CGdtfPhysicalDescriptionsImpl();
         virtual ~CGdtfPhysicalDescriptionsImpl();
+                
+        virtual VCOMError GetColorSpace(VectorworksMVR::IGdtfColorSpace ** outColorSpace);
+        virtual VCOMError SetColorSpace(IGdtfColorSpace * newColorSpace);
 
         virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr);
         virtual void*	  VCOM_CALLTYPE     GetBoundObject();
