@@ -343,8 +343,8 @@ namespace SceneData
         ~GdtfColorSpace();
     private:
         EGdtfColorSpace  fColorSpace;
-        CCieColor        fRed;                  // XXX CIE xyY of the Red Primary; this is used only if the ColorSpace is "Custom".
-        CCieColor        fGreen;                // CIE xyY of the Green Primary; this is used only if the ColorSpace is "Custom".
+        CCieColor        fRed;                  // Optional; CIE xyY of the Red Primary; this is used only if the ColorSpace is "Custom".
+        CCieColor        fGreen;                // Optional; CIE xyY of the Green Primary; this is used only if the ColorSpace is "Custom".
         CCieColor        fBlue;	                // Optional; CIE xyY of the Blue Primary; this is used only if the ColorSpace is "Custom".
         CCieColor        fWhitePoint;           // Optional; CIE xyY of the White Point; this is used only if the ColorSpace is "Custom". 
     public:
@@ -375,7 +375,7 @@ namespace SceneData
         GdtfPhysicalDescriptions();
         ~GdtfPhysicalDescriptions();
     private:        
-        GdtfColorSpace*                 fColorSpace;
+        GdtfColorSpace*                 fColorSpace; // XXX is this a link ???
         //
         TGdtfPhysicalEmitterArray		fEmitters;      // Emitter Collect
         TGdtfFilterArray                fFilters;       // Filter Collect
