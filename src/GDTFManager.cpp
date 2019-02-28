@@ -7228,6 +7228,11 @@ GdtfColorSpace * SceneData::GdtfPhysicalDescriptions::GetColorSpace()
     return fColorSpace;
 }
 
+const TXString& SceneData::GdtfPhysicalDescriptions::GetUnresolvedColorSpace()
+{
+    return fUnresolved_ColorSpace;
+}
+
 void SceneData::GdtfPhysicalDescriptions::SetColorSpace(GdtfColorSpace * val)
 {
     fColorSpace = val;

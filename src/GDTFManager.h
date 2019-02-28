@@ -375,7 +375,8 @@ namespace SceneData
         GdtfPhysicalDescriptions();
         ~GdtfPhysicalDescriptions();
     private:        
-        GdtfColorSpace*                 fColorSpace; // XXX is this a link ???
+        GdtfColorSpace*                 fColorSpace;
+        TXString                        fUnresolved_ColorSpace;
         //
         TGdtfPhysicalEmitterArray		fEmitters;      // Emitter Collect
         TGdtfFilterArray                fFilters;       // Filter Collect
@@ -388,6 +389,7 @@ namespace SceneData
         // XXX TODO: Getter setter
         // Getter        
         GdtfColorSpace*                 GetColorSpace();
+        const TXString&                 GetUnresolvedColorSpace();
         // Setter       
         void                            SetColorSpace(GdtfColorSpace* val);
 
