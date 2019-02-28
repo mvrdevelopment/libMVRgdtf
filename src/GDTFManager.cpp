@@ -5009,47 +5009,8 @@ void GdtfFixture::OnPrintToFile(IXMLFileNodePtr pNode)
 	}
 	
 	// ------------------------------------------------------------------------------------
-	// Print physicalDescription
-	IXMLFileNodePtr physicalDescription;
-	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_GDTF_FixtureChildNodePhysicalDesrip, & physicalDescription)))
-	{
-		// Print Emitters (physicalDescription child)
-		IXMLFileNodePtr emittersGroupNode;
-		if (VCOM_SUCCEEDED(physicalDescription->CreateChildNode(XML_GDTF_PhysicalDescriptionsEmitterCollect, & emittersGroupNode)))
-		{
-			for (GdtfPhysicalEmitterPtr emitter : fEmitters)
-			{
-				emitter->WriteToNode(emittersGroupNode);
-			}
-		}
-		
-		// Print DmxProfiles (physicalDescription child)
-		IXMLFileNodePtr dmxProfGroupNode;
-		if (VCOM_SUCCEEDED(physicalDescription->CreateChildNode(XML_GDTF_DMX_ProfileCollect, &dmxProfGroupNode)))
-		{
-			for (GdtfDMXProfilePtr dmxProfile : fDmxProfiles)
-			{
-				dmxProfile->WriteToNode(dmxProfGroupNode);
-			}
-		}
-		
-		// ------------------------------------------------------------------------------------
-		// CRI_Collect (PhysicalDescription child)
-		IXMLFileNodePtr CRI_CollectNode;
-		if (VCOM_SUCCEEDED(physicalDescription->CreateChildNode(XML_GDTF_PhysicalDescriptionsEmitterCollect, &CRI_CollectNode)))
-		{
-			// CRI_Group (CRI_Collect child)
-			IXMLFileNodePtr criGroupNode;
-			if (VCOM_SUCCEEDED(CRI_CollectNode->CreateChildNode(XML_GDTF_PhysicalDescriptionsEmitterCollect, &criGroupNode)))
-			{
-				for (GdtfCRIGroupPtr criGroup : fCRI_Groups)
-				{
-					criGroup->WriteToNode(criGroupNode);
-				}
-			}
-		}
-		// ------------------------------------------------------------------------------------
-	}
+	// Print physicalDescription TODO XXX
+
 	
 	// ------------------------------------------------------------------------------------
 	// Print models
@@ -7245,7 +7206,41 @@ TXString SceneData::GdtfPhysicalDescriptions::GetNodeName()
 
 void SceneData::GdtfPhysicalDescriptions::OnPrintToFile(IXMLFileNodePtr pNode)
 {
-     // TODO:
+    // Print Emitters (physicalDescription child)
+	IXMLFileNodePtr emittersGroupNode;
+	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_GDTF_PhysicalDescriptionsEmitterCollect, & emittersGroupNode)))
+	{
+		for (GdtfPhysicalEmitterPtr emitter : fEmitters)
+		{
+			emitter->WriteToNode(emittersGroupNode);
+		}
+	}
+		
+	// Print DmxProfiles (physicalDescription child)
+	IXMLFileNodePtr dmxProfGroupNode;
+	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_GDTF_DMX_ProfileCollect, &dmxProfGroupNode)))
+	{
+		for (GdtfDMXProfilePtr dmxProfile : fDmxProfiles)
+		{
+			dmxProfile->WriteToNode(dmxProfGroupNode);
+		}
+	}
+		
+	// CRI_Collect (PhysicalDescription child)
+	IXMLFileNodePtr CRI_CollectNode;
+	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_GDTF_PhysicalDescriptionsEmitterCollect, &CRI_CollectNode)))
+	{
+		// CRI_Group (CRI_Collect child)
+		IXMLFileNodePtr criGroupNode;
+		if (VCOM_SUCCEEDED(CRI_CollectNode->CreateChildNode(XML_GDTF_PhysicalDescriptionsEmitterCollect, &criGroupNode)))
+		{
+			for (GdtfCRIGroupPtr criGroup : fCRI_Groups)
+			{
+				criGroup->WriteToNode(criGroupNode);
+			}
+		}
+	}
+
 }
 
 void SceneData::GdtfPhysicalDescriptions::OnReadFromNode(const IXMLFileNodePtr & pNode)
