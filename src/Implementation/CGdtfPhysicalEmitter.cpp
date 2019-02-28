@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------
 #include "Prefix/StdAfx.h"
 #include "CGdtfPhysicalEmitter.h"
-#include "CGdtfMeasurementPoint.h"
+#include "CGdtfMeasurement.h"
 
 
 using namespace VectorWorks::Filing;
@@ -40,39 +40,39 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalEmitterImpl::GetColor(Vec
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalEmitterImpl::GetMeasurementPointCount(size_t &count)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalEmitterImpl::GetMeasurementCount(size_t &count)
 {
 	// Check if valid
 	if(!fEmitter) return kVCOMError_NotInitialized;
 	
-    count = fEmitter->GetMeasurementPoints().size();
+    count = fEmitter->GetMeasurements().size();
     
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalEmitterImpl::GetMeasurementPointAt(size_t at, VectorworksMVR::IGdtfMeasurementPoint **measurementPoint)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalEmitterImpl::GetMeasurementAt(size_t at, VectorworksMVR::IGdtfMeasurement **outVal)
 {
 	// Check if valid
 	if(!fEmitter) return kVCOMError_NotInitialized;
 	
     // Check if no Overflow
-    if (at >=  fEmitter->GetMeasurementPoints().size()) { return kVCOMError_OutOfBounds;  }
+    if (at >=  fEmitter->GetMeasurements().size()) { return kVCOMError_OutOfBounds;  }
     
-    SceneData::GdtfMeasurementPoint* gdtfMeasurementPoint = fEmitter->GetMeasurementPoints()[at];
+    SceneData::GdtfMeasurement* gdtfMeasurement = fEmitter->GetMeasurements()[at];
     
     
     //---------------------------------------------------------------------------
     // Initialize Object
-    CGdtfMeasurementPointImpl* pMeasurementPointObj = nullptr;
+    CGdtfMeasurementImpl* pMeasurementObj = nullptr;
     
     // Query Interface
-    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfMeasurementPoint, (IVWUnknown**) & pMeasurementPointObj)))
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfMeasurement, (IVWUnknown**) & pMeasurementObj)))
     {
         // Check Casting
-        CGdtfMeasurementPointImpl* pResultInterface = dynamic_cast<CGdtfMeasurementPointImpl* >(pMeasurementPointObj);
+        CGdtfMeasurementImpl* pResultInterface = dynamic_cast<CGdtfMeasurementImpl* >(pMeasurementObj);
         if (pResultInterface)
         {
-            pResultInterface->setPointer(gdtfMeasurementPoint);
+            pResultInterface->setPointer(gdtfMeasurement);
         }
         else
         {
@@ -84,41 +84,38 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalEmitterImpl::GetMeasureme
     
     //---------------------------------------------------------------------------
     // Check Incomming Object
-    if (*measurementPoint)
+    if (*outVal)
     {
-        (*measurementPoint)->Release();
-        *measurementPoint		= NULL;
+        (*outVal)->Release();
+        *outVal		= NULL;
     }
     
     //---------------------------------------------------------------------------
     // Set Out Value
-    *measurementPoint		= pMeasurementPointObj;
+    *outVal		= pMeasurementObj;
     
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalEmitterImpl::CreateMeasurementPoint(double wavelength, double energy, IGdtfMeasurementPoint** measurementPoint)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalEmitterImpl::CreateMeasurement(double wavelength, double energy, IGdtfMeasurement** outVal)
 {
 	// Check if valid
 	if(!fEmitter) return kVCOMError_NotInitialized;
 	
-	SceneData::GdtfMeasurementPoint* gdtfMeasurementPoint = fEmitter->AddMeasurementPoint();
-	gdtfMeasurementPoint->SetEnergy(energy);
-	gdtfMeasurementPoint->SetWavelength(wavelength);
-	
+	SceneData::GdtfMeasurement* gdtfMeasurement = fEmitter->AddMeasurement();
 	
 	//---------------------------------------------------------------------------
 	// Initialize Object
-	CGdtfMeasurementPointImpl* pMeasurementPointObj = nullptr;
+	CGdtfMeasurementImpl* pMeasurementObj = nullptr;
 	
 	// Query Interface
-	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfMeasurementPoint, (IVWUnknown**) & pMeasurementPointObj)))
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfMeasurement, (IVWUnknown**) & pMeasurementObj)))
 	{
 		// Check Casting
-		CGdtfMeasurementPointImpl* pResultInterface = dynamic_cast<CGdtfMeasurementPointImpl* >(pMeasurementPointObj);
+		CGdtfMeasurementImpl* pResultInterface = dynamic_cast<CGdtfMeasurementImpl* >(pMeasurementObj);
 		if (pResultInterface)
 		{
-			pResultInterface->setPointer(gdtfMeasurementPoint);
+			pResultInterface->setPointer(gdtfMeasurement);
 		}
 		else
 		{
@@ -130,15 +127,15 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalEmitterImpl::CreateMeasur
 	
 	//---------------------------------------------------------------------------
 	// Check Incomming Object
-	if (*measurementPoint)
+	if (*outVal)
 	{
-		(*measurementPoint)->Release();
-		*measurementPoint		= NULL;
+		(*outVal)->Release();
+		*outVal		= NULL;
 	}
 	
 	//---------------------------------------------------------------------------
 	// Set Out Value
-	*measurementPoint		= pMeasurementPointObj;
+	*outVal		= pMeasurementObj;
 	
 	return kVCOMError_NoError;
 }

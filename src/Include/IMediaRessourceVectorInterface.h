@@ -827,9 +827,9 @@ namespace VectorworksMVR
         virtual MvrString VCOM_CALLTYPE     GetName() = 0;
         virtual VCOMError VCOM_CALLTYPE     GetColor(CieColor& color) = 0;
         
-        virtual VCOMError VCOM_CALLTYPE     GetMeasurementPointCount(size_t& count) = 0;
-        virtual VCOMError VCOM_CALLTYPE     GetMeasurementPointAt(size_t at, IGdtfMeasurementPoint** measurementPoint) = 0;
-		virtual VCOMError VCOM_CALLTYPE     CreateMeasurementPoint(double wavelength, double energy, IGdtfMeasurementPoint** measurementPoint) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetMeasurementCount(size_t& count) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetMeasurementAt(size_t at, IGdtfMeasurement** ouVal) = 0;
+		virtual VCOMError VCOM_CALLTYPE     CreateMeasurement(double wavelength, double energy, IGdtfMeasurement** ouVal) = 0;
 		
         virtual VCOMError VCOM_CALLTYPE     SetName(MvrString name) = 0;
         virtual VCOMError VCOM_CALLTYPE     SetColor(CieColor & color) = 0;
