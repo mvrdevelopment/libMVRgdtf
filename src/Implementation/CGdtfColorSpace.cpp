@@ -19,7 +19,7 @@ VectorworksMVR::CGdtfColorSpaceImpl::~CGdtfColorSpaceImpl()
 {   
 }
 
-VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::GetColorSpace(EGdtfColorSpace outVal)
+VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::GetColorSpace(EGdtfColorSpace& outVal)
 {
 	//Check Pointer
 	if( ! fColorSpace)		return kVCOMError_NotInitialized;    
