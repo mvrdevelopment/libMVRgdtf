@@ -43,8 +43,8 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		SetLongName(MvrString longname);
 		virtual VCOMError VCOM_CALLTYPE     SetFixtureThumbnail(MvrString thubnail);
 		virtual VCOMError VCOM_CALLTYPE		SetLinkedFixtureGUID(const MvrUUID& uuid);
-		
-        // XXX SetPhysicalDescrip
+        virtual VCOMError VCOM_CALLTYPE     SetPhysicalDescriptions(IGdtfPhysicalDescriptions* val);
+        
         
         virtual VCOMError VCOM_CALLTYPE		GetActivationGroupCount(size_t& count);
         virtual VCOMError VCOM_CALLTYPE		GetActivationGroupAt(size_t at, IGdtfActivationGroup** activationGroup);

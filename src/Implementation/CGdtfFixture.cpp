@@ -332,7 +332,23 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::SetLinkedFixtureGUID
 	return kVCOMError_NoError;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::SetPhysicalDescriptions (IGdtfPhysicalDescriptions * val)
+{
+    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
+    if (!val) { return kVCOMError_InvalidArg; }
 
+    // Cast
+    CGdtfPhysicalDescriptionsImpl* PhysicalDescriptionsImpl = dynamic_cast<CGdtfPhysicalDescriptionsImpl*>(val);
+    if (!PhysicalDescriptionsImpl) { return kVCOMError_Failed; }
+
+    // Set Object
+    SceneData::GdtfPhysicalDescriptions* gdtfPhysicalDescriptions = PhysicalDescriptionsImpl->GetPointer();
+    if (!gdtfPhysicalDescriptions) { return kVCOMError_Failed; }
+
+    fFixtureObject->SetPhysicalDesciptions (*gdtfPhysicalDescriptions);
+
+    return kVCOMError_NoError;
+}
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetActivationGroupCount(size_t &count)
 {
