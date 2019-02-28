@@ -1969,7 +1969,9 @@ private:
         const TXString&             GetThumbnailName() const;        
 		const GdtfPNGFile&          GetPNGThumnailFullPath();		
         const TXString&             GetSVGThumnailFullPath();
-        GdtfPhysicalDescriptionsPtr GetPhysicalDesciptions(); // XXX TODO: Do we even need the getter and setter here?
+        GdtfProtocols&				GetProtocollContainer();
+        GdtfPhysicalDescriptions&   GetPhysicalDesciptions();        
+        
         // Setter
 		void				SetName(const TXString& name);
 		void				SetShortName(const TXString& shortName);
@@ -1979,7 +1981,8 @@ private:
 		void				SetGuid(const VWFC::Tools::VWUUID& uuid);
 		void				SetLinkedGuid(const VWFC::Tools::VWUUID& uuid);
 		void				SetThumbnailName(const TXString& fileName);
-        void                SetPhysicalDesciptions(GdtfPhysicalDescriptionsPtr val);
+        void	        	SetProtocollContainer(GdtfProtocols val);
+        void                SetPhysicalDesciptions(GdtfPhysicalDescriptions val);
 	public:
 		//----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		// Add calls
@@ -2016,10 +2019,6 @@ private:
         const TGdtfRevisionArray&               GetRevisionArray();
         const TGdtfUserPresetArray&             GetPresetArray();
         const TGdtfMacroArray&                  GetMacroArray();
-		
-		GdtfProtocols&							GetProtocollContainer();
-
-        
         
 	public:
 		virtual EGdtfObjectType			GetObjectType();
