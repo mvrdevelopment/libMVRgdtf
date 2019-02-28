@@ -17,6 +17,11 @@ namespace VectorworksMVR
         virtual VCOMError GetColorSpace(VectorworksMVR::IGdtfColorSpace ** outColorSpace);
         virtual VCOMError SetColorSpace(IGdtfColorSpace * newColorSpace);
 
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetEmitterCount(size_t& count);
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateEmitter(MvrString name, VectorworksMVR::IGdtfPhysicalEmitter** outVal);
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetEmitterAt(size_t at, VectorworksMVR::IGdtfPhysicalEmitter** value);
+
+
         virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr);
         virtual void*	  VCOM_CALLTYPE     GetBoundObject();
 

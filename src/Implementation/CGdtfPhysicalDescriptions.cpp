@@ -4,7 +4,7 @@
 #include "Prefix/StdAfx.h"
 #include "CGdtfPhysicalDescriptions.h"
 #include "CGdtfColorSpace.h"
-
+#include "CGdtfPhysicalEmitter.h" 
 
 CGdtfPhysicalDescriptionsImpl::CGdtfPhysicalDescriptionsImpl()
 {
@@ -106,5 +106,110 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::SetColo
 
     return kVCOMError_NoError;
 }
+
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::GetEmitterCount(size_t &count)
+{
+    if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
+
+    count = fPhysicalDescriptions->GetPhysicalEmitterArray().size();
+
+    return kVCOMError_NoError;
+}
+
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::GetEmitterAt(size_t at, VectorworksMVR::IGdtfPhysicalEmitter** value)
+{
+    // Check if Set
+    if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
+
+    // Check if no Overflow
+    if (at >= fPhysicalDescriptions->GetPhysicalEmitterArray().size()) { return kVCOMError_OutOfBounds; }
+
+
+    SceneData::GdtfPhysicalEmitter* gdtfEmitter = fPhysicalDescriptions->GetPhysicalEmitterArray()[at];
+    
+    //---------------------------------------------------------------------------
+    // Initialize Object
+    CGdtfPhysicalEmitterImpl* pEmitterObj = nullptr;
+
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfPhysicalEmitter, (IVWUnknown**)& pEmitterObj)))
+    {
+        // Check Casting
+        CGdtfPhysicalEmitterImpl* pResultInterface = dynamic_cast<CGdtfPhysicalEmitterImpl*>(pEmitterObj);
+        if (pResultInterface)
+        {
+            pResultInterface->setPointer(gdtfEmitter);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+
+    //---------------------------------------------------------------------------
+    // Check Incomming Object
+    if (*value)
+    {
+        (*value)->Release();
+        *value = NULL;
+    }
+
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *value = pEmitterObj;
+
+    return kVCOMError_NoError;
+}
+
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::CreateEmitter(MvrString name, VectorworksMVR::IGdtfPhysicalEmitter **outVal)
+{
+    // Check if Set
+    if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
+
+
+    SceneData::GdtfPhysicalEmitter* gdtfEmitter = fPhysicalDescriptions->AddEmitter(name);
+
+    //---------------------------------------------------------------------------
+    // Initialize Object
+    CGdtfPhysicalEmitterImpl* pEmitterObj = nullptr;
+
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfPhysicalEmitter, (IVWUnknown**)& pEmitterObj)))
+    {
+        // Check Casting
+        CGdtfPhysicalEmitterImpl* pResultInterface = dynamic_cast<CGdtfPhysicalEmitterImpl*>(pEmitterObj);
+        if (pResultInterface)
+        {
+            pResultInterface->setPointer(gdtfEmitter);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+
+    //---------------------------------------------------------------------------
+    // Check Incomming Object
+    if (*outVal)
+    {
+        (*outVal)->Release();
+        *outVal = NULL;
+    }
+
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *outVal = pEmitterObj;
+
+    return kVCOMError_NoError;
+}
+
+
 
 
