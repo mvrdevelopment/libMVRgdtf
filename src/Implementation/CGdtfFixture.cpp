@@ -1433,7 +1433,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateRDM(Vectorwork
 }
 
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::GetColorSpace(VectorworksMVR::IGdtfColorSpace **outColorSpace)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetColorSpace(VectorworksMVR::IGdtfColorSpace **outColorSpace)
 {
     // Check Pointer
     if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
@@ -1478,7 +1478,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::GetColo
 }
 
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::SetColorSpace (IGdtfColorSpace * newColorSpace)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::SetColorSpace (IGdtfColorSpace * newColorSpace)
 {
     if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
     if (!newColorSpace) { return kVCOMError_InvalidArg; }
@@ -1497,7 +1497,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::SetColo
 }
 
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::GetEmitterCount(size_t &count)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetEmitterCount(size_t &count)
 {
     if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
 
@@ -1507,7 +1507,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::GetEmit
 }
 
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::GetEmitterAt(size_t at, VectorworksMVR::IGdtfPhysicalEmitter** value)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetEmitterAt(size_t at, VectorworksMVR::IGdtfPhysicalEmitter** value)
 {
     // Check if Set
     if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
@@ -1555,7 +1555,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::GetEmit
 }
 
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::CreateEmitter(MvrString name, VectorworksMVR::IGdtfPhysicalEmitter **outVal)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateEmitter(MvrString name, VectorworksMVR::IGdtfPhysicalEmitter **outVal)
 {
     // Check if Set
     if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
@@ -1600,7 +1600,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::CreateE
 }
 
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::GetFilterCount(size_t &count)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetFilterCount(size_t &count)
 {
     if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
 
@@ -1610,7 +1610,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::GetFilt
 }
 
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::GetFilterAt(size_t at, VectorworksMVR::IGdtfFilter** value)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetFilterAt(size_t at, VectorworksMVR::IGdtfFilter** value)
 {
     // Check if Set
     if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
@@ -1659,7 +1659,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::GetFilt
 }
 
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::CreateFilter(VectorworksMVR::IGdtfFilter **outVal)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateFilter(VectorworksMVR::IGdtfFilter **outVal)
 {
     // Check if Set
     if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
@@ -1704,7 +1704,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::CreateF
 }
 
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::GetDMXProfileCount(size_t &count)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetDMXProfileCount(size_t &count)
 {
     if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
 
@@ -1714,7 +1714,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::GetDMXP
 }
 
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::GetDMXProfileAt(size_t at, VectorworksMVR::IGdtfDMXProfile** value)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetDMXProfileAt(size_t at, VectorworksMVR::IGdtfDMXProfile** value)
 {
     // Check if Set
     if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
@@ -1763,7 +1763,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::GetDMXP
 }
 
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::CreateDMXProfile(VectorworksMVR::IGdtfDMXProfile **outVal)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateDMXProfile(VectorworksMVR::IGdtfDMXProfile **outVal)
 {
     // Check if Set
     if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
@@ -1807,7 +1807,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::CreateD
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::GetCRIGroupCount(size_t &count)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetCRIGroupCount(size_t &count)
 {
     if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
 
@@ -1817,7 +1817,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::GetCRIG
 }
 
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::GetCRIGroupAt(size_t at, VectorworksMVR::IGdtfCRIGroup** value)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetCRIGroupAt(size_t at, VectorworksMVR::IGdtfCRIGroup** value)
 {
     // Check if Set
     if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
@@ -1866,7 +1866,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::GetCRIG
 }
 
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::CreateCRIGroup(double colorTemp, VectorworksMVR::IGdtfCRIGroup **outVal)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateCRIGroup(double colorTemp, VectorworksMVR::IGdtfCRIGroup **outVal)
 {
     // Check if Set
     if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
