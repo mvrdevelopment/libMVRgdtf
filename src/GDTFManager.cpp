@@ -3897,7 +3897,7 @@ void GdtfPhysicalEmitter::OnPrintToFile(IXMLFileNodePtr pNode)
     pNode->SetNodeAttributeValue(XML_GDTF_EmitterDominantWaveLength, GdtfConverter::ConvertDouble(fDominantWaveLength) );
     pNode->SetNodeAttributeValue(XML_GDTF_EmitterDiodePart,          fDiodePart );
 	//------------------------------------------------------------------------------------
-	// Write MeasurePoints
+	// Write Measurement
 	for (GdtfMeasurement* mes: fMeasurements)
 	{
 		mes->WriteToNode(pNode);
@@ -3923,7 +3923,7 @@ void GdtfPhysicalEmitter::OnReadFromNode(const IXMLFileNodePtr& pNode)
     pNode->GetNodeAttributeValue(XML_GDTF_EmitterDiodePart, fDiodePart);
 	
 	// ------------------------------------------------------------------------------------
-	// Read MeasurePoints
+	// Read Measurements
 	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_MeasurementNodeName, [this] (IXMLFileNodePtr objNode) -> void
 								 {
 									 // Create the object
