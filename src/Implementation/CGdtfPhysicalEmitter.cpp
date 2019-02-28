@@ -72,7 +72,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalEmitterImpl::GetMeasureme
         CGdtfMeasurementImpl* pResultInterface = dynamic_cast<CGdtfMeasurementImpl* >(pMeasurementObj);
         if (pResultInterface)
         {
-            pResultInterface->setPointer(gdtfMeasurement);
+            pResultInterface->SetPointer(gdtfMeasurement);
         }
         else
         {
@@ -115,7 +115,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalEmitterImpl::CreateMeasur
 		CGdtfMeasurementImpl* pResultInterface = dynamic_cast<CGdtfMeasurementImpl* >(pMeasurementObj);
 		if (pResultInterface)
 		{
-			pResultInterface->setPointer(gdtfMeasurement);
+			pResultInterface->SetPointer(gdtfMeasurement);
 		}
 		else
 		{
