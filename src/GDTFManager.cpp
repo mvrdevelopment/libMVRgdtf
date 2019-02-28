@@ -5463,15 +5463,6 @@ GdtfDmxMode* GdtfFixture::AddDmxMode(const TXString& name)
 	return mode;
 }
 
-GdtfDMXProfilePtr SceneData::GdtfFixture::AddDmxProfile()
-{
-    GdtfDMXProfilePtr dmxProf = new GdtfDMXProfile();
-    
-    fDmxProfiles.push_back(dmxProf);
-    
-    return dmxProf;
-}
-
 GdtfMacroPtr GdtfFixture::AddMacro(const TXString& name)
 {
 	GdtfMacroPtr macro = new  GdtfMacro(name);
@@ -7151,6 +7142,15 @@ GdtfPhysicalEmitterPtr SceneData::GdtfPhysicalDescriptions::AddEmitter(const TXS
 	fEmitters.push_back(emitter);
 	
 	return emitter;
+}
+
+GdtfDMXProfilePtr SceneData::GdtfPhysicalDescriptions::AddDmxProfile()
+{
+    GdtfDMXProfilePtr dmxProf = new GdtfDMXProfile();
+    
+    fDmxProfiles.push_back(dmxProf);
+    
+    return dmxProf;
 }
 
 TXString SceneData::GdtfPhysicalDescriptions::GetNodeName()

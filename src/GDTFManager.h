@@ -394,6 +394,7 @@ namespace SceneData
         void                            SetColorSpace(GdtfColorSpace* val);
 
         GdtfPhysicalEmitterPtr	        AddEmitter(const TXString& name);
+        GdtfDMXProfilePtr               AddDmxProfile();
 
     protected:
         virtual	TXString				GetNodeName();
@@ -1988,8 +1989,7 @@ private:
 				
 		GdtfWheelPtr			AddWheel(TXString name);
 		GdtfDmxModePtr			AddDmxMode(const TXString& name);
-		GdtfMacroPtr			AddMacro(const TXString& name);
-        GdtfDMXProfilePtr       AddDmxProfile();
+		GdtfMacroPtr			AddMacro(const TXString& name);        
 
 		GdtfUserPresetPtr		AddUserPreset();
 		GdtfFeatureGroupPtr		AddFeatureGroup(const TXString& name, const TXString& prettyName);
