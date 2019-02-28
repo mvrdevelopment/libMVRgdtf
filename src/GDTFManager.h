@@ -1913,8 +1913,6 @@ namespace SceneData
 		bool			            fHasLinkedGuid;
         
         GdtfProtocols				fProtocollContainer; // XXX Check this implementation.
-        bool                        fHasProtocolls; 
-
         
 		//------------------------------------------------
 		// Storage

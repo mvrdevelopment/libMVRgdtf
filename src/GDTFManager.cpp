@@ -4719,8 +4719,6 @@ GdtfDmxModePtr GdtfFixture::ResolveDMXMode(const TXString& unresolvedDMXmode)
 
 void GdtfFixture::ResolveDMXPersonalityRefs()
 {
-    if ( ! fHasProtocolls) { return;}
-
     GdtfFTRDM* rdm =  fProtocollContainer.GetRDM();
 
     if (rdm)
@@ -4891,8 +4889,7 @@ void GdtfFixture::ResolveDmxChanelFunctionRefs(GdtfDmxLogicalChannelPtr dmxLogCh
 GdtfFixture::GdtfFixture()
 {
 	fReaded					= false;
-	fHasLinkedGuid			= false;    
-    fHasProtocolls          = false;
+	fHasLinkedGuid			= false;        
 }
 
 GdtfFixture::~GdtfFixture()
@@ -5071,7 +5068,7 @@ void GdtfFixture::OnPrintToFile(IXMLFileNodePtr pNode)
 	
 	// ------------------------------------------------------------------------------------
 	// Print Prorocols
-    if (fHasProtocolls) { fProtocollContainer.WriteToNode(pNode); }
+    fProtocollContainer.WriteToNode(pNode);
 }
 
 void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
@@ -5094,7 +5091,6 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
     IXMLFileNodePtr protoNode;
     if (VCOM_SUCCEEDED(pNode->GetChildNode(XML_GDTF_Protocols, &protoNode))) 
     {        
-        fHasProtocolls = true;
         fProtocollContainer.ReadFromNode(protoNode); 
     } 
 
