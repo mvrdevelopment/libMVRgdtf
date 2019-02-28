@@ -54,7 +54,9 @@ namespace SceneData
     class GdtfMeasurementPoint;
     class GdtfMeasurement; typedef std::vector<GdtfMeasurement*>	TGdtfMeasurementArray;
     
-    class GdtfFilter; typedef std::vector<GdtfFilter*>	TGdtfFilterArray;
+    class GdtfFilter; 
+    typedef GdtfFilter*	GdtfFilterPtr;
+    typedef std::vector<GdtfFilter*>	TGdtfFilterArray;
 	//------------------------------------------------------------------------------------
 	// Attributes	
 	
@@ -403,6 +405,7 @@ namespace SceneData
         void                             SetColorSpace(GdtfColorSpace* val);
 
         GdtfPhysicalEmitterPtr	        AddEmitter(const TXString& name);
+        GdtfFilterPtr                   AddFilter();
         GdtfDMXProfilePtr               AddDmxProfile();
         GdtfCRIGroupPtr                 AddCRIGroup(double colorTsemp);
 
@@ -439,8 +442,7 @@ namespace SceneData
         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
         virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
     };
-    typedef GdtfFilter*	GdtfFilterPtr;
-       
+
 	class GdtfWheel : public GdtfObject
 	{
 	public:

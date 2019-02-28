@@ -7124,6 +7124,15 @@ GdtfPhysicalEmitterPtr SceneData::GdtfPhysicalDescriptions::AddEmitter(const TXS
 	return emitter;
 }
 
+GdtfFilterPtr SceneData::GdtfPhysicalDescriptions::AddFilter()
+{
+    GdtfFilterPtr filter = new GdtfFilter();
+
+    fFilters.push_back(filter);
+
+    return filter;
+}
+
 GdtfDMXProfilePtr SceneData::GdtfPhysicalDescriptions::AddDmxProfile()
 {
     GdtfDMXProfilePtr dmxProf = new GdtfDMXProfile();
@@ -7307,7 +7316,7 @@ void SceneData::GdtfColorSpace::OnPrintToFile(IXMLFileNodePtr pNode)
 
     //------------------------------------------------------------------------------------
     // Print the attributes        
-    pNode->SetNodeAttributeValue(XML_GDTF_ColorSpace_ColorSpace, GdtfConverter::ConvertEGdtfColorSpace(fColorSpace) );
+    pNode->SetNodeAttributeValue(XML_GDTF_ColorSpace_Mode, GdtfConverter::ConvertEGdtfColorSpace(fColorSpace) );
     
     if (fColorSpace == EGdtfColorSpace::Custom) // XXX is this correctly implemented
     {
@@ -7326,7 +7335,7 @@ void SceneData::GdtfColorSpace::OnReadFromNode(const IXMLFileNodePtr & pNode)
 
     //------------------------------------------------------------------------------------
     // Get the attributes	
-    TXString colorSpaceStr; pNode->GetNodeAttributeValue(XML_GDTF_ColorSpace_ColorSpace, colorSpaceStr);
+    TXString colorSpaceStr; pNode->GetNodeAttributeValue(XML_GDTF_ColorSpace_Mode, colorSpaceStr);
     GdtfConverter::ConvertEGdtfColorSpace( colorSpaceStr, pNode, fColorSpace);
     
     if (fColorSpace == EGdtfColorSpace::Custom) // XXX is this correctly implemented
