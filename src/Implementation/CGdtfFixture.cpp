@@ -21,7 +21,8 @@
 #include "CGdtfFTRDM.h"
 #include "CGdtfXmlParsingError.h"
 #include "GdtfError.h"
-
+#include "CGdtfFilter.h"
+#include "CGdtfColorSpace.h"
 
 using namespace VectorWorks::Filing;
 
@@ -1436,11 +1437,11 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateRDM(Vectorwork
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetColorSpace(VectorworksMVR::IGdtfColorSpace **outColorSpace)
 {
     // Check Pointer
-    if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
+    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
 
     //---------------------------------------------------------------------------
     // Initialize Object
-    SceneData::GdtfColorSpace*	gdtfColorSpace = fPhysicalDescriptions->GetColorSpace();
+    SceneData::GdtfColorSpace*	gdtfColorSpace = fFixtureObject->GetPhysicalDesciptionsContainer().GetColorSpace();
     if (!gdtfColorSpace) { return kVCOMError_NotSet; }
 
     CGdtfColorSpaceImpl*		pColorSpaceObj = nullptr;
@@ -1478,30 +1479,11 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetColorSpace(Vector
 }
 
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::SetColorSpace (IGdtfColorSpace * newColorSpace)
-{
-    if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
-    if (!newColorSpace) { return kVCOMError_InvalidArg; }
-
-    // Cast
-    CGdtfColorSpaceImpl* ColorSpaceImpl = dynamic_cast<CGdtfColorSpaceImpl*>(newColorSpace);
-    if (!ColorSpaceImpl) { return kVCOMError_Failed; }
-
-    // Set Object
-    SceneData::GdtfColorSpace* gdtfColorSpace = ColorSpaceImpl->GetPointer();
-    if (!gdtfColorSpace) { return kVCOMError_Failed; }
-
-    fPhysicalDescriptions->SetColorSpace (gdtfColorSpace);
-
-    return kVCOMError_NoError;
-}
-
-
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetEmitterCount(size_t &count)
 {
-    if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
+    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
 
-    count = fPhysicalDescriptions->GetPhysicalEmitterArray().size();
+    count = fFixtureObject->GetPhysicalDesciptionsContainer().GetPhysicalEmitterArray().size();
 
     return kVCOMError_NoError;
 }
@@ -1510,13 +1492,13 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetEmitterCount(size
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetEmitterAt(size_t at, VectorworksMVR::IGdtfPhysicalEmitter** value)
 {
     // Check if Set
-    if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
+    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
 
     // Check if no Overflow
-    if (at >= fPhysicalDescriptions->GetPhysicalEmitterArray().size()) { return kVCOMError_OutOfBounds; }
+    if (at >= fFixtureObject->GetPhysicalDesciptionsContainer().GetPhysicalEmitterArray().size()) { return kVCOMError_OutOfBounds; }
 
 
-    SceneData::GdtfPhysicalEmitter* gdtfEmitter = fPhysicalDescriptions->GetPhysicalEmitterArray()[at];
+    SceneData::GdtfPhysicalEmitter* gdtfEmitter = fFixtureObject->GetPhysicalDesciptionsContainer().GetPhysicalEmitterArray()[at];
     
     //---------------------------------------------------------------------------
     // Initialize Object
@@ -1558,10 +1540,10 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetEmitterAt(size_t 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateEmitter(MvrString name, VectorworksMVR::IGdtfPhysicalEmitter **outVal)
 {
     // Check if Set
-    if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
+    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
 
 
-    SceneData::GdtfPhysicalEmitter* gdtfEmitter = fPhysicalDescriptions->AddEmitter(name);
+    SceneData::GdtfPhysicalEmitter* gdtfEmitter = fFixtureObject->GetPhysicalDesciptionsContainer().AddEmitter(name);
 
     //---------------------------------------------------------------------------
     // Initialize Object
@@ -1602,9 +1584,9 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateEmitter(MvrStr
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetFilterCount(size_t &count)
 {
-    if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
+    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
 
-    count = fPhysicalDescriptions->GetFilterArray().size();
+    count = fFixtureObject->GetPhysicalDesciptionsContainer().GetFilterArray().size();
 
     return kVCOMError_NoError;
 }
@@ -1613,13 +1595,13 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetFilterCount(size_
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetFilterAt(size_t at, VectorworksMVR::IGdtfFilter** value)
 {
     // Check if Set
-    if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
+    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
 
     // Check if no Overflow
-    if (at >= fPhysicalDescriptions->GetFilterArray().size()) { return kVCOMError_OutOfBounds; }
+    if (at >=  fFixtureObject->GetPhysicalDesciptionsContainer().GetFilterArray().size()) { return kVCOMError_OutOfBounds; }
 
 
-    SceneData::GdtfFilter* gdtfFilter = fPhysicalDescriptions->GetFilterArray()[at];
+    SceneData::GdtfFilter* gdtfFilter = fFixtureObject->GetPhysicalDesciptionsContainer.GetFilterArray()[at];
 
 
     //---------------------------------------------------------------------------
@@ -1659,13 +1641,13 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetFilterAt(size_t a
 }
 
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateFilter(VectorworksMVR::IGdtfFilter **outVal)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateFilter(MvrString name, VectorworksMVR::IGdtfFilter **outVal)
 {
     // Check if Set
-    if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
+    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
 
 
-    SceneData::GdtfFilter* gdtfFilter = fPhysicalDescriptions->AddFilter();
+    SceneData::GdtfFilter* gdtfFilter = fFixtureObject->GetPhysicalDesciptionsContainer().AddFilter();
 
     //---------------------------------------------------------------------------
     // Initialize Object
@@ -1706,9 +1688,9 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateFilter(Vectorw
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetDMXProfileCount(size_t &count)
 {
-    if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
+    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
 
-    count = fPhysicalDescriptions->GetDmxProfileArray().size();
+    count = fFixtureObject->GetPhysicalDesciptionsContainer().GetDmxProfileArray().size();
 
     return kVCOMError_NoError;
 }
@@ -1717,13 +1699,13 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetDMXProfileCount(s
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetDMXProfileAt(size_t at, VectorworksMVR::IGdtfDMXProfile** value)
 {
     // Check if Set
-    if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
+    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
 
     // Check if no Overflow
-    if (at >= fPhysicalDescriptions->GetDmxProfileArray().size()) { return kVCOMError_OutOfBounds; }
+    if (at >= fFixtureObject->GetPhysicalDesciptionsContainer().GetDmxProfileArray().size()) { return kVCOMError_OutOfBounds; }
 
 
-    SceneData::GdtfDMXProfile* gdtfDMXProfile = fPhysicalDescriptions->GetDmxProfileArray()[at];
+    SceneData::GdtfDMXProfile* gdtfDMXProfile = fFixtureObject->GetPhysicalDesciptionsContainer().GetDmxProfileArray()[at];
 
 
     //---------------------------------------------------------------------------
