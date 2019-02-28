@@ -3850,7 +3850,7 @@ GdtfPhysicalEmitter::GdtfPhysicalEmitter(const TXString& name, CCieColor color)
 
 GdtfPhysicalEmitter::~GdtfPhysicalEmitter()
 {
-	for (GdtfMeasurementPointPtr ptr : fMeasurePoints) { delete ptr; }
+	for (GdtfMeasurementPtr ptr : fMeasurements) { delete ptr; }
 }
 
 void GdtfPhysicalEmitter::SetName(const TXString &name)
@@ -3863,11 +3863,11 @@ void GdtfPhysicalEmitter::SetColor(CCieColor color)
 	fColor = color;
 }
 
-GdtfMeasurementPoint* GdtfPhysicalEmitter::AddMeasurementPoint()
+GdtfMeasurement* GdtfPhysicalEmitter::AddMeasurement()
 {
-	GdtfMeasurementPoint* point = new GdtfMeasurementPoint();
-	fMeasurePoints.push_back(point);
-	return point;
+	GdtfMeasurement* mes = new GdtfMeasurement();
+	fMeasurements.push_back(mes);
+	return mes;
 }
 
 void GdtfPhysicalEmitter::OnPrintToFile(IXMLFileNodePtr pNode)
@@ -3883,9 +3883,9 @@ void GdtfPhysicalEmitter::OnPrintToFile(IXMLFileNodePtr pNode)
 	
 	//------------------------------------------------------------------------------------
 	// Write MeasurePoints
-	for (GdtfMeasurementPoint* measurePointObj : fMeasurePoints)
+	for (GdtfMeasurement* mes: fMeasurements)
 	{
-		measurePointObj->WriteToNode(pNode);
+		mes->WriteToNode(pNode);
 	}
 }
 
@@ -3906,13 +3906,13 @@ void GdtfPhysicalEmitter::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_MeasurementNodeName, [this] (IXMLFileNodePtr objNode) -> void
 								 {
 									 // Create the object
-									 GdtfMeasurementPointPtr mesPoint = new GdtfMeasurementPoint();
+									 GdtfMeasurementPtr mes = new GdtfMeasurement();
 									 
 									 // Read from node
-									 mesPoint->ReadFromNode(objNode);
+									 mes->ReadFromNode(objNode);
 									 
 									 // Add to list
-									 fMeasurePoints.push_back(mesPoint);
+									 fMeasurements.push_back(mes);
 									 return;
 								 });
 }
@@ -3955,9 +3955,9 @@ CCieColor GdtfPhysicalEmitter::GetColor() const
 	return fColor;
 }
 
-const TGdtfMeasurementPointArray GdtfPhysicalEmitter::GetMeasurementPoints()
+const TGdtfMeasurementArray GdtfPhysicalEmitter::GetMeasurements()
 {
-	return fMeasurePoints;
+	return fMeasurements;
 }
 
 TXString GdtfPhysicalEmitter::GetNodeReference()
