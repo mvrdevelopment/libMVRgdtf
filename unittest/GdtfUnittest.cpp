@@ -441,16 +441,16 @@ void GdtfUnittest::ReadFile()
 					IGdtfMeasurementPtr emitterMeasurement;
 					if (__checkVCOM(gdtfEmitter->GetMeasurementAt(j, &emitterMeasurement)))
 					{
-                        double physical; __checkVCOM( emitterMeasurement->GetPhysical(physical));
+                        double physical=0; __checkVCOM( emitterMeasurement->GetPhysical(physical));
                         this->checkifEqual("Physical",         physical, 1.23);
 
-                        double luminousIntensity; __checkVCOM(emitterMeasurement->GetLuminousIntensity(luminousIntensity));
+                        double luminousIntensity=0; __checkVCOM(emitterMeasurement->GetLuminousIntensity(luminousIntensity));
                         this->checkifEqual("LuminousIntensity",   luminousIntensity, 2.34);
 
-                        double transmission; __checkVCOM(emitterMeasurement->GetTransmission(transmission));
+                        double transmission=0; __checkVCOM(emitterMeasurement->GetTransmission(transmission));
                         this->checkifEqual("Transmission",  transmission,  4.56);
 
-                        EGdtfInterpolationTo interpolationTo; __checkVCOM(emitterMeasurement->GetInterpolationTo(interpolationTo));
+                        EGdtfInterpolationTo interpolationTo = EGdtfInterpolationTo::Linear; __checkVCOM(emitterMeasurement->GetInterpolationTo(interpolationTo));
                         this->checkifEqual("InterpolationTo",  size_t(interpolationTo), size_t(EGdtfInterpolationTo::Log) );
 
                         // TODO: XXX
