@@ -4895,6 +4895,8 @@ GdtfFixture::GdtfFixture()
 
 GdtfFixture::~GdtfFixture()
 {
+    delete fPhysicalDesciptions;
+
     for (GdtfActivationGroupPtr obj		: fActivationGroups){ delete obj; }
     for (GdtfFeatureGroupPtr obj		: fFeatureGroups)   { delete obj; }
     for (GdtfAttributePtr obj			: fAttributes)      { delete obj; }
@@ -5100,6 +5102,7 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
     IXMLFileNodePtr physDescrNode;
     if (VCOM_SUCCEEDED(pNode->GetChildNode(XML_GDTF_FixtureChildNodePhysicalDesrip, &physDescrNode) ))
     {
+        fPhysicalDesciptions = new GdtfPhysicalDescriptions();
         fPhysicalDesciptions->ReadFromNode(physDescrNode);
     }
 

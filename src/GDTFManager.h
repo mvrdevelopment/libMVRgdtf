@@ -1915,7 +1915,6 @@ namespace SceneData
         TXString		            fTumbnailFullPath_SVG;
 		GdtfFixtureGUID	            fLinkedGuid;
 		bool			            fHasLinkedGuid;
-        GdtfPhysicalDescriptionsPtr fPhysicalDesciptions; 
 		//------------------------------------------------
 		// Storage
         
@@ -1932,8 +1931,9 @@ namespace SceneData
 		TGdtfRevisionArray				fRevisions;
 		TGdtfUserPresetArray			fPresets;
 		TGdtfMacroArray					fMacros;		        
-		GdtfProtocols					fProtocollContainer;
-		
+		GdtfProtocols					fProtocollContainer; // TODO: XXX init with nullptr and check existence when called!
+        GdtfPhysicalDescriptionsPtr     fPhysicalDesciptions; 
+
 		//------------------------------------------------
 		// Reading support
 		TVWArray_IFileIdentifier		fLocalFiles;
