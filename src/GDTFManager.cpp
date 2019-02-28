@@ -7100,9 +7100,9 @@ EGdtfObjectType SceneData::GdtfPhysicalDescriptions::GetObjectType()
     return EGdtfObjectType::eGdtfPhysicalDescription;
 }
 
-GdtfColorSpace& SceneData::GdtfPhysicalDescriptions::GetColorSpace()
+GdtfColorSpace* SceneData::GdtfPhysicalDescriptions::GetColorSpace()
 {
-    return fColorSpace;
+    return & fColorSpace;
 }
 
 

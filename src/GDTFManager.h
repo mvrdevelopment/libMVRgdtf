@@ -392,7 +392,7 @@ namespace SceneData
 
     public:        
         // Getter        
-        GdtfColorSpace&                  GetColorSpace();
+        GdtfColorSpace*                  GetColorSpace();
 
         const TGdtfPhysicalEmitterArray& GetPhysicalEmitterArray();
         const TGdtfFilterArray&          GetFilterArray();
