@@ -7210,10 +7210,12 @@ void SceneData::GdtfSoftwareVersionID::OnReadFromNode(const IXMLFileNodePtr & pN
 
 SceneData::GdtfPhysicalDescriptions::GdtfPhysicalDescriptions()
 {
+    // TODO XXX: init vars
 }
 
 SceneData::GdtfPhysicalDescriptions::~GdtfPhysicalDescriptions()
 {
+    // TODO XXX: free Pointers
 }
 
 EGdtfObjectType SceneData::GdtfPhysicalDescriptions::GetObjectType()
@@ -7314,10 +7316,14 @@ void SceneData::GdtfColorSpace::OnPrintToFile(IXMLFileNodePtr pNode)
     //------------------------------------------------------------------------------------
     // Print the attributes        
     pNode->SetNodeAttributeValue(XML_GDTF_ColorSpace_ColorSpace, GdtfConverter::ConvertEGdtfColorSpace(fColorSpace) );
-    pNode->SetNodeAttributeValue(XML_GDTF_ColorSpace_Red,        GdtfConverter::ConvertColor(fRed) );
-    pNode->SetNodeAttributeValue(XML_GDTF_ColorSpace_Green,      GdtfConverter::ConvertColor(fGreen) );
-    pNode->SetNodeAttributeValue(XML_GDTF_ColorSpace_Blue,	     GdtfConverter::ConvertColor(fBlue) );
-    pNode->SetNodeAttributeValue(XML_GDTF_ColorSpace_WhitePoint, GdtfConverter::ConvertColor(fWhitePoint) );
+    
+    if (fColorSpace == EGdtfColorSpace::Custom) // XXX is this correctly implemented
+    {
+        pNode->SetNodeAttributeValue(XML_GDTF_ColorSpace_Red,        GdtfConverter::ConvertColor(fRed) );
+        pNode->SetNodeAttributeValue(XML_GDTF_ColorSpace_Green,      GdtfConverter::ConvertColor(fGreen) );
+        pNode->SetNodeAttributeValue(XML_GDTF_ColorSpace_Blue,	     GdtfConverter::ConvertColor(fBlue) );
+        pNode->SetNodeAttributeValue(XML_GDTF_ColorSpace_WhitePoint, GdtfConverter::ConvertColor(fWhitePoint) );
+    }
 }
 
 void SceneData::GdtfColorSpace::OnReadFromNode(const IXMLFileNodePtr & pNode)
@@ -7331,10 +7337,13 @@ void SceneData::GdtfColorSpace::OnReadFromNode(const IXMLFileNodePtr & pNode)
     TXString colorSpaceStr; pNode->GetNodeAttributeValue(XML_GDTF_ColorSpace_ColorSpace, colorSpaceStr);
     GdtfConverter::ConvertEGdtfColorSpace( colorSpaceStr, pNode, fColorSpace);
     
-    GdtfConverter::ConvertColor(XML_GDTF_ColorSpace_Red       , pNode, fRed);
-    GdtfConverter::ConvertColor(XML_GDTF_ColorSpace_Green     , pNode, fGreen);
-    GdtfConverter::ConvertColor(XML_GDTF_ColorSpace_Blue	  , pNode, fBlue);
-    GdtfConverter::ConvertColor(XML_GDTF_ColorSpace_WhitePoint, pNode, fWhitePoint);      
+    if (fColorSpace == EGdtfColorSpace::Custom) // XXX is this correctly implemented
+    {
+        GdtfConverter::ConvertColor(XML_GDTF_ColorSpace_Red       , pNode, fRed);
+        GdtfConverter::ConvertColor(XML_GDTF_ColorSpace_Green     , pNode, fGreen);
+        GdtfConverter::ConvertColor(XML_GDTF_ColorSpace_Blue	  , pNode, fBlue);
+        GdtfConverter::ConvertColor(XML_GDTF_ColorSpace_WhitePoint, pNode, fWhitePoint);      
+    }
 }
 
 SceneData::GdtfFilter::GdtfFilter()
