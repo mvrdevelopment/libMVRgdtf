@@ -3840,12 +3840,16 @@ void GdtfRevision::SetUserId(size_t value)
 GdtfPhysicalEmitter::GdtfPhysicalEmitter()
 {
 	fColor		= CRGBColor(255, 255, 255);
+    fDominantWaveLength = 0;
+    fDiodePart = "";
 }
 
 GdtfPhysicalEmitter::GdtfPhysicalEmitter(const TXString& name, CCieColor color)
 {
 	fColor		= color;
 	fName		= name;
+    fDominantWaveLength = 0;
+    fDiodePart = "";
 }
 
 GdtfPhysicalEmitter::~GdtfPhysicalEmitter()
@@ -3946,6 +3950,8 @@ void GdtfPhysicalEmitter::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	TXStringArray optional;
 	needed.push_back(XML_GDTF_EmitterName);
 	needed.push_back(XML_GDTF_EmitterColor);
+    needed.push_back(XML_GDTF_EmitterDominantWaveLength);
+    needed.push_back(XML_GDTF_EmitterDiodePart);
 	
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node

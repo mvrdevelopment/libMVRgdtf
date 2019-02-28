@@ -146,6 +146,9 @@ void GdtfUnittest::WriteFile()
 		color.f_Y = 0.424242;
 		if (__checkVCOM(gdtfWrite->CreateEmitter("My emitterName", color, &gdtfEmitter)))
 		{
+            gdtfEmitter->SetDominantWaveLength(666);
+            gdtfEmitter->SetDiodePart("MyDiodePart");
+
 			IGdtfMeasurementPtr gdtfMeasurement;            
 			__checkVCOM(gdtfEmitter->CreateMeasurement(100, 200, &gdtfMeasurement));
             gdtfMeasurement->SetPhysical(1.23);

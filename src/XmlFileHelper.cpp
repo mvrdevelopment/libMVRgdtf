@@ -1448,11 +1448,13 @@ CieColor SceneData::GdtfConverter::ConvertCColor(const CCieColor & color)
      else if   (inVal == XML_GDTF_ColorSpaceEnum_Custom)    { outVal = EGdtfColorSpace::Custom; }
      else if   (inVal == XML_GDTF_ColorSpaceEnum_ProPhoto)  { outVal = EGdtfColorSpace::ProPhoto; }
      else if   (inVal == XML_GDTF_ColorSpaceEnumr_ANSI)     { outVal = EGdtfColorSpace::ANSI;  }
+     else 
+     {
+        DSTOP((kEveryone, "Unknown Value for EGdtfColorSpace"));
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertColorSample, node);
+        SceneData::GdtfFixture::AddError(error);
+     }       
 
-    DSTOP((kEveryone, "Unknown Value for EGdtfColorSpace"));
-    GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertColorSample, node);
-    SceneData::GdtfFixture::AddError(error);
-       
     return true;
 }
 
@@ -1477,10 +1479,12 @@ CieColor SceneData::GdtfConverter::ConvertCColor(const CCieColor & color)
      if        (inVal == XML_GDTF_InterpolationTo_Linear)  { outVal = EGdtfInterpolationTo::Linear; }     
      else if   (inVal == XML_GDTF_InterpolationTo_Step)    { outVal = EGdtfInterpolationTo::Step; }
      else if   (inVal == XML_GDTF_InterpolationTo_Log)    { outVal = EGdtfInterpolationTo::Log; }     
-
-    DSTOP((kEveryone, "Unknown Value for EGdtfInterpolationTo"));
-    GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertColorSample, node);
-    SceneData::GdtfFixture::AddError(error);
+     else 
+     {
+        DSTOP((kEveryone, "Unknown Value for EGdtfInterpolationTo"));
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertColorSample, node);
+        SceneData::GdtfFixture::AddError(error);
+     }
        
     return true;
 }
