@@ -1641,13 +1641,12 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetFilterAt(size_t a
 }
 
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateFilter(MvrString name, VectorworksMVR::IGdtfFilter **outVal)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateFilter(MvrString name, CieColor color, VectorworksMVR::IGdtfFilter **outVal)
 {
     // Check if Set
     if (!fFixtureObject) { return kVCOMError_NotInitialized; }
-
-
-    SceneData::GdtfFilter* gdtfFilter = fFixtureObject->GetPhysicalDesciptionsContainer().AddFilter(name);
+    
+    SceneData::GdtfFilter* gdtfFilter = fFixtureObject->GetPhysicalDesciptionsContainer().AddFilter(name, SceneData::GdtfConverter::ConvertCColor(color));
 
     //---------------------------------------------------------------------------
     // Initialize Object
