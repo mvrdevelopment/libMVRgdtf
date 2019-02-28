@@ -7153,6 +7153,7 @@ void SceneData::GdtfPhysicalDescriptions::OnPrintToFile(IXMLFileNodePtr pNode)
     GdtfObject::OnPrintToFile(pNode);
     
     //------------------------------------------------------------------------------------
+    // Print the attributes        
     pNode->SetNodeAttributeValue(XML_GDTF_PhysicalDescriptionsAttrColorSpace,  fUnresolved_ColorSpace);    
 
     // Print Emitters (physicalDescription child)
