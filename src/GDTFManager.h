@@ -1786,20 +1786,26 @@ namespace SceneData
 	private:
 		TXString					fName;
 		CCieColor					fColor;
-        // DominantWaveLength XXX TODO:
-        // DiodePart
+        double                      fDominantWaveLength;
+        double                      fDiodePart;
 		//		
 		TGdtfMeasurementArray	fMeasurements;
 		
 	public:
+        // Getter
 		virtual EGdtfObjectType				GetObjectType();
         const TXString&						GetName() const;
-        CCieColor							GetColor() const;
-        const TGdtfMeasurementArray         GetMeasurements();
+        CCieColor							GetColor() const;        
 		virtual TXString					GetNodeReference();
-		
+        double                              GetDiodePart();
+        double                              GetDominantWaveLength();
+        const TGdtfMeasurementArray         GetMeasurements();
+		// Setter
 		void							SetName(const TXString& name);
 		void							SetColor(CCieColor color);
+        void                            SetDiodePart(double val);
+        void                            SetDominantWaveLength(double val);
+
         GdtfMeasurement*                AddMeasurement();
 
 	protected:

@@ -830,9 +830,13 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetMeasurementCount(size_t& count) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetMeasurementAt(size_t at, IGdtfMeasurement** ouVal) = 0;
 		virtual VCOMError VCOM_CALLTYPE     CreateMeasurement(double wavelength, double energy, IGdtfMeasurement** ouVal) = 0;
-		
+		virtual VCOMError VCOM_CALLTYPE     GetDiodePart(double& outVal)=0;
+        virtual VCOMError VCOM_CALLTYPE     GetDominantWaveLength(double& outVal)=0;		
+
         virtual VCOMError VCOM_CALLTYPE     SetName(MvrString name) = 0;
         virtual VCOMError VCOM_CALLTYPE     SetColor(CieColor & color) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetDiodePart(double val)=0;
+        virtual VCOMError VCOM_CALLTYPE     SetDominantWaveLength(double val)=0;
 
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;

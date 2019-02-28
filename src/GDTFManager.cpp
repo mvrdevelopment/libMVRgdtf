@@ -3863,6 +3863,16 @@ void GdtfPhysicalEmitter::SetColor(CCieColor color)
 	fColor = color;
 }
 
+void SceneData::GdtfPhysicalEmitter::SetDiodePart(double val)
+{
+    fDiodePart = val;
+}
+
+void SceneData::GdtfPhysicalEmitter::SetDominantWaveLength(double val)
+{
+    fDominantWaveLength = val;
+}
+
 GdtfMeasurement* GdtfPhysicalEmitter::AddMeasurement()
 {
 	GdtfMeasurement* mes = new GdtfMeasurement();
@@ -3963,6 +3973,16 @@ const TGdtfMeasurementArray GdtfPhysicalEmitter::GetMeasurements()
 TXString GdtfPhysicalEmitter::GetNodeReference()
 {
 	return GetName();
+}
+
+double SceneData::GdtfPhysicalEmitter::GetDiodePart()
+{
+    return fDiodePart;
+}
+
+double SceneData::GdtfPhysicalEmitter::GetDominantWaveLength()
+{
+    return fDominantWaveLength;
 }
 
 //------------------------------------------------------------------------------------
