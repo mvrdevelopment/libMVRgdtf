@@ -1789,7 +1789,7 @@ namespace SceneData
         double                      fDominantWaveLength;
         TXString                    fDiodePart;
 		//		
-		TGdtfMeasurementArray	fMeasurements;
+		TGdtfMeasurementArray	fMeasurements; 
 		
 	public:
         // Getter
