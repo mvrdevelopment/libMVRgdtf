@@ -4206,7 +4206,7 @@ double GdtfMeasurementPoint::GetEnergy()
 // GdtfFixture
 TGdtfParsingErrorArray* GdtfFixture::__ERROR_CONTAINER_POINTER = nullptr;
 
-GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile) : GdtfFixture()
+GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile)
 {
 	fReaded			= false;
 	fHasLinkedGuid	= false;
