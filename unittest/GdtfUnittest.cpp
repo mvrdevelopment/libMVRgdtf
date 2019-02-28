@@ -509,7 +509,9 @@ void GdtfUnittest::ReadFile()
 
         //------------------------------------------------------------------------------------------------------------------
         // Filters        
-        size_t filterCount; __checkVCOM(gdtfRead->GetFilterCount(filterCount));
+        size_t filterCount; __checkVCOM(gdtfRead->GetFilterCount(filterCount));        
+        this->checkifEqual("Filter Count", filterCount, size_t(1));
+
         IGdtfFilterPtr gdtfFilter; __checkVCOM(gdtfRead->GetFilterAt(0, &gdtfFilter));
 
         MvrString filterNam = gdtfFilter->GetName();
