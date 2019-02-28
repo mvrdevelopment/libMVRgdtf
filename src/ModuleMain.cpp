@@ -39,6 +39,7 @@
 #include "Implementation/CGdtfSoftwareVersionID.h"
 #include "Implementation/CGdtfFTRDM.h"
 #include "Implementation/CGdtfMeasurement.h"
+#include "Implementation/CGdtfFilter.h"
 
 // XML
 #include "XMLLib/XMLFileNodeImpl.h"
@@ -128,6 +129,9 @@ extern "C" VectorworksMVR::VCOMError VW_EXPORT VWQueryInterface(const Vectorwork
         resultInterface = new CGdtfSoftwareVersionIDImpl();
     else if (iid == VectorworksMVR::IID_GdtfMeasurement)
         resultInterface = new CGdtfMeasurementImpl();
+    else if (iid == VectorworksMVR::IID_GdtfFilter)
+        resultInterface = new CGdtfFilterImpl();
+    // 
 	else if (iid == VectorWorks::Filing::IID_FileIdentifier)
 		resultInterface = new CFileIdentifier();
 	else if (iid == VectorWorks::Filing::IID_FolderIdentifier )
