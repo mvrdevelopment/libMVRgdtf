@@ -1980,9 +1980,7 @@ private:
 		void				SetFixtureTypeDescription(const TXString& desc);
 		void				SetGuid(const VWFC::Tools::VWUUID& uuid);
 		void				SetLinkedGuid(const VWFC::Tools::VWUUID& uuid);
-		void				SetThumbnailName(const TXString& fileName);
-        void	        	SetProtocollContainer(GdtfProtocols val);
-        void                SetPhysicalDesciptions(GdtfPhysicalDescriptions val);
+		void				SetThumbnailName(const TXString& fileName);                
 	public:
 		//----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		// Add calls

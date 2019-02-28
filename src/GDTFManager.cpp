@@ -5680,16 +5680,6 @@ void GdtfFixture::SetThumbnailName(const TXString& fileName)
 	fTumbnailName = fileName;
 }
 
-void SceneData::GdtfFixture::SetProtocollContainer(GdtfProtocols val)
-{
-    fProtocollContainer = val;
-}
-
-void SceneData::GdtfFixture::SetPhysicalDesciptions(GdtfPhysicalDescriptions val)
-{
-    fPhysicalDesciptions = val;
-}
-
 SceneData::GdtfDMXProfile::GdtfDMXProfile()
 {
 }
