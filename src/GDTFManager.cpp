@@ -7471,8 +7471,10 @@ void SceneData::GdtfFilter::SetColor(CCieColor val)
 
 GdtfMeasurement* SceneData::GdtfFilter::CreateMeasurement()
 {
-    GdtfMeasurement* measurePt = new GdtfMeasurement();
-    return measurePt;
+    GdtfMeasurement* m= new GdtfMeasurement();    
+    fMeasurementsArray.push_back(m);
+
+    return m;
 }
 
 TXString SceneData::GdtfFilter::GetNodeName()
