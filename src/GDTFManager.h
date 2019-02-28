@@ -415,7 +415,7 @@ namespace SceneData
     {
     public:
         GdtfFilter();
-        GdtfFilter(const TXString& name, const CCieColor& );
+        GdtfFilter(const TXString& name, const CCieColor& col);
         ~GdtfFilter();
     private:
         TXString                        fName;

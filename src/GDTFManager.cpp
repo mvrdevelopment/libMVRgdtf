@@ -7364,6 +7364,12 @@ SceneData::GdtfFilter::GdtfFilter()
     fName = "";
 }
 
+SceneData::GdtfFilter::GdtfFilter(const TXString & name, const CCieColor &col)
+{
+    fName = name;
+    fColor = col;
+}
+
 SceneData::GdtfFilter::~GdtfFilter()
 {
     for (GdtfMeasurement* o : fMeasurementsArray) { delete o; };
