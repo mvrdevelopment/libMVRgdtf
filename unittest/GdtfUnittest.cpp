@@ -478,11 +478,11 @@ void GdtfUnittest::ReadFile()
                         
 						double waveLength_Val = 0;
 						__checkVCOM(gdtfMeasurPoint->GetWaveLength(waveLength_Val));
-						this->checkifEqual("GetWaveLength ", waveLength_Val, double(100));		// only for object valid, because of hardcoded wavelength and energy
+						this->checkifEqual("GetWaveLength ", waveLength_Val, double(2.34));		// only for object valid, because of hardcoded wavelength and energy
 
 						double energy_Val = 0;
 						__checkVCOM(gdtfMeasurPoint->GetEnergy(energy_Val));
-						this->checkifEqual("GetEnergy ", energy_Val, double(200));				// only for object valid, because of hardcoded wavelength and energy
+						this->checkifEqual("GetEnergy ", energy_Val, double(1.23));				// only for object valid, because of hardcoded wavelength and energy
 					}
 				} // measurements loop
 			}
