@@ -1780,7 +1780,7 @@ namespace SceneData
 	{
 	public:
 		GdtfPhysicalEmitter();
-		GdtfPhysicalEmitter(const TXString& name);
+		GdtfPhysicalEmitter(const TXString& name, CCieColor color);
 		~GdtfPhysicalEmitter();
 		
 	private:
