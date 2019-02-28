@@ -5,6 +5,7 @@
 #include "CGdtfPhysicalDescriptions.h"
 #include "CGdtfColorSpace.h"
 #include "CGdtfPhysicalEmitter.h" 
+#include "CGdtfFilter.h"
 
 CGdtfPhysicalDescriptionsImpl::CGdtfPhysicalDescriptionsImpl()
 {
@@ -209,6 +210,113 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::CreateE
 
     return kVCOMError_NoError;
 }
+
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::GetFilterCount(size_t &count)
+{
+    if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
+
+    count = fPhysicalDescriptions->GetFilterArray().size();
+
+    return kVCOMError_NoError;
+}
+
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::GetFilterAt(size_t at, VectorworksMVR::IGdtfFilter** value)
+{
+    // Check if Set
+    if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
+
+    // Check if no Overflow
+    if (at >= fPhysicalDescriptions->GetFilterArray().size()) { return kVCOMError_OutOfBounds; }
+
+
+    SceneData::GdtfFilter* gdtfFilter = fPhysicalDescriptions->GetFilterArray()[at];
+
+
+    //---------------------------------------------------------------------------
+    // Initialize Object
+    CGdtfFilterImpl* pFilterObj = nullptr;
+
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfFilter, (IVWUnknown**)& pFilterObj)))
+    {
+        // Check Casting
+        CGdtfFilterImpl* pResultInterface = dynamic_cast<CGdtfFilterImpl*>(pFilterObj);
+        if (pResultInterface)
+        {
+            pResultInterface->SetPointer(gdtfFilter);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+
+    //---------------------------------------------------------------------------
+    // Check Incomming Object
+    if (*value)
+    {
+        (*value)->Release();
+        *value = NULL;
+    }
+
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *value = pFilterObj;
+
+    return kVCOMError_NoError;
+}
+
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::CreateFilter(VectorworksMVR::IGdtfFilter **outVal)
+{
+    // Check if Set
+    if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
+
+
+    SceneData::GdtfFilter* gdtfFilter = fPhysicalDescriptions->AddFilter();
+
+    //---------------------------------------------------------------------------
+    // Initialize Object
+    CGdtfFilterImpl* pFilterObj = nullptr;
+
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfFilter, (IVWUnknown**)& pFilterObj)))
+    {
+        // Check Casting
+        CGdtfFilterImpl* pResultInterface = dynamic_cast<CGdtfFilterImpl*>(pFilterObj);
+        if (pResultInterface)
+        {
+            pResultInterface->SetPointer(gdtfFilter);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+
+    //---------------------------------------------------------------------------
+    // Check Incomming Object
+    if (*outVal)
+    {
+        (*outVal)->Release();
+        *outVal = NULL;
+    }
+
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *outVal = pFilterObj;
+
+    return kVCOMError_NoError;
+}
+
+
+
 
 
 
