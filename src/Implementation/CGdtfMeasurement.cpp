@@ -15,7 +15,7 @@ VectorworksMVR::CGdtfMeasurementImpl::~CGdtfMeasurementImpl()
 {
 }
 
-VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfMeasurementImpl::GetPhysical(double outVal)
+VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfMeasurementImpl::GetPhysical(double& outVal)
 {
     // Check if valid
     if(!fMeasurement) return kVCOMError_NotInitialized;
@@ -25,7 +25,7 @@ VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfMeasurementImpl::GetPhysical(double
     return kVCOMError_NoError;
 }
 
-VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfMeasurementImpl::GetLuminousIntensity(double outVal)
+VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfMeasurementImpl::GetLuminousIntensity(double& outVal)
 {
     // Check if valid
     if(!fMeasurement) return kVCOMError_NotInitialized;
@@ -35,7 +35,7 @@ VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfMeasurementImpl::GetLuminousIntensi
     return kVCOMError_NoError;    
 }
 
-VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfMeasurementImpl::GetTransmission(double outVal)
+VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfMeasurementImpl::GetTransmission(double& outVal)
 {
     // Check if valid
     if(!fMeasurement) return kVCOMError_NotInitialized;
@@ -45,7 +45,7 @@ VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfMeasurementImpl::GetTransmission(do
     return kVCOMError_NoError;
 }
 
-VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfMeasurementImpl::GetInterpolationTo(EGdtfInterpolationTo outVal)
+VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfMeasurementImpl::GetInterpolationTo(EGdtfInterpolationTo& outVal)
 {
     // Check if valid
     if(!fMeasurement) return kVCOMError_NotInitialized;

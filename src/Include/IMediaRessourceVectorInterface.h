@@ -782,10 +782,10 @@ namespace VectorworksMVR
     {
     public:        
         // Getter
-        virtual VCOMError VCOM_CALLTYPE    GetPhysical(double outVal)=0;
-        virtual VCOMError VCOM_CALLTYPE    GetLuminousIntensity(double outVal)=0;
-        virtual VCOMError VCOM_CALLTYPE    GetTransmission(double outVal)=0;
-        virtual VCOMError VCOM_CALLTYPE    GetInterpolationTo(GdtfDefines::EGdtfInterpolationTo outVal)=0;
+        virtual VCOMError VCOM_CALLTYPE    GetPhysical(double& outVal)=0;
+        virtual VCOMError VCOM_CALLTYPE    GetLuminousIntensity(double& outVal)=0;
+        virtual VCOMError VCOM_CALLTYPE    GetTransmission(double& outVal)=0;
+        virtual VCOMError VCOM_CALLTYPE    GetInterpolationTo(GdtfDefines::EGdtfInterpolationTo& outVal)=0;
         // Setter               
         virtual VCOMError VCOM_CALLTYPE    SetPhysical(double val)=0;
         virtual VCOMError VCOM_CALLTYPE    SetLuminousIntensity(double val)=0;

@@ -15,10 +15,10 @@ namespace VectorworksMVR
         virtual ~CGdtfMeasurementImpl();
         
         // Getter
-        virtual VCOMError VCOM_CALLTYPE    GetPhysical(double outVal);
-        virtual VCOMError VCOM_CALLTYPE    GetLuminousIntensity(double outVal);
-        virtual VCOMError VCOM_CALLTYPE    GetTransmission(double outVal);
-        virtual VCOMError VCOM_CALLTYPE    GetInterpolationTo(EGdtfInterpolationTo outVal);
+        virtual VCOMError VCOM_CALLTYPE    GetPhysical(double& outVal);
+        virtual VCOMError VCOM_CALLTYPE    GetLuminousIntensity(double& outVal);
+        virtual VCOMError VCOM_CALLTYPE    GetTransmission(double& outVal);
+        virtual VCOMError VCOM_CALLTYPE    GetInterpolationTo(EGdtfInterpolationTo& outVal);
         // Setter               
         virtual VCOMError VCOM_CALLTYPE    SetPhysical(double val);
         virtual VCOMError VCOM_CALLTYPE    SetLuminousIntensity(double val);
