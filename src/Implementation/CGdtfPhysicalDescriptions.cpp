@@ -6,6 +6,7 @@
 #include "CGdtfColorSpace.h"
 #include "CGdtfPhysicalEmitter.h" 
 #include "CGdtfFilter.h"
+#include "CGdtfDMXProfile.h"
 
 CGdtfPhysicalDescriptionsImpl::CGdtfPhysicalDescriptionsImpl()
 {
@@ -314,6 +315,112 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::CreateF
 
     return kVCOMError_NoError;
 }
+
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::GetDMXProfileCount(size_t &count)
+{
+    if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
+
+    count = fPhysicalDescriptions->GetDmxProfileArray().size();
+
+    return kVCOMError_NoError;
+}
+
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::GetDMXProfileAt(size_t at, VectorworksMVR::IGdtfDMXProfile** value)
+{
+    // Check if Set
+    if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
+
+    // Check if no Overflow
+    if (at >= fPhysicalDescriptions->GetDmxProfileArray().size()) { return kVCOMError_OutOfBounds; }
+
+
+    SceneData::GdtfDMXProfile* gdtfDMXProfile = fPhysicalDescriptions->GetDmxProfileArray()[at];
+
+
+    //---------------------------------------------------------------------------
+    // Initialize Object
+    CGdtfDMXProfileImpl* pDMXProfileObj = nullptr;
+
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDMXProfile, (IVWUnknown**)& pDMXProfileObj)))
+    {
+        // Check Casting
+        CGdtfDMXProfileImpl* pResultInterface = dynamic_cast<CGdtfDMXProfileImpl*>(pDMXProfileObj);
+        if (pResultInterface)
+        {
+            pResultInterface->SetPointer(gdtfDMXProfile);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+
+    //---------------------------------------------------------------------------
+    // Check Incomming Object
+    if (*value)
+    {
+        (*value)->Release();
+        *value = NULL;
+    }
+
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *value = pDMXProfileObj;
+
+    return kVCOMError_NoError;
+}
+
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalDescriptionsImpl::CreateDMXProfile(VectorworksMVR::IGdtfDMXProfile **outVal)
+{
+    // Check if Set
+    if (!fPhysicalDescriptions) { return kVCOMError_NotInitialized; }
+
+
+    SceneData::GdtfDMXProfile* gdtfDMXProfile = fPhysicalDescriptions->AddDmxProfile();
+
+    //---------------------------------------------------------------------------
+    // Initialize Object
+    CGdtfDMXProfileImpl* pDMXProfileObj = nullptr;
+
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDMXProfile, (IVWUnknown**)& pDMXProfileObj)))
+    {
+        // Check Casting
+        CGdtfDMXProfileImpl* pResultInterface = dynamic_cast<CGdtfDMXProfileImpl*>(pDMXProfileObj);
+        if (pResultInterface)
+        {
+            pResultInterface->SetPointer(gdtfDMXProfile);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+
+    //---------------------------------------------------------------------------
+    // Check Incomming Object
+    if (*outVal)
+    {
+        (*outVal)->Release();
+        *outVal = NULL;
+    }
+
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *outVal = pDMXProfileObj;
+
+    return kVCOMError_NoError;
+}
+
+
 
 
 
