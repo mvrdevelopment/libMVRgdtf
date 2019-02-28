@@ -515,7 +515,8 @@ void GdtfUnittest::ReadFile()
         MvrString filterNam = gdtfFilter->GetName();
         this->checkifEqual("Filter Name", filterNam, "My Filter");
                 
-        CieColor filterColor;  __checkVCOM(gdtfFilter->GetColor(filterColor) );
+        CieColor filterColor;  filterColor.fx = 0; filterColor.fy = 0; filterColor.f_Y = 0;
+        __checkVCOM(gdtfFilter->GetColor(filterColor));
         
         CieColor filterColorCompare; 
 		filterColorCompare.fx	= 0.1;
