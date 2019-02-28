@@ -156,6 +156,8 @@ void GdtfUnittest::WriteFile()
             gdtfMeasurement->SetTransmission(4.56);
             gdtfMeasurement->SetInterpolationTo(EGdtfInterpolationTo::Log);
             
+            //-----------------------------------------------------------------------------
+            // MeasurementPoint
             IGdtfMeasurementPointPtr gdtfMeasurPoint;
             gdtfMeasurement->CreateMeasurementPoint(&gdtfMeasurPoint);
             gdtfMeasurPoint->SetEnergy(1.23);
