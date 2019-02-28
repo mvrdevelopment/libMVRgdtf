@@ -5549,21 +5549,6 @@ const TGdtfMacroArray& GdtfFixture::GetMacroArray()
     return fMacros;
 }
 
-const TGdtfPhysicalEmitterArray& GdtfFixture::GetPhysicalEmitterArray()
-{
-    return fEmitters;
-}
-
-const TGdtfDMXProfileArray& SceneData::GdtfFixture::GetDmxProfileArray()
-{
-    return fDmxProfiles;
-}
-
-const TGdtf_CRIGroupArray & SceneData::GdtfFixture::GetCRIGroupArray()
-{
-    return fCRI_Groups;
-}
-
 GdtfProtocols& GdtfFixture::GetProtocollContainer()
 {
 	return fProtocollContainer;
@@ -7121,6 +7106,22 @@ const TXString& SceneData::GdtfPhysicalDescriptions::GetUnresolvedColorSpace()
 {
     return fUnresolved_ColorSpace;
 }
+
+const TGdtfPhysicalEmitterArray& SceneData::GdtfPhysicalDescriptions::GetPhysicalEmitterArray()
+{
+    return fEmitters;
+}
+
+const TGdtfDMXProfileArray& SceneData::GdtfPhysicalDescriptions::GetDmxProfileArray()
+{
+    return fDmxProfiles;
+}
+
+const TGdtf_CRIGroupArray & SceneData::GdtfPhysicalDescriptions::GetCRIGroupArray()
+{
+    return fCRI_Groups;
+}
+
 
 void SceneData::GdtfPhysicalDescriptions::SetColorSpace(GdtfColorSpace * val)
 {

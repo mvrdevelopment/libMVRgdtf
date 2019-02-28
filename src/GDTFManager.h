@@ -394,10 +394,13 @@ namespace SceneData
     public:
         // XXX TODO: Getter setter
         // Getter        
-        GdtfColorSpace*                 GetColorSpace();
-        const TXString&                 GetUnresolvedColorSpace();
+        GdtfColorSpace*                  GetColorSpace();
+        const TXString&                  GetUnresolvedColorSpace();
+        const TGdtfPhysicalEmitterArray& GetPhysicalEmitterArray();
+        const TGdtfDMXProfileArray&      GetDmxProfileArray();
+        const TGdtf_CRIGroupArray&       GetCRIGroupArray();
         // Setter       
-        void                            SetColorSpace(GdtfColorSpace* val);
+        void                             SetColorSpace(GdtfColorSpace* val);
 
         GdtfPhysicalEmitterPtr	        AddEmitter(const TXString& name);
         GdtfDMXProfilePtr               AddDmxProfile();
@@ -2011,9 +2014,6 @@ private:
         const TGdtfRevisionArray&               GetRevisionArray();
         const TGdtfUserPresetArray&             GetPresetArray();
         const TGdtfMacroArray&                  GetMacroArray();
-        const TGdtfPhysicalEmitterArray&		GetPhysicalEmitterArray();
-        const TGdtfDMXProfileArray&             GetDmxProfileArray();
-        const TGdtf_CRIGroupArray&              GetCRIGroupArray();
 		
 		GdtfProtocols&							GetProtocollContainer();
 
