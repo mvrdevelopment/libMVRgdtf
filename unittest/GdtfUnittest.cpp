@@ -146,7 +146,7 @@ void GdtfUnittest::WriteFile()
 		color.f_Y = 0.424242;
 		if (__checkVCOM(gdtfWrite->CreateEmitter("My emitterName", color, &gdtfEmitter)))
 		{
-            gdtfEmitter->SetDominantWaveLength(666);
+            gdtfEmitter->SetDominantWaveLength(66.6);
             gdtfEmitter->SetDiodePart("MyDiodePart");
 
 			IGdtfMeasurementPtr gdtfMeasurement;            
@@ -427,6 +427,12 @@ void GdtfUnittest::ReadFile()
 			{
 				MvrString emitterName = gdtfEmitter->GetName();
 				this->checkifEqual("gdtfEmitterGetName ", emitterName, "My emitterName");
+
+                double emitterWave; gdtfEmitter->GetDominantWaveLength(emitterWave);
+                this->checkifEqual("Emitter DominantWaveLength", emitterWave, 66.6);
+
+                MvrString emitterDiodePart = gdtfEmitter->GetDiodePart();
+                this->checkifEqual("Emitter DiodePart", emitterDiodePart, "MyDiodePart");
 
 				CieColor color;
 				color.fx = 0;
