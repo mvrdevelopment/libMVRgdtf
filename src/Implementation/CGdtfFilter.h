@@ -15,7 +15,7 @@ namespace VectorworksMVR
 
         // Getter
         virtual MvrString VCOM_CALLTYPE     GetName();
-        virtual VCOMError VCOM_CALLTYPE     GetColor(CieColor outVal);
+        virtual VCOMError VCOM_CALLTYPE     GetColor(CieColor& outVal);
         // Setter
         virtual VCOMError VCOM_CALLTYPE     SetName(MvrString name);
         virtual VCOMError VCOM_CALLTYPE     SetColor(CieColor val);

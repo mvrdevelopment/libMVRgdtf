@@ -26,7 +26,7 @@ MvrString VCOM_CALLTYPE VectorworksMVR::CGdtfFilterImpl::GetName()
 	return fFilter->GetName().GetCharPtr();    
 }
 
-VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfFilterImpl::GetColor(CieColor outVal)
+VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfFilterImpl::GetColor(CieColor& outVal)
 {
     // Check if valid
     if(!fFilter) return kVCOMError_NotInitialized;

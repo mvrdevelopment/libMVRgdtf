@@ -807,7 +807,7 @@ namespace VectorworksMVR
     public:        
         // Getter
         virtual MvrString VCOM_CALLTYPE     GetName()= 0;
-        virtual VCOMError VCOM_CALLTYPE     GetColor(CieColor outVal)= 0;
+        virtual VCOMError VCOM_CALLTYPE     GetColor(CieColor& outVal)= 0;
         // Setter
         virtual VCOMError VCOM_CALLTYPE     SetName(MvrString name)= 0;
         virtual VCOMError VCOM_CALLTYPE     SetColor(CieColor val)= 0;
