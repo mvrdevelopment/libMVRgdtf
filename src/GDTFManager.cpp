@@ -7509,9 +7509,19 @@ void SceneData::GdtfFilter::OnReadFromNode(const IXMLFileNodePtr & pNode)
 
     //------------------------------------------------------------------------------------
     // Get the attributes	
-    pNode->GetNodeAttributeValue(XML_GDTF_Filter_Name, fName);
-    GdtfConverter::ConvertColor(XML_GDTF_FilterColor, pNode, fColor);
+    pNode->GetNodeAttributeValue(XML_GDTF_Filter_Name, fName);    
     
+	// ------------------------------------------------------------------------------------
+	// Get Color
+	TXString color;
+    if (VCOM_SUCCEEDED(pNode->GetNodeAttributeValue(XML_GDTF_FilterColor, color)))
+    {
+        if (color.IsEmpty() == false)
+        {
+            GdtfConverter::ConvertColor(color, pNode, fColor);
+        }
+    }	
+
     // Read the childs
     GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_MeasurementNodeName, [this](IXMLFileNodePtr objNode) -> void
     {
