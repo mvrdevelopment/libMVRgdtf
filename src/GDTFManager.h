@@ -1928,14 +1928,8 @@ namespace SceneData
 		TGdtfDmxModeArray				fDmxModes;
 		TGdtfRevisionArray				fRevisions;
 		TGdtfUserPresetArray			fPresets;
-		TGdtfMacroArray					fMacros;
-		
+		TGdtfMacroArray					fMacros;		
         TGdtfPhysicalDescriptionsArray  fPhysicalDesciptions; 
-		TGdtfPhysicalEmitterArray		fEmitters;    // TODO: XXX remove this later.
-        TGdtfDMXProfileArray            fDmxProfiles; // TODO: XXX remove this later.
-        TGdtf_CRIGroupArray             fCRI_Groups;  // TODO: XXX remove this later.
-		
-
 		GdtfProtocols					fProtocollContainer;
 		
 		//------------------------------------------------
@@ -2030,7 +2024,6 @@ private:
 		        
         GdtfAttributePtr            getAttributeByRef(const TXString& ref);
         GdtfWheelPtr                getWheelByRef(const TXString& ref);		
-		GdtfPhysicalEmitterPtr      getEmiterByRef(const TXString& ref);
         GdtfDmxChannelFunctionPtr   getDmxFunctionByRef(const TXString& ref, GdtfDmxModePtr mode);
 		GdtfDmxChannelPtr           getDmxChannelByRef(const TXString& ref, GdtfDmxModePtr mode);
 
@@ -2042,12 +2035,12 @@ private:
 		void ResolveGeometryRefs();
 		void ResolveGeometryRefs_Recursive(GdtfGeometryPtr geometry);
 		
-		void ResolveAttribRefs();		
-		void ResolveDmxModeRefs();
-        void ResolveDMXModeMasters();       
-        void ResolveDMXPersonalityRefs();
-		void ResolveDmxRelationRefs(GdtfDmxModePtr dmxMode);
-		void ResolveDmxChannelRefs(GdtfDmxModePtr dmxMode);
+		void            ResolveAttribRefs();		
+		void            ResolveDmxModeRefs();                // XXX Check
+        void            ResolveDMXModeMasters();       
+        void            ResolveDMXPersonalityRefs();
+		void            ResolveDmxRelationRefs(GdtfDmxModePtr dmxMode);
+		void            ResolveDmxChannelRefs(GdtfDmxModePtr dmxMode);
 		GdtfGeometryPtr ResolveGeometryRef(const TXString& unresolvedGeoRef, const TGdtfGeometryArray& geometryArray);
 		GdtfDmxModePtr  ResolveDMXMode(const TXString & unresolvedDMXmode);
 

@@ -4438,18 +4438,6 @@ GdtfWheelPtr GdtfFixture::getWheelByRef(const TXString& ref)
 	return nullptr;
 }
 
-GdtfPhysicalEmitterPtr GdtfFixture::getEmiterByRef(const TXString& ref)
-{
-	for (GdtfPhysicalEmitterPtr emt : fEmitters)
-	{
-		if (emt->GetNodeReference() == ref){ return emt;};
-	}
-	
-	// When this line is reached nothing was found.
-	DSTOP ((kEveryone, "Failed to resolve GdtfPhysicalEmitterPtr."));
-	return nullptr;
-}
-
 GdtfDmxChannelFunctionPtr GdtfFixture::getDmxFunctionByRef(const TXString& ref, GdtfDmxModePtr mode)
 {
 	for(GdtfDmxChannelPtr channel : mode->GetChannelArray())
@@ -4886,13 +4874,15 @@ void GdtfFixture::ResolveDmxChanelFunctionRefs(GdtfDmxLogicalChannelPtr dmxLogCh
 		}
 		
 		// ----------------------------------------------------------------------------------------
-		// DmxChanelFunction.PhysicalEmitter (Optional)
-		TXString unresolvedEmitterRef = chnlFunc->getUnresolvedEmitterRef();
-		if ( ! unresolvedEmitterRef.IsEmpty())
-		{
-			GdtfPhysicalEmitterPtr emtPtr = getEmiterByRef(unresolvedEmitterRef);
-			chnlFunc->SetEmitter(emtPtr);
-		}
+		// TODO XXX: Check this Later.
+        // DmxChanelFunction.PhysicalEmitter (Optional)
+		//TXString unresolvedEmitterRef = chnlFunc->getUnresolvedEmitterRef();
+		//if ( ! unresolvedEmitterRef.IsEmpty())
+		//{
+		//	GdtfPhysicalEmitterPtr emtPtr = getEmiterByRef(unresolvedEmitterRef);
+		//	chnlFunc->SetEmitter(emtPtr);
+		//}
+
 	}
 }
 
@@ -4909,12 +4899,9 @@ GdtfFixture::~GdtfFixture()
     for (GdtfAttributePtr obj			: fAttributes)      { delete obj; }
 	for (GdtfWheelPtr obj				: fWheels)			{ delete obj; }
 	for (GdtfGeometry* obj				: fGeometries)		{ delete obj; }
-	for (GdtfModel* obj					: fModels)			{ delete obj; }
-	for (GdtfPhysicalEmitterPtr obj		: fEmitters)		{ delete obj; }
+	for (GdtfModel* obj					: fModels)			{ delete obj; }	
 	for (GdtfDmxModePtr obj				: fDmxModes)		{ delete obj; }
 	for (GdtfRevisionPtr obj			: fRevisions)		{ delete obj; }
-    for (GdtfDMXProfilePtr obj          : fDmxProfiles)     { delete obj; }
-    for (GdtfCRIGroupPtr obj            : fCRI_Groups)      { delete obj; }
 
     // Delete Local Files
 	for (size_t i = 0; i < fLocalFiles.size(); i++)
