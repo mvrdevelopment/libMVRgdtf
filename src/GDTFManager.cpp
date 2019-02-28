@@ -7225,7 +7225,7 @@ void SceneData::GdtfPhysicalDescriptions::OnPrintToFile(IXMLFileNodePtr pNode)
     {
         for (GdtfFilter* filter : fFilters)
         {
-            filter->WriteToNode(pNode);
+            filter->WriteToNode(filtersGroupNode);
         }
     }
     
