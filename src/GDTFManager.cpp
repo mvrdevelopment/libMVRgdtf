@@ -3891,7 +3891,7 @@ void GdtfPhysicalEmitter::OnPrintToFile(IXMLFileNodePtr pNode)
 	pNode->SetNodeAttributeValue(XML_GDTF_EmitterName,				 fName);
 	pNode->SetNodeAttributeValue(XML_GDTF_EmitterColor,				 GdtfConverter::ConvertColor(fColor) );
     pNode->SetNodeAttributeValue(XML_GDTF_EmitterDominantWaveLength, GdtfConverter::ConvertDouble(fDominantWaveLength) );
-    pNode->SetNodeAttributeValue(XML_GDTF_EmitterDiodePart,          GdtfConverter::ConvertDouble(fDiodePart) );
+    pNode->SetNodeAttributeValue(XML_GDTF_EmitterDiodePart,          fDiodePart );
 	//------------------------------------------------------------------------------------
 	// Write MeasurePoints
 	for (GdtfMeasurement* mes: fMeasurements)
@@ -3917,7 +3917,6 @@ void GdtfPhysicalEmitter::OnReadFromNode(const IXMLFileNodePtr& pNode)
     GdtfConverter::ConvertDouble(waveLenStr, pNode, fDominantWaveLength);
 
     pNode->GetNodeAttributeValue(XML_GDTF_EmitterDiodePart, fDiodePart);
-
 	
 	// ------------------------------------------------------------------------------------
 	// Read MeasurePoints
