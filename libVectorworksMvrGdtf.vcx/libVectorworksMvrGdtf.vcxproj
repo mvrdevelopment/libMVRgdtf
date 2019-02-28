@@ -72,6 +72,7 @@
     <ClCompile Include="..\src\Implementation\CGdtfMeasurement.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfMeasurementPoint.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfModel.cpp" />
+    <ClCompile Include="..\src\Implementation\CGdtfPhysicalDescriptions.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfPhysicalEmitter.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfRevision.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfSoftwareVersionID.cpp" />
@@ -158,6 +159,7 @@
     <ClInclude Include="..\src\Implementation\CGdtfMeasurement.h" />
     <ClInclude Include="..\src\Implementation\CGdtfMeasurementPoint.h" />
     <ClInclude Include="..\src\Implementation\CGdtfModel.h" />
+    <ClInclude Include="..\src\Implementation\CGdtfPhysicalDescriptions.h" />
     <ClInclude Include="..\src\Implementation\CGdtfPhysicalEmitter.h" />
     <ClInclude Include="..\src\Implementation\CGdtfRevision.h" />
     <ClInclude Include="..\src\Implementation\CGdtfSoftwareVersionID.h" />
@@ -221,7 +223,7 @@
     <ProjectGuid>{BF7C7ABD-E7E9-4110-AA85-A8452D47126B}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>libVectorworksMvrGdtf</RootNamespace>
-	<WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>    
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
