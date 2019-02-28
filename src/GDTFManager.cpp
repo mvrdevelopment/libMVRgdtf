@@ -3842,9 +3842,9 @@ GdtfPhysicalEmitter::GdtfPhysicalEmitter()
 	fColor		= CRGBColor(255, 255, 255);
 }
 
-GdtfPhysicalEmitter::GdtfPhysicalEmitter(const TXString& name)
+GdtfPhysicalEmitter::GdtfPhysicalEmitter(const TXString& name, CCieColor color)
 {
-	fColor		= CRGBColor(255, 255, 255);
+	fColor		= color;
 	fName		= name;
 }
 
@@ -7127,7 +7127,7 @@ const TGdtf_CRIGroupArray & SceneData::GdtfPhysicalDescriptions::GetCRIGroupArra
     return fCRI_Groups;
 }
 
-GdtfPhysicalEmitterPtr SceneData::GdtfPhysicalDescriptions::AddEmitter(const TXString & name)
+GdtfPhysicalEmitterPtr SceneData::GdtfPhysicalDescriptions::AddEmitter(const TXString & name, CCieColor color)
 {
 	GdtfPhysicalEmitterPtr emitter = new  GdtfPhysicalEmitter(name);
 	

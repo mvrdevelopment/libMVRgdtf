@@ -351,6 +351,7 @@ namespace SceneData
         ~GdtfColorSpace();
     private:
         EGdtfColorSpace  fColorSpace;
+
         CCieColor        fRed;                  // Optional; CIE xyY of the Red Primary; this is used only if the ColorSpace is "Custom".
         CCieColor        fGreen;                // Optional; CIE xyY of the Green Primary; this is used only if the ColorSpace is "Custom".
         CCieColor        fBlue;	                // Optional; CIE xyY of the Blue Primary; this is used only if the ColorSpace is "Custom".
@@ -399,7 +400,7 @@ namespace SceneData
         const TGdtfDMXProfileArray&      GetDmxProfileArray();
         const TGdtf_CRIGroupArray&       GetCRIGroupArray();
         
-        GdtfPhysicalEmitterPtr	        AddEmitter(const TXString& name);
+        GdtfPhysicalEmitterPtr	        AddEmitter(const TXString& name, CCieColor color);
         GdtfFilterPtr                   AddFilter();
         GdtfDMXProfilePtr               AddDmxProfile();
         GdtfCRIGroupPtr                 AddCRIGroup(double colorTsemp);

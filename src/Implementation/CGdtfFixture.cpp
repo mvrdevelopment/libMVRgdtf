@@ -1537,13 +1537,13 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetEmitterAt(size_t 
 }
 
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateEmitter(MvrString name, VectorworksMVR::IGdtfPhysicalEmitter **outVal)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateEmitter(MvrString name, CieColor color, VectorworksMVR::IGdtfPhysicalEmitter **outVal)
 {
     // Check if Set
     if (!fFixtureObject) { return kVCOMError_NotInitialized; }
 
 
-    SceneData::GdtfPhysicalEmitter* gdtfEmitter = fFixtureObject->GetPhysicalDesciptionsContainer().AddEmitter(name);
+    SceneData::GdtfPhysicalEmitter* gdtfEmitter = fFixtureObject->GetPhysicalDesciptionsContainer().AddEmitter(name, SceneData::GdtfConverter::ConvertCColor(color) );
 
     //---------------------------------------------------------------------------
     // Initialize Object
