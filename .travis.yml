@@ -18,7 +18,6 @@ matrix:
       compiler: gcc
       apt:
         packages:
-          - valgrind
           - g++-7
         sources:
           - ubuntu-toolchain-r-test
