@@ -112,7 +112,7 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE		GetParsingErrorAt(size_t at, IGdtfXmlParsingError** value);
 
 		//Internal
-		VectorworksMVR::VCOMError			ReadFromFile(IFileIdentifierPtr file);
+		VectorworksMVR::VCOMError			ReadFromFile(IFileIdentifierPtr file, TXString gdtfFileName);
 		
 	private:
         SceneData::GdtfFixture* fFixtureObject;

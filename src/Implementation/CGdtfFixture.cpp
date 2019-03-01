@@ -45,7 +45,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::ReadFromFile(MvrStri
     file->Set(strFullPath);
 	
     // Read From File
-    return ReadFromFile(file);
+    return ReadFromFile(file, "" /*During GDTF reading, we read onyl one file*/);
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::OpenForWrite(MvrString fullPath, MvrString name, MvrString manufacturer, const MvrUUID& uuid)
@@ -124,14 +124,14 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::Close()
 }
 
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::ReadFromFile(IFileIdentifierPtr file)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::ReadFromFile(IFileIdentifierPtr file, TXString gdtfFileName)
 {
 	
 	// Check there is already a object in here
 	if (fFixtureObject) { delete fFixtureObject; }
 	
 	// Create the new Object
-	fFixtureObject = new SceneData::GdtfFixture( file );
+	fFixtureObject = new SceneData::GdtfFixture( file, gdtfFileName );
 	
 	// Check if this was good
 	if (!fFixtureObject) { return kVCOMError_Failed; }

@@ -1909,8 +1909,8 @@ namespace SceneData
 	// GdtfFixture Definition
 	class GdtfFixture : public GdtfObject
 	{
-	public:        
-        GdtfFixture(IFileIdentifierPtr file);
+	public:
+		GdtfFixture(IFileIdentifierPtr file, TXString folderName);
 		GdtfFixture();
 		~GdtfFixture();
 		
