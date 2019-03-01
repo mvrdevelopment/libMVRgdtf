@@ -81,6 +81,7 @@ namespace VectorworksMVR
     class IGdtfDMXProfile;
     class IGdtfCRIGroup;
     class IGdtfColorSpace;
+    class IGdtfFilter;
 	//-------------------------------------------------------------------------------------------------------------
 	class DYNAMIC_ATTRIBUTE ISceneDataProvider : public IVWUnknown
 	{
