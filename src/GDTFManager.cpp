@@ -4511,6 +4511,18 @@ GdtfPhysicalEmitterPtr GdtfFixture::getEmiterByRef(const TXString& ref)
 	return nullptr;
 }
 
+GdtfFilterPtr GdtfFixture::getFilterByRef(const TXString& ref) 
+{
+    for (GdtfFilterPtr fltr : fPhysicalDesciptions.GetFilterArray())
+    {
+        if (fltr->GetNodeReference() == ref) { return fltr; }
+    }
+
+	// When this line is reached nothing was found.
+	DSTOP ((kEveryone, "Failed to resolve GdtfFilter."));
+	return nullptr;
+}
+
 GdtfDmxChannelFunctionPtr GdtfFixture::getDmxFunctionByRef(const TXString& ref, GdtfDmxModePtr mode)
 {
 	for(GdtfDmxChannelPtr channel : mode->GetChannelArray())
@@ -4954,6 +4966,15 @@ void GdtfFixture::ResolveDmxChanelFunctionRefs(GdtfDmxLogicalChannelPtr dmxLogCh
 			chnlFunc->SetEmitter(emtPtr);
 		}
 
+        // ----------------------------------------------------------------------------------------		
+        // Filter Refs
+        TXString unresolvedFilterRef = chnlFunc->getUnresolvedAttrRef();
+        if (!unresolvedFilterRef.IsEmpty()) 
+        {
+            GdtfFilter* filter = getFilterByRef(unresolvedFilterRef);
+            chnlFunc->SetFilter(filter);
+        }
+        // ----------------------------------------------------------------------------------------		
 	}
 }
 
@@ -7613,6 +7634,11 @@ void SceneData::GdtfFilter::OnReadFromNode(const IXMLFileNodePtr & pNode)
         fMeasurementsArray.push_back(measurePt);
         return;
     });
+}
+
+TXString SceneData::GdtfFilter::GetNodeReference() 
+{
+    return GetName();
 }
 
 SceneData::GdtfMeasurement::GdtfMeasurement()
