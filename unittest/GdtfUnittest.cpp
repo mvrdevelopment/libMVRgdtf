@@ -362,8 +362,8 @@ void GdtfUnittest::ReadFile()
 		this->checkifEqual("GetFixtureThumbnail "		, thumbFileName,  "MyThumbnail"); 
         
         // Check if the Resource Files have been unpacked correctly.
-		this->checkifEqual("GetFixtureThumbnail "		, fullPath_PNG, fAppDataFolder + kSeparator + "GDTF_Folder" + kSeparator + "MyThumbnail.png" ); 
-        this->checkifEqual("GetFixtureThumbnail "		, fullPath_SVG, fAppDataFolder + kSeparator + "GDTF_Folder" + kSeparator + "MyThumbnail.svg");        
+		this->checkifEqual("GetFixtureThumbnail "		, fullPath_PNG, fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator + "MyThumbnail.png" ); 
+        this->checkifEqual("GetFixtureThumbnail "		, fullPath_SVG, fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator + "MyThumbnail.svg");        
         
         this->checkifTrue("Testwheel PNG exists.", UnitTestUtil::FileExists (fullPath_PNG) );
         this->checkifTrue("Testmodel SVG exits.", UnitTestUtil::FileExists (fullPath_SVG) );
