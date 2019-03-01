@@ -7370,17 +7370,38 @@ EGdtfColorSpace SceneData::GdtfColorSpace::GetColorSpace()
 
 CCieColor SceneData::GdtfColorSpace::GetRed()
 {
-    return fRed;
+	CCieColor color = fRed;
+	if(fColorSpace == EGdtfColorSpace::ANSI) 		{ color = CCieColor(0.7347, 0.2653, 100); }
+	if(fColorSpace == EGdtfColorSpace::ProPhoto) 	{ color = CCieColor(0.7347, 0.2653, 100); }
+	if(fColorSpace == EGdtfColorSpace::sRGB) 		{ color = CCieColor(0.6400, 0.3300, 21.26); }
+    return color;
 }
 
 CCieColor SceneData::GdtfColorSpace::GetGreen()
 {
-    return fGreen;
+	CCieColor color = fGreen;
+	if(fColorSpace == EGdtfColorSpace::ANSI) 		{ color = CCieColor(0.1596, 0.8404, 100); }
+	if(fColorSpace == EGdtfColorSpace::ProPhoto) 	{ color = CCieColor(0.1596, 0.8404, 100); }
+	if(fColorSpace == EGdtfColorSpace::sRGB) 		{ color = CCieColor(0.3000, 0.6000, 71.52); }
+    return color;
 }
 
 CCieColor SceneData::GdtfColorSpace::GetBlue()
 {
-    return fBlue;
+	CCieColor color = fBlue;
+	if(fColorSpace == EGdtfColorSpace::ANSI) 		{ color = CCieColor(0.0366, 0.001, 100); }
+	if(fColorSpace == EGdtfColorSpace::ProPhoto) 	{ color = CCieColor(0.0366, 0.0001, 100); }
+	if(fColorSpace == EGdtfColorSpace::sRGB) 		{ color = CCieColor(0.1500, 0.0600, 7.22); }
+    return color;
+}
+
+CCieColor SceneData::GdtfColorSpace::GetWhite()
+{
+	CCieColor color = fWhitePoint;
+	if(fColorSpace == EGdtfColorSpace::ANSI) 		{ color = CCieColor(0.4254, 0.4044, 100); }
+	if(fColorSpace == EGdtfColorSpace::ProPhoto) 	{ color = CCieColor(0.3457, 0.3585, 100); }
+	if(fColorSpace == EGdtfColorSpace::sRGB) 		{ color = CCieColor(0.3127, 0.3290, 100); }
+    return color;
 }
 
 void SceneData::GdtfColorSpace::SetColorSpace(EGdtfColorSpace val)
@@ -7401,6 +7422,11 @@ void SceneData::GdtfColorSpace::SetGreen(CCieColor val)
 void SceneData::GdtfColorSpace::SetBlue(CCieColor val)
 {
     fBlue = val;
+}
+
+void SceneData::GdtfColorSpace::SetWhite(CCieColor val)
+{
+    fWhitePoint = val;
 }
 
 TXString SceneData::GdtfColorSpace::GetNodeName()
