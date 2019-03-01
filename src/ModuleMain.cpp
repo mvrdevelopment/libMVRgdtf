@@ -40,6 +40,7 @@
 #include "Implementation/CGdtfFTRDM.h"
 #include "Implementation/CGdtfMeasurement.h"
 #include "Implementation/CGdtfFilter.h"
+#include "Implementation/CGdtfColorSpace.h"
 
 // XML
 #include "XMLLib/XMLFileNodeImpl.h"
@@ -131,7 +132,8 @@ extern "C" VectorworksMVR::VCOMError VW_EXPORT VWQueryInterface(const Vectorwork
         resultInterface = new CGdtfMeasurementImpl();
     else if (iid == VectorworksMVR::IID_GdtfFilter)
         resultInterface = new CGdtfFilterImpl();
-    // 
+    else if (iid == VectorworksMVR::IID_GdtfColorSpace)
+        resultInterface = new CGdtfColorSpaceImpl();
 	else if (iid == VectorWorks::Filing::IID_FileIdentifier)
 		resultInterface = new CFileIdentifier();
 	else if (iid == VectorWorks::Filing::IID_FolderIdentifier )

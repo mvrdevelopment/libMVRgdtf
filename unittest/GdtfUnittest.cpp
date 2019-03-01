@@ -181,6 +181,12 @@ void GdtfUnittest::WriteFile()
         IGdtfMeasurementPtr gdtfMeasureB;  __checkVCOM(gdtfFilter->CreateMeasurement(&gdtfMeasureB) );
         IGdtfMeasurementPtr gdtfMeasureC;  __checkVCOM(gdtfFilter->CreateMeasurement(&gdtfMeasureC) );
 
+		//------------------------------------------------------------------------------------------------------------------
+		// Set ColorSpace Space
+		IGdtfColorSpacePtr colorSpace;
+		__checkVCOM(gdtfWrite->GetColorSpace( & colorSpace));
+		__checkVCOM(colorSpace->SetColorSpace(EGdtfColorSpace::ANSI));
+
         //------------------------------------------------------------------------------------------------------------------
 		// Handle Models
 		IGdtfModelPtr gdtfModel;
@@ -492,7 +498,7 @@ void GdtfUnittest::ReadFile()
                         
                         IGdtfMeasurementPointPtr gdtfMeasurPoint;
                         
-                        if (__checkVCOM(emitterMeasurement->GetMeasurementPointAt(0, &gdtfMeasurPoint)));                        
+                        __checkVCOM(emitterMeasurement->GetMeasurementPointAt(0, &gdtfMeasurPoint));               
                         
 						double waveLength_Val = 0;
 						__checkVCOM(gdtfMeasurPoint->GetWaveLength(waveLength_Val));
