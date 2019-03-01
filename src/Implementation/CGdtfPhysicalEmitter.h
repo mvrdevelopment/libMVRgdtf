@@ -18,12 +18,17 @@ namespace VectorworksMVR
         virtual MvrString VCOM_CALLTYPE     GetName();
         virtual VCOMError VCOM_CALLTYPE     GetColor(CieColor& color);
         
-        virtual VCOMError VCOM_CALLTYPE     GetMeasurementPointCount(size_t& count);
-        virtual VCOMError VCOM_CALLTYPE     GetMeasurementPointAt(size_t at, IGdtfMeasurementPoint** measurementPoint);
-		virtual VCOMError VCOM_CALLTYPE     CreateMeasurementPoint(double wavelength, double energy, IGdtfMeasurementPoint** measurementPoint);
-		
+        virtual VCOMError VCOM_CALLTYPE     GetMeasurementCount(size_t& count);
+        virtual VCOMError VCOM_CALLTYPE     GetMeasurementAt(size_t at, IGdtfMeasurement** outVal);
+		virtual VCOMError VCOM_CALLTYPE     CreateMeasurement(double wavelength, double energy, IGdtfMeasurement** outVal);
+		virtual MvrString VCOM_CALLTYPE     GetDiodePart();
+        virtual VCOMError VCOM_CALLTYPE     GetDominantWaveLength(double& outVal);
+        
+
         virtual VCOMError VCOM_CALLTYPE     SetName(MvrString name);
         virtual VCOMError VCOM_CALLTYPE     SetColor(CieColor & color);
+		virtual VCOMError VCOM_CALLTYPE     SetDiodePart(MvrString val);
+        virtual VCOMError VCOM_CALLTYPE     SetDominantWaveLength(double val);
 
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr);
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject();

@@ -11,6 +11,8 @@
 #include "GdtfFunctionModeMaster.h"
 #include "Utility.h"
 #include "EmptyGeometryUnitTest.h"
+#include "CustomColorSpaceTest.h"
+
 
 
 
@@ -40,7 +42,10 @@ int main(int argc, char* argv[])
     GdtfEmptyModelTest test1 (base);
 	bool test1_ok = test1.RunTest();
 
-    return  (mvrFailed || gdtfFailed || gdtfDmxFailed || errorFailed || modeMasterFailed || test1_ok);
+	GdtfCustomColorSpaceTest test2 (base);
+	bool test2_ok = test2.RunTest();
+
+    return  (mvrFailed || gdtfFailed || gdtfDmxFailed || errorFailed || modeMasterFailed || test1_ok || test2_ok);
 }
 
 

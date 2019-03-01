@@ -38,6 +38,9 @@
 #include "Implementation/CGdtfDMXPersonality.h"
 #include "Implementation/CGdtfSoftwareVersionID.h"
 #include "Implementation/CGdtfFTRDM.h"
+#include "Implementation/CGdtfMeasurement.h"
+#include "Implementation/CGdtfFilter.h"
+#include "Implementation/CGdtfColorSpace.h"
 
 // XML
 #include "XMLLib/XMLFileNodeImpl.h"
@@ -59,20 +62,20 @@ extern "C" VectorworksMVR::VCOMError VW_EXPORT VWQueryInterface(const Vectorwork
 	VectorworksMVR::IVWUnknown* resultInterface = nullptr;
 
 	// match interface iid
-	if ( iid == VectorworksMVR::IID_MediaRessourceVectorInterface )
-		resultInterface = new VectorworksMVR::CMediaRessourceVectorImpl();
-	else if (iid == VectorworksMVR::IID_SceneDataProvider)
-		resultInterface = new VectorworksMVR::CSceneDataProviderImpl();
-	else if (iid == VectorworksMVR::IID_SceneObject)
-		resultInterface = new VectorworksMVR::CSceneObjImpl();
-	else if (iid == VectorworksMVR::IID_ISymDef)
-		resultInterface = new VectorworksMVR::CSymDefImpl();
-	else if (iid == VectorworksMVR::IID_IClass)
-		resultInterface = new VectorworksMVR::CClassImpl();
-	else if (iid == VectorworksMVR::IID_PositionObj)
-		resultInterface = new VectorworksMVR::CPositionImpl();
-	else if (iid == VectorworksMVR::IID_GeometryReference)
-		resultInterface = new VectorworksMVR::CGeometryReferenceImpl();
+    if (iid == VectorworksMVR::IID_MediaRessourceVectorInterface)
+        resultInterface = new VectorworksMVR::CMediaRessourceVectorImpl();
+    else if (iid == VectorworksMVR::IID_SceneDataProvider)
+        resultInterface = new VectorworksMVR::CSceneDataProviderImpl();
+    else if (iid == VectorworksMVR::IID_SceneObject)
+        resultInterface = new VectorworksMVR::CSceneObjImpl();
+    else if (iid == VectorworksMVR::IID_ISymDef)
+        resultInterface = new VectorworksMVR::CSymDefImpl();
+    else if (iid == VectorworksMVR::IID_IClass)
+        resultInterface = new VectorworksMVR::CClassImpl();
+    else if (iid == VectorworksMVR::IID_PositionObj)
+        resultInterface = new VectorworksMVR::CPositionImpl();
+    else if (iid == VectorworksMVR::IID_GeometryReference)
+        resultInterface = new VectorworksMVR::CGeometryReferenceImpl();
     else if (iid == VectorworksMVR::IID_IGdtfFixture)
         resultInterface = new VectorworksMVR::CGdtfFixtureImpl();
     else if (iid == VectorworksMVR::IID_GdtfWheel)
@@ -125,6 +128,12 @@ extern "C" VectorworksMVR::VCOMError VW_EXPORT VWQueryInterface(const Vectorwork
         resultInterface = new CGdtfDMXPersonalityImpl();
     else if (iid == VectorworksMVR::IID_GdtfSoftwareVersionID)
         resultInterface = new CGdtfSoftwareVersionIDImpl();
+    else if (iid == VectorworksMVR::IID_GdtfMeasurement)
+        resultInterface = new CGdtfMeasurementImpl();
+    else if (iid == VectorworksMVR::IID_GdtfFilter)
+        resultInterface = new CGdtfFilterImpl();
+    else if (iid == VectorworksMVR::IID_GdtfColorSpace)
+        resultInterface = new CGdtfColorSpaceImpl();
 	else if (iid == VectorWorks::Filing::IID_FileIdentifier)
 		resultInterface = new CFileIdentifier();
 	else if (iid == VectorWorks::Filing::IID_FolderIdentifier )

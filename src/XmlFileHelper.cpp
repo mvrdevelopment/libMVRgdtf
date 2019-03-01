@@ -225,7 +225,7 @@ using namespace SceneData;
 	return valueStr;
 }
 
-/*static*/ bool GdtfConverter::ConvertDouble(const TXString& value, const IXMLFileNodePtr& node,double& doubleValue)
+/*static*/ bool GdtfConverter::ConvertDouble(const TXString& value, const IXMLFileNodePtr& node,double& doubleValue) // TODO: XXX unused Param node
 {
 	if(value.IsEmpty()) { return false; }
 	
@@ -1192,6 +1192,22 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 	return false;
 }
 
+CCieColor SceneData::GdtfConverter::ConvertCColor(const CieColor & color)
+{
+    return CCieColor(color.fx, color.fy, color.f_Y);
+}
+
+CieColor SceneData::GdtfConverter::ConvertCColor(const CCieColor & color)
+{
+    CieColor colStruct;
+
+    colStruct.fx   = color.Get_x();
+    colStruct.fy   = color.Get_y();
+    colStruct.f_Y  = color.Get_Y_luminance();
+    
+    return colStruct;
+}
+
 /*static*/ TXString GdtfConverter::ConvertEGdtfColorSampleEnum(EGdtfColorSample value)
 {
     switch (value)
@@ -1410,7 +1426,68 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
        
     return true;
 }
- 
+
+/*static*/ TXString GdtfConverter::ConvertEGdtfColorSpace(EGdtfColorSpace value)
+{
+    switch (value)
+    {
+    case EGdtfColorSpace::sRGB:			return XML_GDTF_ColorSpaceEnum_sRGB;
+    case EGdtfColorSpace::Custom:		return XML_GDTF_ColorSpaceEnum_Custom;
+    case EGdtfColorSpace::ProPhoto:		return XML_GDTF_ColorSpaceEnum_ProPhoto;
+    case EGdtfColorSpace::ANSI:			return XML_GDTF_ColorSpaceEnumr_ANSI;
+    }
+
+	DSTOP((kEveryone, "Unknown Enum for EGdtfColorSpace"));
+
+    return XML_GDTF_ColorSpaceEnum_sRGB;
+}
+
+/*static*/ bool GdtfConverter::ConvertEGdtfColorSpace(const TXString& inVal, const IXMLFileNodePtr& node, EGdtfColorSpace& outVal)
+{
+     if        (inVal == XML_GDTF_ColorSpaceEnum_sRGB)      { outVal = EGdtfColorSpace::sRGB; }     
+     else if   (inVal == XML_GDTF_ColorSpaceEnum_Custom)    { outVal = EGdtfColorSpace::Custom; }
+     else if   (inVal == XML_GDTF_ColorSpaceEnum_ProPhoto)  { outVal = EGdtfColorSpace::ProPhoto; }
+     else if   (inVal == XML_GDTF_ColorSpaceEnumr_ANSI)     { outVal = EGdtfColorSpace::ANSI;  }
+     else 
+     {
+        DSTOP((kEveryone, "Unknown Value for EGdtfColorSpace"));
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertColorSample, node);
+        SceneData::GdtfFixture::AddError(error);
+     }       
+
+    return true;
+}
+
+/*static*/ TXString GdtfConverter::ConvertEGdtfInterpolationTo(EGdtfInterpolationTo value)
+{
+
+    switch (value)
+    {
+    case EGdtfInterpolationTo::Linear:  return XML_GDTF_InterpolationTo_Linear;
+    case EGdtfInterpolationTo::Step:    return XML_GDTF_InterpolationTo_Step;
+    case EGdtfInterpolationTo::Log:     return XML_GDTF_InterpolationTo_Log;
+    }
+
+	DSTOP((kEveryone, "Unknown Enum for EGdtfInterpolationTo"));
+
+    return XML_GDTF_InterpolationTo_Linear;
+}
+
+
+/*static*/ bool GdtfConverter::ConvertEGdtfInterpolationTo(const TXString& inVal, const IXMLFileNodePtr& node, EGdtfInterpolationTo& outVal)
+{
+     if        (inVal == XML_GDTF_InterpolationTo_Linear)  { outVal = EGdtfInterpolationTo::Linear; }     
+     else if   (inVal == XML_GDTF_InterpolationTo_Step)    { outVal = EGdtfInterpolationTo::Step; }
+     else if   (inVal == XML_GDTF_InterpolationTo_Log)    { outVal = EGdtfInterpolationTo::Log; }     
+     else 
+     {
+        DSTOP((kEveryone, "Unknown Value for EGdtfInterpolationTo"));
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertColorSample, node);
+        SceneData::GdtfFixture::AddError(error);
+     }
+       
+    return true;
+}
 
 bool SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, const IFileIdentifierPtr& file, ERessourceType resType, bool deleteFile, bool mustExist)
 {

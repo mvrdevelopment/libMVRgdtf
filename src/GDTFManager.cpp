@@ -2911,6 +2911,9 @@ GdtfDmxChannelFunction::GdtfDmxChannelFunction(GdtfDmxLogicalChannel* parent)
 	fModeMaster_Function	= nullptr;
 	fDmxModeStart			= 0;
 	fDmxModeEnd				= 0;
+
+	fFilter                = nullptr;
+    fUnresolvedFilterRef = "";
 }
 
 GdtfDmxChannelFunction::GdtfDmxChannelFunction(const TXString& name, GdtfDmxLogicalChannel* parent)
@@ -2930,6 +2933,9 @@ GdtfDmxChannelFunction::GdtfDmxChannelFunction(const TXString& name, GdtfDmxLogi
 	fModeMaster_Function	= nullptr;
 	fDmxModeStart			= 0;
 	fDmxModeEnd				= 0;
+
+    fFilter                = nullptr;
+    fUnresolvedFilterRef   = "";
 }
 
 GdtfDmxChannelFunction::~GdtfDmxChannelFunction()
@@ -3026,6 +3032,11 @@ void GdtfDmxChannelFunction::OnPrintToFile(IXMLFileNodePtr pNode)
 		pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeTo,					GdtfConverter::ConvertDMXValue(fDmxModeEnd,   fModeMaster_Function->GetParentDMXChannel()->GetChannelBitResolution()));	
 	}
 
+    if (fFilter) 
+    {
+        pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionFilter, fFilter->GetNodeReference());
+    }
+
 	// ------------------------------------------------------------------------------------
 	// Prepare No Feature Channel Set
 	TGdtfDmxChannelSetArray tempArr;
@@ -3120,6 +3131,9 @@ void GdtfDmxChannelFunction::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeFrom,				fUnresolvedDmxModeStart);	
 	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeTo,					fUnresolvedDmxModeEnd);	
 
+    // Filter
+    pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionFilter,					fUnresolvedFilterRef);	
+
 	// ------------------------------------------------------------------------------------
 	// GdtfDmxChannelSet
 	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_DMXChannelSetNodeName, [this] (IXMLFileNodePtr objNode) -> void
@@ -3170,7 +3184,7 @@ void GdtfDmxChannelFunction::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	optional.push_back(XML_GDTF_DMXChannelFuntionModeFrom);
 	optional.push_back(XML_GDTF_DMXChannelFuntionModeTo);
 	optional.push_back(XML_GDTF_DMXChannelFuntionRealFade);
-	
+    optional.push_back(XML_GDTF_DMXChannelFuntionFilter);
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
 	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
@@ -3289,6 +3303,11 @@ GdtfPhysicalEmitter * SceneData::GdtfDmxChannelFunction::GetEmitter() const
     return fEmitter;
 }
 
+GdtfFilterPtr SceneData::GdtfDmxChannelFunction::GetFilter()
+{
+    return fFilter;
+}
+
 void GdtfDmxChannelFunction::SetWheel(GdtfWheelPtr newWhl)
 {
 	fOnWheel = newWhl;
@@ -3357,6 +3376,11 @@ void GdtfDmxChannelFunction::SetEmitter(GdtfPhysicalEmitter* newEmit)
 	fEmitter = newEmit;
 }
 
+void SceneData::GdtfDmxChannelFunction::SetFilter(GdtfFilterPtr val)
+{
+    fFilter = val;
+}
+
 TXString GdtfDmxChannelFunction::getUnresolvedAttrRef() const
 {
 	return fUnresolvedAttrRef;
@@ -3375,6 +3399,11 @@ TXString GdtfDmxChannelFunction::getUnresolvedEmitterRef() const
 TXString GdtfDmxChannelFunction::getUnresolvedModeMasterRef() const
 {
 	return fUnresolvedModeMaster;
+}
+
+const TXString & SceneData::GdtfDmxChannelFunction::getUnresolvedFilterRef()
+{
+    return fUnresolvedFilterRef;
 }
 
 GdtfDmxChannel * SceneData::GdtfDmxChannelFunction::GetParentDMXChannel() const
@@ -3840,17 +3869,21 @@ void GdtfRevision::SetUserId(size_t value)
 GdtfPhysicalEmitter::GdtfPhysicalEmitter()
 {
 	fColor		= CRGBColor(255, 255, 255);
+    fDominantWaveLength = 0;
+    fDiodePart = "";
 }
 
-GdtfPhysicalEmitter::GdtfPhysicalEmitter(const TXString& name)
+GdtfPhysicalEmitter::GdtfPhysicalEmitter(const TXString& name, CCieColor color)
 {
-	fColor		= CRGBColor(255, 255, 255);
+	fColor		= color;
 	fName		= name;
+    fDominantWaveLength = 0;
+    fDiodePart = "";
 }
 
 GdtfPhysicalEmitter::~GdtfPhysicalEmitter()
 {
-	for (GdtfMeasurementPointPtr ptr : fMeasurePoints) { delete ptr; }
+	for (GdtfMeasurementPtr ptr : fMeasurements) { delete ptr; }
 }
 
 void GdtfPhysicalEmitter::SetName(const TXString &name)
@@ -3863,11 +3896,21 @@ void GdtfPhysicalEmitter::SetColor(CCieColor color)
 	fColor = color;
 }
 
-GdtfMeasurementPoint* GdtfPhysicalEmitter::AddMeasurementPoint()
+void SceneData::GdtfPhysicalEmitter::SetDiodePart(const TXString& val)
 {
-	GdtfMeasurementPoint* point = new GdtfMeasurementPoint();
-	fMeasurePoints.push_back(point);
-	return point;
+    fDiodePart = val;
+}
+
+void SceneData::GdtfPhysicalEmitter::SetDominantWaveLength(double val)
+{
+    fDominantWaveLength = val;
+}
+
+GdtfMeasurement* GdtfPhysicalEmitter::AddMeasurement()
+{
+	GdtfMeasurement* mes = new GdtfMeasurement();
+	fMeasurements.push_back(mes);
+	return mes;
 }
 
 void GdtfPhysicalEmitter::OnPrintToFile(IXMLFileNodePtr pNode)
@@ -3878,14 +3921,15 @@ void GdtfPhysicalEmitter::OnPrintToFile(IXMLFileNodePtr pNode)
 	
 	// ------------------------------------------------------------------------------------
 	// Print node attributes
-	pNode->SetNodeAttributeValue(XML_GDTF_EmitterName,				fName);
-	pNode->SetNodeAttributeValue(XML_GDTF_EmitterColor,				GdtfConverter::ConvertColor(fColor));
-	
+	pNode->SetNodeAttributeValue(XML_GDTF_EmitterName,				 fName);
+	pNode->SetNodeAttributeValue(XML_GDTF_EmitterColor,				 GdtfConverter::ConvertColor(fColor) );
+    pNode->SetNodeAttributeValue(XML_GDTF_EmitterDominantWaveLength, GdtfConverter::ConvertDouble(fDominantWaveLength) );
+    pNode->SetNodeAttributeValue(XML_GDTF_EmitterDiodePart,          fDiodePart );
 	//------------------------------------------------------------------------------------
-	// Write MeasurePoints
-	for (GdtfMeasurementPoint* measurePointObj : fMeasurePoints)
+	// Write Measurement
+	for (GdtfMeasurement* mes: fMeasurements)
 	{
-		measurePointObj->WriteToNode(pNode);
+		mes->WriteToNode(pNode);
 	}
 }
 
@@ -3898,21 +3942,27 @@ void GdtfPhysicalEmitter::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// ------------------------------------------------------------------------------------
 	// Print node attributes
 	pNode->GetNodeAttributeValue(XML_GDTF_EmitterName,				fName);
-	TXString color;		pNode->GetNodeAttributeValue(XML_GDTF_EmitterColor,				color);		GdtfConverter::ConvertColor(color, pNode, fColor);
 	
+    TXString color;		   pNode->GetNodeAttributeValue(XML_GDTF_EmitterColor,	color);		
+    GdtfConverter::ConvertColor(color, pNode, fColor);
+
+    TXString waveLenStr;   pNode->GetNodeAttributeValue(XML_GDTF_EmitterDominantWaveLength,	waveLenStr);		
+    GdtfConverter::ConvertDouble(waveLenStr, pNode, fDominantWaveLength);
+
+    pNode->GetNodeAttributeValue(XML_GDTF_EmitterDiodePart, fDiodePart);
 	
 	// ------------------------------------------------------------------------------------
-	// Read MeasurePoints
+	// Read Measurements
 	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_MeasurementNodeName, [this] (IXMLFileNodePtr objNode) -> void
 								 {
 									 // Create the object
-									 GdtfMeasurementPointPtr mesPoint = new GdtfMeasurementPoint();
+									 GdtfMeasurementPtr mes = new GdtfMeasurement();
 									 
 									 // Read from node
-									 mesPoint->ReadFromNode(objNode);
+									 mes->ReadFromNode(objNode);
 									 
 									 // Add to list
-									 fMeasurePoints.push_back(mesPoint);
+									 fMeasurements.push_back(mes);
 									 return;
 								 });
 }
@@ -3929,6 +3979,8 @@ void GdtfPhysicalEmitter::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	TXStringArray optional;
 	needed.push_back(XML_GDTF_EmitterName);
 	needed.push_back(XML_GDTF_EmitterColor);
+    needed.push_back(XML_GDTF_EmitterDominantWaveLength);
+    needed.push_back(XML_GDTF_EmitterDiodePart);
 	
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
@@ -3955,14 +4007,24 @@ CCieColor GdtfPhysicalEmitter::GetColor() const
 	return fColor;
 }
 
-const TGdtfMeasurementPointArray GdtfPhysicalEmitter::GetMeasurementPoints()
+const TGdtfMeasurementArray GdtfPhysicalEmitter::GetMeasurements()
 {
-	return fMeasurePoints;
+	return fMeasurements;
 }
 
 TXString GdtfPhysicalEmitter::GetNodeReference()
 {
 	return GetName();
+}
+
+const TXString& SceneData::GdtfPhysicalEmitter::GetDiodePart()
+{
+    return fDiodePart;
+}
+
+double SceneData::GdtfPhysicalEmitter::GetDominantWaveLength()
+{
+    return fDominantWaveLength;
 }
 
 //------------------------------------------------------------------------------------
@@ -4189,7 +4251,7 @@ EGdtfObjectType GdtfMeasurementPoint::GetObjectType()
 
 TXString GdtfMeasurementPoint::GetNodeName()
 {
-	return XML_GDTF_MeasurementNodeName;
+	return XML_GDTF_MeasurementPointNode;
 }
 
 double GdtfMeasurementPoint::GetWavelength()
@@ -4442,13 +4504,25 @@ GdtfWheelPtr GdtfFixture::getWheelByRef(const TXString& ref)
 
 GdtfPhysicalEmitterPtr GdtfFixture::getEmiterByRef(const TXString& ref)
 {
-	for (GdtfPhysicalEmitterPtr emt : fEmitters)
+	for (GdtfPhysicalEmitterPtr emt : fPhysicalDesciptions.GetPhysicalEmitterArray() )
 	{
 		if (emt->GetNodeReference() == ref){ return emt;};
 	}
-	
+
 	// When this line is reached nothing was found.
 	DSTOP ((kEveryone, "Failed to resolve GdtfPhysicalEmitterPtr."));
+	return nullptr;
+}
+
+GdtfFilterPtr GdtfFixture::getFilterByRef(const TXString& ref) 
+{
+    for (GdtfFilterPtr fltr : fPhysicalDesciptions.GetFilterArray())
+    {
+        if (fltr->GetNodeReference() == ref) { return fltr; }
+    }
+
+	// When this line is reached nothing was found.
+	DSTOP ((kEveryone, "Failed to resolve GdtfFilter."));
 	return nullptr;
 }
 
@@ -4731,7 +4805,7 @@ GdtfDmxModePtr GdtfFixture::ResolveDMXMode(const TXString& unresolvedDMXmode)
     return nullptr;
 }
 
-void GdtfFixture::ResolveDMXPersonalityRefs() 
+void GdtfFixture::ResolveDMXPersonalityRefs()
 {
     GdtfFTRDM* rdm =  fProtocollContainer.GetRDM();
 
@@ -4887,36 +4961,43 @@ void GdtfFixture::ResolveDmxChanelFunctionRefs(GdtfDmxLogicalChannelPtr dmxLogCh
 			chnlFunc->SetWheel(whlPtr);
 		}
 		
-		// ----------------------------------------------------------------------------------------
-		// DmxChanelFunction.PhysicalEmitter (Optional)
+		// ----------------------------------------------------------------------------------------		
 		TXString unresolvedEmitterRef = chnlFunc->getUnresolvedEmitterRef();
 		if ( ! unresolvedEmitterRef.IsEmpty())
 		{
 			GdtfPhysicalEmitterPtr emtPtr = getEmiterByRef(unresolvedEmitterRef);
 			chnlFunc->SetEmitter(emtPtr);
 		}
+
+        // ----------------------------------------------------------------------------------------		
+        // Filter Refs
+        TXString unresolvedFilterRef = chnlFunc->getUnresolvedFilterRef();
+        if (!unresolvedFilterRef.IsEmpty()) 
+        {
+            GdtfFilter* filter = getFilterByRef(unresolvedFilterRef);
+            chnlFunc->SetFilter(filter);
+        }
+        // ----------------------------------------------------------------------------------------		
 	}
 }
 
 GdtfFixture::GdtfFixture()
 {
 	fReaded					= false;
-	fHasLinkedGuid			= false;
+	fHasLinkedGuid			= false;        
 }
 
 GdtfFixture::~GdtfFixture()
-{
+{   
+
     for (GdtfActivationGroupPtr obj		: fActivationGroups){ delete obj; }
     for (GdtfFeatureGroupPtr obj		: fFeatureGroups)   { delete obj; }
     for (GdtfAttributePtr obj			: fAttributes)      { delete obj; }
 	for (GdtfWheelPtr obj				: fWheels)			{ delete obj; }
 	for (GdtfGeometry* obj				: fGeometries)		{ delete obj; }
-	for (GdtfModel* obj					: fModels)			{ delete obj; }
-	for (GdtfPhysicalEmitterPtr obj		: fEmitters)		{ delete obj; }
+	for (GdtfModel* obj					: fModels)			{ delete obj; }	
 	for (GdtfDmxModePtr obj				: fDmxModes)		{ delete obj; }
 	for (GdtfRevisionPtr obj			: fRevisions)		{ delete obj; }
-    for (GdtfDMXProfilePtr obj          : fDmxProfiles)     { delete obj; }
-    for (GdtfCRIGroupPtr obj            : fCRI_Groups)      { delete obj; }
 
     // Delete Local Files
 	for (size_t i = 0; i < fLocalFiles.size(); i++)
@@ -5011,48 +5092,9 @@ void GdtfFixture::OnPrintToFile(IXMLFileNodePtr pNode)
 	}
 	
 	// ------------------------------------------------------------------------------------
-	// Print physicalDescription
-	IXMLFileNodePtr physicalDescription;
-	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_GDTF_FixtureChildNodePhysicalDesrip, & physicalDescription)))
-	{
-		// Print Emitters (physicalDescription child)
-		IXMLFileNodePtr emittersGroupNode;
-		if (VCOM_SUCCEEDED(physicalDescription->CreateChildNode(XML_GDTF_PhysicalDescriptionsEmitterCollect, & emittersGroupNode)))
-		{
-			for (GdtfPhysicalEmitterPtr emitter : fEmitters)
-			{
-				emitter->WriteToNode(emittersGroupNode);
-			}
-		}
-		
-		// Print DmxProfiles (physicalDescription child)
-		IXMLFileNodePtr dmxProfGroupNode;
-		if (VCOM_SUCCEEDED(physicalDescription->CreateChildNode(XML_GDTF_DMX_ProfileCollect, &dmxProfGroupNode)))
-		{
-			for (GdtfDMXProfilePtr dmxProfile : fDmxProfiles)
-			{
-				dmxProfile->WriteToNode(dmxProfGroupNode);
-			}
-		}
-		
-		// ------------------------------------------------------------------------------------
-		// CRI_Collect (PhysicalDescription child)
-		IXMLFileNodePtr CRI_CollectNode;
-		if (VCOM_SUCCEEDED(physicalDescription->CreateChildNode(XML_GDTF_PhysicalDescriptionsEmitterCollect, &CRI_CollectNode)))
-		{
-			// CRI_Group (CRI_Collect child)
-			IXMLFileNodePtr criGroupNode;
-			if (VCOM_SUCCEEDED(CRI_CollectNode->CreateChildNode(XML_GDTF_PhysicalDescriptionsEmitterCollect, &criGroupNode)))
-			{
-				for (GdtfCRIGroupPtr criGroup : fCRI_Groups)
-				{
-					criGroup->WriteToNode(criGroupNode);
-				}
-			}
-		}
-		// ------------------------------------------------------------------------------------
-	}
-	
+	// Print PhysicalDescriptions    
+    fPhysicalDesciptions.WriteToNode(pNode);
+    	
 	// ------------------------------------------------------------------------------------
 	// Print models
 	IXMLFileNodePtr models;
@@ -5121,7 +5163,7 @@ void GdtfFixture::OnPrintToFile(IXMLFileNodePtr pNode)
 	
 	// ------------------------------------------------------------------------------------
 	// Print Prorocols
-    fProtocollContainer.WriteToNode(pNode);	
+    fProtocollContainer.WriteToNode(pNode);
 }
 
 void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
@@ -5146,6 +5188,13 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
     {        
         fProtocollContainer.ReadFromNode(protoNode); 
     } 
+
+    // Read PhysicalDesciptions
+    IXMLFileNodePtr physDescrNode;
+    if (VCOM_SUCCEEDED(pNode->GetChildNode(XML_GDTF_FixtureChildNodePhysicalDesrip, &physDescrNode) ))
+    {
+        fPhysicalDesciptions.ReadFromNode(physDescrNode);
+    }
 
     // ------------------------------------------------------------------------------------
     // Read AttributeDefinitions
@@ -5290,60 +5339,13 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 									 fRevisions.push_back(rev);
 									 return;
 								 });
-	
 	// ------------------------------------------------------------------------------------
 	// Read presets
-
+    // -
 	
 	// ------------------------------------------------------------------------------------
 	// Read macros
-
-	
-	// ------------------------------------------------------------------------------------
-	// Read PhysicalDescription
-	IXMLFileNodePtr physicalDescription;
-	if (VCOM_SUCCEEDED( pNode->GetChildNode(XML_GDTF_FixtureChildNodePhysicalDesrip, & physicalDescription)))
-	{
-        // Read Emitters (PhysicalDescription Child)
-		GdtfConverter::TraverseNodes(physicalDescription, XML_GDTF_PhysicalDescriptionsEmitterCollect, XML_GDTF_EmitterNodeName, [this] (IXMLFileNodePtr objNode) -> void
-									 {
-										 // Create the object
-										 GdtfPhysicalEmitterPtr emitter = new GdtfPhysicalEmitter();
-										 
-										 // Read from node
-										 emitter->ReadFromNode(objNode);
-										 
-										 // Add to list
-										 fEmitters.push_back(emitter);
-										 return;
-									 });
-        // Read DmxProfiles (PhysicalDescription Child) 
-        GdtfConverter::TraverseNodes(pNode, XML_GDTF_DMX_ProfileCollect, XML_GDTF_DMX_Profile, [this](IXMLFileNodePtr objNode) -> void
-        {
-            // Create the object
-            GdtfDMXProfilePtr dmxProfile = new GdtfDMXProfile();
-
-            // Read from node
-            dmxProfile->ReadFromNode(objNode);
-
-            // Add to list
-            fDmxProfiles.push_back(dmxProfile);
-            return;
-        });
-		
-		// ------------------------------------------------------------------------------------
-		GdtfConverter::TraverseNodes(physicalDescription, XML_GDTF_ColorRenderingIndexCollect, XML_GDTF_ColorRenderingIndexGroup, [this](IXMLFileNodePtr objNode) -> void
-										{
-											GdtfCRIGroupPtr criGroup = new GdtfCRIGroup();
-											
-											// Read from node
-											criGroup->ReadFromNode(objNode);
-											
-											fCRI_Groups.push_back(criGroup);
-											return;
-										});
-	}
-
+    // -
 }
 
 void GdtfFixture::OnErrorCheck(const IXMLFileNodePtr& pNode)
@@ -5550,24 +5552,6 @@ GdtfDmxMode* GdtfFixture::AddDmxMode(const TXString& name)
 	return mode;
 }
 
-GdtfPhysicalEmitterPtr GdtfFixture::AddEmitter(const TXString& name)
-{
-	GdtfPhysicalEmitterPtr emitter = new  GdtfPhysicalEmitter(name);
-	
-	fEmitters.push_back(emitter);
-	
-	return emitter;
-}
-
-GdtfDMXProfilePtr SceneData::GdtfFixture::AddDmxProfile()
-{
-    GdtfDMXProfilePtr dmxProf = new GdtfDMXProfile();
-    
-    fDmxProfiles.push_back(dmxProf);
-    
-    return dmxProf;
-}
-
 GdtfMacroPtr GdtfFixture::AddMacro(const TXString& name)
 {
 	GdtfMacroPtr macro = new  GdtfMacro(name);
@@ -5602,14 +5586,6 @@ GdtfActivationGroupPtr GdtfFixture::AddActivationGroup(const TXString& name)
 	fActivationGroups.push_back(actGroup);
 	
 	return actGroup;
-}
-
-GdtfCRIGroupPtr SceneData::GdtfFixture::AddCRIGroup(double colorTsemp)
-{   
-    GdtfCRIGroupPtr criGroup = new GdtfCRIGroup(colorTsemp);
-    fCRI_Groups.push_back(criGroup);
-
-    return criGroup;
 }
 
 const TGdtfWheelArray& GdtfFixture::GetWheelArray()
@@ -5660,21 +5636,6 @@ const TGdtfUserPresetArray& GdtfFixture::GetPresetArray()
 const TGdtfMacroArray& GdtfFixture::GetMacroArray()
 {
     return fMacros;
-}
-
-const TGdtfPhysicalEmitterArray& GdtfFixture::GetPhysicalEmitterArray()
-{
-    return fEmitters;
-}
-
-const TGdtfDMXProfileArray& SceneData::GdtfFixture::GetDmxProfileArray()
-{
-    return fDmxProfiles;
-}
-
-const TGdtf_CRIGroupArray & SceneData::GdtfFixture::GetCRIGroupArray()
-{
-    return fCRI_Groups;
 }
 
 GdtfProtocols& GdtfFixture::GetProtocollContainer()
@@ -5760,6 +5721,11 @@ const TXString & SceneData::GdtfFixture::GetSVGThumnailFullPath()
     fTumbnailFullPath_SVG = GetFullThumbNailPath(".svg");
 
 	return fTumbnailFullPath_SVG;
+}
+
+GdtfPhysicalDescriptions& SceneData::GdtfFixture::GetPhysicalDesciptionsContainer()
+{
+    return fPhysicalDesciptions;
 }
 
 void GdtfFixture::SetName(const TXString& name)
@@ -7206,6 +7172,597 @@ void SceneData::GdtfSoftwareVersionID::OnReadFromNode(const IXMLFileNodePtr & pN
         dmxPerso->ReadFromNode(objNode);
 
         fDmxPersonalityArray.push_back(dmxPerso);
+        return;
+    });
+}
+
+SceneData::GdtfPhysicalDescriptions::GdtfPhysicalDescriptions()
+{
+}
+
+SceneData::GdtfPhysicalDescriptions::~GdtfPhysicalDescriptions()
+{
+    for (GdtfPhysicalEmitter* o : fEmitters)    { delete o; }
+    for (GdtfFilter*          o : fFilters)     { delete o; }
+    for (GdtfDMXProfile*      o : fDmxProfiles) { delete o; }
+    for (GdtfCRIGroup*        o : fCRI_Groups)  { delete o; }
+}
+
+EGdtfObjectType SceneData::GdtfPhysicalDescriptions::GetObjectType()
+{
+    return EGdtfObjectType::eGdtfPhysicalDescription;
+}
+
+GdtfColorSpace* SceneData::GdtfPhysicalDescriptions::GetColorSpace()
+{
+    return & fColorSpace;
+}
+
+
+
+const TGdtfPhysicalEmitterArray& SceneData::GdtfPhysicalDescriptions::GetPhysicalEmitterArray()
+{
+    return fEmitters;
+}
+
+const TGdtfFilterArray & SceneData::GdtfPhysicalDescriptions::GetFilterArray()
+{
+    return fFilters;
+}
+
+const TGdtfDMXProfileArray& SceneData::GdtfPhysicalDescriptions::GetDmxProfileArray()
+{
+    return fDmxProfiles;
+}
+
+const TGdtf_CRIGroupArray & SceneData::GdtfPhysicalDescriptions::GetCRIGroupArray()
+{
+    return fCRI_Groups;
+}
+
+GdtfPhysicalEmitterPtr SceneData::GdtfPhysicalDescriptions::AddEmitter(const TXString & name, CCieColor color)
+{
+	GdtfPhysicalEmitterPtr emitter = new  GdtfPhysicalEmitter(name, color);
+	
+	fEmitters.push_back(emitter);
+	
+	return emitter;
+}
+
+GdtfFilterPtr SceneData::GdtfPhysicalDescriptions::AddFilter(const TXString& name, CCieColor color)
+{
+    GdtfFilterPtr filter = new GdtfFilter(name, color);
+
+    fFilters.push_back(filter);
+
+    return filter;
+}
+
+GdtfDMXProfilePtr SceneData::GdtfPhysicalDescriptions::AddDmxProfile()
+{
+    GdtfDMXProfilePtr dmxProf = new GdtfDMXProfile();
+    
+    fDmxProfiles.push_back(dmxProf);
+    
+    return dmxProf;
+}
+
+GdtfCRIGroupPtr SceneData::GdtfPhysicalDescriptions::AddCRIGroup(double colorTsemp)
+{
+    GdtfCRIGroupPtr criGroup = new GdtfCRIGroup(colorTsemp);
+    fCRI_Groups.push_back(criGroup);
+
+    return criGroup;
+}
+
+TXString SceneData::GdtfPhysicalDescriptions::GetNodeName()
+{
+    return XML_GDTF_FixtureChildNodePhysicalDesrip;
+}
+
+void SceneData::GdtfPhysicalDescriptions::OnPrintToFile(IXMLFileNodePtr pNode)
+{
+    //------------------------------------------------------------------------------------
+    // Call the parent
+    GdtfObject::OnPrintToFile(pNode);
+    
+    //------------------------------------------------------------------------------------
+    // Print the attributes        
+    fColorSpace.WriteToNode(pNode);
+    
+    //------------------------------------------------------------------------------------
+    // Print Filter        
+    IXMLFileNodePtr filtersGroupNode;
+    if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_GDTF_FiltersCollect, &filtersGroupNode))) 
+    {
+        for (GdtfFilter* filter : fFilters)
+        {
+            filter->WriteToNode(filtersGroupNode);
+        }
+    }
+    
+    // Print Emitters (physicalDescription child)
+	IXMLFileNodePtr emittersGroupNode;
+	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_GDTF_PhysicalDescriptionsEmitterCollect, & emittersGroupNode)))
+	{
+		for (GdtfPhysicalEmitterPtr emitter : fEmitters)
+		{
+			emitter->WriteToNode(emittersGroupNode);
+		}
+	}
+		
+	// Print DmxProfiles (physicalDescription child)
+	IXMLFileNodePtr dmxProfGroupNode;
+	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_GDTF_DMX_ProfileCollect, &dmxProfGroupNode)))
+	{
+		for (GdtfDMXProfilePtr dmxProfile : fDmxProfiles)
+		{
+			dmxProfile->WriteToNode(dmxProfGroupNode);
+		}
+	}
+		
+	// CRI_Collect (PhysicalDescription child)
+	IXMLFileNodePtr CRI_CollectNode;
+	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_GDTF_ColorRenderingIndexCollect, &CRI_CollectNode)))
+	{
+		for (GdtfCRIGroupPtr criGroup : fCRI_Groups)
+		{
+			criGroup->WriteToNode(CRI_CollectNode);
+		}
+		
+	}
+
+}
+
+void SceneData::GdtfPhysicalDescriptions::OnReadFromNode(const IXMLFileNodePtr & pNode)
+{
+	IXMLFileNodePtr colorSpace;
+	if(VCOM_SUCCEEDED(pNode->GetChildNode(XML_GDTF_ColorSpaceNode, & colorSpace)))
+	{
+		fColorSpace.ReadFromNode(colorSpace);
+	}
+
+	// ------------------------------------------------------------------------------------
+	// Read Filters
+	GdtfConverter::TraverseNodes(pNode, XML_GDTF_FiltersCollect, XML_GDTF_FilterNode, [this] (IXMLFileNodePtr objNode) -> void
+									{
+										// Create the object
+										GdtfFilterPtr filter = new GdtfFilter();
+										 
+										// Read from node
+										filter->ReadFromNode(objNode);
+										 
+										// Add to list
+										fFilters.push_back(filter);
+										return;
+									});
+
+    // Read Emitters (PhysicalDescription Child)
+	GdtfConverter::TraverseNodes(pNode, XML_GDTF_PhysicalDescriptionsEmitterCollect, XML_GDTF_EmitterNodeName, [this] (IXMLFileNodePtr objNode) -> void
+									{
+										// Create the object
+										GdtfPhysicalEmitterPtr emitter = new GdtfPhysicalEmitter();
+										 
+										// Read from node
+										emitter->ReadFromNode(objNode);
+										 
+										// Add to list
+										fEmitters.push_back(emitter);
+										return;
+									});
+    // Read DmxProfiles (PhysicalDescription Child) 
+    GdtfConverter::TraverseNodes(pNode, XML_GDTF_DMX_ProfileCollect, XML_GDTF_DMX_Profile, [this](IXMLFileNodePtr objNode) -> void
+    {
+        // Create the object
+        GdtfDMXProfilePtr dmxProfile = new GdtfDMXProfile();
+
+        // Read from node
+        dmxProfile->ReadFromNode(objNode);
+
+        // Add to list
+        fDmxProfiles.push_back(dmxProfile);
+        return;
+    });
+		
+	// ------------------------------------------------------------------------------------
+    // Read CRIs
+	GdtfConverter::TraverseNodes(pNode, XML_GDTF_ColorRenderingIndexCollect, XML_GDTF_ColorRenderingIndexGroup, [this](IXMLFileNodePtr objNode) -> void
+									{
+										GdtfCRIGroupPtr criGroup = new GdtfCRIGroup();
+											
+										// Read from node
+										criGroup->ReadFromNode(objNode);
+											
+										fCRI_Groups.push_back(criGroup);
+										return;
+									});
+	
+}
+
+SceneData::GdtfColorSpace::GdtfColorSpace()
+{
+    fColorSpace = EGdtfColorSpace::sRGB;
+}
+
+SceneData::GdtfColorSpace::~GdtfColorSpace()
+{
+}
+
+EGdtfObjectType SceneData::GdtfColorSpace::GetObjectType()
+{
+    return EGdtfObjectType::eGdtfColorSpace;
+}
+
+EGdtfColorSpace SceneData::GdtfColorSpace::GetColorSpace()
+{
+    return fColorSpace;
+}
+
+CCieColor SceneData::GdtfColorSpace::GetRed()
+{
+	CCieColor color = fRed;
+	if(fColorSpace == EGdtfColorSpace::ANSI) 		{ color = CCieColor(0.7347, 0.2653, 100); }
+	if(fColorSpace == EGdtfColorSpace::ProPhoto) 	{ color = CCieColor(0.7347, 0.2653, 100); }
+	if(fColorSpace == EGdtfColorSpace::sRGB) 		{ color = CCieColor(0.6400, 0.3300, 21.26); }
+    return color;
+}
+
+CCieColor SceneData::GdtfColorSpace::GetGreen()
+{
+	CCieColor color = fGreen;
+	if(fColorSpace == EGdtfColorSpace::ANSI) 		{ color = CCieColor(0.1596, 0.8404, 100); }
+	if(fColorSpace == EGdtfColorSpace::ProPhoto) 	{ color = CCieColor(0.1596, 0.8404, 100); }
+	if(fColorSpace == EGdtfColorSpace::sRGB) 		{ color = CCieColor(0.3000, 0.6000, 71.52); }
+    return color;
+}
+
+CCieColor SceneData::GdtfColorSpace::GetBlue()
+{
+	CCieColor color = fBlue;
+	if(fColorSpace == EGdtfColorSpace::ANSI) 		{ color = CCieColor(0.0366, 0.001, 100); }
+	if(fColorSpace == EGdtfColorSpace::ProPhoto) 	{ color = CCieColor(0.0366, 0.0001, 100); }
+	if(fColorSpace == EGdtfColorSpace::sRGB) 		{ color = CCieColor(0.1500, 0.0600, 7.22); }
+    return color;
+}
+
+CCieColor SceneData::GdtfColorSpace::GetWhite()
+{
+	CCieColor color = fWhitePoint;
+	if(fColorSpace == EGdtfColorSpace::ANSI) 		{ color = CCieColor(0.4254, 0.4044, 100); }
+	if(fColorSpace == EGdtfColorSpace::ProPhoto) 	{ color = CCieColor(0.3457, 0.3585, 100); }
+	if(fColorSpace == EGdtfColorSpace::sRGB) 		{ color = CCieColor(0.3127, 0.3290, 100); }
+    return color;
+}
+
+void SceneData::GdtfColorSpace::SetColorSpace(EGdtfColorSpace val)
+{
+    fColorSpace = val;
+}
+
+void SceneData::GdtfColorSpace::SetRed(CCieColor val)
+{
+    fRed = val;
+}
+
+void SceneData::GdtfColorSpace::SetGreen(CCieColor val)
+{
+    fGreen = val;
+}
+
+void SceneData::GdtfColorSpace::SetBlue(CCieColor val)
+{
+    fBlue = val;
+}
+
+void SceneData::GdtfColorSpace::SetWhite(CCieColor val)
+{
+    fWhitePoint = val;
+}
+
+TXString SceneData::GdtfColorSpace::GetNodeName()
+{
+    return XML_GDTF_ColorSpaceNode;
+}
+
+void SceneData::GdtfColorSpace::OnPrintToFile(IXMLFileNodePtr pNode)
+{
+    //------------------------------------------------------------------------------------
+    // Call the parent
+    GdtfObject::OnPrintToFile(pNode);
+
+    //------------------------------------------------------------------------------------
+    // Print the attributes        
+    pNode->SetNodeAttributeValue(XML_GDTF_ColorSpace_Mode, GdtfConverter::ConvertEGdtfColorSpace(fColorSpace) );
+    
+    if (fColorSpace == EGdtfColorSpace::Custom)
+    {
+        pNode->SetNodeAttributeValue(XML_GDTF_ColorSpace_Red,        GdtfConverter::ConvertColor(fRed) );
+        pNode->SetNodeAttributeValue(XML_GDTF_ColorSpace_Green,      GdtfConverter::ConvertColor(fGreen) );
+        pNode->SetNodeAttributeValue(XML_GDTF_ColorSpace_Blue,	     GdtfConverter::ConvertColor(fBlue) );
+        pNode->SetNodeAttributeValue(XML_GDTF_ColorSpace_WhitePoint, GdtfConverter::ConvertColor(fWhitePoint) );
+    }
+}
+
+void SceneData::GdtfColorSpace::OnReadFromNode(const IXMLFileNodePtr & pNode)
+{
+    //------------------------------------------------------------------------------------
+    // Call the parent
+    GdtfObject::OnReadFromNode(pNode);
+
+    //------------------------------------------------------------------------------------
+    // Get the attributes	
+    TXString colorSpaceStr; pNode->GetNodeAttributeValue(XML_GDTF_ColorSpace_Mode, colorSpaceStr);
+    GdtfConverter::ConvertEGdtfColorSpace( colorSpaceStr, pNode, fColorSpace);
+    
+    if (fColorSpace == EGdtfColorSpace::Custom)
+    {
+		TXString value_red;     pNode->GetNodeAttributeValue(XML_GDTF_ColorSpace_Red,     	 value_red );  	GdtfConverter::ConvertColor(value_red   , pNode, fRed);
+		TXString value_green;   pNode->GetNodeAttributeValue(XML_GDTF_ColorSpace_Green,      value_green ); GdtfConverter::ConvertColor(value_green , pNode, fGreen);
+		TXString value_blue;    pNode->GetNodeAttributeValue(XML_GDTF_ColorSpace_Blue,       value_blue );  GdtfConverter::ConvertColor(value_blue  , pNode, fBlue);
+		TXString value_white;   pNode->GetNodeAttributeValue(XML_GDTF_ColorSpace_WhitePoint, value_white ); GdtfConverter::ConvertColor(value_white , pNode, fWhitePoint);
+    }
+}
+
+void SceneData::GdtfColorSpace::OnErrorCheck(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnErrorCheck(pNode);
+
+	//------------------------------------------------------------------------------------
+	// Create needed and optional Attribute Arrays
+	TXStringArray needed;
+	TXStringArray optional;
+	optional.push_back(XML_GDTF_ColorSpace_Red);
+	optional.push_back(XML_GDTF_ColorSpace_Green);
+	optional.push_back(XML_GDTF_ColorSpace_Blue);
+	optional.push_back(XML_GDTF_ColorSpace_WhitePoint);
+	optional.push_back(XML_GDTF_ColorSpace_Mode);
+
+	//------------------------------------------------------------------------------------
+	// Check Attributes for node
+	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
+}
+
+SceneData::GdtfFilter::GdtfFilter()
+{
+    fName = "";
+}
+
+SceneData::GdtfFilter::GdtfFilter(const TXString & name, const CCieColor &col)
+{
+    fName = name;
+    fColor = col;
+}
+
+SceneData::GdtfFilter::~GdtfFilter()
+{
+    for (GdtfMeasurement* o : fMeasurementsArray) { delete o; };
+}
+
+EGdtfObjectType SceneData::GdtfFilter::GetObjectType()
+{
+    return EGdtfObjectType::eGdtfFilter;
+}
+
+const TXString & SceneData::GdtfFilter::GetName()
+{
+    return fName;
+}
+
+CCieColor SceneData::GdtfFilter::GetColor()
+{
+    return fColor;
+}
+
+const TGdtfMeasurementArray & SceneData::GdtfFilter::GetMeasurementsArray()
+{
+    return fMeasurementsArray;
+}
+
+void SceneData::GdtfFilter::SetName(const TXString & name)
+{
+    fName = name;
+}
+
+void SceneData::GdtfFilter::SetColor(CCieColor val)
+{
+    fColor = val;
+}
+
+GdtfMeasurement* SceneData::GdtfFilter::CreateMeasurement()
+{
+    GdtfMeasurement* m= new GdtfMeasurement();    
+    fMeasurementsArray.push_back(m);
+
+    return m;
+}
+
+TXString SceneData::GdtfFilter::GetNodeName()
+{
+    return XML_GDTF_FilterNode;
+}
+
+void SceneData::GdtfFilter::OnPrintToFile(IXMLFileNodePtr pNode)
+{
+    //------------------------------------------------------------------------------------
+    // Call the parent
+    GdtfObject::OnPrintToFile(pNode);
+
+    //------------------------------------------------------------------------------------
+    // Print the attributes
+    pNode->SetNodeAttributeValue(XML_GDTF_Filter_Name, fName);
+    pNode->SetNodeAttributeValue(XML_GDTF_FilterColor, GdtfConverter::ConvertColor(fColor));
+
+    //------------------------------------------------------------------------------------
+    // Print the childs
+    for (GdtfMeasurement* mes : fMeasurementsArray)
+    {
+         mes->WriteToNode(pNode);
+    }
+}
+
+void SceneData::GdtfFilter::OnReadFromNode(const IXMLFileNodePtr & pNode)
+{
+    //------------------------------------------------------------------------------------
+    // Call the parent
+    GdtfObject::OnReadFromNode(pNode);
+
+    //------------------------------------------------------------------------------------
+    // Get the attributes	
+    pNode->GetNodeAttributeValue(XML_GDTF_Filter_Name, fName);    
+    
+	// ------------------------------------------------------------------------------------
+	// Get Color
+	TXString color;
+    if (VCOM_SUCCEEDED(pNode->GetNodeAttributeValue(XML_GDTF_FilterColor, color)))
+    {
+        if (color.IsEmpty() == false)
+        {
+            GdtfConverter::ConvertColor(color, pNode, fColor);
+        }
+    }	
+
+    // Read the childs
+    GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_MeasurementNodeName, [this](IXMLFileNodePtr objNode) -> void
+    {
+        GdtfMeasurement* measurePt = new GdtfMeasurement();
+
+        measurePt->ReadFromNode(objNode);
+
+        fMeasurementsArray.push_back(measurePt);
+        return;
+    });
+}
+
+TXString SceneData::GdtfFilter::GetNodeReference() 
+{
+    return GetName();
+}
+
+SceneData::GdtfMeasurement::GdtfMeasurement()
+{
+    fPhysical = 0;
+    fLuminousIntensity = 0;
+    fTransmission = 0;
+    fInterpolationTo = EGdtfInterpolationTo::Linear;
+}
+
+SceneData::GdtfMeasurement::~GdtfMeasurement()
+{
+    for (GdtfMeasurementPoint* o : fMeasurementPoints) { delete o; };
+}
+
+EGdtfObjectType SceneData::GdtfMeasurement::GetObjectType()
+{
+    return EGdtfObjectType::eGdtfMeasurement;
+}
+
+double SceneData::GdtfMeasurement::GetPhysical()
+{
+    return fPhysical;
+}
+
+double SceneData::GdtfMeasurement::GetLuminousIntensity()
+{
+    return fLuminousIntensity;
+}
+
+double SceneData::GdtfMeasurement::GetTransmission()
+{
+    return fTransmission;
+}
+
+EGdtfInterpolationTo SceneData::GdtfMeasurement::GetInterpolationTo()
+{
+    return fInterpolationTo;
+}
+
+const TGdtfMeasurementPointArray & SceneData::GdtfMeasurement::GetMeasurementPointsArray()
+{
+    return fMeasurementPoints;
+}
+
+void SceneData::GdtfMeasurement::SetPhysical(double val)
+{
+    fPhysical = val;
+}
+
+void SceneData::GdtfMeasurement::SetLuminousIntensity(double val)
+{
+    fLuminousIntensity = val;
+}
+
+void SceneData::GdtfMeasurement::SetTransmission(double val)
+{
+    fTransmission = val;
+}
+
+void SceneData::GdtfMeasurement::SetInterpolationTo(EGdtfInterpolationTo val)
+{
+    fInterpolationTo = val;
+}
+
+GdtfMeasurementPoint* SceneData::GdtfMeasurement::CreateMeasurementPoint()
+{
+    GdtfMeasurementPointPtr mP = new GdtfMeasurementPoint();
+    fMeasurementPoints.push_back(mP);
+	return mP;
+}
+
+TXString SceneData::GdtfMeasurement::GetNodeName()
+{
+    return XML_GDTF_MeasurementNodeName;
+}
+
+void SceneData::GdtfMeasurement::OnPrintToFile(IXMLFileNodePtr pNode)
+{
+    //------------------------------------------------------------------------------------
+    // Call the parent
+    GdtfObject::OnPrintToFile(pNode);
+
+    //------------------------------------------------------------------------------------
+    // Print the attributes 
+    pNode->SetNodeAttributeValue(XML_GDTF_MeasurementPhysical,          GdtfConverter::ConvertDouble(fPhysical) );
+    pNode->SetNodeAttributeValue(XML_GDTF_MeasurementLuminousIntensity, GdtfConverter::ConvertDouble(fLuminousIntensity) );
+    pNode->SetNodeAttributeValue(XML_GDTF_MeasurementTransmission,      GdtfConverter::ConvertDouble(fTransmission) );
+    pNode->SetNodeAttributeValue(XML_GDTF_MeasurementInterpolationTo,   GdtfConverter::ConvertEGdtfInterpolationTo(fInterpolationTo) );
+    //------------------------------------------------------------------------------------
+    // Print the childs
+    for (GdtfMeasurementPoint* mesPt: fMeasurementPoints)
+    {
+        mesPt->WriteToNode(pNode);
+    }
+}
+
+void SceneData::GdtfMeasurement::OnReadFromNode(const IXMLFileNodePtr & pNode)
+{
+    //------------------------------------------------------------------------------------
+    // Call the parent
+    GdtfObject::OnReadFromNode(pNode);
+
+    //------------------------------------------------------------------------------------
+    // Get the attributes	
+    TXString   physStr; pNode->GetNodeAttributeValue(XML_GDTF_MeasurementPhysical, physStr);
+    GdtfConverter::ConvertDouble( physStr, pNode, fPhysical);
+
+    TXString   lumiStr; pNode->GetNodeAttributeValue(XML_GDTF_MeasurementLuminousIntensity,  lumiStr);
+    GdtfConverter::ConvertDouble( lumiStr, pNode, fLuminousIntensity);
+
+    TXString   transmStr; pNode->GetNodeAttributeValue(XML_GDTF_MeasurementTransmission,  transmStr);    
+    GdtfConverter::ConvertDouble( transmStr, pNode, fTransmission);
+
+    TXString   interpolStr; pNode->GetNodeAttributeValue(XML_GDTF_MeasurementInterpolationTo, interpolStr);
+    GdtfConverter::ConvertEGdtfInterpolationTo(interpolStr, pNode, fInterpolationTo);
+
+    // Read the childs
+    GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_MeasurementPointNode, [this](IXMLFileNodePtr objNode) -> void
+    {
+        GdtfMeasurementPoint* measurePt = new GdtfMeasurementPoint();
+
+        measurePt->ReadFromNode(objNode);
+
+        fMeasurementPoints.push_back(measurePt);
         return;
     });
 }
