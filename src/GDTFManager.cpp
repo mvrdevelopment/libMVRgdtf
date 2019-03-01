@@ -2911,6 +2911,8 @@ GdtfDmxChannelFunction::GdtfDmxChannelFunction(GdtfDmxLogicalChannel* parent)
 	fModeMaster_Function	= nullptr;
 	fDmxModeStart			= 0;
 	fDmxModeEnd				= 0;
+
+    fUnresolvedFilterRef = "";
 }
 
 GdtfDmxChannelFunction::GdtfDmxChannelFunction(const TXString& name, GdtfDmxLogicalChannel* parent)
@@ -2930,6 +2932,9 @@ GdtfDmxChannelFunction::GdtfDmxChannelFunction(const TXString& name, GdtfDmxLogi
 	fModeMaster_Function	= nullptr;
 	fDmxModeStart			= 0;
 	fDmxModeEnd				= 0;
+
+    fFilter                = nullptr;
+    fUnresolvedFilterRef   = "";
 }
 
 GdtfDmxChannelFunction::~GdtfDmxChannelFunction()
@@ -3026,6 +3031,11 @@ void GdtfDmxChannelFunction::OnPrintToFile(IXMLFileNodePtr pNode)
 		pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeTo,					GdtfConverter::ConvertDMXValue(fDmxModeEnd,   fModeMaster_Function->GetParentDMXChannel()->GetChannelBitResolution()));	
 	}
 
+    if (fFilter) 
+    {
+        pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionFilter, fFilter->GetName());
+    }
+
 	// ------------------------------------------------------------------------------------
 	// Prepare No Feature Channel Set
 	TGdtfDmxChannelSetArray tempArr;
@@ -3119,6 +3129,9 @@ void GdtfDmxChannelFunction::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeMaster,				fUnresolvedModeMaster);	
 	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeFrom,				fUnresolvedDmxModeStart);	
 	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeTo,					fUnresolvedDmxModeEnd);	
+
+    // Filter
+    pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionFilter,					fUnresolvedFilterRef);	
 
 	// ------------------------------------------------------------------------------------
 	// GdtfDmxChannelSet
