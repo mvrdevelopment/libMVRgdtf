@@ -48,6 +48,9 @@
     <ClCompile Include="..\unittest\EmptyGeometryUnitTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\unittest\CustomColorSpaceTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\unittest\MvrUnittest.h">
@@ -78,6 +81,9 @@
       <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="..\unittest\EmptyGeometryUnitTest.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\unittest\CustomColorSpaceTest.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
