@@ -4968,7 +4968,7 @@ void GdtfFixture::ResolveDmxChanelFunctionRefs(GdtfDmxLogicalChannelPtr dmxLogCh
 
         // ----------------------------------------------------------------------------------------		
         // Filter Refs
-        TXString unresolvedFilterRef = chnlFunc->getUnresolvedAttrRef();
+        TXString unresolvedFilterRef = chnlFunc->getUnresolvedFilterRef();
         if (!unresolvedFilterRef.IsEmpty()) 
         {
             GdtfFilter* filter = getFilterByRef(unresolvedFilterRef);
