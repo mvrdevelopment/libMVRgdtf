@@ -4360,6 +4360,8 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile, TXString folderName)
 		inPath = fileName;
 	}
 		
+	zipfile->Close();
+	
 	//-------------------------------------------------------------------------------------------------
 	// Decompress the files
 	fReaded = xmlFileBuffer.IsSet();
