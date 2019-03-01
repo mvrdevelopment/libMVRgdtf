@@ -846,8 +846,15 @@ namespace VectorworksMVR
     class DYNAMIC_ATTRIBUTE IGdtfColorSpace : public IVWUnknown
     {
     public:
-        virtual MvrString VCOM_CALLTYPE     GetName() = 0;
-
+        virtual VCOMError VCOM_CALLTYPE GetColorSpace(GdtfDefines::EGdtfColorSpace& outVal) = 0;
+        virtual VCOMError VCOM_CALLTYPE	GetRed (CieColor& outVal) = 0;
+        virtual VCOMError VCOM_CALLTYPE GetGreen(CieColor& outVal) = 0;
+        virtual VCOMError VCOM_CALLTYPE	GetBlue(CieColor& outVal) = 0;
+        // Setter       
+        virtual VCOMError VCOM_CALLTYPE SetColorSpace(GdtfDefines::EGdtfColorSpace val) = 0;
+        virtual VCOMError VCOM_CALLTYPE SetRed(CieColor& val) = 0;
+        virtual VCOMError VCOM_CALLTYPE SetGreen(CieColor& val) = 0;
+        virtual VCOMError VCOM_CALLTYPE SetBlue(CieColor& val) = 0;
 
         virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
         virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
