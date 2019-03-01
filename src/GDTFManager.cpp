@@ -3183,7 +3183,7 @@ void GdtfDmxChannelFunction::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	optional.push_back(XML_GDTF_DMXChannelFuntionModeFrom);
 	optional.push_back(XML_GDTF_DMXChannelFuntionModeTo);
 	optional.push_back(XML_GDTF_DMXChannelFuntionRealFade);
-	
+    optional.push_back(XML_GDTF_DMXChannelFuntionFilter);
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
 	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
