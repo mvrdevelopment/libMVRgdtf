@@ -2912,6 +2912,7 @@ GdtfDmxChannelFunction::GdtfDmxChannelFunction(GdtfDmxLogicalChannel* parent)
 	fDmxModeStart			= 0;
 	fDmxModeEnd				= 0;
 
+	fFilter                = nullptr;
     fUnresolvedFilterRef = "";
 }
 

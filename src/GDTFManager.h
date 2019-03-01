@@ -352,10 +352,10 @@ namespace SceneData
     private:
         EGdtfColorSpace  fColorSpace;
 
-        CCieColor        fRed;                  // Optional; CIE xyY of the Red Primary; this is used only if the ColorSpace is "Custom".
-        CCieColor        fGreen;                // Optional; CIE xyY of the Green Primary; this is used only if the ColorSpace is "Custom".
-        CCieColor        fBlue;	                // Optional; CIE xyY of the Blue Primary; this is used only if the ColorSpace is "Custom".
-        CCieColor        fWhitePoint;           // Optional; CIE xyY of the White Point; this is used only if the ColorSpace is "Custom". 
+        CCieColor        fRed;
+        CCieColor        fGreen;
+        CCieColor        fBlue;
+        CCieColor        fWhitePoint;
     public:
         virtual EGdtfObjectType			GetObjectType();
 
@@ -890,7 +890,7 @@ namespace SceneData
 		TGdtfDmxChannelSetArray	fChannelSets;		
 		
 		// Unresolved Refs
-		TXString				fUnresolvedAttrRef; // TODO: XXX check init off these vars!
+		TXString				fUnresolvedAttrRef;
 		TXString				fUnresolvedWheelRef;
 		TXString				fUnresolvedEmitterRef;
         TXString                fUnresolvedDmxModeStart;
