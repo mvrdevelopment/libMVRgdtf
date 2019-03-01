@@ -63,6 +63,8 @@ VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::SetColorSpace(EGdtf
 {
 	//Check Pointer
 	if( ! fColorSpace)		return kVCOMError_NotInitialized;    
+
+	fColorSpace->SetColorSpace(val);
 	
     return kVCOMError_NoError;
 }

@@ -7268,6 +7268,12 @@ void SceneData::GdtfPhysicalDescriptions::OnPrintToFile(IXMLFileNodePtr pNode)
 
 void SceneData::GdtfPhysicalDescriptions::OnReadFromNode(const IXMLFileNodePtr & pNode)
 {
+	IXMLFileNodePtr colorSpace;
+	if(VCOM_SUCCEEDED(pNode->GetChildNode(XML_GDTF_ColorSpaceNode, & colorSpace)))
+	{
+		fColorSpace.ReadFromNode(colorSpace);
+	}
+
 	// ------------------------------------------------------------------------------------
 	// Read Filters
 	GdtfConverter::TraverseNodes(pNode, XML_GDTF_FiltersCollect, XML_GDTF_FilterNode, [this] (IXMLFileNodePtr objNode) -> void
@@ -7394,7 +7400,7 @@ void SceneData::GdtfColorSpace::OnPrintToFile(IXMLFileNodePtr pNode)
     // Print the attributes        
     pNode->SetNodeAttributeValue(XML_GDTF_ColorSpace_Mode, GdtfConverter::ConvertEGdtfColorSpace(fColorSpace) );
     
-    if (fColorSpace == EGdtfColorSpace::Custom) // XXX is this correctly implemented
+    if (fColorSpace == EGdtfColorSpace::Custom)
     {
         pNode->SetNodeAttributeValue(XML_GDTF_ColorSpace_Red,        GdtfConverter::ConvertColor(fRed) );
         pNode->SetNodeAttributeValue(XML_GDTF_ColorSpace_Green,      GdtfConverter::ConvertColor(fGreen) );
@@ -7414,7 +7420,7 @@ void SceneData::GdtfColorSpace::OnReadFromNode(const IXMLFileNodePtr & pNode)
     TXString colorSpaceStr; pNode->GetNodeAttributeValue(XML_GDTF_ColorSpace_Mode, colorSpaceStr);
     GdtfConverter::ConvertEGdtfColorSpace( colorSpaceStr, pNode, fColorSpace);
     
-    if (fColorSpace == EGdtfColorSpace::Custom) // XXX is this correctly implemented
+    if (fColorSpace == EGdtfColorSpace::Custom)
     {
         GdtfConverter::ConvertColor(XML_GDTF_ColorSpace_Red       , pNode, fRed);
         GdtfConverter::ConvertColor(XML_GDTF_ColorSpace_Green     , pNode, fGreen);
