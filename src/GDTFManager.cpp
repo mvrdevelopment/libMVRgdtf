@@ -7497,10 +7497,11 @@ void SceneData::GdtfColorSpace::OnReadFromNode(const IXMLFileNodePtr & pNode)
     
     if (fColorSpace == EGdtfColorSpace::Custom)
     {
-        GdtfConverter::ConvertColor(XML_GDTF_ColorSpace_Red       , pNode, fRed);
-        GdtfConverter::ConvertColor(XML_GDTF_ColorSpace_Green     , pNode, fGreen);
-        GdtfConverter::ConvertColor(XML_GDTF_ColorSpace_Blue	  , pNode, fBlue);
-        GdtfConverter::ConvertColor(XML_GDTF_ColorSpace_WhitePoint, pNode, fWhitePoint);      
+		TXString value_red;     pNode->GetNodeAttributeValue(XML_GDTF_ColorSpace_Red,     	 value_red );  	GdtfConverter::ConvertColor(value_red   , pNode, fRed);
+		TXString value_green;   pNode->GetNodeAttributeValue(XML_GDTF_ColorSpace_Green,      value_green ); GdtfConverter::ConvertColor(value_green , pNode, fGreen);
+		TXString value_blue;    pNode->GetNodeAttributeValue(XML_GDTF_ColorSpace_Blue,       value_blue );  GdtfConverter::ConvertColor(value_blue  , pNode, fBlue);
+		TXString value_white;   pNode->GetNodeAttributeValue(XML_GDTF_ColorSpace_WhitePoint, value_white ); GdtfConverter::ConvertColor(value_white , pNode, fWhitePoint);
+       
     }
 }
 
