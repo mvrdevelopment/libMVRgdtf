@@ -534,10 +534,23 @@ void GdtfUnittest::ReadFile()
 
         this->checkifEqual("Filter Color", filterColor, filterColorCompare);
 
+
         // Filter.Measurements
         // (The Meaurement attributes are check in the Emitter test.)
         size_t measruementCount; __checkVCOM(gdtfFilter->GetMeasurementCount(measruementCount));
         this->checkifEqual(" Filter.Measurements Count", measruementCount, size_t(3) );
+
+		//------------------------------------------------------------------------------------------------------------------
+		// Set ColorSpace Space
+		IGdtfColorSpacePtr colorSpace;
+		__checkVCOM(gdtfRead->GetColorSpace( & colorSpace));
+
+		EGdtfColorSpace thisSpace = EGdtfColorSpace::sRGB;
+		__checkVCOM(colorSpace->GetColorSpace(thisSpace));
+
+		checkifEqual("ColorSpace", (size_t)thisSpace, (size_t)EGdtfColorSpace::ANSI);
+		
+
 		//------------------------------------------------------------------------------    
 		// Fill with DMX
 		size_t dmxModesCount = 0;
