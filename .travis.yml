@@ -12,6 +12,17 @@ matrix:
       sudo: required
       dist: xenial
       compiler: clang
+    - env: Ubuntu Build
+      sudo: required
+      dist: xenial
+      compiler: gcc
+      apt:
+        packages:
+          - valgrind
+          - g++-7
+        sources:
+          - ubuntu-toolchain-r-test
+
     # Xcode 9.4 g++
     - env: OSX_VERSION=10.10
       osx_image: xcode8.3
