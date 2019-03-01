@@ -4,7 +4,7 @@
 #include "Unittest.h"
 #include "GdtfUnittest.h"
 #include <iostream>
-
+#include "Utility.h"
 #include "Include/VectorworksMVR.h"
 using namespace VectorworksMVR;
 using namespace VectorworksMVR::GdtfDefines;
@@ -14,15 +14,13 @@ using namespace VectorworksMVR::GdtfDefines;
 
 GdtfUnittest::GdtfUnittest(const std::string& currentDir)
 {
-    fPath = currentDir;
-#ifdef _WINDOWS
-    fPath += std::string("\\testGdtf.gdtf");
-#else
-    fPath += std::string("/testGdtf.gdtf");
-#endif
+    fAppDataFolder = currentDir;
 
+    fTestGdtf_Path = fAppDataFolder + kSeparator + "testGdtf.gdtf";
 
-    std::cout << "Export File to " << fPath << std::endl; 
+    fTestResourcesFolder = UnitTestUtil::GetTestResourceFolder();
+
+    std::cout << "Export File to " << fTestGdtf_Path << std::endl; 
 }
 
 GdtfUnittest::~GdtfUnittest()
@@ -43,16 +41,25 @@ void GdtfUnittest::WriteFile()
 	//------------------------------------------------------------------------------------------------
 	// Create Pointer to GDTF Interface
 	IGdtfFixturePtr gdtfWrite (IID_IGdtfFixture);
-
+    
     MvrUUID uuid		(225204211	, 177198167	, 1575790	, 96627);
 	MvrUUID linkedUuid	(2227440	, 1542265	, 1573622	, 2328410);
-    if(__checkVCOM(gdtfWrite->OpenForWrite(fPath.c_str(),"My FixtureName","My Manufacturer", uuid)))
+    if(__checkVCOM(gdtfWrite->OpenForWrite(fTestGdtf_Path.c_str(),"My FixtureName","My Manufacturer", uuid)))
     {
 		__checkVCOM(gdtfWrite->SetFixtureTypeDescription("My Description"));
 		__checkVCOM(gdtfWrite->SetShortName("My shortName"));
-		__checkVCOM(gdtfWrite->SetFixtureThumbnail("My thumbnail"));
+		__checkVCOM(gdtfWrite->SetLongName("My Long Long Name"));
+		__checkVCOM(gdtfWrite->SetFixtureThumbnail("MyThumbnail"));
 		__checkVCOM(gdtfWrite->SetLinkedFixtureGUID(linkedUuid));
 
+        //------------------------------------------------------------------------------    
+        // Add Test Resources
+        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestPNG_ThumbNail().c_str(), ERessourceType::RessoureFixture) );
+        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestSVG_ThumbNail().c_str(), ERessourceType::RessoureFixture) );
+        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestWheel_PNG().c_str(),     ERessourceType::ImageWheel) );
+        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTest3DS_Model().c_str(),     ERessourceType::Model3DS) );
+        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestSVG_Model().c_str(),     ERessourceType::ModelSVG) );
+        
 		//------------------------------------------------------------------------------    
 		// Set Attributes
 		IGdtfActivationGroupPtr gdtfActGroup;
@@ -149,7 +156,7 @@ void GdtfUnittest::WriteFile()
 		IGdtfModelPtr gdtfModel;
 		if (__checkVCOM(gdtfWrite->CreateModel("My modelName", &gdtfModel)))
 		{
-			__checkVCOM(gdtfModel->Set3DSGeometryFile("My file3DSGeometry"));
+			__checkVCOM(gdtfModel->SetGeometryFile("My file3DSGeometry"));
 			__checkVCOM(gdtfModel->SetHeight(10));
 			__checkVCOM(gdtfModel->SetWidth(20));
 			__checkVCOM(gdtfModel->SetLength(30));
@@ -169,8 +176,8 @@ void GdtfUnittest::WriteFile()
 		__checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometry, "My nameGeometry", gdtfModel, ma, &childGeo));
 
 		// Create Child in Child
-		IGdtfGeometryPtr innerChild;
-		__checkVCOM(childGeo->CreateGeometry(EGdtfObjectType::eGdtfGeometry, "My Inner Geo", gdtfModel, ma, &innerChild));
+		IGdtfGeometryPtr innerChildGeo;
+		__checkVCOM(childGeo->CreateGeometry(EGdtfObjectType::eGdtfGeometry, "My Inner Geo", gdtfModel, ma, &innerChildGeo));
 
 		IGdtfGeometryPtr geoRef1;
 		__checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometryReference, "My Reference", gdtfModel, ma, &geoRef1));
@@ -178,11 +185,15 @@ void GdtfUnittest::WriteFile()
 
 		IGdtfGeometryPtr geoRef2;
 		__checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometryReference, "My Ref to Inner Obj", gdtfModel, ma, &geoRef2));
-		__checkVCOM(geoRef2->SetGeometryReference(innerChild));
+		__checkVCOM(geoRef2->SetGeometryReference(innerChildGeo));
 
 		IGdtfBreakPtr gdtfBreak;
 		__checkVCOM(geoRef2->CreateBreak(3,4,& gdtfBreak));
 
+        // Beam Geometry
+        IGdtfGeometryPtr beamGeo;        
+        __checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometryLamp, "My Lamp Geometry", gdtfModel, ma, &beamGeo));
+        beamGeo->SetLuminousIntensity(5);
 
 		//------------------------------------------------------------------------------
 		// Get dmxModes
@@ -199,12 +210,9 @@ void GdtfUnittest::WriteFile()
 				__checkVCOM(gdtfDmxChannel->SetFine(2));
 				__checkVCOM(gdtfDmxChannel->SetUltra(3));
 				__checkVCOM(gdtfDmxChannel->SetUber(4));
-				__checkVCOM(gdtfDmxChannel->SetDmxFrequency(EGdtfDmxFrequency::eGdtfDmxFrequency_30));
 				__checkVCOM(gdtfDmxChannel->SetDefaultValue(5));
 				__checkVCOM(gdtfDmxChannel->SetHighlight(6));
 				__checkVCOM(gdtfDmxChannel->SetDmxBreak(7));
-				__checkVCOM(gdtfDmxChannel->SetMoveInBlackFrames(8));
-				__checkVCOM(gdtfDmxChannel->SetDmxChangeTimeLimit(9));
 				__checkVCOM(gdtfDmxChannel->SetGeometry(childGeo));
 
 				IGdtfDmxLogicalChannelPtr gdtfLogicalChannel;
@@ -213,6 +221,8 @@ void GdtfUnittest::WriteFile()
 					__checkVCOM(gdtfLogicalChannel->SetAttribute(gdtfAttribute));
 					__checkVCOM(gdtfLogicalChannel->SetDmxMaster(EGdtfDmxMaster::eGdtfDmxMaster_Grand));
 					__checkVCOM(gdtfLogicalChannel->SetDmxSnap(EGdtfDmxSnap::eGdtfDmxMaster_On));
+				    __checkVCOM(gdtfLogicalChannel->SetMoveInBlackFrames(8));
+				    __checkVCOM(gdtfLogicalChannel->SetDmxChangeTimeLimit(9));
 
 					
 					if (__checkVCOM(gdtfLogicalChannel->CreateDmxFunction("My nameDmxFunction", &gdftChannelFunction)))
@@ -224,8 +234,6 @@ void GdtfUnittest::WriteFile()
 						__checkVCOM(gdftChannelFunction->SetPhysicalStart(2));
 						__checkVCOM(gdftChannelFunction->SetPhysicalEnd(3));
 						__checkVCOM(gdftChannelFunction->SetRealFade(4));
-						__checkVCOM(gdftChannelFunction->SetDMXInvert(EGDTFDmxInvert::eGDTFDmxInvert_No));
-						__checkVCOM(gdftChannelFunction->SetEncoderInvert(EGDTFEncoderInvert::eGDTFEncoderInvert_Yes));
 						__checkVCOM(gdftChannelFunction->SetOnWheel(gdtfWheelObj));
 						__checkVCOM(gdftChannelFunction->SetEmitter(gdtfEmitter));
 
@@ -251,7 +259,25 @@ void GdtfUnittest::WriteFile()
 		timestamp.fYear = 2020; timestamp.fMonth = 12; timestamp.fDay = 2;
 		timestamp.fHour = 22; timestamp.fMinute = 33; timestamp.fSecond = 44;
 		__checkVCOM(gdtfWrite->CreateRevision("Revision TestText", timestamp, &rev));
+		__checkVCOM(rev->SetUserId(254));
 
+        //------------------------------------------------------------------------------    
+        // Add RDM 
+        IGdtfTRDMPtr rdm;
+        __checkVCOM (gdtfWrite->CreateRDM(&rdm) );        
+        __checkVCOM (rdm->SetDeviceModelID(1) );
+        __checkVCOM (rdm->SetManufacturerID(2) );        
+
+        //------------------------------------------------------------------------------    
+        // Add SoftwareVersionID
+        IGdtfSoftwareVersionIDPtr softID;
+        __checkVCOM (rdm->CreateSoftwareVersionID( 22, &softID));        
+
+        //------------------------------------------------------------------------------    
+        // Add DMXPersonality
+
+        IGdtfDMXPersonalityPtr dmxPerso;
+        __checkVCOM (softID->CreateDMXPersonality( 11, gdtfDmxMode, &dmxPerso));        
 
 		//------------------------------------------------------------------------------    
 		// Close the stream and dump to disk
@@ -264,7 +290,7 @@ void GdtfUnittest::ReadFile()
 	//------------------------------------------------------------------------------    
 	// Read Fixture Information
 	IGdtfFixturePtr gdtfRead (IID_IGdtfFixture);
-    if(__checkVCOM(gdtfRead->ReadFromFile(fPath.c_str())))
+    if(__checkVCOM(gdtfRead->ReadFromFile(fTestGdtf_Path.c_str())))
     {
 		//Check those written UUIDs
 		MvrUUID fixtureUUID	(225204211, 177198167, 	1575790, 	96627);
@@ -274,22 +300,35 @@ void GdtfUnittest::ReadFile()
 
 		// Check Fixture Name
 		MvrString fixtureName		= gdtfRead->GetName();
+		MvrString fixtureLongName	= gdtfRead->GetLongName();
 		MvrString fixtureShortName	= gdtfRead->GetShortName();
 		MvrString manufacturer		= gdtfRead->GetManufacturer();
 		MvrString description		= gdtfRead->GetFixtureTypeDescription();
+
 		this->checkifEqual("GetName "					, fixtureName		, "My FixtureName");
 		this->checkifEqual("GetShortName "				, fixtureShortName	, "My shortName");
 		this->checkifEqual("GetManufacturer "			, manufacturer		, "My Manufacturer");
 		this->checkifEqual("GetFixtureTypeDescription "	, description		, "My Description");
+		this->checkifEqual("GetLongName "	, fixtureLongName		, "My Long Long Name");
 
 		__checkVCOM(gdtfRead->GetFixtureGUID(resultUUID));
 		this->checkifEqual("GetFixtureGUID fixtureUUID ", fixtureUUID, resultUUID);
 		
-		// Get the Image from GDTF File
-		MvrString pngFileName		= gdtfRead->GetFixtureThumbnail();
-		MvrString fullPath			= gdtfRead->GetFixtureThumbnail();
-		this->checkifEqual("GetFixtureThumbnail "		, pngFileName		, "My thumbnail");
-		this->checkifEqual("GetFixtureThumbnail "		, fullPath			, "My thumbnail");
+        //-----------------------------------------------------------------------------
+		// Get the Thumbnail-Image from GDTF File
+		MvrString thumbFileName		= gdtfRead->GetFixtureThumbnail();
+		MvrString fullPath_PNG		= gdtfRead->GetFixtureThumbnail_PNG_FullPath();
+        MvrString fullPath_SVG      = gdtfRead->GetFixtureThumbnail_SVG_FullPath();        
+
+		this->checkifEqual("GetFixtureThumbnail "		, thumbFileName,  "MyThumbnail"); 
+        
+        // Check if the Resource Files have been unpacked correctly.
+		this->checkifEqual("GetFixtureThumbnail "		, fullPath_PNG, fAppDataFolder + kSeparator + "GDTF_Folder" + kSeparator + "MyThumbnail.png" ); 
+        this->checkifEqual("GetFixtureThumbnail "		, fullPath_SVG, fAppDataFolder + kSeparator + "GDTF_Folder" + kSeparator + "MyThumbnail.svg");        
+        
+        this->checkifTrue("Testwheel PNG exists.", UnitTestUtil::FileExists (fullPath_PNG) );
+        this->checkifTrue("Testmodel SVG exits.", UnitTestUtil::FileExists (fullPath_SVG) );
+        //-----------------------------------------------------------------------------
 
 		bool hasLinkedFixture = false;
 		__checkVCOM(gdtfRead->HasLinkedFixtureGUID(hasLinkedFixture));
@@ -453,11 +492,6 @@ void GdtfUnittest::ReadFile()
 						this->checkifEqual("geometryPtrGetName ", geometryName, "My nameGeometry");
 					}
 
-					// Move In Black Frames
-					double moveInBlack = 0;
-					__checkVCOM(gdtfDmxChannel->GetMoveInBlackFrames(moveInBlack));
-					this->checkifEqual("gdtfDmxChannelGetMoveInBlackFrames ", moveInBlack, double(8));
-
 					// Coarse
 					Sint32 coarse;
 					__checkVCOM(gdtfDmxChannel->GetCoarse(coarse));
@@ -478,11 +512,6 @@ void GdtfUnittest::ReadFile()
 					__checkVCOM(gdtfDmxChannel->GetUber(uber));
 					this->checkifEqual("gdtfDmxChannelGetUber ", uber, 4);
 
-					// DMX Frequency
-					EGdtfDmxFrequency freq;
-					__checkVCOM(gdtfDmxChannel->GetDmxFrequency(freq));
-					this->checkifEqual("gdtfDmxChannelGetDmxFrequency ", freq, EGdtfDmxFrequency::eGdtfDmxFrequency_30);
-
 					// Default Value
 					GdtfDefines::DmxValue def;
 					__checkVCOM(gdtfDmxChannel->GetDefaultValue(def));
@@ -496,11 +525,6 @@ void GdtfUnittest::ReadFile()
 					bool hasHighlight = false;
 					__checkVCOM(gdtfDmxChannel->HasHighlight(hasHighlight));
 					this->checkifEqual("gdtfDmxChannelHasHighlight ", hasHighlight, 1);
-
-					// DMX Change Time Limit
-					double change;
-					__checkVCOM(gdtfDmxChannel->GetDmxChangeTimeLimit(change));
-					this->checkifEqual("gdtfDmxChannelGetDmxChangeTimeLimit ", change, double(9));
 
 					// DMX Break
 					Sint32 breakId;
@@ -543,6 +567,16 @@ void GdtfUnittest::ReadFile()
 						EGdtfDmxMaster master;
 						__checkVCOM(gdtfLogicalChannel->GetDmxMaster(master));
 						this->checkifEqual("gdtfLogicalChannelGetDmxMaster ", master, EGdtfDmxMaster::eGdtfDmxMaster_Grand);
+
+					    // Move In Black Frames
+					    double moveInBlack = 0;
+					    __checkVCOM(gdtfLogicalChannel->GetMoveInBlackFrames(moveInBlack));
+					    this->checkifEqual("gdtfDmxChannelGetMoveInBlackFrames ", moveInBlack, double(8) );
+
+					    // DMX Change Time Limit
+					    double change;
+					    __checkVCOM(gdtfLogicalChannel->GetDmxChangeTimeLimit(change));
+					    this->checkifEqual("gdtfDmxChannelGetDmxChangeTimeLimit ", change, double(9));
 
 						//------------------------------------------------------------------------------    
 						// Add the Features 
@@ -610,16 +644,6 @@ void GdtfUnittest::ReadFile()
 								double realFade;
 								__checkVCOM(gdtfFunction->GetRealFade(realFade));
 								this->checkifEqual("gdtfFunctionGetRealFade ", realFade, double(4));
-
-								// DMX Invert
-								EGDTFDmxInvert dmxInv;
-								__checkVCOM(gdtfFunction->GetDMXInvert(dmxInv));
-								this->checkifEqual("gdtfFunctionGetDMXInvert ", dmxInv, EGDTFDmxInvert::eGDTFDmxInvert_No);
-
-								// Encoder Invert
-								EGDTFEncoderInvert encInv;
-								__checkVCOM(gdtfFunction->GetEncoderInvert(encInv));
-								this->checkifEqual("gdtfFunctionGetEncoderInvert ", encInv, EGDTFEncoderInvert::eGDTFEncoderInvert_Yes);
 
 								//------------------------------------------------------------------------------    
 								// Add the ChannelSets 
@@ -828,7 +852,7 @@ void GdtfUnittest::ReadFile()
 			if (__checkVCOM(gdtfRead->GetModelAt(i, &gdtfModel)))
 			{
 				MvrString  modelName	= gdtfModel->GetName();
-				MvrString geometryFile	= gdtfModel->Get3DSGeometryFile();
+				MvrString geometryFile	= gdtfModel->GetGeometryFileName();
 				this->checkifEqual("gdtfModelGetName "				, modelName		, "My modelName");
 				this->checkifEqual("gdtfModelGet3DSGeometryFile "	, geometryFile	, "My file3DSGeometry");
 
@@ -859,7 +883,7 @@ void GdtfUnittest::ReadFile()
 		// Geometry Section
 		size_t countGeo = 0;
 		__checkVCOM(gdtfRead->GetGeometryCount(countGeo));
-		this->checkifEqual("Geometry Count ", countGeo, size_t(3));
+		this->checkifEqual("Geometry Count ", countGeo, size_t(4));
 
 		IGdtfGeometryPtr geo1;
 		__checkVCOM(gdtfRead->GetGeometryAt(0, &geo1));
@@ -915,17 +939,94 @@ void GdtfUnittest::ReadFile()
 
 		STime expTimestamp;
 		__checkVCOM(rev->GetDate(expTimestamp));
-		//timestamp.fYear = 2020; timestamp.fMonth = 12; timestamp.fDay = 2;
-		//timestamp.fHour = 22; timestamp.fMinute = 33; timestamp.fSecond = 44;
+
+		size_t userId = 0;
+		__checkVCOM(rev->GetUserId(userId));
 
 		this->checkifEqual("Check RevText", rev->GetText(), "Revision TestText");
-		this->checkifEqual("Check RevDatefYear",	expTimestamp.fYear, Uint16(2020));
-		this->checkifEqual("Check RevDatefMonth",	expTimestamp.fMonth, Uint16(12));
-		this->checkifEqual("Check RevDatefDay",		expTimestamp.fDay, Uint16(2));
-		this->checkifEqual("Check RevDatefHour",	expTimestamp.fHour, Uint16(22));
-		this->checkifEqual("Check RevDatefMinute",	expTimestamp.fMinute, Uint16(33));
-		this->checkifEqual("Check RevDatefSecond",	expTimestamp.fSecond, Uint16(44));
+		this->checkifEqual("Check RevDatefYear",	expTimestamp.fYear, 	Uint16(2020));
+		this->checkifEqual("Check RevDatefMonth",	expTimestamp.fMonth, 	Uint16(12));
+		this->checkifEqual("Check RevDatefDay",		expTimestamp.fDay, 		Uint16(2));
+		this->checkifEqual("Check RevDatefHour",	expTimestamp.fHour, 	Uint16(22));
+		this->checkifEqual("Check RevDatefMinute",	expTimestamp.fMinute,	Uint16(33));
+		this->checkifEqual("Check RevDatefSecond",	expTimestamp.fSecond, 	Uint16(44));
+		this->checkifEqual("Check UserId",			userId, 				size_t(254));
+
+
+		
+
+        //------------------------------------------------------------------------------    
+        // Read RDM         
+        IGdtfTRDMPtr rdm;
+        __checkVCOM (gdtfRead->GetRDM(&rdm));
+        
+        Sint32 devModID;
+        __checkVCOM (rdm->GetDeviceModelID(devModID));
+        this->checkifEqual("Check DeviceModelID", devModID, 1);
+
+        Sint32 manID;
+        __checkVCOM (rdm->GetManufacturerID(manID));
+        this->checkifEqual("Check ManufacturerID", manID, 2);
+        
+        //------------------------------------------------------------------------------    
+        // Read SoftwareVersionID
+        size_t softIdCount;
+        __checkVCOM (rdm->GetSoftwareVersionIDCount(softIdCount));
+        this->checkifEqual("SoftwareVersionID count", Sint32(softIdCount), Sint32(1));
+                
+        IGdtfSoftwareVersionIDPtr softID;
+        rdm->GetSoftwareVersionIDAt(0, &softID);
+
+        size_t softIDVal;
+        __checkVCOM (softID->GetValue(softIDVal));
+        this->checkifEqual("SoftwareVersionID Value", Sint32(softIDVal), Sint32(22));
+
+        //------------------------------------------------------------------------------    
+        // Read DMXPersonality
+        size_t dmxPersCount;
+        __checkVCOM (softID->GetDMXPersonalityCount(dmxPersCount) );
+        this->checkifEqual("DMXPersonality count", Sint32(dmxPersCount), Sint32(1));
+
+        IGdtfDMXPersonalityPtr dmxPerso;
+        __checkVCOM (softID->GetDMXPersonalityAt(0, &dmxPerso));
+        
+        size_t dmxPersoVal;
+        __checkVCOM (dmxPerso->GetValue(dmxPersoVal));
+        this->checkifEqual("DMXPersonality Value", Sint32(dmxPersoVal), Sint32(11));
+        
+        IGdtfDmxModePtr dmxMode; dmxPerso->GetDmxMode(&dmxMode);
+        this->checkifEqual("DMXPersonality.DMXModeName ", dmxMode->GetName(), "My DmxModeName");
 }
 
 	PrintParsingErrorList(gdtfRead);
+}
+
+std::string GdtfUnittest::GetTestPNG_ThumbNail()
+{
+    std::string path = fTestResourcesFolder + kSeparator + "MyThumbnail.png";
+    return path;
+}
+
+std::string GdtfUnittest::GetTestSVG_ThumbNail()
+{
+    std::string path = fTestResourcesFolder + kSeparator + "MyThumbnail.svg";
+    return path;
+}
+
+std::string GdtfUnittest::GetTestSVG_Model()
+{
+    std::string path = fTestResourcesFolder + kSeparator + "MyModel.svg";
+    return path;
+}
+
+std::string GdtfUnittest::GetTest3DS_Model()
+{
+    std::string path = fTestResourcesFolder + kSeparator + "MyModel.3ds";
+    return path;
+}
+
+std::string GdtfUnittest::GetTestWheel_PNG()
+{
+    std::string path = fTestResourcesFolder + kSeparator + "MWheel_Img1.png";
+    return path;
 }

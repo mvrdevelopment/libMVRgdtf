@@ -52,6 +52,7 @@
     <ClCompile Include="..\src\Implementation\CGdtfDmxChannelSet.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfDmxLogicalChannel.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfDmxMode.cpp" />
+    <ClCompile Include="..\src\Implementation\CGdtfDMXPersonality.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfDmxProfile.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfDmxRelation.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfFeature.cpp" />
@@ -69,14 +70,8 @@
     <ClCompile Include="..\src\Implementation\CGdtfMeasurementPoint.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfModel.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfPhysicalEmitter.cpp" />
-    <ClCompile Include="..\src\Implementation\CGdtfRDMAbsentNotification.cpp" />
-    <ClCompile Include="..\src\Implementation\CGdtfRDMNotifications.cpp" />
-    <ClCompile Include="..\src\Implementation\CGdtfRDMParameter.cpp" />
-    <ClCompile Include="..\src\Implementation\CGdtfRDMParameterNotification.cpp" />
-    <ClCompile Include="..\src\Implementation\CGdtfRDMParameterValue.cpp" />
-    <ClCompile Include="..\src\Implementation\CGdtfRDMSensorNotification.cpp" />
-    <ClCompile Include="..\src\Implementation\CGdtfRDMValueSensor.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfRevision.cpp" />
+    <ClCompile Include="..\src\Implementation\CGdtfSoftwareVersionID.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfUserPreset.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfWheel.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfWheelSlot.cpp" />
@@ -88,7 +83,6 @@
     <ClCompile Include="..\src\Implementation\CSceneDataProviderImpl.cpp" />
     <ClCompile Include="..\src\Implementation\CSceneObjImpl.cpp" />
     <ClCompile Include="..\src\Implementation\CSymDefImpl.cpp" />
-    <ClCompile Include="..\src\Implementation\Utility.cpp" />
     <ClCompile Include="..\src\MCCoordTypes.cpp" />
     <ClCompile Include="..\src\MCFloat.cpp" />
     <ClCompile Include="..\src\MCMatrix.cpp" />
@@ -96,6 +90,7 @@
     <ClCompile Include="..\src\RGBColor.cpp" />
     <ClCompile Include="..\src\SceneDataExchange.cpp" />
     <ClCompile Include="..\src\sha256\sha256.cpp" />
+    <ClCompile Include="..\src\Utility.cpp" />
     <ClCompile Include="..\src\UUID.cpp" />
     <ClCompile Include="..\src\VWLine2D.cpp" />
     <ClCompile Include="..\src\VWLine3D.cpp" />
@@ -140,6 +135,7 @@
     <ClInclude Include="..\src\Implementation\CGdtfDmxChannelSet.h" />
     <ClInclude Include="..\src\Implementation\CGdtfDmxLogicalChannel.h" />
     <ClInclude Include="..\src\Implementation\CGdtfDmxMode.h" />
+    <ClInclude Include="..\src\Implementation\CGdtfDMXPersonality.h" />
     <ClInclude Include="..\src\Implementation\CGdtfDmxProfile.h" />
     <ClInclude Include="..\src\Implementation\CGdtfDmxRelation.h" />
     <ClInclude Include="..\src\Implementation\CGdtfFeature.h" />
@@ -157,14 +153,8 @@
     <ClInclude Include="..\src\Implementation\CGdtfMeasurementPoint.h" />
     <ClInclude Include="..\src\Implementation\CGdtfModel.h" />
     <ClInclude Include="..\src\Implementation\CGdtfPhysicalEmitter.h" />
-    <ClInclude Include="..\src\Implementation\CGdtfRDMAbsentNotification.h" />
-    <ClInclude Include="..\src\Implementation\CGdtfRDMNotifications.h" />
-    <ClInclude Include="..\src\Implementation\CGdtfRDMParameter.h" />
-    <ClInclude Include="..\src\Implementation\CGdtfRDMParameterNotification.h" />
-    <ClInclude Include="..\src\Implementation\CGdtfRDMParameterValue.h" />
-    <ClInclude Include="..\src\Implementation\CGdtfRDMSensorNotification.h" />
-    <ClInclude Include="..\src\Implementation\CGdtfRDMValueSensor.h" />
     <ClInclude Include="..\src\Implementation\CGdtfRevision.h" />
+    <ClInclude Include="..\src\Implementation\CGdtfSoftwareVersionID.h" />
     <ClInclude Include="..\src\Implementation\CGdtfUserPreset.h" />
     <ClInclude Include="..\src\Implementation\CGdtfWheel.h" />
     <ClInclude Include="..\src\Implementation\CGdtfWheelSlot.h" />
@@ -176,7 +166,6 @@
     <ClInclude Include="..\src\Implementation\CSceneDataProviderImpl.h" />
     <ClInclude Include="..\src\Implementation\CSceneObjImpl.h" />
     <ClInclude Include="..\src\Implementation\CSymDefImpl.h" />
-    <ClInclude Include="..\src\Implementation\Utility.h" />
     <ClInclude Include="..\src\Include\GDTFPrefix.h" />
     <ClInclude Include="..\src\Include\IMediaRessourceVectorInterface.h" />
     <ClInclude Include="..\src\Include\VectorworksMVR.h" />
@@ -197,6 +186,7 @@
     <ClInclude Include="..\src\RGBColor.h" />
     <ClInclude Include="..\src\SceneDataExchange.h" />
     <ClInclude Include="..\src\sha256\sha256.h" />
+    <ClInclude Include="..\src\Utility.h" />
     <ClInclude Include="..\src\UUID.h" />
     <ClInclude Include="..\src\VWLine2D.h" />
     <ClInclude Include="..\src\VWLine3D.h" />
@@ -224,8 +214,8 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{BF7C7ABD-E7E9-4110-AA85-A8452D47126B}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>libVectorworksMvrGdtf</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <RootNamespace>libVectorworksMvrGdtf</RootNamespace>	
+	<WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>    
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

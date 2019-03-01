@@ -4,6 +4,7 @@
 #include "Unittest.h"
 #include "GdtfXmlError.h"
 #include <iostream>
+#include "Utility.h"
 
 #include "Include/VectorworksMVR.h"
 using namespace VectorworksMVR;
@@ -15,17 +16,9 @@ using namespace VectorworksMVR::GdtfDefines;
 
 GdtfXmlErrorTest::GdtfXmlErrorTest(const std::string& currentDir)
 {
-    fPath = currentDir;
-#ifdef _WINDOWS
-    fPath = std::string(GITPATH);
-    fPath += std::string("\\files\\XMLBroken.gdtf");
-#else
-	fPath = std::string(GITPATH);
-	fPath += "/unittest/files/XMLBroken.gdtf";
-#endif
+    fErrorGdtf_Path = UnitTestUtil::GetTestResourceFolder() + kSeparator + "XMLBroken.gdtf";
 
-
-    std::cout << "Export File to " << fPath << std::endl; 
+    std::cout << "Export File to " << fErrorGdtf_Path << std::endl; 
 }
 
 GdtfXmlErrorTest::~GdtfXmlErrorTest()
@@ -46,7 +39,7 @@ void GdtfXmlErrorTest::ReadDamagedFile()
 	//------------------------------------------------------------------------------    
 	// Read Existing File with damaged structure
 	IGdtfFixturePtr gdtfRead (IID_IGdtfFixture);
-    __checkVCOM(gdtfRead->ReadFromFile(fPath.c_str()));
+    __checkVCOM(gdtfRead->ReadFromFile(fErrorGdtf_Path.c_str()));
 
 	size_t countErrors = 0;
 	__checkVCOM(gdtfRead->GetParsingErrorCount(countErrors));
@@ -57,8 +50,9 @@ void GdtfXmlErrorTest::ReadDamagedFile()
 		IGdtfXmlParsingErrorPtr error;
 		__checkVCOM(gdtfRead->GetParsingErrorAt(i, & error));
 
-		if(i == 0) { ReadError(error, 0, 0, GdtfDefines::EGdtfParsingError::eFixtureChecksumError); }
-		if(i == 1) { ReadError(error, 27, 7, GdtfDefines::EGdtfParsingError::eXmlParsingError); }
+		if(i == 0) { ReadError(error, 27, 7, GdtfDefines::EGdtfParsingError::eXmlParsingError); }
+		if(i == 1) { ReadError(error, 4, 268, GdtfDefines::EGdtfParsingError::eNodeMissingMandatoryAttribute); }
+
 	}
 	
 }

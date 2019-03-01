@@ -111,6 +111,26 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxLogicalChannelImpl::GetDmxMast
     return kVCOMError_NoError;
 }
 
+VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfDmxLogicalChannelImpl::GetMoveInBlackFrames(double & frames)
+{
+	// Check Pointer
+	if ( ! fLogicalChannel) { return kVCOMError_NotInitialized; }
+	
+    frames = fLogicalChannel->GetMoveInBlackFrames();
+    
+    return kVCOMError_NoError; 
+}
+
+VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfDmxLogicalChannelImpl::GetDmxChangeTimeLimit(double & changeTimeLimit)
+{
+	// Check Pointer
+	if ( ! fLogicalChannel) { return kVCOMError_NotInitialized; }
+	
+    changeTimeLimit = fLogicalChannel->GetDmxChangeTimeLimit();
+    
+    return kVCOMError_NoError; 
+}
+
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxLogicalChannelImpl::SetDmxSnap(EGdtfDmxSnap snap)
 {
 	// Check Pointer
@@ -127,6 +147,26 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxLogicalChannelImpl::SetDmxMast
 	if ( ! fLogicalChannel) { return kVCOMError_NotInitialized; }
 	
 	fLogicalChannel->SetDmxMaster(master);
+	return kVCOMError_NoError;
+}
+
+VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfDmxLogicalChannelImpl::SetMoveInBlackFrames(double frames)
+{
+	// Check Pointer
+	if ( ! fLogicalChannel) { return kVCOMError_NotInitialized; }
+	
+	fLogicalChannel->SetMoveInBlackFrames(frames);
+	
+	return kVCOMError_NoError;
+}
+
+VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfDmxLogicalChannelImpl::SetDmxChangeTimeLimit(double changeTimeLimit)
+{
+	// Check Pointer
+	if ( ! fLogicalChannel) { return kVCOMError_NotInitialized; }
+	
+	fLogicalChannel->SetDmxChangeTimeLimit(changeTimeLimit);
+	
 	return kVCOMError_NoError;
 }
 

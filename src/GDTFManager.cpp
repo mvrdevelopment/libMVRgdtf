@@ -6,6 +6,7 @@
 #include "XmlFileHelper.h"
 #include "HashManager.h"
 #include <iostream>
+#include "Utility.h"
 
 using namespace SceneData;
 
@@ -1045,11 +1046,10 @@ void GdtfModel::SetPrimitiveType(const EGdtfModel_PrimitiveType &type)
 	fPrimitiveType = type;
 }
 
-void GdtfModel::SetGeometryFile(const Gdtf3DSFile &file)
+void GdtfModel::SetGeometryFile(const TXString &file)
 {
 	fGeometryFile = file;
 }
-
 
 void GdtfModel::OnPrintToFile(IXMLFileNodePtr pNode)
 {
@@ -1123,25 +1123,48 @@ TXString GdtfModel::GetNodeReference()
 	return GetName();
 }
 
-const TXString& GdtfModel::GetGeometryFile() const
+const TXString& GdtfModel::GetGeometryFileName() const
 {
 	return fGeometryFile;
 }
 
-const TXString& GdtfModel::GetGeometryFileFullPath()
+const TXString& GdtfModel::GetGeometryFile_3DS_FullPath()
 {
-	TXString				workingFolder;
-	IFolderIdentifierPtr	folder;
-	fParentFixture->GetWorkingFolder(folder);
-	
-	ASSERTN(kEveryone, folder != nullptr);
-	if (folder) { folder->GetFullPath(workingFolder); }
-	
+	fFullPath3DS = "";
 	// Set to store
-	fFullPath = workingFolder + fGeometryFile;
+	IFolderIdentifierPtr folder (IID_FolderIdentifier);
+	fParentFixture->GetWorkingFolder(folder);
+
+	IFileIdentifierPtr file (IID_FileIdentifier);
+	file->Set(folder, fGeometryFile + ".3ds");
+
+	bool fileExists = false;
+	if(VCOM_SUCCEEDED(file->ExistsOnDisk(fileExists)) && fileExists)
+	{
+		file->GetFileFullPath(fFullPath3DS);
+	}
 	
-	// Return
-	return fFullPath;
+	return fFullPath3DS;
+}
+
+const TXString & SceneData::GdtfModel::GetGeometryFile_SVG_FullPath()
+{
+	// Set to store
+	fFullPathSVG = "";
+	// Set to store
+	IFolderIdentifierPtr folder (IID_FolderIdentifier);
+	fParentFixture->GetWorkingFolder(folder);
+
+	IFileIdentifierPtr file (IID_FileIdentifier);
+	file->Set(folder, fGeometryFile + ".svg");
+
+	bool fileExists = false;
+	if(VCOM_SUCCEEDED(file->ExistsOnDisk(fileExists)) && fileExists)
+	{
+		file->GetFileFullPath(fFullPathSVG);
+	}
+	
+	return fFullPathSVG;
 }
 
 const TXString& GdtfModel::GetName() const
@@ -1292,7 +1315,6 @@ void GdtfGeometry::OnPrintToFile(IXMLFileNodePtr pNode)
 	
 	pNode->SetNodeAttributeValue(XML_GDTF_GeometryMatrix,			GdtfConverter::ConvertMatrix(fMatrix, true));
 
-	ASSERTN(kEveryone, fModelReference != nullptr);
 	if (fModelReference) { pNode->SetNodeAttributeValue(XML_GDTF_GeometryModelRef,	fModelReference->GetNodeReference()); }
 	
 	// ------------------------------------------------------------------------------------
@@ -1383,11 +1405,12 @@ void GdtfGeometry::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	//------------------------------------------------------------------------------------
 	// Create needed and optional Attribute Arrays
 	TXStringArray needed;
-	TXStringArray optional;
 	needed.push_back(XML_GDTF_GeometryName);
-	needed.push_back(XML_GDTF_GeometryModelRef);
 	needed.push_back(XML_GDTF_GeometryMatrix);
 	
+	TXStringArray optional;
+	optional.push_back(XML_GDTF_GeometryModelRef);
+
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
 	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
@@ -1437,10 +1460,7 @@ const std::vector<GdtfGeometry*> GdtfGeometry::GetInternalGeometries()
 TXString GdtfGeometry::GetNodeReference()
 {
 	TXString nodeRef;
-
-	if (fParent)	{ nodeRef = fParent->GetNodeReference() + "." + GetName(); }
-	else			{ nodeRef = GetName();}
-
+	nodeRef = GetName();
 	return nodeRef;
 }
 
@@ -1449,36 +1469,17 @@ TXString GdtfGeometry::GetNodeReference()
 GdtfGeometryAxis::GdtfGeometryAxis(GdtfGeometry* parent) 
 				: GdtfGeometry(parent)
 {
-	fAngleStart = 0;
-	fAngleEnd	= 0;
-	fSpeed		= 0;	
+	
 }
 
 GdtfGeometryAxis::GdtfGeometryAxis(const TXString& name, GdtfModelPtr refToModel,const VWTransformMatrix& ma, GdtfGeometry* parent)
 				: GdtfGeometry(name,refToModel,ma, parent)
 {
-	fAngleStart = 0;
-	fAngleEnd	= 0;
-	fSpeed		= 0;
+
 }
 
 GdtfGeometryAxis::~GdtfGeometryAxis()
 {
-}
-
-void GdtfGeometryAxis::SetStartAngle(double start)
-{
-	fAngleStart = start;
-}
-
-void GdtfGeometryAxis::SetEndAngle(double end)
-{
-	fAngleEnd = end;
-}
-
-void GdtfGeometryAxis::SetSpeed(double speed)
-{
-	fSpeed = speed;
 }
 
 void GdtfGeometryAxis::OnPrintToFile(IXMLFileNodePtr pNode)
@@ -1487,12 +1488,6 @@ void GdtfGeometryAxis::OnPrintToFile(IXMLFileNodePtr pNode)
 	// Call the parent
 	GdtfGeometry::OnPrintToFile(pNode);
 	
-	
-	// ------------------------------------------------------------------------------------
-	// Print node attributes
-	pNode->SetNodeAttributeValue(XML_GDTF_GeometryAxisFrom,			GdtfConverter::ConvertDouble(fAngleStart));
-	pNode->SetNodeAttributeValue(XML_GDTF_GeometryAxisTo,			GdtfConverter::ConvertDouble(fAngleEnd));
-	pNode->SetNodeAttributeValue(XML_GDTF_GeometryAxisSpeed,		GdtfConverter::ConvertDouble(fSpeed));
 
 }
 
@@ -1502,11 +1497,6 @@ void GdtfGeometryAxis::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// Call the parent
 	GdtfGeometry::OnReadFromNode(pNode);
 	
-	// Read Axis from
-	TXString angleStart;	pNode->GetNodeAttributeValue(XML_GDTF_GeometryAxisFrom,		angleStart);	GdtfConverter::ConvertDouble(angleStart,pNode,	fAngleStart);
-	TXString angleEnd;		pNode->GetNodeAttributeValue(XML_GDTF_GeometryAxisTo,		angleEnd);		GdtfConverter::ConvertDouble(angleEnd, 	pNode,	fAngleEnd);
-	TXString speed;			pNode->GetNodeAttributeValue(XML_GDTF_GeometryAxisSpeed,	speed);			GdtfConverter::ConvertDouble(speed,	 	pNode,	fSpeed);
-
 }
 
 void GdtfGeometryAxis::OnErrorCheck(const IXMLFileNodePtr& pNode)
@@ -1522,9 +1512,6 @@ void GdtfGeometryAxis::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	needed.push_back(XML_GDTF_GeometryName);
 	needed.push_back(XML_GDTF_GeometryModelRef);
 	needed.push_back(XML_GDTF_GeometryMatrix);
-	optional.push_back(XML_GDTF_GeometryAxisFrom);
-	optional.push_back(XML_GDTF_GeometryAxisTo);
-	optional.push_back(XML_GDTF_GeometryAxisSpeed);
 	
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
@@ -1599,21 +1586,6 @@ EGdtfObjectType GdtfGeometryBeamFilter::GetObjectType()
 TXString GdtfGeometryBeamFilter::GetNodeName()
 {
 	return XML_GDTF_FilterBeamNodeName;
-}
-
-double GdtfGeometryAxis::GetStartAngle()
-{
-	return fAngleStart;
-}
-
-double GdtfGeometryAxis::GetEndAngle()
-{
-	return fAngleEnd;
-}
-
-double GdtfGeometryAxis::GetSpeed()
-{
-	return fSpeed;
 }
 
 //------------------------------------------------------------------------------------
@@ -1888,7 +1860,7 @@ void GdtfGeometryLamp::OnPrintToFile(IXMLFileNodePtr pNode)
 	// Print node attributes
 	pNode->SetNodeAttributeValue(XML_GDTF_LampLampType,				GdtfConverter::ConvertLampeType(fLampType));
 	pNode->SetNodeAttributeValue(XML_GDTF_LampPowerConsumption,		GdtfConverter::ConvertDouble(fPowerConsuption));
-	pNode->SetNodeAttributeValue(XML_GDTF_LampLuminousIntensity,	GdtfConverter::ConvertDouble(fLuminousIntensity));
+	pNode->SetNodeAttributeValue(XML_GDTF_LampLuminousFlux,	        GdtfConverter::ConvertDouble(fLuminousIntensity));
 	pNode->SetNodeAttributeValue(XML_GDTF_ColorTemperature,			GdtfConverter::ConvertDouble(fColorTemperature));
 	pNode->SetNodeAttributeValue(XML_GDTF_BeamAngle,				GdtfConverter::ConvertDouble(fBeamAngle));
 	pNode->SetNodeAttributeValue(XML_GDTF_BeamRadius,				GdtfConverter::ConvertDouble(fBeamRadius));
@@ -1909,7 +1881,7 @@ void GdtfGeometryLamp::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// Print node attributes
 	TXString lampType;	pNode->GetNodeAttributeValue(XML_GDTF_LampLampType,				lampType);	GdtfConverter::ConvertLampeType(lampType, 	pNode,	fLampType);
 	TXString power;		pNode->GetNodeAttributeValue(XML_GDTF_LampPowerConsumption,		power);		GdtfConverter::ConvertDouble(power, 		pNode,	fPowerConsuption);
-	TXString lum;		pNode->GetNodeAttributeValue(XML_GDTF_LampLuminousIntensity,	lum);		GdtfConverter::ConvertDouble(lum, 			pNode,	fLuminousIntensity);
+	TXString lum;		pNode->GetNodeAttributeValue(XML_GDTF_LampLuminousFlux,	lum);		GdtfConverter::ConvertDouble(lum, 			pNode,	fLuminousIntensity);
 	TXString colorTemp;	pNode->GetNodeAttributeValue(XML_GDTF_ColorTemperature,			colorTemp);	GdtfConverter::ConvertDouble(colorTemp, 	pNode,	fColorTemperature);
 	TXString angle;		pNode->GetNodeAttributeValue(XML_GDTF_BeamAngle,				angle);		GdtfConverter::ConvertDouble(angle, 		pNode,	fBeamAngle);
 	TXString radius;	pNode->GetNodeAttributeValue(XML_GDTF_BeamRadius,				radius);	GdtfConverter::ConvertDouble(radius, 		pNode,	fBeamRadius);
@@ -1933,7 +1905,7 @@ void GdtfGeometryLamp::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	needed.push_back(XML_GDTF_GeometryMatrix);
 	optional.push_back(XML_GDTF_LampLampType);
 	optional.push_back(XML_GDTF_LampPowerConsumption);
-	optional.push_back(XML_GDTF_LampLuminousIntensity);
+	optional.push_back(XML_GDTF_LampLuminousFlux);
 	optional.push_back(XML_GDTF_ColorTemperature);
 	optional.push_back(XML_GDTF_BeamAngle);
 	optional.push_back(XML_GDTF_FieldAngle);
@@ -2411,15 +2383,12 @@ GdtfDmxChannel::GdtfDmxChannel(GdtfDmxMode* parent)
 {
 	fName_AutoGenerated					= "";
 	fDmxBreak				= 1;
-	fCoarse					= 0;	fCoarseNone		= true;
-	fFine					= 0;	fFineNone		= true;
-	fUltra					= 0;	fUltraNone		= true;
-	fUber					= 0;    fUberNone		= true;
-	fFrequenz				= eGdtfDmxFrequency_30;
+	fCoarse					= 0;	
+	fFine					= 0;	
+	fUltra					= 0;	
+	fUber					= 0;   
 	fDefaultValue			= 0;
 	fHeighlight				= 0;	fHeighlightNone = true;
-	fMoveInBlackFrames		= 0;
-	fDmxChangeTimeLimit		= 0;
 	fGeomRef				= nullptr;
 
 	ASSERTN(kEveryone, parent != nullptr);
@@ -2444,31 +2413,28 @@ void GdtfDmxChannel::SetDmxBreak(Sint32 dmxBreak)
 void GdtfDmxChannel::SetDmxCoarse(Sint32 coarse)
 {
 	fCoarse = coarse;
-	if(fCoarse > 0) {fCoarseNone = false;}
 	
 }
 
 void GdtfDmxChannel::SetDmxFine(Sint32 fine)
 {
+	ASSERTN(kEveryone, fCoarse > 0);
 	fFine = fine;
-	if(fFine > 0) {fFineNone = false;}
 }
 
 void GdtfDmxChannel::SetDmxUltra(Sint32 ultra)
 {
+	ASSERTN(kEveryone, fCoarse > 0);
+	ASSERTN(kEveryone, fFine > 0);
 	fUltra = ultra;
-	if(fUltra > 0) {fUltraNone = false;}
 }
 
 void SceneData::GdtfDmxChannel::SetDmxUber(Sint32 uber)
 {
+	ASSERTN(kEveryone, fCoarse > 0);
+	ASSERTN(kEveryone, fFine > 0);
+	ASSERTN(kEveryone, fUltra > 0);
 	fUber = uber;
-	if(fUber > 0) {fUberNone = false;}
-}
-
-void GdtfDmxChannel::SetFrequency(EGdtfDmxFrequency frequency)
-{
-	fFrequenz = frequency;
 }
 
 void GdtfDmxChannel::SetDefaultValue(DmxValue defaultValue)
@@ -2480,16 +2446,6 @@ void GdtfDmxChannel::SetHighlight(DmxValue highlight)
 {
 	fHeighlight = highlight;
 	fHeighlightNone = false;
-}
-
-void GdtfDmxChannel::SetMoveInBlackFrames(double moveInBlackFrames)
-{
-	fMoveInBlackFrames = moveInBlackFrames;
-}
-
-void GdtfDmxChannel::SetDmxChangeTimeLimit(double changeLimit)
-{
-	fDmxChangeTimeLimit = changeLimit;
 }
 
 GdtfDmxLogicalChannel* GdtfDmxChannel::AddLogicalChannel()
@@ -2511,15 +2467,9 @@ void GdtfDmxChannel::OnPrintToFile(IXMLFileNodePtr pNode)
 	// ------------------------------------------------------------------------------------
 	// Print node attributes
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelDMXBreak,			GdtfConverter::ConvertDmxBreak(fDmxBreak));
-	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelCoarse,				GdtfConverter::ConvertInteger(fCoarse ,		fCoarseNone));
-	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFine,				GdtfConverter::ConvertInteger(fFine,		fFineNone));
-	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelUltra,				GdtfConverter::ConvertInteger(fUltra,		fUltraNone));	
-	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelUber,				GdtfConverter::ConvertInteger(fUber,		fUberNone));	
-	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFrequency,			GdtfConverter::ConvertFrequenz(fFrequenz));
+	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelOffset,				GdtfConverter::ConvertDmxOffset(fCoarse, fFine, fUltra, fUber));
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelDefault,			GdtfConverter::ConvertDMXValue(fDefaultValue, chanelReso));
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelHighlight,			GdtfConverter::ConvertDMXValue(fHeighlight,	chanelReso, fHeighlightNone));
-	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelMibFadeFrames,		GdtfConverter::ConvertDouble(fMoveInBlackFrames));
-	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelDMXChangeTimeLimit,	GdtfConverter::ConvertDouble(fDmxChangeTimeLimit));	
 	if (fGeomRef) { pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelGeometry,			fGeomRef->GetNodeReference()); }
 	
 	// ------------------------------------------------------------------------------------
@@ -2540,31 +2490,12 @@ void GdtfDmxChannel::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// Print node attributes
 	TXString dmxBreak;	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelDMXBreak,			dmxBreak);	GdtfConverter::ConvertDmxBreak(dmxBreak, pNode,		fDmxBreak);
 	//
-	TXString coarse;	
-	if (pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelCoarse, coarse) == kVCOMError_NoError) 
+	TXString offset;	
+	if (pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelOffset, offset) == kVCOMError_NoError) 
 	{
-		GdtfConverter::ConvertInteger(coarse, pNode, fCoarse, fCoarseNone);
+		GdtfConverter::ConvertDmxOffset(offset, pNode, fCoarse, fFine, fUltra, fUber);
 	}	
-	//
-	TXString fine;		
-	if (pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFine, fine) ==  kVCOMError_NoError) 
-	{
-		GdtfConverter::ConvertInteger(fine, pNode,	fFine, fFineNone);
-	}
-	//
-	TXString ultra;		
-	if (pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelUltra, ultra) == kVCOMError_NoError) 
-	{
-		GdtfConverter::ConvertInteger(ultra, pNode, fUltra, fUltraNone);
-	}	
-	//
-	TXString uber;
-	if (pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelUber, uber) == kVCOMError_NoError) 
-	{
-		GdtfConverter::ConvertInteger(uber, pNode, fUber, fUberNone);
-	}
-	//
-	TXString freq;		pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFrequency,			freq);		GdtfConverter::ConvertFrequenz(freq, pNode,		fFrequenz);
+
 	//
 	TXString defVal;	
 	if (pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelDefault, defVal) == kVCOMError_NoError)
@@ -2576,14 +2507,9 @@ void GdtfDmxChannel::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	if(VCOM_SUCCEEDED(pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelHighlight,			highlight)	))
 	{
 		GdtfConverter::ConvertDMXValue(highlight, pNode, this->GetChannelBitResolution(), fHeighlight, fHeighlightNone);
-	}
+	}	
 	
-	
-	//
-	TXString mib;		pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelMibFadeFrames,		mib);		GdtfConverter::ConvertDouble(mib, 		pNode,	fMoveInBlackFrames);
-	TXString timelimit;	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelDMXChangeTimeLimit,	timelimit);	GdtfConverter::ConvertDouble(timelimit, pNode,	fDmxChangeTimeLimit);
-	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelGeometry, fUnresolvedGeomRef);
-	
+	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelGeometry, fUnresolvedGeomRef);	
 	
 	// ------------------------------------------------------------------------------------
 	// LogicalChannels	
@@ -2626,16 +2552,9 @@ void GdtfDmxChannel::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	TXStringArray optional;
 	needed.push_back(XML_GDTF_DMXChannelGeometry);
 	optional.push_back(XML_GDTF_DMXChannelDMXBreak);
-	optional.push_back(XML_GDTF_DMXChannelCoarse);
-	optional.push_back(XML_GDTF_DMXChannelFine);
-	optional.push_back(XML_GDTF_DMXChannelUltra);
-	optional.push_back(XML_GDTF_DMXChannelUber);
-	optional.push_back(XML_GDTF_DMXChannelFrequency);
+	optional.push_back(XML_GDTF_DMXChannelOffset);
 	optional.push_back(XML_GDTF_DMXChannelDefault);
 	optional.push_back(XML_GDTF_DMXChannelHighlight);
-	optional.push_back(XML_GDTF_DMXChannelMibFadeFrames);
-	optional.push_back(XML_GDTF_DMXChannelDMXChangeTimeLimit);
-
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
 	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
@@ -2704,10 +2623,6 @@ Sint32 GdtfDmxChannel::GetUber() const
 	return fUber;
 }
 
-EGdtfDmxFrequency GdtfDmxChannel::GetFrequency() const
-{
-	return fFrequenz;
-}
 DmxValue GdtfDmxChannel::GetDefaultValue() const
 {
 	return fDefaultValue;
@@ -2721,16 +2636,6 @@ DmxValue GdtfDmxChannel::GetHighlight() const
 bool GdtfDmxChannel::HasHighlight() const
 {
 	return !fHeighlightNone;
-}
-
-double GdtfDmxChannel::GetMoveInBlackFrames() const
-{
-	return fMoveInBlackFrames;
-}
-
-double GdtfDmxChannel::GetDmxChangeTimeLimit() const
-{
-	return fDmxChangeTimeLimit;
 }
 
 void GdtfDmxChannel::SetGeomRef(GdtfGeometryPtr newGeom)
@@ -2753,15 +2658,13 @@ TXString GdtfDmxChannel::GetUnresolvedGeomRef() const
 	return fUnresolvedGeomRef;
 }
 
-#include <iostream>
-
 EGdtfChannelBitResolution SceneData::GdtfDmxChannel::GetChannelBitResolution()
 {
-
-	if		(  fFineNone  &&   fUltraNone &&    fUberNone)		{ return EGdtfChannelBitResolution::eGdtfChannelBitResolution_8; }
-	else if ((!fFineNone) &&   fUltraNone  &&   fUberNone )		{ return EGdtfChannelBitResolution::eGdtfChannelBitResolution_16; }
-	else if ((!fFineNone) && (!fUltraNone) &&   fUberNone )		{ return EGdtfChannelBitResolution::eGdtfChannelBitResolution_24; }
-	else if ((!fFineNone) && (!fUltraNone) && (!fUberNone))		{ return EGdtfChannelBitResolution::eGdtfChannelBitResolution_32; }
+	// 0 is false, everything else is true
+	if		( !fFine  &&  !fUltra &&    !fUber)		{ return EGdtfChannelBitResolution::eGdtfChannelBitResolution_8; }
+	else if (( fFine) &&  !fUltra  &&   !fUber )	{ return EGdtfChannelBitResolution::eGdtfChannelBitResolution_16; }
+	else if (( fFine) && ( fUltra) &&   !fUber )	{ return EGdtfChannelBitResolution::eGdtfChannelBitResolution_24; }
+	else if (( fFine) && ( fUltra) && (  fUber))	{ return EGdtfChannelBitResolution::eGdtfChannelBitResolution_32; }
     	
 	// Other states are invalid. This line should never be reached.
 	DSTOP((kEveryone, "Invalid state in GetChannelBitResolution()"));
@@ -2782,7 +2685,8 @@ GdtfDmxLogicalChannel::GdtfDmxLogicalChannel(GdtfDmxChannel* parent)
 	fDmxMaster				= eGdtfDmxMaster_None;
 	fParentDmxChannel		= parent;
 	fNextLogicalChannel		= nullptr;
-
+	fMoveInBlackFrames		= 0;
+	fDmxChangeTimeLimit		= 0;
 }
 
 GdtfDmxLogicalChannel::~GdtfDmxLogicalChannel()
@@ -2816,9 +2720,29 @@ void GdtfDmxLogicalChannel::SetNextLogicalChannel(GdtfDmxLogicalChannel* next)
 	fNextLogicalChannel = next;
 }
 
+void SceneData::GdtfDmxLogicalChannel::SetMoveInBlackFrames(double moveInBlackFrames)
+{
+    fMoveInBlackFrames = moveInBlackFrames;
+}
+
+void SceneData::GdtfDmxLogicalChannel::SetDmxChangeTimeLimit(double changeLimit)
+{
+    fDmxChangeTimeLimit = changeLimit;
+}
+
 GdtfDmxLogicalChannelPtr GdtfDmxLogicalChannel::GetNextLogicalChannel()
 {
 	return fNextLogicalChannel;
+}
+
+double SceneData::GdtfDmxLogicalChannel::GetMoveInBlackFrames() const
+{
+    return fMoveInBlackFrames;
+}
+
+double SceneData::GdtfDmxLogicalChannel::GetDmxChangeTimeLimit() const
+{
+    return fDmxChangeTimeLimit;
 }
 
 GdtfDmxChannelFunctionPtr GdtfDmxLogicalChannel::AddDmxChannelFunction(const TXString &name)
@@ -2845,7 +2769,8 @@ void GdtfDmxLogicalChannel::OnPrintToFile(IXMLFileNodePtr pNode)
 	if (fAttribute) {pNode->SetNodeAttributeValue(XML_GDTF_DMXLogicalChannelAttribute, fAttribute->GetNodeReference()); };
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXLogicalChannelSnap,		GdtfConverter::ConvertSnapEnum(fSnap));
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXLogicalChannelMaster,		GdtfConverter::ConvertMasterEnum(fDmxMaster));
-	
+	pNode->SetNodeAttributeValue(XML_GDTF_DMXLogicalChannelMibFadeFrames,		GdtfConverter::ConvertDouble(fMoveInBlackFrames));
+	pNode->SetNodeAttributeValue(XML_GDTF_DMXLogicalChannelDMXChangeTimeLimit,	GdtfConverter::ConvertDouble(fDmxChangeTimeLimit));		
 	// ------------------------------------------------------------------------------------
 	// LogicalChannels
 	for (GdtfDmxChannelFunctionPtr functionObj : fFunctions)
@@ -2866,6 +2791,9 @@ void GdtfDmxLogicalChannel::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	pNode->GetNodeAttributeValue(XML_GDTF_DMXLogicalChannelAttribute, fUnresolvedAttribRef);
 	TXString snap; 	pNode->GetNodeAttributeValue(XML_GDTF_DMXLogicalChannelSnap,	snap);		GdtfConverter::ConvertSnapEnum(snap, 	 pNode, fSnap);
 	TXString master;pNode->GetNodeAttributeValue(XML_GDTF_DMXLogicalChannelMaster,	master);	GdtfConverter::ConvertMasterEnum(master, pNode,	fDmxMaster);
+	//
+	TXString mib;		pNode->GetNodeAttributeValue(XML_GDTF_DMXLogicalChannelMibFadeFrames,		mib);		GdtfConverter::ConvertDouble(mib, 		pNode,	fMoveInBlackFrames);
+	TXString timelimit;	pNode->GetNodeAttributeValue(XML_GDTF_DMXLogicalChannelDMXChangeTimeLimit,	timelimit);	GdtfConverter::ConvertDouble(timelimit, pNode,	fDmxChangeTimeLimit);
 	
 	// ------------------------------------------------------------------------------------
 	// Read LogicalChannels
@@ -2900,7 +2828,8 @@ void GdtfDmxLogicalChannel::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	needed.push_back(XML_GDTF_DMXLogicalChannelAttribute);
 	optional.push_back(XML_GDTF_DMXLogicalChannelSnap);
 	optional.push_back(XML_GDTF_DMXLogicalChannelMaster);
-	
+    optional.push_back(XML_GDTF_DMXLogicalChannelMibFadeFrames);
+	optional.push_back(XML_GDTF_DMXLogicalChannelDMXChangeTimeLimit);	
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
 	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
@@ -2973,9 +2902,7 @@ GdtfDmxChannelFunction::GdtfDmxChannelFunction(GdtfDmxLogicalChannel* parent)
 	fPhysicalEnd			= 1;
 	fRealFade				= 0;
 	fOnWheel				= nullptr;
-	fEmitter				= nullptr;
-	fEncoderInvert			= EGDTFEncoderInvert::eGDTFEncoderInvert_No;
-	fDmxInvert				= EGDTFDmxInvert::eGDTFDmxInvert_No;
+	fEmitter				= nullptr;	
 	fAttribute				= nullptr;
 	fParentLogicalChannel	= parent;
 	fNextFunction			= nullptr;
@@ -2994,9 +2921,7 @@ GdtfDmxChannelFunction::GdtfDmxChannelFunction(const TXString& name, GdtfDmxLogi
 	fPhysicalEnd			= 1;
 	fRealFade				= 0;
 	fOnWheel				= nullptr;
-	fEmitter				= nullptr;
-	fEncoderInvert			= EGDTFEncoderInvert::eGDTFEncoderInvert_No;
-	fDmxInvert				= EGDTFDmxInvert::eGDTFDmxInvert_No;	
+	fEmitter				= nullptr;				
 	fAttribute				= nullptr;
 	fParentLogicalChannel	= parent;
 	fNextFunction			= nullptr;
@@ -3077,8 +3002,6 @@ void GdtfDmxChannelFunction::OnPrintToFile(IXMLFileNodePtr pNode)
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionPhysicalFrom,		GdtfConverter::ConvertDouble(fPhysicalStart));
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionPhysicalTo,			GdtfConverter::ConvertDouble(fPhysicalEnd));
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionRealFade,			GdtfConverter::ConvertDouble(fRealFade));
-	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelDMXInvert,					GdtfConverter::ConvertDMXInvertEnum(fDmxInvert));
-	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelEncoderInvert,				GdtfConverter::ConvertEncoderInvertEnum(fEncoderInvert));
 	
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionOriginalAttribute,								fOrignalAttribute);
 	if (fAttribute)		    { pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionAttribute,			    fAttribute->GetNodeReference());}
@@ -3188,8 +3111,6 @@ void GdtfDmxChannelFunction::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	TXString physFrom;	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionPhysicalFrom,		physFrom);	GdtfConverter::ConvertDouble(physFrom, 				pNode,				fPhysicalStart);
 	TXString physTo;	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionPhysicalTo,			physTo);	GdtfConverter::ConvertDouble(physTo, 				pNode,				fPhysicalEnd);
 	TXString realFade;	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionRealFade,			realFade);	GdtfConverter::ConvertDouble(realFade, 				pNode,				fRealFade);
-	TXString dmxInvert;	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelDMXInvert,					dmxInvert);	GdtfConverter::ConvertDMXInvertEnum(dmxInvert, 		pNode,				fDmxInvert);
-	TXString encInvert;	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelEncoderInvert,				encInvert);	GdtfConverter::ConvertEncoderInvertEnum(encInvert, 	pNode,				fEncoderInvert);
 	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionAttribute, 	fUnresolvedAttrRef);	
 	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionWheelRef, 	fUnresolvedWheelRef);
 	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelEmitter, 			fUnresolvedEmitterRef);
@@ -3249,9 +3170,6 @@ void GdtfDmxChannelFunction::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	optional.push_back(XML_GDTF_DMXChannelFuntionModeFrom);
 	optional.push_back(XML_GDTF_DMXChannelFuntionModeTo);
 	optional.push_back(XML_GDTF_DMXChannelFuntionRealFade);
-	optional.push_back(XML_GDTF_DMXChannelDMXInvert);
-	optional.push_back(XML_GDTF_DMXChannelEncoderInvert);
-
 	
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
@@ -3371,16 +3289,6 @@ GdtfPhysicalEmitter * SceneData::GdtfDmxChannelFunction::GetEmitter() const
     return fEmitter;
 }
 
-EGDTFDmxInvert SceneData::GdtfDmxChannelFunction::GetDmxInvert() const
-{
-    return fDmxInvert;
-}
-
-EGDTFEncoderInvert SceneData::GdtfDmxChannelFunction::GetEncoderInvert() const
-{
-    return fEncoderInvert;
-}
-
 void GdtfDmxChannelFunction::SetWheel(GdtfWheelPtr newWhl)
 {
 	fOnWheel = newWhl;
@@ -3447,16 +3355,6 @@ void GdtfDmxChannelFunction::SetModeMasterDmxEnd(DmxValue end)
 void GdtfDmxChannelFunction::SetEmitter(GdtfPhysicalEmitter* newEmit)
 {
 	fEmitter = newEmit;
-}
-
-void SceneData::GdtfDmxChannelFunction::SetDmxInvert(EGDTFDmxInvert dmxInvert)
-{
-    fDmxInvert = dmxInvert;
-}
-
-void SceneData::GdtfDmxChannelFunction::SetEncoderInvert(EGDTFEncoderInvert encoderInvert)
-{
-    fEncoderInvert = encoderInvert;
 }
 
 TXString GdtfDmxChannelFunction::getUnresolvedAttrRef() const
@@ -3828,7 +3726,8 @@ EGdtfDmxRelationType GdtfDmxRelation::GetRelationType() const
 // GdtfRevision
 GdtfRevision::GdtfRevision()
 {
-    fText = "";
+    fText 			= "";
+	fUserId 		= 0;
 	fDateS.fYear	= 0;
 	fDateS.fMonth	= 0;
 	fDateS.fDay		= 0;
@@ -3853,6 +3752,7 @@ void GdtfRevision::OnPrintToFile(IXMLFileNodePtr pNode)
 	// Print node attributes
 	pNode->SetNodeAttributeValue(XML_GDTF_RevisionText,			fText);
 	pNode->SetNodeAttributeValue(XML_GDTF_RevisionDate,			SceneData::GdtfConverter::ConvertDate(fDateS));
+	pNode->SetNodeAttributeValue(XML_GDTF_RevisionUserId,		SceneData::GdtfConverter::ConvertInteger(fUserId));
 	
 }
 
@@ -3867,6 +3767,8 @@ void GdtfRevision::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// Print node attributes
 						pNode->GetNodeAttributeValue(XML_GDTF_RevisionText,		fText);
 	TXString date;		pNode->GetNodeAttributeValue(XML_GDTF_RevisionDate, 	date);		GdtfConverter::ConvertDate(date, pNode, fDateS);
+	TXString userid;	pNode->GetNodeAttributeValue(XML_GDTF_RevisionUserId, 	userid);	GdtfConverter::ConvertInteger(userid, pNode, fUserId);
+
 }
 
 void GdtfRevision::OnErrorCheck(const IXMLFileNodePtr& pNode)
@@ -3881,6 +3783,7 @@ void GdtfRevision::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	TXStringArray optional;
 	needed.push_back(XML_GDTF_RevisionDate);
 	optional.push_back(XML_GDTF_RevisionText);
+	optional.push_back(XML_GDTF_RevisionUserId);
 
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
@@ -3920,6 +3823,16 @@ const STime& GdtfRevision::GetDate() const
 const TXString& GdtfRevision::GetText() const
 {
 	return fText;
+}
+
+size_t GdtfRevision::GetUserId() const
+{
+	return fUserId;
+}
+
+void GdtfRevision::SetUserId(size_t value) 
+{
+	fUserId = value;
 }
 
 //------------------------------------------------------------------------------------
@@ -4327,20 +4240,18 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile, TXString folderName)
 	zipfile->OpenRead(inZipFile);
 
 	ISceneDataZipBuffer xmlFileBuffer;
-    ISceneDataZipBuffer xmlFileSHA256Buffer;
-	
-	
+		
 	//-------------------------------------------------------------------------------------------------
 	// Decompress the files
-	TXString outPath				= "";
+	TXString fileName				= "";
 	TXString inPath					= "";
-	while (VCOM_SUCCEEDED( zipfile->GetNextFile(inPath, outPath)))
+	while (VCOM_SUCCEEDED( zipfile->GetNextFile(inPath, fileName)))
 	{
 		// This is the current file that we are reading
 		ISceneDataZipBuffer buffer;
-		zipfile->GetFile(outPath, &buffer);
+		zipfile->GetFile(fileName, &buffer);
 		
-		if (outPath == "description.xml")
+		if (fileName == "description.xml")
         {
 			// Read the data
 			size_t	size = 0;							buffer.GetDataSize(size);
@@ -4352,23 +4263,30 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile, TXString folderName)
 			// House keeping
 			std::free(data);
         }
-        else if (outPath == "description.checksum.txt")
-        {
-			// Read the data
-            size_t	size = 0;							buffer.GetDataSize(size);
-            void*	data = malloc(size * sizeof(char));	buffer.CopyDataInto(data, size);
-			
-			// Set the buffer object
-            xmlFileSHA256Buffer.SetData(data, size);
-			
-			// House keeping
-			std::free(data);
-        }
 		else
 		{
-			// Prepare pointer to the new files
+			//-----------------------------------------------------------------------------
+			// Prepare pointer to the new files            
+            
+            // Seperate filename und folder
+            TXString fileNameWithoutFolder = TXString(fileName).Replace("/", TXString(kSeperator) );
+            TXString subFolder 			   = SystemUtil::ExtractFolderFromPath(fileNameWithoutFolder);            
+            
+			// flatten the folder structure
+            subFolder = subFolder.Replace(TXString(kSeperator), "");
+            subFolder = kSeperator + subFolder;
+
+            //-----------------------------------------------------------------------------
+			IFolderIdentifierPtr targetFolder (IID_FolderIdentifier);
+            targetFolder->Set(fWorkingFolder, subFolder);
+            
+			bool exists = false;
+			targetFolder->ExistsOnDisk(exists);
+			if( ! exists )	{ targetFolder->CreateOnDisk(); }
+			
+            
 			IFileIdentifierPtr file (IID_FileIdentifier);
-			file->Set(fWorkingFolder, outPath);
+			file->Set(targetFolder, fileNameWithoutFolder);
 			
 			// dump buffer into file
 			buffer.WriteToFile(file);
@@ -4377,7 +4295,7 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile, TXString folderName)
 			fLocalFiles.push_back(file);
 
 		}
-		inPath = outPath;
+		inPath = fileName;
 	}
 		
 	//-------------------------------------------------------------------------------------------------
@@ -4391,15 +4309,6 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile, TXString folderName)
 	}
 	else
 	{
-		if (xmlFileSHA256Buffer.IsSet())
-		{
-			if (HashManager::HashManager::CheckHashForBuffer(xmlFileBuffer, xmlFileSHA256Buffer) == false)
-			{
-				GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureChecksumError); 
-				SceneData::GdtfFixture::AddError(error); 
-			}
-		}
-
 		IXMLFilePtr xmlFile (IID_XMLFile);
 
 		size_t	size = 0;								xmlFileBuffer.GetDataSize(size);
@@ -4428,6 +4337,7 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile, TXString folderName)
 			}
 		}
 	}
+
 	__ERROR_CONTAINER_POINTER = nullptr;
 }
 
@@ -4573,7 +4483,8 @@ void GdtfFixture::ResolveAllReferences()
 	ResolveGeometryRefs();
 	ResolveAttribRefs();
 	ResolveDmxModeRefs();	
-	ResolveDMXModeMasters();	
+	ResolveDMXModeMasters();
+    ResolveDMXPersonalityRefs();
 }
 
 void GdtfFixture::ResolveGeometryRefs()
@@ -4727,7 +4638,10 @@ void GdtfFixture::ResolveDmxModeRefs()
 		{
 			for (GdtfGeometryPtr geo : fGeometries)
 			{
-				if (geo->GetNodeReference() == unresolvedgeomRef) { geomPtr = geo; break; }
+				if (geo->GetNodeReference() == unresolvedgeomRef) 
+                { 
+                    geomPtr = geo; break; 
+                }
 			}
 		}
 
@@ -4801,6 +4715,46 @@ void GdtfFixture::ResolveDMXModeMasters()
 			}
 		}
 	}	
+}
+
+
+GdtfDmxModePtr GdtfFixture::ResolveDMXMode(const TXString& unresolvedDMXmode)
+{
+    for (GdtfDmxModePtr dmxMode : fDmxModes) 
+    {
+        if (dmxMode->GetModeName() == unresolvedDMXmode) 
+        {
+            return dmxMode;
+        }    
+    }
+    
+    return nullptr;
+}
+
+void GdtfFixture::ResolveDMXPersonalityRefs() 
+{
+    GdtfFTRDM* rdm =  fProtocollContainer.GetRDM();
+
+    if (rdm)
+    {
+        for (GdtfSoftwareVersionID* softID : rdm->GetSoftwareVersIDs() ) 
+        {
+            for (GdtfDMXPersonality* dmxPerso : softID->GetDMXPersonalityArray() ) 
+            {
+                GdtfDmxModePtr dmxMode =  ResolveDMXMode(dmxPerso->GetUnresolvedDMXMode()); 
+            
+				ASSERTN(kEveryone, dmxMode != nullptr);
+                if (dmxMode != nullptr) { dmxPerso->SetDMXMode(dmxMode);  }
+				else
+				{
+					IXMLFileNodePtr node;
+					dmxPerso->GetNode(node);
+					GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_UnresolvedRdmPersonalityMode, node);
+					SceneData::GdtfFixture::AddError(error);
+				}
+            }
+        }
+    }
 }
 
 void GdtfFixture::ResolveDmxRelationRefs(GdtfDmxModePtr dmxMode)
@@ -4992,10 +4946,11 @@ void GdtfFixture::OnPrintToFile(IXMLFileNodePtr pNode)
 	// Print node attributes
 	pNode->SetNodeAttributeValue(XML_GDTF_FixtureName,			fName);
 	pNode->SetNodeAttributeValue(XML_GDTF_FixtureShortName,		fShortName);
+	pNode->SetNodeAttributeValue(XML_GDTF_FixtureLongName,		fLongName);
 	pNode->SetNodeAttributeValue(XML_GDTF_FixtureManufacturer,	fManufacturer);
 	pNode->SetNodeAttributeValue(XML_GDTF_FixtureDescription,	fFixtureTypeDescription);
 	pNode->SetNodeAttributeValue(XML_GDTF_FixtureTypeID,		GdtfConverter::ConvertUUID(fGuid));
-	pNode->SetNodeAttributeValue(XML_GDTF_FixtureThumbnail,		fTumbnail);
+	pNode->SetNodeAttributeValue(XML_GDTF_FixtureThumbnail,		fTumbnailName);
 	
 	if(fHasLinkedGuid)
 	{
@@ -5164,27 +5119,34 @@ void GdtfFixture::OnPrintToFile(IXMLFileNodePtr pNode)
 		}
 	}
 	
-
-	
 	// ------------------------------------------------------------------------------------
-	// Print RDM	
-	// This is missing today
+	// Print Prorocols
+    fProtocollContainer.WriteToNode(pNode);	
 }
 
 void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 {
 	pNode->GetNodeAttributeValue(XML_GDTF_FixtureName,						fName);
 	pNode->GetNodeAttributeValue(XML_GDTF_FixtureShortName,					fShortName);
+	pNode->GetNodeAttributeValue(XML_GDTF_FixtureLongName,					fLongName);
 	pNode->GetNodeAttributeValue(XML_GDTF_FixtureManufacturer,				fManufacturer);
 	pNode->GetNodeAttributeValue(XML_GDTF_FixtureDescription,				fFixtureTypeDescription);
 	TXString uuid; pNode->GetNodeAttributeValue(XML_GDTF_FixtureTypeID,		uuid );	GdtfConverter::ConvertUUID(uuid, pNode, fGuid);
-	pNode->GetNodeAttributeValue(XML_GDTF_FixtureThumbnail,					fTumbnail);
+	pNode->GetNodeAttributeValue(XML_GDTF_FixtureThumbnail,					fTumbnailName);
 	
 	
 	TXString linkedUuid;
 	pNode->GetNodeAttributeValue(XML_GDTF_LinkedUuid,		linkedUuid );
 	fHasLinkedGuid = GdtfConverter::ConvertUUID(linkedUuid, pNode, fLinkedGuid);
 	
+    // ------------------------------------------------------------------------------------
+	// Read Prorocols
+    IXMLFileNodePtr protoNode;
+    if (VCOM_SUCCEEDED(pNode->GetChildNode(XML_GDTF_Protocols, &protoNode))) 
+    {        
+        fProtocollContainer.ReadFromNode(protoNode); 
+    } 
+
     // ------------------------------------------------------------------------------------
     // Read AttributeDefinitions
     
@@ -5381,6 +5343,7 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 											return;
 										});
 	}
+
 }
 
 void GdtfFixture::OnErrorCheck(const IXMLFileNodePtr& pNode)
@@ -5395,6 +5358,7 @@ void GdtfFixture::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	TXStringArray optional;
 	needed.push_back(XML_GDTF_FixtureName);
 	needed.push_back(XML_GDTF_FixtureShortName);
+	needed.push_back(XML_GDTF_FixtureLongName);
 	needed.push_back(XML_GDTF_FixtureManufacturer);
 	needed.push_back(XML_GDTF_FixtureDescription);
 	needed.push_back(XML_GDTF_FixtureTypeID);
@@ -5458,7 +5422,7 @@ bool GdtfFixture::ExportToFile(IZIPFilePtr& zipfile)
 	
 	//------------------------------------------------------------------------------------
 	// Add tp ZIP
-	SceneDataZip::AddFileToZip(zipfile, zipXmlBuffer, TXString(XML_GDTF_GDTFFILENAME) , true);
+	SceneDataZip::AddFileToZip(zipfile, zipXmlBuffer, TXString(XML_GDTF_GDTFFILENAME) );
 
 	
 	return true;
@@ -5728,6 +5692,11 @@ const TXString& GdtfFixture::GetShortName() const
     return fShortName;
 }
 
+const TXString& GdtfFixture::GetLongName() const
+{
+    return fLongName;
+}
+
 const TXString& GdtfFixture::GetManufacturer() const
 {
     return fManufacturer;
@@ -5753,25 +5722,45 @@ bool GdtfFixture::HasLinkedGuid() const
 	return fHasLinkedGuid;
 }
 
-const GdtfPNGFile& GdtfFixture::GetPNGFile() const
+const TXString& GdtfFixture::GetThumbnailName() const
 {
-    return fTumbnail;
+    return fTumbnailName;
 }
 
-const GdtfPNGFile& GdtfFixture::GetPNGFileFullPath()
+TXString GdtfFixture::GetFullThumbNailPath (const TXString& fileExtension) 
 {
-	TXString				workingFolder;
-	
-	ASSERTN(kEveryone, fWorkingFolder != nullptr);
-	if (fWorkingFolder) { fWorkingFolder->GetFullPath(workingFolder); }
-	
 	// Set to store
-	fTumbnailFullPath = workingFolder + fTumbnail;
-	
-	// Return
-	return fTumbnailFullPath;
+	TXString fileName = fTumbnailName + fileExtension;
+
+    // Check if file exists:
+    IFileIdentifierPtr file (IID_FileIdentifier);
+    file->Set(fWorkingFolder, fileName);
+    
+    bool exists = false;  
+	VCOM_SUCCEEDED(file->ExistsOnDisk(exists));
+    if ( ! exists)	{ return ""; }
+
+	TXString fullPath;
+	file->GetFileFullPath(fullPath);
+
+	return fullPath;
 }
 
+const GdtfPNGFile& GdtfFixture::GetPNGThumnailFullPath()
+{
+	// Set to store
+    fTumbnailFullPath_PNG = GetFullThumbNailPath(".png");
+
+	return fTumbnailFullPath_PNG;
+}
+
+const TXString & SceneData::GdtfFixture::GetSVGThumnailFullPath()
+{
+	// Set to store
+    fTumbnailFullPath_SVG = GetFullThumbNailPath(".svg");
+
+	return fTumbnailFullPath_SVG;
+}
 
 void GdtfFixture::SetName(const TXString& name)
 {
@@ -5781,6 +5770,11 @@ void GdtfFixture::SetName(const TXString& name)
 void GdtfFixture::SetShortName(const TXString& shortName)
 {
 	fShortName = shortName;
+}
+
+void GdtfFixture::SetLongName(const TXString& longName)
+{
+	fLongName = longName;
 }
 
 void GdtfFixture::SetManufacturer(const TXString& manu)
@@ -5804,9 +5798,9 @@ void GdtfFixture::SetLinkedGuid(const VWFC::Tools::VWUUID& uuid)
 	fLinkedGuid = uuid;
 }
 
-void GdtfFixture::SetPNGFile(const GdtfPNGFile& png)
+void GdtfFixture::SetThumbnailName(const TXString& fileName)
 {
-	fTumbnail = png;
+	fTumbnailName = fileName;
 }
 
 SceneData::GdtfDMXProfile::GdtfDMXProfile()
@@ -6057,16 +6051,13 @@ void SceneData::GdtfFTRDM::OnPrintToFile(IXMLFileNodePtr pNode)
 	//------------------------------------------------------------------------------------
 	// Print the attributes
 	pNode->SetNodeAttributeValue(XML_GDTF_FTRDM_AttrManufacturerID, GdtfConverter::ConvertInteger(fManufacturerID) );
-	pNode->SetNodeAttributeValue(XML_GDTF_FTRDM_AttrDeviceModelID,  GdtfConverter::ConvertInteger(fDeviceModelID)  );
-	pNode->SetNodeAttributeValue(XML_GDTF_FTRDM_AttrSoftwareVersionIDs, GdtfConverter::ConvertIntegerArray(fSoftwareVersIDs) );
+	pNode->SetNodeAttributeValue(XML_GDTF_FTRDM_AttrDeviceModelID,  GdtfConverter::ConvertInteger(fDeviceModelID)  );	 
 	//------------------------------------------------------------------------------------
-	// Print the childs
-	for (GdtfRDMParameter* rdmParam : fRDMParameters)
+    // Print the Childs
+	for (GdtfSoftwareVersionIDPtr softID : fSoftwareVersionIDArray)
 	{
-		rdmParam->WriteToNode(pNode);
+		softID->WriteToNode(pNode);
 	}
-	
-	if (fRDMNotifications) { fRDMNotifications->WriteToNode(pNode); };
 }
 
 void SceneData::GdtfFTRDM::OnReadFromNode(const IXMLFileNodePtr & pNode)
@@ -6082,32 +6073,18 @@ void SceneData::GdtfFTRDM::OnReadFromNode(const IXMLFileNodePtr & pNode)
 	
 	TXString deviceModelStr;  pNode->GetNodeAttributeValue(XML_GDTF_FTRDM_AttrDeviceModelID, deviceModelStr);
 	GdtfConverter::ConvertInteger(deviceModelStr, pNode, fDeviceModelID);
-	
-	TXString softwareIDsStr;  pNode->GetNodeAttributeValue(XML_GDTF_FTRDM_AttrSoftwareVersionIDs, softwareIDsStr);
-	GdtfConverter::ConvertIntegerArray ( softwareIDsStr, pNode, fSoftwareVersIDs);
-	//------------------------------------------------------------------------------------
+    
+    //------------------------------------------------------------------------------------
 	// Read the childs
-	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_RDMParameterS, [this](IXMLFileNodePtr objNode) -> void
+	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_SoftwareVersionID_NodeNam, [this](IXMLFileNodePtr objNode) -> void
 								 {
-									 // Now we are in the <RDMParameters>(pure container) and need to go one deeper to read the <RDMParameter>.
-									 GdtfConverter::TraverseNodes(objNode, "", XML_GDTF_RDMParameter, [this](IXMLFileNodePtr objNode) -> void
-																  {
-																	  GdtfRDMParameter* rdmParam = new GdtfRDMParameter();
-																	  
-																	  rdmParam->ReadFromNode(objNode);
-																	  
-																	  fRDMParameters.push_back(rdmParam);
-																	  return;
-																  } );
-								 } );
-	
-	// Single childs:
-	IXMLFileNode* rdmNotifysNode;
-	if (VCOM_SUCCEEDED(pNode->GetChildNode(XML_GDTF_RDMNotifications, &rdmNotifysNode)))
-	{
-		fRDMNotifications = new GdtfRDMNotifications();
-		fRDMNotifications->ReadFromNode(rdmNotifysNode);
-	}
+									 GdtfSoftwareVersionIDPtr  softID = new GdtfSoftwareVersionID();
+									 
+									 softID->ReadFromNode(objNode);
+									 
+									 fSoftwareVersionIDArray.push_back(softID);
+									 return;
+								 });	
 }
 
 void SceneData::GdtfFTRDM::OnErrorCheck(const IXMLFileNodePtr& pNode)
@@ -6121,8 +6098,7 @@ void SceneData::GdtfFTRDM::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	TXStringArray needed;
 	TXStringArray optional;
 	needed.push_back(XML_GDTF_FTRDM_AttrManufacturerID);
-	needed.push_back(XML_GDTF_FTRDM_AttrDeviceModelID);
-	needed.push_back(XML_GDTF_FTRDM_AttrSoftwareVersionIDs);
+	needed.push_back(XML_GDTF_FTRDM_AttrDeviceModelID);	
 
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
@@ -6133,7 +6109,6 @@ SceneData::GdtfFTRDM::GdtfFTRDM()
 {
 	fManufacturerID = 0;
 	fDeviceModelID  = 0;
-	fRDMNotifications = nullptr;
 }
 
 SceneData::GdtfFTRDM::GdtfFTRDM(Sint32 manufacturerID, Sint32 deviceModelID) : GdtfFTRDM()
@@ -6143,10 +6118,8 @@ SceneData::GdtfFTRDM::GdtfFTRDM(Sint32 manufacturerID, Sint32 deviceModelID) : G
 }
 
 SceneData::GdtfFTRDM::~GdtfFTRDM()
-{
-	for (GdtfRDMParameterPtr ptr : fRDMParameters) { delete ptr; }
-	
-	if (fRDMNotifications) { delete fRDMNotifications; }
+{	    
+     for (GdtfSoftwareVersionID* obj : fSoftwareVersionIDArray){ delete obj; }
 }
 
 EGdtfObjectType SceneData::GdtfFTRDM::GetObjectType()
@@ -6164,19 +6137,9 @@ Sint32 SceneData::GdtfFTRDM::GetDeviceModelID() const
 	return fDeviceModelID;
 }
 
-const TSint32Array& SceneData::GdtfFTRDM::GetSoftwareVersIDs() const
+const TGdtfSoftwareVersionIDArray& SceneData::GdtfFTRDM::GetSoftwareVersIDs() const
 {
-	return fSoftwareVersIDs;
-}
-
-const TGdtfRDMParameterArray & SceneData::GdtfFTRDM::GetRDMParametersArray() const
-{
-	return fRDMParameters;
-}
-
-GdtfRDMNotifications* SceneData::GdtfFTRDM::GetRDMNotifications() const
-{
-	return fRDMNotifications;
+	return fSoftwareVersionIDArray;
 }
 
 void SceneData::GdtfFTRDM::SetManufacturerID(Sint32 val)
@@ -6189,1197 +6152,94 @@ void SceneData::GdtfFTRDM::SetDeviceModelID(Sint32 val)
 	fDeviceModelID = val;
 }
 
-GdtfRDMParameterPtr SceneData::GdtfFTRDM::AddRDMParameter(
-    const TXString& name,
-    Sint32 PID,
-    EGdtf_RDMParam_Type              Type,
-    EGdtf_RDMParam_DataType          dataType,
-    EGdtf_RDMParam_Command           command,
-    EGdtf_RDMParam_SensorUnit        sensorUnit,
-    EGdtf_RDMParam_SensorUnitPrefix  sensorUnitPrefix,
-    Sint32                           minValue,
-    Sint32                           maxValue,
-    Sint32                           PDLSize,
-    const TXString&                        description)
-{
-	GdtfRDMParameter* rdmParamPtr = new GdtfRDMParameter(
-														 name,
-														 PID,
-														 Type,
-														 dataType,
-														 command,
-														 sensorUnit,
-														 sensorUnitPrefix,
-														 minValue,
-														 maxValue,
-														 PDLSize,
-														 description);
-	
-	fRDMParameters.push_back( rdmParamPtr);
-	
-	return rdmParamPtr;
-}
-
-void SceneData::GdtfFTRDM::SetRDMNotifications(GdtfRDMNotifications * notifications)
-{
-	fRDMNotifications = notifications;
-}
-
-void SceneData::GdtfFTRDM::AddSoftwareVersID(Sint32 ID)
-{
-	fSoftwareVersIDs.push_back(ID);
-}
-
-SceneData::GdtfRDMParameter::GdtfRDMParameter()
-{
-	fName = ""; // TODO: See Docu: Default value: object type with an index in parent???
-	fPID  = 0;
-	
-	fType             = EGdtf_RDMParam_Type::Fixture;
-	fDataType         = EGdtf_RDMParam_DataType::DS_NOT_DEFINED; 
-	fCommand          = EGdtf_RDMParam_Command::None; 
-	fSensorUnit       = EGdtf_RDMParam_SensorUnit::UNITS_NONE; 
-	fSensorUnitPrefix = EGdtf_RDMParam_SensorUnitPrefix::PREFIX_NONE; 
-	
-	fMinValue = 0;
-	fMaxValue = 0;
-	fPDLSize =  0;
-	fDescription = "";
-}
-
-SceneData::GdtfRDMParameter::GdtfRDMParameter(const TXString & name,
-											  Sint32 PID,
-											  EGdtf_RDMParam_Type Type,
-											  EGdtf_RDMParam_DataType dataType,
-											  EGdtf_RDMParam_Command command,
-											  EGdtf_RDMParam_SensorUnit sensorUnit,
-											  EGdtf_RDMParam_SensorUnitPrefix sensorUnitPrefix,
-											  Sint32 minValue,
-											  Sint32 maxValue,
-											  Sint32 PDLSize,
-											  const TXString & description) : GdtfRDMParameter()
-{
-	fName = name;
-	fPID = PID;
-	fType = Type;
-	fDataType = dataType;
-	fCommand = command;
-	fSensorUnit = sensorUnit;
-	fSensorUnitPrefix = sensorUnitPrefix;
-	fMinValue = minValue;
-	fMaxValue = maxValue;
-	fPDLSize = PDLSize;
-	fDescription = description;
-}
-
-SceneData::GdtfRDMParameter::~GdtfRDMParameter()
-{
-}
-
-EGdtfObjectType SceneData::GdtfRDMParameter::GetObjectType()
-{
-	return EGdtfObjectType::eGdtfRDMParameter;
-}
-
-const TXString & SceneData::GdtfRDMParameter::GetName() const
-{
-	return fName;
-}
-
-Sint32 SceneData::GdtfRDMParameter::GetPID() const
-{
-	return fPID;
-}
-
-EGdtf_RDMParam_Type SceneData::GdtfRDMParameter::GetType() const
-{
-	return fType;
-}
-
-EGdtf_RDMParam_DataType SceneData::GdtfRDMParameter::GetDataType() const
-{
-	return fDataType;
-}
-
-EGdtf_RDMParam_Command SceneData::GdtfRDMParameter::GetCommand() const
-{
-	return fCommand;
-}
-
-EGdtf_RDMParam_SensorUnit SceneData::GdtfRDMParameter::GetSensorUnit() const
-{
-	return fSensorUnit;
-}
-
-EGdtf_RDMParam_SensorUnitPrefix SceneData::GdtfRDMParameter::GetSensorUnitPrefix() const
-{
-	return fSensorUnitPrefix;
-}
-
-Sint32 SceneData::GdtfRDMParameter::GetMinValue() const
-{
-	return fMinValue;
-}
-
-Sint32 SceneData::GdtfRDMParameter::GetMaxValue() const
-{
-	return fMaxValue;
-}
-
-Sint32 SceneData::GdtfRDMParameter::GetPDLSize() const
-{
-	return fPDLSize;
-}
-
-const TXString & SceneData::GdtfRDMParameter::GetDescription() const
-{
-	return fDescription;
-}
-
-const TGdtfRDMParameterValueArray & SceneData::GdtfRDMParameter::GetParameterValueArray() const
-{
-	return fParameterValueArray;
-}
-
-void SceneData::GdtfRDMParameter::SetName(const TXString & val)
-{
-	fName = val;
-}
-
-void SceneData::GdtfRDMParameter::SetPID(Sint32 val)
-{
-	fPID = val;
-}
-
-void SceneData::GdtfRDMParameter::SetType(EGdtf_RDMParam_Type val)
-{
-	fType = val;
-}
-
-void SceneData::GdtfRDMParameter::SetDataType(EGdtf_RDMParam_DataType val)
-{
-	fDataType = val;
-}
-
-void SceneData::GdtfRDMParameter::SetCommand(EGdtf_RDMParam_Command val)
-{
-	fCommand = val;
-}
-
-void SceneData::GdtfRDMParameter::SetSensorUnit(EGdtf_RDMParam_SensorUnit val)
-{
-	fSensorUnit = val;
-}
-
-void SceneData::GdtfRDMParameter::SetSensorUnitPrefix(EGdtf_RDMParam_SensorUnitPrefix val)
-{
-	fSensorUnitPrefix = val;
-}
-
-void SceneData::GdtfRDMParameter::SetMinValue(Sint32 val)
-{
-	fMinValue = val;
-}
-
-void SceneData::GdtfRDMParameter::SetMaxValue(Sint32 val)
-{
-	fMaxValue = val;
-}
-
-void SceneData::GdtfRDMParameter::SetPDLSize(Sint32 val)
-{
-	fPDLSize = val;
-}
-
-void SceneData::GdtfRDMParameter::SetDescription(const TXString & val)
-{
-	fDescription = val;
-}
-
-GdtfRDMParameterValue * SceneData::GdtfRDMParameter::AddRMDValueBool()
-{
-	GdtfRDMParameterValuePtr value = new GdtfRDMValueBool();
-	
-	fParameterValueArray.push_back(value);
-	
-	return value;
-}
-
-GdtfRDMParameterValue * SceneData::GdtfRDMParameter::AddDmxPersoalityDescription()
-{
-	GdtfRDMParameterValuePtr value = new GdtfGdtfRDMValue_DMX_PERSONALITY_DESCRIPTION();
-	
-	fParameterValueArray.push_back(value);
-	
-	return value;
-}
-
-GdtfRDMParameterValue * SceneData::GdtfRDMParameter::AddSensorDefinition()
-{
-	GdtfRDMParameterValuePtr value = new GdtfRDMValue_SENSOR_DEFINITION();
-	
-	fParameterValueArray.push_back(value);
-	
-	return value;
-}
-
-GdtfRDMParameterValue * SceneData::GdtfRDMParameter::AddSlotInfo()
-{
-	GdtfRDMParameterValuePtr value = new GdtfRDMValue_SLOT_INFO();
-	
-	fParameterValueArray.push_back(value);
-	
-	return value;
-}
-
-GdtfRDMParameterValue * SceneData::GdtfRDMParameter::AddStatusID_Desciption()
-{
-	GdtfRDMParameterValuePtr value = new GdtfRDMValue_STATUS_ID_DESCRIPTION();
-	
-	fParameterValueArray.push_back(value);
-	
-	return value;
-}
-
-TXString SceneData::GdtfRDMParameter::GetNodeName()
-{
-	return XML_GDTF_RDMParameter;
-}
-
-void SceneData::GdtfRDMParameter::OnPrintToFile(IXMLFileNodePtr pNode)
-{
-	//------------------------------------------------------------------------------------
-	// Call the parent
-	GdtfObject::OnPrintToFile(pNode);
-	
-	//------------------------------------------------------------------------------------
-	// Print the attributes
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMParam_AttrName, fName);
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMParam_AttrPID,  GdtfConverter::ConvertInteger(fPID) );
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMParam_AttrType, GdtfConverter::ConvertRDMParamTypeEnum(fType) );
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMParam_AttrDataType, GdtfConverter::Convert_RDMParamDataTypeEnum(fDataType) );
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMParam_AttrCommand, GdtfConverter::Convert_RDMParam_CommandEnum (fCommand) );
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMParam_AttrSensorUnit, GdtfConverter::Convert_RDMParam_SensorUnitEnum (fSensorUnit) );
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMParam_AttrSensorUnitPrefix, GdtfConverter::Convert_RDMParam_SensorUnitPrefixEnum (fSensorUnitPrefix) );
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMParam_AttrMinValue, GdtfConverter::ConvertInteger (fMinValue) );
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMParam_AttrMaxValue, GdtfConverter::ConvertInteger (fMaxValue) );
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMParam_AttrPDLSize, GdtfConverter::ConvertInteger (fPDLSize) );
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMParam_AttrDescription, fDescription);
-	
-	//------------------------------------------------------------------------------------
-	// Print the childs
-	for (GdtfRDMParameterValue* paramValue : fParameterValueArray)
-	{
-		paramValue->WriteToNode(pNode);
-	}
-}
-
-void SceneData::GdtfRDMParameter::OnReadFromNode(const IXMLFileNodePtr & pNode)
-{
-	//------------------------------------------------------------------------------------
-	// Call the parent
-	GdtfObject::OnReadFromNode(pNode);
-	
-	//------------------------------------------------------------------------------------
-	// Get the attributes
-	pNode->GetNodeAttributeValue(XML_GDTF_RDMParam_AttrName, fName);
-	
-	TXString pidStr; pNode->GetNodeAttributeValue(XML_GDTF_RDMParam_AttrPID, pidStr);
-	GdtfConverter::ConvertInteger(fPID);
-	
-	TXString typeStr; pNode->GetNodeAttributeValue(XML_GDTF_RDMParam_AttrType, typeStr);
-	GdtfConverter::ConvertRDMParamTypeEnum(typeStr, pNode, fType);
-	
-	TXString dataTypeStr; pNode->GetNodeAttributeValue(XML_GDTF_RDMParam_AttrDataType, dataTypeStr);
-	GdtfConverter::Convert_RDMParamDataTypeEnum( dataTypeStr, pNode, fDataType);
-	
-	TXString commandStr; pNode->GetNodeAttributeValue(XML_GDTF_RDMParam_AttrCommand, commandStr);
-	GdtfConverter::Convert_RDMParam_CommandEnum( commandStr, pNode, fCommand);
-	
-	TXString sensorUnitStr; pNode->GetNodeAttributeValue(XML_GDTF_RDMParam_AttrSensorUnit, sensorUnitStr);
-	GdtfConverter::Convert_RDMParam_SensorUnitEnum( sensorUnitStr, pNode, fSensorUnit);
-	
-	TXString sensorUnitPrefxStr; pNode->GetNodeAttributeValue(XML_GDTF_RDMParam_AttrSensorUnitPrefix, sensorUnitPrefxStr);
-	GdtfConverter::Convert_RDMParam_SensorUnitPrefixEnum( sensorUnitPrefxStr, pNode, fSensorUnitPrefix);
-	
-	TXString minValueStr; pNode->GetNodeAttributeValue(XML_GDTF_RDMParam_AttrMinValue, minValueStr);
-	GdtfConverter::ConvertInteger(minValueStr, pNode, fMinValue);
-	
-	TXString maxValueStr; pNode->GetNodeAttributeValue(XML_GDTF_RDMParam_AttrMaxValue, maxValueStr);
-	GdtfConverter::ConvertInteger(maxValueStr, pNode, fMaxValue);
-	
-	TXString pdlSizeStr; pNode->GetNodeAttributeValue(XML_GDTF_RDMParam_AttrPDLSize, pdlSizeStr);
-	GdtfConverter::ConvertInteger( pdlSizeStr, pNode, fPDLSize);
-	
-	pNode->GetNodeAttributeValue(XML_GDTF_RDMParam_AttrDescription, fDescription);
-	
-	// Read the childs
-	GdtfConverter::TraverseMultiNodes(pNode, "", [this] (IXMLFileNodePtr objNode,const TXString& childNodeName) -> void
-									  {
-										  
-										  GdtfRDMParameterValue* paramValPtr = nullptr;
-										  
-										  TXString nodeName;
-										  objNode->GetNodeName(nodeName);
-										  
-										  if	  ( nodeName == XML_GDTF_RDMValue_UNSIGNED_BYTE)				{ paramValPtr = new GdtfRDMValue_UNSIGNED_BYTE(); }
-										  else if (nodeName == XML_GDTF_RDMValue_SIGNED_BYTE)					{ paramValPtr = new GdtfRDMValue_SIGNED_BYTE(); }
-										  else if (nodeName == XML_GDTF_RDMValue_UNSIGNED_WORD)					{ paramValPtr = new GdtfRDMValue_UNSIGNED_WORD(); }
-										  else if (nodeName == XML_GDTF_RDMValue_SIGNED_WORD)					{ paramValPtr = new GdtfRDMValue_SIGNED_WORD(); }
-										  else if (nodeName == XML_GDTF_RDMValue_UNSIGNED_DWORD)				{ paramValPtr = new GdtfRDMValue_SIGNED_DWORD(); }
-										  else if (nodeName == XML_GDTF_RDMValue_SIGNED_DWORD)					{ paramValPtr = new GdtfRDMValue_UNSIGNED_DWORD(); }
-										  else if (nodeName == XML_GDTF_RDMValue_ASCII)							{ paramValPtr = new GdtfRDMValue_ASCII(); }
-										  else if (nodeName == XML_GDTF_RDMValueBool)							{ paramValPtr = new GdtfRDMValueBool(); }
-										  else if (nodeName == XML_GDTF_RDMValue_DMX_PERSONALITY_DESCRIPTION)	{ paramValPtr = new GdtfGdtfRDMValue_DMX_PERSONALITY_DESCRIPTION(); }
-										  else if (nodeName == XML_GDTF_RDMValue_SLOT_INFO)						{ paramValPtr = new GdtfRDMValue_SLOT_INFO(); }
-										  else if (nodeName == XML_GDTF_RDMValue_STATUS_ID_DESCRIPTION)			{ paramValPtr = new GdtfRDMValue_STATUS_ID_DESCRIPTION();  }
-										  else																	{ DSTOP((kEveryone, "Unexpected Node in RDM Parameter"));}
-										  
-										  
-										  if (paramValPtr)
-										  {
-											  paramValPtr->ReadFromNode(objNode);
-											  fParameterValueArray.push_back(paramValPtr);
-										  }
-									  } );
-}
-
-void SceneData::GdtfRDMParameter::OnErrorCheck(const IXMLFileNodePtr& pNode)
-{
-	//------------------------------------------------------------------------------------
-	// Call the parent
-	GdtfObject::OnErrorCheck(pNode);
-
-	//------------------------------------------------------------------------------------
-	// Create needed and optional Attribute Arrays
-	TXStringArray needed;
-	TXStringArray optional;
-	needed.push_back(XML_GDTF_RDMParam_AttrName);
-	needed.push_back(XML_GDTF_RDMParam_AttrType);
-	needed.push_back(XML_GDTF_RDMParam_AttrDataType);
-	needed.push_back(XML_GDTF_RDMParam_AttrCommand);
-	needed.push_back(XML_GDTF_RDMParam_AttrSensorUnit);
-	needed.push_back(XML_GDTF_RDMParam_AttrSensorUnitPrefix);
-	needed.push_back(XML_GDTF_RDMParam_AttrMinValue);
-	needed.push_back(XML_GDTF_RDMParam_AttrMaxValue);
-	needed.push_back(XML_GDTF_RDMParam_AttrPDLSize);
-	needed.push_back(XML_GDTF_RDMParam_AttrDescription);
-	optional.push_back(XML_GDTF_RDMParam_AttrPID);
-
-	//------------------------------------------------------------------------------------
-	// Check Attributes for node
-	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
-}
-
-SceneData::GdtfRDMParameterValue::GdtfRDMParameterValue()
-{
-}
-
-SceneData::GdtfRDMParameterValue::~GdtfRDMParameterValue()
-{
-}
-
-SceneData::GdtfRDMValue_RealTimeClock::GdtfRDMValue_RealTimeClock()
-{
-	fYear = 0;
-	fMonth = 0;
-	fDay = 0;
-	fHours = 0;
-	fMinute = 0;
-	fSecond = 0;
-}
-
-SceneData::GdtfRDMValue_RealTimeClock::GdtfRDMValue_RealTimeClock(Sint32 year, Sint32 month, Sint32 day, Sint32 hours, Sint32 minute, Sint32 second, EGdtf_RDMValue_ThresholdOperator thresholdOperator)
-: GdtfRDMValue_RealTimeClock()
-{
-	fYear     = year;
-	fMonth    = month;
-	fDay      = day;
-	fHours    = hours;
-	fMinute   = minute;
-	fSecond   = second;
-	fThresholdOperator = thresholdOperator;
-}
-
-SceneData::GdtfRDMValue_RealTimeClock::~GdtfRDMValue_RealTimeClock()
-{
-}
-
-EGdtfObjectType SceneData::GdtfRDMValue_RealTimeClock::GetObjectType()
-{
-	return EGdtfObjectType::eGdtfRDMValue_REAL_TIME_CLOCK;
-}
-
-Sint32 SceneData::GdtfRDMValue_RealTimeClock::GetYear() const
-{
-	return fYear;
-}
-
-Sint32 SceneData::GdtfRDMValue_RealTimeClock::GetMonth() const
-{
-	return fMonth;
-}
-
-Sint32 SceneData::GdtfRDMValue_RealTimeClock::GetDay() const
-{
-	return fDay;
-}
-
-Sint32 SceneData::GdtfRDMValue_RealTimeClock::GetHours() const
-{
-	return fHours;
-}
-
-Sint32 SceneData::GdtfRDMValue_RealTimeClock::GetMinute() const
-{
-	return fMinute;
-}
-
-Sint32 SceneData::GdtfRDMValue_RealTimeClock::GetSecond() const
-{
-	return fSecond;
-}
-
-EGdtf_RDMValue_ThresholdOperator SceneData::GdtfRDMValue_RealTimeClock::GetThresholdOperator() const
-{
-	return fThresholdOperator;
-}
-
-void SceneData::GdtfRDMValue_RealTimeClock::SetYear(Sint32 val)
-{
-	fYear = val;
-}
-
-void SceneData::GdtfRDMValue_RealTimeClock::SetMonth(Sint32 val)
-{
-	fMonth = val;
-}
-
-void SceneData::GdtfRDMValue_RealTimeClock::SetDay(Sint32 val)
-{
-	fDay = val;
-}
-
-void SceneData::GdtfRDMValue_RealTimeClock::SetHours(Sint32 val)
-{
-	fHours = val;
-}
-
-void SceneData::GdtfRDMValue_RealTimeClock::SetMinute(Sint32 val)
-{
-	fMinute = val;
-}
-
-void SceneData::GdtfRDMValue_RealTimeClock::SetSecond(Sint32 val)
-{
-	fSecond = val;
-}
-
-void SceneData::GdtfRDMValue_RealTimeClock::SetThresholdOperator(EGdtf_RDMValue_ThresholdOperator val)
-{
-	fThresholdOperator = val;
-}
-
-TXString SceneData::GdtfRDMValue_RealTimeClock::GetNodeName()
-{
-	return XML_GDTF_RDMValue_REAL_TIME_CLOCK;
-}
-
-void SceneData::GdtfRDMValue_RealTimeClock::OnPrintToFile(IXMLFileNodePtr pNode)
-{
-	
-	//------------------------------------------------------------------------------------
-	// Call the parent
-	GdtfObject::OnPrintToFile(pNode);
-	
-	//------------------------------------------------------------------------------------
-	// Print the attributes
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMValue_REAL_TIME_CLOCK_AttrYear, GdtfConverter::ConvertInteger(fYear));
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMValue_REAL_TIME_CLOCK_AttrMonth, GdtfConverter::ConvertInteger(fMonth));
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMValue_REAL_TIME_CLOCK_AttrDay, GdtfConverter::ConvertInteger(fDay));
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMValue_REAL_TIME_CLOCK_AttrHours, GdtfConverter::ConvertInteger(fHours));
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMValue_REAL_TIME_CLOCK_AttrMinute, GdtfConverter::ConvertInteger(fMinute));
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMValue_REAL_TIME_CLOCK_AttrSecond, GdtfConverter::ConvertInteger(fSecond));
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMValue_REAL_TIME_CLOCK_AttrThresholdOperator,
-         GdtfConverter::ConvertEGdtf_RDMValue_ThresholdOperatorEnum (fThresholdOperator));
-}
-
-void SceneData::GdtfRDMValue_RealTimeClock::OnReadFromNode(const IXMLFileNodePtr & pNode)
-{
-	//------------------------------------------------------------------------------------
-	// Call the parent
-	GdtfObject::OnReadFromNode(pNode);
-	
-	//------------------------------------------------------------------------------------
-	// Get the attributes
-	TXString yearStr; pNode->GetNodeAttributeValue(XML_GDTF_RDMValue_REAL_TIME_CLOCK_AttrYear, yearStr);
-	GdtfConverter::ConvertInteger(yearStr, pNode, fYear);
-	
-	TXString monthStr; pNode->GetNodeAttributeValue(XML_GDTF_RDMValue_REAL_TIME_CLOCK_AttrMonth, monthStr);
-	GdtfConverter::ConvertInteger(monthStr, pNode, fMonth);
-	
-	TXString dayStr; pNode->GetNodeAttributeValue(XML_GDTF_RDMValue_REAL_TIME_CLOCK_AttrDay, dayStr);
-	GdtfConverter::ConvertInteger(dayStr, pNode, fDay);
-	
-	TXString hourStr; pNode->GetNodeAttributeValue(XML_GDTF_RDMValue_REAL_TIME_CLOCK_AttrHours, hourStr);
-	GdtfConverter::ConvertInteger(hourStr, pNode, fHours);
-	
-	TXString minuteStr; pNode->GetNodeAttributeValue(XML_GDTF_RDMValue_REAL_TIME_CLOCK_AttrMinute, minuteStr);
-	GdtfConverter::ConvertInteger(minuteStr, pNode, fMinute);
-	
-	TXString secondStr; pNode->GetNodeAttributeValue(XML_GDTF_RDMValue_REAL_TIME_CLOCK_AttrSecond, secondStr);
-	GdtfConverter::ConvertInteger(secondStr, pNode, fSecond);
-	
-	TXString thresholdOperStr; pNode->GetNodeAttributeValue(XML_GDTF_RDMValue_REAL_TIME_CLOCK_AttrThresholdOperator, thresholdOperStr);
-	GdtfConverter::ConvertEGdtf_RDMValue_ThresholdOperatorEnum(thresholdOperStr, pNode, fThresholdOperator);
-}
-
-void SceneData::GdtfRDMValue_RealTimeClock::OnErrorCheck(const IXMLFileNodePtr& pNode)
-{
-	//------------------------------------------------------------------------------------
-	// Call the parent
-	GdtfObject::OnErrorCheck(pNode);
-
-	//------------------------------------------------------------------------------------
-	// Create needed and optional Attribute Arrays
-	TXStringArray needed;
-	TXStringArray optional;
-	needed.push_back(XML_GDTF_RDMValue_REAL_TIME_CLOCK_AttrYear);
-	needed.push_back(XML_GDTF_RDMValue_REAL_TIME_CLOCK_AttrMonth);
-	needed.push_back(XML_GDTF_RDMValue_REAL_TIME_CLOCK_AttrDay);
-	needed.push_back(XML_GDTF_RDMValue_REAL_TIME_CLOCK_AttrHours);
-	needed.push_back(XML_GDTF_RDMValue_REAL_TIME_CLOCK_AttrMinute);
-	needed.push_back(XML_GDTF_RDMValue_REAL_TIME_CLOCK_AttrSecond);
-	needed.push_back(XML_GDTF_RDMValue_REAL_TIME_CLOCK_AttrThresholdOperator);
-
-	//------------------------------------------------------------------------------------
-	// Check Attributes for node
-	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
-}
-
-SceneData::GdtfRDMSensorNotification::GdtfRDMSensorNotification()
-{
-	fSensorOffset = 0;
-}
-
-SceneData::GdtfRDMSensorNotification::GdtfRDMSensorNotification(Sint32 sensorOffset) : GdtfRDMSensorNotification()
-{
-	fSensorOffset = sensorOffset;
-}
-
-SceneData::GdtfRDMSensorNotification::~GdtfRDMSensorNotification()
-{
-	for (GdtfRDMValueSensor* ptr : fSensorValueArray) { delete ptr; }
-}
-
-EGdtfObjectType SceneData::GdtfRDMSensorNotification::GetObjectType()
-{
-	return EGdtfObjectType::eGdtfRDMSensorNotification;
-}
-
-Sint32 SceneData::GdtfRDMSensorNotification::GetSensorOffset() const
-{
-	return fSensorOffset;
-}
-
-TGdtfRDMValueSensorArray SceneData::GdtfRDMSensorNotification::GetSensorValueArray()
-{
-	return fSensorValueArray;
-}
-
-void SceneData::GdtfRDMSensorNotification::SetSensorOffset(Sint32 val)
-{
-}
-
-GdtfRDMValueSensor* SceneData::GdtfRDMSensorNotification::AddValueSensor(Sint32 value, Sint32 lowest, Sint32 highest, Sint32 recorded, EGdtf_RDMValue_ThresholdOperator thresholdOperator)
-{
-	GdtfRDMValueSensor* valueSensor = new GdtfRDMValueSensor(value, lowest, highest, recorded, thresholdOperator);
-	
-	fSensorValueArray.push_back(valueSensor);
-	
-	return valueSensor;
-}
-
-
-TXString SceneData::GdtfRDMSensorNotification::GetNodeName()
-{
-	return XML_GDTF_RDMSensorNotification;
-}
-
-void SceneData::GdtfRDMSensorNotification::OnPrintToFile(IXMLFileNodePtr pNode)
-{
-	//------------------------------------------------------------------------------------
-	// Call the parent
-	GdtfObject::OnPrintToFile(pNode);
-	
-	//------------------------------------------------------------------------------------
-	// Print the attributes
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMSensorNotif_AttrSensorOffset, GdtfConverter::ConvertInteger(fSensorOffset) );
-	
-	//------------------------------------------------------------------------------------
-	// Print the childs
-	for (GdtfRDMValueSensor* sensorDefini : fSensorValueArray)
-	{
-		sensorDefini->WriteToNode(pNode);
-	}
-}
-
-void SceneData::GdtfRDMSensorNotification::OnReadFromNode(const IXMLFileNodePtr & pNode)
-{
-	//------------------------------------------------------------------------------------
-	// Call the parent
-	GdtfObject::OnReadFromNode(pNode);
-	
-	//------------------------------------------------------------------------------------
-	// Get the attributes
-	TXString sensorOffStr; pNode->GetNodeAttributeValue(XML_GDTF_RDMSensorNotif_AttrSensorOffset, sensorOffStr);
-	GdtfConverter::ConvertInteger(sensorOffStr, pNode, fSensorOffset);
-	
-	// Read the childs
-	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_RDMValue_SENSOR_DEFINITION, [this](IXMLFileNodePtr objNode) -> void
-								 {
-									 GdtfRDMValueSensor* valueSensor = new GdtfRDMValueSensor();
-									 
-									 valueSensor->ReadFromNode(objNode);
-									 
-									 fSensorValueArray.push_back(valueSensor);
-									 return;
-								 });
-}
-
-void SceneData::GdtfRDMSensorNotification::OnErrorCheck(const IXMLFileNodePtr& pNode)
-{
-	//------------------------------------------------------------------------------------
-	// Call the parent
-	GdtfObject::OnErrorCheck(pNode);
-
-	//------------------------------------------------------------------------------------
-	// Create needed and optional Attribute Arrays
-	TXStringArray needed;
-	TXStringArray optional;
-	needed.push_back(XML_GDTF_RDMSensorNotif_AttrSensorOffset);
-
-	//------------------------------------------------------------------------------------
-	// Check Attributes for node
-	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
-}
-
-SceneData::GdtfRDMValueSensor::GdtfRDMValueSensor()
-{
-	fValue             = 0;
-	fLowest            = 0;
-	fHighest           = 0;
-	fRecorded          = 0;
-	fThresholdOperator = EGdtf_RDMValue_ThresholdOperator::IsNot;
-}
-
-SceneData::GdtfRDMValueSensor::GdtfRDMValueSensor(Sint32 value, Sint32 lowest, Sint32 highest, Sint32 recorded, EGdtf_RDMValue_ThresholdOperator thresholdOperator)
-{
-	fValue    = value;
-	fLowest   = lowest;
-	fHighest  = highest;
-	fRecorded = recorded ;
-	fThresholdOperator = thresholdOperator;
-}
-
-SceneData::GdtfRDMValueSensor::~GdtfRDMValueSensor()
-{
-}
-
-EGdtfObjectType SceneData::GdtfRDMValueSensor::GetObjectType()
-{
-	return EGdtfObjectType::eGdtfValueSensor;
-}
-
-Sint32 SceneData::GdtfRDMValueSensor::GetValue() const
-{
-	return fValue;
-}
-
-Sint32 SceneData::GdtfRDMValueSensor::GetLowest() const
-{
-	return fLowest;
-}
-
-Sint32 SceneData::GdtfRDMValueSensor::GetHighest() const
-{
-	return fHighest;
-}
-
-Sint32 SceneData::GdtfRDMValueSensor::GetRecorded() const
-{
-	return fRecorded;
-}
-
-EGdtf_RDMValue_ThresholdOperator SceneData::GdtfRDMValueSensor::GetThresholdOperator() const
-{
-	return fThresholdOperator;
-}
-
-void SceneData::GdtfRDMValueSensor::SetValue(Sint32 val)
-{
-	fValue = val;
-}
-
-void SceneData::GdtfRDMValueSensor::SetLowest(Sint32 val)
-{
-	fLowest = val;
-}
-
-void SceneData::GdtfRDMValueSensor::SetHighest(Sint32 val)
-{
-	fHighest = val;
-}
-
-void SceneData::GdtfRDMValueSensor::SetRecorded(Sint32 val)
-{
-	fRecorded = val;
-}
-
-void SceneData::GdtfRDMValueSensor::SetThresholdOperator(EGdtf_RDMValue_ThresholdOperator val)
-{
-	fThresholdOperator = val;
-}
-
-TXString SceneData::GdtfRDMValueSensor::GetNodeName()
-{
-	return XML_GDTF_RDMValueSensor;
-}
-
-void SceneData::GdtfRDMValueSensor::OnPrintToFile(IXMLFileNodePtr pNode)
-{
-	//------------------------------------------------------------------------------------
-	// Call the parent
-	GdtfObject::OnPrintToFile(pNode);
-	
-	//------------------------------------------------------------------------------------
-	// Print the attributes
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMValueSensorAttrValue, GdtfConverter::ConvertInteger (fValue) );
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMValueSensor_AttrLowest, GdtfConverter::ConvertInteger (fLowest) );
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMValueSensor_AttrHighest, GdtfConverter::ConvertInteger (fHighest) );
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMValueSensor_AttrRecorded, GdtfConverter::ConvertInteger (fRecorded) );
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMValueSensor_AttrThresholdOperator,
-         GdtfConverter::ConvertEGdtf_RDMValue_ThresholdOperatorEnum (fThresholdOperator) );
-}
-
-void SceneData::GdtfRDMValueSensor::OnReadFromNode(const IXMLFileNodePtr & pNode)
-{
-	//------------------------------------------------------------------------------------
-	// Call the parent
-	GdtfObject::OnReadFromNode(pNode);
-	
-	//------------------------------------------------------------------------------------
-	// Get the attributes
-	TXString valueStr;  pNode->GetNodeAttributeValue(XML_GDTF_RDMValueSensorAttrValue, valueStr);
-	GdtfConverter::ConvertInteger(valueStr, pNode, fValue);
-	
-	TXString lowestStr;  pNode->GetNodeAttributeValue(XML_GDTF_RDMValueSensor_AttrLowest, lowestStr);
-	GdtfConverter::ConvertInteger(lowestStr, pNode, fLowest);
-	
-	TXString highestStr;  pNode->GetNodeAttributeValue(XML_GDTF_RDMValueSensor_AttrHighest, highestStr);
-	GdtfConverter::ConvertInteger(highestStr, pNode, fHighest);
-	
-	TXString recoredStr;  pNode->GetNodeAttributeValue(XML_GDTF_RDMValueSensor_AttrRecorded, recoredStr);
-	GdtfConverter::ConvertInteger(recoredStr, pNode, fRecorded);
-	
-	TXString thresholdOperStr;  pNode->GetNodeAttributeValue(XML_GDTF_RDMValueSensor_AttrThresholdOperator, thresholdOperStr);
-	GdtfConverter::ConvertEGdtf_RDMValue_ThresholdOperatorEnum(thresholdOperStr, pNode, fThresholdOperator);
-}
-
-void SceneData::GdtfRDMValueSensor::OnErrorCheck(const IXMLFileNodePtr& pNode)
-{
-	//------------------------------------------------------------------------------------
-	// Call the parent
-	GdtfObject::OnErrorCheck(pNode);
 
-	//------------------------------------------------------------------------------------
-	// Create needed and optional Attribute Arrays
-	TXStringArray needed;
-	TXStringArray optional;
-	needed.push_back(XML_GDTF_RDMValueSensorAttrValue);
-	needed.push_back(XML_GDTF_RDMValueSensor_AttrLowest);
-	needed.push_back(XML_GDTF_RDMValueSensor_AttrHighest);
-	needed.push_back(XML_GDTF_RDMValueSensor_AttrRecorded);
-	needed.push_back(XML_GDTF_RDMValueSensor_AttrThresholdOperator);
-
-	//------------------------------------------------------------------------------------
-	// Check Attributes for node
-	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
-}
-
-SceneData::GdtfRDMAbsentNotification::GdtfRDMAbsentNotification()
-{
-}
-
-SceneData::GdtfRDMAbsentNotification::~GdtfRDMAbsentNotification()
-{
-}
-
-EGdtfObjectType SceneData::GdtfRDMAbsentNotification::GetObjectType()
-{
-	return EGdtfObjectType::eGdtfRDMNotification;
-}
-
-TXString SceneData::GdtfRDMAbsentNotification::GetNodeName()
-{
-	return XML_GDTF_RDMNotification;
-}
-
-SceneData::GdtfRDMParameterNotification::GdtfRDMParameterNotification()
-{
-}
-
-SceneData::GdtfRDMParameterNotification::GdtfRDMParameterNotification(Sint32 PID)
-{
-	fPID = PID;
-}
-
-SceneData::GdtfRDMParameterNotification::~GdtfRDMParameterNotification()
-{
-	for (GdtfRDMParameterValuePtr ptr : fParameterValueArray) { delete ptr; }
-}
-
-EGdtfObjectType SceneData::GdtfRDMParameterNotification::GetObjectType()
-{
-	return EGdtfObjectType::eGdtfRDMParameterNotification;
-}
-
-Sint32 SceneData::GdtfRDMParameterNotification::GetPID() const
-{
-	return fPID;
-}
-
-TGdtfRDMParameterValueArray SceneData::GdtfRDMParameterNotification::GetParameterValueArray() const
-{
-	return fParameterValueArray;
-}
-
-void SceneData::GdtfRDMParameterNotification::SetPID(Sint32 val)
-{
-	fPID = val;
-}
-
-GdtfRDMParameterValue* SceneData::GdtfRDMParameterNotification::AddRMDValueBool()
-{
-	GdtfRDMParameterValuePtr value = new GdtfRDMValueBool();
-	
-	fParameterValueArray.push_back(value);
-	
-	return value;
-}
-
-GdtfRDMParameterValue* SceneData::GdtfRDMParameterNotification::AddRealTimeClock()
-{
-	GdtfRDMParameterValue* value = new GdtfRDMValue_RealTimeClock();
-	
-	fParameterValueArray.push_back(value);
-	
-	return value;
-}
-
-TXString SceneData::GdtfRDMParameterNotification::GetNodeName()
-{
-	return XML_GDTF_RDMParamNotification;
-}
-
-void SceneData::GdtfRDMParameterNotification::OnPrintToFile(IXMLFileNodePtr pNode)
-{
-	//------------------------------------------------------------------------------------
-	// Call the parent
-	GdtfObject::OnPrintToFile(pNode);
-	
-	//------------------------------------------------------------------------------------
-	// Print the attributes
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMParamNotification_AttrPID, GdtfConverter::ConvertInteger(fPID) );
-	
-	//------------------------------------------------------------------------------------
-	// Print the childs
-	for (GdtfRDMParameterValue* paramValue : fParameterValueArray)
-	{
-		paramValue->WriteToNode(pNode);
-	}
-}
-
-void SceneData::GdtfRDMParameterNotification::OnReadFromNode(const IXMLFileNodePtr & pNode)
-{
-	//------------------------------------------------------------------------------------
-	// Call the parent
-	GdtfObject::OnReadFromNode(pNode);
-	
-	//------------------------------------------------------------------------------------
-	// Get the attributes
-	TXString pidStr;  pNode->GetNodeAttributeValue(XML_GDTF_RDMParamNotification_AttrPID, pidStr);
-	GdtfConverter::ConvertInteger(pidStr, pNode, fPID);
-	
-	// Read the childs
-	GdtfConverter::TraverseMultiNodes(pNode, "", [this] (IXMLFileNodePtr objNode,const TXString& childNodeName) -> void
-									  {
-										  GdtfRDMParameterValue* paramValPtr = nullptr;
-										  
-										  TXString nodeName;
-										  objNode->GetNodeName(nodeName);
-										  
-										  if	  ( nodeName == XML_GDTF_RDMValue_UNSIGNED_BYTE)	{ paramValPtr = new GdtfRDMValue_UNSIGNED_BYTE(); }
-										  else if (nodeName == XML_GDTF_RDMValue_SIGNED_BYTE)		{ paramValPtr = new GdtfRDMValue_SIGNED_BYTE(); }
-										  else if (nodeName == XML_GDTF_RDMValue_UNSIGNED_WORD)		{ paramValPtr = new GdtfRDMValue_UNSIGNED_WORD(); }
-										  else if (nodeName == XML_GDTF_RDMValue_SIGNED_WORD)		{ paramValPtr = new GdtfRDMValue_SIGNED_WORD(); }
-										  else if (nodeName == XML_GDTF_RDMValue_UNSIGNED_DWORD)	{ paramValPtr = new GdtfRDMValue_SIGNED_DWORD(); }
-										  else if (nodeName == XML_GDTF_RDMValue_SIGNED_DWORD)		{ paramValPtr = new GdtfRDMValue_UNSIGNED_DWORD(); }
-										  else if (nodeName == XML_GDTF_RDMValueBool)				{ paramValPtr = new GdtfRDMValueBool(); }
-										  else if (nodeName == XML_GDTF_RDMValue_REAL_TIME_CLOCK)	{ paramValPtr= new GdtfRDMValue_RealTimeClock(); }
-
-										  if (paramValPtr)
-										  {
-											  paramValPtr->ReadFromNode(objNode);
-											  fParameterValueArray.push_back(paramValPtr);
-										  }
-										  
-										  return;
-									  } );
-}
-
-void SceneData::GdtfRDMParameterNotification::OnErrorCheck(const IXMLFileNodePtr& pNode)
-{
-	//------------------------------------------------------------------------------------
-	// Call the parent
-	GdtfObject::OnErrorCheck(pNode);
-
-	//------------------------------------------------------------------------------------
-	// Create needed and optional Attribute Arrays
-	TXStringArray needed;
-	TXStringArray optional;
-	needed.push_back(XML_GDTF_RDMParamNotification_AttrPID);
-
-	//------------------------------------------------------------------------------------
-	// Check Attributes for node
-	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
-}
-
-SceneData::GdtfRDMValueBool::GdtfRDMValueBool()
-{
-	fValue				= EGdtf_RDMValueBool_Value::eNo;
-	fThresholdOperator	= EGdtf_RDMValue_ThresholdOperator::Is;
-}
-
-SceneData::GdtfRDMValueBool::GdtfRDMValueBool(EGdtf_RDMValueBool_Value value, EGdtf_RDMValue_ThresholdOperator thresholdOperator)
-: GdtfRDMValueBool()
-{
-	fValue = value;
-	fThresholdOperator = thresholdOperator;
-}
-
-SceneData::GdtfRDMValueBool::~GdtfRDMValueBool()
-{
-}
-
-EGdtfObjectType SceneData::GdtfRDMValueBool::GetObjectType()
-{
-	return EGdtfObjectType::eGdtfRDMValueBool;
-}
-
-EGdtf_RDMValueBool_Value SceneData::GdtfRDMValueBool::GetValue() const
-{
-	return fValue;
-}
-
-EGdtf_RDMValue_ThresholdOperator SceneData::GdtfRDMValueBool::GetThresholdOperator() const
-{
-	return fThresholdOperator;
-}
-
-void SceneData::GdtfRDMValueBool::SetValue(EGdtf_RDMValueBool_Value value)
+GdtfSoftwareVersionIDPtr SceneData::GdtfFTRDM::AddSoftwareVersID(size_t value)
 {
-	fValue = value;
-}
-
-void SceneData::GdtfRDMValueBool::SetThresholdOperator(EGdtf_RDMValue_ThresholdOperator value)
-{
-	fThresholdOperator = value;
-}
-
-TXString SceneData::GdtfRDMValueBool::GetNodeName()
-{
-	return XML_GDTF_RDMValueBool;
-}
-
-void SceneData::GdtfRDMValueBool::OnPrintToFile(IXMLFileNodePtr pNode)
-{
-	//------------------------------------------------------------------------------------
-	// Call the parent
-	GdtfObject::OnPrintToFile(pNode);
-	//------------------------------------------------------------------------------------
-	// Print the attributes
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMValueBool_AttrValue, GdtfConverter::ConvertEGdtf_RDMValueBool_ValueEnum(fValue) );
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMValueBool_AttrThresholdOperator,
-								 GdtfConverter::ConvertEGdtf_RDMValue_ThresholdOperatorEnum(fThresholdOperator));
-}
-
-void SceneData::GdtfRDMValueBool::OnReadFromNode(const IXMLFileNodePtr & pNode)
-{
-	//------------------------------------------------------------------------------------
-	// Call the parent
-	GdtfObject::OnReadFromNode(pNode);
-	//------------------------------------------------------------------------------------
-	// Get the attributes
-	TXString valueStr; pNode->GetNodeAttributeValue(XML_GDTF_RDMValueBool_AttrValue, valueStr);
-	GdtfConverter::ConvertEGdtf_RDMValue_ThresholdOperatorEnum(valueStr, pNode, fThresholdOperator);
+    GdtfSoftwareVersionIDPtr softID = new GdtfSoftwareVersionID(value);
 	
-	TXString thresHoldOpStr; pNode->GetNodeAttributeValue(XML_GDTF_RDMValueBool_AttrThresholdOperator, thresHoldOpStr);
-	GdtfConverter::ConvertEGdtf_RDMValue_ThresholdOperatorEnum(thresHoldOpStr, pNode, fThresholdOperator);
-}
-
-void SceneData::GdtfRDMValueBool::OnErrorCheck(const IXMLFileNodePtr& pNode)
-{
-	//------------------------------------------------------------------------------------
-	// Call the parent
-	GdtfObject::OnErrorCheck(pNode);
+    fSoftwareVersionIDArray.push_back(softID);
 
-	//------------------------------------------------------------------------------------
-	// Create needed and optional Attribute Arrays
-	TXStringArray needed;
-	TXStringArray optional;
-	needed.push_back(XML_GDTF_RDMValueBool_AttrValue);
-	needed.push_back(XML_GDTF_RDMValueBool_AttrThresholdOperator);
-
-	//------------------------------------------------------------------------------------
-	// Check Attributes for node
-	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
+    return softID;
 }
 
-SceneData::GdtfRDMNotifications::GdtfRDMNotifications()
+SceneData::GdtfDMXPersonality::GdtfDMXPersonality()
 {
-	fRDMAbsentNotification = nullptr;
+    fValue = 0;
+    fDMXMode = nullptr;
+    fDMXMode_Unresolved = "";
 }
 
-SceneData::GdtfRDMNotifications::~GdtfRDMNotifications()
+SceneData::GdtfDMXPersonality::GdtfDMXPersonality(size_t value, GdtfDmxModePtr dmxMode)
 {
-	if (fRDMAbsentNotification) { delete fRDMAbsentNotification; }
-	
-	for (GdtfRDMParameterNotificationPtr ptr : fRDMParamNotificationArray) { delete ptr; }
-	for (GdtfRDMSensorNotificationPtr ptr : fRDMSensorNotificationArray)   { delete ptr; }
+    fValue   = value;
+    fDMXMode = dmxMode;
+    fDMXMode_Unresolved = "";
 }
 
-GdtfRDMAbsentNotification* SceneData::GdtfRDMNotifications::GetAbsentNotification() const
-{
-	return fRDMAbsentNotification;
+SceneData::GdtfDMXPersonality::~GdtfDMXPersonality()
+{     
 }
 
-TGdtfRDMParameterNotificationArray SceneData::GdtfRDMNotifications::GetParameterNotificationArray() const
+EGdtfObjectType SceneData::GdtfDMXPersonality::GetObjectType()
 {
-	return fRDMParamNotificationArray;
+    return EGdtfObjectType::eGdtfDMXPersonality;
 }
 
-TGdtfRDMSensorNotificationArray SceneData::GdtfRDMNotifications::GetSensorNotificationArray() const
+size_t SceneData::GdtfDMXPersonality::GetValue() const
 {
-	return fRDMSensorNotificationArray;
+    return fValue;
 }
 
-void SceneData::GdtfRDMNotifications::SetAbsentNotification(GdtfRDMAbsentNotification * val)
+const TXString & SceneData::GdtfDMXPersonality::GetUnresolvedDMXMode() const
 {
-	fRDMAbsentNotification = val;
+    return fDMXMode_Unresolved;
 }
 
-GdtfRDMParameterNotification* SceneData::GdtfRDMNotifications::AddRDMParameterNotification(Sint32 PID)
+GdtfDmxModePtr SceneData::GdtfDMXPersonality::GetDMXMode() const
 {
-	GdtfRDMParameterNotification* paramNotification = new GdtfRDMParameterNotification(PID);
-	
-	fRDMParamNotificationArray.push_back(paramNotification);
-	
-	return paramNotification;
+    return fDMXMode;
 }
 
-GdtfRDMSensorNotification* SceneData::GdtfRDMNotifications::AddDMSensorNotification(Sint32 sensorOffset)
+void SceneData::GdtfDMXPersonality::SetValue(size_t val)
 {
-	GdtfRDMSensorNotification* sensorNotif = new GdtfRDMSensorNotification(sensorOffset);
-	
-	fRDMSensorNotificationArray.push_back(sensorNotif);
-	
-	return sensorNotif;
+    fValue = val;
 }
 
-EGdtfObjectType SceneData::GdtfRDMNotifications::GetObjectType()
+void SceneData::GdtfDMXPersonality::SetDMXMode(GdtfDmxModePtr mode)
 {
-	return EGdtfObjectType::eGdtfRDMNotifications;
+    fDMXMode = mode;
 }
 
-TXString SceneData::GdtfRDMNotifications::GetNodeName()
+TXString SceneData::GdtfDMXPersonality::GetNodeName()
 {
-	return XML_GDTF_RDMNotifications;
+    return XML_GDTF_DMXPersonalityNodeNam;
 }
 
-void SceneData::GdtfRDMNotifications::OnPrintToFile(IXMLFileNodePtr pNode)
+void GdtfDMXPersonality::OnPrintToFile(IXMLFileNodePtr pNode)
 {
-	//------------------------------------------------------------------------------------
-	// Call the parent
-	GdtfObject::OnPrintToFile(pNode);
-	//------------------------------------------------------------------------------------
-	// Print the attributes
-	fRDMAbsentNotification->WriteToNode(pNode);
-	//------------------------------------------------------------------------------------
-	// Print the childs
-	for (GdtfRDMParameterNotificationPtr feature : fRDMParamNotificationArray)
-	{
-		feature->WriteToNode(pNode);
-	}
-	
-	for (GdtfRDMSensorNotificationPtr feature : fRDMSensorNotificationArray)
-	{
-		feature->WriteToNode(pNode);
-	}
-}
+    //------------------------------------------------------------------------------------
+    // Call the parent
+    GdtfObject::OnPrintToFile(pNode);
 
-void SceneData::GdtfRDMNotifications::OnReadFromNode(const IXMLFileNodePtr & pNode)
-{
-	//------------------------------------------------------------------------------------
-	// Call the parent
-	GdtfObject::OnReadFromNode(pNode);
-	
-	//------------------------------------------------------------------------------------
-	// Get the attributes
-	// -
-	// Read the childs
-	IXMLFileNode* rdmAbsentNotifNode;
-	if (VCOM_SUCCEEDED(pNode->GetChildNode(XML_GDTF_FTRDM, &rdmAbsentNotifNode)))
-	{
-		fRDMAbsentNotification = new GdtfRDMAbsentNotification();
-		fRDMAbsentNotification->ReadFromNode(rdmAbsentNotifNode);
-	}
-	
-	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_RDMParamNotification, [this](IXMLFileNodePtr objNode) -> void
-								 {
-									 GdtfRDMParameterNotificationPtr paramNotif = new GdtfRDMParameterNotification ();
-									 
-									 paramNotif->ReadFromNode(objNode);
-									 
-									 fRDMParamNotificationArray.push_back(paramNotif);
-									 return;
-								 });
-	
-	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_RDMSensorNotification, [this](IXMLFileNodePtr objNode) -> void
-								 {
-									 GdtfRDMSensorNotificationPtr sensorNotif = new GdtfRDMSensorNotification();
-									 
-									 sensorNotif->ReadFromNode(objNode);
-									 
-									 fRDMSensorNotificationArray.push_back(sensorNotif);
-									 return;
-								 });
+    //------------------------------------------------------------------------------------
+    // Print the attributes
+    pNode->SetNodeAttributeValue(XML_GDTF_DMXPersonalityValue, GdtfConverter::ConvertInteger(fValue));
+    pNode->SetNodeAttributeValue(XML_GDTF_DMXPersonalityDMXMode, fDMXMode->GetModeName() );
 }
 
-void SceneData::GdtfRDMNotifications::OnErrorCheck(const IXMLFileNodePtr& pNode)
+void GdtfDMXPersonality::OnReadFromNode(const IXMLFileNodePtr& pNode)
 {
-	//------------------------------------------------------------------------------------
-	// Call the parent
-	GdtfObject::OnErrorCheck(pNode);
+    //------------------------------------------------------------------------------------
+    // Call the parent
+    GdtfObject::OnReadFromNode(pNode);
 
-	//------------------------------------------------------------------------------------
-	// Create needed and optional Attribute Arrays
-	TXStringArray needed;
-	TXStringArray optional;
+    //------------------------------------------------------------------------------------
+    // Get the attributes	
+    TXString valueStr;
+    pNode->GetNodeAttributeValue(XML_GDTF_DMXPersonalityValue, valueStr);
+    GdtfConverter::ConvertInteger(valueStr, pNode, fValue);
 
-	//------------------------------------------------------------------------------------
-	// Check Attributes for node
-	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
+    pNode->GetNodeAttributeValue(XML_GDTF_DMXPersonalityDMXMode, fDMXMode_Unresolved);
 }
 
 SceneData::GdtfProtocols::GdtfProtocols()
@@ -7505,54 +6365,53 @@ void SceneData::GdtfProtocols::OnReadFromNode(const IXMLFileNodePtr & pNode)
 {
 	//------------------------------------------------------------------------------------
 	// Call the parent
-	GdtfObject::OnReadFromNode(pNode);
+	 GdtfObject::OnReadFromNode(pNode);
 	
 	//------------------------------------------------------------------------------------
-	// Read the childs
-	
-	IXMLFileNode* ftrdmNode;
+	// Read the childs	
+	IXMLFileNodePtr ftrdmNode;
 	if (VCOM_SUCCEEDED( pNode->GetChildNode(XML_GDTF_FTRDM, &ftrdmNode)) )
 	{
 		fRDM = new GdtfFTRDM();
 		fRDM->ReadFromNode(ftrdmNode);
 	}
 	
-	IXMLFileNode* artNetNode;
+	IXMLFileNodePtr artNetNode;
 	if (VCOM_SUCCEEDED(pNode->GetChildNode(XML_GDTF_ArtNet, &artNetNode)))
 	{
 		fArtNet = new GdtfArtNet();
 		fArtNet->ReadFromNode(artNetNode);
 	}
 	
-	IXMLFileNode* sAcnNode;
+	IXMLFileNodePtr sAcnNode;
 	if (VCOM_SUCCEEDED(pNode->GetChildNode(XML_GDTF_sACN, &sAcnNode)))
 	{
 		fsACN = new GdtfsAcn();
 		fsACN->ReadFromNode(sAcnNode);
 	}
 	
-	IXMLFileNode* kinetNode;
+	IXMLFileNodePtr kinetNode;
 	if (VCOM_SUCCEEDED(pNode->GetChildNode(XML_GDTF_KiNET, &kinetNode)))
 	{
 		fKiNET = new GdtfKiNET();
 		fKiNET->ReadFromNode(kinetNode);
 	}
 	
-	IXMLFileNode* posiStageNetNode;
+	IXMLFileNodePtr posiStageNetNode;
 	if (VCOM_SUCCEEDED(pNode->GetChildNode(XML_GDTF_PosiStageNet, &posiStageNetNode)))
 	{
 		fPosiStageNet = new GdtfPosiStageNet();
 		fPosiStageNet->ReadFromNode(posiStageNetNode);
 	}
 	
-	IXMLFileNode* openSoundControlNode;
+	IXMLFileNodePtr openSoundControlNode;
 	if (VCOM_SUCCEEDED(pNode->GetChildNode(XML_GDTF_OpenSoundControl, &openSoundControlNode)))
 	{
 		fOpenSoundControl = new GdtfOpenSoundControl();
 		fOpenSoundControl->ReadFromNode(openSoundControlNode);
 	}
 	
-	IXMLFileNode* ctipNode;
+	IXMLFileNodePtr ctipNode;
 	if (VCOM_SUCCEEDED(pNode->GetChildNode(XML_GDTF_CITP, &ctipNode)))
 	{
 		fCITP = new GdtfCITP();
@@ -7570,775 +6429,6 @@ void SceneData::GdtfProtocols::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	// Create needed and optional Attribute Arrays
 	TXStringArray needed;
 	TXStringArray optional;
-
-	//------------------------------------------------------------------------------------
-	// Check Attributes for node
-	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
-}
-
-SceneData::GdtfRDMParameterValue_Numeric::GdtfRDMParameterValue_Numeric()
-{
-	fThresholdOperator = EGdtf_RDMValue_ThresholdOperator::Is;
-	fValue = 0;
-}
-
-SceneData::GdtfRDMParameterValue_Numeric::GdtfRDMParameterValue_Numeric(Sint32 value, EGdtf_RDMValue_ThresholdOperator thresholdOperator)
-: GdtfRDMParameterValue_Numeric()
-{
-	fValue = value;
-	fThresholdOperator = thresholdOperator;
-}
-
-SceneData::GdtfRDMParameterValue_Numeric::~GdtfRDMParameterValue_Numeric()
-{
-}
-
-Sint32 SceneData::GdtfRDMParameterValue_Numeric::GetValue() const
-{
-	return fValue;
-}
-
-EGdtf_RDMValue_ThresholdOperator SceneData::GdtfRDMParameterValue_Numeric::GetThresholdOperator() const
-{
-	return fThresholdOperator;
-}
-
-void SceneData::GdtfRDMParameterValue_Numeric::SetValue(Sint32 value)
-{
-	fValue = value;
-}
-
-void SceneData::GdtfRDMParameterValue_Numeric::SetThresholdOperator(EGdtf_RDMValue_ThresholdOperator value)
-{
-	fThresholdOperator = value;
-}
-
-void SceneData::GdtfRDMParameterValue_Numeric::OnPrintToFile(IXMLFileNodePtr pNode)
-{
-	
-	//------------------------------------------------------------------------------------
-	// Call the parent
-	GdtfObject::OnPrintToFile(pNode);
-	
-	//------------------------------------------------------------------------------------
-	// Print the attributes
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMValue_Numeric_AttrValue, GdtfConverter::ConvertInteger(fValue) );
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMValue_Numeric_AttrThresholdOperator,
-         GdtfConverter::ConvertEGdtf_RDMValue_ThresholdOperatorEnum (fThresholdOperator));
-}
-
-void SceneData::GdtfRDMParameterValue_Numeric::OnReadFromNode(const IXMLFileNodePtr & pNode)
-{
-	//------------------------------------------------------------------------------------
-	// Call the parent
-	GdtfObject::OnReadFromNode(pNode);
-
-	//------------------------------------------------------------------------------------
-	// Get the attributes
-	TXString valueStr; pNode->GetNodeAttributeValue(XML_GDTF_RDMValue_Numeric_AttrValue, valueStr);
-	GdtfConverter::ConvertInteger(valueStr, pNode, fValue);
-	
-	TXString thresholdOperatorStr; pNode->GetNodeAttributeValue(XML_GDTF_RDMValue_Numeric_AttrThresholdOperator, thresholdOperatorStr);
-	GdtfConverter::ConvertEGdtf_RDMValue_ThresholdOperatorEnum(thresholdOperatorStr, pNode, fThresholdOperator);
-}
-
-void SceneData::GdtfRDMParameterValue_Numeric::OnErrorCheck(const IXMLFileNodePtr& pNode)
-{
-	//------------------------------------------------------------------------------------
-	// Call the parent
-	GdtfObject::OnErrorCheck(pNode);
-
-	//------------------------------------------------------------------------------------
-	// Create needed and optional Attribute Arrays
-	TXStringArray needed;
-	TXStringArray optional;
-	needed.push_back(XML_GDTF_RDMValue_Numeric_AttrValue);
-	needed.push_back(XML_GDTF_RDMValue_Numeric_AttrThresholdOperator);
-
-	//------------------------------------------------------------------------------------
-	// Check Attributes for node
-	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
-}
-
-SceneData::GdtfRDMValue_UNSIGNED_BYTE::GdtfRDMValue_UNSIGNED_BYTE()
-{
-}
-
-SceneData::GdtfRDMValue_UNSIGNED_BYTE::GdtfRDMValue_UNSIGNED_BYTE(Sint32 value, EGdtf_RDMValue_ThresholdOperator thresholdOperator)
-: GdtfRDMParameterValue_Numeric(value, thresholdOperator)
-{
-}
-
-SceneData::GdtfRDMValue_UNSIGNED_BYTE::~GdtfRDMValue_UNSIGNED_BYTE()
-{
-}
-
-EGdtfObjectType SceneData::GdtfRDMValue_UNSIGNED_BYTE::GetObjectType()
-{
-	return EGdtfObjectType::eGdtfRDMValue_UNSIGNED_BYTE;
-}
-
-TXString SceneData::GdtfRDMValue_UNSIGNED_BYTE::GetNodeName()
-{
-	return XML_GDTF_RDMValue_UNSIGNED_BYTE;
-}
-
-SceneData::GdtfRDMValue_SIGNED_BYTE::GdtfRDMValue_SIGNED_BYTE()
-{
-}
-
-SceneData::GdtfRDMValue_SIGNED_BYTE::GdtfRDMValue_SIGNED_BYTE(Sint32 value, EGdtf_RDMValue_ThresholdOperator thresholdOperator)
-: GdtfRDMParameterValue_Numeric(value, thresholdOperator)
-{
-}
-
-SceneData::GdtfRDMValue_SIGNED_BYTE::~GdtfRDMValue_SIGNED_BYTE()
-{
-}
-
-EGdtfObjectType SceneData::GdtfRDMValue_SIGNED_BYTE::GetObjectType()
-{
-	return EGdtfObjectType::eGdtfRDMValue_SIGNED_BYTE;
-}
-
-TXString SceneData::GdtfRDMValue_SIGNED_BYTE::GetNodeName()
-{
-	return XML_GDTF_RDMValue_UNSIGNED_BYTE;
-}
-
-SceneData::GdtfRDMValue_UNSIGNED_WORD::GdtfRDMValue_UNSIGNED_WORD()
-{
-}
-
-SceneData::GdtfRDMValue_UNSIGNED_WORD::GdtfRDMValue_UNSIGNED_WORD(Sint32 value, EGdtf_RDMValue_ThresholdOperator thresholdOperator)
-: GdtfRDMParameterValue_Numeric(value, thresholdOperator)
-{
-}
-
-SceneData::GdtfRDMValue_UNSIGNED_WORD::~GdtfRDMValue_UNSIGNED_WORD()
-{
-}
-
-EGdtfObjectType SceneData::GdtfRDMValue_UNSIGNED_WORD::GetObjectType()
-{
-	return EGdtfObjectType::eGdtfRDMValue_UNSIGNED_WORD;
-}
-
-TXString SceneData::GdtfRDMValue_UNSIGNED_WORD::GetNodeName()
-{
-	return XML_GDTF_RDMValue_UNSIGNED_WORD;
-}
-
-SceneData::GdtfRDMValue_SIGNED_WORD::GdtfRDMValue_SIGNED_WORD()
-{
-}
-
-SceneData::GdtfRDMValue_SIGNED_WORD::GdtfRDMValue_SIGNED_WORD(Sint32 value, EGdtf_RDMValue_ThresholdOperator thresholdOperator)
-: GdtfRDMParameterValue_Numeric(value, thresholdOperator)
-{
-}
-
-SceneData::GdtfRDMValue_SIGNED_WORD::~GdtfRDMValue_SIGNED_WORD()
-{
-}
-
-EGdtfObjectType SceneData::GdtfRDMValue_SIGNED_WORD::GetObjectType()
-{
-	return EGdtfObjectType::eGdtfRDMValue_SIGNED_WORD;
-}
-
-TXString SceneData::GdtfRDMValue_SIGNED_WORD::GetNodeName()
-{
-	return XML_GDTF_RDMValue_SIGNED_WORD;
-}
-
-SceneData::GdtfRDMValue_UNSIGNED_DWORD::GdtfRDMValue_UNSIGNED_DWORD()
-{
-}
-
-SceneData::GdtfRDMValue_UNSIGNED_DWORD::GdtfRDMValue_UNSIGNED_DWORD(Sint32 value, EGdtf_RDMValue_ThresholdOperator thresholdOperator)
-: GdtfRDMParameterValue_Numeric(value, thresholdOperator)
-{
-}
-
-SceneData::GdtfRDMValue_UNSIGNED_DWORD::~GdtfRDMValue_UNSIGNED_DWORD()
-{
-}
-
-EGdtfObjectType SceneData::GdtfRDMValue_UNSIGNED_DWORD::GetObjectType()
-{
-	return EGdtfObjectType::eGdtfRDMValue_UNSIGNED_DWORD;
-}
-
-TXString SceneData::GdtfRDMValue_UNSIGNED_DWORD::GetNodeName()
-{
-	return XML_GDTF_RDMValue_UNSIGNED_DWORD;
-}
-
-
-SceneData::GdtfRDMValue_SIGNED_DWORD::GdtfRDMValue_SIGNED_DWORD()
-{
-}
-
-SceneData::GdtfRDMValue_SIGNED_DWORD::GdtfRDMValue_SIGNED_DWORD(Sint32 value, EGdtf_RDMValue_ThresholdOperator thresholdOperator)
-: GdtfRDMParameterValue_Numeric(value, thresholdOperator)
-{
-}
-
-SceneData::GdtfRDMValue_SIGNED_DWORD::~GdtfRDMValue_SIGNED_DWORD()
-{
-}
-
-EGdtfObjectType SceneData::GdtfRDMValue_SIGNED_DWORD::GetObjectType()
-{
-	return EGdtfObjectType::eGdtfRDMValue_SIGNED_DWORD;
-}
-
-TXString SceneData::GdtfRDMValue_SIGNED_DWORD::GetNodeName()
-{
-	return XML_GDTF_RDMValue_SIGNED_DWORD;
-}
-
-SceneData::GdtfRDMValue_ASCII::GdtfRDMValue_ASCII()
-{
-}
-
-SceneData::GdtfRDMValue_ASCII::GdtfRDMValue_ASCII(Sint32 value, EGdtf_RDMValue_ThresholdOperator thresholdOperator)
-: GdtfRDMParameterValue_Numeric(value, thresholdOperator)
-{
-}
-
-SceneData::GdtfRDMValue_ASCII::~GdtfRDMValue_ASCII()
-{
-}
-
-EGdtfObjectType SceneData::GdtfRDMValue_ASCII::GetObjectType()
-{
-	return EGdtfObjectType::eGdtfRDMValue_ASCII;
-}
-
-TXString SceneData::GdtfRDMValue_ASCII::GetNodeName()
-{
-	return XML_GDTF_RDMValue_ASCII;
-}
-
-SceneData::GdtfGdtfRDMValue_DMX_PERSONALITY_DESCRIPTION::GdtfGdtfRDMValue_DMX_PERSONALITY_DESCRIPTION()
-{
-	fFootPrint = 0;
-	fDescription = "";
-}
-
-SceneData::GdtfGdtfRDMValue_DMX_PERSONALITY_DESCRIPTION::GdtfGdtfRDMValue_DMX_PERSONALITY_DESCRIPTION(Sint32 footPrint, TXString& description)
-: GdtfGdtfRDMValue_DMX_PERSONALITY_DESCRIPTION()
-{
-	fFootPrint = footPrint;
-	fDescription = description;
-}
-
-SceneData::GdtfGdtfRDMValue_DMX_PERSONALITY_DESCRIPTION::~GdtfGdtfRDMValue_DMX_PERSONALITY_DESCRIPTION()
-{
-}
-
-EGdtfObjectType SceneData::GdtfGdtfRDMValue_DMX_PERSONALITY_DESCRIPTION::GetObjectType()
-{
-	return EGdtfObjectType::eGdtfRDMValue_DMX_PERSONALITY_DESCRIPTION;
-}
-
-Sint32 SceneData::GdtfGdtfRDMValue_DMX_PERSONALITY_DESCRIPTION::GetFootPrint() const
-{
-	return fFootPrint;
-}
-
-const TXString & SceneData::GdtfGdtfRDMValue_DMX_PERSONALITY_DESCRIPTION::GetDescription() const
-{
-	return fDescription;
-}
-
-void SceneData::GdtfGdtfRDMValue_DMX_PERSONALITY_DESCRIPTION::SetFootPrint(Sint32 val)
-{
-	fFootPrint = val;
-}
-
-void SceneData::GdtfGdtfRDMValue_DMX_PERSONALITY_DESCRIPTION::SetDescription(const TXString & val)
-{
-	fDescription = val;
-}
-
-TXString SceneData::GdtfGdtfRDMValue_DMX_PERSONALITY_DESCRIPTION::GetNodeName()
-{
-	return XML_GDTF_RDMValue_DMX_PERSONALITY_DESCRIPTION;
-}
-
-void SceneData::GdtfGdtfRDMValue_DMX_PERSONALITY_DESCRIPTION::OnPrintToFile(IXMLFileNodePtr pNode)
-{
-	//------------------------------------------------------------------------------------
-	// Call the parent
-	GdtfObject::OnPrintToFile(pNode);
-	//------------------------------------------------------------------------------------
-	// Print the attributes
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMValue_DMX_PERSON_DESC_AttrFootPrint,   GdtfConverter::ConvertInteger(fFootPrint) );
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMValue_DMX_PERSON_DESC_AttrDescription, fDescription);
-}
-
-void SceneData::GdtfGdtfRDMValue_DMX_PERSONALITY_DESCRIPTION::OnReadFromNode(const IXMLFileNodePtr & pNode)
-{
-	//------------------------------------------------------------------------------------
-	// Call the parent
-	GdtfObject::OnReadFromNode(pNode);
-	
-	//------------------------------------------------------------------------------------
-	// Get the attributes
-	TXString footPrintStr; pNode->GetNodeAttributeValue(XML_GDTF_RDMValue_DMX_PERSON_DESC_AttrFootPrint, footPrintStr);
-	GdtfConverter::ConvertInteger(footPrintStr, pNode, fFootPrint);
-	
-	pNode->GetNodeAttributeValue(XML_GDTF_RDMValue_DMX_PERSON_DESC_AttrDescription, fDescription);
-}
-
-void SceneData::GdtfGdtfRDMValue_DMX_PERSONALITY_DESCRIPTION::OnErrorCheck(const IXMLFileNodePtr& pNode)
-{
-	//------------------------------------------------------------------------------------
-	// Call the parent
-	GdtfObject::OnErrorCheck(pNode);
-
-	//------------------------------------------------------------------------------------
-	// Create needed and optional Attribute Arrays
-	TXStringArray needed;
-	TXStringArray optional;
-	needed.push_back(XML_GDTF_RDMValue_DMX_PERSON_DESC_AttrFootPrint);
-	needed.push_back(XML_GDTF_RDMValue_DMX_PERSON_DESC_AttrDescription);
-
-	//------------------------------------------------------------------------------------
-	// Check Attributes for node
-	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
-}
-
-SceneData::GdtfRDMValue_SENSOR_DEFINITION::GdtfRDMValue_SENSOR_DEFINITION()
-{
-	fRangeMinValue  = 0;
-	fRangeMaxValue  = 0;
-	fNormalMinValue = 0;
-	fNormalMaxValue = 0;
-		
-	fType   = EGdtf_RDMValue_SENSOR_DEFINITION_TYPE::SEND_TEMPERATURE;
-	fUnit   = EGdtf_RDMParam_SensorUnit::UNITS_NONE;
-	fPrefix = EGdtf_RDMParam_SensorUnitPrefix::PREFIX_NONE;
-	
-	fLowesHighestDetectionSupported = EGdtf_RDMValue_LowesHighestDetectionSupported::eNO;
-	fRecordValueSupported           = EGdtf_RDMValue_RecordValueSupported::eNO;
-	
-	fDescription = "";
-}
-
-SceneData::GdtfRDMValue_SENSOR_DEFINITION::GdtfRDMValue_SENSOR_DEFINITION(EGdtf_RDMValue_SENSOR_DEFINITION_TYPE type, EGdtf_RDMParam_SensorUnit unit, EGdtf_RDMParam_SensorUnitPrefix prefix, Sint32 rangeMinValue, Sint32 rangeMaxValue, Sint32 normalMinValue, Sint32 normalMaxValue, EGdtf_RDMValue_LowesHighestDetectionSupported lowesHighestDetectionSupported, EGdtf_RDMValue_RecordValueSupported recordValueSupported, TXString & description)
-{
-	fType                           = type;
-	fUnit                           = unit;
-	fPrefix                         = prefix;
-	fRangeMinValue                  = rangeMinValue;
-	fRangeMaxValue                  = rangeMaxValue;
-	fNormalMinValue                 = normalMinValue;
-	fNormalMaxValue                 = normalMaxValue;
-	fLowesHighestDetectionSupported = lowesHighestDetectionSupported;
-	fRecordValueSupported           = recordValueSupported;
-	fDescription                    = description;
-}
-
-SceneData::GdtfRDMValue_SENSOR_DEFINITION::~GdtfRDMValue_SENSOR_DEFINITION()
-{
-}
-
-EGdtfObjectType SceneData::GdtfRDMValue_SENSOR_DEFINITION::GetObjectType()
-{
-	return EGdtfObjectType::eRDMValue_SENSOR_DEFINITION;
-}
-
-EGdtf_RDMValue_SENSOR_DEFINITION_TYPE SceneData::GdtfRDMValue_SENSOR_DEFINITION::GetType() const
-{
-	return fType;
-}
-
-EGdtf_RDMParam_SensorUnit SceneData::GdtfRDMValue_SENSOR_DEFINITION::GetUnit() const
-{
-	return fUnit;
-}
-
-EGdtf_RDMParam_SensorUnitPrefix SceneData::GdtfRDMValue_SENSOR_DEFINITION::GetPrefix() const
-{
-	return fPrefix;
-}
-
-Sint32 SceneData::GdtfRDMValue_SENSOR_DEFINITION::GetRangeMinValue() const
-{
-	return fRangeMinValue;
-}
-
-Sint32 SceneData::GdtfRDMValue_SENSOR_DEFINITION::GetRangeMaxValue() const
-{
-	return fRangeMaxValue;
-}
-
-Sint32 SceneData::GdtfRDMValue_SENSOR_DEFINITION::GetNormalMinValue() const
-{
-	return fNormalMinValue;
-}
-
-Sint32 SceneData::GdtfRDMValue_SENSOR_DEFINITION::GetNormalMaxValueype() const // TODO: rename -ype
-{
-	return fNormalMaxValue;
-}
-
-EGdtf_RDMValue_LowesHighestDetectionSupported SceneData::GdtfRDMValue_SENSOR_DEFINITION::GetLowesHighestDetectionSupported() const
-{
-	return fLowesHighestDetectionSupported;
-}
-
-EGdtf_RDMValue_RecordValueSupported SceneData::GdtfRDMValue_SENSOR_DEFINITION::GetRecordValueSupported() const
-{
-	return fRecordValueSupported;
-}
-
-const TXString & SceneData::GdtfRDMValue_SENSOR_DEFINITION::GetDescription() const
-{
-	return fDescription;
-}
-
-void SceneData::GdtfRDMValue_SENSOR_DEFINITION::SetType(EGdtf_RDMValue_SENSOR_DEFINITION_TYPE val)
-{
-	fType = val;
-}
-
-void SceneData::GdtfRDMValue_SENSOR_DEFINITION::SetUnit(EGdtf_RDMParam_SensorUnit val)
-{
-	fUnit = val;
-}
-
-void SceneData::GdtfRDMValue_SENSOR_DEFINITION::SetPrefix(EGdtf_RDMParam_SensorUnitPrefix val)
-{
-	fPrefix = val;
-}
-
-void SceneData::GdtfRDMValue_SENSOR_DEFINITION::SetRangeMinValue(Sint32 val)
-{
-	fRangeMinValue = val;
-}
-
-void SceneData::GdtfRDMValue_SENSOR_DEFINITION::SetDescription(const TXString & val)
-{
-	fDescription = val;
-}
-
-TXString SceneData::GdtfRDMValue_SENSOR_DEFINITION::GetNodeName()
-{
-	return XML_GDTF_RDMValue_SENSOR_DEFINITION;
-}
-
-void SceneData::GdtfRDMValue_SENSOR_DEFINITION::OnPrintToFile(IXMLFileNodePtr pNode)
-{
-	//------------------------------------------------------------------------------------
-	// Call the parent
-	GdtfObject::OnPrintToFile(pNode);
-	//------------------------------------------------------------------------------------
-	// Print the attributes
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMValue_SENSOR_DEFINITION_AttrType, GdtfConverter::ConvertRDMValue_SENSOR_DEFINITION_TypeEnum(fType) );
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMValue_SENSOR_DEFINITION_AttrUnit, GdtfConverter::Convert_RDMParam_SensorUnitEnum(fUnit) );
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMValue_SENSOR_DEFINITION_AttrPrefix, GdtfConverter::Convert_RDMParam_SensorUnitPrefixEnum(fPrefix) );
-	
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMValue_SENSOR_DEFINITION_AttrRangeMinValue,  GdtfConverter::ConvertInteger(fRangeMinValue) );
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMValue_SENSOR_DEFINITION_AttrRangeMaxValue,  GdtfConverter::ConvertInteger(fRangeMaxValue) );
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMValue_SENSOR_DEFINITION_AttrNormalMinValue, GdtfConverter::ConvertInteger(fNormalMinValue) );
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMValue_SENSOR_DEFINITION_AttrNormalMaxValue, GdtfConverter::ConvertInteger(fNormalMaxValue) );
-	
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMValue_SENSOR_DEFINITION_AttrLowesHighestDetectionSupported,
-								 GdtfConverter::Convert_RDMValue_LowesHighestDetectionSupportedEnum (fLowesHighestDetectionSupported) );
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMValue_SENSOR_DEFINITION_AttrRecordValueSupported,
-								 GdtfConverter::Convert_RDMValue_RecordValueSupportedEnum (fRecordValueSupported) );
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMValue_SENSOR_DEFINITION_Attr_Description, fDescription);
-}
-
-void SceneData::GdtfRDMValue_SENSOR_DEFINITION::OnReadFromNode(const IXMLFileNodePtr & pNode)
-{
-	//------------------------------------------------------------------------------------
-	// Call the parent
-	GdtfObject::OnReadFromNode(pNode);
-	
-	//------------------------------------------------------------------------------------
-	// Get the attributes
-	TXString TypeStr; pNode->GetNodeAttributeValue(XML_GDTF_RDMValue_SENSOR_DEFINITION_AttrType, TypeStr);
-	GdtfConverter::ConvertRDMValue_SENSOR_DEFINITION_TypeEnum(TypeStr, pNode, fType);
-	
-	TXString UnitStr; pNode->GetNodeAttributeValue(XML_GDTF_RDMValue_SENSOR_DEFINITION_AttrUnit, UnitStr);
-	GdtfConverter::Convert_RDMParam_SensorUnitEnum (UnitStr, pNode, fUnit);
-	
-	TXString PrefixStr; pNode->GetNodeAttributeValue(XML_GDTF_RDMValue_SENSOR_DEFINITION_AttrPrefix, PrefixStr);
-	GdtfConverter::Convert_RDMParam_SensorUnitPrefixEnum(PrefixStr, pNode, fPrefix);
-	
-	TXString RangeMinValueStr; pNode->GetNodeAttributeValue(XML_GDTF_RDMValue_SENSOR_DEFINITION_AttrRangeMinValue, RangeMinValueStr);
-	GdtfConverter::ConvertInteger(RangeMinValueStr, pNode, fRangeMinValue);
-	
-	TXString RangeMaxValueStr; pNode->GetNodeAttributeValue(XML_GDTF_RDMValue_SENSOR_DEFINITION_AttrRangeMaxValue, RangeMaxValueStr);
-	GdtfConverter::ConvertInteger(RangeMaxValueStr, pNode, fRangeMaxValue);
-	
-	TXString NormalMinValueStr;pNode->GetNodeAttributeValue(XML_GDTF_RDMValue_SENSOR_DEFINITION_AttrNormalMinValue, NormalMinValueStr);
-	GdtfConverter::ConvertInteger(NormalMinValueStr, pNode, fNormalMinValue);
-	
-	TXString NormalMaxValueStr;pNode->GetNodeAttributeValue(XML_GDTF_RDMValue_SENSOR_DEFINITION_AttrNormalMaxValue, NormalMaxValueStr);
-	GdtfConverter::ConvertInteger(NormalMaxValueStr, pNode, fNormalMaxValue);
-	
-	TXString LowesHighestDetectionSupportedStr; pNode->GetNodeAttributeValue(XML_GDTF_RDMValue_SENSOR_DEFINITION_AttrLowesHighestDetectionSupported, LowesHighestDetectionSupportedStr);
-	GdtfConverter::Convert_RDMValue_LowesHighestDetectionSupportedEnum(LowesHighestDetectionSupportedStr, pNode, fLowesHighestDetectionSupported);
-	
-	TXString RecordValueSupportedStr;pNode->GetNodeAttributeValue(XML_GDTF_RDMValue_SENSOR_DEFINITION_AttrRecordValueSupported, RecordValueSupportedStr);
-	GdtfConverter::Convert_RDMValue_RecordValueSupportedEnum(RecordValueSupportedStr, pNode, fRecordValueSupported);
-	
-	pNode->GetNodeAttributeValue(XML_GDTF_RDMValue_SENSOR_DEFINITION_Attr_Description, fDescription);
-}
-
-void SceneData::GdtfRDMValue_SENSOR_DEFINITION::OnErrorCheck(const IXMLFileNodePtr& pNode)
-{
-	//------------------------------------------------------------------------------------
-	// Call the parent
-	GdtfObject::OnErrorCheck(pNode);
-
-	//------------------------------------------------------------------------------------
-	// Create needed and optional Attribute Arrays
-	TXStringArray needed;
-	TXStringArray optional;
-	needed.push_back(XML_GDTF_RDMValue_SENSOR_DEFINITION_AttrType);
-	needed.push_back(XML_GDTF_RDMValue_SENSOR_DEFINITION_AttrUnit);
-	needed.push_back(XML_GDTF_RDMValue_SENSOR_DEFINITION_AttrPrefix);
-	needed.push_back(XML_GDTF_RDMValue_SENSOR_DEFINITION_AttrRangeMinValue);
-	needed.push_back(XML_GDTF_RDMValue_SENSOR_DEFINITION_AttrRangeMaxValue);
-	needed.push_back(XML_GDTF_RDMValue_SENSOR_DEFINITION_AttrNormalMinValue);
-	needed.push_back(XML_GDTF_RDMValue_SENSOR_DEFINITION_AttrNormalMaxValue);
-	needed.push_back(XML_GDTF_RDMValue_SENSOR_DEFINITION_AttrLowesHighestDetectionSupported);
-	needed.push_back(XML_GDTF_RDMValue_SENSOR_DEFINITION_AttrRecordValueSupported);
-	optional.push_back(XML_GDTF_RDMValue_SENSOR_DEFINITION_Attr_Description);
-
-	//------------------------------------------------------------------------------------
-	// Check Attributes for node
-	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
-}
-
-void SceneData::GdtfRDMValue_SENSOR_DEFINITION::SetRangeMaxValue(Sint32 val)
-{
-	fRangeMaxValue = val;
-}
-
-void SceneData::GdtfRDMValue_SENSOR_DEFINITION::SetNormalMinValue(Sint32 val)
-{
-	fNormalMinValue = val;
-}
-
-void SceneData::GdtfRDMValue_SENSOR_DEFINITION::SetNormalMaxValueype(Sint32 val)
-{
-	fNormalMaxValue = val;
-}
-
-void SceneData::GdtfRDMValue_SENSOR_DEFINITION::SetLowesHighestDetectionSupported(EGdtf_RDMValue_LowesHighestDetectionSupported val)
-{
-	fLowesHighestDetectionSupported = val;
-}
-
-void SceneData::GdtfRDMValue_SENSOR_DEFINITION::SetRecordValueSupported(EGdtf_RDMValue_RecordValueSupported val)
-{
-	fRecordValueSupported = val;
-}
-
-SceneData::GdtfRDMValue_SLOT_INFO::GdtfRDMValue_SLOT_INFO()
-{
-	fOffset			= 0;
-	fType			= EGdtf_RDMValue_SLOT_INFO_Type::ST_PRIMARY;
-	fSlotLabelID	= EGdtf_RDMValue_SLOT_INFO_SlotLabelID::SD_BARN_DOOR;
-}
-
-SceneData::GdtfRDMValue_SLOT_INFO::GdtfRDMValue_SLOT_INFO(Sint32 offset, EGdtf_RDMValue_SLOT_INFO_Type type, EGdtf_RDMValue_SLOT_INFO_SlotLabelID slotLabelID)
-: GdtfRDMValue_SLOT_INFO()
-{
-	fOffset			= offset;
-	fType			= type;
-	fSlotLabelID	= slotLabelID;
-}
-
-SceneData::GdtfRDMValue_SLOT_INFO::~GdtfRDMValue_SLOT_INFO()
-{
-}
-
-EGdtfObjectType SceneData::GdtfRDMValue_SLOT_INFO::GetObjectType()
-{
-	return EGdtfObjectType::eGdtfRDMValue_SLOT_INFO;
-}
-
-Sint32 SceneData::GdtfRDMValue_SLOT_INFO::GetOffset() const
-{
-	return fOffset;
-}
-
-EGdtf_RDMValue_SLOT_INFO_Type SceneData::GdtfRDMValue_SLOT_INFO::GetType() const
-{
-	return fType;
-}
-
-EGdtf_RDMValue_SLOT_INFO_SlotLabelID SceneData::GdtfRDMValue_SLOT_INFO::GetSlotLabelID() const
-{
-	return fSlotLabelID;
-}
-
-void SceneData::GdtfRDMValue_SLOT_INFO::SetOffset(Sint32 val)
-{
-	fOffset = val;
-}
-
-void SceneData::GdtfRDMValue_SLOT_INFO::SetType(EGdtf_RDMValue_SLOT_INFO_Type val)
-{
-	fType = val;
-}
-
-void SceneData::GdtfRDMValue_SLOT_INFO::SetSlotLabelID(EGdtf_RDMValue_SLOT_INFO_SlotLabelID val)
-{
-	fSlotLabelID = val;
-}
-
-TXString SceneData::GdtfRDMValue_SLOT_INFO::GetNodeName()
-{
-	return XML_GDTF_RDMValue_SLOT_INFO;
-}
-
-void SceneData::GdtfRDMValue_SLOT_INFO::OnPrintToFile(IXMLFileNodePtr pNode)
-{
-	//------------------------------------------------------------------------------------
-	// Call the parent
-	GdtfObject::OnPrintToFile(pNode);
-	
-	//------------------------------------------------------------------------------------
-	// Print the attributes
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMValue_SLOT_INFO_AttrOffset,
-         GdtfConverter::ConvertInteger(fOffset));
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMValue_SLOT_INFO_AttrType,
-         GdtfConverter::ConvertRDMValue_SLOT_INFO_TypeEnum(fType) );
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMValue_SLOT_INFO_AttrSlotLabelID,
-         GdtfConverter::ConvertRDMValue_SLOT_INFO_SlotLabelIDEnum (fSlotLabelID) );
-}
-
-void SceneData::GdtfRDMValue_SLOT_INFO::OnReadFromNode(const IXMLFileNodePtr & pNode)
-{
-	//------------------------------------------------------------------------------------
-	// Call the parent
-	GdtfObject::OnReadFromNode(pNode);
-	
-	//------------------------------------------------------------------------------------
-	// Get the attributes
-	TXString offStr; pNode->GetNodeAttributeValue(XML_GDTF_RDMValue_SLOT_INFO_AttrOffset, offStr);
-	GdtfConverter::ConvertInteger(offStr, pNode, fOffset);
-	
-	TXString typeStr; pNode->GetNodeAttributeValue(XML_GDTF_RDMValue_SLOT_INFO_AttrType, typeStr);
-	GdtfConverter::ConvertRDMValue_SLOT_INFO_TypeEnum(typeStr, pNode, fType);
-	
-	TXString slotLabelIDStr; pNode->GetNodeAttributeValue(XML_GDTF_RDMValue_SLOT_INFO_AttrSlotLabelID, slotLabelIDStr);
-	GdtfConverter::ConvertRDMValue_SLOT_INFO_SlotLabelIDEnum (slotLabelIDStr, pNode, fSlotLabelID);
-}
-
-void SceneData::GdtfRDMValue_SLOT_INFO::OnErrorCheck(const IXMLFileNodePtr& pNode)
-{
-	//------------------------------------------------------------------------------------
-	// Call the parent
-	GdtfObject::OnErrorCheck(pNode);
-
-	//------------------------------------------------------------------------------------
-	// Create needed and optional Attribute Arrays
-	TXStringArray needed;
-	TXStringArray optional;
-	needed.push_back(XML_GDTF_RDMValue_SLOT_INFO_AttrOffset);
-	needed.push_back(XML_GDTF_RDMValue_SLOT_INFO_AttrType);
-	needed.push_back(XML_GDTF_RDMValue_SLOT_INFO_AttrSlotLabelID);
-
-	//------------------------------------------------------------------------------------
-	// Check Attributes for node
-	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
-}
-
-SceneData::GdtfRDMValue_STATUS_ID_DESCRIPTION::GdtfRDMValue_STATUS_ID_DESCRIPTION()
-{
-	fStatusID    = 0;
-	fDescription = "";
-}
-
-SceneData::GdtfRDMValue_STATUS_ID_DESCRIPTION::GdtfRDMValue_STATUS_ID_DESCRIPTION(Sint32 statusID, const TXString& description)
-{
-	fStatusID = statusID;
-	fDescription = description;
-}
-
-SceneData::GdtfRDMValue_STATUS_ID_DESCRIPTION::~GdtfRDMValue_STATUS_ID_DESCRIPTION()
-{
-}
-
-EGdtfObjectType SceneData::GdtfRDMValue_STATUS_ID_DESCRIPTION::GetObjectType()
-{
-	return EGdtfObjectType::eRDMValue_STATUS_ID_DESCRIPTION;
-}
-
-StatusID SceneData::GdtfRDMValue_STATUS_ID_DESCRIPTION::GetStatusID() const
-{
-	return fStatusID;
-}
-
-const TXString & SceneData::GdtfRDMValue_STATUS_ID_DESCRIPTION::GetDescription() const
-{
-	return fDescription;
-}
-
-void SceneData::GdtfRDMValue_STATUS_ID_DESCRIPTION::SetStatusID(StatusID val)
-{
-	fStatusID = val;
-}
-
-void SceneData::GdtfRDMValue_STATUS_ID_DESCRIPTION::SetDescription(const TXString & val)
-{
-	fDescription = val;
-}
-
-TXString SceneData::GdtfRDMValue_STATUS_ID_DESCRIPTION::GetNodeName()
-{
-	return XML_GDTF_RDMValue_STATUS_ID_DESCRIPTION;
-}
-
-void SceneData::GdtfRDMValue_STATUS_ID_DESCRIPTION::OnPrintToFile(IXMLFileNodePtr pNode)
-{
-	//------------------------------------------------------------------------------------
-	// Call the parent
-	GdtfObject::OnPrintToFile(pNode);
-	
-	//------------------------------------------------------------------------------------
-	// Print the attributes
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMValue_STATUS_ID_DESCRIPTION_AttrStatusID, GdtfConverter::ConvertInteger(fStatusID) );
-	pNode->SetNodeAttributeValue(XML_GDTF_RDMValue_STATUS_ID_DESCRIPTION_AttrDescription, fDescription);
-}
-
-void SceneData::GdtfRDMValue_STATUS_ID_DESCRIPTION::OnReadFromNode(const IXMLFileNodePtr & pNode)
-{
-	//------------------------------------------------------------------------------------
-	// Call the parent
-	GdtfObject::OnReadFromNode(pNode);
-	//------------------------------------------------------------------------------------
-	// Get the attributes
-	TXString statusIDStr; pNode->GetNodeAttributeValue(XML_GDTF_RDMValue_STATUS_ID_DESCRIPTION_AttrStatusID, statusIDStr);
-	GdtfConverter::ConvertInteger(statusIDStr, pNode, fStatusID);
-	
-	pNode->GetNodeAttributeValue(XML_GDTF_RDMValue_STATUS_ID_DESCRIPTION_AttrDescription, fDescription);
-}
-
-void SceneData::GdtfRDMValue_STATUS_ID_DESCRIPTION::OnErrorCheck(const IXMLFileNodePtr& pNode)
-{
-	//------------------------------------------------------------------------------------
-	// Call the parent
-	GdtfObject::OnErrorCheck(pNode);
-
-	//------------------------------------------------------------------------------------
-	// Create needed and optional Attribute Arrays
-	TXStringArray needed;
-	TXStringArray optional;
-	needed.push_back(XML_GDTF_RDMValue_STATUS_ID_DESCRIPTION_AttrStatusID);
-	needed.push_back(XML_GDTF_RDMValue_STATUS_ID_DESCRIPTION_AttrDescription);
 
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
@@ -9029,4 +7119,93 @@ void SceneData::GdtfMacroVisualValue::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
 	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
+}
+
+SceneData::GdtfSoftwareVersionID::GdtfSoftwareVersionID()
+{
+    fValue = 0;
+}
+
+SceneData::GdtfSoftwareVersionID::GdtfSoftwareVersionID(size_t value)
+{
+    fValue = value;
+}
+
+SceneData::GdtfSoftwareVersionID::~GdtfSoftwareVersionID()
+{
+     for (GdtfDMXPersonalityPtr obj		: fDmxPersonalityArray){ delete obj; }
+}
+
+EGdtfObjectType SceneData::GdtfSoftwareVersionID::GetObjectType()
+{
+    return EGdtfObjectType::eGdtfSoftwareVersionID;
+}
+
+size_t SceneData::GdtfSoftwareVersionID::GetValue() const
+{
+    return fValue;
+}
+
+const TGdtfDMXPersonalityArray& SceneData::GdtfSoftwareVersionID::GetDMXPersonalityArray()
+{
+    return fDmxPersonalityArray;
+}
+
+void SceneData::GdtfSoftwareVersionID::SetValue(size_t val)
+{
+    fValue = val;
+}
+
+GdtfDMXPersonalityPtr SceneData::GdtfSoftwareVersionID::AddDMXPersonality(size_t value, GdtfDmxModePtr dmxMode)
+{
+    GdtfDMXPersonalityPtr dmxPerso = new GdtfDMXPersonality(value, dmxMode);
+    fDmxPersonalityArray.push_back(dmxPerso);
+
+    return dmxPerso;
+}
+
+TXString SceneData::GdtfSoftwareVersionID::GetNodeName()
+{
+    return XML_GDTF_SoftwareVersionID_NodeNam;
+}
+
+void SceneData::GdtfSoftwareVersionID::OnPrintToFile(IXMLFileNodePtr pNode)
+{
+    //------------------------------------------------------------------------------------
+    // Call the parent
+    GdtfObject::OnPrintToFile(pNode);
+
+    //------------------------------------------------------------------------------------
+    // Print the attributes
+    pNode->SetNodeAttributeValue(XML_GDTF_SoftwareVersionID_Value, GdtfConverter::ConvertInteger(fValue));
+
+    //------------------------------------------------------------------------------------
+    // Print the childs
+    for (GdtfDMXPersonalityPtr dmxPerso: fDmxPersonalityArray)
+    {
+        dmxPerso->WriteToNode(pNode);
+    }
+}
+
+void SceneData::GdtfSoftwareVersionID::OnReadFromNode(const IXMLFileNodePtr & pNode)
+{
+    //------------------------------------------------------------------------------------
+    // Call the parent
+    GdtfObject::OnReadFromNode(pNode);
+
+    //------------------------------------------------------------------------------------
+    // Get the attributes
+    TXString valueStr; pNode->GetNodeAttributeValue(XML_GDTF_SoftwareVersionID_Value, valueStr);
+    GdtfConverter::ConvertInteger( valueStr, pNode, fValue);
+
+    // Read the childs
+    GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_DMXPersonalityNodeNam, [this](IXMLFileNodePtr objNode) -> void
+    {
+        GdtfDMXPersonalityPtr dmxPerso = new GdtfDMXPersonality();
+
+        dmxPerso->ReadFromNode(objNode);
+
+        fDmxPersonalityArray.push_back(dmxPerso);
+        return;
+    });
 }

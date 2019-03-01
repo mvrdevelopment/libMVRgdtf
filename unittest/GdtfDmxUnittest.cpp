@@ -289,7 +289,7 @@ void GdtfDmxUnittest::ReadFile()
 			if (__checkVCOM(gdtfRead->GetModelAt(i, &gdtfModel)))
 			{
 				MvrString  modelName = gdtfModel->GetName();
-				MvrString geometryFile = gdtfModel->Get3DSGeometryFile();
+				MvrString geometryFile = gdtfModel->GetGeometryFileName();
 				this->checkifEqual("gdtfModelGetName ", modelName, "Model");
 
 				// Height
@@ -449,7 +449,7 @@ void GdtfDmxUnittest::Check8bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxCh
 {
 	// ---------------------------------------------------------------------------
 	// Check DMXChannel attributes
-	CheckDmxChannel(dmxChannel, 1, 1, 0, 0, 0,eGdtfDmxFrequency_30, (DmxValue)0, false ,(double)0, (double)0);
+	CheckDmxChannel(dmxChannel, 1, 1, 0, 0, 0, (DmxValue)0, false ,(double)0, (double)0);
 
 	// ---------------------------------------------------------------------------
 	// Get Logical Channels
@@ -589,6 +589,16 @@ void GdtfDmxUnittest::Check8bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxCh
 	IGdtfDmxChannelSetPtr bit8ChannelSet21;
 	__checkVCOM(bit8Function4->GetDmxChannelSetAt(5, &bit8ChannelSet21));
 	this->CheckChannelSet(bit8ChannelSet21, "My Name12",230,255);
+
+    //-----------------------------------------------------------------------------
+    double thisDmxMibFade = 0;
+	__checkVCOM(bit8LogicalChannel1->GetMoveInBlackFrames(thisDmxMibFade));
+	this->checkifEqual("Check DmxChannel MibFade - Default: 0 ", (double)0, thisDmxMibFade);
+
+	double thisDmxChangeTimeLimit = 0;
+	__checkVCOM(bit8LogicalChannel1->GetDmxChangeTimeLimit(thisDmxChangeTimeLimit));
+	this->checkifEqual("Check DmxChannel DMXChangeTimeLimit  - Default: 0 ", (double)0, thisDmxChangeTimeLimit);
+
 }
 
 void GdtfDmxUnittest::Check24bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxChannel)
@@ -621,6 +631,14 @@ void GdtfDmxUnittest::Check24bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxC
 	__checkVCOM(logicalChannel->GetDmxFunctionAt(2, &bit8Function3));
 	CheckFunction(bit8Function3, "Log 3", "Attribute1", 0, max24bit);
 
+	double thisDmxMibFade = 0;
+	__checkVCOM(logicalChannel->GetMoveInBlackFrames(thisDmxMibFade));
+	this->checkifEqual("Check DmxChannel MibFade - Default: 0 ", (double)0, thisDmxMibFade);
+
+	double thisDmxChangeTimeLimit = 0;
+	__checkVCOM(logicalChannel->GetDmxChangeTimeLimit(thisDmxChangeTimeLimit));
+	this->checkifEqual("Check DmxChannel DMXChangeTimeLimit  - Default: 0 ", (double)0, thisDmxChangeTimeLimit);
+
 
 	// Check ModeMaster
 	IGdtfDmxChannelPtr 			gdtfChannel;
@@ -638,7 +656,7 @@ void GdtfDmxUnittest::Check24bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxC
 }
 
 void GdtfDmxUnittest::CheckDmxChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxChannel, Sint32 dmxBreak, Sint32 coarse,
-									  Sint32 fine, Sint32 ultra, Sint32 uber, EGdtfDmxFrequency frequency, DmxValue defaultValue,
+									  Sint32 fine, Sint32 ultra, Sint32 uber, DmxValue defaultValue,
 									  DmxValue highlight, double MibFade, double dmxChangeLimit)
 {
 	Sint32 thisDmxBreak = 0;
@@ -661,10 +679,6 @@ void GdtfDmxUnittest::CheckDmxChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxCha
 	__checkVCOM(dmxChannel->GetUber(thisDmxUber));
 	this->checkifEqual("Check DmxChannel Uber - Default: \"None\"  ", uber, thisDmxUber);
 
-	GdtfDefines::EGdtfDmxFrequency thisDmxFrequency;
-	__checkVCOM(dmxChannel->GetDmxFrequency(thisDmxFrequency));
-	this->checkifEqual("Check DmxChannel Frequency - Default: \"30\" ", frequency, thisDmxFrequency);
-
 	DmxValue thisDmxDefaultValue = 0;
 	__checkVCOM(dmxChannel->GetDefaultValue(thisDmxDefaultValue));
 	this->checkifEqual("Check DmxChannel DefaultValue - Default: 0/1 ", defaultValue, thisDmxDefaultValue);
@@ -677,14 +691,6 @@ void GdtfDmxUnittest::CheckDmxChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxCha
 		__checkVCOM(dmxChannel->GetHighlight(thisHighlight));
 		this->checkifEqual("Check DmxChannel HighlightValue  - Default: \"None\"  ", highlight, thisHighlight);
 	}
-
-	double thisDmxMibFade = 0;
-	__checkVCOM(dmxChannel->GetMoveInBlackFrames(thisDmxMibFade));
-	this->checkifEqual("Check DmxChannel MibFade - Default: 0 ", (double)0, thisDmxMibFade);
-
-	double thisDmxChangeTimeLimit = 0;
-	__checkVCOM(dmxChannel->GetDmxChangeTimeLimit(thisDmxChangeTimeLimit));
-	this->checkifEqual("Check DmxChannel DMXChangeTimeLimit  - Default: 0 ", (double)0, thisDmxChangeTimeLimit);
 }
 
 void GdtfDmxUnittest::CheckChannelSet(IGdtfDmxChannelSetPtr& channelSet, std::string name, DmxValue start, DmxValue end)

@@ -90,7 +90,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetTransformMatrix(
     
     fGeometry->GetTransformMatrix(ma);
     
-	Utility::ConvertMatrix(ma, transformMatrix);
+	GdtfUtil::ConvertMatrix(ma, transformMatrix);
 	
     return kVCOMError_NoError;
 }
@@ -157,25 +157,22 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::CreateGeometry(EGdt
 {
 	// Check if Set
 	if(!fGeometry) { return kVCOMError_NotInitialized;}
-	
-	// Check Input
-	if (!model)		{ return kVCOMError_InvalidArg;  }
-	
+		
 	//---------------------------------------------------------------------------
 	// Extract Model
+	SceneData::GdtfModelPtr scModel = nullptr;
+
 	CGdtfModelImpl* modelInterface = dynamic_cast<CGdtfModelImpl*>(model);
-	if( ! modelInterface) { return kVCOMError_Failed;  }
-	
-	
-	SceneData::GdtfModelPtr scModel = modelInterface->GetPointer();
-	if ( ! scModel) { return kVCOMError_Failed; }
-	
+	if( modelInterface)
+	{
+		scModel = modelInterface->GetPointer();
+	}
 	
 	//---------------------------------------------------------------------------
 	// Create geometry
 	TXString			vwName (name);
 	VWTransformMatrix	ma;
-	Utility::ConvertMatrix(mat, ma);
+	GdtfUtil::ConvertMatrix(mat, ma);
 	
 	
 	
@@ -232,96 +229,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::CreateGeometry(EGdt
 	// Set Out Value
 	*geometry		= pGeometryObj;
 	
-	return kVCOMError_NoError;
-}
-
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetStartAngle(double &angle)
-{
-	// Check Pointer
-	if( ! fGeometry) return kVCOMError_NotInitialized;
-	
-	// Check if it is the right type
-	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryAxis) return kVCOMError_WrongGeometryType;
-	
-	SceneData::GdtfGeometryAxis* axis = dynamic_cast<SceneData::GdtfGeometryAxis*>(fGeometry);
-	if ( ! axis) { return kVCOMError_Failed; }
-	
-	angle = axis->GetStartAngle();
-	return kVCOMError_NoError;
-}
-
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetEndAngle(double &angle)
-{
-	// Check Pointer
-	if( ! fGeometry) return kVCOMError_NotInitialized;
-	
-	// Check if it is the right type
-	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryAxis) return kVCOMError_WrongGeometryType;
-	
-	SceneData::GdtfGeometryAxis* axis = dynamic_cast<SceneData::GdtfGeometryAxis*>(fGeometry);
-	if ( ! axis) { return kVCOMError_Failed; }
-	
-	angle = axis->GetEndAngle();
-	return kVCOMError_NoError;
-}
-
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetSpeed(double &speed)
-{
-	// Check Pointer
-	if( ! fGeometry) return kVCOMError_NotInitialized;
-	
-	// Check if it is the right type
-	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryAxis) return kVCOMError_WrongGeometryType;
-	
-	SceneData::GdtfGeometryAxis* axis = dynamic_cast<SceneData::GdtfGeometryAxis*>(fGeometry);
-	if ( ! axis) { return kVCOMError_Failed; }
-	
-	speed = axis->GetSpeed();
-	return kVCOMError_NoError;
-}
-
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetStartAngle(double angle)
-{
-	// Check Pointer
-	if( ! fGeometry) return kVCOMError_NotInitialized;
-	
-	// Check if it is the right type
-	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryAxis) return kVCOMError_WrongGeometryType;
-	
-	SceneData::GdtfGeometryAxis* axis = dynamic_cast<SceneData::GdtfGeometryAxis*>(fGeometry);
-	if ( ! axis) { return kVCOMError_Failed; }
-	
-	axis->SetStartAngle(angle);
-	return kVCOMError_NoError;
-}
-
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetEndAngle(double angle)
-{
-	// Check Pointer
-	if( ! fGeometry) return kVCOMError_NotInitialized;
-	
-	// Check if it is the right type
-	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryAxis) return kVCOMError_WrongGeometryType;
-	
-	SceneData::GdtfGeometryAxis* axis = dynamic_cast<SceneData::GdtfGeometryAxis*>(fGeometry);
-	if ( ! axis) { return kVCOMError_Failed; }
-	
-	axis->SetEndAngle(angle);
-	return kVCOMError_NoError;
-}
-
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetSpeed(double speed)
-{
-	// Check Pointer
-	if( ! fGeometry) return kVCOMError_NotInitialized;
-	
-	// Check if it is the right type
-	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryAxis) return kVCOMError_WrongGeometryType;
-	
-	SceneData::GdtfGeometryAxis* axis = dynamic_cast<SceneData::GdtfGeometryAxis*>(fGeometry);
-	if ( ! axis) { return kVCOMError_Failed; }
-	
-	axis->SetSpeed(speed);
 	return kVCOMError_NoError;
 }
 
@@ -520,7 +427,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetTransformMatrix(
 	if( ! fGeometry) return kVCOMError_NotInitialized;	
 	
     VWTransformMatrix vwMatrix;
-    Utility::ConvertMatrix(transformMatrix, vwMatrix);
+    GdtfUtil::ConvertMatrix(transformMatrix, vwMatrix);
 
     fGeometry->SetTransformMatrix(vwMatrix);
 

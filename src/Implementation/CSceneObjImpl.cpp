@@ -65,7 +65,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetTransfromMatrix(STra
 	fPtr->GetTransformMatric(ma);
 	
 	// Dump Matrix in memory
-	Utility::ConvertMatrix(ma, outMatrix);
+	GdtfUtil::ConvertMatrix(ma, outMatrix);
 	
 	return kVCOMError_NoError;
 }
@@ -147,7 +147,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::AddGeometry(const STran
 	//---------------------------------------------------------------------------
 	// Set Transfrom Matrix
 	VWTransformMatrix ma;
-	Utility::ConvertMatrix(scMatrix, ma);
+	GdtfUtil::ConvertMatrix(scMatrix, ma);
 	geometryObject->SetTransformMatrix(ma);
     geometryObject->SetFileName(fileName);
 	
@@ -189,7 +189,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::AddSymbol(const STransf
 	
 	// Set Transfrom Matrix
 	VWTransformMatrix ma;
-	Utility::ConvertMatrix(geometry,  ma);
+	GdtfUtil::ConvertMatrix(geometry,  ma);
 	newSymbolObj->SetTransformMatrix(ma);
 	
 	// Set SymbolDef

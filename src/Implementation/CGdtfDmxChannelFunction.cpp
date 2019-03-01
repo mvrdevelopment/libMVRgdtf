@@ -218,25 +218,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetEmitte
     return kVCOMError_NoError;    
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetDMXInvert(EGDTFDmxInvert & dmxInvert)
-{
-	// Check Pointer
-	if ( ! fFunction) { return kVCOMError_NotInitialized; }
-	
-    dmxInvert = fFunction->GetDmxInvert();
-    return kVCOMError_NoError;
-}
-
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetEncoderInvert(EGDTFEncoderInvert & encoderInvert)
-{
-	// Check Pointer
-	if ( ! fFunction) { return kVCOMError_NotInitialized; }
-	
-    encoderInvert = fFunction->GetEncoderInvert();
-    
-    return kVCOMError_NoError;
-}
-
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetAttribute(IGdtfAttribute* attribute)
 {
 	// Check Pointer
@@ -338,26 +319,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetEmitte
 	
 	fFunction->SetEmitter (gdtfEmitter);
 	
-	return kVCOMError_NoError;}
-
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetDMXInvert(EGDTFDmxInvert dmxInvert)
-{
-	// Check Pointer
-	if ( ! fFunction) { return kVCOMError_NotInitialized; }
-	
-    fFunction->SetDmxInvert(dmxInvert);
-	
-    return kVCOMError_NoError;
-}
-
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetEncoderInvert(EGDTFEncoderInvert encoderInvert)
-{
-	// Check Pointer
-	if ( ! fFunction) { return kVCOMError_NotInitialized; }
-	
-    fFunction->SetEncoderInvert(encoderInvert);
-	
-    return kVCOMError_NoError;
+	return kVCOMError_NoError;
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetDmxChannelSetCount(size_t &count)

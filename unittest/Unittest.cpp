@@ -37,6 +37,11 @@ else
     return fFailed;
 }
 
+void Unittest::checkifTrue (const std::string& check, const bool b) 
+{
+    checkifEqual(check, b, true);
+}
+
 void Unittest::checkifEqual(const std::string& check, const Uint32 val1, const Uint32 val2)
 {
 	if (val1 == val2) return;

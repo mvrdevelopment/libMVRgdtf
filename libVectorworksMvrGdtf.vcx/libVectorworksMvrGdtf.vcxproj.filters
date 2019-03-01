@@ -25,6 +25,9 @@
     <Filter Include="src\Wrapper">
       <UniqueIdentifier>{b9f64660-55d4-4675-b964-2e9130ed5581}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Utility">
+      <UniqueIdentifier>{a5540437-07f3-4128-aa9f-26ce22a2dfdd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\XMLLib\ErrorHandler.cpp">
@@ -111,9 +114,6 @@
     <ClCompile Include="..\src\Implementation\CGdtfFixture.cpp">
       <Filter>src\Implementation</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Implementation\CGdtfFTRDM.cpp">
-      <Filter>src\Implementation</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Implementation\CGdtfGeometry.cpp">
       <Filter>src\Implementation</Filter>
     </ClCompile>
@@ -147,27 +147,6 @@
     <ClCompile Include="..\src\Implementation\CGdtfPhysicalEmitter.cpp">
       <Filter>src\Implementation</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Implementation\CGdtfRDMAbsentNotification.cpp">
-      <Filter>src\Implementation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Implementation\CGdtfRDMNotifications.cpp">
-      <Filter>src\Implementation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Implementation\CGdtfRDMParameter.cpp">
-      <Filter>src\Implementation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Implementation\CGdtfRDMParameterNotification.cpp">
-      <Filter>src\Implementation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Implementation\CGdtfRDMParameterValue.cpp">
-      <Filter>src\Implementation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Implementation\CGdtfRDMSensorNotification.cpp">
-      <Filter>src\Implementation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Implementation\CGdtfRDMValueSensor.cpp">
-      <Filter>src\Implementation</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Implementation\CGdtfRevision.cpp">
       <Filter>src\Implementation</Filter>
     </ClCompile>
@@ -199,9 +178,6 @@
       <Filter>src\Implementation</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Implementation\CSymDefImpl.cpp">
-      <Filter>src\Implementation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Implementation\Utility.cpp">
       <Filter>src\Implementation</Filter>
     </ClCompile>
     <ClCompile Include="..\src\BasicMath.X.cpp">
@@ -269,6 +245,18 @@
     </ClCompile>
     <ClCompile Include="..\src\XMLLib\TaggingDOMParser.cpp">
       <Filter>src\XmlLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Implementation\CGdtfDMXPersonality.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Implementation\CGdtfSoftwareVersionID.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Implementation\CGdtfFTRDM.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Utility.cpp">
+      <Filter>src\Utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -398,9 +386,6 @@
     <ClInclude Include="..\src\Implementation\CGdtfFixture.h">
       <Filter>src\Implementation</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Implementation\CGdtfFTRDM.h">
-      <Filter>src\Implementation</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Implementation\CGdtfGeometry.h">
       <Filter>src\Implementation</Filter>
     </ClInclude>
@@ -434,27 +419,6 @@
     <ClInclude Include="..\src\Implementation\CGdtfPhysicalEmitter.h">
       <Filter>src\Implementation</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Implementation\CGdtfRDMAbsentNotification.h">
-      <Filter>src\Implementation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Implementation\CGdtfRDMNotifications.h">
-      <Filter>src\Implementation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Implementation\CGdtfRDMParameter.h">
-      <Filter>src\Implementation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Implementation\CGdtfRDMParameterNotification.h">
-      <Filter>src\Implementation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Implementation\CGdtfRDMParameterValue.h">
-      <Filter>src\Implementation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Implementation\CGdtfRDMSensorNotification.h">
-      <Filter>src\Implementation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Implementation\CGdtfRDMValueSensor.h">
-      <Filter>src\Implementation</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Implementation\CGdtfRevision.h">
       <Filter>src\Implementation</Filter>
     </ClInclude>
@@ -486,9 +450,6 @@
       <Filter>src\Implementation</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Implementation\CSymDefImpl.h">
-      <Filter>src\Implementation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Implementation\Utility.h">
       <Filter>src\Implementation</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Implementation\CClassImpl.h">
@@ -574,6 +535,18 @@
     </ClInclude>
     <ClInclude Include="..\src\XMLLib\TaggingDOMParser.h">
       <Filter>src\XmlLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Implementation\CGdtfDMXPersonality.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Implementation\CGdtfSoftwareVersionID.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Implementation\CGdtfFTRDM.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Utility.h">
+      <Filter>src\Utility</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

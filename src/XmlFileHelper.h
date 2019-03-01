@@ -63,39 +63,26 @@ namespace SceneData
         static TXString	ConvertDmxBreak(Sint32 value);
 		static TXString	ConvertInteger(size_t value);
 		static TXString	ConvertInteger(Sint32 value, bool noneValue);
-        static TXString	ConvertIntegerArray (TSint32Array& values);
+        static TXString	ConvertIntegerArray (TSint32Array& values, bool includeBrackets);
 		static TXString	ConvertDMXAdress(DMXAddress value);
 		static TXString	ConvertDMXValue(DmxValue value, EGdtfChannelBitResolution chanlReso, bool noneValue=false);		
 		static TXString	ConvertPrimitiveType(EGdtfModel_PrimitiveType value);
 		static TXString ConvertMatrix(const VWTransformMatrix& ma, bool fourLines);
 		static TXString ConvertRotation(const VWTransformMatrix& ma);
-		static TXString	ConvertLampeType(EGdtfLampType value);
-		static TXString	ConvertFrequenz(EGdtfDmxFrequency value);
+		static TXString	ConvertLampeType(EGdtfLampType value);		
 		static TXString	ConvertSnapEnum(EGdtfDmxSnap value);
 		static TXString	ConvertMasterEnum(EGdtfDmxMaster value);
 		static TXString	ConvertRelationEnum(EGdtfDmxRelationType value);
 		static TXString	ConvertPhysicalUnitEnum(EGdtfPhysicalUnit value);
 		static TXString	ConvertSpecialAttrEnum(EGdtfSpecial value);
 		static TXString ConvertBeamType(EGdtfBeamType value);
-		static TXString ConvertDMXInvertEnum(EGDTFDmxInvert value);
-		static TXString ConvertEncoderInvertEnum(EGDTFEncoderInvert value);
-        static TXString ConvertRDMParamTypeEnum(EGdtf_RDMParam_Type value);
-        static TXString Convert_RDMParamDataTypeEnum(EGdtf_RDMParam_DataType value);		
-        static TXString Convert_RDMParam_CommandEnum(EGdtf_RDMParam_Command value);
-        static TXString Convert_RDMParam_SensorUnitEnum(EGdtf_RDMParam_SensorUnit value);        
-        static TXString Convert_RDMParam_SensorUnitPrefixEnum(EGdtf_RDMParam_SensorUnitPrefix value);
-        static TXString ConvertEGdtf_RDMValueBool_ValueEnum(EGdtf_RDMValueBool_Value value);
-        static TXString ConvertEGdtf_RDMValue_ThresholdOperatorEnum(EGdtf_RDMValue_ThresholdOperator value);		
-        static TXString ConvertRDMValue_SENSOR_DEFINITION_TypeEnum(EGdtf_RDMValue_SENSOR_DEFINITION_TYPE value);
-        static TXString Convert_RDMValue_LowesHighestDetectionSupportedEnum(EGdtf_RDMValue_LowesHighestDetectionSupported value);
-        static TXString Convert_RDMValue_RecordValueSupportedEnum(EGdtf_RDMValue_RecordValueSupported value);
-        static TXString ConvertRDMValue_SLOT_INFO_TypeEnum(EGdtf_RDMValue_SLOT_INFO_Type value);
-        static TXString ConvertRDMValue_SLOT_INFO_SlotLabelIDEnum(EGdtf_RDMValue_SLOT_INFO_SlotLabelID value);
-        static TXString ConvertEGdtfColorSampleEnum(							  EGdtfColorSample value);
+        static TXString ConvertEGdtfColorSampleEnum(EGdtfColorSample value);
+		static TXString ConvertDmxOffset(DMXAddress coarse, DMXAddress fine, DMXAddress ultra, DMXAddress uber);
+
 
         //-----------------------------------------------------------------------------
         // Convert from String functions:
-        static bool		ConvertUUID(										const TXString& value, const IXMLFileNodePtr& node,			VWFC::Tools::VWUUID& uuid);
+        static bool		ConvertUUID(										const TXString& value, const IXMLFileNodePtr& node,			VWFC::Tools::VWUUID& uuid);        
 		static bool		ConvertDate(										const TXString& value, const IXMLFileNodePtr& node,			STime& date);
 		static bool		ConvertColor(										const TXString& value, const IXMLFileNodePtr& node,			CCieColor& color);
 		static bool		ConvertDouble(										const TXString& value, const IXMLFileNodePtr& node,			double& doubleValue);
@@ -111,29 +98,16 @@ namespace SceneData
         static bool     ConvertIntegerArray(									  TXString  values,const IXMLFileNodePtr& node,			TSint32Array& intArray);
 		static bool		ConvertDMXAdress(									const TXString& value, const IXMLFileNodePtr& node,			DMXAddress& intValue);
 		static bool  	ConvertDMXValue(									const TXString& value, const IXMLFileNodePtr& node,		    EGdtfChannelBitResolution chanlReso,	DmxValue& intValue);
-		static bool  	ConvertDMXValue(									const TXString& value, const IXMLFileNodePtr& node,		    EGdtfChannelBitResolution chanlReso,	DmxValue& intValue, bool& noneValue);
-		static bool		ConvertFrequenz(									const TXString& value, const IXMLFileNodePtr& node,			EGdtfDmxFrequency& freq);
+		static bool  	ConvertDMXValue(									const TXString& value, const IXMLFileNodePtr& node,		    EGdtfChannelBitResolution chanlReso,	DmxValue& intValue, bool& noneValue);		
 		static bool		ConvertRelationEnum(								const TXString& value, const IXMLFileNodePtr& node,			EGdtfDmxRelationType& relation);
 		static bool		ConvertSnapEnum(									const TXString& value, const IXMLFileNodePtr& node,			EGdtfDmxSnap& snap);
 		static bool		ConvertMasterEnum(									const TXString& value, const IXMLFileNodePtr& node,			EGdtfDmxMaster& master);
 		static bool		ConvertPhysicalUnitEnum(							const TXString& value, const IXMLFileNodePtr& node,			EGdtfPhysicalUnit& unit);
 		static bool		ConvertSpecialAttrEnum(								const TXString& value, const IXMLFileNodePtr& node,			EGdtfSpecial& special);
 		static bool		ConvertBeamType(									const TXString& value, const IXMLFileNodePtr& node,			EGdtfBeamType& type);
-		static bool		ConvertDMXInvertEnum(								const TXString& value, const IXMLFileNodePtr& node,			EGDTFDmxInvert&	dmx);
-		static bool		ConvertEncoderInvertEnum(							const TXString& value, const IXMLFileNodePtr& node,			EGDTFEncoderInvert&	enc);
-        static bool     ConvertRDMParamTypeEnum(							const TXString& value, const IXMLFileNodePtr& node,			EGdtf_RDMParam_Type& val);
-        static bool     Convert_RDMParamDataTypeEnum(						const TXString& value, const IXMLFileNodePtr& node,			EGdtf_RDMParam_DataType& val);
-        static bool     Convert_RDMParam_CommandEnum(						const TXString& value, const IXMLFileNodePtr& node,			EGdtf_RDMParam_Command&	val);
-        static bool     Convert_RDMParam_SensorUnitEnum(					const TXString& value, const IXMLFileNodePtr& node,			EGdtf_RDMParam_SensorUnit& val);
-        static bool     Convert_RDMParam_SensorUnitPrefixEnum(				const TXString& value, const IXMLFileNodePtr& node,			EGdtf_RDMParam_SensorUnitPrefix& val);
-        static bool     ConvertEGdtf_RDMValueBool_ValueEnum(				const TXString& value, const IXMLFileNodePtr& node,			EGdtf_RDMValueBool_Value& val);
-        static bool     ConvertEGdtf_RDMValue_ThresholdOperatorEnum(		const TXString& value, const IXMLFileNodePtr& node,			EGdtf_RDMValue_ThresholdOperator& val);
-        static bool     ConvertRDMValue_SENSOR_DEFINITION_TypeEnum(			const TXString& value, const IXMLFileNodePtr& node,			EGdtf_RDMValue_SENSOR_DEFINITION_TYPE& val);
-        static bool     Convert_RDMValue_LowesHighestDetectionSupportedEnum(const TXString& value, const IXMLFileNodePtr& node,			EGdtf_RDMValue_LowesHighestDetectionSupported& val);
-        static bool     Convert_RDMValue_RecordValueSupportedEnum(			const TXString& value, const IXMLFileNodePtr& node,			EGdtf_RDMValue_RecordValueSupported& val);
-        static bool     ConvertRDMValue_SLOT_INFO_TypeEnum(					const TXString& value, const IXMLFileNodePtr& node,			EGdtf_RDMValue_SLOT_INFO_Type& val);
-        static bool     ConvertRDMValue_SLOT_INFO_SlotLabelIDEnum(			const TXString& value, const IXMLFileNodePtr& node,			EGdtf_RDMValue_SLOT_INFO_SlotLabelID& val);        
         static bool     ConvertEGdtfColorSampleEnum(						const TXString& inVal, const IXMLFileNodePtr& node,			EGdtfColorSample& outVal);
+		static bool 	ConvertDmxOffset(const TXString& inVal, const IXMLFileNodePtr& node, DMXAddress& coarse, DMXAddress& fine, DMXAddress& ultra, DMXAddress& uber);
+
 
         static DmxValue GetChannelMaxDmx(const EGdtfChannelBitResolution chanlReso);
 
@@ -146,16 +120,18 @@ namespace SceneData
 	private:
 		static bool		Deserialize(const TXString& value, const IXMLFileNodePtr& node, std::vector<double>& doubleArr);
 		static bool		Deserialize(const TXString& value, const IXMLFileNodePtr& node, TSint32Array& intArray, TXChar seperator = ',');
-		static bool		DeserializeDate(const TXString& value, const IXMLFileNodePtr& node, TSint32Array& intArray);
+		static bool		DeserializeUTC_Date(const TXString& value, const IXMLFileNodePtr& node, TSint32Array& intArray);
 
+        static TXString IntToString2Digits(Sint64 value);
 
 	};
 	
 	class SceneDataZip
 	{
 	public:
-		static bool AddFileToZip(IZIPFilePtr& zipFile, const IFileIdentifierPtr& file, bool createChecksum, bool deleteFile, bool mustExist = true);
-        static void AddFileToZip(IZIPFilePtr& zipFile, ISceneDataZipBuffer& buffer,const TXString &name , bool createChecksum);
-		static bool GetFile(const TXString& fileName,const IFolderIdentifierPtr& workingFolder, IFileIdentifierPtr& outFile, bool& hasCheckSum, bool& checksumIsFine, bool checkSumCheck );
+		static bool AddFileToZip(IZIPFilePtr& zipFile, const IFileIdentifierPtr& file, ERessourceType resType, bool deleteFile, bool mustExist = true);
+        static void AddFileToZip(IZIPFilePtr& zipFile, ISceneDataZipBuffer& buffer,const TXString &name);		
+
+        static TXString GetResourceSubFolder(ERessourceType resType);
 	};
 }

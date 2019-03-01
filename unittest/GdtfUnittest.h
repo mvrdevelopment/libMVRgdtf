@@ -13,8 +13,17 @@ protected:
     bool virtual ExecuteTest();
 
 private:
-    void WriteFile();
-    void ReadFile();
+    std::string fAppDataFolder;
+    std::string fTestGdtf_Path;
+    std::string fTestResourcesFolder;    
 
-    std::string fPath;
+    void        WriteFile();
+    void        ReadFile();
+    
+    // Test Resources
+    std::string GetTestPNG_ThumbNail();
+    std::string GetTestSVG_ThumbNail();
+    std::string GetTestSVG_Model();
+    std::string GetTest3DS_Model();
+    std::string GetTestWheel_PNG();
 };

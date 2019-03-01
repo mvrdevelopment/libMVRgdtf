@@ -48,15 +48,6 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     SetBeamType(EGdtfBeamType type);
         virtual VCOMError VCOM_CALLTYPE     SetColorIndex(Sint32 idx);
 		
-		// Axis
-		virtual VCOMError VCOM_CALLTYPE     GetStartAngle(double& angle);   //in Degrees
-		virtual VCOMError VCOM_CALLTYPE     GetEndAngle(double& angle);     //in Degrees
-		virtual VCOMError VCOM_CALLTYPE     GetSpeed(double& speed);        //in mm/s
-		
-		virtual VCOMError VCOM_CALLTYPE     SetStartAngle(double angle);   //in Degrees
-		virtual VCOMError VCOM_CALLTYPE     SetEndAngle(double angle);     //in Degrees
-		virtual VCOMError VCOM_CALLTYPE     SetSpeed(double speed);        //in mm/s
-		
 		// Reference
 		virtual VCOMError VCOM_CALLTYPE     GetBreakCount(size_t& count);
 		virtual VCOMError VCOM_CALLTYPE     GetBreakAt(size_t at, IGdtfBreak** gdtfBreak);

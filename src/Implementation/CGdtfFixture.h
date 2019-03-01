@@ -18,23 +18,27 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE		ReadFromFile(MvrString fullPath);
 		
 		virtual VCOMError VCOM_CALLTYPE		OpenForWrite(MvrString fullPath, MvrString name, MvrString manufacturer, const MvrUUID& uuid);
-		virtual VCOMError VCOM_CALLTYPE		AddFileToGdtfFile(MvrString fullPath);
+		virtual VCOMError VCOM_CALLTYPE		AddFileToGdtfFile(MvrString fullPath, ERessourceType resType);
 		virtual VCOMError VCOM_CALLTYPE		Close();
 		
         virtual MvrString VCOM_CALLTYPE		GetName();
         virtual MvrString VCOM_CALLTYPE		GetShortName();
+		virtual MvrString VCOM_CALLTYPE		GetLongName();
         virtual MvrString VCOM_CALLTYPE     GetManufacturer();
         virtual MvrString VCOM_CALLTYPE     GetFixtureTypeDescription();
         virtual VCOMError VCOM_CALLTYPE     GetFixtureGUID(MvrUUID& uuid);
+        
         virtual MvrString VCOM_CALLTYPE     GetFixtureThumbnail();
-		virtual MvrString VCOM_CALLTYPE     GetFixtureThumbnailFullPath();
+		virtual MvrString VCOM_CALLTYPE     GetFixtureThumbnail_PNG_FullPath();
+        virtual MvrString VCOM_CALLTYPE     GetFixtureThumbnail_SVG_FullPath();
+
 		virtual VCOMError VCOM_CALLTYPE		GetLinkedFixtureGUID(MvrUUID& uuid);
 		virtual VCOMError VCOM_CALLTYPE		HasLinkedFixtureGUID(bool& has);
-
 		
 		
 		virtual VCOMError VCOM_CALLTYPE     SetFixtureTypeDescription(MvrString descrip);
 		virtual VCOMError VCOM_CALLTYPE		SetShortName(MvrString shortName);
+		virtual VCOMError VCOM_CALLTYPE		SetLongName(MvrString longname);
 		virtual VCOMError VCOM_CALLTYPE     SetFixtureThumbnail(MvrString thubnail);
 		virtual VCOMError VCOM_CALLTYPE		SetLinkedFixtureGUID(const MvrUUID& uuid);
 		

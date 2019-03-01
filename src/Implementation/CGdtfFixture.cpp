@@ -80,12 +80,12 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::OpenForWrite(MvrStri
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::AddFileToGdtfFile(MvrString fullPath)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::AddFileToGdtfFile(MvrString fullPath, ERessourceType resType)
 {
 	if(!fFixtureObject) { return kVCOMError_Failed; }
 	if(!fZipFile)		{ return kVCOMError_Failed; }
 	TXString strFullPath ( fullPath );
-	
+
 	// Create the file pointer on the full path
 	IFileIdentifierPtr file (IID_FileIdentifier);
 	file->Set(strFullPath);
@@ -96,11 +96,12 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::AddFileToGdtfFile(Mv
 	// Check if the file exists
 	if (!fileExisis) { return kVCOMError_Failed; }
 	
-	TXString fileName;
-	file->GetFileName(fileName);
+	TXString fileName; file->GetFileName(fileName);
 	
-	fZipFile->AddFile(fileName, file);
-	
+    // Append the SubFoldername for resources.
+    fileName = SceneData::SceneDataZip::GetResourceSubFolder(resType) + fileName;
+
+	fZipFile->AddFile(fileName, file);	
 	
 	// Read From File
 	return kVCOMError_NoError;
@@ -152,6 +153,13 @@ MvrString VectorworksMVR::CGdtfFixtureImpl::GetShortName()
     if(!fFixtureObject) {return "";}
 	
     return fFixtureObject->GetShortName().GetCharPtr();
+}
+
+MvrString VectorworksMVR::CGdtfFixtureImpl::GetLongName()
+{
+    if(!fFixtureObject) {return "";}
+	
+    return fFixtureObject->GetLongName().GetCharPtr();
 }
 
 MvrString VectorworksMVR::CGdtfFixtureImpl::GetManufacturer()
@@ -208,15 +216,23 @@ MvrString VectorworksMVR::CGdtfFixtureImpl::GetFixtureThumbnail()
     if(!fFixtureObject) {return "";}
 	
     
-    return fFixtureObject->GetPNGFile().GetCharPtr();
+    return fFixtureObject->GetThumbnailName().GetCharPtr();
 }
 
-MvrString VectorworksMVR::CGdtfFixtureImpl::GetFixtureThumbnailFullPath()
+MvrString VectorworksMVR::CGdtfFixtureImpl::GetFixtureThumbnail_PNG_FullPath()
 {
 	if(!fFixtureObject) {return "";}
 	
 	
-	return fFixtureObject->GetPNGFileFullPath().GetCharPtr();
+	return fFixtureObject->GetPNGThumnailFullPath().GetCharPtr();
+}
+
+MvrString VCOM_CALLTYPE VectorworksMVR::CGdtfFixtureImpl::GetFixtureThumbnail_SVG_FullPath()
+{
+	if(!fFixtureObject) {return "";}
+	
+	
+	return fFixtureObject->GetSVGThumnailFullPath().GetCharPtr();
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::SetFixtureTypeDescription(MvrString descrip)
@@ -239,12 +255,22 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::SetShortName(MvrStri
 	return kVCOMError_NoError;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::SetLongName(MvrString longname)
+{
+	if(!fFixtureObject) {return kVCOMError_NotInitialized;}
+	
+	TXString vwName (longname);
+	fFixtureObject->SetLongName(vwName);
+	
+	return kVCOMError_NoError;
+}
+
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::SetFixtureThumbnail(MvrString thubnail)
 {
 	if(!fFixtureObject) {return kVCOMError_NotInitialized;}
 	
 	TXString vwThumb (thubnail);
-	fFixtureObject->SetPNGFile(vwThumb);
+	fFixtureObject->SetThumbnailName(vwThumb);
 	
 	return kVCOMError_NoError;
 }
@@ -836,25 +862,23 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateGeometry(EGdtf
 {
 	// Check if Set
 	if(!fFixtureObject) { return kVCOMError_NotInitialized;}
-	
-	// Check Input
-	if (!model)			{ return kVCOMError_InvalidArg;  }
-	
-	//---------------------------------------------------------------------------
+		
+    //---------------------------------------------------------------------------
 	// Extract Model
+	SceneData::GdtfModelPtr scModel = nullptr;
+
 	CGdtfModelImpl* modelInterface = dynamic_cast<CGdtfModelImpl*>(model);
-	if( ! modelInterface) { return kVCOMError_Failed;  }
-	
-	
-	SceneData::GdtfModelPtr scModel = modelInterface->GetPointer();
-	if ( ! scModel) { return kVCOMError_Failed; }
+	if( modelInterface)
+	{
+		scModel = modelInterface->GetPointer();
+	}
 	
 	
 	//---------------------------------------------------------------------------
 	// Create geometry
 	TXString			vwName (name);
 	VWTransformMatrix	ma;
-	Utility::ConvertMatrix(mat, ma);
+	GdtfUtil::ConvertMatrix(mat, ma);
 	
 	SceneData::GdtfGeometry* gdtfGeometry = nullptr;
 	
@@ -1692,7 +1716,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateRDM(Vectorwork
 	CGdtf_FTRDMImpl* pRdm = nullptr;
 	
 	// Query Interface
-	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDMXProfile, (IVWUnknown**)& pRdm)))
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfTRDM, (IVWUnknown**)& pRdm)))
 	{
 		// Check Casting
 		CGdtf_FTRDMImpl* pResultInterface = dynamic_cast<CGdtf_FTRDMImpl*>(pRdm);
