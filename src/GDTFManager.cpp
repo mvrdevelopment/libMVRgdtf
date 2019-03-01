@@ -7483,6 +7483,27 @@ void SceneData::GdtfColorSpace::OnReadFromNode(const IXMLFileNodePtr & pNode)
     }
 }
 
+void SceneData::GdtfColorSpace::OnErrorCheck(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnErrorCheck(pNode);
+
+	//------------------------------------------------------------------------------------
+	// Create needed and optional Attribute Arrays
+	TXStringArray needed;
+	TXStringArray optional;
+	optional.push_back(XML_GDTF_ColorSpace_Red);
+	optional.push_back(XML_GDTF_ColorSpace_Green);
+	optional.push_back(XML_GDTF_ColorSpace_Blue);
+	optional.push_back(XML_GDTF_ColorSpace_WhitePoint);
+	optional.push_back(XML_GDTF_ColorSpace_Mode);
+
+	//------------------------------------------------------------------------------------
+	// Check Attributes for node
+	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
+}
+
 SceneData::GdtfFilter::GdtfFilter()
 {
     fName = "";
