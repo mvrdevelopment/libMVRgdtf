@@ -3289,6 +3289,11 @@ GdtfPhysicalEmitter * SceneData::GdtfDmxChannelFunction::GetEmitter() const
     return fEmitter;
 }
 
+GdtfFilterPtr SceneData::GdtfDmxChannelFunction::GetFilter()
+{
+    return fFilter;
+}
+
 void GdtfDmxChannelFunction::SetWheel(GdtfWheelPtr newWhl)
 {
 	fOnWheel = newWhl;
@@ -3357,6 +3362,11 @@ void GdtfDmxChannelFunction::SetEmitter(GdtfPhysicalEmitter* newEmit)
 	fEmitter = newEmit;
 }
 
+void SceneData::GdtfDmxChannelFunction::SetFilter(GdtfFilterPtr val)
+{
+    fFilter = val;
+}
+
 TXString GdtfDmxChannelFunction::getUnresolvedAttrRef() const
 {
 	return fUnresolvedAttrRef;
@@ -3375,6 +3385,11 @@ TXString GdtfDmxChannelFunction::getUnresolvedEmitterRef() const
 TXString GdtfDmxChannelFunction::getUnresolvedModeMasterRef() const
 {
 	return fUnresolvedModeMaster;
+}
+
+const TXString & SceneData::GdtfDmxChannelFunction::getUnresolvedFilterRef()
+{
+    return fUnresolvedFilterRef;
 }
 
 GdtfDmxChannel * SceneData::GdtfDmxChannelFunction::GetParentDMXChannel() const

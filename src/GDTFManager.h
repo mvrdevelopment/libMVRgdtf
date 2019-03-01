@@ -881,7 +881,7 @@ namespace SceneData
         GdtfDmxChannelFunction* fModeMaster_Function;
         DmxValue                fDmxModeStart;
         DmxValue                fDmxModeEnd;
-
+        GdtfFilterPtr           fFilter;
 		//
 		TGdtfDmxChannelSetArray	fChannelSets;		
 		
@@ -892,7 +892,8 @@ namespace SceneData
         TXString                fUnresolvedDmxModeStart;
         TXString                fUnresolvedDmxModeEnd;
         TXString                fUnresolvedModeMaster;
-		
+        TXString                fUnresolvedFilterRef;
+
 		// Parent Logical Channel
 		GdtfDmxLogicalChannel*	fParentLogicalChannel;
         GdtfDmxChannelFunction* fNextFunction;
@@ -910,7 +911,9 @@ namespace SceneData
         double							GetPhysicalEnd() const;
         double							GetRealFade() const;        
         GdtfWheelPtr					GetOnWheel() const;
-        GdtfPhysicalEmitter*            GetEmitter() const;
+        GdtfPhysicalEmitter*            GetEmitter() const;   
+        GdtfFilterPtr                   GetFilter();
+
 
         GdtfDmxChannel*                 GetModeMaster_Channel() const;
         GdtfDmxChannelFunction*         GetModeMaster_Function() const;
@@ -926,6 +929,7 @@ namespace SceneData
 		TXString						getUnresolvedWheelRef() const;
 		TXString						getUnresolvedEmitterRef() const;
         TXString						getUnresolvedModeMasterRef() const;
+        const TXString&                 getUnresolvedFilterRef();
 		GdtfDmxChannel*					GetParentDMXChannel() const;
         GdtfDmxLogicalChannel*			GetParentLogicalChannel() const;
         void						    ResolveModeMasterDmx(EGdtfChannelBitResolution resolution);
@@ -943,6 +947,8 @@ namespace SceneData
 		void							SetPhysicalEnd(double end);
 		void							SetRealFade(double fade);				
 		void							SetEmitter(GdtfPhysicalEmitter* newEmit);
+        void                            SetFilter(GdtfFilterPtr val);
+
 
         void                            SetModeMaster_Channel(GdtfDmxChannel* channel);
         void                            SetModeMaster_Function(GdtfDmxChannelFunction* function);
