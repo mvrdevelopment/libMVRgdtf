@@ -23,6 +23,7 @@ LIBDIR_POST	= release
 # compiler, linker and options
 CXX					?= g++									# gnu c++ compiler on all platforms
 CXXFLAGS			= -std=c++11							# compiler options
+CXX_FLAGS_CUSTOM	?= 									# custom options
 CXXFLAGSUNITTEST	= -std=c++11	-DGITPATH=\"$(CURDIR)\"	# compiler options unit test
 #LDFLAGS			= -shared								# linker options
 
@@ -80,6 +81,8 @@ else
     endif
 endif
 
+# ADd the custom flags to the normal Build
+CXXFLAGS += $(CXX_FLAGS_CUSTOM)
 
 # UnitTest:	set platform compiler, linker and e.t.c. options
 # Windows
