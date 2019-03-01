@@ -426,7 +426,7 @@ namespace SceneData
         TGdtfMeasurementArray           fMeasurementsArray;
     public:
         virtual EGdtfObjectType		    GetObjectType();
-
+        virtual TXString				GetNodeReference();
     public:            
         const TXString&		            GetName();
         CCieColor                       GetColor();
@@ -438,7 +438,7 @@ namespace SceneData
     protected:
         virtual	TXString				GetNodeName();
         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
-        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);        
     };
 
 	class GdtfWheel : public GdtfObject
@@ -2041,6 +2041,7 @@ private:
         GdtfPhysicalEmitterPtr      getEmiterByRef(const TXString& ref);
         GdtfDmxChannelFunctionPtr   getDmxFunctionByRef(const TXString& ref, GdtfDmxModePtr mode);
 		GdtfDmxChannelPtr           getDmxChannelByRef(const TXString& ref, GdtfDmxModePtr mode);
+        GdtfFilterPtr               getFilterByRef(const TXString& ref);
 
 		//
 		void AutoGenerateNames(GdtfDmxModePtr dmxMode);
