@@ -367,6 +367,24 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetEmitte
 	return kVCOMError_NoError;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetFilter (IGdtfFilter * newFilter)
+{
+    if (!fFunction) { return kVCOMError_NotInitialized; }
+    if (!newFilter) { return kVCOMError_InvalidArg; }
+
+    // Cast
+    CGdtfFilterImpl* FilterImpl = dynamic_cast<CGdtfFilterImpl*>(newFilter);
+    if (!FilterImpl) { return kVCOMError_Failed; }
+
+    // Set Object
+    SceneData::GdtfFilter* gdtfFilter = FilterImpl->GetPointer();
+    if (!gdtfFilter) { return kVCOMError_Failed; }
+
+    fFunction->SetFilter (gdtfFilter);
+
+    return kVCOMError_NoError;
+}
+
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetDmxChannelSetCount(size_t &count)
 {
 	// Check Pointer
