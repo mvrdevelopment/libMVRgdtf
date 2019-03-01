@@ -59,6 +59,16 @@ VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::GetBlue(CieColor& o
     return kVCOMError_NoError;
 }
 
+VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::GetWhite(CieColor& outVal)
+{
+	//Check Pointer
+	if( ! fColorSpace)		return kVCOMError_NotInitialized;    
+
+    outVal = SceneData::GdtfConverter::ConvertCColor( fColorSpace->GetWhite() );
+
+    return kVCOMError_NoError;
+}
+
 VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::SetColorSpace(EGdtfColorSpace val)
 {
 	//Check Pointer
@@ -69,7 +79,7 @@ VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::SetColorSpace(EGdtf
     return kVCOMError_NoError;
 }
 
-VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::SetRed(CieColor& val)
+VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::SetRed(CieColor val)
 {
 	//Check Pointer
 	if( ! fColorSpace)		return kVCOMError_NotInitialized;    
@@ -79,7 +89,7 @@ VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::SetRed(CieColor& va
 	return kVCOMError_NoError;
 }
 
-VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::SetGreen(CieColor& val)
+VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::SetGreen(CieColor val)
 {
 	//Check Pointer
 	if( ! fColorSpace)		return kVCOMError_NotInitialized;    
@@ -89,7 +99,7 @@ VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::SetGreen(CieColor& 
 	return kVCOMError_NoError;
 }
 
-VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::SetBlue(CieColor& val)
+VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::SetBlue(CieColor val)
 {
 	//Check Pointer
 	if( ! fColorSpace)		return kVCOMError_NotInitialized;    
@@ -99,6 +109,15 @@ VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::SetBlue(CieColor& v
 	return kVCOMError_NoError;
 }
 
+VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::SetWhite(CieColor val)
+{
+	//Check Pointer
+	if( ! fColorSpace)		return kVCOMError_NotInitialized;    
+
+    fColorSpace->SetWhite( SceneData::GdtfConverter::ConvertCColor(val) );
+
+	return kVCOMError_NoError;
+}
 
 VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::BindToObject(void * objAddr)
 {

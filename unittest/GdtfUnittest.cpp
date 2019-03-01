@@ -549,6 +549,28 @@ void GdtfUnittest::ReadFile()
 		__checkVCOM(colorSpace->GetColorSpace(thisSpace));
 
 		checkifEqual("ColorSpace", (size_t)thisSpace, (size_t)EGdtfColorSpace::ANSI);
+
+		CieColor ansiColor_Red;		ansiColor_Red.fx   = 0.7347; 	ansiColor_Red.fy   = 0.2653;	ansiColor_Red.f_Y   = 100;
+		CieColor ansiColor_Green;	ansiColor_Green.fx = 0.1596;	ansiColor_Green.fy = 0.8404; 	ansiColor_Green.f_Y = 100;
+		CieColor ansiColor_Blue;	ansiColor_Blue.fx  = 0.0366; 	ansiColor_Blue.fy  = 0.001; 	ansiColor_Blue.f_Y  = 100;
+		CieColor ansiColor_White;	ansiColor_White.fx = 0.4254; 	ansiColor_White.fy = 0.4044;	ansiColor_White.f_Y = 100;
+
+		CieColor gdtfColor_Red;
+		__checkVCOM(colorSpace->GetRed(gdtfColor_Red));
+
+		CieColor gdtfColor_Green;
+		__checkVCOM(colorSpace->GetGreen(gdtfColor_Green));
+
+		CieColor gdtfColor_Blue;
+		__checkVCOM(colorSpace->GetBlue(gdtfColor_Blue));
+
+		CieColor gdtfColor_White;
+		__checkVCOM(colorSpace->GetWhite(gdtfColor_White));
+
+		checkifEqual("ANSI Color Red", 		ansiColor_Red, 		gdtfColor_Red);
+		checkifEqual("ANSI Color Green", 	ansiColor_Green, 	gdtfColor_Green);
+		checkifEqual("ANSI Color Blue", 	ansiColor_Blue, 	gdtfColor_Blue);
+		checkifEqual("ANSI Color White", 	ansiColor_White,	gdtfColor_White);
 		
 
 		//------------------------------------------------------------------------------    

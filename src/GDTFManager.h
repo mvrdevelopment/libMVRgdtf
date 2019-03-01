@@ -365,11 +365,13 @@ namespace SceneData
         CCieColor		      GetRed();
         CCieColor             GetGreen();
         CCieColor		      GetBlue();
+		CCieColor             GetWhite();
         // Setter       
         void        		            SetColorSpace(EGdtfColorSpace val);
         void                            SetRed(CCieColor val);
         void                            SetGreen(CCieColor val);
         void    		                SetBlue(CCieColor val);
+		void    		                SetWhite(CCieColor val);
     protected:
         virtual	TXString				GetNodeName();
         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
