@@ -9,6 +9,7 @@
 #include "CGdtfPhysicalEmitter.h"
 #include "CGdtfDmxChannel.h"
 #include "CGdtfDmxLogicalChannel.h"
+#include "CGdtfFilter.h"
 
 using namespace VectorWorks::Filing;
 
@@ -216,6 +217,50 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetEmitte
     *emitter	= pEmitter;
     
     return kVCOMError_NoError;    
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetFilter(IGdtfFilter** outVal) 
+{
+    // Check Pointer
+    if (!fFunction) { return kVCOMError_NotInitialized; }
+
+    //---------------------------------------------------------------------------
+    // Initialize Object
+    SceneData::GdtfFilter*	gdtfFilter = fFunction->GetFilter();
+    if (!gdtfFilter) { return kVCOMError_NotSet; }
+
+    CGdtfFilterImpl*		pFilterObj = nullptr;
+
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfFilter, (IVWUnknown**)& pFilterObj)))
+    {
+        // Check Casting
+        CGdtfFilterImpl* pResultInterface = dynamic_cast<CGdtfFilterImpl*>(pFilterObj);
+        if (pResultInterface)
+        {
+            pResultInterface->SetPointer(gdtfFilter);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+
+    //---------------------------------------------------------------------------
+    // Check Incomming Object
+    if (*outVal)
+    {
+        (*outVal)->Release();
+        *outVal = NULL;
+    }
+
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *outVal = pFilterObj;
+
+    return kVCOMError_NoError;
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetAttribute(IGdtfAttribute* attribute)
