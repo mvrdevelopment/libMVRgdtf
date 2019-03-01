@@ -3033,7 +3033,7 @@ void GdtfDmxChannelFunction::OnPrintToFile(IXMLFileNodePtr pNode)
 
     if (fFilter) 
     {
-        pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionFilter, fFilter->GetName());
+        pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionFilter, fFilter->GetNodeReference());
     }
 
 	// ------------------------------------------------------------------------------------
