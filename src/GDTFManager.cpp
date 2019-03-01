@@ -7300,17 +7300,13 @@ void SceneData::GdtfPhysicalDescriptions::OnPrintToFile(IXMLFileNodePtr pNode)
 		
 	// CRI_Collect (PhysicalDescription child)
 	IXMLFileNodePtr CRI_CollectNode;
-	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_GDTF_PhysicalDescriptionsEmitterCollect, &CRI_CollectNode)))
+	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_GDTF_ColorRenderingIndexCollect, &CRI_CollectNode)))
 	{
-		// CRI_Group (CRI_Collect child)
-		IXMLFileNodePtr criGroupNode;
-		if (VCOM_SUCCEEDED(CRI_CollectNode->CreateChildNode(XML_GDTF_PhysicalDescriptionsEmitterCollect, &criGroupNode)))
+		for (GdtfCRIGroupPtr criGroup : fCRI_Groups)
 		{
-			for (GdtfCRIGroupPtr criGroup : fCRI_Groups)
-			{
-				criGroup->WriteToNode(criGroupNode);
-			}
+			criGroup->WriteToNode(CRI_CollectNode);
 		}
+		
 	}
 
 }
@@ -7501,7 +7497,6 @@ void SceneData::GdtfColorSpace::OnReadFromNode(const IXMLFileNodePtr & pNode)
 		TXString value_green;   pNode->GetNodeAttributeValue(XML_GDTF_ColorSpace_Green,      value_green ); GdtfConverter::ConvertColor(value_green , pNode, fGreen);
 		TXString value_blue;    pNode->GetNodeAttributeValue(XML_GDTF_ColorSpace_Blue,       value_blue );  GdtfConverter::ConvertColor(value_blue  , pNode, fBlue);
 		TXString value_white;   pNode->GetNodeAttributeValue(XML_GDTF_ColorSpace_WhitePoint, value_white ); GdtfConverter::ConvertColor(value_white , pNode, fWhitePoint);
-       
     }
 }
 
