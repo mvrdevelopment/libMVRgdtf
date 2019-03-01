@@ -95,6 +95,9 @@ namespace VectorworksMVR
             eGdtfMacroVisualValue       = 67,
             eGdtfDMXPersonality         = 68, 
             eGdtfSoftwareVersionID      = 69,
+            eGdtfColorSpace             = 70,
+            eGdtfFilter                 = 71,
+            eGdtfMeasurement            = 72,
 		};
 
         enum class EGdtfParsingError : Sint32
@@ -574,6 +577,22 @@ namespace VectorworksMVR
             CES_98,
             CES_99,
         };
+
+        enum class EGdtfColorSpace
+        {
+            sRGB = 0,
+            Custom = 1,
+            ProPhoto = 2,
+            ANSI = 3,
+        };
+
+        enum class EGdtfInterpolationTo
+        {
+            Linear = 0, 
+            Step   = 1, 
+            Log    = 2,
+        };
+
 	}
 }
 

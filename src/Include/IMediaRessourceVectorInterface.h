@@ -78,7 +78,10 @@ namespace VectorworksMVR
     class IGdtfDmxLogicalChannel;
     class IGdtfXmlParsingError;
     class IGdtfSoftwareVersionID;
-
+    class IGdtfDMXProfile;
+    class IGdtfCRIGroup;
+    class IGdtfColorSpace;
+    class IGdtfFilter;
 	//-------------------------------------------------------------------------------------------------------------
 	class DYNAMIC_ATTRIBUTE ISceneDataProvider : public IVWUnknown
 	{
@@ -205,7 +208,7 @@ namespace VectorworksMVR
 		// Call this at the start of generating a MVR file
 		virtual VCOMError VCOM_CALLTYPE		OpenForWrite(MvrString fullPath) = 0;
 		virtual VCOMError VCOM_CALLTYPE		AddGdtfFolderLocation(MvrString fullPathToFolder) = 0;
-        virtual VCOMError VCOM_CALLTYPE		AddFileToMvrFile(MvrString fullPath, GdtfDefines::ERessourceType resType) = 0;
+        virtual VCOMError VCOM_CALLTYPE		AddFileToMvrFile(MvrString fullPath) = 0;
 
 		
 		// After this you can generate Aux Objects
@@ -509,6 +512,7 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetRealFade(double& fade) = 0;        
         virtual VCOMError VCOM_CALLTYPE     GetOnWheel(IGdtfWheel** wheel) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetEmitter(IGdtfPhysicalEmitter** emitter) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetFilter(IGdtfFilter** outVal) = 0;
 
 		virtual VCOMError VCOM_CALLTYPE     SetAttribute(IGdtfAttribute* attribute) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetOriginalAttribute(MvrString attr) = 0;
@@ -518,6 +522,7 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE     SetRealFade(double fade) = 0;		
 		virtual VCOMError VCOM_CALLTYPE     SetOnWheel(IGdtfWheel* wheel) = 0;
         virtual VCOMError VCOM_CALLTYPE     SetEmitter(IGdtfPhysicalEmitter* emitter) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetFilter(IGdtfFilter* val)=0;
 
         virtual VCOMError VCOM_CALLTYPE     GetDmxChannelSetCount(size_t& count) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetDmxChannelSetAt(size_t at, IGdtfDmxChannelSet** set) = 0;
@@ -775,6 +780,49 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     SetEnergy(double energy) = 0;
     };
 	typedef VCOMPtr<IGdtfMeasurementPoint>	IGdtfMeasurementPointPtr;
+        
+    class DYNAMIC_ATTRIBUTE IGdtfMeasurement : public IVWUnknown
+    {
+    public:        
+        // Getter
+        virtual VCOMError VCOM_CALLTYPE    GetPhysical(double& outVal)=0;
+        virtual VCOMError VCOM_CALLTYPE    GetLuminousIntensity(double& outVal)=0;
+        virtual VCOMError VCOM_CALLTYPE    GetTransmission(double& outVal)=0;
+        virtual VCOMError VCOM_CALLTYPE    GetInterpolationTo(GdtfDefines::EGdtfInterpolationTo& outVal)=0;
+        // Setter               
+        virtual VCOMError VCOM_CALLTYPE    SetPhysical(double val)=0;
+        virtual VCOMError VCOM_CALLTYPE    SetLuminousIntensity(double val)=0;
+        virtual VCOMError VCOM_CALLTYPE    SetTransmission(double val)=0;
+        virtual VCOMError VCOM_CALLTYPE    SetInterpolationTo(GdtfDefines::EGdtfInterpolationTo val)=0;        
+        //
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetMeasurementPointCount(size_t& count)=0;
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateMeasurementPoint(VectorworksMVR::IGdtfMeasurementPoint** outVal)=0;
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetMeasurementPointAt(size_t at, VectorworksMVR::IGdtfMeasurementPoint** value)=0;
+        //
+
+        virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+        virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+    };
+    typedef VCOMPtr<IGdtfMeasurement>	IGdtfMeasurementPtr;
+           
+    class DYNAMIC_ATTRIBUTE IGdtfFilter : public IVWUnknown
+    {
+    public:        
+        // Getter
+        virtual MvrString VCOM_CALLTYPE     GetName()= 0;
+        virtual VCOMError VCOM_CALLTYPE     GetColor(CieColor& outVal)= 0;
+        // Setter
+        virtual VCOMError VCOM_CALLTYPE     SetName(MvrString name)= 0;
+        virtual VCOMError VCOM_CALLTYPE     SetColor(CieColor val)= 0;
+        //
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetMeasurementCount(size_t& count)= 0;
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateMeasurement(VectorworksMVR::IGdtfMeasurement** outVal)= 0;
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetMeasurementAt(size_t at, VectorworksMVR::IGdtfMeasurement** value)= 0;
+        //
+        virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+        virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+    };
+    typedef VCOMPtr<IGdtfFilter>	IGdtfFilterPtr;
     
     class DYNAMIC_ATTRIBUTE IGdtfPhysicalEmitter : public IVWUnknown
     {
@@ -782,17 +830,43 @@ namespace VectorworksMVR
         virtual MvrString VCOM_CALLTYPE     GetName() = 0;
         virtual VCOMError VCOM_CALLTYPE     GetColor(CieColor& color) = 0;
         
-        virtual VCOMError VCOM_CALLTYPE     GetMeasurementPointCount(size_t& count) = 0;
-        virtual VCOMError VCOM_CALLTYPE     GetMeasurementPointAt(size_t at, IGdtfMeasurementPoint** measurementPoint) = 0;
-		virtual VCOMError VCOM_CALLTYPE     CreateMeasurementPoint(double wavelength, double energy, IGdtfMeasurementPoint** measurementPoint) = 0;
-		
+        virtual VCOMError VCOM_CALLTYPE     GetMeasurementCount(size_t& count) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetMeasurementAt(size_t at, IGdtfMeasurement** ouVal) = 0;
+		virtual VCOMError VCOM_CALLTYPE     CreateMeasurement(double wavelength, double energy, IGdtfMeasurement** ouVal) = 0;
+		virtual MvrString VCOM_CALLTYPE     GetDiodePart()=0;
+        virtual VCOMError VCOM_CALLTYPE     GetDominantWaveLength(double& outVal)=0;		
+
         virtual VCOMError VCOM_CALLTYPE     SetName(MvrString name) = 0;
         virtual VCOMError VCOM_CALLTYPE     SetColor(CieColor & color) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetDiodePart(MvrString val)=0;		
+        virtual VCOMError VCOM_CALLTYPE     SetDominantWaveLength(double val)=0;
 
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
     };
     typedef VCOMPtr<IGdtfPhysicalEmitter>	IGdtfPhysicalEmitterPtr;
+        
+    class DYNAMIC_ATTRIBUTE IGdtfColorSpace : public IVWUnknown
+    {
+    public:
+        virtual VCOMError VCOM_CALLTYPE GetColorSpace(GdtfDefines::EGdtfColorSpace& outVal) = 0;
+        virtual VCOMError VCOM_CALLTYPE	GetRed (CieColor& outVal) = 0;
+        virtual VCOMError VCOM_CALLTYPE GetGreen(CieColor& outVal) = 0;
+        virtual VCOMError VCOM_CALLTYPE	GetBlue(CieColor& outVal) = 0;
+        virtual VCOMError VCOM_CALLTYPE	GetWhite(CieColor& outVal) = 0;
+
+        // Setter       
+        virtual VCOMError VCOM_CALLTYPE SetColorSpace(GdtfDefines::EGdtfColorSpace val) = 0;
+        virtual VCOMError VCOM_CALLTYPE SetRed(CieColor val) = 0;
+        virtual VCOMError VCOM_CALLTYPE SetGreen(CieColor val) = 0;
+        virtual VCOMError VCOM_CALLTYPE SetBlue(CieColor val) = 0;
+        virtual VCOMError VCOM_CALLTYPE	SetWhite(CieColor outVal) = 0;
+
+
+        virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+        virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+    };
+    typedef VCOMPtr<IGdtfColorSpace>	IGdtfColorSpacePtr;
 
     class DYNAMIC_ATTRIBUTE IGdtfCRI : public IVWUnknown
     {
@@ -859,7 +933,7 @@ namespace VectorworksMVR
         virtual MvrString VCOM_CALLTYPE     GetFixtureThumbnail() = 0;
 		virtual MvrString VCOM_CALLTYPE     GetFixtureThumbnail_PNG_FullPath() = 0;
         virtual MvrString VCOM_CALLTYPE     GetFixtureThumbnail_SVG_FullPath() = 0;
-		
+        
 		virtual VCOMError VCOM_CALLTYPE     SetFixtureTypeDescription(MvrString descrip) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetShortName(MvrString shortName) = 0;
 
@@ -906,24 +980,31 @@ namespace VectorworksMVR
         
         virtual VCOMError VCOM_CALLTYPE		GetMacroCount(size_t& count) = 0;
         virtual VCOMError VCOM_CALLTYPE		GetMacroAt(size_t at, IGdtfMacro** macro ) = 0;
-		virtual VCOMError VCOM_CALLTYPE     CreateMacro(MvrString& name, IGdtfMacro** macro) = 0;
-        
-		virtual VCOMError VCOM_CALLTYPE     GetEmitterCount(size_t& count) = 0;
-
-		virtual VCOMError VCOM_CALLTYPE     GetEmitterAt(size_t at, IGdtfPhysicalEmitter** emitter) = 0;		
-        virtual VCOMError VCOM_CALLTYPE     CreateEmitter(MvrString name,const CieColor& color, IGdtfPhysicalEmitter** emitter) = 0;
-
-        virtual VCOMError VCOM_CALLTYPE		GetCRIGroupCount(size_t& count) = 0;
-        virtual VCOMError VCOM_CALLTYPE		CreateCRIGroup(double colorTemp, VectorworksMVR::IGdtfCRIGroup** outVal) = 0;
-        virtual VCOMError VCOM_CALLTYPE		GetCRIGroupAt(size_t at, VectorworksMVR::IGdtfCRIGroup** value) = 0;
+		virtual VCOMError VCOM_CALLTYPE     CreateMacro(MvrString& name, IGdtfMacro** macro) = 0;        
         		
 		virtual VCOMError VCOM_CALLTYPE     GetRDM(IGdtf_FTRDM ** newFTRDM) = 0;
 		virtual VCOMError VCOM_CALLTYPE     CreateRDM(VectorworksMVR::IGdtf_FTRDM ** outFTRDM) = 0;
 
-		virtual VCOMError VCOM_CALLTYPE		GetDMXProfileCount(size_t& count) = 0;
-		virtual VCOMError VCOM_CALLTYPE		CreateDMXProfile(VectorworksMVR::IGdtfDMXProfile** outVal) = 0;
-		virtual VCOMError VCOM_CALLTYPE		GetDMXProfileAt(size_t at, VectorworksMVR::IGdtfDMXProfile** value) = 0;
+        //-----------------------------------------------------------------------------
+        // PhysicalDescriptions
+        virtual VCOMError                             GetColorSpace(VectorworksMVR::IGdtfColorSpace ** outColorSpace)=0;
 
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetEmitterCount(size_t& count)=0;
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateEmitter(MvrString name, CieColor color, VectorworksMVR::IGdtfPhysicalEmitter** outVal)=0;
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetEmitterAt(size_t at, VectorworksMVR::IGdtfPhysicalEmitter** value)=0;
+
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetFilterCount(size_t& count)=0;
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateFilter(MvrString name, CieColor color, VectorworksMVR::IGdtfFilter** outVal)=0;
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetFilterAt(size_t at, VectorworksMVR::IGdtfFilter** value)=0;
+
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetDMXProfileCount(size_t& count)=0;
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateDMXProfile(VectorworksMVR::IGdtfDMXProfile** outVal)=0;
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetDMXProfileAt(size_t at, VectorworksMVR::IGdtfDMXProfile** value)=0;
+
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetCRIGroupCount(size_t& count)=0;
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateCRIGroup(double colorTemp, VectorworksMVR::IGdtfCRIGroup** outVal)=0;
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetCRIGroupAt(size_t at, VectorworksMVR::IGdtfCRIGroup** value)=0;
+        //-----------------------------------------------------------------------------               
         // Parsing Errors
         virtual VCOMError VCOM_CALLTYPE		GetParsingErrorCount(size_t& count) = 0;
         virtual VCOMError VCOM_CALLTYPE		GetParsingErrorAt(size_t at, IGdtfXmlParsingError** value) = 0;

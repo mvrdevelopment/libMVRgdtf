@@ -45,6 +45,7 @@
     <ClCompile Include="..\src\Implementation\CGdtfActivationGroup.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfAttribute.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfBreak.cpp" />
+    <ClCompile Include="..\src\Implementation\CGdtfColorSpace.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfCRI.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfCRIGroup.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfDmxChannel.cpp" />
@@ -57,6 +58,7 @@
     <ClCompile Include="..\src\Implementation\CGdtfDmxRelation.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfFeature.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfFeatureGroup.cpp" />
+    <ClCompile Include="..\src\Implementation\CGdtfFilter.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfFixture.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfFTRDM.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfGeometry.cpp" />
@@ -67,6 +69,7 @@
     <ClCompile Include="..\src\Implementation\CGdtfMacroVisual.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfMacroVisualStep.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfMacroVisualValue.cpp" />
+    <ClCompile Include="..\src\Implementation\CGdtfMeasurement.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfMeasurementPoint.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfModel.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfPhysicalEmitter.cpp" />
@@ -128,6 +131,7 @@
     <ClInclude Include="..\src\Implementation\CGdtfActivationGroup.h" />
     <ClInclude Include="..\src\Implementation\CGdtfAttribute.h" />
     <ClInclude Include="..\src\Implementation\CGdtfBreak.h" />
+    <ClInclude Include="..\src\Implementation\CGdtfColorSpace.h" />
     <ClInclude Include="..\src\Implementation\CGdtfCRI.h" />
     <ClInclude Include="..\src\Implementation\CGdtfCRIGroup.h" />
     <ClInclude Include="..\src\Implementation\CGdtfDmxChannel.h" />
@@ -140,6 +144,7 @@
     <ClInclude Include="..\src\Implementation\CGdtfDmxRelation.h" />
     <ClInclude Include="..\src\Implementation\CGdtfFeature.h" />
     <ClInclude Include="..\src\Implementation\CGdtfFeatureGroup.h" />
+    <ClInclude Include="..\src\Implementation\CGdtfFilter.h" />
     <ClInclude Include="..\src\Implementation\CGdtfFixture.h" />
     <ClInclude Include="..\src\Implementation\CGdtfFTRDM.h" />
     <ClInclude Include="..\src\Implementation\CGdtfGeometry.h" />
@@ -150,6 +155,7 @@
     <ClInclude Include="..\src\Implementation\CGdtfMacroVisual.h" />
     <ClInclude Include="..\src\Implementation\CGdtfMacroVisualStep.h" />
     <ClInclude Include="..\src\Implementation\CGdtfMacroVisualValue.h" />
+    <ClInclude Include="..\src\Implementation\CGdtfMeasurement.h" />
     <ClInclude Include="..\src\Implementation\CGdtfMeasurementPoint.h" />
     <ClInclude Include="..\src\Implementation\CGdtfModel.h" />
     <ClInclude Include="..\src\Implementation\CGdtfPhysicalEmitter.h" />
@@ -214,8 +220,8 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{BF7C7ABD-E7E9-4110-AA85-A8452D47126B}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>libVectorworksMvrGdtf</RootNamespace>	
-	<WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>    
+    <RootNamespace>libVectorworksMvrGdtf</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

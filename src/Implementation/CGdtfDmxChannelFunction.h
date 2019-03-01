@@ -25,6 +25,7 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetRealFade(double& fade);        
         virtual VCOMError VCOM_CALLTYPE     GetOnWheel(IGdtfWheel** wheel);
         virtual VCOMError VCOM_CALLTYPE     GetEmitter(IGdtfPhysicalEmitter** emitter);
+        virtual VCOMError VCOM_CALLTYPE     GetFilter(IGdtfFilter** outVal);
 
 		virtual VCOMError VCOM_CALLTYPE     SetAttribute(IGdtfAttribute* attribute);
 		virtual VCOMError VCOM_CALLTYPE     SetOriginalAttribute(MvrString attr);
@@ -34,7 +35,7 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE     SetRealFade(double fade);
 		virtual VCOMError VCOM_CALLTYPE     SetOnWheel(IGdtfWheel* wheel);
         virtual VCOMError VCOM_CALLTYPE     SetEmitter(IGdtfPhysicalEmitter* emitter);
-
+        virtual VCOMError VCOM_CALLTYPE     SetFilter(IGdtfFilter* val);
 		
         virtual VCOMError VCOM_CALLTYPE     GetDmxChannelSetCount(size_t& count);
         virtual VCOMError VCOM_CALLTYPE     GetDmxChannelSetAt(size_t at, IGdtfDmxChannelSet** set);
@@ -45,7 +46,7 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE     GetModeMasterFunction(IGdtfDmxChannelFunction** outFunction, DmxValue& start, DmxValue& end);
 		virtual VCOMError VCOM_CALLTYPE     SetModeMasterChannel(IGdtfDmxChannel* channel, DmxValue start, DmxValue end);
 		virtual VCOMError VCOM_CALLTYPE     SetModeMasterFunction(IGdtfDmxChannelFunction* function, DmxValue start, DmxValue end);
-
+        
         virtual VCOMError VCOM_CALLTYPE     GetParentLogicalChannel(IGdtfDmxLogicalChannel** parent);
 		
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr);

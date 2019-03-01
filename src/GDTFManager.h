@@ -18,7 +18,10 @@ typedef Sint32				StatusID;
 namespace SceneData
 {
 	// Forward declarations
-	class GdtfPhysicalEmitter;
+	class GdtfPhysicalEmitter; 
+    typedef GdtfPhysicalEmitter*				GdtfPhysicalEmitterPtr;
+    typedef std::vector<GdtfPhysicalEmitter*>	TGdtfPhysicalEmitterArray;    	
+
 	class GdtfFeatureGroup;
 	class GdtfAttribute;
 	class GdtfWheel;	
@@ -39,7 +42,21 @@ namespace SceneData
     class GdtfSoftwareVersionID;
     typedef std::vector<GdtfSoftwareVersionID*>	TGdtfSoftwareVersionIDArray;
     typedef GdtfSoftwareVersionID*	GdtfSoftwareVersionIDPtr;
-    //-----------------------------------------------------------------------------
+    
+    class GdtfDMXProfile; 
+    typedef GdtfDMXProfile*	GdtfDMXProfilePtr;
+    typedef std::vector<GdtfDMXProfile*>	TGdtfDMXProfileArray;
+
+    class GdtfCRIGroup;  
+    typedef GdtfCRIGroup*	GdtfCRIGroupPtr;
+    typedef std::vector<GdtfCRIGroup*>	TGdtf_CRIGroupArray;
+    
+    class GdtfMeasurementPoint;
+    class GdtfMeasurement; typedef std::vector<GdtfMeasurement*>	TGdtfMeasurementArray;
+    
+    class GdtfFilter; 
+    typedef GdtfFilter*	GdtfFilterPtr;
+    typedef std::vector<GdtfFilter*>	TGdtfFilterArray;
 	//------------------------------------------------------------------------------------
 	// Attributes	
 	
@@ -326,7 +343,106 @@ namespace SceneData
 	};
 	typedef GdtfWheelSlot*					GdtfWheelSlotPtr;
 	typedef std::vector<GdtfWheelSlotPtr>	TGdtfWheelSlotArray;
-	
+
+    class GdtfColorSpace : public GdtfObject
+    {
+    public:
+        GdtfColorSpace();
+        ~GdtfColorSpace();
+    private:
+        EGdtfColorSpace  fColorSpace;
+
+        CCieColor        fRed;
+        CCieColor        fGreen;
+        CCieColor        fBlue;
+        CCieColor        fWhitePoint;
+    public:
+        virtual EGdtfObjectType			GetObjectType();
+
+    public:
+        // Getter        
+        EGdtfColorSpace		  GetColorSpace();
+        CCieColor		      GetRed();
+        CCieColor             GetGreen();
+        CCieColor		      GetBlue();
+		CCieColor             GetWhite();
+        // Setter       
+        void        		            SetColorSpace(EGdtfColorSpace val);
+        void                            SetRed(CCieColor val);
+        void                            SetGreen(CCieColor val);
+        void    		                SetBlue(CCieColor val);
+		void    		                SetWhite(CCieColor val);
+    protected:
+        virtual	TXString				GetNodeName();
+        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+		virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+
+    };
+
+
+    class GdtfPhysicalDescriptions : public GdtfObject
+    {
+    public:
+        GdtfPhysicalDescriptions();
+        ~GdtfPhysicalDescriptions();
+    private:        
+        GdtfColorSpace                  fColorSpace;    
+        TGdtfPhysicalEmitterArray		fEmitters;      
+        TGdtfFilterArray                fFilters;       
+        TGdtfDMXProfileArray            fDmxProfiles;         
+        TGdtf_CRIGroupArray             fCRI_Groups; 
+    public:
+        virtual EGdtfObjectType			GetObjectType();
+
+    public:        
+        // Getter        
+        GdtfColorSpace*                  GetColorSpace();
+
+        const TGdtfPhysicalEmitterArray& GetPhysicalEmitterArray();
+        const TGdtfFilterArray&          GetFilterArray();
+        const TGdtfDMXProfileArray&      GetDmxProfileArray();
+        const TGdtf_CRIGroupArray&       GetCRIGroupArray();
+        
+        GdtfPhysicalEmitterPtr	        AddEmitter(const TXString& name, CCieColor color);
+        GdtfFilterPtr                   AddFilter(const TXString& name,  CCieColor color);
+        GdtfDMXProfilePtr               AddDmxProfile();
+        GdtfCRIGroupPtr                 AddCRIGroup(double colorTsemp);
+
+    protected:
+        virtual	TXString				GetNodeName();
+        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+    };
+    typedef GdtfPhysicalDescriptions*	GdtfPhysicalDescriptionsPtr;	
+
+    class GdtfFilter : public GdtfObject
+    {
+    public:
+        GdtfFilter();
+        GdtfFilter(const TXString& name, const CCieColor& col);
+        ~GdtfFilter();
+    private:
+        TXString                        fName;
+        CCieColor                       fColor;
+        TGdtfMeasurementArray           fMeasurementsArray;
+    public:
+        virtual EGdtfObjectType		    GetObjectType();
+        virtual TXString				GetNodeReference();
+    public:            
+        const TXString&		            GetName();
+        CCieColor                       GetColor();
+        const TGdtfMeasurementArray&    GetMeasurementsArray();
+        // Setter       
+        void						    SetName(const TXString& name);
+        void                            SetColor(CCieColor val);
+        GdtfMeasurement*                CreateMeasurement();
+    protected:
+        virtual	TXString				GetNodeName();
+        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);        
+    };
+
 	class GdtfWheel : public GdtfObject
 	{
 	public:
@@ -769,7 +885,7 @@ namespace SceneData
         GdtfDmxChannelFunction* fModeMaster_Function;
         DmxValue                fDmxModeStart;
         DmxValue                fDmxModeEnd;
-
+        GdtfFilterPtr           fFilter;
 		//
 		TGdtfDmxChannelSetArray	fChannelSets;		
 		
@@ -780,7 +896,8 @@ namespace SceneData
         TXString                fUnresolvedDmxModeStart;
         TXString                fUnresolvedDmxModeEnd;
         TXString                fUnresolvedModeMaster;
-		
+        TXString                fUnresolvedFilterRef;
+
 		// Parent Logical Channel
 		GdtfDmxLogicalChannel*	fParentLogicalChannel;
         GdtfDmxChannelFunction* fNextFunction;
@@ -798,7 +915,9 @@ namespace SceneData
         double							GetPhysicalEnd() const;
         double							GetRealFade() const;        
         GdtfWheelPtr					GetOnWheel() const;
-        GdtfPhysicalEmitter*            GetEmitter() const;
+        GdtfPhysicalEmitter*            GetEmitter() const;   
+        GdtfFilterPtr                   GetFilter();
+
 
         GdtfDmxChannel*                 GetModeMaster_Channel() const;
         GdtfDmxChannelFunction*         GetModeMaster_Function() const;
@@ -814,6 +933,7 @@ namespace SceneData
 		TXString						getUnresolvedWheelRef() const;
 		TXString						getUnresolvedEmitterRef() const;
         TXString						getUnresolvedModeMasterRef() const;
+        const TXString&                 getUnresolvedFilterRef();
 		GdtfDmxChannel*					GetParentDMXChannel() const;
         GdtfDmxLogicalChannel*			GetParentLogicalChannel() const;
         void						    ResolveModeMasterDmx(EGdtfChannelBitResolution resolution);
@@ -831,6 +951,8 @@ namespace SceneData
 		void							SetPhysicalEnd(double end);
 		void							SetRealFade(double fade);				
 		void							SetEmitter(GdtfPhysicalEmitter* newEmit);
+        void                            SetFilter(GdtfFilterPtr val);
+
 
         void                            SetModeMaster_Channel(GdtfDmxChannel* channel);
         void                            SetModeMaster_Function(GdtfDmxChannelFunction* function);
@@ -1598,8 +1720,6 @@ namespace SceneData
     };
     typedef GdtfMacroVisual*	GdtfMacroVisualPtr;
 
-	//------------------------------------------------------------------------------------
-	// GdtfPhysicalDescription Definition
 	class GdtfMeasurementPoint : public GdtfObject
 	{
 	public:
@@ -1627,31 +1747,76 @@ namespace SceneData
 	};
 	typedef GdtfMeasurementPoint*				GdtfMeasurementPointPtr;
 	typedef std::vector<GdtfMeasurementPoint*>	TGdtfMeasurementPointArray;
+    	
 
-	
+    class GdtfMeasurement : public GdtfObject
+    {
+    public:
+        GdtfMeasurement();
+        ~GdtfMeasurement();
+    private:
+        double                      fPhysical;
+        double                      fLuminousIntensity;
+        double                      fTransmission;
+        EGdtfInterpolationTo        fInterpolationTo;
+
+        TGdtfMeasurementPointArray  fMeasurementPoints;
+    public:
+        virtual EGdtfObjectType		GetObjectType();
+
+    public:
+        // Getter                
+        double                             GetPhysical();
+        double                             GetLuminousIntensity();
+        double                             GetTransmission();
+        EGdtfInterpolationTo               GetInterpolationTo();
+        const TGdtfMeasurementPointArray&  GetMeasurementPointsArray();
+        // Setter               
+        void                               SetPhysical(double val);
+        void                               SetLuminousIntensity(double val);
+        void                               SetTransmission(double val);
+        void                               SetInterpolationTo(EGdtfInterpolationTo val);
+        GdtfMeasurementPoint*              CreateMeasurementPoint();
+    protected:
+        virtual	TXString				   GetNodeName();
+        virtual	void					   OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					   OnReadFromNode(const IXMLFileNodePtr& pNode);
+    };
+    typedef GdtfMeasurement*	GdtfMeasurementPtr;
+        
+	//------------------------------------------------------------------------------------
+	// GdtfPhysicalDescription Definition
 	class GdtfPhysicalEmitter : public GdtfObject
 	{
 	public:
 		GdtfPhysicalEmitter();
-		GdtfPhysicalEmitter(const TXString& name);
+		GdtfPhysicalEmitter(const TXString& name, CCieColor color);
 		~GdtfPhysicalEmitter();
 		
 	private:
 		TXString					fName;
 		CCieColor					fColor;
+        double                      fDominantWaveLength;
+        TXString                    fDiodePart;
 		//		
-		TGdtfMeasurementPointArray	fMeasurePoints;
+		TGdtfMeasurementArray	fMeasurements; 
 		
 	public:
+        // Getter
 		virtual EGdtfObjectType				GetObjectType();
         const TXString&						GetName() const;
-        CCieColor							GetColor() const;
-        const TGdtfMeasurementPointArray    GetMeasurementPoints();
+        CCieColor							GetColor() const;        
 		virtual TXString					GetNodeReference();
-		
+        const TXString&                     GetDiodePart();
+        double                              GetDominantWaveLength();
+        const TGdtfMeasurementArray         GetMeasurements();
+		// Setter
 		void							SetName(const TXString& name);
 		void							SetColor(CCieColor color);
-		GdtfMeasurementPoint*			AddMeasurementPoint();
+        void                            SetDiodePart(const TXString& val);
+        void                            SetDominantWaveLength(double val);
+
+        GdtfMeasurement*                AddMeasurement();
 
 	protected:
 		virtual	TXString				GetNodeName();
@@ -1660,8 +1825,6 @@ namespace SceneData
         virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
 
 	};
-	typedef GdtfPhysicalEmitter*				GdtfPhysicalEmitterPtr;
-	typedef std::vector<GdtfPhysicalEmitter*>	TGdtfPhysicalEmitterArray;
 	
     class GdtfCRI : public GdtfObject
     {
@@ -1720,8 +1883,6 @@ namespace SceneData
         virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
         virtual void                    OnErrorCheck(const IXMLFileNodePtr& pNode);
     };
-    typedef GdtfCRIGroup*	GdtfCRIGroupPtr;
-    typedef std::vector<GdtfCRIGroup*>	TGdtf_CRIGroupArray;
 
 	class GdtfDMXProfile : public GdtfObject
      {
@@ -1743,10 +1904,7 @@ namespace SceneData
          virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
          virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
      };
-     typedef GdtfDMXProfile*	GdtfDMXProfilePtr;
-     typedef std::vector<GdtfDMXProfile*>	TGdtfDMXProfileArray;
 	
-
 	//------------------------------------------------------------------------------------
 	// GdtfFixture Definition
 	class GdtfFixture : public GdtfObject
@@ -1759,18 +1917,21 @@ namespace SceneData
 	private:
 		//------------------------------------------------
 		// Parameters for a GdtfFixture
-		TXString		fName;
-		TXString		fShortName;
-		TXString		fLongName;
-		TXString		fManufacturer;
-		TXString		fFixtureTypeDescription;
-		GdtfFixtureGUID	fGuid;
-		TXString		fTumbnailName;
-		TXString		fTumbnailFullPath_PNG;
-        TXString		fTumbnailFullPath_SVG;
-		GdtfFixtureGUID	fLinkedGuid;
-		bool			fHasLinkedGuid;
-
+		TXString		            fName;
+		TXString		            fShortName;
+		TXString		            fLongName;
+		TXString		            fManufacturer;
+		TXString		            fFixtureTypeDescription;
+		GdtfFixtureGUID	            fGuid;
+		TXString		            fTumbnailName;
+		TXString		            fTumbnailFullPath_PNG;
+        TXString		            fTumbnailFullPath_SVG;
+		
+        GdtfFixtureGUID	            fLinkedGuid;
+		bool			            fHasLinkedGuid;
+        
+        GdtfProtocols				fProtocollContainer;
+        
 		//------------------------------------------------
 		// Storage
         
@@ -1786,15 +1947,8 @@ namespace SceneData
 		TGdtfDmxModeArray				fDmxModes;
 		TGdtfRevisionArray				fRevisions;
 		TGdtfUserPresetArray			fPresets;
-		TGdtfMacroArray					fMacros;
-		
-		TGdtfPhysicalEmitterArray		fEmitters;
-        TGdtfDMXProfileArray            fDmxProfiles;
-        TGdtf_CRIGroupArray             fCRI_Groups;
-		
-
-		GdtfProtocols					fProtocollContainer;
-		
+		TGdtfMacroArray					fMacros;	
+        GdtfPhysicalDescriptions        fPhysicalDesciptions; 
 		//------------------------------------------------
 		// Reading support
 		TVWArray_IFileIdentifier		fLocalFiles;
@@ -1815,17 +1969,20 @@ private:
 	public:
 		//----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		// Getter
-		const TXString&		GetName() const;
-        const TXString&		GetShortName() const;
-		const TXString&		GetLongName() const;
-        const TXString&		GetManufacturer() const;
-        const TXString&		GetFixtureTypeDescription() const;
-        GdtfFixtureGUID		GetGuid() const;
-		GdtfFixtureGUID		GetLinkedGuid() const;
-		bool				HasLinkedGuid() const;
-        const TXString&     GetThumbnailName() const;        
-		const GdtfPNGFile&  GetPNGThumnailFullPath();		
-        const TXString&     GetSVGThumnailFullPath();
+		const TXString&		        GetName() const;
+        const TXString&		        GetShortName() const;
+		const TXString&		        GetLongName() const;
+        const TXString&		        GetManufacturer() const;
+        const TXString&		        GetFixtureTypeDescription() const;
+        GdtfFixtureGUID		        GetGuid() const;
+		GdtfFixtureGUID		        GetLinkedGuid() const;
+		bool				        HasLinkedGuid() const;
+        const TXString&             GetThumbnailName() const;        
+		const GdtfPNGFile&          GetPNGThumnailFullPath();		
+        const TXString&             GetSVGThumnailFullPath();
+        GdtfProtocols&				GetProtocollContainer();
+        GdtfPhysicalDescriptions&   GetPhysicalDesciptionsContainer();        
+        
         // Setter
 		void				SetName(const TXString& name);
 		void				SetShortName(const TXString& shortName);
@@ -1834,7 +1991,7 @@ private:
 		void				SetFixtureTypeDescription(const TXString& desc);
 		void				SetGuid(const VWFC::Tools::VWUUID& uuid);
 		void				SetLinkedGuid(const VWFC::Tools::VWUUID& uuid);
-		void				SetThumbnailName(const TXString& fileName);
+		void				SetThumbnailName(const TXString& fileName);                
 	public:
 		//----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		// Add calls
@@ -1853,14 +2010,11 @@ private:
 				
 		GdtfWheelPtr			AddWheel(TXString name);
 		GdtfDmxModePtr			AddDmxMode(const TXString& name);
-		GdtfPhysicalEmitterPtr	AddEmitter(const TXString& name);
-		GdtfMacroPtr			AddMacro(const TXString& name);
-        GdtfDMXProfilePtr       AddDmxProfile();
+		GdtfMacroPtr			AddMacro(const TXString& name);        
 
 		GdtfUserPresetPtr		AddUserPreset();
 		GdtfFeatureGroupPtr		AddFeatureGroup(const TXString& name, const TXString& prettyName);
-		GdtfActivationGroupPtr	AddActivationGroup(const TXString& name);
-        GdtfCRIGroupPtr         AddCRIGroup(double colorTsemp);
+		GdtfActivationGroupPtr	AddActivationGroup(const TXString& name);        
 
 		//----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		// Read calls
@@ -1874,13 +2028,6 @@ private:
         const TGdtfRevisionArray&               GetRevisionArray();
         const TGdtfUserPresetArray&             GetPresetArray();
         const TGdtfMacroArray&                  GetMacroArray();
-        const TGdtfPhysicalEmitterArray&		GetPhysicalEmitterArray();
-        const TGdtfDMXProfileArray&             GetDmxProfileArray();
-        const TGdtf_CRIGroupArray&              GetCRIGroupArray();
-		
-		GdtfProtocols&							GetProtocollContainer();
-
-        
         
 	public:
 		virtual EGdtfObjectType			GetObjectType();
@@ -1892,10 +2039,11 @@ private:
         virtual	void			        OnErrorCheck(const IXMLFileNodePtr& pNode);
 		        
         GdtfAttributePtr            getAttributeByRef(const TXString& ref);
-        GdtfWheelPtr                getWheelByRef(const TXString& ref);		
-		GdtfPhysicalEmitterPtr      getEmiterByRef(const TXString& ref);
+        GdtfWheelPtr                getWheelByRef(const TXString& ref);	
+        GdtfPhysicalEmitterPtr      getEmiterByRef(const TXString& ref);
         GdtfDmxChannelFunctionPtr   getDmxFunctionByRef(const TXString& ref, GdtfDmxModePtr mode);
 		GdtfDmxChannelPtr           getDmxChannelByRef(const TXString& ref, GdtfDmxModePtr mode);
+        GdtfFilterPtr               getFilterByRef(const TXString& ref);
 
 		//
 		void AutoGenerateNames(GdtfDmxModePtr dmxMode);
@@ -1905,12 +2053,12 @@ private:
 		void ResolveGeometryRefs();
 		void ResolveGeometryRefs_Recursive(GdtfGeometryPtr geometry);
 		
-		void ResolveAttribRefs();		
-		void ResolveDmxModeRefs();
-        void ResolveDMXModeMasters();       
-        void ResolveDMXPersonalityRefs();
-		void ResolveDmxRelationRefs(GdtfDmxModePtr dmxMode);
-		void ResolveDmxChannelRefs(GdtfDmxModePtr dmxMode);
+		void            ResolveAttribRefs();		
+		void            ResolveDmxModeRefs();
+        void            ResolveDMXModeMasters();       
+        void            ResolveDMXPersonalityRefs();
+		void            ResolveDmxRelationRefs(GdtfDmxModePtr dmxMode);
+		void            ResolveDmxChannelRefs(GdtfDmxModePtr dmxMode);
 		GdtfGeometryPtr ResolveGeometryRef(const TXString& unresolvedGeoRef, const TGdtfGeometryArray& geometryArray);
 		GdtfDmxModePtr  ResolveDMXMode(const TXString & unresolvedDMXmode);
 

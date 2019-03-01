@@ -38,7 +38,7 @@ namespace VectorworksMVR
 		// Call this at the start of generating a MVR file
 		virtual VCOMError VCOM_CALLTYPE	OpenForWrite(MvrString fullPath);
 		virtual VCOMError VCOM_CALLTYPE	AddGdtfFolderLocation(MvrString fullPathToFolder);
-        virtual VCOMError VCOM_CALLTYPE	AddFileToMvrFile(MvrString fullPath, ERessourceType resType);
+        virtual VCOMError VCOM_CALLTYPE	AddFileToMvrFile(MvrString fullPath);
 		
 		// After this you can generate Aux Objects
 		virtual VCOMError VCOM_CALLTYPE		CreateDataProviderObject(MvrString provider,	MvrString version, ISceneDataProvider** outSceneDataProvider);

@@ -136,7 +136,7 @@ const Sint32 kMVR_MinorVersion = 4;
 
 #define XML_GDTF_ROOTNODENAME			"GDTF"
 #define XML_GDTF_ROOTNODEATTRVERSION	"DataVersion"
-#define XML_GDTF_CurrentVersion			"0.9"
+#define XML_GDTF_CurrentVersion			"1.0"
 
 #define XML_GDTF_FixtureNodeName		"FixtureType"
 #define XML_GDTF_FixtureName			"Name"
@@ -220,8 +220,29 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_FixtureChildNodeRevisions			"Revisions"
 #define XML_GDTF_FixtureChildNodePresets			"FTPresets"
 #define XML_GDTF_FixtureChildNodeMacros				"FTMacros"
-#define XML_GDTF_FixtureChildNodePhysicalDesrip		"PhysicalDescriptions"
 #define XML_GDTF_FixtureChildNodeRDM				"FTRDM"
+
+#define XML_GDTF_FixtureChildNodePhysicalDesrip		 "PhysicalDescriptions"
+#define XML_GDTF_PhysicalDescriptionsAttrColorSpace  "ColorSpace"
+
+//-----------------------------------------------------------------------------
+// ColorSpace
+#define XML_GDTF_ColorSpaceNode         "ColorSpace"
+
+// ColorSpace Atributtes
+#define XML_GDTF_ColorSpace_Mode       "Mode"
+#define XML_GDTF_ColorSpace_Red        "Red"
+#define XML_GDTF_ColorSpace_Green      "Green"
+#define XML_GDTF_ColorSpace_Blue	   "Blue"
+#define XML_GDTF_ColorSpace_WhitePoint "WhitePoint"
+//-----------------------------------------------------------------------------
+// Filter
+#define XML_GDTF_FiltersCollect         "Filters"
+#define XML_GDTF_FilterNode             "Filter"
+// Filter Attribs
+#define XML_GDTF_Filter_Name            "Name"
+#define XML_GDTF_FilterColor            "Color"
+//-----------------------------------------------------------------------------
 
 #define XML_GDTF_WheelNodeName			"Wheel"
 #define XML_GDTF_WheelName				"Name"
@@ -352,6 +373,8 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_DMXChannelFuntionModeFrom				"ModeFrom"
 #define XML_GDTF_DMXChannelFuntionModeTo				"ModeTo"
 
+#define XML_GDTF_DMXChannelFuntionFilter                "Filter"
+
 #define XML_GDTF_DMXChannelDmxnvertEnum_Yes				"Yes"
 #define XML_GDTF_DMXChannelDmxInvertEnum_No				"No"
 
@@ -431,19 +454,37 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_MacroNodeName							"FTMacro"
 #define XML_GDTF_UserPresetNodeName						"FTPreset"
 
-#define XML_GDTF_PhysicalDescriptionsEmitterCollect		"Emitters"
-
+#define XML_GDTF_PhysicalDescriptionsEmitterCollect	    "Emitters"
 #define XML_GDTF_EmitterNodeName						"Emitter"
 #define XML_GDTF_EmitterName							"Name"
 #define XML_GDTF_EmitterColor							"Color"
+#define XML_GDTF_EmitterDominantWaveLength              "DominantWaveLength"
+#define XML_GDTF_EmitterDiodePart                       "DiodePart"
 
 #define XML_GDTF_DMX_ProfileCollect                     "DMXProfiles"
 #define XML_GDTF_DMX_Profile                            "DMXProfile"
 
+//-----------------------------------------------------------------------------
+// Measurement
 #define XML_GDTF_MeasurementNodeName					"Measurement"
+// Measurement Attribs
+#define XML_GDTF_MeasurementPhysical                   "Physical"
+#define XML_GDTF_MeasurementLuminousIntensity          "LuminousIntensity"
+#define XML_GDTF_MeasurementTransmission               "Transmission"
+#define XML_GDTF_MeasurementInterpolationTo            "InterpolationTo"
+//-----------------------------------------------------------------------------
+// MeasurementPoint
+#define XML_GDTF_MeasurementPointNode                   "MeasurementPoint"
+// MeasurementPoint Attribs.
 #define XML_GDTF_MeasurementWaveLegth					"WaveLength"
-#define XML_GDTF_MeasurementEnergy						"Energy"
+#define XML_GDTF_MeasurementEnergy						"Energy"    
+//-----------------------------------------------------------------------------
+// InterpolationTo Enum
+#define XML_GDTF_InterpolationTo_Linear  "Linear" 
+#define XML_GDTF_InterpolationTo_Step    "Step"
+#define XML_GDTF_InterpolationTo_Log     "Log" 
 
+//-----------------------------------------------------------------------------
 #define XML_GDTF_ColorRenderingIndexCollect             "CRIs"
 #define XML_GDTF_ColorRenderingIndexGroup               "CRIGroup"
 #define XML_GDTF_ColorRenderingIndexGrou_AttrColorTemp  "ColorTemperature"
@@ -552,3 +593,13 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_ColorSample_97 "CES97"
 #define XML_GDTF_ColorSample_98 "CES98"
 #define XML_GDTF_ColorSample_99 "CES99"
+
+//-----------------------------------------------------------------------------
+// ColorSpace Enum Vals
+#define XML_GDTF_ColorSpaceEnum "ColorSpace"
+
+#define XML_GDTF_ColorSpaceEnum_sRGB      "sRGB" 
+#define XML_GDTF_ColorSpaceEnum_Custom    "Custom"
+#define XML_GDTF_ColorSpaceEnum_ProPhoto  "ProPhoto"     
+#define XML_GDTF_ColorSpaceEnumr_ANSI     "ANSI"   
+//-----------------------------------------------------------------------------

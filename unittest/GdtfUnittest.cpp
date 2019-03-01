@@ -146,12 +146,48 @@ void GdtfUnittest::WriteFile()
 		color.f_Y = 0.424242;
 		if (__checkVCOM(gdtfWrite->CreateEmitter("My emitterName", color, &gdtfEmitter)))
 		{
-			IGdtfMeasurementPointPtr gdtfMeasurement;
-			__checkVCOM(gdtfEmitter->CreateMeasurementPoint(100, 200, &gdtfMeasurement));
+            gdtfEmitter->SetDominantWaveLength(66.6);
+            gdtfEmitter->SetDiodePart("MyDiodePart");
+
+			IGdtfMeasurementPtr gdtfMeasurement;            
+			__checkVCOM(gdtfEmitter->CreateMeasurement(100, 200, &gdtfMeasurement));
+            gdtfMeasurement->SetPhysical(1.23);
+            gdtfMeasurement->SetLuminousIntensity(2.34);
+            gdtfMeasurement->SetTransmission(4.56);
+            gdtfMeasurement->SetInterpolationTo(EGdtfInterpolationTo::Log);
+            
+            //-----------------------------------------------------------------------------
+            // MeasurementPoint
+            IGdtfMeasurementPointPtr gdtfMeasurPoint;
+            gdtfMeasurement->CreateMeasurementPoint(&gdtfMeasurPoint);
+            gdtfMeasurPoint->SetEnergy(1.23);
+            gdtfMeasurPoint->SetWaveLength(2.34);
 		}
 
+        //------------------------------------------------------------------------------------------------------------------
+        // Filters
+
+        CieColor filterColor; 
+		filterColor.fx	= 0.1;
+		filterColor.fy	= 0.2;
+		filterColor.f_Y	= 0.3;
+
+        IGdtfFilterPtr gdtfFilter; gdtfWrite->CreateFilter( "My Filter", filterColor, &gdtfFilter);
+
+        // Filter.Measurements
+        // (The Meaurement attributes are check in the Emitter test.)        
+
+        IGdtfMeasurementPtr gdtfMeasureA;  __checkVCOM(gdtfFilter->CreateMeasurement(&gdtfMeasureA));
+        IGdtfMeasurementPtr gdtfMeasureB;  __checkVCOM(gdtfFilter->CreateMeasurement(&gdtfMeasureB) );
+        IGdtfMeasurementPtr gdtfMeasureC;  __checkVCOM(gdtfFilter->CreateMeasurement(&gdtfMeasureC) );
 
 		//------------------------------------------------------------------------------------------------------------------
+		// Set ColorSpace Space
+		IGdtfColorSpacePtr colorSpace;
+		__checkVCOM(gdtfWrite->GetColorSpace( & colorSpace));
+		__checkVCOM(colorSpace->SetColorSpace(EGdtfColorSpace::ANSI));
+
+        //------------------------------------------------------------------------------------------------------------------
 		// Handle Models
 		IGdtfModelPtr gdtfModel;
 		if (__checkVCOM(gdtfWrite->CreateModel("My modelName", &gdtfModel)))
@@ -236,6 +272,9 @@ void GdtfUnittest::WriteFile()
 						__checkVCOM(gdftChannelFunction->SetRealFade(4));
 						__checkVCOM(gdftChannelFunction->SetOnWheel(gdtfWheelObj));
 						__checkVCOM(gdftChannelFunction->SetEmitter(gdtfEmitter));
+
+                        // Set the Linked Filter
+                        __checkVCOM(gdftChannelFunction->SetFilter(gdtfFilter));
 
 						IGdtfDmxChannelSetPtr gdtfChannelSet;
 						if (__checkVCOM(gdftChannelFunction->CreateDmxChannelSet("My nameDmxChannelSet", 1, 2, &gdtfChannelSet)))
@@ -421,6 +460,12 @@ void GdtfUnittest::ReadFile()
 				MvrString emitterName = gdtfEmitter->GetName();
 				this->checkifEqual("gdtfEmitterGetName ", emitterName, "My emitterName");
 
+                double emitterWave; gdtfEmitter->GetDominantWaveLength(emitterWave);
+                this->checkifEqual("Emitter DominantWaveLength", emitterWave, 66.6);
+
+                MvrString emitterDiodePart = gdtfEmitter->GetDiodePart();
+                this->checkifEqual("Emitter DiodePart", emitterDiodePart, "MyDiodePart");
+
 				CieColor color;
 				color.fx = 0;
 				color.fy = 0;
@@ -431,24 +476,105 @@ void GdtfUnittest::ReadFile()
 				this->checkifEqual("gdtfEmitterColorFY ", color.f_Y, 0.424242);
 
 				size_t measurementsCount = 0;
-				__checkVCOM(gdtfEmitter->GetMeasurementPointCount(measurementsCount));
+				__checkVCOM(gdtfEmitter->GetMeasurementCount(measurementsCount));  // XXX TODO: check the count here!
 				for (size_t j = 0; j < measurementsCount; j++)
 				{
-					IGdtfMeasurementPointPtr emitterMeasurement;
-					if (__checkVCOM(gdtfEmitter->GetMeasurementPointAt(j, &emitterMeasurement)))
+					IGdtfMeasurementPtr emitterMeasurement;
+					if (__checkVCOM(gdtfEmitter->GetMeasurementAt(j, &emitterMeasurement)))
 					{
+                        double physical=0; __checkVCOM( emitterMeasurement->GetPhysical(physical));
+                        this->checkifEqual("Physical",         physical, 1.23);
+
+                        double luminousIntensity=0; __checkVCOM(emitterMeasurement->GetLuminousIntensity(luminousIntensity));
+                        this->checkifEqual("LuminousIntensity",   luminousIntensity, 2.34);
+
+                        double transmission=0; __checkVCOM(emitterMeasurement->GetTransmission(transmission));
+                        this->checkifEqual("Transmission",  transmission,  4.56);
+
+                        EGdtfInterpolationTo interpolationTo = EGdtfInterpolationTo::Linear; __checkVCOM(emitterMeasurement->GetInterpolationTo(interpolationTo));
+                        this->checkifEqual("InterpolationTo",  size_t(interpolationTo), size_t(EGdtfInterpolationTo::Log) );
+
+                        //-----------------------------------------------------------------------------
+                        // MeasurementPoint
+                        size_t mpCount; __checkVCOM(emitterMeasurement->GetMeasurementPointCount(mpCount));
+                        this->checkifEqual("MeasurementPoint Count", mpCount, size_t(1));
+                        
+                        IGdtfMeasurementPointPtr gdtfMeasurPoint;
+                        
+                        __checkVCOM(emitterMeasurement->GetMeasurementPointAt(0, &gdtfMeasurPoint));               
+                        
 						double waveLength_Val = 0;
-						__checkVCOM(emitterMeasurement->GetWaveLength(waveLength_Val));
-						this->checkifEqual("GetWaveLength ", waveLength_Val, double(100));		// only for object valid, because of hardcoded wavelength and energy
+						__checkVCOM(gdtfMeasurPoint->GetWaveLength(waveLength_Val));
+						this->checkifEqual("GetWaveLength ", waveLength_Val, double(2.34));		// only for object valid, because of hardcoded wavelength and energy
 
 						double energy_Val = 0;
-						__checkVCOM(emitterMeasurement->GetEnergy(energy_Val));
-						this->checkifEqual("GetEnergy ", energy_Val, double(200));				// only for object valid, because of hardcoded wavelength and energy
+						__checkVCOM(gdtfMeasurPoint->GetEnergy(energy_Val));
+						this->checkifEqual("GetEnergy ", energy_Val, double(1.23));				// only for object valid, because of hardcoded wavelength and energy
 					}
 				} // measurements loop
 			}
 		} // emitter loop
 
+
+        //------------------------------------------------------------------------------------------------------------------
+        // Filters        
+        size_t filterCount; __checkVCOM(gdtfRead->GetFilterCount(filterCount));
+        
+        this->checkifEqual("Filter Count", filterCount, size_t(1));
+
+        IGdtfFilterPtr gdtfFilter; __checkVCOM(gdtfRead->GetFilterAt(0, &gdtfFilter));
+
+        MvrString filterNam = gdtfFilter->GetName();
+        this->checkifEqual("Filter Name", filterNam, "My Filter");
+                
+        CieColor filterColor;  filterColor.fx = 0; filterColor.fy = 0; filterColor.f_Y = 0;
+        __checkVCOM(gdtfFilter->GetColor(filterColor));
+        
+        CieColor filterColorCompare; 
+		filterColorCompare.fx	= 0.1;
+		filterColorCompare.fy	= 0.2;
+		filterColorCompare.f_Y	= 0.3;
+
+        this->checkifEqual("Filter Color", filterColor, filterColorCompare);
+
+
+        // Filter.Measurements
+        // (The Meaurement attributes are check in the Emitter test.)
+        size_t measruementCount; __checkVCOM(gdtfFilter->GetMeasurementCount(measruementCount));
+        this->checkifEqual(" Filter.Measurements Count", measruementCount, size_t(3) );
+
+		//------------------------------------------------------------------------------------------------------------------
+		// Set ColorSpace Space
+		IGdtfColorSpacePtr colorSpace;
+		__checkVCOM(gdtfRead->GetColorSpace( & colorSpace));
+
+		EGdtfColorSpace thisSpace = EGdtfColorSpace::sRGB;
+		__checkVCOM(colorSpace->GetColorSpace(thisSpace));
+
+		checkifEqual("ColorSpace", (size_t)thisSpace, (size_t)EGdtfColorSpace::ANSI);
+
+		CieColor ansiColor_Red;		ansiColor_Red.fx   = 0.7347; 	ansiColor_Red.fy   = 0.2653;	ansiColor_Red.f_Y   = 100;
+		CieColor ansiColor_Green;	ansiColor_Green.fx = 0.1596;	ansiColor_Green.fy = 0.8404; 	ansiColor_Green.f_Y = 100;
+		CieColor ansiColor_Blue;	ansiColor_Blue.fx  = 0.0366; 	ansiColor_Blue.fy  = 0.001; 	ansiColor_Blue.f_Y  = 100;
+		CieColor ansiColor_White;	ansiColor_White.fx = 0.4254; 	ansiColor_White.fy = 0.4044;	ansiColor_White.f_Y = 100;
+
+		CieColor gdtfColor_Red;
+		__checkVCOM(colorSpace->GetRed(gdtfColor_Red));
+
+		CieColor gdtfColor_Green;
+		__checkVCOM(colorSpace->GetGreen(gdtfColor_Green));
+
+		CieColor gdtfColor_Blue;
+		__checkVCOM(colorSpace->GetBlue(gdtfColor_Blue));
+
+		CieColor gdtfColor_White;
+		__checkVCOM(colorSpace->GetWhite(gdtfColor_White));
+
+		checkifEqual("ANSI Color Red", 		ansiColor_Red, 		gdtfColor_Red);
+		checkifEqual("ANSI Color Green", 	ansiColor_Green, 	gdtfColor_Green);
+		checkifEqual("ANSI Color Blue", 	ansiColor_Blue, 	gdtfColor_Blue);
+		checkifEqual("ANSI Color White", 	ansiColor_White,	gdtfColor_White);
+		
 
 		//------------------------------------------------------------------------------    
 		// Fill with DMX
@@ -584,6 +710,8 @@ void GdtfUnittest::ReadFile()
 						__checkVCOM(gdtfLogicalChannel->GetDmxFunctionCount(countFeatures));
 						for (size_t j = 0; j < countFeatures; j++)
 						{
+                            //------------------------------------------------------------------------------    
+                            // ChannelFunction
 							IGdtfDmxChannelFunctionPtr gdtfFunction;
 							if (__checkVCOM(gdtfLogicalChannel->GetDmxFunctionAt(j, &gdtfFunction)))
 							{
@@ -645,6 +773,10 @@ void GdtfUnittest::ReadFile()
 								__checkVCOM(gdtfFunction->GetRealFade(realFade));
 								this->checkifEqual("gdtfFunctionGetRealFade ", realFade, double(4));
 
+                                // Check the Linked Filter
+                                IGdtfFilterPtr filter;
+                                __checkVCOM(gdtfFunction->GetFilter(&filter) );
+                                this->checkifEqual("Filter Name", filter->GetName() ,"My Filter");
 								//------------------------------------------------------------------------------    
 								// Add the ChannelSets 
 								size_t countChannelSets = 0;
