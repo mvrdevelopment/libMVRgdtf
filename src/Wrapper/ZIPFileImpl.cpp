@@ -5,7 +5,9 @@
 #pragma GCC diagnostic push 
 #pragma GCC diagnostic ignored "-Wattributes"
 #pragma GCC diagnostic ignored "-Wstrict-aliasing"
+#ifdef GCC7_ERROR
 #pragma GCC diagnostic ignored "-Wmisleading-indentation"
+#endif
 #include "Minizip/Source/miniz.c"
 #pragma GCC diagnostic pop
 
