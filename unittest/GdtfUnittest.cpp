@@ -273,6 +273,9 @@ void GdtfUnittest::WriteFile()
 						__checkVCOM(gdftChannelFunction->SetOnWheel(gdtfWheelObj));
 						__checkVCOM(gdftChannelFunction->SetEmitter(gdtfEmitter));
 
+                        // Set the Linked Filter
+                        __checkVCOM(gdftChannelFunction->SetFilter(gdtfFilter));
+
 						IGdtfDmxChannelSetPtr gdtfChannelSet;
 						if (__checkVCOM(gdftChannelFunction->CreateDmxChannelSet("My nameDmxChannelSet", 1, 2, &gdtfChannelSet)))
 						{
@@ -707,6 +710,8 @@ void GdtfUnittest::ReadFile()
 						__checkVCOM(gdtfLogicalChannel->GetDmxFunctionCount(countFeatures));
 						for (size_t j = 0; j < countFeatures; j++)
 						{
+                            //------------------------------------------------------------------------------    
+                            // ChannelFunction
 							IGdtfDmxChannelFunctionPtr gdtfFunction;
 							if (__checkVCOM(gdtfLogicalChannel->GetDmxFunctionAt(j, &gdtfFunction)))
 							{
@@ -768,6 +773,10 @@ void GdtfUnittest::ReadFile()
 								__checkVCOM(gdtfFunction->GetRealFade(realFade));
 								this->checkifEqual("gdtfFunctionGetRealFade ", realFade, double(4));
 
+                                // Check the Linked Filter
+                                IGdtfFilterPtr filter;
+                                __checkVCOM(gdtfFunction->GetFilter(&filter) );
+                                this->checkifEqual("Filter Name", filter->GetName() ,"My Filter");
 								//------------------------------------------------------------------------------    
 								// Add the ChannelSets 
 								size_t countChannelSets = 0;
