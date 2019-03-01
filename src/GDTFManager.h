@@ -888,7 +888,7 @@ namespace SceneData
 		TGdtfDmxChannelSetArray	fChannelSets;		
 		
 		// Unresolved Refs
-		TXString				fUnresolvedAttrRef;
+		TXString				fUnresolvedAttrRef; // TODO: XXX check init off these vars!
 		TXString				fUnresolvedWheelRef;
 		TXString				fUnresolvedEmitterRef;
         TXString                fUnresolvedDmxModeStart;
