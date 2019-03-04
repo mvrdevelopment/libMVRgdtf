@@ -674,7 +674,7 @@ void CXMLFileImpl::resetErrors()
 	TXString	currToken;
 	bool		isTokenizeStopped = false;
 
-	size_t	strLen	= string.GetLength();
+	size_t	strLen	= string.GetEncodingLength(ETXEncoding::eUTF8);
 	for(size_t i=0; i<strLen; i++) {
 		UCChar	ch		= string.GetAt( i );
 
@@ -749,7 +749,7 @@ VCOMError  CXMLFileImpl::DoSimpleNode(IXMLFileNode* pRefNode, const TXString& no
 					pRefNode	= NULL;
 				}
 
-				if ( nodeName.GetLength() > 0 && nodeName.GetAt(0) == '$' ) {
+				if ( nodeName.GetEncodingLength(ETXEncoding::eUTF8) > 0 && nodeName.GetAt(0) == '$' ) {
 					nodeName	= nodeName.Mid( 1 );
 					if ( doWrite ) {
 						err			= xmlNode->SetNodeAttributeValue( nodeName, outValue );
@@ -770,7 +770,7 @@ VCOMError  CXMLFileImpl::DoSimpleNode(IXMLFileNode* pRefNode, const TXString& no
 					TXString	attrName, attrValue;
 					if ( hasIndex ) {
 						TXString strIndex	= nodeName.Mid( startAt + 1, endAt - startAt - 1 );
-						if ( strIndex.GetLength() > 0 && strIndex.GetAt( 0 ) == '$' )
+						if ( strIndex.GetEncodingLength(ETXEncoding::eUTF8) > 0 && strIndex.GetAt( 0 ) == '$' )
 						{
 							TXStringArray	arrTokens;
 							this->Tokenize( strIndex, arrTokens, "=", 1, true, '\'' );
@@ -780,9 +780,9 @@ VCOMError  CXMLFileImpl::DoSimpleNode(IXMLFileNode* pRefNode, const TXString& no
 								attrValue	= arrTokens[ 1 ]; attrValue.Trim();
 
 								attrName	= attrName.Mid( 1 ); // strip the '$'
-								if ( attrValue.GetLength() > 2 && attrValue.GetAt(0) == '\'' && attrValue.GetAt( attrValue.GetLength() - 1 ) == '\'' )
+								if ( attrValue.GetEncodingLength(ETXEncoding::eUTF8) > 2 && attrValue.GetAt(0) == '\'' && attrValue.GetAt( attrValue.GetEncodingLength(ETXEncoding::eUTF8) - 1 ) == '\'' )
 								{
-									attrValue	= attrValue.Mid( 1, attrValue.GetLength() - 2 );
+									attrValue	= attrValue.Mid( 1, attrValue.GetEncodingLength(ETXEncoding::eUTF8) - 2 );
 								}
 							}
 						}
