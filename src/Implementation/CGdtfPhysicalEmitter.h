@@ -20,7 +20,7 @@ namespace VectorworksMVR
         
         virtual VCOMError VCOM_CALLTYPE     GetMeasurementCount(size_t& count);
         virtual VCOMError VCOM_CALLTYPE     GetMeasurementAt(size_t at, IGdtfMeasurement** outVal);
-		virtual VCOMError VCOM_CALLTYPE     CreateMeasurement(double wavelength, double energy, IGdtfMeasurement** outVal);
+		virtual VCOMError VCOM_CALLTYPE     CreateMeasurement(IGdtfMeasurement** outVal);
 		virtual MvrString VCOM_CALLTYPE     GetDiodePart();
         virtual VCOMError VCOM_CALLTYPE     GetDominantWaveLength(double& outVal);
         
