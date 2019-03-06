@@ -97,7 +97,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalEmitterImpl::GetMeasureme
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalEmitterImpl::CreateMeasurement(double wavelength, double energy, IGdtfMeasurement** outVal)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalEmitterImpl::CreateMeasurement(IGdtfMeasurement** outVal)
 {
 	// Check if valid
 	if(!fEmitter) return kVCOMError_NotInitialized;

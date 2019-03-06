@@ -150,7 +150,7 @@ void GdtfUnittest::WriteFile()
             gdtfEmitter->SetDiodePart("MyDiodePart");
 
 			IGdtfMeasurementPtr gdtfMeasurement;            
-			__checkVCOM(gdtfEmitter->CreateMeasurement(100, 200, &gdtfMeasurement));
+			__checkVCOM(gdtfEmitter->CreateMeasurement(&gdtfMeasurement));
             gdtfMeasurement->SetPhysical(1.23);
             gdtfMeasurement->SetLuminousIntensity(2.34);
             gdtfMeasurement->SetTransmission(4.56);
