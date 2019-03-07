@@ -1158,8 +1158,12 @@ const TXString & SceneData::GdtfModel::GetGeometryFile_SVG_FullPath()
 	IFolderIdentifierPtr folder (IID_FolderIdentifier);
 	fParentFixture->GetWorkingFolder(folder);
 
+	IFolderIdentifierPtr modelsvgFolter (IID_FolderIdentifier);
+	modelsvgFolter->Set(folder, "modelssvg");
+
 	IFileIdentifierPtr file (IID_FileIdentifier);
-	file->Set(folder, fGeometryFile + ".svg");
+	file->Set(modelsvgFolter, fGeometryFile + ".svg");
+
 
 	bool fileExists = false;
 	if(VCOM_SUCCEEDED(file->ExistsOnDisk(fileExists)) && fileExists)

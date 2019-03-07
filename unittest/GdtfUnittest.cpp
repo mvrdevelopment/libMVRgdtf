@@ -988,9 +988,11 @@ void GdtfUnittest::ReadFile()
 				this->checkifEqual("gdtfModelGetName "				, modelName		, "My modelName");
 				this->checkifEqual("gdtfModelGet3DSGeometryFile "	, geometryFile	, "MyModel");
 
-				MvrString fullPath = gdtfModel->GetGeometryFile_3DS_FullPath();
-				this->checkifTrue("Testwheel  exists.", UnitTestUtil::FileExists(fullPath));
+				MvrString fullPath_3ds = gdtfModel->GetGeometryFile_3DS_FullPath();
+				this->checkifTrue("Model 3DS exists.", UnitTestUtil::FileExists(fullPath_3ds));
 
+				MvrString fullPath_svg = gdtfModel->GetGeometryFile_SVG_FullPath();
+				this->checkifTrue("Model SVG exists", UnitTestUtil::FileExists(fullPath_svg));
 
 				// Height
 				double heightVal = 0.0;
