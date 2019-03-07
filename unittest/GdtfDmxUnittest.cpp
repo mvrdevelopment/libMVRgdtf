@@ -73,6 +73,10 @@ void GdtfDmxUnittest::WriteFile()
 		__checkVCOM(gdtfWrite->CreateAttribute("Attribute4","Pretty", &attribute4));
 		attribute4->SetFeature(feature);
 
+		IGdtfAttributePtr attribute5;
+		__checkVCOM(gdtfWrite->CreateAttribute("Attribute5","Pretty", &attribute5));
+		attribute5->SetFeature(feature);
+
 		//----------------------------------------------------------------
 		// Create Model
 		IGdtfModelPtr model;
@@ -239,6 +243,16 @@ void GdtfDmxUnittest::WriteFile()
 		bit8_1Function1->SetStartAddress(0);
 		bit8_1Function1->SetAttribute(attribute1);
 
+		//----------------------------------------------------------------
+		// Write virtual Channel
+		IGdtfDmxChannelPtr virtualChannel;
+		__checkVCOM(mode->CreateDmxChannel(geometry, &virtualChannel));
+		__checkVCOM(virtualChannel->SetGeometry(geometry));
+		__checkVCOM(virtualChannel->SetDefaultValue(50000));
+		IGdtfDmxLogicalChannelPtr virtualLogicalChannel;
+		virtualChannel->CreateLogicalChannel(attribute5, &virtualLogicalChannel);
+
+
         __checkVCOM(gdtfWrite->Close());
     }
 }
@@ -254,7 +268,7 @@ void GdtfDmxUnittest::ReadFile()
 		// Read the Attributes
 		size_t countAttributes = 0;
 		__checkVCOM(gdtfRead->GetAttributeCount(countAttributes));
-		this->checkifEqual("Check Count Attributes ", countAttributes, size_t(4));
+		this->checkifEqual("Check Count Attributes ", countAttributes, size_t(5));
 
 		// Check Attribute
 		IGdtfAttributePtr	gdtfAttribute1;
@@ -277,7 +291,10 @@ void GdtfDmxUnittest::ReadFile()
 		this->checkifEqual("gdtfAttribute GetName() ", gdtfAttribute4->GetName(), "Attribute4");
 		this->checkifEqual("gdtfAttribute GetName() ", gdtfAttribute4->GetPrettyName(), "Pretty");
 
-
+		IGdtfAttributePtr	gdtfAttribute5;
+		__checkVCOM(gdtfRead->GetAttributeAt(4, &gdtfAttribute5));
+		this->checkifEqual("gdtfAttribute GetName() ", gdtfAttribute5->GetName(), "Attribute5");
+		this->checkifEqual("gdtfAttribute GetName() ", gdtfAttribute5->GetPrettyName(), "Pretty");
 
 		//------------------------------------------------------------------------------    
 		// Extract Geometry & Models
@@ -337,7 +354,7 @@ void GdtfDmxUnittest::ReadFile()
 
 		size_t countChannels = 0;
 		__checkVCOM(mode->GetDmxChannelCount(countChannels));
-		this->checkifEqual("Check Count DMX Channels", countChannels, size_t(4));
+		this->checkifEqual("Check Count DMX Channels", countChannels, size_t(5));
 		
 
 		//----------------------------------------------------------------
@@ -437,6 +454,17 @@ void GdtfDmxUnittest::ReadFile()
 		// Check DMX Channel Sets
 		__checkVCOM(bit8_1Function->GetDmxChannelSetCount(countChannelSets));
 		this->checkifEqual("Check Count DMX Channels", countChannelSets, size_t(0));
+
+		//----------------------------------------------------------------
+		// Check Virtual Channel
+		IGdtfDmxChannelPtr virtualChannel;
+		__checkVCOM(mode->GetDmxChannelAt(4, &virtualChannel));
+
+		DmxValue defaultValue = 0;
+		__checkVCOM(virtualChannel->GetDefaultValue(defaultValue));
+		this->checkifEqual("Default Virtual Chanel", defaultValue, (DmxValue)50000);
+
+
 
 	}
 
