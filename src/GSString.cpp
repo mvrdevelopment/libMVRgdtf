@@ -2333,7 +2333,7 @@ void TXString::PrepareCharBuffer(ETXEncoding encoding) const
 	{
 		charBufSize = len;
 		if (charPtr) delete charPtr;
-		charPtr = (char*) new char[charBufSize];
+		charPtr = (char*)::operator new(charBufSize);
 	}
 
 	std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> convert;
