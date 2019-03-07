@@ -1135,8 +1135,11 @@ const TXString& GdtfModel::GetGeometryFile_3DS_FullPath()
 	IFolderIdentifierPtr folder (IID_FolderIdentifier);
 	fParentFixture->GetWorkingFolder(folder);
 
+	IFolderIdentifierPtr model3DsFolter (IID_FolderIdentifier);
+	model3DsFolter->Set(folder, "models3ds");
+
 	IFileIdentifierPtr file (IID_FileIdentifier);
-	file->Set(folder, fGeometryFile + ".3ds");
+	file->Set(model3DsFolter, fGeometryFile + ".3ds");
 
 	bool fileExists = false;
 	if(VCOM_SUCCEEDED(file->ExistsOnDisk(fileExists)) && fileExists)
@@ -1155,8 +1158,12 @@ const TXString & SceneData::GdtfModel::GetGeometryFile_SVG_FullPath()
 	IFolderIdentifierPtr folder (IID_FolderIdentifier);
 	fParentFixture->GetWorkingFolder(folder);
 
+	IFolderIdentifierPtr modelsvgFolter (IID_FolderIdentifier);
+	modelsvgFolter->Set(folder, "modelssvg");
+
 	IFileIdentifierPtr file (IID_FileIdentifier);
-	file->Set(folder, fGeometryFile + ".svg");
+	file->Set(modelsvgFolter, fGeometryFile + ".svg");
+
 
 	bool fileExists = false;
 	if(VCOM_SUCCEEDED(file->ExistsOnDisk(fileExists)) && fileExists)

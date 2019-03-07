@@ -192,7 +192,7 @@ void GdtfUnittest::WriteFile()
 		IGdtfModelPtr gdtfModel;
 		if (__checkVCOM(gdtfWrite->CreateModel("My modelName", &gdtfModel)))
 		{
-			__checkVCOM(gdtfModel->SetGeometryFile("My file3DSGeometry"));
+			__checkVCOM(gdtfModel->SetGeometryFile("MyModel"));
 			__checkVCOM(gdtfModel->SetHeight(10));
 			__checkVCOM(gdtfModel->SetWidth(20));
 			__checkVCOM(gdtfModel->SetLength(30));
@@ -986,7 +986,13 @@ void GdtfUnittest::ReadFile()
 				MvrString  modelName	= gdtfModel->GetName();
 				MvrString geometryFile	= gdtfModel->GetGeometryFileName();
 				this->checkifEqual("gdtfModelGetName "				, modelName		, "My modelName");
-				this->checkifEqual("gdtfModelGet3DSGeometryFile "	, geometryFile	, "My file3DSGeometry");
+				this->checkifEqual("gdtfModelGet3DSGeometryFile "	, geometryFile	, "MyModel");
+
+				MvrString fullPath_3ds = gdtfModel->GetGeometryFile_3DS_FullPath();
+				this->checkifTrue("Model 3DS exists.", UnitTestUtil::FileExists(fullPath_3ds));
+
+				MvrString fullPath_svg = gdtfModel->GetGeometryFile_SVG_FullPath();
+				this->checkifTrue("Model SVG exists", UnitTestUtil::FileExists(fullPath_svg));
 
 				// Height
 				double heightVal = 0.0;
