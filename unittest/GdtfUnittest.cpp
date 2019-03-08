@@ -133,6 +133,9 @@ void GdtfUnittest::WriteFile()
 				{
 					__checkVCOM(gdtfFacet->SetColor(facetCol));
 				}
+
+				// Set Wheel
+				wheelSlotContainer->SetGobo("MWheel_Img1");
 			}
 		}
 
@@ -408,6 +411,14 @@ void GdtfUnittest::ReadFile()
 						this->checkifEqual("GetWheelSlot1Wheel1ColorFx ",color.fx, 0.500000);
 						this->checkifEqual("GetWheelSlot1Wheel1ColorFy ",color.fy, 0.424242);
 						this->checkifEqual("GetWheelSlot1Wheel1ColorFY ",color.f_Y, 1.000000);
+
+						// Wheel Image
+						this->checkifEqual("GetGdtfSlotName ", gdtfSlot->GetGobo(), "MWheel_Img1");
+
+						MvrString goboImage = gdtfSlot->GetGoboFileFullPath();
+						this->checkifTrue("Gobo Image exists", UnitTestUtil::FileExists(goboImage));
+
+
 
 						// PrismFacets loop
 						size_t prismFacetCount = 0;
