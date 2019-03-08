@@ -457,97 +457,17 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString& strValue, const I
 	SplitStr(strValue, firstPart, secndPart, (size_t)splitPos);
 	//-----------------------------------------------------------------------------------
 	
-	Sint32 dmxValueRaw    = firstPart.atoi();
-	Sint32 bytetSpecifier = secndPart.atoi();
+	DmxValue dmxValueRaw  = firstPart.atoi64();
+	Sint32 	 bytetSpecifier = secndPart.atoi();
 
 	// Check if the ByteSpecifier is different to the ChannelResolution.
 	if (bytetSpecifier != chanlReso) 
 	{
-        switch (chanlReso) 
-        {
-		    // The Value needs to be scaled depending on the ChannelResolution.
-            case eGdtfChannelBitResolution_8:
-		    {
-                switch (bytetSpecifier)
-                {                
-			        // (No need to check eGdtfChannelBitResolution_8 here.)
-                    case eGdtfChannelBitResolution_16:
-			        {			
-				        intValue = dmxValueRaw / 256; break;
-			        }
-                    case eGdtfChannelBitResolution_24:
-			        {
-				        intValue = dmxValueRaw / 256 / 256; break;
-			        }	
-                    case eGdtfChannelBitResolution_32:
-			        {			
-				        intValue = dmxValueRaw / 256 / 256 / 256; break;
-			        }                    
-                }
-                break;
-		    }
-            case eGdtfChannelBitResolution_16:
-		    {
-                switch (bytetSpecifier)
-                {
+        DmxValue maxResolution  = GetChannelMaxDmx((EGdtfChannelBitResolution)bytetSpecifier);        
+        DmxValue maxChannelUnit = GetChannelMaxDmx(chanlReso);
 
-                    case eGdtfChannelBitResolution_8:
-                    {
-                        intValue = dmxValueRaw * 256; break;
-                    }
-                    // /No need to check eGdtfChannelBitResolution_16 here.)
-                    case eGdtfChannelBitResolution_24:
-                    {
-                        intValue = dmxValueRaw / 256; break;
-                    }
-                    case eGdtfChannelBitResolution_32:
-                    {
-                        intValue = dmxValueRaw / 256 / 256; break;
-                    }
-                }
-                break;
-		    }	
-            case eGdtfChannelBitResolution_24:
-		    {
-                switch (bytetSpecifier)
-                {
-                    case eGdtfChannelBitResolution_8:
-                    {
-                        intValue = dmxValueRaw * 256 * 256; break;
-                    }
-                    case eGdtfChannelBitResolution_16:
-                    {
-                        intValue = dmxValueRaw * 256; break;
-                    }
-                    // (No need to check eGdtfChannelBitResolution_24 here.)
-                    case eGdtfChannelBitResolution_32:
-                    {
-                        intValue = dmxValueRaw / 256; break;
-                    }                
-                }
-                break;
-		    }
-            case eGdtfChannelBitResolution_32:
-            {
-                switch (bytetSpecifier)
-                {
-                    case eGdtfChannelBitResolution_8:
-                    {
-                        intValue = dmxValueRaw * 256 * 256 * 256; break;
-                    }
-                    case eGdtfChannelBitResolution_16:
-                    {
-                        intValue = dmxValueRaw * 256 * 256; break;
-                    }
-                    case eGdtfChannelBitResolution_24:
-                    {
-                        intValue = dmxValueRaw * 256; break;
-                    }
-                    // (No need to check eGdtfChannelBitResolution_32 here.)                    
-                }
-                break;
-            }
-        }
+        intValue = (dmxValueRaw / maxResolution) * maxChannelUnit;
+
 	}	
 	else
 	{
