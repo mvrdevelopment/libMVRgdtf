@@ -865,15 +865,22 @@ const TXString&	GdtfWheelSlot::GetGobo() const
 
 const TXString&	GdtfWheelSlot::GetGoboFileFullPath()
 {
-	TXString				workingFolder;
+	fGoboFile = "";
+
 	IFolderIdentifierPtr	folder;
 	fWheelParent->GetParentFixture()->GetWorkingFolder(folder);
+
+	IFolderIdentifierPtr wheelsFolder (IID_FolderIdentifier);
+ 	wheelsFolder->Set(folder, "wheels");
 	
-	ASSERTN(kEveryone, folder != nullptr);
-	if (folder) { folder->GetFullPath(workingFolder); }
-	
-	// Set to store
-	fGoboFile = workingFolder + fGobo;
+	IFileIdentifierPtr file (IID_FileIdentifier);		 	
+ 	file->Set(wheelsFolder, fGobo + ".png");
+	bool fileExists = false;
+ 	if(VCOM_SUCCEEDED(file->ExistsOnDisk(fileExists)) && fileExists)		 	
+	{			
+		file->GetFileFullPath(fGoboFile);				
+	}			
+
 	
 	// Return
 	return fGoboFile;
