@@ -440,6 +440,13 @@ bool SplitStr(const TXString& str, TXString& part1, TXString& part2, size_t spli
 bool SceneData::GdtfConverter::ConvertDMXValue(const TXString& strValue, const IXMLFileNodePtr& node, EGdtfChannelBitResolution chanlReso, DmxValue & intValue)
 /* Converts a string to a DmxValue. returns succes of the opeation as bool (XXX this is always true at the moment.)*/
 {
+	if(strValue.IsEmpty())
+	{
+		intValue = 0;
+		return true;
+	}
+
+
 	// Split the String ("ValRaw/bytetSpecifier")
 	TXString firstPart;
 	TXString secndPart;
