@@ -536,14 +536,10 @@ void MvrUnittest::ReadFile()
 		if(symDef2)
 		{
 			VectorworksMVR::MvrUUID uuid (0,0,0,0);
+			VectorworksMVR::MvrUUID emptyuuid (0,0,0,0);
 			__checkVCOM(symDef2->GetGuid(uuid));
 
-			checkifUnEqual("UUID for Sym Def", uuid.a, (Uint32)0 );
-			checkifUnEqual("UUID for Sym Def", uuid.b, (Uint32)0 );
-			checkifUnEqual("UUID for Sym Def", uuid.c, (Uint32)0 );
-			checkifUnEqual("UUID for Sym Def", uuid.d, (Uint32)0 );
-
-
+			checkifUnEqual("UUID for Sym Def", uuid, emptyuuid );
 		}
 
 

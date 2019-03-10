@@ -68,6 +68,8 @@ public:
 
         fFailedTests.push_back(test);
     };
+    void checkifUnEqual(const std::string& check, const VectorworksMVR::MvrUUID val1, const VectorworksMVR::MvrUUID val2);
+
 
 private:
     bool                fFailed;
