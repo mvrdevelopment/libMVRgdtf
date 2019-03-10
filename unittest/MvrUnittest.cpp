@@ -285,11 +285,10 @@ void MvrUnittest::ReadFile()
 
 					ISymDefPtr linkedSymDef;
 					__checkVCOM(geoRef->GetSymDef(&linkedSymDef));
-					checkifEqual("SymbolDef for Focus Point", linkedSymDef->GetName(), "Symbol Definition for the FocusPoint");
-
-									
-
-					
+					if(linkedSymDef)
+					{
+						checkifEqual("SymbolDef for Focus Point", linkedSymDef->GetName(), "Symbol Definition for the FocusPoint");					
+					}
 				}
 				
 

@@ -39,7 +39,7 @@ MvrString VectorworksMVR::CGeometryReferenceImpl::GetFileForGeometry()
 	SceneData::SceneDataGeometryObjPtr geoObj = dynamic_cast<SceneData::SceneDataGeometryObjPtr>(fPtr);
 	
 	ASSERTN(kEveryone, geoObj != nullptr );
-	if (!geoObj) { return nullptr; }
+	if (!geoObj) { return ""; }
 	
 	//----------------------------------------------------------------------------------------------------
 	// Get the geometry full file path
