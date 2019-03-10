@@ -550,12 +550,12 @@ namespace SceneData
 		virtual ~SceneDataSymbolObj();
 		
 	private:
-		SceneDataGUID	fSymDef;
-		bool			fIsInitialized;
+		SceneDataSymDefObjPtr	fSymDef;
+		TXString				fUnresolvedSymDef;		
 		
 	public:
-		void				SetSymDef(SceneDataSymDefObjPtr symDef);
-		SceneDataGUID		GetSymDef();
+		void					SetSymDef(SceneDataSymDefObjPtr symDef);
+		SceneDataSymDefObjPtr		GetSymDef();
 		
 	private:
 		virtual	TXString				GetNodeName();

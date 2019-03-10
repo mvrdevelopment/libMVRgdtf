@@ -57,11 +57,12 @@ VectorworksMVR::VCOMError VectorworksMVR::CGeometryReferenceImpl::GetSymDef(ISym
 	if( ! fIsSymbol) return kVCOMError_Failed;
 	
 	// Cast to Symdef
-	SceneData::SceneDataSymDefObjPtr scSymDef = dynamic_cast<SceneData::SceneDataSymDefObjPtr>(fPtr);
-	if(!scSymDef)	{ return kVCOMError_Failed; }
+	SceneData::SceneDataSymbolObjPtr scSymObj = dynamic_cast<SceneData::SceneDataSymbolObjPtr>(fPtr);
+	if(!scSymObj)	{ return kVCOMError_Failed; }
 	
-	
-	
+	SceneData::SceneDataSymDefObjPtr scSymDef = scSymObj->GetSymDef();
+	if(!scSymDef)	{ return kVCOMError_NotInitialized; }
+
 	//---------------------------------------------------------------------------
 	// Initialize Object
 	CSymDefImpl* pSymDef = nullptr;
