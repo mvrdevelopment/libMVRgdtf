@@ -1402,6 +1402,11 @@ SceneDataSymDefObjPtr SceneDataSymbolObj::GetSymDef()
 	return fSymDef;
 }
 
+const TXString& SceneDataSymbolObj::GetUnresolvedSymDef() const
+{
+	return fUnresolvedSymDef;
+}
+
 // ----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataExchange
 SceneDataExchange::SceneDataExchange()
@@ -1525,7 +1530,8 @@ SceneDataSymDefObjPtr SceneDataExchange::ReadSymDefObject(const IXMLFileNodePtr&
 	newSymDef->ReadFromNode(node, this);
 	
 	fAuxDataObjs.push_back(newSymDef);
-	
+	fSymDefMap[uuid] = newSymDef;
+
 	return newSymDef;
 }
 
@@ -2353,6 +2359,19 @@ void SceneDataExchange::ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xml
 			if (!match) { DSTOP((kEveryone, "Could not resolve UUID from Class to Object")); }
 			
 		}
+
+		for(SceneDataGeoInstanceObjPtr geoObj : scObj->GetGeometryArr())
+		{
+			if(geoObj->IsSymDef())
+			{
+				SceneDataSymbolObjPtr symObj = dynamic_cast<SceneDataSymbolObjPtr>(geoObj);
+				SceneDataSymDefObjPtr ptr    = fSymDefMap[symObj->GetUnresolvedSymDef()];
+				
+				ASSERTN(kEveryone, ptr);
+				if(ptr) { symObj->SetSymDef(ptr); }
+			}
+		}
+		
 	}
 	
 }
