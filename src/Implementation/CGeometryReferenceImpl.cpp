@@ -68,7 +68,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGeometryReferenceImpl::GetSymDef(ISym
 	CSymDefImpl* pSymDef = nullptr;
 	
 	// Query Interface
-	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GeometryReference, (IVWUnknown**) & pSymDef)))
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_ISymDef, (IVWUnknown**) & pSymDef)))
 	{
 		// Check Casting
 		CSymDefImpl* pResultInterface = dynamic_cast<CSymDefImpl* >(pSymDef);
