@@ -51,6 +51,26 @@ public:
 
     void PrintParsingErrorList(VectorworksMVR::IGdtfFixturePtr& fixture);
 
+    template <typename A>
+    void checkifUnEqual(const std::string& check, A result, A expected)
+    {
+        if (result != expected) return;
+
+        // Else Log the error
+        fFailed = true;
+
+        UnittestFailObject test;
+        test.fMessage += check;
+        test.fMessage += " Result: ";
+        test.fMessage += std::to_string(result);
+        test.fMessage += " Expected: ";
+        test.fMessage += std::to_string(expected);
+
+        fFailedTests.push_back(test);
+    };
+    void checkifUnEqual(const std::string& check, const VectorworksMVR::MvrUUID val1, const VectorworksMVR::MvrUUID val2);
+
+
 private:
     bool                fFailed;
     TUnittestFailArray  fFailedTests;

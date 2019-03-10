@@ -84,6 +84,11 @@ void MvrUnittest::WriteFile()
 			mx.wz = 12;
             __checkVCOM(symDef1->AddGeometry(mx, "My3DSFile.3ds"));
         }
+
+		ISymDefPtr symDef2 = nullptr;
+        if(__checkVCOM(mvrWrite->CreateSymDefObject(MvrUUID(0, 0, 0, 0), "Symbol Definition for the UUID Creation Check", & symDef2)))
+        {
+        }
         
         IClassPtr clas1 = nullptr;
         __checkVCOM(mvrWrite->CreateClassObject(MvrUUID(122074618, 11852014, 669377348, 947530087), "My first Class", & clas1));
@@ -479,52 +484,64 @@ void MvrUnittest::ReadFile()
 
 		size_t  countSymbols = 0;
 		__checkVCOM(mvrRead->GetSymDefCount(countSymbols));
-		for (size_t i = 0; i <countSymbols; i++)
+		checkifEqual("Count Symbol Defs", countSymbols, size_t(2));
+
+		// First Sym Def
+		ISymDefPtr symDef = nullptr;
+		__checkVCOM(mvrRead->GetSymDefAt(0, & symDef));
+		
+		checkifEqual("GetSymDef name", symDef->GetName(), "Symbol Definition for the FocusPoint");
+
+		size_t geoCount = 0;
+		__checkVCOM(symDef->GetGeometryCount(geoCount));
+		
+		for (size_t j = 0; j < geoCount; j++)
 		{
-			ISymDefPtr symDef = nullptr;
-			__checkVCOM(mvrRead->GetSymDefAt(i, & symDef));
-			
-			checkifEqual("GetSymDef name", symDef->GetName(), "Symbol Definition for the FocusPoint");
+			IGeometryReferencePtr geoRef = nullptr;
+			__checkVCOM(symDef->GetGeometryAt(j, & geoRef));
 
-			size_t geoCount = 0;
-			__checkVCOM(symDef->GetGeometryCount(geoCount));
 			
-			for (size_t j = 0; j < geoCount; j++)
-			{
-				IGeometryReferencePtr geoRef = nullptr;
-				__checkVCOM(symDef->GetGeometryAt(j, & geoRef));
-
-				
-				// First way to get a file is to just get the path to the file
-				// You can use the own importer to read this file
-				std::string path = gdtfPath;
+			// First way to get a file is to just get the path to the file
+			// You can use the own importer to read this file
+			std::string path = gdtfPath;
 #ifdef _WINDOWS
-                path += "\\MVR_Export\\My3DSFile.3ds";
+			path += "\\MVR_Export\\My3DSFile.3ds";
 #else
-                path += "/MVR_Export/My3DSFile.3ds";
+			path += "/MVR_Export/My3DSFile.3ds";
 #endif
 
-				
-				checkifEqual("Get GeometryFileName", geoRef->GetFileForGeometry(), path);
+			
+			checkifEqual("Get GeometryFileName", geoRef->GetFileForGeometry(), path);
 
-				STransformMatrix mx;
-				__checkVCOM(geoRef->GetTransfromMatrix(mx));
-				
-				checkifEqual("mx.ox", mx.ox, (double)1);
-				checkifEqual("mx.oy", mx.oy, (double)2);
-				checkifEqual("mx.oz", mx.oz, (double)3);
-				checkifEqual("mx.ux", mx.ux, (double)4);
-				checkifEqual("mx.uy", mx.uy, (double)5);
-				checkifEqual("mx.uz", mx.uz, (double)6);
-				checkifEqual("mx.vx", mx.vx, (double)7);
-				checkifEqual("mx.vy", mx.vy, (double)8);
-				checkifEqual("mx.vz", mx.vz, (double)9);
-				checkifEqual("mx.wx", mx.wx, (double)10);
-				checkifEqual("mx.wy", mx.wy, (double)11);
-				checkifEqual("mx.wz", mx.wz, (double)12);
-			}
-
+			STransformMatrix mx;
+			__checkVCOM(geoRef->GetTransfromMatrix(mx));
+			
+			checkifEqual("mx.ox", mx.ox, (double)1);
+			checkifEqual("mx.oy", mx.oy, (double)2);
+			checkifEqual("mx.oz", mx.oz, (double)3);
+			checkifEqual("mx.ux", mx.ux, (double)4);
+			checkifEqual("mx.uy", mx.uy, (double)5);
+			checkifEqual("mx.uz", mx.uz, (double)6);
+			checkifEqual("mx.vx", mx.vx, (double)7);
+			checkifEqual("mx.vy", mx.vy, (double)8);
+			checkifEqual("mx.vz", mx.vz, (double)9);
+			checkifEqual("mx.wx", mx.wx, (double)10);
+			checkifEqual("mx.wy", mx.wy, (double)11);
+			checkifEqual("mx.wz", mx.wz, (double)12);
 		}
+
+		// Second Sym Def
+		ISymDefPtr symDef2 = nullptr;
+		__checkVCOM(mvrRead->GetSymDefAt(1, & symDef2));
+		if(symDef2)
+		{
+			VectorworksMVR::MvrUUID uuid (0,0,0,0);
+			VectorworksMVR::MvrUUID emptyuuid (0,0,0,0);
+			__checkVCOM(symDef2->GetGuid(uuid));
+
+			checkifUnEqual("UUID for Sym Def", uuid, emptyuuid );
+		}
+
 
 		size_t countClasses = 0;
 		__checkVCOM(mvrRead->GetClassCount(countClasses));

@@ -351,3 +351,26 @@ void Unittest::PrintParsingErrorList(VectorworksMVR::IGdtfFixturePtr& fixture)
 		PrintParsingError(error->GetErrorMessage(), (Sint32)errorType);
 	}
 };
+
+void Unittest::checkifUnEqual(const std::string& check, const VectorworksMVR::MvrUUID val1, const VectorworksMVR::MvrUUID val2)
+{
+	if ( ! (val1.a == val2.a && val1.b == val2.b && val1.c == val2.c && val1.d == val2.d)) return;
+
+	// Else Log the error
+	fFailed = true;
+
+	UnittestFailObject test;
+	test.fMessage += check;
+	test.fMessage += " Result: ";
+	test.fMessage += std::to_string(val1.a)+".";
+	test.fMessage += std::to_string(val1.b)+".";
+	test.fMessage += std::to_string(val1.c)+".";
+	test.fMessage += std::to_string(val1.d);
+	test.fMessage += " Expected: ";
+	test.fMessage += std::to_string(val2.a)+".";
+	test.fMessage += std::to_string(val2.b)+".";
+	test.fMessage += std::to_string(val2.c)+".";
+	test.fMessage += std::to_string(val2.d);
+
+	fFailedTests.push_back(test);
+};
