@@ -275,6 +275,25 @@ void MvrUnittest::ReadFile()
 					checkifEqual("GetFocusPoint name", sceneObj->GetName(), "My FocusPoint");
 					__checkVCOM(sceneObj->GetGuid(resultUUID));
 					this->checkifEqual("GetFocusPointGuid focusPointUUID ", resultUUID, focusPointUUID);
+
+					// Check Geometry
+					size_t geometryCount = 0;
+					__checkVCOM(sceneObj->GetGeometryCount(geometryCount));
+					checkifEqual("Focus Point Geometry Count ", geometryCount, size_t(1));
+
+					IGeometryReferencePtr geoRef;
+					__checkVCOM(sceneObj->GetGeometryAt(0, &geoRef));
+
+					bool isSymbol = false;
+					__checkVCOM(geoRef->GetIsSymbol(isSymbol));
+					checkifTrue("Is Symbol", isSymbol);
+
+					ISymDefPtr linkedSymDef;
+					__checkVCOM(geoRef->GetSymDef(&linkedSymDef));
+					if(linkedSymDef)
+					{
+						checkifEqual("SymbolDef for Focus Point", linkedSymDef->GetName(), "Symbol Definition for the FocusPoint");					
+					}
 				}
 				
 

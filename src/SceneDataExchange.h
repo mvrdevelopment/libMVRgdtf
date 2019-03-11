@@ -550,12 +550,14 @@ namespace SceneData
 		virtual ~SceneDataSymbolObj();
 		
 	private:
-		SceneDataGUID	fSymDef;
-		bool			fIsInitialized;
+		SceneDataSymDefObjPtr	fSymDef;
+		TXString				fUnresolvedSymDef;		
 		
 	public:
-		void				SetSymDef(SceneDataSymDefObjPtr symDef);
-		SceneDataGUID		GetSymDef();
+		void					SetSymDef(SceneDataSymDefObjPtr symDef);
+		SceneDataSymDefObjPtr	GetSymDef();
+		const TXString&			GetUnresolvedSymDef() const;
+
 		
 	private:
 		virtual	TXString				GetNodeName();
@@ -604,6 +606,8 @@ namespace SceneData
 		TXStringArray						fRequiredGdtfFiles;
 		TFolderIdentifierArray				fGdtfFolderLocations;
 		
+		// Resolve map
+		std::map<TXString, SceneDataSymDefObjPtr> fSymDefMap;
 		
 		//
 		size_t							fCountExportedGeometryProviders;

@@ -1355,9 +1355,9 @@ ESceneDataObjectType SceneDataVideoScreenObj::GetObjectType()
 
 // ----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataTrussObj
-SceneDataSymbolObj::SceneDataSymbolObj(const SceneDataGUID& guid) : SceneDataGeoInstanceObj(guid, true /*Is SymbolDef*/), fSymDef(ePlaceHolder, "Missing SymDef")
+SceneDataSymbolObj::SceneDataSymbolObj(const SceneDataGUID& guid) : SceneDataGeoInstanceObj(guid, true /*Is SymbolDef*/)
 {
-	fIsInitialized = false;
+	fSymDef = nullptr;
 }
 
 SceneDataSymbolObj::~SceneDataSymbolObj()
@@ -1380,10 +1380,7 @@ void SceneDataSymbolObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange*
 	// Call Parent
 	SceneDataGeoInstanceObj::OnPrintToFile(pNode, exchange);
 	
-	if (fIsInitialized)
-	{
-		pNode->SetNodeAttributeValue(XML_Val_GuidSymdefAttrName,	fSymDef);
-	}
+	if (fSymDef)	{ pNode->SetNodeAttributeValue(XML_Val_GuidSymdefAttrName,	fSymDef->getGuid()); }
 }
 
 void SceneDataSymbolObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
@@ -1391,24 +1388,23 @@ void SceneDataSymbolObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataE
 	SceneDataObjWithMatrix::OnReadFromNode(pNode, exchange);
 	
 	TXString value;
-	pNode->GetNodeAttributeValue(XML_Val_GuidSymdefAttrName,	value);
-	
-	fIsInitialized = true;
-	fSymDef = SceneDataGUID(value);
-	
+	pNode->GetNodeAttributeValue(XML_Val_GuidSymdefAttrName,	fUnresolvedSymDef);
+		
 }
 
 void SceneDataSymbolObj::SetSymDef(SceneDataSymDefObjPtr symDef)
 {
-	ASSERTN(kEveryone, fIsInitialized == false);
-	fIsInitialized = true;
-	fSymDef = SceneDataGUID(symDef->getGuid());;
+	fSymDef = symDef;
 }
 
-SceneDataGUID SceneDataSymbolObj::GetSymDef()
+SceneDataSymDefObjPtr SceneDataSymbolObj::GetSymDef()
 {
-	ASSERTN(kEveryone, fIsInitialized == true);
 	return fSymDef;
+}
+
+const TXString& SceneDataSymbolObj::GetUnresolvedSymDef() const
+{
+	return fUnresolvedSymDef;
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------------
@@ -1534,7 +1530,8 @@ SceneDataSymDefObjPtr SceneDataExchange::ReadSymDefObject(const IXMLFileNodePtr&
 	newSymDef->ReadFromNode(node, this);
 	
 	fAuxDataObjs.push_back(newSymDef);
-	
+	fSymDefMap[uuid] = newSymDef;
+
 	return newSymDef;
 }
 
@@ -2362,6 +2359,19 @@ void SceneDataExchange::ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xml
 			if (!match) { DSTOP((kEveryone, "Could not resolve UUID from Class to Object")); }
 			
 		}
+
+		for(SceneDataGeoInstanceObjPtr geoObj : scObj->GetGeometryArr())
+		{
+			if(geoObj->IsSymDef())
+			{
+				SceneDataSymbolObjPtr symObj = dynamic_cast<SceneDataSymbolObjPtr>(geoObj);
+				SceneDataSymDefObjPtr ptr    = fSymDefMap[symObj->GetUnresolvedSymDef()];
+				
+				ASSERTN(kEveryone, ptr);
+				if(ptr) { symObj->SetSymDef(ptr); }
+			}
+		}
+		
 	}
 	
 }

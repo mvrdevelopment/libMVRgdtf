@@ -39,7 +39,7 @@ MvrString VectorworksMVR::CGeometryReferenceImpl::GetFileForGeometry()
 	SceneData::SceneDataGeometryObjPtr geoObj = dynamic_cast<SceneData::SceneDataGeometryObjPtr>(fPtr);
 	
 	ASSERTN(kEveryone, geoObj != nullptr );
-	if (!geoObj) { return nullptr; }
+	if (!geoObj) { return ""; }
 	
 	//----------------------------------------------------------------------------------------------------
 	// Get the geometry full file path
@@ -57,17 +57,18 @@ VectorworksMVR::VCOMError VectorworksMVR::CGeometryReferenceImpl::GetSymDef(ISym
 	if( ! fIsSymbol) return kVCOMError_Failed;
 	
 	// Cast to Symdef
-	SceneData::SceneDataSymDefObjPtr scSymDef = dynamic_cast<SceneData::SceneDataSymDefObjPtr>(fPtr);
-	if(!scSymDef)	{ return kVCOMError_Failed; }
+	SceneData::SceneDataSymbolObjPtr scSymObj = dynamic_cast<SceneData::SceneDataSymbolObjPtr>(fPtr);
+	if(!scSymObj)	{ return kVCOMError_Failed; }
 	
-	
-	
+	SceneData::SceneDataSymDefObjPtr scSymDef = scSymObj->GetSymDef();
+	if(!scSymDef)	{ return kVCOMError_NotInitialized; }
+
 	//---------------------------------------------------------------------------
 	// Initialize Object
 	CSymDefImpl* pSymDef = nullptr;
 	
 	// Query Interface
-	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GeometryReference, (IVWUnknown**) & pSymDef)))
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_ISymDef, (IVWUnknown**) & pSymDef)))
 	{
 		// Check Casting
 		CSymDefImpl* pResultInterface = dynamic_cast<CSymDefImpl* >(pSymDef);
