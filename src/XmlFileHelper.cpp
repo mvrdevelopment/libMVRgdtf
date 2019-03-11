@@ -951,10 +951,10 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 {
 	switch (value)
 	{
-		case eGdtfLampType_LED:			return XML_GDTF_LampTypeEnum_Discharge;
+		case eGdtfLampType_LED:			return XML_GDTF_LampTypeEnum_LED;
 		case eGdtfLampType_Halogen:		return XML_GDTF_LampTypeEnum_Halogen;
 		case eGdtfLampType_Tungsten:	return XML_GDTF_LampTypeEnum_Tungsten;
-		case eGdtfLampType_Dischange:	return XML_GDTF_LampTypeEnum_LED;	
+		case eGdtfLampType_Dischange:	return XML_GDTF_LampTypeEnum_Discharge;	
 	}
 	
 	// Make Assert
