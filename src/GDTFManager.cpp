@@ -1524,7 +1524,7 @@ void GdtfGeometryAxis::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	TXStringArray needed;
 	TXStringArray optional;
 	needed.push_back(XML_GDTF_GeometryName);
-	needed.push_back(XML_GDTF_GeometryModelRef);
+	optional.push_back(XML_GDTF_GeometryModelRef);
 	needed.push_back(XML_GDTF_GeometryMatrix);
 	
 	//------------------------------------------------------------------------------------
@@ -1584,7 +1584,7 @@ void GdtfGeometryBeamFilter::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	TXStringArray needed;
 	TXStringArray optional;
 	needed.push_back(XML_GDTF_GeometryName);
-	needed.push_back(XML_GDTF_GeometryModelRef);
+	optional.push_back(XML_GDTF_GeometryModelRef);
 	needed.push_back(XML_GDTF_GeometryMatrix);
 
 	//------------------------------------------------------------------------------------
@@ -1646,7 +1646,7 @@ void GdtfGeometryColorFilter::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	TXStringArray needed;
 	TXStringArray optional;
 	needed.push_back(XML_GDTF_GeometryName);
-	needed.push_back(XML_GDTF_GeometryModelRef);
+	optional.push_back(XML_GDTF_GeometryModelRef);
 	needed.push_back(XML_GDTF_GeometryMatrix);
 
 	//------------------------------------------------------------------------------------
@@ -1708,7 +1708,7 @@ void GdtfGeometryShaperFilter::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	TXStringArray needed;
 	TXStringArray optional;
 	needed.push_back(XML_GDTF_GeometryName);
-	needed.push_back(XML_GDTF_GeometryModelRef);
+	optional.push_back(XML_GDTF_GeometryModelRef);
 	needed.push_back(XML_GDTF_GeometryMatrix);
 
 	//------------------------------------------------------------------------------------
@@ -1769,7 +1769,7 @@ void GdtfGeometryGoboFilter::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	TXStringArray needed;
 	TXStringArray optional;
 	needed.push_back(XML_GDTF_GeometryName);
-	needed.push_back(XML_GDTF_GeometryModelRef);
+	optional.push_back(XML_GDTF_GeometryModelRef);
 	needed.push_back(XML_GDTF_GeometryMatrix);
 
 	//------------------------------------------------------------------------------------
@@ -1915,7 +1915,6 @@ void GdtfGeometryLamp::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	TXStringArray needed;
 	TXStringArray optional;
 	needed.push_back(XML_GDTF_GeometryName);
-	needed.push_back(XML_GDTF_GeometryModelRef);
 	needed.push_back(XML_GDTF_GeometryMatrix);
 	optional.push_back(XML_GDTF_LampLampType);
 	optional.push_back(XML_GDTF_LampPowerConsumption);
@@ -1926,6 +1925,8 @@ void GdtfGeometryLamp::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	optional.push_back(XML_GDTF_BeamRadius);
 	optional.push_back(XML_GDTF_BeamType);
 	optional.push_back(XML_GDTF_BeamColorRenderingIndex);
+	optional.push_back(XML_GDTF_GeometryModelRef);
+
 	
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
@@ -2161,7 +2162,7 @@ void GdtfGeometryReference::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	TXStringArray needed;
 	TXStringArray optional;
 	needed.push_back(XML_GDTF_GeometryName);
-	needed.push_back(XML_GDTF_GeometryModelRef);
+	optional.push_back(XML_GDTF_GeometryModelRef);
 	needed.push_back(XML_GDTF_GeometryReferenceLinkedGeo);
 	needed.push_back(XML_GDTF_GeometryMatrix);
 

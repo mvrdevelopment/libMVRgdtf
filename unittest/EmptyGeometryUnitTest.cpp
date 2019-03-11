@@ -36,7 +36,9 @@ void GdtfEmptyModelTest::WriteFile(VectorworksMVR::IGdtfFixturePtr& fixture)
 
     
     IGdtfGeometryPtr geometry1;
-    __checkVCOM(fixture->CreateGeometry(EGdtfObjectType::eGdtfGeometry, "Geometry1", nullptr, STransformMatrix(), &geometry1));
+    __checkVCOM(fixture->CreateGeometry(EGdtfObjectType::eGdtfGeometryLamp, "Geometry1", nullptr, STransformMatrix(), &geometry1));
+
+    geometry1->SetLampType(EGdtfLampType::eGdtfLampType_LED);
 
     if(geometry1)
     {
@@ -66,6 +68,11 @@ void GdtfEmptyModelTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
         __checkVCOM(fixture->GetGeometryAt(0, &geometry1));
         checkifEqual("Second Level Geometry Name", geometry1->GetName(), "Geometry1");
         __checkVCOM_NotSet(geometry1->GetModel( & model));
+
+        EGdtfLampType lampType = EGdtfLampType::eGdtfLampType_Dischange;
+        __checkVCOM(geometry1->GetLampType(lampType));
+        checkifEqual("Check Lamp Type", lampType, EGdtfLampType::eGdtfLampType_LED);
+
 
 
         size_t second_level = 0;
