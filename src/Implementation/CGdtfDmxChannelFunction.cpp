@@ -188,7 +188,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetEmitte
 	if ( ! gdtfEmitter)	{ return kVCOMError_NotSet; }
     
     // Query Interface
-    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfWheel, (IVWUnknown**) & pEmitter)))
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfPhysicalEmitter, (IVWUnknown**) & pEmitter)))
     {
         // Check Casting
         CGdtfPhysicalEmitterImpl* pResultInterface = dynamic_cast<CGdtfPhysicalEmitterImpl* >(pEmitter);
