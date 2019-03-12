@@ -1239,3 +1239,9 @@ MvrString VectorworksMVR::CMediaRessourceVectorImpl::GetAttachedFileCountAt(size
 
     return "";
 }
+
+VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetSceneObjectCount(size_t& countObjects)
+{
+	countObjects = 0;
+	return kVCOMError_NoError;
+}
