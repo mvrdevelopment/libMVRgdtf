@@ -1242,6 +1242,6 @@ MvrString VectorworksMVR::CMediaRessourceVectorImpl::GetAttachedFileCountAt(size
 
 VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetSceneObjectCount(size_t& countObjects)
 {
-	countObjects = 0;
+	countObjects = fExchangeObj.GetSceneDataObjects().size();
 	return kVCOMError_NoError;
 }
