@@ -260,6 +260,9 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetFirstLayer(ISceneObj** firstLayer ) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetFirstChild(ISceneObj* container, ISceneObj** outChild) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetNextObject(ISceneObj* object, ISceneObj** outNextObj) = 0;
+
+        // Get Count Scene Object
+        virtual VCOMError VCOM_CALLTYPE		GetSceneObjectCount(size_t& countObjects ) = 0;
 				
 	};
 	typedef VCOMPtr<IMediaRessourceVectorInterface>	IMediaRessourceVectorInterfacePtr;

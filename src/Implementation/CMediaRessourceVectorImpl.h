@@ -92,5 +92,8 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetFirstLayer(ISceneObj** firstLayer );
 		virtual VCOMError VCOM_CALLTYPE		GetFirstChild(ISceneObj* container, ISceneObj** outChild);
 		virtual VCOMError VCOM_CALLTYPE		GetNextObject(ISceneObj* object, ISceneObj** outNextObj);	
+
+		virtual VCOMError VCOM_CALLTYPE		GetSceneObjectCount(size_t& countObjects );
+
 	};
 }
