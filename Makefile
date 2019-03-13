@@ -154,7 +154,7 @@ $(TargetTestName): $(SRC_UNIT)
 $(TargetLibName).a: $(OBJECTS)
 	@echo "Linking objects to lib$(TargetLib) ..."
 	@mkdir -p $(BINDIR)
-    @mkdir -p $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)
+	@mkdir -p $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)
 	ar rcs $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)/lib$@ $(OBJECTS)
 	@#$(CXX) $(LDFLAGS) -o $(BINDIR)/$@ $(OBJECTS) -L$(XERCESLIBPATH) -l$(XERCESLIBNAME) $(LINKWITHLIBS)
 
