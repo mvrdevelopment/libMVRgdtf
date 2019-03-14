@@ -4505,8 +4505,7 @@ GdtfAttributePtr GdtfFixture::getAttributeByRef(const TXString& ref)
 	{
 		if(fNoFeature == nullptr)
 		{
-			fNoFeature = new GdtfAttribute("NoFeature", "NoFeature");
-			fAttributes.push_back(fNoFeature);
+			CreateNoFeatureAttribute();
 		} 
 		return fNoFeature; 
 	}
@@ -4515,6 +4514,54 @@ GdtfAttributePtr GdtfFixture::getAttributeByRef(const TXString& ref)
 	// When this line is reached nothing was found.
 	DSTOP ((kEveryone, "Failed to resolve GdtfAttributePtr."));
 	return fNoFeature;
+}
+
+void GdtfFixture::CreateNoFeatureAttribute()
+{
+	//------------------------------------------------------------
+	// Create Attribute
+	ASSERTN(kEveryone, fNoFeature == nullptr);
+	fNoFeature = new GdtfAttribute("NoFeature", "NoFeature");
+	fAttributes.push_back(fNoFeature);
+
+	//------------------------------------------------------------
+	// Create Feature Group
+	GdtfFeatureGroupPtr controlFeatureGroup = nullptr;
+	for (GdtfFeatureGroupPtr featGrp : fFeatureGroups)
+	{	
+		if(featGrp->GetName() == "Control")
+		{
+			controlFeatureGroup = featGrp;
+			break;
+		}
+	}
+
+	if(controlFeatureGroup == nullptr)
+	{
+		controlFeatureGroup = new GdtfFeatureGroup("Control", "Control");
+		fFeatureGroups.push_back(controlFeatureGroup);
+	}
+	ASSERTN(kEveryone, controlFeatureGroup != nullptr)
+
+	//------------------------------------------------------------
+	// Create Feature
+	GdtfFeaturePtr linkedFeature = nullptr;
+	for (GdtfFeaturePtr feature : controlFeatureGroup->GetFeatureArray())
+	{	
+		if(feature->GetName() == "Control")
+		{
+			linkedFeature = feature;
+			break;
+		}
+	}
+
+	if(linkedFeature == nullptr)
+	{
+		linkedFeature = controlFeatureGroup->AddFeature("Control");
+	}
+
+	fNoFeature->SetFeature(linkedFeature);
+
 }
 
 GdtfWheelPtr GdtfFixture::getWheelByRef(const TXString& ref)

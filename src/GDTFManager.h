@@ -2041,7 +2041,8 @@ private:
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
         virtual	void			        OnErrorCheck(const IXMLFileNodePtr& pNode);
-		        
+
+		void            			CreateNoFeatureAttribute();      
         GdtfAttributePtr            getAttributeByRef(const TXString& ref);
         GdtfWheelPtr                getWheelByRef(const TXString& ref);	
         GdtfPhysicalEmitterPtr      getEmiterByRef(const TXString& ref);
