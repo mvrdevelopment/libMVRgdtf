@@ -1956,6 +1956,10 @@ namespace SceneData
 		IFolderIdentifierPtr			fWorkingFolder;
         TGdtfParsingErrorArray          fParsingErrors;
 
+
+		// 
+		GdtfAttributePtr 				fNoFeature;
+
 public:
         static void                     AddError(const GdtfParsingError& error);
         static TGdtfParsingErrorArray*  __ERROR_CONTAINER_POINTER;
