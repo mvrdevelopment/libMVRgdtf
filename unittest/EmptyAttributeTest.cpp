@@ -84,6 +84,11 @@ void EmptyAttributeTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
     checkifEqual("Attribte Count", attributeCount, size_t(2));
 
 
+     size_t featureGroupCount = 0;
+    __checkVCOM(fixture->GetFeatureGroupCount(featureGroupCount));
+    checkifEqual("GetFeatureGroupCount", featureGroupCount, size_t(2));
+
+
      //----------------------------------------------------------------
     // Check Attributes
     IGdtfDmxModePtr mode;
@@ -117,5 +122,13 @@ void EmptyAttributeTest::TestFunction(VectorworksMVR::IGdtfDmxChannelFunctionPtr
     IGdtfAttributePtr attribute;
     __checkVCOM(function->GetAttribute(&attribute));
     checkifEqual("AttributeName" , attribute->GetName(), "NoFeature");
+
+    IGdtfFeaturePtr linkedFeature;
+    __checkVCOM(attribute->GetFeature(&linkedFeature));
+    if(linkedFeature)
+    {
+        checkifEqual("LinkedFeature Name" , linkedFeature->GetName(), "Control");
+    }
+    
 
 }
