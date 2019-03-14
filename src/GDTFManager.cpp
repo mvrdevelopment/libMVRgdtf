@@ -4499,7 +4499,8 @@ GdtfAttributePtr GdtfFixture::getAttributeByRef(const TXString& ref)
 	// Check fi there
 	for (GdtfAttributePtr attr : fAttributes)
 	{
-		if (attr->GetNodeReference() == ref) {return attr;};
+		if (fNoFeature == nullptr && XML_GDTF_AttributeNoFeature_nullptr == ref) { fNoFeature = attr; }
+		if (attr->GetNodeReference() == ref) { return attr; };
 	}
 	if(ref.IsEmpty() || ref == XML_GDTF_AttributeNoFeature_nullptr)							   
 	{
