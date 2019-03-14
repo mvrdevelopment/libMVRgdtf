@@ -3015,7 +3015,6 @@ void GdtfDmxChannelFunction::OnPrintToFile(IXMLFileNodePtr pNode)
 	
 	EGdtfChannelBitResolution chanelReso = GetParentDMXChannel()->GetChannelBitResolution();
 
-	ASSERTN(kEveryone, fAttribute!= nullptr);
 	// ------------------------------------------------------------------------------------
 	// Print node attributes
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionName,				fName);

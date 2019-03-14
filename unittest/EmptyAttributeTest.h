@@ -19,4 +19,7 @@ private:
     void virtual WriteFile(VectorworksMVR::IGdtfFixturePtr& fixtureDuringRead) override;
     void virtual ReadFile(VectorworksMVR::IGdtfFixturePtr& fixtureDuringWrite) override;
 
+    void TestFunction(VectorworksMVR::IGdtfDmxChannelFunctionPtr& function);
+
+
 };
