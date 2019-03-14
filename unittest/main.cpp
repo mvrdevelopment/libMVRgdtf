@@ -13,6 +13,10 @@
 #include "EmptyGeometryUnitTest.h"
 #include "CustomColorSpaceTest.h"
 #include "EmptyAttributeTest.h"
+#include "EmptyAttributeTest2.h"
+#include "EmptyAttributeTest3.h"
+#include "EmptyAttributeTest4.h"
+
 
 
 
@@ -48,7 +52,16 @@ int main(int argc, char* argv[])
 	EmptyAttributeTest test3 (base);
 	bool test3_ok = test3.RunTest();
 
-    return  (mvrFailed || gdtfFailed || gdtfDmxFailed || errorFailed || modeMasterFailed || test1_ok || test2_ok|| test3_ok);
+	EmptyAttributeTest2 test4 (base);
+	bool test4_ok = test4.RunTest();
+
+	EmptyAttributeTest3 test5 (base);
+	bool test5_ok = test5.RunTest();
+
+	EmptyAttributeTest4 test6 (base);
+	bool test6_ok = test6.RunTest();
+
+    return  (mvrFailed || gdtfFailed || gdtfDmxFailed || errorFailed || modeMasterFailed || test1_ok || test2_ok|| test3_ok || test4_ok || test5_ok || test6_ok);
 }
 
 

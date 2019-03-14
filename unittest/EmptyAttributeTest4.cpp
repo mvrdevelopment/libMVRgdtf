@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------
 
 #include "Include/VectorworksMVR.h"
-#include "EmptyAttributeTest.h"
+#include "EmptyAttributeTest4.h"
 
 using namespace VectorworksMVR;
 using namespace VectorworksMVR::GdtfDefines;
@@ -12,33 +12,33 @@ using namespace VectorworksMVR::GdtfDefines;
 #define __checkVCOM(x) this->checkVCOM(x, #x)
 #define __checkVCOM_NotSet(x) this->checkVCOM_NotSet(x, #x)
 
-EmptyAttributeTest::EmptyAttributeTest(const std::string& currentDir) : GdtfUnitTest(currentDir)
+EmptyAttributeTest4::EmptyAttributeTest4(const std::string& currentDir) : GdtfUnitTest(currentDir)
 {
 }
 
-EmptyAttributeTest::~EmptyAttributeTest()
+EmptyAttributeTest4::~EmptyAttributeTest4()
 {  
 }
 
 
-std::string EmptyAttributeTest::GetUnitTestName()
+std::string EmptyAttributeTest4::GetUnitTestName()
 {  
-    return  std::string("EmptyAttributeTest");
+    return  std::string("EmptyAttributeTest4");
 }
 
-void EmptyAttributeTest::WriteFile(VectorworksMVR::IGdtfFixturePtr& fixture)
+void EmptyAttributeTest4::WriteFile(VectorworksMVR::IGdtfFixturePtr& fixture)
 {  
     //----------------------------------------------------------------
     // Create Attribute
     IGdtfFeatureGroupPtr featureGroup;
-    __checkVCOM(fixture->CreateFeatureGroup("FeatureGroup","FeatureGroup", &featureGroup));
+    __checkVCOM(fixture->CreateFeatureGroup("Control","Control", &featureGroup));
 
     IGdtfFeaturePtr feature;
-    __checkVCOM(featureGroup->CreateFeature("Feature", & feature));
+    __checkVCOM(featureGroup->CreateFeature("Control", & feature));
 
     
     IGdtfAttributePtr attribute1;
-    __checkVCOM(fixture->CreateAttribute("Attribute1","Pretty", &attribute1));
+    __checkVCOM(fixture->CreateAttribute("NoFeature","NoFeature", &attribute1));
     attribute1->SetFeature(feature);
 
     //----------------------------------------------------------------
@@ -75,18 +75,17 @@ void EmptyAttributeTest::WriteFile(VectorworksMVR::IGdtfFixturePtr& fixture)
 
 }
 
-void EmptyAttributeTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
+void EmptyAttributeTest4::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
 {  
     //----------------------------------------------------------------
     // Check Attributes
     size_t attributeCount = 0;
     __checkVCOM(fixture->GetAttributeCount(attributeCount));
-    checkifEqual("Attribte Count", attributeCount, size_t(2));
+    checkifEqual("Attribte Count", attributeCount, size_t(1));
 
-
-     size_t featureGroupCount = 0;
+    size_t featureGroupCount = 0;
     __checkVCOM(fixture->GetFeatureGroupCount(featureGroupCount));
-    checkifEqual("GetFeatureGroupCount", featureGroupCount, size_t(2));
+    checkifEqual("GetFeatureGroupCount", featureGroupCount, size_t(1));
 
     IGdtfFeatureGroupPtr group;
     __checkVCOM(fixture->GetFeatureGroupAt(0, & group));
@@ -124,7 +123,7 @@ void EmptyAttributeTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
 
 }
 
-void EmptyAttributeTest::TestFunction(VectorworksMVR::IGdtfDmxChannelFunctionPtr& function)
+void EmptyAttributeTest4::TestFunction(VectorworksMVR::IGdtfDmxChannelFunctionPtr& function)
 {
     IGdtfAttributePtr attribute;
     __checkVCOM(function->GetAttribute(&attribute));
