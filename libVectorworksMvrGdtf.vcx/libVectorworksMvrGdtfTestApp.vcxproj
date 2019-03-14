@@ -36,6 +36,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\unittest\CustomColorSpaceTest.cpp" />
+    <ClCompile Include="..\unittest\EmptyAttributeTest.cpp" />
     <ClCompile Include="..\unittest\EmptyGeometryUnitTest.cpp" />
     <ClCompile Include="..\unittest\GdtfDmxUnittest.cpp" />
     <ClCompile Include="..\unittest\GdtfFunctionModeMaster.cpp" />
@@ -49,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\unittest\CustomColorSpaceTest.h" />
+    <ClInclude Include="..\unittest\EmptyAttributeTest.h" />
     <ClInclude Include="..\unittest\EmptyGeometryUnitTest.h" />
     <ClInclude Include="..\unittest\GdtfDmxUnittest.h" />
     <ClInclude Include="..\unittest\GdtfFunctionModeMaster.h" />
