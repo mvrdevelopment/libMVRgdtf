@@ -4288,6 +4288,7 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile, TXString folderName)
 {
 	fReaded			= false;
 	fHasLinkedGuid	= false;
+	fNoFeature 		= nullptr;
 	ASSERTN(kEveryone, __ERROR_CONTAINER_POINTER == nullptr);
 	__ERROR_CONTAINER_POINTER = & this->fErrorContainer; 
 	
@@ -4501,8 +4502,15 @@ GdtfAttributePtr GdtfFixture::getAttributeByRef(const TXString& ref)
 	{
 		if (attr->GetNodeReference() == ref) {return attr;};
 	}
-
-	if(ref.IsEmpty())	{ return fNoFeature; }
+	if(ref.IsEmpty() || ref == XML_GDTF_AttributeNoFeature_nullptr)							   
+	{
+		if(fNoFeature == nullptr)
+		{
+			fNoFeature = new GdtfAttribute("NoFeature", "NoFeature");
+		} 
+		return fNoFeature; 
+	}
+	
 
 	// When this line is reached nothing was found.
 	DSTOP ((kEveryone, "Failed to resolve GdtfAttributePtr."));
@@ -4994,7 +5002,8 @@ void GdtfFixture::ResolveDmxChanelFunctionRefs(GdtfDmxLogicalChannelPtr dmxLogCh
 GdtfFixture::GdtfFixture()
 {
 	fReaded					= false;
-	fHasLinkedGuid			= false;        
+	fHasLinkedGuid			= false;     
+	fNoFeature				= nullptr;   
 }
 
 GdtfFixture::~GdtfFixture()
