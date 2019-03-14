@@ -290,7 +290,28 @@ VWFC::Tools::VWUUID::VWUUID()
 	uuid_generate_time_safe( myUUID );
 	memcpy( fData, &myUUID, 16 );
 #else // Mac
-// TODO
+
+	auto newId = CFUUIDCreate(kCFAllocatorDefault);
+	auto bytes = CFUUIDGetUUIDBytes(newId);
+	CFRelease(newId);
+
+	fData[0]  =	bytes.byte0;
+	fData[1]  =	bytes.byte1;
+	fData[2]  =	bytes.byte2;
+	fData[3]  =	bytes.byte3;
+	fData[4]  =	bytes.byte4;
+	fData[5]  =	bytes.byte5;
+	fData[6]  =	bytes.byte6;
+	fData[7]  =	bytes.byte7;
+	fData[8]  =	bytes.byte8;
+	fData[9]  =	bytes.byte9;
+	fData[10] =	bytes.byte10;
+	fData[11] =	bytes.byte11;
+	fData[12] =	bytes.byte12;
+	fData[13] =	bytes.byte13;
+	fData[14] =	bytes.byte14;
+	fData[14] =	bytes.byte15;
+
 #endif
 }
 
