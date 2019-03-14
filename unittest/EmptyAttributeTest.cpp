@@ -65,5 +65,7 @@ void EmptyAttributeTest::WriteFile(VectorworksMVR::IGdtfFixturePtr& fixture)
 
 void EmptyAttributeTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
 {  
-    
+    size_t attributeCount = 0;
+    __checkVCOM(fixture->GetAttributeCount(attributeCount));
+    checkifEqual("Attribte Count", attributeCount, size_t(2));
 }

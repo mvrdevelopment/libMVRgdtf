@@ -4507,6 +4507,7 @@ GdtfAttributePtr GdtfFixture::getAttributeByRef(const TXString& ref)
 		if(fNoFeature == nullptr)
 		{
 			fNoFeature = new GdtfAttribute("NoFeature", "NoFeature");
+			fAttributes.push_back(fNoFeature);
 		} 
 		return fNoFeature; 
 	}
