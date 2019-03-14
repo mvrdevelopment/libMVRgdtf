@@ -12,7 +12,7 @@
 #include "Utility.h"
 #include "EmptyGeometryUnitTest.h"
 #include "CustomColorSpaceTest.h"
-
+#include "EmptyAttributeTest.h"
 
 
 
@@ -45,7 +45,10 @@ int main(int argc, char* argv[])
 	GdtfCustomColorSpaceTest test2 (base);
 	bool test2_ok = test2.RunTest();
 
-    return  (mvrFailed || gdtfFailed || gdtfDmxFailed || errorFailed || modeMasterFailed || test1_ok || test2_ok);
+	EmptyAttributeTest test3 (base);
+	bool test3_ok = test3.RunTest();
+
+    return  (mvrFailed || gdtfFailed || gdtfDmxFailed || errorFailed || modeMasterFailed || test1_ok || test2_ok|| test3_ok);
 }
 
 
