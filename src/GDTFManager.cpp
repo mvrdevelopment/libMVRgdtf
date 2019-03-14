@@ -3015,7 +3015,6 @@ void GdtfDmxChannelFunction::OnPrintToFile(IXMLFileNodePtr pNode)
 	
 	EGdtfChannelBitResolution chanelReso = GetParentDMXChannel()->GetChannelBitResolution();
 
-	ASSERTN(kEveryone, fAttribute!= nullptr);
 	// ------------------------------------------------------------------------------------
 	// Print node attributes
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionName,				fName);
@@ -4288,6 +4287,7 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile, TXString folderName)
 {
 	fReaded			= false;
 	fHasLinkedGuid	= false;
+	fNoFeature 		= nullptr;
 	ASSERTN(kEveryone, __ERROR_CONTAINER_POINTER == nullptr);
 	__ERROR_CONTAINER_POINTER = & this->fErrorContainer; 
 	
@@ -4496,16 +4496,73 @@ void GdtfFixture::AutoGenerateNames(GdtfDmxModePtr dmxMode)
 
 GdtfAttributePtr GdtfFixture::getAttributeByRef(const TXString& ref)
 {	
-	if(ref == XML_GDTF_AttributeNoFeature_nullptr) { return nullptr; }
-    
+	// Check fi there
 	for (GdtfAttributePtr attr : fAttributes)
 	{
-		if (attr->GetNodeReference() == ref) {return attr;};
+		if (fNoFeature == nullptr && XML_GDTF_AttributeNoFeature_nullptr == ref) { fNoFeature = attr; }
+		if (attr->GetNodeReference() == ref) { return attr; };
 	}
+	if(ref.IsEmpty() || ref == XML_GDTF_AttributeNoFeature_nullptr)							   
+	{
+		if(fNoFeature == nullptr)
+		{
+			CreateNoFeatureAttribute();
+		} 
+		return fNoFeature; 
+	}
+	
 
 	// When this line is reached nothing was found.
 	DSTOP ((kEveryone, "Failed to resolve GdtfAttributePtr."));
-	return nullptr;
+	return fNoFeature;
+}
+
+void GdtfFixture::CreateNoFeatureAttribute()
+{
+	//------------------------------------------------------------
+	// Create Attribute
+	ASSERTN(kEveryone, fNoFeature == nullptr);
+	fNoFeature = new GdtfAttribute("NoFeature", "NoFeature");
+	fAttributes.push_back(fNoFeature);
+
+	//------------------------------------------------------------
+	// Create Feature Group
+	GdtfFeatureGroupPtr controlFeatureGroup = nullptr;
+	for (GdtfFeatureGroupPtr featGrp : fFeatureGroups)
+	{	
+		if(featGrp->GetName() == "Control")
+		{
+			controlFeatureGroup = featGrp;
+			break;
+		}
+	}
+
+	if(controlFeatureGroup == nullptr)
+	{
+		controlFeatureGroup = new GdtfFeatureGroup("Control", "Control");
+		fFeatureGroups.push_back(controlFeatureGroup);
+	}
+	ASSERTN(kEveryone, controlFeatureGroup != nullptr)
+
+	//------------------------------------------------------------
+	// Create Feature
+	GdtfFeaturePtr linkedFeature = nullptr;
+	for (GdtfFeaturePtr feature : controlFeatureGroup->GetFeatureArray())
+	{	
+		if(feature->GetName() == "Control")
+		{
+			linkedFeature = feature;
+			break;
+		}
+	}
+
+	if(linkedFeature == nullptr)
+	{
+		linkedFeature = controlFeatureGroup->AddFeature("Control");
+	}
+
+	fNoFeature->SetFeature(linkedFeature);
+
 }
 
 GdtfWheelPtr GdtfFixture::getWheelByRef(const TXString& ref)
@@ -4573,10 +4630,10 @@ GdtfDmxChannelPtr GdtfFixture::getDmxChannelByRef(const TXString& ref, GdtfDmxMo
 void GdtfFixture::ResolveAllReferences()
 {
 	ResolveGeometryRefs();
-	ResolveAttribRefs();
 	ResolveDmxModeRefs();	
 	ResolveDMXModeMasters();
     ResolveDMXPersonalityRefs();
+	ResolveAttribRefs();
 }
 
 void GdtfFixture::ResolveGeometryRefs()
@@ -4925,29 +4982,18 @@ void GdtfFixture::ResolveDmxLogicalChanRefs(GdtfDmxChannelPtr dmxChnl)
 	for ( GdtfDmxLogicalChannelPtr logChnl : dmxChnl->GetLogicalChannelArray() )
 	{
 		// ----------------------------------------------------------------------------------------
-		// DmxLogicalChannel.Attribute
-		TXString unresolvedAttribRef = logChnl->GetUnresolvedAttribRef();
-		
-		if (!unresolvedAttribRef.IsEmpty())
+		// DmxLogicalChannel.Attribute		
+		GdtfAttributePtr attrPtr = getAttributeByRef(logChnl->GetUnresolvedAttribRef());
+				
+		ASSERTN(kEveryone, attrPtr != nullptr);
+		if (attrPtr != nullptr)	{ logChnl->SetAttribute(attrPtr); }
+		else
 		{
-			GdtfAttributePtr attrPtr = nullptr;
-			
-			for (GdtfAttributePtr attr : fAttributes)
-			{
-				if (attr->GetNodeReference() == unresolvedAttribRef)	{ attrPtr = attr; break; }
-			}
-
-			
-			
-			ASSERTN(kEveryone, attrPtr != nullptr);
-			if (attrPtr != nullptr)	{ logChnl->SetAttribute(attrPtr); }
-			else
-			{
-				IXMLFileNodePtr node;
-				logChnl->GetNode(node);
-				GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureLogicalChannelMissingAttribute, node); SceneData::GdtfFixture::AddError(error);
-			}
+			IXMLFileNodePtr node;
+			logChnl->GetNode(node);
+			GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureLogicalChannelMissingAttribute, node); SceneData::GdtfFixture::AddError(error);
 		}
+		
 		
 		// ----------------------------------------------------------------------------------------
 		// DmxChannelFuntionArray
@@ -4956,18 +5002,20 @@ void GdtfFixture::ResolveDmxLogicalChanRefs(GdtfDmxChannelPtr dmxChnl)
 }
 
 void GdtfFixture::ResolveDmxChanelFunctionRefs(GdtfDmxLogicalChannelPtr dmxLogChnl)
-
 {
 	for (GdtfDmxChannelFunctionPtr chnlFunc : dmxLogChnl->GetDmxChannelFunctions())
 	{
 		// ----------------------------------------------------------------------------------------
 		// DmxChanelFunction.Attribute
-		TXString unresolvedAttrRef	= chnlFunc->getUnresolvedAttrRef();
-		
-		if ( ! unresolvedAttrRef.IsEmpty())
+		GdtfAttributePtr attrPtr = getAttributeByRef(chnlFunc->getUnresolvedAttrRef());
+
+		ASSERTN(kEveryone, attrPtr != nullptr);
+		if (attrPtr != nullptr)	{ chnlFunc->SetAttribute(attrPtr); }
+		else
 		{
-			GdtfAttributePtr attrPtr = getAttributeByRef(unresolvedAttrRef);
-			chnlFunc->SetAttribute(attrPtr);
+			IXMLFileNodePtr node;
+			chnlFunc->GetNode(node);
+			GdtfParsingError error (GdtfDefines::EGdtfParsingError::eChannelFunctionMissingAttribute, node); SceneData::GdtfFixture::AddError(error);
 		}
 		
 		// ----------------------------------------------------------------------------------------
@@ -5002,7 +5050,8 @@ void GdtfFixture::ResolveDmxChanelFunctionRefs(GdtfDmxLogicalChannelPtr dmxLogCh
 GdtfFixture::GdtfFixture()
 {
 	fReaded					= false;
-	fHasLinkedGuid			= false;        
+	fHasLinkedGuid			= false;     
+	fNoFeature				= nullptr;   
 }
 
 GdtfFixture::~GdtfFixture()
