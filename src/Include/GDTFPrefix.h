@@ -148,6 +148,7 @@ namespace VectorworksMVR
             eXmlParsingError                        = 56, // The XML file structure is damaged
 			eValueError_DateHasWrongFormat	        = 57,
             eValueError_UnresolvedRdmPersonalityMode= 58,
+            eChannelFunctionMissingAttribute          = 59, // A Channel Function has no Link to a Attribute
         };
 		
 		enum class EGdtfPhysicalUnit
