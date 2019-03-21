@@ -251,6 +251,7 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_WheelSlotName			"Name"
 #define XML_GDTF_WheelSlotColor			"Color"
 #define XML_GDTF_WheelSlotPicture		"MediaFileName"
+#define XML_GDTF_WheelSlotFilter		"Filter"
 
 #define XML_GDTF_PrismFacetNodeName		"Facet"
 #define XML_GDTF_PrismFacetColor		"Color"
