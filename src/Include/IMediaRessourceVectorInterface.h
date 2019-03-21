@@ -373,6 +373,10 @@ namespace VectorworksMVR
 		
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+
+        // 0.3.13
+        virtual VCOMError VCOM_CALLTYPE     GetFilter(IGdtfFilter** outVal) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetFilter(IGdtfFilter* val)=0;
     };
 	typedef VCOMPtr<IGdtfWheelSlot>	IGdtfWheelSlotPtr;
     

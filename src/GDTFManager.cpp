@@ -822,12 +822,14 @@ TXString GdtfWheelSlotPrismFacet::GetNodeName()
 GdtfWheelSlot::GdtfWheelSlot(GdtfWheel* parent)
 {
 	fWheelParent = parent;
+	fFilter 	 = nullptr;
 }
 
 GdtfWheelSlot::GdtfWheelSlot(const TXString& name, GdtfWheel* parent)
 {
 	fName		 = name;
 	fWheelParent = parent;
+	fFilter		 = nullptr;
 }
 
 
@@ -851,6 +853,11 @@ void GdtfWheelSlot::SetColor(const CCieColor& color)
 	fColor = color;
 }
 
+void GdtfWheelSlot::SetFilter(GdtfFilter* filter)
+{
+	fFilter = filter;
+}
+
 GdtfWheelSlotPrismFacet* GdtfWheelSlot::AddPrismFacet()
 {
 	GdtfWheelSlotPrismFacet* prism = new GdtfWheelSlotPrismFacet();
@@ -861,6 +868,11 @@ GdtfWheelSlotPrismFacet* GdtfWheelSlot::AddPrismFacet()
 const TXString&	GdtfWheelSlot::GetGobo() const
 {
 	return fGobo;
+}
+
+GdtfFilter*	GdtfWheelSlot::GetFilter() const
+{
+	return fFilter;
 }
 
 const TXString&	GdtfWheelSlot::GetGoboFileFullPath()
