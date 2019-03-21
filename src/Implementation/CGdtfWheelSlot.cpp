@@ -4,7 +4,7 @@
 #include "Prefix/StdAfx.h"
 #include "CGdtfWheelSlot.h"
 #include "CGdtfWheelSlotPrismFacet.h"
-
+#include "CGdtfFilter.h"
 
 using namespace VectorWorks::Filing;
 
@@ -214,4 +214,67 @@ void* VectorworksMVR::CGdtfWheelSlotImpl::GetBoundObject()
 	if(!fWheelSlot) return nullptr;
 	
 	return fWheelSlot->GetBind();
+}
+
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotImpl::GetFilter(IGdtfFilter** outVal) 
+{
+    // Check Pointer
+    if (!fWheelSlot) { return kVCOMError_NotInitialized; }
+
+    //---------------------------------------------------------------------------
+    // Initialize Object
+    SceneData::GdtfFilter*	gdtfFilter = fWheelSlot->GetFilter();
+    if (!gdtfFilter) { return kVCOMError_NotSet; }
+
+    CGdtfFilterImpl*		pFilterObj = nullptr;
+
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfFilter, (IVWUnknown**)& pFilterObj)))
+    {
+        // Check Casting
+        CGdtfFilterImpl* pResultInterface = dynamic_cast<CGdtfFilterImpl*>(pFilterObj);
+        if (pResultInterface)
+        {
+            pResultInterface->SetPointer(gdtfFilter);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+
+    //---------------------------------------------------------------------------
+    // Check Incomming Object
+    if (*outVal)
+    {
+        (*outVal)->Release();
+        *outVal = NULL;
+    }
+
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *outVal = pFilterObj;
+
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotImpl::SetFilter (IGdtfFilter * newFilter)
+{
+    if (!fWheelSlot) { return kVCOMError_NotInitialized; }
+    if (!newFilter) { return kVCOMError_InvalidArg; }
+
+    // Cast
+    CGdtfFilterImpl* FilterImpl = dynamic_cast<CGdtfFilterImpl*>(newFilter);
+    if (!FilterImpl) { return kVCOMError_Failed; }
+
+    // Set Object
+    SceneData::GdtfFilter* gdtfFilter = FilterImpl->GetPointer();
+    if (!gdtfFilter) { return kVCOMError_Failed; }
+
+    fWheelSlot->SetFilter (gdtfFilter);
+
+    return kVCOMError_NoError;
 }

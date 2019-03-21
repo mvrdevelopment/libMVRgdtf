@@ -822,12 +822,14 @@ TXString GdtfWheelSlotPrismFacet::GetNodeName()
 GdtfWheelSlot::GdtfWheelSlot(GdtfWheel* parent)
 {
 	fWheelParent = parent;
+	fFilter 	 = nullptr;
 }
 
 GdtfWheelSlot::GdtfWheelSlot(const TXString& name, GdtfWheel* parent)
 {
 	fName		 = name;
 	fWheelParent = parent;
+	fFilter		 = nullptr;
 }
 
 
@@ -851,6 +853,11 @@ void GdtfWheelSlot::SetColor(const CCieColor& color)
 	fColor = color;
 }
 
+void GdtfWheelSlot::SetFilter(GdtfFilter* filter)
+{
+	fFilter = filter;
+}
+
 GdtfWheelSlotPrismFacet* GdtfWheelSlot::AddPrismFacet()
 {
 	GdtfWheelSlotPrismFacet* prism = new GdtfWheelSlotPrismFacet();
@@ -861,6 +868,16 @@ GdtfWheelSlotPrismFacet* GdtfWheelSlot::AddPrismFacet()
 const TXString&	GdtfWheelSlot::GetGobo() const
 {
 	return fGobo;
+}
+
+GdtfFilter*	GdtfWheelSlot::GetFilter() const
+{
+	return fFilter;
+}
+
+const TXString&	GdtfWheelSlot::GetUnresolvedFilter() const
+{
+	return fUnresolvedFilter;
 }
 
 const TXString&	GdtfWheelSlot::GetGoboFileFullPath()
@@ -908,7 +925,7 @@ void GdtfWheelSlot::OnPrintToFile(IXMLFileNodePtr pNode)
 	pNode->SetNodeAttributeValue(XML_GDTF_WheelSlotName,	fName);
 	pNode->SetNodeAttributeValue(XML_GDTF_WheelSlotColor,		GdtfConverter::ConvertColor(fColor));
 	if(fGobo != "")	{ pNode->SetNodeAttributeValue(XML_GDTF_WheelSlotPicture,	fGobo); }
-	
+	if(fFilter)	{ pNode->SetNodeAttributeValue(XML_GDTF_WheelSlotFilter,		fFilter->GetNodeReference()); }
 	
 	//------------------------------------------------------------------------------------
 	// Print the childs
@@ -944,6 +961,8 @@ void GdtfWheelSlot::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// Get Gobo
 	pNode->GetNodeAttributeValue(XML_GDTF_WheelSlotPicture, fGobo);
 	
+
+	pNode->GetNodeAttributeValue(XML_GDTF_WheelSlotFilter,	fUnresolvedFilter);
 	
 	//------------------------------------------------------------------------------------
 	// Read the wheel slots
@@ -974,6 +993,8 @@ void GdtfWheelSlot::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	needed.push_back(XML_GDTF_WheelSlotName);
 	optional.push_back(XML_GDTF_WheelSlotColor);
 	optional.push_back(XML_GDTF_WheelSlotPicture);
+	optional.push_back(XML_GDTF_WheelSlotFilter);
+
 	
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
@@ -4634,6 +4655,7 @@ void GdtfFixture::ResolveAllReferences()
 	ResolveDMXModeMasters();
     ResolveDMXPersonalityRefs();
 	ResolveAttribRefs();
+	ResolveWheelSlots();
 }
 
 void GdtfFixture::ResolveGeometryRefs()
@@ -4703,6 +4725,22 @@ void GdtfFixture::ResolveGeometryRefs_Recursive(GdtfGeometryPtr geometry)
 	for (GdtfGeometryPtr internalGeometry : geometry->GetInternalGeometries())
 	{
 		ResolveGeometryRefs_Recursive(internalGeometry);
+	}
+}
+
+void GdtfFixture::ResolveWheelSlots()
+{
+	for(GdtfWheelPtr wheel : fWheels)
+	{
+		for(GdtfWheelSlotPtr slot :  wheel->GetWheelSlotArray())
+		{
+			TXString ref = slot->GetUnresolvedFilter();
+			if( ! ref.IsEmpty())
+			{
+				GdtfFilterPtr filter = getFilterByRef(ref);
+				slot->SetFilter(filter);
+			}
+		}
 	}
 }
 

@@ -315,6 +315,8 @@ namespace SceneData
 		TGdtfWheelSlotPrismFacetArray	fPrismFacts;
 		GdtfWheel*                      fWheelParent;		
 		TXString						fGoboFile; // MediaFileName
+		GdtfFilter*						fFilter;
+		TXString						fUnresolvedFilter;
 		
 	public:
 		const TXString&                 GetGobo() const;
@@ -322,14 +324,17 @@ namespace SceneData
 		CCieColor                       GetColor() const;
 		const TXString&                 GetName() const;
         TGdtfWheelSlotPrismFacetArray   GetPrismFacets();
+		GdtfFilter*                 	GetFilter() const;
 		
 		void							SetName(const TXString& name);
 		void							SetGobo(const GdtfPNGFile& png);
 		void							SetColor(const CCieColor& color);
+		void							SetFilter(GdtfFilter* filter);
 		GdtfWheelSlotPrismFacet*		AddPrismFacet();
 
 		virtual TXString				GetNodeReference();
 
+		const TXString&                 GetUnresolvedFilter() const;
         
 	public:
 		virtual EGdtfObjectType			GetObjectType();
@@ -2059,6 +2064,7 @@ private:
 		void ResolveGeometryRefs_Recursive(GdtfGeometryPtr geometry);
 		
 		void            ResolveAttribRefs();		
+		void            ResolveWheelSlots();
 		void            ResolveDmxModeRefs();
         void            ResolveDMXModeMasters();       
         void            ResolveDMXPersonalityRefs();
