@@ -63,6 +63,9 @@
     <ClCompile Include="..\unittest\EmptyAttributeTest4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\unittest\XmlConversionTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\unittest\MvrUnittest.h">
@@ -108,6 +111,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\unittest\EmptyAttributeTest4.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\unittest\XmlConversionTest.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
