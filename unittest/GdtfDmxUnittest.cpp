@@ -499,7 +499,7 @@ void GdtfDmxUnittest::ReadFile()
 
 		IGdtfDmxChannelSetPtr virtualChannelSet3;
 		__checkVCOM(virtualFunction->GetDmxChannelSetAt(2, &virtualChannelSet3));
-		this->CheckChannelSet(virtualChannelSet3, "My Name1", 4294967295, 4294967295);
+		this->CheckChannelSet(virtualChannelSet3, "My Name3", 4294967295, 4294967295);
 	}
 
 	PrintParsingErrorList(gdtfRead);

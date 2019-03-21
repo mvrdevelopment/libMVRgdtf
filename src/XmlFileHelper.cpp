@@ -464,7 +464,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString& strValue, const I
 	SplitStr(strValue, firstPart, secndPart, (size_t)splitPos);
 	//-----------------------------------------------------------------------------------
 	
-	DmxValue dmxValueRaw  = firstPart.atoi64();
+	DmxValue dmxValueRaw    = firstPart.atof();
 	Sint32 	 bytetSpecifier = secndPart.atoi();
 
 	// Check if the ByteSpecifier is different to the ChannelResolution.
