@@ -875,6 +875,11 @@ GdtfFilter*	GdtfWheelSlot::GetFilter() const
 	return fFilter;
 }
 
+const TXString&	GdtfWheelSlot::GetUnresolvedFilter() const
+{
+	return fUnresolvedFilter;
+}
+
 const TXString&	GdtfWheelSlot::GetGoboFileFullPath()
 {
 	fGoboFile = "";
@@ -4650,6 +4655,7 @@ void GdtfFixture::ResolveAllReferences()
 	ResolveDMXModeMasters();
     ResolveDMXPersonalityRefs();
 	ResolveAttribRefs();
+	ResolveWheelSlots();
 }
 
 void GdtfFixture::ResolveGeometryRefs()
@@ -4719,6 +4725,22 @@ void GdtfFixture::ResolveGeometryRefs_Recursive(GdtfGeometryPtr geometry)
 	for (GdtfGeometryPtr internalGeometry : geometry->GetInternalGeometries())
 	{
 		ResolveGeometryRefs_Recursive(internalGeometry);
+	}
+}
+
+void GdtfFixture::ResolveWheelSlots()
+{
+	for(GdtfWheelPtr wheel : fWheels)
+	{
+		for(GdtfWheelSlotPtr slot :  wheel->GetWheelSlotArray())
+		{
+			TXString ref = slot->GetUnresolvedFilter();
+			if( ! ref.IsEmpty())
+			{
+				GdtfFilterPtr filter = getFilterByRef(ref);
+				slot->SetFilter(filter);
+			}
+		}
 	}
 }
 

@@ -334,6 +334,7 @@ namespace SceneData
 
 		virtual TXString				GetNodeReference();
 
+		const TXString&                 GetUnresolvedFilter() const;
         
 	public:
 		virtual EGdtfObjectType			GetObjectType();
@@ -2063,6 +2064,7 @@ private:
 		void ResolveGeometryRefs_Recursive(GdtfGeometryPtr geometry);
 		
 		void            ResolveAttribRefs();		
+		void            ResolveWheelSlots();
 		void            ResolveDmxModeRefs();
         void            ResolveDMXModeMasters();       
         void            ResolveDMXPersonalityRefs();
