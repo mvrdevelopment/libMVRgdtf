@@ -253,6 +253,17 @@ void GdtfDmxUnittest::WriteFile()
 		virtualChannel->CreateLogicalChannel(attribute5, &virtualLogicalChannel);
 
 
+		IGdtfDmxChannelFunctionPtr virtualFunction;
+		virtualLogicalChannel->CreateDmxFunction("Function", &virtualFunction);
+		virtualFunction->SetAttribute(attribute5);
+
+		IGdtfDmxChannelSetPtr virtualChannelSet1;
+		virtualFunction->CreateDmxChannelSet("My Name1", 0, 0, &virtualChannelSet1);
+
+		IGdtfDmxChannelSetPtr virtualChannelSet3;
+		virtualFunction->CreateDmxChannelSet("My Name3", 4294967295, 4294967295, &virtualChannelSet3);
+
+
         __checkVCOM(gdtfWrite->Close());
     }
 }
