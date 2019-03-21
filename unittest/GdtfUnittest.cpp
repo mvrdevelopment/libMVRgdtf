@@ -103,6 +103,24 @@ void GdtfUnittest::WriteFile()
 			// TODO: CHeck if this comes thru
 		}
 
+        //------------------------------------------------------------------------------------------------------------------
+        // Filters
+
+        CieColor filterColor; 
+		filterColor.fx	= 0.1;
+		filterColor.fy	= 0.2;
+		filterColor.f_Y	= 0.3;
+
+        IGdtfFilterPtr gdtfFilter; gdtfWrite->CreateFilter( "My Filter", filterColor, &gdtfFilter);
+
+        // Filter.Measurements
+        // (The Meaurement attributes are check in the Emitter test.)        
+
+        IGdtfMeasurementPtr gdtfMeasureA;  __checkVCOM(gdtfFilter->CreateMeasurement(&gdtfMeasureA));
+        IGdtfMeasurementPtr gdtfMeasureB;  __checkVCOM(gdtfFilter->CreateMeasurement(&gdtfMeasureB) );
+        IGdtfMeasurementPtr gdtfMeasureC;  __checkVCOM(gdtfFilter->CreateMeasurement(&gdtfMeasureC) );
+
+
 		//------------------------------------------------------------------------------    
 		// Set Wheels
 		IGdtfWheelPtr gdtfWheelObj;
@@ -136,6 +154,10 @@ void GdtfUnittest::WriteFile()
 
 				// Set Wheel
 				wheelSlotContainer->SetGobo("MWheel_Img1");
+
+
+				// Set Filter link
+				__checkVCOM(wheelSlotContainer->SetFilter(gdtfFilter));
 			}
 		}
 
@@ -167,22 +189,6 @@ void GdtfUnittest::WriteFile()
             gdtfMeasurPoint->SetWaveLength(2.34);
 		}
 
-        //------------------------------------------------------------------------------------------------------------------
-        // Filters
-
-        CieColor filterColor; 
-		filterColor.fx	= 0.1;
-		filterColor.fy	= 0.2;
-		filterColor.f_Y	= 0.3;
-
-        IGdtfFilterPtr gdtfFilter; gdtfWrite->CreateFilter( "My Filter", filterColor, &gdtfFilter);
-
-        // Filter.Measurements
-        // (The Meaurement attributes are check in the Emitter test.)        
-
-        IGdtfMeasurementPtr gdtfMeasureA;  __checkVCOM(gdtfFilter->CreateMeasurement(&gdtfMeasureA));
-        IGdtfMeasurementPtr gdtfMeasureB;  __checkVCOM(gdtfFilter->CreateMeasurement(&gdtfMeasureB) );
-        IGdtfMeasurementPtr gdtfMeasureC;  __checkVCOM(gdtfFilter->CreateMeasurement(&gdtfMeasureC) );
 
 		//------------------------------------------------------------------------------------------------------------------
 		// Set ColorSpace Space
@@ -418,6 +424,15 @@ void GdtfUnittest::ReadFile()
 						MvrString goboImage = gdtfSlot->GetGoboFileFullPath();
 						this->checkifTrue("Gobo Image exists", UnitTestUtil::FileExists(goboImage));
 
+						// Check Filter Link
+						IGdtfFilterPtr gdtfLinkedFilter;
+						__checkVCOM(gdtfSlot->GetFilter(&gdtfLinkedFilter));
+						if(gdtfLinkedFilter)
+						{
+							checkifEqual("Linked Filter Name", gdtfLinkedFilter->GetName(), "My Filter");
+						}
+
+						
 
 
 						// PrismFacets loop
