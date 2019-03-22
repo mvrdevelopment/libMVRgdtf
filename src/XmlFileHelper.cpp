@@ -464,8 +464,8 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString& strValue, const I
 	SplitStr(strValue, firstPart, secndPart, (size_t)splitPos);
 	//-----------------------------------------------------------------------------------
 	
-	DmxValue dmxValueRaw  = firstPart.atoi64();
-	Sint32 	 bytetSpecifier = secndPart.atoi();
+	double dmxValueRaw    = firstPart.atof();
+	Sint32 bytetSpecifier = secndPart.atoi();
 
 	// Check if the ByteSpecifier is different to the ChannelResolution.
 	if (bytetSpecifier != chanlReso) 
@@ -473,7 +473,9 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString& strValue, const I
         DmxValue maxResolution  = GetChannelMaxDmx((EGdtfChannelBitResolution)bytetSpecifier);        
         DmxValue maxChannelUnit = GetChannelMaxDmx(chanlReso);
 
-        intValue = (dmxValueRaw / maxResolution) * maxChannelUnit;
+		double percentage = (dmxValueRaw / maxResolution);
+
+        intValue = percentage * maxChannelUnit;
 
 	}	
 	else
@@ -1589,6 +1591,11 @@ TXString SceneData::SceneDataZip::GetResourceSubFolder(ERessourceType resType)
 	}	
 
 	return true;
+}
+
+/*static*/ bool GdtfConverter::ConvertDMXValue_UnitTest(const char* value, EGdtfChannelBitResolution chanlReso,	DmxValue& intValue)
+{
+	return GdtfConverter::ConvertDMXValue(value,nullptr, chanlReso, intValue);
 }
 
 void GdtfConverter::TraverseNodes(IXMLFileNodePtr root, const TXString& childContainerNodeName,const TXString& childNodeName, TProcessNodeCall processNodeFunction )
