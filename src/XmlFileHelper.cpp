@@ -473,7 +473,9 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString& strValue, const I
         DmxValue maxResolution  = GetChannelMaxDmx((EGdtfChannelBitResolution)bytetSpecifier);        
         DmxValue maxChannelUnit = GetChannelMaxDmx(chanlReso);
 
-        intValue = (dmxValueRaw / maxResolution) * maxChannelUnit;
+		double percentage = (dmxValueRaw / (double)maxResolution);
+
+        intValue = percentage * maxChannelUnit;
 
 	}	
 	else
