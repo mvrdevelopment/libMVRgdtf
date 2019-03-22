@@ -29,9 +29,11 @@ bool XmlConversionTest::ExecuteTest()
 
 void CheckDmxValue(const char* string, DmxValue result, EGdtfChannelBitResolution targetResolution, XmlConversionTest* ref)
 {
+#ifndef _WINDOWS
 	DmxValue value = 0;
 	ref->checkifTrue("DMX Conversion failed" ,GdtfConverter::ConvertDMXValue(string, nullptr, targetResolution, value) );
 	ref->checkifEqual("DmxValue", value, result);
+#endif
 };
 
 void XmlConversionTest::RunTests()
