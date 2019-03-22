@@ -129,6 +129,12 @@ namespace SceneData
 
         static TXString IntToString2Digits(Sint64 value);
 
+
+	public:
+		// UNIT TEST HELPER
+		static bool  	ConvertDMXValue_UnitTest(const char* value, EGdtfChannelBitResolution chanlReso,	DmxValue& intValue);
+
+
 	};
 	
 	class SceneDataZip

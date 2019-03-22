@@ -1591,6 +1591,11 @@ TXString SceneData::SceneDataZip::GetResourceSubFolder(ERessourceType resType)
 	return true;
 }
 
+/*static*/ bool GdtfConverter::ConvertDMXValue_UnitTest(const char* value, EGdtfChannelBitResolution chanlReso,	DmxValue& intValue)
+{
+	return GdtfConverter::ConvertDMXValue(value,nullptr, chanlReso, intValue);
+}
+
 void GdtfConverter::TraverseNodes(IXMLFileNodePtr root, const TXString& childContainerNodeName,const TXString& childNodeName, TProcessNodeCall processNodeFunction )
 {
 	// ------------------------------------------------------------------------------------
