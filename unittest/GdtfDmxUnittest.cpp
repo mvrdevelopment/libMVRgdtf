@@ -280,7 +280,7 @@ void GdtfDmxUnittest::ReadFile()
 		MvrUUID guid 		(0,0,0,0);
 		MvrUUID emptyguid 	(0,0,0,0);
 
-		__checkVCOM(gdtfRead->GetLinkedFixtureGUID(guid));
+		__checkVCOM_NotSet(gdtfRead->GetLinkedFixtureGUID(guid));
 		this->checkifEqual("Linked GDTF", guid, emptyguid);
 
 		//------------------------------------------------------------------------------ 

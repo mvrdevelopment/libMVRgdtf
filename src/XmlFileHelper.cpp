@@ -92,8 +92,7 @@ using namespace SceneData;
     }
     else if(inValue.GetLength() == 0)
     {
-        uuid = VWUUID();
-        return true;
+        return false;
     }
     else
     {
