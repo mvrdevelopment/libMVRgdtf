@@ -275,6 +275,14 @@ void GdtfDmxUnittest::ReadFile()
     IGdtfFixturePtr gdtfRead (IID_IGdtfFixture);
     if(__checkVCOM(gdtfRead->ReadFromFile(fPath.c_str())))
     {
+		//------------------------------------------------------------------------------
+		// Read the linked GUID
+		MvrUUID guid 		(0,0,0,0);
+		MvrUUID emptyguid 	(0,0,0,0);
+
+		__checkVCOM(gdtfRead->GetLinkedFixtureGUID(guid));
+		this->checkifEqual("Linked GDTF", guid, emptyguid);
+
 		//------------------------------------------------------------------------------ 
 		// Read the Attributes
 		size_t countAttributes = 0;
