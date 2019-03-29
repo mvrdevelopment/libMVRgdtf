@@ -22,7 +22,7 @@ std::string UnitTestUtil::GetTestResourceFolder()
 {
 #ifdef _WINDOWS
     return std::string(GITPATH) + kSeparator + "files";
-#elif
+#else
     return std::string(GITPATH) + kSeparator + "unittest" + kSeparator + "files";
 #endif
 }
