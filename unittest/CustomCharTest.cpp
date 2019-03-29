@@ -4,6 +4,8 @@
 
 #include "Include/VectorworksMVR.h"
 #include "CustomCharTest.h"
+#include "Utility.h"
+
 
 using namespace VectorworksMVR;
 using namespace VectorworksMVR::GdtfDefines;
@@ -28,7 +30,16 @@ std::string GdtfCustomCharTest::GetUnitTestName()
 
 void GdtfCustomCharTest::WriteFile(VectorworksMVR::IGdtfFixturePtr& fixture)
 {  
+    IGdtfWheelPtr wheel;
+    fixture->CreateWheel("Wheel", &wheel);
 
+    IGdtfWheelSlotPtr slot;
+    wheel->CreateWheelSlot("Slot", &slot);
+
+    slot->SetGobo("屏幕快照 2019-03-29 下午2.52.35");
+
+    std::string path = UnitTestUtil::GetTestResourceFolder() + kSeparator + "屏幕快照 2019-03-29 下午2.52.35.png";
+    fixture->AddFileToGdtfFile(path.c_str(), ERessourceType::ImageWheel);
 }
 
 void GdtfCustomCharTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
