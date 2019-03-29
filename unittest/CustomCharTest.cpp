@@ -34,7 +34,7 @@ void GdtfCustomCharTest::WriteFile(VectorworksMVR::IGdtfFixturePtr& fixture)
     fixture->CreateWheel("Wheel", &wheel);
 
     IGdtfWheelSlotPtr slot;
-    wheel->CreateWheelSlot("Slot", &slot);
+    wheel->CreateWheelSlot("SlotName", &slot);
 
     slot->SetGobo("屏幕快照 2019-03-29 下午2.52.35");
 
@@ -48,10 +48,11 @@ void GdtfCustomCharTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
     fixture->GetWheelAt(0, &wheel);
 
     IGdtfWheelSlotPtr slot;
-    wheel->CreateWheelSlot(0, &slot);
+    wheel->GetWheelSlotAt(0, &slot);
 
     std::string goboName = slot->GetGobo();
-    checkifEqual("Gobo Name", goboName, "屏幕快照 2019-03-29 下午2.52.35.png");
+    checkifEqual("Gobo Name", goboName, "屏幕快照 2019-03-29 下午2.52.35");
+
 
     this->checkifTrue("Gobo Image exists", UnitTestUtil::FileExists (slot->GetGoboFileFullPath()) );
 
