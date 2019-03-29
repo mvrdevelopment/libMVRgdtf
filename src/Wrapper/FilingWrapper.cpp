@@ -278,8 +278,13 @@ bool TFileIdentifier::IsFileReadOnly()
 
 bool TFileIdentifier::ExistsOnDisk()
 {
-	// Check if you can make a stream to the file
-	const char* path = fcsPath.GetCharPtr();
+#ifdef _WINDOWS
+    const wchar_t* path = fcsPath.GetWCharPtr();
+#else
+    const char* path = fcsPath.GetCharPtr();
+#endif
+
+    // Check if you can make a stream to the file
 	std::ifstream stream (path);
 	return stream.good();
 }
