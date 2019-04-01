@@ -9,6 +9,8 @@
 #if defined(_WINDOWS)
 # include <Shlobj.h>
 # include <Shlwapi.h>
+#include <locale>
+#include <codecvt>
 #elif GS_LIN
 #include <unistd.h>
 #include <sys/types.h>
@@ -59,8 +61,8 @@ bool UnitTestUtil::GetFolderAppDataLocal(std::string& outPath)
 	return true;
 }
 
-bool UnitTestUtil::FileExists(std::string fullPath)
+bool UnitTestUtil::FileExists(std::string stdfullPath)
 {
-    std::ifstream f(fullPath.c_str());
+    std::ifstream f(stdfullPath);
     return f.good();
 }
