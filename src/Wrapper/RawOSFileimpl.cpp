@@ -19,9 +19,21 @@ VCOMError CRawOSFileImpl::Open(VectorWorks::Filing::IFileIdentifier* pFileID, bo
 	TXString	filePath;
 	pFileID->GetFileFullPath( filePath );
 
-	     if ( bReadable == true  && bWritable == false )		fTheFile = std::fopen( filePath, "rb" );
-	else if ( bReadable == false && bWritable == true  )		fTheFile = std::fopen( filePath, bTruncateExisting ? "ab" : "wb" );
-	else if ( bReadable == true  && bWritable == true  )		fTheFile = std::fopen( filePath, bTruncateExisting ? "wb+" : "ab+" );
+#ifdef _WINDOWS
+	 const wchar_t* path = filePath.GetWCharPtr();
+ #else
+     const char* path = fcsPath.GetCharPtr();
+ #endif
+
+ #ifdef _WINDOWS
+         if ( bReadable == true  && bWritable == false )		fTheFile = _wfopen( path, L"rb" );
+	else if ( bReadable == false && bWritable == true  )		fTheFile = _wfopen( path, bTruncateExisting ? L"ab" : L"wb" );
+	else if ( bReadable == true  && bWritable == true  )		fTheFile = _wfopen( path, bTruncateExisting ? L"wb+" : L"ab+" );
+ #else
+	     if ( bReadable == true  && bWritable == false )		fTheFile = std::fopen( path, "rb" );
+	else if ( bReadable == false && bWritable == true  )		fTheFile = std::fopen( path, bTruncateExisting ? "ab" : "wb" );
+	else if ( bReadable == true  && bWritable == true  )		fTheFile = std::fopen( path, bTruncateExisting ? "wb+" : "ab+" );
+ #endif
 
 	return fTheFile ? kVCOMError_NoError : kVCOMError_Failed;;
 }
