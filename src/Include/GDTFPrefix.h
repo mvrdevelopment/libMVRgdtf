@@ -149,6 +149,10 @@ namespace VectorworksMVR
 			eValueError_DateHasWrongFormat	        = 57,
             eValueError_UnresolvedRdmPersonalityMode= 58,
             eChannelFunctionMissingAttribute          = 59, // A Channel Function has no Link to a Attribute
+            eHexConversion_ValueToHight                 = 60,
+            eHexConversion_InvalidChar                  = 61,
+
+
         };
 		
 		enum class EGdtfPhysicalUnit

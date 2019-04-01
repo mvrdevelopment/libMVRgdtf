@@ -1029,15 +1029,15 @@ namespace VectorworksMVR
     class DYNAMIC_ATTRIBUTE IGdtf_FTRDM : public IVWUnknown
     {
     public:
-        virtual VCOMError VCOM_CALLTYPE GetManufacturerID(Sint32& outVal) = 0;        
-        virtual VCOMError VCOM_CALLTYPE GetDeviceModelID(Sint32& outVal) = 0;
+        virtual VCOMError VCOM_CALLTYPE GetManufacturerID(size_t& outVal) = 0;        
+        virtual VCOMError VCOM_CALLTYPE GetDeviceModelID(size_t& outVal) = 0;
 
         virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetSoftwareVersionIDCount(size_t& count) = 0;
         virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateSoftwareVersionID(size_t value, VectorworksMVR::IGdtfSoftwareVersionID** outVal) = 0;
         virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetSoftwareVersionIDAt(size_t at, VectorworksMVR::IGdtfSoftwareVersionID** value) = 0;
 
-        virtual VCOMError VCOM_CALLTYPE SetManufacturerID(Sint32 value) = 0;
-        virtual VCOMError VCOM_CALLTYPE SetDeviceModelID(Sint32 value) = 0;
+        virtual VCOMError VCOM_CALLTYPE SetManufacturerID(size_t value) = 0;
+        virtual VCOMError VCOM_CALLTYPE SetDeviceModelID(size_t value) = 0;
 
         
         virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;

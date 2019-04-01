@@ -1124,13 +1124,13 @@ void GdtfUnittest::ReadFile()
         IGdtfTRDMPtr rdm;
         __checkVCOM (gdtfRead->GetRDM(&rdm));
         
-        Sint32 devModID;
+        size_t devModID = 0;
         __checkVCOM (rdm->GetDeviceModelID(devModID));
-        this->checkifEqual("Check DeviceModelID", devModID, 1);
+        this->checkifEqual("Check DeviceModelID", devModID, size_t(1));
 
-        Sint32 manID;
+        size_t manID = 0;
         __checkVCOM (rdm->GetManufacturerID(manID));
-        this->checkifEqual("Check ManufacturerID", manID, 2);
+        this->checkifEqual("Check ManufacturerID", manID, size_t(2));
         
         //------------------------------------------------------------------------------    
         // Read SoftwareVersionID
