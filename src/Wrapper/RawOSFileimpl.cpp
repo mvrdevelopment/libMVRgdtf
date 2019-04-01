@@ -22,7 +22,7 @@ VCOMError CRawOSFileImpl::Open(VectorWorks::Filing::IFileIdentifier* pFileID, bo
 #ifdef _WINDOWS
 	 const wchar_t* path = filePath.GetWCharPtr();
  #else
-     const char* path = fcsPath.GetCharPtr();
+     const char*    path = filePath.GetCharPtr();
  #endif
 
  #ifdef _WINDOWS
