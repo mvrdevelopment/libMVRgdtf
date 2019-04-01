@@ -1835,13 +1835,28 @@ VCOMError IXMLFileIOBufferImpl::GetData(void*& dataPointer)
 				case TXChar('D'): fact = 13; break;
 				case TXChar('E'): fact = 14; break;
 				case TXChar('F'): fact = 15; break;
-				default: return false; 		 break;
+				default: 
+				{
+					GdtfParsingError error (GdtfDefines::EGdtfParsingError::eHexConversion_InvalidChar, node);
+					SceneData::GdtfFixture::AddError(error);
+					return false; 
+				} break;
 			}
 			outValue += fact; 
 		}
 	}
+	else if( ! inVal.IsEmpty())
+	{
+		GdtfParsingError error (GdtfDefines::EGdtfParsingError::eHexConversion_InvalidChar, node);
+		SceneData::GdtfFixture::AddError(error);
+	}
+	
+	
 	if(outValue > 65535)
 	{
+		GdtfParsingError error (GdtfDefines::EGdtfParsingError::eHexConversion_ValueToHight, node);
+        SceneData::GdtfFixture::AddError(error);
+		outValue = 65535;
 		return false;
 	}
 	return true;
