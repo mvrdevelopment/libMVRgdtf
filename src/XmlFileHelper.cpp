@@ -1854,6 +1854,10 @@ VCOMError IXMLFileIOBufferImpl::GetData(void*& dataPointer)
 	{
 		return TXString("0xFFFF");
 	}
+	if(value == 0)
+	{
+		return TXString("0x0");
+	}
 	while(value > 0)
 	{
 		size_t cCode = value % 16;
