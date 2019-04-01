@@ -1804,3 +1804,16 @@ VCOMError IXMLFileIOBufferImpl::GetData(void*& dataPointer)
     dataPointer = fXMLBuffer;
     return kVCOMError_NoError;
 }
+
+/*static*/ bool GdtfConverter::ConvertHexValue(const TXString & inVal, const IXMLFileNodePtr & node, size_t& outValue)
+{
+	outValue = 0;
+	return true;
+}
+
+/*static*/ TXString GdtfConverter::ConvertHexValue(size_t value)
+{
+	TXString valueStr;
+	valueStr << value;
+	return "valueStr";
+}

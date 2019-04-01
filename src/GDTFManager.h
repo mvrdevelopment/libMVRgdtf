@@ -1275,12 +1275,12 @@ namespace SceneData
     {
     public:
         GdtfFTRDM();
-        GdtfFTRDM(Sint32 manufacturerID, Sint32 deviceModelID);
+        GdtfFTRDM(size_t manufacturerID, size_t deviceModelID);
         ~GdtfFTRDM();
     private:
         // Attributes
-        Sint32        fManufacturerID;  // Manufacturer ESTA ID; Size: 2 bytes
-        Sint32        fDeviceModelID;   // Unique device model ID; Size: 2 bytes        
+        size_t        fManufacturerID;  // Manufacturer ESTA ID; Size: 2 bytes
+        size_t        fDeviceModelID;   // Unique device model ID; Size: 2 bytes        
         
         TGdtfSoftwareVersionIDArray     fSoftwareVersionIDArray;
     public:
@@ -1288,12 +1288,12 @@ namespace SceneData
 
     public:
         // Getter
-        Sint32                              GetManufacturerID() const;
-        Sint32                              GetDeviceModelID()  const;
+        size_t                              GetManufacturerID() const;
+        size_t                              GetDeviceModelID()  const;
         const TGdtfSoftwareVersionIDArray&  GetSoftwareVersIDs() const;        
         // Setter
-        void                                SetManufacturerID(Sint32 val);
-        void                                SetDeviceModelID(Sint32 val);
+        void                                SetManufacturerID(size_t val);
+        void                                SetDeviceModelID(size_t val);
         GdtfSoftwareVersionIDPtr            AddSoftwareVersID(size_t value);
     protected:
         virtual	TXString				GetNodeName();

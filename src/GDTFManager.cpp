@@ -6121,8 +6121,8 @@ void SceneData::GdtfFTRDM::OnPrintToFile(IXMLFileNodePtr pNode)
 	GdtfObject::OnPrintToFile(pNode);
 	//------------------------------------------------------------------------------------
 	// Print the attributes
-	pNode->SetNodeAttributeValue(XML_GDTF_FTRDM_AttrManufacturerID, GdtfConverter::ConvertInteger(fManufacturerID) );
-	pNode->SetNodeAttributeValue(XML_GDTF_FTRDM_AttrDeviceModelID,  GdtfConverter::ConvertInteger(fDeviceModelID)  );	 
+	pNode->SetNodeAttributeValue(XML_GDTF_FTRDM_AttrManufacturerID, GdtfConverter::ConvertHexValue(fManufacturerID) );
+	pNode->SetNodeAttributeValue(XML_GDTF_FTRDM_AttrDeviceModelID,  GdtfConverter::ConvertHexValue(fDeviceModelID)  );	 
 	//------------------------------------------------------------------------------------
     // Print the Childs
 	for (GdtfSoftwareVersionIDPtr softID : fSoftwareVersionIDArray)
@@ -6140,10 +6140,10 @@ void SceneData::GdtfFTRDM::OnReadFromNode(const IXMLFileNodePtr & pNode)
 	//------------------------------------------------------------------------------------
 	// Get the attributes
 	TXString manufactStr; pNode->GetNodeAttributeValue(XML_GDTF_FTRDM_AttrManufacturerID, manufactStr);
-	GdtfConverter::ConvertInteger(manufactStr, pNode, fManufacturerID);
+	GdtfConverter::ConvertHexValue(manufactStr, pNode, fManufacturerID);
 	
 	TXString deviceModelStr;  pNode->GetNodeAttributeValue(XML_GDTF_FTRDM_AttrDeviceModelID, deviceModelStr);
-	GdtfConverter::ConvertInteger(deviceModelStr, pNode, fDeviceModelID);
+	GdtfConverter::ConvertHexValue(deviceModelStr, pNode, fDeviceModelID);
     
     //------------------------------------------------------------------------------------
 	// Read the childs
@@ -6182,7 +6182,7 @@ SceneData::GdtfFTRDM::GdtfFTRDM()
 	fDeviceModelID  = 0;
 }
 
-SceneData::GdtfFTRDM::GdtfFTRDM(Sint32 manufacturerID, Sint32 deviceModelID) : GdtfFTRDM()
+SceneData::GdtfFTRDM::GdtfFTRDM(size_t manufacturerID, size_t deviceModelID) : GdtfFTRDM()
 {
 	fManufacturerID = manufacturerID;
 	fDeviceModelID  = deviceModelID;
@@ -6198,12 +6198,12 @@ EGdtfObjectType SceneData::GdtfFTRDM::GetObjectType()
 	return EGdtfObjectType::eGdtfFTRDM;
 }
 
-Sint32 SceneData::GdtfFTRDM::GetManufacturerID() const
+size_t SceneData::GdtfFTRDM::GetManufacturerID() const
 {
 	return fManufacturerID;
 }
 
-Sint32 SceneData::GdtfFTRDM::GetDeviceModelID() const
+size_t SceneData::GdtfFTRDM::GetDeviceModelID() const
 {
 	return fDeviceModelID;
 }
@@ -6213,12 +6213,12 @@ const TGdtfSoftwareVersionIDArray& SceneData::GdtfFTRDM::GetSoftwareVersIDs() co
 	return fSoftwareVersionIDArray;
 }
 
-void SceneData::GdtfFTRDM::SetManufacturerID(Sint32 val)
+void SceneData::GdtfFTRDM::SetManufacturerID(size_t val)
 {
 	fManufacturerID = val;
 }
 
-void SceneData::GdtfFTRDM::SetDeviceModelID(Sint32 val)
+void SceneData::GdtfFTRDM::SetDeviceModelID(size_t val)
 {
 	fDeviceModelID = val;
 }
@@ -7248,7 +7248,7 @@ void SceneData::GdtfSoftwareVersionID::OnPrintToFile(IXMLFileNodePtr pNode)
 
     //------------------------------------------------------------------------------------
     // Print the attributes
-    pNode->SetNodeAttributeValue(XML_GDTF_SoftwareVersionID_Value, GdtfConverter::ConvertInteger(fValue));
+    pNode->SetNodeAttributeValue(XML_GDTF_SoftwareVersionID_Value, GdtfConverter::ConvertHexValue(fValue));
 
     //------------------------------------------------------------------------------------
     // Print the childs
@@ -7267,7 +7267,7 @@ void SceneData::GdtfSoftwareVersionID::OnReadFromNode(const IXMLFileNodePtr & pN
     //------------------------------------------------------------------------------------
     // Get the attributes
     TXString valueStr; pNode->GetNodeAttributeValue(XML_GDTF_SoftwareVersionID_Value, valueStr);
-    GdtfConverter::ConvertInteger( valueStr, pNode, fValue);
+    GdtfConverter::ConvertHexValue( valueStr, pNode, fValue);
 
     // Read the childs
     GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_DMXPersonalityNodeNam, [this](IXMLFileNodePtr objNode) -> void
