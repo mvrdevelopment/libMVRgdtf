@@ -1808,12 +1808,80 @@ VCOMError IXMLFileIOBufferImpl::GetData(void*& dataPointer)
 /*static*/ bool GdtfConverter::ConvertHexValue(const TXString & inVal, const IXMLFileNodePtr & node, size_t& outValue)
 {
 	outValue = 0;
+	if(inVal.Left(2).Equal(TXString("0x")))
+	{
+		TXString hexCont = inVal.Mid(2);
+		hexCont.MakeUpper();
+		for(size_t i = 0; i < hexCont.GetLength(); i++)
+		{
+			outValue = outValue*16;
+			size_t fact = 0;
+			TXChar c = hexCont.GetAt(i); 
+			switch (c) 
+			{ 	
+				case TXChar('0'): fact =  0; break;
+				case TXChar('1'): fact =  1; break;
+				case TXChar('2'): fact =  2; break;
+				case TXChar('3'): fact =  3; break;
+				case TXChar('4'): fact =  4; break;
+				case TXChar('5'): fact =  5; break;
+				case TXChar('6'): fact =  6; break;
+				case TXChar('7'): fact =  7; break;
+				case TXChar('8'): fact =  8; break;
+				case TXChar('9'): fact =  9; break;
+				case TXChar('A'): fact = 10; break;
+				case TXChar('B'): fact = 11; break;
+				case TXChar('C'): fact = 12; break;
+				case TXChar('D'): fact = 13; break;
+				case TXChar('E'): fact = 14; break;
+				case TXChar('F'): fact = 15; break;
+				default: return false; 		 break;
+			}
+			outValue += fact; 
+		}
+	}
+	if(outValue > 65535)
+	{
+		return false;
+	}
 	return true;
 }
 
 /*static*/ TXString GdtfConverter::ConvertHexValue(size_t value)
 {
-	TXString valueStr;
-	valueStr << value;
-	return "valueStr";
+	TXString outString ("0x");
+	if(value > 65535)
+	{
+		return TXString("0xFFFF");
+	}
+	while(value > 0)
+	{
+		size_t cCode = value % 16;
+		value = (value-cCode)/16;
+		TXChar c = TXChar('0');
+		switch (cCode)
+		{
+			case  0: c = TXChar('0'); break;
+			case  1: c = TXChar('1'); break;
+			case  2: c = TXChar('2'); break;
+			case  3: c = TXChar('3'); break;
+			case  4: c = TXChar('4'); break;
+			case  5: c = TXChar('5'); break;
+			case  6: c = TXChar('6'); break;
+			case  7: c = TXChar('7'); break;
+			case  8: c = TXChar('8'); break;
+			case  9: c = TXChar('9'); break;
+			case 10: c = TXChar('A'); break;
+			case 11: c = TXChar('B'); break;
+			case 12: c = TXChar('C'); break;
+			case 13: c = TXChar('D'); break;
+			case 14: c = TXChar('E'); break;
+			case 15: c = TXChar('F'); break;
+		
+			default:
+				break;
+		}
+		outString.Insert(2, c);
+	}
+	return outString;
 }

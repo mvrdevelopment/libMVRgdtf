@@ -6294,7 +6294,7 @@ void GdtfDMXPersonality::OnPrintToFile(IXMLFileNodePtr pNode)
 
     //------------------------------------------------------------------------------------
     // Print the attributes
-    pNode->SetNodeAttributeValue(XML_GDTF_DMXPersonalityValue, GdtfConverter::ConvertInteger(fValue));
+    pNode->SetNodeAttributeValue(XML_GDTF_DMXPersonalityValue, GdtfConverter::ConvertHexValue(fValue));
     pNode->SetNodeAttributeValue(XML_GDTF_DMXPersonalityDMXMode, fDMXMode->GetModeName() );
 }
 
@@ -6308,7 +6308,7 @@ void GdtfDMXPersonality::OnReadFromNode(const IXMLFileNodePtr& pNode)
     // Get the attributes	
     TXString valueStr;
     pNode->GetNodeAttributeValue(XML_GDTF_DMXPersonalityValue, valueStr);
-    GdtfConverter::ConvertInteger(valueStr, pNode, fValue);
+    GdtfConverter::ConvertHexValue(valueStr, pNode, fValue);
 
     pNode->GetNodeAttributeValue(XML_GDTF_DMXPersonalityDMXMode, fDMXMode_Unresolved);
 }
