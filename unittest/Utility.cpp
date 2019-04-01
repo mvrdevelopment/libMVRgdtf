@@ -9,8 +9,6 @@
 #if defined(_WINDOWS)
 # include <Shlobj.h>
 # include <Shlwapi.h>
-#include <locale>
-#include <codecvt>
 #elif GS_LIN
 #include <unistd.h>
 #include <sys/types.h>
