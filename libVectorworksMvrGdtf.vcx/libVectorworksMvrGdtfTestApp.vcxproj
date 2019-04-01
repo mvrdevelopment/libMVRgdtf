@@ -35,6 +35,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\unittest\CustomCharTest.cpp" />
     <ClCompile Include="..\unittest\CustomColorSpaceTest.cpp" />
     <ClCompile Include="..\unittest\EmptyAttributeTest.cpp" />
     <ClCompile Include="..\unittest\EmptyAttributeTest2.cpp" />
@@ -53,6 +54,7 @@
     <ClCompile Include="..\unittest\XmlConversionTest.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\unittest\CustomCharTest.h" />
     <ClInclude Include="..\unittest\CustomColorSpaceTest.h" />
     <ClInclude Include="..\unittest\EmptyAttributeTest.h" />
     <ClInclude Include="..\unittest\EmptyAttributeTest2.h" />
@@ -302,7 +304,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);GS_WIN;_WINDOWS;GITPATH="$(SolutionDir.Replace('\', '\\'))"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);GS_WIN;_WINDOWS;GITPATH="$(SolutionDir.Replace('\', '\\'))unittest"</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir)src</AdditionalIncludeDirectories>

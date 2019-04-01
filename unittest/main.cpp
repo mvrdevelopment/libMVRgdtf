@@ -17,6 +17,8 @@
 #include "EmptyAttributeTest3.h"
 #include "EmptyAttributeTest4.h"
 #include "XmlConversionTest.h"
+#include "CustomCharTest.h"
+
 
 
 
@@ -64,7 +66,10 @@ int main(int argc, char* argv[])
 	XmlConversionTest test7 (base);
 	bool test7_ok = test7.RunTest();
 
-    return  (mvrFailed || gdtfFailed || gdtfDmxFailed || errorFailed || modeMasterFailed || test1_ok || test2_ok|| test3_ok || test4_ok || test5_ok || test6_ok || test7_ok);
+	GdtfCustomCharTest test8 (base);
+	bool test8_ok = test8.RunTest();
+
+    return  (mvrFailed || gdtfFailed || gdtfDmxFailed || errorFailed || modeMasterFailed || test1_ok || test2_ok|| test3_ok || test4_ok || test5_ok || test6_ok || test7_ok || test8_ok);
 }
 
 
