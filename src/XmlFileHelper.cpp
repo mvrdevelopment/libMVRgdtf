@@ -1873,25 +1873,25 @@ VCOMError IXMLFileIOBufferImpl::GetData(void*& dataPointer)
 	{
 		size_t cCode = value % 16;
 		value = (value-cCode)/16;
-		TXChar c = TXChar('0');
+		TXString c = TXString('0');
 		switch (cCode)
 		{
-			case  0: c = TXChar('0'); break;
-			case  1: c = TXChar('1'); break;
-			case  2: c = TXChar('2'); break;
-			case  3: c = TXChar('3'); break;
-			case  4: c = TXChar('4'); break;
-			case  5: c = TXChar('5'); break;
-			case  6: c = TXChar('6'); break;
-			case  7: c = TXChar('7'); break;
-			case  8: c = TXChar('8'); break;
-			case  9: c = TXChar('9'); break;
-			case 10: c = TXChar('A'); break;
-			case 11: c = TXChar('B'); break;
-			case 12: c = TXChar('C'); break;
-			case 13: c = TXChar('D'); break;
-			case 14: c = TXChar('E'); break;
-			case 15: c = TXChar('F'); break;
+			case  0: c = TXString('0'); break;
+			case  1: c = TXString('1'); break;
+			case  2: c = TXString('2'); break;
+			case  3: c = TXString('3'); break;
+			case  4: c = TXString('4'); break;
+			case  5: c = TXString('5'); break;
+			case  6: c = TXString('6'); break;
+			case  7: c = TXString('7'); break;
+			case  8: c = TXString('8'); break;
+			case  9: c = TXString('9'); break;
+			case 10: c = TXString('A'); break;
+			case 11: c = TXString('B'); break;
+			case 12: c = TXString('C'); break;
+			case 13: c = TXString('D'); break;
+			case 14: c = TXString('E'); break;
+			case 15: c = TXString('F'); break;
 		
 			default:
 				break;
