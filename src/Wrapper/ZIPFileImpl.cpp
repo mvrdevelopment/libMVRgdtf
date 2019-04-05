@@ -1064,7 +1064,7 @@ void CZIPFileImpl::WriteLocalFileHeader( SZIPFileInfo* fileInfo, Uint64& current
 	this->WriteLong( fileInfo->dwUncompressedSize, currentWritePosition );
 	this->WriteShort( (Uint16)fileInfo->fFileName.GetEncodingLength(ETXEncoding::eUTF8), currentWritePosition );
 	this->WriteShort( 0, currentWritePosition );
-	this->WriteToFile( (void*)(const char*)fileInfo, currentWritePosition, fileInfo->fFileName.GetEncodingLength(ETXEncoding::eUTF8));
+	this->WriteToFile( (void*)(const char*)fileInfo->fFileName, currentWritePosition, fileInfo->fFileName.GetEncodingLength(ETXEncoding::eUTF8));
 }
 
 void CZIPFileImpl::WriteCentralDirectoryHeader( SZIPArchiveInfo* zipArchiveInfo, TZIPFileInfoArray* fileInfoArray, Uint64& currentWritePosition )
