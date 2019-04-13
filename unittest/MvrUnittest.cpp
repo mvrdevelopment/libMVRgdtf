@@ -55,7 +55,7 @@ void MvrUnittest::WriteFile()
         //------------------------------------------------------------------------------------------------
         // Add Custom data
         ISceneDataProviderPtr obj;
-        if(__checkVCOM(mvrWrite->CreateDataProviderObject("Test Data", "1", &obj)))
+        if(__checkVCOM(mvrWrite->CreateDataProviderObject("Test Data", "1.1.2", &obj)))
         {
             __checkVCOM(obj->AddKeyValue("Key", "Value"));
         }
@@ -214,6 +214,9 @@ void MvrUnittest::ReadFile()
                 checkifEqual("Check Key "  ,"Key"  , key);
                 checkifEqual("Check Value ","Value", value);
             }
+
+			checkifEqual("Provider Name", "Test Data", obj->GetProviderName());
+			checkifEqual("Provider Version", "1.1.2", obj->GetVersion());
         }
 
 		// Check Object

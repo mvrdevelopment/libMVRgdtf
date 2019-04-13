@@ -71,6 +71,32 @@ MvrString VectorworksMVR::CSceneDataProviderImpl::GetKeyAt(size_t at)
 	
 }
 
+MvrString VectorworksMVR::CSceneDataProviderImpl::GetProviderName()
+{
+	//------------------------------------------------------------------------------------------
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) return "";
+	
+	//------------------------------------------------------------------------------------------
+	// Get Value
+	return fPtr->GetProvider().GetCharPtr();;
+	
+}
+
+MvrString VectorworksMVR::CSceneDataProviderImpl::GetVersion()
+{
+	//------------------------------------------------------------------------------------------
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) return "";
+	
+	//------------------------------------------------------------------------------------------
+	// Get Value
+	return fPtr->GetVersion().GetCharPtr();;
+	
+}
+
 MvrString VectorworksMVR::CSceneDataProviderImpl::GetValueAt(size_t at)
 {
 	//------------------------------------------------------------------------------------------

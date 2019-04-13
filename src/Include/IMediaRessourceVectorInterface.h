@@ -90,6 +90,9 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetKeyValueCount(size_t& outVal) = 0;
 		virtual MvrString VCOM_CALLTYPE		GetKeyAt(size_t at) = 0;
 		virtual MvrString VCOM_CALLTYPE		GetValueAt(size_t at) = 0;
+        virtual MvrString VCOM_CALLTYPE		GetProviderName() = 0;
+        virtual MvrString VCOM_CALLTYPE		GetVersion() = 0;
+
 	};
 	typedef VCOMPtr<ISceneDataProvider>	ISceneDataProviderPtr;
 	
