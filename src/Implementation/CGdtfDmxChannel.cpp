@@ -152,6 +152,16 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::GetGeometry(Vecto
     return kVCOMError_NoError;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::GetResolution(GdtfDefines::EGdtfChannelBitResolution & resolution)
+{
+	// Check Pointer
+	if ( ! fChannel) { return kVCOMError_NotInitialized; }
+	
+	resolution = fChannel->GetChannelBitResolution();
+	
+	return kVCOMError_NoError;
+}
+
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::SetDmxBreak(Sint32 dmxBreak)
 {
 	// Check Pointer
