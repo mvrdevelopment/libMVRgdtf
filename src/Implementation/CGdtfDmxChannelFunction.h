@@ -26,6 +26,7 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetOnWheel(IGdtfWheel** wheel);
         virtual VCOMError VCOM_CALLTYPE     GetEmitter(IGdtfPhysicalEmitter** emitter);
         virtual VCOMError VCOM_CALLTYPE     GetFilter(IGdtfFilter** outVal);
+        virtual VCOMError VCOM_CALLTYPE     GetResolution(GdtfDefines::EGdtfChannelBitResolution& resolution);
 
 		virtual VCOMError VCOM_CALLTYPE     SetAttribute(IGdtfAttribute* attribute);
 		virtual VCOMError VCOM_CALLTYPE     SetOriginalAttribute(MvrString attr);

@@ -548,6 +548,11 @@ namespace VectorworksMVR
 
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+
+        // 0.3.20
+        virtual VCOMError VCOM_CALLTYPE     GetResolution(GdtfDefines::EGdtfChannelBitResolution& resolution) = 0;
+
+
     };
 	typedef VCOMPtr<IGdtfDmxChannelFunction>	IGdtfDmxChannelFunctionPtr;
         
@@ -609,6 +614,9 @@ namespace VectorworksMVR
 		
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+
+        // 0.3.20
+        virtual VCOMError VCOM_CALLTYPE     GetResolution(GdtfDefines::EGdtfChannelBitResolution& resolution) = 0;
     };
 	typedef VCOMPtr<IGdtfDmxChannel>	IGdtfDmxChannelPtr;
     

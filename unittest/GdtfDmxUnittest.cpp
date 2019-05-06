@@ -519,7 +519,7 @@ void GdtfDmxUnittest::Check8bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxCh
 {
 	// ---------------------------------------------------------------------------
 	// Check DMXChannel attributes
-	CheckDmxChannel(dmxChannel, 1, 1, 0, 0, 0, (DmxValue)0, false ,(double)0, (double)0);
+	CheckDmxChannel(dmxChannel, 1, 1, 0, 0, 0, (DmxValue)0, false ,(double)0, (double)0, eGdtfChannelBitResolution_8);
 
 	// ---------------------------------------------------------------------------
 	// Get Logical Channels
@@ -543,19 +543,19 @@ void GdtfDmxUnittest::Check8bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxCh
 
 	IGdtfDmxChannelFunctionPtr bit8Function1;
 	__checkVCOM(bit8LogicalChannel1->GetDmxFunctionAt(0, &bit8Function1));
-	CheckFunction(bit8Function1, "Function1", "Attribute1", 0, 99);
+	CheckFunction(bit8Function1, "Function1", "Attribute1", 0, 99, eGdtfChannelBitResolution_8);
 
 	IGdtfDmxChannelFunctionPtr bit8Function2;
 	__checkVCOM(bit8LogicalChannel1->GetDmxFunctionAt(1, &bit8Function2));
-	CheckFunction(bit8Function2, "Function2", "Attribute1", 100, 169);
+	CheckFunction(bit8Function2, "Function2", "Attribute1", 100, 169, eGdtfChannelBitResolution_8);
 
 	IGdtfDmxChannelFunctionPtr bit8Function3;
 	__checkVCOM(bit8LogicalChannel2->GetDmxFunctionAt(0, &bit8Function3));
-	CheckFunction(bit8Function3, "Function3", "Attribute1", 170, 199);
+	CheckFunction(bit8Function3, "Function3", "Attribute1", 170, 199, eGdtfChannelBitResolution_8);
 
 	IGdtfDmxChannelFunctionPtr bit8Function4;
 	__checkVCOM(bit8LogicalChannel2->GetDmxFunctionAt(1, &bit8Function4));
-	CheckFunction(bit8Function4, "Function4", "Attribute1", 200, 255);
+	CheckFunction(bit8Function4, "Function4", "Attribute1", 200, 255, eGdtfChannelBitResolution_8);
 
 	// ---------------------------------------------------------------------------
 	// Check Channel Set Count bit8Function1
@@ -691,15 +691,15 @@ void GdtfDmxUnittest::Check24bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxC
 
 	IGdtfDmxChannelFunctionPtr bit8Function1;
 	__checkVCOM(logicalChannel->GetDmxFunctionAt(0, &bit8Function1));
-	CheckFunction(bit8Function1, "Log 1", "Attribute1", 0, max24bit);
+	CheckFunction(bit8Function1, "Log 1", "Attribute1", 0, max24bit, eGdtfChannelBitResolution_24);
 
 	IGdtfDmxChannelFunctionPtr bit8Function2;
 	__checkVCOM(logicalChannel->GetDmxFunctionAt(1, &bit8Function2));
-	CheckFunction(bit8Function2, "Log 2", "Attribute1", 0, max24bit);
+	CheckFunction(bit8Function2, "Log 2", "Attribute1", 0, max24bit, eGdtfChannelBitResolution_24);
 
 	IGdtfDmxChannelFunctionPtr bit8Function3;
 	__checkVCOM(logicalChannel->GetDmxFunctionAt(2, &bit8Function3));
-	CheckFunction(bit8Function3, "Log 3", "Attribute1", 0, max24bit);
+	CheckFunction(bit8Function3, "Log 3", "Attribute1", 0, max24bit, eGdtfChannelBitResolution_24);
 
 	double thisDmxMibFade = 0;
 	__checkVCOM(logicalChannel->GetMoveInBlackFrames(thisDmxMibFade));
@@ -727,7 +727,7 @@ void GdtfDmxUnittest::Check24bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxC
 
 void GdtfDmxUnittest::CheckDmxChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxChannel, Sint32 dmxBreak, Sint32 coarse,
 									  Sint32 fine, Sint32 ultra, Sint32 uber, DmxValue defaultValue,
-									  DmxValue highlight, double MibFade, double dmxChangeLimit)
+									  DmxValue highlight, double MibFade, double dmxChangeLimit, EGdtfChannelBitResolution resolution)
 {
 	Sint32 thisDmxBreak = 0;
 	__checkVCOM(dmxChannel->GetDmxBreak(thisDmxBreak));
@@ -761,6 +761,11 @@ void GdtfDmxUnittest::CheckDmxChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxCha
 		__checkVCOM(dmxChannel->GetHighlight(thisHighlight));
 		this->checkifEqual("Check DmxChannel HighlightValue  - Default: \"None\"  ", highlight, thisHighlight);
 	}
+
+	EGdtfChannelBitResolution thisResolution;
+	__checkVCOM(dmxChannel->GetResolution(thisResolution));
+	this->checkifEqual("CheckResolution ",  (size_t)resolution, (size_t)thisResolution);
+
 }
 
 void GdtfDmxUnittest::CheckChannelSet(IGdtfDmxChannelSetPtr& channelSet, std::string name, DmxValue start, DmxValue end)
@@ -776,7 +781,7 @@ void GdtfDmxUnittest::CheckChannelSet(IGdtfDmxChannelSetPtr& channelSet, std::st
 	this->checkifEqual("Check End ",  end, thisEnd);
 }
 
-void GdtfDmxUnittest::CheckFunction(VectorworksMVR::IGdtfDmxChannelFunctionPtr& function, std::string name, std::string attributeName, DmxValue start, DmxValue end)
+void GdtfDmxUnittest::CheckFunction(VectorworksMVR::IGdtfDmxChannelFunctionPtr& function, std::string name, std::string attributeName, DmxValue start, DmxValue end, EGdtfChannelBitResolution resolution)
 {
 	this->checkifEqual("Check Name ", name, function->GetName());
 	IGdtfAttributePtr gdtfAttribute;
@@ -789,4 +794,10 @@ void GdtfDmxUnittest::CheckFunction(VectorworksMVR::IGdtfDmxChannelFunctionPtr& 
 	DmxValue thisEnd = 0;
 	__checkVCOM(function->GetEndAddress(thisEnd));
 	this->checkifEqual("Check End ",  end, thisEnd);
+
+
+	EGdtfChannelBitResolution thisResolution;
+	__checkVCOM(function->GetResolution(thisResolution));
+	this->checkifEqual("CheckResolution ",  (size_t)resolution, (size_t)thisResolution);
+
 }

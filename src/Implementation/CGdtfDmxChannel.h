@@ -25,6 +25,7 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetHighlight(DmxValue& highlight);
 		virtual VCOMError VCOM_CALLTYPE     HasHighlight(bool& highlight);
 		virtual VCOMError VCOM_CALLTYPE     GetGeometry(VectorworksMVR::IGdtfGeometry **geo);
+        virtual VCOMError VCOM_CALLTYPE     GetResolution(GdtfDefines::EGdtfChannelBitResolution& resolution);
 		
 		virtual VCOMError VCOM_CALLTYPE     SetDmxBreak(Sint32 dmxBreak);
 		virtual VCOMError VCOM_CALLTYPE     SetCoarse(Sint32 coarse);

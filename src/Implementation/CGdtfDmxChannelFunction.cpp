@@ -263,6 +263,16 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetFilter
     return kVCOMError_NoError;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetResolution(GdtfDefines::EGdtfChannelBitResolution & resolution)
+{
+	// Check Pointer
+	if ( ! fFunction) { return kVCOMError_NotInitialized; }
+	
+	resolution = fFunction->GetParentDMXChannel()->GetChannelBitResolution();
+	
+	return kVCOMError_NoError;
+}
+
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetAttribute(IGdtfAttribute* attribute)
 {
 	// Check Pointer
