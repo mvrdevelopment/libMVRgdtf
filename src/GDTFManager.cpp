@@ -1826,7 +1826,7 @@ void GdtfGeometryLamp::InitializeMembersWithDefaultsVals()
 {
 	fLampType			= EGdtfLampType::eGdtfLampType_Dischange;
 	fPowerConsuption	= 1000;
-	fLuminousIntensity	= 1000;
+	fLuminousIntensity	= 10000;
 	fColorTemperature	= 6000;
 	fBeamAngle			= 25;
     fFieldAngle         = 25;
