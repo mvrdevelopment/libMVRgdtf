@@ -265,11 +265,11 @@ void SceneDataProviderObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDat
 	
 	// ------------------------------------------------------------------------------
 	// Read Version
-	pNode->GetNodeAttributeValue(XML_Val_DataNodeAttrProvider,	fVersion);
+	pNode->GetNodeAttributeValue(XML_Val_DataNodeAttrProvider,	fProvider);
 	
 	// ------------------------------------------------------------------------------
 	// Read Provider
-	pNode->GetNodeAttributeValue(XML_Val_DataNodeAttrVersion,	fProvider);
+	pNode->GetNodeAttributeValue(XML_Val_DataNodeAttrVersion,	fVersion);
 	
 	// ------------------------------------------------------------------------------
 	// Read Data

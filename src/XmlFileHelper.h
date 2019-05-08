@@ -80,6 +80,8 @@ namespace SceneData
 		static TXString ConvertDmxOffset(DMXAddress coarse, DMXAddress fine, DMXAddress ultra, DMXAddress uber);
         static TXString ConvertEGdtfColorSpace(EGdtfColorSpace value);
         static TXString ConvertEGdtfInterpolationTo(EGdtfInterpolationTo value);
+		static TXString	ConvertHexValue(size_t value);
+
         //-----------------------------------------------------------------------------
         // Convert from String functions:
         static bool		ConvertUUID(										const TXString& value, const IXMLFileNodePtr& node,			VWFC::Tools::VWUUID& uuid);        
@@ -108,7 +110,8 @@ namespace SceneData
         static bool     ConvertEGdtfColorSampleEnum(						const TXString& inVal, const IXMLFileNodePtr& node,			EGdtfColorSample& outVal);        
         static bool     ConvertEGdtfColorSpace(const TXString & inVal, const IXMLFileNodePtr & node, EGdtfColorSpace & outVal);
         static bool     ConvertEGdtfInterpolationTo(const TXString & inVal, const IXMLFileNodePtr & node, EGdtfInterpolationTo & outVal);
-		
+		static bool		ConvertHexValue(const TXString & inVal, const IXMLFileNodePtr & node, size_t& outValue);
+
         static bool 	ConvertDmxOffset(const TXString& inVal, const IXMLFileNodePtr& node, DMXAddress& coarse, DMXAddress& fine, DMXAddress& ultra, DMXAddress& uber);
         //-----------------------------------------------------------------------------
         static CCieColor ConvertCColor (const CieColor& color);
@@ -128,6 +131,12 @@ namespace SceneData
 		static bool		DeserializeUTC_Date(const TXString& value, const IXMLFileNodePtr& node, TSint32Array& intArray);
 
         static TXString IntToString2Digits(Sint64 value);
+
+
+	public:
+		// UNIT TEST HELPER
+		static bool  	ConvertDMXValue_UnitTest(const char* value, EGdtfChannelBitResolution chanlReso,	DmxValue& intValue);
+
 
 	};
 	

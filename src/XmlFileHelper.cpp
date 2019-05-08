@@ -92,8 +92,7 @@ using namespace SceneData;
     }
     else if(inValue.GetLength() == 0)
     {
-        uuid = VWUUID();
-        return true;
+        return false;
     }
     else
     {
@@ -464,8 +463,8 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString& strValue, const I
 	SplitStr(strValue, firstPart, secndPart, (size_t)splitPos);
 	//-----------------------------------------------------------------------------------
 	
-	DmxValue dmxValueRaw  = firstPart.atoi64();
-	Sint32 	 bytetSpecifier = secndPart.atoi();
+	double dmxValueRaw    = firstPart.atof();
+	Sint32 bytetSpecifier = secndPart.atoi();
 
 	// Check if the ByteSpecifier is different to the ChannelResolution.
 	if (bytetSpecifier != chanlReso) 
@@ -473,7 +472,9 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString& strValue, const I
         DmxValue maxResolution  = GetChannelMaxDmx((EGdtfChannelBitResolution)bytetSpecifier);        
         DmxValue maxChannelUnit = GetChannelMaxDmx(chanlReso);
 
-        intValue = (dmxValueRaw / maxResolution) * maxChannelUnit;
+		double percentage = (dmxValueRaw / maxResolution);
+
+        intValue = percentage * maxChannelUnit;
 
 	}	
 	else
@@ -1403,14 +1404,17 @@ CieColor SceneData::GdtfConverter::ConvertCColor(const CCieColor & color)
 
 /*static*/ bool GdtfConverter::ConvertEGdtfInterpolationTo(const TXString& inVal, const IXMLFileNodePtr& node, EGdtfInterpolationTo& outVal)
 {
-     if        (inVal == XML_GDTF_InterpolationTo_Linear)  { outVal = EGdtfInterpolationTo::Linear; }     
-     else if   (inVal == XML_GDTF_InterpolationTo_Step)    { outVal = EGdtfInterpolationTo::Step; }
-     else if   (inVal == XML_GDTF_InterpolationTo_Log)    { outVal = EGdtfInterpolationTo::Log; }     
+     if        (inVal == XML_GDTF_InterpolationTo_Linear)   { outVal = EGdtfInterpolationTo::Linear; }     
+     else if   (inVal == XML_GDTF_InterpolationTo_Step)     { outVal = EGdtfInterpolationTo::Step; }
+     else if   (inVal == XML_GDTF_InterpolationTo_Log)      { outVal = EGdtfInterpolationTo::Log; }     
+	 else if   (inVal.IsEmpty())    						{ outVal = EGdtfInterpolationTo::Linear; } 
      else 
      {
         DSTOP((kEveryone, "Unknown Value for EGdtfInterpolationTo"));
         GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertColorSample, node);
         SceneData::GdtfFixture::AddError(error);
+
+		outVal = EGdtfInterpolationTo::Linear;
      }
        
     return true;
@@ -1586,6 +1590,11 @@ TXString SceneData::SceneDataZip::GetResourceSubFolder(ERessourceType resType)
 	}	
 
 	return true;
+}
+
+/*static*/ bool GdtfConverter::ConvertDMXValue_UnitTest(const char* value, EGdtfChannelBitResolution chanlReso,	DmxValue& intValue)
+{
+	return GdtfConverter::ConvertDMXValue(value,nullptr, chanlReso, intValue);
 }
 
 void GdtfConverter::TraverseNodes(IXMLFileNodePtr root, const TXString& childContainerNodeName,const TXString& childNodeName, TProcessNodeCall processNodeFunction )
@@ -1794,4 +1803,104 @@ VCOMError IXMLFileIOBufferImpl::GetData(void*& dataPointer)
 {
     dataPointer = fXMLBuffer;
     return kVCOMError_NoError;
+}
+
+/*static*/ bool GdtfConverter::ConvertHexValue(const TXString & inVal, const IXMLFileNodePtr & node, size_t& outValue)
+{
+	outValue = 0;
+	if(inVal.Left(2).Equal(TXString("0x")))
+	{
+		TXString hexCont = inVal.Mid(2);
+		hexCont.MakeUpper();
+		for(size_t i = 0; i < hexCont.GetLength(); i++)
+		{
+			outValue = outValue*16;
+			size_t fact = 0;
+			TXChar c = hexCont.GetAt(i); 
+			switch (c) 
+			{ 	
+				case TXChar('0'): fact =  0; break;
+				case TXChar('1'): fact =  1; break;
+				case TXChar('2'): fact =  2; break;
+				case TXChar('3'): fact =  3; break;
+				case TXChar('4'): fact =  4; break;
+				case TXChar('5'): fact =  5; break;
+				case TXChar('6'): fact =  6; break;
+				case TXChar('7'): fact =  7; break;
+				case TXChar('8'): fact =  8; break;
+				case TXChar('9'): fact =  9; break;
+				case TXChar('A'): fact = 10; break;
+				case TXChar('B'): fact = 11; break;
+				case TXChar('C'): fact = 12; break;
+				case TXChar('D'): fact = 13; break;
+				case TXChar('E'): fact = 14; break;
+				case TXChar('F'): fact = 15; break;
+				default: 
+				{
+					GdtfParsingError error (GdtfDefines::EGdtfParsingError::eHexConversion_InvalidChar, node);
+					SceneData::GdtfFixture::AddError(error);
+					return false; 
+				} break;
+			}
+			outValue += fact; 
+		}
+	}
+	else if( ! inVal.IsEmpty())
+	{
+		GdtfParsingError error (GdtfDefines::EGdtfParsingError::eHexConversion_InvalidChar, node);
+		SceneData::GdtfFixture::AddError(error);
+	}
+	
+	
+	if(outValue > 65535)
+	{
+		GdtfParsingError error (GdtfDefines::EGdtfParsingError::eHexConversion_ValueToHight, node);
+        SceneData::GdtfFixture::AddError(error);
+		outValue = 65535;
+		return false;
+	}
+	return true;
+}
+
+/*static*/ TXString GdtfConverter::ConvertHexValue(size_t value)
+{
+	TXString outString ("0x");
+	if(value > 65535)
+	{
+		return TXString("0xFFFF");
+	}
+	if(value == 0)
+	{
+		return TXString("0x0");
+	}
+	while(value > 0)
+	{
+		size_t cCode = value % 16;
+		value = (value-cCode)/16;
+		TXString c = TXString('0');
+		switch (cCode)
+		{
+			case  0: c = TXString('0'); break;
+			case  1: c = TXString('1'); break;
+			case  2: c = TXString('2'); break;
+			case  3: c = TXString('3'); break;
+			case  4: c = TXString('4'); break;
+			case  5: c = TXString('5'); break;
+			case  6: c = TXString('6'); break;
+			case  7: c = TXString('7'); break;
+			case  8: c = TXString('8'); break;
+			case  9: c = TXString('9'); break;
+			case 10: c = TXString('A'); break;
+			case 11: c = TXString('B'); break;
+			case 12: c = TXString('C'); break;
+			case 13: c = TXString('D'); break;
+			case 14: c = TXString('E'); break;
+			case 15: c = TXString('F'); break;
+		
+			default:
+				break;
+		}
+		outString.Insert(2, c);
+	}
+	return outString;
 }

@@ -197,6 +197,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetLinkedFixtureGUID
 		uuid.b = 0;
 		uuid.c = 0;
 		uuid.d = 0;
+        return kVCOMError_NotSet;
 	}
 	
 	fFixtureObject->GetLinkedGuid().GetUUID(uuid.a, uuid.b, uuid.c, uuid.d);

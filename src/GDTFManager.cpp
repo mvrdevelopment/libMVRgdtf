@@ -822,12 +822,14 @@ TXString GdtfWheelSlotPrismFacet::GetNodeName()
 GdtfWheelSlot::GdtfWheelSlot(GdtfWheel* parent)
 {
 	fWheelParent = parent;
+	fFilter 	 = nullptr;
 }
 
 GdtfWheelSlot::GdtfWheelSlot(const TXString& name, GdtfWheel* parent)
 {
 	fName		 = name;
 	fWheelParent = parent;
+	fFilter		 = nullptr;
 }
 
 
@@ -851,6 +853,11 @@ void GdtfWheelSlot::SetColor(const CCieColor& color)
 	fColor = color;
 }
 
+void GdtfWheelSlot::SetFilter(GdtfFilter* filter)
+{
+	fFilter = filter;
+}
+
 GdtfWheelSlotPrismFacet* GdtfWheelSlot::AddPrismFacet()
 {
 	GdtfWheelSlotPrismFacet* prism = new GdtfWheelSlotPrismFacet();
@@ -861,6 +868,16 @@ GdtfWheelSlotPrismFacet* GdtfWheelSlot::AddPrismFacet()
 const TXString&	GdtfWheelSlot::GetGobo() const
 {
 	return fGobo;
+}
+
+GdtfFilter*	GdtfWheelSlot::GetFilter() const
+{
+	return fFilter;
+}
+
+const TXString&	GdtfWheelSlot::GetUnresolvedFilter() const
+{
+	return fUnresolvedFilter;
 }
 
 const TXString&	GdtfWheelSlot::GetGoboFileFullPath()
@@ -908,7 +925,7 @@ void GdtfWheelSlot::OnPrintToFile(IXMLFileNodePtr pNode)
 	pNode->SetNodeAttributeValue(XML_GDTF_WheelSlotName,	fName);
 	pNode->SetNodeAttributeValue(XML_GDTF_WheelSlotColor,		GdtfConverter::ConvertColor(fColor));
 	if(fGobo != "")	{ pNode->SetNodeAttributeValue(XML_GDTF_WheelSlotPicture,	fGobo); }
-	
+	if(fFilter)	{ pNode->SetNodeAttributeValue(XML_GDTF_WheelSlotFilter,		fFilter->GetNodeReference()); }
 	
 	//------------------------------------------------------------------------------------
 	// Print the childs
@@ -944,6 +961,8 @@ void GdtfWheelSlot::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// Get Gobo
 	pNode->GetNodeAttributeValue(XML_GDTF_WheelSlotPicture, fGobo);
 	
+
+	pNode->GetNodeAttributeValue(XML_GDTF_WheelSlotFilter,	fUnresolvedFilter);
 	
 	//------------------------------------------------------------------------------------
 	// Read the wheel slots
@@ -974,6 +993,8 @@ void GdtfWheelSlot::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	needed.push_back(XML_GDTF_WheelSlotName);
 	optional.push_back(XML_GDTF_WheelSlotColor);
 	optional.push_back(XML_GDTF_WheelSlotPicture);
+	optional.push_back(XML_GDTF_WheelSlotFilter);
+
 	
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
@@ -1805,7 +1826,7 @@ void GdtfGeometryLamp::InitializeMembersWithDefaultsVals()
 {
 	fLampType			= EGdtfLampType::eGdtfLampType_Dischange;
 	fPowerConsuption	= 1000;
-	fLuminousIntensity	= 1000;
+	fLuminousIntensity	= 10000;
 	fColorTemperature	= 6000;
 	fBeamAngle			= 25;
     fFieldAngle         = 25;
@@ -4634,6 +4655,7 @@ void GdtfFixture::ResolveAllReferences()
 	ResolveDMXModeMasters();
     ResolveDMXPersonalityRefs();
 	ResolveAttribRefs();
+	ResolveWheelSlots();
 }
 
 void GdtfFixture::ResolveGeometryRefs()
@@ -4703,6 +4725,22 @@ void GdtfFixture::ResolveGeometryRefs_Recursive(GdtfGeometryPtr geometry)
 	for (GdtfGeometryPtr internalGeometry : geometry->GetInternalGeometries())
 	{
 		ResolveGeometryRefs_Recursive(internalGeometry);
+	}
+}
+
+void GdtfFixture::ResolveWheelSlots()
+{
+	for(GdtfWheelPtr wheel : fWheels)
+	{
+		for(GdtfWheelSlotPtr slot :  wheel->GetWheelSlotArray())
+		{
+			TXString ref = slot->GetUnresolvedFilter();
+			if( ! ref.IsEmpty())
+			{
+				GdtfFilterPtr filter = getFilterByRef(ref);
+				slot->SetFilter(filter);
+			}
+		}
 	}
 }
 
@@ -6083,8 +6121,8 @@ void SceneData::GdtfFTRDM::OnPrintToFile(IXMLFileNodePtr pNode)
 	GdtfObject::OnPrintToFile(pNode);
 	//------------------------------------------------------------------------------------
 	// Print the attributes
-	pNode->SetNodeAttributeValue(XML_GDTF_FTRDM_AttrManufacturerID, GdtfConverter::ConvertInteger(fManufacturerID) );
-	pNode->SetNodeAttributeValue(XML_GDTF_FTRDM_AttrDeviceModelID,  GdtfConverter::ConvertInteger(fDeviceModelID)  );	 
+	pNode->SetNodeAttributeValue(XML_GDTF_FTRDM_AttrManufacturerID, GdtfConverter::ConvertHexValue(fManufacturerID) );
+	pNode->SetNodeAttributeValue(XML_GDTF_FTRDM_AttrDeviceModelID,  GdtfConverter::ConvertHexValue(fDeviceModelID)  );	 
 	//------------------------------------------------------------------------------------
     // Print the Childs
 	for (GdtfSoftwareVersionIDPtr softID : fSoftwareVersionIDArray)
@@ -6102,10 +6140,10 @@ void SceneData::GdtfFTRDM::OnReadFromNode(const IXMLFileNodePtr & pNode)
 	//------------------------------------------------------------------------------------
 	// Get the attributes
 	TXString manufactStr; pNode->GetNodeAttributeValue(XML_GDTF_FTRDM_AttrManufacturerID, manufactStr);
-	GdtfConverter::ConvertInteger(manufactStr, pNode, fManufacturerID);
+	GdtfConverter::ConvertHexValue(manufactStr, pNode, fManufacturerID);
 	
 	TXString deviceModelStr;  pNode->GetNodeAttributeValue(XML_GDTF_FTRDM_AttrDeviceModelID, deviceModelStr);
-	GdtfConverter::ConvertInteger(deviceModelStr, pNode, fDeviceModelID);
+	GdtfConverter::ConvertHexValue(deviceModelStr, pNode, fDeviceModelID);
     
     //------------------------------------------------------------------------------------
 	// Read the childs
@@ -6144,7 +6182,7 @@ SceneData::GdtfFTRDM::GdtfFTRDM()
 	fDeviceModelID  = 0;
 }
 
-SceneData::GdtfFTRDM::GdtfFTRDM(Sint32 manufacturerID, Sint32 deviceModelID) : GdtfFTRDM()
+SceneData::GdtfFTRDM::GdtfFTRDM(size_t manufacturerID, size_t deviceModelID) : GdtfFTRDM()
 {
 	fManufacturerID = manufacturerID;
 	fDeviceModelID  = deviceModelID;
@@ -6160,12 +6198,12 @@ EGdtfObjectType SceneData::GdtfFTRDM::GetObjectType()
 	return EGdtfObjectType::eGdtfFTRDM;
 }
 
-Sint32 SceneData::GdtfFTRDM::GetManufacturerID() const
+size_t SceneData::GdtfFTRDM::GetManufacturerID() const
 {
 	return fManufacturerID;
 }
 
-Sint32 SceneData::GdtfFTRDM::GetDeviceModelID() const
+size_t SceneData::GdtfFTRDM::GetDeviceModelID() const
 {
 	return fDeviceModelID;
 }
@@ -6175,12 +6213,12 @@ const TGdtfSoftwareVersionIDArray& SceneData::GdtfFTRDM::GetSoftwareVersIDs() co
 	return fSoftwareVersionIDArray;
 }
 
-void SceneData::GdtfFTRDM::SetManufacturerID(Sint32 val)
+void SceneData::GdtfFTRDM::SetManufacturerID(size_t val)
 {
 	fManufacturerID = val;
 }
 
-void SceneData::GdtfFTRDM::SetDeviceModelID(Sint32 val)
+void SceneData::GdtfFTRDM::SetDeviceModelID(size_t val)
 {
 	fDeviceModelID = val;
 }
@@ -6256,7 +6294,7 @@ void GdtfDMXPersonality::OnPrintToFile(IXMLFileNodePtr pNode)
 
     //------------------------------------------------------------------------------------
     // Print the attributes
-    pNode->SetNodeAttributeValue(XML_GDTF_DMXPersonalityValue, GdtfConverter::ConvertInteger(fValue));
+    pNode->SetNodeAttributeValue(XML_GDTF_DMXPersonalityValue, GdtfConverter::ConvertHexValue(fValue));
     pNode->SetNodeAttributeValue(XML_GDTF_DMXPersonalityDMXMode, fDMXMode->GetModeName() );
 }
 
@@ -6270,7 +6308,7 @@ void GdtfDMXPersonality::OnReadFromNode(const IXMLFileNodePtr& pNode)
     // Get the attributes	
     TXString valueStr;
     pNode->GetNodeAttributeValue(XML_GDTF_DMXPersonalityValue, valueStr);
-    GdtfConverter::ConvertInteger(valueStr, pNode, fValue);
+    GdtfConverter::ConvertHexValue(valueStr, pNode, fValue);
 
     pNode->GetNodeAttributeValue(XML_GDTF_DMXPersonalityDMXMode, fDMXMode_Unresolved);
 }
@@ -7210,7 +7248,7 @@ void SceneData::GdtfSoftwareVersionID::OnPrintToFile(IXMLFileNodePtr pNode)
 
     //------------------------------------------------------------------------------------
     // Print the attributes
-    pNode->SetNodeAttributeValue(XML_GDTF_SoftwareVersionID_Value, GdtfConverter::ConvertInteger(fValue));
+    pNode->SetNodeAttributeValue(XML_GDTF_SoftwareVersionID_Value, GdtfConverter::ConvertHexValue(fValue));
 
     //------------------------------------------------------------------------------------
     // Print the childs
@@ -7229,7 +7267,7 @@ void SceneData::GdtfSoftwareVersionID::OnReadFromNode(const IXMLFileNodePtr & pN
     //------------------------------------------------------------------------------------
     // Get the attributes
     TXString valueStr; pNode->GetNodeAttributeValue(XML_GDTF_SoftwareVersionID_Value, valueStr);
-    GdtfConverter::ConvertInteger( valueStr, pNode, fValue);
+    GdtfConverter::ConvertHexValue( valueStr, pNode, fValue);
 
     // Read the childs
     GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_DMXPersonalityNodeNam, [this](IXMLFileNodePtr objNode) -> void

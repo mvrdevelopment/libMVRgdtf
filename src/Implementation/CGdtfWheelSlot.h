@@ -19,10 +19,12 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetColor(CieColor& color);
         virtual MvrString VCOM_CALLTYPE     GetGobo();
 		virtual MvrString VCOM_CALLTYPE     GetGoboFileFullPath();
+        virtual VCOMError VCOM_CALLTYPE     GetFilter(IGdtfFilter** outVal);
 		
         virtual VCOMError VCOM_CALLTYPE		SetName(MvrString name);				
 		virtual VCOMError VCOM_CALLTYPE     SetColor(const CieColor& color);
 		virtual VCOMError VCOM_CALLTYPE     SetGobo(MvrString path);
+        virtual VCOMError VCOM_CALLTYPE     SetFilter(IGdtfFilter* val);
 		
         virtual VCOMError VCOM_CALLTYPE     GetPrismFacetCount(size_t& outCount);
         virtual VCOMError VCOM_CALLTYPE     GetPrismFacetAt(size_t& at, IGdtfWheelSlotPrismFacet** outPosition);

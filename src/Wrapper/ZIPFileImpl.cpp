@@ -541,8 +541,8 @@ VCOMError CZIPFileImpl::AddFile(const TXString& path, IZIPFileIOBuffer* inputBuf
 	
 			zipArchiveInfo.dwNumberOfEntriesOnThisDisk++;
 			zipArchiveInfo.dwTotalNumberOfEntries++;
-			zipArchiveInfo.dwOffsetCentralDir = centralDirPosition + (Uint32)compressedSize + (Uint32)zipFileInfo.fFileName.GetLength() + kLocalFileHeaderLength; 
-			zipArchiveInfo.dwSizeOfCentralDir += kCentralFileHeaderLength + (Uint32)zipFileInfo.fFileName.GetLength(); 
+			zipArchiveInfo.dwOffsetCentralDir = centralDirPosition + (Uint32)compressedSize + (Uint32)zipFileInfo.fFileName.GetEncodingLength(ETXEncoding::eUTF8) + kLocalFileHeaderLength; 
+			zipArchiveInfo.dwSizeOfCentralDir += kCentralFileHeaderLength + (Uint32)zipFileInfo.fFileName.GetEncodingLength(ETXEncoding::eUTF8); 
 
 			Uint64 currentWritePosition = 0;
 			this->WriteToFile( (void*)readData1, currentWritePosition,  centralDirPosition );
@@ -619,8 +619,8 @@ VCOMError CZIPFileImpl::AddFile(const TXString& path, IZIPFileIOBuffer* inputBuf
 			zipArchiveInfo.dwNumberOfCentralDirDisk = 0;
 			zipArchiveInfo.dwNumberOfEntriesOnThisDisk = 1;
 			zipArchiveInfo.dwNumberOfThisDisk = 0;
-			zipArchiveInfo.dwOffsetCentralDir = 30 + (Uint32)zipFileInfo.fFileName.GetLength() + (Uint32)compressedSize; 
-			zipArchiveInfo.dwSizeOfCentralDir = 46 + (Uint32)zipFileInfo.fFileName.GetLength(); 
+			zipArchiveInfo.dwOffsetCentralDir = 30 + (Uint32)zipFileInfo.fFileName.GetEncodingLength(ETXEncoding::eUTF8) + (Uint32)compressedSize; 
+			zipArchiveInfo.dwSizeOfCentralDir = 46 + (Uint32)zipFileInfo.fFileName.GetEncodingLength(ETXEncoding::eUTF8); 
 			zipArchiveInfo.dwStartingDiskNumber = 0;
 			zipArchiveInfo.dwTotalNumberOfEntries = 1;
 			zipArchiveInfo.fFileComment = "";
@@ -1062,7 +1062,7 @@ void CZIPFileImpl::WriteLocalFileHeader( SZIPFileInfo* fileInfo, Uint64& current
 	this->WriteLong( fileInfo->dwCRC, currentWritePosition );
 	this->WriteLong( fileInfo->dwCompressedSize, currentWritePosition );
 	this->WriteLong( fileInfo->dwUncompressedSize, currentWritePosition );
-	this->WriteShort( (Uint16)fileInfo->fFileName.GetLength(), currentWritePosition );
+	this->WriteShort( (Uint16)fileInfo->fFileName.GetEncodingLength(ETXEncoding::eUTF8), currentWritePosition );
 	this->WriteShort( 0, currentWritePosition );
 	this->WriteToFile( (void*)(const char*)fileInfo->fFileName, currentWritePosition, fileInfo->fFileName.GetEncodingLength(ETXEncoding::eUTF8));
 }
@@ -1084,9 +1084,9 @@ void CZIPFileImpl::WriteCentralDirectoryHeader( SZIPArchiveInfo* zipArchiveInfo,
 		this->WriteLong( currentFileInfo.dwCRC, currentWritePosition );
 		this->WriteLong( currentFileInfo.dwCompressedSize, currentWritePosition );
 		this->WriteLong( currentFileInfo.dwUncompressedSize, currentWritePosition );
-		this->WriteShort((Uint16) currentFileInfo.fFileName.GetLength(), currentWritePosition );
+		this->WriteShort((Uint16) currentFileInfo.fFileName.GetEncodingLength(ETXEncoding::eUTF8), currentWritePosition );
 		this->WriteShort( 0, currentWritePosition );
-		this->WriteShort((Uint16) currentFileInfo.fComment.GetLength(), currentWritePosition );
+		this->WriteShort((Uint16) currentFileInfo.fComment.GetEncodingLength(ETXEncoding::eUTF8), currentWritePosition );
 		this->WriteShort( zipArchiveInfo->dwStartingDiskNumber, currentWritePosition );
 		this->WriteShort( currentFileInfo.dwInternalAttrib, currentWritePosition );
 		this->WriteLong( currentFileInfo.dwExternalAttrib, currentWritePosition );
@@ -1109,9 +1109,9 @@ void CZIPFileImpl::WriteCentralDirectoryHeader( SZIPArchiveInfo* zipArchiveInfo,
 	this->WriteLong( zipFileInfo->dwCRC, currentWritePosition );
 	this->WriteLong( zipFileInfo->dwCompressedSize, currentWritePosition );
 	this->WriteLong( zipFileInfo->dwUncompressedSize, currentWritePosition );
-	this->WriteShort( (Uint16)zipFileInfo->fFileName.GetLength(), currentWritePosition );
+	this->WriteShort( (Uint16)zipFileInfo->fFileName.GetEncodingLength(ETXEncoding::eUTF8), currentWritePosition );
 	this->WriteShort( 0, currentWritePosition );
-	this->WriteShort((Uint16) zipFileInfo->fComment.GetLength(), currentWritePosition );
+	this->WriteShort((Uint16) zipFileInfo->fComment.GetEncodingLength(ETXEncoding::eUTF8), currentWritePosition );
 	this->WriteShort( zipArchiveInfo->dwStartingDiskNumber, currentWritePosition );
 	this->WriteShort( zipFileInfo->dwInternalAttrib, currentWritePosition );
 	this->WriteLong( zipFileInfo->dwExternalAttrib, currentWritePosition );

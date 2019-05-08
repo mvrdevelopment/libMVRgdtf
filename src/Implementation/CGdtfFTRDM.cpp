@@ -17,7 +17,7 @@ CGdtf_FTRDMImpl::~CGdtf_FTRDMImpl()
     
 }
 
-VCOMError CGdtf_FTRDMImpl::GetManufacturerID(Sint32& outVal)
+VCOMError CGdtf_FTRDMImpl::GetManufacturerID(size_t& outVal)
 {
     // Check Data
     if (!f_FtRDM) return kVCOMError_NotInitialized;
@@ -27,7 +27,7 @@ VCOMError CGdtf_FTRDMImpl::GetManufacturerID(Sint32& outVal)
     return kVCOMError_NoError;
 }
 
-VCOMError CGdtf_FTRDMImpl::SetManufacturerID(Sint32 value)
+VCOMError CGdtf_FTRDMImpl::SetManufacturerID(size_t value)
 {
     // Check Pointer
     if (!f_FtRDM) return kVCOMError_NotInitialized;
@@ -48,7 +48,7 @@ VCOMError VCOM_CALLTYPE CGdtf_FTRDMImpl::BindToObject(void * objAddr)
     return kVCOMError_NoError;
 }
 
-VCOMError CGdtf_FTRDMImpl::GetDeviceModelID(Sint32& outVal)
+VCOMError CGdtf_FTRDMImpl::GetDeviceModelID(size_t& outVal)
 {
 
     // Check Data
@@ -163,7 +163,7 @@ VCOMError CGdtf_FTRDMImpl::CreateSoftwareVersionID(size_t value, IGdtfSoftwareVe
 }
 
 
-VCOMError CGdtf_FTRDMImpl::SetDeviceModelID(Sint32 value)
+VCOMError CGdtf_FTRDMImpl::SetDeviceModelID(size_t value)
 {
     // Check Pointer
     if (!f_FtRDM) return kVCOMError_NotInitialized;

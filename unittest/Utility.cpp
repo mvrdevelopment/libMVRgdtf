@@ -9,6 +9,8 @@
 #if defined(_WINDOWS)
 # include <Shlobj.h>
 # include <Shlwapi.h>
+#include <locale>
+#include <codecvt>
 #elif GS_LIN
 #include <unistd.h>
 #include <sys/types.h>
@@ -20,7 +22,11 @@
 
 std::string UnitTestUtil::GetTestResourceFolder()
 {
+#ifdef _WINDOWS
+    return std::string(GITPATH) + kSeparator + "files";
+#else
     return std::string(GITPATH) + kSeparator + "unittest" + kSeparator + "files";
+#endif
 }
 
 bool UnitTestUtil::GetFolderAppDataLocal(std::string& outPath)
@@ -55,8 +61,15 @@ bool UnitTestUtil::GetFolderAppDataLocal(std::string& outPath)
 	return true;
 }
 
-bool UnitTestUtil::FileExists(std::string fullPath)
+bool UnitTestUtil::FileExists(std::string stdfullPath)
 {
-    std::ifstream f(fullPath.c_str());
+#ifdef _WINDOWS
+    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+    std::wstring wide = converter.from_bytes(stdfullPath);
+ 	 const wchar_t* path = wide.c_str();
+#else
+    const char*    path = stdfullPath.c_str();
+#endif
+    std::ifstream f(path);
     return f.good();
 }

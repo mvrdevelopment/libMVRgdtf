@@ -315,6 +315,8 @@ namespace SceneData
 		TGdtfWheelSlotPrismFacetArray	fPrismFacts;
 		GdtfWheel*                      fWheelParent;		
 		TXString						fGoboFile; // MediaFileName
+		GdtfFilter*						fFilter;
+		TXString						fUnresolvedFilter;
 		
 	public:
 		const TXString&                 GetGobo() const;
@@ -322,14 +324,17 @@ namespace SceneData
 		CCieColor                       GetColor() const;
 		const TXString&                 GetName() const;
         TGdtfWheelSlotPrismFacetArray   GetPrismFacets();
+		GdtfFilter*                 	GetFilter() const;
 		
 		void							SetName(const TXString& name);
 		void							SetGobo(const GdtfPNGFile& png);
 		void							SetColor(const CCieColor& color);
+		void							SetFilter(GdtfFilter* filter);
 		GdtfWheelSlotPrismFacet*		AddPrismFacet();
 
 		virtual TXString				GetNodeReference();
 
+		const TXString&                 GetUnresolvedFilter() const;
         
 	public:
 		virtual EGdtfObjectType			GetObjectType();
@@ -1270,12 +1275,12 @@ namespace SceneData
     {
     public:
         GdtfFTRDM();
-        GdtfFTRDM(Sint32 manufacturerID, Sint32 deviceModelID);
+        GdtfFTRDM(size_t manufacturerID, size_t deviceModelID);
         ~GdtfFTRDM();
     private:
         // Attributes
-        Sint32        fManufacturerID;  // Manufacturer ESTA ID; Size: 2 bytes
-        Sint32        fDeviceModelID;   // Unique device model ID; Size: 2 bytes        
+        size_t        fManufacturerID;  // Manufacturer ESTA ID; Size: 2 bytes
+        size_t        fDeviceModelID;   // Unique device model ID; Size: 2 bytes        
         
         TGdtfSoftwareVersionIDArray     fSoftwareVersionIDArray;
     public:
@@ -1283,12 +1288,12 @@ namespace SceneData
 
     public:
         // Getter
-        Sint32                              GetManufacturerID() const;
-        Sint32                              GetDeviceModelID()  const;
+        size_t                              GetManufacturerID() const;
+        size_t                              GetDeviceModelID()  const;
         const TGdtfSoftwareVersionIDArray&  GetSoftwareVersIDs() const;        
         // Setter
-        void                                SetManufacturerID(Sint32 val);
-        void                                SetDeviceModelID(Sint32 val);
+        void                                SetManufacturerID(size_t val);
+        void                                SetDeviceModelID(size_t val);
         GdtfSoftwareVersionIDPtr            AddSoftwareVersID(size_t value);
     protected:
         virtual	TXString				GetNodeName();
@@ -2059,6 +2064,7 @@ private:
 		void ResolveGeometryRefs_Recursive(GdtfGeometryPtr geometry);
 		
 		void            ResolveAttribRefs();		
+		void            ResolveWheelSlots();
 		void            ResolveDmxModeRefs();
         void            ResolveDMXModeMasters();       
         void            ResolveDMXPersonalityRefs();
