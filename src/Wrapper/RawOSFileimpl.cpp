@@ -43,6 +43,9 @@ VCOMError CRawOSFileImpl::Close()
 	if ( fTheFile )
 	{
 		std::fclose( fTheFile );
+	#ifdef _LINUX
+		std::fsync();
+	#endif
 		fTheFile = NULL;
 	}
 
