@@ -2,6 +2,11 @@
 
 #include "RawOSFileimpl.h"
 
+#ifdef _LINUX
+#include <unistd.h>
+#include <stdio.h>
+#endif
+
 CRawOSFileImpl::CRawOSFileImpl()
 	: fTheFile( nullptr )
 {
@@ -42,10 +47,11 @@ VCOMError CRawOSFileImpl::Close()
 {
 	if ( fTheFile )
 	{
+#ifdef _LINUX
+		fsync(fileno(fTheFile));
+#endif
 		std::fclose( fTheFile );
-	#ifdef _LINUX
-		std::fsync();
-	#endif
+
 		fTheFile = NULL;
 	}
 
