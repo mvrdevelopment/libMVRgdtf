@@ -33,7 +33,8 @@
 #include <vector>
 #include <memory>
 #include <sstream>
-
+namespace VectorworksMVR
+{
 // Used to specify the encoding of TXString (char buffer).
 enum class ETXEncoding {
 	eMacEncoded,
@@ -565,10 +566,5 @@ TXString operator+(const TXChar* lhs, const TXString& rhs);
 // Non-member swap function
 void swap(TXString& lhs, TXString& rhs);
 
-namespace std
-{
-	template<>
-	void swap<TXString>(TXString& lhs, TXString& rhs);
-}
-
 #endif  // _GSSTRINGX_
+}

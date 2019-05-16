@@ -31,6 +31,9 @@
 #endif
 
 #include "GSString.h"
+namespace VectorworksMVR
+{
+
 
 inline void utf32ToTXCharBuffer(char32_t input, TXChar* output);
 inline void utf32BufferToTXCharBuffer(const char32_t* input, TXChar* output, size_t numInputChars = -1);
@@ -2651,4 +2654,6 @@ inline void utf8BufferToTXCharBuffer(const char* const input, TXChar* output, si
 	}
 
 	*output = 0;
+}
+
 }
