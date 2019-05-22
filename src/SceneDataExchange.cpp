@@ -391,42 +391,28 @@ void SceneDataSymDefObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataE
 	// Call parent
 	SceneDataAuxObj::OnReadFromNode(pNode, exchange);
 	
-	
-	// Create the child node
-	IXMLFileNodePtr pChildNode;
-	if ( VCOM_SUCCEEDED( pNode->GetChildNode( XML_Val_ChildObsNodeName, & pChildNode ) ) )
-	{
-		IXMLFileNodePtr pChild;
-		if ( VCOM_SUCCEEDED( pChildNode->GetFirstChildNode( & pChild)))
-		{
-			TXString nodeName;
-			pChild->GetNodeName(nodeName);
-			if (nodeName == XML_Val_GeometryObjectNodeName)
-			{
-				SceneDataGeometryObjPtr geometry = new SceneDataGeometryObj();
-				geometry->ReadFromNode(pChild, exchange);
-				fGeometries.push_back(geometry);
-			}
-			else if (nodeName == XML_Val_SymbolObjectNodeName)
-			{
-				TXString uuidSymbol;
-				pChild->GetNodeAttributeValue(XML_Val_GuidAttrName,			uuidSymbol);
+    //-----------------------------------------------------------------------------
+    // Child geomtries
+    GdtfConverter::TraverseNodes(pNode, XML_Val_ChildObsNodeName, XML_Val_GeometryObjectNodeName, [this, exchange] (IXMLFileNodePtr pNode) -> void
+								 {
+				                    SceneDataGeometryObjPtr geometry = new SceneDataGeometryObj();
+				                    geometry->ReadFromNode(pNode, exchange);
+				                    fGeometries.push_back(geometry);								 
+                                 }
+								 );
+    //-----------------------------------------------------------------------------
+    // Child symbols	
+    GdtfConverter::TraverseNodes(pNode, XML_Val_ChildObsNodeName, XML_Val_SymbolObjectNodeName, [exchange, this] (IXMLFileNodePtr pNode) -> void
+								 {
+				                    TXString uuidSymbol;
+				                    pNode->GetNodeAttributeValue(XML_Val_GuidAttrName,			uuidSymbol);				
 				
-				
-				SceneDataSymbolObjPtr symbol = new SceneDataSymbolObj(uuidSymbol);
-				symbol->ReadFromNode(pChild, exchange);
-				fGeometries.push_back(symbol);
-				
-				
-			}
-			else
-			{
-				ASSERTN(kEveryone, nodeName == XML_Val_GeometryObjectNodeName || nodeName == XML_Val_SymbolObjectNodeName);
-			}
-		}
-		
-	}
-	
+				                    SceneDataSymbolObjPtr symbol = new SceneDataSymbolObj(uuidSymbol);
+				                    symbol->ReadFromNode(pNode, exchange);
+				                    fGeometries.push_back(symbol);								 
+                                 }
+								 );
+    //-----------------------------------------------------------------------------
 }
 
 TXString SceneDataSymDefObj::GetNodeName()
