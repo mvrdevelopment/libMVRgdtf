@@ -2346,7 +2346,33 @@ void SceneDataExchange::ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xml
 			
 		}
 
-		for(SceneDataGeoInstanceObjPtr geoObj : scObj->GetGeometryArr())
+        //-----------------------------------------------------------------------------
+        // Resolve Symbols in Symbols
+        TSymDefMap::iterator it = fSymDefMap.begin();
+        while(it != fSymDefMap.end())
+        {
+            TXString symNam = it->first;
+            SceneDataSymDefObjPtr symDef = it->second;
+
+            for (SceneDataGeoInstanceObjPtr geoObj : symDef->getGeometryArray())  // XXX: capsulate 
+            {
+                if (geoObj->IsSymDef())
+                {
+				    SceneDataSymbolObjPtr symObj = dynamic_cast<SceneDataSymbolObjPtr>(geoObj);
+				    SceneDataSymDefObjPtr ptr    = fSymDefMap[symObj->GetUnresolvedSymDef()];
+				
+				    ASSERTN(kEveryone, ptr);
+				    if(ptr) 
+                    { 
+                        symObj->SetSymDef(ptr); 
+                    }
+                }            
+            }
+
+            it++;
+        }
+
+		for(SceneDataGeoInstanceObjPtr geoObj : scObj->GetGeometryArr())        // XXX: capsulate 
 		{
 			if(geoObj->IsSymDef())
 			{
