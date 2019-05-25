@@ -43,6 +43,9 @@ void GdtfUnittest::WriteFile()
 	IGdtfFixturePtr gdtfWrite (IID_IGdtfFixture);
     
     MvrUUID uuid		(225204211	, 177198167	, 1575790	, 96627);
+
+    checkifTrue("Check UUID exual operator: ", uuid == uuid); // XXX TODO: not sure if this is the best place here.
+
 	MvrUUID linkedUuid	(2227440	, 1542265	, 1573622	, 2328410);
     if(__checkVCOM(gdtfWrite->OpenForWrite(fTestGdtf_Path.c_str(),"My FixtureName","My Manufacturer", uuid)))
     {
