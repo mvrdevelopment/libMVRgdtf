@@ -59,6 +59,14 @@ namespace VectorworksMVR
 	{
 		MvrUUID(Uint32 a,Uint32 b,Uint32 c,Uint32 d) { this->a = a; this->b = b; this->c = c; this->d = d;}
 		Uint32 a, b, c, d;
+
+        bool operator== (const MvrUUID& uuid) const 
+        {
+            return ((this->a == uuid.a) &&
+                (this->b == uuid.b) &&
+                (this->c == uuid.c) &&
+                (this->d == uuid.d));                          
+        }
 	};
 	
 	//-------------------------------------------------------------------------------------------------------------
