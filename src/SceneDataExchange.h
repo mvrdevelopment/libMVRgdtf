@@ -18,12 +18,13 @@ namespace SceneData
 	class SceneDataGroupObj;
 	class SceneDataGeoInstanceObj;
 	class SceneDataLayerObj;
-	
-	typedef SceneDataGeoInstanceObj*				SceneDataGeoInstanceObjPtr;
-	typedef std::vector<SceneDataGeoInstanceObjPtr>	SceneDataGeometryObjArray;
-	typedef std::vector<IFileIdentifierPtr>			TFileIdentifierPtrArray;
-	typedef std::vector<IFolderIdentifierPtr>		TFolderIdentifierArray;
-	
+    class SceneDataSymDefObj;
+
+	typedef SceneDataGeoInstanceObj*				    SceneDataGeoInstanceObjPtr;
+	typedef std::vector<SceneDataGeoInstanceObjPtr>	    SceneDataGeometryObjArray;
+	typedef std::vector<IFileIdentifierPtr>			    TFileIdentifierPtrArray;
+	typedef std::vector<IFolderIdentifierPtr>		    TFolderIdentifierArray;
+    typedef std::map<TXString, SceneDataSymDefObj*>     TSymDefMap;
 	
 	enum ESceneDataGUIDType : short
 	{
@@ -607,7 +608,7 @@ namespace SceneData
 		TFolderIdentifierArray				fGdtfFolderLocations;
 		
 		// Resolve map
-		std::map<TXString, SceneDataSymDefObjPtr> fSymDefMap;
+		TSymDefMap fSymDefMap;
 		
 		//
 		size_t							fCountExportedGeometryProviders;
