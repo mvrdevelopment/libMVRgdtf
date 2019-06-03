@@ -412,7 +412,7 @@ void SceneDataSymDefObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataE
 		}
 		else
 		{
-			DSTOP((kEveryone, "Invalid Node"));
+			ASSERTN(kEveryone, childNodeName == XML_Val_GeometryObjectNodeName || childNodeName == XML_Val_SymbolObjectNodeName);
 		}								
 	}
 	);
