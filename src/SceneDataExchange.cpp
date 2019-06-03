@@ -393,26 +393,29 @@ void SceneDataSymDefObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataE
 	
     //-----------------------------------------------------------------------------
     // Child geomtries
-    GdtfConverter::TraverseNodes(pNode, XML_Val_ChildObsNodeName, XML_Val_GeometryObjectNodeName, [this, exchange] (IXMLFileNodePtr pNode) -> void
-								 {
-				                    SceneDataGeometryObjPtr geometry = new SceneDataGeometryObj();
-				                    geometry->ReadFromNode(pNode, exchange);
-				                    fGeometries.push_back(geometry);								 
-                                 }
-								 );
-    //-----------------------------------------------------------------------------
-    // Child symbols	
-    GdtfConverter::TraverseNodes(pNode, XML_Val_ChildObsNodeName, XML_Val_SymbolObjectNodeName, [exchange, this] (IXMLFileNodePtr pNode) -> void
-								 {
-				                    TXString uuidSymbol;
-				                    pNode->GetNodeAttributeValue(XML_Val_GuidAttrName,			uuidSymbol);				
-				
-				                    SceneDataSymbolObjPtr symbol = new SceneDataSymbolObj(uuidSymbol);
-				                    symbol->ReadFromNode(pNode, exchange);
-				                    fGeometries.push_back(symbol);								 
-                                 }
-								 );
-    //-----------------------------------------------------------------------------
+	GdtfConverter::TraverseMultiNodes(pNode, XML_Val_ChildObsNodeName, [this, exchange] (IXMLFileNodePtr objNode, const TXString& childNodeName) -> void
+	{
+		if(XML_Val_GeometryObjectNodeName == childNodeName)
+		{
+			SceneDataGeometryObjPtr geometry = new SceneDataGeometryObj();
+			geometry->ReadFromNode(objNode, exchange);
+			fGeometries.push_back(geometry);
+		}
+		else if(XML_Val_SymbolObjectNodeName == childNodeName)
+		{
+			TXString uuidSymbol;
+			objNode->GetNodeAttributeValue(XML_Val_GuidAttrName,			uuidSymbol);				
+
+			SceneDataSymbolObjPtr symbol = new SceneDataSymbolObj(uuidSymbol);
+			symbol->ReadFromNode(objNode, exchange);
+			fGeometries.push_back(symbol);		
+		}
+		else
+		{
+			DSTOP((kEveryone, "Invalid Node"));
+		}								
+	}
+	);
 }
 
 TXString SceneDataSymDefObj::GetNodeName()
