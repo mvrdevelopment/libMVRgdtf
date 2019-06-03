@@ -2354,10 +2354,10 @@ void SceneDataExchange::ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xml
         TSymDefMap::iterator it = fSymDefMap.begin();
         while(it != fSymDefMap.end())
         {
-            TXString symNam = it->first;
+            TXString symNam 			 = it->first;
             SceneDataSymDefObjPtr symDef = it->second;
 
-            for (SceneDataGeoInstanceObjPtr geoObj : symDef->getGeometryArray())  // XXX: capsulate 
+            for (SceneDataGeoInstanceObjPtr geoObj : symDef->getGeometryArray()) 
             {
                 if (geoObj->IsSymDef())
                 {
@@ -2365,17 +2365,14 @@ void SceneDataExchange::ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xml
 				    SceneDataSymDefObjPtr ptr    = fSymDefMap[symObj->GetUnresolvedSymDef()];
 				
 				    ASSERTN(kEveryone, ptr);
-				    if(ptr) 
-                    { 
-                        symObj->SetSymDef(ptr); 
-                    }
+				    if(ptr) { symObj->SetSymDef(ptr); }
                 }            
             }
 
             it++;
         }
 
-		for(SceneDataGeoInstanceObjPtr geoObj : scObj->GetGeometryArr())        // XXX: capsulate 
+		for(SceneDataGeoInstanceObjPtr geoObj : scObj->GetGeometryArr())  
 		{
 			if(geoObj->IsSymDef())
 			{
