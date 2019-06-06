@@ -50,13 +50,6 @@ namespace VectorworksMVR
 		double f_Y;
 	};
 
-    struct RgbColor
-	{
-		double fr;
-		double fg;
-		double fb;
-	};
-
 	struct RGBColor
 	{
 		Uint16 r, g, b;
@@ -1117,8 +1110,8 @@ namespace VectorworksMVR
     class DYNAMIC_ATTRIBUTE IUtility : public IVWUnknown
     {
 		public:
-        virtual VCOMError VCOM_CALLTYPE     CieToRgb(const CieColor& color, RgbColor& out) = 0;
-        virtual VCOMError VCOM_CALLTYPE     RgBToCie(const RgbColor& color, CieColor& out) = 0;
+        virtual VCOMError VCOM_CALLTYPE     CieToRgb(const CieColor& color, RGBColor& out) = 0;
+        virtual VCOMError VCOM_CALLTYPE     RgBToCie(const RGBColor& color, CieColor& out) = 0;
     };
     typedef VCOMPtr<IUtility>	IIUtilityPtr;
     const   VWIID IID_IUtility = { 0x706cb180, 0xcd45, 0x4a9a, {0xab, 0xdc, 0x62, 0xab, 0x5f, 0xfe, 0x37, 0x6b}};
