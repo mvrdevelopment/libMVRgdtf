@@ -41,6 +41,8 @@
 #include "Implementation/CGdtfMeasurement.h"
 #include "Implementation/CGdtfFilter.h"
 #include "Implementation/CGdtfColorSpace.h"
+#include "Implementation/CUtility.h"
+
 
 // XML
 #include "XMLLib/XMLFileNodeImpl.h"
@@ -145,6 +147,8 @@ extern "C" VectorworksMVR::VCOMError VW_EXPORT VWQueryInterface(const Vectorwork
 	else if (iid == XML::IID_XMLFile)
 		resultInterface = new XML::CXMLFileImpl();
 	else if (iid == XML::IID_XMLFileNode)
+		resultInterface = new XML::CXMLFileNodeImpl();
+    else if (iid == VectorworksMVR::IID_IUtility)
 		resultInterface = new XML::CXMLFileNodeImpl();
 	
 	// determine the result values
