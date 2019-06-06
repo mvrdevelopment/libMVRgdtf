@@ -52,7 +52,7 @@ namespace VectorworksMVR
 
 	struct RGBColor
 	{
-		Uint16 r, g, b;
+		Uint8 r, g, b;
 	};
 	
 	struct MvrUUID
