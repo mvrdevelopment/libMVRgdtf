@@ -18,9 +18,7 @@
 #include "EmptyAttributeTest4.h"
 #include "XmlConversionTest.h"
 #include "CustomCharTest.h"
-
-
-
+#include "UtilityTest.h"
 
 using namespace VectorworksMVR;					
 
@@ -69,7 +67,10 @@ int main(int argc, char* argv[])
 	GdtfCustomCharTest test8 (base);
 	bool test8_ok = test8.RunTest();
 
-    return  (mvrFailed || gdtfFailed || gdtfDmxFailed || errorFailed || modeMasterFailed || test1_ok || test2_ok|| test3_ok || test4_ok || test5_ok || test6_ok || test7_ok || test8_ok);
+	UtilityTest test9 (base);
+	bool test9_ok = test9.RunTest();
+
+    return  (mvrFailed || gdtfFailed || gdtfDmxFailed || errorFailed || modeMasterFailed || test1_ok || test2_ok|| test3_ok || test4_ok || test5_ok || test6_ok || test7_ok || test8_ok || test9_ok);
 }
 
 
