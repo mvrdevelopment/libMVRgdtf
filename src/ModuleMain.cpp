@@ -149,7 +149,7 @@ extern "C" VectorworksMVR::VCOMError VW_EXPORT VWQueryInterface(const Vectorwork
 	else if (iid == XML::IID_XMLFileNode)
 		resultInterface = new XML::CXMLFileNodeImpl();
     else if (iid == VectorworksMVR::IID_IUtility)
-		resultInterface = new XML::CXMLFileNodeImpl();
+		resultInterface = new CUtilityImpl();
 	
 	// determine the result values
 	VCOMError result = kVCOMError_Failed;

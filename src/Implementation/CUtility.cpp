@@ -30,8 +30,8 @@ VectorworksMVR::VCOMError VectorworksMVR::CUtilityImpl::RgBToCie(const RGBColor&
 
 		CCieColor cie (rgbColor);
 
-		out.fx = cie.Get_x();
-		out.fy = cie.Get_y();
+		out.fx  = cie.Get_x();
+		out.fy  = cie.Get_y();
 		out.f_Y = cie.Get_Y_luminance();
 
 	return kVCOMError_NoError;
