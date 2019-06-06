@@ -51,6 +51,7 @@
     <ClCompile Include="..\unittest\MvrUnittest.cpp" />
     <ClCompile Include="..\unittest\Unittest.cpp" />
     <ClCompile Include="..\unittest\Utility.cpp" />
+    <ClCompile Include="..\unittest\UtilityTest.cpp" />
     <ClCompile Include="..\unittest\XmlConversionTest.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -70,6 +71,7 @@
     <ClInclude Include="..\unittest\MvrUnittest.h" />
     <ClInclude Include="..\unittest\Unittest.h" />
     <ClInclude Include="..\unittest\Utility.h" />
+    <ClInclude Include="..\unittest\UtilityTest.h" />
     <ClInclude Include="..\unittest\XmlConversionTest.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
