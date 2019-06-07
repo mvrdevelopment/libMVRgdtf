@@ -849,7 +849,7 @@ SceneDataFixtureObj::SceneDataFixtureObj(const SceneDataGUID& guid) : SceneDataO
 {
 	fFocusPoint		= nullptr;
 	fPosition		= nullptr;
-	fColor			= CRGBColor(255,255,255);
+	fColor			= CCieColor(0.312712,0.329008,100.0);
 	fUnitNumber		= 0;
 	fFixtureTypeId	= 0;
 	fCustomId		= 0;
