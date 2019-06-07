@@ -30,11 +30,11 @@ bool UtilityTest::ExecuteTest()
 	rgb.b = 255;
 	CieColor cie;
 	__checkVCOM(util->RgBToCie(rgb, cie));
-	__checkVCOM(util->CieToRgb(cie, rgb));
 
-	this->checkifEqual("R", rgb.r, (Sint32)255 );
-	this->checkifEqual("G", rgb.g, (Sint32)255 );
-	this->checkifEqual("B", rgb.b, (Sint32)255 );
+	RGBColor rgb_back;
+	__checkVCOM(util->CieToRgb(cie, rgb_back));
+
+	this->checkifEqual("Color To RGB", rgb_back, rgb );
 
     return true;
 }

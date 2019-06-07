@@ -26,7 +26,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CUtilityImpl::CieToRgb(const CieColor&
 
 VectorworksMVR::VCOMError VectorworksMVR::CUtilityImpl::RgBToCie(const RGBColor& color, CieColor& out)
 {
-		CCieColor cie (color.r, color.g, color.b);
+		CCieColor cie (VWFC::Tools::CRGBColor( color.r, color.g, color.b ));
 		out.fx  = cie.Get_x();
 		out.fy  = cie.Get_y();
 		out.f_Y = cie.Get_Y_luminance();
