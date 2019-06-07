@@ -32,9 +32,9 @@ bool UtilityTest::ExecuteTest()
 	__checkVCOM(util->RgBToCie(rgb, cie));
 	__checkVCOM(util->CieToRgb(cie, rgb));
 
-	this->checkifEqual("R", rgb.r, (Uint8)255 );
-	this->checkifEqual("G", rgb.g, (Uint8)255 );
-	this->checkifEqual("B", rgb.b, (Uint8)255 );
+	this->checkifEqual("R", rgb.r, (Sint32)255 );
+	this->checkifEqual("G", rgb.g, (Sint32)255 );
+	this->checkifEqual("B", rgb.b, (Sint32)255 );
 
     return true;
 }
