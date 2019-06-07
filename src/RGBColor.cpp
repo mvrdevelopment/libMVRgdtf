@@ -6,7 +6,7 @@
 #include "Prefix/StdAfx.h"
 #include "RGBColor.h"
 
-using namespace VWFC::Tools;
+using namespace VectorworksMVR;
 
 CRGBColor::CRGBColor()
 {
