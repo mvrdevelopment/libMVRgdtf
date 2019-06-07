@@ -3,6 +3,7 @@
 //-----------------------------------------------------------------------------
 #include "Unittest.h"
 #include <iostream>
+#include <cmath>
 
 using namespace VectorworksMVR;
 
@@ -228,6 +229,27 @@ void Unittest::checkifEqual(const std::string& check, const VectorworksMVR::CieC
 	fFailedTests.push_back(test);
 };
 
+void Unittest::checkifEqual(const std::string& check, const VectorworksMVR::RGBColor val1, const VectorworksMVR::RGBColor val2)
+{
+	if ( Equalish(val1.r,val2.r,1) && Equalish(val1.g,val2.g,1) && Equalish(val1.b,val2.b,1) ) return;
+
+	// Else Log the error
+	fFailed = true;
+
+	UnittestFailObject test;
+	test.fMessage += check;
+	test.fMessage += " Result: ";
+	test.fMessage += "(" + std::to_string(val1.r) + "), ";
+	test.fMessage += "(" + std::to_string(val1.g) + "), ";
+	test.fMessage += "(" + std::to_string(val1.b) + "), ";
+	test.fMessage += " Expected: ";
+	test.fMessage += "(" + std::to_string(val2.r) + "), ";
+	test.fMessage += "(" + std::to_string(val2.g) + "), ";
+	test.fMessage += "(" + std::to_string(val2.b) + "), ";
+
+	fFailedTests.push_back(test);
+};
+
 void Unittest::checkifEqual(const std::string& check, const std::string& aspected, const std::string& result)
 {
 	if (aspected == result) return;
@@ -374,3 +396,8 @@ void Unittest::checkifUnEqual(const std::string& check, const VectorworksMVR::Mv
 
 	fFailedTests.push_back(test);
 };
+
+bool Unittest::Equalish(double val1, double val2, double epislon)
+{
+	return (std::abs(val1 - val2) <= epislon);
+}

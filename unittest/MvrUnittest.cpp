@@ -183,6 +183,12 @@ void MvrUnittest::WriteFile()
 
 void MvrUnittest::ReadFile()
 {
+
+	CieColor defaultColor;
+	defaultColor.fx  = 0.312712;
+	defaultColor.fy  = 0.329008;
+	defaultColor.f_Y = 100.0;
+
 	//------------------------------------------------------------------------------------------------
 	// Create Pointer to MVR Interface
 	IMediaRessourceVectorInterfacePtr mvrRead( IID_MediaRessourceVectorInterface );
@@ -335,12 +341,8 @@ void MvrUnittest::ReadFile()
 					checkifEqual("GetUnitNumber", unitNumb, 0);
 
 					CieColor resultColor;
-					CieColor color;
-					color.fx  = 0;
-					color.fy  = 0;
-					color.f_Y = 0;
 					sceneObj->GetColor(resultColor);
-					checkifEqual("GetColor", resultColor, color);
+					checkifEqual("GetColor", resultColor, defaultColor);
 
 					Sint8 fixtureTypeId;
 					sceneObj->GetFixtureTypeId(fixtureTypeId);
@@ -396,12 +398,8 @@ void MvrUnittest::ReadFile()
 					checkifEqual("GetUnitNumber", unitNumb, 0);
 
 					CieColor resultColor;
-					CieColor color;
-					color.fx  = 0;
-					color.fy  = 0;
-					color.f_Y = 0;
 					sceneObj->GetColor(resultColor);
-					checkifEqual("GetColor", resultColor, color);
+					checkifEqual("GetColor", resultColor, defaultColor);
 
 					Sint8 fixtureTypeId;
 					sceneObj->GetFixtureTypeId(fixtureTypeId);
@@ -457,12 +455,8 @@ void MvrUnittest::ReadFile()
 					checkifEqual("GetUnitNumber", unitNumb, 0);
 
 					CieColor resultColor;
-					CieColor color;
-					color.fx  = 0;
-					color.fy  = 0;
-					color.f_Y = 0;
 					sceneObj->GetColor(resultColor);
-					checkifEqual("GetColor", resultColor, color);
+					checkifEqual("GetColor", resultColor, defaultColor);
 
 					Sint8 fixtureTypeId;
 					sceneObj->GetFixtureTypeId(fixtureTypeId);
