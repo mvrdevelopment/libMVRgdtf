@@ -413,6 +413,7 @@ GdtfAttribute::GdtfAttribute()
 	fFeature            = nullptr;
     fMainAttribute      = nullptr;
     fPhysicalUnit       = EGdtfPhysicalUnit::None;
+	fHasColor 			= false;
 
 }
 
@@ -424,6 +425,7 @@ GdtfAttribute::GdtfAttribute(const TXString& name, const TXString& prettyName)
 	fFeature            = nullptr;    
     fMainAttribute      = nullptr;
     fPhysicalUnit       = EGdtfPhysicalUnit::None;
+	fHasColor 			= false;
 }
 
 GdtfAttribute::~GdtfAttribute()
@@ -461,6 +463,7 @@ void SceneData::GdtfAttribute::SetPhysicalUnit(EGdtfPhysicalUnit unit)
 
 void SceneData::GdtfAttribute::SetColor(const CCieColor & col)
 {
+	fHasColor = true;
     fColor = col;
 }
 
@@ -479,9 +482,9 @@ void GdtfAttribute::OnPrintToFile(IXMLFileNodePtr pNode)
 	if (fActivationGroup)	{ pNode->SetNodeAttributeValue(XML_GDTF_AttributeActGroup,	fActivationGroup->GetNodeReference()); }
 	if (fFeature)			{ pNode->SetNodeAttributeValue(XML_GDTF_AttributeFeature,	fFeature->GetNodeReference() );	}	
     if (fMainAttribute)     { pNode->SetNodeAttributeValue(XML_GDTF_AttributefMainAttribute, fMainAttribute->GetNodeReference()); }
-	
+	if(fHasColor) 			{ pNode->SetNodeAttributeValue(XML_GDTF_AttributeColor, GdtfConverter::ConvertColor(fColor)); }
+
     pNode->SetNodeAttributeValue(XML_GDTF_AttributePhysicalUnit, GdtfConverter::ConvertPhysicalUnitEnum(fPhysicalUnit));
-    pNode->SetNodeAttributeValue(XML_GDTF_AttributeColor, GdtfConverter::ConvertColor(fColor));
 	
 }
 
@@ -501,8 +504,13 @@ void GdtfAttribute::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	pNode->GetNodeAttributeValue(XML_GDTF_AttributeFeature, fUnresolvedFeature);   
     pNode->GetNodeAttributeValue(XML_GDTF_AttributefMainAttribute, fUnresolvedMainAttrib);
     TXString physicalUnitStr; pNode->GetNodeAttributeValue(XML_GDTF_AttributePhysicalUnit, physicalUnitStr); 	GdtfConverter::ConvertPhysicalUnitEnum(physicalUnitStr, pNode, fPhysicalUnit);
-    TXString colorStr;        pNode->GetNodeAttributeValue(XML_GDTF_AttributeColor, colorStr); 					GdtfConverter::ConvertColor(colorStr, pNode, fColor);
-	
+
+	TXString colorStr; 
+	if(VCOM_SUCCEEDED(pNode->GetNodeAttributeValue(XML_GDTF_AttributeColor, colorStr)))
+	{
+		GdtfConverter::ConvertColor(colorStr, pNode, fColor);
+		fHasColor = true;
+	}	
 }
 
 void GdtfAttribute::OnErrorCheck(const IXMLFileNodePtr& pNode)
@@ -555,6 +563,11 @@ GdtfActivationGroupPtr GdtfAttribute::GetActivationGroup() const
 GdtfFeaturePtr GdtfAttribute::GetFeature() const
 {
 	return fFeature;
+}
+
+bool GdtfAttribute::HasColor() const
+{
+	return fHasColor;
 }
 
 void GdtfAttribute::SetFeature(GdtfFeaturePtr newFeat)

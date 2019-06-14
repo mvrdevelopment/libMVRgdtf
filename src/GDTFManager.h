@@ -224,6 +224,7 @@ namespace SceneData
         GdtfAttribute*          fMainAttribute;
         EGdtfPhysicalUnit       fPhysicalUnit;
         CCieColor               fColor;
+		bool					fHasColor;
 		//		
 		
 	private:
@@ -241,6 +242,7 @@ namespace SceneData
         GdtfAttribute*                  GetMainAttribute();
         EGdtfPhysicalUnit               GetPhysicalUnit();
         CCieColor                       GetColor();		
+		bool                       		HasColor() const;	
         // Setter
 		void							SetName(const TXString& name);
 		void							SetPrettyName(const TXString& name);
