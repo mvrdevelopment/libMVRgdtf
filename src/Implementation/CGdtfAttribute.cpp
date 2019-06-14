@@ -184,7 +184,8 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfAttributeImpl::GetPhysicalUnit(Gd
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfAttributeImpl::GetColor(CieColor & col)
 {
 	// Check Data
-	if( ! fAttribute) return kVCOMError_NotInitialized;
+	if( ! fAttribute)             return kVCOMError_NotInitialized;
+    if( ! fAttribute->HasColor()) return kVCOMError_NotSet;
 		
     col.fx   = fAttribute->GetColor().Get_x();
     col.fy   = fAttribute->GetColor().Get_y();

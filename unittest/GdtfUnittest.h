@@ -26,4 +26,6 @@ private:
     std::string GetTestSVG_Model();
     std::string GetTest3DS_Model();
     std::string GetTestWheel_PNG();
+
+    void CheckAttibute(VectorworksMVR::IGdtfAttributePtr attribute, bool hasColor);
 };
