@@ -1,6 +1,7 @@
 ##
 ##	Makefile for libVectorworksMvrGdtf
 ##
+include Makefile.defs
 
 
 # set library name
@@ -135,8 +136,13 @@ all: $(TargetLib)
 # UnitTest
 test: $(TargetTest)
 
-# Xerces Build
-xerces: 
+# compiled utils
+share: 
+	cd share && make
+
+# clean compiled utils
+cleanshare: 
+	cd share && make clean
 
 # CLEAN
 clean:
