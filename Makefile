@@ -158,7 +158,7 @@ cleandependencies:
 $(TargetTestName): $(SRC_UNIT)
 	@echo "Building $@ ..."
 	@echo $(SRC_UNIT)
-	$(CXX) $(CXXFLAGSUNITTEST) $^ -o $(BINDIR)/$@ -I$(SRCDIR) -L$(LIBPATH) -l$(TargetLibName) -l$(XERCESLIBNAME) $(LINKWITHLIBS)
+	$(CXX) $(CXXFLAGSUNITTEST) $^ -o $(BINDIR)/$@ -I$(SRCDIR) -L$(LIBPATH) -Lshared/$(SHAREDLIBDIR) -l$(TargetLibName) -l$(XERCESLIBNAME) $(LINKWITHLIBS)
 	@./$(BINDIR)/$@
 
 # Mac Linux
