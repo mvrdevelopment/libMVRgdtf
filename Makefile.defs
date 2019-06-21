@@ -8,7 +8,11 @@
 #--------------------------------------------------------------------------------------
 
 #   director for builded programs/libs
-SHAREDIR = $(shell pwd)/builds
+SHAREDDIR        = $(shell pwd)
+SHAREDBUILDSDIR  = builds
+SHAREDLIBDIR     = lib
+SHAREDINCDIR     = include
+SHAREDBINDIR     = bin
 
 #--------------------------------------------------------------------------------------
 #   Xercex-C

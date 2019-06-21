@@ -137,8 +137,9 @@ all: $(TargetLib)
 test: $(TargetTest)
 
 # compiled utils
-share: 
-	cd share && echo $(SHAREDIR) && $(MAKE)
+dependencies: 
+	cd shared && echo $(SHAREDDIR) && $(MAKE)
+
 
 .PHONY: clean cleanshare
 
@@ -148,8 +149,8 @@ clean:
 	$(RM)
 
 # clean compiled utils
-cleanshare: 
-	cd share && $(MAKE) clean
+cleandependencies: 
+	cd shared && $(MAKE) clean
 
 # Mac Linux
 $(TargetTestName): $(SRC_UNIT)
