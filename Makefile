@@ -138,7 +138,7 @@ test: $(TargetTest)
 
 # compiled utils
 dependencies: 
-	cd shared && echo $(SHAREDDIR) && $(MAKE)
+	cd shared && $(MAKE)
 
 
 .PHONY: clean cleanshare
