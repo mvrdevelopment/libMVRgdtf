@@ -22,7 +22,7 @@ xerces: dir
 				wget -N http://archive.apache.org/dist/xerces/c/3/sources/xerces-c-$(XERCES_VERSION).tar.gz ; \
 			fi ; \
 			if [ ! -d $(SHAREDBUILDSDIR)/xerces-c-$(XERCES_VERSION) ] ; then \
-					cd $(SHAREDBUILDSDIR)/ && tar -xzvf ../xerces-c-$(XERCES_VERSION).tar.gz 1>/dev/null && cd .. ; \
+					cd $(SHAREDBUILDSDIR)/ && tar -xzf ../xerces-c-$(XERCES_VERSION).tar.gz 1>/dev/null && cd .. ; \
 			fi ; \
 			cd $(SHAREDBUILDSDIR)/xerces-c-$(XERCES_VERSION) && ./configure --prefix=$(SHAREDDIR) && $(MAKE) && $(MAKE) install && cd ../.. ; \
 			echo "===============================================================";\
