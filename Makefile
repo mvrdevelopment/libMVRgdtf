@@ -138,16 +138,18 @@ test: $(TargetTest)
 
 # compiled utils
 share: 
-	cd share && make
+	cd share && echo $(SHAREDIR) && $(MAKE)
 
-# clean compiled utils
-cleanshare: 
-	cd share && make clean
+.PHONY: clean cleanshare
 
 # CLEAN
 clean:
 	@echo "Cleaning $(BINDIR)/ and $(OBJDIR)/ ...  "
 	$(RM)
+
+# clean compiled utils
+cleanshare: 
+	cd share && $(MAKE) clean
 
 # Mac Linux
 $(TargetTestName): $(SRC_UNIT)
