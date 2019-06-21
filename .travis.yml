@@ -32,4 +32,5 @@ matrix:
 
 script:
 - make
+- make dependencies
 - make test
