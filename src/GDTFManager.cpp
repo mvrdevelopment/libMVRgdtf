@@ -4028,8 +4028,11 @@ void GdtfPhysicalEmitter::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	TXStringArray optional;
 	needed.push_back(XML_GDTF_EmitterName);
 	needed.push_back(XML_GDTF_EmitterColor);
-    needed.push_back(XML_GDTF_EmitterDominantWaveLength);
-    needed.push_back(XML_GDTF_EmitterDiodePart);
+	    
+		
+	optional.push_back(XML_GDTF_EmitterDominantWaveLength);
+    optional.push_back(XML_GDTF_EmitterDiodePart);
+
 	
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
