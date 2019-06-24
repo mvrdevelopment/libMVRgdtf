@@ -24,7 +24,7 @@ xerces: dir
 			if [ ! -d $(SHAREDBUILDSDIR)/xerces-c-$(XERCES_VERSION) ] ; then \
 					cd $(SHAREDBUILDSDIR)/ && tar -xzf ../xerces-c-$(XERCES_VERSION).tar.gz 1>/dev/null && cd .. ; \
 			fi ; \
-			cd $(SHAREDBUILDSDIR)/xerces-c-$(XERCES_VERSION) && ./configure --prefix=$(SHAREDDIR) && $(MAKE) && $(MAKE) install && cd ../.. && rm lib/libxerces-c-3.1.so && rm lib/libxerces-c.so && rm lib/libxerces-c.la; \
+			cd $(SHAREDBUILDSDIR)/xerces-c-$(XERCES_VERSION) && ./configure --prefix=$(SHAREDDIR) && $(MAKE) && $(MAKE) install && cd ../.. ; \
 			echo "===============================================================";\
 			echo "= X e r c e s - C   D O N E                                   =";\
 			echo "===============================================================";\
