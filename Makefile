@@ -64,7 +64,7 @@ else
 		LIBDIR_PLAT		= lin
 		XERCESLIBNAME	= xerces-c
 		LIBPATH			= libs/lin/release
-		EXTLIBPATH		= $(SHAREDDIR)/$(SHAREDLIBDIR)
+		EXTLIBPATH		= shared/$(SHAREDLIBDIR)
 		LINKWITHLIBS 	+= -luuid -lpthread
 		RM				= rm -rf $(BINDIR)/*; rm -rf $(OBJDIR)/*; \
 						rm -f $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)/lib$(TargetLib)
@@ -75,9 +75,9 @@ else
 		LDFLAGS			+=
 		libExt			= .a
 		LIBDIR_PLAT		= mac
-		XERCESLIBNAME	= xerces-c #Xerces
+		XERCESLIBNAME	= xerces-c
 		LIBPATH			= libs/mac/release
-		EXTLIBPATH		= $(SHAREDDIR)/$(SHAREDLIBDIR)
+		EXTLIBPATH		= shared/$(SHAREDLIBDIR)
 		LINKWITHLIBS 	+= -lpthread -framework CoreServices -framework CoreFoundation
 		RM				= rm -rf $(BINDIR)/*; rm -rf $(OBJDIR)/*; \
 						rm -f $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)/lib$(TargetLib)
