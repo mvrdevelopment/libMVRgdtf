@@ -31,6 +31,6 @@ matrix:
         - CMD //C "runMSBuild.bat"
 
 script:
-- make dependencies
-- make
+- make dependencies -j 2
+- make -j 2
 - make test
