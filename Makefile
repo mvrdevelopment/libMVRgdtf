@@ -78,7 +78,7 @@ else
 		XERCESLIBNAME	= xerces-c
 		LIBPATH			= libs/mac/release
 		EXTLIBPATH		= shared/$(SHAREDLIBDIR)
-		LINKWITHLIBS 	+= -lpthread -framework CoreServices -framework CoreFoundation
+		LINKWITHLIBS 	+= -lpthread -lcurl -framework CoreServices -framework CoreFoundation
 		RM				= rm -rf $(BINDIR)/*; rm -rf $(OBJDIR)/*; \
 						rm -f $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)/lib$(TargetLib)
     endif
