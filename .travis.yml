@@ -8,26 +8,14 @@ matrix:
     - env: Ubuntu Build
       sudo: required
       dist: xenial
-      addons:
-        apt:
-          packages:
-          - libicu-dev
     - env: Ubuntu Build
       sudo: required
       dist: xenial
       compiler: clang
-      addons:
-        apt:
-          packages:
-          - libicu-dev
     - env: Ubuntu Build
       sudo: required
       dist: bionic
       compiler: gcc
-      addons:
-        apt:
-          packages:
-          - libicu-dev
     # Xcode 9.4 g++
     - env: OSX_VERSION=10.10
       osx_image: xcode8.3
