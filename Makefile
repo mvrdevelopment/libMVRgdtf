@@ -65,7 +65,7 @@ else
 		XERCESLIBNAME	= xerces-c
 		LIBPATH			= libs/lin/release
 		EXTLIBPATH		= shared/$(SHAREDLIBDIR)
-		LINKWITHLIBS 	+= -luuid -lpthread
+		LINKWITHLIBS 	+= -luuid -lpthread -lcurl
 		RM				= rm -rf $(BINDIR)/*; rm -rf $(OBJDIR)/*; \
 						rm -f $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)/lib$(TargetLib)
     endif
@@ -172,7 +172,7 @@ $(TargetLibName).a: $(OBJECTS)
 $(OBJDIR)/%.o : %.cpp
 	@echo "Compiling:	" $<
 	@mkdir -p $(OBJDIR)
-	$(CXX) $(CXXFLAGS) -I$(SRCDIR) -I$(SRCDIR)/../shared/$(SHAREDINCDIR) -c $< -o $@
+	$(CXX) $(CXXFLAGS) -I$(SRCDIR) -Ishared/$(SHAREDINCDIR) -c $< -o $@
 
 
 # Include Header-Dependencies (stored as ".d" Makefile fragments files
