@@ -65,7 +65,7 @@ else
 		XERCESLIBNAME	= xerces-c
 		LIBPATH			= libs/lin/release
 		EXTLIBPATH		= shared/$(SHAREDLIBDIR)
-		LINKWITHLIBS 	+= -luuid -lpthread -lcurl -liconv
+		LINKWITHLIBS 	+= -luuid -lpthread -lcurl -licu
 		RM				= rm -rf $(BINDIR)/*; rm -rf $(OBJDIR)/*; \
 						rm -f $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)/lib$(TargetLib)
     endif
