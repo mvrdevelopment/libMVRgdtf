@@ -64,8 +64,8 @@ else
 		LIBDIR_PLAT		= lin
 		XERCESLIBNAME	= xerces-c
 		LIBPATH			= libs/lin/release
-		EXTLIBPATH		= $(SHAREDDIR)/$(SHAREDLIBDIR)
-		LINKWITHLIBS 	+= -luuid -lpthread
+		EXTLIBPATH		= shared/$(SHAREDLIBDIR)
+		LINKWITHLIBS 	+= -luuid -lpthread -lcurl -licuuc
 		RM				= rm -rf $(BINDIR)/*; rm -rf $(OBJDIR)/*; \
 						rm -f $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)/lib$(TargetLib)
     endif
@@ -75,10 +75,10 @@ else
 		LDFLAGS			+=
 		libExt			= .a
 		LIBDIR_PLAT		= mac
-		XERCESLIBNAME	= xerces-c #Xerces
+		XERCESLIBNAME	= xerces-c
 		LIBPATH			= libs/mac/release
-		EXTLIBPATH		= $(SHAREDDIR)/$(SHAREDLIBDIR)
-		LINKWITHLIBS 	+= -lpthread -framework CoreServices -framework CoreFoundation
+		EXTLIBPATH		= shared/$(SHAREDLIBDIR)
+		LINKWITHLIBS 	+= -lpthread -lcurl -framework CoreServices -framework CoreFoundation
 		RM				= rm -rf $(BINDIR)/*; rm -rf $(OBJDIR)/*; \
 						rm -f $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)/lib$(TargetLib)
     endif
@@ -158,7 +158,7 @@ cleandependencies:
 $(TargetTestName): $(SRC_UNIT)
 	@echo "Building $@ ..."
 	@echo $(SRC_UNIT)
-	$(CXX) $(CXXFLAGSUNITTEST) $^ -o $(BINDIR)/$@ -I$(SRCDIR) -L$(LIBPATH) -Lshared/$(SHAREDLIBDIR) -l$(TargetLibName) -l$(XERCESLIBNAME) $(LINKWITHLIBS)
+	$(CXX) $(CXXFLAGSUNITTEST) $^ -I$(SRCDIR) -Ishared/$(SHAREDINCDIR) -o $(BINDIR)/$@ -L$(LIBPATH) -Lshared/$(SHAREDLIBDIR) -l$(TargetLibName) -l$(XERCESLIBNAME) $(LINKWITHLIBS)
 	@./$(BINDIR)/$@
 
 # Mac Linux
@@ -172,7 +172,7 @@ $(TargetLibName).a: $(OBJECTS)
 $(OBJDIR)/%.o : %.cpp
 	@echo "Compiling:	" $<
 	@mkdir -p $(OBJDIR)
-	$(CXX) $(CXXFLAGS) -I$(SRCDIR) -I$(SRCDIR)/../shared/$(SHAREDINCDIR) -c $< -o $@
+	$(CXX) $(CXXFLAGS) -I$(SRCDIR) -Ishared/$(SHAREDINCDIR) -c $< -o $@
 
 
 # Include Header-Dependencies (stored as ".d" Makefile fragments files
