@@ -28,7 +28,7 @@ CXX_FLAGS_CUSTOM	?= 									# custom options
 CXXFLAGSUNITTEST	= -std=c++11	-DGITPATH=\"$(CURDIR)\"	# compiler options unit test
 #LDFLAGS			= -shared								# linker options
 
-
+# libs 
 XERCESLIBNAME	=
 XERCESLIBPATH	=
 
@@ -56,6 +56,11 @@ ifeq ($(OS),Windows_NT)
 		MV 				= move *.o $(OBJDIR)/
 else
     UNAME_S := $(shell uname -s)
+# MSYS (Windows) only used for building xerces
+    ifeq ($(UNAME_S),MINGW64_NT-10.0-17763)
+		XERCES_CONFIGURE_OPTIONS += --enable-netaccessor-winsock --enable-transcoder-windows
+    endif
+
 # Linux
     ifeq ($(UNAME_S),Linux)
 		CXXFLAGS		+= -DGS_LIN=1 -D_LINUX -MMD -MP -fPIC
@@ -141,7 +146,6 @@ test: $(TargetTest)
 # compiled utils
 dependencies: 
 	cd shared && $(MAKE)
-
 
 .PHONY: clean cleandependencies
 
