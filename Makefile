@@ -56,6 +56,7 @@ ifeq ($(OS),Windows_NT)
 		MV 				= move *.o $(OBJDIR)/
 else
     UNAME_S := $(shell uname -s)
+#	Xerces Variables
 # MSYS (Windows) only used for building xerces
     ifeq ($(UNAME_S),MINGW64_NT-10.0-17763)
 		XERCES_CONFIGURE_OPTIONS += --enable-netaccessor-winsock --enable-transcoder-windows
@@ -86,6 +87,7 @@ else
 		LINKWITHLIBS 	+= -lpthread -lcurl -framework CoreServices -framework CoreFoundation
 		RM				= rm -rf $(BINDIR)/*; rm -rf $(OBJDIR)/*; \
 						rm -f $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)/lib$(TargetLib)
+		XERCES_CONFIGURE_OPTIONS += --enable-transcoder-macosunicodeconverter --enable-netaccessor-curl
     endif
 endif
 
