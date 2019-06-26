@@ -17,8 +17,14 @@ mkdir shared\builds
 mkdir shared\lib
 mkdir shared\bin
 mkdir shared\include
-powershell -nologo -noprofile -command "& { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::ExtractToDirectory('shared\xerces-c-3.1.4.zip', 'shared\builds\'); }"
-msys2_shell.cmd -where . -mingw64 -c "make dependencies"
+powershell -nologo -noprofile -command "& { Expand-Archive -Path shared\xerces-c-3.1.4.zip -DestinationPath shared\builds\ -Force; }"
+
+REM build xerces
+cd shared\builds\xerces-c-3.1.4\projects\Win32\VC14\xerces-all\
+MSBuild.exe xerces-all.sln /t:Build /p:Configuration=Release /p:Platform=x64
+cd ..\..\..\..\..\..\..\
+move shared\builds\xerces-c-3.1.4\Build\Win64\VC14\Release\xerces-c_3.lib shared\lib\xerces-c_3.lib
+powershell -nologo -noprofile -command "& { Expand-Archive -Path shared\xerces-c-3.1.4.zip -DestinationPath shared\builds\ -Force; }"
 
 REM build libVectorworksMvrGdtf
 MSBuild.exe libVectorworksMvrGdtf.sln /t:Build /p:Configuration=Release /p:Platform=x64
