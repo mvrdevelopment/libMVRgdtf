@@ -69,9 +69,10 @@ else
 		libExt			= .a
 		XERCESLIBNAME	= xerces-c
 		LIBPATH			= libs
-		LINKWITHLIBS 	+= -luuid -lpthread -licuuc
+		LINKWITHLIBS 	+= -luuid -lpthread
 		RM				= rm -rf $(BINDIR)/*; rm -rf $(OBJDIR)/*; \
 						rm -f $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)/lib$(TargetLib)
+		XERCES_CONFIGURE_OPTIONS += --enable-transcoder-iconv
     endif
 # Mac
     ifeq ($(UNAME_S),Darwin)
