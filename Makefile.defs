@@ -19,4 +19,4 @@ SHAREDBINDIR     = bin
 #--------------------------------------------------------------------------------------
 
 XERCES_VERSION = 3.1.4
-XERCES_CONFIGURE_OPTIONS = --prefix=$(SHAREDDIR) --enable-shared=no
+XERCES_CONFIGURE_OPTIONS = --prefix=$(SHAREDDIR) --enable-shared=no --libdir=$(SHAREDDIR)/../libs --disable-network

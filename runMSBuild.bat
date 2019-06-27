@@ -20,7 +20,7 @@ REM build xerces
 cd shared\builds\xerces-c-3.1.4\projects\Win32\VC14\xerces-all\
 MSBuild.exe xerces-all.sln /t:Build /p:Configuration=Release /p:Platform=x64 /m
 cd ..\..\..\..\..\..\..\
-move shared\builds\xerces-c-3.1.4\Build\Win64\VC14\Release\xerces-c_3.lib shared\lib\xerces-c_3.lib
+move shared\builds\xerces-c-3.1.4\Build\Win64\VC14\Release\xerces-c_3.lib libs\xerces-c_3.lib
 REM build libVectorworksMvrGdtf
 MSBuild.exe libVectorworksMvrGdtf.sln /t:Build /p:Configuration=Release /p:Platform=x64 /m
 x64\Release\libVectorworksMvrGdtfTestApp.exe

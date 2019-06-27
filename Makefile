@@ -59,7 +59,7 @@ else
 #	Xerces Variables
 # MSYS (Windows) only used for building xerces
     ifeq ($(UNAME_S),MINGW64_NT-10.0-17763)
-		XERCES_CONFIGURE_OPTIONS += --enable-netaccessor-winsock --enable-transcoder-windows
+		XERCES_CONFIGURE_OPTIONS += --enable-transcoder-windows
     endif
 
 # Linux
@@ -67,11 +67,9 @@ else
 		CXXFLAGS		+= -DGS_LIN=1 -D_LINUX -MMD -MP -fPIC
 		LDFLAGS			+=
 		libExt			= .a
-		LIBDIR_PLAT		= lin
 		XERCESLIBNAME	= xerces-c
-		LIBPATH			= libs/lin/release
-		EXTLIBPATH		= shared/$(SHAREDLIBDIR)
-		LINKWITHLIBS 	+= -luuid -lpthread -lcurl -licuuc
+		LIBPATH			= libs
+		LINKWITHLIBS 	+= -luuid -lpthread -licuuc
 		RM				= rm -rf $(BINDIR)/*; rm -rf $(OBJDIR)/*; \
 						rm -f $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)/lib$(TargetLib)
     endif
@@ -80,14 +78,12 @@ else
 		CXXFLAGS		+= -DGS_MAC=1 -D__APPLE__ -MMD -MP -mmacosx-version-min=$(OSX_VERSION)
 		LDFLAGS			+=
 		libExt			= .a
-		LIBDIR_PLAT		= mac
 		XERCESLIBNAME	= xerces-c
-		LIBPATH			= libs/mac/release
-		EXTLIBPATH		= shared/$(SHAREDLIBDIR)
+		LIBPATH			= libs
 		LINKWITHLIBS 	+= -lpthread -lcurl -framework CoreServices -framework CoreFoundation
 		RM				= rm -rf $(BINDIR)/*; rm -rf $(OBJDIR)/*; \
 						rm -f $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)/lib$(TargetLib)
-		XERCES_CONFIGURE_OPTIONS += --enable-transcoder-macosunicodeconverter --enable-netaccessor-curl
+		XERCES_CONFIGURE_OPTIONS += --enable-transcoder-macosunicodeconverter
     endif
 endif
 
@@ -164,7 +160,7 @@ cleandependencies:
 $(TargetTestName): $(SRC_UNIT)
 	@echo "Building $@ ..."
 	@echo $(SRC_UNIT)
-	$(CXX) $(CXXFLAGSUNITTEST) $^ -I$(SRCDIR) -Ishared/$(SHAREDINCDIR) -o $(BINDIR)/$@ -L$(LIBPATH) -Lshared/$(SHAREDLIBDIR) -l$(TargetLibName) -l$(XERCESLIBNAME) $(LINKWITHLIBS)
+	$(CXX) $(CXXFLAGSUNITTEST) $^ -I$(SRCDIR) -Ishared/$(SHAREDINCDIR) -o $(BINDIR)/$@ -L$(LIBPATH) -l$(TargetLibName) -l$(XERCESLIBNAME) $(LINKWITHLIBS)
 	@./$(BINDIR)/$@
 
 # Mac Linux
@@ -172,7 +168,7 @@ $(TargetLibName).a: $(OBJECTS)
 	@echo "Linking objects to lib$(TargetLib) ..."
 	@mkdir -p $(BINDIR)
 	@mkdir -p $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)
-	ar rcs $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)/lib$@ $(OBJECTS)
+	ar rcs $(LIBDIR_PRE)/lib$@ $(OBJECTS)
 	@#$(CXX) $(LDFLAGS) -o $(BINDIR)/$@ $(OBJECTS) -Lshared/$(SHAREDLIBDIR) -l$(XERCESLIBNAME) $(LINKWITHLIBS)
 
 $(OBJDIR)/%.o : %.cpp
