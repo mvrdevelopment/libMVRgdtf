@@ -2007,6 +2007,14 @@ TXString& TXString::ftoa(Real64 value, Sint32 precision)
 	return (*this = TXString::ToStringReal(value, precision));
 }
 
+bool TXString::IsCompleteNumber()
+{
+	auto it = stdUStr.begin();
+    while (it != stdUStr.end() && std::isdigit(*it)) ++it;
+    return !stdUStr.empty() && it == stdUStr.end();
+
+}
+
 //=======================================================================================
 /*static*/ TXString TXString::ToStringInt(Sint64 value)
 {
