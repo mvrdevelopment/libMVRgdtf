@@ -88,6 +88,8 @@ void MvrUnittest::WriteFile()
 		ISymDefPtr symDef2 = nullptr;
         if(__checkVCOM(mvrWrite->CreateSymDefObject(MvrUUID(0, 0, 0, 0), "Symbol Definition for the UUID Creation Check", & symDef2)))
         {
+			STransformMatrix mx;
+			symDef2->AddSymbol(mx, symDef1);
         }
         
         IClassPtr clas1 = nullptr;
@@ -181,6 +183,12 @@ void MvrUnittest::WriteFile()
 
 void MvrUnittest::ReadFile()
 {
+
+	CieColor defaultColor;
+	defaultColor.fx  = 0.312712;
+	defaultColor.fy  = 0.329008;
+	defaultColor.f_Y = 100.0;
+
 	//------------------------------------------------------------------------------------------------
 	// Create Pointer to MVR Interface
 	IMediaRessourceVectorInterfacePtr mvrRead( IID_MediaRessourceVectorInterface );
@@ -333,12 +341,8 @@ void MvrUnittest::ReadFile()
 					checkifEqual("GetUnitNumber", unitNumb, 0);
 
 					CieColor resultColor;
-					CieColor color;
-					color.fx  = 0;
-					color.fy  = 0;
-					color.f_Y = 0;
 					sceneObj->GetColor(resultColor);
-					checkifEqual("GetColor", resultColor, color);
+					checkifEqual("GetColor", resultColor, defaultColor);
 
 					Sint8 fixtureTypeId;
 					sceneObj->GetFixtureTypeId(fixtureTypeId);
@@ -394,12 +398,8 @@ void MvrUnittest::ReadFile()
 					checkifEqual("GetUnitNumber", unitNumb, 0);
 
 					CieColor resultColor;
-					CieColor color;
-					color.fx  = 0;
-					color.fy  = 0;
-					color.f_Y = 0;
 					sceneObj->GetColor(resultColor);
-					checkifEqual("GetColor", resultColor, color);
+					checkifEqual("GetColor", resultColor, defaultColor);
 
 					Sint8 fixtureTypeId;
 					sceneObj->GetFixtureTypeId(fixtureTypeId);
@@ -455,12 +455,8 @@ void MvrUnittest::ReadFile()
 					checkifEqual("GetUnitNumber", unitNumb, 0);
 
 					CieColor resultColor;
-					CieColor color;
-					color.fx  = 0;
-					color.fy  = 0;
-					color.f_Y = 0;
 					sceneObj->GetColor(resultColor);
-					checkifEqual("GetColor", resultColor, color);
+					checkifEqual("GetColor", resultColor, defaultColor);
 
 					Sint8 fixtureTypeId;
 					sceneObj->GetFixtureTypeId(fixtureTypeId);
@@ -567,6 +563,23 @@ void MvrUnittest::ReadFile()
 			__checkVCOM(symDef2->GetGuid(uuid));
 
 			checkifUnEqual("UUID for Sym Def", uuid, emptyuuid );
+
+			size_t symDef2_count = 0;
+			__checkVCOM(symDef2->GetGeometryCount(symDef2_count));
+			checkifEqual("Geometry Count Symbol Def 2", symDef2_count, size_t(1));
+
+			IGeometryReferencePtr symDef2_geoRef;
+			__checkVCOM(symDef2->GetGeometryAt(0, &symDef2_geoRef));
+
+			bool isSymbol = false;
+			__checkVCOM(symDef2_geoRef->GetIsSymbol(isSymbol));
+			checkifTrue("symDef2_geoRef isSymbol", isSymbol);
+
+			ISymDefPtr linkedSymDef;
+			__checkVCOM(symDef2_geoRef->GetSymDef(&linkedSymDef));
+
+			checkifEqual("Sym Def Link", linkedSymDef->GetName(), symDef->GetName());
+
 		}
 
 

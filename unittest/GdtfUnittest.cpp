@@ -11,6 +11,8 @@ using namespace VectorworksMVR::GdtfDefines;
 
 
 #define __checkVCOM(x) this->checkVCOM(x, #x)
+#define __checkVCOM_NotSet(x) this->checkVCOM_NotSet(x, #x)
+
 
 GdtfUnittest::GdtfUnittest(const std::string& currentDir)
 {
@@ -43,6 +45,9 @@ void GdtfUnittest::WriteFile()
 	IGdtfFixturePtr gdtfWrite (IID_IGdtfFixture);
     
     MvrUUID uuid		(225204211	, 177198167	, 1575790	, 96627);
+
+    checkifTrue("Check UUID exual operator: ", uuid == uuid);
+
 	MvrUUID linkedUuid	(2227440	, 1542265	, 1573622	, 2328410);
     if(__checkVCOM(gdtfWrite->OpenForWrite(fTestGdtf_Path.c_str(),"My FixtureName","My Manufacturer", uuid)))
     {
@@ -93,11 +98,6 @@ void GdtfUnittest::WriteFile()
 			__checkVCOM(gdtfAttribute->SetFeature(gdtfFeature));
 			__checkVCOM(gdtfAttribute->SetPhysicalUnit(EGdtfPhysicalUnit::Angle));
 
-			CieColor cieCol;
-			cieCol.fx  = 1.0;
-			cieCol.fy  = 0.5;
-			cieCol.f_Y = 0.424242;
-			__checkVCOM(gdtfAttribute->SetColor(cieCol));
 
 			__checkVCOM(gdtfAttribute->SetMainAttribute(gdtfMainAttribute));
 			// TODO: CHeck if this comes thru
@@ -383,6 +383,20 @@ void GdtfUnittest::ReadFile()
 		__checkVCOM(gdtfRead->GetLinkedFixtureGUID(resultUUID));
 		this->checkifEqual("GetFixtureGUID linkedUuid ", linkedUUID, resultUUID);
 
+		//--------------------------------------------------------------------------------
+		// Read Attribute
+		size_t countAttribute = 0;
+		__checkVCOM(gdtfRead->GetAttributeCount(countAttribute));
+		this->checkifEqual("GetWheelSlot1Wheel1ColorFY ",countAttribute, size_t(2));
+
+		IGdtfAttributePtr attribute1;
+		__checkVCOM(gdtfRead->GetAttributeAt(0, &attribute1));
+		this->CheckAttibute(attribute1, true);
+
+
+		IGdtfAttributePtr attribute2;
+		__checkVCOM(gdtfRead->GetAttributeAt(1, &attribute2));
+		this->CheckAttibute(attribute2, false);
 
 		//--------------------------------------------------------------------------------
 		// Read Wheels
@@ -1193,4 +1207,17 @@ std::string GdtfUnittest::GetTestWheel_PNG()
 {
     std::string path = fTestResourcesFolder + kSeparator + "MWheel_Img1.png";
     return path;
+}
+
+void GdtfUnittest::CheckAttibute(VectorworksMVR::IGdtfAttributePtr attribute, bool hasColor)
+{
+	VectorworksMVR::CieColor color;
+	if(hasColor)
+	{
+		__checkVCOM(attribute->GetColor(color));
+	}
+	else
+	{
+		__checkVCOM_NotSet(attribute->GetColor(color));
+	}
 }

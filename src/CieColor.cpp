@@ -10,7 +10,7 @@
 // sended on 1/18/18. So Handle with care.
 //
 //--------------------------------------------------------------
-
+using namespace VectorworksMVR;
 
 CCieColor::CCieColor()
 {
@@ -28,7 +28,7 @@ CCieColor::CCieColor(double x, double y, double Y_luminance)
 	fY_luminance	= Y_luminance;
 }
 
-CCieColor::CCieColor(const VWFC::Tools::CRGBColor& color)
+CCieColor::CCieColor(const CRGBColor& color)
 {
 	double r = color.GetRed();
 	double g = color.GetGreen();
@@ -80,7 +80,7 @@ double CCieColor::Get_Y_luminance() const
 	return fY_luminance;
 }
 
-void CCieColor::GetRGBColor(VWFC::Tools::CRGBColor& rgb) const
+void CCieColor::GetRGBColor(CRGBColor& rgb) const
 {
 	// Convertion Formulars/Matrix from http://www.brucelindbloom.com/
 		

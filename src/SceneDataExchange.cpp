@@ -391,42 +391,31 @@ void SceneDataSymDefObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataE
 	// Call parent
 	SceneDataAuxObj::OnReadFromNode(pNode, exchange);
 	
-	
-	// Create the child node
-	IXMLFileNodePtr pChildNode;
-	if ( VCOM_SUCCEEDED( pNode->GetChildNode( XML_Val_ChildObsNodeName, & pChildNode ) ) )
+    //-----------------------------------------------------------------------------
+    // Child geomtries
+	GdtfConverter::TraverseMultiNodes(pNode, XML_Val_ChildObsNodeName, [this, exchange] (IXMLFileNodePtr objNode, const TXString& childNodeName) -> void
 	{
-		IXMLFileNodePtr pChild;
-		if ( VCOM_SUCCEEDED( pChildNode->GetFirstChildNode( & pChild)))
+		if(XML_Val_GeometryObjectNodeName == childNodeName)
 		{
-			TXString nodeName;
-			pChild->GetNodeName(nodeName);
-			if (nodeName == XML_Val_GeometryObjectNodeName)
-			{
-				SceneDataGeometryObjPtr geometry = new SceneDataGeometryObj();
-				geometry->ReadFromNode(pChild, exchange);
-				fGeometries.push_back(geometry);
-			}
-			else if (nodeName == XML_Val_SymbolObjectNodeName)
-			{
-				TXString uuidSymbol;
-				pChild->GetNodeAttributeValue(XML_Val_GuidAttrName,			uuidSymbol);
-				
-				
-				SceneDataSymbolObjPtr symbol = new SceneDataSymbolObj(uuidSymbol);
-				symbol->ReadFromNode(pChild, exchange);
-				fGeometries.push_back(symbol);
-				
-				
-			}
-			else
-			{
-				ASSERTN(kEveryone, nodeName == XML_Val_GeometryObjectNodeName || nodeName == XML_Val_SymbolObjectNodeName);
-			}
+			SceneDataGeometryObjPtr geometry = new SceneDataGeometryObj();
+			geometry->ReadFromNode(objNode, exchange);
+			fGeometries.push_back(geometry);
 		}
-		
+		else if(XML_Val_SymbolObjectNodeName == childNodeName)
+		{
+			TXString uuidSymbol;
+			objNode->GetNodeAttributeValue(XML_Val_GuidAttrName,			uuidSymbol);				
+
+			SceneDataSymbolObjPtr symbol = new SceneDataSymbolObj(uuidSymbol);
+			symbol->ReadFromNode(objNode, exchange);
+			fGeometries.push_back(symbol);		
+		}
+		else
+		{
+			ASSERTN(kEveryone, childNodeName == XML_Val_GeometryObjectNodeName || childNodeName == XML_Val_SymbolObjectNodeName);
+		}								
 	}
-	
+	);
 }
 
 TXString SceneDataSymDefObj::GetNodeName()
@@ -860,7 +849,7 @@ SceneDataFixtureObj::SceneDataFixtureObj(const SceneDataGUID& guid) : SceneDataO
 {
 	fFocusPoint		= nullptr;
 	fPosition		= nullptr;
-	fColor			= CRGBColor(255,255,255);
+	fColor			= CCieColor(0.312712,0.329008,100.0);
 	fUnitNumber		= 0;
 	fFixtureTypeId	= 0;
 	fCustomId		= 0;
@@ -2360,7 +2349,30 @@ void SceneDataExchange::ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xml
 			
 		}
 
-		for(SceneDataGeoInstanceObjPtr geoObj : scObj->GetGeometryArr())
+        //-----------------------------------------------------------------------------
+        // Resolve Symbols in Symbols
+        TSymDefMap::iterator it = fSymDefMap.begin();
+        while(it != fSymDefMap.end())
+        {
+            TXString symNam 			 = it->first;
+            SceneDataSymDefObjPtr symDef = it->second;
+
+            for (SceneDataGeoInstanceObjPtr geoObj : symDef->getGeometryArray()) 
+            {
+                if (geoObj->IsSymDef())
+                {
+				    SceneDataSymbolObjPtr symObj = dynamic_cast<SceneDataSymbolObjPtr>(geoObj);
+				    SceneDataSymDefObjPtr ptr    = fSymDefMap[symObj->GetUnresolvedSymDef()];
+				
+				    ASSERTN(kEveryone, ptr);
+				    if(ptr) { symObj->SetSymDef(ptr); }
+                }            
+            }
+
+            it++;
+        }
+
+		for(SceneDataGeoInstanceObjPtr geoObj : scObj->GetGeometryArr())  
 		{
 			if(geoObj->IsSymDef())
 			{

@@ -69,6 +69,9 @@
     <ClCompile Include="..\unittest\CustomCharTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\unittest\UtilityTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\unittest\MvrUnittest.h">
@@ -89,37 +92,40 @@
     <ClInclude Include="..\unittest\GdtfXmlError.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\unittest\GdtfFunctionModeMaster.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\unittest\GdtfUnittestHandler.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\unittest\Utility.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="..\unittest\EmptyGeometryUnitTest.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="..\unittest\CustomCharTest.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\unittest\CustomColorSpaceTest.h">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\unittest\EmptyAttributeTest.h">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\unittest\EmptyAttributeTest2.h">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\unittest\EmptyAttributeTest3.h">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\unittest\EmptyAttributeTest4.h">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\unittest\EmptyGeometryUnitTest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\unittest\GdtfFunctionModeMaster.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\unittest\GdtfUnittestHandler.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\unittest\XmlConversionTest.h">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\unittest\CustomCharTest.h">
+    <ClInclude Include="..\unittest\UtilityTest.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

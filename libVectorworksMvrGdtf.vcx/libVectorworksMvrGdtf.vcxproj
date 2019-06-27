@@ -86,6 +86,7 @@
     <ClCompile Include="..\src\Implementation\CSceneDataProviderImpl.cpp" />
     <ClCompile Include="..\src\Implementation\CSceneObjImpl.cpp" />
     <ClCompile Include="..\src\Implementation\CSymDefImpl.cpp" />
+    <ClCompile Include="..\src\Implementation\CUtility.cpp" />
     <ClCompile Include="..\src\MCCoordTypes.cpp" />
     <ClCompile Include="..\src\MCFloat.cpp" />
     <ClCompile Include="..\src\MCMatrix.cpp" />
@@ -172,6 +173,7 @@
     <ClInclude Include="..\src\Implementation\CSceneDataProviderImpl.h" />
     <ClInclude Include="..\src\Implementation\CSceneObjImpl.h" />
     <ClInclude Include="..\src\Implementation\CSymDefImpl.h" />
+    <ClInclude Include="..\src\Implementation\CUtility.h" />
     <ClInclude Include="..\src\Include\GDTFPrefix.h" />
     <ClInclude Include="..\src\Include\IMediaRessourceVectorInterface.h" />
     <ClInclude Include="..\src\Include\VectorworksMVR.h" />

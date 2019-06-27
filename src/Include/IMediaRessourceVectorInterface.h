@@ -52,13 +52,21 @@ namespace VectorworksMVR
 
 	struct RGBColor
 	{
-		Uint16 r, g, b;
+		Sint32 r, g, b;
 	};
 	
 	struct MvrUUID
 	{
 		MvrUUID(Uint32 a,Uint32 b,Uint32 c,Uint32 d) { this->a = a; this->b = b; this->c = c; this->d = d;}
 		Uint32 a, b, c, d;
+
+        bool operator== (const MvrUUID& uuid) const 
+        {
+            return ((this->a == uuid.a) &&
+                (this->b == uuid.b) &&
+                (this->c == uuid.c) &&
+                (this->d == uuid.d));                          
+        }
 	};
 	
 	//-------------------------------------------------------------------------------------------------------------
@@ -1098,6 +1106,15 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetLineAndColumnNumber(size_t& line, size_t& column) = 0;
     };
     typedef VCOMPtr<IGdtfXmlParsingError>	IGdtfXmlParsingErrorPtr;
+
+    class DYNAMIC_ATTRIBUTE IUtility : public IVWUnknown
+    {
+		public:
+        virtual VCOMError VCOM_CALLTYPE     CieToRgb(const CieColor& color, RGBColor& out) = 0;
+        virtual VCOMError VCOM_CALLTYPE     RgBToCie(const RGBColor& color, CieColor& out) = 0;
+    };
+    typedef VCOMPtr<IUtility>	IIUtilityPtr;
+    const   VWIID IID_IUtility = { 0x706cb180, 0xcd45, 0x4a9a, {0xab, 0xdc, 0x62, 0xab, 0x5f, 0xfe, 0x37, 0x6b}};
 
 
 }
