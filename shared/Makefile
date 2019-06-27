@@ -24,6 +24,7 @@ xerces: dir
 			if [ ! -d $(SHAREDBUILDSDIR)/xerces-c-$(XERCES_VERSION) ] ; then \
 					cd $(SHAREDBUILDSDIR)/ && unzip ../xerces-c-$(XERCES_VERSION).zip 1>/dev/null && cd .. ; \
 			fi ; \
+			echo $(XERCES_CONFIGURE_OPTIONS) ;\
 			cd $(SHAREDBUILDSDIR)/xerces-c-$(XERCES_VERSION) && ./configure $(XERCES_CONFIGURE_OPTIONS) && $(MAKE) && $(MAKE) install && cd ../.. ; \
 			echo "===============================================================";\
 			echo "= X e r c e s - C   D O N E                                   =";\
