@@ -67,10 +67,8 @@ else
 		CXXFLAGS		+= -DGS_LIN=1 -D_LINUX -MMD -MP -fPIC
 		LDFLAGS			+=
 		libExt			= .a
-		LIBDIR_PLAT		= lin
 		XERCESLIBNAME	= xerces-c
 		LIBPATH			= libs
-		EXTLIBPATH		= shared/$(SHAREDLIBDIR)
 		LINKWITHLIBS 	+= -luuid -lpthread -lcurl -licuuc
 		RM				= rm -rf $(BINDIR)/*; rm -rf $(OBJDIR)/*; \
 						rm -f $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)/lib$(TargetLib)
@@ -80,10 +78,8 @@ else
 		CXXFLAGS		+= -DGS_MAC=1 -D__APPLE__ -MMD -MP -mmacosx-version-min=$(OSX_VERSION)
 		LDFLAGS			+=
 		libExt			= .a
-		LIBDIR_PLAT		= mac
 		XERCESLIBNAME	= xerces-c
 		LIBPATH			= libs
-		EXTLIBPATH		= shared/$(SHAREDLIBDIR)
 		LINKWITHLIBS 	+= -lpthread -lcurl -framework CoreServices -framework CoreFoundation
 		RM				= rm -rf $(BINDIR)/*; rm -rf $(OBJDIR)/*; \
 						rm -f $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)/lib$(TargetLib)
@@ -164,7 +160,7 @@ cleandependencies:
 $(TargetTestName): $(SRC_UNIT)
 	@echo "Building $@ ..."
 	@echo $(SRC_UNIT)
-	$(CXX) $(CXXFLAGSUNITTEST) $^ -I$(SRCDIR) -Ishared/$(SHAREDINCDIR) -o $(BINDIR)/$@ -L$(LIBPATH) -Lshared/$(SHAREDLIBDIR) -l$(TargetLibName) -l$(XERCESLIBNAME) $(LINKWITHLIBS)
+	$(CXX) $(CXXFLAGSUNITTEST) $^ -I$(SRCDIR) -Ishared/$(SHAREDINCDIR) -o $(BINDIR)/$@ -L$(LIBPATH) -l$(TargetLibName) -l$(XERCESLIBNAME) $(LINKWITHLIBS)
 	@./$(BINDIR)/$@
 
 # Mac Linux
@@ -172,7 +168,7 @@ $(TargetLibName).a: $(OBJECTS)
 	@echo "Linking objects to lib$(TargetLib) ..."
 	@mkdir -p $(BINDIR)
 	@mkdir -p $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)
-	ar rcs $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)/lib$@ $(OBJECTS)
+	ar rcs $(LIBDIR_PRE)/lib$@ $(OBJECTS)
 	@#$(CXX) $(LDFLAGS) -o $(BINDIR)/$@ $(OBJECTS) -Lshared/$(SHAREDLIBDIR) -l$(XERCESLIBNAME) $(LINKWITHLIBS)
 
 $(OBJDIR)/%.o : %.cpp
