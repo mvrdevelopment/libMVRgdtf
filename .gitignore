@@ -61,3 +61,4 @@ x64/Release/vectorworksMvrGdtfTestApp
 .vscode/ipch/**
 shared/**
 libs/**
+x64/**
