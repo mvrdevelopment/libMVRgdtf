@@ -59,7 +59,7 @@ else
 #	Xerces Variables
 # MSYS (Windows) only used for building xerces
     ifeq ($(UNAME_S),MINGW64_NT-10.0-17763)
-		XERCES_CONFIGURE_OPTIONS += --enable-netaccessor-winsock --enable-transcoder-windows
+		XERCES_CONFIGURE_OPTIONS += --enable-transcoder-windows
     endif
 
 # Linux
@@ -69,7 +69,7 @@ else
 		libExt			= .a
 		XERCESLIBNAME	= xerces-c
 		LIBPATH			= libs
-		LINKWITHLIBS 	+= -luuid -lpthread -lcurl -licuuc
+		LINKWITHLIBS 	+= -luuid -lpthread -licuuc
 		RM				= rm -rf $(BINDIR)/*; rm -rf $(OBJDIR)/*; \
 						rm -f $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)/lib$(TargetLib)
     endif
@@ -83,7 +83,7 @@ else
 		LINKWITHLIBS 	+= -lpthread -lcurl -framework CoreServices -framework CoreFoundation
 		RM				= rm -rf $(BINDIR)/*; rm -rf $(OBJDIR)/*; \
 						rm -f $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)/lib$(TargetLib)
-		XERCES_CONFIGURE_OPTIONS += --enable-transcoder-macosunicodeconverter --enable-netaccessor-curl
+		XERCES_CONFIGURE_OPTIONS += --enable-transcoder-macosunicodeconverter
     endif
 endif
 
