@@ -1,6 +1,7 @@
 ##
 ##	Makefile for libVectorworksMvrGdtf
 ##
+include Makefile.defs
 
 
 # set library name
@@ -27,7 +28,7 @@ CXX_FLAGS_CUSTOM	?= 									# custom options
 CXXFLAGSUNITTEST	= -std=c++11	-DGITPATH=\"$(CURDIR)\"	# compiler options unit test
 #LDFLAGS			= -shared								# linker options
 
-
+# libs 
 XERCESLIBNAME	=
 XERCESLIBPATH	=
 
@@ -55,6 +56,12 @@ ifeq ($(OS),Windows_NT)
 		MV 				= move *.o $(OBJDIR)/
 else
     UNAME_S := $(shell uname -s)
+#	Xerces Variables
+# MSYS (Windows) only used for building xerces
+    ifeq ($(UNAME_S),MINGW64_NT-10.0-17763)
+		XERCES_CONFIGURE_OPTIONS += --enable-netaccessor-winsock --enable-transcoder-windows
+    endif
+
 # Linux
     ifeq ($(UNAME_S),Linux)
 		CXXFLAGS		+= -DGS_LIN=1 -D_LINUX -MMD -MP -fPIC
@@ -63,7 +70,8 @@ else
 		LIBDIR_PLAT		= lin
 		XERCESLIBNAME	= xerces-c
 		LIBPATH			= libs/lin/release
-		LINKWITHLIBS 	+= -luuid -lpthread
+		EXTLIBPATH		= shared/$(SHAREDLIBDIR)
+		LINKWITHLIBS 	+= -luuid -lpthread -lcurl -licuuc
 		RM				= rm -rf $(BINDIR)/*; rm -rf $(OBJDIR)/*; \
 						rm -f $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)/lib$(TargetLib)
     endif
@@ -73,11 +81,13 @@ else
 		LDFLAGS			+=
 		libExt			= .a
 		LIBDIR_PLAT		= mac
-		XERCESLIBNAME	= Xerces
+		XERCESLIBNAME	= xerces-c
 		LIBPATH			= libs/mac/release
-		LINKWITHLIBS 	+= -lpthread -framework CoreServices -framework CoreFoundation
+		EXTLIBPATH		= shared/$(SHAREDLIBDIR)
+		LINKWITHLIBS 	+= -lpthread -lcurl -framework CoreServices -framework CoreFoundation
 		RM				= rm -rf $(BINDIR)/*; rm -rf $(OBJDIR)/*; \
 						rm -f $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)/lib$(TargetLib)
+		XERCES_CONFIGURE_OPTIONS += --enable-transcoder-macosunicodeconverter --enable-netaccessor-curl
     endif
 endif
 
@@ -135,32 +145,40 @@ all: $(TargetLib)
 # UnitTest
 test: $(TargetTest)
 
-# Xerces Build
-xerces: 
+# compiled utils
+dependencies: 
+	cd shared && $(MAKE)
+
+.PHONY: clean cleandependencies
 
 # CLEAN
 clean:
 	@echo "Cleaning $(BINDIR)/ and $(OBJDIR)/ ...  "
 	$(RM)
 
+# clean compiled utils
+cleandependencies: 
+	cd shared && $(MAKE) clean
+
 # Mac Linux
 $(TargetTestName): $(SRC_UNIT)
 	@echo "Building $@ ..."
 	@echo $(SRC_UNIT)
-	$(CXX) $(CXXFLAGSUNITTEST) $^ -o $(BINDIR)/$@ -I$(SRCDIR) -L$(LIBPATH) -l$(TargetLibName) -l$(XERCESLIBNAME) $(LINKWITHLIBS)
+	$(CXX) $(CXXFLAGSUNITTEST) $^ -I$(SRCDIR) -Ishared/$(SHAREDINCDIR) -o $(BINDIR)/$@ -L$(LIBPATH) -Lshared/$(SHAREDLIBDIR) -l$(TargetLibName) -l$(XERCESLIBNAME) $(LINKWITHLIBS)
 	@./$(BINDIR)/$@
 
 # Mac Linux
 $(TargetLibName).a: $(OBJECTS)
 	@echo "Linking objects to lib$(TargetLib) ..."
 	@mkdir -p $(BINDIR)
+	@mkdir -p $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)
 	ar rcs $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)/lib$@ $(OBJECTS)
-	@#$(CXX) $(LDFLAGS) -o $(BINDIR)/$@ $(OBJECTS) -L$(XERCESLIBPATH) -l$(XERCESLIBNAME) $(LINKWITHLIBS)
+	@#$(CXX) $(LDFLAGS) -o $(BINDIR)/$@ $(OBJECTS) -Lshared/$(SHAREDLIBDIR) -l$(XERCESLIBNAME) $(LINKWITHLIBS)
 
 $(OBJDIR)/%.o : %.cpp
 	@echo "Compiling:	" $<
 	@mkdir -p $(OBJDIR)
-	$(CXX) $(CXXFLAGS) -I$(SRCDIR) -c $< -o $@
+	$(CXX) $(CXXFLAGS) -I$(SRCDIR) -Ishared/$(SHAREDINCDIR) -c $< -o $@
 
 
 # Include Header-Dependencies (stored as ".d" Makefile fragments files
