@@ -22,6 +22,7 @@
 // For Unicode normalization form (precomposed v.s. decomposed)
 //	#include <WinNls.h> 
 #include <cstring>
+#include <cctype>
 #elif GS_LIN
 #include <cstring>
 #include <string>
