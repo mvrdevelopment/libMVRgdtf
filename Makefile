@@ -72,7 +72,7 @@ else
 		LINKWITHLIBS 	+= -luuid -lpthread
 		RM				= rm -rf $(BINDIR)/*; rm -rf $(OBJDIR)/*; \
 						rm -f $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)/lib$(TargetLib)
-		XERCES_CONFIGURE_OPTIONS += --enable-transcoder-iconv
+		XERCES_CONFIGURE_OPTIONS += --with-pic=yes
     endif
 # Mac
     ifeq ($(UNAME_S),Darwin)
