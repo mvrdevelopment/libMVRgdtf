@@ -59,7 +59,6 @@ else
 #	Xerces Variables
 # MSYS (Windows) only used for building xerces
     ifeq ($(UNAME_S),MINGW64_NT-10.0-17763)
-		XERCES_CONFIGURE_OPTIONS += --enable-transcoder-windows
     endif
 
 # Linux
@@ -72,7 +71,6 @@ else
 		LINKWITHLIBS 	+= -luuid -lpthread
 		RM				= rm -rf $(BINDIR)/*; rm -rf $(OBJDIR)/*; \
 						rm -f $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)/lib$(TargetLib)
-		XERCES_CONFIGURE_OPTIONS += --with-pic=yes
     endif
 # Mac
     ifeq ($(UNAME_S),Darwin)
@@ -84,7 +82,6 @@ else
 		LINKWITHLIBS 	+= -lpthread -lcurl -framework CoreServices -framework CoreFoundation
 		RM				= rm -rf $(BINDIR)/*; rm -rf $(OBJDIR)/*; \
 						rm -f $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)/lib$(TargetLib)
-		XERCES_CONFIGURE_OPTIONS += --enable-transcoder-macosunicodeconverter
     endif
 endif
 
