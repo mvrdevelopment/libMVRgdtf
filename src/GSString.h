@@ -415,6 +415,7 @@ public:
 	TXString& itoa(Sint64 value);
 	TXString& ftoa(Real64 value);
 	TXString& ftoa(Real64 value, Sint32 precision);
+	bool 			IsCompleteNumber();
 	static TXString	ToStringInt(Sint64 value);
 	static TXString	ToStringInt(Sint64 value, Sint32 width, wchar_t paddingChar);
 	static TXString	ToStringReal(Real64 value);

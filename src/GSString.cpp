@@ -22,6 +22,7 @@
 // For Unicode normalization form (precomposed v.s. decomposed)
 //	#include <WinNls.h> 
 #include <cstring>
+#include <cctype>
 #elif GS_LIN
 #include <cstring>
 #include <string>
@@ -2005,6 +2006,14 @@ TXString& TXString::ftoa(Real64 value)
 TXString& TXString::ftoa(Real64 value, Sint32 precision)
 {
 	return (*this = TXString::ToStringReal(value, precision));
+}
+
+bool TXString::IsCompleteNumber()
+{
+	auto it = stdUStr.begin();
+    while (it != stdUStr.end() && std::isdigit(*it)) ++it;
+    return !stdUStr.empty() && it == stdUStr.end();
+
 }
 
 //=======================================================================================

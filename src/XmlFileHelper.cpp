@@ -466,6 +466,14 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString& strValue, const I
 	double dmxValueRaw    = firstPart.atof();
 	Sint32 bytetSpecifier = secndPart.atoi();
 
+	if( ! (firstPart.IsCompleteNumber() && secndPart.IsCompleteNumber()))
+	{
+		GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_DmxValueHasWrongValue, node);
+        SceneData::GdtfFixture::AddError(error);
+		dmxValueRaw 	= 0;
+		bytetSpecifier 	= 1;
+	}
+
 	// Check if the ByteSpecifier is different to the ChannelResolution.
 	if (bytetSpecifier != chanlReso) 
 	{
