@@ -69,7 +69,7 @@ else
 		libExt			= .a
 		LIBDIR_PLAT		= lin
 		XERCESLIBNAME	= xerces-c
-		LIBPATH			= libs/lin/release
+		LIBPATH			= libs
 		EXTLIBPATH		= shared/$(SHAREDLIBDIR)
 		LINKWITHLIBS 	+= -luuid -lpthread -lcurl -licuuc
 		RM				= rm -rf $(BINDIR)/*; rm -rf $(OBJDIR)/*; \
@@ -82,7 +82,7 @@ else
 		libExt			= .a
 		LIBDIR_PLAT		= mac
 		XERCESLIBNAME	= xerces-c
-		LIBPATH			= libs/mac/release
+		LIBPATH			= libs
 		EXTLIBPATH		= shared/$(SHAREDLIBDIR)
 		LINKWITHLIBS 	+= -lpthread -lcurl -framework CoreServices -framework CoreFoundation
 		RM				= rm -rf $(BINDIR)/*; rm -rf $(OBJDIR)/*; \
