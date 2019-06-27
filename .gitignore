@@ -59,3 +59,5 @@ libs/lin/release/libVectorworksMvrGdtf\.a
 
 x64/Release/vectorworksMvrGdtfTestApp
 .vscode/ipch/**
+shared/**
+libs/**
