@@ -12,6 +12,10 @@ matrix:
       sudo: required
       dist: xenial
       compiler: clang
+    - env: XERCES_CONFIGURE_ENCODER="--enable-transcoder-icu" ADDIONAL_LD=" -licuuc"
+      sudo: required
+      dist: xenial
+      compiler: clang
     - env: Ubuntu Build
       sudo: required
       dist: bionic

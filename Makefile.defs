@@ -18,6 +18,8 @@ SHAREDBINDIR     = bin
 #   Xercex-C
 #--------------------------------------------------------------------------------------
 
+XERCES_CONFIGURE_ENCODER ?= --enable-transcoder-gnuiconv
+
 XERCES_VERSION = 3.1.4
 XERCES_CONFIGURE_OPTIONS += --prefix=$(SHAREDDIR) --enable-shared=no --libdir=$(SHAREDDIR)/../libs --disable-network
 
@@ -27,7 +29,7 @@ else
     UNAME_S := $(shell uname -s)
 # Linux
     ifeq ($(UNAME_S),Linux)
-		XERCES_CONFIGURE_OPTIONS += CXXFLAGS=-fPIC CFLAGS=-fPIC --enable-transcoder-gnuiconv
+		XERCES_CONFIGURE_OPTIONS += CXXFLAGS=-fPIC CFLAGS=-fPIC $(XERCES_CONFIGURE_ENCODER)
     endif
 # Mac
     ifeq ($(UNAME_S),Darwin)
