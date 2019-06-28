@@ -27,6 +27,7 @@ CXXFLAGS			= -std=c++11							# compiler options
 CXX_FLAGS_CUSTOM	?= 									# custom options
 CXXFLAGSUNITTEST	= -std=c++11	-DGITPATH=\"$(CURDIR)\"	# compiler options unit test
 #LDFLAGS			= -shared								# linker options
+ADDIONAL_LD			?= 										# custom linker options
 
 # libs 
 XERCESLIBNAME	=
@@ -84,6 +85,8 @@ else
 						rm -f $(LIBDIR_PRE)/$(LIBDIR_PLAT)/$(LIBDIR_POST)/lib$(TargetLib)
     endif
 endif
+
+LINKWITHLIBS += $(ADDIONAL_LD)
 
 # ADd the custom flags to the normal Build
 CXXFLAGS += $(CXX_FLAGS_CUSTOM)
