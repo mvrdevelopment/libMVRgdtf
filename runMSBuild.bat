@@ -11,6 +11,10 @@ powershell -Command "Invoke-WebRequest http://archive.apache.org/dist/xerces/c/3
 :ok
 echo Install successful
 REM Extract and build Xerces
+rmdir /s /q shared\builds
+rmdir /s /q shared\lib
+rmdir /s /q shared\bin
+rmdir /s /q shared\include
 mkdir shared\builds
 mkdir shared\lib
 mkdir shared\bin
