@@ -328,6 +328,18 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxModeImpl::CreateDmxRelation(Mv
     
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxModeImpl::GetBreakCount(size_t & count)
+{
+    //count = fDmxMode->Get
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxModeImpl::GetFootprintForBreak(size_t inBreak, size_t& footprint)
+{
+    //count = fDmxMode->Get
+    return kVCOMError_NoError;
+}
+
 SceneData::GdtfDmxMode* VectorworksMVR::CGdtfDmxModeImpl::getPointer()
 {
     return fDmxMode;

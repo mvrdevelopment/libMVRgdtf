@@ -2222,16 +2222,12 @@ TGdtfBreakArray GdtfGeometryReference::GetBreakArray()
 
 //------------------------------------------------------------------------------------
 // GdtfDmxMode
-GdtfDmxMode::GdtfDmxMode()
-{
-	fName		= "";
-	fGeomRef	= nullptr;
-}
 
-GdtfDmxMode::GdtfDmxMode(const TXString& name)
+GdtfDmxMode::GdtfDmxMode(GdtfFixture* fixture, const TXString& name)
 {
 	fName		= name;
 	fGeomRef    = nullptr;
+	fFixture    = fixture;
 }
 
 GdtfDmxMode::~GdtfDmxMode()
@@ -2424,6 +2420,35 @@ const TXString& GdtfDmxMode::GetUnresolvedGeomRef()
 const TGdtfDmxRelationArray GdtfDmxMode::GetDmxRelations()
 {
 	return fRelations;
+}
+
+size_t GdtfDmxMode::GetBreakCount() const
+{
+
+	for (GdtfDmxChannelPtr channel : fChannels)
+	{
+		Sint32 breakId = channel->GetDmxBreak();
+	}
+
+	return 0;
+	
+}
+
+size_t GdtfDmxMode::GetFootPrintForBreak(size_t breakId) const
+{
+
+	for (GdtfDmxChannelPtr channel : fChannels)
+	{
+		Sint32 breakId = channel->GetDmxBreak();
+		if(breakId == breakId)
+		{
+
+		}
+
+	}
+
+	return 0;
+	
 }
 
 //------------------------------------------------------------------------------------
@@ -5436,7 +5461,7 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	GdtfConverter::TraverseNodes(pNode, XML_GDTF_FixtureChildNodeDMX, XML_GDTF_DMXModeNodeName, [this] (IXMLFileNodePtr objNode) -> void
 								 {
 									 // Create the object
-									 GdtfDmxModePtr dmxMode = new GdtfDmxMode();
+									 GdtfDmxModePtr dmxMode = new GdtfDmxMode(this, "");
 									 
 									 // Read from node
 									 dmxMode->ReadFromNode(objNode);
@@ -5666,7 +5691,7 @@ GdtfGeometryPtr GdtfFixture::AddGeometryBeam(const TXString& name, GdtfModelPtr 
 
 GdtfDmxMode* GdtfFixture::AddDmxMode(const TXString& name)
 {
-	GdtfDmxMode* mode = new  GdtfDmxMode(name);
+	GdtfDmxMode* mode = new  GdtfDmxMode(this, name);
 	
 	fDmxModes.push_back(mode);
 	
