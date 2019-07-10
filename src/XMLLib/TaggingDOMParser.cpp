@@ -1,7 +1,9 @@
 #include "Prefix/StdAfx.h"
 #include "TaggingDOMParser.h"
 
-class TagDataHandler : public DOMUserDataHandler 
+using namespace XML;
+
+class XML::TagDataHandler : public DOMUserDataHandler 
 {
     private:
         TaggingDOMParser* parser;

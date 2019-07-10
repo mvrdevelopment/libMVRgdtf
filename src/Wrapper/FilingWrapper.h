@@ -2,6 +2,11 @@
 
 #include "FolderSpecifiers.h"
 
+namespace VectorWorks
+{
+	namespace Filing
+	{
+
 typedef Uint32	StorageAttributes;
 //General Access
 const StorageAttributes kStorageAttrRead				= 0x00000001;
@@ -143,3 +148,5 @@ bool GetFolderWithSpecifer(EFolderSpecifier inWhichFolder, TFolderIdentifier& ou
 
 
 bool GetFolderAppDataPath(TXString& outPath);
+	}
+}

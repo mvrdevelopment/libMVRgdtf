@@ -7,6 +7,8 @@
 #include <stdio.h>
 #endif
 
+using namespace VectorWorks::Filing;
+
 CRawOSFileImpl::CRawOSFileImpl()
 	: fTheFile( nullptr )
 {

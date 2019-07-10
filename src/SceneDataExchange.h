@@ -4,7 +4,7 @@
 #pragma once
 
 using namespace VectorWorks::Filing;
-using namespace VWFC;
+using namespace VectorworksMVR::VWFC;
 
 #include "CieColor.h"
 #include "XmlFileHelper.h"
