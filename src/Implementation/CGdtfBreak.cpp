@@ -5,7 +5,7 @@
 #include "CGdtfBreak.h"
 
 
-using namespace VectorWorks::Filing;
+using namespace VectorworksMVR::Filing;
 
 VectorworksMVR::CGdtfBreakImpl::CGdtfBreakImpl()
 {

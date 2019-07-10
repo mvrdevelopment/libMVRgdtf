@@ -5,7 +5,7 @@
 
 #pragma once
 
-namespace VectorWorks
+namespace VectorworksMVR
 {
 	namespace Filing
 	{

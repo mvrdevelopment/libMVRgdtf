@@ -6,7 +6,7 @@
 #include "CGdtfWheelSlot.h"
 
 
-using namespace VectorWorks::Filing;
+using namespace VectorworksMVR::Filing;
 
 VectorworksMVR::CGdtfWheelImpl::CGdtfWheelImpl()
 {

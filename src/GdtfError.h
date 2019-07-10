@@ -5,10 +5,13 @@
 #include "Prefix/StdAfx.h"
 #include "Include/GDTFPrefix.h"
 
-using namespace VectorWorks::Filing;
+using namespace VectorworksMVR::Filing;
 
 //------------------------------------------------------------------------------------
 // Parsing Errors
+namespace VectorworksMVR
+{
+
 class GdtfParsingError
 {
 public:
@@ -36,3 +39,5 @@ public:
 };
 
 typedef std::vector<GdtfParsingError> TGdtfParsingErrorArray;
+
+}

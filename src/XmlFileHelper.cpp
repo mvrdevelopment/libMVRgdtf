@@ -4,7 +4,7 @@
 
 
 #include "Prefix/StdAfx.h"
-using namespace VWFC;
+using namespace VectorworksMVR::VWFC;
 
 #include "SceneDataExchange.h"
 #include "GDTFManager.h"

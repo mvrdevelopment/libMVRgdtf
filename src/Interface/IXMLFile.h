@@ -8,7 +8,7 @@
 
 #include "IFileIdentifier.h"
 
-namespace VectorWorks
+namespace VectorworksMVR
 {
 	namespace Filing
 	{

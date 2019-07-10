@@ -10,7 +10,7 @@
 #include "CGdtfDmxChannel.h"
 
 
-using namespace VectorWorks::Filing;
+using namespace VectorworksMVR::Filing;
 
 VectorworksMVR::CGdtfDmxModeImpl::CGdtfDmxModeImpl()
 {

@@ -11,7 +11,7 @@
 #include "CGdtfDmxLogicalChannel.h"
 #include "CGdtfFilter.h"
 
-using namespace VectorWorks::Filing;
+using namespace VectorworksMVR::Filing;
 
 VectorworksMVR::CGdtfDmxChannelFunctionImpl::CGdtfDmxChannelFunctionImpl()
 {

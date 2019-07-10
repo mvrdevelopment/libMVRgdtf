@@ -10,6 +10,8 @@
 #include "Prefix/StdAfx.h"
 #include "MCCoordTypes.h"
 
-const extern double kNearlyEqualEpsilonForWorldCoords = 1e-13;
-const extern WorldCoord kMaxLegalWorldCoord = 1.0E100;
-const extern WorldCoord kMaxOutOfRangeWorldCoord = DBL_MAX;
+using namespace VectorworksMVR;
+
+const extern double VectorworksMVR::kNearlyEqualEpsilonForWorldCoords = 1e-13;
+const extern WorldCoord VectorworksMVR::kMaxLegalWorldCoord = 1.0E100;
+const extern WorldCoord VectorworksMVR::kMaxOutOfRangeWorldCoord = DBL_MAX;

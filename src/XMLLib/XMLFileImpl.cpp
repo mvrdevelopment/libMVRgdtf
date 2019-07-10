@@ -5,9 +5,9 @@
 #include "TaggingDOMParser.h"
 #include "../GDTFManager.h"
 
-using namespace VectorWorks::Filing;
-using namespace XML;
-using namespace VWFC::Tools;
+using namespace VectorworksMVR::Filing;
+using namespace VectorworksMVR::XML;
+using namespace VectorworksMVR::VWFC::Tools;
 
 /*static*/ VCOMError	CXMLFileImpl::fLastError;
 

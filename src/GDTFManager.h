@@ -7,13 +7,13 @@
 #include "GdtfError.h"
 #include "Include/GDTFPrefix.h"
 
-using namespace VectorWorks::Filing;
+using namespace VectorworksMVR::Filing;
 using namespace VectorworksMVR::GdtfDefines;
 
-typedef VWFC::Tools::VWUUID	GdtfFixtureGUID;
-typedef TXString			GdtfPNGFile;
-typedef TXString			Gdtf3DSFile;
-typedef Sint32				StatusID;
+typedef VectorworksMVR::VWFC::Tools::VWUUID	GdtfFixtureGUID;
+typedef TXString							GdtfPNGFile;
+typedef TXString							Gdtf3DSFile;
+typedef Sint32								StatusID;
 
 namespace SceneData
 {
