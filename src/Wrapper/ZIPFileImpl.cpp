@@ -14,8 +14,8 @@
 
 #include "TDQuickDraw.h"
 
-using namespace VectorWorks::Filing;
 //using namespace ZIP;
+using namespace VectorworksMVR::Filing;
 
 /*static*/ VCOMError	CZIPFileImpl::fLastError;
 

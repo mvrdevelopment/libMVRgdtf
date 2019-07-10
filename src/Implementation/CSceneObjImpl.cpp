@@ -8,7 +8,7 @@
 #include "CGdtfFixture.h"
 #include "Utility.h"
 
-using namespace VectorWorks::Filing;
+using namespace VectorworksMVR::Filing;
 
 
 VectorworksMVR::CSceneObjImpl::CSceneObjImpl()

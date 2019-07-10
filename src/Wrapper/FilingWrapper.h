@@ -2,7 +2,7 @@
 
 #include "FolderSpecifiers.h"
 
-namespace VectorWorks
+namespace VectorworksMVR
 {
 	namespace Filing
 	{

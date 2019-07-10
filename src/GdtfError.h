@@ -5,7 +5,7 @@
 #include "Prefix/StdAfx.h"
 #include "Include/GDTFPrefix.h"
 
-using namespace VectorWorks::Filing;
+using namespace VectorworksMVR::Filing;
 
 //------------------------------------------------------------------------------------
 // Parsing Errors

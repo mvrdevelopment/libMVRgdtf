@@ -7,7 +7,7 @@
 #include "CGdtfDmxChannelFunction.h"
 #include "CGdtfDmxChannel.h"
 
-using namespace VectorWorks::Filing;
+using namespace VectorworksMVR::Filing;
 
 VectorworksMVR::CGdtfDmxLogicalChannelImpl::CGdtfDmxLogicalChannelImpl()
 {

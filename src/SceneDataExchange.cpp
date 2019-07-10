@@ -2055,7 +2055,7 @@ bool SceneDataExchange::WriteXml(const IFolderIdentifierPtr& folder, IXMLFileIOB
 		// write file
 
 		
-        pXMLFile->WriteBuffer(&outBuffer, VectorWorks::Filing::EXMLEncoding::eXMLEncoding_UTF8);
+        pXMLFile->WriteBuffer(&outBuffer, VectorworksMVR::Filing::EXMLEncoding::eXMLEncoding_UTF8);
 		
 	}
 

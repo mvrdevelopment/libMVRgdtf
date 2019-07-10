@@ -6,7 +6,7 @@
 #include "CGdtfDmxChannel.h"
 #include "CGdtfDmxChannelFunction.h"
 
-using namespace VectorWorks::Filing;
+using namespace VectorworksMVR::Filing;
 
 VectorworksMVR::CGdtfDmxRelationImpl::CGdtfDmxRelationImpl()
 {

@@ -18,7 +18,7 @@
 #include <pwd.h>
 #endif
 
-using namespace VectorWorks::Filing;
+using namespace VectorworksMVR::Filing;
 
 // ------------------------------------------------------------------------------------
 TXBaseStorageAccess::TXBaseStorageAccess()
@@ -359,13 +359,13 @@ bool TFileIdentifier::RevealInOS()
 	return nullptr;
 }
 
-bool VectorWorks::Filing::GetFolderWithSpecifer(EFolderSpecifier inWhichFolder, TFolderIdentifier & outFolderID, bool inCreateIfMissing)
+bool VectorworksMVR::Filing::GetFolderWithSpecifer(EFolderSpecifier inWhichFolder, TFolderIdentifier & outFolderID, bool inCreateIfMissing)
 {
 	// If you require the Spotlight Folder, you will get a path to a readable location on disk
 	if ((Sint32)inWhichFolder == 302 || (Sint32)inWhichFolder == -302/*kSpotlightFolder*/)
 	{
 		TXString appdataPath;
-		if (!VectorWorks::Filing::GetFolderAppDataPath(appdataPath))
+		if (!VectorworksMVR::Filing::GetFolderAppDataPath(appdataPath))
 		{
 			return false;
 		}
@@ -377,7 +377,7 @@ bool VectorWorks::Filing::GetFolderWithSpecifer(EFolderSpecifier inWhichFolder, 
 }
 
 // ------------------------------------------------------------------------------------
-bool VectorWorks::Filing::GetFolderAppDataPath(TXString& outPath)
+bool VectorworksMVR::Filing::GetFolderAppDataPath(TXString& outPath)
 {
 	//--------------------------------------------------------
 	// Implementation for Windows

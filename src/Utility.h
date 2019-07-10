@@ -11,7 +11,7 @@
 
 namespace VectorworksMVR
 {
-	class GdtfUtil																					//TODO here any namespace necessary?
+	class GdtfUtil
 	{
 	public:
 		static void ConvertMatrix(const VectorworksMVR::STransformMatrix & smatrix, VWTransformMatrix & vwmatrix);

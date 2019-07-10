@@ -1,9 +1,9 @@
 #include "Prefix/StdAfx.h"
 #include "TaggingDOMParser.h"
 
-using namespace XML;
+using namespace VectorworksMVR::XML;
 
-class XML::TagDataHandler : public DOMUserDataHandler 
+class VectorworksMVR::XML::TagDataHandler : public DOMUserDataHandler
 {
     private:
         TaggingDOMParser* parser;

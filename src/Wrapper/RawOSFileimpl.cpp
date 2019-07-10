@@ -7,7 +7,7 @@
 #include <stdio.h>
 #endif
 
-using namespace VectorWorks::Filing;
+using namespace VectorworksMVR::Filing;
 
 CRawOSFileImpl::CRawOSFileImpl()
 	: fTheFile( nullptr )
@@ -18,7 +18,7 @@ CRawOSFileImpl::~CRawOSFileImpl()
 {
 }
 
-VCOMError CRawOSFileImpl::Open(VectorWorks::Filing::IFileIdentifier* pFileID, bool bReadable, bool bWritable, bool bRandomAccess, bool bTruncateExisting)
+VCOMError CRawOSFileImpl::Open(VectorworksMVR::Filing::IFileIdentifier* pFileID, bool bReadable, bool bWritable, bool bRandomAccess, bool bTruncateExisting)
 {
 	if ( pFileID == nullptr )
 		return kVCOMError_InvalidArg;

@@ -9,7 +9,7 @@
 #include "FolderIdentifier.h"
 
 
-namespace VectorWorks
+namespace VectorworksMVR
 {
 	namespace Filing
 	{

@@ -5,7 +5,7 @@
 #include "CGdtfUserPreset.h"
 
 
-using namespace VectorWorks::Filing;
+using namespace VectorworksMVR::Filing;
 
 VectorworksMVR::CGdtfUserPresetImpl::CGdtfUserPresetImpl()
 {

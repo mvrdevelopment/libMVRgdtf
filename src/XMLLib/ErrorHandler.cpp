@@ -5,7 +5,7 @@
 
 #include "ErrorHandler.h"
 
-using namespace XML;
+using namespace VectorworksMVR::XML;
 
 bool XMLErrorHandler::handleError(const DOMError &domError)
 {
