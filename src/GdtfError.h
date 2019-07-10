@@ -9,6 +9,9 @@ using namespace VectorworksMVR::Filing;
 
 //------------------------------------------------------------------------------------
 // Parsing Errors
+namespace VectorworksMVR
+{
+
 class GdtfParsingError
 {
 public:
@@ -36,3 +39,5 @@ public:
 };
 
 typedef std::vector<GdtfParsingError> TGdtfParsingErrorArray;
+
+}

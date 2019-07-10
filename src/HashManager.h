@@ -6,7 +6,7 @@
 
 using namespace VectorworksMVR::Filing;
 
-namespace HashManager
+namespace VectorworksMVR
 {
 	class HashManager
 	{
