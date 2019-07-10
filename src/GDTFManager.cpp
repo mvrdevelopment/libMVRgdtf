@@ -2422,16 +2422,66 @@ const TGdtfDmxRelationArray GdtfDmxMode::GetDmxRelations()
 	return fRelations;
 }
 
-size_t GdtfDmxMode::GetBreakCount() const
+std::vector<Sint32> GdtfDmxMode::GetBreakArray() const
 {
+	std::vector<Sint32> breaks (0) ;
+	TGdtfGeometryArray geometryRefs (0) ;
+
+	TGdtfGeometryArray geometrysToCheck = {fGeomRef};
+
+	while(geometrysToCheck.size() > 0)
+	{
+		GdtfGeometryPtr geometry = geometrysToCheck.back();
+		geometrysToCheck.pop_back();
+
+		TGdtfGeometryArray children = geometry->GetInternalGeometries();
+		for(GdtfGeometryPtr child : children)
+		{
+			geometrysToCheck.push_back(child);
+		}
+
+		if(geometry->GetObjectType() == eGdtfGeometryReference )
+		{
+			GdtfGeometryReferencePtr geoRef = dynamic_cast<GdtfGeometryReferencePtr>(geometry);
+			geometrysToCheck.push_back(geoRef->GetLinkedGeometry());
+			geometryRefs.push_back(geoRef);
+		}
+	}
 
 	for (GdtfDmxChannelPtr channel : fChannels)
 	{
 		Sint32 breakId = channel->GetDmxBreak();
+		
+		if(breakId == 0)
+		{
+			for(GdtfGeometryPtr geometry : geometryRefs)
+			{
+				GdtfGeometryReferencePtr geoRef = dynamic_cast<GdtfGeometryReferencePtr>(geometry);
+				if(geoRef->GetLinkedGeometry() == channel->GetGeomRef())
+				{
+					TGdtfBreakArray refBreaks = geoRef->GetBreakArray();
+					
+					std::vector<Sint32>::iterator foundIndex = std::find(breaks.begin(), breaks.end(), refBreaks.back()->GetDmxBreak());
+					if(foundIndex == breaks.end())
+					{
+						breaks.push_back(refBreaks.back()->GetDmxBreak());
+					}
+				}
+			}
+		}
+		else
+		{
+			std::vector<Sint32>::iterator foundIndex = std::find(breaks.begin(), breaks.end(), breakId);
+			if(foundIndex == breaks.end())
+			{
+				breaks.push_back(breakId);
+			}
+		}
 	}
 
-	return 0;
-	
+	std::sort(breaks.begin(), breaks.end());
+
+	return breaks;
 }
 
 size_t GdtfDmxMode::GetFootPrintForBreak(size_t breakId) const
@@ -2439,8 +2489,12 @@ size_t GdtfDmxMode::GetFootPrintForBreak(size_t breakId) const
 
 	for (GdtfDmxChannelPtr channel : fChannels)
 	{
-		Sint32 breakId = channel->GetDmxBreak();
-		if(breakId == breakId)
+		Sint32 thisBreakId = channel->GetDmxBreak();
+		if(thisBreakId == breakId)
+		{
+
+		}
+		if(thisBreakId == 0)
 		{
 
 		}

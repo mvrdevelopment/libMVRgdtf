@@ -85,6 +85,18 @@ void GdtfDmxUnittest::WriteFile()
 		IGdtfGeometryPtr geometry;
 		__checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometry, "Geometry", model, STransformMatrix(), &geometry));
 
+		IGdtfGeometryPtr geoToRef;
+		__checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometry, "Geometry to ref", model, STransformMatrix(), &geoToRef));
+
+		IGdtfGeometryPtr geoRef;
+		__checkVCOM(geometry->CreateGeometry(EGdtfObjectType::eGdtfGeometryReference, "GeoRef", nullptr, STransformMatrix(), &geoRef));
+		__checkVCOM(geoRef->SetGeometryReference(geoToRef));
+
+		IGdtfBreakPtr refBreak;
+		__checkVCOM(geoRef->CreateBreak(3, 1, &refBreak));
+
+
+
 		IGdtfDmxModePtr mode;
 		__checkVCOM(gdtfWrite->CreateDmxMode("Mode", &mode));
 		__checkVCOM(mode->SetGeometry(geometry));
@@ -171,8 +183,8 @@ void GdtfDmxUnittest::WriteFile()
 		//----------------------------------------------------------------
 		// Write 16 bit Channel
 		IGdtfDmxChannelPtr bit16channel;
-		__checkVCOM(mode->CreateDmxChannel(geometry, &bit16channel));
-		__checkVCOM(bit16channel->SetGeometry(geometry));
+		__checkVCOM(mode->CreateDmxChannel(geoToRef, &bit16channel));
+		__checkVCOM(bit16channel->SetGeometry(geoToRef));
 		bit16channel->SetCoarse(1);
 		bit16channel->SetFine(2);
 		bit16channel->SetDmxBreak(0);
@@ -355,7 +367,7 @@ void GdtfDmxUnittest::ReadFile()
 		// Geometry Section
 		size_t countGeo = 0;
 		__checkVCOM(gdtfRead->GetGeometryCount(countGeo));
-		this->checkifEqual("Geometry Count ", countGeo, size_t(1));
+		this->checkifEqual("Geometry Count ", countGeo, size_t(2));
 
 		IGdtfGeometryPtr gdtfGeometry;
 		__checkVCOM(gdtfRead->GetGeometryAt(0, &gdtfGeometry));
@@ -374,6 +386,14 @@ void GdtfDmxUnittest::ReadFile()
 		size_t countChannels = 0;
 		__checkVCOM(mode->GetDmxChannelCount(countChannels));
 		this->checkifEqual("Check Count DMX Channels", countChannels, size_t(5));
+
+		size_t countBreaks = 0;
+		__checkVCOM(mode->GetBreakCount(countBreaks));
+		this->checkifEqual("Check Count DMX Breaks", countBreaks, size_t(2));
+
+		size_t break2 = 0;
+		__checkVCOM(mode->GetBreakAt(size_t(1), break2));
+		this->checkifEqual("Check the second Break", break2, size_t(3));
 		
 
 		//----------------------------------------------------------------

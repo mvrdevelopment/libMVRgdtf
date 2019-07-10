@@ -330,7 +330,19 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxModeImpl::CreateDmxRelation(Mv
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxModeImpl::GetBreakCount(size_t & count)
 {
-    //count = fDmxMode->Get
+    count = fDmxMode->GetBreakArray().size();
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxModeImpl::GetBreakAt(size_t at, size_t& breakId)
+{
+    if(at >= fDmxMode->GetBreakArray().size())
+    {
+        return kVCOMError_OutOfBounds;
+    }
+
+    breakId = fDmxMode->GetBreakArray()[at];
+
     return kVCOMError_NoError;
 }
 

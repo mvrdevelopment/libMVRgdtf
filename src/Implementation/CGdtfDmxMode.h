@@ -30,6 +30,7 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE     CreateDmxRelation(MvrString name, GdtfDefines::EGdtfDmxRelationType type, IGdtfDmxChannel* master, IGdtfDmxChannelFunction* slave, IGdtfDmxRelation** relation);
 
         virtual VCOMError VCOM_CALLTYPE     GetBreakCount(size_t& count);
+        virtual VCOMError VCOM_CALLTYPE     GetBreakAt(size_t at, size_t &breakId);
         virtual VCOMError VCOM_CALLTYPE     GetFootprintForBreak(size_t inBreak, size_t& footprint);
 
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr);
