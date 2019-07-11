@@ -7,7 +7,7 @@
 #include "Prefix/StdAfx.h"
 
 
-using namespace VWFC::Math;
+using namespace VectorworksMVR::VWFC::Math;
 
 
 

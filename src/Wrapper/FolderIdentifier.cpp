@@ -22,7 +22,7 @@
 #endif
 
 
-using namespace VectorWorks::Filing;
+using namespace VectorworksMVR::Filing;
 
 // ----------------------------------------------------------------------------------------------------
 CFolderIdentifier::CFolderIdentifier()
@@ -785,7 +785,7 @@ VCOMError CFolderIdentifier::EnumerateContents(IFolderContentListener* pListener
 	return error;
 }
 
-namespace VectorWorks
+namespace VectorworksMVR
 {
 	namespace Filing
 	{

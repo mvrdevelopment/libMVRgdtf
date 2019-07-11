@@ -6,8 +6,8 @@
 #include "XMLFileNodeImpl.h"
 #include "TaggingDOMParser.h"
 
-using namespace VectorWorks::Filing;
-using namespace XML;
+using namespace VectorworksMVR::Filing;
+using namespace VectorworksMVR::XML;
 
 // ----------------------------------------------------------------------------------------------------
 CXMLFileNodeImpl::CXMLFileNodeImpl()

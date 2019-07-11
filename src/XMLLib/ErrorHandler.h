@@ -5,29 +5,28 @@
 
 #include "XercesSupport.h"
 
-namespace XML
+namespace VectorworksMVR
 {
-
-
-
-	class XMLErrorHandler : public DOMErrorHandler
+	namespace XML
 	{
-	public:
+		class XMLErrorHandler : public DOMErrorHandler
+		{
+		public:
 
-		XMLErrorHandler() {};
-		~XMLErrorHandler() {};
+			XMLErrorHandler() {};
+			~XMLErrorHandler() {};
 
-		/** @name The error handler interface */
-		bool handleError(const DOMError& domError);
-		void resetErrors() {};
+			/** @name The error handler interface */
+			bool handleError(const DOMError& domError);
+			void resetErrors() {};
 
 	private :
-		/* Unimplemented constructors and operators */
-		XMLErrorHandler(const DOMErrorHandler&);
-		void operator=(const DOMErrorHandler&);
+			/* Unimplemented constructors and operators */
+			XMLErrorHandler(const DOMErrorHandler&);
+			void operator=(const DOMErrorHandler&);
 
-		char	errorString[256];
-	};
+			char	errorString[256];
+		};
+	}
 }
-
 #endif

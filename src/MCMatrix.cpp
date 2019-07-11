@@ -30,6 +30,7 @@ DECLARE_THIS_FILE
 // accessible data structures. It will remain turned off until needed. - PCP 2-12-2001
 //////////////////////////////
 
+using namespace VectorworksMVR;
 
 #if MFarnan && GS_MAC && _MINICAD_
 #include "PreferencesRec.h"
@@ -64,7 +65,7 @@ void ASSERTIfDataMisaligned(const void* p, char* name)
 //**********************************************************************************
 
 
-void GS_API MatrixToXMatrix(const TransformMatrix &source, TransformXMatrix &dest)
+void GS_API VectorworksMVR::MatrixToXMatrix(const TransformMatrix &source, TransformXMatrix &dest)
 {
 
 	GS_ASSERTDOUBLEALIGNMENT(&source);
@@ -87,7 +88,7 @@ void GS_API MatrixToXMatrix(const TransformMatrix &source, TransformXMatrix &des
 	dest.mat[3][3] = 1.0;
 }
 
-TransformXMatrix MatrixToXMatrix(const TransformMatrix &source)
+TransformXMatrix VectorworksMVR::MatrixToXMatrix(const TransformMatrix &source)
 // XXX_JDW_MISC - this is inefficient. 
 {
 
@@ -116,7 +117,7 @@ TransformXMatrix MatrixToXMatrix(const TransformMatrix &source)
 }
 
 
-void GS_API XMatrixToMatrix(const TransformXMatrix &source, TransformMatrix &dest)
+void GS_API VectorworksMVR::XMatrixToMatrix(const TransformXMatrix &source, TransformMatrix &dest)
 {
 	GS_ASSERTDOUBLEALIGNMENT(&source);
 	GS_ASSERTDOUBLEALIGNMENT(&dest);
@@ -134,7 +135,7 @@ void GS_API XMatrixToMatrix(const TransformXMatrix &source, TransformMatrix &des
 	}
 }
 
-TransformMatrix XMatrixToMatrix(const TransformXMatrix &source)
+TransformMatrix VectorworksMVR::XMatrixToMatrix(const TransformXMatrix &source)
 {
 	GS_ASSERTDOUBLEALIGNMENT(&source);
 
@@ -158,7 +159,7 @@ TransformMatrix XMatrixToMatrix(const TransformXMatrix &source)
 }
 
 #if GS_SDK_VW8_COMPATIBLE
-Boolean GS_API XMatrix2Matrix(const TransformXMatrix& source, TransformMatrix& dest)
+Boolean GS_API VectorworksMVR::XMatrix2Matrix(const TransformXMatrix& source, TransformMatrix& dest)
 //
 // Same as XMatrixToMatrix, but returns true if the matrix could be converted, 
 // false if overflow. If false, the destination matrix is set to the identity 
@@ -185,7 +186,7 @@ Boolean GS_API XMatrix2Matrix(const TransformXMatrix& source, TransformMatrix& d
 //////////////////////////////////////////////////
 #if BUG
 //////////////////////////////////////////////////
-void BugVerifyTransformMatrix(const TransformMatrix& matrix)
+void VectorworksMVR::BugVerifyTransformMatrix(const TransformMatrix& matrix)
 //
 // This debugging function is to be called to test
 // that a transformation matrix is in fact a valid
@@ -210,7 +211,7 @@ void BugVerifyTransformMatrix(const TransformMatrix& matrix)
 //**********************************************************************************
 
 
-void GS_API XMatrixMultiply(const TransformXMatrix &mat1, const TransformXMatrix &mat2, TransformXMatrix &dest)
+void GS_API VectorworksMVR::XMatrixMultiply(const TransformXMatrix &mat1, const TransformXMatrix &mat2, TransformXMatrix &dest)
 {
 	GS_ASSERTDOUBLEALIGNMENT(&mat1);
 	GS_ASSERTDOUBLEALIGNMENT(&mat2);
@@ -238,7 +239,7 @@ void GS_API XMatrixMultiply(const TransformXMatrix &mat1, const TransformXMatrix
 	dest = returnMat;
 }
 
-TransformXMatrix XMatrixMultiply(const TransformXMatrix &m1, const TransformXMatrix &m2)
+TransformXMatrix VectorworksMVR::XMatrixMultiply(const TransformXMatrix &m1, const TransformXMatrix &m2)
 {
 	GS_ASSERTDOUBLEALIGNMENT(&m1);
 	GS_ASSERTDOUBLEALIGNMENT(&m2);
@@ -272,7 +273,7 @@ TransformXMatrix XMatrixMultiply(const TransformXMatrix &m1, const TransformXMat
 }
 
 
-void GS_API SetAxisRotationXMatrix(MajorAxisSpec axis, double_param degrees, TransformXMatrix &mat)
+void GS_API VectorworksMVR::SetAxisRotationXMatrix(MajorAxisSpec axis, double_param degrees, TransformXMatrix &mat)
 
 {
 	GS_ASSERTDOUBLEALIGNMENT(&mat);
@@ -290,36 +291,36 @@ void GS_API SetAxisRotationXMatrix(MajorAxisSpec axis, double_param degrees, Tra
 	/////////////////////////////////////////////////////////////
 
 	switch (axis) {
-		case kXAxis: {
-			mat.mat[0][0] = 1.0;
-			mat.mat[1][1] = myCos;
-			mat.mat[1][2] = mySin;
-			mat.mat[2][1] = -mySin;
-			mat.mat[2][2] = myCos;
-			break;
-		}
-		case kYAxis: {
-			mat.mat[2][0] = mySin;
-			mat.mat[2][2] = myCos;
-			mat.mat[0][0] = myCos;
-			mat.mat[0][2] = -mySin;
-			mat.mat[1][1] = 1.0;
-			break;
-		}
-		case kZAxis: {
-			mat.mat[0][0] = myCos;
-			mat.mat[0][1] = mySin;
-			mat.mat[1][0] = -mySin;
-			mat.mat[1][1] = myCos;
-			mat.mat[2][2] = 1.0;
-			break;
-		}
+	case kXAxis: {
+		mat.mat[0][0] = 1.0;
+		mat.mat[1][1] = myCos;
+		mat.mat[1][2] = mySin;
+		mat.mat[2][1] = -mySin;
+		mat.mat[2][2] = myCos;
+		break;
+	}
+	case kYAxis: {
+		mat.mat[2][0] = mySin;
+		mat.mat[2][2] = myCos;
+		mat.mat[0][0] = myCos;
+		mat.mat[0][2] = -mySin;
+		mat.mat[1][1] = 1.0;
+		break;
+	}
+	case kZAxis: {
+		mat.mat[0][0] = myCos;
+		mat.mat[0][1] = mySin;
+		mat.mat[1][0] = -mySin;
+		mat.mat[1][1] = myCos;
+		mat.mat[2][2] = 1.0;
+		break;
+	}
 	}
 }
 
 
 
-void GS_API SetVectorRotationXMatrix(const Vector &axis, double_param degrees, TransformXMatrix &mat)
+void GS_API VectorworksMVR::SetVectorRotationXMatrix(const Vector &axis, double_param degrees, TransformXMatrix &mat)
 {
 	GS_ASSERTDOUBLEALIGNMENT(&mat);
 	GS_ASSERTDOUBLEALIGNMENT(&axis);
@@ -329,13 +330,13 @@ void GS_API SetVectorRotationXMatrix(const Vector &axis, double_param degrees, T
 	double_gs					myt;
 
 	// this algorithm assumes that axis is already normalized
-	#ifdef _MINICAD_
-	#ifdef BUG
+#ifdef _MINICAD_
+#ifdef BUG
 //	if (Abs((axis.Magnitude() - 1.0)) > 0.0001)
 //		DSTOP((kPaul, brief, "NON-Normal vector passed to SetVectorRotationXMatrix!!!"));
 	ASSERTN(kMark, axis.IsNormalized());
-	#endif
-	#endif
+#endif
+#endif
 
 	mat.SetToIdentity();
 	if (degrees != 0.0) {
@@ -451,7 +452,7 @@ static void Invert4by4_ByeBye(void) {
 #endif
 }
 
-void GS_API InvertXMatrix(const TransformXMatrix &source, TransformXMatrix &dest)
+void GS_API VectorworksMVR::InvertXMatrix(const TransformXMatrix &source, TransformXMatrix &dest)
 {
 	GS_ASSERTDOUBLEALIGNMENT(&source);
 	GS_ASSERTDOUBLEALIGNMENT(&dest);
@@ -552,7 +553,7 @@ void GS_API InvertXMatrix(const TransformXMatrix &source, TransformXMatrix &dest
 	dest.mat[1][3] = 0.0;
 	dest.mat[2][3] = 0.0;
 	dest.mat[3][3] = 1.0;
-	
+
 #ifdef paulsdebug
 	{
 		TransformXMatrix c;
@@ -564,7 +565,7 @@ void GS_API InvertXMatrix(const TransformXMatrix &source, TransformXMatrix &dest
 #endif
 }
 
-void GS_API AssignVectorsToXMatrix(const Vector &aVec, const Vector &bVec, const Vector &cVec, TransformXMatrix &mat)
+void GS_API VectorworksMVR::AssignVectorsToXMatrix(const Vector &aVec, const Vector &bVec, const Vector &cVec, TransformXMatrix &mat)
 {
 	GS_ASSERTDOUBLEALIGNMENT(&aVec);
 	GS_ASSERTDOUBLEALIGNMENT(&bVec);
@@ -591,8 +592,8 @@ void GS_API AssignVectorsToXMatrix(const Vector &aVec, const Vector &bVec, const
 //			when referring to code from older versions of MiniCad or MiniCad externals which have not
 //			yet been converted to use the newer calls. See MCMatrix.h for a table of equivalent calls.
 
-void GS_API XPointTransformN(const WorldPt3 &a, const TransformXMatrix &mat, WorldPt3 &b)
-{	
+void GS_API VectorworksMVR::XPointTransformN(const WorldPt3 &a, const TransformXMatrix &mat, WorldPt3 &b)
+{
 	GS_ASSERTDOUBLEALIGNMENT(&a);
 	GS_ASSERTDOUBLEALIGNMENT(&b);
 	GS_ASSERTDOUBLEALIGNMENT(&mat);
@@ -621,13 +622,13 @@ void GS_API InverseXPointTransformN(const WorldPt3 &a, const TransformXMatrix &m
 	dOffset.x = a.x-mat.mat[3][0];
 	dOffset.y = a.y-mat.mat[3][1];
 	dOffset.z = a.z-mat.mat[3][2];
-	
+
 	b.x =	dOffset.x * mat.mat[0][0] + dOffset.y * mat.mat[0][1] + dOffset.z * mat.mat[0][2];
 	b.y =	dOffset.x * mat.mat[1][0] + dOffset.y * mat.mat[1][1] + dOffset.z * mat.mat[1][2];
 	b.z =	dOffset.x * mat.mat[2][0] + dOffset.y * mat.mat[2][1] + dOffset.z * mat.mat[2][2];
 }
 
-WorldPt3 GS_API InverseXPointTransformN(const WorldPt3 &a, const TransformXMatrix &mat)
+WorldPt3 GS_API VectorworksMVR::InverseXPointTransformN(const WorldPt3 &a, const TransformXMatrix &mat)
 {
 	GS_ASSERTDOUBLEALIGNMENT(&a);
 	GS_ASSERTDOUBLEALIGNMENT(&mat);
@@ -636,13 +637,13 @@ WorldPt3 GS_API InverseXPointTransformN(const WorldPt3 &a, const TransformXMatri
 	// b = a MAT^{-1}
 
 	WorldPt3 dOffset(a.x - mat.mat[3][0], a.y - mat.mat[3][1], a.z - mat.mat[3][2]);
-	
+
 	return WorldPt3(dOffset.x * mat.mat[0][0] + dOffset.y * mat.mat[0][1] + dOffset.z * mat.mat[0][2],
-					dOffset.x * mat.mat[1][0] + dOffset.y * mat.mat[1][1] + dOffset.z * mat.mat[1][2],
-					dOffset.x * mat.mat[2][0] + dOffset.y * mat.mat[2][1] + dOffset.z * mat.mat[2][2]);
+		dOffset.x * mat.mat[1][0] + dOffset.y * mat.mat[1][1] + dOffset.z * mat.mat[1][2],
+		dOffset.x * mat.mat[2][0] + dOffset.y * mat.mat[2][1] + dOffset.z * mat.mat[2][2]);
 }
 
-void GS_API VectorXTransformN(const Vector a, const TransformXMatrix &mat, Vector &b)
+void GS_API VectorworksMVR::VectorXTransformN(const Vector a, const TransformXMatrix &mat, Vector &b)
 {
 	GS_ASSERTDOUBLEALIGNMENT(&b);
 	GS_ASSERTDOUBLEALIGNMENT(&mat);
@@ -655,7 +656,7 @@ void GS_API VectorXTransformN(const Vector a, const TransformXMatrix &mat, Vecto
 	b.z = a.x * mat.mat[0][2] + a.y * mat.mat[1][2] + a.z * mat.mat[2][2];
 }
 
-void GS_API InverseVectorXTransformN(const Vector a, const TransformXMatrix &mat, Vector &b) 
+void GS_API VectorworksMVR::InverseVectorXTransformN(const Vector a, const TransformXMatrix &mat, Vector &b)
 {
 	GS_ASSERTDOUBLEALIGNMENT(&b);
 	GS_ASSERTDOUBLEALIGNMENT(&mat);
@@ -668,7 +669,7 @@ void GS_API InverseVectorXTransformN(const Vector a, const TransformXMatrix &mat
 	b.z = a.x * mat.mat[2][0] + a.y * mat.mat[2][1] + a.z * mat.mat[2][2];
 }
 
-void GS_API CubeTransformN(const WorldCube& in, const TransformMatrix& mat, WorldCube& out)
+void GS_API VectorworksMVR::CubeTransformN(const WorldCube& in, const TransformMatrix& mat, WorldCube& out)
 // Linear algebra equivalent:  b = a MAT for each point of the cube. Could be more efficient.
 // JDW, 3/18/99
 {
@@ -720,7 +721,7 @@ void GS_API CubeTransformN(const WorldCube& in, const TransformMatrix& mat, Worl
 
 
 
-void GS_API IdentityMatrix(TransformMatrix &mat)
+void GS_API VectorworksMVR::IdentityMatrix(TransformMatrix &mat)
 {
 	GS_ASSERTDOUBLEALIGNMENT(&mat);
 
@@ -731,7 +732,7 @@ void GS_API IdentityMatrix(TransformMatrix &mat)
 
 
 ////////////////////////////////////////////////////////////
-const GS_API TransformMatrix& IdentityMatrix()
+const GS_API TransformMatrix& VectorworksMVR::IdentityMatrix()
 //
 // This function returns a const reference to an identity
 // matrix (a singleton).
@@ -740,7 +741,7 @@ const GS_API TransformMatrix& IdentityMatrix()
 	static bool setToIdentity = false;
 	static TransformMatrix iMatrix; // static, so it lasts until shutdown
 	if ( !setToIdentity ) {
-		IdentityMatrix(iMatrix);
+		VectorworksMVR::IdentityMatrix(iMatrix);
 		setToIdentity = true;
 	}
 	return iMatrix;
@@ -778,7 +779,7 @@ inline void BasePointTransformN(const WorldPt3 &a, const TransformMatrix &mat, W
 }
 
 //////////////////////////////////////////////////
-void GS_API NonLinearPointTransformN(const WorldPt3 &a, const TransformMatrix &mat, WorldPt3 &b)
+void GS_API VectorworksMVR::NonLinearPointTransformN(const WorldPt3 &a, const TransformMatrix &mat, WorldPt3 &b)
 //
 // This function should be used in place of
 // PointTransformN when the transformation isn't
@@ -795,7 +796,7 @@ void GS_API NonLinearPointTransformN(const WorldPt3 &a, const TransformMatrix &m
 }
 
 //////////////////////////////////////////////////
-void GS_API PointTransformN(const WorldPt3 &a, const TransformMatrix &mat, WorldPt3 &b)
+void GS_API VectorworksMVR::PointTransformN(const WorldPt3 &a, const TransformMatrix &mat, WorldPt3 &b)
 //
 // This function performs what is assumed to be a
 // linear transformation on a and puts the result
@@ -811,7 +812,7 @@ void GS_API PointTransformN(const WorldPt3 &a, const TransformMatrix &mat, World
 	BasePointTransformN(a, mat, b);
 }
 
-void GS_API InversePointTransformN(const WorldPt3 &a, const TransformMatrix &mat, WorldPt3 &b)
+void GS_API VectorworksMVR::InversePointTransformN(const WorldPt3 &a, const TransformMatrix &mat, WorldPt3 &b)
 {
 	GS_ASSERTDOUBLEALIGNMENT(&a);
 	GS_ASSERTDOUBLEALIGNMENT(&b);
@@ -827,27 +828,27 @@ void GS_API InversePointTransformN(const WorldPt3 &a, const TransformMatrix &mat
 	b.z =	dOffset.x * mat.v1.a20 + dOffset.y * mat.v1.a21 + dOffset.z * mat.v1.a22;
 }
 
-void GS_API VectorTransformN(const Vector &a, const TransformMatrix &mat, Vector &b) 
+void GS_API VectorworksMVR::VectorTransformN(const Vector &a, const TransformMatrix &mat, Vector &b)
 {
 	GS_ASSERTDOUBLEALIGNMENT(&a);
 	GS_ASSERTDOUBLEALIGNMENT(&b);
 	GS_ASSERTDOUBLEALIGNMENT(&mat);
 
 	Vector d = a;  // need this for VectorTransformN(v, t, v);
-	
+
 	b.x =	d.x * mat.v1.a00 + d.y * mat.v1.a10 + d.z * mat.v1.a20;
 	b.y =	d.x * mat.v1.a01 + d.y * mat.v1.a11 + d.z * mat.v1.a21;
 	b.z =	d.x * mat.v1.a02 + d.y * mat.v1.a12 + d.z * mat.v1.a22;
 }
 
-void GS_API InverseVectorTransformN(const Vector &a, const TransformMatrix &mat, Vector &b)
+void GS_API VectorworksMVR::InverseVectorTransformN(const Vector &a, const TransformMatrix &mat, Vector &b)
 {
 	GS_ASSERTDOUBLEALIGNMENT(&a);
 	GS_ASSERTDOUBLEALIGNMENT(&b);
 	GS_ASSERTDOUBLEALIGNMENT(&mat);
 
 	Vector d = a;  // need this for InverseVectorTransformN(v, t, v);
-	
+
 	b.x =	d.x * mat.v1.a00  +  d.y * mat.v1.a01  +  d.z * mat.v1.a02;
 	b.y =	d.x * mat.v1.a10  +  d.y * mat.v1.a11  +  d.z * mat.v1.a12;
 	b.z =	d.x * mat.v1.a20  +  d.y * mat.v1.a21  +  d.z * mat.v1.a22;
@@ -856,7 +857,7 @@ void GS_API InverseVectorTransformN(const Vector &a, const TransformMatrix &mat,
 
 // 2D point transform routines
 
-void InversePoint2DTransform(const WorldPt &a, const TransformMatrix &mat, WorldPt &b)
+void VectorworksMVR::InversePoint2DTransform(const WorldPt &a, const TransformMatrix &mat, WorldPt &b)
 {
 	GS_ASSERTDOUBLEALIGNMENT(&a);
 	GS_ASSERTDOUBLEALIGNMENT(&b);
@@ -867,12 +868,12 @@ void InversePoint2DTransform(const WorldPt &a, const TransformMatrix &mat, World
 	dOffset.x = a.x-mat.v1.xOff;
 	dOffset.y = a.y-mat.v1.yOff;
 	b.x =	dOffset.x * mat.v1.a00+
-			dOffset.y * mat.v1.a01;
+		dOffset.y * mat.v1.a01;
 	b.y =	dOffset.x * mat.v1.a10+
-			dOffset.y * mat.v1.a11;
+		dOffset.y * mat.v1.a11;
 
 }
-void InverseVector2DTransform(const WorldPt &a, const TransformMatrix &mat, WorldPt &b)
+void VectorworksMVR::InverseVector2DTransform(const WorldPt &a, const TransformMatrix &mat, WorldPt &b)
 {
 	GS_ASSERTDOUBLEALIGNMENT(&a);
 	GS_ASSERTDOUBLEALIGNMENT(&b);
@@ -881,32 +882,32 @@ void InverseVector2DTransform(const WorldPt &a, const TransformMatrix &mat, Worl
 	WorldPt d = a;  // need this for when a and b are the same variable
 
 	b.x =	d.x * mat.v1.a00+
-			d.y * mat.v1.a01;
+		d.y * mat.v1.a01;
 	b.y =	d.x * mat.v1.a10+
-			d.y * mat.v1.a11;
+		d.y * mat.v1.a11;
 
 }
 
-void PointTransformTo2D(const WorldPt3 &a, const TransformMatrix &mat, WorldPt &b)
+void VectorworksMVR::PointTransformTo2D(const WorldPt3 &a, const TransformMatrix &mat, WorldPt &b)
 {
 	GS_ASSERTDOUBLEALIGNMENT(&a);
 	GS_ASSERTDOUBLEALIGNMENT(&b);
 	GS_ASSERTDOUBLEALIGNMENT(&mat);
 
 	WorldPt3	p = a;
-	
+
 	b.x = 	p.x * mat.v1.a00 +
-			p.y * mat.v1.a10 +
-			p.z * mat.v1.a20 +
-			mat.v1.xOff;
+		p.y * mat.v1.a10 +
+		p.z * mat.v1.a20 +
+		mat.v1.xOff;
 	b.y = 	p.x * mat.v1.a01 +
-			p.y * mat.v1.a11 +
-			p.z * mat.v1.a21 +
-			mat.v1.yOff;
+		p.y * mat.v1.a11 +
+		p.z * mat.v1.a21 +
+		mat.v1.yOff;
 }
 
 
-TransformMatrix GS_API MatrixMultiply(const TransformMatrix &mat1, const TransformMatrix &mat2)
+TransformMatrix GS_API VectorworksMVR::MatrixMultiply(const TransformMatrix &mat1, const TransformMatrix &mat2)
 {
 	GS_ASSERTDOUBLEALIGNMENT(&mat1);
 	GS_ASSERTDOUBLEALIGNMENT(&mat2);
@@ -914,41 +915,41 @@ TransformMatrix GS_API MatrixMultiply(const TransformMatrix &mat1, const Transfo
 	TransformMatrix				matTemp;
 
 	matTemp.v1.a00 =	mat2.v1.a00 * mat1.v1.a00 +
-						mat2.v1.a10 * mat1.v1.a01 +
-						mat2.v1.a20 * mat1.v1.a02;
+		mat2.v1.a10 * mat1.v1.a01 +
+		mat2.v1.a20 * mat1.v1.a02;
 	matTemp.v1.a01 =	mat2.v1.a01 * mat1.v1.a00 +
-						mat2.v1.a11 * mat1.v1.a01 +
-						mat2.v1.a21 * mat1.v1.a02;
+		mat2.v1.a11 * mat1.v1.a01 +
+		mat2.v1.a21 * mat1.v1.a02;
 	matTemp.v1.a02 =	mat2.v1.a02 * mat1.v1.a00 +
-						mat2.v1.a12 * mat1.v1.a01 +
-						mat2.v1.a22 * mat1.v1.a02;
+		mat2.v1.a12 * mat1.v1.a01 +
+		mat2.v1.a22 * mat1.v1.a02;
 	matTemp.v1.a10 =	mat2.v1.a00 * mat1.v1.a10 +
-						mat2.v1.a10 * mat1.v1.a11 +
-						mat2.v1.a20 * mat1.v1.a12;
+		mat2.v1.a10 * mat1.v1.a11 +
+		mat2.v1.a20 * mat1.v1.a12;
 	matTemp.v1.a11 =	mat2.v1.a01 * mat1.v1.a10 +
-						mat2.v1.a11 * mat1.v1.a11 +
-						mat2.v1.a21 * mat1.v1.a12;
+		mat2.v1.a11 * mat1.v1.a11 +
+		mat2.v1.a21 * mat1.v1.a12;
 	matTemp.v1.a12 =	mat2.v1.a02 * mat1.v1.a10 +
-						mat2.v1.a12 * mat1.v1.a11 +
-						mat2.v1.a22 * mat1.v1.a12;
+		mat2.v1.a12 * mat1.v1.a11 +
+		mat2.v1.a22 * mat1.v1.a12;
 	matTemp.v1.a20 =	mat2.v1.a00 * mat1.v1.a20 +
-						mat2.v1.a10 * mat1.v1.a21 +
-						mat2.v1.a20 * mat1.v1.a22;
+		mat2.v1.a10 * mat1.v1.a21 +
+		mat2.v1.a20 * mat1.v1.a22;
 	matTemp.v1.a21 =	mat2.v1.a01 * mat1.v1.a20 +
-						mat2.v1.a11 * mat1.v1.a21 +
-						mat2.v1.a21 * mat1.v1.a22;
+		mat2.v1.a11 * mat1.v1.a21 +
+		mat2.v1.a21 * mat1.v1.a22;
 	matTemp.v1.a22 =	mat2.v1.a02 * mat1.v1.a20 +
-						mat2.v1.a12 * mat1.v1.a21 +
-						mat2.v1.a22 * mat1.v1.a22;
+		mat2.v1.a12 * mat1.v1.a21 +
+		mat2.v1.a22 * mat1.v1.a22;
 	matTemp.v1.xOff =	mat1.v1.xOff * mat2.v1.a00 +
-						mat1.v1.yOff * mat2.v1.a10 +
-						mat1.v1.zOff * mat2.v1.a20 + mat2.v1.xOff;
+		mat1.v1.yOff * mat2.v1.a10 +
+		mat1.v1.zOff * mat2.v1.a20 + mat2.v1.xOff;
 	matTemp.v1.yOff =	mat1.v1.xOff * mat2.v1.a01 +
-						mat1.v1.yOff * mat2.v1.a11 +
-						mat1.v1.zOff * mat2.v1.a21 + mat2.v1.yOff;
+		mat1.v1.yOff * mat2.v1.a11 +
+		mat1.v1.zOff * mat2.v1.a21 + mat2.v1.yOff;
 	matTemp.v1.zOff =	mat1.v1.xOff * mat2.v1.a02 +
-						mat1.v1.yOff * mat2.v1.a12 +
-						mat1.v1.zOff * mat2.v1.a22 + mat2.v1.zOff;
+		mat1.v1.yOff * mat2.v1.a12 +
+		mat1.v1.zOff * mat2.v1.a22 + mat2.v1.zOff;
 
 	// fix VB-111889
 	for ( short a = 0; a < 3; ++a )
@@ -967,7 +968,7 @@ TransformMatrix GS_API MatrixMultiply(const TransformMatrix &mat1, const Transfo
 
 
 
-void GS_API MatrixMakeOrthogonal(TransformMatrix &mat)
+void GS_API VectorworksMVR::MatrixMakeOrthogonal(TransformMatrix &mat)
 {
 	GS_ASSERTDOUBLEALIGNMENT(&mat);
 
@@ -994,32 +995,32 @@ void GS_API MatrixMakeOrthogonal(TransformMatrix &mat)
 }
 
 
-void GS_API InvertMatrix(const TransformMatrix &source, TransformMatrix &dest)
+void GS_API VectorworksMVR::InvertMatrix(const TransformMatrix &source, TransformMatrix &dest)
 {
 	GS_ASSERTDOUBLEALIGNMENT(&source);
 	GS_ASSERTDOUBLEALIGNMENT(&dest);
 
 	TransformXMatrix					tempMat;
 
-	MatrixToXMatrix(source, tempMat);
-	InvertXMatrix(tempMat, tempMat);
-	XMatrixToMatrix(tempMat, dest);
+	VectorworksMVR::MatrixToXMatrix(source, tempMat);
+	VectorworksMVR::InvertXMatrix(tempMat, tempMat);
+	VectorworksMVR::XMatrixToMatrix(tempMat, dest);
 }
 
 
 
-void GS_API SetAxisRotationMatrix(MajorAxisSpec axis, double_param degrees, TransformMatrix &mat)
+void GS_API VectorworksMVR::SetAxisRotationMatrix(MajorAxisSpec axis, double_param degrees, TransformMatrix &mat)
 {
 	GS_ASSERTDOUBLEALIGNMENT(&mat);
 
 	TransformXMatrix					tmpMat;
 
-	SetAxisRotationXMatrix(axis, degrees, tmpMat);
-	XMatrixToMatrix(tmpMat, mat);
+	VectorworksMVR::SetAxisRotationXMatrix(axis, degrees, tmpMat);
+	VectorworksMVR::XMatrixToMatrix(tmpMat, mat);
 }
 
 
-void GS_API SetAxisRotationMatrix(MajorAxisSpec axis, double_param degrees, const WorldPt3& center, TransformMatrix &mat)
+void GS_API VectorworksMVR::SetAxisRotationMatrix(MajorAxisSpec axis, double_param degrees, const WorldPt3& center, TransformMatrix &mat)
 {
 	GS_ASSERTDOUBLEALIGNMENT(&center);
 	GS_ASSERTDOUBLEALIGNMENT(&mat);
@@ -1027,14 +1028,14 @@ void GS_API SetAxisRotationMatrix(MajorAxisSpec axis, double_param degrees, cons
 	TransformXMatrix					tmpMat;
 	TransformMatrix						tmpFrac;
 
-	IdentityMatrix(tmpFrac);
-	TranslateMatrix(tmpFrac, -center.x, -center.y, -center.z);
+	VectorworksMVR::IdentityMatrix(tmpFrac);
+	VectorworksMVR::TranslateMatrix(tmpFrac, -center.x, -center.y, -center.z);
 
-	SetAxisRotationXMatrix(axis, degrees, tmpMat);
-	XMatrixToMatrix(tmpMat, mat);
+	VectorworksMVR::SetAxisRotationXMatrix(axis, degrees, tmpMat);
+	VectorworksMVR::XMatrixToMatrix(tmpMat, mat);
 
-	mat = MatrixMultiply(tmpFrac, mat);	
-	TranslateMatrix(mat, center.x, center.y, center.z);
+	mat = VectorworksMVR::MatrixMultiply(tmpFrac, mat);
+	VectorworksMVR::TranslateMatrix(mat, center.x, center.y, center.z);
 }
 
 
@@ -1057,7 +1058,7 @@ static Degrees AdjustDegreesToRange(Degrees in, Degrees low, Degrees high)
 	return out;
 }
 
-void GS_API GetAnglesFromMatrix(const TransformMatrix &inMat, Degrees &outAboutXAxis, Degrees &outAboutYAxis, Degrees &outAboutZAxis)
+void GS_API VectorworksMVR::GetAnglesFromMatrix(const TransformMatrix &inMat, Degrees &outAboutXAxis, Degrees &outAboutYAxis, Degrees &outAboutZAxis)
 //
 // Created by EJKerr 
 //
@@ -1152,7 +1153,7 @@ void GS_API GetAnglesFromMatrix(const TransformMatrix &inMat, Degrees &outAboutX
 
 // JAK 10/15/99 DOES NOT COMPILE...illegal override...the type Degrees does not agree with the .h file which has double_param.
 //void GS_API SetVectorRotationMatrix(const Vector& axis, const Degrees degrees, TransformMatrix& mat)
-void GS_API SetVectorRotationMatrix(const Vector& axis, double_param degrees, TransformMatrix& mat)
+void GS_API VectorworksMVR::SetVectorRotationMatrix(const Vector& axis, double_param degrees, TransformMatrix& mat)
 // XXX_JDW_MISC - change to radians (but preserve API)
 {
 	GS_ASSERTDOUBLEALIGNMENT(&axis);
@@ -1163,13 +1164,13 @@ void GS_API SetVectorRotationMatrix(const Vector& axis, double_param degrees, Tr
 	double_gs		myt;
 
 	// this algorithm assumes that axis is already normalized
-	#ifdef _MINICAD_
-	#ifdef BUG
+#ifdef _MINICAD_
+#ifdef BUG
 //	if (Abs((axis.Magnitude() - 1.0)) > 0.0001) // XXX_JDW_MISC 
 //		DSTOP((kPaul, brief, "NON-Normal vector passed to SetVectorRotationMatrix!!!"));
 	ASSERTN(kMark, axis.IsNormalized());
-	#endif
-	#endif
+#endif
+#endif
 
 	mat.SetToIdentity();
 	if (degrees != 0.0) {
@@ -1192,32 +1193,32 @@ void GS_API SetVectorRotationMatrix(const Vector& axis, double_param degrees, Tr
 
 
 //-----------------------------------------------------------------------------
-void GS_API Set2DAxisFlipMatrix(const MajorAxisSpec axis, const WorldPt& origin, TransformMatrix& tm)
+void GS_API VectorworksMVR::Set2DAxisFlipMatrix(const MajorAxisSpec axis, const WorldPt& origin, TransformMatrix& tm)
 {
 	GS_ASSERTDOUBLEALIGNMENT(&origin);
 	GS_ASSERTDOUBLEALIGNMENT(&tm);
 
 
 	TransformMatrix offmat1, offmat2;
-	IdentityMatrix(offmat1);
-	IdentityMatrix(offmat2);
-	IdentityMatrix(tm);
+	VectorworksMVR::IdentityMatrix(offmat1);
+	VectorworksMVR::IdentityMatrix(offmat2);
+	VectorworksMVR::IdentityMatrix(tm);
 	// set the two translation matrices: one to Move Center of flip to the
 	// origin,	and one to Move the Center back to original position
-	TranslateMatrix(offmat1, -origin.x, -origin.y, 0L);
-	TranslateMatrix(offmat2, origin.x, origin.y, 0L);
+	VectorworksMVR::TranslateMatrix(offmat1, -origin.x, -origin.y, 0L);
+	VectorworksMVR::TranslateMatrix(offmat2, origin.x, origin.y, 0L);
 	// Set the flip matrix
 	if (axis == kYAxis)
 		tm.v1.a00 = -tm.v1.a00;
 	else if (axis == kXAxis)
 		tm.v1.a11 = -tm.v1.a11;
 	// find the final flip matrix
-	tm = MatrixMultiply(offmat1, tm);
-	tm = MatrixMultiply(tm, offmat2);
+	tm = VectorworksMVR::MatrixMultiply(offmat1, tm);
+	tm = VectorworksMVR::MatrixMultiply(tm, offmat2);
 }
 
 #if 0	// on or before June 99
-Boolean GS_API MakeVectorsOrthonormal(Vector &aVec, Vector &bVec, Vector &cVec, Boolean first)
+Boolean GS_API VectorworksMVR::MakeVectorsOrthonormal(Vector &aVec, Vector &bVec, Vector &cVec, Boolean first)
 {
 	GS_ASSERTDOUBLEALIGNMENT(&aVec);
 	GS_ASSERTDOUBLEALIGNMENT(&bVec);
@@ -1227,42 +1228,42 @@ Boolean GS_API MakeVectorsOrthonormal(Vector &aVec, Vector &bVec, Vector &cVec, 
 	bVec = Normal(bVec);
 	if (Abs(DotProduct(aVec, bVec)) < 0.9999) {
 		cVec = Normal(CrossProduct(aVec, bVec));
-		if (first) 
+		if (first)
 			aVec = Normal(CrossProduct(bVec, cVec));
-		else 
+		else
 			bVec = Normal(CrossProduct(cVec, aVec));
 		return true;
 	}
 	else
-	
+
 		return false;
 }
 
 #else
 
-Boolean GS_API MakeVectorsOrthonormal(Vector &aVec, Vector &bVec, Vector &cVec, Boolean first)
+Boolean GS_API VectorworksMVR::MakeVectorsOrthonormal(Vector &aVec, Vector &bVec, Vector &cVec, Boolean first)
 {
 	GS_ASSERTDOUBLEALIGNMENT(&aVec);
 	GS_ASSERTDOUBLEALIGNMENT(&bVec);
 	GS_ASSERTDOUBLEALIGNMENT(&cVec);
-	
+
 	bool inputNotZero = !aVec.IsZero() && !bVec.IsZero();
-	
-	
+
+
 	if (inputNotZero) {
-		
+
 		aVec.Normalize();
 		bVec.Normalize();
 		if (Abs(DotProduct(aVec, bVec)) < 0.9999) {	// XXX_JDW_MISC 
 			cVec = (CrossProduct(aVec, bVec)).Normal();
-			if (first) 
+			if (first)
 				aVec = (CrossProduct(bVec, cVec)).Normal();
-			else 
+			else
 				bVec = (CrossProduct(cVec, aVec)).Normal();
 			return true;
 		}
 		else
-		
+
 			return false;
 	}
 	else
@@ -1272,7 +1273,7 @@ Boolean GS_API MakeVectorsOrthonormal(Vector &aVec, Vector &bVec, Vector &cVec, 
 #endif
 
 
-void GS_API GetVectorsFromMatrix(const TransformMatrix &mat, Vector &aVec, Vector &bVec, Vector &cVec)
+void GS_API VectorworksMVR::GetVectorsFromMatrix(const TransformMatrix &mat, Vector &aVec, Vector &bVec, Vector &cVec)
 {
 
 	GS_ASSERTDOUBLEALIGNMENT(&aVec);
@@ -1296,7 +1297,7 @@ void GS_API GetVectorsFromMatrix(const TransformMatrix &mat, Vector &aVec, Vecto
 
 
 
-void GS_API AssignVectorsToMatrix(const Vector &aVec, const Vector &bVec, const Vector &cVec, TransformMatrix &mat)
+void GS_API VectorworksMVR::AssignVectorsToMatrix(const Vector &aVec, const Vector &bVec, const Vector &cVec, TransformMatrix &mat)
 {
 
 	GS_ASSERTDOUBLEALIGNMENT(&aVec);
@@ -1318,34 +1319,34 @@ void GS_API AssignVectorsToMatrix(const Vector &aVec, const Vector &bVec, const 
 }
 
 
-void GS_API CreateMatrixFromAxis(const Axis &axis, TransformMatrix &mat)
+void GS_API VectorworksMVR::CreateMatrixFromAxis(const Axis &axis, TransformMatrix &mat)
 {
 	GS_ASSERTDOUBLEALIGNMENT(&axis);
 	GS_ASSERTDOUBLEALIGNMENT(&mat);
 
 	TransformMatrix				transMatrix;
 
-	IdentityMatrix(mat);
-	AssignVectorsToMatrix(axis.i, axis.j, axis.k, mat);
+	VectorworksMVR::IdentityMatrix(mat);
+	VectorworksMVR::AssignVectorsToMatrix(axis.i, axis.j, axis.k, mat);
 
-	IdentityMatrix(transMatrix);
-	TranslateMatrix(transMatrix, -axis.vertex.x, -axis.vertex.y, -axis.vertex.z);
-	mat = MatrixMultiply(transMatrix, mat);
+	VectorworksMVR::IdentityMatrix(transMatrix);
+	VectorworksMVR::TranslateMatrix(transMatrix, -axis.vertex.x, -axis.vertex.y, -axis.vertex.z);
+	mat = VectorworksMVR::MatrixMultiply(transMatrix, mat);
 }
 
 
-void GS_API CreateAxisFromMatrix(const TransformMatrix &mat, Axis &axis)
+void GS_API VectorworksMVR::CreateAxisFromMatrix(const TransformMatrix &mat, Axis &axis)
 {
 	GS_ASSERTDOUBLEALIGNMENT(&axis);
 	GS_ASSERTDOUBLEALIGNMENT(&mat);
 
-	GetVectorsFromMatrix(mat, axis.i, axis.j, axis.k);
-	InversePointTransformN(WorldPt3(0L, 0L, 0L), mat, axis.vertex);
+	VectorworksMVR::GetVectorsFromMatrix(mat, axis.i, axis.j, axis.k);
+	VectorworksMVR::InversePointTransformN(WorldPt3(0L, 0L, 0L), mat, axis.vertex);
 }
 
 
 
-void GS_API SetMatrixKI(const WorldPt3 &kDir, const WorldPt3 &iDir, TransformMatrix &mat)
+void GS_API VectorworksMVR::SetMatrixKI(const WorldPt3 &kDir, const WorldPt3 &iDir, TransformMatrix &mat)
 {
 	GS_ASSERTDOUBLEALIGNMENT(&kDir);
 	GS_ASSERTDOUBLEALIGNMENT(&iDir);
@@ -1358,13 +1359,13 @@ void GS_API SetMatrixKI(const WorldPt3 &kDir, const WorldPt3 &iDir, TransformMat
 	kVec = WorldPt3(kDir);
 	iVec = WorldPt3(iDir);
 
-	if (MakeVectorsOrthonormal(kVec, iVec, jVec, false)) {
-		AssignVectorsToMatrix(iVec, jVec, kVec, mat);
+	if (VectorworksMVR::MakeVectorsOrthonormal(kVec, iVec, jVec, false)) {
+		VectorworksMVR::AssignVectorsToMatrix(iVec, jVec, kVec, mat);
 	}
 }
 
 
-void GS_API SetMatrixKJ(const WorldPt3 &kDir, const WorldPt3 &jDir, TransformMatrix &mat)
+void GS_API VectorworksMVR::SetMatrixKJ(const WorldPt3 &kDir, const WorldPt3 &jDir, TransformMatrix &mat)
 {
 	GS_ASSERTDOUBLEALIGNMENT(&kDir);
 	GS_ASSERTDOUBLEALIGNMENT(&jDir);
@@ -1376,15 +1377,15 @@ void GS_API SetMatrixKJ(const WorldPt3 &kDir, const WorldPt3 &jDir, TransformMat
 
 	kVec = WorldPt3(kDir);
 	jVec = WorldPt3(jDir);
-	if (MakeVectorsOrthonormal(jVec, kVec, iVec, true)) {
-		AssignVectorsToMatrix(iVec, jVec, kVec, mat);
+	if (VectorworksMVR::MakeVectorsOrthonormal(jVec, kVec, iVec, true)) {
+		VectorworksMVR::AssignVectorsToMatrix(iVec, jVec, kVec, mat);
 	}
 	else
 		DSTOP((kEveryone, "Unable to make vectors orthonormal!"));
 }
 
 
-void GS_API SetMatrixIJ(const WorldPt3 &kDir, const WorldPt3 &iDir, TransformMatrix &mat)
+void GS_API VectorworksMVR::SetMatrixIJ(const WorldPt3 &kDir, const WorldPt3 &iDir, TransformMatrix &mat)
 {
 	GS_ASSERTDOUBLEALIGNMENT(&kDir);
 	GS_ASSERTDOUBLEALIGNMENT(&iDir);
@@ -1396,13 +1397,13 @@ void GS_API SetMatrixIJ(const WorldPt3 &kDir, const WorldPt3 &iDir, TransformMat
 
 	iVec = WorldPt3(kDir);
 	jVec = WorldPt3(iDir);
-	if (MakeVectorsOrthonormal(iVec, jVec, kVec, false)) {
-		AssignVectorsToMatrix(iVec, jVec, kVec, mat);
+	if (VectorworksMVR::MakeVectorsOrthonormal(iVec, jVec, kVec, false)) {
+		VectorworksMVR::AssignVectorsToMatrix(iVec, jVec, kVec, mat);
 	}
 }
 
 
-void GS_API TranslateMatrix(TransformMatrix &f, WorldCoord x, WorldCoord y, WorldCoord z)
+void GS_API VectorworksMVR::TranslateMatrix(TransformMatrix &f, WorldCoord x, WorldCoord y, WorldCoord z)
 {
 	GS_ASSERTDOUBLEALIGNMENT(&f);
 
@@ -1412,7 +1413,7 @@ void GS_API TranslateMatrix(TransformMatrix &f, WorldCoord x, WorldCoord y, Worl
 }
 
 
-void GS_API SetMultiAxisSpinMatrix(	TransformMatrix &mat,
+void GS_API VectorworksMVR::SetMultiAxisSpinMatrix(	TransformMatrix &mat,
 						MajorAxisSpec firstAxis,
 						MajorAxisSpec secondAxis,
 						MajorAxisSpec thirdAxis,
@@ -1430,41 +1431,41 @@ void GS_API SetMultiAxisSpinMatrix(	TransformMatrix &mat,
 	TransformMatrix				tmpFrac2;
 	TransformXMatrix			tmpMat;
 
-	IdentityMatrix(tmpFrac2);
+	VectorworksMVR::IdentityMatrix(tmpFrac2);
 	CAST(WorldPt3, tmpFrac2.v2.offset) = -center;
-	SetAxisRotationXMatrix(firstAxis, firstAngleDegrees, tmpMat);
-	XMatrixToMatrix(tmpMat, tmpFrac);
-	tmpFrac = MatrixMultiply(tmpFrac2, tmpFrac);
+	VectorworksMVR::SetAxisRotationXMatrix(firstAxis, firstAngleDegrees, tmpMat);
+	VectorworksMVR::XMatrixToMatrix(tmpMat, tmpFrac);
+	tmpFrac = VectorworksMVR::MatrixMultiply(tmpFrac2, tmpFrac);
 	if (secondAxis != 0) {
-		SetAxisRotationXMatrix(secondAxis, secondAngleDegrees, tmpMat);
-		XMatrixToMatrix(tmpMat, tmpFrac2);
-		tmpFrac = MatrixMultiply(tmpFrac, tmpFrac2);
+		VectorworksMVR::SetAxisRotationXMatrix(secondAxis, secondAngleDegrees, tmpMat);
+		VectorworksMVR::XMatrixToMatrix(tmpMat, tmpFrac2);
+		tmpFrac = VectorworksMVR::MatrixMultiply(tmpFrac, tmpFrac2);
 	}
 	if (thirdAxis != 0) {
-		SetAxisRotationXMatrix(thirdAxis, thirdAngleDegrees, tmpMat);
-		XMatrixToMatrix(tmpMat, tmpFrac2);
-		tmpFrac = MatrixMultiply(tmpFrac, tmpFrac2);
+		VectorworksMVR::SetAxisRotationXMatrix(thirdAxis, thirdAngleDegrees, tmpMat);
+		VectorworksMVR::XMatrixToMatrix(tmpMat, tmpFrac2);
+		tmpFrac = VectorworksMVR::MatrixMultiply(tmpFrac, tmpFrac2);
 	}
-	IdentityMatrix(tmpFrac2);
+	VectorworksMVR::IdentityMatrix(tmpFrac2);
 	CAST(WorldPt3, tmpFrac2.v2.offset) = center;
-	tmpFrac = MatrixMultiply(tmpFrac, tmpFrac2);
-	mat = fromzero ? tmpFrac : MatrixMultiply(mat, tmpFrac);
+	tmpFrac = VectorworksMVR::MatrixMultiply(tmpFrac, tmpFrac2);
+	mat = fromzero ? tmpFrac : VectorworksMVR::MatrixMultiply(mat, tmpFrac);
 }
 
-void GS_API RotateMatrix2D(double_param degrees, const WorldPt& center, TransformMatrix &mat)
+void GS_API VectorworksMVR::RotateMatrix2D(double_param degrees, const WorldPt& center, TransformMatrix &mat)
 {
 	GS_ASSERTDOUBLEALIGNMENT(&mat);
 	GS_ASSERTDOUBLEALIGNMENT(&center);
 
 	WorldPt3 rotCenter(center, 0L);
 	TransformMatrix rotMat;
-	SetAxisRotationMatrix(kZAxis, degrees, rotCenter, rotMat);
-	mat = MatrixMultiply(mat, rotMat);
+	VectorworksMVR::SetAxisRotationMatrix(kZAxis, degrees, rotCenter, rotMat);
+	mat = VectorworksMVR::MatrixMultiply(mat, rotMat);
 }
 
 // This fucntion calculates a transformation matrix (non afine)
 // that transforms the first triangle (inPt1, inPt2, inPt3) into (transfPt1, transfPt2, transfPt3) triangle
-bool GS_API CalcTransformFromOneTriToAnother(TransformMatrix& outMatrix,
+bool GS_API VectorworksMVR::CalcTransformFromOneTriToAnother(TransformMatrix& outMatrix,
 											const WorldPt3& inPt1, const WorldPt3& inPt2, const WorldPt3& inPt3,
 											const WorldPt3& transfPt1, const WorldPt3& transfPt2, const WorldPt3& transfPt3)
 {
@@ -1683,7 +1684,7 @@ bool GS_API CalcTransformFromOneTriToAnother(TransformMatrix& outMatrix,
 } // CalcTransformFromOneTriToAnother
 
 
-bool RayPlaneIntersection(const WorldPt3& ptOnPlane, const WorldPt3& planeNormal, const Ray& ray, WorldPt3* pOutIntersection, double* pOutDistance)
+bool VectorworksMVR::RayPlaneIntersection(const WorldPt3& ptOnPlane, const WorldPt3& planeNormal, const Ray& ray, WorldPt3* pOutIntersection, double* pOutDistance)
 {
 	WorldPt3 p = ptOnPlane;
 	WorldPt3 n = planeNormal;
@@ -1712,7 +1713,7 @@ bool RayPlaneIntersection(const WorldPt3& ptOnPlane, const WorldPt3& planeNormal
 	return bFound;
 }
 
-bool IsPointNearLine(const WorldPt & inPoint, const WorldPt & inP0, const WorldPt & inP1, double inNearDist, Sint32 inLineType)
+bool VectorworksMVR::IsPointNearLine(const WorldPt & inPoint, const WorldPt & inP0, const WorldPt & inP1, double inNearDist, Sint32 inLineType)
 // returns whether point is near a line.  line may be an infinite line, a ray or a segment.
 //		inLineType - 1 == infinite line, 2 == ray from inP0 toward inP1, 3 == segment from inP0 to inP1
 {
@@ -1741,17 +1742,17 @@ bool IsPointNearLine(const WorldPt & inPoint, const WorldPt & inP0, const WorldP
 	return std::abs((int)perpDot) <= inNearDist;
 }
 
-bool RayPlaneIntersection(const TransformMatrix& plane, const Ray& ray, WorldPt3* pOutIntersection, double* pOutDistance)
+bool VectorworksMVR::RayPlaneIntersection(const TransformMatrix& plane, const Ray& ray, WorldPt3* pOutIntersection, double* pOutDistance)
 {
 	return ::RayPlaneIntersection( plane.v2.offset, plane.v2.k, ray, pOutIntersection, pOutDistance );
 }
 
-bool RayPlaneIntersection(const Axis& plane, const Ray& ray, WorldPt3* pOutIntersection, double* pOutDistance)
+bool VectorworksMVR::RayPlaneIntersection(const Axis& plane, const Ray& ray, WorldPt3* pOutIntersection, double* pOutDistance)
 {
 	return ::RayPlaneIntersection( plane.vertex, plane.k, ray, pOutIntersection, pOutDistance );
 }
 
-bool RayCubeIntersection(const WorldCube& inwc, const Ray& inRay,
+bool VectorworksMVR::RayCubeIntersection(const WorldCube& inwc, const Ray& inRay,
 						 WorldPt3* outpwpt3Int1/*=NULL*/, WorldPt3* outpwpt3Int2/*=NULL*/,
 						 double* outpA1/*=NULL*/, double* outpA2/*=NULL*/) 
 {
@@ -1947,7 +1948,7 @@ bool inline InBox( const WorldPt3& Hit, const WorldPt3& B1, const WorldPt3& B2, 
 
 // returns true if line (L1, L2) intersects with the worldcube: inWC
 // returns intersection points in Hit1 & Hit2
-bool LineIntersectsCube( const WorldCube& inWC, const WorldPt3& L1, const WorldPt3& L2, WorldPt3 &Hit1, WorldPt3 &Hit2 )
+bool VectorworksMVR::LineIntersectsCube( const WorldCube& inWC, const WorldPt3& L1, const WorldPt3& L2, WorldPt3 &Hit1, WorldPt3 &Hit2 )
 {
 
 	if (!inWC.IsEmpty()) {
@@ -2040,32 +2041,32 @@ bool LineIntersectsCube( const WorldCube& inWC, const WorldPt3& L1, const WorldP
 
 GS_API TOneWayCoordSystem::TOneWayCoordSystem(void)
 {
-	IdentityMatrix(fCSMat);
-	CreateAxisFromMatrix(fCSMat, fCSAxis);
+	VectorworksMVR::IdentityMatrix(fCSMat);
+	VectorworksMVR::CreateAxisFromMatrix(fCSMat, fCSAxis);
 }
 
 GS_API TOneWayCoordSystem::TOneWayCoordSystem(const TransformMatrix& csMatrix)
 {
 	fCSMat = csMatrix;
-	CreateAxisFromMatrix(fCSMat, fCSAxis);
+	VectorworksMVR::CreateAxisFromMatrix(fCSMat, fCSAxis);
 }
 
 GS_API TOneWayCoordSystem::TOneWayCoordSystem(const Axis& csAxis)
 {
 	fCSAxis = csAxis;
-	CreateMatrixFromAxis(fCSAxis, fCSMat);
+	VectorworksMVR::CreateMatrixFromAxis(fCSAxis, fCSMat);
 }
 
 
 void GS_API TCoordSystem::Setup(void)
 {
-	InvertMatrix(fCSMat, fInverseCSMat);
+	VectorworksMVR::InvertMatrix(fCSMat, fInverseCSMat);
 }
 
 
 GS_API TCoordSystem::TCoordSystem(void)
 {
-	IdentityMatrix(fInverseCSMat);
+	VectorworksMVR::IdentityMatrix(fInverseCSMat);
 }
 
 GS_API TCoordSystem::TCoordSystem(const Axis& csAxis) :

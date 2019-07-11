@@ -6,9 +6,11 @@
 
 #pragma once
 
-namespace VWFC
+namespace VectorworksMVR
 {
-	namespace Math
+	namespace VWFC
+	{
+		namespace Math
 	{
 		// --------------------------------------------------------------------------------
 		class VWLine3D;
@@ -140,6 +142,7 @@ namespace VWFC
 		};
 
 		// array of point defintion
-		typedef		std::vector<VWPoint3D>									TSTLPoints3DArray;
+			typedef		std::vector<VWPoint3D>									TSTLPoints3DArray;
+		}
 	}
 }
