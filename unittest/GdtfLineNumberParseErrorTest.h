@@ -16,6 +16,7 @@ protected:
 
 private:
 	void ReadFile();
+	void ClearExpectedError();
 
 	std::string fErrorGdtf_Path;
 };

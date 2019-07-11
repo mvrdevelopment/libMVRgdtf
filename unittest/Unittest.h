@@ -74,6 +74,10 @@ public:
 
     bool Equalish(double val1, double val2, double epislon);
 
+	// For clearing false state if false error was forced
+	std::pair<bool, std::string>	getFailedTests();
+	void							resetFailedTestState();
+
 private:
     bool                fFailed;
     TUnittestFailArray  fFailedTests;

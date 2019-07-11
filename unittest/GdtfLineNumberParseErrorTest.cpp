@@ -42,4 +42,18 @@ void GdtfLineNumberParseErrorTest::ReadFile()
 	checkifEqual("Count Errors", countErrors, size_t(1));
 
 	PrintParsingErrorList(gdtfRead);
+	ClearExpectedError();
+}
+
+void GdtfLineNumberParseErrorTest::ClearExpectedError()
+{	
+	std::pair<bool, std::string> failedTest = getFailedTests();
+
+	if (failedTest.first)
+	{
+		if (failedTest.second == " Code: 21 Message:  Line: 186 Column: 96")
+		{
+			resetFailedTestState();
+		}
+	}
 }
