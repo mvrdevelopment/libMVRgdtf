@@ -48,7 +48,7 @@ public:
     bool checkVCOM(VectorworksMVR::VCOMError error, const std::string& check);
     bool checkVCOM_NotSet(VectorworksMVR::VCOMError error, const std::string& check);
 	bool checkVCOM_Failed(VectorworksMVR::VCOMError error, const std::string& check);
-    void PrintParsingError(const std::string& check, const Sint32 val1);
+    void PrintParsingError(const std::string& check, const Sint32 val1, size_t line, size_t column);
 
 
     void PrintParsingErrorList(VectorworksMVR::IGdtfFixturePtr& fixture);

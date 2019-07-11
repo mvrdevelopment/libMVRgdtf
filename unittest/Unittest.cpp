@@ -340,7 +340,7 @@ void Unittest::checkifEqualPtr(const std::string& check, void* val1, void* val2)
 	fFailedTests.push_back(test);
 };
 
-void Unittest::PrintParsingError(const std::string& check, const Sint32 val1)
+void Unittest::PrintParsingError(const std::string& check, const Sint32 val1, size_t line, size_t column)
 {
 	// Else Log the error
 	fFailed = true;
@@ -350,6 +350,10 @@ void Unittest::PrintParsingError(const std::string& check, const Sint32 val1)
 	test.fMessage += std::to_string(val1);
 	test.fMessage += " Message: ";
 	test.fMessage += check;
+	test.fMessage += " Line: ";
+	test.fMessage += std::to_string(line) ;
+	test.fMessage += " Column: ";
+	test.fMessage += std::to_string(column);
 
 	fFailedTests.push_back(test);
 };
@@ -370,7 +374,7 @@ void Unittest::PrintParsingErrorList(VectorworksMVR::IGdtfFixturePtr& fixture)
 		fixture->GetParsingErrorAt( i, &error);
 		error->GetErrorType(errorType);
 		error->GetLineAndColumnNumber(line, column);
-		PrintParsingError(error->GetErrorMessage(), (Sint32)errorType);
+		PrintParsingError(error->GetErrorMessage(), (Sint32)errorType, line, column);
 	}
 };
 
