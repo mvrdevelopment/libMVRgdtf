@@ -21,7 +21,7 @@ XmlConversionTest::~XmlConversionTest()
 
 bool XmlConversionTest::ExecuteTest()
 {
-	std::cout << "=                                        XmlConversionTest                             =" << std::endl;
+	std::cout << "=                                        XmlConversionTest                                 =" << std::endl;
     RunTests();
 
     return true;

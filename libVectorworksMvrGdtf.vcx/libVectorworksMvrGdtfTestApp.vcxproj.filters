@@ -72,6 +72,9 @@
     <ClCompile Include="..\unittest\UtilityTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\unittest\GdtfLineNumberParseErrorTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\unittest\MvrUnittest.h">
@@ -127,6 +130,9 @@
     </ClInclude>
     <ClInclude Include="..\unittest\UtilityTest.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\unittest\GdtfLineNumberParseErrorTest.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

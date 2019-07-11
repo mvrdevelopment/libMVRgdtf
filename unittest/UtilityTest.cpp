@@ -20,7 +20,7 @@ UtilityTest::~UtilityTest()
 
 bool UtilityTest::ExecuteTest()
 {
-	std::cout << "=                                        UtilTest                                       =" << std::endl;
+	std::cout << "=                                        UtilTest                                          =" << std::endl;
 
 	IIUtilityPtr util (IID_IUtility);
 
