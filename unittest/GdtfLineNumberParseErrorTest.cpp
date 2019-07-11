@@ -12,7 +12,7 @@ using namespace VectorworksMVR::GdtfDefines;
 #define __checkVCOM(x) checkVCOM(x, #x)
 #define __checkVCOM_Failed(x) this->checkVCOM_NotSet(x, #x)
 
-GdtfLineNumberParseErrorTest::GdtfLineNumberParseErrorTest(const std::string& currentDir) : GdtfUnitTest(currentDir)
+GdtfLineNumberParseErrorTest::GdtfLineNumberParseErrorTest(const std::string& currentDir)
 {
 	fErrorGdtf_Path = UnitTestUtil::GetTestResourceFolder() + kSeparator + "WrongDmxValue.gdtf";
 }
@@ -21,17 +21,15 @@ GdtfLineNumberParseErrorTest::~GdtfLineNumberParseErrorTest()
 {
 }
 
-
-std::string GdtfLineNumberParseErrorTest::GetUnitTestName()
+bool GdtfLineNumberParseErrorTest::ExecuteTest()
 {
-	return  std::string("GdtfLineNumberParseErrorTest");
+	std::cout << "=                           GdtfUnittest Line Number ParseError Test                       =" << std::endl;
+	ReadFile();
+
+	return true;
 }
 
-void GdtfLineNumberParseErrorTest::WriteFile(VectorworksMVR::IGdtfFixturePtr& fixture)
-{
-}
-
-void GdtfLineNumberParseErrorTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
+void GdtfLineNumberParseErrorTest::ReadFile()
 {
 	
 	//------------------------------------------------------------------------------    

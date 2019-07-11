@@ -6,18 +6,16 @@
 #include "GdtfUnittestHandler.h"
 
 
-class GdtfLineNumberParseErrorTest : public GdtfUnitTest
+class GdtfLineNumberParseErrorTest : public Unittest
 {
 public:
 	GdtfLineNumberParseErrorTest(const std::string& currentDir);
 	virtual ~GdtfLineNumberParseErrorTest();
 protected:
-	std::string virtual GetUnitTestName() override;
+	bool virtual ExecuteTest();
 
 private:
+	void ReadFile();
+
 	std::string fErrorGdtf_Path;
-
-	void virtual WriteFile(VectorworksMVR::IGdtfFixturePtr& fixtureDuringRead) override;
-	void virtual ReadFile(VectorworksMVR::IGdtfFixturePtr& fixtureDuringWrite) override;
-
 };
