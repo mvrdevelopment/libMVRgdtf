@@ -77,8 +77,8 @@ void TaggingDOMParser::startElement
     // supercall
     XercesDOMParser::startElement(elemDecl, urlId, elemPrefix, attrList, attrCount, isEmpty, isRoot);
     
-    if(!isEmpty)
-    {
+    //if(!isEmpty)
+    //{
         const Locator* locator = getScanner()->getLocator();
         Tag* tag = createTag();
         tag->lineNumber   = locator->getLineNumber();
@@ -87,5 +87,5 @@ void TaggingDOMParser::startElement
         XercesDOMParser::fCurrentNode->setUserData(tagKey, tag, dataHandler);
 
         tag->link();
-    }
+    //}
 }

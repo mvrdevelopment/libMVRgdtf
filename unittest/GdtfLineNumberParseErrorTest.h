@@ -15,6 +15,8 @@ protected:
 	std::string virtual GetUnitTestName() override;
 
 private:
+	std::string fErrorGdtf_Path;
+
 	void virtual WriteFile(VectorworksMVR::IGdtfFixturePtr& fixtureDuringRead) override;
 	void virtual ReadFile(VectorworksMVR::IGdtfFixturePtr& fixtureDuringWrite) override;
 
