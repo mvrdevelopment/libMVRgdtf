@@ -59,7 +59,7 @@
 #include "Wrapper/ZIPFileImpl.h"
 
 //------------------------------------------------------------------
-extern "C" VectorworksMVR::VCOMError VW_EXPORT VWQueryInterface(const VectorworksMVR::VWIID& iid, VectorworksMVR::IVWUnknown** outInterface)
+extern "C" VectorworksMVR::VCOMError VWQueryInterface(const VectorworksMVR::VWIID& iid, VectorworksMVR::IVWUnknown** outInterface)
 {
 	VectorworksMVR::IVWUnknown* resultInterface = nullptr;
 

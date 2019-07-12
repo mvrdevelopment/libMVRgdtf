@@ -135,7 +135,7 @@ namespace VectorworksMVR
     const VCOMError     kVCOMError_NoObj                      = 465;
 
 	// ---------------------------------------------------------------------------------------------------
-	extern "C" VCOMError EXPORT_MVR_CLASS VWQueryInterface(const VWIID& iid, IVWUnknown** outInterface);
+	extern "C" VCOMError VWQueryInterface(const VWIID& iid, IVWUnknown** outInterface);
 
 	// ---------------------------------------------------------------------------------------------------
 	template<class T> class VCOMPtr
