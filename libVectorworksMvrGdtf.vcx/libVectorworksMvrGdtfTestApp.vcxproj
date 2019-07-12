@@ -210,8 +210,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libVectorworksMvrGdtf.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)libs</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies);libVectorworksMvrGdtf.lib;xerces-c_3.lib;Rpcrt4.lib;ws2_32.lib;ws2_32.lib;USP10.lib</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>xcopy /y "$(SolutionDir)libs\xerces-c_3.lib" "$(OutDir)"</Command>
@@ -234,8 +234,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libVectorworksMvrGdtf.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)libs</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies);libVectorworksMvrGdtf.lib;xerces-c_3.lib;Rpcrt4.lib;ws2_32.lib;ws2_32.lib;USP10.lib</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>xcopy /y "$(SolutionDir)libs\xerces-c_3.lib" "$(OutDir)"</Command>
@@ -330,8 +330,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libVectorworksMvrGdtf.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)libs</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies);libVectorworksMvrGdtf.lib;xerces-c_3.lib;Rpcrt4.lib;ws2_32.lib;ws2_32.lib;USP10.lib</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>xcopy /y "$(SolutionDir)libs\xerces-c_3.lib" "$(OutDir)"</Command>
@@ -358,8 +358,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libVectorworksMvrGdtf.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)libs</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies);libVectorworksMvrGdtf.lib;xerces-c_3.lib;Rpcrt4.lib;ws2_32.lib;ws2_32.lib;USP10.lib</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>xcopy /y "$(SolutionDir)libs\xerces-c_3.lib" "$(OutDir)"</Command>
