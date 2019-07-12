@@ -412,6 +412,7 @@ std::pair<bool, std::string> Unittest::getFailedTests()
 	{
 		return std::make_pair(true, fFailedTests.at(0).fMessage);
 	}
+	return std::make_pair(false, "THIS SHOULD NOT BE REACHED!");
 }
 
 void Unittest::resetFailedTestState()
