@@ -11,10 +11,14 @@ namespace VectorworksMVR
 {
 	// ---------------------------------------------------------------------------------------------------
 	#ifdef _WIN32
-		#ifdef EXPORT_SYMBOLS
-			#define EXPORT_MVR_CLASS			__declspec(dllexport)
+		#ifdef EXPORT_STATIC
+			#define EXPORT_MVR_CLASS
 		#else
-			#define EXPORT_MVR_CLASS			__declspec(dllimport)
+			#ifdef EXPORT_SYMBOLS
+				#define EXPORT_MVR_CLASS			__declspec(dllexport)
+			#else
+				#define EXPORT_MVR_CLASS			__declspec(dllimport)
+			#endif
 		#endif
 	#elif _LINUX
 		#define EXPORT_MVR_CLASS			__attribute__((visibility("default")))
@@ -135,7 +139,7 @@ namespace VectorworksMVR
     const VCOMError     kVCOMError_NoObj                      = 465;
 
 	// ---------------------------------------------------------------------------------------------------
-	extern "C" VCOMError EXPORT_MVR_CLASS VWQueryInterface(const VWIID& iid, IVWUnknown** outInterface);
+	extern "C" VCOMError VWQueryInterface(const VWIID& iid, IVWUnknown** outInterface);
 
 	// ---------------------------------------------------------------------------------------------------
 	template<class T> class VCOMPtr

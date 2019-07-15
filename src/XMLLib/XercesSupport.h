@@ -7,6 +7,10 @@
 #define XERCES_STATIC_LIBRARY 1
 #endif // !1
 
+#ifdef EXPORT_STATIC
+#define XERCES_STATIC_LIBRARY
+#endif
+
 
 
 #include "xercesc/framework/LocalFileFormatTarget.hpp"
