@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="DebugVS15|Win32">
@@ -202,16 +202,17 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);GS_WIN;_WINDOWS;GITPATH="$(SolutionDir.Replace('\', '\\'))unittest"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);GS_WIN;_WINDOWS;GITPATH="$(SolutionDir.Replace('\', '\\'))unittest";XERCES_STATIC_LIBRARY </PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir)src</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)libs</AdditionalLibraryDirectories>
-      <AdditionalDependencies>%(AdditionalDependencies);libVectorworksMvrGdtf.lib;xerces-c_3.lib;Rpcrt4.lib;ws2_32.lib;ws2_32.lib;USP10.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);libVectorworksMvrGdtf.lib;xerces-c_3.lib;Rpcrt4.lib;ws2_32.lib;ws2_32.lib;USP10.lib;Shlwapi.lib</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>xcopy /y "$(SolutionDir)libs\xerces-c_3.lib" "$(OutDir)"</Command>
@@ -226,16 +227,17 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);GS_WIN;_WINDOWS;GITPATH="$(SolutionDir.Replace('\', '\\'))unittest"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);GS_WIN;_WINDOWS;GITPATH="$(SolutionDir.Replace('\', '\\'))unittest";XERCES_STATIC_LIBRARY </PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir)src</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)libs</AdditionalLibraryDirectories>
-      <AdditionalDependencies>%(AdditionalDependencies);libVectorworksMvrGdtf.lib;xerces-c_3.lib;Rpcrt4.lib;ws2_32.lib;ws2_32.lib;USP10.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);libVectorworksMvrGdtf.lib;xerces-c_3.lib;Rpcrt4.lib;ws2_32.lib;ws2_32.lib;USP10.lib;Shlwapi.lib</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>xcopy /y "$(SolutionDir)libs\xerces-c_3.lib" "$(OutDir)"</Command>
@@ -320,10 +322,11 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);GS_WIN;_WINDOWS;GITPATH="$(SolutionDir.Replace('\', '\\'))unittest"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);GS_WIN;_WINDOWS;GITPATH="$(SolutionDir.Replace('\', '\\'))unittest";XERCES_STATIC_LIBRARY </PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir)src</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -331,7 +334,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)libs</AdditionalLibraryDirectories>
-      <AdditionalDependencies>%(AdditionalDependencies);libVectorworksMvrGdtf.lib;xerces-c_3.lib;Rpcrt4.lib;ws2_32.lib;ws2_32.lib;USP10.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);libVectorworksMvrGdtf.lib;xerces-c_3.lib;Rpcrt4.lib;ws2_32.lib;ws2_32.lib;USP10.lib;Shlwapi.lib</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>xcopy /y "$(SolutionDir)libs\xerces-c_3.lib" "$(OutDir)"</Command>
@@ -348,10 +351,11 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);GS_WIN;_WINDOWS;GITPATH="$(SolutionDir.Replace('\', '\\'))unittest"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);GS_WIN;_WINDOWS;GITPATH="$(SolutionDir.Replace('\', '\\'))unittest";XERCES_STATIC_LIBRARY </PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir)src</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -359,7 +363,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)libs</AdditionalLibraryDirectories>
-      <AdditionalDependencies>%(AdditionalDependencies);libVectorworksMvrGdtf.lib;xerces-c_3.lib;Rpcrt4.lib;ws2_32.lib;ws2_32.lib;USP10.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);libVectorworksMvrGdtf.lib;xerces-c_3.lib;Rpcrt4.lib;ws2_32.lib;ws2_32.lib;USP10.lib;Shlwapi.lib</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>xcopy /y "$(SolutionDir)libs\xerces-c_3.lib" "$(OutDir)"</Command>
