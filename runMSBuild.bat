@@ -21,6 +21,7 @@ mkdir shared\bin
 mkdir shared\include
 powershell -nologo -noprofile -command "& { Expand-Archive -Path shared\xerces-c-3.1.4.zip -DestinationPath shared\builds\ -Force; }"
 REM build xerces
+copy /y "projectfiles\xerces-all\" "shared\builds\xerces-c-3.1.4\projects\Win32\VC14\xerces-all\"
 cd shared\builds\xerces-c-3.1.4\projects\Win32\VC14\xerces-all\
 MSBuild.exe xerces-all.sln /t:Build /p:Configuration="Static Release" /p:Platform=x64 /m
 cd ..\..\..\..\..\..\..\
