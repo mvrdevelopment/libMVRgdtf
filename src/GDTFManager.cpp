@@ -1512,6 +1512,11 @@ TXString GdtfGeometry::GetNodeReference()
 	return nodeRef;
 }
 
+GdtfGeometryPtr GdtfGeometry::GetParentGeometry()
+{
+	return fParent;
+}
+
 //------------------------------------------------------------------------------------
 // GdtfGeometryAxis
 GdtfGeometryAxis::GdtfGeometryAxis(GdtfGeometry* parent) 
@@ -2484,21 +2489,84 @@ std::vector<Sint32> GdtfDmxMode::GetBreakArray() const
 	return breaks;
 }
 
-size_t GdtfDmxMode::GetFootPrintForBreak(size_t breakId) const
+size_t GdtfDmxMode::GetFootPrintForBreak(size_t breakId)
 {
+	std::vector<DMXAddress> addresses (0);
+
+	std::vector<Sint32> breaks = this->GetBreakArray();
+	std::vector<Sint32>::iterator foundIndex = std::find(breaks.begin(), breaks.end(), breaks);
+	if(foundIndex == breaks.end())
+	{
+		return 0;
+	}
 
 	for (GdtfDmxChannelPtr channel : fChannels)
 	{
-		Sint32 thisBreakId = channel->GetDmxBreak();
-		if(thisBreakId == breakId)
-		{
+		if(channel->IsVirtual()) continue;
 
+		Sint32 thisBreakId = channel->GetDmxBreak();
+
+		std::vector<DMXAddress> addressesOfChannel (0);
+
+		GdtfGeometryPtr linkedGeometry = channel->GetGeomRef();
+
+		std::vector<std::pair<GdtfGeometryPtr, DMXAddress>> geometriesToCheckWithOffset (0);
+
+		geometriesToCheckWithOffset.push_back(std::pair(this->GetGeomRef(), 0));
+
+		while(geometriesToCheckWithOffset.size() > 0)
+		{
+			std::pair<GdtfGeometryPtr, DMXAddress> geometryToCheckWithOffset = geometriesToCheckWithOffset.back();
+			if(geometryToCheckWithOffset.first->GetObjectType() == eGdtfGeometryReference)
+			{
+				GdtfGeometryReferencePtr geoRef = dynamic_cast<GdtfGeometryReferencePtr> (geometryToCheckWithOffset.first);
+				geometriesToCheckWithOffset.push_back(std::pair(geoRef->GetLinkedGeometry(), 0));
+			}
 		}
+
+		if(thisBreakId == breakId)
+		{	
+			GdtfGeometryPtr parent = linkedGeometry;
+			bool isInModeTree = false;
+			while(parent->GetParentGeometry() != nullptr)
+			{
+				parent = parent->GetParentGeometry();
+			}
+
+			if(parent == this->GetGeomRef()) isInModeTree == true;
+
+			if(isInModeTree)
+			{
+				EGdtfChannelBitResolution resolution = channel->GetChannelBitResolution();
+				if(resolution >= eGdtfChannelBitResolution_8) 	addressesOfChannel.push_back(channel->GetCoarse());
+				if(resolution >= eGdtfChannelBitResolution_16) 	addressesOfChannel.push_back(channel->GetFine());
+				if(resolution >= eGdtfChannelBitResolution_24) 	addressesOfChannel.push_back(channel->GetUltra());
+				if(resolution >= eGdtfChannelBitResolution_32) 	addressesOfChannel.push_back(channel->GetUber());
+			}
+			else
+			{
+				
+			}
+		}
+
 		if(thisBreakId == 0)
 		{
+			//array that contains every reference   
+			std::vector<std::pair<GdtfGeometryReferencePtr, GdtfBreak>> geoRefsToCheck (0);
+
+			//get all geometry references that are present in the geometry tree of the Mode
 
 		}
 
+		for(DMXAddress address : addressesOfChannel)
+		{
+			std::vector<DMXAddress>::iterator foundIndex = std::find(addresses.begin(), addresses.end(), addresses);
+
+			if(foundIndex == addresses.end())
+			{
+				addresses.push_back(address);
+			}
+		}
 	}
 
 	return 0;
@@ -2803,6 +2871,12 @@ EGdtfChannelBitResolution SceneData::GdtfDmxChannel::GetChannelBitResolution()
 DmxValue SceneData::GdtfDmxChannel::GetChannelMaxDmx()
 {
 	return GdtfConverter::GetChannelMaxDmx(this->GetChannelBitResolution());
+}
+
+bool SceneData::GdtfDmxChannel::IsVirtual() const
+{
+	if(fCoarse == 0 && fFine == 0 && fUltra == 0 && fUber == 0)	return true;
+	else 														return false;
 }
 
 //------------------------------------------------------------------------------------

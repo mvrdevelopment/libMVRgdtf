@@ -580,6 +580,8 @@ namespace SceneData
 		void								GetTransformMatrix(VWTransformMatrix& ma) const;        
         const std::vector<GdtfGeometry*>	GetInternalGeometries();
 		virtual TXString					GetNodeReference();
+		GdtfGeometryPtr						GetParentGeometry();
+
 		// Setter	
 		void								SetName(const TXString& name);
 		void								SetModel(GdtfModelPtr model);
@@ -1072,6 +1074,7 @@ namespace SceneData
 		TXString							GetUnresolvedGeomRef() const;
 		EGdtfChannelBitResolution			GetChannelBitResolution();
 		DmxValue							GetChannelMaxDmx();
+		bool								IsVirtual() const;
 
 		void								SetName(const TXString& name);
 		void								SetDmxBreak(Sint32 dmxBreak);
@@ -1170,7 +1173,7 @@ namespace SceneData
 		
         const TXString&				GetUnresolvedGeomRef();
 		const TGdtfDmxRelationArray GetDmxRelations();
-		size_t     					GetFootPrintForBreak(size_t breakId) const;
+		size_t     					GetFootPrintForBreak(size_t breakId);
 		std::vector<Sint32>			GetBreakArray() const;
 
 		
