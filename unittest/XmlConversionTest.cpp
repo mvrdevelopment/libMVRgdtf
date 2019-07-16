@@ -39,21 +39,21 @@ void CheckDmxValue(const char* string, DmxValue result, EGdtfChannelBitResolutio
 void XmlConversionTest::RunTests()
 {
 	// Full Range
-	CheckDmxValue("255/1", 255, 		EGdtfChannelBitResolution::eGdtfChannelBitResolution_8,  this);
-	CheckDmxValue("255/1", 65535, 		EGdtfChannelBitResolution::eGdtfChannelBitResolution_16, this);
-	CheckDmxValue("255/1", 16777215, 	EGdtfChannelBitResolution::eGdtfChannelBitResolution_24, this);
-	CheckDmxValue("255/1", 4294967295, 	EGdtfChannelBitResolution::eGdtfChannelBitResolution_32, this);
+	CheckDmxValue("255/1", 255, 			EGdtfChannelBitResolution::eGdtfChannelBitResolution_8,  this);
+	CheckDmxValue("255/1", 255*256, 		EGdtfChannelBitResolution::eGdtfChannelBitResolution_16, this);
+	CheckDmxValue("255/1", 255*256*256, 	EGdtfChannelBitResolution::eGdtfChannelBitResolution_24, this);
+	CheckDmxValue("255/1", 255*256*256*256, EGdtfChannelBitResolution::eGdtfChannelBitResolution_32, this);
 
 	
 	CheckDmxValue("65535/2", 255, 			EGdtfChannelBitResolution::eGdtfChannelBitResolution_8,  this);
 	CheckDmxValue("65535/2", 65535, 		EGdtfChannelBitResolution::eGdtfChannelBitResolution_16, this);
-	CheckDmxValue("65535/2", 16777215, 		EGdtfChannelBitResolution::eGdtfChannelBitResolution_24, this);
-	CheckDmxValue("65535/2", 4294967295, 	EGdtfChannelBitResolution::eGdtfChannelBitResolution_32, this);
+	CheckDmxValue("65535/2", 65535*256, 	EGdtfChannelBitResolution::eGdtfChannelBitResolution_24, this);
+	CheckDmxValue("65535/2", 65535*256*256, EGdtfChannelBitResolution::eGdtfChannelBitResolution_32, this);
 
 	CheckDmxValue("16777215/3", 255, 			EGdtfChannelBitResolution::eGdtfChannelBitResolution_8,  this);
 	CheckDmxValue("16777215/3", 65535, 			EGdtfChannelBitResolution::eGdtfChannelBitResolution_16, this);
 	CheckDmxValue("16777215/3", 16777215, 		EGdtfChannelBitResolution::eGdtfChannelBitResolution_24, this);
-	CheckDmxValue("16777215/3", 4294967295, 	EGdtfChannelBitResolution::eGdtfChannelBitResolution_32, this);
+	CheckDmxValue("16777215/3", 16777215*256, 	EGdtfChannelBitResolution::eGdtfChannelBitResolution_32, this);
 
 	CheckDmxValue("4294967295/4", 255, 			EGdtfChannelBitResolution::eGdtfChannelBitResolution_8,  this);
 	CheckDmxValue("4294967295/4", 65535, 		EGdtfChannelBitResolution::eGdtfChannelBitResolution_16, this);
@@ -61,9 +61,9 @@ void XmlConversionTest::RunTests()
 	CheckDmxValue("4294967295/4", 4294967295, 	EGdtfChannelBitResolution::eGdtfChannelBitResolution_32, this);
 
 	// First Value
-	CheckDmxValue("1/1", 1, 		EGdtfChannelBitResolution::eGdtfChannelBitResolution_8,  this);
-	CheckDmxValue("1/1", 257, 		EGdtfChannelBitResolution::eGdtfChannelBitResolution_16, this);
-	CheckDmxValue("1/1", 65793, 	EGdtfChannelBitResolution::eGdtfChannelBitResolution_24, this);
-	CheckDmxValue("1/1", 16843009, 	EGdtfChannelBitResolution::eGdtfChannelBitResolution_32, this);
+	CheckDmxValue("1/1", 1, 			EGdtfChannelBitResolution::eGdtfChannelBitResolution_8,  this);
+	CheckDmxValue("1/1", 256, 			EGdtfChannelBitResolution::eGdtfChannelBitResolution_16, this);
+	CheckDmxValue("1/1", 256*256, 		EGdtfChannelBitResolution::eGdtfChannelBitResolution_24, this);
+	CheckDmxValue("1/1", 256*256*256, 	EGdtfChannelBitResolution::eGdtfChannelBitResolution_32, this);
 
 }

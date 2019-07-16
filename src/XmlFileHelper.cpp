@@ -475,14 +475,27 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString& strValue, const I
 	}
 
 	// Check if the ByteSpecifier is different to the ChannelResolution.
+	intValue = dmxValueRaw;
 	if (bytetSpecifier != chanlReso) 
 	{
-        DmxValue maxResolution  = GetChannelMaxDmx((EGdtfChannelBitResolution)bytetSpecifier);        
+		EGdtfChannelBitResolution resSpecifier = (EGdtfChannelBitResolution)bytetSpecifier;
+		while(resSpecifier < chanlReso)
+		{
+			intValue *= 256; 
+			resSpecifier = (EGdtfChannelBitResolution)(resSpecifier +1);
+		}
+		while(resSpecifier > chanlReso)
+		{
+			intValue = intValue/256; 
+			resSpecifier = (EGdtfChannelBitResolution)(resSpecifier -1);
+		}
+
+        /*DmxValue maxResolution  = GetChannelMaxDmx((EGdtfChannelBitResolution)bytetSpecifier);        
         DmxValue maxChannelUnit = GetChannelMaxDmx(chanlReso);
 
 		double percentage = (dmxValueRaw / maxResolution);
 
-        intValue = percentage * maxChannelUnit;
+        intValue = percentage * maxChannelUnit; */
 
 	}	
 	else
