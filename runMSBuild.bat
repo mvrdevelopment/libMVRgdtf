@@ -26,10 +26,10 @@ cd shared\builds\xerces-c-3.1.4\projects\Win32\VC14\xerces-all\
 MSBuild.exe xerces-all.sln /t:XercesLib /p:Configuration="Static Release" /p:Platform=x64 /m
 cd ..\..\..\..\..\..\..\
 mkdir libs
-dir libs
-dir x64
-dir x64/Release
 copy "shared\builds\xerces-c-3.1.4\Build\Win64\VC14\Static Release\xerces-c_static_3.lib" libs\xerces-c_3.lib /Y
+dir libs
 REM build libVectorworksMvrGdtf
 MSBuild.exe libVectorworksMvrGdtf.sln /t:Build /p:Configuration=Release /p:Platform=x64 /m
+dir x64
+dir x64\Release
 x64\Release\libVectorworksMvrGdtfTestApp.exe
