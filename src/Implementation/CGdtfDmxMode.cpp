@@ -348,7 +348,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxModeImpl::GetBreakAt(size_t at
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxModeImpl::GetFootprintForBreak(size_t inBreak, size_t& footprint)
 {
-    //count = fDmxMode->Get
+    footprint = fDmxMode->GetFootPrintForBreak(inBreak);
     return kVCOMError_NoError;
 }
 

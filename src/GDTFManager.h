@@ -580,7 +580,7 @@ namespace SceneData
 		void								GetTransformMatrix(VWTransformMatrix& ma) const;        
         const std::vector<GdtfGeometry*>	GetInternalGeometries();
 		virtual TXString					GetNodeReference();
-		GdtfGeometryPtr						GetParentGeometry();
+		GdtfGeometry*						GetParentGeometry();
 
 		// Setter	
 		void								SetName(const TXString& name);

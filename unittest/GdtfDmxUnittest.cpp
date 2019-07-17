@@ -92,10 +92,15 @@ void GdtfDmxUnittest::WriteFile()
 		__checkVCOM(geometry->CreateGeometry(EGdtfObjectType::eGdtfGeometryReference, "GeoRef", nullptr, STransformMatrix(), &geoRef));
 		__checkVCOM(geoRef->SetGeometryReference(geoToRef));
 
+
+		IGdtfBreakPtr break3;
+		__checkVCOM(geoRef->CreateBreak(3,5, &break3));
+
 		IGdtfBreakPtr refBreak;
 		__checkVCOM(geoRef->CreateBreak(3, 1, &refBreak));
 
-
+		IGdtfGeometryPtr childGeoOfRef;
+		__checkVCOM(geoToRef->CreateGeometry(EGdtfObjectType::eGdtfGeometry, "Child of refed Geo", model, STransformMatrix(), &childGeoOfRef));
 
 		IGdtfDmxModePtr mode;
 		__checkVCOM(gdtfWrite->CreateDmxMode("Mode", &mode));
@@ -214,7 +219,8 @@ void GdtfDmxUnittest::WriteFile()
 		// Write 24 bit Channel - With Mode Relation
 		IGdtfDmxChannelPtr bit24channel;
 		__checkVCOM(mode->CreateDmxChannel(geometry, &bit24channel));
-		__checkVCOM(bit24channel->SetGeometry(geometry));
+		__checkVCOM(bit24channel->SetDmxBreak(3));
+		__checkVCOM(bit24channel->SetGeometry(childGeoOfRef));
 		bit24channel->SetCoarse(3);
 		bit24channel->SetFine(4);
 		bit24channel->SetUltra(5);
@@ -247,6 +253,7 @@ void GdtfDmxUnittest::WriteFile()
 		IGdtfDmxChannelPtr bit8channel2;
 		__checkVCOM(mode->CreateDmxChannel(geometry, &bit8channel2));
 		bit8channel2->SetCoarse(19);
+		bit8channel2->SetDmxBreak(3);
 		IGdtfDmxLogicalChannelPtr bit8_1LogicalChannel1;
 		bit8channel2->CreateLogicalChannel(attribute4, &bit8_1LogicalChannel1);
 
@@ -394,6 +401,10 @@ void GdtfDmxUnittest::ReadFile()
 		size_t break2 = 0;
 		__checkVCOM(mode->GetBreakAt(size_t(1), break2));
 		this->checkifEqual("Check the second Break", break2, size_t(3));
+
+		size_t footprint = 0;
+		__checkVCOM(mode->GetFootprintForBreak(break2, footprint));
+		this->checkifEqual("Check the footprint", footprint, size_t(6));
 		
 
 		//----------------------------------------------------------------
