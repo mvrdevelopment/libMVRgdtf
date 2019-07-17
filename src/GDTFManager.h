@@ -1178,6 +1178,7 @@ namespace SceneData
 		const TGdtfDmxRelationArray GetDmxRelations();
 		size_t     					GetFootPrintForBreak(size_t breakId);
 		TSint32Array				GetBreakArray() const;
+		void						GetAddressesFromChannel(TDMXAddressArray& addresses, GdtfDmxChannel* channel, DMXAddress offset) const;
 
 		
 		void						SetName(const TXString& name);

@@ -2526,11 +2526,7 @@ size_t GdtfDmxMode::GetFootPrintForBreak(size_t breakId)
 		{
 			if(channel->GetGeomRef() == geoToCheck && channel->GetDmxBreak() == (Sint32)breakId) 
 			{
-				EGdtfChannelBitResolution resolution = channel->GetChannelBitResolution();
-				if(resolution >= eGdtfChannelBitResolution_8) 	{ addressesOfGeo.push_back(channel->GetCoarse());}
-				if(resolution >= eGdtfChannelBitResolution_16) 	{ addressesOfGeo.push_back(channel->GetFine());  }
-				if(resolution >= eGdtfChannelBitResolution_24) 	{ addressesOfGeo.push_back(channel->GetUltra()); }
-				if(resolution >= eGdtfChannelBitResolution_32) 	{ addressesOfGeo.push_back(channel->GetUber());  }
+				GetAddressesFromChannel(addressesOfGeo, channel, 0);
 			}
 		}
 
@@ -2595,11 +2591,7 @@ size_t GdtfDmxMode::GetFootPrintForBreak(size_t breakId)
 					{
 						if(channel->GetGeomRef() == geometryInRefToCheck && channel->GetDmxBreak() == (Sint32)breakId) 
 						{
-							EGdtfChannelBitResolution resolution = channel->GetChannelBitResolution();
-							if(resolution >= eGdtfChannelBitResolution_8) 	{ addressesOfGeo.push_back(channel->GetCoarse()+ offset);}
-							if(resolution >= eGdtfChannelBitResolution_16) 	{ addressesOfGeo.push_back(channel->GetFine()  + offset);}
-							if(resolution >= eGdtfChannelBitResolution_24) 	{ addressesOfGeo.push_back(channel->GetUltra() + offset);}
-							if(resolution >= eGdtfChannelBitResolution_32) 	{ addressesOfGeo.push_back(channel->GetUber()  + offset);}
+							GetAddressesFromChannel(addressesOfGeo, channel, offset);
 						}
 					}
 				}
@@ -2630,11 +2622,7 @@ size_t GdtfDmxMode::GetFootPrintForBreak(size_t breakId)
 						{
 							if(channel->GetGeomRef() == geometryInRefToCheck && channel->GetDmxBreak() == 0) 
 							{
-								EGdtfChannelBitResolution resolution = channel->GetChannelBitResolution();
-								if(resolution >= eGdtfChannelBitResolution_8) 	addressesOfGeo.push_back(channel->GetCoarse()+offset);
-								if(resolution >= eGdtfChannelBitResolution_16) 	addressesOfGeo.push_back(channel->GetFine()	+offset);
-								if(resolution >= eGdtfChannelBitResolution_24) 	addressesOfGeo.push_back(channel->GetUltra()+offset);
-								if(resolution >= eGdtfChannelBitResolution_32) 	addressesOfGeo.push_back(channel->GetUber()	+offset);
+								GetAddressesFromChannel(addressesOfGeo, channel, offset);
 							}
 						}
 					}
@@ -2653,6 +2641,15 @@ size_t GdtfDmxMode::GetFootPrintForBreak(size_t breakId)
 	}
 
 	return addresses.size();
+}
+void GdtfDmxMode::GetAddressesFromChannel(TDMXAddressArray& addresses, GdtfDmxChannel* channel, DMXAddress offset) const
+{
+	EGdtfChannelBitResolution resolution = channel->GetChannelBitResolution();
+	if(resolution >= eGdtfChannelBitResolution_8) 	{ addresses.push_back(channel->GetCoarse()  + offset);}
+	if(resolution >= eGdtfChannelBitResolution_16) 	{ addresses.push_back(channel->GetFine()	+ offset);}
+	if(resolution >= eGdtfChannelBitResolution_24) 	{ addresses.push_back(channel->GetUltra()   + offset);}
+	if(resolution >= eGdtfChannelBitResolution_32) 	{ addresses.push_back(channel->GetUber()	+ offset);}
+
 }
 
 //------------------------------------------------------------------------------------
