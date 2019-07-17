@@ -657,12 +657,13 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetDmxRelationAt(size_t at, IGdtfDmxRelation** relation) = 0;
 		virtual VCOMError VCOM_CALLTYPE     CreateDmxRelation(MvrString name, GdtfDefines::EGdtfDmxRelationType type, IGdtfDmxChannel* master, IGdtfDmxChannelFunction* slave, IGdtfDmxRelation** relation) = 0;
 		
+		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+
+        // 0.5.1
         virtual VCOMError VCOM_CALLTYPE     GetBreakCount(size_t& count) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetFootprintForBreak(size_t inBreak, size_t& footprint) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetBreakAt(size_t at, size_t &breakId) = 0;
-
-		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
-		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
     };
 	typedef VCOMPtr<IGdtfDmxMode>	IGdtfDmxModePtr;
     
