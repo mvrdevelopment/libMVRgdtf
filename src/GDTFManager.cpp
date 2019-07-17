@@ -2515,8 +2515,7 @@ size_t GdtfDmxMode::GetFootPrintForBreak(size_t breakId)
 	while(geometriesInGeoTree.size() > 0)
 	{
 		TDMXAddressArray addressesOfGeo;
-
-		GdtfGeometryPtr geoToCheck = geometriesInGeoTree.back();
+		GdtfGeometryPtr  geoToCheck = geometriesInGeoTree.back();
 		geometriesInGeoTree.pop_back();
 
 		for (GdtfGeometryPtr child : geoToCheck->GetInternalGeometries()) { geometriesInGeoTree.push_back(child); }
@@ -2578,14 +2577,10 @@ size_t GdtfDmxMode::GetFootPrintForBreak(size_t breakId)
 
 				while (geometriesInReferencedTree.size() > 0)
 				{
-
 					GdtfGeometryPtr geometryInRefToCheck = geometriesInReferencedTree.back();
 					geometriesInReferencedTree.pop_back();
 
-					for (GdtfGeometryPtr childOfRef : geometryInRefToCheck->GetInternalGeometries())
-					{
-						geometriesInReferencedTree.push_back(childOfRef);
-					}
+					for (GdtfGeometryPtr childOfRef : geometryInRefToCheck->GetInternalGeometries()) { geometriesInReferencedTree.push_back(childOfRef); }
 
 					for(GdtfDmxChannelPtr channel : fChannels)
 					{
@@ -2604,25 +2599,18 @@ size_t GdtfDmxMode::GetFootPrintForBreak(size_t breakId)
 				if(overwriteBreak->GetDmxBreak() == (Sint32)breakId)
 				{
 					TGdtfGeometryArray geometriesInReferencedTree = {refedGeo};
-
-					size_t offset = overwriteBreak->GetDmxAddress()-1;
-
 					while (geometriesInReferencedTree.size() > 0)
 					{
-
 						GdtfGeometryPtr geometryInRefToCheck = geometriesInReferencedTree.back();
 						geometriesInReferencedTree.pop_back();
 
-						for (GdtfGeometryPtr childOfRef : geometryInRefToCheck->GetInternalGeometries())
-						{
-							geometriesInReferencedTree.push_back(childOfRef);
-						}
+						for (GdtfGeometryPtr childOfRef : geometryInRefToCheck->GetInternalGeometries()) { geometriesInReferencedTree.push_back(childOfRef); }
 
 						for(GdtfDmxChannelPtr channel : fChannels)
 						{
-							if(channel->GetGeomRef() == geometryInRefToCheck && channel->GetDmxBreak() == 0) 
+							if(channel->GetGeomRef() == geometryInRefToCheck && channel->GetDmxBreak() == kDmxBreakOverwriteValue) 
 							{
-								GetAddressesFromChannel(addressesOfGeo, channel, offset);
+								GetAddressesFromChannel(addressesOfGeo, channel, overwriteBreak->GetDmxAddress()-1);
 							}
 						}
 					}
