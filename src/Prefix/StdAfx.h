@@ -69,8 +69,9 @@ using namespace VWFC::Tools;
 #include "Interface/IXMLFile.h"
 
 // Needed typedefs
-typedef std::vector<Sint32> TSint32Array;
-typedef std::vector<Uint16> TUint16Array;
+typedef std::vector<Sint32>     TSint32Array;
+typedef std::vector<Uint16>     TUint16Array;
+typedef std::vector<VectorworksMVR::GdtfDefines::DMXAddress> TDMXAddressArray;
 
 
 //
