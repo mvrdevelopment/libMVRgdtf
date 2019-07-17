@@ -2429,8 +2429,8 @@ const TGdtfDmxRelationArray GdtfDmxMode::GetDmxRelations()
 
 std::vector<Sint32> GdtfDmxMode::GetBreakArray() const
 {
-	std::vector<Sint32> breaks (0) ;
-	TGdtfGeometryArray geometryRefs (0) ;
+	std::vector<Sint32> breaks;
+	TGdtfGeometryArray  geometryRefs;
 
 	TGdtfGeometryArray geometrysToCheck = {fGeomRef};
 
@@ -2491,7 +2491,7 @@ std::vector<Sint32> GdtfDmxMode::GetBreakArray() const
 
 size_t GdtfDmxMode::GetFootPrintForBreak(size_t breakId)
 {
-	std::vector<DMXAddress> addresses (0);
+	std::vector<DMXAddress> addresses;
 
 
 	// check if break exists
@@ -2508,7 +2508,7 @@ size_t GdtfDmxMode::GetFootPrintForBreak(size_t breakId)
 	while(geometriesInGeoTree.size() > 0)
 	{
 
-		std::vector<DMXAddress> addressesOfGeo (0);
+		std::vector<DMXAddress> addressesOfGeo;
 
 		GdtfGeometryPtr geoToCheck = geometriesInGeoTree.back();
 		geometriesInGeoTree.pop_back();
