@@ -2550,7 +2550,7 @@ size_t GdtfDmxMode::GetFootPrintForBreak(size_t breakId)
 				{
 					if(channel->GetGeomRef() == geometryInRefToCheck)
 					{
-						if(channel->GetDmxBreak() != 0)
+						if(channel->GetDmxBreak() != kDmxBreakOverwriteValue)
 						{
 							if(std::find(breakIdsOfReference.begin(), breakIdsOfReference.end(), channel->GetDmxBreak()) == breakIdsOfReference.end())
 							{
