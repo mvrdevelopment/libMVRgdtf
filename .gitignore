@@ -62,3 +62,5 @@ x64/Release/vectorworksMvrGdtfTestApp
 shared/**
 libs/**
 x64/**
+
+libVectorworksMvrGdtf\.vcx/libs
