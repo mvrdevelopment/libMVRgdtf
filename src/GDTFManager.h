@@ -1174,7 +1174,7 @@ namespace SceneData
         const TXString&				GetUnresolvedGeomRef();
 		const TGdtfDmxRelationArray GetDmxRelations();
 		size_t     					GetFootPrintForBreak(size_t breakId);
-		std::vector<Sint32>			GetBreakArray() const;
+		TSint32Array				GetBreakArray() const;
 
 		
 		void						SetName(const TXString& name);

@@ -2427,9 +2427,9 @@ const TGdtfDmxRelationArray GdtfDmxMode::GetDmxRelations()
 	return fRelations;
 }
 
-std::vector<Sint32> GdtfDmxMode::GetBreakArray() const
+TSint32Array GdtfDmxMode::GetBreakArray() const
 {
-	std::vector<Sint32> breaks;
+	TSint32Array breaks;
 	TGdtfGeometryArray  geometryRefs;
 
 	TGdtfGeometryArray geometrysToCheck = {fGeomRef};
@@ -2466,7 +2466,7 @@ std::vector<Sint32> GdtfDmxMode::GetBreakArray() const
 				{
 					TGdtfBreakArray refBreaks = geoRef->GetBreakArray();
 					
-					std::vector<Sint32>::iterator foundIndex = std::find(breaks.begin(), breaks.end(), refBreaks.back()->GetDmxBreak());
+					TSint32Array::iterator foundIndex = std::find(breaks.begin(), breaks.end(), refBreaks.back()->GetDmxBreak());
 					if(foundIndex == breaks.end())
 					{
 						breaks.push_back(refBreaks.back()->GetDmxBreak());
@@ -2476,7 +2476,7 @@ std::vector<Sint32> GdtfDmxMode::GetBreakArray() const
 		}
 		else
 		{
-			std::vector<Sint32>::iterator foundIndex = std::find(breaks.begin(), breaks.end(), breakId);
+			TSint32Array::iterator foundIndex = std::find(breaks.begin(), breaks.end(), breakId);
 			if(foundIndex == breaks.end())
 			{
 				breaks.push_back(breakId);
@@ -2495,8 +2495,8 @@ size_t GdtfDmxMode::GetFootPrintForBreak(size_t breakId)
 
 
 	// check if break exists
-	std::vector<Sint32> breaks = this->GetBreakArray();
-	std::vector<Sint32>::iterator foundIndex = std::find(breaks.begin(), breaks.end(), breakId);
+	TSint32Array breaks = this->GetBreakArray();
+	TSint32Array::iterator foundIndex = std::find(breaks.begin(), breaks.end(), breakId);
 	if(foundIndex == breaks.end())
 	{
 		return 0;
@@ -2539,7 +2539,7 @@ size_t GdtfDmxMode::GetFootPrintForBreak(size_t breakId)
 
 			std::vector<GdtfGeometryPtr> geometriesInReferencedTree = {refedGeo};
 
-			std::vector<Sint32> breakIdsOfReference (0);
+			TSint32Array breakIdsOfReference (0);
 			bool overwrite = false;
 			
 			// go through every child of the referenced geometry and get every used break id
@@ -2559,7 +2559,7 @@ size_t GdtfDmxMode::GetFootPrintForBreak(size_t breakId)
 					{
 						if(channel->GetDmxBreak() != 0)
 						{
-							std::vector<Sint32>::iterator foundIndex = std::find(breakIdsOfReference.begin(), breakIdsOfReference.end(), channel->GetDmxBreak());
+							TSint32Array::iterator foundIndex = std::find(breakIdsOfReference.begin(), breakIdsOfReference.end(), channel->GetDmxBreak());
 
 							if(foundIndex == breakIdsOfReference.end())
 							{
@@ -2576,7 +2576,7 @@ size_t GdtfDmxMode::GetFootPrintForBreak(size_t breakId)
 
 			std::sort(breakIdsOfReference.begin(), breakIdsOfReference.end());
 
-			std::vector<Sint32>::iterator foundIndex = std::find(breakIdsOfReference.begin(), breakIdsOfReference.end(), breakId);
+			TSint32Array::iterator foundIndex = std::find(breakIdsOfReference.begin(), breakIdsOfReference.end(), breakId);
 
 			// if the reference contains geometries that are linked to a dmx channel that has a matching break, then add the address + offset to the footprint
 			if(foundIndex != breakIdsOfReference.end())
