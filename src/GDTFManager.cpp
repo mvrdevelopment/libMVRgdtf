@@ -2532,7 +2532,7 @@ size_t GdtfDmxMode::GetFootPrintForBreak(size_t breakId)
 		// if the current geometry is a geometry reference do stuff
 		if(geoToCheck->GetObjectType() == eGdtfGeometryReference)
 		{
-			GdtfGeometryReferencePtr geoRef 	= dynamic_cast<GdtfGeometryReferencePtr>(geoToCheck);
+			GdtfGeometryReferencePtr geoRef 	= dynamic_cast<GdtfGeometryReferencePtr>(geoToCheck); ASSERTN(kEveryone, geoRef);
 			GdtfGeometryPtr 		 refedGeo   = geoRef->GetLinkedGeometry();
 			TSint32Array 			 breakIdsOfReference;
 			TGdtfGeometryArray 		 geometriesInReferencedTree = {refedGeo};
