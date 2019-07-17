@@ -2521,7 +2521,7 @@ size_t GdtfDmxMode::GetFootPrintForBreak(size_t breakId)
 		// if channel is linked to the current geometry and the breaks match add the dmx addresses to the footprint 
 		for (GdtfDmxChannelPtr channel : fChannels)
 		{
-			if(channel->GetGeomRef() == geoToCheck && channel->GetDmxBreak() == breakId) 
+			if(channel->GetGeomRef() == geoToCheck && channel->GetDmxBreak() == (Sint32)breakId) 
 			{
 				EGdtfChannelBitResolution resolution = channel->GetChannelBitResolution();
 				if(resolution >= eGdtfChannelBitResolution_8) 	addressesOfGeo.push_back(channel->GetCoarse());
@@ -2600,7 +2600,7 @@ size_t GdtfDmxMode::GetFootPrintForBreak(size_t breakId)
 
 					for(GdtfDmxChannelPtr channel : fChannels)
 					{
-						if(channel->GetGeomRef() == geometryInRefToCheck && channel->GetDmxBreak() == breakId) 
+						if(channel->GetGeomRef() == geometryInRefToCheck && channel->GetDmxBreak() == (Sint32)breakId) 
 						{
 							EGdtfChannelBitResolution resolution = channel->GetChannelBitResolution();
 							if(resolution >= eGdtfChannelBitResolution_8) 	addressesOfGeo.push_back(channel->GetCoarse()+offset);
@@ -2616,7 +2616,7 @@ size_t GdtfDmxMode::GetFootPrintForBreak(size_t breakId)
 			if(overwrite)
 			{
 				GdtfBreakPtr overwriteBreak = geoRef->GetBreakArray().back();
-				if(overwriteBreak->GetDmxBreak() == breakId)
+				if(overwriteBreak->GetDmxBreak() == (Sint32)breakId)
 				{
 					std::vector<GdtfGeometryPtr> geometriesInReferencedTree = {refedGeo};
 
