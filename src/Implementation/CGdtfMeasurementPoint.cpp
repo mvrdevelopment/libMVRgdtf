@@ -5,7 +5,7 @@
 #include "CGdtfMeasurementPoint.h"
 
 
-using namespace VectorWorks::Filing;
+using namespace VectorworksMVR::Filing;
 
 VectorworksMVR::CGdtfMeasurementPointImpl::CGdtfMeasurementPointImpl()
 {

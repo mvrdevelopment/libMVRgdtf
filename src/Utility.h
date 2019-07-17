@@ -9,15 +9,18 @@
 #define kSeperator '/'
 #endif
 
-class GdtfUtil
-{   
-public:
-    static void ConvertMatrix (const VectorworksMVR::STransformMatrix & smatrix, VWTransformMatrix & vwmatrix);
-    static void ConvertMatrix (const VWTransformMatrix & vwmatrix, VectorworksMVR::STransformMatrix & smatrix);
-};
-
-class SystemUtil
+namespace VectorworksMVR
 {
-public:
-    static TXString ExtractFolderFromPath(TXString & path);
-};
+	class GdtfUtil
+	{
+	public:
+		static void ConvertMatrix(const VectorworksMVR::STransformMatrix & smatrix, VWTransformMatrix & vwmatrix);
+		static void ConvertMatrix(const VWTransformMatrix & vwmatrix, VectorworksMVR::STransformMatrix & smatrix);
+	};
+
+	class SystemUtil
+	{
+	public:
+		static TXString ExtractFolderFromPath(TXString & path);
+	};
+}

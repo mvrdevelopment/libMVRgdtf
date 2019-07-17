@@ -8,7 +8,7 @@
 #include "FilingWrapper.h"
 #include <sys/stat.h>
 
-using namespace VectorWorks::Filing;
+using namespace VectorworksMVR::Filing;
 
 // ----------------------------------------------------------------------------------------------------
 CFileIdentifier::CFileIdentifier()

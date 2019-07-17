@@ -33,7 +33,7 @@ bool GdtfUnitTest::ExecuteTest()
 	fPath += this->GetUnitTestName();
 	fPath += std::string(".gdtf");
 
-	std::cout << "=                                     GdtfUnitTest::" << this->GetUnitTestName() << "                           =" << std::endl;
+	std::cout << "=                              GdtfUnitTest::" << this->GetUnitTestName() << "                           " << std::endl;
 	std::cout << "Export File to " << fPath << std::endl; 
 
 

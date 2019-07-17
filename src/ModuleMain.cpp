@@ -59,7 +59,7 @@
 #include "Wrapper/ZIPFileImpl.h"
 
 //------------------------------------------------------------------
-extern "C" VectorworksMVR::VCOMError VW_EXPORT VWQueryInterface(const VectorworksMVR::VWIID& iid, VectorworksMVR::IVWUnknown** outInterface)
+extern "C" VectorworksMVR::VCOMError VWQueryInterface(const VectorworksMVR::VWIID& iid, VectorworksMVR::IVWUnknown** outInterface)
 {
 	VectorworksMVR::IVWUnknown* resultInterface = nullptr;
 
@@ -136,13 +136,13 @@ extern "C" VectorworksMVR::VCOMError VW_EXPORT VWQueryInterface(const Vectorwork
         resultInterface = new CGdtfFilterImpl();
     else if (iid == VectorworksMVR::IID_GdtfColorSpace)
         resultInterface = new CGdtfColorSpaceImpl();
-	else if (iid == VectorWorks::Filing::IID_FileIdentifier)
+	else if (iid == VectorworksMVR::Filing::IID_FileIdentifier)
 		resultInterface = new CFileIdentifier();
-	else if (iid == VectorWorks::Filing::IID_FolderIdentifier )
+	else if (iid == VectorworksMVR::Filing::IID_FolderIdentifier )
 		resultInterface = new CFolderIdentifier();
-	else if (iid == VectorWorks::Filing::IID_ZIPFile)
+	else if (iid == VectorworksMVR::Filing::IID_ZIPFile)
 		resultInterface = new CZIPFileImpl();
-	else if (iid == VectorWorks::Filing::IID_RawOSFile)
+	else if (iid == VectorworksMVR::Filing::IID_RawOSFile)
 		resultInterface = new CRawOSFileImpl();
 	else if (iid == XML::IID_XMLFile)
 		resultInterface = new XML::CXMLFileImpl();

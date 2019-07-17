@@ -24,7 +24,7 @@ namespace windows {
 
 #endif
 
-using namespace VWFC;
+using namespace VectorworksMVR::VWFC;
 
 VWFC::Tools::VWUUID::VWUUID(Uint32 a, Uint32 b, Uint32 c, Uint32 d)
 {

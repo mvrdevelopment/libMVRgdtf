@@ -9,35 +9,38 @@
 
 #pragma once
 
-/*namespace ZIP
-{*/
-	using namespace VectorWorks::Filing;
+namespace VectorworksMVR
+{
+	namespace Filing
+	{
+		/*namespace ZIP
+		{*/
 
 	const Uint64 kLocalFileInfoSignature	= 0x04034b50L;
 	const Uint64 kCentralDirSignature		= 0x02014b50L;
 	const Uint64 kEndSignature				= 0x06054b50L;
 	const Uint64 kExtraDataSignature		= 0x08074b50L;
 
-	struct SZIPArchiveInfo
-	{
-		TXString fFileComment;
+		struct SZIPArchiveInfo
+		{
+			TXString fFileComment;
 
-		Uint16 dwNumberOfThisDisk;
-		Uint16 dwNumberOfCentralDirDisk;
-		Uint16 dwNumberOfEntriesOnThisDisk;
-		Uint16 dwTotalNumberOfEntries;
-		Uint32 dwSizeOfCentralDir;
-		Uint32 dwOffsetCentralDir;
-		Uint16 dwStartingDiskNumber;
-		Uint16 dwCommentLength;
-	};
-		
-	typedef std::vector<SZIPFileInfo> TZIPFileInfoArray;
+			Uint16 dwNumberOfThisDisk;
+			Uint16 dwNumberOfCentralDirDisk;
+			Uint16 dwNumberOfEntriesOnThisDisk;
+			Uint16 dwTotalNumberOfEntries;
+			Uint32 dwSizeOfCentralDir;
+			Uint32 dwOffsetCentralDir;
+			Uint16 dwStartingDiskNumber;
+			Uint16 dwCommentLength;
+		};
+
+		typedef std::vector<VectorworksMVR::Filing::SZIPFileInfo> TZIPFileInfoArray;
 		// ----------------------------------------------------------------------------------------------------
 		class  CZIPFileIOBufferImpl : public IZIPFileIOBuffer
 		{
 		public:
-											CZIPFileIOBufferImpl();
+			CZIPFileIOBufferImpl();
 			virtual							~CZIPFileIOBufferImpl();
 
 		public:
@@ -57,7 +60,7 @@
 		class  CZIPFileImpl : public IZIPFile
 		{
 		public:
-											CZIPFileImpl();
+			CZIPFileImpl();
 			virtual							~CZIPFileImpl();
 
 		public:
@@ -130,10 +133,11 @@
 			TXString						fFolderPath;
 
 		private:
-			static VCOMError		fLastError;
+			static VCOMError				fLastError;
 
 		};
-	
+	}
+}
 /*}*/
 
 

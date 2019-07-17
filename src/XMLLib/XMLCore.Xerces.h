@@ -7,9 +7,11 @@
 #include "XercesSupport.h"
 
 
+namespace VectorworksMVR
+{
 namespace XML
 {
-	using namespace VectorWorks::Filing;
+		using namespace VectorworksMVR::Filing;
 
 	// ------------------------------------------------------------------------------------------------------
 	// Error constants
@@ -127,6 +129,7 @@ namespace XML
 			TXMLDataMap		fXMLDataMap;
 			Sint32			fXMLDataMapNextID;
 	};
+}
 }
 
 #endif

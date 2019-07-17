@@ -6,7 +6,7 @@
 #include "CGdtfMeasurement.h"
 
 
-using namespace VectorWorks::Filing;
+using namespace VectorworksMVR::Filing;
 
 VectorworksMVR::CGdtfPhysicalEmitterImpl::CGdtfPhysicalEmitterImpl()
 {

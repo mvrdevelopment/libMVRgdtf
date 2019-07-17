@@ -29,6 +29,8 @@
 #endif
 
 //----------------------------------------------------------------------------------------
+namespace VectorworksMVR
+{	
 
 const short MaxInt     		= 32767;  
 const short kMaxShortInt	= 32767;    
@@ -2076,7 +2078,7 @@ WorldCoord WORLDCOORD(double d) { return WorldCoord(d); }
 #define WC (WorldCoord) 
 
 #endif   // class WorldCoord test code
-
+}
 
 
 #endif  // #ifndef _MCCOORDTYPES_

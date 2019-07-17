@@ -5,7 +5,7 @@
 #include "CMediaRessourceVectorImpl.h"
 #include "Utility.h"
 
-using namespace VectorWorks::Filing;
+using namespace VectorworksMVR::Filing;
 
 VectorworksMVR::CMediaRessourceVectorImpl::CMediaRessourceVectorImpl()
 {

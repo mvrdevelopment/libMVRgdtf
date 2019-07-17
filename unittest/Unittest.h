@@ -48,7 +48,7 @@ public:
     bool checkVCOM(VectorworksMVR::VCOMError error, const std::string& check);
     bool checkVCOM_NotSet(VectorworksMVR::VCOMError error, const std::string& check);
 	bool checkVCOM_Failed(VectorworksMVR::VCOMError error, const std::string& check);
-    void PrintParsingError(const std::string& check, const Sint32 val1);
+    void PrintParsingError(const std::string& check, const Sint32 val1, size_t line, size_t column);
 
 
     void PrintParsingErrorList(VectorworksMVR::IGdtfFixturePtr& fixture);
@@ -73,6 +73,10 @@ public:
     void checkifUnEqual(const std::string& check, const VectorworksMVR::MvrUUID val1, const VectorworksMVR::MvrUUID val2);
 
     bool Equalish(double val1, double val2, double epislon);
+
+	// For clearing false state if false error was forced
+	std::pair<bool, std::string>	getFailedTests();
+	void							resetFailedTestState();
 
 private:
     bool                fFailed;

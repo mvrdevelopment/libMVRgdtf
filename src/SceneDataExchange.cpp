@@ -18,7 +18,7 @@ SceneDataGUID::SceneDataGUID(const TXString& uuid)
 	_type	= eNormal;
 }
 
-SceneDataGUID::SceneDataGUID(const VWFC::Tools::VWUUID& uuid)
+SceneDataGUID::SceneDataGUID(const VectorworksMVR::VWFC::Tools::VWUUID& uuid)
 {
 	_uuid	= uuid;
 	_type	= eNormal;
@@ -2055,7 +2055,7 @@ bool SceneDataExchange::WriteXml(const IFolderIdentifierPtr& folder, IXMLFileIOB
 		// write file
 
 		
-        pXMLFile->WriteBuffer(&outBuffer, VectorWorks::Filing::EXMLEncoding::eXMLEncoding_UTF8);
+        pXMLFile->WriteBuffer(&outBuffer, VectorworksMVR::Filing::EXMLEncoding::eXMLEncoding_UTF8);
 		
 	}
 

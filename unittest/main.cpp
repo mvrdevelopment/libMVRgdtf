@@ -9,6 +9,7 @@
 #include "GdtfDmxUnittest.h"
 #include "GdtfXmlError.h"
 #include "GdtfFunctionModeMaster.h"
+#include "GdtfLineNumberParseErrorTest.h"
 #include "Utility.h"
 #include "EmptyGeometryUnitTest.h"
 #include "CustomColorSpaceTest.h"
@@ -70,7 +71,10 @@ int main(int argc, char* argv[])
 	UtilityTest test9 (base);
 	bool test9_ok = test9.RunTest();
 
-    return  (mvrFailed || gdtfFailed || gdtfDmxFailed || errorFailed || modeMasterFailed || test1_ok || test2_ok|| test3_ok || test4_ok || test5_ok || test6_ok || test7_ok || test8_ok || test9_ok);
+	GdtfLineNumberParseErrorTest test10(base);
+	bool test10_ok = test10.RunTest();
+
+    return  (mvrFailed || gdtfFailed || gdtfDmxFailed || errorFailed || modeMasterFailed || test1_ok || test2_ok|| test3_ok || test4_ok || test5_ok || test6_ok || test7_ok || test8_ok || test9_ok || test10_ok);
 }
 
 

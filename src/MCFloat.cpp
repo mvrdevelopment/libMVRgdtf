@@ -9,5 +9,7 @@
 #include "Prefix/StdAfx.h"
 #include "MCFloat.h"
 
-const extern double kNearlyEqualEpsilonForDoubles = 1e-10;
-const extern double kNearlyEqualEpsilonForNormalizedValues = 1e-06;
+using namespace VectorworksMVR;
+
+const extern double VectorworksMVR::kNearlyEqualEpsilonForDoubles = 1e-10;
+const extern double VectorworksMVR::kNearlyEqualEpsilonForNormalizedValues = 1e-06;

@@ -4,9 +4,9 @@
 #pragma once
 #include "XmlFileHelper.h"
 
-using namespace VectorWorks::Filing;
+using namespace VectorworksMVR::Filing;
 
-namespace HashManager
+namespace VectorworksMVR
 {
 	class HashManager
 	{

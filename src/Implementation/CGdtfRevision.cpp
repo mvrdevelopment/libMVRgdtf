@@ -5,7 +5,7 @@
 #include "CGdtfRevision.h"
 
 
-using namespace VectorWorks::Filing;
+using namespace VectorworksMVR::Filing;
 
 VectorworksMVR::CGdtfRevisionImpl::CGdtfRevisionImpl()
 {

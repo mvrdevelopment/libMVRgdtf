@@ -5,7 +5,7 @@
 #include "CMediaRessourceVectorImpl.h"
 #include "CGeometryReferenceImpl.h"
 
-using namespace VectorWorks::Filing;
+using namespace VectorworksMVR::Filing;
 
 //----------------------------------------------------------------------------------------
 VectorworksMVR::CGeometryReferenceImpl::CGeometryReferenceImpl()

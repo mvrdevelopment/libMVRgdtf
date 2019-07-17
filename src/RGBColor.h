@@ -8,7 +8,6 @@
 
 namespace VectorworksMVR
 {
-
 	class CRGBColor
 	{
 	public:

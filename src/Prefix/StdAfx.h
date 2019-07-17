@@ -86,11 +86,15 @@ typedef std::vector<VectorworksMVR::GdtfDefines::DMXAddress> TDMXAddressArray;
 #pragma once
 #if GS_WIN
 
-#ifdef EXPORT_SYMBOLS
-#define GS_HIDDEN_VISIBILITY	__declspec(dllexport)
+#ifdef EXPORT_STATIC
+	#define GS_HIDDEN_VISIBILITY
 #else
-#define GS_HIDDEN_VISIBILITY	__declspec(dllimport)
-#endif // EXPORT_SYMBOLS
+	#ifdef EXPORT_SYMBOLS
+	#define GS_HIDDEN_VISIBILITY	__declspec(dllexport)
+	#else
+	#define GS_HIDDEN_VISIBILITY	__declspec(dllimport)
+	#endif // EXPORT_SYMBOLS
+#endif
 
 #define WIN32_LEAN_AND_MEAN             // Selten verwendete Komponenten aus Windows-Headern ausschließen
 // Windows-Headerdateien
