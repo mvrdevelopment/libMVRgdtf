@@ -2429,45 +2429,51 @@ const TGdtfDmxRelationArray GdtfDmxMode::GetDmxRelations()
 
 TSint32Array GdtfDmxMode::GetBreakArray() const
 {
-	TSint32Array breaks;
-	TGdtfGeometryArray  geometryRefs;
+	//------------------------------------------------------------------------------------------------------------
+	// Prepare Arrays
+	TSint32Array 							breaks;
+	std::vector<GdtfGeometryReferencePtr>  	geometryRefs;
+	TGdtfGeometryArray  					geometrysToCheck = {fGeomRef};
 
-	TGdtfGeometryArray geometrysToCheck = {fGeomRef};
-
+	//------------------------------------------------------------------------------------------------------------
+	// Get All Geometry References
 	while(geometrysToCheck.size() > 0)
 	{
+		// Get First Entry and delete it then
 		GdtfGeometryPtr geometry = geometrysToCheck.back();
 		geometrysToCheck.pop_back();
 
-		TGdtfGeometryArray children = geometry->GetInternalGeometries();
-		for(GdtfGeometryPtr child : children)
-		{
-			geometrysToCheck.push_back(child);
-		}
+		// Get all the internal geometries and prepare to chekc them
+		for(GdtfGeometryPtr child : geometry->GetInternalGeometries()) { geometrysToCheck.push_back(child); }
 
+		// Handle Geo Refs
 		if(geometry->GetObjectType() == eGdtfGeometryReference )
 		{
 			GdtfGeometryReferencePtr geoRef = dynamic_cast<GdtfGeometryReferencePtr>(geometry);
-			geometrysToCheck.push_back(geoRef->GetLinkedGeometry());
-			geometryRefs.push_back(geoRef);
+			ASSERTN(kEveryone, geoRef != nullptr);
+			if(geoRef)
+			{
+				geometrysToCheck.push_back(geoRef->GetLinkedGeometry());
+				geometryRefs.push_back(geoRef);
+			}
 		}
 	}
 
+	//------------------------------------------------------------------------------------------------------------
+	// Check all the channels
 	for (GdtfDmxChannelPtr channel : fChannels)
 	{
 		Sint32 breakId = channel->GetDmxBreak();
 		
-		if(breakId == 0)
+		// Check if Override
+		if(breakId == kDmxBreakOverwriteValue)
 		{
-			for(GdtfGeometryPtr geometry : geometryRefs)
+			for(GdtfGeometryReferencePtr geoRef : geometryRefs)
 			{
-				GdtfGeometryReferencePtr geoRef = dynamic_cast<GdtfGeometryReferencePtr>(geometry);
 				if(geoRef->GetLinkedGeometry() == channel->GetGeomRef())
 				{
 					TGdtfBreakArray refBreaks = geoRef->GetBreakArray();
-					
-					TSint32Array::iterator foundIndex = std::find(breaks.begin(), breaks.end(), refBreaks.back()->GetDmxBreak());
-					if(foundIndex == breaks.end())
+					if(std::find(breaks.begin(), breaks.end(), refBreaks.back()->GetDmxBreak()) == breaks.end())
 					{
 						breaks.push_back(refBreaks.back()->GetDmxBreak());
 					}
@@ -2476,14 +2482,15 @@ TSint32Array GdtfDmxMode::GetBreakArray() const
 		}
 		else
 		{
-			TSint32Array::iterator foundIndex = std::find(breaks.begin(), breaks.end(), breakId);
-			if(foundIndex == breaks.end())
+			if(std::find(breaks.begin(), breaks.end(), breakId) == breaks.end())
 			{
 				breaks.push_back(breakId);
 			}
 		}
 	}
 
+	//------------------------------------------------------------------------------------------------------------
+	// Sort the found break
 	std::sort(breaks.begin(), breaks.end());
 
 	return breaks;

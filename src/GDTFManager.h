@@ -57,6 +57,9 @@ namespace SceneData
     class GdtfFilter; 
     typedef GdtfFilter*	GdtfFilterPtr;
     typedef std::vector<GdtfFilter*>	TGdtfFilterArray;
+
+
+	const Sint32 kDmxBreakOverwriteValue = 0;
 	//------------------------------------------------------------------------------------
 	// Attributes	
 	
