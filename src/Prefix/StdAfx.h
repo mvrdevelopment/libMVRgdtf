@@ -64,6 +64,7 @@ using namespace VWFC::Tools;
 #include "Interface/IFileIdentifier.h"
 #include "Interface/IFolderIdentifier.h"
 #include "Interface/IRawOSFile.h"
+#include "Interface/IZIPFileBuffer.h"
 #include "Interface/IZIPFile.h"
 #include "Interface/IStdFile.h"
 #include "Interface/IXMLFile.h"
