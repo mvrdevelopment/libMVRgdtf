@@ -1173,6 +1173,7 @@ namespace SceneData
 		GdtfDmxChannelPtr			GetMasterByRef(const TXString& ref) const;
 		GdtfDmxChannelFunctionPtr	GetSlaveByRef(const TXString& ref) const;
 		GdtfGeometryPtr				GetGeomRef();
+		TGdtfDmxChannelArray		GetChannelsForGeometry(GdtfGeometryPtr geometry);
 		
         const TXString&				GetUnresolvedGeomRef();
 		const TGdtfDmxRelationArray GetDmxRelations();
