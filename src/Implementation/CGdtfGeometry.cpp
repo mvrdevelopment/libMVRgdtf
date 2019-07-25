@@ -764,6 +764,15 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetGeometryReferenc
 	return kVCOMError_NoError;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetCountLinkedDmxChannel(size_t& count, IGdtfDmxMode * forMode)
+{
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetLinkedDmxChannelAt(size_t at, IGdtfDmxChannel** outChannel, IGdtfDmxMode * forMode)
+{
+	return kVCOMError_NoError;
+}
 
 void VectorworksMVR::CGdtfGeometryImpl::SetPointer(SceneData::GdtfGeometry* geometry)
 {
