@@ -21,7 +21,11 @@ namespace VectorworksMVR
 			virtual VCOMError VCOM_CALLTYPE	Write(Uint64 position, Uint64 size, const void* pBuffer);
 
 		private:
-			std::FILE*	fTheFile;
+			Uint8*						fpZIPDataBuffer;
+			size_t						fZIPDataBufferSize;
+			VCOMPtr<IFileIdentifier>	fpOpenedFileID;
+
+
 		};
 
 	}

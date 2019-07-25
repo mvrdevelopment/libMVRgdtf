@@ -10,7 +10,6 @@
 using namespace VectorworksMVR::Filing;
 
 ZIPFileBuffer::ZIPFileBuffer()
-	: fTheFile( nullptr )
 {
 }
 
@@ -20,6 +19,7 @@ ZIPFileBuffer::~ZIPFileBuffer()
 
 VCOMError ZIPFileBuffer::Open(VectorworksMVR::Filing::IFileIdentifier* pFileID, bool bReadable, bool bWritable, bool bRandomAccess, bool bTruncateExisting)
 {
+	/*
 	if ( pFileID == nullptr )
 		return kVCOMError_InvalidArg;
 
@@ -41,12 +41,13 @@ VCOMError ZIPFileBuffer::Open(VectorworksMVR::Filing::IFileIdentifier* pFileID, 
 	else if ( bReadable == false && bWritable == true  )		fTheFile = std::fopen( path, bTruncateExisting ? "ab" : "wb" );
 	else if ( bReadable == true  && bWritable == true  )		fTheFile = std::fopen( path, bTruncateExisting ? "wb+" : "ab+" );
  #endif
-
-	return fTheFile ? kVCOMError_NoError : kVCOMError_Failed;;
+ */
+	return kVCOMError_NoError ;
 }
 
 VCOMError ZIPFileBuffer::Close()
 {
+	/*
 	if ( fTheFile )
 	{
 #ifdef _LINUX
@@ -56,12 +57,14 @@ VCOMError ZIPFileBuffer::Close()
 
 		fTheFile = NULL;
 	}
+	 */
 
 	return kVCOMError_NoError;
 }
 
 VCOMError ZIPFileBuffer::GetFileSize(Uint64& outValue)
 {
+	/*
 	if ( fTheFile == nullptr )
 		return kVCOMError_NotInitialized;
 
@@ -74,12 +77,13 @@ VCOMError ZIPFileBuffer::GetFileSize(Uint64& outValue)
 		outValue = std::ftell( fTheFile );
 		result = kVCOMError_NoError;
 	}
-
-	return result;
+	 */
+	return kVCOMError_NoError;
 }
 
 VCOMError ZIPFileBuffer::Read(Uint64 position, Uint64& inoutSize, void* pOutBuffer)
 {
+	/*
 	if ( fTheFile == nullptr )
 		return kVCOMError_NotInitialized;
 
@@ -94,12 +98,14 @@ VCOMError ZIPFileBuffer::Read(Uint64 position, Uint64& inoutSize, void* pOutBuff
 		return kVCOMError_NoError;
 		
 	}
+	 */
 
-	return result;
+	return kVCOMError_NoError;
 }
 
 VCOMError ZIPFileBuffer::Write(Uint64 position, Uint64 size, const void* pBuffer)
 {
+	/*
 	if ( fTheFile == nullptr )
 		return kVCOMError_NotInitialized;
 
@@ -110,7 +116,8 @@ VCOMError ZIPFileBuffer::Write(Uint64 position, Uint64 size, const void* pBuffer
 		if ( written == size )
 			result = kVCOMError_NoError;
 	}
+	 */
 
-	return result;
+	return kVCOMError_NoError;
 }
 

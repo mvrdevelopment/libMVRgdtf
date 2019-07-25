@@ -154,7 +154,7 @@ VCOMError CZIPFileImpl::OpenRead(IFileIdentifier* pFileID)
 
 	fbOpenedWrite		= false;
 
-	fpOpenedFile.Query( IID_RawOSFile );
+	fpOpenedFile = new ZIPFileBuffer();
 	fpOpenedFile->Open( pFileID, true, false, true, false );
 	fpOpenedFileID = pFileID;
 
@@ -176,7 +176,7 @@ VCOMError CZIPFileImpl::OpenWrite(IFileIdentifier* pFileID)
 	fbOpenedWrite	= true;
 	fbCompressFiles = true;
 
-	fpOpenedFile.Query( IID_RawOSFile );
+	fpOpenedFile = new ZIPFileBuffer();
 	fpOpenedFile->Open( pFileID, true, true, true, false );
 	fpOpenedFileID = pFileID;
 
@@ -198,7 +198,7 @@ VCOMError CZIPFileImpl::OpenNewWrite(IFileIdentifier* pFileID, bool compressFile
 	fbOpenedWrite	= true;
 	fbCompressFiles	= compressFiles;
 
-	fpOpenedFile.Query( IID_RawOSFile );
+	fpOpenedFile = new ZIPFileBuffer();
 	fpOpenedFile->Open( pFileID, true, true, true, true );
 	fpOpenedFileID = pFileID;
 
