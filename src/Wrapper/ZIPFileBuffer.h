@@ -24,7 +24,7 @@ namespace VectorworksMVR
 			Uint8*						fpZIPDataBuffer;
 			size_t						fZIPDataBufferSize;
 			VCOMPtr<IFileIdentifier>	fpOpenedFileID;
-			IRawOSFilePtr 				file;
+			IRawOSFilePtr 				fFile;
 
 		};
 
