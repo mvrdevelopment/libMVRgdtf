@@ -11,6 +11,7 @@ using namespace VectorworksMVR::Filing;
 
 ZIPFileBuffer::ZIPFileBuffer()
 {
+	IRawOSFilePtr file (IID_RawOSFile);
 }
 
 ZIPFileBuffer::~ZIPFileBuffer()
@@ -19,104 +20,43 @@ ZIPFileBuffer::~ZIPFileBuffer()
 
 VCOMError ZIPFileBuffer::Open(VectorworksMVR::Filing::IFileIdentifier* pFileID, bool bReadable, bool bWritable, bool bRandomAccess, bool bTruncateExisting)
 {
-	/*
-	if ( pFileID == nullptr )
-		return kVCOMError_InvalidArg;
-
-	TXString	filePath;
-	pFileID->GetFileFullPath( filePath );
-
-#ifdef _WINDOWS
-	 const wchar_t* path = filePath.GetWCharPtr();
- #else
-     const char*    path = filePath.GetCharPtr();
- #endif
-
- #ifdef _WINDOWS
-         if ( bReadable == true  && bWritable == false )		fTheFile = _wfopen( path, L"rb" );
-	else if ( bReadable == false && bWritable == true  )		fTheFile = _wfopen( path, bTruncateExisting ? L"ab" : L"wb" );
-	else if ( bReadable == true  && bWritable == true  )		fTheFile = _wfopen( path, bTruncateExisting ? L"wb+" : L"ab+" );
- #else
-	     if ( bReadable == true  && bWritable == false )		fTheFile = std::fopen( path, "rb" );
-	else if ( bReadable == false && bWritable == true  )		fTheFile = std::fopen( path, bTruncateExisting ? "ab" : "wb" );
-	else if ( bReadable == true  && bWritable == true  )		fTheFile = std::fopen( path, bTruncateExisting ? "wb+" : "ab+" );
- #endif
- */
+	file->Open(pFileID, true, true, false, false);
 	return kVCOMError_NoError ;
 }
 
 VCOMError ZIPFileBuffer::Close()
 {
-	/*
-	if ( fTheFile )
-	{
-#ifdef _LINUX
-		fsync(fileno(fTheFile));
-#endif
-		std::fclose( fTheFile );
-
-		fTheFile = NULL;
-	}
-	 */
-
+	file->Close();
 	return kVCOMError_NoError;
 }
 
 VCOMError ZIPFileBuffer::GetFileSize(Uint64& outValue)
 {
-	/*
-	if ( fTheFile == nullptr )
-		return kVCOMError_NotInitialized;
-
-	VCOMError result = kVCOMError_Failed;
-
-	// get the position of the end
-	// we dont care about chaning the position as this class requires possition when reading/writing
-	if ( std::fseek( fTheFile, 0, SEEK_END ) == 0 )
-	{
-		outValue = std::ftell( fTheFile );
-		result = kVCOMError_NoError;
-	}
-	 */
+	outValue = fZIPDataBufferSize;
 	return kVCOMError_NoError;
 }
 
 VCOMError ZIPFileBuffer::Read(Uint64 position, Uint64& inoutSize, void* pOutBuffer)
 {
-	/*
-	if ( fTheFile == nullptr )
-		return kVCOMError_NotInitialized;
-
-	VCOMError result = kVCOMError_Failed;
-	if ( std::fseek( fTheFile, DemoteTo<long>(kEveryone, position), SEEK_SET ) == 0 )
-	{
-
-		Uint64 read = std::fread( pOutBuffer, 1, inoutSize, fTheFile );
-		ASSERTN(kEveryone, read == inoutSize);
-
-		inoutSize = read;
-		return kVCOMError_NoError;
-		
-	}
-	 */
+	memcpy(pOutBuffer, fpZIPDataBuffer + position, inoutSize);
 
 	return kVCOMError_NoError;
 }
 
 VCOMError ZIPFileBuffer::Write(Uint64 position, Uint64 size, const void* pBuffer)
 {
-	/*
-	if ( fTheFile == nullptr )
-		return kVCOMError_NotInitialized;
+	// size_t bufferSize = 1048576; // 1MBytes * 1024 * 1024 = 1048576 Bytes
+	Uint8* tempBuffer = new Uint8[ fZIPDataBufferSize + size + 1];// + 1 ];
+	memcpy( tempBuffer,  fpZIPDataBuffer, fZIPDataBufferSize );
+	memcpy( tempBuffer + sizeof( Uint8 ) * fZIPDataBufferSize, pBuffer, size );
+	fZIPDataBufferSize += size;
+	delete [] fpZIPDataBuffer;
 
-	VCOMError result = kVCOMError_Failed;
-	if ( std::fseek( fTheFile, DemoteTo<long>(kEveryone, position), SEEK_SET ) == 0 )
-	{
-		size_t written = std::fwrite( pBuffer, 1, size, fTheFile );
-		if ( written == size )
-			result = kVCOMError_NoError;
-	}
-	 */
+	fpZIPDataBuffer = new Uint8[ fZIPDataBufferSize + 1 ];
+	memcpy( fpZIPDataBuffer, tempBuffer, fZIPDataBufferSize + 1);
+
+	if ( tempBuffer )
+		delete [] tempBuffer;
 
 	return kVCOMError_NoError;
 }
