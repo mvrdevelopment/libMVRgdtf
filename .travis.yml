@@ -29,7 +29,7 @@ matrix:
       osx_image: xcode10.1
       os: osx
     # Windows 2016 Server
-    - env: runtimeLibFlag="/MT /O2 /Ob2 /DNDEBUG"
+    - env: runtimeLibFlag="/MD /O2 /Ob2 /DNDEBUG"
       os: windows
       script:
         - powershell -nologo -noprofile -command "& { Expand-Archive -Path shared\xerces-c-3.2.2.zip -DestinationPath shared\ -Force; }"
