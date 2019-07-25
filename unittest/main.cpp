@@ -20,6 +20,8 @@
 #include "XmlConversionTest.h"
 #include "CustomCharTest.h"
 #include "UtilityTest.h"
+#include "GetCountOfChannels.h"
+
 
 using namespace VectorworksMVR;					
 
@@ -74,7 +76,10 @@ int main(int argc, char* argv[])
 	GdtfLineNumberParseErrorTest test10(base);
 	bool test10_ok = test10.RunTest();
 
-    return  (mvrFailed || gdtfFailed || gdtfDmxFailed || errorFailed || modeMasterFailed || test1_ok || test2_ok|| test3_ok || test4_ok || test5_ok || test6_ok || test7_ok || test8_ok || test9_ok || test10_ok);
+	GdtfGetCountOfLinkedChannelsForGeometry test11(base);
+	bool test11_ok = test11.RunTest();
+
+    return  (mvrFailed || gdtfFailed || gdtfDmxFailed || errorFailed || modeMasterFailed || test1_ok || test2_ok|| test3_ok || test4_ok || test5_ok || test6_ok || test7_ok || test8_ok || test9_ok || test10_ok || test11_ok);
 }
 
 

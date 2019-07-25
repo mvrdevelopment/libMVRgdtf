@@ -7,6 +7,8 @@
 #include "CGdtfBreak.h"
 #include "CMediaRessourceVectorImpl.h"
 #include "Utility.h"
+#include "CGdtfDmxMode.h"
+#include "CGdtfDmxChannel.h"
 
 using namespace VectorworksMVR::Filing;
 
@@ -764,6 +766,73 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetGeometryReferenc
 	return kVCOMError_NoError;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetCountLinkedDmxChannel(size_t& count, IGdtfDmxMode * forMode)
+{
+	// Get Count
+	count = 0;
+
+	// Check interface
+	CGdtfDmxModeImpl* modeInterface = dynamic_cast<CGdtfDmxModeImpl*>(forMode);
+	if( ! modeInterface) { return kVCOMError_InvalidArg; }
+
+	// Get Array
+	SceneData::GdtfDmxModePtr 		scMode 	 = modeInterface->getPointer();
+	SceneData::TGdtfDmxChannelArray channels = scMode->GetChannelsForGeometry(fGeometry);
+
+	count = channels.size();
+	
+
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetLinkedDmxChannelAt(size_t at, IGdtfDmxChannel** outChannel, IGdtfDmxMode * forMode)
+{
+	// Check interface
+	CGdtfDmxModeImpl* modeInterface = dynamic_cast<CGdtfDmxModeImpl*>(forMode);
+	if( ! modeInterface) { return kVCOMError_InvalidArg; }
+
+	// Get Array
+	SceneData::GdtfDmxModePtr 		scMode 	 = modeInterface->getPointer();
+	SceneData::TGdtfDmxChannelArray channels = scMode->GetChannelsForGeometry(fGeometry);
+
+	// Check Bound
+	if( at >= channels.size()) {return kVCOMError_OutOfBounds; }
+
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CGdtfDmxChannelImpl*			pChannObj			= nullptr;
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDmxChannel, (IVWUnknown**) & pChannObj)))
+	{
+		// Check Casting
+		CGdtfDmxChannelImpl* pResultInterface = dynamic_cast<CGdtfDmxChannelImpl* >(pChannObj);
+		if (pResultInterface)
+		{
+			pResultInterface->setPointer(channels[at]);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incomming Object
+	if (*outChannel)
+	{
+		(*outChannel)->Release();
+		*outChannel		= NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*outChannel		= pChannObj;
+
+	return kVCOMError_NoError;
+}
 
 void VectorworksMVR::CGdtfGeometryImpl::SetPointer(SceneData::GdtfGeometry* geometry)
 {

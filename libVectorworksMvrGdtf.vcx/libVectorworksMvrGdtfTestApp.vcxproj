@@ -48,6 +48,7 @@
     <ClCompile Include="..\unittest\GdtfUnittest.cpp" />
     <ClCompile Include="..\unittest\GdtfUnittestHandler.cpp" />
     <ClCompile Include="..\unittest\GdtfXmlError.cpp" />
+    <ClCompile Include="..\unittest\GetCountOfChannels.cpp" />
     <ClCompile Include="..\unittest\main.cpp" />
     <ClCompile Include="..\unittest\MvrUnittest.cpp" />
     <ClCompile Include="..\unittest\Unittest.cpp" />
@@ -69,6 +70,7 @@
     <ClInclude Include="..\unittest\GdtfUnittest.h" />
     <ClInclude Include="..\unittest\GdtfUnittestHandler.h" />
     <ClInclude Include="..\unittest\GdtfXmlError.h" />
+    <ClInclude Include="..\unittest\GetCountOfChannels.h" />
     <ClInclude Include="..\unittest\main.h" />
     <ClInclude Include="..\unittest\MvrUnittest.h" />
     <ClInclude Include="..\unittest\Unittest.h" />
