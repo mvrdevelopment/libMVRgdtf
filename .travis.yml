@@ -39,7 +39,7 @@ matrix:
         - cmake -G "Visual Studio 15 2017 Win64" -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_INSTALL_PREFIX:PATH=.\ -DCMAKE_CONFIGURATION_TYPES:STRING=Release -DCMAKE_CXX_FLAGS_RELEASE:STRING=$runtimeLibFlag ..
         - cmake --build . --config Release --target xerces-c
         - cd ..\..\..\
-        - copy "shared\builds\xerces-c-3.2.2\build\src\Release\xerces-c_3.lib" libs\xerces-c_3.lib /Y
+        - copy "shared\xerces-c-3.2.2\build\src\Release\xerces-c_3.lib" libs\xerces-c_3.lib /Y
         - CMD //C "runMSBuild.bat"
 
 script:
