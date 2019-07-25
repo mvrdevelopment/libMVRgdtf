@@ -37,7 +37,7 @@ matrix:
         - cd xerces-c-3.2.2
         - mkdir build
         - cd build
-        - cmake -G "Visual Studio 15 2017 Win64" -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_INSTALL_PREFIX:PATH=.\libs -DCMAKE_CONFIGURATION_TYPES:STRING=Release -Dxmlch-type=wchar_t -DCMAKE_CXX_FLAGS_RELEASE:STRING="/MD /O2 /Ob2 /DNDEBUG" ..
+        - cmake -G "Visual Studio 15 2017 Win64" -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_INSTALL_PREFIX:PATH=.\libs -DCMAKE_CONFIGURATION_TYPES:STRING=Release -Dxmlch-type=wchar_t -DCMAKE_CXX_FLAGS_RELEASE:STRING="-MD -O2 -Ob2 -DNDEBUG" ..
         - cmake --build . --config Release --target install
         - cd ..\..\..\
         - copy "shared\xerces-c-3.2.2\build\libs\lib\xerces-c_3.lib" libs\xerces-c_3.lib -force
