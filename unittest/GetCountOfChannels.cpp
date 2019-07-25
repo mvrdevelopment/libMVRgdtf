@@ -87,5 +87,37 @@ void GdtfGetCountOfLinkedChannelsForGeometry::WriteFile(VectorworksMVR::IGdtfFix
 
 void GdtfGetCountOfLinkedChannelsForGeometry::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
 {  
+    //--------------------------------------------------------------------------------------------------------
+    // Get Stuff
+    IGdtfDmxModePtr mode1;
+    __checkVCOM(fixture->GetDmxModeAt(0, &mode1));
+
+    IGdtfDmxModePtr mode2;
+    __checkVCOM(fixture->GetDmxModeAt(1, &mode2));
+
+    IGdtfGeometryPtr geometry1;
+    __checkVCOM(fixture->GetGeometryAt(0, &geometry1));
+
+     IGdtfGeometryPtr geometry2;
+    __checkVCOM(fixture->GetGeometryAt(1, &geometry2));
+
+    //--------------------------------------------------------------------------------------------------------
+    // Check Linked Channel Count
+    size_t count_m1_g1 = 0;
+    __checkVCOM(geometry1->GetCountLinkedDmxChannel(count_m1_g1, mode1));
+    checkifEqual("count_m1_g1", count_m1_g1, size_t(0));
+
+    size_t count_m1_g2 = 0;
+    __checkVCOM(geometry2->GetCountLinkedDmxChannel(count_m1_g2, mode1));
+    checkifEqual("count_m1_g2", count_m1_g2, size_t(0));
+
+
+    size_t count_m2_g1 = 0;
+    __checkVCOM(geometry1->GetCountLinkedDmxChannel(count_m2_g1, mode2));
+    checkifEqual("count_m2_g1", count_m2_g1, size_t(0));
+
+    size_t count_m2_g2 = 0;
+    __checkVCOM(geometry2->GetCountLinkedDmxChannel(count_m2_g2, mode2));
+    checkifEqual("count_m2_g2", count_m2_g2, size_t(0));
 
 }
