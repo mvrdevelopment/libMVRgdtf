@@ -108,6 +108,7 @@
     <ClCompile Include="..\src\Wrapper\RawOSFileimpl.cpp" />
     <ClCompile Include="..\src\Wrapper\TDQuickDraw.cpp" />
     <ClCompile Include="..\src\Wrapper\UTranslateFiles.cpp" />
+    <ClCompile Include="..\src\Wrapper\ZIPFileBuffer.cpp" />
     <ClCompile Include="..\src\Wrapper\ZIPFileImpl.cpp" />
     <ClCompile Include="..\src\XmlFileHelper.cpp" />
     <ClCompile Include="..\src\XMLLib\ErrorHandler.cpp" />
@@ -183,6 +184,7 @@
     <ClInclude Include="..\src\Interface\IStdFile.h" />
     <ClInclude Include="..\src\Interface\IXMLFile.h" />
     <ClInclude Include="..\src\Interface\IZIPFile.h" />
+    <ClInclude Include="..\src\Interface\IZIPFileBuffer.h" />
     <ClInclude Include="..\src\MCCoordTypes.h" />
     <ClInclude Include="..\src\MCFloat.h" />
     <ClInclude Include="..\src\MCMatrix.h" />
@@ -209,6 +211,7 @@
     <ClInclude Include="..\src\Wrapper\RawOSFileimpl.h" />
     <ClInclude Include="..\src\Wrapper\TDQuickDraw.h" />
     <ClInclude Include="..\src\Wrapper\UTranslateFiles.h" />
+    <ClInclude Include="..\src\Wrapper\ZIPFileBuffer.h" />
     <ClInclude Include="..\src\Wrapper\ZIPFileImpl.h" />
     <ClInclude Include="..\src\XmlFileHelper.h" />
     <ClInclude Include="..\src\XMLLib\ErrorHandler.h" />
