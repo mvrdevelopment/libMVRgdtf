@@ -12,4 +12,4 @@ cd ..
 cd ..
 cd ..
 mkdir libs
-copy "shared\xerces\build\libs\lib\xerces-c_3.lib" libs\xerces-c_3.lib -force
+copy "shared\xerces\build\libs\lib\xerces-c_3.lib" libs\xerces-c_3.lib /Y
