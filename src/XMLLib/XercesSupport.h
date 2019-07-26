@@ -8,7 +8,7 @@
 #endif // !1
 
 #ifdef EXPORT_STATIC
-#define XERCES_STATIC_LIBRARY
+#define XERCES_STATIC_LIBRARY 1
 #endif
 
 
