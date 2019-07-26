@@ -6,6 +6,7 @@ ren xerces-c-3.2.2 xerces
 cd xerces
 mkdir build
 cd build
-cmake -G "Visual Studio 15 2017 Win64" -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_INSTALL_PREFIX:PATH=.\libs -DCMAKE_CONFIGURATION_TYPES:STRING=Release -Dxmlch-type=wchar_t -DCMAKE_CXX_FLAGS_RELEASE:STRING=%1 ..
-cmake --build . --config Release --target install
+cmake -G "Visual Studio 15 2017 Win64" -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_SYSTEM_VERSION:STRING=%3 -DCMAKE_INSTALL_PREFIX:PATH=.\libs -DCMAKE_CONFIGURATION_TYPES:STRING=%2 -Dxmlch-type=wchar_t -DCMAKE_CXX_FLAGS_RELEASE:STRING=%1 ..
+cmake --build . --config %2 --target install
 cd ..\..\..\
+
