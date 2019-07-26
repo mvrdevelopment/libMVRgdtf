@@ -7,7 +7,7 @@ import logging
 import os
 
 def CopyFileTo( src, dest ):
-  print ("Copy" + src + " to " + dest)
+  print ("Copy " + src + " to " + dest)
   if os.path.isdir(src):
       if os.path.exists(dest):
           rmtree(dest)
