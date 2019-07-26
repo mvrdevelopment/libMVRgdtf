@@ -283,10 +283,12 @@
       <AdditionalDependencies>%(AdditionalDependencies);libVectorworksMvrGdtf.lib;xerces-c_3.lib;Shlwapi.lib;Rpcrt4.lib</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>xcopy /y "$(SolutionDir)libs\xerces-c_3.lib" "$(OutDir)"</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
     <PreBuildEvent>
-      <Message>Copy xerces</Message>
+      <Message>
+      </Message>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugMT|x64'">
@@ -308,10 +310,12 @@
       <AdditionalDependencies>%(AdditionalDependencies);libVectorworksMvrGdtf.lib;xerces-c_3.lib;Shlwapi.lib;Rpcrt4.lib</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>xcopy /y "$(SolutionDir)libs\xerces-c_3.lib" "$(OutDir)"</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
     <PreBuildEvent>
-      <Message>Copy xerces</Message>
+      <Message>
+      </Message>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugVS15|x64'">
@@ -333,10 +337,12 @@
       <AdditionalDependencies>%(AdditionalDependencies);libVectorworksMvrGdtf.lib;xerces-c_3.lib;Shlwapi.lib;Rpcrt4.lib</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>xcopy /y "$(SolutionDir)libs\xerces-c_3.lib" "$(OutDir)"</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
     <PreBuildEvent>
-      <Message>Copy xerces</Message>
+      <Message>
+      </Message>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -526,10 +532,12 @@
       <AdditionalDependencies>%(AdditionalDependencies);libVectorworksMvrGdtf.lib;xerces-c_3.lib;Shlwapi.lib;Rpcrt4.lib</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>xcopy /y "$(SolutionDir)libs\xerces-c_3.lib" "$(OutDir)"</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
     <PreBuildEvent>
-      <Message>Copy xerces</Message>
+      <Message>
+      </Message>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
