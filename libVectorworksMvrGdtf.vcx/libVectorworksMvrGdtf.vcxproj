@@ -419,7 +419,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;LIBVECTORWORKSMVRGDTF_EXPORTS;EXPORT_STATIC;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);GS_WIN;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)shared\xerces-c-3.2.2\build\libs\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)shared\xerces\build\libs\include</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
@@ -439,7 +439,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;LIBVECTORWORKSMVRGDTF_EXPORTS;EXPORT_STATIC;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);GS_WIN;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)shared\xerces-c-3.2.2\build\libs\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)shared\xerces\build\libs\include</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
@@ -515,7 +515,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;LIBVECTORWORKSMVRGDTF_EXPORTS;EXPORT_STATIC;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);GS_WIN;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)shared\xerces-c-3.2.2\build\libs\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)shared\xerces\build\libs\include</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
@@ -538,7 +538,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;LIBVECTORWORKSMVRGDTF_EXPORTS;EXPORT_STATIC;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);GS_WIN;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)shared\xerces-c-3.2.2\build\libs\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)shared\xerces\build\libs\include</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
@@ -561,7 +561,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;LIBVECTORWORKSMVRGDTF_EXPORTS;EXPORT_STATIC;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);GS_WIN;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)shared\xerces-c-3.2.2\build\libs\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)shared\xerces\build\libs\include</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
