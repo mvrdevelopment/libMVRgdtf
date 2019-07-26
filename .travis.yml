@@ -29,11 +29,16 @@ matrix:
       osx_image: xcode10.1
       os: osx
     # Windows 2016 Server
-    - env: Windows 2016 Server
+    - env: BUILD_TYPE="Release"
       os: windows
       script:
         - CMD //C runMSBuild_xerces.bat "-MD -O2 -Ob2 -DNDEBUG" "Release" "10.0.17134.0"
-        - CMD //C runMSBuild_lib.bat "Release"
+        - CMD //C runMSBuild_lib.bat $BUILD_TYPE
+    - env: BUILD_TYPE="ReleaseMT"
+      os: windows
+      script:
+        - CMD //C runMSBuild_xerces.bat "-MT -O2 -Ob2 -DNDEBUG" "Release" "10.0.17134.0"
+        - CMD //C runMSBuild_lib.bat $BUILD_TYPE
 
 script:
 - make dependencies -j 2
