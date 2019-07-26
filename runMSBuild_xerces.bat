@@ -9,4 +9,4 @@ cd build
 cmake -G "Visual Studio 15 2017 Win64" -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_INSTALL_PREFIX:PATH=.\libs -DCMAKE_CONFIGURATION_TYPES:STRING=Release -Dxmlch-type=wchar_t -DCMAKE_CXX_FLAGS_RELEASE:STRING=%1 ..
 cmake --build . --config Release --target install
 cd ..\..\..\
-copy "shared\xerces\build\libs\lib\xerces-c_3.lib" "libs\xerces-c_3.lib" -force
+copy shared\xerces\build\libs\lib\xerces-c_3.lib libs\xerces-c_3.lib -forcerun
