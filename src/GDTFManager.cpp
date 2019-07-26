@@ -1512,6 +1512,11 @@ TXString GdtfGeometry::GetNodeReference()
 	return nodeRef;
 }
 
+GdtfGeometryPtr GdtfGeometry::GetParentGeometry()
+{
+	return fParent;
+}
+
 //------------------------------------------------------------------------------------
 // GdtfGeometryAxis
 GdtfGeometryAxis::GdtfGeometryAxis(GdtfGeometry* parent) 
@@ -2222,16 +2227,12 @@ TGdtfBreakArray GdtfGeometryReference::GetBreakArray()
 
 //------------------------------------------------------------------------------------
 // GdtfDmxMode
-GdtfDmxMode::GdtfDmxMode()
-{
-	fName		= "";
-	fGeomRef	= nullptr;
-}
 
-GdtfDmxMode::GdtfDmxMode(const TXString& name)
+GdtfDmxMode::GdtfDmxMode(GdtfFixture* fixture, const TXString& name)
 {
 	fName		= name;
 	fGeomRef    = nullptr;
+	fFixture    = fixture;
 }
 
 GdtfDmxMode::~GdtfDmxMode()
@@ -2416,6 +2417,21 @@ GdtfGeometryPtr	GdtfDmxMode::GetGeomRef()
 	return fGeomRef;
 }
 
+TGdtfDmxChannelArray GdtfDmxMode::GetChannelsForGeometry(GdtfGeometryPtr geometry)
+{
+	TGdtfDmxChannelArray array;
+	for (GdtfDmxChannelPtr channel : GetChannelArray())
+	{
+		if(channel->GetGeomRef() == geometry)
+		{
+			array.push_back(channel);
+		}
+	}
+	
+	return array;
+}
+
+
 const TXString& GdtfDmxMode::GetUnresolvedGeomRef()
 {
 	return fUnresolvedGeomRef;
@@ -2424,6 +2440,219 @@ const TXString& GdtfDmxMode::GetUnresolvedGeomRef()
 const TGdtfDmxRelationArray GdtfDmxMode::GetDmxRelations()
 {
 	return fRelations;
+}
+
+TSint32Array GdtfDmxMode::GetBreakArray() const
+{
+	//------------------------------------------------------------------------------------------------------------
+	// Prepare Arrays
+	TSint32Array 							breaks;
+	std::vector<GdtfGeometryReferencePtr>  	geometryRefs;
+	TGdtfGeometryArray  					geometrysToCheck = {fGeomRef};
+
+	//------------------------------------------------------------------------------------------------------------
+	// Get All Geometry References
+	while(geometrysToCheck.size() > 0)
+	{
+		// Get First Entry and delete it then
+		GdtfGeometryPtr geometry = geometrysToCheck.back();
+		geometrysToCheck.pop_back();
+
+		// Get all the internal geometries and prepare to chekc them
+		for(GdtfGeometryPtr child : geometry->GetInternalGeometries()) { geometrysToCheck.push_back(child); }
+
+		// Handle Geo Refs
+		if(geometry->GetObjectType() == eGdtfGeometryReference )
+		{
+			GdtfGeometryReferencePtr geoRef = dynamic_cast<GdtfGeometryReferencePtr>(geometry);
+			ASSERTN(kEveryone, geoRef != nullptr);
+			if(geoRef)
+			{
+				geometrysToCheck.push_back(geoRef->GetLinkedGeometry());
+				geometryRefs.push_back(geoRef);
+			}
+		}
+	}
+
+	//------------------------------------------------------------------------------------------------------------
+	// Check all the channels
+	for (GdtfDmxChannelPtr channel : fChannels)
+	{
+		Sint32 breakId = channel->GetDmxBreak();
+		
+		// Check if Override
+		if(breakId == kDmxBreakOverwriteValue)
+		{
+			for(GdtfGeometryReferencePtr geoRef : geometryRefs)
+			{
+				if(geoRef->GetLinkedGeometry() == channel->GetGeomRef())
+				{
+					TGdtfBreakArray refBreaks = geoRef->GetBreakArray();
+					if(std::find(breaks.begin(), breaks.end(), refBreaks.back()->GetDmxBreak()) == breaks.end())
+					{
+						breaks.push_back(refBreaks.back()->GetDmxBreak());
+					}
+				}
+			}
+		}
+		else
+		{
+			if(std::find(breaks.begin(), breaks.end(), breakId) == breaks.end())
+			{
+				breaks.push_back(breakId);
+			}
+		}
+	}
+
+	//------------------------------------------------------------------------------------------------------------
+	// Sort the found break
+	std::sort(breaks.begin(), breaks.end());
+
+	return breaks;
+}
+
+size_t GdtfDmxMode::GetFootPrintForBreak(size_t breakId)
+{
+	//------------------------------------------------------------------------------------------------------------
+	// check if break exists
+	TSint32Array breaks = this->GetBreakArray();
+	if(std::find(breaks.begin(), breaks.end(), breakId) == breaks.end()) 
+	{ 
+		return 0; 
+	}
+
+	//------------------------------------------------------------------------------------------------------------
+	// Prepare arrays
+	TDMXAddressArray 	addresses;
+	TGdtfGeometryArray  geometriesInGeoTree = {fGeomRef};
+
+	// iterate through every geometry in the geometry tree of the mode 
+	while(geometriesInGeoTree.size() > 0)
+	{
+		TDMXAddressArray addressesOfGeo;
+		GdtfGeometryPtr  geoToCheck = geometriesInGeoTree.back();
+		geometriesInGeoTree.pop_back();
+
+		for (GdtfGeometryPtr child : geoToCheck->GetInternalGeometries()) { geometriesInGeoTree.push_back(child); }
+
+		// if channel is linked to the current geometry and the breaks match add the dmx addresses to the footprint 
+		for (GdtfDmxChannelPtr channel : fChannels)
+		{
+			if(channel->GetGeomRef() == geoToCheck && channel->GetDmxBreak() == (Sint32)breakId) 
+			{
+				GetAddressesFromChannel(addressesOfGeo, channel, 0);
+			}
+		}
+
+		// if the current geometry is a geometry reference do stuff
+		if(geoToCheck->GetObjectType() == eGdtfGeometryReference)
+		{
+			GdtfGeometryReferencePtr geoRef 	= dynamic_cast<GdtfGeometryReferencePtr>(geoToCheck); ASSERTN(kEveryone, geoRef);
+			GdtfGeometryPtr 		 refedGeo   = geoRef->GetLinkedGeometry();
+			TSint32Array 			 breakIdsOfReference;
+			TGdtfGeometryArray 		 geometriesInReferencedTree = {refedGeo};
+			bool 				     overwrite = false;
+			
+			// go through every child of the referenced geometry and get every used break id
+			while (geometriesInReferencedTree.size() > 0)
+			{
+				GdtfGeometryPtr geometryInRefToCheck = geometriesInReferencedTree.back();
+				geometriesInReferencedTree.pop_back();
+
+				for (GdtfGeometryPtr childOfRef : geometryInRefToCheck->GetInternalGeometries()){ geometriesInReferencedTree.push_back(childOfRef); }
+
+				for (GdtfDmxChannelPtr channel : fChannels)
+				{
+					if(channel->GetGeomRef() == geometryInRefToCheck)
+					{
+						if(channel->GetDmxBreak() != kDmxBreakOverwriteValue)
+						{
+							if(std::find(breakIdsOfReference.begin(), breakIdsOfReference.end(), channel->GetDmxBreak()) == breakIdsOfReference.end())
+							{
+								breakIdsOfReference.push_back(channel->GetDmxBreak());
+							}
+						}
+						else 
+						{
+							overwrite = true;
+						}
+					}
+				}
+			}
+
+			std::sort(breakIdsOfReference.begin(), breakIdsOfReference.end());
+
+			TSint32Array::iterator foundIndex = std::find(breakIdsOfReference.begin(), breakIdsOfReference.end(), breakId);
+			// if the reference contains geometries that are linked to a dmx channel that has a matching break, then add the address + offset to the footprint
+			if(foundIndex != breakIdsOfReference.end())
+			{
+				size_t 				indexOfBreak 				= std::distance(breakIdsOfReference.begin(),foundIndex);
+				size_t 				offset 						= geoRef->GetBreakArray()[indexOfBreak]->GetDmxAddress()-1;
+				TGdtfGeometryArray  geometriesInReferencedTree 	= {refedGeo};
+
+				while (geometriesInReferencedTree.size() > 0)
+				{
+					GdtfGeometryPtr geometryInRefToCheck = geometriesInReferencedTree.back();
+					geometriesInReferencedTree.pop_back();
+
+					for (GdtfGeometryPtr childOfRef : geometryInRefToCheck->GetInternalGeometries()) { geometriesInReferencedTree.push_back(childOfRef); }
+
+					for(GdtfDmxChannelPtr channel : fChannels)
+					{
+						if(channel->GetGeomRef() == geometryInRefToCheck && channel->GetDmxBreak() == (Sint32)breakId) 
+						{
+							GetAddressesFromChannel(addressesOfGeo, channel, offset);
+						}
+					}
+				}
+			}
+
+			// if the channel of a child geometry has the break value overwrite and the last break of the ref has a matching break Id, then add addresses + offset 
+			if(overwrite)
+			{
+				GdtfBreakPtr overwriteBreak = geoRef->GetBreakArray().back();
+				if(overwriteBreak->GetDmxBreak() == (Sint32)breakId)
+				{
+					TGdtfGeometryArray geometriesInReferencedTree = {refedGeo};
+					while (geometriesInReferencedTree.size() > 0)
+					{
+						GdtfGeometryPtr geometryInRefToCheck = geometriesInReferencedTree.back();
+						geometriesInReferencedTree.pop_back();
+
+						for (GdtfGeometryPtr childOfRef : geometryInRefToCheck->GetInternalGeometries()) { geometriesInReferencedTree.push_back(childOfRef); }
+
+						for(GdtfDmxChannelPtr channel : fChannels)
+						{
+							if(channel->GetGeomRef() == geometryInRefToCheck && channel->GetDmxBreak() == kDmxBreakOverwriteValue) 
+							{
+								GetAddressesFromChannel(addressesOfGeo, channel, overwriteBreak->GetDmxAddress()-1);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// make addresses unique
+		for(DMXAddress address : addressesOfGeo)
+		{
+			if(std::find(addresses.begin(), addresses.end(), address) == addresses.end())
+			{
+				addresses.push_back(address);
+			}
+		}
+	}
+
+	return addresses.size();
+}
+void GdtfDmxMode::GetAddressesFromChannel(TDMXAddressArray& addresses, GdtfDmxChannel* channel, DMXAddress offset) const
+{
+	EGdtfChannelBitResolution resolution = channel->GetChannelBitResolution();
+	if(resolution >= eGdtfChannelBitResolution_8) 	{ addresses.push_back(channel->GetCoarse()  + offset);}
+	if(resolution >= eGdtfChannelBitResolution_16) 	{ addresses.push_back(channel->GetFine()	+ offset);}
+	if(resolution >= eGdtfChannelBitResolution_24) 	{ addresses.push_back(channel->GetUltra()   + offset);}
+	if(resolution >= eGdtfChannelBitResolution_32) 	{ addresses.push_back(channel->GetUber()	+ offset);}
+
 }
 
 //------------------------------------------------------------------------------------
@@ -2724,6 +2953,12 @@ EGdtfChannelBitResolution SceneData::GdtfDmxChannel::GetChannelBitResolution()
 DmxValue SceneData::GdtfDmxChannel::GetChannelMaxDmx()
 {
 	return GdtfConverter::GetChannelMaxDmx(this->GetChannelBitResolution());
+}
+
+bool SceneData::GdtfDmxChannel::IsVirtual() const
+{
+	if(fCoarse == 0 && fFine == 0 && fUltra == 0 && fUber == 0)	return true;
+	else 														return false;
 }
 
 //------------------------------------------------------------------------------------
@@ -5436,7 +5671,7 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	GdtfConverter::TraverseNodes(pNode, XML_GDTF_FixtureChildNodeDMX, XML_GDTF_DMXModeNodeName, [this] (IXMLFileNodePtr objNode) -> void
 								 {
 									 // Create the object
-									 GdtfDmxModePtr dmxMode = new GdtfDmxMode();
+									 GdtfDmxModePtr dmxMode = new GdtfDmxMode(this, "");
 									 
 									 // Read from node
 									 dmxMode->ReadFromNode(objNode);
@@ -5666,7 +5901,7 @@ GdtfGeometryPtr GdtfFixture::AddGeometryBeam(const TXString& name, GdtfModelPtr 
 
 GdtfDmxMode* GdtfFixture::AddDmxMode(const TXString& name)
 {
-	GdtfDmxMode* mode = new  GdtfDmxMode(name);
+	GdtfDmxMode* mode = new  GdtfDmxMode(this, name);
 	
 	fDmxModes.push_back(mode);
 	

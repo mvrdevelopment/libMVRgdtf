@@ -90,6 +90,7 @@ namespace VectorworksMVR
     class IGdtfCRIGroup;
     class IGdtfColorSpace;
     class IGdtfFilter;
+    class IGdtfDmxMode;
 	//-------------------------------------------------------------------------------------------------------------
 	class DYNAMIC_ATTRIBUTE ISceneDataProvider : public IVWUnknown
 	{
@@ -492,6 +493,11 @@ namespace VectorworksMVR
 
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+
+        // 0.5.2
+        virtual VCOMError VCOM_CALLTYPE     GetCountLinkedDmxChannel(size_t& count, IGdtfDmxMode * forMode) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetLinkedDmxChannelAt(size_t at, IGdtfDmxChannel** outChannel, IGdtfDmxMode * forMode) = 0;
+
 	};
 	typedef VCOMPtr<IGdtfGeometry>	IGdtfGeometryPtr;
     
@@ -659,6 +665,11 @@ namespace VectorworksMVR
 		
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+
+        // 0.5.1
+        virtual VCOMError VCOM_CALLTYPE     GetBreakCount(size_t& count) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetFootprintForBreak(size_t inBreak, size_t& footprint) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetBreakAt(size_t at, size_t &breakId) = 0;
     };
 	typedef VCOMPtr<IGdtfDmxMode>	IGdtfDmxModePtr;
     

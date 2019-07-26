@@ -57,6 +57,9 @@ namespace SceneData
     class GdtfFilter; 
     typedef GdtfFilter*	GdtfFilterPtr;
     typedef std::vector<GdtfFilter*>	TGdtfFilterArray;
+
+
+	const Sint32 kDmxBreakOverwriteValue = 0;
 	//------------------------------------------------------------------------------------
 	// Attributes	
 	
@@ -580,6 +583,8 @@ namespace SceneData
 		void								GetTransformMatrix(VWTransformMatrix& ma) const;        
         const std::vector<GdtfGeometry*>	GetInternalGeometries();
 		virtual TXString					GetNodeReference();
+		GdtfGeometry*						GetParentGeometry();
+
 		// Setter	
 		void								SetName(const TXString& name);
 		void								SetModel(GdtfModelPtr model);
@@ -1072,6 +1077,7 @@ namespace SceneData
 		TXString							GetUnresolvedGeomRef() const;
 		EGdtfChannelBitResolution			GetChannelBitResolution();
 		DmxValue							GetChannelMaxDmx();
+		bool								IsVirtual() const;
 
 		void								SetName(const TXString& name);
 		void								SetDmxBreak(Sint32 dmxBreak);
@@ -1149,13 +1155,13 @@ namespace SceneData
 	class GdtfDmxMode : public GdtfObject
 	{
 	public:
-		GdtfDmxMode();
-		GdtfDmxMode(const TXString& name);
+		GdtfDmxMode(GdtfFixture* fixture, const TXString& name);
 		~GdtfDmxMode();
 		
 	private:
 		TXString				fName;			
 		GdtfGeometryPtr			fGeomRef;
+		GdtfFixture*			fFixture;
 		TXString				fUnresolvedGeomRef;
 		//
 		TGdtfDmxChannelArray	fChannels;
@@ -1167,9 +1173,14 @@ namespace SceneData
 		GdtfDmxChannelPtr			GetMasterByRef(const TXString& ref) const;
 		GdtfDmxChannelFunctionPtr	GetSlaveByRef(const TXString& ref) const;
 		GdtfGeometryPtr				GetGeomRef();
+		TGdtfDmxChannelArray		GetChannelsForGeometry(GdtfGeometryPtr geometry);
 		
         const TXString&				GetUnresolvedGeomRef();
 		const TGdtfDmxRelationArray GetDmxRelations();
+		size_t     					GetFootPrintForBreak(size_t breakId);
+		TSint32Array				GetBreakArray() const;
+		void						GetAddressesFromChannel(TDMXAddressArray& addresses, GdtfDmxChannel* channel, DMXAddress offset) const;
+
 		
 		void						SetName(const TXString& name);
 		GdtfDmxChannelPtr			AddChannel();
