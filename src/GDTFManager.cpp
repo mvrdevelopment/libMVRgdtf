@@ -2417,6 +2417,21 @@ GdtfGeometryPtr	GdtfDmxMode::GetGeomRef()
 	return fGeomRef;
 }
 
+TGdtfDmxChannelArray GdtfDmxMode::GetChannelsForGeometry(GdtfGeometryPtr geometry)
+{
+	TGdtfDmxChannelArray array;
+	for (GdtfDmxChannelPtr channel : GetChannelArray())
+	{
+		if(channel->GetGeomRef() == geometry)
+		{
+			array.push_back(channel);
+		}
+	}
+	
+	return array;
+}
+
+
 const TXString& GdtfDmxMode::GetUnresolvedGeomRef()
 {
 	return fUnresolvedGeomRef;
