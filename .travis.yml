@@ -32,7 +32,7 @@ matrix:
     - env: Windows 2016 Server
       os: windows
       script:
-        - CMD //C runMSBuild_xerces.bat "/MD /O2 /Ob2 /DNDEBUG"
+        - CMD //C runMSBuild_xerces.bat "-MD -O2 -Ob2 -DNDEBUG"
         - CMD //C runMSBuild_lib.bat "Release"
 
 script:
