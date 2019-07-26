@@ -33,6 +33,7 @@ matrix:
       os: windows
       script:
         - CMD //C runMSBuild_xerces.bat "-MD -O2 -Ob2 -DNDEBUG"
+        - python copyFrameworks.py
         - CMD //C runMSBuild_lib.bat "Release"
 
 script:
