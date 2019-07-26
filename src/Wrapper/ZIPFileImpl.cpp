@@ -155,7 +155,7 @@ VCOMError CZIPFileImpl::OpenRead(IFileIdentifier* pFileID)
 	fbOpenedWrite		= false;
 
 	fpOpenedFile = new ZIPFileBuffer();
-	fpOpenedFile->Open( pFileID, true, false, true, false );
+	fpOpenedFile->Open( pFileID, true );
 	fpOpenedFileID = pFileID;
 
 	IFolderIdentifierPtr pFolderID( IID_FolderIdentifier );
@@ -177,7 +177,7 @@ VCOMError CZIPFileImpl::OpenWrite(IFileIdentifier* pFileID)
 	fbCompressFiles = true;
 
 	fpOpenedFile = new ZIPFileBuffer();
-	fpOpenedFile->Open( pFileID, true, true, true, false );
+	fpOpenedFile->Open( pFileID, false );
 	fpOpenedFileID = pFileID;
 
 	IFolderIdentifierPtr pFolderID( IID_FolderIdentifier );
@@ -199,7 +199,7 @@ VCOMError CZIPFileImpl::OpenNewWrite(IFileIdentifier* pFileID, bool compressFile
 	fbCompressFiles	= compressFiles;
 
 	fpOpenedFile = new ZIPFileBuffer();
-	fpOpenedFile->Open( pFileID, true, true, true, true );
+	fpOpenedFile->Open( pFileID, false );
 	fpOpenedFileID = pFileID;
 
 	IFolderIdentifierPtr pFolderID( IID_FolderIdentifier );
@@ -734,7 +734,7 @@ VCOMError CZIPFileImpl::RemoveFile(const TXString& path)
 		fpOpenedFile->Read( localFileHeaderPosition + removedLocalDataSize, readSize2, (void*)readData2 );
 	
 		fpOpenedFile->Close();
-		fpOpenedFile->Open( fpOpenedFileID, true, true, true, true );
+		fpOpenedFile->Open( fpOpenedFileID, false );
 	
 		Uint64 currentWritePosition = 0;
 		this->WriteToFile( (void*)readData1, currentWritePosition, readSize1 );
@@ -746,11 +746,11 @@ VCOMError CZIPFileImpl::RemoveFile(const TXString& path)
 	
 		if ( fbOpenedWrite )
 		{
-			fpOpenedFile->Open( fpOpenedFileID, true, true, true, false );
+			fpOpenedFile->Open( fpOpenedFileID, false );
 		}
 		else 
 		{
-			fpOpenedFile->Open( fpOpenedFileID, true, false, true, false );
+			fpOpenedFile->Open( fpOpenedFileID, true );
 		}
 	
 		if ( readData1 )
@@ -776,11 +776,11 @@ VCOMError CZIPFileImpl::MoveFile(const TXString& path)
 
 	if ( fbOpenedWrite )
 	{
-		fpOpenedFile->Open( pMovedFile, true, true, true, false );	
+		fpOpenedFile->Open( pMovedFile, false );	
 	}
 	else
 	{
-		fpOpenedFile->Open( pMovedFile, true, false, true, false );
+		fpOpenedFile->Open( pMovedFile, true );
 	}
 
 	return kVCOMError_NoError;

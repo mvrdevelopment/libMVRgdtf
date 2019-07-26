@@ -14,7 +14,7 @@ namespace VectorworksMVR
 			virtual	~ZIPFileBuffer();
 
 		public:
-			virtual VCOMError VCOM_CALLTYPE	Open(VectorworksMVR::Filing::IFileIdentifier* pFileID, bool bReadable, bool bWritable, bool bRandomAccess, bool bTruncateExisting);
+			virtual VCOMError VCOM_CALLTYPE	Open(VectorworksMVR::Filing::IFileIdentifier* pFileID,  bool openForRead);
 			virtual VCOMError VCOM_CALLTYPE	Close();
 			virtual VCOMError VCOM_CALLTYPE	GetFileSize(Uint64& outValue);
 			virtual VCOMError VCOM_CALLTYPE	Read(Uint64 position, Uint64& inoutSize, void* pOutBuffer);
@@ -24,6 +24,7 @@ namespace VectorworksMVR
 			Uint8*						fpZIPFileBuffer;
 			size_t						fZIPFileBufferSize;
 			VCOMPtr<IFileIdentifier>	fpOpenedFileID;
+			bool						fOpenForRead;
 
 		};
 
