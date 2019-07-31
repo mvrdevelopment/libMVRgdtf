@@ -1,4 +1,3 @@
-call "C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\Common7\Tools\VsDevCmd.bat"
 REM build xerces
 powershell -nologo -noprofile -command "& { Expand-Archive -Path shared\xerces-c-3.2.2.zip -DestinationPath shared\ -Force; }"
 cd shared
