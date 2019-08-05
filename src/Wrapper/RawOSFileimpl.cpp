@@ -42,7 +42,7 @@ VCOMError CRawOSFileImpl::Open(VectorworksMVR::Filing::IFileIdentifier* pFileID,
 	else if ( bReadable == true  && bWritable == true  )		fTheFile = std::fopen( path, bTruncateExisting ? "wb+" : "ab+" );
  #endif
 
-	return fTheFile ? kVCOMError_NoError : kVCOMError_Failed;;
+	return fTheFile ? kVCOMError_NoError : kVCOMError_Failed;
 }
 
 VCOMError CRawOSFileImpl::Close()
