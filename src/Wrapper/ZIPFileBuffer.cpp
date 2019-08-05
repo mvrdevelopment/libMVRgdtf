@@ -50,13 +50,13 @@ VCOMError ZIPFileBuffer::Open(VectorworksMVR::Filing::IFileIdentifier* pFileID, 
 
 VCOMError ZIPFileBuffer::Close()
 {
-	if (!fOpenForRead && !fpZIPFileBuffer)
+	if (!fOpenForRead && fpZIPFileBuffer)
 	{
 		// prepare file
 		IRawOSFilePtr file(IID_RawOSFile);
 
 		// open file
-		file->Open(fpOpenedFileID, false, true, false, false);
+		file->Open(fpOpenedFileID, true, true, true, true);
 
 		file->Write(0, fZIPFileBufferSize, fpZIPFileBuffer);
 
