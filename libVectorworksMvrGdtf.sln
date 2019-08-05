@@ -12,6 +12,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libVectorworksMvrGdtfTestAp
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug MDd|x64 = Debug MDd|x64
+		Debug MDd|x86 = Debug MDd|x86
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
 		DebugMT|x64 = DebugMT|x64
@@ -26,6 +28,10 @@ Global
 		ReleaseVS15|x86 = ReleaseVS15|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BF7C7ABD-E7E9-4110-AA85-A8452D47126B}.Debug MDd|x64.ActiveCfg = Debug MDd|x64
+		{BF7C7ABD-E7E9-4110-AA85-A8452D47126B}.Debug MDd|x64.Build.0 = Debug MDd|x64
+		{BF7C7ABD-E7E9-4110-AA85-A8452D47126B}.Debug MDd|x86.ActiveCfg = Debug MDd|Win32
+		{BF7C7ABD-E7E9-4110-AA85-A8452D47126B}.Debug MDd|x86.Build.0 = Debug MDd|Win32
 		{BF7C7ABD-E7E9-4110-AA85-A8452D47126B}.Debug|x64.ActiveCfg = Debug|x64
 		{BF7C7ABD-E7E9-4110-AA85-A8452D47126B}.Debug|x64.Build.0 = Debug|x64
 		{BF7C7ABD-E7E9-4110-AA85-A8452D47126B}.Debug|x86.ActiveCfg = Release|x64
@@ -50,6 +56,10 @@ Global
 		{BF7C7ABD-E7E9-4110-AA85-A8452D47126B}.ReleaseVS15|x64.Build.0 = ReleaseVS15|x64
 		{BF7C7ABD-E7E9-4110-AA85-A8452D47126B}.ReleaseVS15|x86.ActiveCfg = ReleaseVS15|Win32
 		{BF7C7ABD-E7E9-4110-AA85-A8452D47126B}.ReleaseVS15|x86.Build.0 = ReleaseVS15|Win32
+		{6658C878-A33C-4AFA-B10C-E4FF5ECDDC9D}.Debug MDd|x64.ActiveCfg = Debug MDd|x64
+		{6658C878-A33C-4AFA-B10C-E4FF5ECDDC9D}.Debug MDd|x64.Build.0 = Debug MDd|x64
+		{6658C878-A33C-4AFA-B10C-E4FF5ECDDC9D}.Debug MDd|x86.ActiveCfg = Debug MDd|Win32
+		{6658C878-A33C-4AFA-B10C-E4FF5ECDDC9D}.Debug MDd|x86.Build.0 = Debug MDd|Win32
 		{6658C878-A33C-4AFA-B10C-E4FF5ECDDC9D}.Debug|x64.ActiveCfg = Debug|x64
 		{6658C878-A33C-4AFA-B10C-E4FF5ECDDC9D}.Debug|x64.Build.0 = Debug|x64
 		{6658C878-A33C-4AFA-B10C-E4FF5ECDDC9D}.Debug|x86.ActiveCfg = Debug|x64
