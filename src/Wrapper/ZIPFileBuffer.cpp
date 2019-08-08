@@ -37,7 +37,6 @@ VCOMError ZIPFileBuffer::Open(VectorworksMVR::Filing::IFileIdentifier* pFileID, 
 
 		// get filesize
 		file->GetFileSize(fZIPFileBufferSize);
-
 		// load in buffer
 		fpZIPFileBuffer = new Uint8[fZIPFileBufferSize];
 		file->Read(0, fZIPFileBufferSize, fpZIPFileBuffer);
