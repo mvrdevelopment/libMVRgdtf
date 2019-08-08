@@ -26,6 +26,7 @@ VCOMError ZIPFileBuffer::Open(VectorworksMVR::Filing::IFileIdentifier* pFileID, 
 {
 	fOpenForRead   = openForRead;
 	fpOpenedFileID = pFileID;
+
 	if (fOpenForRead)
 	{
 		// prepare file
@@ -56,7 +57,7 @@ VCOMError ZIPFileBuffer::Close()
 		IRawOSFilePtr file(IID_RawOSFile);
 
 		// open file
-		file->Open(fpOpenedFileID, true, true, true, true);
+		file->Open(fpOpenedFileID, false, true, false, false);
 
 		file->Write(0, fZIPFileBufferSize, fpZIPFileBuffer);
 
@@ -75,13 +76,13 @@ VCOMError ZIPFileBuffer::GetFileSize(Uint64& outValue)
 
 VCOMError ZIPFileBuffer::Read(Uint64 position, Uint64& inoutSize, void* pOutBuffer)
 {
-	memcpy(pOutBuffer, fpZIPFileBuffer + position, inoutSize);
+	memcpy(pOutBuffer, fpZIPFileBuffer + position, (size_t)inoutSize);
 	return kVCOMError_NoError;
 }
 
 VCOMError ZIPFileBuffer::Write(Uint64 position, Uint64 size, const void* pBuffer)
 {
-	Uint8* tempBuffer = new Uint8[fZIPFileBufferSize + size];
+	Uint8* tempBuffer = new Uint8[fZIPFileBufferSize + (size_t)size];
 
 	memcpy(tempBuffer, fpZIPFileBuffer, fZIPFileBufferSize);
 
@@ -97,6 +98,13 @@ VCOMError ZIPFileBuffer::Write(Uint64 position, Uint64 size, const void* pBuffer
 	if (tempBuffer)
 		delete[] tempBuffer;
 
+	return kVCOMError_NoError;
+}
+
+VCOMError VectorworksMVR::Filing::ZIPFileBuffer::CleanBuffer()
+{
+	fpZIPFileBuffer = NULL;
+	fZIPFileBufferSize = 0;
 	return kVCOMError_NoError;
 }
 

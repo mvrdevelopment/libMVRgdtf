@@ -545,6 +545,7 @@ VCOMError CZIPFileImpl::AddFile(const TXString& path, IZIPFileIOBuffer* inputBuf
 			zipArchiveInfo.dwSizeOfCentralDir += kCentralFileHeaderLength + (Uint32)zipFileInfo.fFileName.GetEncodingLength(ETXEncoding::eUTF8); 
 
 			Uint64 currentWritePosition = 0;
+			fpOpenedFile->CleanBuffer();
 			this->WriteToFile( (void*)readData1, currentWritePosition,  centralDirPosition );
 			this->WriteLocalFileHeader( &zipFileInfo, currentWritePosition);
 			this->WriteToFile( (void*)outData, currentWritePosition, compressedSize );
