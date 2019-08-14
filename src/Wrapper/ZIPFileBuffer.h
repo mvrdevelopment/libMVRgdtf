@@ -24,6 +24,7 @@ namespace VectorworksMVR
 		private:
 			Uint8*						fpZIPFileBuffer;
 			Uint64						fZIPFileBufferSize;
+			Uint64						fAllocatedMemInMB;
 			VCOMPtr<IFileIdentifier>	fpOpenedFileID;
 			bool						fOpenForRead;
 
