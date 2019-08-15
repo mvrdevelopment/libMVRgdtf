@@ -219,6 +219,7 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_FixtureChildNodeDMX				"DMXModes"
 #define XML_GDTF_FixtureChildNodeRevisions			"Revisions"
 #define XML_GDTF_FixtureChildNodePresets			"FTPresets"
+#define XML_GDTF_FixtureChildNodeMacros				"FTMacros"
 #define XML_GDTF_FixtureChildNodeRDM				"FTRDM"
 
 #define XML_GDTF_FixtureChildNodePhysicalDesrip		 "PhysicalDescriptions"
@@ -326,7 +327,6 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_DMXModeGeometryRef				"Geometry"
 #define XML_GDTF_DMXModeDMXChannels				"DMXChannels"
 #define XML_GDTF_DMXModeRelations				"Relations"
-#define XML_GDTF_DMXModeMacros					"FTMacros"
 
 #define XML_GDTF_DMXChannelNodeName				"DMXChannel"
 #define XML_GDTF_DMXChannelDMXBreak				"DMXBreak"
