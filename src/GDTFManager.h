@@ -1165,7 +1165,8 @@ namespace SceneData
 		TXString				fUnresolvedGeomRef;
 		//
 		TGdtfDmxChannelArray	fChannels;
-		TGdtfDmxRelationArray	fRelations;	  	
+		TGdtfDmxRelationArray	fRelations;
+		TGdtfMacroArray			fMacros;
 
 	public:		
 		const TXString&				GetModeName() const;
@@ -1177,6 +1178,7 @@ namespace SceneData
 		
         const TXString&				GetUnresolvedGeomRef();
 		const TGdtfDmxRelationArray GetDmxRelations();
+		const TGdtfMacroArray		GetMacros();
 		size_t     					GetFootPrintForBreak(size_t breakId);
 		TSint32Array				GetBreakArray() const;
 		void						GetAddressesFromChannel(TDMXAddressArray& addresses, GdtfDmxChannel* channel, DMXAddress offset) const;
@@ -1965,7 +1967,6 @@ namespace SceneData
 		TGdtfDmxModeArray				fDmxModes;
 		TGdtfRevisionArray				fRevisions;
 		TGdtfUserPresetArray			fPresets;
-		TGdtfMacroArray					fMacros;	
         GdtfPhysicalDescriptions        fPhysicalDesciptions; 
 		//------------------------------------------------
 		// Reading support
@@ -2049,7 +2050,6 @@ private:
         const TGdtfDmxModeArray&                GetDmxModeArray();
         const TGdtfRevisionArray&               GetRevisionArray();
         const TGdtfUserPresetArray&             GetPresetArray();
-        const TGdtfMacroArray&                  GetMacroArray();
         
 	public:
 		virtual EGdtfObjectType			GetObjectType();

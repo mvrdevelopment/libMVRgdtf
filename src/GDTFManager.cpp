@@ -2306,12 +2306,22 @@ void GdtfDmxMode::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// Print Relations
 	GdtfConverter::TraverseNodes(pNode, XML_GDTF_DMXModeRelations, XML_GDTF_DMXRelationNodeName, [this] (IXMLFileNodePtr pNode) -> void
 								 {
-									 GdtfDmxRelationPtr relation = new GdtfDmxRelation();;
+									 GdtfDmxRelationPtr relation = new GdtfDmxRelation();
 									 relation->ReadFromNode(pNode);
 									 fRelations.push_back(relation);
 								 }
 								 );
 	
+
+	// ------------------------------------------------------------------------------------
+	// Print Macros
+	GdtfConverter::TraverseNodes(pNode, XML_GDTF_DMXModeMacros, XML_GDTF_MacroNodeName, [this](IXMLFileNodePtr pNode) -> void
+								{
+									GdtfMacroPtr macro = new GdtfMacro(XML_GDTF_MacroNodeName);
+									macro->ReadFromNode(pNode);
+									fMacros.push_back(macro);
+								}
+								);
 }
 
 void GdtfDmxMode::OnErrorCheck(const IXMLFileNodePtr& pNode)
@@ -5509,7 +5519,7 @@ void GdtfFixture::OnPrintToFile(IXMLFileNodePtr pNode)
 	// ------------------------------------------------------------------------------------
 	// Print macros
 	IXMLFileNodePtr macros;
-	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_GDTF_FixtureChildNodeMacros, & macros)))
+	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_GDTF_DMXModeMacros, & macros)))
 	{
 		for (GdtfMacro* macroObj : fMacros)
 		{
@@ -5989,7 +5999,7 @@ const TGdtfUserPresetArray& GdtfFixture::GetPresetArray()
     return fPresets;
 }
 
-const TGdtfMacroArray& GdtfFixture::GetMacroArray()
+const TGdtfMacroArray GdtfDmxMode::GetMacros()
 {
     return fMacros;
 }
