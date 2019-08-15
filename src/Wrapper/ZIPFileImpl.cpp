@@ -150,6 +150,7 @@ VCOMError CZIPFileImpl::OpenRead(IFileIdentifier* pFileID)
 	if ( fpOpenedFile )
 	{
 		fpOpenedFile->Close();
+		delete[] fpOpenedFile;
 	}
 
 	fbOpenedWrite		= false;
