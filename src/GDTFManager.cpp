@@ -5537,17 +5537,6 @@ void GdtfFixture::OnPrintToFile(IXMLFileNodePtr pNode)
 	}
 	
 	// ------------------------------------------------------------------------------------
-	// Print macros
-	IXMLFileNodePtr macros;
-	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_GDTF_FixtureChildNodeMacros, & macros)))
-	{
-		for (GdtfMacro* macroObj : fMacros)
-		{
-			macroObj->WriteToNode(macros);
-		}
-	}
-	
-	// ------------------------------------------------------------------------------------
 	// Print Prorocols
     fProtocollContainer.WriteToNode(pNode);
 }
@@ -5938,15 +5927,6 @@ GdtfDmxMode* GdtfFixture::AddDmxMode(const TXString& name)
 	return mode;
 }
 
-GdtfMacroPtr GdtfFixture::AddMacro(const TXString& name)
-{
-	GdtfMacroPtr macro = new  GdtfMacro(name);
-	
-	fMacros.push_back(macro);
-	
-	return macro;
-}
-
 GdtfUserPresetPtr GdtfFixture::AddUserPreset()
 {
 	GdtfUserPresetPtr preset = new  GdtfUserPreset();
@@ -6017,11 +5997,6 @@ const TGdtfRevisionArray& GdtfFixture::GetRevisionArray()
 const TGdtfUserPresetArray& GdtfFixture::GetPresetArray()
 {
     return fPresets;
-}
-
-const TGdtfMacroArray& GdtfFixture::GetMacroArray()
-{
-    return fMacros;
 }
 
 GdtfProtocols& GdtfFixture::GetProtocollContainer()

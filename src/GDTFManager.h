@@ -1971,7 +1971,6 @@ namespace SceneData
 		TGdtfDmxModeArray				fDmxModes;
 		TGdtfRevisionArray				fRevisions;
 		TGdtfUserPresetArray			fPresets;
-		TGdtfMacroArray					fMacros;	
         GdtfPhysicalDescriptions        fPhysicalDesciptions; 
 		//------------------------------------------------
 		// Reading support

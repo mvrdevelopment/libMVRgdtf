@@ -1017,11 +1017,7 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE		GetPresetCount(size_t& count) = 0;
         virtual VCOMError VCOM_CALLTYPE		GetPresetAt(size_t at, IGdtfUserPreset** preset ) = 0;
 		virtual VCOMError VCOM_CALLTYPE     CreatePreset(IGdtfUserPreset** macro) = 0;
-        
-        virtual VCOMError VCOM_CALLTYPE		GetMacroCount(size_t& count) = 0;
-        virtual VCOMError VCOM_CALLTYPE		GetMacroAt(size_t at, IGdtfMacro** macro ) = 0;
-		virtual VCOMError VCOM_CALLTYPE     CreateMacro(MvrString& name, IGdtfMacro** macro) = 0;        
-        		
+                		
 		virtual VCOMError VCOM_CALLTYPE     GetRDM(IGdtf_FTRDM ** newFTRDM) = 0;
 		virtual VCOMError VCOM_CALLTYPE     CreateRDM(VectorworksMVR::IGdtf_FTRDM ** outFTRDM) = 0;
 
