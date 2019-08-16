@@ -4409,7 +4409,12 @@ void GdtfMacro::OnPrintToFile(IXMLFileNodePtr pNode)
     //------------------------------------------------------------------------------------
     // Call the parent
     GdtfObject::OnPrintToFile(pNode);
-    //------------------------------------------------------------------------------------
+    
+	// ------------------------------------------------------------------------------------
+	// Print node attributes
+	pNode->SetNodeAttributeValue(XML_GDTF_MacroName, fName);
+
+	//------------------------------------------------------------------------------------
     // Print the childs
     if (fMacroDMX != nullptr) 
     {
@@ -4431,24 +4436,8 @@ void GdtfMacro::OnReadFromNode(const IXMLFileNodePtr& pNode)
     pNode->GetNodeAttributeValue(XML_GDTF_MacroName, fName);    
     //------------------------------------------------------------------------------------
     // Read the childs
-    // MacroDMX
-    IXMLFileNode* macroDmxNode;
-    pNode->GetChildNode(XML_GDTF_MacroDMX, &macroDmxNode);
-    
-    if (macroDmxNode != nullptr) 
-    {
-        this->fMacroDMX = new GdtfMacroDMX();
-        this->fMacroDMX->ReadFromNode(macroDmxNode);
-    }
-    // MacroVisual    
-    IXMLFileNode* MacroVisualNode;
-    pNode->GetChildNode(XML_GDTF_MacroVisual, &MacroVisualNode);
-
-    if (MacroVisualNode != nullptr)
-    {
-        this->fMacroVisual = new GdtfMacroVisual();
-        this->fMacroVisual->ReadFromNode(MacroVisualNode);
-    }
+    //	-	MacroDMX
+	//	-	MacroVisual    
 }
 
 void GdtfMacro::OnErrorCheck(const IXMLFileNodePtr& pNode)
