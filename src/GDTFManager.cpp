@@ -2240,6 +2240,7 @@ GdtfDmxMode::~GdtfDmxMode()
     // Housekeeping
     for (GdtfDmxChannelPtr	ptr : fChannels)	{ delete ptr; }
 	for (GdtfDmxRelationPtr	ptr : fRelations)	{ delete ptr; }
+	for (GdtfMacroPtr		ptr : fMacros)		{ delete ptr; }
     
 }
 
@@ -2277,6 +2278,17 @@ void GdtfDmxMode::OnPrintToFile(IXMLFileNodePtr pNode)
 		}
 	}
 	
+	// ------------------------------------------------------------------------------------
+	// Print Macros
+	IXMLFileNodePtr macros;
+	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_GDTF_DMXModeMacros, &macros)))
+	{
+		for (GdtfMacro* macrosObj : fMacros)
+		{
+			macrosObj->WriteToNode(macros);
+		}
+	}
+
 }
 
 void GdtfDmxMode::OnReadFromNode(const IXMLFileNodePtr& pNode)
@@ -2306,12 +2318,23 @@ void GdtfDmxMode::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// Print Relations
 	GdtfConverter::TraverseNodes(pNode, XML_GDTF_DMXModeRelations, XML_GDTF_DMXRelationNodeName, [this] (IXMLFileNodePtr pNode) -> void
 								 {
-									 GdtfDmxRelationPtr relation = new GdtfDmxRelation();;
+									 GdtfDmxRelationPtr relation = new GdtfDmxRelation();
 									 relation->ReadFromNode(pNode);
 									 fRelations.push_back(relation);
 								 }
 								 );
 	
+
+	// ------------------------------------------------------------------------------------
+	// Print Macros
+	GdtfConverter::TraverseNodes(pNode, XML_GDTF_DMXModeMacros, XML_GDTF_MacroNodeName, [this](IXMLFileNodePtr pNode) -> void
+								{
+									GdtfMacroPtr macro = new GdtfMacro();
+									macro->ReadFromNode(pNode);
+									fMacros.push_back(macro);
+								}
+								);
+
 }
 
 void GdtfDmxMode::OnErrorCheck(const IXMLFileNodePtr& pNode)
@@ -2410,6 +2433,13 @@ GdtfDmxRelation* GdtfDmxMode::AddDmxRelation(GdtfDmxChannel* master, GdtfDmxChan
 	GdtfDmxRelation* relation = new GdtfDmxRelation(master, slave, name);
 	fRelations.push_back(relation);
 	return relation;
+}
+
+GdtfMacro* GdtfDmxMode::AddMacro(const TXString &name)
+{
+	GdtfMacro* macro = new GdtfMacro(name);
+	fMacros.push_back(macro);
+	return macro;
 }
 
 GdtfGeometryPtr	GdtfDmxMode::GetGeomRef()
@@ -2653,6 +2683,11 @@ void GdtfDmxMode::GetAddressesFromChannel(TDMXAddressArray& addresses, GdtfDmxCh
 	if(resolution >= eGdtfChannelBitResolution_24) 	{ addresses.push_back(channel->GetUltra()   + offset);}
 	if(resolution >= eGdtfChannelBitResolution_32) 	{ addresses.push_back(channel->GetUber()	+ offset);}
 
+}
+
+const TGdtfMacroArray GdtfDmxMode::GetDmxMacrosArray()
+{
+	return fMacros;
 }
 
 //------------------------------------------------------------------------------------
@@ -4350,6 +4385,12 @@ TXString GdtfUserPreset::GetNodeName()
 
 //------------------------------------------------------------------------------------
 // Macro
+GdtfMacro::GdtfMacro()
+{
+	fMacroDMX = nullptr;
+	fMacroVisual = nullptr;
+}
+
 GdtfMacro::GdtfMacro(const TXString& name)
 {
     fName = name;

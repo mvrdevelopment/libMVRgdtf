@@ -6,6 +6,7 @@
 #include "CGdtfGeometry.h"
 #include "CGdtfDmxChannel.h"
 #include "CGdtfDmxRelation.h"
+#include "CGdtfMacro.h"
 #include "CGdtfDmxChannelFunction.h"
 #include "CGdtfDmxChannel.h"
 
@@ -326,6 +327,109 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxModeImpl::CreateDmxRelation(Mv
     
     return kVCOMError_NoError;
     
+}
+
+VectorworksMVR::VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfDmxModeImpl::GetDmxMacroCount(size_t & count)
+{
+	// Check Pointer
+	if (!fDmxMode) return kVCOMError_NotInitialized;
+
+	count = fDmxMode->GetDmxMacrosArray().size();
+
+	return kVCOMError_NoError;
+
+}
+
+VectorworksMVR::VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfDmxModeImpl::GetDmxMacroAt(size_t at, IGdtfMacro ** macro)
+{
+	// Check Pointer
+	if (!fDmxMode) return kVCOMError_NotInitialized;
+
+	// Check if no Overflow
+	if (at >= fDmxMode->GetDmxMacrosArray().size()) { return kVCOMError_OutOfBounds; }
+
+
+
+
+
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	SceneData::GdtfMacro* gdtfDmxMacro = fDmxMode->GetDmxMacrosArray()[at];
+	CGdtfMacroImpl*		  pDmxMacroObj = nullptr;
+
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfMacro, (IVWUnknown**)& pDmxMacroObj)))
+	{
+		// Check Casting
+		CGdtfMacroImpl* pResultInterface = dynamic_cast<CGdtfMacroImpl*>(pDmxMacroObj);
+		if (pResultInterface)
+		{
+			pResultInterface->setPointer(gdtfDmxMacro);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+
+	//---------------------------------------------------------------------------
+	// Check Incomming Object
+	if (*macro)
+	{
+		(*macro)->Release();
+		*macro = NULL;
+	}
+
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*macro = pDmxMacroObj;
+
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfDmxModeImpl::CreateDmxMacro(MvrString name, IGdtfMacro ** macro)
+{
+	// Create the new Macro
+	TXString vwName(name);
+
+	SceneData::GdtfMacro* gdtfDmxMacro = fDmxMode->AddMacro(vwName);
+
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CGdtfMacroImpl*		  pDmxMacroObj = nullptr;
+
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfMacro, (IVWUnknown**)& pDmxMacroObj)))
+	{
+		// Check Casting
+		CGdtfMacroImpl* pResultInterface = dynamic_cast<CGdtfMacroImpl*>(pDmxMacroObj);
+		if (pResultInterface)
+		{
+			pResultInterface->setPointer(gdtfDmxMacro);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+
+	//---------------------------------------------------------------------------
+	// Check Incomming Object
+	if (*macro)
+	{
+		(*macro)->Release();
+		*macro = NULL;
+	}
+
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*macro = pDmxMacroObj;
+
+	return kVCOMError_NoError;
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxModeImpl::GetBreakCount(size_t & count)

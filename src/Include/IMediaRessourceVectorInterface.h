@@ -646,6 +646,116 @@ namespace VectorworksMVR
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
     };
 	typedef VCOMPtr<IGdtfDmxRelation>	IGdtfDmxRelationPtr;
+
+	class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
+	{
+	public:
+		virtual MvrString VCOM_CALLTYPE     GetName() = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetName(MvrString name) = 0;
+
+	};
+	typedef VCOMPtr<IGdtfMacro>	IGdtfMacroPtr;
+
+
+	class DYNAMIC_ATTRIBUTE IGdtfMacroDMX : public IVWUnknown
+	{
+	public:
+		virtual MvrString VCOM_CALLTYPE     GetName() = 0;
+
+		virtual VCOMError VCOM_CALLTYPE    GetStepCount(size_t& count) = 0;
+		virtual VCOMError VCOM_CALLTYPE    GetStepAt(size_t at, IGdtfMacroDMXStep** outStep) = 0;
+		virtual VCOMError VCOM_CALLTYPE    CreateStep(Sint32& macroDuration, IGdtfMacroDMXStep** outStep) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+	};
+	typedef VCOMPtr<IGdtfMacroDMX>	IGdtfMacroDMXPtr;
+
+
+	class DYNAMIC_ATTRIBUTE IGdtfMacroDMXStep : public IVWUnknown
+	{
+	public:
+		virtual MvrString VCOM_CALLTYPE     GetName() = 0;
+		//
+		virtual VCOMError VCOM_CALLTYPE     GetDuration(Sint32 outDur) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE GetDMXValueCount(size_t & count) = 0;
+		virtual VCOMError VCOM_CALLTYPE GetDMXValueAt(size_t at, IGdtfMacroDMXValue**  outVal) = 0;
+		virtual VCOMError VCOM_CALLTYPE CreateDMXValue(GdtfDefines::DmxValue dmxVal, IGdtfDmxChannel* dmxChannel, IGdtfMacroDMXValue** outVal) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+	};
+	typedef VCOMPtr<IGdtfMacroDMXStep>	IGdtfMacroDMXStepPtr;
+
+
+	class DYNAMIC_ATTRIBUTE IGdtfMacroDMXValue : public IVWUnknown
+	{
+	public:
+		virtual MvrString VCOM_CALLTYPE     GetName() = 0;
+
+		virtual VCOMError VCOM_CALLTYPE   GetDmxValue(GdtfDefines::DmxValue& outValue) = 0;
+		virtual VCOMError VCOM_CALLTYPE   GetDmxChannel(IGdtfDmxChannel** outValue) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+	};
+	typedef VCOMPtr<IGdtfMacroDMXValue>	IGdtfMacroDMXValuePtr;
+
+
+	class DYNAMIC_ATTRIBUTE IGdtfMacroVisual : public IVWUnknown
+	{
+	public:
+		virtual MvrString VCOM_CALLTYPE     GetName() = 0;
+
+		virtual VCOMError VCOM_CALLTYPE     GetVisualStepCount(size_t& outCount) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetVisualStepAt(size_t at, IGdtfMacroVisualStep**  outVal) = 0;
+		virtual VCOMError VCOM_CALLTYPE     CreateVisualStep(IGdtfMacroVisualStep** outVal) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+	};
+	typedef VCOMPtr<IGdtfMacroVisual>	IGdtfMacroVisualPtr;
+
+
+	class DYNAMIC_ATTRIBUTE IGdtfMacroVisualStep : public IVWUnknown
+	{
+	public:
+		virtual MvrString VCOM_CALLTYPE     GetName() = 0;
+		//
+		virtual VCOMError VCOM_CALLTYPE GetDuration(Sint32& duration) = 0;
+		virtual VCOMError VCOM_CALLTYPE GetFade(double& fade) = 0;
+		virtual VCOMError VCOM_CALLTYPE GetDelay(double& delay) = 0;
+		//        
+		virtual VCOMError VCOM_CALLTYPE SetDuration(Sint32 d) = 0;
+		virtual VCOMError VCOM_CALLTYPE SetFade(double f) = 0;
+		virtual VCOMError VCOM_CALLTYPE SetDelay(double d) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE     GetVisualValueCount(size_t& outCount) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetVisualValueAt(size_t at, IGdtfMacroVisualValue**  outVal) = 0;
+		virtual VCOMError VCOM_CALLTYPE     CreateVisualValue(GdtfDefines::DmxValue dmxVal, IGdtfDmxChannelFunction* channelFunction, IGdtfMacroVisualValue ** outVal) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+	};
+	typedef VCOMPtr<IGdtfMacroVisualStep>	IGdtfMacroVisualStepPtr;
+
+
+	class DYNAMIC_ATTRIBUTE IGdtfMacroVisualValue : public IVWUnknown
+	{
+	public:
+		virtual MvrString VCOM_CALLTYPE     GetName() = 0;
+
+		virtual VCOMError VCOM_CALLTYPE   GetDmxValue(GdtfDefines::DmxValue& outValue) = 0;
+		virtual VCOMError VCOM_CALLTYPE   GetDmxChannel(IGdtfDmxChannelFunction** outValue) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE   SetDmxValue(GdtfDefines::DmxValue newValue) = 0;
+		virtual VCOMError VCOM_CALLTYPE   SetDmxChannel(IGdtfDmxChannelFunction* newValue) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+	};
+	typedef VCOMPtr<IGdtfMacroVisualValue>	IGdtfMacroVisualValuePtr;
     
     class DYNAMIC_ATTRIBUTE IGdtfDmxMode : public IVWUnknown
     {
@@ -663,6 +773,10 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetDmxRelationAt(size_t at, IGdtfDmxRelation** relation) = 0;
 		virtual VCOMError VCOM_CALLTYPE     CreateDmxRelation(MvrString name, GdtfDefines::EGdtfDmxRelationType type, IGdtfDmxChannel* master, IGdtfDmxChannelFunction* slave, IGdtfDmxRelation** relation) = 0;
 		
+		virtual VCOMError VCOM_CALLTYPE     GetDmxMacroCount(size_t& count) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetDmxMacroAt(size_t at, IGdtfMacro** macro) = 0;
+		virtual VCOMError VCOM_CALLTYPE     CreateDmxMacro(MvrString name, IGdtfMacro** macro) = 0;
+
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
 
@@ -692,117 +806,6 @@ namespace VectorworksMVR
     {
     };
 	typedef VCOMPtr<IGdtfUserPreset>	IGdtfUserPresetPtr;
-    
-    class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
-    {
-        public:
-            virtual MvrString VCOM_CALLTYPE     GetName() = 0;
-            virtual VCOMError VCOM_CALLTYPE     SetName(MvrString name) = 0;           
-            
-    };
-	typedef VCOMPtr<IGdtfMacro>	IGdtfMacroPtr;
-   
-    
-    class DYNAMIC_ATTRIBUTE IGdtfMacroDMX : public IVWUnknown
-    {
-    public:
-        virtual MvrString VCOM_CALLTYPE     GetName() = 0;
-
-        virtual VCOMError VCOM_CALLTYPE    GetStepCount(size_t& count) = 0;
-        virtual VCOMError VCOM_CALLTYPE    GetStepAt(size_t at, IGdtfMacroDMXStep** outStep) = 0;
-        virtual VCOMError VCOM_CALLTYPE    CreateStep(Sint32& macroDuration, IGdtfMacroDMXStep** outStep) = 0;
-        
-        virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
-        virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
-    };
-    typedef VCOMPtr<IGdtfMacroDMX>	IGdtfMacroDMXPtr;
-
-
-    class DYNAMIC_ATTRIBUTE IGdtfMacroDMXStep : public IVWUnknown
-    {
-    public:
-        virtual MvrString VCOM_CALLTYPE     GetName() = 0;
-        //
-        virtual VCOMError VCOM_CALLTYPE     GetDuration(Sint32 outDur) = 0;
-
-        virtual VCOMError VCOM_CALLTYPE GetDMXValueCount(size_t & count) = 0;
-        virtual VCOMError VCOM_CALLTYPE GetDMXValueAt(size_t at, IGdtfMacroDMXValue**  outVal) = 0;
-        virtual VCOMError VCOM_CALLTYPE CreateDMXValue(GdtfDefines::DmxValue dmxVal, IGdtfDmxChannel* dmxChannel, IGdtfMacroDMXValue** outVal) = 0;
-        
-        virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
-        virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
-    };
-    typedef VCOMPtr<IGdtfMacroDMXStep>	IGdtfMacroDMXStepPtr;
-
-
-    class DYNAMIC_ATTRIBUTE IGdtfMacroDMXValue : public IVWUnknown
-    {
-    public:
-        virtual MvrString VCOM_CALLTYPE     GetName() = 0;
-        
-        virtual VCOMError VCOM_CALLTYPE   GetDmxValue(GdtfDefines::DmxValue& outValue) = 0;
-        virtual VCOMError VCOM_CALLTYPE   GetDmxChannel(IGdtfDmxChannel** outValue) = 0;
-
-        virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
-        virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
-    };
-    typedef VCOMPtr<IGdtfMacroDMXValue>	IGdtfMacroDMXValuePtr;
-
-    
-    class DYNAMIC_ATTRIBUTE IGdtfMacroVisual : public IVWUnknown
-    {
-    public:
-        virtual MvrString VCOM_CALLTYPE     GetName() = 0;
-
-        virtual VCOMError VCOM_CALLTYPE     GetVisualStepCount(size_t& outCount) = 0;
-        virtual VCOMError VCOM_CALLTYPE     GetVisualStepAt(size_t at, IGdtfMacroVisualStep**  outVal) = 0;
-        virtual VCOMError VCOM_CALLTYPE     CreateVisualStep(IGdtfMacroVisualStep** outVal) = 0;
-
-        virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
-        virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
-    };
-    typedef VCOMPtr<IGdtfMacroVisual>	IGdtfMacroVisualPtr;
-
-
-    class DYNAMIC_ATTRIBUTE IGdtfMacroVisualStep : public IVWUnknown
-    {
-    public:
-        virtual MvrString VCOM_CALLTYPE     GetName() = 0;
-        //
-        virtual VCOMError VCOM_CALLTYPE GetDuration(Sint32& duration) = 0;
-        virtual VCOMError VCOM_CALLTYPE GetFade(double& fade) = 0;
-        virtual VCOMError VCOM_CALLTYPE GetDelay(double& delay) = 0;
-        //        
-        virtual VCOMError VCOM_CALLTYPE SetDuration(Sint32 d) = 0;
-        virtual VCOMError VCOM_CALLTYPE SetFade(double f) = 0;
-        virtual VCOMError VCOM_CALLTYPE SetDelay(double d) = 0;
-
-        virtual VCOMError VCOM_CALLTYPE     GetVisualValueCount(size_t& outCount) = 0;
-        virtual VCOMError VCOM_CALLTYPE     GetVisualValueAt(size_t at, IGdtfMacroVisualValue**  outVal) = 0;
-        virtual VCOMError VCOM_CALLTYPE     CreateVisualValue(GdtfDefines::DmxValue dmxVal, IGdtfDmxChannelFunction* channelFunction, IGdtfMacroVisualValue ** outVal) = 0;
-
-        virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
-        virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
-    };
-    typedef VCOMPtr<IGdtfMacroVisualStep>	IGdtfMacroVisualStepPtr;
-
-
-    class DYNAMIC_ATTRIBUTE IGdtfMacroVisualValue : public IVWUnknown
-    {
-    public:
-        virtual MvrString VCOM_CALLTYPE     GetName() = 0;
-
-        virtual VCOMError VCOM_CALLTYPE   GetDmxValue(GdtfDefines::DmxValue& outValue) = 0;
-        virtual VCOMError VCOM_CALLTYPE   GetDmxChannel(IGdtfDmxChannelFunction** outValue) = 0;
-
-        virtual VCOMError VCOM_CALLTYPE   SetDmxValue(GdtfDefines::DmxValue newValue) = 0;
-        virtual VCOMError VCOM_CALLTYPE   SetDmxChannel(IGdtfDmxChannelFunction* newValue) = 0;
-
-        virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
-        virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
-    };
-    typedef VCOMPtr<IGdtfMacroVisualValue>	IGdtfMacroVisualValuePtr;
-
 
     class DYNAMIC_ATTRIBUTE IGdtfMeasurementPoint : public IVWUnknown
     {
