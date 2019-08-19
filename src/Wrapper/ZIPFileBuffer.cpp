@@ -1,11 +1,8 @@
+//-----------------------------------------------------------------------------
+//----- Copyright deersoft 2015 - 2017 www.deersoft.de
+//-----------------------------------------------------------------------------
 #include "Prefix/StdAfx.h"
-
 #include "ZIPFileBuffer.h"
-
-#ifdef _LINUX
-#include <unistd.h>
-#include <stdio.h>
-#endif
 
 using namespace VectorworksMVR::Filing;
 
