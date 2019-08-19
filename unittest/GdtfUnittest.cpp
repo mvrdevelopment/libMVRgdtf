@@ -298,7 +298,11 @@ void GdtfUnittest::WriteFile()
 
 			// Add Relation
 			IGdtfDmxRelationPtr relation;
-			__checkVCOM(gdtfDmxMode->CreateDmxRelation("Relation", EGdtfDmxRelationType::eGdtfDmxRelationType_Multiply, gdtfDmxChannel, gdftChannelFunction, & relation));
+			__checkVCOM(gdtfDmxMode->CreateDmxRelation("My Relation", EGdtfDmxRelationType::eGdtfDmxRelationType_Multiply, gdtfDmxChannel, gdftChannelFunction, & relation));
+
+			// Add Macro
+			IGdtfMacroPtr macro;
+			__checkVCOM(gdtfDmxMode->CreateDmxMacro("My Macro", &macro));
 		}
 
 		// Add Revision
@@ -881,7 +885,7 @@ void GdtfUnittest::ReadFile()
 
 					// Set the name
 					MvrString dmxRelationName = gdtfRelation->GetName();
-					this->checkifEqual("gdtfRelationGetName ", dmxRelationName, "Relation");
+					this->checkifEqual("gdtfRelationGetName ", dmxRelationName, "My Relation");
 
 					// Get Master Channel
 					IGdtfDmxChannelPtr	master;
@@ -905,6 +909,23 @@ void GdtfUnittest::ReadFile()
 					this->checkifEqual("gdtfRelationGetRelationType ", rel, EGdtfDmxRelationType::eGdtfDmxRelationType_Multiply);
 					
 				}
+
+				//------------------------------------------------------------------------------ 
+				// Add the Macro
+				size_t countMacro = 0;
+				__checkVCOM(gdtfDmxMode->GetDmxMacroCount(countMacro));
+				for (size_t i = 0; i < countMacro; i++)
+				{
+					IGdtfMacroPtr gdtfmacro;
+					__checkVCOM(gdtfDmxMode->GetDmxMacroAt(i, &gdtfmacro));
+
+					// Set the name
+					MvrString dmxMacroName = gdtfmacro->GetName();
+					this->checkifEqual("gdtfMacroGetName ", dmxMacroName, "My Macro");
+
+					// TODO Add MacroDMX MacroVisual
+				}
+
 			}
 		}
 
