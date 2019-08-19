@@ -462,8 +462,10 @@ VCOMError CZIPFileImpl::GetFile(const TXString& path, IFileIdentifier* outputFil
 	return err;
 }
 
-VCOMError CZIPFileImpl::AddFile(const TXString& path, IZIPFileIOBuffer* inputBuffer)
+VCOMError CZIPFileImpl::AddFile(const TXString& inPath, IZIPFileIOBuffer* inputBuffer)
 {
+	TXString path = inPath;
+	path.Replace("\\", "/");
 	VCOMError err = kVCOMError_NoError;
 	if ( !fpOpenedFile || !fbOpenedWrite )
 		return kVCOMError_NotInitialized;
