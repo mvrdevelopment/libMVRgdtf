@@ -9,11 +9,11 @@
 
 using namespace VectorworksMVR::Filing;
 
-const size_t cFiveMegaByte = 5 * 1024;
+const size_t kFiveMegaByte = 5 * 1024;
 
 ZIPFileBuffer::ZIPFileBuffer()
 {
-	fpZIPFileBuffer		= NULL;
+	fpZIPFileBuffer		= nullptr;
 	fZIPFileBufferSize	= 0;
 }
 
@@ -21,7 +21,7 @@ ZIPFileBuffer::~ZIPFileBuffer()
 {
 	if (fpZIPFileBuffer)
 		delete[] fpZIPFileBuffer;
-	fpZIPFileBuffer = NULL;
+	fpZIPFileBuffer = nullptr;
 }
 
 VCOMError ZIPFileBuffer::Open(VectorworksMVR::Filing::IFileIdentifier* pFileID, bool openForRead)
@@ -92,7 +92,7 @@ VCOMError ZIPFileBuffer::Write(Uint64 position, Uint64 size, const void* pBuffer
 	fZIPFileBufferSize += size;
 
 	// check if we need to extend recent allocated memory
-	size_t needToAllocate = ((fZIPFileBufferSize + (size_t)size) / (cFiveMegaByte) + 1)*(cFiveMegaByte);
+	size_t needToAllocate = ((fZIPFileBufferSize + (size_t)size) / (kFiveMegaByte) + 1)*(kFiveMegaByte);
 
 	// here check if we need to reallocate fZipFileBuffer
 	if (fAllocatedMemInMB == needToAllocate)
@@ -118,7 +118,11 @@ VCOMError ZIPFileBuffer::Write(Uint64 position, Uint64 size, const void* pBuffer
 
 VCOMError VectorworksMVR::Filing::ZIPFileBuffer::CleanBuffer()
 {
-	fpZIPFileBuffer		= NULL;
+	if(fpZIPFileBuffer)
+	{
+		delete[] fpZIPFileBuffer;
+	}
+	fpZIPFileBuffer		= nullptr;
 	fZIPFileBufferSize	= 0;
 	fAllocatedMemInMB	= 0;
 	return kVCOMError_NoError;
