@@ -9,12 +9,13 @@
 
 using namespace VectorworksMVR::Filing;
 
-const size_t kFiveMegaByte = 5 * 1024;
+const size_t k_5_MegaByte = 5 * 1024;
 
 ZIPFileBuffer::ZIPFileBuffer()
 {
-	fpZIPFileBuffer		= nullptr;
-	fZIPFileBufferSize	= 0;
+	fpZIPFileBuffer		 = nullptr;
+	fZIPFileBufferSize	 = 0;
+	fAllocatedMemorySize = 0;
 }
 
 ZIPFileBuffer::~ZIPFileBuffer()
@@ -40,7 +41,8 @@ VCOMError ZIPFileBuffer::Open(VectorworksMVR::Filing::IFileIdentifier* pFileID, 
 		// get filesize
 		file->GetFileSize(fZIPFileBufferSize);
 		// load in buffer
-		fpZIPFileBuffer = new Uint8[fZIPFileBufferSize];
+		fpZIPFileBuffer      = new Uint8[fZIPFileBufferSize];
+		fAllocatedMemorySize = fZIPFileBufferSize;
 		file->Read(0, fZIPFileBufferSize, fpZIPFileBuffer);
 
 		// close file
@@ -83,35 +85,37 @@ VCOMError ZIPFileBuffer::Read(Uint64 position, Uint64& inoutSize, void* pOutBuff
 
 VCOMError ZIPFileBuffer::Write(Uint64 position, Uint64 size, const void* pBuffer)
 {
-	Uint8* tempBuffer = new Uint8[fZIPFileBufferSize + (size_t)size];
+	// Check how much memory we need
+	size_t needToAllocate = fZIPFileBufferSize + size;
 
-	memcpy(tempBuffer, fpZIPFileBuffer, fZIPFileBufferSize);
-
-	memcpy(tempBuffer + sizeof(Uint8) * fZIPFileBufferSize, pBuffer, size);
-
-	fZIPFileBufferSize += size;
-
-	// check if we need to extend recent allocated memory
-	size_t needToAllocate = ((fZIPFileBufferSize + (size_t)size) / (kFiveMegaByte) + 1)*(kFiveMegaByte);
-
-	// here check if we need to reallocate fZipFileBuffer
-	if (fAllocatedMemInMB == needToAllocate)
+	// When we already have enought memory, just copy
+	if (fAllocatedMemorySize >= needToAllocate)
 	{
-		memcpy(fpZIPFileBuffer, tempBuffer, fZIPFileBufferSize);
+		memcpy(fpZIPFileBuffer + fZIPFileBufferSize, pBuffer, size);
+		fZIPFileBufferSize += size;
 	}
+	// Otherwise allocate more mempry
 	else
 	{
-		fAllocatedMemInMB = needToAllocate;
+		// Calculate the new needed buffer
+		fAllocatedMemorySize = needToAllocate + k_5_MegaByte;
 
-		delete[] fpZIPFileBuffer;
+		// Create new Buffer
+		Uint8* tempBuffer = new Uint8[fAllocatedMemorySize];
+		if(fpZIPFileBuffer)
+		{
+			memcpy(tempBuffer, fpZIPFileBuffer, fZIPFileBufferSize);
+			delete[] fpZIPFileBuffer;
+		}
+		memcpy(tempBuffer + sizeof(Uint8) * fZIPFileBufferSize, pBuffer, size);
 
-		fpZIPFileBuffer = new Uint8[fAllocatedMemInMB];
-		memcpy(fpZIPFileBuffer, tempBuffer, fZIPFileBufferSize);
+		// Set the new Buffer size
+		fZIPFileBufferSize = fZIPFileBufferSize + (size_t)size;
+
+		// Set the new Buffer
+		fpZIPFileBuffer = tempBuffer;
+
 	}
-
-
-	if (tempBuffer)
-		delete[] tempBuffer;
 
 	return kVCOMError_NoError;
 }
@@ -124,7 +128,7 @@ VCOMError VectorworksMVR::Filing::ZIPFileBuffer::CleanBuffer()
 	}
 	fpZIPFileBuffer		= nullptr;
 	fZIPFileBufferSize	= 0;
-	fAllocatedMemInMB	= 0;
+	fAllocatedMemorySize= 0;
 	return kVCOMError_NoError;
 }
 
