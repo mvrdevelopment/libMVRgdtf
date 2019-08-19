@@ -18,7 +18,10 @@ ZIPFileBuffer::ZIPFileBuffer()
 ZIPFileBuffer::~ZIPFileBuffer()
 {
 	if (fpZIPFileBuffer)
+	{
 		delete[] fpZIPFileBuffer;
+	}
+		
 	fpZIPFileBuffer = nullptr;
 }
 
