@@ -150,7 +150,7 @@ VCOMError CZIPFileImpl::OpenRead(IFileIdentifier* pFileID)
 	if ( fpOpenedFile )
 	{
 		fpOpenedFile->Close();
-		delete[] fpOpenedFile;
+		delete fpOpenedFile;
 	}
 
 	fbOpenedWrite		= false;
@@ -172,6 +172,7 @@ VCOMError CZIPFileImpl::OpenWrite(IFileIdentifier* pFileID)
 	if ( fpOpenedFile )
 	{
 		fpOpenedFile->Close();
+		delete fpOpenedFile;
 	}
 
 	fbOpenedWrite	= true;
@@ -194,6 +195,7 @@ VCOMError CZIPFileImpl::OpenNewWrite(IFileIdentifier* pFileID, bool compressFile
 	if ( fpOpenedFile )
 	{
 		fpOpenedFile->Close();
+		delete fpOpenedFile;
 	}
 
 	fbOpenedWrite	= true;
