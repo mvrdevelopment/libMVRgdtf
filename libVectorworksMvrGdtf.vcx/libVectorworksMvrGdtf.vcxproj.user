@@ -21,6 +21,11 @@
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
     <LocalDebuggerAttach>false</LocalDebuggerAttach>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug MDd|x64'">
+    <LocalDebuggerCommand>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)TestApp.exe</LocalDebuggerCommand>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerAttach>false</LocalDebuggerAttach>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugVS15|x64'">
     <LocalDebuggerCommand>$(OutDir)$(ProjectName)TestApp.exe</LocalDebuggerCommand>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>

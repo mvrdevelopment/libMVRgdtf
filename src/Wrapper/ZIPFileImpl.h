@@ -9,6 +9,8 @@
 
 #pragma once
 
+#include "ZIPFileBuffer.h"
+
 namespace VectorworksMVR
 {
 	namespace Filing
@@ -126,7 +128,7 @@ namespace VectorworksMVR
 			bool							fbOpenedWrite;
 			bool							fbCompressFiles;
 
-			VCOMPtr<IRawOSFile>				fpOpenedFile;
+			ZIPFileBuffer*					fpOpenedFile;
 			VCOMPtr<IFileIdentifier>		fpOpenedFileID;
 
 			TXString						fOpenedFileFullPath;
