@@ -122,6 +122,11 @@ CZIPFileImpl::CZIPFileImpl()
 
 CZIPFileImpl::~CZIPFileImpl()
 {
+	if(fpOpenedFile)
+	{
+		delete fpOpenedFile;
+		fpOpenedFile = nullptr;
+	}
 }
 uint32_t CZIPFileImpl::AddRef()
 {
