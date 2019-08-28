@@ -14,7 +14,7 @@ namespace VectorworksMVR
         CGdtfMacroDMXStepImpl();
         virtual ~CGdtfMacroDMXStepImpl();
 
-        virtual VCOMError VCOM_CALLTYPE     GetDuration(Sint32 outDur);
+        virtual VCOMError VCOM_CALLTYPE     GetDuration(Sint32 & outDur);
 
         virtual VCOMError VCOM_CALLTYPE GetDMXValueCount(size_t & count);
         virtual VCOMError VCOM_CALLTYPE GetDMXValueAt(size_t at, IGdtfMacroDMXValue**  outVal);

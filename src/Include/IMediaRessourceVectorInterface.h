@@ -680,7 +680,7 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 	class DYNAMIC_ATTRIBUTE IGdtfMacroDMXStep : public IVWUnknown
 	{
 	public:
-		virtual VCOMError VCOM_CALLTYPE     GetDuration(Sint32 outDur) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetDuration(Sint32& outDur) = 0;
 
 		virtual VCOMError VCOM_CALLTYPE GetDMXValueCount(size_t & count) = 0;
 		virtual VCOMError VCOM_CALLTYPE GetDMXValueAt(size_t at, IGdtfMacroDMXValue**  outVal) = 0;

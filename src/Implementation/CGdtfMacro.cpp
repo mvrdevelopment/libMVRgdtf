@@ -50,8 +50,8 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfMacroImpl::CreateMacroDMX(Vectorw
 	// Check if Set
 	if (!fMacro) { return kVCOMError_NotInitialized; }
 	
-	
-	SceneData::GdtfMacroDMX* gdtfMacroDmx = fMacro->GetMacroDMX();
+	SceneData::GdtfMacroDMX* gdtfMacroDmx = new SceneData::GdtfMacroDMX();
+    fMacro->SetMacroDMX(gdtfMacroDmx);
 	//---------------------------------------------------------------------------
 	// Initialize Object
 	CGdtfMacroDMXImpl* pMacroDmx = nullptr;
@@ -94,7 +94,8 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfMacroImpl::CreateMacroVisual(Vect
 	if (!fMacro) { return kVCOMError_NotInitialized; }
 	
 	
-	SceneData::GdtfMacroVisual* gdtfMacroVisual = fMacro->GetMacroVisual();
+	SceneData::GdtfMacroVisual* gdtfMacroVisual = new SceneData::GdtfMacroVisual();
+    fMacro->SetMacroVisual(gdtfMacroVisual);
 	//---------------------------------------------------------------------------
 	// Initialize Object
 	CGdtfMacroVisualImpl* pMacroVisual = nullptr;
@@ -127,6 +128,94 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfMacroImpl::CreateMacroVisual(Vect
 	//---------------------------------------------------------------------------
 	// Set Out Value
 	*outMacroVisual = pMacroVisual;
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfMacroImpl::GetMacroDMX(IGdtfMacroDMX ** outMacroDmx)
+{
+	// Check if Set
+	if (!fMacro) { return kVCOMError_NotInitialized; }
+	
+
+	SceneData::GdtfMacroDMX* gdtfMacroDmx = fMacro->GetMacroDMX();
+	
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CGdtfMacroDMXImpl* pMacroDmx = nullptr;
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfMacroDMX, (IVWUnknown**)& pMacroDmx)))
+	{
+		// Check Casting
+		CGdtfMacroDMXImpl* pResultInterface = dynamic_cast<CGdtfMacroDMXImpl*>(pMacroDmx);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(gdtfMacroDmx);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incomming Object
+	if ( *outMacroDmx)
+	{
+		(*outMacroDmx)->Release();
+		 outMacroDmx = NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out outMacroDmx
+	 *outMacroDmx = pMacroDmx;
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfMacroImpl::GetMacroVisual(IGdtfMacroVisual ** outMacroVisual)
+{
+	// Check if Set
+	if (!fMacro) { return kVCOMError_NotInitialized; }
+	
+
+	SceneData::GdtfMacroVisual* gdtfMacroVisual = fMacro->GetMacroVisual();
+	
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CGdtfMacroVisualImpl* pMacroVisual = nullptr;
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfMacroVisual, (IVWUnknown**)& pMacroVisual)))
+	{
+		// Check Casting
+		CGdtfMacroVisualImpl* pResultInterface = dynamic_cast<CGdtfMacroVisualImpl*>(pMacroVisual);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(gdtfMacroVisual);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incomming Object
+	if ( *outMacroVisual)
+	{
+		(*outMacroVisual)->Release();
+		 outMacroVisual = NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out outMacroDmx
+	 *outMacroVisual = pMacroVisual;
 	
 	return kVCOMError_NoError;
 }

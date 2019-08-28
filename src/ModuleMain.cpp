@@ -22,6 +22,12 @@
 #include "Implementation/CGdtfRevision.h"
 #include "Implementation/CGdtfUserPreset.h"
 #include "Implementation/CGdtfMacro.h"
+#include "Implementation/CGdtfMacroDMX.h"
+#include "Implementation/CGdtfMacroDMXStep.h"
+#include "Implementation/CGdtfMacroDMXValue.h"
+#include "Implementation/CGdtfMacroVisual.h"
+#include "Implementation/CGdtfMacroVisualStep.h"
+#include "Implementation/CGdtfMacroVisualValue.h"
 #include "Implementation/CGdtfFeature.h"
 #include "Implementation/CGdtfWheelSlot.h"
 #include "Implementation/CGdtfDmxChannel.h"
@@ -100,6 +106,18 @@ extern "C" VectorworksMVR::VCOMError VWQueryInterface(const VectorworksMVR::VWII
         resultInterface = new VectorworksMVR::CGdtfUserPresetImpl();
     else if (iid == VectorworksMVR::IID_GdtfMacro)
         resultInterface = new VectorworksMVR::CGdtfMacroImpl();
+    else if (iid == VectorworksMVR::IID_GdtfMacroDMX)
+        resultInterface = new VectorworksMVR::CGdtfMacroDMXImpl();
+    else if (iid == VectorworksMVR::IID_GdtfMacroDMXStep)
+        resultInterface = new VectorworksMVR::CGdtfMacroDMXStepImpl();
+    else if (iid == VectorworksMVR::IID_GdtfMacroDMXValue)
+        resultInterface = new VectorworksMVR::CGdtfMacroDMXValueImpl();
+    else if (iid == VectorworksMVR::IID_GdtfMacroVisual)
+        resultInterface = new VectorworksMVR::CGdtfMacroVisualImpl();
+    else if (iid == VectorworksMVR::IID_GdtfMacroVisualStep)
+        resultInterface = new VectorworksMVR::CGdtfMacroVisualStepImpl();
+    else if (iid == VectorworksMVR::IID_GdtfMacroVisualValue)
+        resultInterface = new VectorworksMVR::CGdtfMacroVisualValueImpl();
     else if (iid == VectorworksMVR::IID_GdtfFeature)
         resultInterface = new VectorworksMVR::CGdtfFeatureImpl();
     else if (iid == VectorworksMVR::IID_GdtfWheelSlot)

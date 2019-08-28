@@ -4436,8 +4436,19 @@ void GdtfMacro::OnReadFromNode(const IXMLFileNodePtr& pNode)
     pNode->GetNodeAttributeValue(XML_GDTF_MacroName, fName);    
     //------------------------------------------------------------------------------------
     // Read the childs
-    //	-	MacroDMX
-	//	-	MacroVisual    
+	IXMLFileNodePtr macroDmxNode;
+    if(VCOM_SUCCEEDED(pNode->GetChildNode(XML_GDTF_MacroDMX, &macroDmxNode)))
+	{
+		this->fMacroDMX = new GdtfMacroDMX();
+		this->fMacroDMX->ReadFromNode(macroDmxNode);
+	}
+	
+	IXMLFileNodePtr macroVisualNode;
+    if(VCOM_SUCCEEDED(pNode->GetChildNode(XML_GDTF_MacroVisual, &macroVisualNode)))
+	{
+		this->fMacroVisual = new GdtfMacroVisual();
+		this->fMacroVisual->ReadFromNode(macroVisualNode);
+	}
 }
 
 void GdtfMacro::OnErrorCheck(const IXMLFileNodePtr& pNode)
@@ -5094,6 +5105,56 @@ void GdtfFixture::ResolveAttribRefs()
 	}
 }
 
+void GdtfFixture::ResolveMacroRefs(GdtfDmxModePtr dmxMode)
+{
+	for (GdtfMacroPtr macro : dmxMode->GetDmxMacrosArray())
+	{
+		if(macro->GetMacroDMX())
+		{
+			for (GdtfMacroDMXStepPtr step : macro->GetMacroDMX()->GetStepArray())
+			{
+				for(GdtfMacroDMXValuePtr value : step->GetDMXValueArray())
+				{
+					TXString channelRef = value->GetUnresolvedDMXChannel();
+					value->SetDMXChannel(nullptr);
+					for(GdtfDmxChannelPtr channel : dmxMode->GetChannelArray())
+					{
+						if(channel->GetNodeReference() == channelRef)
+						{
+							value->SetDMXChannel(channel);
+						}
+					}
+				}
+			}
+		}
+
+		if(macro->GetMacroVisual())
+		{
+			for (GdtfMacroVisualStepPtr step : macro->GetMacroVisual()->GetVisualStepArray())
+			{
+				for (GdtfMacroVisualValuePtr value : step->GetVisualValueArray())
+				{
+					TXString channelFunctionRef = value->GetUnresolvedChannelFunctionRef();
+					value->SetChannelFunction(nullptr);
+					for (GdtfDmxChannelPtr channel : dmxMode->GetChannelArray())
+					{
+						for (GdtfDmxLogicalChannelPtr logChannel : channel->GetLogicalChannelArray())
+						{
+							for (GdtfDmxChannelFunctionPtr channelFunction : logChannel->GetDmxChannelFunctions())
+							{
+								if(channelFunction->GetNodeReference() == channelFunctionRef)
+								{
+									value->SetChannelFunction(channelFunction);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
 void GdtfFixture::ResolveDmxModeRefs()
 {	
 	for (GdtfDmxModePtr dmxMode : fDmxModes)
@@ -5132,6 +5193,8 @@ void GdtfFixture::ResolveDmxModeRefs()
 		
 		// Then we have all the information for this
 		ResolveDmxRelationRefs(dmxMode);
+
+		ResolveMacroRefs(dmxMode);
 	}	
 }
 
@@ -6941,6 +7004,7 @@ void SceneData::GdtfMacroDMX::OnReadFromNode(const IXMLFileNodePtr & pNode)
 
 SceneData::GdtfMacroDMXValue::GdtfMacroDMXValue()
 {
+	fDMXChannel = nullptr;
 }
 
 SceneData::GdtfMacroDMXValue::GdtfMacroDMXValue(DmxValue dmxVal, GdtfDmxChannelPtr dmxChannel)
@@ -7101,7 +7165,7 @@ void SceneData::GdtfMacroDMXValue::OnPrintToFile(IXMLFileNodePtr pNode)
 	
 	//------------------------------------------------------------------------------------
 	// Print the attributes
-	TXString valStr; // XXX GdtfConverter::ConvertDMXValue(dmxValStr, ???, fDMXValue);  We need Fade/Uber und Fine to calculate the DmxValue; See DMXChannel
+	TXString valStr = GdtfConverter::ConvertDMXValue(fValue, fDMXChannel->GetChannelBitResolution());
 	pNode->SetNodeAttributeValue(XML_GDTF_MacroDMXValue_AttrValue, valStr);
 	//
 	pNode->SetNodeAttributeValue(XML_GDTF_MacroDMXValue_AttrChannel, fDMXChannel->GetNodeReference() );
@@ -7115,7 +7179,14 @@ void SceneData::GdtfMacroDMXValue::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	
 	//------------------------------------------------------------------------------------
 	// Get the attributes
+	EGdtfChannelBitResolution resolution = eGdtfChannelBitResolution_8;
+	if(fDMXChannel)
+	{
+		resolution = fDMXChannel->GetChannelBitResolution();
+	}
+
 	TXString valStr;  pNode->GetNodeAttributeValue(XML_GDTF_MacroDMXValue_AttrValue, valStr);
+	GdtfConverter::ConvertDMXValue(valStr, pNode, resolution, fValue);
 	// XXX fValue X GdtfConverter::ConvertDMXValue
 	pNode->GetNodeAttributeValue(XML_GDTF_MacroDMXValue_AttrChannel, funresolvedDMXChannel);
 }
@@ -7402,7 +7473,7 @@ void SceneData::GdtfMacroVisualValue::OnPrintToFile(IXMLFileNodePtr pNode)
 
 	EGdtfChannelBitResolution resolution = EGdtfChannelBitResolution::eGdtfChannelBitResolution_8;
 	ASSERTN(kEveryone, fChannelFunctionRef != nullptr);
-	if(fChannelFunctionRef) { fChannelFunctionRef->GetParentDMXChannel()->GetChannelBitResolution(); }
+	if(fChannelFunctionRef) {resolution = fChannelFunctionRef->GetParentDMXChannel()->GetChannelBitResolution(); }
 	
 	//------------------------------------------------------------------------------------
 	// Print the attributes

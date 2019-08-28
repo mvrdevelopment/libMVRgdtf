@@ -2092,7 +2092,8 @@ private:
 		GdtfDmxModePtr  ResolveDMXMode(const TXString & unresolvedDMXmode);
 
 		void ResolveDmxLogicalChanRefs(GdtfDmxChannelPtr dmxChnl);
-		void ResolveDmxChanelFunctionRefs(GdtfDmxLogicalChannelPtr dmxLogChnl);		
+		void ResolveDmxChanelFunctionRefs(GdtfDmxLogicalChannelPtr dmxLogChnl);
+		void ResolveMacroRefs(GdtfDmxModePtr dmxMode);	
 		//----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		
 	public:
