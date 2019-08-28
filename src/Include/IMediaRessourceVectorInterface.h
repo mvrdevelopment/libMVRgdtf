@@ -91,6 +91,8 @@ namespace VectorworksMVR
     class IGdtfColorSpace;
     class IGdtfFilter;
     class IGdtfDmxMode;
+	class IGdtfMacroDMX;
+	class IGdtfMacroVisual;
 	//-------------------------------------------------------------------------------------------------------------
 	class DYNAMIC_ATTRIBUTE ISceneDataProvider : public IVWUnknown
 	{
@@ -647,12 +649,17 @@ namespace VectorworksMVR
     };
 	typedef VCOMPtr<IGdtfDmxRelation>	IGdtfDmxRelationPtr;
 
-	class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
+class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 	{
 	public:
 		virtual MvrString VCOM_CALLTYPE     GetName() = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetName(MvrString name) = 0;
 
+		virtual VCOMError VCOM_CALLTYPE		GetMacroDMX(IGdtfMacroDMX** outMacroDmx) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateMacroDMX(IGdtfMacroDMX** outMacroDmx) = 0;
+		
+		virtual VCOMError VCOM_CALLTYPE		GetMacroVisual(IGdtfMacroVisual** outMacroVisual) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateMacroVisual(IGdtfMacroVisual** outMacroVisual) = 0;
 	};
 	typedef VCOMPtr<IGdtfMacro>	IGdtfMacroPtr;
 
@@ -660,8 +667,6 @@ namespace VectorworksMVR
 	class DYNAMIC_ATTRIBUTE IGdtfMacroDMX : public IVWUnknown
 	{
 	public:
-		virtual MvrString VCOM_CALLTYPE     GetName() = 0;
-
 		virtual VCOMError VCOM_CALLTYPE    GetStepCount(size_t& count) = 0;
 		virtual VCOMError VCOM_CALLTYPE    GetStepAt(size_t at, IGdtfMacroDMXStep** outStep) = 0;
 		virtual VCOMError VCOM_CALLTYPE    CreateStep(Sint32& macroDuration, IGdtfMacroDMXStep** outStep) = 0;
@@ -675,8 +680,6 @@ namespace VectorworksMVR
 	class DYNAMIC_ATTRIBUTE IGdtfMacroDMXStep : public IVWUnknown
 	{
 	public:
-		virtual MvrString VCOM_CALLTYPE     GetName() = 0;
-		//
 		virtual VCOMError VCOM_CALLTYPE     GetDuration(Sint32 outDur) = 0;
 
 		virtual VCOMError VCOM_CALLTYPE GetDMXValueCount(size_t & count) = 0;
@@ -692,8 +695,6 @@ namespace VectorworksMVR
 	class DYNAMIC_ATTRIBUTE IGdtfMacroDMXValue : public IVWUnknown
 	{
 	public:
-		virtual MvrString VCOM_CALLTYPE     GetName() = 0;
-
 		virtual VCOMError VCOM_CALLTYPE   GetDmxValue(GdtfDefines::DmxValue& outValue) = 0;
 		virtual VCOMError VCOM_CALLTYPE   GetDmxChannel(IGdtfDmxChannel** outValue) = 0;
 
@@ -706,8 +707,6 @@ namespace VectorworksMVR
 	class DYNAMIC_ATTRIBUTE IGdtfMacroVisual : public IVWUnknown
 	{
 	public:
-		virtual MvrString VCOM_CALLTYPE     GetName() = 0;
-
 		virtual VCOMError VCOM_CALLTYPE     GetVisualStepCount(size_t& outCount) = 0;
 		virtual VCOMError VCOM_CALLTYPE     GetVisualStepAt(size_t at, IGdtfMacroVisualStep**  outVal) = 0;
 		virtual VCOMError VCOM_CALLTYPE     CreateVisualStep(IGdtfMacroVisualStep** outVal) = 0;
@@ -721,8 +720,6 @@ namespace VectorworksMVR
 	class DYNAMIC_ATTRIBUTE IGdtfMacroVisualStep : public IVWUnknown
 	{
 	public:
-		virtual MvrString VCOM_CALLTYPE     GetName() = 0;
-		//
 		virtual VCOMError VCOM_CALLTYPE GetDuration(Sint32& duration) = 0;
 		virtual VCOMError VCOM_CALLTYPE GetFade(double& fade) = 0;
 		virtual VCOMError VCOM_CALLTYPE GetDelay(double& delay) = 0;
@@ -744,8 +741,6 @@ namespace VectorworksMVR
 	class DYNAMIC_ATTRIBUTE IGdtfMacroVisualValue : public IVWUnknown
 	{
 	public:
-		virtual MvrString VCOM_CALLTYPE     GetName() = 0;
-
 		virtual VCOMError VCOM_CALLTYPE   GetDmxValue(GdtfDefines::DmxValue& outValue) = 0;
 		virtual VCOMError VCOM_CALLTYPE   GetDmxChannel(IGdtfDmxChannelFunction** outValue) = 0;
 
