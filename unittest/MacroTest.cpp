@@ -16,11 +16,6 @@ using namespace VectorworksMVR::GdtfDefines;
 
 GdtfMacroTest::GdtfMacroTest(const std::string& currentDir) : GdtfUnitTest(currentDir)
 {
-    fTestData = {
-        {       1,      -1,     3},
-        {       74,     56,     -1},
-        {       255,    33,     -1}
-    };
 }
 
 GdtfMacroTest::~GdtfMacroTest()

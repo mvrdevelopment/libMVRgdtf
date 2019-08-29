@@ -18,6 +18,4 @@ protected:
 private:
     void virtual WriteFile(VectorworksMVR::IGdtfFixturePtr& fixtureDuringRead) override;
     void virtual ReadFile(VectorworksMVR::IGdtfFixturePtr& fixtureDuringWrite) override;
-
-    std::vector<std::vector<Sint32>> fTestData;
 };
