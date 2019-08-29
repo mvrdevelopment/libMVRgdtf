@@ -102,9 +102,11 @@ void GdtfMacroTest::WriteFile(VectorworksMVR::IGdtfFixturePtr& fixture)
 
     IGdtfMacroVisualStepPtr macro2VisualStep;
     macro2Visual->CreateVisualStep(&macro2VisualStep);
+    macro2VisualStep->SetFade(2);
+    macro2VisualStep->SetDelay(3);
 
     IGdtfMacroVisualValuePtr macro2VisualValue;
-    macro2VisualStep->CreateVisualValue(128, channelFunction1, &macro2VisualValue);
+    macro2VisualStep->CreateVisualValue(64, channelFunction2, &macro2VisualValue);
 }
 
 void GdtfMacroTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
@@ -114,6 +116,15 @@ void GdtfMacroTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
 
     IGdtfDmxChannelPtr channel1;
     mode->GetDmxChannelAt(0, &channel1);
+
+    IGdtfDmxChannelPtr channel2;
+    mode->GetDmxChannelAt(1, &channel2);
+    
+    IGdtfDmxLogicalChannelPtr logChannel;
+    channel2->GetLogicalChannelAt(0, &logChannel);
+    
+    IGdtfDmxChannelFunctionPtr channelFunction;
+    logChannel->GetDmxFunctionAt(0, &channelFunction);
 
     IGdtfMacroPtr macro1;
     mode->GetDmxMacroAt(0, &macro1);
@@ -137,5 +148,37 @@ void GdtfMacroTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
 
     IGdtfDmxChannelPtr channelToTest;
     macro1dmxValue->GetDmxChannel(&channelToTest);
-    checkifEqual("DMX Channel", channel1->GetName(), channelToTest->GetName());
+    checkifEqualPtr("DMX Channel", channel1->GetBoundObject(), channelToTest->GetBoundObject());
+
+    IGdtfMacroPtr macro2;
+    mode->GetDmxMacroAt(1, &macro2);
+
+    IGdtfMacroVisualPtr macro2visual;
+    macro2->GetMacroVisual(&macro2visual);
+
+    IGdtfMacroVisualStepPtr macro2visualStep;
+    macro2visual->GetVisualStepAt(0, & macro2visualStep);
+
+    double delay;
+    macro2visualStep->GetDelay(delay);
+    checkifEqual("Delay", delay, 3.0);
+
+    double fade;
+    macro2visualStep->GetFade(fade);
+    checkifEqual("Fade", fade, 2.0);
+
+    Sint32 duration2;
+    macro2visualStep->GetDuration(duration2);
+    checkifEqual("Duration",  duration2, 1);
+
+    IGdtfMacroVisualValuePtr macro2visualValue;
+    macro2visualStep->GetVisualValueAt(0, &macro2visualValue);
+
+    DmxValue dmxValue2;
+    macro2visualValue->GetDmxValue(dmxValue2);
+    checkifEqual("DMX Value", (size_t)dmxValue2, (size_t)64);
+
+    IGdtfDmxChannelFunctionPtr channelFuncToTest;
+    macro2visualValue->GetDmxChannel(&channelFuncToTest);
+    checkifEqualPtr("DMX ChannelFunction", channelFuncToTest->GetBoundObject(), channelFunction->GetBoundObject());
 }
