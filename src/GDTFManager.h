@@ -1194,6 +1194,7 @@ namespace SceneData
 		GdtfMacroDMXValue(DmxValue dmxVal, GdtfDmxChannelPtr dmxChannel);
 		~GdtfMacroDMXValue();
 	private:
+		TXString 				funresolvedValue;
 		DmxValue				fValue;
 		TXString                funresolvedDMXChannel;
 		GdtfDmxChannelPtr       fDMXChannel;
@@ -1205,6 +1206,7 @@ namespace SceneData
 		DmxValue		            GetValue() const;
 		const TXString&				GetUnresolvedDMXChannel() const;
 		GdtfDmxChannelPtr           GetDMXChannel() const;
+		const TXString&      	   	GetUnresolvedDMXValue() const;
 		// Setter       
 		void						SetValue(DmxValue val);
 		void                        SetDMXChannel(GdtfDmxChannelPtr chnl);
@@ -1273,6 +1275,7 @@ namespace SceneData
 		GdtfMacroVisualValue(DmxValue dmxVal, GdtfDmxChannelFunctionPtr channelFunctionRef);
 		~GdtfMacroVisualValue();
 	private:
+		TXString 				  funresolvedValue;
 		DmxValue				  fDmxValue;
 		TXString                  fUnresolvedChannelFunctionRef;
 		GdtfDmxChannelFunctionPtr fChannelFunctionRef;
@@ -1284,6 +1287,7 @@ namespace SceneData
 		DmxValue                     GetDmxValue() const;
 		const TXString&			     GetUnresolvedChannelFunctionRef() const;
 		GdtfDmxChannelFunctionPtr    GetChannelFunctionRef() const;
+		const TXString&				 GetUnresolvedDMXValue() const;
 		// Setter               
 		void                         SetDmxValue(DmxValue val);
 		void	        			 SetUnresolvedChannelFunctionRef(const TXString& ref);

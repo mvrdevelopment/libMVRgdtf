@@ -122,58 +122,64 @@ void GdtfMacroTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
     logChannel->GetDmxFunctionAt(0, &channelFunction);
 
     IGdtfMacroPtr macro1;
-    mode->GetDmxMacroAt(0, &macro1);
+    __checkVCOM( mode->GetDmxMacroAt(0, &macro1));
     checkifEqual("Macro Name", macro1->GetName(), "macro1");
 
+    IGdtfMacroVisualPtr notSetVisual;
+    __checkVCOM_NotSet(macro1->GetMacroVisual(&notSetVisual));
+
     IGdtfMacroDMXPtr macro1dmx;
-    macro1->GetMacroDMX(&macro1dmx);
+    __checkVCOM(macro1->GetMacroDMX(&macro1dmx));
 
     IGdtfMacroDMXStepPtr macro1dmxStep;
-    macro1dmx->GetStepAt(0, &macro1dmxStep);
+    __checkVCOM(macro1dmx->GetStepAt(0, &macro1dmxStep));
 
-    Sint32 duration;
-    macro1dmxStep->GetDuration(duration);
+    Sint32 duration = 0;
+    __checkVCOM(macro1dmxStep->GetDuration(duration));
     checkifEqual("Step Duration", duration, 3);
     
     IGdtfMacroDMXValuePtr macro1dmxValue;
-    macro1dmxStep->GetDMXValueAt(0, &macro1dmxValue);
+    __checkVCOM(macro1dmxStep->GetDMXValueAt(0, &macro1dmxValue));
     DmxValue dmxValue;
-    macro1dmxValue->GetDmxValue(dmxValue);
+    __checkVCOM(macro1dmxValue->GetDmxValue(dmxValue));
     checkifEqual("DMX Value", (size_t)dmxValue, (size_t)128);
 
     IGdtfDmxChannelPtr channelToTest;
-    macro1dmxValue->GetDmxChannel(&channelToTest);
+    __checkVCOM(macro1dmxValue->GetDmxChannel(&channelToTest));
     checkifEqualPtr("DMX Channel", channel1->GetBoundObject(), channelToTest->GetBoundObject());
 
     IGdtfMacroPtr macro2;
-    mode->GetDmxMacroAt(1, &macro2);
+    __checkVCOM(mode->GetDmxMacroAt(1, &macro2));
+
+    IGdtfMacroDMXPtr notSetDmx;
+    __checkVCOM_NotSet(macro2->GetMacroDMX(&notSetDmx));
 
     IGdtfMacroVisualPtr macro2visual;
-    macro2->GetMacroVisual(&macro2visual);
+    __checkVCOM(macro2->GetMacroVisual(&macro2visual));
 
     IGdtfMacroVisualStepPtr macro2visualStep;
-    macro2visual->GetVisualStepAt(0, & macro2visualStep);
+    __checkVCOM(macro2visual->GetVisualStepAt(0, & macro2visualStep));
 
-    double delay;
-    macro2visualStep->GetDelay(delay);
+    double delay = 0;
+    __checkVCOM(macro2visualStep->GetDelay(delay));
     checkifEqual("Delay", delay, 3.0);
 
-    double fade;
-    macro2visualStep->GetFade(fade);
+    double fade = 0;
+    __checkVCOM(macro2visualStep->GetFade(fade));
     checkifEqual("Fade", fade, 2.0);
 
-    Sint32 duration2;
-    macro2visualStep->GetDuration(duration2);
+    Sint32 duration2 = 0;
+    __checkVCOM(macro2visualStep->GetDuration(duration2));
     checkifEqual("Duration",  duration2, 1);
 
     IGdtfMacroVisualValuePtr macro2visualValue;
-    macro2visualStep->GetVisualValueAt(0, &macro2visualValue);
+    __checkVCOM(macro2visualStep->GetVisualValueAt(0, &macro2visualValue));
 
     DmxValue dmxValue2;
-    macro2visualValue->GetDmxValue(dmxValue2);
+    __checkVCOM(macro2visualValue->GetDmxValue(dmxValue2));
     checkifEqual("DMX Value", (size_t)dmxValue2, (size_t)64);
 
     IGdtfDmxChannelFunctionPtr channelFuncToTest;
-    macro2visualValue->GetDmxChannel(&channelFuncToTest);
+    __checkVCOM(macro2visualValue->GetDmxChannel(&channelFuncToTest));
     checkifEqualPtr("DMX ChannelFunction", channelFuncToTest->GetBoundObject(), channelFunction->GetBoundObject());
 }

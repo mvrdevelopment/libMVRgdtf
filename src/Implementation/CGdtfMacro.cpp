@@ -139,7 +139,10 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfMacroImpl::GetMacroDMX(IGdtfMacro
 	
 
 	SceneData::GdtfMacroDMX* gdtfMacroDmx = fMacro->GetMacroDMX();
-	
+	if( !gdtfMacroDmx ) {
+		return kVCOMError_NotSet;
+	}
+
 	//---------------------------------------------------------------------------
 	// Initialize Object
 	CGdtfMacroDMXImpl* pMacroDmx = nullptr;
@@ -183,7 +186,10 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfMacroImpl::GetMacroVisual(IGdtfMa
 	
 
 	SceneData::GdtfMacroVisual* gdtfMacroVisual = fMacro->GetMacroVisual();
-	
+	if ( !gdtfMacroVisual ) {
+		return kVCOMError_NotSet;
+	}
+
 	//---------------------------------------------------------------------------
 	// Initialize Object
 	CGdtfMacroVisualImpl* pMacroVisual = nullptr;
