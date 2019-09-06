@@ -21,6 +21,7 @@
 #include "CustomCharTest.h"
 #include "UtilityTest.h"
 #include "GetCountOfChannels.h"
+#include "MacroTest.h"
 
 
 using namespace VectorworksMVR;					
@@ -79,7 +80,10 @@ int main(int argc, char* argv[])
 	GdtfGetCountOfLinkedChannelsForGeometry test11(base);
 	bool test11_ok = test11.RunTest();
 
-    return  (mvrFailed || gdtfFailed || gdtfDmxFailed || errorFailed || modeMasterFailed || test1_ok || test2_ok|| test3_ok || test4_ok || test5_ok || test6_ok || test7_ok || test8_ok || test9_ok || test10_ok || test11_ok);
+	GdtfMacroTest test12(base);
+	bool test12_ok = test12.RunTest();
+
+    return  (mvrFailed || gdtfFailed || gdtfDmxFailed || errorFailed || modeMasterFailed || test1_ok || test2_ok|| test3_ok || test4_ok || test5_ok || test6_ok || test7_ok || test8_ok || test9_ok || test10_ok || test11_ok || test12_ok);
 }
 
 

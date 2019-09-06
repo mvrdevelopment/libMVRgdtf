@@ -14,7 +14,7 @@ VectorworksMVR::CGdtfMacroVisualStepImpl::~CGdtfMacroVisualStepImpl()
 {
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfMacroVisualStepImpl::GetDuration(Sint32 & duration)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfMacroVisualStepImpl::GetDuration(double & duration)
 {
     // Check Data
     if (!fMacroVisualStep) return kVCOMError_NotInitialized;
@@ -45,7 +45,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfMacroVisualStepImpl::GetDelay(dou
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfMacroVisualStepImpl::SetDuration(Sint32 d)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfMacroVisualStepImpl::SetDuration(double d)
 {
     // Check Data
     if (!fMacroVisualStep) return kVCOMError_NotInitialized;

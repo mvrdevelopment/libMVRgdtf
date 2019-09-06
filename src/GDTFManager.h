@@ -1194,6 +1194,7 @@ namespace SceneData
 		GdtfMacroDMXValue(DmxValue dmxVal, GdtfDmxChannelPtr dmxChannel);
 		~GdtfMacroDMXValue();
 	private:
+		TXString 				funresolvedValue;
 		DmxValue				fValue;
 		TXString                funresolvedDMXChannel;
 		GdtfDmxChannelPtr       fDMXChannel;
@@ -1205,6 +1206,7 @@ namespace SceneData
 		DmxValue		            GetValue() const;
 		const TXString&				GetUnresolvedDMXChannel() const;
 		GdtfDmxChannelPtr           GetDMXChannel() const;
+		const TXString&      	   	GetUnresolvedDMXValue() const;
 		// Setter       
 		void						SetValue(DmxValue val);
 		void                        SetDMXChannel(GdtfDmxChannelPtr chnl);
@@ -1222,10 +1224,10 @@ namespace SceneData
 	{
 	public:
 		GdtfMacroDMXStep();
-		GdtfMacroDMXStep(Sint32 duration);
+		GdtfMacroDMXStep(double duration);
 		~GdtfMacroDMXStep();
 	private:
-		Sint32 fDuration;
+		double fDuration;
 		// Childs
 		TGdtfMacroDMXValueArray fDMXValues;
 	public:
@@ -1233,10 +1235,10 @@ namespace SceneData
 
 	public:
 		// Getter        
-		Sint32 GetDuration() const;
+		double GetDuration() const;
 		TGdtfMacroDMXValueArray GetDMXValueArray() const;
 		// Setter               
-		void SetDuration(Sint32 d);
+		void SetDuration(double d);
 		//
 		GdtfMacroDMXValuePtr AddDmxValue(DmxValue dmxVal, GdtfDmxChannelPtr dmxChannel);
 	protected:
@@ -1259,7 +1261,7 @@ namespace SceneData
 		virtual EGdtfObjectType			GetObjectType();
 		virtual TGdtfMacroDMXStepArray  GetStepArray();
 	public:
-		GdtfMacroDMXStepPtr AddDmxStep(Sint32& duration);
+		GdtfMacroDMXStepPtr AddDmxStep(double& duration);
 	protected:
 		virtual	TXString				GetNodeName();
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
@@ -1273,6 +1275,7 @@ namespace SceneData
 		GdtfMacroVisualValue(DmxValue dmxVal, GdtfDmxChannelFunctionPtr channelFunctionRef);
 		~GdtfMacroVisualValue();
 	private:
+		TXString 				  funresolvedValue;
 		DmxValue				  fDmxValue;
 		TXString                  fUnresolvedChannelFunctionRef;
 		GdtfDmxChannelFunctionPtr fChannelFunctionRef;
@@ -1284,6 +1287,7 @@ namespace SceneData
 		DmxValue                     GetDmxValue() const;
 		const TXString&			     GetUnresolvedChannelFunctionRef() const;
 		GdtfDmxChannelFunctionPtr    GetChannelFunctionRef() const;
+		const TXString&				 GetUnresolvedDMXValue() const;
 		// Setter               
 		void                         SetDmxValue(DmxValue val);
 		void	        			 SetUnresolvedChannelFunctionRef(const TXString& ref);
@@ -1305,7 +1309,7 @@ namespace SceneData
 		GdtfMacroVisualStep();
 		~GdtfMacroVisualStep();
 	private:
-		Sint32 fDuration;
+		double fDuration;
 		double  fFade;
 		double  fDelay;
 		// Childs
@@ -1317,11 +1321,11 @@ namespace SceneData
 
 	public:
 		// Getter        
-		Sint32  getDuration();
+		double  getDuration();
 		double  getFade();
 		double  getDelay();
 		// Setter
-		void setDuration(Sint32 d);
+		void setDuration(double d);
 		void setFade(double f);
 		void setDelay(double d);
 		//
@@ -2092,7 +2096,8 @@ private:
 		GdtfDmxModePtr  ResolveDMXMode(const TXString & unresolvedDMXmode);
 
 		void ResolveDmxLogicalChanRefs(GdtfDmxChannelPtr dmxChnl);
-		void ResolveDmxChanelFunctionRefs(GdtfDmxLogicalChannelPtr dmxLogChnl);		
+		void ResolveDmxChanelFunctionRefs(GdtfDmxLogicalChannelPtr dmxLogChnl);
+		void ResolveMacroRefs(GdtfDmxModePtr dmxMode);	
 		//----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		
 	public:

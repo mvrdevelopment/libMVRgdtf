@@ -14,11 +14,11 @@ namespace VectorworksMVR
         CGdtfMacroVisualStepImpl();
         virtual ~CGdtfMacroVisualStepImpl();
         // 
-        virtual VCOMError VCOM_CALLTYPE GetDuration(Sint32& duration);
+        virtual VCOMError VCOM_CALLTYPE GetDuration(double& duration);
         virtual VCOMError VCOM_CALLTYPE GetFade(double& fade);
         virtual VCOMError VCOM_CALLTYPE GetDelay(double& delay);
         //        
-        virtual VCOMError VCOM_CALLTYPE SetDuration(Sint32 d);
+        virtual VCOMError VCOM_CALLTYPE SetDuration(double d);
         virtual VCOMError VCOM_CALLTYPE SetFade(double f);
         virtual VCOMError VCOM_CALLTYPE SetDelay(double d);
 

@@ -23,7 +23,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfMacroDMXImpl::GetStepCount(size_t
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfMacroDMXImpl::CreateStep(Sint32& macroDuration, IGdtfMacroDMXStep ** outStep)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfMacroDMXImpl::CreateStep(double& macroDuration, IGdtfMacroDMXStep ** outStep)
 {
     // Check if Set
     if (!fMacroDMX) { return kVCOMError_NotInitialized; }
