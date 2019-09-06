@@ -4492,11 +4492,13 @@ void SceneData::GdtfMacro::SetName(const TXString & name)
 
 void SceneData::GdtfMacro::SetMacroDMX(GdtfMacroDMX* val)
 {
+	if(fMacroDMX) {delete fMacroDMX; }
     fMacroDMX = val;
 }
 
 void SceneData::GdtfMacro::SetMacroVisual(GdtfMacroVisual* val)
 {
+	if(fMacroVisual) {delete fMacroVisual; }
     fMacroVisual = val;
 }
 
@@ -5141,7 +5143,6 @@ void GdtfFixture::ResolveMacroRefs(GdtfDmxModePtr dmxMode)
 			{
 				for (GdtfMacroVisualValuePtr value : step->GetVisualValueArray())
 				{
-					value->SetChannelFunction(nullptr);
 					for (GdtfDmxChannelPtr channel : dmxMode->GetChannelArray())
 					{
 						for (GdtfDmxLogicalChannelPtr logChannel : channel->GetLogicalChannelArray())
@@ -5151,16 +5152,12 @@ void GdtfFixture::ResolveMacroRefs(GdtfDmxModePtr dmxMode)
 								if (channelFunction->GetNodeReference() == value->GetUnresolvedChannelFunctionRef())
 								{
 									value->SetChannelFunction(channelFunction);
-								}
-								if(value->GetChannelFunctionRef())
-								{
+
 									IXMLFileNodePtr node;
 									value->GetNode(node);
 								
-									EGdtfChannelBitResolution resolution;
-									resolution = value->GetChannelFunctionRef()->GetParentDMXChannel()->GetChannelBitResolution();
-									DmxValue dmxVal;
-									GdtfConverter::ConvertDMXValue(value->GetUnresolvedDMXValue(), node, resolution, dmxVal);
+									DmxValue dmxVal = 0;
+									GdtfConverter::ConvertDMXValue(value->GetUnresolvedDMXValue(), node, channelFunction->GetParentDMXChannel()->GetChannelBitResolution(), dmxVal);
 									value->SetDmxValue(dmxVal);
 								}
 							}

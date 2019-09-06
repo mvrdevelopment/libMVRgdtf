@@ -139,9 +139,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfMacroImpl::GetMacroDMX(IGdtfMacro
 	
 
 	SceneData::GdtfMacroDMX* gdtfMacroDmx = fMacro->GetMacroDMX();
-	if( !gdtfMacroDmx ) {
-		return kVCOMError_NotSet;
-	}
+	if( !gdtfMacroDmx ) { return kVCOMError_NotSet; }
 
 	//---------------------------------------------------------------------------
 	// Initialize Object
