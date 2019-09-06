@@ -5117,23 +5117,18 @@ void GdtfFixture::ResolveMacroRefs(GdtfDmxModePtr dmxMode)
 			{
 				for(GdtfMacroDMXValuePtr value : step->GetDMXValueArray())
 				{
-					value->SetDMXChannel(nullptr);
 					for(GdtfDmxChannelPtr channel : dmxMode->GetChannelArray())
 					{
-						if (channel->GetNodeReference() == value->GetUnresolvedDMXChannel())
-						{
-							value->SetDMXChannel(channel);
-						}
+						if (channel->GetNodeReference() == value->GetUnresolvedDMXChannel()) { value->SetDMXChannel(channel); break; }
 					}
+
 					if(value->GetDMXChannel())
 					{
 						IXMLFileNodePtr node;
 						value->GetNode(node);
 						
-						EGdtfChannelBitResolution resolution;
-						resolution = value->GetDMXChannel()->GetChannelBitResolution();
-						DmxValue dmxVal;
-						GdtfConverter::ConvertDMXValue(value->GetUnresolvedDMXValue(), node, resolution, dmxVal);
+						DmxValue dmxVal = 0;						
+						GdtfConverter::ConvertDMXValue(value->GetUnresolvedDMXValue(), node, value->GetDMXChannel()->GetChannelBitResolution(), dmxVal);
 						value->SetValue(dmxVal);
 					}
 				}
