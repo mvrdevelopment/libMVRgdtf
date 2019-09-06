@@ -5119,6 +5119,9 @@ void GdtfFixture::ResolveMacroRefs(GdtfDmxModePtr dmxMode)
 			{
 				for(GdtfMacroDMXValuePtr value : step->GetDMXValueArray())
 				{
+					IXMLFileNodePtr node;
+					value->GetNode(node);
+
 					for(GdtfDmxChannelPtr channel : dmxMode->GetChannelArray())
 					{
 						if (channel->GetNodeReference() == value->GetUnresolvedDMXChannel()) { value->SetDMXChannel(channel); break; }
@@ -5126,12 +5129,15 @@ void GdtfFixture::ResolveMacroRefs(GdtfDmxModePtr dmxMode)
 
 					if(value->GetDMXChannel())
 					{
-						IXMLFileNodePtr node;
-						value->GetNode(node);
 						
 						DmxValue dmxVal = 0;						
 						GdtfConverter::ConvertDMXValue(value->GetUnresolvedDMXValue(), node, value->GetDMXChannel()->GetChannelBitResolution(), dmxVal);
 						value->SetValue(dmxVal);
+					}
+					else
+					{
+						GdtfParsingError error (GdtfDefines::EGdtfParsingError::eDmxMacroDmxValueChannelReference, node);
+						SceneData::GdtfFixture::AddError(error);
 					}
 				}
 			}
