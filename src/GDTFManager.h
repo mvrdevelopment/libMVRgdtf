@@ -1224,10 +1224,10 @@ namespace SceneData
 	{
 	public:
 		GdtfMacroDMXStep();
-		GdtfMacroDMXStep(Sint32 duration);
+		GdtfMacroDMXStep(double duration);
 		~GdtfMacroDMXStep();
 	private:
-		Sint32 fDuration;
+		double fDuration;
 		// Childs
 		TGdtfMacroDMXValueArray fDMXValues;
 	public:
@@ -1235,10 +1235,10 @@ namespace SceneData
 
 	public:
 		// Getter        
-		Sint32 GetDuration() const;
+		double GetDuration() const;
 		TGdtfMacroDMXValueArray GetDMXValueArray() const;
 		// Setter               
-		void SetDuration(Sint32 d);
+		void SetDuration(double d);
 		//
 		GdtfMacroDMXValuePtr AddDmxValue(DmxValue dmxVal, GdtfDmxChannelPtr dmxChannel);
 	protected:
@@ -1261,7 +1261,7 @@ namespace SceneData
 		virtual EGdtfObjectType			GetObjectType();
 		virtual TGdtfMacroDMXStepArray  GetStepArray();
 	public:
-		GdtfMacroDMXStepPtr AddDmxStep(Sint32& duration);
+		GdtfMacroDMXStepPtr AddDmxStep(double& duration);
 	protected:
 		virtual	TXString				GetNodeName();
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
@@ -1309,7 +1309,7 @@ namespace SceneData
 		GdtfMacroVisualStep();
 		~GdtfMacroVisualStep();
 	private:
-		Sint32 fDuration;
+		double fDuration;
 		double  fFade;
 		double  fDelay;
 		// Childs
@@ -1321,11 +1321,11 @@ namespace SceneData
 
 	public:
 		// Getter        
-		Sint32  getDuration();
+		double  getDuration();
 		double  getFade();
 		double  getDelay();
 		// Setter
-		void setDuration(Sint32 d);
+		void setDuration(double d);
 		void setFade(double f);
 		void setDelay(double d);
 		//

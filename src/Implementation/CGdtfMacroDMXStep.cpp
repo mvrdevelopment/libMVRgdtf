@@ -15,7 +15,7 @@ VectorworksMVR::CGdtfMacroDMXStepImpl::~CGdtfMacroDMXStepImpl()
 {
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfMacroDMXStepImpl::GetDuration(Sint32& outDur)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfMacroDMXStepImpl::GetDuration(double& outDur)
 {
     // Check Data
     if (!fMacroDMXStep) return kVCOMError_NotInitialized;

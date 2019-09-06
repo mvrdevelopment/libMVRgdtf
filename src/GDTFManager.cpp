@@ -6973,7 +6973,7 @@ TGdtfMacroDMXStepArray SceneData::GdtfMacroDMX::GetStepArray()
 	return fDMXSetps;
 }
 
-GdtfMacroDMXStepPtr SceneData::GdtfMacroDMX::AddDmxStep(Sint32& duration)
+GdtfMacroDMXStepPtr SceneData::GdtfMacroDMX::AddDmxStep(double& duration)
 {
 	GdtfMacroDMXStepPtr dmxStep = new GdtfMacroDMXStep(duration);
 	fDMXSetps.push_back(dmxStep);
@@ -7045,7 +7045,7 @@ SceneData::GdtfMacroDMXStep::GdtfMacroDMXStep()
 {
 }
 
-SceneData::GdtfMacroDMXStep::GdtfMacroDMXStep(Sint32 duration)
+SceneData::GdtfMacroDMXStep::GdtfMacroDMXStep(double duration)
 {
 	fDuration = duration;
 }
@@ -7059,7 +7059,7 @@ EGdtfObjectType SceneData::GdtfMacroDMXStep::GetObjectType()
 	return EGdtfObjectType::eGdtfMacroDMXStep;
 }
 
-Sint32 SceneData::GdtfMacroDMXStep::GetDuration() const
+double SceneData::GdtfMacroDMXStep::GetDuration() const
 {
 	return fDuration;
 }
@@ -7069,7 +7069,7 @@ TGdtfMacroDMXValueArray SceneData::GdtfMacroDMXStep::GetDMXValueArray() const
 	return fDMXValues;
 }
 
-void SceneData::GdtfMacroDMXStep::SetDuration(Sint32 d)
+void SceneData::GdtfMacroDMXStep::SetDuration(double d)
 {
 	fDuration = d;
 }
@@ -7095,7 +7095,7 @@ void SceneData::GdtfMacroDMXStep::OnPrintToFile(IXMLFileNodePtr pNode)
 	
 	//------------------------------------------------------------------------------------
 	// Print the attributes
-	pNode->SetNodeAttributeValue(XML_GDTF_MacroDMXStepDuration, GdtfConverter::ConvertInteger(fDuration) );
+	pNode->SetNodeAttributeValue(XML_GDTF_MacroDMXStepDuration, GdtfConverter::ConvertDouble(fDuration) );
 	
 	//------------------------------------------------------------------------------------
 	// Print the childs
@@ -7114,7 +7114,7 @@ void SceneData::GdtfMacroDMXStep::OnReadFromNode(const IXMLFileNodePtr & pNode)
 	// Get the attributes
 	TXString durationStr;
 	pNode->GetNodeAttributeValue(XML_GDTF_MacroDMXStepDuration, durationStr);
-	GdtfConverter::ConvertInteger(durationStr, pNode, fDuration);
+	GdtfConverter::ConvertDouble(durationStr, pNode, fDuration);
 	// Read the childs
 	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_MacroDMXValue, [this](IXMLFileNodePtr objNode) -> void
 								 {
@@ -7324,7 +7324,7 @@ EGdtfObjectType SceneData::GdtfMacroVisualStep::GetObjectType()
 	return EGdtfObjectType::eGdtfMacroVisualStep;
 }
 
-Sint32 SceneData::GdtfMacroVisualStep::getDuration()
+double SceneData::GdtfMacroVisualStep::getDuration()
 {
 	return fDuration;
 }
@@ -7339,7 +7339,7 @@ double SceneData::GdtfMacroVisualStep::getDelay()
 	return fDelay;
 }
 
-void SceneData::GdtfMacroVisualStep::setDuration(Sint32 d)
+void SceneData::GdtfMacroVisualStep::setDuration(double d)
 {
 	fDuration = d;
 }
@@ -7376,7 +7376,7 @@ void SceneData::GdtfMacroVisualStep::OnPrintToFile(IXMLFileNodePtr pNode)
 	
 	//------------------------------------------------------------------------------------
 	// Print the attributes
-	pNode->SetNodeAttributeValue(XML_GDTF_MacroVisualStep_AttrDuration, GdtfConverter::ConvertInteger(fDuration));
+	pNode->SetNodeAttributeValue(XML_GDTF_MacroVisualStep_AttrDuration, GdtfConverter::ConvertDouble(fDuration));
 	pNode->SetNodeAttributeValue(XML_GDTF_MacroVisualStep_AttrFade,     GdtfConverter::ConvertDouble (fFade));
 	pNode->SetNodeAttributeValue(XML_GDTF_MacroVisualStep_AttrDelay,    GdtfConverter::ConvertDouble (fDelay));
 	
@@ -7397,7 +7397,7 @@ void SceneData::GdtfMacroVisualStep::OnReadFromNode(const IXMLFileNodePtr & pNod
 	//------------------------------------------------------------------------------------
 	// Get the attributes
 	TXString durationStr; pNode->GetNodeAttributeValue(XML_GDTF_MacroVisualStep_AttrDuration, durationStr);
-	GdtfConverter::ConvertInteger(durationStr, pNode, fDuration);
+	GdtfConverter::ConvertDouble(durationStr, pNode, fDuration);
 	TXString fadeStr;     pNode->GetNodeAttributeValue(XML_GDTF_MacroVisualStep_AttrFade, fadeStr);
 	GdtfConverter::ConvertDouble(fadeStr, pNode, fFade);
 	TXString delayStr;    pNode->GetNodeAttributeValue(XML_GDTF_MacroVisualStep_AttrDelay, delayStr);

@@ -669,7 +669,7 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 	public:
 		virtual VCOMError VCOM_CALLTYPE    GetStepCount(size_t& count) = 0;
 		virtual VCOMError VCOM_CALLTYPE    GetStepAt(size_t at, IGdtfMacroDMXStep** outStep) = 0;
-		virtual VCOMError VCOM_CALLTYPE    CreateStep(Sint32& macroDuration, IGdtfMacroDMXStep** outStep) = 0;
+		virtual VCOMError VCOM_CALLTYPE    CreateStep(double& macroDuration, IGdtfMacroDMXStep** outStep) = 0;
 
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
@@ -680,7 +680,7 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 	class DYNAMIC_ATTRIBUTE IGdtfMacroDMXStep : public IVWUnknown
 	{
 	public:
-		virtual VCOMError VCOM_CALLTYPE     GetDuration(Sint32& outDur) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetDuration(double& outDur) = 0;
 
 		virtual VCOMError VCOM_CALLTYPE GetDMXValueCount(size_t & count) = 0;
 		virtual VCOMError VCOM_CALLTYPE GetDMXValueAt(size_t at, IGdtfMacroDMXValue**  outVal) = 0;
@@ -720,11 +720,11 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 	class DYNAMIC_ATTRIBUTE IGdtfMacroVisualStep : public IVWUnknown
 	{
 	public:
-		virtual VCOMError VCOM_CALLTYPE GetDuration(Sint32& duration) = 0;
+		virtual VCOMError VCOM_CALLTYPE GetDuration(double& duration) = 0;
 		virtual VCOMError VCOM_CALLTYPE GetFade(double& fade) = 0;
 		virtual VCOMError VCOM_CALLTYPE GetDelay(double& delay) = 0;
 		//        
-		virtual VCOMError VCOM_CALLTYPE SetDuration(Sint32 d) = 0;
+		virtual VCOMError VCOM_CALLTYPE SetDuration(double d) = 0;
 		virtual VCOMError VCOM_CALLTYPE SetFade(double f) = 0;
 		virtual VCOMError VCOM_CALLTYPE SetDelay(double d) = 0;
 

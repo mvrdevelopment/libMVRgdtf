@@ -82,7 +82,7 @@ void GdtfMacroTest::WriteFile(VectorworksMVR::IGdtfFixturePtr& fixture)
     IGdtfMacroDMXPtr macro1dmx;
     macro1->CreateMacroDMX(&macro1dmx);
 
-    Sint32 duration = 3;
+    double duration = 3;
     IGdtfMacroDMXStepPtr macro1dmxStep;
     macro1dmx->CreateStep(duration ,&macro1dmxStep);
 
@@ -134,9 +134,9 @@ void GdtfMacroTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
     IGdtfMacroDMXStepPtr macro1dmxStep;
     __checkVCOM(macro1dmx->GetStepAt(0, &macro1dmxStep));
 
-    Sint32 duration = 0;
+    double duration = 0;
     __checkVCOM(macro1dmxStep->GetDuration(duration));
-    checkifEqual("Step Duration", duration, 3);
+    checkifEqual("Step Duration", duration, 3.0);
     
     IGdtfMacroDMXValuePtr macro1dmxValue;
     __checkVCOM(macro1dmxStep->GetDMXValueAt(0, &macro1dmxValue));
@@ -168,9 +168,9 @@ void GdtfMacroTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
     __checkVCOM(macro2visualStep->GetFade(fade));
     checkifEqual("Fade", fade, 2.0);
 
-    Sint32 duration2 = 0;
+    double duration2 = 0;
     __checkVCOM(macro2visualStep->GetDuration(duration2));
-    checkifEqual("Duration",  duration2, 1);
+    checkifEqual("Duration",  duration2, 1.0);
 
     IGdtfMacroVisualValuePtr macro2visualValue;
     __checkVCOM(macro2visualStep->GetVisualValueAt(0, &macro2visualValue));
