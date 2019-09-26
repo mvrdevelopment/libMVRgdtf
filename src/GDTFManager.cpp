@@ -5476,6 +5476,19 @@ GdtfFixture::~GdtfFixture()
 	}
 }
 
+size_t GdtfFixture::GetAttachedFileCount()
+{
+    return fLocalFilesFullPath.size();
+}
+
+bool GdtfFixture::GetAttachedFileCountAt(size_t at, TXString* outFile)
+{
+	bool retVal = (at < fLocalFilesFullPath.size());
+	if(retVal)	{ outFile = &fLocalFilesFullPath.at(at); }
+
+    return retVal;
+}
+
 bool  GdtfFixture::IsReaded()
 {
 	return fReaded;

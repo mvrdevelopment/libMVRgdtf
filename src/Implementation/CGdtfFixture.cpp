@@ -1851,12 +1851,21 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetImageRessourcesCo
 {
     if (!fFixtureObject) { return kVCOMError_NotInitialized; }
 
+    count = fFixtureObject->GetAttachedFileCount();
+
     return kVCOMError_NoError;
 }
 
 MvrString VectorworksMVR::CGdtfFixtureImpl::GetImageRessourcesPathAt(size_t at)
 {
     if (!fFixtureObject) { return ""; }
+
+    TXString* fullPathPtr = nullptr;
+
+    if(fFixtureObject->GetAttachedFileCountAt(at, fullPathPtr) && fullPathPtr)
+    {
+        return fullPathPtr->GetCharPtr();
+    }
 
 
     return "";
