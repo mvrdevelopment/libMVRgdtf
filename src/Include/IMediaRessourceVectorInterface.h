@@ -1044,6 +1044,9 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		virtual MvrString VCOM_CALLTYPE		GetLongName() = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetLongName(MvrString longname) = 0;
 
+		// Get Ressources
+		virtual VCOMError VCOM_CALLTYPE		GetImageRessourcesCount(size_t& count) = 0;
+		virtual MvrString VCOM_CALLTYPE		GetImageRessourcesPathAt(size_t at) = 0;
 
 		
 	};

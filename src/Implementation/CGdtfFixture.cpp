@@ -1846,3 +1846,18 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetParsingErrorAt(si
 
     return kVCOMError_NoError;
 }
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetImageRessourcesCount(size_t& count)
+{
+    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
+
+    return kVCOMError_NoError;
+}
+
+MvrString VectorworksMVR::CGdtfFixtureImpl::GetImageRessourcesPathAt(size_t at)
+{
+    if (!fFixtureObject) { return ""; }
+
+
+    return "";
+}

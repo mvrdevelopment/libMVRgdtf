@@ -109,6 +109,10 @@ namespace VectorworksMVR
 
 		//Internal
 		VectorworksMVR::VCOMError			ReadFromFile(IFileIdentifierPtr file, TXString gdtfFileName);
+
+        virtual VCOMError VCOM_CALLTYPE		GetImageRessourcesCount(size_t& count);
+		virtual MvrString VCOM_CALLTYPE		GetImageRessourcesPathAt(size_t at);
+
 		
 	private:
         SceneData::GdtfFixture* fFixtureObject;
