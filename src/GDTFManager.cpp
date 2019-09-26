@@ -4689,6 +4689,11 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile, TXString folderName)
 			// Add it into the file list
 			fLocalFiles.push_back(file);
 
+			TXString fullPathRessource;
+			file->GetFileFullPath(fullPathRessource);
+			fLocalFilesFullPath.push_back(fullPathRessource);
+
+
 		}
 		inPath = fileName;
 	}
