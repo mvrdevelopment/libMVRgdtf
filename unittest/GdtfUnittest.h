@@ -28,4 +28,5 @@ private:
     std::string GetTestWheel_PNG();
 
     void CheckAttibute(VectorworksMVR::IGdtfAttributePtr attribute, bool hasColor);
+    void CheckAttachedFiles(VectorworksMVR::IGdtfFixturePtr fixture, size_t at, std::string inFile);
 };

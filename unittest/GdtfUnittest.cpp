@@ -365,6 +365,20 @@ void GdtfUnittest::ReadFile()
 
 		__checkVCOM(gdtfRead->GetFixtureGUID(resultUUID));
 		this->checkifEqual("GetFixtureGUID fixtureUUID ", fixtureUUID, resultUUID);
+
+		//-----------------------------------------------------------------------------
+		// Check the file content
+		size_t ressourceFiles = 0;
+		__checkVCOM(gdtfRead->GetImageRessourcesCount(ressourceFiles));
+		this->checkifEqual("GetImageRessourcesCount", ressourceFiles, size_t(5));
+
+		CheckAttachedFiles(gdtfRead, 0, this->GetTestPNG_ThumbNail());
+		CheckAttachedFiles(gdtfRead, 1, this->GetTestSVG_ThumbNail());
+		CheckAttachedFiles(gdtfRead, 2, this->GetTestSVG_Model());
+		CheckAttachedFiles(gdtfRead, 3, this->GetTest3DS_Model());
+		CheckAttachedFiles(gdtfRead, 4, this->GetTestWheel_PNG());
+
+
 		
         //-----------------------------------------------------------------------------
 		// Get the Thumbnail-Image from GDTF File
@@ -1241,4 +1255,13 @@ void GdtfUnittest::CheckAttibute(VectorworksMVR::IGdtfAttributePtr attribute, bo
 	{
 		__checkVCOM_NotSet(attribute->GetColor(color));
 	}
+}
+
+void GdtfUnittest::CheckAttachedFiles(VectorworksMVR::IGdtfFixturePtr fixture, size_t at, std::string inFile)
+{
+	std::string file = fixture->GetImageRessourcesPathAt(at);
+
+	this->checkifEqual("Filename for Attached File", file, inFile);
+
+	
 }
