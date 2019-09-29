@@ -5486,7 +5486,7 @@ size_t GdtfFixture::GetAttachedFileCount()
     return fLocalFilesFullPath.size();
 }
 
-bool GdtfFixture::GetAttachedFileCountAt(size_t at, TXString* outFile)
+bool GdtfFixture::GetAttachedFileCountAt(size_t at, TXString*& outFile)
 {
 	bool retVal = (at < fLocalFilesFullPath.size());
 	if(retVal)	{ outFile = &fLocalFilesFullPath.at(at); }

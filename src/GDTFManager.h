@@ -1995,7 +1995,7 @@ public:
         
         TXString                        GetFullThumbNailPath(const TXString & fileExtension);
 		size_t 	GetAttachedFileCount();
-		bool	GetAttachedFileCountAt(size_t at, TXString* outFile);
+		bool	GetAttachedFileCountAt(size_t at, TXString*& outFile);
 
 private:
         TGdtfParsingErrorArray          fErrorContainer;
