@@ -365,6 +365,20 @@ void GdtfUnittest::ReadFile()
 
 		__checkVCOM(gdtfRead->GetFixtureGUID(resultUUID));
 		this->checkifEqual("GetFixtureGUID fixtureUUID ", fixtureUUID, resultUUID);
+
+		//-----------------------------------------------------------------------------
+		// Check the file content
+		size_t ressourceFiles = 0;
+		__checkVCOM(gdtfRead->GetImageRessourcesCount(ressourceFiles));
+		this->checkifEqual("GetImageRessourcesCount", ressourceFiles, size_t(5));
+
+		CheckAttachedFiles(gdtfRead, 0, this->GetTestPNG_ThumbNail(true));
+		CheckAttachedFiles(gdtfRead, 1, this->GetTestSVG_ThumbNail(true));
+		CheckAttachedFiles(gdtfRead, 2, this->GetTestWheel_PNG(true));
+		CheckAttachedFiles(gdtfRead, 3, this->GetTest3DS_Model(true));
+		CheckAttachedFiles(gdtfRead, 4, this->GetTestSVG_Model(true));
+
+
 		
         //-----------------------------------------------------------------------------
 		// Get the Thumbnail-Image from GDTF File
@@ -1200,33 +1214,49 @@ void GdtfUnittest::ReadFile()
 	PrintParsingErrorList(gdtfRead);
 }
 
-std::string GdtfUnittest::GetTestPNG_ThumbNail()
+std::string GdtfUnittest::GetTestPNG_ThumbNail(bool readLocation)
 {
-    std::string path = fTestResourcesFolder + kSeparator + "MyThumbnail.png";
+	std::string path;
+	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator; }
+	else 				{ path = fTestResourcesFolder + kSeparator; }
+    path += "MyThumbnail.png";
     return path;
 }
 
-std::string GdtfUnittest::GetTestSVG_ThumbNail()
+std::string GdtfUnittest::GetTestSVG_ThumbNail(bool readLocation)
 {
-    std::string path = fTestResourcesFolder + kSeparator + "MyThumbnail.svg";
+	std::string path;
+	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator; }
+	else 				{ path = fTestResourcesFolder + kSeparator; }
+    path += "MyThumbnail.svg";
     return path;
 }
 
-std::string GdtfUnittest::GetTestSVG_Model()
+std::string GdtfUnittest::GetTestSVG_Model(bool readLocation)
 {
-    std::string path = fTestResourcesFolder + kSeparator + "MyModel.svg";
+	std::string path;
+	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator+ "modelssvg" + kSeparator;; }
+	else 				{ path = fTestResourcesFolder + kSeparator; }
+    path += "MyModel.svg";
     return path;
 }
 
-std::string GdtfUnittest::GetTest3DS_Model()
+std::string GdtfUnittest::GetTest3DS_Model(bool readLocation)
 {
-    std::string path = fTestResourcesFolder + kSeparator + "MyModel.3ds";
+	std::string path;
+	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator+ "models3ds" + kSeparator;; }
+	else 				{ path = fTestResourcesFolder + kSeparator; }
+	
+    path += "MyModel.3ds";
     return path;
 }
 
-std::string GdtfUnittest::GetTestWheel_PNG()
+std::string GdtfUnittest::GetTestWheel_PNG(bool readLocation)
 {
-    std::string path = fTestResourcesFolder + kSeparator + "MWheel_Img1.png";
+	std::string path;
+	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator + "wheels" + kSeparator; }
+	else 				{ path = fTestResourcesFolder + kSeparator; }
+    path += "MWheel_Img1.png";
     return path;
 }
 
@@ -1241,4 +1271,13 @@ void GdtfUnittest::CheckAttibute(VectorworksMVR::IGdtfAttributePtr attribute, bo
 	{
 		__checkVCOM_NotSet(attribute->GetColor(color));
 	}
+}
+
+void GdtfUnittest::CheckAttachedFiles(VectorworksMVR::IGdtfFixturePtr fixture, size_t at, std::string inFile)
+{
+	std::string file = fixture->GetImageRessourcesPathAt(at);
+
+	this->checkifEqual("Filename for Attached File", file, inFile);
+
+	
 }

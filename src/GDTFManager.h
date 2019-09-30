@@ -1979,6 +1979,7 @@ namespace SceneData
 		//------------------------------------------------
 		// Reading support
 		TVWArray_IFileIdentifier		fLocalFiles;
+		TXStringArray 					fLocalFilesFullPath;
 		bool							fReaded;
 		IFolderIdentifierPtr			fWorkingFolder;
         TGdtfParsingErrorArray          fParsingErrors;
@@ -1993,6 +1994,9 @@ public:
         TGdtfParsingErrorArray&         GetParsingErrorArray();
         
         TXString                        GetFullThumbNailPath(const TXString & fileExtension);
+		size_t 	GetAttachedFileCount();
+		bool	GetAttachedFileCountAt(size_t at, TXString*& outFile);
+
 private:
         TGdtfParsingErrorArray          fErrorContainer;
         

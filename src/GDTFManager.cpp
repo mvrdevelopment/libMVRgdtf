@@ -4689,6 +4689,11 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile, TXString folderName)
 			// Add it into the file list
 			fLocalFiles.push_back(file);
 
+			TXString fullPathRessource;
+			file->GetFileFullPath(fullPathRessource);
+			fLocalFilesFullPath.push_back(fullPathRessource);
+
+
 		}
 		inPath = fileName;
 	}
@@ -5474,6 +5479,19 @@ GdtfFixture::~GdtfFixture()
 		IFileIdentifierPtr file = fLocalFiles[i];
 		file->DeleteOnDisk();
 	}
+}
+
+size_t GdtfFixture::GetAttachedFileCount()
+{
+    return fLocalFilesFullPath.size();
+}
+
+bool GdtfFixture::GetAttachedFileCountAt(size_t at, TXString*& outFile)
+{
+	bool retVal = (at < fLocalFilesFullPath.size());
+	if(retVal)	{ outFile = &fLocalFilesFullPath.at(at); }
+
+    return retVal;
 }
 
 bool  GdtfFixture::IsReaded()
