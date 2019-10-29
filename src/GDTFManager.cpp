@@ -4664,8 +4664,11 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile, TXString folderName)
 			// Prepare pointer to the new files            
             
             // Seperate filename und folder
-            TXString fileNameWithoutFolder = TXString(fileName).Replace("/", TXString(kSeperator) );
-            TXString subFolder 			   = SystemUtil::ExtractFolderFromPath(fileNameWithoutFolder);            
+            TXString fileNameWithoutFolder = TXString(fileName).Replace("/", TXString(kSeperator) );	
+#ifndef _WINDOWS
+			fileNameWithoutFolder          = TXString(fileName).Replace("\\", TXString(kSeperator) ); // It seems some zips come also with this.
+#endif
+            TXString subFolder 			   = SystemUtil::ExtractFolderFromPath(fileNameWithoutFolder);        
             
 			// flatten the folder structure
             subFolder = subFolder.Replace(TXString(kSeperator), "");
