@@ -97,6 +97,50 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetTransformMatrix(
     return kVCOMError_NoError;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetParent(VectorworksMVR::IGdtfGeometry **geometry)
+{
+	// Check Pointer
+	if ( ! fGeometry) { return kVCOMError_NotInitialized; }
+    
+    //---------------------------------------------------------------------------
+    // Initialize Object
+	SceneData::GdtfGeometry*	gdtfGeometry = fGeometry->GetParentGeometry();
+	if ( ! gdtfGeometry)	{ return kVCOMError_NotSet; }
+
+    CGdtfGeometryImpl*			pGeometry = nullptr;
+    
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfGeometry, (IVWUnknown**) & pGeometry)))
+    {
+        // Check Casting
+        CGdtfGeometryImpl* pResultInterface = dynamic_cast<CGdtfGeometryImpl* >(pGeometry);
+        if (pResultInterface)
+        {
+            pResultInterface->SetPointer(gdtfGeometry);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+    
+    //---------------------------------------------------------------------------
+    // Check Incomming Object
+    if (*geometry)
+    {
+        (*geometry)->Release();
+        *geometry		= NULL;
+    }
+    
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *geometry		= pGeometry;
+    
+    return kVCOMError_NoError;
+}
+
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetInternalGeometryCount(size_t &count)
 {
 	// Check Pointer

@@ -379,7 +379,16 @@ void GdtfDmxUnittest::ReadFile()
 		IGdtfGeometryPtr gdtfGeometry;
 		__checkVCOM(gdtfRead->GetGeometryAt(0, &gdtfGeometry));
 		this->checkifEqual("GetGeometryAtGetName() ", gdtfGeometry->GetName(), "Geometry");
+
+		IGdtfGeometryPtr possibleParentGeometry;
+		__checkVCOM_NotSet(gdtfGeometry->GetParent( & possibleParentGeometry));
 		
+		IGdtfGeometryPtr childGeometry;
+		__checkVCOM(gdtfGeometry->GetInternalGeometryAt(0, &childGeometry));
+		__checkVCOM(childGeometry->GetParent( & possibleParentGeometry));
+
+		this->checkifEqual("GeometryParent", gdtfGeometry->GetName(),possibleParentGeometry->GetName());
+
 
 		//------------------------------------------------------------------
 		// Get DMX Mode

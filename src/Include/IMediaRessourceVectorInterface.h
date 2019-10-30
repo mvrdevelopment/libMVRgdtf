@@ -500,6 +500,11 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetCountLinkedDmxChannel(size_t& count, IGdtfDmxMode * forMode) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetLinkedDmxChannelAt(size_t at, IGdtfDmxChannel** outChannel, IGdtfDmxMode * forMode) = 0;
 
+		// 0.6.3
+		virtual VCOMError VCOM_CALLTYPE     GetParent(IGdtfGeometry** model) = 0;
+
+
+
 	};
 	typedef VCOMPtr<IGdtfGeometry>	IGdtfGeometryPtr;
     

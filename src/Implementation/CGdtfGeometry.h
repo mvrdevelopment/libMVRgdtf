@@ -19,6 +19,8 @@ namespace VectorworksMVR
         virtual MvrString VCOM_CALLTYPE     GetName();
         virtual VCOMError VCOM_CALLTYPE     GetModel(IGdtfModel** model);
         virtual VCOMError VCOM_CALLTYPE     GetTransformMatrix(STransformMatrix& transformMatrix);
+        virtual VCOMError VCOM_CALLTYPE     GetParent(IGdtfGeometry** model);
+
 		
         virtual VCOMError VCOM_CALLTYPE     GetInternalGeometryCount(size_t& count);
         virtual VCOMError VCOM_CALLTYPE     GetInternalGeometryAt(size_t at, IGdtfGeometry** geometry);
