@@ -150,6 +150,11 @@ void MvrUnittest::WriteFile()
 		}
 
 
+		ISceneObjPtr trussObject = nullptr;
+		__checkVCOM(mvrWrite->CreateTruss(MvrUUID(1136161271, 1699351080, 75193997, 1748573014), STransformMatrix(), "MyTrussName", layer2, &trussObject));
+
+
+
 		// Check Next Object behavoir
 		ISceneObjPtr firstLayerWritten;
 		if(__checkVCOM(mvrWrite->GetFirstLayer( & firstLayerWritten)))
@@ -230,7 +235,7 @@ void MvrUnittest::ReadFile()
 		// Check Object
 		size_t count_Objects = 0;
 		__checkVCOM(mvrRead->GetSceneObjectCount(count_Objects));
-		this->checkifEqual("Check Global Object Count", count_Objects, size_t(4));
+		this->checkifEqual("Check Global Object Count", count_Objects, size_t(5));
 
 		//------------------------------------------------------------------------------------------------
 		// Check File Getters
@@ -485,6 +490,12 @@ void MvrUnittest::ReadFile()
 							}
 						}
 					}
+				}
+
+				if (i==2 && j==0)
+				{
+					checkifEqual("ESceneObjType Type ", (Sint32)type ,(Sint32)ESceneObjType::Truss);
+
 				}
 							
 				//------------------------------------------------------------------------
