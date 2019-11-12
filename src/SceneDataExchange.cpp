@@ -1109,7 +1109,14 @@ void SceneDataFixtureObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange
 		pColorNode->SetNodeValue(GdtfConverter::ConvertColor(fColor));
 			
 	}
-	
+
+	//--------------------------------------------------------------------------------------------
+	// Print Gobo
+	IXMLFileNodePtr pGoboNode;
+	if ( (! fGobo.IsEmpty()) && VCOM_SUCCEEDED( pNode->CreateChildNode( XML_Val_FixtureGobo, & pGoboNode ) ) )
+	{
+		pGoboNode->SetNodeValue(fGobo);
+	}
 }
 
 void SceneDataFixtureObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
@@ -1192,6 +1199,14 @@ void SceneDataFixtureObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneData
 		pColorNode->GetNodeValue(colorStr);
 		GdtfConverter::ConvertColor(colorStr, pNode,fColor);
 			
+	}
+
+	//--------------------------------------------------------------------------------------------
+	// Read Gobo
+	IXMLFileNodePtr pGoboNode;
+	if ( VCOM_SUCCEEDED( pNode->GetChildNode( XML_Val_FixtureGobo, & pGoboNode ) ) )
+	{
+		pGoboNode->GetNodeValue(fGobo);
 	}
 	
 }
