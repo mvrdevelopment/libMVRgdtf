@@ -704,24 +704,6 @@ MvrString VectorworksMVR::CSceneObjImpl::GetGobo()
 	return fixture->GetGobo().GetCharPtr();
 }
 
-
-MvrString VectorworksMVR::CSceneObjImpl::GetGoboFullPath()
-{
-	// Check if this is initialized
-	ASSERTN(kEveryone,fPtr);
-	if( ! fPtr) return "";
-	
-	// Check the type is right
-	ASSERTN(kEveryone,fType == ESceneObjType::Fixture);
-	if( fType != ESceneObjType::Fixture) return "";
-	
-	// Try to cast
-	SceneData::SceneDataFixtureObjPtr fixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
-	if( ! fixture) return "";
-	
-	return "fixture->GetFixtureId().GetCharPtr()";
-}
-
 VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetGdtfName(MvrString gdtfName)
 {
 	// Check if this is initialized

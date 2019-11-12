@@ -4,6 +4,8 @@
 #include "Unittest.h"
 #include "MvrUnittest.h"
 #include <iostream>
+#include "Utility.h"
+
 
 #include "Include/VectorworksMVR.h"
 using namespace VectorworksMVR;
@@ -148,6 +150,9 @@ void MvrUnittest::WriteFile()
 			__checkVCOM(fixture3->AddAdress(5684, 1));
 			__checkVCOM(fixture3->SetFocusPoint(focusPoint));
 			__checkVCOM(fixture3->SetGobo("MWheel_Img1"));
+
+
+			mvrWrite->AddFileToMvrFile(GetTestWheel_PNG(false).c_str());
 		}
 
 
@@ -242,7 +247,7 @@ void MvrUnittest::ReadFile()
 		// Check File Getters
 		size_t countFiles = size_t(-1);
 		__checkVCOM(mvrRead->GetAttachedFileCount(countFiles));
-		checkifEqual("Check File Count in MVR",countFiles , size_t(1) );
+		checkifEqual("Check File Count in MVR",countFiles , size_t(2) );
 
 
 		std::string path = gdtfPath;
@@ -251,9 +256,11 @@ void MvrUnittest::ReadFile()
 #else
 		path += "/MVR_Export/";
 #endif
+		std::string file0 = path + std::string("MWheel_Img1.png");
 		std::string file1 = path + std::string("testGdtf.gdtf");
 
-		checkifEqual("File 1 Name", mvrRead->GetAttachedFileCountAt(0), file1.c_str());
+		checkifEqual("File 0 Name", mvrRead->GetAttachedFileCountAt(0), file0.c_str());
+		checkifEqual("File 1 Name", mvrRead->GetAttachedFileCountAt(1), file1.c_str());
 		//------------------------------------------------------------------------------------------------
 		// Read Layers
 		ISceneObjPtr readLayer = nullptr;
@@ -617,4 +624,13 @@ void MvrUnittest::ReadFile()
 		}
 
     }
+}
+
+std::string MvrUnittest::GetTestWheel_PNG(bool readLocation)
+{
+	std::string path;
+	if(readLocation)	{ path =fPath + kSeparator + "GdtfGroup" + kSeparator + "wheels" + kSeparator; }
+	else 				{ path = UnitTestUtil::GetTestResourceFolder() + kSeparator; }
+    path += "MWheel_Img1.png";
+    return path;
 }

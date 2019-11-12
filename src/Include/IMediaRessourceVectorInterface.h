@@ -199,7 +199,6 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetFixtureTypeId(Sint8& outType) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetCustomId(size_t& outId) = 0;
 		virtual MvrString VCOM_CALLTYPE		GetGobo() = 0;
-		virtual MvrString VCOM_CALLTYPE		GetGoboFullPath() = 0;
 		
 		virtual VCOMError VCOM_CALLTYPE		SetGdtfName(MvrString gdtfName) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetGdtfMode(MvrString gdtfMode) = 0;
