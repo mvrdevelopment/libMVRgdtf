@@ -135,6 +135,8 @@ void MvrUnittest::WriteFile()
 			__checkVCOM(fixture2->AddAdress(352, 0));
 			__checkVCOM(fixture2->AddAdress(5684, 1));
 			__checkVCOM(fixture2->SetFocusPoint(focusPoint));
+			__checkVCOM(fixture2->SetGoboRotation(32.87));
+			__checkVCOM(fixture2->SetGobo("MWheel_Img1"));
 		}
 
 		// Create second Layer
@@ -406,6 +408,10 @@ void MvrUnittest::ReadFile()
 						checkifEqual("GetFocusPoint", focus->GetName(), "My FocusPoint");
 					}
 
+					double goboRotation = -1.0;
+					__checkVCOM(sceneObj->GetGoboRotation(goboRotation));
+					checkifEqual("sceneObj->GetGoboRotation", goboRotation, 32.87);
+
 					Sint32 unitNumb;
 					sceneObj->GetUnitNumber(unitNumb);
 					checkifEqual("GetUnitNumber", unitNumb, 0);
@@ -454,6 +460,10 @@ void MvrUnittest::ReadFile()
 					checkifEqual("GetGdtfName", 	 	sceneObj->GetGdtfName(), "testGdtf.gdtf");
 					checkifEqual("GetGdtfMode", 	 	sceneObj->GetGdtfMode(), "My DmxModeName");
 					checkifEqual("GetGobo", 	 		sceneObj->GetGobo(), "MWheel_Img1");
+
+					double goboRotation = -1.0;
+					__checkVCOM(sceneObj->GetGoboRotation(goboRotation));
+					checkifEqual("sceneObj->GetGoboRotation", goboRotation, 0.0);
 					
 					IClassPtr mvrClass;
 					__checkVCOM_Failed(sceneObj->GetClass(& mvrClass));
