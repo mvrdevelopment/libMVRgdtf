@@ -701,7 +701,7 @@ MvrString VectorworksMVR::CSceneObjImpl::GetGobo()
 	SceneData::SceneDataFixtureObjPtr fixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
 	if( ! fixture) return "";
 	
-	return "fixture->GetFixtureId().GetCharPtr()";
+	return fixture->GetGobo().GetCharPtr();
 }
 
 
@@ -985,7 +985,8 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetGobo(MvrString gobo)
 	if( ! fixture) {return kVCOMError_NoFixtureObj;}
 	
 	//
-	//fixture->SetCustomId(outId);
+	TXString goboString (gobo);
+	fixture->SetGobo(goboString);
 	
 	return kVCOMError_NoError;
 }

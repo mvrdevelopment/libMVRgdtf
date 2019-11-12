@@ -147,6 +147,7 @@ void MvrUnittest::WriteFile()
 			__checkVCOM(fixture3->AddAdress(352, 0));
 			__checkVCOM(fixture3->AddAdress(5684, 1));
 			__checkVCOM(fixture3->SetFocusPoint(focusPoint));
+			__checkVCOM(fixture3->SetGobo("MWheel_Img1"));
 		}
 
 
@@ -445,6 +446,7 @@ void MvrUnittest::ReadFile()
 					this->checkifEqual("GetFixtureGuid fixtureUUID3 ", resultUUID, fixtureUUID3);
 					checkifEqual("GetGdtfName", 	 	sceneObj->GetGdtfName(), "testGdtf.gdtf");
 					checkifEqual("GetGdtfMode", 	 	sceneObj->GetGdtfMode(), "My DmxModeName");
+					checkifEqual("GetGobo", 	 		sceneObj->GetGobo(), "MWheel_Img1");
 					
 					IClassPtr mvrClass;
 					__checkVCOM_Failed(sceneObj->GetClass(& mvrClass));

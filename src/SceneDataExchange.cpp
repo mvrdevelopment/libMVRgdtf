@@ -915,6 +915,11 @@ size_t SceneDataFixtureObj::GetCustomId()
 	return fCustomId;
 }
 
+const TXString& SceneDataFixtureObj::GetGobo()
+{
+	return fGobo;
+}
+
 const SceneDataAdressArray& SceneDataFixtureObj::GetAdressesArray()
 {
 	return fAdresses;
@@ -978,6 +983,11 @@ void SceneDataFixtureObj::SetFixtureId(const TXString& value)
 void SceneDataFixtureObj::SetUnitNumber(Sint32 value)
 {
 	fUnitNumber = value;
+}
+
+void SceneDataFixtureObj::SetGobo(const TXString& value)
+{
+	fGobo = value;
 }
 
 void SceneDataFixtureObj::SetCustomId(const size_t& value)
