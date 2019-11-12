@@ -46,6 +46,9 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetColor(CieColor& outColor);
 		virtual VCOMError VCOM_CALLTYPE		GetFixtureTypeId(Sint8& outType);
 		virtual VCOMError VCOM_CALLTYPE		GetCustomId(size_t& outId);
+		virtual MvrString VCOM_CALLTYPE		GetGobo();
+		virtual MvrString VCOM_CALLTYPE		GetGoboFullPath();
+
 		
 		virtual VCOMError VCOM_CALLTYPE		SetGdtfName(MvrString gdtfName);
 		virtual VCOMError VCOM_CALLTYPE		SetGdtfMode(MvrString gdtfMode);
@@ -57,6 +60,7 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		SetColor(const CieColor& color);
 		virtual VCOMError VCOM_CALLTYPE		SetFixtureTypeId(const Sint8& outType);
 		virtual VCOMError VCOM_CALLTYPE		SetCustomId(const size_t& outId);
+		virtual VCOMError VCOM_CALLTYPE		SetGobo(MvrString gobo);
 		
 		
 		// Implementation
