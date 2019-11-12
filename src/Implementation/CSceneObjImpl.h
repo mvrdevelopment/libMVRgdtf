@@ -47,7 +47,8 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetFixtureTypeId(Sint8& outType);
 		virtual VCOMError VCOM_CALLTYPE		GetCustomId(size_t& outId);
 		virtual MvrString VCOM_CALLTYPE		GetGobo();
-		
+		virtual VCOMError VCOM_CALLTYPE		GetGoboRotation(double& value);
+
 		virtual VCOMError VCOM_CALLTYPE		SetGdtfName(MvrString gdtfName);
 		virtual VCOMError VCOM_CALLTYPE		SetGdtfMode(MvrString gdtfMode);
 		virtual VCOMError VCOM_CALLTYPE		SetFocusPoint(ISceneObj* focusPoint);
@@ -59,7 +60,7 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		SetFixtureTypeId(const Sint8& outType);
 		virtual VCOMError VCOM_CALLTYPE		SetCustomId(const size_t& outId);
 		virtual VCOMError VCOM_CALLTYPE		SetGobo(MvrString gobo);
-		
+		virtual VCOMError VCOM_CALLTYPE		SetGoboRotation(double rotation);
 		
 		// Implementation
 	public:

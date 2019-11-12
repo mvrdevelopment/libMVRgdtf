@@ -853,6 +853,7 @@ SceneDataFixtureObj::SceneDataFixtureObj(const SceneDataGUID& guid) : SceneDataO
 	fUnitNumber		= 0;
 	fFixtureTypeId	= 0;
 	fCustomId		= 0;
+	fGoboRotation 	= 0.0;
 }
 
 SceneDataFixtureObj::~SceneDataFixtureObj()
@@ -918,6 +919,11 @@ size_t SceneDataFixtureObj::GetCustomId()
 const TXString& SceneDataFixtureObj::GetGobo()
 {
 	return fGobo;
+}
+
+double SceneDataFixtureObj::GetGoboRotation()
+{
+	return fGoboRotation;
 }
 
 const SceneDataAdressArray& SceneDataFixtureObj::GetAdressesArray()
@@ -988,6 +994,11 @@ void SceneDataFixtureObj::SetUnitNumber(Sint32 value)
 void SceneDataFixtureObj::SetGobo(const TXString& value)
 {
 	fGobo = value;
+}
+
+void SceneDataFixtureObj::SetGoboRotation(double value)
+{
+	fGoboRotation = value;
 }
 
 void SceneDataFixtureObj::SetCustomId(const size_t& value)
@@ -1116,6 +1127,7 @@ void SceneDataFixtureObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange
 	if ( (! fGobo.IsEmpty()) && VCOM_SUCCEEDED( pNode->CreateChildNode( XML_Val_FixtureGobo, & pGoboNode ) ) )
 	{
 		pGoboNode->SetNodeValue(fGobo);
+		pGoboNode->SetNodeAttributeValue(XML_Val_FixtureGoboRotation, GdtfConverter::ConvertDouble(fGoboRotation));
 	}
 }
 
@@ -1207,6 +1219,11 @@ void SceneDataFixtureObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneData
 	if ( VCOM_SUCCEEDED( pNode->GetChildNode( XML_Val_FixtureGobo, & pGoboNode ) ) )
 	{
 		pGoboNode->GetNodeValue(fGobo);
+
+		TXString rotationStr;
+		pGoboNode->GetNodeAttributeValue(XML_Val_FixtureGoboRotation, rotationStr);
+
+		GdtfConverter::ConvertDouble(rotationStr, pGoboNode, fGoboRotation);
 	}
 	
 }
