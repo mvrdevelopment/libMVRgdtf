@@ -39,6 +39,34 @@ bool GdtfValueBug::ExecuteTest()
 		__checkVCOM(gdtfFile->GetParsingErrorAt(0, & error));
         ReadError(error, 367,64,GdtfDefines::EGdtfParsingError::eValueError_DmxValueHasWrongValue);
 
+        IGdtfDmxModePtr mode;
+        __checkVCOM(gdtfFile->GetDmxModeAt(0, & mode));
+
+
+        IGdtfDmxChannelPtr channel;
+        __checkVCOM(mode->GetDmxChannelAt(0, & channel));
+
+        IGdtfDmxLogicalChannelPtr logicalChannel;
+        __checkVCOM(channel->GetLogicalChannelAt(0, & logicalChannel));
+
+
+        IGdtfDmxChannelFunctionPtr function;
+        __checkVCOM(logicalChannel->GetDmxFunctionAt(0, & function));
+
+        size_t countChannelSets = 0;
+        __checkVCOM(function->GetDmxChannelSetCount(countChannelSets));
+
+        for (size_t i = 0; i < countChannelSets; i++)
+        {
+            IGdtfDmxChannelSetPtr channelSet;
+            __checkVCOM(function->GetDmxChannelSetAt(i,&channelSet));
+
+            CheckChannelSet(channelSet);
+
+        }
+        
+
+
 
     }
     return true;
@@ -56,4 +84,9 @@ void GdtfValueBug::ReadError(IGdtfXmlParsingErrorPtr& error, size_t lineNumber, 
 
 	GdtfDefines::EGdtfParsingError thisErrorType;
 	if(__checkVCOM(error->GetErrorType(thisErrorType))) { this->checkifEqual("errorType ", (Sint32)thisErrorType, (Sint32)errorType); }
+}
+
+void GdtfValueBug::CheckChannelSet(VectorworksMVR::IGdtfDmxChannelSetPtr channelSet)
+{
+
 }

@@ -14,5 +14,7 @@ protected:
 
     private:
     void ReadError(VectorworksMVR::IGdtfXmlParsingErrorPtr& error, size_t lineNumber, size_t colNumber, VectorworksMVR::GdtfDefines::EGdtfParsingError errorType);
+    void CheckChannelSet(VectorworksMVR::IGdtfDmxChannelSetPtr channelSet);
+
 
 };
