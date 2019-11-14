@@ -55,7 +55,7 @@ bool GdtfValueBug::ExecuteTest()
 
         size_t countChannelSets = 0;
         __checkVCOM(function->GetDmxChannelSetCount(countChannelSets));
-		this->checkifEqual("Check Count Channel Set", countChannelSets, size_t(3));
+		this->checkifEqual("Check Count Channel Set", countChannelSets, size_t(2));
 
 
         for (size_t i = 0; i < countChannelSets; i++)
@@ -63,9 +63,8 @@ bool GdtfValueBug::ExecuteTest()
             IGdtfDmxChannelSetPtr channelSet;
             __checkVCOM(function->GetDmxChannelSetAt(i,&channelSet));
 
-            if(i==0) { CheckChannelSet(channelSet, "min Pulse", 108,108); }
-            if(i==1) { CheckChannelSet(channelSet, "", 50,100); }
-            if(i==2) { CheckChannelSet(channelSet, "max Pulse", 207,255); }
+            if(i==0) { CheckChannelSet(channelSet, "min Pulse", 108,206); }
+            if(i==1) { CheckChannelSet(channelSet, "max Pulse", 207,207); }
 
         }
         

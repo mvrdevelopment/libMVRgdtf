@@ -3456,20 +3456,22 @@ void GdtfDmxChannelFunction::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// ------------------------------------------------------------------------------------
 	// GdtfDmxChannelSet
 	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_DMXChannelSetNodeName, [this] (IXMLFileNodePtr objNode) -> void
-								 {
-									 // Create the object
-									 GdtfDmxChannelSetPtr channelSet = new GdtfDmxChannelSet(this);
-									 
-									 // Read from node
-									 channelSet->ReadFromNode(objNode);
-									
-									// Link with next
-									if(!fChannelSets.empty()) { fChannelSets.back()->SetNextChannelSet(channelSet);}
-									 
-									 // Add to list
-									 fChannelSets.push_back(channelSet);
-									 return;
-								 });
+	{
+		// Create the object
+		GdtfDmxChannelSetPtr channelSet = new GdtfDmxChannelSet(this);
+		
+		// Read from node
+		channelSet->ReadFromNode(objNode);
+
+		if( ! channelSet->IsValid()) { delete channelSet; return; }
+	
+		// Link with next
+		if(!fChannelSets.empty()) { fChannelSets.back()->SetNextChannelSet(channelSet);}
+		
+		// Add to list
+		fChannelSets.push_back(channelSet);
+		return;
+	});
 	
 	// Now calculate end values
 	for (size_t i = 1; i < fChannelSets.size() ; i++)
@@ -3752,6 +3754,7 @@ GdtfDmxChannelSet::GdtfDmxChannelSet(GdtfDmxChannelFunction* parent)
 	fSetPhysical	= false;
 	fNextChannelSet = nullptr;
 	fParentChnlFunction = parent;
+	fValid = true;
 }
 
 GdtfDmxChannelSet::GdtfDmxChannelSet(const TXString& name, GdtfDmxChannelFunction* parent)
@@ -3765,6 +3768,7 @@ GdtfDmxChannelSet::GdtfDmxChannelSet(const TXString& name, GdtfDmxChannelFunctio
 	fSetPhysical	= false;
 	fNextChannelSet = nullptr;
 	fParentChnlFunction = parent;
+	fValid = true;
 }
 
 GdtfDmxChannelSet::~GdtfDmxChannelSet()
@@ -3809,6 +3813,11 @@ void GdtfDmxChannelSet::SetWheelSlot(Sint32 slotIndex)
 	fWheelSlotIdx = slotIndex;
 }
 
+bool GdtfDmxChannelSet::IsValid()
+{
+	return fValid;
+}
+
 void GdtfDmxChannelSet::OnPrintToFile(IXMLFileNodePtr pNode)
 {
 	//------------------------------------------------------------------------------------
@@ -3843,7 +3852,7 @@ void GdtfDmxChannelSet::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	
 	EGdtfChannelBitResolution channelReso = fParentChnlFunction->GetParentDMXChannel()->GetChannelBitResolution();
 
-	TXString dmxfrom;	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelSetDMXFrom,				dmxfrom);	GdtfConverter::ConvertDMXValue (dmxfrom, pNode, channelReso, fDmxStart);
+	TXString dmxfrom;	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelSetDMXFrom,				dmxfrom);	fValid = GdtfConverter::ConvertDMXValue (dmxfrom, pNode, channelReso, fDmxStart);
 	TXString wheelId;	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelSetWheelSlotIndexRef,	wheelId);	GdtfConverter::ConvertInteger(wheelId, pNode,  fWheelSlotIdx);
 	
 	

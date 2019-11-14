@@ -839,6 +839,7 @@ namespace SceneData
 		double				fPhysicalStart;
 		double				fPhysicalEnd;
 		Sint32				fWheelSlotIdx;
+		bool				fValid;
 
 		GdtfDmxChannelFunction* fParentChnlFunction; 
         GdtfDmxChannelSet*      fNextChannelSet;
@@ -865,6 +866,8 @@ namespace SceneData
 		void							SetWheelSlot(Sint32 slotIndex);
 
         void					        SetNextChannelSet(GdtfDmxChannelSet* next);	
+
+		bool 							IsValid();
 				
 	protected:
 		virtual	TXString				GetNodeName();
