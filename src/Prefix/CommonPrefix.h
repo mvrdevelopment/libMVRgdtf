@@ -111,6 +111,8 @@
 #define XML_Val_FixtureAttrBreak	"break"
 #define XML_Val_FixtureTypeId		"FixtureTypeId"
 #define XML_Val_FixtureCustomid		"CustomId"
+#define XML_Val_FixtureGobo		    "Gobo"
+#define XML_Val_FixtureGoboRotation "rotation"
 
 #define XML_Val_SceneObjectNodeName			"SceneObject"
 

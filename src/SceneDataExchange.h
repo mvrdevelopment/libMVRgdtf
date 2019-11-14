@@ -440,6 +440,8 @@ namespace SceneData
 	private:
 		TXString						fGdtfFile;
 		TXString						fGdtfDmxMode;
+		TXString 						fGobo;
+		double							fGoboRotation;
 		SceneDataFocusPointObjPtr		fFocusPoint;
 		SceneDataPositionObjPtr			fPosition;
 		SceneDataAdressArray			fAdresses;
@@ -471,6 +473,8 @@ namespace SceneData
 		Sint8							GetFixtureTypeId();
 		size_t							GetCustomId();
 		const SceneDataAdressArray&		GetAdressesArray();
+		const TXString&					GetGobo();
+		double							GetGoboRotation();
 		
 		void							SetPosition(SceneDataPositionObjPtr ptr);
 		void							SetFocusPoint(SceneDataFocusPointObjPtr ptr);
@@ -482,6 +486,8 @@ namespace SceneData
 		void							SetCustomId(const size_t& value);
 		void							SetFixtureId(const TXString& value);
 		void							SetUnitNumber(Sint32 value);
+		void							SetGobo(const TXString& value);
+		void							SetGoboRotation(double value);
 		
 	protected:
 		virtual	TXString				GetNodeName();

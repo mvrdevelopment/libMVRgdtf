@@ -853,6 +853,7 @@ SceneDataFixtureObj::SceneDataFixtureObj(const SceneDataGUID& guid) : SceneDataO
 	fUnitNumber		= 0;
 	fFixtureTypeId	= 0;
 	fCustomId		= 0;
+	fGoboRotation 	= 0.0;
 }
 
 SceneDataFixtureObj::~SceneDataFixtureObj()
@@ -913,6 +914,16 @@ Sint8 SceneDataFixtureObj::GetFixtureTypeId()
 size_t SceneDataFixtureObj::GetCustomId()
 {
 	return fCustomId;
+}
+
+const TXString& SceneDataFixtureObj::GetGobo()
+{
+	return fGobo;
+}
+
+double SceneDataFixtureObj::GetGoboRotation()
+{
+	return fGoboRotation;
 }
 
 const SceneDataAdressArray& SceneDataFixtureObj::GetAdressesArray()
@@ -978,6 +989,16 @@ void SceneDataFixtureObj::SetFixtureId(const TXString& value)
 void SceneDataFixtureObj::SetUnitNumber(Sint32 value)
 {
 	fUnitNumber = value;
+}
+
+void SceneDataFixtureObj::SetGobo(const TXString& value)
+{
+	fGobo = value;
+}
+
+void SceneDataFixtureObj::SetGoboRotation(double value)
+{
+	fGoboRotation = value;
 }
 
 void SceneDataFixtureObj::SetCustomId(const size_t& value)
@@ -1099,7 +1120,15 @@ void SceneDataFixtureObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange
 		pColorNode->SetNodeValue(GdtfConverter::ConvertColor(fColor));
 			
 	}
-	
+
+	//--------------------------------------------------------------------------------------------
+	// Print Gobo
+	IXMLFileNodePtr pGoboNode;
+	if ( (! fGobo.IsEmpty()) && VCOM_SUCCEEDED( pNode->CreateChildNode( XML_Val_FixtureGobo, & pGoboNode ) ) )
+	{
+		pGoboNode->SetNodeValue(fGobo);
+		pGoboNode->SetNodeAttributeValue(XML_Val_FixtureGoboRotation, GdtfConverter::ConvertDouble(fGoboRotation));
+	}
 }
 
 void SceneDataFixtureObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
@@ -1182,6 +1211,19 @@ void SceneDataFixtureObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneData
 		pColorNode->GetNodeValue(colorStr);
 		GdtfConverter::ConvertColor(colorStr, pNode,fColor);
 			
+	}
+
+	//--------------------------------------------------------------------------------------------
+	// Read Gobo
+	IXMLFileNodePtr pGoboNode;
+	if ( VCOM_SUCCEEDED( pNode->GetChildNode( XML_Val_FixtureGobo, & pGoboNode ) ) )
+	{
+		pGoboNode->GetNodeValue(fGobo);
+
+		TXString rotationStr;
+		pGoboNode->GetNodeAttributeValue(XML_Val_FixtureGoboRotation, rotationStr);
+
+		GdtfConverter::ConvertDouble(rotationStr, pGoboNode, fGoboRotation);
 	}
 	
 }
