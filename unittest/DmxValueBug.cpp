@@ -44,24 +44,28 @@ bool GdtfValueBug::ExecuteTest()
 
 
         IGdtfDmxChannelPtr channel;
-        __checkVCOM(mode->GetDmxChannelAt(0, & channel));
+        __checkVCOM(mode->GetDmxChannelAt(6, & channel));
 
         IGdtfDmxLogicalChannelPtr logicalChannel;
         __checkVCOM(channel->GetLogicalChannelAt(0, & logicalChannel));
 
 
         IGdtfDmxChannelFunctionPtr function;
-        __checkVCOM(logicalChannel->GetDmxFunctionAt(0, & function));
+        __checkVCOM(logicalChannel->GetDmxFunctionAt(3, & function));
 
         size_t countChannelSets = 0;
         __checkVCOM(function->GetDmxChannelSetCount(countChannelSets));
+		this->checkifEqual("Check Count Channel Set", countChannelSets, size_t(3));
+
 
         for (size_t i = 0; i < countChannelSets; i++)
         {
             IGdtfDmxChannelSetPtr channelSet;
             __checkVCOM(function->GetDmxChannelSetAt(i,&channelSet));
 
-            CheckChannelSet(channelSet);
+            if(i==0) { CheckChannelSet(channelSet, "min Pulse", 108,108); }
+            if(i==1) { CheckChannelSet(channelSet, "", 50,100); }
+            if(i==2) { CheckChannelSet(channelSet, "max Pulse", 207,255); }
 
         }
         
@@ -86,7 +90,15 @@ void GdtfValueBug::ReadError(IGdtfXmlParsingErrorPtr& error, size_t lineNumber, 
 	if(__checkVCOM(error->GetErrorType(thisErrorType))) { this->checkifEqual("errorType ", (Sint32)thisErrorType, (Sint32)errorType); }
 }
 
-void GdtfValueBug::CheckChannelSet(VectorworksMVR::IGdtfDmxChannelSetPtr channelSet)
+void GdtfValueBug::CheckChannelSet(VectorworksMVR::IGdtfDmxChannelSetPtr& channelSet, std::string name, VectorworksMVR::GdtfDefines::DmxValue start, VectorworksMVR::GdtfDefines::DmxValue end)
 {
+	this->checkifEqual("Check Name ", name, channelSet->GetName());
 
+	DmxValue thisStart = 0;
+	__checkVCOM(channelSet->GetDmxStartAddress(thisStart));
+	this->checkifEqual("Check Start ", start, thisStart);
+
+	DmxValue thisEnd = 0;
+	__checkVCOM(channelSet->GetDmxEndAddress(thisEnd));
+	this->checkifEqual("Check End ",  end, thisEnd);
 }
