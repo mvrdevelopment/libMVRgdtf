@@ -456,10 +456,12 @@ namespace SceneData
 	private:
 		TXString						fUnresolvedFocus;
 		TXString						fUnresolvedPosition;
+		TXString						fGoboFullPath;
 		
 	public:
 		TXString						GetUnresolvedFocusUUID();
 		TXString						GetUnresolvedPositionUUID();
+		const TXString&					GetGoboFullPath(SceneDataExchange* exchange);
 		
 	public:
 		
