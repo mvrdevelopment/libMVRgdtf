@@ -461,6 +461,9 @@ void MvrUnittest::ReadFile()
 					checkifEqual("GetGdtfMode", 	 	sceneObj->GetGdtfMode(), "My DmxModeName");
 					checkifEqual("GetGobo", 	 		sceneObj->GetGobo(), "MWheel_Img1");
 
+					std::string goboFullPath = sceneObj->GetGoboFullPath();
+					checkifTrue("GetGoboFullPath is not empty", !goboFullPath.empty());
+
 					double goboRotation = -1.0;
 					__checkVCOM(sceneObj->GetGoboRotation(goboRotation));
 					checkifEqual("sceneObj->GetGoboRotation", goboRotation, 0.0);
