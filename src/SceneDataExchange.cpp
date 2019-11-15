@@ -921,6 +921,26 @@ const TXString& SceneDataFixtureObj::GetGobo()
 	return fGobo;
 }
 
+const TXString& SceneDataFixtureObj::GetGoboFullPath(SceneDataExchange* exchange)
+{
+	// Reset
+	fGoboFullPath = "";
+
+	// Prepare
+	IFileIdentifierPtr goboFile (IID_FileIdentifier);
+	if (goboFile) { goboFile->Set(exchange->GetWorkingFolder(), this->GetGobo() + ".png"); }
+
+	// 
+	bool existsOnDisk = false;
+	if(VCOM_SUCCEEDED(goboFile->ExistsOnDisk(existsOnDisk)) && existsOnDisk)
+	{
+		goboFile->GetFileFullPath(fGoboFullPath);
+	}
+
+	
+	return fGoboFullPath;
+}
+
 double SceneDataFixtureObj::GetGoboRotation()
 {
 	return fGoboRotation;
