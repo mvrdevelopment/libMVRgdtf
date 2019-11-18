@@ -43,6 +43,9 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::ReadFromFile(MvrStri
     // Create the file pointer on the full path
     IFileIdentifierPtr file (IID_FileIdentifier);
     file->Set(strFullPath);
+
+    // Store Full Path
+    fFullPath = strFullPath;
 	
     // Read From File
     return ReadFromFile(file, "" /*During GDTF reading, we read onyl one file*/);
@@ -1869,4 +1872,46 @@ MvrString VectorworksMVR::CGdtfFixtureImpl::GetImageRessourcesPathAt(size_t at)
 
 
     return "";
+}
+
+VCOMError VectorworksMVR::CGdtfFixtureImpl::GetBufferLength(size_t& length)
+{
+    length = 0;
+    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
+
+    IFileIdentifierPtr file (IID_FileIdentifier);
+    file->Set(fFullPath);
+
+    IRawOSFilePtr rawFile (IID_RawOSFile);
+
+    if(VCOM_SUCCEEDED(rawFile->Open(file, true, false, false, false)))
+    {
+        Uint64 size = 0;
+        rawFile->GetFileSize(size);
+        length = size;
+    }    
+
+    if(length > 0)  { return kVCOMError_NoError; }
+
+    return kVCOMError_NoError;
+}
+
+VCOMError VectorworksMVR::CGdtfFixtureImpl::ToBuffer(char* outBuffer)
+{
+    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
+
+    IFileIdentifierPtr file (IID_FileIdentifier);
+    file->Set(fFullPath);
+
+    IRawOSFilePtr rawFile (IID_RawOSFile);
+
+    if(VCOM_SUCCEEDED(rawFile->Open(file, true, false, false, false)))
+    {
+        Uint64 size = 0;
+        rawFile->GetFileSize(size);
+
+        rawFile->Read(0, size, outBuffer);
+    }    
+
+    return kVCOMError_NoError;
 }

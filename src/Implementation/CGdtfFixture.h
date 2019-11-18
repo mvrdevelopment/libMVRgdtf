@@ -113,10 +113,17 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE		GetImageRessourcesCount(size_t& count);
 		virtual MvrString VCOM_CALLTYPE		GetImageRessourcesPathAt(size_t at);
 
+        //-----------------------------------------------------------------------------               
+        // BufferWorkflow
+		virtual VCOMError VCOM_CALLTYPE		GetBufferLength(size_t& length);		
+		virtual VCOMError VCOM_CALLTYPE		ToBuffer(char* outBuffer);	
+		virtual VCOMError VCOM_CALLTYPE		FromBuffer(const char* buffer, size_t length);
+
 		
 	private:
         SceneData::GdtfFixture* fFixtureObject;
 		IZIPFilePtr				fZipFile;
+        TXString                fFullPath;
 	};
 	
 

@@ -64,3 +64,4 @@ libs/**
 x64/**
 
 libVectorworksMvrGdtf\.vcx/libs
+.DS_Store
