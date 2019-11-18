@@ -1893,7 +1893,7 @@ VCOMError VectorworksMVR::CGdtfFixtureImpl::GetBufferLength(size_t& length)
 
     if(length > 0)  { return kVCOMError_NoError; }
 
-    return kVCOMError_NoError;
+    return kVCOMError_Failed;
 }
 
 VCOMError VectorworksMVR::CGdtfFixtureImpl::ToBuffer(char* outBuffer)
@@ -1910,8 +1910,21 @@ VCOMError VectorworksMVR::CGdtfFixtureImpl::ToBuffer(char* outBuffer)
         Uint64 size = 0;
         rawFile->GetFileSize(size);
 
-        rawFile->Read(0, size, outBuffer);
+        if(size > 0)
+        {
+            char* tempBuffer = new char[size + 1];
+            rawFile->Read(0, size, tempBuffer);
+            memcpy( tempBuffer,  outBuffer, size );
+            delete[] tempBuffer;
+            return kVCOMError_NoError;
+        }
     }    
 
-    return kVCOMError_NoError;
+    return kVCOMError_Failed;
+}
+
+VCOMError VectorworksMVR::CGdtfFixtureImpl::FromBuffer(const char* buffer, size_t length)
+{
+
+    return kVCOMError_Failed;
 }
