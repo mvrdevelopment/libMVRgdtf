@@ -43,9 +43,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::ReadFromFile(MvrStri
     // Create the file pointer on the full path
     IFileIdentifierPtr file (IID_FileIdentifier);
     file->Set(strFullPath);
-
-    // Store Full Path
-    fFullPath = strFullPath;
 	
     // Read From File
     return ReadFromFile(file, "" /*During GDTF reading, we read onyl one file*/);
@@ -129,7 +126,9 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::Close()
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::ReadFromFile(IFileIdentifierPtr file, TXString gdtfFileName)
 {
-	
+	// Store Full Path
+    file->GetFileFullPath(fFullPath);
+
 	// Check there is already a object in here
 	if (fFixtureObject) { delete fFixtureObject; }
 	

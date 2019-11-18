@@ -389,6 +389,13 @@ void MvrUnittest::ReadFile()
 
 					IGdtfFixturePtr gdtfLinkedFixture;
 					__checkVCOM(sceneObj->GetGdtfFixture( & gdtfLinkedFixture));
+
+					size_t bufferLength = 0;
+					__checkVCOM(gdtfLinkedFixture->GetBufferLength(bufferLength));
+
+					char* buffer = new char[bufferLength + 1];
+					__checkVCOM(gdtfLinkedFixture->ToBuffer(buffer));
+					delete[] buffer;
 				}
 				
 				// ------------------------------------------------------------------------------
