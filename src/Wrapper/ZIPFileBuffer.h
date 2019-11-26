@@ -16,6 +16,7 @@ namespace VectorworksMVR
 
 		public:
 			VCOMError	Open(VectorworksMVR::Filing::IFileIdentifier* pFileID,  bool openForRead);
+			VCOMError	Open(const char* buffer, size_t length, bool openForRead);
 			VCOMError	Close();
 			VCOMError	GetFileSize(Uint64& outValue);
 			VCOMError 	Read(Uint64 position, Uint64& inoutSize, void* pOutBuffer);

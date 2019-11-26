@@ -4623,10 +4623,10 @@ void GdtfFixture::ImportFromBuffer(const char*buffer, size_t length, const TXStr
 {
 	PrepareWorkingFolder(folder);
 	
-	//IZIPFilePtr zipfile ( IID_ZIPFile );
-	//zipfile->OpenRead(inZipFile);
+	IZIPFilePtr zipfile ( IID_ZIPFile );
+	zipfile->OpenRead(buffer, length);
 
-	//ImportFromZip(zipfile);
+	ImportFromZip(zipfile);
 }
 
 void GdtfFixture::PrepareWorkingFolder(TXString folderName)
