@@ -133,10 +133,12 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::ReadFromFile(IFileId
 	if (fFixtureObject) { delete fFixtureObject; }
 	
 	// Create the new Object
-	fFixtureObject = new SceneData::GdtfFixture( file, gdtfFileName );
+	fFixtureObject = new SceneData::GdtfFixture();
 	
 	// Check if this was good
 	if (!fFixtureObject) { return kVCOMError_Failed; }
+
+    fFixtureObject->ImportFromFile(file, gdtfFileName);
 	
 	// Check if you can read it
 	if ( ! fFixtureObject->IsReaded()) { return kVCOMError_InvalidArg; }
@@ -1925,5 +1927,20 @@ VCOMError VectorworksMVR::CGdtfFixtureImpl::ToBuffer(char* outBuffer)
 VCOMError VectorworksMVR::CGdtfFixtureImpl::FromBuffer(const char* buffer, size_t length)
 {
 
-    return kVCOMError_Failed;
+	// Check there is already a object in here
+	if (fFixtureObject) { delete fFixtureObject; }
+	
+	// Create the new Object
+	fFixtureObject = new SceneData::GdtfFixture();
+	
+	// Check if this was good
+	if (!fFixtureObject) { return kVCOMError_Failed; }
+
+    fFixtureObject->ImportFromBuffer(buffer,length, "" /* Single Read*/);
+	
+	// Check if you can read it
+	if ( ! fFixtureObject->IsReaded()) { return kVCOMError_InvalidArg; }
+	
+	// If everything is OK
+	return kVCOMError_NoError;
 }
