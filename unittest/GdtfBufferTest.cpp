@@ -56,7 +56,7 @@ bool GdtfBufferTest::ExecuteTest()
 	IGdtfFixturePtr gdtfFixture (IID_IGdtfFixture);
 	if(__checkVCOM(gdtfFixture->FromBuffer(buffer, length)))
 	{
-
+		checkifEqual("Name Fixture Type", "Alpha Spot QWO 800",  gdtfFixture->GetName());
 	}
 
     return true;
