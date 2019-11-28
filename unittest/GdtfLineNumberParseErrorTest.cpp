@@ -39,21 +39,10 @@ void GdtfLineNumberParseErrorTest::ReadFile()
 
 	size_t countErrors = 0;
 	__checkVCOM(gdtfRead->GetParsingErrorCount(countErrors));
-	checkifEqual("Count Errors", countErrors, size_t(1));
+	checkifEqual("Count Errors", countErrors, size_t(13));
 
 	PrintParsingErrorList(gdtfRead);
-	ClearExpectedError();
+	resetFailedTestState();
 }
 
-void GdtfLineNumberParseErrorTest::ClearExpectedError()
-{	
-	std::pair<bool, std::string> failedTest = getFailedTests();
 
-	if (failedTest.first)
-	{
-		if (failedTest.second == " Code: 21 Message:  Line: 186 Column: 96")
-		{
-			resetFailedTestState();
-		}
-	}
-}

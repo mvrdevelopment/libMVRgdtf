@@ -810,6 +810,7 @@ void GdtfDmxUnittest::CheckDmxChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxCha
 
 void GdtfDmxUnittest::CheckChannelSet(IGdtfDmxChannelSetPtr& channelSet, std::string name, DmxValue start, DmxValue end)
 {
+	if( ! channelSet) { this->checkifTrue("CheckChannelSet ok", channelSet != nullptr); return;}
 	this->checkifEqual("Check Name ", name, channelSet->GetName());
 
 	DmxValue thisStart = 0;

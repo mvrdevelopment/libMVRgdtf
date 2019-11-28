@@ -23,7 +23,7 @@ GdtfDmxChannelSetBug::~GdtfDmxChannelSetBug()
 
 bool GdtfDmxChannelSetBug::ExecuteTest()
 {
-	std::cout << "=                                     GdtfValueBug Unit Test                           =" << std::endl;
+	std::cout << "=                         GdtfDmxChannelSetBug Unit Test                           =" << std::endl;
 
     std::string path = UnitTestUtil::GetTestResourceFolder() + kSeparator + "BugInChannelSetDmxJumps.gdtf";
 
@@ -33,7 +33,24 @@ bool GdtfDmxChannelSetBug::ExecuteTest()
     {
         size_t countErrors = 0;
         __checkVCOM(gdtfFile->GetParsingErrorCount(countErrors));
-        checkifEqual("Count Errors", countErrors, (size_t)1);
+        checkifEqual("Count Errors", countErrors, (size_t)5);
+
+
+		 IGdtfXmlParsingErrorPtr error;
+		__checkVCOM(gdtfFile->GetParsingErrorAt(0, & error));
+        ReadError(error, 4091,88,GdtfDefines::EGdtfParsingError::eValueError_DmxValueHasWrongValue);
+
+		__checkVCOM(gdtfFile->GetParsingErrorAt(1, & error));
+        ReadError(error, 4092,88,GdtfDefines::EGdtfParsingError::eValueError_DmxValueHasWrongValue);
+		
+		__checkVCOM(gdtfFile->GetParsingErrorAt(2, & error));
+        ReadError(error, 4093,88,GdtfDefines::EGdtfParsingError::eValueError_DmxValueHasWrongValue);
+		
+		__checkVCOM(gdtfFile->GetParsingErrorAt(3, & error));
+        ReadError(error, 4094,71,GdtfDefines::EGdtfParsingError::eValueError_DmxValueHasWrongValue);
+		
+		__checkVCOM(gdtfFile->GetParsingErrorAt(4, & error));
+        ReadError(error, 4534,75,GdtfDefines::EGdtfParsingError::eValueError_DmxValueHasWrongValue);
 
 
     }
