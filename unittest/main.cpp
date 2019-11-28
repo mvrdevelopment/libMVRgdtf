@@ -23,7 +23,7 @@
 #include "GetCountOfChannels.h"
 #include "MacroTest.h"
 #include "DmxValueBug.h"
-
+#include "DmxChannelSetBug.h"
 
 
 using namespace VectorworksMVR;					
@@ -88,7 +88,10 @@ int main(int argc, char* argv[])
 	GdtfValueBug test13(base);
 	bool test13_ok = test13.RunTest();
 
-    return  (mvrFailed || gdtfFailed || gdtfDmxFailed || errorFailed || modeMasterFailed || test1_ok || test2_ok|| test3_ok || test4_ok || test5_ok || test6_ok || test7_ok || test8_ok || test9_ok || test10_ok || test11_ok || test12_ok || test13_ok);
+	GdtfDmxChannelSetBug test15(base);
+	bool test15_ok = test15.RunTest();
+
+    return  (mvrFailed || gdtfFailed || gdtfDmxFailed || errorFailed || modeMasterFailed || test1_ok || test2_ok|| test3_ok || test4_ok || test5_ok || test6_ok || test7_ok || test8_ok || test9_ok || test10_ok || test11_ok || test12_ok || test13_ok || test15_ok);
 }
 
 

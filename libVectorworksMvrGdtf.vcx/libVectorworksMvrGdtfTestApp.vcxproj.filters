@@ -84,6 +84,9 @@
     <ClCompile Include="..\unittest\DmxValueBug.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\unittest\DmxChannelSetBug.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\unittest\MvrUnittest.h">
@@ -150,6 +153,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\unittest\DmxValueBug.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\unittest\DmxChannelSetBug.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
