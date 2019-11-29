@@ -3464,9 +3464,14 @@ void GdtfDmxChannelFunction::OnReadFromNode(const IXMLFileNodePtr& pNode)
 		channelSet->ReadFromNode(objNode);
 
 		if( ! channelSet->IsValid()) { delete channelSet; return; }
+
 	
 		// Link with next
-		if(!fChannelSets.empty()) { fChannelSets.back()->SetNextChannelSet(channelSet);}
+		if(!fChannelSets.empty()) 
+		{ 
+			bool validDmxRange = fChannelSets.back()->SetNextChannelSet(channelSet, objNode);
+			if(! validDmxRange) { delete channelSet; return; }
+		}
 		
 		// Add to list
 		fChannelSets.push_back(channelSet);
@@ -3775,10 +3780,18 @@ GdtfDmxChannelSet::~GdtfDmxChannelSet()
 {
 }
 
-void GdtfDmxChannelSet::SetNextChannelSet(GdtfDmxChannelSet* next)
+bool GdtfDmxChannelSet::SetNextChannelSet(GdtfDmxChannelSet* next, IXMLFileNodePtr objNode)
 {
+	if(this->GetDmxStart() >= next->GetDmxStart())
+	{
+		GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_DmxValueHasWrongValue, objNode);
+        SceneData::GdtfFixture::AddError(error);
+		return false;
+	}
+
 	ASSERTN(kEveryone, fNextChannelSet == nullptr);
 	fNextChannelSet = next;
+	return true;
 }
 
 void GdtfDmxChannelSet::SetName(const TXString& name)

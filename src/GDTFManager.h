@@ -865,7 +865,7 @@ namespace SceneData
 		void							SetPhysicalEnd(double end);		
 		void							SetWheelSlot(Sint32 slotIndex);
 
-        void					        SetNextChannelSet(GdtfDmxChannelSet* next);	
+        bool					        SetNextChannelSet(GdtfDmxChannelSet* next, IXMLFileNodePtr objNode);	
 
 		bool 							IsValid();
 				
