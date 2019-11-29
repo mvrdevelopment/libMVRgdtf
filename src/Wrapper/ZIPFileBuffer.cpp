@@ -52,9 +52,9 @@ VCOMError ZIPFileBuffer::Open(VectorworksMVR::Filing::IFileIdentifier* pFileID, 
 	return kVCOMError_NoError ;
 }
 
-VCOMError ZIPFileBuffer::Open(const char* buffer, size_t length, bool openForRead)
+VCOMError ZIPFileBuffer::Open(const char* buffer, size_t length)
 {
-	fOpenForRead   = openForRead;
+	fOpenForRead   = true;
 
 	if (fOpenForRead)
 	{

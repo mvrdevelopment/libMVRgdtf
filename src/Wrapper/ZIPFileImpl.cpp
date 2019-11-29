@@ -183,7 +183,7 @@ VCOMError CZIPFileImpl::OpenRead(const char* buffer, size_t length)
 	fbOpenedWrite		= false;
 
 	fpOpenedFile = new ZIPFileBuffer();
-	fpOpenedFile->Open( buffer,length, true );
+	fpOpenedFile->Open( buffer,length );
 
 	return kVCOMError_NoError;
 }
