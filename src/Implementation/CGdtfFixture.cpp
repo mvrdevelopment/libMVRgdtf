@@ -1915,7 +1915,7 @@ VCOMError VectorworksMVR::CGdtfFixtureImpl::ToBuffer(char* outBuffer)
         {
             char* tempBuffer = new char[size + 1];
             rawFile->Read(0, size, tempBuffer);
-            memcpy( tempBuffer,  outBuffer, size );
+            memcpy( outBuffer,  tempBuffer, size );
             delete[] tempBuffer;
             return kVCOMError_NoError;
         }
