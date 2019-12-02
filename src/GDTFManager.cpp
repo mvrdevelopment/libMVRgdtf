@@ -4622,14 +4622,28 @@ double GdtfMeasurementPoint::GetEnergy()
 // GdtfFixture
 TGdtfParsingErrorArray* GdtfFixture::__ERROR_CONTAINER_POINTER = nullptr;
 
-GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile, TXString folderName)
+void GdtfFixture::ImportFromFile(IFileIdentifierPtr inZipFile, const TXString& folder)
 {
-	fReaded			= false;
-	fHasLinkedGuid	= false;
-	fNoFeature 		= nullptr;
-	ASSERTN(kEveryone, __ERROR_CONTAINER_POINTER == nullptr);
-	__ERROR_CONTAINER_POINTER = & this->fErrorContainer; 
+	PrepareWorkingFolder(folder);
 	
+	IZIPFilePtr zipfile ( IID_ZIPFile );
+	zipfile->OpenRead(inZipFile);
+
+	ImportFromZip(zipfile);
+}
+
+void GdtfFixture::ImportFromBuffer(const char*buffer, size_t length, const TXString& folder)
+{
+	PrepareWorkingFolder(folder);
+	
+	IZIPFilePtr zipfile ( IID_ZIPFile );
+	zipfile->OpenRead(buffer, length);
+
+	ImportFromZip(zipfile);
+}
+
+void GdtfFixture::PrepareWorkingFolder(TXString folderName)
+{
 	//-------------------------------------------------------------------------------------------------
 	// Working Directory
 	if(folderName.IsEmpty()){ folderName = "GdtfGroup"; }
@@ -4650,11 +4664,12 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile, TXString folderName)
 	// check if this was good
 	fWorkingFolder->ExistsOnDisk(exists);
 	ASSERTN(kEveryone, exists == true);
-	
-	//-------------------------------------------------------------------------------------------------
-	// Create a ZIP File
-	IZIPFilePtr zipfile ( IID_ZIPFile );
-	zipfile->OpenRead(inZipFile);
+}
+
+bool GdtfFixture::ImportFromZip(IZIPFilePtr& zipfile)
+{
+	ASSERTN(kEveryone, __ERROR_CONTAINER_POINTER == nullptr);
+	__ERROR_CONTAINER_POINTER = & this->fErrorContainer; 
 
 	ISceneDataZipBuffer xmlFileBuffer;
 		
@@ -4766,6 +4781,8 @@ GdtfFixture::GdtfFixture(IFileIdentifierPtr inZipFile, TXString folderName)
 	}
 
 	__ERROR_CONTAINER_POINTER = nullptr;
+
+	return true;
 }
 
 /*static*/ void	GdtfFixture::AddError(const GdtfParsingError& error)

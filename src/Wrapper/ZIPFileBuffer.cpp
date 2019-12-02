@@ -52,6 +52,21 @@ VCOMError ZIPFileBuffer::Open(VectorworksMVR::Filing::IFileIdentifier* pFileID, 
 	return kVCOMError_NoError ;
 }
 
+VCOMError ZIPFileBuffer::Open(const char* buffer, size_t length)
+{
+	fOpenForRead   = true;
+
+	if (fOpenForRead)
+	{
+		fZIPFileBufferSize = length;
+		fpZIPFileBuffer      = new Uint8[fZIPFileBufferSize];
+		fAllocatedMemorySize = fZIPFileBufferSize;
+		memcpy(fpZIPFileBuffer, buffer, fZIPFileBufferSize);
+	}
+
+	return kVCOMError_NoError ;
+}
+
 VCOMError ZIPFileBuffer::Close()
 {
 	if (!fOpenForRead && fpZIPFileBuffer)

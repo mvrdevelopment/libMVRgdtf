@@ -294,6 +294,13 @@ void GdtfDmxUnittest::ReadFile()
     IGdtfFixturePtr gdtfRead (IID_IGdtfFixture);
     if(__checkVCOM(gdtfRead->ReadFromFile(fPath.c_str())))
     {
+		size_t bufferLength = 0;
+		__checkVCOM(gdtfRead->GetBufferLength(bufferLength));
+
+		char* buffer = new char[bufferLength + 1];
+		__checkVCOM(gdtfRead->ToBuffer(buffer));
+		delete[] buffer;
+
 		//------------------------------------------------------------------------------
 		// Read the linked GUID
 		MvrUUID guid 		(0,0,0,0);

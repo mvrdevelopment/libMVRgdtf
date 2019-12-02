@@ -1941,7 +1941,6 @@ namespace SceneData
 	class GdtfFixture : public GdtfObject
 	{
 	public:
-		GdtfFixture(IFileIdentifierPtr file, TXString folderName);
 		GdtfFixture();
 		~GdtfFixture();
 		
@@ -2107,9 +2106,16 @@ private:
 		void ResolveMacroRefs(GdtfDmxModePtr dmxMode);	
 		//----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		
+	private:
+		bool							ImportFromZip(IZIPFilePtr& zipfile);
+		void 							PrepareWorkingFolder(TXString folderName);
+
 	public:
 		bool							ExportToFile(IZIPFilePtr& zipfile);
-		
+		void							ImportFromFile(IFileIdentifierPtr inZipFile, const TXString& folder);
+		void							ImportFromBuffer(const char*buffer, size_t length, const TXString& folder);
+
+
 		bool							IsReaded();
 		void							GetWorkingFolder(IFolderIdentifierPtr& folder);        
 	};    

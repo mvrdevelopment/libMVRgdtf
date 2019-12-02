@@ -172,6 +172,22 @@ VCOMError CZIPFileImpl::OpenRead(IFileIdentifier* pFileID)
 	return kVCOMError_NoError;
 }
 
+VCOMError CZIPFileImpl::OpenRead(const char* buffer, size_t length)
+{
+	if ( fpOpenedFile )
+	{
+		fpOpenedFile->Close();
+		delete fpOpenedFile;
+	}
+
+	fbOpenedWrite		= false;
+
+	fpOpenedFile = new ZIPFileBuffer();
+	fpOpenedFile->Open( buffer,length );
+
+	return kVCOMError_NoError;
+}
+
 VCOMError CZIPFileImpl::OpenWrite(IFileIdentifier* pFileID)
 {
 	if ( fpOpenedFile )
