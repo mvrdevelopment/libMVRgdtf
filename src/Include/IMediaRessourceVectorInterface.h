@@ -228,7 +228,7 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		OpenForWrite(MvrString fullPath) = 0;
 		virtual VCOMError VCOM_CALLTYPE		AddGdtfFolderLocation(MvrString fullPathToFolder) = 0;
         virtual VCOMError VCOM_CALLTYPE		AddFileToMvrFile(MvrString fullPath) = 0;
-
+		virtual VCOMError VCOM_CALLTYPE		AddBufferToMvrFile(MvrString filename, char* buffer, size_t length) = 0;
 		
 		// After this you can generate Aux Objects
 		virtual VCOMError VCOM_CALLTYPE		CreateDataProviderObject(MvrString provider,	MvrString version,	ISceneDataProvider** outSceneDataProvider) = 0;
