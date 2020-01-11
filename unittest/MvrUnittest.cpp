@@ -54,6 +54,22 @@ void MvrUnittest::WriteFile()
 	// Open file for write
     if(__checkVCOM(mvrWrite->OpenForWrite(fPath.c_str())))
     {
+		//------------------------------------------------------------------------------------------------
+        // Add Buffer File
+		std::string path 		= UnitTestUtil::GetTestResourceFolder() + kSeparator + "allWorking.gdtf";
+
+		IGdtfFixturePtr fixture (IID_IGdtfFixture);
+		if(__checkVCOM(fixture->ReadFromFile(path.c_str())))
+		{
+			size_t bufferLength = 0;
+			fixture->GetBufferLength(bufferLength);
+
+			char* buffer = new char[bufferLength + 1];
+			__checkVCOM(fixture->ToBuffer(buffer));
+			__checkVCOM(mvrWrite->AddBufferToMvrFile("gdtfTestFile.gdtf", buffer, bufferLength));
+			delete [] buffer;
+		}
+		
         //------------------------------------------------------------------------------------------------
         // Add Custom data
         ISceneDataProviderPtr obj;
