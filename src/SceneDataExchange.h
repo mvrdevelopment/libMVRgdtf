@@ -610,6 +610,8 @@ namespace SceneData
         TFileIdentifierPtrArray				fSVG_FilesToAdd;
         TFileIdentifierPtrArray				fWheel_Image_FilesToAdd;
         TFileIdentifierPtrArray				fFixtureResources_FilesToAdd;
+		
+		std::vector<std::pair<TXString, ISceneDataZipBuffer*>> fBuffersToAdd;
         //
 		TFileIdentifierPtrArray				fFilesInZip;
 		TXStringArray						fRequiredGdtfFiles;
@@ -685,6 +687,7 @@ namespace SceneData
 		bool WriteToFile(const IFileIdentifierPtr&);
 		bool AddNeededGdtfFile(const TXString& gdtfName);
         void AddFileToZip(const IFileIdentifierPtr& file, ERessourceType resType);
+		void AddBufferToZip(const TXString& fileName, ISceneDataZipBuffer* buffer);
 		void AddLocationForGdtfFiles(IFolderIdentifierPtr folder);
 		
 	private:

@@ -265,7 +265,7 @@ void MvrUnittest::ReadFile()
 		// Check File Getters
 		size_t countFiles = size_t(-1);
 		__checkVCOM(mvrRead->GetAttachedFileCount(countFiles));
-		checkifEqual("Check File Count in MVR",countFiles , size_t(2) );
+		checkifEqual("Check File Count in MVR",countFiles , size_t(3) );
 
 
 		std::string path = gdtfPath;
@@ -275,10 +275,18 @@ void MvrUnittest::ReadFile()
 		path += "/MVR_Export/";
 #endif
 		std::string file0 = path + std::string("MWheel_Img1.png");
-		std::string file1 = path + std::string("testGdtf.gdtf");
+		std::string file1 = path + std::string("gdtfTestFile.gdtf");
+		std::string file2 = path + std::string("testGdtf.gdtf");
 
 		checkifEqual("File 0 Name", mvrRead->GetAttachedFileCountAt(0), file0.c_str());
 		checkifEqual("File 1 Name", mvrRead->GetAttachedFileCountAt(1), file1.c_str());
+		checkifEqual("File 2 Name", mvrRead->GetAttachedFileCountAt(2), file2.c_str());
+
+
+		IGdtfFixturePtr fixtureFromBuffer (IID_IGdtfFixture);
+		__checkVCOM(fixtureFromBuffer->ReadFromFile(file1.c_str()));
+
+
 		//------------------------------------------------------------------------------------------------
 		// Read Layers
 		ISceneObjPtr readLayer = nullptr;

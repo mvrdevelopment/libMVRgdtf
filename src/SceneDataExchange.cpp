@@ -2003,6 +2003,11 @@ bool SceneDataExchange::WriteToFile(const IFileIdentifierPtr& file)
 	{        
 		SceneDataZip::AddFileToZip(zipfile, fFixtureResources_FilesToAdd.at(i), ERessourceType::RessoureFixture, false/*Delete*/);
 	}
+
+	for (size_t i = 0; i < fBuffersToAdd.size(); i++)
+	{        
+    	SceneDataZip::AddFileToZip(zipfile, *fBuffersToAdd[i].second, fBuffersToAdd[i].first);
+	}
 	
 	//-------------------------------------------------------------------------------------------------
 	// Add the needed
@@ -2551,6 +2556,11 @@ void SceneDataExchange::AddFileToZip(const IFileIdentifierPtr& file, ERessourceT
     }        
 
 	DSTOP((kEveryone, "Unaspected ERessourceType Enum for AddFileToZip"));
+}
+
+void SceneDataExchange::AddBufferToZip(const TXString& fileName, ISceneDataZipBuffer* buffer)
+{
+    fBuffersToAdd.push_back(std::make_pair(fileName, buffer));
 }
 
 size_t SceneDataExchange::GetAttachedFileCount()
