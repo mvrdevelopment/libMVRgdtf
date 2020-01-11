@@ -2007,7 +2007,9 @@ bool SceneDataExchange::WriteToFile(const IFileIdentifierPtr& file)
 	for (size_t i = 0; i < fBuffersToAdd.size(); i++)
 	{        
     	SceneDataZip::AddFileToZip(zipfile, *fBuffersToAdd[i].second, fBuffersToAdd[i].first);
+		delete fBuffersToAdd[i].second;
 	}
+	fBuffersToAdd.clear();
 	
 	//-------------------------------------------------------------------------------------------------
 	// Add the needed
