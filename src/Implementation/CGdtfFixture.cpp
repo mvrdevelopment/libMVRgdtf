@@ -131,12 +131,14 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::ReadFromFile(IFileId
     {
         Uint64 size = 0;
         rawFile->GetFileSize(size);
-
+        
         if(size > 0)
         {
-            fBuffer = new char[size + 1];
-            rawFile->Read(0, size, fBuffer);
-            return FromBufferInternal(fBuffer, size, gdtfFileName);
+            char* tempBuffer = new char[size + 1];
+            rawFile->Read(0, size, tempBuffer);
+            VectorworksMVR::VCOMError retVal = FromBufferInternal(tempBuffer, size, gdtfFileName);
+            delete[] tempBuffer;
+            return retVal;
         }
     }    
 	
