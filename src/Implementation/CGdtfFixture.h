@@ -118,12 +118,19 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetBufferLength(size_t& length);		
 		virtual VCOMError VCOM_CALLTYPE		ToBuffer(char* outBuffer);	
 		virtual VCOMError VCOM_CALLTYPE		FromBuffer(const char* buffer, size_t length);
+        virtual VCOMError VCOM_CALLTYPE		FromBufferInternal(const char* buffer, size_t length, TXString gdtfFileName);
+
+        private:
+        void FreeBuffer();
 
 		
 	private:
         SceneData::GdtfFixture* fFixtureObject;
 		IZIPFilePtr				fZipFile;
-        TXString                fFullPath;
+
+        char*                   fBuffer;
+        size_t                  fBufferLength;
+        
 	};
 	
 

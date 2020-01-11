@@ -28,12 +28,15 @@ using namespace VectorworksMVR::Filing;
 
 VectorworksMVR::CGdtfFixtureImpl::CGdtfFixtureImpl()
 {
-    fFixtureObject = nullptr;
+    fFixtureObject  = nullptr;
+    fBuffer         = nullptr;
+    fBufferLength   = 0;
 }
 
 VectorworksMVR::CGdtfFixtureImpl::~CGdtfFixtureImpl()
 {
-    if (fFixtureObject) {delete fFixtureObject;}
+    if (fFixtureObject) { delete fFixtureObject;}
+    FreeBuffer();
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::ReadFromFile(MvrString fullPath)
@@ -43,9 +46,8 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::ReadFromFile(MvrStri
     // Create the file pointer on the full path
     IFileIdentifierPtr file (IID_FileIdentifier);
     file->Set(strFullPath);
-	
-    // Read From File
-    return ReadFromFile(file, "" /*During GDTF reading, we read onyl one file*/);
+
+    return ReadFromFile(file, "");
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::OpenForWrite(MvrString fullPath, MvrString name, MvrString manufacturer, const MvrUUID& uuid)
@@ -109,7 +111,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::AddFileToGdtfFile(Mv
 	return kVCOMError_NoError;
 }
 
-
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::Close()
 {
 	if(!fFixtureObject) { return kVCOMError_Failed; }
@@ -123,28 +124,23 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::Close()
 	return kVCOMError_NoError;
 }
 
-
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::ReadFromFile(IFileIdentifierPtr file, TXString gdtfFileName)
-{
-	// Store Full Path
-    file->GetFileFullPath(fFullPath);
+{	
+    IRawOSFilePtr rawFile (IID_RawOSFile);
+    if(VCOM_SUCCEEDED(rawFile->Open(file, true, false, false, false)))
+    {
+        Uint64 size = 0;
+        rawFile->GetFileSize(size);
 
-	// Check there is already a object in here
-	if (fFixtureObject) { delete fFixtureObject; }
+        if(size > 0)
+        {
+            fBuffer = new char[size + 1];
+            rawFile->Read(0, size, fBuffer);
+            return FromBufferInternal(fBuffer, size, gdtfFileName);
+        }
+    }    
 	
-	// Create the new Object
-	fFixtureObject = new SceneData::GdtfFixture();
-	
-	// Check if this was good
-	if (!fFixtureObject) { return kVCOMError_Failed; }
-
-    fFixtureObject->ImportFromFile(file, gdtfFileName);
-	
-	// Check if you can read it
-	if ( ! fFixtureObject->IsReaded()) { return kVCOMError_InvalidArg; }
-	
-	// If everything is OK
-	return kVCOMError_NoError;
+    return kVCOMError_Failed;
 }
 
 MvrString VectorworksMVR::CGdtfFixtureImpl::GetName()
@@ -234,7 +230,7 @@ MvrString VectorworksMVR::CGdtfFixtureImpl::GetFixtureThumbnail_PNG_FullPath()
 	return fFixtureObject->GetPNGThumnailFullPath().GetCharPtr();
 }
 
-MvrString VCOM_CALLTYPE VectorworksMVR::CGdtfFixtureImpl::GetFixtureThumbnail_SVG_FullPath()
+MvrString VectorworksMVR::CGdtfFixtureImpl::GetFixtureThumbnail_SVG_FullPath()
 {
 	if(!fFixtureObject) {return "";}
 	
@@ -1877,23 +1873,8 @@ MvrString VectorworksMVR::CGdtfFixtureImpl::GetImageRessourcesPathAt(size_t at)
 
 VCOMError VectorworksMVR::CGdtfFixtureImpl::GetBufferLength(size_t& length)
 {
-    length = 0;
-    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
-
-    IFileIdentifierPtr file (IID_FileIdentifier);
-    file->Set(fFullPath);
-
-    IRawOSFilePtr rawFile (IID_RawOSFile);
-
-    if(VCOM_SUCCEEDED(rawFile->Open(file, true, false, false, false)))
-    {
-        Uint64 size = 0;
-        rawFile->GetFileSize(size);
-        length = size;
-    }    
-
+    length = fBufferLength;
     if(length > 0)  { return kVCOMError_NoError; }
-
     return kVCOMError_Failed;
 }
 
@@ -1901,31 +1882,22 @@ VCOMError VectorworksMVR::CGdtfFixtureImpl::ToBuffer(char* outBuffer)
 {
     if (!fFixtureObject) { return kVCOMError_NotInitialized; }
 
-    IFileIdentifierPtr file (IID_FileIdentifier);
-    file->Set(fFullPath);
-
-    IRawOSFilePtr rawFile (IID_RawOSFile);
-
-    if(VCOM_SUCCEEDED(rawFile->Open(file, true, false, false, false)))
-    {
-        Uint64 size = 0;
-        rawFile->GetFileSize(size);
-
-        if(size > 0)
-        {
-            char* tempBuffer = new char[size + 1];
-            rawFile->Read(0, size, tempBuffer);
-            memcpy( outBuffer,  tempBuffer, size );
-            delete[] tempBuffer;
-            return kVCOMError_NoError;
-        }
-    }    
-
-    return kVCOMError_Failed;
+    memcpy( outBuffer,  fBuffer, fBufferLength );
+    return kVCOMError_NoError;
 }
 
 VCOMError VectorworksMVR::CGdtfFixtureImpl::FromBuffer(const char* buffer, size_t length)
 {
+    return FromBufferInternal(buffer, length, "" /*Single File Read*/);
+}
+
+VCOMError VectorworksMVR::CGdtfFixtureImpl::FromBufferInternal(const char* buffer, size_t length, TXString gdtfFileName)
+{
+    FreeBuffer();
+    fBufferLength   = length;
+    fBuffer         = new char[fBufferLength + 1];
+    memcpy( fBuffer,  buffer, fBufferLength );
+
 
 	// Check there is already a object in here
 	if (fFixtureObject) { delete fFixtureObject; }
@@ -1936,11 +1908,17 @@ VCOMError VectorworksMVR::CGdtfFixtureImpl::FromBuffer(const char* buffer, size_
 	// Check if this was good
 	if (!fFixtureObject) { return kVCOMError_Failed; }
 
-    fFixtureObject->ImportFromBuffer(buffer,length, "" /* Single Read*/);
+    fFixtureObject->ImportFromBuffer(buffer,length, gdtfFileName);
 	
 	// Check if you can read it
 	if ( ! fFixtureObject->IsReaded()) { return kVCOMError_InvalidArg; }
 	
 	// If everything is OK
 	return kVCOMError_NoError;
+}
+
+void VectorworksMVR::CGdtfFixtureImpl::FreeBuffer()
+{
+    if(fBuffer) {delete[] fBuffer;}
+    fBufferLength = 0;
 }
