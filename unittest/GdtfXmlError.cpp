@@ -63,18 +63,6 @@ void GdtfXmlErrorTest::ReadNonExistingFile()
 	// Read Existing File with damaged structure
 	IGdtfFixturePtr gdtfRead (IID_IGdtfFixture);
     __checkVCOMFailed(gdtfRead->ReadFromFile(""));
-
-	size_t countErrors = 0;
-	__checkVCOM(gdtfRead->GetParsingErrorCount(countErrors));
-	checkifEqual("Count Errors", countErrors, (size_t)1);
-
-	for(size_t i = 0; i < countErrors; i++)
-	{
-		IGdtfXmlParsingErrorPtr error;
-		__checkVCOM(gdtfRead->GetParsingErrorAt(i, & error));
-
-		if(i == 0) { ReadError(error, 0, 0, GdtfDefines::EGdtfParsingError::eFixtureNoGdtfFileInXmlBuffer); }
-	}
 	
 }
 

@@ -44,6 +44,22 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::AddFileToMv
     return kVCOMError_NoError;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::AddBufferToMvrFile(MvrString filename, char* buffer, size_t length)
+{
+    TXString strFileName (filename);
+
+    if (strFileName.IsEmpty()) 	{ return kVCOMError_InvalidArg; }
+	if (length == 0) 		 	{ return kVCOMError_InvalidArg; }
+	if (buffer == nullptr) 	 	{ return kVCOMError_InvalidArg; }
+
+	// House Keeping by the interface itself after export
+	SceneData::ISceneDataZipBuffer* internalBuffer = new SceneData::ISceneDataZipBuffer();
+	internalBuffer->SetData(buffer, length);
+
+	fExchangeObj.AddBufferToZip(strFileName, internalBuffer);
+    // 
+    return kVCOMError_NoError;
+}
 
 VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::AddGdtfFolderLocation(MvrString fullPathToFolder)
 {
