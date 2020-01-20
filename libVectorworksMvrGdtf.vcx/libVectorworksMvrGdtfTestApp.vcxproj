@@ -70,6 +70,7 @@
     <ClCompile Include="..\unittest\CustomCharTest.cpp" />
     <ClCompile Include="..\unittest\CustomColorSpaceTest.cpp" />
     <ClCompile Include="..\unittest\DmxChannelSetBug.cpp" />
+    <ClCompile Include="..\unittest\DmxChannelSetFormating.cpp" />
     <ClCompile Include="..\unittest\DmxValueBug.cpp" />
     <ClCompile Include="..\unittest\EmptyAttributeTest.cpp" />
     <ClCompile Include="..\unittest\EmptyAttributeTest2.cpp" />
@@ -96,6 +97,7 @@
     <ClInclude Include="..\unittest\CustomCharTest.h" />
     <ClInclude Include="..\unittest\CustomColorSpaceTest.h" />
     <ClInclude Include="..\unittest\DmxChannelSetBug.h" />
+    <ClInclude Include="..\unittest\DmxChannelSetFormating.h" />
     <ClInclude Include="..\unittest\DmxValueBug.h" />
     <ClInclude Include="..\unittest\EmptyAttributeTest.h" />
     <ClInclude Include="..\unittest\EmptyAttributeTest2.h" />
