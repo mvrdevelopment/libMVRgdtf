@@ -3373,6 +3373,7 @@ void GdtfDmxChannelFunction::OnPrintToFile(IXMLFileNodePtr pNode)
 		{
 			GdtfDmxChannelSetPtr noFeature = new GdtfDmxChannelSet("", this);
 			noFeature->SetDmxStart(this->GetStartAdress());
+			noFeature->SetDmxEnd(firstChannelSet->GetDmxStart()-1);
 			tempArr.push_back(noFeature);
 		}
 		
@@ -3405,6 +3406,7 @@ void GdtfDmxChannelFunction::OnPrintToFile(IXMLFileNodePtr pNode)
 	if(hasChannelSets)
 	{
 		GdtfDmxChannelSetPtr lastChannelSet = fChannelSets.back();
+
 		if(lastChannelSet->GetDmxEnd() < this->GetEndAdress())
 		{
 			GdtfDmxChannelSetPtr noFeature = new GdtfDmxChannelSet("", this);
@@ -3580,16 +3582,17 @@ DmxValue GdtfDmxChannelFunction::GetStartAdress() const
 
 DmxValue GdtfDmxChannelFunction::GetEndAdress() const
 {
-	// If there is a next function, return the end address based on this
-	GdtfDmxChannelFunction* nextFunctionForAddress = fNextFunction;
-	while(nextFunctionForAddress != nullptr) 
+	if(fNextFunction)
 	{
 		// There could be serveral Channel Function that have the same start adress, step over them 
-		if(nextFunctionForAddress->GetStartAdress() == this->GetStartAdress()) { nextFunctionForAddress = nextFunctionForAddress->GetNextFunction(); }
+		if(fNextFunction->GetStartAdress() <= this->GetStartAdress()) { fParentLogicalChannel->GetParentDMXChannel()->GetChannelMaxDmx(); }
 		// If the Start Adress differrs, the end Adress is based on the start adress of this channel 
-		else { return(fNextFunction->GetStartAdress() - 1);  }	 
-		// The last channel function will have a nullptr for the next function 
+		else { return(fNextFunction->GetStartAdress() - 1);  }	
 	}
+ 
+	
+	// The last channel function will have a nullptr for the next function 
+	
 
 	// If there is a next channel function return the end address based on its frist funxtion
 	GdtfDmxLogicalChannelPtr nextLogChannel = fParentLogicalChannel->GetNextLogicalChannel();
