@@ -81,12 +81,9 @@ void DmxChannelSetFormatingTest::WriteFile(VectorworksMVR::IGdtfFixturePtr& fixt
 		bit8Function4->SetStartAddress(0);
 		bit8Function4->SetAttribute(attribute1);
 
-		IGdtfDmxChannelSetPtr bit8ChannelSet4;
-		bit8Function4->CreateDmxChannelSet("My Name1", 32768, 65535, &bit8ChannelSet4);
-
 		IGdtfDmxChannelFunctionPtr bit8Function1;
 		bit8LogicalChannel1->CreateDmxFunction("Function1", &bit8Function1);
-		bit8Function1->SetStartAddress(0);
+		bit8Function1->SetStartAddress(600);
 		bit8Function1->SetAttribute(attribute1);
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet1;
@@ -128,9 +125,6 @@ void DmxChannelSetFormatingTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixtu
 	IGdtfDmxLogicalChannelPtr bit8LogicalChannel1;
 	__checkVCOM(bit8channel->GetLogicalChannelAt(0, &bit8LogicalChannel1));
 
-	IGdtfDmxChannelFunctionPtr bit8Function1;
-	__checkVCOM(bit8LogicalChannel1->GetDmxFunctionAt(0, &bit8Function1));
-	CheckFunction(bit8Function1);
 
 	IGdtfDmxChannelFunctionPtr bit8Function2;
 	__checkVCOM(bit8LogicalChannel1->GetDmxFunctionAt(2, &bit8Function2));
