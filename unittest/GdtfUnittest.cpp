@@ -275,7 +275,7 @@ void GdtfUnittest::WriteFile()
 						IGdtfAttributePtr attribute;
 						__checkVCOM(gdftChannelFunction->SetAttribute(gdtfAttribute));
 						__checkVCOM(gdftChannelFunction->SetOriginalAttribute("My orginalAttribute"));
-						__checkVCOM(gdftChannelFunction->SetStartAddress(1));
+						__checkVCOM(gdftChannelFunction->SetStartAddress(0));
 						__checkVCOM(gdftChannelFunction->SetPhysicalStart(2));
 						__checkVCOM(gdftChannelFunction->SetPhysicalEnd(3));
 						__checkVCOM(gdftChannelFunction->SetRealFade(4));
@@ -814,7 +814,7 @@ void GdtfUnittest::ReadFile()
 								//Start Address
 								GdtfDefines::DmxValue dmxStartAddress;
 								__checkVCOM(gdtfFunction->GetStartAddress(dmxStartAddress));
-								this->checkifEqual("gdtfFunctionGetStartAddress ", dmxStartAddress, GdtfDefines::DmxValue(1));
+								this->checkifEqual("gdtfFunctionGetStartAddress ", dmxStartAddress, GdtfDefines::DmxValue(0));
 
 								//physical Start
 								double physicalStart;

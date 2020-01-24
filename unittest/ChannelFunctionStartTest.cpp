@@ -31,8 +31,31 @@ bool ChannelFunctionStartTest::ExecuteTest()
 
     if(__checkVCOM(gdtfFile->ReadFromFile(path.c_str())))
     {
+        IGdtfXmlParsingErrorPtr error;
+		__checkVCOM(gdtfFile->GetParsingErrorAt(0, & error));
+        ReadError(error, 887,172,GdtfDefines::EGdtfParsingError::eChannelFunctionNotStartingWithZero);
+
+		__checkVCOM(gdtfFile->GetParsingErrorAt(1, & error));
+        ReadError(error, 1037,75,GdtfDefines::EGdtfParsingError::eValueError_DmxValueHasWrongValue);
+
+		__checkVCOM(gdtfFile->GetParsingErrorAt(2, & error));
+        ReadError(error, 1663,172,GdtfDefines::EGdtfParsingError::eChannelFunctionNotStartingWithZero);
 
 
     }
     return true;
+}
+
+void ChannelFunctionStartTest::ReadError(IGdtfXmlParsingErrorPtr& error, size_t lineNumber, size_t colNumber, GdtfDefines::EGdtfParsingError errorType)
+{
+	size_t thisLineNumber  = 0;
+	size_t thisColNumber   = 0;
+	if(__checkVCOM(error->GetLineAndColumnNumber(thisLineNumber, thisColNumber)))
+	{
+		this->checkifEqual("lineNumber ", 	thisLineNumber, lineNumber);
+		this->checkifEqual("colNumber ", 	thisColNumber, 	colNumber); 
+	}
+
+	GdtfDefines::EGdtfParsingError thisErrorType;
+	if(__checkVCOM(error->GetErrorType(thisErrorType))) { this->checkifEqual("errorType ", (Sint32)thisErrorType, (Sint32)errorType); }
 }
