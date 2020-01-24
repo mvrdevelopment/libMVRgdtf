@@ -93,6 +93,9 @@
     <ClCompile Include="..\unittest\DmxChannelSetFormating.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\unittest\ChannelFunctionStartTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\unittest\MvrUnittest.h">
@@ -168,6 +171,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\unittest\DmxChannelSetFormating.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\unittest\ChannelFunctionStartTest.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
