@@ -59,7 +59,7 @@
 
 //----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataExchange XML Values
-#define XML_Val_RootNodeName			"GeneralScenceDescription"
+#define XML_Val_RootNodeName			"GeneralSceneDescription"
 #define XML_Val_RootAttrMainVersion		"verMajor"
 #define XML_Val_RootAttrMinorVersion	"verMinor"
 
