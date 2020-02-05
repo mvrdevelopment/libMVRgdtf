@@ -152,6 +152,7 @@ namespace VectorworksMVR
             eHexConversion_ValueToHight                 = 60,
             eHexConversion_InvalidChar                  = 61,
             eDmxMacroDmxValueChannelReference                  = 62,
+            eChannelFunctionNotStartingWithZero                  = 63,
 
         };
 		

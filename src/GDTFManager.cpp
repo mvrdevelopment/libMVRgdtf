@@ -3127,6 +3127,16 @@ void GdtfDmxLogicalChannel::OnReadFromNode(const IXMLFileNodePtr& pNode)
 
 									 if(fFunctions.size() > 0)	{ fFunctions.back()->SetNextFunction(function); }
 									 
+									 if(fFunctions.size() == 0)	
+									 { 
+										if(function->GetStartAdress() != 0)
+										{
+											GdtfParsingError error (GdtfDefines::EGdtfParsingError::eChannelFunctionNotStartingWithZero, objNode);
+        									SceneData::GdtfFixture::AddError(error);
+											function->SetStartAddress(0);
+										}
+									 }
+									 
 									 // Add to list
 									 fFunctions.push_back(function);
 
