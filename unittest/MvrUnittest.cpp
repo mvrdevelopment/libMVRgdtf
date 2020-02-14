@@ -271,6 +271,8 @@ void MvrUnittest::ReadFile()
 		std::string path = gdtfPath;
 #ifdef _WINDOWS
 		path += "\\MVR_Export\\";
+#elif GS_MAC
+		path += "/Library/Application Support/mvrexchange/MVR_Export/";
 #else
 		path += "/MVR_Export/";
 #endif
@@ -593,6 +595,8 @@ void MvrUnittest::ReadFile()
 			std::string path = gdtfPath;
 #ifdef _WINDOWS
 			path += "\\MVR_Export\\My3DSFile.3ds";
+#elif GS_MAC
+		path += "/Library/Application Support/mvrexchange/MVR_Export/My3DSFile.3ds";
 #else
 			path += "/MVR_Export/My3DSFile.3ds";
 #endif
