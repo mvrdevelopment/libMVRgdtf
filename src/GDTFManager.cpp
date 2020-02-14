@@ -4262,7 +4262,7 @@ void SceneData::GdtfPhysicalEmitter::SetDominantWaveLength(double val)
 
 GdtfMeasurement* GdtfPhysicalEmitter::AddMeasurement()
 {
-	GdtfMeasurement* mes = new GdtfMeasurement();
+	GdtfMeasurement* mes = new GdtfMeasurement(false);
 	fMeasurements.push_back(mes);
 	return mes;
 }
@@ -4310,7 +4310,7 @@ void GdtfPhysicalEmitter::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_MeasurementNodeName, [this] (IXMLFileNodePtr objNode) -> void
 								 {
 									 // Create the object
-									 GdtfMeasurementPtr mes = new GdtfMeasurement();
+									 GdtfMeasurementPtr mes = new GdtfMeasurement(false);
 									 
 									 // Read from node
 									 mes->ReadFromNode(objNode);
@@ -8096,7 +8096,7 @@ void SceneData::GdtfFilter::SetColor(CCieColor val)
 
 GdtfMeasurement* SceneData::GdtfFilter::CreateMeasurement()
 {
-    GdtfMeasurement* m= new GdtfMeasurement();    
+    GdtfMeasurement* m= new GdtfMeasurement(true);    
     fMeasurementsArray.push_back(m);
 
     return m;
@@ -8150,7 +8150,7 @@ void SceneData::GdtfFilter::OnReadFromNode(const IXMLFileNodePtr & pNode)
     // Read the childs
     GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_MeasurementNodeName, [this](IXMLFileNodePtr objNode) -> void
     {
-        GdtfMeasurement* measurePt = new GdtfMeasurement();
+        GdtfMeasurement* measurePt = new GdtfMeasurement(true);
 
         measurePt->ReadFromNode(objNode);
 
@@ -8164,12 +8164,13 @@ TXString SceneData::GdtfFilter::GetNodeReference()
     return GetName();
 }
 
-SceneData::GdtfMeasurement::GdtfMeasurement()
+SceneData::GdtfMeasurement::GdtfMeasurement(bool forFilter)
 {
-    fPhysical = 0;
-    fLuminousIntensity = 0;
-    fTransmission = 0;
-    fInterpolationTo = EGdtfInterpolationTo::Linear;
+    fPhysical 				= 0;
+    fLuminousIntensity 		= 0;
+    fTransmission 			= 0;
+    fInterpolationTo 		= EGdtfInterpolationTo::Linear;
+	fIsForFilter 			= forFilter;
 }
 
 SceneData::GdtfMeasurement::~GdtfMeasurement()
@@ -8248,8 +8249,11 @@ void SceneData::GdtfMeasurement::OnPrintToFile(IXMLFileNodePtr pNode)
     //------------------------------------------------------------------------------------
     // Print the attributes 
     pNode->SetNodeAttributeValue(XML_GDTF_MeasurementPhysical,          GdtfConverter::ConvertDouble(fPhysical) );
-    pNode->SetNodeAttributeValue(XML_GDTF_MeasurementLuminousIntensity, GdtfConverter::ConvertDouble(fLuminousIntensity) );
-    pNode->SetNodeAttributeValue(XML_GDTF_MeasurementTransmission,      GdtfConverter::ConvertDouble(fTransmission) );
+
+	if(fIsForFilter) { pNode->SetNodeAttributeValue(XML_GDTF_MeasurementTransmission,      GdtfConverter::ConvertDouble(fTransmission) ); }
+	else			 { pNode->SetNodeAttributeValue(XML_GDTF_MeasurementLuminousIntensity, GdtfConverter::ConvertDouble(fLuminousIntensity) ); }
+
+    
     pNode->SetNodeAttributeValue(XML_GDTF_MeasurementInterpolationTo,   GdtfConverter::ConvertEGdtfInterpolationTo(fInterpolationTo) );
     //------------------------------------------------------------------------------------
     // Print the childs
@@ -8273,11 +8277,17 @@ void SceneData::GdtfMeasurement::OnReadFromNode(const IXMLFileNodePtr & pNode)
     TXString   lumiStr; pNode->GetNodeAttributeValue(XML_GDTF_MeasurementLuminousIntensity,  lumiStr);
     GdtfConverter::ConvertDouble( lumiStr, pNode, fLuminousIntensity);
 
-    TXString   transmStr; pNode->GetNodeAttributeValue(XML_GDTF_MeasurementTransmission,  transmStr);    
-    GdtfConverter::ConvertDouble( transmStr, pNode, fTransmission);
+	if(fIsForFilter)
+	{
+		TXString   transmStr; pNode->GetNodeAttributeValue(XML_GDTF_MeasurementTransmission,  transmStr);    
+		GdtfConverter::ConvertDouble( transmStr, pNode, fTransmission);
+	}
+	else
+	{
+		TXString   interpolStr; pNode->GetNodeAttributeValue(XML_GDTF_MeasurementInterpolationTo, interpolStr);
+		GdtfConverter::ConvertEGdtfInterpolationTo(interpolStr, pNode, fInterpolationTo);
+	}
 
-    TXString   interpolStr; pNode->GetNodeAttributeValue(XML_GDTF_MeasurementInterpolationTo, interpolStr);
-    GdtfConverter::ConvertEGdtfInterpolationTo(interpolStr, pNode, fInterpolationTo);
 
     // Read the childs
     GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_MeasurementPointNode, [this](IXMLFileNodePtr objNode) -> void
