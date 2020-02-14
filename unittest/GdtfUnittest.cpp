@@ -17,8 +17,11 @@ using namespace VectorworksMVR::GdtfDefines;
 GdtfUnittest::GdtfUnittest(const std::string& currentDir)
 {
     fAppDataFolder = currentDir;
+	#ifdef GS_MAC
+	fAppDataFolder += "/Library/Application Support/mvrexchange"; 
+	#endif
 
-    fTestGdtf_Path = fAppDataFolder + kSeparator + "testGdtf.gdtf";
+    fTestGdtf_Path = currentDir + kSeparator + "testGdtf.gdtf";
 
     fTestResourcesFolder = UnitTestUtil::GetTestResourceFolder();
 

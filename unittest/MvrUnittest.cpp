@@ -271,6 +271,8 @@ void MvrUnittest::ReadFile()
 		std::string path = gdtfPath;
 #ifdef _WINDOWS
 		path += "\\MVR_Export\\";
+#elif GS_MAC
+		path += "/Library/Application Support/mvrexchange/MVR_Export/";
 #else
 		path += "/MVR_Export/";
 #endif
@@ -593,6 +595,8 @@ void MvrUnittest::ReadFile()
 			std::string path = gdtfPath;
 #ifdef _WINDOWS
 			path += "\\MVR_Export\\My3DSFile.3ds";
+#elif GS_MAC
+		path += "/Library/Application Support/mvrexchange/MVR_Export/My3DSFile.3ds";
 #else
 			path += "/MVR_Export/My3DSFile.3ds";
 #endif
@@ -673,7 +677,7 @@ void MvrUnittest::ReadFile()
 std::string MvrUnittest::GetTestWheel_PNG(bool readLocation)
 {
 	std::string path;
-	if(readLocation)	{ path =fPath + kSeparator + "GdtfGroup" + kSeparator + "wheels" + kSeparator; }
+	if(readLocation)	{ path =fPath + kSeparator + "GdtfMvrUnitTest" + kSeparator + "wheels" + kSeparator; }
 	else 				{ path = UnitTestUtil::GetTestResourceFolder() + kSeparator; }
     path += "MWheel_Img1.png";
     return path;
