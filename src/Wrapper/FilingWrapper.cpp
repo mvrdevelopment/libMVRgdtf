@@ -412,7 +412,7 @@ bool VectorworksMVR::Filing::GetFolderAppDataPath(TXString& outPath)
 
 	const char *homedir = pw->pw_dir;
 	outPath = TXString(homedir);
-	outPath += "=/Library/Application Support/mvrexchange"; 
+	outPath += "/Library/Application Support/mvrexchange"; 
 #endif
 
 	
