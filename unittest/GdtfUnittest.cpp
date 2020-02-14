@@ -547,7 +547,7 @@ void GdtfUnittest::ReadFile()
                         this->checkifEqual("LuminousIntensity",   luminousIntensity, 2.34);
 
                         double transmission=0; __checkVCOM(emitterMeasurement->GetTransmission(transmission));
-                        this->checkifEqual("Transmission",  transmission,  4.56);
+                        this->checkifEqual("Transmission is not allowed to be set",  transmission, 0.0);
 
                         EGdtfInterpolationTo interpolationTo = EGdtfInterpolationTo::Linear; __checkVCOM(emitterMeasurement->GetInterpolationTo(interpolationTo));
                         this->checkifEqual("InterpolationTo",  size_t(interpolationTo), size_t(EGdtfInterpolationTo::Log) );
