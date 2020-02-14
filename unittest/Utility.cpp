@@ -17,6 +17,9 @@
 #include <pwd.h>
 #elif GS_MAC
 #include <stdio.h> 
+#include <unistd.h>
+#include <sys/types.h>
+#include <pwd.h>
 #endif
 
 
@@ -54,8 +57,10 @@ bool UnitTestUtil::GetFolderAppDataLocal(std::string& outPath)
 	outPath = std::string(homedir);
 #elif GS_MAC
 	//Implementation for OSX
-	const char *homeDir = getenv("HOME");
-	outPath = std::string(homeDir);
+		struct passwd *pw = getpwuid(getuid());
+
+	const char *homedir = pw->pw_dir;
+	outPath = std::string(homedir);
 #endif	    
 
 	return true;
