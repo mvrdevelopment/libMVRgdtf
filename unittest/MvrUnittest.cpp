@@ -673,7 +673,7 @@ void MvrUnittest::ReadFile()
 std::string MvrUnittest::GetTestWheel_PNG(bool readLocation)
 {
 	std::string path;
-	if(readLocation)	{ path =fPath + kSeparator + "GdtfGroup" + kSeparator + "wheels" + kSeparator; }
+	if(readLocation)	{ path =fPath + kSeparator + "GdtfMvrUnitTest" + kSeparator + "wheels" + kSeparator; }
 	else 				{ path = UnitTestUtil::GetTestResourceFolder() + kSeparator; }
     path += "MWheel_Img1.png";
     return path;

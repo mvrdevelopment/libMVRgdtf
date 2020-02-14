@@ -371,6 +371,15 @@ bool VectorworksMVR::Filing::GetFolderWithSpecifer(EFolderSpecifier inWhichFolde
 		}
 
 		outFolderID.SetByFullPath(appdataPath);
+
+		if( ! outFolderID.ExistsOnDisk(appdataPath))
+		{
+			outFolderID.CreateOnDisk(appdataPath);
+		}
+		
+
+		
+
 		return true;
 	}
 	return false;
@@ -403,7 +412,9 @@ bool VectorworksMVR::Filing::GetFolderAppDataPath(TXString& outPath)
 
 	const char *homedir = pw->pw_dir;
 	outPath = TXString(homedir);
+	outPath += "=/Library/Application Support/mvrexchange"; 
 #endif
+
 	
 	return true;
 }
