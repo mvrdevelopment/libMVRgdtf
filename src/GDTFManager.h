@@ -1783,13 +1783,15 @@ namespace SceneData
     class GdtfMeasurement : public GdtfObject
     {
     public:
-        GdtfMeasurement();
+        GdtfMeasurement(bool forFilter);
         ~GdtfMeasurement();
     private:
         double                      fPhysical;
         double                      fLuminousIntensity;
         double                      fTransmission;
         EGdtfInterpolationTo        fInterpolationTo;
+		bool						fIsForFilter;
+
 
         TGdtfMeasurementPointArray  fMeasurementPoints;
     public:
