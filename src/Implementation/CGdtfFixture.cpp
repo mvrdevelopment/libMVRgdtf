@@ -127,6 +127,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::Close()
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::ReadFromFile(IFileIdentifierPtr file, TXString gdtfFileName)
 {	
     IRawOSFilePtr rawFile (IID_RawOSFile);
+    VectorworksMVR::VCOMError retVal = kVCOMError_Failed;
     if(VCOM_SUCCEEDED(rawFile->Open(file, true, false, false, false)))
     {
         Uint64 size = 0;
@@ -136,13 +137,14 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::ReadFromFile(IFileId
         {
             char* tempBuffer = new char[size + 1];
             rawFile->Read(0, size, tempBuffer);
-            VectorworksMVR::VCOMError retVal = FromBufferInternal(tempBuffer, size, gdtfFileName);
+            retVal = FromBufferInternal(tempBuffer, size, gdtfFileName);
             delete[] tempBuffer;
-            return retVal;
         }
+        rawFile->Close();
+        
     }    
 	
-    return kVCOMError_Failed;
+    return retVal;
 }
 
 MvrString VectorworksMVR::CGdtfFixtureImpl::GetName()
