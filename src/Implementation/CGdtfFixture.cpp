@@ -140,6 +140,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::ReadFromFile(IFileId
             delete[] tempBuffer;
             return retVal;
         }
+        rawFile->Close();
     }    
 	
     return kVCOMError_Failed;
