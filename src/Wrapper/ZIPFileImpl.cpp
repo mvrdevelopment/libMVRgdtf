@@ -445,13 +445,6 @@ VCOMError CZIPFileImpl::GetFile(const TXString& path, IZIPFileIOBuffer* outputBu
 	Uint64 inOutReadSize = (Uint64)fileInfo.dwCompressedSize;
 	this->ReadFromFile( currentReadPosition, inOutReadSize, (void*)readData ); 
 	
-	if ( fileInfo.dwCompressionMethod == 8 /* Deflate */)
-	{
-		// inflate the data if it is compressed
-		bool bOk = this->Inflate( (void*)readData, fileInfo.dwCompressedSize, outputBuffer ); 
-		if ( !bOk )
-			err = kVCOMError_Failed;
-	}
 	if ( fileInfo.dwCompressionMethod == 12  /* bzip2 */)
 	{
 		err = kVCOMError_Failed;
@@ -462,7 +455,10 @@ VCOMError CZIPFileImpl::GetFile(const TXString& path, IZIPFileIOBuffer* outputBu
 	}
 	else
 	{
-		err = kVCOMError_Failed;
+		// inflate the data if it is compressed
+		bool bOk = this->Inflate( (void*)readData, fileInfo.dwCompressedSize, outputBuffer ); 
+		if ( !bOk )
+			err = kVCOMError_Failed;
 	}
 
 	if ( readData )

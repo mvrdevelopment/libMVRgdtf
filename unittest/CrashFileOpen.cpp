@@ -10,8 +10,7 @@ using namespace VectorworksMVR;
 using namespace VectorworksMVR::GdtfDefines;
 
 
-#define __checkVCOM(x) this->checkVCOM(x, #x)
-#define __checkVCOM_NotSet(x) this->checkVCOM_NotSet(x, #x)
+#define __checkVCOMFailed(x) this->checkVCOM_Failed(x, #x)
 
 GdtfCrashFileOpen::GdtfCrashFileOpen(const std::string& currentDir)
 {
@@ -29,7 +28,7 @@ bool GdtfCrashFileOpen::ExecuteTest()
 
     IGdtfFixturePtr gdtfFile (IID_IGdtfFixture);
 
-    if(__checkVCOM(gdtfFile->ReadFromFile(path.c_str())))
+    if(__checkVCOMFailed(gdtfFile->ReadFromFile(path.c_str())))
     {
 
     }

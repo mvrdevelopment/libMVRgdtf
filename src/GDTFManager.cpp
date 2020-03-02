@@ -4750,9 +4750,6 @@ bool GdtfFixture::ImportFromZip(IZIPFilePtr& zipfile)
 			}
 		}
 		
-		
-
-		std::cout << "fileName " << fileName.GetCharPtr() << std::endl;
 		inPath = fileName;
 	}
 		
