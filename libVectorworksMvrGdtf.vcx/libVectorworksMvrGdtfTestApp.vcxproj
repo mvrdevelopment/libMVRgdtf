@@ -68,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\unittest\ChannelFunctionStartTest.cpp" />
+    <ClCompile Include="..\unittest\CrashFileOpen.cpp" />
     <ClCompile Include="..\unittest\CustomCharTest.cpp" />
     <ClCompile Include="..\unittest\CustomColorSpaceTest.cpp" />
     <ClCompile Include="..\unittest\DmxChannelSetBug.cpp" />
@@ -96,6 +97,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\unittest\ChannelFunctionStartTest.h" />
+    <ClInclude Include="..\unittest\CrashFileOpen.h" />
     <ClInclude Include="..\unittest\CustomCharTest.h" />
     <ClInclude Include="..\unittest\CustomColorSpaceTest.h" />
     <ClInclude Include="..\unittest\DmxChannelSetBug.h" />
