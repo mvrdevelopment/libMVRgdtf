@@ -14,6 +14,8 @@
 
 #include "TDQuickDraw.h"
 
+#include "GDTFManager.h"
+
 //using namespace ZIP;
 using namespace VectorworksMVR::Filing;
 
@@ -447,6 +449,7 @@ VCOMError CZIPFileImpl::GetFile(const TXString& path, IZIPFileIOBuffer* outputBu
 	
 	if ( fileInfo.dwCompressionMethod == 12  /* bzip2 */)
 	{
+		SceneData::GdtfFixture::AddError(GdtfParsingError(GdtfDefines::EGdtfParsingError::eFileWithUnsupportedEncodingInZip)); 
 		err = kVCOMError_Failed;
 	}
 	else if(fileInfo.dwCompressionMethod == 0 /* No compression */)

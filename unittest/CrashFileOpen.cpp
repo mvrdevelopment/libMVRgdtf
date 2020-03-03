@@ -11,6 +11,7 @@ using namespace VectorworksMVR::GdtfDefines;
 
 
 #define __checkVCOMFailed(x) this->checkVCOM_Failed(x, #x)
+#define __checkVCOM(x) this->checkVCOM(x, #x)
 
 GdtfCrashFileOpen::GdtfCrashFileOpen(const std::string& currentDir)
 {
@@ -30,7 +31,10 @@ bool GdtfCrashFileOpen::ExecuteTest()
 
     if(__checkVCOMFailed(gdtfFile->ReadFromFile(path.c_str())))
     {
-
+        IGdtfXmlParsingErrorPtr error;
+		__checkVCOM(gdtfFile->GetParsingErrorAt(0, & error));
+        GdtfDefines::EGdtfParsingError thisErrorType;
+	    if(__checkVCOM(error->GetErrorType(thisErrorType))) { this->checkifEqual("errorType ", (Sint32)thisErrorType, (Sint32)GdtfDefines::EGdtfParsingError::eFileWithUnsupportedEncodingInZip); }
     }
     return true;
 }
