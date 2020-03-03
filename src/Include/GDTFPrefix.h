@@ -153,6 +153,7 @@ namespace VectorworksMVR
             eHexConversion_InvalidChar                  = 61,
             eDmxMacroDmxValueChannelReference                  = 62,
             eChannelFunctionNotStartingWithZero                  = 63,
+            eFileWithUnsupportedEncodingInZip                  = 64,
 
         };
 		

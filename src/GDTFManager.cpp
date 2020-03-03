@@ -4694,60 +4694,62 @@ bool GdtfFixture::ImportFromZip(IZIPFilePtr& zipfile)
 	{
 		// This is the current file that we are reading
 		ISceneDataZipBuffer buffer;
-		zipfile->GetFile(fileName, &buffer);
-		
-		if (fileName == "description.xml")
-        {
-			// Read the data
-			size_t	size = 0;							buffer.GetDataSize(size);
-			void*	data = malloc(size * sizeof(char));	buffer.CopyDataInto(data, size);
-			
-			// Set the buffer object
-            xmlFileBuffer.SetData(data, size);
-			
-			// House keeping
-			std::free(data);
-        }
-		else
+		if(VCOM_SUCCEEDED(zipfile->GetFile(fileName, &buffer)))
 		{
-			//-----------------------------------------------------------------------------
-			// Prepare pointer to the new files            
-            
-            // Seperate filename und folder
-            TXString fileNameWithoutFolder = TXString(fileName).Replace("/", TXString(kSeperator) );	
-#ifndef _WINDOWS
-			fileNameWithoutFolder          = TXString(fileName).Replace("\\", TXString(kSeperator) ); // It seems some zips come also with this.
-#endif
-            TXString subFolder 			   = SystemUtil::ExtractFolderFromPath(fileNameWithoutFolder);        
-            
-			// flatten the folder structure
-            subFolder = subFolder.Replace(TXString(kSeperator), "");
-            subFolder = kSeperator + subFolder;
+			if (fileName == "description.xml")
+			{
+				// Read the data
+				size_t	size = 0;							buffer.GetDataSize(size);
+				void*	data = malloc(size * sizeof(char));	buffer.CopyDataInto(data, size);
+				
+				// Set the buffer object
+				xmlFileBuffer.SetData(data, size);
+				
+				// House keeping
+				std::free(data);
+			}
+			else
+			{
+				//-----------------------------------------------------------------------------
+				// Prepare pointer to the new files            
+				
+				// Seperate filename und folder
+				TXString fileNameWithoutFolder = TXString(fileName).Replace("/", TXString(kSeperator) );	
+	#ifndef _WINDOWS
+				fileNameWithoutFolder          = TXString(fileName).Replace("\\", TXString(kSeperator) ); // It seems some zips come also with this.
+	#endif
+				TXString subFolder 			   = SystemUtil::ExtractFolderFromPath(fileNameWithoutFolder);        
+				
+				// flatten the folder structure
+				subFolder = subFolder.Replace(TXString(kSeperator), "");
+				subFolder = kSeperator + subFolder;
 
-            //-----------------------------------------------------------------------------
-			IFolderIdentifierPtr targetFolder (IID_FolderIdentifier);
-            targetFolder->Set(fWorkingFolder, subFolder);
-            
-			bool exists = false;
-			targetFolder->ExistsOnDisk(exists);
-			if( ! exists )	{ targetFolder->CreateOnDisk(); }
-			
-            
-			IFileIdentifierPtr file (IID_FileIdentifier);
-			file->Set(targetFolder, fileNameWithoutFolder);
-			
-			// dump buffer into file
-			buffer.WriteToFile(file);
-			
-			// Add it into the file list
-			fLocalFiles.push_back(file);
+				//-----------------------------------------------------------------------------
+				IFolderIdentifierPtr targetFolder (IID_FolderIdentifier);
+				targetFolder->Set(fWorkingFolder, subFolder);
+				
+				bool exists = false;
+				targetFolder->ExistsOnDisk(exists);
+				if( ! exists )	{ targetFolder->CreateOnDisk(); }
+				
+				
+				IFileIdentifierPtr file (IID_FileIdentifier);
+				file->Set(targetFolder, fileNameWithoutFolder);
+				
+				// dump buffer into file
+				buffer.WriteToFile(file);
+				
+				// Add it into the file list
+				fLocalFiles.push_back(file);
 
-			TXString fullPathRessource;
-			file->GetFileFullPath(fullPathRessource);
-			fLocalFilesFullPath.push_back(fullPathRessource);
+				TXString fullPathRessource;
+				file->GetFileFullPath(fullPathRessource);
+				fLocalFilesFullPath.push_back(fullPathRessource);
 
 
+			}
 		}
+		
 		inPath = fileName;
 	}
 		

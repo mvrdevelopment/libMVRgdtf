@@ -14,6 +14,8 @@
 
 #include "TDQuickDraw.h"
 
+#include "GDTFManager.h"
+
 //using namespace ZIP;
 using namespace VectorworksMVR::Filing;
 
@@ -445,16 +447,21 @@ VCOMError CZIPFileImpl::GetFile(const TXString& path, IZIPFileIOBuffer* outputBu
 	Uint64 inOutReadSize = (Uint64)fileInfo.dwCompressedSize;
 	this->ReadFromFile( currentReadPosition, inOutReadSize, (void*)readData ); 
 	
-	if ( fileInfo.dwCompressionMethod != 0 )
+	if ( fileInfo.dwCompressionMethod == 12  /* bzip2 */)
+	{
+		SceneData::GdtfFixture::AddError(GdtfParsingError(GdtfDefines::EGdtfParsingError::eFileWithUnsupportedEncodingInZip)); 
+		err = kVCOMError_Failed;
+	}
+	else if(fileInfo.dwCompressionMethod == 0 /* No compression */)
+	{
+		err = outputBuffer->SetData( (void*)readData, fileInfo.dwCompressedSize ); 
+	}
+	else
 	{
 		// inflate the data if it is compressed
 		bool bOk = this->Inflate( (void*)readData, fileInfo.dwCompressedSize, outputBuffer ); 
 		if ( !bOk )
 			err = kVCOMError_Failed;
-	}
-	else
-	{
-		err = outputBuffer->SetData( (void*)readData, fileInfo.dwCompressedSize ); 
 	}
 
 	if ( readData )
