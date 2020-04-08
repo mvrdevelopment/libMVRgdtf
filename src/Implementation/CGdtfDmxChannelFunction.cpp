@@ -703,3 +703,21 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetParent
     
     return kVCOMError_NoError;
 }
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetRealAcceleration(double& value)
+{
+	// Check Pointer
+	if ( ! fFunction) { return kVCOMError_NotInitialized; }
+	
+    value = fFunction->GetRealAcceleration();
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetRealAcceleration(double value)
+{
+	// Check Pointer
+	if ( ! fFunction) { return kVCOMError_NotInitialized; }
+	
+    fFunction->SetRealAcceleration(value);
+    return kVCOMError_NoError;
+}

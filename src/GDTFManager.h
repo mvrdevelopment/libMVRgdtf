@@ -892,7 +892,8 @@ namespace SceneData
 		DmxValue				fAdressStart;   
 		double					fPhysicalStart;
 		double					fPhysicalEnd;
-		double					fRealFade;			
+		double					fRealFade;	
+		double					fRealAcceleration;				
 		GdtfWheelPtr			fOnWheel;
 		GdtfPhysicalEmitter*	fEmitter;
 
@@ -928,6 +929,7 @@ namespace SceneData
         DmxValue						GetEndAdress() const;
         double							GetPhysicalStart() const;
         double							GetPhysicalEnd() const;
+		double							GetRealAcceleration() const;
         double							GetRealFade() const;        
         GdtfWheelPtr					GetOnWheel() const;
         GdtfPhysicalEmitter*            GetEmitter() const;   
@@ -964,6 +966,7 @@ namespace SceneData
 		void							SetStartAddress(DmxValue address);
 		void							SetPhysicalStart(double start);
 		void							SetPhysicalEnd(double end);
+		void							SetRealAcceleration(double fade);
 		void							SetRealFade(double fade);				
 		void							SetEmitter(GdtfPhysicalEmitter* newEmit);
         void                            SetFilter(GdtfFilterPtr val);

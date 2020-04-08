@@ -579,6 +579,10 @@ namespace VectorworksMVR
         // 0.3.20
         virtual VCOMError VCOM_CALLTYPE     GetResolution(GdtfDefines::EGdtfChannelBitResolution& resolution) = 0;
 
+		// GDTF 1.1
+		virtual VCOMError VCOM_CALLTYPE     GetRealAcceleration(double& value) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetRealAcceleration(double value) = 0;
+
 
     };
 	typedef VCOMPtr<IGdtfDmxChannelFunction>	IGdtfDmxChannelFunctionPtr;
