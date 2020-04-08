@@ -282,6 +282,7 @@ void GdtfUnittest::WriteFile()
 						__checkVCOM(gdftChannelFunction->SetPhysicalStart(2));
 						__checkVCOM(gdftChannelFunction->SetPhysicalEnd(3));
 						__checkVCOM(gdftChannelFunction->SetRealFade(4));
+						__checkVCOM(gdftChannelFunction->SetRealAcceleration(5));
 						__checkVCOM(gdftChannelFunction->SetOnWheel(gdtfWheelObj));
 						__checkVCOM(gdftChannelFunction->SetEmitter(gdtfEmitter));
 
@@ -833,6 +834,11 @@ void GdtfUnittest::ReadFile()
 								double realFade;
 								__checkVCOM(gdtfFunction->GetRealFade(realFade));
 								this->checkifEqual("gdtfFunctionGetRealFade ", realFade, double(4));
+
+								//real Fade
+								double realAcc;
+								__checkVCOM(gdtfFunction->GetRealAcceleration(realAcc));
+								this->checkifEqual("GetRealAcceleration ", realAcc, double(5));
 
                                 // Check the Linked Filter
                                 IGdtfFilterPtr filter;
