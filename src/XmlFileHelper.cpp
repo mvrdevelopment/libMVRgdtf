@@ -1501,7 +1501,7 @@ CieColor SceneData::GdtfConverter::ConvertCColor(const CCieColor & color)
     return true;
 }
 
-/*static*/ TXString GdtfConverter::Convert2DPoint(Sint32 p_X, Sint32 p_Y)
+/*static*/ TXString GdtfConverter::Convert2DPoint(double p_X, double p_Y)
 {
 	TDoubleArray array {p_X, p_Y};
 	
