@@ -1071,7 +1071,7 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 
 		//-----------------------------------------------------------------------------
 		// GDTF 1.1
-		virtual VCOMError VCOM_CALLTYPE		GetCanHaveChildren(GdtfDefines::EGdtfCanHaveChildren& value) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetCanHaveChildren(bool& value) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetCanHaveChildren(GdtfDefines::EGdtfCanHaveChildren value) = 0;
 
 	};

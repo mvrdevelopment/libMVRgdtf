@@ -1929,11 +1929,11 @@ void VectorworksMVR::CGdtfFixtureImpl::FreeBuffer()
 
 //GDTF 1.1
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetCanHaveChildren(GdtfDefines::EGdtfCanHaveChildren& value)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetCanHaveChildren(bool& value)
 {
 	if(!fFixtureObject) {return kVCOMError_NotInitialized;}
 	
-	value = fFixtureObject->GetCanHaveChildren();
+	value = (fFixtureObject->GetCanHaveChildren() == GdtfDefines::EGdtfCanHaveChildren::eYES);
 	
 	return kVCOMError_NoError;
 }
