@@ -237,7 +237,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotImpl::GetAnimationSystem
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotImpl::CreateAnimationSystem(IGdtfWheelSlotAnimationSystem** outAnimationSystem, double p1_X, double p1_Y, double p2_X, double p2_Y, double p3_X, double p3_Y, double radius)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotImpl::CreateAnimationSystem(double p1_X, double p1_Y, double p2_X, double p2_Y, double p3_X, double p3_Y, double radius, IGdtfWheelSlotAnimationSystem** outAnimationSystem)
 {
 	// Check Data
 	if( ! fWheelSlot) return kVCOMError_NotInitialized;
