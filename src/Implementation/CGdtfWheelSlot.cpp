@@ -237,12 +237,19 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotImpl::GetAnimationSystem
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotImpl::CreateAnimationSystem(IGdtfWheelSlotAnimationSystem** outAnimationSystem)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotImpl::CreateAnimationSystem(IGdtfWheelSlotAnimationSystem** outAnimationSystem, double p1_X, double p1_Y, double p2_X, double p2_Y, double p3_X, double p3_Y, double radius)
 {
 	// Check Data
 	if( ! fWheelSlot) return kVCOMError_NotInitialized;
 	
 	SceneData::GdtfWheelSlotAnimationSystem* gdtfAnimationSystem = fWheelSlot->AddAnimationSystem();
+    gdtfAnimationSystem->SetP1_X(p1_X);
+    gdtfAnimationSystem->SetP1_Y(p1_Y);
+    gdtfAnimationSystem->SetP2_X(p2_X);
+    gdtfAnimationSystem->SetP2_Y(p2_Y);
+    gdtfAnimationSystem->SetP3_X(p3_X);
+    gdtfAnimationSystem->SetP3_Y(p3_Y);
+    gdtfAnimationSystem->SetRadius(radius);
 	
 	//---------------------------------------------------------------------------
 	// Initialize Object
