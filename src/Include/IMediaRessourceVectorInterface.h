@@ -423,8 +423,8 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     SetFilter(IGdtfFilter* val)=0;
 
 		//GDTF 1.1
-		virtual VCOMError VCOM_CALLTYPE     GetAnimationSystem(IGdtfWheelSlotAnimationSystem** 	outAnimationSystem) = 0;
-		virtual VCOMError VCOM_CALLTYPE     SetAnimationSystem(IGdtfWheelSlotAnimationSystem* 	newAnimationSystem) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetAnimationSystem(IGdtfWheelSlotAnimationSystem** 		outAnimationSystem) = 0;
+		virtual VCOMError VCOM_CALLTYPE     CreateAnimationSystem(IGdtfWheelSlotAnimationSystem** 	outAnimationSystem, double p1_X, double p1_Y, double p2_X, double p2_Y, double p3_X, double p3_Y, double radius) = 0;
     };
 	typedef VCOMPtr<IGdtfWheelSlot>	IGdtfWheelSlotPtr;
     
