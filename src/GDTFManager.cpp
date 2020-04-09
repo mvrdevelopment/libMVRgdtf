@@ -3314,9 +3314,9 @@ void GdtfDmxChannelFunction::SetRealFade(double fade)
 	fRealFade = fade;
 }
 
-void GdtfDmxChannelFunction::SetRealAcceleration(double fade)
+void GdtfDmxChannelFunction::SetRealAcceleration(double acceleration)
 {
-	fRealAcceleration = fade;
+	fRealAcceleration = acceleration;
 }
 
 GdtfDmxChannelSet* GdtfDmxChannelFunction::AddChannelSet(const TXString &name)
@@ -3460,7 +3460,7 @@ void GdtfDmxChannelFunction::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	TXString physFrom;	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionPhysicalFrom,		physFrom);	GdtfConverter::ConvertDouble(physFrom, 				pNode,				fPhysicalStart);
 	TXString physTo;	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionPhysicalTo,			physTo);	GdtfConverter::ConvertDouble(physTo, 				pNode,				fPhysicalEnd);
 	TXString realFade;	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionRealFade,			realFade);	GdtfConverter::ConvertDouble(realFade, 				pNode,				fRealFade);
-	TXString acc;	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionRealAcceleration,		acc);		GdtfConverter::ConvertDouble(acc, 					pNode,				fRealAcceleration);
+	TXString realAcc;	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionRealAcceleration,	realAcc);	GdtfConverter::ConvertDouble(realAcc, 				pNode,				fRealAcceleration);
 
 	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionAttribute, 	fUnresolvedAttrRef);	
 	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionWheelRef, 	fUnresolvedWheelRef);

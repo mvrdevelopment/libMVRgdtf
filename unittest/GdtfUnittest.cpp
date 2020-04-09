@@ -835,10 +835,10 @@ void GdtfUnittest::ReadFile()
 								__checkVCOM(gdtfFunction->GetRealFade(realFade));
 								this->checkifEqual("gdtfFunctionGetRealFade ", realFade, double(4));
 
-								//real Fade
+								//real Acceleration
 								double realAcc;
 								__checkVCOM(gdtfFunction->GetRealAcceleration(realAcc));
-								this->checkifEqual("GetRealAcceleration ", realAcc, double(5));
+								this->checkifEqual("gdtfFunctionGetRealAcceleration ", realAcc, double(5));
 
                                 // Check the Linked Filter
                                 IGdtfFilterPtr filter;

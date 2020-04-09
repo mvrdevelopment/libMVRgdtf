@@ -53,6 +53,7 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr);
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject();
 
+        // GDTF 1.1
         virtual VCOMError VCOM_CALLTYPE     GetRealAcceleration(double& value);
 		virtual VCOMError VCOM_CALLTYPE     SetRealAcceleration(double value);
 

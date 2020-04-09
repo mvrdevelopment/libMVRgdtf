@@ -704,6 +704,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetParent
     return kVCOMError_NoError;
 }
 
+// GDTF 1.1
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetRealAcceleration(double& value)
 {
 	// Check Pointer
