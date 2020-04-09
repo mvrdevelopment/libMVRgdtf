@@ -303,6 +303,49 @@ namespace SceneData
 	};
 	typedef GdtfWheelSlotPrismFacet*				GdtfWheelSlotPrismFacetPtr;
 	typedef std::vector<GdtfWheelSlotPrismFacetPtr>	TGdtfWheelSlotPrismFacetArray;
+
+	class GdtfWheelSlotAnimationSystem : public GdtfObject
+	{
+	public:
+		GdtfWheelSlotAnimationSystem();
+		~GdtfWheelSlotAnimationSystem();
+		
+	private:
+		double	fP1_X;
+		double	fP1_Y;
+		double	fP2_X;
+		double	fP2_Y;
+		double	fP3_X;
+		double	fP3_Y;
+		double	fRadius;
+		
+    public:
+        double GetP1_X();
+        double GetP1_Y();
+        double GetP2_X();
+        double GetP2_Y();
+        double GetP3_X();
+        double GetP3_Y();
+        double GetRadius();
+
+        void SetP1_X(double p1_X);
+        void SetP1_Y(double p1_Y);
+        void SetP2_X(double p2_X);
+        void SetP2_Y(double p2_Y);
+        void SetP3_X(double p3_X);
+        void SetP3_Y(double p3_Y);
+        void SetRadius(double radius);
+	public:
+		virtual EGdtfObjectType			GetObjectType();
+		
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+		
+	};
+	typedef GdtfWheelSlotAnimationSystem*				GdtfWheelSlotAnimationSystemPtr;
 	
 	class GdtfWheelSlot : public GdtfObject
 	{
@@ -322,6 +365,7 @@ namespace SceneData
 		TXString						fGoboFile; // MediaFileName
 		GdtfFilter*						fFilter;
 		TXString						fUnresolvedFilter;
+		GdtfWheelSlotAnimationSystem*	fAnimationSystem;
 		
 	public:
 		const TXString&                 GetGobo() const;
@@ -330,12 +374,14 @@ namespace SceneData
 		const TXString&                 GetName() const;
         TGdtfWheelSlotPrismFacetArray   GetPrismFacets();
 		GdtfFilter*                 	GetFilter() const;
+		GdtfWheelSlotAnimationSystem*	GetAnimationSystem() const;
 		
 		void							SetName(const TXString& name);
 		void							SetGobo(const GdtfPNGFile& png);
 		void							SetColor(const CCieColor& color);
 		void							SetFilter(GdtfFilter* filter);
 		GdtfWheelSlotPrismFacet*		AddPrismFacet();
+		GdtfWheelSlotAnimationSystem*	AddAnimationSystem();
 
 		virtual TXString				GetNodeReference();
 

@@ -162,6 +162,9 @@
     <ClCompile Include="..\src\Implementation\CGdtfWheelSlotPrismFacet.cpp">
       <Filter>src\Implementation</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Implementation\CGdtfWheelSlotAnimationSystem.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\Implementation\CGeometryReferenceImpl.cpp">
       <Filter>src\Implementation</Filter>
     </ClCompile>
@@ -447,6 +450,9 @@
       <Filter>src\Implementation</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Implementation\CGdtfWheelSlotPrismFacet.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Implementation\CGdtfWheelSlotAnimationSystem.h">
       <Filter>src\Implementation</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Implementation\CGeometryReferenceImpl.h">

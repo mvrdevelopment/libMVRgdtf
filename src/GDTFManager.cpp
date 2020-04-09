@@ -831,6 +831,140 @@ TXString GdtfWheelSlotPrismFacet::GetNodeName()
 }
 
 //------------------------------------------------------------------------------------
+// GdtfWheelSlotAnimationSystem
+GdtfWheelSlotAnimationSystem::GdtfWheelSlotAnimationSystem()
+{
+}
+
+GdtfWheelSlotAnimationSystem::~GdtfWheelSlotAnimationSystem()
+{
+}
+
+double GdtfWheelSlotAnimationSystem::GetP1_X()
+{
+	return fP1_X;
+}
+
+double GdtfWheelSlotAnimationSystem::GetP1_Y()
+{
+	return fP1_Y;
+}
+
+double GdtfWheelSlotAnimationSystem::GetP2_X()
+{
+	return fP2_X;
+}
+
+double GdtfWheelSlotAnimationSystem::GetP2_Y()
+{
+	return fP2_Y;
+}
+
+double GdtfWheelSlotAnimationSystem::GetP3_X()
+{
+	return fP3_X;
+}
+
+double GdtfWheelSlotAnimationSystem::GetP3_Y()
+{
+	return fP3_Y;
+}
+
+double GdtfWheelSlotAnimationSystem::GetRadius()
+{
+	return fRadius;
+}
+
+void GdtfWheelSlotAnimationSystem::SetP1_X(double p1_X)
+{
+	fP1_X = p1_X;
+}
+
+void GdtfWheelSlotAnimationSystem::SetP1_Y(double p1_Y)
+{
+	fP1_Y = p1_Y;
+}
+
+void GdtfWheelSlotAnimationSystem::SetP2_X(double p2_X)
+{
+	fP2_X = p2_X;
+}
+
+void GdtfWheelSlotAnimationSystem::SetP2_Y(double p2_Y)
+{
+	fP2_Y = p2_Y;
+}
+
+void GdtfWheelSlotAnimationSystem::SetP3_X(double p3_X)
+{
+	fP3_X = p3_X;
+}
+
+void GdtfWheelSlotAnimationSystem::SetP3_Y(double p3_Y)
+{
+	fP3_Y = p3_Y;
+}
+
+void GdtfWheelSlotAnimationSystem::SetRadius(double radius)
+{
+	fRadius = radius;
+}
+
+void GdtfWheelSlotAnimationSystem::OnPrintToFile(IXMLFileNodePtr pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnPrintToFile(pNode);
+	
+	pNode->SetNodeAttributeValue(XML_GDTF_AnimationSystemP1,		GdtfConverter::Convert2DPoint(fP1_X, fP1_Y));
+	pNode->SetNodeAttributeValue(XML_GDTF_AnimationSystemP2,		GdtfConverter::Convert2DPoint(fP2_X, fP2_Y));
+	pNode->SetNodeAttributeValue(XML_GDTF_AnimationSystemP3,		GdtfConverter::Convert2DPoint(fP3_X, fP3_Y));
+	pNode->SetNodeAttributeValue(XML_GDTF_AnimationSystemRadius,	GdtfConverter::ConvertDouble(fRadius));
+}
+
+void GdtfWheelSlotAnimationSystem::OnReadFromNode(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnReadFromNode(pNode);
+	
+	TXString p1;		pNode->GetNodeAttributeValue(XML_GDTF_AnimationSystemP1,		p1);		GdtfConverter::Convert2DPoint(p1, pNode, fP1_X, fP1_Y);
+	TXString p2;		pNode->GetNodeAttributeValue(XML_GDTF_AnimationSystemP2,		p2);		GdtfConverter::Convert2DPoint(p2, pNode, fP2_X, fP2_Y);
+	TXString p3;		pNode->GetNodeAttributeValue(XML_GDTF_AnimationSystemP3,		p3);		GdtfConverter::Convert2DPoint(p3, pNode, fP3_X, fP3_Y);
+	TXString radius;	pNode->GetNodeAttributeValue(XML_GDTF_AnimationSystemRadius,	radius);	GdtfConverter::ConvertDouble(radius, pNode, fRadius);
+}
+
+void GdtfWheelSlotAnimationSystem::OnErrorCheck(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnErrorCheck(pNode);
+
+	//------------------------------------------------------------------------------------
+	// Create needed and optional Attribute Arrays
+	TXStringArray needed;
+	TXStringArray optional;
+	needed.push_back(XML_GDTF_AnimationSystemP1);
+	needed.push_back(XML_GDTF_AnimationSystemP2);
+	needed.push_back(XML_GDTF_AnimationSystemP3);
+	needed.push_back(XML_GDTF_AnimationSystemRadius);
+	
+	//------------------------------------------------------------------------------------
+	// Check Attributes for node
+	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
+}
+
+EGdtfObjectType GdtfWheelSlotAnimationSystem::GetObjectType()
+{
+	return EGdtfObjectType::eGdtfAnimationSystem;
+}
+
+TXString GdtfWheelSlotAnimationSystem::GetNodeName()
+{
+	return XML_GDTF_AnimationSystemNodeName;
+}
+
+//------------------------------------------------------------------------------------
 // GdtfWheelSlot
 GdtfWheelSlot::GdtfWheelSlot(GdtfWheel* parent)
 {
@@ -876,6 +1010,13 @@ GdtfWheelSlotPrismFacet* GdtfWheelSlot::AddPrismFacet()
 	GdtfWheelSlotPrismFacet* prism = new GdtfWheelSlotPrismFacet();
 	fPrismFacts.push_back(prism);
 	return prism;
+}
+
+GdtfWheelSlotAnimationSystem* GdtfWheelSlot::AddAnimationSystem()
+{
+	GdtfWheelSlotAnimationSystem* animationSystem = new GdtfWheelSlotAnimationSystem();
+	fAnimationSystem = animationSystem;
+	return animationSystem;
 }
 
 const TXString&	GdtfWheelSlot::GetGobo() const
@@ -1032,6 +1173,11 @@ TXString GdtfWheelSlot::GetNodeReference()
 {
 	TXString ref = fWheelParent->GetNodeReference() + "." + GetName();
 	return ref;
+}
+
+GdtfWheelSlotAnimationSystem* GdtfWheelSlot::GetAnimationSystem() const
+{
+	return fAnimationSystem;
 }
 
 //------------------------------------------------------------------------------------

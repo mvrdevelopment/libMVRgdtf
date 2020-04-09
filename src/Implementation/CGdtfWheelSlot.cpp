@@ -4,6 +4,7 @@
 #include "Prefix/StdAfx.h"
 #include "CGdtfWheelSlot.h"
 #include "CGdtfWheelSlotPrismFacet.h"
+#include "CGdtfWheelSlotAnimationSystem.h"
 #include "CGdtfFilter.h"
 
 using namespace VectorworksMVR::Filing;
@@ -188,6 +189,93 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotImpl::CreatePrismFacet(c
 	//---------------------------------------------------------------------------
 	// Set Out Value
 	*outFacet		= pPrismFacetObj;
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotImpl::GetAnimationSystem(VectorworksMVR::IGdtfWheelSlotAnimationSystem** outAnimationSystem)
+{
+	// Check Data
+	if( ! fWheelSlot) return kVCOMError_NotInitialized;    
+    
+    SceneData::GdtfWheelSlotAnimationSystem* gdtfAnimationSystem = fWheelSlot->GetAnimationSystem();
+    
+    
+    //---------------------------------------------------------------------------
+    // Initialize Object
+    CGdtfWheelSlotAnimationSystemImpl* pAnimationSystemObj = nullptr;
+    
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfWheelSlotAnimationSystem, (IVWUnknown**) & pAnimationSystemObj)))
+    {
+        // Check Casting
+        CGdtfWheelSlotAnimationSystemImpl* pResultInterface = dynamic_cast<CGdtfWheelSlotAnimationSystemImpl* >(pAnimationSystemObj);
+        if (pResultInterface)
+        {
+            pResultInterface->setPointer(gdtfAnimationSystem);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+    
+    //---------------------------------------------------------------------------
+    // Check Incoming Object
+    if (*outAnimationSystem)
+    {
+        (*outAnimationSystem)->Release();
+        *outAnimationSystem		= NULL;
+    }
+    
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *outAnimationSystem		= pAnimationSystemObj;
+    
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotImpl::CreateAnimationSystem(IGdtfWheelSlotAnimationSystem** outAnimationSystem)
+{
+	// Check Data
+	if( ! fWheelSlot) return kVCOMError_NotInitialized;
+	
+	SceneData::GdtfWheelSlotAnimationSystem* gdtfAnimationSystem = fWheelSlot->AddAnimationSystem();
+	
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CGdtfWheelSlotAnimationSystemImpl* pAnimationSystemObj = nullptr;
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfWheelSlotAnimationSystem, (IVWUnknown**) & pAnimationSystemObj)))
+	{
+		// Check Casting
+		CGdtfWheelSlotAnimationSystemImpl* pResultInterface = dynamic_cast<CGdtfWheelSlotAnimationSystemImpl* >(pAnimationSystemObj);
+		if (pResultInterface)
+		{
+			pResultInterface->setPointer(gdtfAnimationSystem);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incomming Object
+	if (*outAnimationSystem)
+	{
+		(*outAnimationSystem)->Release();
+		*outAnimationSystem	= NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*outAnimationSystem	= pAnimationSystemObj;
 	
 	return kVCOMError_NoError;
 }

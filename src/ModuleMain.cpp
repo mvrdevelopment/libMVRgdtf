@@ -39,6 +39,7 @@
 #include "Implementation/CGdtfDmxChannelSet.h"
 #include "Implementation/CGdtfBreak.h"
 #include "Implementation/CGdtfWheelSlotPrismFacet.h"
+#include "Implementation/CGdtfWheelSlotAnimationSystem.h"
 #include "Implementation/CGeometryReferenceImpl.h"
 #include "Implementation/CGdtfXmlParsingError.h"
 #include "Implementation/CGdtfDMXPersonality.h"
@@ -140,6 +141,8 @@ extern "C" VectorworksMVR::VCOMError VWQueryInterface(const VectorworksMVR::VWII
         resultInterface = new VectorworksMVR::CGdtfBreakImpl();
     else if (iid == VectorworksMVR::IID_GdtfWheelSlotPrismFacet)
         resultInterface = new CGdtfWheelSlotPrismFacetImpl();
+    else if (iid == VectorworksMVR::IID_GdtfWheelSlotAnimationSystem)
+        resultInterface = new CGdtfWheelSlotAnimationSystemImpl();
     else if (iid == VectorworksMVR::IID_GdtfXmlParsingError)
         resultInterface = new CGdtfXmlParsingErrorImpl();
     else if (iid == VectorworksMVR::IID_GdtfTRDM)

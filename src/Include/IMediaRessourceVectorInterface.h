@@ -374,6 +374,30 @@ namespace VectorworksMVR
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
     };
 	typedef VCOMPtr<IGdtfWheelSlotPrismFacet>	IGdtfWheelSlotPrismFacetPtr;
+
+	class DYNAMIC_ATTRIBUTE IGdtfWheelSlotAnimationSystem : public IVWUnknown
+    {
+		public:
+        virtual VCOMError VCOM_CALLTYPE     GetP1_X(double& p1_X) 		= 0;
+        virtual VCOMError VCOM_CALLTYPE     GetP1_Y(double& p1_Y) 		= 0;
+        virtual VCOMError VCOM_CALLTYPE     GetP2_X(double& p2_X) 		= 0;
+        virtual VCOMError VCOM_CALLTYPE     GetP2_Y(double& p2_Y) 		= 0;
+        virtual VCOMError VCOM_CALLTYPE     GetP3_X(double& p3_X) 		= 0;
+        virtual VCOMError VCOM_CALLTYPE     GetP3_Y(double& p3_Y) 		= 0;
+        virtual VCOMError VCOM_CALLTYPE     GetRadius(double& radius) 	= 0;
+
+        virtual VCOMError VCOM_CALLTYPE     SetP1_X(double p1_X) 		= 0;
+        virtual VCOMError VCOM_CALLTYPE     SetP1_Y(double p1_Y) 		= 0;
+        virtual VCOMError VCOM_CALLTYPE     SetP2_X(double p2_X) 		= 0;
+        virtual VCOMError VCOM_CALLTYPE     SetP2_Y(double p2_Y) 		= 0;
+        virtual VCOMError VCOM_CALLTYPE     SetP3_X(double p3_X) 		= 0;
+        virtual VCOMError VCOM_CALLTYPE     SetP3_Y(double p3_Y) 		= 0;
+        virtual VCOMError VCOM_CALLTYPE     SetRadius(double radius) 	= 0;
+		
+		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+    };
+	typedef VCOMPtr<IGdtfWheelSlotAnimationSystem>	IGdtfWheelSlotAnimationSystemPtr;
     
     class DYNAMIC_ATTRIBUTE IGdtfWheelSlot : public IVWUnknown
     {
@@ -397,6 +421,10 @@ namespace VectorworksMVR
         // 0.3.13
         virtual VCOMError VCOM_CALLTYPE     GetFilter(IGdtfFilter** outVal) = 0;
         virtual VCOMError VCOM_CALLTYPE     SetFilter(IGdtfFilter* val)=0;
+
+		//GDTF 1.1
+		virtual VCOMError VCOM_CALLTYPE     GetAnimationSystem(IGdtfWheelSlotAnimationSystem** 	outAnimationSystem) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetAnimationSystem(IGdtfWheelSlotAnimationSystem* 	newAnimationSystem) = 0;
     };
 	typedef VCOMPtr<IGdtfWheelSlot>	IGdtfWheelSlotPtr;
     

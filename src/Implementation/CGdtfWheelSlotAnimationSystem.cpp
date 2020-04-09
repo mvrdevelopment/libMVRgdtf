@@ -16,7 +16,7 @@ VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::~CGdtfWheelSlotAnimationSyste
     
 };
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::GetP1_X(Sint32& p1_X)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::GetP1_X(double& p1_X)
 {
 	// Check Data
 	if( ! fAnimationSystem) return kVCOMError_NotInitialized;
@@ -26,7 +26,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::Get
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::GetP1_Y(Sint32& p1_Y)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::GetP1_Y(double& p1_Y)
 {
 	// Check Data
 	if( ! fAnimationSystem) return kVCOMError_NotInitialized;
@@ -36,7 +36,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::Get
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::GetP2_X(Sint32& p2_X)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::GetP2_X(double& p2_X)
 {
 	// Check Data
 	if( ! fAnimationSystem) return kVCOMError_NotInitialized;
@@ -46,7 +46,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::Get
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::GetP2_Y(Sint32& p2_Y)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::GetP2_Y(double& p2_Y)
 {
 	// Check Data
 	if( ! fAnimationSystem) return kVCOMError_NotInitialized;
@@ -56,7 +56,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::Get
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::GetP3_X(Sint32& p3_X)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::GetP3_X(double& p3_X)
 {
 	// Check Data
 	if( ! fAnimationSystem) return kVCOMError_NotInitialized;
@@ -66,7 +66,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::Get
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::GetP3_Y(Sint32& p3_Y)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::GetP3_Y(double& p3_Y)
 {
 	// Check Data
 	if( ! fAnimationSystem) return kVCOMError_NotInitialized;
@@ -76,7 +76,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::Get
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::GetRadius(Sint32& radius)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::GetRadius(double& radius)
 {
 	// Check Data
 	if( ! fAnimationSystem) return kVCOMError_NotInitialized;
@@ -86,7 +86,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::Get
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::SetP1_X(Sint32 p1_X)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::SetP1_X(double p1_X)
 {
 	// Check Data
 	if( ! fAnimationSystem) return kVCOMError_NotInitialized;
@@ -96,7 +96,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::Set
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::SetP1_Y(Sint32 p1_Y)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::SetP1_Y(double p1_Y)
 {
 	// Check Data
 	if( ! fAnimationSystem) return kVCOMError_NotInitialized;
@@ -106,7 +106,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::Set
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::SetP2_X(Sint32 p2_X)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::SetP2_X(double p2_X)
 {
 	// Check Data
 	if( ! fAnimationSystem) return kVCOMError_NotInitialized;
@@ -116,7 +116,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::Set
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::SetP2_Y(Sint32 p2_Y)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::SetP2_Y(double p2_Y)
 {
 	// Check Data
 	if( ! fAnimationSystem) return kVCOMError_NotInitialized;
@@ -126,7 +126,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::Set
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::SetP3_X(Sint32 p3_X)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::SetP3_X(double p3_X)
 {
 	// Check Data
 	if( ! fAnimationSystem) return kVCOMError_NotInitialized;
@@ -136,7 +136,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::Set
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::SetP3_Y(Sint32 p3_Y)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::SetP3_Y(double p3_Y)
 {
 	// Check Data
 	if( ! fAnimationSystem) return kVCOMError_NotInitialized;
@@ -146,7 +146,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::Set
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::SetRadius(Sint32 radius)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotAnimationSystemImpl::SetRadius(double radius)
 {
 	// Check Data
 	if( ! fAnimationSystem) return kVCOMError_NotInitialized;
