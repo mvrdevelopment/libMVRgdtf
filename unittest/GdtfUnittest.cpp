@@ -140,6 +140,7 @@ void GdtfUnittest::WriteFile()
 				cieCol.f_Y = 1.0;
 				__checkVCOM(wheelSlotContainer->SetColor(cieCol));
 
+				// Set PrismFacet
 				// no "ox, oy, oz" entries here
 				STransformMatrix ma;
 				ma.ux = 1;ma.vx = 4;ma.wx = 7;
@@ -157,8 +158,12 @@ void GdtfUnittest::WriteFile()
 					__checkVCOM(gdtfFacet->SetColor(facetCol));
 				}
 
-				// Set Wheel
+				// Set Gobo
 				wheelSlotContainer->SetGobo("MWheel_Img1");
+
+				//Set AnimationSystem
+				IGdtfWheelSlotAnimationSystemPtr gdtfAnimationSystem;
+				__checkVCOM(wheelSlotContainer->CreateAnimationSystem(1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0 /*radius*/, &gdtfAnimationSystem));
 
 
 				// Set Filter link
@@ -474,9 +479,6 @@ void GdtfUnittest::ReadFile()
 							checkifEqual("Linked Filter Name", gdtfLinkedFilter->GetName(), "My Filter");
 						}
 
-						
-
-
 						// PrismFacets loop
 						size_t prismFacetCount = 0;
 						__checkVCOM(gdtfSlot->GetPrismFacetCount(prismFacetCount));
@@ -510,6 +512,36 @@ void GdtfUnittest::ReadFile()
 								this->checkifEqual("GetTransformMatrix.wz ", matrix.wz, double(9));
 							}
 						} // PrismFacets loop
+
+						//Animation System
+						IGdtfWheelSlotAnimationSystemPtr gdtfAnimationSystem;
+						if(__checkVCOM(gdtfSlot->GetAnimationSystem(&gdtfAnimationSystem)))
+						{
+							double p1_X = 0.0;
+							double p1_Y = 0.0;
+							double p2_X = 0.0;
+							double p2_Y = 0.0;
+							double p3_X = 0.0;
+							double p3_Y = 0.0;
+							__checkVCOM(gdtfAnimationSystem->GetP1_X(p1_X));
+							__checkVCOM(gdtfAnimationSystem->GetP1_Y(p1_Y));
+							__checkVCOM(gdtfAnimationSystem->GetP2_X(p2_X));
+							__checkVCOM(gdtfAnimationSystem->GetP2_Y(p2_Y));
+							__checkVCOM(gdtfAnimationSystem->GetP3_X(p3_X));
+							__checkVCOM(gdtfAnimationSystem->GetP3_Y(p3_Y));
+							this->checkifEqual("GetWheelSlotAnimationSystemP1_X ", p1_X, 1.0);
+							this->checkifEqual("GetWheelSlotAnimationSystemP1_Y ", p1_Y, 1.5);
+							this->checkifEqual("GetWheelSlotAnimationSystemP2_X ", p2_X, 2.0);
+							this->checkifEqual("GetWheelSlotAnimationSystemP2_Y ", p2_Y, 2.5);
+							this->checkifEqual("GetWheelSlotAnimationSystemP3_X ", p3_X, 3.0);
+							this->checkifEqual("GetWheelSlotAnimationSystemP3_Y ", p3_Y, 3.5);
+
+							double radius = 0.0;
+							__checkVCOM(gdtfAnimationSystem->GetRadius(radius));
+							this->checkifEqual("GetWheelSlotAnimationSystemRadius ", radius, 4.0);
+
+						}
+
 					} // WheelSlot loop
 				}
 			} // Wheels loop
