@@ -81,36 +81,38 @@ namespace SceneData
         static TXString ConvertEGdtfColorSpace(EGdtfColorSpace value);
         static TXString ConvertEGdtfInterpolationTo(EGdtfInterpolationTo value);
 		static TXString	ConvertHexValue(size_t value);
+		static TXString	ConvertEGdtfCanHaveChildren(EGdtfCanHaveChildren value);
 
         //-----------------------------------------------------------------------------
         // Convert from String functions:
-        static bool		ConvertUUID(										const TXString& value, const IXMLFileNodePtr& node,			VWFC::Tools::VWUUID& uuid);        
-		static bool		ConvertDate(										const TXString& value, const IXMLFileNodePtr& node,			STime& date);
-		static bool		ConvertColor(										const TXString& value, const IXMLFileNodePtr& node,			CCieColor& color);
-		static bool		ConvertDouble(										const TXString& value, const IXMLFileNodePtr& node,			double& doubleValue);
-		static bool		ConvertMatrix(										const TXString& value, const IXMLFileNodePtr& node,			VWTransformMatrix& ma);
-		static bool		ConvertRotation(									const TXString& value, const IXMLFileNodePtr& node,			VWTransformMatrix& ma);
-		static bool		ConvertPrimitiveType(								const TXString& value, const IXMLFileNodePtr& node,			EGdtfModel_PrimitiveType& type);
-		static bool		ConvertLampeType(									const TXString& value, const IXMLFileNodePtr& node,			EGdtfLampType& lampType);
-		static bool		ConvertInteger(										const TXString& value, const IXMLFileNodePtr& node,			Sint32&	intValue);
-        static bool		ConvertDmxBreak(									const TXString& value, const IXMLFileNodePtr& node,			Sint32&	intValue);
-		static bool		ConvertInteger(										const TXString& value, const IXMLFileNodePtr& node,			Sint8& intValue);
-		static bool		ConvertInteger(										const TXString& value, const IXMLFileNodePtr& node,			size_t& intValue);
-		static bool		ConvertInteger(										const TXString& value, const IXMLFileNodePtr& node,			Sint32&	intValue,						bool& noneValue);
-        static bool     ConvertIntegerArray(									  TXString  values,const IXMLFileNodePtr& node,			TSint32Array& intArray);
-		static bool		ConvertDMXAdress(									const TXString& value, const IXMLFileNodePtr& node,			DMXAddress& intValue);
-		static bool  	ConvertDMXValue(									const TXString& value, const IXMLFileNodePtr& node,		    EGdtfChannelBitResolution chanlReso,	DmxValue& intValue);
-		static bool  	ConvertDMXValue(									const TXString& value, const IXMLFileNodePtr& node,		    EGdtfChannelBitResolution chanlReso,	DmxValue& intValue, bool& noneValue);		
-		static bool		ConvertRelationEnum(								const TXString& value, const IXMLFileNodePtr& node,			EGdtfDmxRelationType& relation);
-		static bool		ConvertSnapEnum(									const TXString& value, const IXMLFileNodePtr& node,			EGdtfDmxSnap& snap);
-		static bool		ConvertMasterEnum(									const TXString& value, const IXMLFileNodePtr& node,			EGdtfDmxMaster& master);
-		static bool		ConvertPhysicalUnitEnum(							const TXString& value, const IXMLFileNodePtr& node,			EGdtfPhysicalUnit& unit);
-		static bool		ConvertSpecialAttrEnum(								const TXString& value, const IXMLFileNodePtr& node,			EGdtfSpecial& special);
-		static bool		ConvertBeamType(									const TXString& value, const IXMLFileNodePtr& node,			EGdtfBeamType& type);
-        static bool     ConvertEGdtfColorSampleEnum(						const TXString& inVal, const IXMLFileNodePtr& node,			EGdtfColorSample& outVal);        
-        static bool     ConvertEGdtfColorSpace(const TXString & inVal, const IXMLFileNodePtr & node, EGdtfColorSpace & outVal);
-        static bool     ConvertEGdtfInterpolationTo(const TXString & inVal, const IXMLFileNodePtr & node, EGdtfInterpolationTo & outVal);
-		static bool		ConvertHexValue(const TXString & inVal, const IXMLFileNodePtr & node, size_t& outValue);
+        static bool		ConvertUUID(					const TXString& value, const IXMLFileNodePtr& node,			VWFC::Tools::VWUUID& uuid);        
+		static bool		ConvertDate(					const TXString& value, const IXMLFileNodePtr& node,			STime& date);
+		static bool		ConvertColor(					const TXString& value, const IXMLFileNodePtr& node,			CCieColor& color);
+		static bool		ConvertDouble(					const TXString& value, const IXMLFileNodePtr& node,			double& doubleValue);
+		static bool		ConvertMatrix(					const TXString& value, const IXMLFileNodePtr& node,			VWTransformMatrix& ma);
+		static bool		ConvertRotation(				const TXString& value, const IXMLFileNodePtr& node,			VWTransformMatrix& ma);
+		static bool		ConvertPrimitiveType(			const TXString& value, const IXMLFileNodePtr& node,			EGdtfModel_PrimitiveType& type);
+		static bool		ConvertLampeType(				const TXString& value, const IXMLFileNodePtr& node,			EGdtfLampType& lampType);
+		static bool		ConvertInteger(					const TXString& value, const IXMLFileNodePtr& node,			Sint32&	intValue);
+        static bool		ConvertDmxBreak(				const TXString& value, const IXMLFileNodePtr& node,			Sint32&	intValue);
+		static bool		ConvertInteger(					const TXString& value, const IXMLFileNodePtr& node,			Sint8& intValue);
+		static bool		ConvertInteger(					const TXString& value, const IXMLFileNodePtr& node,			size_t& intValue);
+		static bool		ConvertInteger(					const TXString& value, const IXMLFileNodePtr& node,			Sint32&	intValue,						bool& noneValue);
+        static bool     ConvertIntegerArray(				  TXString  values,const IXMLFileNodePtr& node,			TSint32Array& intArray);
+		static bool		ConvertDMXAdress(				const TXString& value, const IXMLFileNodePtr& node,			DMXAddress& intValue);
+		static bool  	ConvertDMXValue(				const TXString& value, const IXMLFileNodePtr& node,		    EGdtfChannelBitResolution chanlReso,	DmxValue& intValue);
+		static bool  	ConvertDMXValue(				const TXString& value, const IXMLFileNodePtr& node,		    EGdtfChannelBitResolution chanlReso,	DmxValue& intValue, bool& noneValue);		
+		static bool		ConvertRelationEnum(			const TXString& value, const IXMLFileNodePtr& node,			EGdtfDmxRelationType& relation);
+		static bool		ConvertSnapEnum(				const TXString& value, const IXMLFileNodePtr& node,			EGdtfDmxSnap& snap);
+		static bool		ConvertMasterEnum(				const TXString& value, const IXMLFileNodePtr& node,			EGdtfDmxMaster& master);
+		static bool		ConvertPhysicalUnitEnum(		const TXString& value, const IXMLFileNodePtr& node,			EGdtfPhysicalUnit& unit);
+		static bool		ConvertSpecialAttrEnum(			const TXString& value, const IXMLFileNodePtr& node,			EGdtfSpecial& special);
+		static bool		ConvertBeamType(				const TXString& value, const IXMLFileNodePtr& node,			EGdtfBeamType& type);
+        static bool     ConvertEGdtfColorSampleEnum(	const TXString& inVal, const IXMLFileNodePtr& node,			EGdtfColorSample& outVal);        
+        static bool     ConvertEGdtfColorSpace(			const TXString& inVal, const IXMLFileNodePtr& node, 		EGdtfColorSpace& outVal);
+        static bool     ConvertEGdtfInterpolationTo(	const TXString& inVal, const IXMLFileNodePtr& node, 		EGdtfInterpolationTo& outVal);
+		static bool		ConvertHexValue(				const TXString& inVal, const IXMLFileNodePtr& node, 		size_t& outValue);
+		static bool     ConvertEGdtfCanHaveChildren(	const TXString& inVal, const IXMLFileNodePtr& node, 		EGdtfCanHaveChildren& outVal);
 
         static bool 	ConvertDmxOffset(const TXString& inVal, const IXMLFileNodePtr& node, DMXAddress& coarse, DMXAddress& fine, DMXAddress& ultra, DMXAddress& uber);
         //-----------------------------------------------------------------------------

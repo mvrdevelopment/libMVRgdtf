@@ -60,6 +60,8 @@ void GdtfUnittest::WriteFile()
 		__checkVCOM(gdtfWrite->SetFixtureThumbnail("MyThumbnail"));
 		__checkVCOM(gdtfWrite->SetLinkedFixtureGUID(linkedUuid));
 
+		__checkVCOM(gdtfWrite->SetCanHaveChildren(EGdtfCanHaveChildren::eNO));
+
         //------------------------------------------------------------------------------    
         // Add Test Resources
         __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestPNG_ThumbNail().c_str(), ERessourceType::RessoureFixture) );
@@ -365,10 +367,14 @@ void GdtfUnittest::ReadFile()
 		this->checkifEqual("GetShortName "				, fixtureShortName	, "My shortName");
 		this->checkifEqual("GetManufacturer "			, manufacturer		, "My Manufacturer");
 		this->checkifEqual("GetFixtureTypeDescription "	, description		, "My Description");
-		this->checkifEqual("GetLongName "	, fixtureLongName		, "My Long Long Name");
+		this->checkifEqual("GetLongName "				, fixtureLongName	, "My Long Long Name");
 
 		__checkVCOM(gdtfRead->GetFixtureGUID(resultUUID));
 		this->checkifEqual("GetFixtureGUID fixtureUUID ", fixtureUUID, resultUUID);
+
+		EGdtfCanHaveChildren canHaveChildren;
+		__checkVCOM(gdtfRead->GetCanHaveChildren(canHaveChildren));
+		this->checkifEqual("GetCanHaveChildren ", (size_t) canHaveChildren, (size_t) EGdtfCanHaveChildren::eNO);
 
 		//-----------------------------------------------------------------------------
 		// Check the file content

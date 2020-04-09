@@ -123,6 +123,10 @@ namespace VectorworksMVR
         private:
         void FreeBuffer();
 
+        //GDTF 1.1
+        virtual VCOMError VCOM_CALLTYPE     GetCanHaveChildren(GdtfDefines::EGdtfCanHaveChildren& value);
+        virtual VCOMError VCOM_CALLTYPE     SetCanHaveChildren(GdtfDefines::EGdtfCanHaveChildren value);
+
 		
 	private:
         SceneData::GdtfFixture* fFixtureObject;
