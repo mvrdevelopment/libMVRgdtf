@@ -892,7 +892,7 @@ namespace SceneData
 		DmxValue				fAdressStart;   
 		double					fPhysicalStart;
 		double					fPhysicalEnd;
-		double					fRealFade;	
+		double					fRealFade;
 		double					fRealAcceleration;				
 		GdtfWheelPtr			fOnWheel;
 		GdtfPhysicalEmitter*	fEmitter;
@@ -1959,6 +1959,7 @@ namespace SceneData
 		TXString		            fFixtureTypeDescription;
 		GdtfFixtureGUID	            fGuid;
 		TXString		            fTumbnailName;
+		EGdtfCanHaveChildren		fCanHaveChildren;
 		TXString		            fTumbnailFullPath_PNG;
         TXString		            fTumbnailFullPath_SVG;
 		
@@ -1966,7 +1967,6 @@ namespace SceneData
 		bool			            fHasLinkedGuid;
         
         GdtfProtocols				fProtocollContainer;
-        
 		//------------------------------------------------
 		// Storage
         
@@ -1995,7 +1995,7 @@ namespace SceneData
 		// 
 		GdtfAttributePtr 				fNoFeature;
 
-public:
+	public:
         static void                     AddError(const GdtfParsingError& error);
         static TGdtfParsingErrorArray*  __ERROR_CONTAINER_POINTER;
         TGdtfParsingErrorArray&         GetParsingErrorArray();
@@ -2004,10 +2004,9 @@ public:
 		size_t 	GetAttachedFileCount();
 		bool	GetAttachedFileCountAt(size_t at, TXString*& outFile);
 
-private:
+	private:
         TGdtfParsingErrorArray          fErrorContainer;
-        
-		
+  
 	public:
 		//----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		// Getter
@@ -2019,11 +2018,14 @@ private:
         GdtfFixtureGUID		        GetGuid() const;
 		GdtfFixtureGUID		        GetLinkedGuid() const;
 		bool				        HasLinkedGuid() const;
-        const TXString&             GetThumbnailName() const;        
-		const GdtfPNGFile&          GetPNGThumnailFullPath();		
+        const TXString&             GetThumbnailName() const;
+		EGdtfCanHaveChildren		GetCanHaveChildren() const;
+		const GdtfPNGFile&          GetPNGThumnailFullPath();
         const TXString&             GetSVGThumnailFullPath();
         GdtfProtocols&				GetProtocollContainer();
-        GdtfPhysicalDescriptions&   GetPhysicalDesciptionsContainer();        
+        GdtfPhysicalDescriptions&   GetPhysicalDesciptionsContainer();
+
+		;
         
         // Setter
 		void				SetName(const TXString& name);
@@ -2033,7 +2035,10 @@ private:
 		void				SetFixtureTypeDescription(const TXString& desc);
 		void				SetGuid(const VWFC::Tools::VWUUID& uuid);
 		void				SetLinkedGuid(const VWFC::Tools::VWUUID& uuid);
-		void				SetThumbnailName(const TXString& fileName);                
+		void				SetThumbnailName(const TXString& fileName);
+		void				SetCanHaveChildren(EGdtfCanHaveChildren canHaveChildren);
+
+
 	public:
 		//----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		// Add calls

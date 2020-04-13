@@ -1419,10 +1419,42 @@ CieColor SceneData::GdtfConverter::ConvertCColor(const CCieColor & color)
      else 
      {
         DSTOP((kEveryone, "Unknown Value for EGdtfInterpolationTo"));
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertColorSample, node);
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_InterpolationTo, node);
         SceneData::GdtfFixture::AddError(error);
 
 		outVal = EGdtfInterpolationTo::Linear;
+     }
+       
+    return true;
+}
+
+/*static*/ TXString GdtfConverter::ConvertEGdtfCanHaveChildren(EGdtfCanHaveChildren value)
+{
+
+    switch (value)
+    {
+		case EGdtfCanHaveChildren::eYES:	return XML_GDTF_CanHaveChildren_Yes;
+		case EGdtfCanHaveChildren::eNO:		return XML_GDTF_CanHaveChildren_No;
+    }
+
+	DSTOP((kEveryone, "Unknown Enum for EGdtfCanHaveChildren"));
+
+    return XML_GDTF_CanHaveChildren_Yes;
+}
+
+
+/*static*/ bool GdtfConverter::ConvertEGdtfCanHaveChildren(const TXString& inVal, const IXMLFileNodePtr& node, EGdtfCanHaveChildren& outVal)
+{
+     if        (inVal == XML_GDTF_CanHaveChildren_Yes)	{ outVal = EGdtfCanHaveChildren::eYES; }     
+     else if   (inVal == XML_GDTF_CanHaveChildren_No)   { outVal = EGdtfCanHaveChildren::eNO; }    
+	 else if   (inVal.IsEmpty())    					{ outVal = EGdtfCanHaveChildren::eYES; } 
+     else 
+     {
+        DSTOP((kEveryone, "Unknown Value for EGdtfCanHaveChildren"));
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_CanHaveChildren, node);
+        SceneData::GdtfFixture::AddError(error);
+
+		outVal = EGdtfCanHaveChildren::eYES;
      }
        
     return true;

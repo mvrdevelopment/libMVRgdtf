@@ -1063,12 +1063,17 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		virtual VCOMError VCOM_CALLTYPE		GetImageRessourcesCount(size_t& count) = 0;
 		virtual MvrString VCOM_CALLTYPE		GetImageRessourcesPathAt(size_t at) = 0;
 
-
 		//-----------------------------------------------------------------------------               
         // BufferWorkflow
 		virtual VCOMError VCOM_CALLTYPE		GetBufferLength(size_t& length) = 0;		
 		virtual VCOMError VCOM_CALLTYPE		ToBuffer(char* outBuffer) = 0;	
 		virtual VCOMError VCOM_CALLTYPE		FromBuffer(const char* inBuffer, size_t length) = 0;
+
+		//-----------------------------------------------------------------------------
+		// GDTF 1.1
+		virtual VCOMError VCOM_CALLTYPE		GetCanHaveChildren(bool& value) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetCanHaveChildren(GdtfDefines::EGdtfCanHaveChildren value) = 0;
+
 	};
     typedef VCOMPtr<IGdtfFixture>	IGdtfFixturePtr;
     const   VWIID IID_IGdtfFixture = { 0x8f7bba09, 0x0753, 0x4971, {0xa9, 0x1b, 0x51, 0xce, 0x96, 0xd2, 0xb6, 0x3f}};

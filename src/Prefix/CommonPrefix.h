@@ -148,6 +148,7 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_FixtureDescription		"Description"
 #define XML_GDTF_FixtureTypeID			"FixtureTypeID"
 #define XML_GDTF_FixtureThumbnail		"Thumbnail"
+#define XML_GDTF_FixtureCanHaveChildren "CanHaveChildren"
 #define XML_GDTF_LinkedUuid				"RefFT"
 
 #define XML_GDTF_FixtureChildNodeAttributeDef		"AttributeDefinitions"
@@ -488,7 +489,12 @@ const Sint32 kMVR_MinorVersion = 4;
 // InterpolationTo Enum
 #define XML_GDTF_InterpolationTo_Linear  "Linear" 
 #define XML_GDTF_InterpolationTo_Step    "Step"
-#define XML_GDTF_InterpolationTo_Log     "Log" 
+#define XML_GDTF_InterpolationTo_Log     "Log"
+
+//-----------------------------------------------------------------------------
+// CanHaveChildren Enum
+#define XML_GDTF_CanHaveChildren_Yes    "Yes" 
+#define XML_GDTF_CanHaveChildren_No     "No"
 
 //-----------------------------------------------------------------------------
 #define XML_GDTF_ColorRenderingIndexCollect             "CRIs"
