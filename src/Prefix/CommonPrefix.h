@@ -371,6 +371,7 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_DMXChannelFuntionPhysicalFrom			"PhysicalFrom"
 #define XML_GDTF_DMXChannelFuntionPhysicalTo			"PhysicalTo"
 #define XML_GDTF_DMXChannelFuntionRealFade				"RealFade"
+#define XML_GDTF_DMXChannelFuntionRealAcceleration		"RealAcceleration"
 #define XML_GDTF_DMXChannelFuntionWheelRef				"Wheel"
 #define XML_GDTF_DMXChannelEmitter						"Emitter"
 

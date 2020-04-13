@@ -3314,6 +3314,11 @@ void GdtfDmxChannelFunction::SetRealFade(double fade)
 	fRealFade = fade;
 }
 
+void GdtfDmxChannelFunction::SetRealAcceleration(double acceleration)
+{
+	fRealAcceleration = acceleration;
+}
+
 GdtfDmxChannelSet* GdtfDmxChannelFunction::AddChannelSet(const TXString &name)
 {
 	GdtfDmxChannelSet* channelSet = new GdtfDmxChannelSet(name, this);
@@ -3337,6 +3342,8 @@ void GdtfDmxChannelFunction::OnPrintToFile(IXMLFileNodePtr pNode)
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionPhysicalFrom,		GdtfConverter::ConvertDouble(fPhysicalStart));
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionPhysicalTo,			GdtfConverter::ConvertDouble(fPhysicalEnd));
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionRealFade,			GdtfConverter::ConvertDouble(fRealFade));
+	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionRealAcceleration,	GdtfConverter::ConvertDouble(fRealAcceleration));
+
 	
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionOriginalAttribute,								fOrignalAttribute);
 	if (fAttribute)		    { pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionAttribute,			    fAttribute->GetNodeReference());}
@@ -3453,6 +3460,8 @@ void GdtfDmxChannelFunction::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	TXString physFrom;	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionPhysicalFrom,		physFrom);	GdtfConverter::ConvertDouble(physFrom, 				pNode,				fPhysicalStart);
 	TXString physTo;	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionPhysicalTo,			physTo);	GdtfConverter::ConvertDouble(physTo, 				pNode,				fPhysicalEnd);
 	TXString realFade;	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionRealFade,			realFade);	GdtfConverter::ConvertDouble(realFade, 				pNode,				fRealFade);
+	TXString realAcc;	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionRealAcceleration,	realAcc);	GdtfConverter::ConvertDouble(realAcc, 				pNode,				fRealAcceleration);
+
 	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionAttribute, 	fUnresolvedAttrRef);	
 	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionWheelRef, 	fUnresolvedWheelRef);
 	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelEmitter, 			fUnresolvedEmitterRef);
@@ -3523,6 +3532,7 @@ void GdtfDmxChannelFunction::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	optional.push_back(XML_GDTF_DMXChannelFuntionModeTo);
 	optional.push_back(XML_GDTF_DMXChannelFuntionRealFade);
     optional.push_back(XML_GDTF_DMXChannelFuntionFilter);
+	optional.push_back(XML_GDTF_DMXChannelFuntionRealAcceleration);
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
 	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
@@ -3630,6 +3640,11 @@ double GdtfDmxChannelFunction::GetPhysicalEnd() const
 double GdtfDmxChannelFunction::GetRealFade() const
 {
 	return fRealFade;
+}
+
+double GdtfDmxChannelFunction::GetRealAcceleration() const
+{
+	return fRealAcceleration;
 }
 
 GdtfWheelPtr GdtfDmxChannelFunction::GetOnWheel() const
