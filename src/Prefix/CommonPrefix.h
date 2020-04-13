@@ -138,7 +138,7 @@ const Sint32 kMVR_MinorVersion = 4;
 
 #define XML_GDTF_ROOTNODENAME			"GDTF"
 #define XML_GDTF_ROOTNODEATTRVERSION	"DataVersion"
-#define XML_GDTF_CurrentVersion			"1.0"
+#define XML_GDTF_CurrentVersion			"1.1"
 
 #define XML_GDTF_FixtureNodeName		"FixtureType"
 #define XML_GDTF_FixtureName			"Name"
