@@ -1703,7 +1703,7 @@ TXString SceneData::SceneDataZip::GetResourceSubFolder(ERessourceType resType)
 	return GdtfConverter::ConvertDMXValue(value,nullptr, chanlReso, intValue);
 }
 
-void GdtfConverter::TraverseNodes(IXMLFileNodePtr root, const TXString& childContainerNodeName,const TXString& childNodeName, TProcessNodeCall processNodeFunction )
+void GdtfConverter::TraverseNodes(IXMLFileNodePtr root, const TXString& childContainerNodeName, const TXString& childNodeName, TProcessNodeCall processNodeFunction)
 {
 	// ------------------------------------------------------------------------------------
 	// Print models

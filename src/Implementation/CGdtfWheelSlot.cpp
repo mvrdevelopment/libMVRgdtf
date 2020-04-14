@@ -32,7 +32,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotImpl::GetColor(Vectorwor
 	// Check Data
 	if( ! fWheelSlot) return kVCOMError_NotInitialized;
 	
-	
     color.fx   = fWheelSlot->GetColor().Get_x();
     color.fy   = fWheelSlot->GetColor().Get_y();
     color.f_Y  = fWheelSlot->GetColor().Get_Y_luminance();

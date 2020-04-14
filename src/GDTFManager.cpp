@@ -968,15 +968,17 @@ TXString GdtfWheelSlotAnimationSystem::GetNodeName()
 // GdtfWheelSlot
 GdtfWheelSlot::GdtfWheelSlot(GdtfWheel* parent)
 {
-	fWheelParent = parent;
-	fFilter 	 = nullptr;
+	fWheelParent 		= parent;
+	fFilter 	 		= nullptr;
+	fAnimationSystem	= nullptr;
 }
 
 GdtfWheelSlot::GdtfWheelSlot(const TXString& name, GdtfWheel* parent)
 {
-	fName		 = name;
-	fWheelParent = parent;
-	fFilter		 = nullptr;
+	fName		 		= name;
+	fWheelParent 		= parent;
+	fFilter		 		= nullptr;
+	fAnimationSystem	= nullptr;
 }
 
 
@@ -1082,11 +1084,15 @@ void GdtfWheelSlot::OnPrintToFile(IXMLFileNodePtr pNode)
 	if(fFilter)	{ pNode->SetNodeAttributeValue(XML_GDTF_WheelSlotFilter,		fFilter->GetNodeReference()); }
 	
 	//------------------------------------------------------------------------------------
-	// Print the childs
+	// Print the children
 	for (GdtfWheelSlotPrismFacet* prism : fPrismFacts)
 	{
 		prism->WriteToNode(pNode);
 	}
+
+	//------------------------------------------------------------------------------------
+	// Print the animation system
+	if(fAnimationSystem) { fAnimationSystem->WriteToNode(pNode); }
 }
 
 void GdtfWheelSlot::OnReadFromNode(const IXMLFileNodePtr& pNode)
@@ -1121,17 +1127,31 @@ void GdtfWheelSlot::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	//------------------------------------------------------------------------------------
 	// Read the wheel slots
 	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_PrismFacetNodeName, [this] (IXMLFileNodePtr objNode) -> void
-								 {
-									 // Create the object
-									 GdtfWheelSlotPrismFacetPtr facet = new GdtfWheelSlotPrismFacet();
-									 
-									 // Read from node
-									 facet->ReadFromNode(objNode);
-									 
-									 // Add to list
-									 fPrismFacts.push_back(facet);
-									 return;
-								 });
+								{
+									// Create the object
+									GdtfWheelSlotPrismFacetPtr facet = new GdtfWheelSlotPrismFacet();
+									
+									// Read from node
+									facet->ReadFromNode(objNode);
+									
+									// Add to list
+									fPrismFacts.push_back(facet);
+									return;
+								});
+
+	//Animation System
+	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_AnimationSystemNodeName, [this] (IXMLFileNodePtr objNode) -> void
+								{
+									// Create the object
+									GdtfWheelSlotAnimationSystemPtr animationSystem = new GdtfWheelSlotAnimationSystem();
+									
+									// Read from node
+									animationSystem->ReadFromNode(objNode);
+									
+									// Add to list
+									fAnimationSystem = animationSystem;
+									return;
+								});
 }
 
 void GdtfWheelSlot::OnErrorCheck(const IXMLFileNodePtr& pNode)
