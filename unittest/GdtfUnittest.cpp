@@ -666,7 +666,7 @@ void GdtfUnittest::ReadFile()
 			MvrString connectorName = gdtfConnector->GetName();
 			this->checkifEqual("Connector Name", connectorName, "My connectorName");
 
-			MvrString type = gdtfConnector->GetName();
+			MvrString type = gdtfConnector->GetType();
 			this->checkifEqual("Connector Type", type, "HDMI");
 
 			Uint32 dmxBreak;

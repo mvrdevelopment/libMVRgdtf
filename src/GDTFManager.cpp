@@ -8046,7 +8046,7 @@ void SceneData::GdtfPhysicalDescriptions::OnPrintToFile(IXMLFileNodePtr pNode)
 
 	// Print Connectors (physicalDescription child)
 	IXMLFileNodePtr ConnectorNode;
-	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_GDTF_ConnectorNodeName, &ConnectorNode)))
+	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_GDTF_ConnectorCollect, &ConnectorNode)))
 	{
 		for (GdtfConnectorPtr connector : fConnectors)
 		{
@@ -8121,7 +8121,7 @@ void SceneData::GdtfPhysicalDescriptions::OnReadFromNode(const IXMLFileNodePtr &
 									});
 	
 	// Read Connectors (PhysicalDescription Child)
-	GdtfConverter::TraverseNodes(pNode, XML_GDTF_PhysicalDescriptionsConnectorCollect, XML_GDTF_ConnectorNodeName, [this] (IXMLFileNodePtr objNode) -> void
+	GdtfConverter::TraverseNodes(pNode, XML_GDTF_ConnectorCollect, XML_GDTF_ConnectorNodeName, [this] (IXMLFileNodePtr objNode) -> void
 									{
 										// Create the object
 										GdtfConnectorPtr connector = new GdtfConnector();
