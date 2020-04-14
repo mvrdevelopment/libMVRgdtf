@@ -368,7 +368,7 @@ TXString SceneData::GdtfConverter::ConvertDoubleArray(TDoubleArray & values, boo
 }
 
 bool SceneData::GdtfConverter::ConvertDoubleArray(TXString values, const IXMLFileNodePtr& node, TDoubleArray & doubleArray)
-/* Takes string in the format: "{Int, Int, ... Int}" and fills the values into the IntArray. */
+/* Takes string in the format: "{double, double, ... double}" and fills the values into the doubleArray. */
 {
     TXString doubleArrayString = values;
     if (values.IsEmpty()) { return false; }
