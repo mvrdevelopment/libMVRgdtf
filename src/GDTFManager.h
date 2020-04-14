@@ -58,6 +58,10 @@ namespace SceneData
     typedef GdtfFilter*	GdtfFilterPtr;
     typedef std::vector<GdtfFilter*>	TGdtfFilterArray;
 
+	class GdtfConnector; 
+    typedef GdtfConnector*	GdtfConnectorPtr;
+    typedef std::vector<GdtfConnector*>	TGdtfConnectorArray;
+
 
 	const Sint32 kDmxBreakOverwriteValue = 0;
 	//------------------------------------------------------------------------------------
@@ -443,11 +447,12 @@ namespace SceneData
         GdtfPhysicalDescriptions();
         ~GdtfPhysicalDescriptions();
     private:        
-        GdtfColorSpace                  fColorSpace;    
-        TGdtfPhysicalEmitterArray		fEmitters;      
-        TGdtfFilterArray                fFilters;       
-        TGdtfDMXProfileArray            fDmxProfiles;         
-        TGdtf_CRIGroupArray             fCRI_Groups; 
+        GdtfColorSpace                  fColorSpace;
+        TGdtfPhysicalEmitterArray		fEmitters;
+        TGdtfFilterArray                fFilters;
+        TGdtfDMXProfileArray            fDmxProfiles;
+        TGdtf_CRIGroupArray             fCRI_Groups;
+		TGdtfConnectorArray				fConnectors;
     public:
         virtual EGdtfObjectType			GetObjectType();
 
@@ -459,11 +464,13 @@ namespace SceneData
         const TGdtfFilterArray&          GetFilterArray();
         const TGdtfDMXProfileArray&      GetDmxProfileArray();
         const TGdtf_CRIGroupArray&       GetCRIGroupArray();
+		const TGdtfConnectorArray&       GetConnectorArray();
         
         GdtfPhysicalEmitterPtr	        AddEmitter(const TXString& name, CCieColor color);
         GdtfFilterPtr                   AddFilter(const TXString& name,  CCieColor color);
         GdtfDMXProfilePtr               AddDmxProfile();
         GdtfCRIGroupPtr                 AddCRIGroup(double colorTsemp);
+		GdtfConnectorPtr                AddConnector(const TXString& name,  const TXString& type);
 
     protected:
         virtual	TXString				GetNodeName();
@@ -1986,6 +1993,44 @@ namespace SceneData
          virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
          virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
      };
+
+	 class GdtfConnector : public GdtfObject
+	{
+	public:
+		GdtfConnector();
+		GdtfConnector(const TXString& name, const TXString& type);
+		~GdtfConnector();
+		
+	private:
+		TXString	fName;
+		TXString	fType;
+		Uint32		fDmxBreak;
+		Sint32		fGender;
+        double		fLength;
+		
+	public:
+        // Getter
+		virtual EGdtfObjectType	GetObjectType();
+        const TXString&			GetName() const;
+		const TXString&			GetType() const;
+		Uint32					GetDmxBreak();
+		Sint32					GetGender();
+		double					GetLength();
+        
+		// Setter
+		void	SetName(const TXString& name);
+		void	SetType(const TXString& type);
+		void	SetDmxBreak(Uint32 dmxBreak);
+		void	SetGender(Sint32 gender);
+        void	SetLength(double length);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+
+	};
 	
 	//------------------------------------------------------------------------------------
 	// GdtfFixture Definition

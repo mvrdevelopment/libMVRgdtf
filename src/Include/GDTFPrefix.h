@@ -99,6 +99,7 @@ namespace VectorworksMVR
             eGdtfFilter                 = 71,
             eGdtfMeasurement            = 72,
             eGdtfAnimationSystem        = 73,
+            eGdtfConnector              = 74,
 		};
 
         enum class EGdtfParsingError : Sint32

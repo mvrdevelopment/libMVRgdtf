@@ -7904,6 +7904,7 @@ SceneData::GdtfPhysicalDescriptions::~GdtfPhysicalDescriptions()
     for (GdtfFilter*          o : fFilters)     { delete o; }
     for (GdtfDMXProfile*      o : fDmxProfiles) { delete o; }
     for (GdtfCRIGroup*        o : fCRI_Groups)  { delete o; }
+	for (GdtfConnector*       o : fConnectors)  { delete o; }
 }
 
 EGdtfObjectType SceneData::GdtfPhysicalDescriptions::GetObjectType()
@@ -7936,6 +7937,11 @@ const TGdtfDMXProfileArray& SceneData::GdtfPhysicalDescriptions::GetDmxProfileAr
 const TGdtf_CRIGroupArray & SceneData::GdtfPhysicalDescriptions::GetCRIGroupArray()
 {
     return fCRI_Groups;
+}
+
+const TGdtfConnectorArray & SceneData::GdtfPhysicalDescriptions::GetConnectorArray()
+{
+    return fConnectors;
 }
 
 GdtfPhysicalEmitterPtr SceneData::GdtfPhysicalDescriptions::AddEmitter(const TXString & name, CCieColor color)
@@ -7971,6 +7977,14 @@ GdtfCRIGroupPtr SceneData::GdtfPhysicalDescriptions::AddCRIGroup(double colorTse
     fCRI_Groups.push_back(criGroup);
 
     return criGroup;
+}
+
+GdtfConnectorPtr SceneData::GdtfPhysicalDescriptions::AddConnector(const TXString& name,  const TXString& type)
+{
+    GdtfConnectorPtr connector = new GdtfConnector(name, type);
+    fConnectors.push_back(connector);
+
+    return connector;
 }
 
 TXString SceneData::GdtfPhysicalDescriptions::GetNodeName()
@@ -8026,6 +8040,17 @@ void SceneData::GdtfPhysicalDescriptions::OnPrintToFile(IXMLFileNodePtr pNode)
 		for (GdtfCRIGroupPtr criGroup : fCRI_Groups)
 		{
 			criGroup->WriteToNode(CRI_CollectNode);
+		}
+		
+	}
+
+	// Print Connectors (physicalDescription child)
+	IXMLFileNodePtr ConnectorNode;
+	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_GDTF_ConnectorNodeName, &ConnectorNode)))
+	{
+		for (GdtfConnectorPtr connector : fConnectors)
+		{
+			connector->WriteToNode(ConnectorNode);
 		}
 		
 	}
@@ -8092,6 +8117,20 @@ void SceneData::GdtfPhysicalDescriptions::OnReadFromNode(const IXMLFileNodePtr &
 										criGroup->ReadFromNode(objNode);
 											
 										fCRI_Groups.push_back(criGroup);
+										return;
+									});
+	
+	// Read Connectors (PhysicalDescription Child)
+	GdtfConverter::TraverseNodes(pNode, XML_GDTF_PhysicalDescriptionsConnectorCollect, XML_GDTF_ConnectorNodeName, [this] (IXMLFileNodePtr objNode) -> void
+									{
+										// Create the object
+										GdtfConnectorPtr connector = new GdtfConnector();
+										 
+										// Read from node
+										connector->ReadFromNode(objNode);
+										 
+										// Add to list
+										fConnectors.push_back(connector);
 										return;
 									});
 	
@@ -8493,4 +8532,142 @@ void SceneData::GdtfMeasurement::OnReadFromNode(const IXMLFileNodePtr & pNode)
         fMeasurementPoints.push_back(measurePt);
         return;
     });
+}
+
+//------------------------------------------------------------------------------------
+// GdtfConnector
+GdtfConnector::GdtfConnector()
+{
+	fDmxBreak 	= 0;
+    fGender 	= 0;
+    fLength 	= 0.0;
+}
+
+GdtfConnector::GdtfConnector(const TXString& name, const TXString& type)
+{
+	fName		= name;
+	fType		= type;
+	fDmxBreak 	= 0;
+    fGender 	= 0;
+    fLength 	= 0.0;
+}
+
+GdtfConnector::~GdtfConnector()
+{
+}
+
+void GdtfConnector::SetName(const TXString &name)
+{
+	fName = name;
+}
+
+void GdtfConnector::SetName(const TXString &type)
+{
+	fType = type;
+}
+
+void SceneData::GdtfConnector::SetDmxBreak(Uint32 dmxBreak)
+{
+    fDmxBreak = dmxBreak;
+}
+
+void SceneData::GdtfConnector::SetGender(Sint32 gender)
+{
+    fGender = gender;
+}
+
+void SceneData::GdtfConnector::SetLength(double length)
+{
+    fLength = length;
+}
+
+void GdtfConnector::OnPrintToFile(IXMLFileNodePtr pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnPrintToFile(pNode);
+	
+	// ------------------------------------------------------------------------------------
+	// Print node attributes
+	pNode->SetNodeAttributeValue(XML_GDTF_ConnectorName,		fName);
+	pNode->SetNodeAttributeValue(XML_GDTF_ConnectorType,		fType);
+	pNode->SetNodeAttributeValue(XML_GDTF_ConnectorDmxBreak, 	GdtfConverter::ConvertInteger(fDmxBreak));
+	pNode->SetNodeAttributeValue(XML_GDTF_ConnectorGender,		GdtfConverter::ConvertInteger(fGender));
+    pNode->SetNodeAttributeValue(XML_GDTF_ConnectorLength, 		GdtfConverter::ConvertDouble(fLength));
+}
+
+void GdtfConnector::OnReadFromNode(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnReadFromNode(pNode);
+	
+	// ------------------------------------------------------------------------------------
+	// Read node attributes
+	pNode->GetNodeAttributeValue(XML_GDTF_ConnectorName, fName);
+	pNode->GetNodeAttributeValue(XML_GDTF_ConnectorType, fType);
+
+    TXString dmxBreakStr;   pNode->GetNodeAttributeValue(XML_GDTF_ConnectorDmxBreak, dmxBreakStr);		
+    GdtfConverter::ConvertInteger(dmxBreakStr, pNode, fDmxBreak);
+	TXString genderStr;   pNode->GetNodeAttributeValue(XML_GDTF_ConnectorGender, genderStr);		
+    GdtfConverter::ConvertInteger(genderStr, pNode, fGender);
+	TXString lengthStr;   pNode->GetNodeAttributeValue(XML_GDTF_ConnectorLength, lengthStr);		
+    GdtfConverter::ConvertDouble(lengthStr, pNode, fLength);
+}
+
+void GdtfConnector::OnErrorCheck(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnErrorCheck(pNode);
+
+	//------------------------------------------------------------------------------------
+	// Create needed and optional Attribute Arrays
+	TXStringArray needed;
+	TXStringArray optional;
+	needed.push_back(XML_GDTF_ConnectorName);
+	needed.push_back(XML_GDTF_ConnectorType);
+	    
+	optional.push_back(XML_GDTF_ConnectorDmxBreak);
+	optional.push_back(XML_GDTF_ConnectorGender);
+    optional.push_back(XML_GDTF_ConnectorLength);
+
+	//------------------------------------------------------------------------------------
+	// Check Attributes for node
+	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
+}
+
+EGdtfObjectType GdtfConnector::GetObjectType()
+{
+	return EGdtfObjectType::eGdtfConnector;
+}
+
+TXString GdtfConnector::GetNodeName()
+{
+	return XML_GDTF_ConnectorNodeName;
+}
+
+const TXString& GdtfConnector::GetName() const
+{
+	return fName;
+}
+
+const TXString& GdtfConnector::GetType() const;
+{
+	return fType;
+}
+
+Uint32 GdtfConnector::GetDmxBreak()
+{
+	return fDmxBreak;
+}
+
+Sint32 SceneData::GdtfConnector::GetGender()
+{
+    return fGender;
+}
+
+double SceneData::GdtfConnector::GetLength()
+{
+    return fLength;
 }

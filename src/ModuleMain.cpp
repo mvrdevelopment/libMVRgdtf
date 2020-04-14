@@ -48,6 +48,7 @@
 #include "Implementation/CGdtfMeasurement.h"
 #include "Implementation/CGdtfFilter.h"
 #include "Implementation/CGdtfColorSpace.h"
+#include "Implementation/CGdtfConnector.h"
 #include "Implementation/CUtility.h"
 
 
@@ -157,6 +158,8 @@ extern "C" VectorworksMVR::VCOMError VWQueryInterface(const VectorworksMVR::VWII
         resultInterface = new CGdtfFilterImpl();
     else if (iid == VectorworksMVR::IID_GdtfColorSpace)
         resultInterface = new CGdtfColorSpaceImpl();
+    else if (iid == VectorworksMVR::IID_GdtfConnector)
+        resultInterface = new CGdtfConnectorImpl();
 	else if (iid == VectorworksMVR::Filing::IID_FileIdentifier)
 		resultInterface = new CFileIdentifier();
 	else if (iid == VectorworksMVR::Filing::IID_FolderIdentifier )

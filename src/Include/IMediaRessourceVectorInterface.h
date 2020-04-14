@@ -1003,7 +1003,7 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		virtual VCOMError VCOM_CALLTYPE     SetType(MvrString type) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetDmxBreak(Uint32 dmxBreak) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetGender(Sint32 gender) = 0;	
-        virtual VCOMError VCOM_CALLTYPE     SetDominantWaveLength(double length) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetLength(double length) = 0;
 
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
@@ -1121,6 +1121,10 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		// GDTF 1.1
 		virtual VCOMError VCOM_CALLTYPE		GetCanHaveChildren(GdtfDefines::EGdtfCanHaveChildren& value) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetCanHaveChildren(GdtfDefines::EGdtfCanHaveChildren value) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetConnectorCount(size_t& count)=0;
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateConnector(MvrString name, MvrString type, VectorworksMVR::IGdtfConnector** outVal)=0;
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetEmitterAt(size_t at, VectorworksMVR::IGdtfConnector** value)=0;
 
 	};
     typedef VCOMPtr<IGdtfFixture>	IGdtfFixturePtr;

@@ -78,6 +78,7 @@
     <ClCompile Include="..\src\Implementation\CGdtfAttribute.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfBreak.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfColorSpace.cpp" />
+    <ClCompile Include="..\src\Implementation\CGdtfConnector.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfCRI.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfCRIGroup.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfDmxChannel.cpp" />
@@ -110,8 +111,8 @@
     <ClCompile Include="..\src\Implementation\CGdtfUserPreset.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfWheel.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfWheelSlot.cpp" />
-    <ClCompile Include="..\src\Implementation\CGdtfWheelSlotPrismFacet.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfWheelSlotAnimationSystem.cpp" />
+    <ClCompile Include="..\src\Implementation\CGdtfWheelSlotPrismFacet.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfXmlParsingError.cpp" />
     <ClCompile Include="..\src\Implementation\CGeometryReferenceImpl.cpp" />
     <ClCompile Include="..\src\Implementation\CMediaRessourceVectorImpl.cpp" />
@@ -167,6 +168,7 @@
     <ClInclude Include="..\src\Implementation\CGdtfAttribute.h" />
     <ClInclude Include="..\src\Implementation\CGdtfBreak.h" />
     <ClInclude Include="..\src\Implementation\CGdtfColorSpace.h" />
+    <ClInclude Include="..\src\Implementation\CGdtfConnector.h" />
     <ClInclude Include="..\src\Implementation\CGdtfCRI.h" />
     <ClInclude Include="..\src\Implementation\CGdtfCRIGroup.h" />
     <ClInclude Include="..\src\Implementation\CGdtfDmxChannel.h" />
@@ -199,8 +201,8 @@
     <ClInclude Include="..\src\Implementation\CGdtfUserPreset.h" />
     <ClInclude Include="..\src\Implementation\CGdtfWheel.h" />
     <ClInclude Include="..\src\Implementation\CGdtfWheelSlot.h" />
-    <ClInclude Include="..\src\Implementation\CGdtfWheelSlotPrismFacet.h" />
     <ClInclude Include="..\src\Implementation\CGdtfWheelSlotAnimationSystem.h" />
+    <ClInclude Include="..\src\Implementation\CGdtfWheelSlotPrismFacet.h" />
     <ClInclude Include="..\src\Implementation\CGdtfXmlParsingError.h" />
     <ClInclude Include="..\src\Implementation\CGeometryReferenceImpl.h" />
     <ClInclude Include="..\src\Implementation\CMediaRessourceVectorImpl.h" />
