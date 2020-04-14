@@ -989,6 +989,26 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
 	};
 	typedef VCOMPtr<IGdtfDMXProfile>	IGdtfDMXProfilePtr;
+
+	class DYNAMIC_ATTRIBUTE IGdtfConnector : public IVWUnknown
+    {
+		public:
+        virtual MvrString VCOM_CALLTYPE     GetName() = 0;
+		virtual MvrString VCOM_CALLTYPE     GetType() = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetDmxBreak(Uint32& outDmxBreak) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetGender(Sint32& outGender) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetLength(double& outLength) = 0;
+
+        virtual VCOMError VCOM_CALLTYPE     SetName(MvrString name) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetType(MvrString type) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetDmxBreak(Uint32 dmxBreak) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetGender(Sint32 gender) = 0;	
+        virtual VCOMError VCOM_CALLTYPE     SetDominantWaveLength(double length) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+    };
+    typedef VCOMPtr<IGdtfConnector>	IGdtfConnectorPtr;
 	
     class DYNAMIC_ATTRIBUTE IGdtfFixture : public IVWUnknown
     {
