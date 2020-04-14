@@ -199,6 +199,16 @@ void GdtfUnittest::WriteFile()
             gdtfMeasurPoint->SetWaveLength(2.34);
 		}
 
+		//------------------------------------------------------------------------------    
+		// Set Connector
+		IGdtfConnectorPtr gdtfConnector;
+		if (__checkVCOM(gdtfWrite->CreateConnector("My connectorName", "HDMI", &gdtfConnector)))
+		{
+            gdtfConnector->SetDmxBreak(2);
+            gdtfConnector->SetGender(-1);
+			gdtfConnector->SetLength(9000.1);
+		}
+
 
 		//------------------------------------------------------------------------------------------------------------------
 		// Set ColorSpace Space
@@ -615,8 +625,7 @@ void GdtfUnittest::ReadFile()
 			}
 		} // emitter loop
 
-
-        //------------------------------------------------------------------------------------------------------------------
+		//------------------------------------------------------------------------------------------------------------------
         // Filters        
         size_t filterCount; __checkVCOM(gdtfRead->GetFilterCount(filterCount));
         
@@ -642,6 +651,38 @@ void GdtfUnittest::ReadFile()
         // (The Meaurement attributes are check in the Emitter test.)
         size_t measruementCount; __checkVCOM(gdtfFilter->GetMeasurementCount(measruementCount));
         this->checkifEqual(" Filter.Measurements Count", measruementCount, size_t(3) );
+
+
+        //------------------------------------------------------------------------------------------------------------------
+        // Connectors        
+        size_t connectorCount; __checkVCOM(gdtfRead->GetConnectorCount(connectorCount));
+        
+        this->checkifEqual("Connector Count", connectorCount, size_t(1));
+
+        IGdtfConnectorPtr gdtfConnector;
+		
+		if(__checkVCOM(gdtfRead->GetConnectorAt(0, &gdtfConnector)))
+		{
+			MvrString connectorName = gdtfConnector->GetName();
+			this->checkifEqual("Connector Name", connectorName, "My connectorName");
+
+			MvrString type = gdtfConnector->GetName();
+			this->checkifEqual("Connector Type", type, "HDMI");
+
+			Uint32 dmxBreak;
+			__checkVCOM(gdtfConnector->GetDmxBreak(dmxBreak));
+			this->checkifEqual("Connector DmxBreak", (size_t)dmxBreak, (size_t)2);
+
+			Sint32 gender;
+			__checkVCOM(gdtfConnector->GetGender(gender));
+			this->checkifEqual("Connector Gender", gender, -1);
+
+			double length;
+			__checkVCOM(gdtfConnector->GetLength(length));
+			this->checkifEqual("Connector Length", length, 9000.1);
+		}
+
+        
 
 		//------------------------------------------------------------------------------------------------------------------
 		// Set ColorSpace Space
