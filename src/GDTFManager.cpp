@@ -8561,7 +8561,7 @@ void GdtfConnector::SetName(const TXString &name)
 	fName = name;
 }
 
-void GdtfConnector::SetName(const TXString &type)
+void GdtfConnector::SetType(const TXString &type)
 {
 	fType = type;
 }
@@ -8652,7 +8652,7 @@ const TXString& GdtfConnector::GetName() const
 	return fName;
 }
 
-const TXString& GdtfConnector::GetType() const;
+const TXString& GdtfConnector::GetType() const
 {
 	return fType;
 }

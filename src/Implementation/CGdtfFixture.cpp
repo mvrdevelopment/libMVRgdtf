@@ -23,6 +23,7 @@
 #include "GdtfError.h"
 #include "CGdtfFilter.h"
 #include "CGdtfColorSpace.h"
+#include "CGdtfConnector.h"
 
 using namespace VectorworksMVR::Filing;
 
@@ -1945,4 +1946,106 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::SetCanHaveChildren(G
 	fFixtureObject->SetCanHaveChildren(value);
 	
 	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetConnectorCount(size_t &count)
+{
+    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
+
+    count = fFixtureObject->GetPhysicalDesciptionsContainer().GetConnectorArray().size();
+
+    return kVCOMError_NoError;
+}
+
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetConnectorAt(size_t at, VectorworksMVR::IGdtfConnector** value)
+{
+    // Check if Set
+    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
+
+    // Check if no Overflow
+    if (at >= fFixtureObject->GetPhysicalDesciptionsContainer().GetConnectorArray().size()) { return kVCOMError_OutOfBounds; }
+
+
+    SceneData::GdtfConnector* gdtfConnector = fFixtureObject->GetPhysicalDesciptionsContainer().GetConnectorArray()[at];
+    
+    //---------------------------------------------------------------------------
+    // Initialize Object
+    CGdtfConnectorImpl* pConnectorObj = nullptr;
+
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfConnector, (IVWUnknown**)& pConnectorObj)))
+    {
+        // Check Casting
+        CGdtfConnectorImpl* pResultInterface = dynamic_cast<CGdtfConnectorImpl*>(pConnectorObj);
+        if (pResultInterface)
+        {
+            pResultInterface->setPointer(gdtfConnector);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+
+    //---------------------------------------------------------------------------
+    // Check Incoming Object
+    if (*value)
+    {
+        (*value)->Release();
+        *value = NULL;
+    }
+
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *value = pConnectorObj;
+
+    return kVCOMError_NoError;
+}
+
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateConnector(MvrString name, MvrString type, VectorworksMVR::IGdtfConnector **outVal)
+{
+    // Check if Set
+    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
+
+
+    SceneData::GdtfConnector* gdtfConnector = fFixtureObject->GetPhysicalDesciptionsContainer().AddConnector(name, type);
+
+    //---------------------------------------------------------------------------
+    // Initialize Object
+    CGdtfConnectorImpl* pConnectorObj = nullptr;
+
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfConnector, (IVWUnknown**)& pConnectorObj)))
+    {
+        // Check Casting
+        CGdtfConnectorImpl* pResultInterface = dynamic_cast<CGdtfConnectorImpl*>(pConnectorObj);
+        if (pResultInterface)
+        {
+            pResultInterface->setPointer(gdtfConnector);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+
+    //---------------------------------------------------------------------------
+    // Check Incomming Object
+    if (*outVal)
+    {
+        (*outVal)->Release();
+        *outVal = NULL;
+    }
+
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *outVal = pConnectorObj;
+
+    return kVCOMError_NoError;
 }
