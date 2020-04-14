@@ -1138,20 +1138,18 @@ void GdtfWheelSlot::OnReadFromNode(const IXMLFileNodePtr& pNode)
 									fPrismFacts.push_back(facet);
 									return;
 								});
-
+	
 	//Animation System
-	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_AnimationSystemNodeName, [this] (IXMLFileNodePtr objNode) -> void
-								{
-									// Create the object
-									GdtfWheelSlotAnimationSystemPtr animationSystem = new GdtfWheelSlotAnimationSystem();
-									
-									// Read from node
-									animationSystem->ReadFromNode(objNode);
-									
-									// Add to list
-									fAnimationSystem = animationSystem;
-									return;
-								});
+	IXMLFileNodePtr animationSystemNode;
+	pNode->GetChildNode(XML_GDTF_AnimationSystemNodeName, &animationSystemNode);
+	if(animationSystemNode != nullptr)
+	{
+		GdtfWheelSlotAnimationSystemPtr animationSystem = new GdtfWheelSlotAnimationSystem();
+		animationSystem->ReadFromNode(animationSystemNode);
+		fAnimationSystem = animationSystem;
+	}
+	
+
 }
 
 void GdtfWheelSlot::OnErrorCheck(const IXMLFileNodePtr& pNode)
