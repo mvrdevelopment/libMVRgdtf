@@ -5159,6 +5159,18 @@ GdtfFilterPtr GdtfFixture::getFilterByRef(const TXString& ref)
 	return nullptr;
 }
 
+GdtfConnectorPtr GdtfFixture::getConnectorByRef(const TXString& ref) 
+{
+    for (GdtfConnectorPtr connector : fPhysicalDesciptions.GetConnectorArray())
+    {
+        if (connector->GetNodeReference() == ref) { return connector; }
+    }
+
+	// When this line is reached nothing was found.
+	DSTOP ((kEveryone, "Failed to resolve GdtfConnectorPtr."));
+	return nullptr;
+}
+
 GdtfDmxChannelFunctionPtr GdtfFixture::getDmxFunctionByRef(const TXString& ref, GdtfDmxModePtr mode)
 {
 	for(GdtfDmxChannelPtr channel : mode->GetChannelArray())
@@ -5193,6 +5205,7 @@ void GdtfFixture::ResolveAllReferences()
     ResolveDMXPersonalityRefs();
 	ResolveAttribRefs();
 	ResolveWheelSlots();
+	ResolvePowerConsumptions();
 }
 
 void GdtfFixture::ResolveGeometryRefs()
@@ -5277,6 +5290,19 @@ void GdtfFixture::ResolveWheelSlots()
 				GdtfFilterPtr filter = getFilterByRef(ref);
 				slot->SetFilter(filter);
 			}
+		}
+	}
+}
+
+void GdtfFixture::ResolvePowerConsumptions()
+{
+	for(GdtfPowerConsumptionPtr powerConsumption : fPhysicalDesciptions.GetPowerConsumptionArray())
+	{
+		TXString ref = powerConsumption->GetUnresolvedConnector();
+		if( ! ref.IsEmpty())
+		{
+			GdtfConnectorPtr connector = getConnectorByRef(ref);
+			powerConsumption->SetConnector(connector);
 		}
 	}
 }
@@ -7900,11 +7926,13 @@ SceneData::GdtfPhysicalDescriptions::GdtfPhysicalDescriptions()
 
 SceneData::GdtfPhysicalDescriptions::~GdtfPhysicalDescriptions()
 {
-    for (GdtfPhysicalEmitter* o : fEmitters)    { delete o; }
-    for (GdtfFilter*          o : fFilters)     { delete o; }
-    for (GdtfDMXProfile*      o : fDmxProfiles) { delete o; }
-    for (GdtfCRIGroup*        o : fCRI_Groups)  { delete o; }
-	for (GdtfConnector*       o : fConnectors)  { delete o; }
+    for (GdtfPhysicalEmitter* 	o : fEmitters)    		{ delete o; }
+    for (GdtfFilter*          	o : fFilters)     		{ delete o; }
+    for (GdtfDMXProfile*      	o : fDmxProfiles) 		{ delete o; }
+    for (GdtfCRIGroup*        	o : fCRI_Groups)  		{ delete o; }
+	for (GdtfConnector*       	o : fConnectors)  		{ delete o; }
+
+	for (GdtfPowerConsumption*	o : fPowerConsumptions) { delete o; }
 }
 
 EGdtfObjectType SceneData::GdtfPhysicalDescriptions::GetObjectType()
@@ -7916,8 +7944,6 @@ GdtfColorSpace* SceneData::GdtfPhysicalDescriptions::GetColorSpace()
 {
     return & fColorSpace;
 }
-
-
 
 const TGdtfPhysicalEmitterArray& SceneData::GdtfPhysicalDescriptions::GetPhysicalEmitterArray()
 {
@@ -7942,6 +7968,11 @@ const TGdtf_CRIGroupArray & SceneData::GdtfPhysicalDescriptions::GetCRIGroupArra
 const TGdtfConnectorArray & SceneData::GdtfPhysicalDescriptions::GetConnectorArray()
 {
     return fConnectors;
+}
+
+const TGdtfPowerConsumptionArray & SceneData::GdtfPhysicalDescriptions::GetPowerConsumptionArray()
+{
+    return fPowerConsumptions;
 }
 
 GdtfPhysicalEmitterPtr SceneData::GdtfPhysicalDescriptions::AddEmitter(const TXString & name, CCieColor color)
@@ -7985,6 +8016,14 @@ GdtfConnectorPtr SceneData::GdtfPhysicalDescriptions::AddConnector(const TXStrin
     fConnectors.push_back(connector);
 
     return connector;
+}
+
+GdtfPowerConsumptionPtr SceneData::GdtfPhysicalDescriptions::AddPowerConsumption(GdtfConnectorPtr connector)
+{
+    GdtfPowerConsumptionPtr powerConsumption = new GdtfPowerConsumption(connector);
+    fPowerConsumptions.push_back(powerConsumption);
+
+    return powerConsumption;
 }
 
 TXString SceneData::GdtfPhysicalDescriptions::GetNodeName()
@@ -8642,6 +8681,11 @@ EGdtfObjectType GdtfConnector::GetObjectType()
 	return EGdtfObjectType::eGdtfConnector;
 }
 
+TXString GdtfConnector::GetNodeReference() 
+{
+    return GetName();
+}
+
 TXString GdtfConnector::GetNodeName()
 {
 	return XML_GDTF_ConnectorNodeName;
@@ -8662,12 +8706,193 @@ Uint32 GdtfConnector::GetDmxBreak()
 	return fDmxBreak;
 }
 
-Sint32 SceneData::GdtfConnector::GetGender()
+Sint32 GdtfConnector::GetGender()
 {
     return fGender;
 }
 
-double SceneData::GdtfConnector::GetLength()
+double GdtfConnector::GetLength()
 {
     return fLength;
+}
+
+//------------------------------------------------------------------------------------
+// GdtfPowerConsumption
+GdtfPowerConsumption::GdtfPowerConsumption()
+{
+	fValue 			= 0.0;
+	fPowerFactor 	= 1.0;
+	fConnector 		= nullptr;
+    fVoltageLow 	= 90.0;
+    fVoltageHigh 	= 240.0;
+	fFrequencyLow 	= 50.0;
+    fFrequencyHigh 	= 60.0;
+}
+
+GdtfPowerConsumption::GdtfPowerConsumption(GdtfConnector* connector)
+{
+	fValue 			= 0.0;
+	fPowerFactor 	= 1.0;
+	fConnector 		= connector;
+    fVoltageLow 	= 90.0;
+    fVoltageHigh 	= 240.0;
+	fFrequencyLow 	= 50.0;
+    fFrequencyHigh 	= 60.0;
+}
+
+GdtfPowerConsumption::~GdtfPowerConsumption()
+{
+}
+
+// Setters
+void GdtfPowerConsumption::SetValue(double value)
+{
+	fValue = value;
+}
+
+void GdtfPowerConsumption::SetPowerFactor(double powerFactor)
+{
+	fPowerFactor = powerFactor;
+}
+
+void GdtfPowerConsumption::SetConnector(GdtfConnector* connector)
+{
+	fConnector = connector;
+}
+
+void GdtfPowerConsumption::SetVoltageLow(double voltageLow)
+{
+	fVoltageLow = voltageLow;
+}
+
+void GdtfPowerConsumption::SetVoltageHigh(double voltageHigh)
+{
+	fVoltageHigh = voltageHigh;
+}
+
+void GdtfPowerConsumption::SetFrequencyLow(double frequencyLow)
+{
+	fFrequencyLow = frequencyLow;
+}
+
+void GdtfPowerConsumption::SetFrequencyHigh(double frequencyHigh)
+{
+	fFrequencyHigh = frequencyHigh;
+}
+
+void GdtfPowerConsumption::OnPrintToFile(IXMLFileNodePtr pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnPrintToFile(pNode);
+	
+	// ------------------------------------------------------------------------------------
+	// Print node attributes
+    pNode->SetNodeAttributeValue(XML_GDTF_PowerConsumptionValue, 			GdtfConverter::ConvertDouble(fValue));
+	pNode->SetNodeAttributeValue(XML_GDTF_PowerConsumptionPowerFactor,		GdtfConverter::ConvertDouble(fPowerFactor));
+	if(fConnector)	{ pNode->SetNodeAttributeValue(XML_GDTF_PowerConsumptionConnector,	fConnector->GetNodeReference()); }
+	pNode->SetNodeAttributeValue(XML_GDTF_PowerConsumptionVoltageLow, 		GdtfConverter::ConvertDouble(fVoltageLow));
+	pNode->SetNodeAttributeValue(XML_GDTF_PowerConsumptionVoltageHigh, 		GdtfConverter::ConvertDouble(fVoltageHigh));
+	pNode->SetNodeAttributeValue(XML_GDTF_PowerConsumptionFrequencyLow, 	GdtfConverter::ConvertDouble(fFrequencyLow));
+	pNode->SetNodeAttributeValue(XML_GDTF_PowerConsumptionFrequencyHigh,	GdtfConverter::ConvertDouble(fFrequencyHigh));
+
+}
+
+void GdtfPowerConsumption::OnReadFromNode(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnReadFromNode(pNode);
+	
+	// ------------------------------------------------------------------------------------
+	// Read node attributes
+	TXString valueStr;   pNode->GetNodeAttributeValue(XML_GDTF_PowerConsumptionValue, valueStr);		
+    GdtfConverter::ConvertDouble(valueStr, pNode, fValue);
+	TXString powerFactorStr;   pNode->GetNodeAttributeValue(XML_GDTF_PowerConsumptionPowerFactor, powerFactorStr);		
+    GdtfConverter::ConvertDouble(powerFactorStr, pNode, fPowerFactor);
+
+	pNode->GetNodeAttributeValue(XML_GDTF_PowerConsumptionConnector, fUnresolvedConnector);
+
+	TXString voltageLowStr;   pNode->GetNodeAttributeValue(XML_GDTF_PowerConsumptionVoltageLow, voltageLowStr);		
+    GdtfConverter::ConvertDouble(voltageLowStr, pNode, fVoltageLow);
+	TXString voltageHighStr;   pNode->GetNodeAttributeValue(XML_GDTF_PowerConsumptionVoltageHigh, voltageHighStr);		
+    GdtfConverter::ConvertDouble(voltageHighStr, pNode, fVoltageHigh);
+	TXString frequencyLowStr;   pNode->GetNodeAttributeValue(XML_GDTF_PowerConsumptionFrequencyLow, frequencyLowStr);		
+    GdtfConverter::ConvertDouble(frequencyLowStr, pNode, fFrequencyLow);
+	TXString frequencyHighStr;   pNode->GetNodeAttributeValue(XML_GDTF_PowerConsumptionFrequencyHigh, frequencyHighStr);		
+    GdtfConverter::ConvertDouble(frequencyHighStr, pNode, fFrequencyHigh);
+}
+
+void GdtfPowerConsumption::OnErrorCheck(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnErrorCheck(pNode);
+
+	//------------------------------------------------------------------------------------
+	// Create needed and optional Attribute Arrays
+	TXStringArray needed;
+	TXStringArray optional;
+	needed.push_back(XML_GDTF_PowerConsumptionConnector);
+	    
+	optional.push_back(XML_GDTF_PowerConsumptionValue);
+	optional.push_back(XML_GDTF_PowerConsumptionPowerFactor);
+	optional.push_back(XML_GDTF_PowerConsumptionVoltageLow);
+	optional.push_back(XML_GDTF_PowerConsumptionVoltageHigh);
+	optional.push_back(XML_GDTF_PowerConsumptionFrequencyLow);
+	optional.push_back(XML_GDTF_PowerConsumptionFrequencyHigh);
+	
+	//------------------------------------------------------------------------------------
+	// Check Attributes for node
+	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
+}
+
+EGdtfObjectType GdtfPowerConsumption::GetObjectType()
+{
+	return EGdtfObjectType::eGdtfPowerConsumption;
+}
+
+TXString GdtfPowerConsumption::GetNodeName()
+{
+	return XML_GDTF_PowerConsumptionNodeName;
+}
+
+double GdtfPowerConsumption::GetValue()
+{
+    return fValue;
+}
+
+double GdtfPowerConsumption::GetPowerFactor()
+{
+    return fPowerFactor;
+}
+
+GdtfConnector* GdtfPowerConsumption::GetConnector()
+{
+	return fConnector;
+}
+
+const TXString& GdtfPowerConsumption::GetUnresolvedConnector()
+{
+	return fUnresolvedConnector;
+}
+
+double GdtfPowerConsumption::GetVoltageLow()
+{
+	return fVoltageLow;
+}
+
+double GdtfPowerConsumption::GetVoltageHigh()
+{
+	return fVoltageHigh;
+}
+
+double GdtfPowerConsumption::GetFrequencyLow()
+{
+	return fFrequencyLow;
+}
+
+double GdtfPowerConsumption::GetFrequencyHigh()
+{
+	return fFrequencyHigh;
 }

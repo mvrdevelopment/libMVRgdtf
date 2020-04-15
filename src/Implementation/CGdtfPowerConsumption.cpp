@@ -45,7 +45,7 @@ VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfPowerConsumptionImpl::GetConnector(
 
     //---------------------------------------------------------------------------
     // Initialize Object
-    SceneData::GdtfConnector*	gdtfConnector = fPowerConsumption->GetFilter();
+    SceneData::GdtfConnector*	gdtfConnector = fPowerConsumption->GetConnector();
     if (!gdtfConnector) { return kVCOMError_NotSet; }
 
     CGdtfConnectorImpl*		pConnectorObj = nullptr;
