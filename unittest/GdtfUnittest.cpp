@@ -387,9 +387,9 @@ void GdtfUnittest::ReadFile()
 		__checkVCOM(gdtfRead->GetFixtureGUID(resultUUID));
 		this->checkifEqual("GetFixtureGUID fixtureUUID ", fixtureUUID, resultUUID);
 
-		EGdtfCanHaveChildren canHaveChildren;
+		bool canHaveChildren;
 		__checkVCOM(gdtfRead->GetCanHaveChildren(canHaveChildren));
-		this->checkifEqual("GetCanHaveChildren ", (size_t) canHaveChildren, (size_t) EGdtfCanHaveChildren::eNO);
+		this->checkifEqual("GetCanHaveChildren ", canHaveChildren, false);
 
 		//-----------------------------------------------------------------------------
 		// Check the file content

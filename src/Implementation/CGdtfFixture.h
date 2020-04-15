@@ -124,7 +124,7 @@ namespace VectorworksMVR
         void FreeBuffer();
 
         //GDTF 1.1
-        virtual VCOMError VCOM_CALLTYPE     GetCanHaveChildren(GdtfDefines::EGdtfCanHaveChildren& value);
+        virtual VCOMError VCOM_CALLTYPE     GetCanHaveChildren(bool& value);
         virtual VCOMError VCOM_CALLTYPE     SetCanHaveChildren(GdtfDefines::EGdtfCanHaveChildren value);
 
         virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetConnectorCount(size_t& count);
