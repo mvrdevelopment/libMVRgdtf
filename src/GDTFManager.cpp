@@ -8094,6 +8094,16 @@ void SceneData::GdtfPhysicalDescriptions::OnPrintToFile(IXMLFileNodePtr pNode)
 		
 	}
 
+	// Print Properties (physicalDescription child)
+	IXMLFileNodePtr PropertiesNode;
+	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_GDTF_PropertiesCollect, &PropertiesNode)))
+	{
+		for (GdtfPowerConsumptionPtr powerConsumption : fPowerConsumptions)
+		{
+			powerConsumption->WriteToNode(PropertiesNode);
+		}
+	}
+
 }
 
 void SceneData::GdtfPhysicalDescriptions::OnReadFromNode(const IXMLFileNodePtr & pNode)
@@ -8170,6 +8180,20 @@ void SceneData::GdtfPhysicalDescriptions::OnReadFromNode(const IXMLFileNodePtr &
 										 
 										// Add to list
 										fConnectors.push_back(connector);
+										return;
+									});
+	
+	// Read Properties (PhysicalDescription Child)
+	GdtfConverter::TraverseNodes(pNode, XML_GDTF_PropertiesCollect, XML_GDTF_PowerConsumptionNodeName, [this] (IXMLFileNodePtr objNode) -> void
+									{
+										// Create the object
+										GdtfPowerConsumptionPtr powerConsumption = new GdtfPowerConsumption();
+										 
+										// Read from node
+										powerConsumption->ReadFromNode(objNode);
+										 
+										// Add to list
+										fPowerConsumptions.push_back(powerConsumption);
 										return;
 									});
 	
