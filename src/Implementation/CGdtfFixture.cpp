@@ -2167,7 +2167,7 @@ VCOMError VCOM_CALLTYPE	CGdtfFixtureImpl::GetOperatingTemperatureLow(double& val
 {
     if(!fFixtureObject) {return kVCOMError_NotInitialized;}
 	
-	value = fFixtureObject->GetOperatingTemperatureLow();
+	value = fFixtureObject->GetPhysicalDesciptionsContainer().GetOperatingTemperatureLow();
 	
 	return kVCOMError_NoError;
     
@@ -2177,7 +2177,7 @@ VCOMError VCOM_CALLTYPE	CGdtfFixtureImpl::SetOperatingTemperatureLow(double valu
 {
     if(!fFixtureObject) {return kVCOMError_NotInitialized;}
 	
-	fFixtureObject->SetOperatingTemperatureLow(value);
+	fFixtureObject->GetPhysicalDesciptionsContainer().SetOperatingTemperatureLow(value);
 	
 	return kVCOMError_NoError;
 }
@@ -2186,7 +2186,7 @@ VCOMError VCOM_CALLTYPE	CGdtfFixtureImpl::GetOperatingTemperatureHigh(double& va
 {
     if(!fFixtureObject) {return kVCOMError_NotInitialized;}
 	
-	value = fFixtureObject->GetOperatingTemperatureHigh();
+	value = fFixtureObject->GetPhysicalDesciptionsContainer().GetOperatingTemperatureHigh();
 	
 	return kVCOMError_NoError;
     
@@ -2196,7 +2196,7 @@ VCOMError VCOM_CALLTYPE	CGdtfFixtureImpl::SetOperatingTemperatureHigh(double val
 {
     if(!fFixtureObject) {return kVCOMError_NotInitialized;}
 	
-	fFixtureObject->SetOperatingTemperatureHigh(value);
+	fFixtureObject->GetPhysicalDesciptionsContainer().SetOperatingTemperatureHigh(value);
 	
 	return kVCOMError_NoError;
 }
@@ -2205,7 +2205,7 @@ VCOMError VCOM_CALLTYPE	CGdtfFixtureImpl::GetWeight(double& value)
 {
     if(!fFixtureObject) {return kVCOMError_NotInitialized;}
 	
-	value = fFixtureObject->GetWeight();
+	value = fFixtureObject->GetPhysicalDesciptionsContainer().GetWeight();
 	
 	return kVCOMError_NoError;
     
@@ -2215,7 +2215,7 @@ VCOMError VCOM_CALLTYPE	CGdtfFixtureImpl::SetWeight(double value)
 {
     if(!fFixtureObject) {return kVCOMError_NotInitialized;}
 	
-	fFixtureObject->SetWeight(value);
+	fFixtureObject->GetPhysicalDesciptionsContainer().SetWeight(value);
 	
 	return kVCOMError_NoError;
 }
@@ -2224,7 +2224,7 @@ VCOMError VCOM_CALLTYPE	CGdtfFixtureImpl::GetLegHeight(double& value)
 {
     if(!fFixtureObject) {return kVCOMError_NotInitialized;}
 	
-	value = fFixtureObject->GetLegHeight();
+	value = fFixtureObject->GetPhysicalDesciptionsContainer().GetLegHeight();
 	
 	return kVCOMError_NoError;
     
@@ -2234,7 +2234,7 @@ VCOMError VCOM_CALLTYPE	CGdtfFixtureImpl::SetLegHeight(double value)
 {
     if(!fFixtureObject) {return kVCOMError_NotInitialized;}
 	
-	fFixtureObject->SetLegHeight(value);
+	fFixtureObject->GetPhysicalDesciptionsContainer().SetLegHeight(value);
 	
 	return kVCOMError_NoError;
 }

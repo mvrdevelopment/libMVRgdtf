@@ -498,6 +498,16 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_PowerConsumptionFrequencyLow           "FrequencyLow"
 #define XML_GDTF_PowerConsumptionFrequencyHigh          "FrequencyHigh"
 
+#define XML_GDTF_OperatingTemperatureNodeName           "OperatingTemperature"
+#define XML_GDTF_OperatingTemperatureLow                "Low"
+#define XML_GDTF_OperatingTemperatureHigh               "High"
+
+#define XML_GDTF_WeightNodeName                         "Weight"
+#define XML_GDTF_WeightValue                            "Value"
+
+#define XML_GDTF_LegHeightNodeName                      "LegHeight"
+#define XML_GDTF_LegHeightValue                         "Value"
+
 //-----------------------------------------------------------------------------
 // Measurement
 #define XML_GDTF_MeasurementNodeName					"Measurement"

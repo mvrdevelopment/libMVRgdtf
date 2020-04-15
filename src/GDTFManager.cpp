@@ -7975,6 +7975,46 @@ const TGdtfPowerConsumptionArray & SceneData::GdtfPhysicalDescriptions::GetPower
     return fPowerConsumptions;
 }
 
+double GdtfPhysicalDescriptions::GetOperatingTemperatureLow()
+{
+    return fOperatingTemperatureLow;
+}
+
+double GdtfPhysicalDescriptions::GetOperatingTemperatureHigh()
+{
+    return fOperatingTemperatureHigh;
+}
+
+double GdtfPhysicalDescriptions::GetWeight()
+{
+    return fWeight;
+}
+
+double GdtfPhysicalDescriptions::GetLegHeight()
+{
+    return fLegHeight;
+}
+
+void GdtfPhysicalDescriptions::SetOperatingTemperatureLow(double value)
+{
+	fOperatingTemperatureLow = value;
+}
+
+void GdtfPhysicalDescriptions::SetOperatingTemperatureHigh(double value)
+{
+	fOperatingTemperatureHigh = value;
+}
+
+void GdtfPhysicalDescriptions::SetWeight(double value)
+{
+	fWeight = value;
+}
+
+void GdtfPhysicalDescriptions::SetLegHeight(double value)
+{
+	fLegHeight = value;
+}
+
 GdtfPhysicalEmitterPtr SceneData::GdtfPhysicalDescriptions::AddEmitter(const TXString & name, CCieColor color)
 {
 	GdtfPhysicalEmitterPtr emitter = new  GdtfPhysicalEmitter(name, color);
@@ -8102,6 +8142,26 @@ void SceneData::GdtfPhysicalDescriptions::OnPrintToFile(IXMLFileNodePtr pNode)
 		{
 			powerConsumption->WriteToNode(PropertiesNode);
 		}
+
+		IXMLFileNodePtr OperatingTemperatureNode;
+		if(VCOM_SUCCEEDED(pNode->CreateChildNode(XML_GDTF_OperatingTemperatureNodeName, &OperatingTemperatureNode)))
+		{
+			pNode->SetNodeAttributeValue(XML_GDTF_OperatingTemperatureLow,	GdtfConverter::ConvertDouble(fOperatingTemperatureLow));
+			pNode->SetNodeAttributeValue(XML_GDTF_OperatingTemperatureHigh, GdtfConverter::ConvertDouble(fOperatingTemperatureHigh));
+		}
+
+		IXMLFileNodePtr WeightNode;
+		if(VCOM_SUCCEEDED(pNode->CreateChildNode(XML_GDTF_WeightNodeName, &WeightNode)))
+		{
+			pNode->SetNodeAttributeValue(XML_GDTF_WeightValue,	GdtfConverter::ConvertDouble(fWeight));
+		}
+
+		IXMLFileNodePtr LegHeightNode;
+		if(VCOM_SUCCEEDED(pNode->CreateChildNode(XML_GDTF_LegHeightNodeName, &LegHeightNode)))
+		{
+			pNode->SetNodeAttributeValue(XML_GDTF_LegHeightValue,	GdtfConverter::ConvertDouble(fLegHeight));
+		}
+
 	}
 
 }
@@ -8196,6 +8256,15 @@ void SceneData::GdtfPhysicalDescriptions::OnReadFromNode(const IXMLFileNodePtr &
 										fPowerConsumptions.push_back(powerConsumption);
 										return;
 									});
+	
+		//Animation System
+	IXMLFileNodePtr OperatingTemperatureNode;
+	pNode->GetChildNode(XML_GDTF_OperatingTemperatureNodeName, &OperatingTemperatureNode);
+	if(OperatingTemperatureNode != nullptr)
+	{;
+		animationSystem->ReadFromNode(OperatingTemperatureNode);
+		fAnimationSystem = animationSystem;
+	}
 	
 }
 

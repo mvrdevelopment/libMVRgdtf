@@ -460,6 +460,11 @@ namespace SceneData
 
 		//Properties Collect
 		TGdtfPowerConsumptionArray		fPowerConsumptions;
+		double							fOperatingTemperatureLow;
+		double							fOperatingTemperatureHigh;
+		double							fWeight;
+		double							fLegHeight;
+
     public:
         virtual EGdtfObjectType			GetObjectType();
 
@@ -473,6 +478,15 @@ namespace SceneData
         const TGdtf_CRIGroupArray&       	GetCRIGroupArray();
 		const TGdtfConnectorArray&       	GetConnectorArray();
 		const TGdtfPowerConsumptionArray&   GetPowerConsumptionArray();
+		double								GetOperatingTemperatureLow();
+		double								GetOperatingTemperatureHigh();
+		double								GetWeight();
+		double								GetLegHeight();
+
+		void								SetOperatingTemperatureLow(double value);
+		void								SetOperatingTemperatureHigh(double value);
+		void								SetWeight(double value);
+		void								SetLegHeight(double value);
         
         GdtfPhysicalEmitterPtr	        AddEmitter(const TXString& name, CCieColor color);
         GdtfFilterPtr                   AddFilter(const TXString& name,  CCieColor color);
