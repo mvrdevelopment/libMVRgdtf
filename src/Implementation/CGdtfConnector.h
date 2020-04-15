@@ -34,7 +34,7 @@ namespace VectorworksMVR
     private:
         SceneData::GdtfConnector* fConnector;
     public:
-        void setPointer(SceneData::GdtfConnector* connector);
+        void SetPointer(SceneData::GdtfConnector* connector);
         SceneData::GdtfConnector* GetPointer();
         
     };
