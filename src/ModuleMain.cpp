@@ -39,6 +39,7 @@
 #include "Implementation/CGdtfDmxChannelSet.h"
 #include "Implementation/CGdtfBreak.h"
 #include "Implementation/CGdtfWheelSlotPrismFacet.h"
+#include "Implementation/CGdtfWheelSlotAnimationSystem.h"
 #include "Implementation/CGeometryReferenceImpl.h"
 #include "Implementation/CGdtfXmlParsingError.h"
 #include "Implementation/CGdtfDMXPersonality.h"
@@ -47,6 +48,7 @@
 #include "Implementation/CGdtfMeasurement.h"
 #include "Implementation/CGdtfFilter.h"
 #include "Implementation/CGdtfColorSpace.h"
+#include "Implementation/CGdtfConnector.h"
 #include "Implementation/CUtility.h"
 
 
@@ -140,6 +142,8 @@ extern "C" VectorworksMVR::VCOMError VWQueryInterface(const VectorworksMVR::VWII
         resultInterface = new VectorworksMVR::CGdtfBreakImpl();
     else if (iid == VectorworksMVR::IID_GdtfWheelSlotPrismFacet)
         resultInterface = new CGdtfWheelSlotPrismFacetImpl();
+    else if (iid == VectorworksMVR::IID_GdtfWheelSlotAnimationSystem)
+        resultInterface = new CGdtfWheelSlotAnimationSystemImpl();
     else if (iid == VectorworksMVR::IID_GdtfXmlParsingError)
         resultInterface = new CGdtfXmlParsingErrorImpl();
     else if (iid == VectorworksMVR::IID_GdtfTRDM)
@@ -154,6 +158,8 @@ extern "C" VectorworksMVR::VCOMError VWQueryInterface(const VectorworksMVR::VWII
         resultInterface = new CGdtfFilterImpl();
     else if (iid == VectorworksMVR::IID_GdtfColorSpace)
         resultInterface = new CGdtfColorSpaceImpl();
+    else if (iid == VectorworksMVR::IID_GdtfConnector)
+        resultInterface = new CGdtfConnectorImpl();
 	else if (iid == VectorworksMVR::Filing::IID_FileIdentifier)
 		resultInterface = new CFileIdentifier();
 	else if (iid == VectorworksMVR::Filing::IID_FolderIdentifier )

@@ -78,6 +78,9 @@
     <ClCompile Include="..\src\Implementation\CGdtfBreak.cpp">
       <Filter>src\Implementation</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Implementation\CGdtfConnector.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\Implementation\CGdtfCRI.cpp">
       <Filter>src\Implementation</Filter>
     </ClCompile>
@@ -157,6 +160,9 @@
       <Filter>src\Implementation</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Implementation\CGdtfWheelSlot.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Implementation\CGdtfWheelSlotAnimationSystem.cpp">
       <Filter>src\Implementation</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Implementation\CGdtfWheelSlotPrismFacet.cpp">
@@ -365,6 +371,9 @@
     <ClInclude Include="..\src\Implementation\CGdtfBreak.h">
       <Filter>src\Implementation</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Implementation\CGdtfConnector.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
     <ClInclude Include="..\src\Implementation\CGdtfCRI.h">
       <Filter>src\Implementation</Filter>
     </ClInclude>
@@ -444,6 +453,9 @@
       <Filter>src\Implementation</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Implementation\CGdtfWheelSlot.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Implementation\CGdtfWheelSlotAnimationSystem.h">
       <Filter>src\Implementation</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Implementation\CGdtfWheelSlotPrismFacet.h">

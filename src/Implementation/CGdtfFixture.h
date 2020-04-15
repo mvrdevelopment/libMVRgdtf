@@ -127,6 +127,9 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetCanHaveChildren(bool& value);
         virtual VCOMError VCOM_CALLTYPE     SetCanHaveChildren(GdtfDefines::EGdtfCanHaveChildren value);
 
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetConnectorCount(size_t& count);
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateConnector(MvrString name, MvrString type, VectorworksMVR::IGdtfConnector** outVal);
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetConnectorAt(size_t at, VectorworksMVR::IGdtfConnector** value);
 		
 	private:
         SceneData::GdtfFixture* fFixtureObject;

@@ -831,18 +831,154 @@ TXString GdtfWheelSlotPrismFacet::GetNodeName()
 }
 
 //------------------------------------------------------------------------------------
+// GdtfWheelSlotAnimationSystem
+GdtfWheelSlotAnimationSystem::GdtfWheelSlotAnimationSystem()
+{
+}
+
+GdtfWheelSlotAnimationSystem::~GdtfWheelSlotAnimationSystem()
+{
+}
+
+double GdtfWheelSlotAnimationSystem::GetP1_X()
+{
+	return fP1_X;
+}
+
+double GdtfWheelSlotAnimationSystem::GetP1_Y()
+{
+	return fP1_Y;
+}
+
+double GdtfWheelSlotAnimationSystem::GetP2_X()
+{
+	return fP2_X;
+}
+
+double GdtfWheelSlotAnimationSystem::GetP2_Y()
+{
+	return fP2_Y;
+}
+
+double GdtfWheelSlotAnimationSystem::GetP3_X()
+{
+	return fP3_X;
+}
+
+double GdtfWheelSlotAnimationSystem::GetP3_Y()
+{
+	return fP3_Y;
+}
+
+double GdtfWheelSlotAnimationSystem::GetRadius()
+{
+	return fRadius;
+}
+
+void GdtfWheelSlotAnimationSystem::SetP1_X(double p1_X)
+{
+	fP1_X = p1_X;
+}
+
+void GdtfWheelSlotAnimationSystem::SetP1_Y(double p1_Y)
+{
+	fP1_Y = p1_Y;
+}
+
+void GdtfWheelSlotAnimationSystem::SetP2_X(double p2_X)
+{
+	fP2_X = p2_X;
+}
+
+void GdtfWheelSlotAnimationSystem::SetP2_Y(double p2_Y)
+{
+	fP2_Y = p2_Y;
+}
+
+void GdtfWheelSlotAnimationSystem::SetP3_X(double p3_X)
+{
+	fP3_X = p3_X;
+}
+
+void GdtfWheelSlotAnimationSystem::SetP3_Y(double p3_Y)
+{
+	fP3_Y = p3_Y;
+}
+
+void GdtfWheelSlotAnimationSystem::SetRadius(double radius)
+{
+	fRadius = radius;
+}
+
+void GdtfWheelSlotAnimationSystem::OnPrintToFile(IXMLFileNodePtr pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnPrintToFile(pNode);
+	
+	pNode->SetNodeAttributeValue(XML_GDTF_AnimationSystemP1,		GdtfConverter::Convert2DPoint(fP1_X, fP1_Y));
+	pNode->SetNodeAttributeValue(XML_GDTF_AnimationSystemP2,		GdtfConverter::Convert2DPoint(fP2_X, fP2_Y));
+	pNode->SetNodeAttributeValue(XML_GDTF_AnimationSystemP3,		GdtfConverter::Convert2DPoint(fP3_X, fP3_Y));
+	pNode->SetNodeAttributeValue(XML_GDTF_AnimationSystemRadius,	GdtfConverter::ConvertDouble(fRadius));
+}
+
+void GdtfWheelSlotAnimationSystem::OnReadFromNode(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnReadFromNode(pNode);
+	
+	TXString p1;		pNode->GetNodeAttributeValue(XML_GDTF_AnimationSystemP1,		p1);		GdtfConverter::Convert2DPoint(p1, pNode, fP1_X, fP1_Y);
+	TXString p2;		pNode->GetNodeAttributeValue(XML_GDTF_AnimationSystemP2,		p2);		GdtfConverter::Convert2DPoint(p2, pNode, fP2_X, fP2_Y);
+	TXString p3;		pNode->GetNodeAttributeValue(XML_GDTF_AnimationSystemP3,		p3);		GdtfConverter::Convert2DPoint(p3, pNode, fP3_X, fP3_Y);
+	TXString radius;	pNode->GetNodeAttributeValue(XML_GDTF_AnimationSystemRadius,	radius);	GdtfConverter::ConvertDouble(radius, pNode, fRadius);
+}
+
+void GdtfWheelSlotAnimationSystem::OnErrorCheck(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnErrorCheck(pNode);
+
+	//------------------------------------------------------------------------------------
+	// Create needed and optional Attribute Arrays
+	TXStringArray needed;
+	TXStringArray optional;
+	needed.push_back(XML_GDTF_AnimationSystemP1);
+	needed.push_back(XML_GDTF_AnimationSystemP2);
+	needed.push_back(XML_GDTF_AnimationSystemP3);
+	needed.push_back(XML_GDTF_AnimationSystemRadius);
+	
+	//------------------------------------------------------------------------------------
+	// Check Attributes for node
+	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
+}
+
+EGdtfObjectType GdtfWheelSlotAnimationSystem::GetObjectType()
+{
+	return EGdtfObjectType::eGdtfAnimationSystem;
+}
+
+TXString GdtfWheelSlotAnimationSystem::GetNodeName()
+{
+	return XML_GDTF_AnimationSystemNodeName;
+}
+
+//------------------------------------------------------------------------------------
 // GdtfWheelSlot
 GdtfWheelSlot::GdtfWheelSlot(GdtfWheel* parent)
 {
-	fWheelParent = parent;
-	fFilter 	 = nullptr;
+	fWheelParent 		= parent;
+	fFilter 	 		= nullptr;
+	fAnimationSystem	= nullptr;
 }
 
 GdtfWheelSlot::GdtfWheelSlot(const TXString& name, GdtfWheel* parent)
 {
-	fName		 = name;
-	fWheelParent = parent;
-	fFilter		 = nullptr;
+	fName		 		= name;
+	fWheelParent 		= parent;
+	fFilter		 		= nullptr;
+	fAnimationSystem	= nullptr;
 }
 
 
@@ -876,6 +1012,13 @@ GdtfWheelSlotPrismFacet* GdtfWheelSlot::AddPrismFacet()
 	GdtfWheelSlotPrismFacet* prism = new GdtfWheelSlotPrismFacet();
 	fPrismFacts.push_back(prism);
 	return prism;
+}
+
+GdtfWheelSlotAnimationSystem* GdtfWheelSlot::AddAnimationSystem()
+{
+	GdtfWheelSlotAnimationSystem* animationSystem = new GdtfWheelSlotAnimationSystem();
+	fAnimationSystem = animationSystem;
+	return animationSystem;
 }
 
 const TXString&	GdtfWheelSlot::GetGobo() const
@@ -941,11 +1084,15 @@ void GdtfWheelSlot::OnPrintToFile(IXMLFileNodePtr pNode)
 	if(fFilter)	{ pNode->SetNodeAttributeValue(XML_GDTF_WheelSlotFilter,		fFilter->GetNodeReference()); }
 	
 	//------------------------------------------------------------------------------------
-	// Print the childs
+	// Print the children
 	for (GdtfWheelSlotPrismFacet* prism : fPrismFacts)
 	{
 		prism->WriteToNode(pNode);
 	}
+
+	//------------------------------------------------------------------------------------
+	// Print the animation system
+	if(fAnimationSystem) { fAnimationSystem->WriteToNode(pNode); }
 }
 
 void GdtfWheelSlot::OnReadFromNode(const IXMLFileNodePtr& pNode)
@@ -980,17 +1127,29 @@ void GdtfWheelSlot::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	//------------------------------------------------------------------------------------
 	// Read the wheel slots
 	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_PrismFacetNodeName, [this] (IXMLFileNodePtr objNode) -> void
-								 {
-									 // Create the object
-									 GdtfWheelSlotPrismFacetPtr facet = new GdtfWheelSlotPrismFacet();
-									 
-									 // Read from node
-									 facet->ReadFromNode(objNode);
-									 
-									 // Add to list
-									 fPrismFacts.push_back(facet);
-									 return;
-								 });
+								{
+									// Create the object
+									GdtfWheelSlotPrismFacetPtr facet = new GdtfWheelSlotPrismFacet();
+									
+									// Read from node
+									facet->ReadFromNode(objNode);
+									
+									// Add to list
+									fPrismFacts.push_back(facet);
+									return;
+								});
+	
+	//Animation System
+	IXMLFileNodePtr animationSystemNode;
+	pNode->GetChildNode(XML_GDTF_AnimationSystemNodeName, &animationSystemNode);
+	if(animationSystemNode != nullptr)
+	{
+		GdtfWheelSlotAnimationSystemPtr animationSystem = new GdtfWheelSlotAnimationSystem();
+		animationSystem->ReadFromNode(animationSystemNode);
+		fAnimationSystem = animationSystem;
+	}
+	
+
 }
 
 void GdtfWheelSlot::OnErrorCheck(const IXMLFileNodePtr& pNode)
@@ -1032,6 +1191,11 @@ TXString GdtfWheelSlot::GetNodeReference()
 {
 	TXString ref = fWheelParent->GetNodeReference() + "." + GetName();
 	return ref;
+}
+
+GdtfWheelSlotAnimationSystem* GdtfWheelSlot::GetAnimationSystem() const
+{
+	return fAnimationSystem;
 }
 
 //------------------------------------------------------------------------------------
@@ -7740,6 +7904,7 @@ SceneData::GdtfPhysicalDescriptions::~GdtfPhysicalDescriptions()
     for (GdtfFilter*          o : fFilters)     { delete o; }
     for (GdtfDMXProfile*      o : fDmxProfiles) { delete o; }
     for (GdtfCRIGroup*        o : fCRI_Groups)  { delete o; }
+	for (GdtfConnector*       o : fConnectors)  { delete o; }
 }
 
 EGdtfObjectType SceneData::GdtfPhysicalDescriptions::GetObjectType()
@@ -7772,6 +7937,11 @@ const TGdtfDMXProfileArray& SceneData::GdtfPhysicalDescriptions::GetDmxProfileAr
 const TGdtf_CRIGroupArray & SceneData::GdtfPhysicalDescriptions::GetCRIGroupArray()
 {
     return fCRI_Groups;
+}
+
+const TGdtfConnectorArray & SceneData::GdtfPhysicalDescriptions::GetConnectorArray()
+{
+    return fConnectors;
 }
 
 GdtfPhysicalEmitterPtr SceneData::GdtfPhysicalDescriptions::AddEmitter(const TXString & name, CCieColor color)
@@ -7807,6 +7977,14 @@ GdtfCRIGroupPtr SceneData::GdtfPhysicalDescriptions::AddCRIGroup(double colorTse
     fCRI_Groups.push_back(criGroup);
 
     return criGroup;
+}
+
+GdtfConnectorPtr SceneData::GdtfPhysicalDescriptions::AddConnector(const TXString& name,  const TXString& type)
+{
+    GdtfConnectorPtr connector = new GdtfConnector(name, type);
+    fConnectors.push_back(connector);
+
+    return connector;
 }
 
 TXString SceneData::GdtfPhysicalDescriptions::GetNodeName()
@@ -7862,6 +8040,17 @@ void SceneData::GdtfPhysicalDescriptions::OnPrintToFile(IXMLFileNodePtr pNode)
 		for (GdtfCRIGroupPtr criGroup : fCRI_Groups)
 		{
 			criGroup->WriteToNode(CRI_CollectNode);
+		}
+		
+	}
+
+	// Print Connectors (physicalDescription child)
+	IXMLFileNodePtr ConnectorNode;
+	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_GDTF_ConnectorCollect, &ConnectorNode)))
+	{
+		for (GdtfConnectorPtr connector : fConnectors)
+		{
+			connector->WriteToNode(ConnectorNode);
 		}
 		
 	}
@@ -7928,6 +8117,20 @@ void SceneData::GdtfPhysicalDescriptions::OnReadFromNode(const IXMLFileNodePtr &
 										criGroup->ReadFromNode(objNode);
 											
 										fCRI_Groups.push_back(criGroup);
+										return;
+									});
+	
+	// Read Connectors (PhysicalDescription Child)
+	GdtfConverter::TraverseNodes(pNode, XML_GDTF_ConnectorCollect, XML_GDTF_ConnectorNodeName, [this] (IXMLFileNodePtr objNode) -> void
+									{
+										// Create the object
+										GdtfConnectorPtr connector = new GdtfConnector();
+										 
+										// Read from node
+										connector->ReadFromNode(objNode);
+										 
+										// Add to list
+										fConnectors.push_back(connector);
 										return;
 									});
 	
@@ -8329,4 +8532,142 @@ void SceneData::GdtfMeasurement::OnReadFromNode(const IXMLFileNodePtr & pNode)
         fMeasurementPoints.push_back(measurePt);
         return;
     });
+}
+
+//------------------------------------------------------------------------------------
+// GdtfConnector
+GdtfConnector::GdtfConnector()
+{
+	fDmxBreak 	= 0;
+    fGender 	= 0;
+    fLength 	= 0.0;
+}
+
+GdtfConnector::GdtfConnector(const TXString& name, const TXString& type)
+{
+	fName		= name;
+	fType		= type;
+	fDmxBreak 	= 0;
+    fGender 	= 0;
+    fLength 	= 0.0;
+}
+
+GdtfConnector::~GdtfConnector()
+{
+}
+
+void GdtfConnector::SetName(const TXString &name)
+{
+	fName = name;
+}
+
+void GdtfConnector::SetType(const TXString &type)
+{
+	fType = type;
+}
+
+void SceneData::GdtfConnector::SetDmxBreak(Uint32 dmxBreak)
+{
+    fDmxBreak = dmxBreak;
+}
+
+void SceneData::GdtfConnector::SetGender(Sint32 gender)
+{
+    fGender = gender;
+}
+
+void SceneData::GdtfConnector::SetLength(double length)
+{
+    fLength = length;
+}
+
+void GdtfConnector::OnPrintToFile(IXMLFileNodePtr pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnPrintToFile(pNode);
+	
+	// ------------------------------------------------------------------------------------
+	// Print node attributes
+	pNode->SetNodeAttributeValue(XML_GDTF_ConnectorName,		fName);
+	pNode->SetNodeAttributeValue(XML_GDTF_ConnectorType,		fType);
+	pNode->SetNodeAttributeValue(XML_GDTF_ConnectorDmxBreak, 	GdtfConverter::ConvertInteger(fDmxBreak));
+	pNode->SetNodeAttributeValue(XML_GDTF_ConnectorGender,		GdtfConverter::ConvertInteger(fGender));
+    pNode->SetNodeAttributeValue(XML_GDTF_ConnectorLength, 		GdtfConverter::ConvertDouble(fLength));
+}
+
+void GdtfConnector::OnReadFromNode(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnReadFromNode(pNode);
+	
+	// ------------------------------------------------------------------------------------
+	// Read node attributes
+	pNode->GetNodeAttributeValue(XML_GDTF_ConnectorName, fName);
+	pNode->GetNodeAttributeValue(XML_GDTF_ConnectorType, fType);
+
+    TXString dmxBreakStr;   pNode->GetNodeAttributeValue(XML_GDTF_ConnectorDmxBreak, dmxBreakStr);		
+    GdtfConverter::ConvertInteger(dmxBreakStr, pNode, fDmxBreak);
+	TXString genderStr;   pNode->GetNodeAttributeValue(XML_GDTF_ConnectorGender, genderStr);		
+    GdtfConverter::ConvertInteger(genderStr, pNode, fGender);
+	TXString lengthStr;   pNode->GetNodeAttributeValue(XML_GDTF_ConnectorLength, lengthStr);		
+    GdtfConverter::ConvertDouble(lengthStr, pNode, fLength);
+}
+
+void GdtfConnector::OnErrorCheck(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnErrorCheck(pNode);
+
+	//------------------------------------------------------------------------------------
+	// Create needed and optional Attribute Arrays
+	TXStringArray needed;
+	TXStringArray optional;
+	needed.push_back(XML_GDTF_ConnectorName);
+	needed.push_back(XML_GDTF_ConnectorType);
+	    
+	optional.push_back(XML_GDTF_ConnectorDmxBreak);
+	optional.push_back(XML_GDTF_ConnectorGender);
+    optional.push_back(XML_GDTF_ConnectorLength);
+
+	//------------------------------------------------------------------------------------
+	// Check Attributes for node
+	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
+}
+
+EGdtfObjectType GdtfConnector::GetObjectType()
+{
+	return EGdtfObjectType::eGdtfConnector;
+}
+
+TXString GdtfConnector::GetNodeName()
+{
+	return XML_GDTF_ConnectorNodeName;
+}
+
+const TXString& GdtfConnector::GetName() const
+{
+	return fName;
+}
+
+const TXString& GdtfConnector::GetType() const
+{
+	return fType;
+}
+
+Uint32 GdtfConnector::GetDmxBreak()
+{
+	return fDmxBreak;
+}
+
+Sint32 SceneData::GdtfConnector::GetGender()
+{
+    return fGender;
+}
+
+double SceneData::GdtfConnector::GetLength()
+{
+    return fLength;
 }

@@ -374,6 +374,30 @@ namespace VectorworksMVR
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
     };
 	typedef VCOMPtr<IGdtfWheelSlotPrismFacet>	IGdtfWheelSlotPrismFacetPtr;
+
+	class DYNAMIC_ATTRIBUTE IGdtfWheelSlotAnimationSystem : public IVWUnknown
+    {
+		public:
+        virtual VCOMError VCOM_CALLTYPE     GetP1_X(double& p1_X) 		= 0;
+        virtual VCOMError VCOM_CALLTYPE     GetP1_Y(double& p1_Y) 		= 0;
+        virtual VCOMError VCOM_CALLTYPE     GetP2_X(double& p2_X) 		= 0;
+        virtual VCOMError VCOM_CALLTYPE     GetP2_Y(double& p2_Y) 		= 0;
+        virtual VCOMError VCOM_CALLTYPE     GetP3_X(double& p3_X) 		= 0;
+        virtual VCOMError VCOM_CALLTYPE     GetP3_Y(double& p3_Y) 		= 0;
+        virtual VCOMError VCOM_CALLTYPE     GetRadius(double& radius) 	= 0;
+
+        virtual VCOMError VCOM_CALLTYPE     SetP1_X(double p1_X) 		= 0;
+        virtual VCOMError VCOM_CALLTYPE     SetP1_Y(double p1_Y) 		= 0;
+        virtual VCOMError VCOM_CALLTYPE     SetP2_X(double p2_X) 		= 0;
+        virtual VCOMError VCOM_CALLTYPE     SetP2_Y(double p2_Y) 		= 0;
+        virtual VCOMError VCOM_CALLTYPE     SetP3_X(double p3_X) 		= 0;
+        virtual VCOMError VCOM_CALLTYPE     SetP3_Y(double p3_Y) 		= 0;
+        virtual VCOMError VCOM_CALLTYPE     SetRadius(double radius) 	= 0;
+		
+		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+    };
+	typedef VCOMPtr<IGdtfWheelSlotAnimationSystem>	IGdtfWheelSlotAnimationSystemPtr;
     
     class DYNAMIC_ATTRIBUTE IGdtfWheelSlot : public IVWUnknown
     {
@@ -397,6 +421,10 @@ namespace VectorworksMVR
         // 0.3.13
         virtual VCOMError VCOM_CALLTYPE     GetFilter(IGdtfFilter** outVal) = 0;
         virtual VCOMError VCOM_CALLTYPE     SetFilter(IGdtfFilter* val)=0;
+
+		//GDTF 1.1
+		virtual VCOMError VCOM_CALLTYPE     GetAnimationSystem(IGdtfWheelSlotAnimationSystem** outAnimationSystem) = 0;
+		virtual VCOMError VCOM_CALLTYPE     CreateAnimationSystem(double p1_X, double p1_Y, double p2_X, double p2_Y, double p3_X, double p3_Y, double radius, IGdtfWheelSlotAnimationSystem** 	outAnimationSystem) = 0;
     };
 	typedef VCOMPtr<IGdtfWheelSlot>	IGdtfWheelSlotPtr;
     
@@ -961,6 +989,26 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
 	};
 	typedef VCOMPtr<IGdtfDMXProfile>	IGdtfDMXProfilePtr;
+
+	class DYNAMIC_ATTRIBUTE IGdtfConnector : public IVWUnknown
+    {
+		public:
+        virtual MvrString VCOM_CALLTYPE     GetName() = 0;
+		virtual MvrString VCOM_CALLTYPE     GetType() = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetDmxBreak(Uint32& outDmxBreak) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetGender(Sint32& outGender) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetLength(double& outLength) = 0;
+
+        virtual VCOMError VCOM_CALLTYPE     SetName(MvrString name) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetType(MvrString type) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetDmxBreak(Uint32 dmxBreak) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetGender(Sint32 gender) = 0;	
+        virtual VCOMError VCOM_CALLTYPE     SetLength(double length) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+    };
+    typedef VCOMPtr<IGdtfConnector>	IGdtfConnectorPtr;
 	
     class DYNAMIC_ATTRIBUTE IGdtfFixture : public IVWUnknown
     {
@@ -1073,6 +1121,10 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		// GDTF 1.1
 		virtual VCOMError VCOM_CALLTYPE		GetCanHaveChildren(bool& value) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetCanHaveChildren(GdtfDefines::EGdtfCanHaveChildren value) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetConnectorCount(size_t& count)=0;
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateConnector(MvrString name, MvrString type, VectorworksMVR::IGdtfConnector** outVal)=0;
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetConnectorAt(size_t at, VectorworksMVR::IGdtfConnector** value)=0;
 
 	};
     typedef VCOMPtr<IGdtfFixture>	IGdtfFixturePtr;

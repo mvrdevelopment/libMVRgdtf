@@ -58,6 +58,10 @@ namespace SceneData
     typedef GdtfFilter*	GdtfFilterPtr;
     typedef std::vector<GdtfFilter*>	TGdtfFilterArray;
 
+	class GdtfConnector; 
+    typedef GdtfConnector*	GdtfConnectorPtr;
+    typedef std::vector<GdtfConnector*>	TGdtfConnectorArray;
+
 
 	const Sint32 kDmxBreakOverwriteValue = 0;
 	//------------------------------------------------------------------------------------
@@ -303,6 +307,49 @@ namespace SceneData
 	};
 	typedef GdtfWheelSlotPrismFacet*				GdtfWheelSlotPrismFacetPtr;
 	typedef std::vector<GdtfWheelSlotPrismFacetPtr>	TGdtfWheelSlotPrismFacetArray;
+
+	class GdtfWheelSlotAnimationSystem : public GdtfObject
+	{
+	public:
+		GdtfWheelSlotAnimationSystem();
+		~GdtfWheelSlotAnimationSystem();
+		
+	private:
+		double	fP1_X;
+		double	fP1_Y;
+		double	fP2_X;
+		double	fP2_Y;
+		double	fP3_X;
+		double	fP3_Y;
+		double	fRadius;
+		
+    public:
+        double GetP1_X();
+        double GetP1_Y();
+        double GetP2_X();
+        double GetP2_Y();
+        double GetP3_X();
+        double GetP3_Y();
+        double GetRadius();
+
+        void SetP1_X(double p1_X);
+        void SetP1_Y(double p1_Y);
+        void SetP2_X(double p2_X);
+        void SetP2_Y(double p2_Y);
+        void SetP3_X(double p3_X);
+        void SetP3_Y(double p3_Y);
+        void SetRadius(double radius);
+	public:
+		virtual EGdtfObjectType			GetObjectType();
+		
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+		
+	};
+	typedef GdtfWheelSlotAnimationSystem*				GdtfWheelSlotAnimationSystemPtr;
 	
 	class GdtfWheelSlot : public GdtfObject
 	{
@@ -322,6 +369,7 @@ namespace SceneData
 		TXString						fGoboFile; // MediaFileName
 		GdtfFilter*						fFilter;
 		TXString						fUnresolvedFilter;
+		GdtfWheelSlotAnimationSystem*	fAnimationSystem;
 		
 	public:
 		const TXString&                 GetGobo() const;
@@ -330,12 +378,14 @@ namespace SceneData
 		const TXString&                 GetName() const;
         TGdtfWheelSlotPrismFacetArray   GetPrismFacets();
 		GdtfFilter*                 	GetFilter() const;
+		GdtfWheelSlotAnimationSystem*	GetAnimationSystem() const;
 		
 		void							SetName(const TXString& name);
 		void							SetGobo(const GdtfPNGFile& png);
 		void							SetColor(const CCieColor& color);
 		void							SetFilter(GdtfFilter* filter);
 		GdtfWheelSlotPrismFacet*		AddPrismFacet();
+		GdtfWheelSlotAnimationSystem*	AddAnimationSystem();
 
 		virtual TXString				GetNodeReference();
 
@@ -397,11 +447,12 @@ namespace SceneData
         GdtfPhysicalDescriptions();
         ~GdtfPhysicalDescriptions();
     private:        
-        GdtfColorSpace                  fColorSpace;    
-        TGdtfPhysicalEmitterArray		fEmitters;      
-        TGdtfFilterArray                fFilters;       
-        TGdtfDMXProfileArray            fDmxProfiles;         
-        TGdtf_CRIGroupArray             fCRI_Groups; 
+        GdtfColorSpace                  fColorSpace;
+        TGdtfPhysicalEmitterArray		fEmitters;
+        TGdtfFilterArray                fFilters;
+        TGdtfDMXProfileArray            fDmxProfiles;
+        TGdtf_CRIGroupArray             fCRI_Groups;
+		TGdtfConnectorArray				fConnectors;
     public:
         virtual EGdtfObjectType			GetObjectType();
 
@@ -413,11 +464,13 @@ namespace SceneData
         const TGdtfFilterArray&          GetFilterArray();
         const TGdtfDMXProfileArray&      GetDmxProfileArray();
         const TGdtf_CRIGroupArray&       GetCRIGroupArray();
+		const TGdtfConnectorArray&       GetConnectorArray();
         
         GdtfPhysicalEmitterPtr	        AddEmitter(const TXString& name, CCieColor color);
         GdtfFilterPtr                   AddFilter(const TXString& name,  CCieColor color);
         GdtfDMXProfilePtr               AddDmxProfile();
         GdtfCRIGroupPtr                 AddCRIGroup(double colorTsemp);
+		GdtfConnectorPtr                AddConnector(const TXString& name,  const TXString& type);
 
     protected:
         virtual	TXString				GetNodeName();
@@ -1940,6 +1993,44 @@ namespace SceneData
          virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
          virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
      };
+
+	 class GdtfConnector : public GdtfObject
+	{
+	public:
+		GdtfConnector();
+		GdtfConnector(const TXString& name, const TXString& type);
+		~GdtfConnector();
+		
+	private:
+		TXString	fName;
+		TXString	fType;
+		Uint32		fDmxBreak;
+		Sint32		fGender;
+        double		fLength;
+		
+	public:
+        // Getter
+		virtual EGdtfObjectType	GetObjectType();
+        const TXString&			GetName() const;
+		const TXString&			GetType() const;
+		Uint32					GetDmxBreak();
+		Sint32					GetGender();
+		double					GetLength();
+        
+		// Setter
+		void	SetName(const TXString& name);
+		void	SetType(const TXString& type);
+		void	SetDmxBreak(Uint32 dmxBreak);
+		void	SetGender(Sint32 gender);
+        void	SetLength(double length);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+
+	};
 	
 	//------------------------------------------------------------------------------------
 	// GdtfFixture Definition

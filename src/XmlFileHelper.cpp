@@ -242,6 +242,13 @@ using namespace SceneData;
 	return valueStr;
 }
 
+/*static*/ TXString GdtfConverter::ConvertInteger(Uint32 value)
+{
+	TXString valueStr;
+	valueStr << value;
+	return valueStr;
+}
+
 /*static*/ bool GdtfConverter::ConvertDmxBreak(const TXString& value, const IXMLFileNodePtr& node,Sint32& intValue)
 {
     if(value.IsEmpty()) return false;
@@ -268,6 +275,14 @@ using namespace SceneData;
 }
 
 /*static*/ bool GdtfConverter::ConvertInteger(const TXString& value, const IXMLFileNodePtr& node,Sint32& intValue)
+{
+    if(value.IsEmpty()) return false;
+	
+    intValue = value.atoi();
+	return true;
+}
+
+/*static*/ bool GdtfConverter::ConvertInteger(const TXString& value, const IXMLFileNodePtr& node, Uint32& intValue)
 {
     if(value.IsEmpty()) return false;
 	
@@ -338,6 +353,47 @@ bool SceneData::GdtfConverter::ConvertIntegerArray(TXString values, const IXMLFi
 
     // Seperate the string by ","
     GdtfConverter::Deserialize(values, node, intArray);
+    return true;
+}
+
+TXString SceneData::GdtfConverter::ConvertDoubleArray(TDoubleArray & values, bool includeBrackets)
+/* Takes an Int-Array and returns it as string in the format: "{Int, Int, ... Int}" */
+{   
+    TXString arrayStr;
+    
+	if(includeBrackets) { arrayStr += "{"; }
+    
+    // Add the Values
+    for (size_t idx = 0; idx < values.size(); idx++)
+    {        
+        arrayStr += (TXString() << values.at(idx));
+        
+        // The last index is size-1. We want that no "," is appended at the last item 
+        // so only append "," for idx < last_idx.
+        if (idx < values.size() - 1) 
+        {
+            arrayStr += ",";
+        }        
+    }    
+
+    // Close the Array Str
+	if(includeBrackets) { arrayStr += "}"; }
+
+    return arrayStr;
+}
+
+bool SceneData::GdtfConverter::ConvertDoubleArray(TXString values, const IXMLFileNodePtr& node, TDoubleArray & doubleArray)
+/* Takes string in the format: "{double, double, ... double}" and fills the values into the doubleArray. */
+{
+    TXString doubleArrayString = values;
+    if (values.IsEmpty()) { return false; }
+
+    // Remove the brackets "{" and "}"
+    values.Replace("{", "");
+    values.Replace("}", "");
+
+    // Separate the string by ","
+    GdtfConverter::Deserialize(values, node, doubleArray);
     return true;
 }
 
@@ -1412,18 +1468,18 @@ CieColor SceneData::GdtfConverter::ConvertCColor(const CCieColor & color)
 
 /*static*/ bool GdtfConverter::ConvertEGdtfInterpolationTo(const TXString& inVal, const IXMLFileNodePtr& node, EGdtfInterpolationTo& outVal)
 {
-     if        (inVal == XML_GDTF_InterpolationTo_Linear)   { outVal = EGdtfInterpolationTo::Linear; }     
-     else if   (inVal == XML_GDTF_InterpolationTo_Step)     { outVal = EGdtfInterpolationTo::Step; }
-     else if   (inVal == XML_GDTF_InterpolationTo_Log)      { outVal = EGdtfInterpolationTo::Log; }     
-	 else if   (inVal.IsEmpty())    						{ outVal = EGdtfInterpolationTo::Linear; } 
-     else 
-     {
-        DSTOP((kEveryone, "Unknown Value for EGdtfInterpolationTo"));
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_InterpolationTo, node);
-        SceneData::GdtfFixture::AddError(error);
+	if        (inVal == XML_GDTF_InterpolationTo_Linear)   { outVal = EGdtfInterpolationTo::Linear; }     
+	else if   (inVal == XML_GDTF_InterpolationTo_Step)     { outVal = EGdtfInterpolationTo::Step; }
+	else if   (inVal == XML_GDTF_InterpolationTo_Log)      { outVal = EGdtfInterpolationTo::Log; }     
+	else if   (inVal.IsEmpty())    						{ outVal = EGdtfInterpolationTo::Linear; } 
+	else 
+	{
+	DSTOP((kEveryone, "Unknown Value for EGdtfInterpolationTo"));
+	GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_InterpolationTo, node);
+	SceneData::GdtfFixture::AddError(error);
 
-		outVal = EGdtfInterpolationTo::Linear;
-     }
+	outVal = EGdtfInterpolationTo::Linear;
+	}
        
     return true;
 }
@@ -1445,19 +1501,44 @@ CieColor SceneData::GdtfConverter::ConvertCColor(const CCieColor & color)
 
 /*static*/ bool GdtfConverter::ConvertEGdtfCanHaveChildren(const TXString& inVal, const IXMLFileNodePtr& node, EGdtfCanHaveChildren& outVal)
 {
-     if        (inVal == XML_GDTF_CanHaveChildren_Yes)	{ outVal = EGdtfCanHaveChildren::eYES; }     
-     else if   (inVal == XML_GDTF_CanHaveChildren_No)   { outVal = EGdtfCanHaveChildren::eNO; }    
-	 else if   (inVal.IsEmpty())    					{ outVal = EGdtfCanHaveChildren::eYES; } 
-     else 
-     {
-        DSTOP((kEveryone, "Unknown Value for EGdtfCanHaveChildren"));
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_CanHaveChildren, node);
-        SceneData::GdtfFixture::AddError(error);
+	if        (inVal == XML_GDTF_CanHaveChildren_Yes)	{ outVal = EGdtfCanHaveChildren::eYES; }     
+	else if   (inVal == XML_GDTF_CanHaveChildren_No)   { outVal = EGdtfCanHaveChildren::eNO; }    
+	else if   (inVal.IsEmpty())    					{ outVal = EGdtfCanHaveChildren::eYES; } 
+	else 
+	{
+	DSTOP((kEveryone, "Unknown Value for EGdtfCanHaveChildren"));
+	GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_CanHaveChildren, node);
+	SceneData::GdtfFixture::AddError(error);
 
-		outVal = EGdtfCanHaveChildren::eYES;
-     }
+	outVal = EGdtfCanHaveChildren::eYES;
+	}
        
     return true;
+}
+
+/*static*/ TXString GdtfConverter::Convert2DPoint(double p_X, double p_Y)
+{
+	TDoubleArray array {p_X, p_Y};
+	
+	return ConvertDoubleArray(array, false);
+}
+
+
+/*static*/ bool GdtfConverter::Convert2DPoint(const TXString& inVal, const IXMLFileNodePtr& node, double& p_X, double& p_Y)
+{
+    p_X = 0.0;
+	p_Y = 0.0;
+
+	TDoubleArray array;
+	if(ConvertDoubleArray(inVal, node, array) && array.size() >= 2)
+	{
+		p_X = array[0];
+		p_Y = array[1];
+		
+		return true;
+	}
+
+	return false;
 }
 
 bool SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, const IFileIdentifierPtr& file, ERessourceType resType, bool deleteFile, bool mustExist)
@@ -1637,7 +1718,7 @@ TXString SceneData::SceneDataZip::GetResourceSubFolder(ERessourceType resType)
 	return GdtfConverter::ConvertDMXValue(value,nullptr, chanlReso, intValue);
 }
 
-void GdtfConverter::TraverseNodes(IXMLFileNodePtr root, const TXString& childContainerNodeName,const TXString& childNodeName, TProcessNodeCall processNodeFunction )
+void GdtfConverter::TraverseNodes(IXMLFileNodePtr root, const TXString& childContainerNodeName, const TXString& childNodeName, TProcessNodeCall processNodeFunction)
 {
 	// ------------------------------------------------------------------------------------
 	// Print models

@@ -4,6 +4,7 @@
 #include "Prefix/StdAfx.h"
 #include "CGdtfWheelSlot.h"
 #include "CGdtfWheelSlotPrismFacet.h"
+#include "CGdtfWheelSlotAnimationSystem.h"
 #include "CGdtfFilter.h"
 
 using namespace VectorworksMVR::Filing;
@@ -30,7 +31,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotImpl::GetColor(Vectorwor
 {
 	// Check Data
 	if( ! fWheelSlot) return kVCOMError_NotInitialized;
-	
 	
     color.fx   = fWheelSlot->GetColor().Get_x();
     color.fy   = fWheelSlot->GetColor().Get_y();
@@ -188,6 +188,100 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotImpl::CreatePrismFacet(c
 	//---------------------------------------------------------------------------
 	// Set Out Value
 	*outFacet		= pPrismFacetObj;
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotImpl::GetAnimationSystem(VectorworksMVR::IGdtfWheelSlotAnimationSystem** outAnimationSystem)
+{
+	// Check Data
+	if( ! fWheelSlot) return kVCOMError_NotInitialized;    
+    
+    SceneData::GdtfWheelSlotAnimationSystem* gdtfAnimationSystem = fWheelSlot->GetAnimationSystem();
+    
+    
+    //---------------------------------------------------------------------------
+    // Initialize Object
+    CGdtfWheelSlotAnimationSystemImpl* pAnimationSystemObj = nullptr;
+    
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfWheelSlotAnimationSystem, (IVWUnknown**) & pAnimationSystemObj)))
+    {
+        // Check Casting
+        CGdtfWheelSlotAnimationSystemImpl* pResultInterface = dynamic_cast<CGdtfWheelSlotAnimationSystemImpl* >(pAnimationSystemObj);
+        if (pResultInterface)
+        {
+            pResultInterface->setPointer(gdtfAnimationSystem);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+    
+    //---------------------------------------------------------------------------
+    // Check Incoming Object
+    if (*outAnimationSystem)
+    {
+        (*outAnimationSystem)->Release();
+        *outAnimationSystem		= NULL;
+    }
+    
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *outAnimationSystem		= pAnimationSystemObj;
+    
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotImpl::CreateAnimationSystem(double p1_X, double p1_Y, double p2_X, double p2_Y, double p3_X, double p3_Y, double radius, IGdtfWheelSlotAnimationSystem** outAnimationSystem)
+{
+	// Check Data
+	if( ! fWheelSlot) return kVCOMError_NotInitialized;
+	
+	SceneData::GdtfWheelSlotAnimationSystem* gdtfAnimationSystem = fWheelSlot->AddAnimationSystem();
+    gdtfAnimationSystem->SetP1_X(p1_X);
+    gdtfAnimationSystem->SetP1_Y(p1_Y);
+    gdtfAnimationSystem->SetP2_X(p2_X);
+    gdtfAnimationSystem->SetP2_Y(p2_Y);
+    gdtfAnimationSystem->SetP3_X(p3_X);
+    gdtfAnimationSystem->SetP3_Y(p3_Y);
+    gdtfAnimationSystem->SetRadius(radius);
+	
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CGdtfWheelSlotAnimationSystemImpl* pAnimationSystemObj = nullptr;
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfWheelSlotAnimationSystem, (IVWUnknown**) & pAnimationSystemObj)))
+	{
+		// Check Casting
+		CGdtfWheelSlotAnimationSystemImpl* pResultInterface = dynamic_cast<CGdtfWheelSlotAnimationSystemImpl* >(pAnimationSystemObj);
+		if (pResultInterface)
+		{
+			pResultInterface->setPointer(gdtfAnimationSystem);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incomming Object
+	if (*outAnimationSystem)
+	{
+		(*outAnimationSystem)->Release();
+		*outAnimationSystem	= NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*outAnimationSystem	= pAnimationSystemObj;
 	
 	return kVCOMError_NoError;
 }

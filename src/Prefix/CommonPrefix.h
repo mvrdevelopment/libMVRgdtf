@@ -260,6 +260,11 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_PrismFacetColor		"Color"
 #define XML_GDTF_PrismFacetRotation		"Rotation"
 
+#define XML_GDTF_AnimationSystemNodeName    "AnimationSystem"
+#define XML_GDTF_AnimationSystemP1          "P1"
+#define XML_GDTF_AnimationSystemP2          "P2"
+#define XML_GDTF_AnimationSystemP3          "P3"
+#define XML_GDTF_AnimationSystemRadius      "Radius"
 
 #define XML_GDTF_ModelNodeName			"Model"
 #define XML_GDTF_ModelName				"Name"
@@ -470,6 +475,14 @@ const Sint32 kMVR_MinorVersion = 4;
 
 #define XML_GDTF_DMX_ProfileCollect                     "DMXProfiles"
 #define XML_GDTF_DMX_Profile                            "DMXProfile"
+
+#define XML_GDTF_ConnectorCollect	                    "Connectors"
+#define XML_GDTF_ConnectorNodeName                      "Connector"
+#define XML_GDTF_ConnectorName                          "Name"
+#define XML_GDTF_ConnectorType                          "Type"
+#define XML_GDTF_ConnectorDmxBreak                      "DmxBreak"
+#define XML_GDTF_ConnectorGender                        "Gender"
+#define XML_GDTF_ConnectorLength                        "Length"
 
 //-----------------------------------------------------------------------------
 // Measurement
