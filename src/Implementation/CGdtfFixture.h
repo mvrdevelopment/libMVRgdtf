@@ -134,6 +134,18 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetPowerConsumptionCount(size_t& count);
         virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreatePowerConsumption(VectorworksMVR::IGdtfConnector* connector, VectorworksMVR::IGdtfPowerConsumption** outVal);
         virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetPowerConsumptionAt(size_t at, VectorworksMVR::IGdtfPowerConsumption** value);
+
+        virtual VCOMError VCOM_CALLTYPE		GetOperatingTemperatureLow(double& value);
+		virtual VCOMError VCOM_CALLTYPE		SetOperatingTemperatureLow(double value);
+
+		virtual VCOMError VCOM_CALLTYPE		GetOperatingTemperatureHigh(double& value);
+		virtual VCOMError VCOM_CALLTYPE		SetOperatingTemperatureHigh(double value);
+
+		virtual VCOMError VCOM_CALLTYPE		GetWeight(double& value);
+		virtual VCOMError VCOM_CALLTYPE		SetWeight(double value);
+
+		virtual VCOMError VCOM_CALLTYPE		GetLegHeight(double& value);
+		virtual VCOMError VCOM_CALLTYPE		SetLegHeight(double value);
 		
 	private:
         SceneData::GdtfFixture* fFixtureObject;

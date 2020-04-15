@@ -1154,6 +1154,18 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
         virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreatePowerConsumption(VectorworksMVR::IGdtfConnector* connector, VectorworksMVR::IGdtfPowerConsumption** outVal)=0;
         virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetPowerConsumptionAt(size_t at, VectorworksMVR::IGdtfPowerConsumption** value)=0;
 
+		virtual VCOMError VCOM_CALLTYPE		GetOperatingTemperatureLow(double& value) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetOperatingTemperatureLow(double value) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE		GetOperatingTemperatureHigh(double& value) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetOperatingTemperatureHigh(double value) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE		GetWeight(double& value) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetWeight(double value) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE		GetLegHeight(double& value) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetLegHeight(double value) = 0;
+
 	};
     typedef VCOMPtr<IGdtfFixture>	IGdtfFixturePtr;
     const   VWIID IID_IGdtfFixture = { 0x8f7bba09, 0x0753, 0x4971, {0xa9, 0x1b, 0x51, 0xce, 0x96, 0xd2, 0xb6, 0x3f}};

@@ -2162,3 +2162,79 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreatePowerConsumpti
 
     return kVCOMError_NoError;
 }
+
+VCOMError VCOM_CALLTYPE	CGdtfFixtureImpl::GetOperatingTemperatureLow(double& value)
+{
+    if(!fFixtureObject) {return kVCOMError_NotInitialized;}
+	
+	value = fFixtureObject->GetOperatingTemperatureLow();
+	
+	return kVCOMError_NoError;
+    
+}
+
+VCOMError VCOM_CALLTYPE	CGdtfFixtureImpl::SetOperatingTemperatureLow(double value)
+{
+    if(!fFixtureObject) {return kVCOMError_NotInitialized;}
+	
+	fFixtureObject->SetOperatingTemperatureLow(value);
+	
+	return kVCOMError_NoError;
+}
+
+VCOMError VCOM_CALLTYPE	CGdtfFixtureImpl::GetOperatingTemperatureHigh(double& value)
+{
+    if(!fFixtureObject) {return kVCOMError_NotInitialized;}
+	
+	value = fFixtureObject->GetOperatingTemperatureHigh();
+	
+	return kVCOMError_NoError;
+    
+}
+
+VCOMError VCOM_CALLTYPE	CGdtfFixtureImpl::SetOperatingTemperatureHigh(double value)
+{
+    if(!fFixtureObject) {return kVCOMError_NotInitialized;}
+	
+	fFixtureObject->SetOperatingTemperatureHigh(value);
+	
+	return kVCOMError_NoError;
+}
+
+VCOMError VCOM_CALLTYPE	CGdtfFixtureImpl::GetWeight(double& value)
+{
+    if(!fFixtureObject) {return kVCOMError_NotInitialized;}
+	
+	value = fFixtureObject->GetWeight();
+	
+	return kVCOMError_NoError;
+    
+}
+
+VCOMError VCOM_CALLTYPE	CGdtfFixtureImpl::SetWeight(double value)
+{
+    if(!fFixtureObject) {return kVCOMError_NotInitialized;}
+	
+	fFixtureObject->SetWeight(value);
+	
+	return kVCOMError_NoError;
+}
+
+VCOMError VCOM_CALLTYPE	CGdtfFixtureImpl::GetLegHeight(double& value)
+{
+    if(!fFixtureObject) {return kVCOMError_NotInitialized;}
+	
+	value = fFixtureObject->GetLegHeight();
+	
+	return kVCOMError_NoError;
+    
+}
+
+VCOMError VCOM_CALLTYPE	CGdtfFixtureImpl::SetLegHeight(double value)
+{
+    if(!fFixtureObject) {return kVCOMError_NotInitialized;}
+	
+	fFixtureObject->SetLegHeight(value);
+	
+	return kVCOMError_NoError;
+}
