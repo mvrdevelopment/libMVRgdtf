@@ -7922,6 +7922,10 @@ void SceneData::GdtfSoftwareVersionID::OnReadFromNode(const IXMLFileNodePtr & pN
 
 SceneData::GdtfPhysicalDescriptions::GdtfPhysicalDescriptions()
 {
+	fOperatingTemperatureLow 	= 0.0;
+	fOperatingTemperatureHigh 	= 40.0;
+	fWeight 					= 0.0;
+	fLegHeight 					= 0.0;
 }
 
 SceneData::GdtfPhysicalDescriptions::~GdtfPhysicalDescriptions()
@@ -8146,20 +8150,20 @@ void SceneData::GdtfPhysicalDescriptions::OnPrintToFile(IXMLFileNodePtr pNode)
 		IXMLFileNodePtr OperatingTemperatureNode;
 		if(VCOM_SUCCEEDED(pNode->CreateChildNode(XML_GDTF_OperatingTemperatureNodeName, &OperatingTemperatureNode)))
 		{
-			pNode->SetNodeAttributeValue(XML_GDTF_OperatingTemperatureLow,	GdtfConverter::ConvertDouble(fOperatingTemperatureLow));
-			pNode->SetNodeAttributeValue(XML_GDTF_OperatingTemperatureHigh, GdtfConverter::ConvertDouble(fOperatingTemperatureHigh));
+			OperatingTemperatureNode->SetNodeAttributeValue(XML_GDTF_OperatingTemperatureLow,	GdtfConverter::ConvertDouble(fOperatingTemperatureLow));
+			OperatingTemperatureNode->SetNodeAttributeValue(XML_GDTF_OperatingTemperatureHigh, GdtfConverter::ConvertDouble(fOperatingTemperatureHigh));
 		}
 
 		IXMLFileNodePtr WeightNode;
 		if(VCOM_SUCCEEDED(pNode->CreateChildNode(XML_GDTF_WeightNodeName, &WeightNode)))
 		{
-			pNode->SetNodeAttributeValue(XML_GDTF_WeightValue,	GdtfConverter::ConvertDouble(fWeight));
+			WeightNode->SetNodeAttributeValue(XML_GDTF_WeightValue,	GdtfConverter::ConvertDouble(fWeight));
 		}
 
 		IXMLFileNodePtr LegHeightNode;
 		if(VCOM_SUCCEEDED(pNode->CreateChildNode(XML_GDTF_LegHeightNodeName, &LegHeightNode)))
 		{
-			pNode->SetNodeAttributeValue(XML_GDTF_LegHeightValue,	GdtfConverter::ConvertDouble(fLegHeight));
+			LegHeightNode->SetNodeAttributeValue(XML_GDTF_LegHeightValue,	GdtfConverter::ConvertDouble(fLegHeight));
 		}
 
 	}
@@ -8285,7 +8289,7 @@ void SceneData::GdtfPhysicalDescriptions::OnReadFromNode(const IXMLFileNodePtr &
 	if(LegHeightNode != nullptr)
 	{
 		TXString legHeightStr; LegHeightNode->GetNodeAttributeValue(XML_GDTF_LegHeightValue, legHeightStr);
-		GdtfConverter::ConvertDouble(legHeightStr, LegHeightNode, fWeight);	
+		GdtfConverter::ConvertDouble(legHeightStr, LegHeightNode, fLegHeight);	
 	}
 	
 }

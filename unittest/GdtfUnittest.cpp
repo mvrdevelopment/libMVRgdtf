@@ -224,6 +224,13 @@ void GdtfUnittest::WriteFile()
 			//Frequency High is not set so we can check that the default value (60 Hz) is set.
 		}
 
+			//Set OperatingTemperature
+		gdtfWrite->SetOperatingTemperatureLow(-273.15);
+			//Set Weight
+		gdtfWrite->SetWeight(42);
+			//Set LegHeight
+		gdtfWrite->SetLegHeight(0.6);
+
 
 		//------------------------------------------------------------------------------------------------------------------
 		// Set ColorSpace Space
@@ -741,7 +748,24 @@ void GdtfUnittest::ReadFile()
 			this->checkifEqual("PowerConsumption FrequencyHigh", frequencyHigh, 60.0);
 		}
 
-        
+			//OperatingTemperature 
+		double operatingTemperatureLow;
+		__checkVCOM(gdtfRead->GetOperatingTemperatureLow(operatingTemperatureLow));
+		this->checkifEqual("operatingTemperatureLow", operatingTemperatureLow, -273.15);
+
+		double operatingTemperatureHigh;
+		__checkVCOM(gdtfRead->GetOperatingTemperatureHigh(operatingTemperatureHigh));
+		this->checkifEqual("operatingTemperatureHigh", operatingTemperatureHigh, 40.0);
+
+			//Weight 
+		double weight;
+		__checkVCOM(gdtfRead->GetWeight(weight));
+		this->checkifEqual("weight", weight, 42.0);
+
+			//OperatingTemperature 
+		double legHeight;
+		__checkVCOM(gdtfRead->GetLegHeight(legHeight));
+		this->checkifEqual("legHeight", legHeight, 0.6);
 
 		//------------------------------------------------------------------------------------------------------------------
 		// Set ColorSpace Space
