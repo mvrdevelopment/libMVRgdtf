@@ -14,7 +14,8 @@
             "cwd": "${workspaceFolder}",
             "environment": [],
             "externalConsole": true,
-            "MIMode": "lldb"
+            "MIMode": "lldb",
+            "miDebuggerPath": "/Applications/Xcode.app/Contents/Developer/usr/bin/lldb-mi"
         },
         {
             "name": "(gdb) Launch",

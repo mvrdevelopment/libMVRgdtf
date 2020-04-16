@@ -29,6 +29,9 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetPrismFacetCount(size_t& outCount);
         virtual VCOMError VCOM_CALLTYPE     GetPrismFacetAt(size_t& at, IGdtfWheelSlotPrismFacet** outPosition);
 		virtual VCOMError VCOM_CALLTYPE     CreatePrismFacet(const STransformMatrix& transformMatrix, IGdtfWheelSlotPrismFacet** outFacet);
+
+        virtual VCOMError VCOM_CALLTYPE     GetAnimationSystem(IGdtfWheelSlotAnimationSystem** outAnimationSystem);
+		virtual VCOMError VCOM_CALLTYPE     CreateAnimationSystem(double p1_X, double p1_Y, double p2_X, double p2_Y, double p3_X, double p3_Y, double radius, IGdtfWheelSlotAnimationSystem**   outAnimationSystem);
 		
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr);
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject();

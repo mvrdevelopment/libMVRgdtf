@@ -59,7 +59,7 @@
 
 //----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataExchange XML Values
-#define XML_Val_RootNodeName			"GeneralScenceDescription"
+#define XML_Val_RootNodeName			"GeneralSceneDescription"
 #define XML_Val_RootAttrMainVersion		"verMajor"
 #define XML_Val_RootAttrMinorVersion	"verMinor"
 
@@ -111,6 +111,8 @@
 #define XML_Val_FixtureAttrBreak	"break"
 #define XML_Val_FixtureTypeId		"FixtureTypeId"
 #define XML_Val_FixtureCustomid		"CustomId"
+#define XML_Val_FixtureGobo		    "Gobo"
+#define XML_Val_FixtureGoboRotation "rotation"
 
 #define XML_Val_SceneObjectNodeName			"SceneObject"
 
@@ -136,7 +138,7 @@ const Sint32 kMVR_MinorVersion = 4;
 
 #define XML_GDTF_ROOTNODENAME			"GDTF"
 #define XML_GDTF_ROOTNODEATTRVERSION	"DataVersion"
-#define XML_GDTF_CurrentVersion			"1.0"
+#define XML_GDTF_CurrentVersion			"1.1"
 
 #define XML_GDTF_FixtureNodeName		"FixtureType"
 #define XML_GDTF_FixtureName			"Name"
@@ -146,6 +148,7 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_FixtureDescription		"Description"
 #define XML_GDTF_FixtureTypeID			"FixtureTypeID"
 #define XML_GDTF_FixtureThumbnail		"Thumbnail"
+#define XML_GDTF_FixtureCanHaveChildren "CanHaveChildren"
 #define XML_GDTF_LinkedUuid				"RefFT"
 
 #define XML_GDTF_FixtureChildNodeAttributeDef		"AttributeDefinitions"
@@ -257,6 +260,11 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_PrismFacetColor		"Color"
 #define XML_GDTF_PrismFacetRotation		"Rotation"
 
+#define XML_GDTF_AnimationSystemNodeName    "AnimationSystem"
+#define XML_GDTF_AnimationSystemP1          "P1"
+#define XML_GDTF_AnimationSystemP2          "P2"
+#define XML_GDTF_AnimationSystemP3          "P3"
+#define XML_GDTF_AnimationSystemRadius      "Radius"
 
 #define XML_GDTF_ModelNodeName			"Model"
 #define XML_GDTF_ModelName				"Name"
@@ -327,6 +335,8 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_DMXModeGeometryRef				"Geometry"
 #define XML_GDTF_DMXModeDMXChannels				"DMXChannels"
 #define XML_GDTF_DMXModeRelations				"Relations"
+#define XML_GDTF_DMXModeMacros					"FTMacros"
+
 
 #define XML_GDTF_DMXChannelNodeName				"DMXChannel"
 #define XML_GDTF_DMXChannelDMXBreak				"DMXBreak"
@@ -367,6 +377,7 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_DMXChannelFuntionPhysicalFrom			"PhysicalFrom"
 #define XML_GDTF_DMXChannelFuntionPhysicalTo			"PhysicalTo"
 #define XML_GDTF_DMXChannelFuntionRealFade				"RealFade"
+#define XML_GDTF_DMXChannelFuntionRealAcceleration		"RealAcceleration"
 #define XML_GDTF_DMXChannelFuntionWheelRef				"Wheel"
 #define XML_GDTF_DMXChannelEmitter						"Emitter"
 
@@ -465,6 +476,14 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_DMX_ProfileCollect                     "DMXProfiles"
 #define XML_GDTF_DMX_Profile                            "DMXProfile"
 
+#define XML_GDTF_ConnectorCollect	                    "Connectors"
+#define XML_GDTF_ConnectorNodeName                      "Connector"
+#define XML_GDTF_ConnectorName                          "Name"
+#define XML_GDTF_ConnectorType                          "Type"
+#define XML_GDTF_ConnectorDmxBreak                      "DmxBreak"
+#define XML_GDTF_ConnectorGender                        "Gender"
+#define XML_GDTF_ConnectorLength                        "Length"
+
 //-----------------------------------------------------------------------------
 // Measurement
 #define XML_GDTF_MeasurementNodeName					"Measurement"
@@ -483,7 +502,12 @@ const Sint32 kMVR_MinorVersion = 4;
 // InterpolationTo Enum
 #define XML_GDTF_InterpolationTo_Linear  "Linear" 
 #define XML_GDTF_InterpolationTo_Step    "Step"
-#define XML_GDTF_InterpolationTo_Log     "Log" 
+#define XML_GDTF_InterpolationTo_Log     "Log"
+
+//-----------------------------------------------------------------------------
+// CanHaveChildren Enum
+#define XML_GDTF_CanHaveChildren_Yes    "Yes" 
+#define XML_GDTF_CanHaveChildren_No     "No"
 
 //-----------------------------------------------------------------------------
 #define XML_GDTF_ColorRenderingIndexCollect             "CRIs"

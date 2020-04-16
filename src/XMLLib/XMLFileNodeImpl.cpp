@@ -987,31 +987,35 @@ VCOMError CXMLFileNodeImpl::CreateChildNodeBeforeIndex(const TXString& name, siz
                 
                 //===================================================================
                 // We need to skip whitespace node to get the correct index. [PChang]
-                DOMNodeList *list = fpNode->getChildNodes();
-                size_t listLength = list->getLength();
-                
-				size_t nodeIndex = 0;
+  
 				bool bInserted = false;
-				
-				for(size_t listItemIndex = 0; listItemIndex < listLength; listItemIndex++)
+
+				if(index != size_t(-1))
 				{
-					DOMNode *pCurrentNode = list->item(listItemIndex);
-					
-					if ((pCurrentNode->getNodeType() == DOMNode::TEXT_NODE)			// Empty text node
-						|| (pCurrentNode->getNodeType() == DOMNode::COMMENT_NODE))	// Comment
+					DOMNodeList *	list 		= fpNode->getChildNodes();
+                	size_t 			listLength 	= list->getLength();
+					size_t 			nodeIndex 	= 0;
+
+					for(size_t listItemIndex = 0; listItemIndex < listLength; listItemIndex++)
 					{
-						// Skip uninteresting nodes
-						continue;
+						DOMNode *pCurrentNode = list->item(listItemIndex);
+						
+						if ((pCurrentNode->getNodeType() == DOMNode::TEXT_NODE)			// Empty text node
+							|| (pCurrentNode->getNodeType() == DOMNode::COMMENT_NODE))	// Comment
+						{
+							// Skip uninteresting nodes
+							continue;
+						}
+						
+						if(nodeIndex == index)	// Match
+						{
+							fpNode->insertBefore( pChildNode, fpNode->getChildNodes()->item(listItemIndex) );
+							bInserted = true;
+							break;
+						}
+						
+						++nodeIndex;
 					}
-					
-					if(nodeIndex == index)	// Match
-					{
-						fpNode->insertBefore( pChildNode, fpNode->getChildNodes()->item(listItemIndex) );
-						bInserted = true;
-						break;
-					}
-					
-					++nodeIndex;
 				}
 				
 				// If not inserted, append the child.

@@ -4,6 +4,8 @@
 #include "Unittest.h"
 #include "MvrUnittest.h"
 #include <iostream>
+#include "Utility.h"
+
 
 #include "Include/VectorworksMVR.h"
 using namespace VectorworksMVR;
@@ -52,6 +54,22 @@ void MvrUnittest::WriteFile()
 	// Open file for write
     if(__checkVCOM(mvrWrite->OpenForWrite(fPath.c_str())))
     {
+		//------------------------------------------------------------------------------------------------
+        // Add Buffer File
+		std::string path 		= UnitTestUtil::GetTestResourceFolder() + kSeparator + "allWorking.gdtf";
+
+		IGdtfFixturePtr fixture (IID_IGdtfFixture);
+		if(__checkVCOM(fixture->ReadFromFile(path.c_str())))
+		{
+			size_t bufferLength = 0;
+			fixture->GetBufferLength(bufferLength);
+
+			char* buffer = new char[bufferLength + 1];
+			__checkVCOM(fixture->ToBuffer(buffer));
+			__checkVCOM(mvrWrite->AddBufferToMvrFile("gdtfTestFile.gdtf", buffer, bufferLength));
+			delete [] buffer;
+		}
+		
         //------------------------------------------------------------------------------------------------
         // Add Custom data
         ISceneDataProviderPtr obj;
@@ -133,6 +151,8 @@ void MvrUnittest::WriteFile()
 			__checkVCOM(fixture2->AddAdress(352, 0));
 			__checkVCOM(fixture2->AddAdress(5684, 1));
 			__checkVCOM(fixture2->SetFocusPoint(focusPoint));
+			__checkVCOM(fixture2->SetGoboRotation(32.87));
+			__checkVCOM(fixture2->SetGobo("MWheel_Img1"));
 		}
 
 		// Create second Layer
@@ -147,7 +167,16 @@ void MvrUnittest::WriteFile()
 			__checkVCOM(fixture3->AddAdress(352, 0));
 			__checkVCOM(fixture3->AddAdress(5684, 1));
 			__checkVCOM(fixture3->SetFocusPoint(focusPoint));
+			__checkVCOM(fixture3->SetGobo("MWheel_Img1"));
+
+
+			mvrWrite->AddFileToMvrFile(GetTestWheel_PNG(false).c_str());
 		}
+
+
+		ISceneObjPtr trussObject = nullptr;
+		__checkVCOM(mvrWrite->CreateTruss(MvrUUID(1136161271, 1699351080, 75193997, 1748573014), STransformMatrix(), "MyTrussName", layer2, &trussObject));
+
 
 
 		// Check Next Object behavoir
@@ -230,24 +259,36 @@ void MvrUnittest::ReadFile()
 		// Check Object
 		size_t count_Objects = 0;
 		__checkVCOM(mvrRead->GetSceneObjectCount(count_Objects));
-		this->checkifEqual("Check Global Object Count", count_Objects, size_t(4));
+		this->checkifEqual("Check Global Object Count", count_Objects, size_t(5));
 
 		//------------------------------------------------------------------------------------------------
 		// Check File Getters
 		size_t countFiles = size_t(-1);
 		__checkVCOM(mvrRead->GetAttachedFileCount(countFiles));
-		checkifEqual("Check File Count in MVR",countFiles , size_t(1) );
+		checkifEqual("Check File Count in MVR",countFiles , size_t(3) );
 
 
 		std::string path = gdtfPath;
 #ifdef _WINDOWS
 		path += "\\MVR_Export\\";
+#elif GS_MAC
+		path += "/Library/Application Support/mvrexchange/MVR_Export/";
 #else
 		path += "/MVR_Export/";
 #endif
-		std::string file1 = path + std::string("testGdtf.gdtf");
+		std::string file0 = path + std::string("MWheel_Img1.png");
+		std::string file1 = path + std::string("gdtfTestFile.gdtf");
+		std::string file2 = path + std::string("testGdtf.gdtf");
 
-		checkifEqual("File 1 Name", mvrRead->GetAttachedFileCountAt(0), file1.c_str());
+		checkifEqual("File 0 Name", mvrRead->GetAttachedFileCountAt(0), file0.c_str());
+		checkifEqual("File 1 Name", mvrRead->GetAttachedFileCountAt(1), file1.c_str());
+		checkifEqual("File 2 Name", mvrRead->GetAttachedFileCountAt(2), file2.c_str());
+
+
+		IGdtfFixturePtr fixtureFromBuffer (IID_IGdtfFixture);
+		__checkVCOM(fixtureFromBuffer->ReadFromFile(file1.c_str()));
+
+
 		//------------------------------------------------------------------------------------------------
 		// Read Layers
 		ISceneObjPtr readLayer = nullptr;
@@ -374,6 +415,13 @@ void MvrUnittest::ReadFile()
 
 					IGdtfFixturePtr gdtfLinkedFixture;
 					__checkVCOM(sceneObj->GetGdtfFixture( & gdtfLinkedFixture));
+
+					size_t bufferLength = 0;
+					__checkVCOM(gdtfLinkedFixture->GetBufferLength(bufferLength));
+
+					char* buffer = new char[bufferLength + 1];
+					__checkVCOM(gdtfLinkedFixture->ToBuffer(buffer));
+					delete[] buffer;
 				}
 				
 				// ------------------------------------------------------------------------------
@@ -392,6 +440,10 @@ void MvrUnittest::ReadFile()
 					{
 						checkifEqual("GetFocusPoint", focus->GetName(), "My FocusPoint");
 					}
+
+					double goboRotation = -1.0;
+					__checkVCOM(sceneObj->GetGoboRotation(goboRotation));
+					checkifEqual("sceneObj->GetGoboRotation", goboRotation, 32.87);
 
 					Sint32 unitNumb;
 					sceneObj->GetUnitNumber(unitNumb);
@@ -440,6 +492,14 @@ void MvrUnittest::ReadFile()
 					this->checkifEqual("GetFixtureGuid fixtureUUID3 ", resultUUID, fixtureUUID3);
 					checkifEqual("GetGdtfName", 	 	sceneObj->GetGdtfName(), "testGdtf.gdtf");
 					checkifEqual("GetGdtfMode", 	 	sceneObj->GetGdtfMode(), "My DmxModeName");
+					checkifEqual("GetGobo", 	 		sceneObj->GetGobo(), "MWheel_Img1");
+
+					std::string goboFullPath = sceneObj->GetGoboFullPath();
+					checkifTrue("GetGoboFullPath is not empty", !goboFullPath.empty());
+
+					double goboRotation = -1.0;
+					__checkVCOM(sceneObj->GetGoboRotation(goboRotation));
+					checkifEqual("sceneObj->GetGoboRotation", goboRotation, 0.0);
 					
 					IClassPtr mvrClass;
 					__checkVCOM_Failed(sceneObj->GetClass(& mvrClass));
@@ -486,6 +546,12 @@ void MvrUnittest::ReadFile()
 						}
 					}
 				}
+
+				if (i==2 && j==0)
+				{
+					checkifEqual("ESceneObjType Type ", (Sint32)type ,(Sint32)ESceneObjType::Truss);
+
+				}
 							
 				//------------------------------------------------------------------------
 				// Step to next Obj
@@ -529,6 +595,8 @@ void MvrUnittest::ReadFile()
 			std::string path = gdtfPath;
 #ifdef _WINDOWS
 			path += "\\MVR_Export\\My3DSFile.3ds";
+#elif GS_MAC
+		path += "/Library/Application Support/mvrexchange/MVR_Export/My3DSFile.3ds";
 #else
 			path += "/MVR_Export/My3DSFile.3ds";
 #endif
@@ -604,4 +672,13 @@ void MvrUnittest::ReadFile()
 		}
 
     }
+}
+
+std::string MvrUnittest::GetTestWheel_PNG(bool readLocation)
+{
+	std::string path;
+	if(readLocation)	{ path =fPath + kSeparator + "GdtfMvrUnitTest" + kSeparator + "wheels" + kSeparator; }
+	else 				{ path = UnitTestUtil::GetTestResourceFolder() + kSeparator; }
+    path += "MWheel_Img1.png";
+    return path;
 }

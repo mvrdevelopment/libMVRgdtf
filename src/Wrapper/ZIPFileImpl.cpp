@@ -14,6 +14,8 @@
 
 #include "TDQuickDraw.h"
 
+#include "GDTFManager.h"
+
 //using namespace ZIP;
 using namespace VectorworksMVR::Filing;
 
@@ -122,6 +124,11 @@ CZIPFileImpl::CZIPFileImpl()
 
 CZIPFileImpl::~CZIPFileImpl()
 {
+	if(fpOpenedFile)
+	{
+		delete fpOpenedFile;
+		fpOpenedFile = nullptr;
+	}
 }
 uint32_t CZIPFileImpl::AddRef()
 {
@@ -150,12 +157,13 @@ VCOMError CZIPFileImpl::OpenRead(IFileIdentifier* pFileID)
 	if ( fpOpenedFile )
 	{
 		fpOpenedFile->Close();
+		delete fpOpenedFile;
 	}
 
 	fbOpenedWrite		= false;
 
-	fpOpenedFile.Query( IID_RawOSFile );
-	fpOpenedFile->Open( pFileID, true, false, true, false );
+	fpOpenedFile = new ZIPFileBuffer();
+	fpOpenedFile->Open( pFileID, true );
 	fpOpenedFileID = pFileID;
 
 	IFolderIdentifierPtr pFolderID( IID_FolderIdentifier );
@@ -166,18 +174,35 @@ VCOMError CZIPFileImpl::OpenRead(IFileIdentifier* pFileID)
 	return kVCOMError_NoError;
 }
 
+VCOMError CZIPFileImpl::OpenRead(const char* buffer, size_t length)
+{
+	if ( fpOpenedFile )
+	{
+		fpOpenedFile->Close();
+		delete fpOpenedFile;
+	}
+
+	fbOpenedWrite		= false;
+
+	fpOpenedFile = new ZIPFileBuffer();
+	fpOpenedFile->Open( buffer,length );
+
+	return kVCOMError_NoError;
+}
+
 VCOMError CZIPFileImpl::OpenWrite(IFileIdentifier* pFileID)
 {
 	if ( fpOpenedFile )
 	{
 		fpOpenedFile->Close();
+		delete fpOpenedFile;
 	}
 
 	fbOpenedWrite	= true;
 	fbCompressFiles = true;
 
-	fpOpenedFile.Query( IID_RawOSFile );
-	fpOpenedFile->Open( pFileID, true, true, true, false );
+	fpOpenedFile = new ZIPFileBuffer();
+	fpOpenedFile->Open( pFileID, false );
 	fpOpenedFileID = pFileID;
 
 	IFolderIdentifierPtr pFolderID( IID_FolderIdentifier );
@@ -193,13 +218,14 @@ VCOMError CZIPFileImpl::OpenNewWrite(IFileIdentifier* pFileID, bool compressFile
 	if ( fpOpenedFile )
 	{
 		fpOpenedFile->Close();
+		delete fpOpenedFile;
 	}
 
 	fbOpenedWrite	= true;
 	fbCompressFiles	= compressFiles;
 
-	fpOpenedFile.Query( IID_RawOSFile );
-	fpOpenedFile->Open( pFileID, true, true, true, true );
+	fpOpenedFile = new ZIPFileBuffer();
+	fpOpenedFile->Open( pFileID, false );
 	fpOpenedFileID = pFileID;
 
 	IFolderIdentifierPtr pFolderID( IID_FolderIdentifier );
@@ -421,16 +447,21 @@ VCOMError CZIPFileImpl::GetFile(const TXString& path, IZIPFileIOBuffer* outputBu
 	Uint64 inOutReadSize = (Uint64)fileInfo.dwCompressedSize;
 	this->ReadFromFile( currentReadPosition, inOutReadSize, (void*)readData ); 
 	
-	if ( fileInfo.dwCompressionMethod != 0 )
+	if ( fileInfo.dwCompressionMethod == 12  /* bzip2 */)
+	{
+		SceneData::GdtfFixture::AddError(GdtfParsingError(GdtfDefines::EGdtfParsingError::eFileWithUnsupportedEncodingInZip)); 
+		err = kVCOMError_Failed;
+	}
+	else if(fileInfo.dwCompressionMethod == 0 /* No compression */)
+	{
+		err = outputBuffer->SetData( (void*)readData, fileInfo.dwCompressedSize ); 
+	}
+	else
 	{
 		// inflate the data if it is compressed
 		bool bOk = this->Inflate( (void*)readData, fileInfo.dwCompressedSize, outputBuffer ); 
 		if ( !bOk )
 			err = kVCOMError_Failed;
-	}
-	else
-	{
-		err = outputBuffer->SetData( (void*)readData, fileInfo.dwCompressedSize ); 
 	}
 
 	if ( readData )
@@ -454,8 +485,10 @@ VCOMError CZIPFileImpl::GetFile(const TXString& path, IFileIdentifier* outputFil
 	return err;
 }
 
-VCOMError CZIPFileImpl::AddFile(const TXString& path, IZIPFileIOBuffer* inputBuffer)
+VCOMError CZIPFileImpl::AddFile(const TXString& inPath, IZIPFileIOBuffer* inputBuffer)
 {
+	TXString path = inPath;
+	path.Replace("\\", "/");
 	VCOMError err = kVCOMError_NoError;
 	if ( !fpOpenedFile || !fbOpenedWrite )
 		return kVCOMError_NotInitialized;
@@ -545,6 +578,7 @@ VCOMError CZIPFileImpl::AddFile(const TXString& path, IZIPFileIOBuffer* inputBuf
 			zipArchiveInfo.dwSizeOfCentralDir += kCentralFileHeaderLength + (Uint32)zipFileInfo.fFileName.GetEncodingLength(ETXEncoding::eUTF8); 
 
 			Uint64 currentWritePosition = 0;
+			fpOpenedFile->CleanBuffer();
 			this->WriteToFile( (void*)readData1, currentWritePosition,  centralDirPosition );
 			this->WriteLocalFileHeader( &zipFileInfo, currentWritePosition);
 			this->WriteToFile( (void*)outData, currentWritePosition, compressedSize );
@@ -734,7 +768,7 @@ VCOMError CZIPFileImpl::RemoveFile(const TXString& path)
 		fpOpenedFile->Read( localFileHeaderPosition + removedLocalDataSize, readSize2, (void*)readData2 );
 	
 		fpOpenedFile->Close();
-		fpOpenedFile->Open( fpOpenedFileID, true, true, true, true );
+		fpOpenedFile->Open( fpOpenedFileID, false );
 	
 		Uint64 currentWritePosition = 0;
 		this->WriteToFile( (void*)readData1, currentWritePosition, readSize1 );
@@ -746,11 +780,11 @@ VCOMError CZIPFileImpl::RemoveFile(const TXString& path)
 	
 		if ( fbOpenedWrite )
 		{
-			fpOpenedFile->Open( fpOpenedFileID, true, true, true, false );
+			fpOpenedFile->Open( fpOpenedFileID, false );
 		}
 		else 
 		{
-			fpOpenedFile->Open( fpOpenedFileID, true, false, true, false );
+			fpOpenedFile->Open( fpOpenedFileID, true );
 		}
 	
 		if ( readData1 )
@@ -776,11 +810,11 @@ VCOMError CZIPFileImpl::MoveFile(const TXString& path)
 
 	if ( fbOpenedWrite )
 	{
-		fpOpenedFile->Open( pMovedFile, true, true, true, false );	
+		fpOpenedFile->Open( pMovedFile, false );	
 	}
 	else
 	{
-		fpOpenedFile->Open( pMovedFile, true, false, true, false );
+		fpOpenedFile->Open( pMovedFile, true );
 	}
 
 	return kVCOMError_NoError;

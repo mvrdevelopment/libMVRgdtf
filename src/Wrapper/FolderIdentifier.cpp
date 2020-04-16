@@ -257,7 +257,7 @@ VCOMError CFolderIdentifier::Set(EFolderSpecifier folderSpec, bool bUserFolder)
 
 	VCOMError	error	= kVCOMError_Failed;
  	TFolderIdentifier	folder;
- 	if ( GetFolderWithSpecifer( (EFolderSpecifier) innerFolderSpec, folder, false /*inCreateIfMissing*/ ) ) {
+ 	if ( GetFolderWithSpecifer( (EFolderSpecifier) innerFolderSpec, folder, true /*inCreateIfMissing*/ ) ) {
  #if GS_WIN
  		error	= this->SetFullPath( folder.GetFolderPath() );
  #else

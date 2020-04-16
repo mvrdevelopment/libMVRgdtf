@@ -53,6 +53,7 @@ namespace VectorworksMVR
 		{
 		public:
 			virtual VCOMError VCOM_CALLTYPE	OpenRead(IFileIdentifier* pFileID) = 0;
+			virtual VCOMError VCOM_CALLTYPE	OpenRead(const char* buffer, size_t length) = 0;
 			virtual VCOMError VCOM_CALLTYPE	OpenWrite(IFileIdentifier* pFileID) = 0;
 			virtual VCOMError VCOM_CALLTYPE	OpenNewWrite(IFileIdentifier* pFileID, bool compressFiles = true) = 0;
 			virtual VCOMError VCOM_CALLTYPE	Close() = 0;

@@ -687,6 +687,60 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetCustomId(size_t& out
 	return kVCOMError_NoError;
 }
 
+MvrString VectorworksMVR::CSceneObjImpl::GetGobo()
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) return "";
+	
+	// Check the type is right
+	ASSERTN(kEveryone,fType == ESceneObjType::Fixture);
+	if( fType != ESceneObjType::Fixture) return "";
+	
+	// Try to cast
+	SceneData::SceneDataFixtureObjPtr fixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	if( ! fixture) return "";
+	
+	return fixture->GetGobo().GetCharPtr();
+}
+
+MvrString VectorworksMVR::CSceneObjImpl::GetGoboFullPath()
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) return "";
+	
+	// Check the type is right
+	ASSERTN(kEveryone,fType == ESceneObjType::Fixture);
+	if( fType != ESceneObjType::Fixture) return "";
+	
+	// Try to cast
+	SceneData::SceneDataFixtureObjPtr fixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	if( ! fixture) return "";
+	
+
+	return fixture->GetGoboFullPath(fContext).GetCharPtr();
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetGoboRotation(double& value)
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+	
+	// Check the type is right
+	ASSERTN(kEveryone,fType == ESceneObjType::Fixture);
+	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
+	
+	// Try to cast
+	SceneData::SceneDataFixtureObjPtr fixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	if( ! fixture) return kVCOMError_NoFixtureObj;
+		
+	value = fixture->GetGoboRotation();
+
+	return kVCOMError_NoError;
+}
+
 VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetGdtfName(MvrString gdtfName)
 {
 	// Check if this is initialized
@@ -931,6 +985,47 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetCustomId(const size_
 	
 	//
 	fixture->SetCustomId(outId);
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetGobo(MvrString gobo)
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) {return kVCOMError_NotInitialized;}
+	
+	// Check the type is right
+	ASSERTN(kEveryone,fType == ESceneObjType::Fixture);
+	if( fType != ESceneObjType::Fixture) {return kVCOMError_NoFixtureObj;}
+	
+	// Try to cast
+	SceneData::SceneDataFixtureObjPtr fixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	if( ! fixture) {return kVCOMError_NoFixtureObj;}
+	
+	//
+	TXString goboString (gobo);
+	fixture->SetGobo(goboString);
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetGoboRotation(double rotation)
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) {return kVCOMError_NotInitialized;}
+	
+	// Check the type is right
+	ASSERTN(kEveryone,fType == ESceneObjType::Fixture);
+	if( fType != ESceneObjType::Fixture) {return kVCOMError_NoFixtureObj;}
+	
+	// Try to cast
+	SceneData::SceneDataFixtureObjPtr fixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	if( ! fixture) {return kVCOMError_NoFixtureObj;}
+	
+	//
+	fixture->SetGoboRotation(rotation);
 	
 	return kVCOMError_NoError;
 }

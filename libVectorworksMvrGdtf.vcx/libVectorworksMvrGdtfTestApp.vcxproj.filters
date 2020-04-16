@@ -78,6 +78,27 @@
     <ClCompile Include="..\unittest\GetCountOfChannels.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\unittest\MacroTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\unittest\DmxValueBug.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\unittest\DmxChannelSetBug.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\unittest\GdtfBufferTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\unittest\DmxChannelSetFormating.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\unittest\ChannelFunctionStartTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\unittest\CrashFileOpen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\unittest\MvrUnittest.h">
@@ -139,6 +160,27 @@
     </ClInclude>
     <ClInclude Include="..\unittest\GetCountOfChannels.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\unittest\MacroTest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\unittest\DmxValueBug.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\unittest\DmxChannelSetBug.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\unittest\GdtfBufferTest.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\unittest\DmxChannelSetFormating.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\unittest\ChannelFunctionStartTest.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\unittest\CrashFileOpen.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -17,8 +17,11 @@ using namespace VectorworksMVR::GdtfDefines;
 GdtfUnittest::GdtfUnittest(const std::string& currentDir)
 {
     fAppDataFolder = currentDir;
+	#ifdef GS_MAC
+	fAppDataFolder += "/Library/Application Support/mvrexchange"; 
+	#endif
 
-    fTestGdtf_Path = fAppDataFolder + kSeparator + "testGdtf.gdtf";
+    fTestGdtf_Path = currentDir + kSeparator + "testGdtf.gdtf";
 
     fTestResourcesFolder = UnitTestUtil::GetTestResourceFolder();
 
@@ -56,6 +59,8 @@ void GdtfUnittest::WriteFile()
 		__checkVCOM(gdtfWrite->SetLongName("My Long Long Name"));
 		__checkVCOM(gdtfWrite->SetFixtureThumbnail("MyThumbnail"));
 		__checkVCOM(gdtfWrite->SetLinkedFixtureGUID(linkedUuid));
+
+		__checkVCOM(gdtfWrite->SetCanHaveChildren(EGdtfCanHaveChildren::eNO));
 
         //------------------------------------------------------------------------------    
         // Add Test Resources
@@ -135,6 +140,7 @@ void GdtfUnittest::WriteFile()
 				cieCol.f_Y = 1.0;
 				__checkVCOM(wheelSlotContainer->SetColor(cieCol));
 
+				// Set PrismFacet
 				// no "ox, oy, oz" entries here
 				STransformMatrix ma;
 				ma.ux = 1;ma.vx = 4;ma.wx = 7;
@@ -152,8 +158,12 @@ void GdtfUnittest::WriteFile()
 					__checkVCOM(gdtfFacet->SetColor(facetCol));
 				}
 
-				// Set Wheel
+				// Set Gobo
 				wheelSlotContainer->SetGobo("MWheel_Img1");
+
+				//Set AnimationSystem
+				IGdtfWheelSlotAnimationSystemPtr gdtfAnimationSystem;
+				__checkVCOM(wheelSlotContainer->CreateAnimationSystem(1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0 /*radius*/, &gdtfAnimationSystem));
 
 
 				// Set Filter link
@@ -187,6 +197,16 @@ void GdtfUnittest::WriteFile()
             gdtfMeasurement->CreateMeasurementPoint(&gdtfMeasurPoint);
             gdtfMeasurPoint->SetEnergy(1.23);
             gdtfMeasurPoint->SetWaveLength(2.34);
+		}
+
+		//------------------------------------------------------------------------------    
+		// Set Connector
+		IGdtfConnectorPtr gdtfConnector;
+		if (__checkVCOM(gdtfWrite->CreateConnector("My connectorName", "HDMI", &gdtfConnector)))
+		{
+            gdtfConnector->SetDmxBreak(2);
+            gdtfConnector->SetGender(-1);
+			gdtfConnector->SetLength(9000.1);
 		}
 
 
@@ -275,10 +295,11 @@ void GdtfUnittest::WriteFile()
 						IGdtfAttributePtr attribute;
 						__checkVCOM(gdftChannelFunction->SetAttribute(gdtfAttribute));
 						__checkVCOM(gdftChannelFunction->SetOriginalAttribute("My orginalAttribute"));
-						__checkVCOM(gdftChannelFunction->SetStartAddress(1));
+						__checkVCOM(gdftChannelFunction->SetStartAddress(0));
 						__checkVCOM(gdftChannelFunction->SetPhysicalStart(2));
 						__checkVCOM(gdftChannelFunction->SetPhysicalEnd(3));
 						__checkVCOM(gdftChannelFunction->SetRealFade(4));
+						__checkVCOM(gdftChannelFunction->SetRealAcceleration(5));
 						__checkVCOM(gdftChannelFunction->SetOnWheel(gdtfWheelObj));
 						__checkVCOM(gdftChannelFunction->SetEmitter(gdtfEmitter));
 
@@ -298,7 +319,11 @@ void GdtfUnittest::WriteFile()
 
 			// Add Relation
 			IGdtfDmxRelationPtr relation;
-			__checkVCOM(gdtfDmxMode->CreateDmxRelation("Relation", EGdtfDmxRelationType::eGdtfDmxRelationType_Multiply, gdtfDmxChannel, gdftChannelFunction, & relation));
+			__checkVCOM(gdtfDmxMode->CreateDmxRelation("My Relation", EGdtfDmxRelationType::eGdtfDmxRelationType_Multiply, gdtfDmxChannel, gdftChannelFunction, & relation));
+
+			// Add Macro
+			IGdtfMacroPtr macro;
+			__checkVCOM(gdtfDmxMode->CreateDmxMacro("My Macro", &macro));
 		}
 
 		// Add Revision
@@ -357,10 +382,28 @@ void GdtfUnittest::ReadFile()
 		this->checkifEqual("GetShortName "				, fixtureShortName	, "My shortName");
 		this->checkifEqual("GetManufacturer "			, manufacturer		, "My Manufacturer");
 		this->checkifEqual("GetFixtureTypeDescription "	, description		, "My Description");
-		this->checkifEqual("GetLongName "	, fixtureLongName		, "My Long Long Name");
+		this->checkifEqual("GetLongName "				, fixtureLongName	, "My Long Long Name");
 
 		__checkVCOM(gdtfRead->GetFixtureGUID(resultUUID));
 		this->checkifEqual("GetFixtureGUID fixtureUUID ", fixtureUUID, resultUUID);
+
+		bool canHaveChildren;
+		__checkVCOM(gdtfRead->GetCanHaveChildren(canHaveChildren));
+		this->checkifEqual("GetCanHaveChildren ", canHaveChildren, false);
+
+		//-----------------------------------------------------------------------------
+		// Check the file content
+		size_t ressourceFiles = 0;
+		__checkVCOM(gdtfRead->GetImageRessourcesCount(ressourceFiles));
+		this->checkifEqual("GetImageRessourcesCount", ressourceFiles, size_t(5));
+
+		CheckAttachedFiles(gdtfRead, 0, this->GetTestPNG_ThumbNail(true));
+		CheckAttachedFiles(gdtfRead, 1, this->GetTestSVG_ThumbNail(true));
+		CheckAttachedFiles(gdtfRead, 2, this->GetTestWheel_PNG(true));
+		CheckAttachedFiles(gdtfRead, 3, this->GetTest3DS_Model(true));
+		CheckAttachedFiles(gdtfRead, 4, this->GetTestSVG_Model(true));
+
+
 		
         //-----------------------------------------------------------------------------
 		// Get the Thumbnail-Image from GDTF File
@@ -446,9 +489,6 @@ void GdtfUnittest::ReadFile()
 							checkifEqual("Linked Filter Name", gdtfLinkedFilter->GetName(), "My Filter");
 						}
 
-						
-
-
 						// PrismFacets loop
 						size_t prismFacetCount = 0;
 						__checkVCOM(gdtfSlot->GetPrismFacetCount(prismFacetCount));
@@ -482,6 +522,36 @@ void GdtfUnittest::ReadFile()
 								this->checkifEqual("GetTransformMatrix.wz ", matrix.wz, double(9));
 							}
 						} // PrismFacets loop
+
+						//Animation System
+						IGdtfWheelSlotAnimationSystemPtr gdtfAnimationSystem;
+						if(__checkVCOM(gdtfSlot->GetAnimationSystem(&gdtfAnimationSystem)))
+						{
+							double p1_X = 0.0;
+							double p1_Y = 0.0;
+							double p2_X = 0.0;
+							double p2_Y = 0.0;
+							double p3_X = 0.0;
+							double p3_Y = 0.0;
+							__checkVCOM(gdtfAnimationSystem->GetP1_X(p1_X));
+							__checkVCOM(gdtfAnimationSystem->GetP1_Y(p1_Y));
+							__checkVCOM(gdtfAnimationSystem->GetP2_X(p2_X));
+							__checkVCOM(gdtfAnimationSystem->GetP2_Y(p2_Y));
+							__checkVCOM(gdtfAnimationSystem->GetP3_X(p3_X));
+							__checkVCOM(gdtfAnimationSystem->GetP3_Y(p3_Y));
+							this->checkifEqual("GetWheelSlotAnimationSystemP1_X ", p1_X, 1.0);
+							this->checkifEqual("GetWheelSlotAnimationSystemP1_Y ", p1_Y, 1.5);
+							this->checkifEqual("GetWheelSlotAnimationSystemP2_X ", p2_X, 2.0);
+							this->checkifEqual("GetWheelSlotAnimationSystemP2_Y ", p2_Y, 2.5);
+							this->checkifEqual("GetWheelSlotAnimationSystemP3_X ", p3_X, 3.0);
+							this->checkifEqual("GetWheelSlotAnimationSystemP3_Y ", p3_Y, 3.5);
+
+							double radius = 0.0;
+							__checkVCOM(gdtfAnimationSystem->GetRadius(radius));
+							this->checkifEqual("GetWheelSlotAnimationSystemRadius ", radius, 4.0);
+
+						}
+
 					} // WheelSlot loop
 				}
 			} // Wheels loop
@@ -529,7 +599,7 @@ void GdtfUnittest::ReadFile()
                         this->checkifEqual("LuminousIntensity",   luminousIntensity, 2.34);
 
                         double transmission=0; __checkVCOM(emitterMeasurement->GetTransmission(transmission));
-                        this->checkifEqual("Transmission",  transmission,  4.56);
+                        this->checkifEqual("Transmission is not allowed to be set",  transmission, 0.0);
 
                         EGdtfInterpolationTo interpolationTo = EGdtfInterpolationTo::Linear; __checkVCOM(emitterMeasurement->GetInterpolationTo(interpolationTo));
                         this->checkifEqual("InterpolationTo",  size_t(interpolationTo), size_t(EGdtfInterpolationTo::Log) );
@@ -555,8 +625,7 @@ void GdtfUnittest::ReadFile()
 			}
 		} // emitter loop
 
-
-        //------------------------------------------------------------------------------------------------------------------
+		//------------------------------------------------------------------------------------------------------------------
         // Filters        
         size_t filterCount; __checkVCOM(gdtfRead->GetFilterCount(filterCount));
         
@@ -582,6 +651,38 @@ void GdtfUnittest::ReadFile()
         // (The Meaurement attributes are check in the Emitter test.)
         size_t measruementCount; __checkVCOM(gdtfFilter->GetMeasurementCount(measruementCount));
         this->checkifEqual(" Filter.Measurements Count", measruementCount, size_t(3) );
+
+
+        //------------------------------------------------------------------------------------------------------------------
+        // Connectors        
+        size_t connectorCount; __checkVCOM(gdtfRead->GetConnectorCount(connectorCount));
+        
+        this->checkifEqual("Connector Count", connectorCount, size_t(1));
+
+        IGdtfConnectorPtr gdtfConnector;
+		
+		if(__checkVCOM(gdtfRead->GetConnectorAt(0, &gdtfConnector)))
+		{
+			MvrString connectorName = gdtfConnector->GetName();
+			this->checkifEqual("Connector Name", connectorName, "My connectorName");
+
+			MvrString type = gdtfConnector->GetType();
+			this->checkifEqual("Connector Type", type, "HDMI");
+
+			Uint32 dmxBreak;
+			__checkVCOM(gdtfConnector->GetDmxBreak(dmxBreak));
+			this->checkifEqual("Connector DmxBreak", (size_t)dmxBreak, (size_t)2);
+
+			Sint32 gender;
+			__checkVCOM(gdtfConnector->GetGender(gender));
+			this->checkifEqual("Connector Gender", gender, -1);
+
+			double length;
+			__checkVCOM(gdtfConnector->GetLength(length));
+			this->checkifEqual("Connector Length", length, 9000.1);
+		}
+
+        
 
 		//------------------------------------------------------------------------------------------------------------------
 		// Set ColorSpace Space
@@ -796,7 +897,7 @@ void GdtfUnittest::ReadFile()
 								//Start Address
 								GdtfDefines::DmxValue dmxStartAddress;
 								__checkVCOM(gdtfFunction->GetStartAddress(dmxStartAddress));
-								this->checkifEqual("gdtfFunctionGetStartAddress ", dmxStartAddress, GdtfDefines::DmxValue(1));
+								this->checkifEqual("gdtfFunctionGetStartAddress ", dmxStartAddress, GdtfDefines::DmxValue(0));
 
 								//physical Start
 								double physicalStart;
@@ -812,6 +913,11 @@ void GdtfUnittest::ReadFile()
 								double realFade;
 								__checkVCOM(gdtfFunction->GetRealFade(realFade));
 								this->checkifEqual("gdtfFunctionGetRealFade ", realFade, double(4));
+
+								//real Acceleration
+								double realAcc;
+								__checkVCOM(gdtfFunction->GetRealAcceleration(realAcc));
+								this->checkifEqual("gdtfFunctionGetRealAcceleration ", realAcc, double(5));
 
                                 // Check the Linked Filter
                                 IGdtfFilterPtr filter;
@@ -881,7 +987,7 @@ void GdtfUnittest::ReadFile()
 
 					// Set the name
 					MvrString dmxRelationName = gdtfRelation->GetName();
-					this->checkifEqual("gdtfRelationGetName ", dmxRelationName, "Relation");
+					this->checkifEqual("gdtfRelationGetName ", dmxRelationName, "My Relation");
 
 					// Get Master Channel
 					IGdtfDmxChannelPtr	master;
@@ -905,6 +1011,23 @@ void GdtfUnittest::ReadFile()
 					this->checkifEqual("gdtfRelationGetRelationType ", rel, EGdtfDmxRelationType::eGdtfDmxRelationType_Multiply);
 					
 				}
+
+				//------------------------------------------------------------------------------ 
+				// Add the Macro
+				size_t countMacro = 0;
+				__checkVCOM(gdtfDmxMode->GetDmxMacroCount(countMacro));
+				for (size_t i = 0; i < countMacro; i++)
+				{
+					IGdtfMacroPtr gdtfmacro;
+					__checkVCOM(gdtfDmxMode->GetDmxMacroAt(i, &gdtfmacro));
+
+					// Set the name
+					MvrString dmxMacroName = gdtfmacro->GetName();
+					this->checkifEqual("gdtfMacroGetName ", dmxMacroName, "My Macro");
+
+					// TODO Add MacroDMX MacroVisual
+				}
+
 			}
 		}
 
@@ -1179,33 +1302,49 @@ void GdtfUnittest::ReadFile()
 	PrintParsingErrorList(gdtfRead);
 }
 
-std::string GdtfUnittest::GetTestPNG_ThumbNail()
+std::string GdtfUnittest::GetTestPNG_ThumbNail(bool readLocation)
 {
-    std::string path = fTestResourcesFolder + kSeparator + "MyThumbnail.png";
+	std::string path;
+	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator; }
+	else 				{ path = fTestResourcesFolder + kSeparator; }
+    path += "MyThumbnail.png";
     return path;
 }
 
-std::string GdtfUnittest::GetTestSVG_ThumbNail()
+std::string GdtfUnittest::GetTestSVG_ThumbNail(bool readLocation)
 {
-    std::string path = fTestResourcesFolder + kSeparator + "MyThumbnail.svg";
+	std::string path;
+	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator; }
+	else 				{ path = fTestResourcesFolder + kSeparator; }
+    path += "MyThumbnail.svg";
     return path;
 }
 
-std::string GdtfUnittest::GetTestSVG_Model()
+std::string GdtfUnittest::GetTestSVG_Model(bool readLocation)
 {
-    std::string path = fTestResourcesFolder + kSeparator + "MyModel.svg";
+	std::string path;
+	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator+ "modelssvg" + kSeparator;; }
+	else 				{ path = fTestResourcesFolder + kSeparator; }
+    path += "MyModel.svg";
     return path;
 }
 
-std::string GdtfUnittest::GetTest3DS_Model()
+std::string GdtfUnittest::GetTest3DS_Model(bool readLocation)
 {
-    std::string path = fTestResourcesFolder + kSeparator + "MyModel.3ds";
+	std::string path;
+	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator+ "models3ds" + kSeparator;; }
+	else 				{ path = fTestResourcesFolder + kSeparator; }
+	
+    path += "MyModel.3ds";
     return path;
 }
 
-std::string GdtfUnittest::GetTestWheel_PNG()
+std::string GdtfUnittest::GetTestWheel_PNG(bool readLocation)
 {
-    std::string path = fTestResourcesFolder + kSeparator + "MWheel_Img1.png";
+	std::string path;
+	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator + "wheels" + kSeparator; }
+	else 				{ path = fTestResourcesFolder + kSeparator; }
+    path += "MWheel_Img1.png";
     return path;
 }
 
@@ -1220,4 +1359,13 @@ void GdtfUnittest::CheckAttibute(VectorworksMVR::IGdtfAttributePtr attribute, bo
 	{
 		__checkVCOM_NotSet(attribute->GetColor(color));
 	}
+}
+
+void GdtfUnittest::CheckAttachedFiles(VectorworksMVR::IGdtfFixturePtr fixture, size_t at, std::string inFile)
+{
+	std::string file = fixture->GetImageRessourcesPathAt(at);
+
+	this->checkifEqual("Filename for Attached File", file, inFile);
+
+	
 }

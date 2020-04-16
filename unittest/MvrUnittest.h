@@ -13,8 +13,9 @@ protected:
     bool virtual ExecuteTest();
 
 private:
-    void WriteFile();
-    void ReadFile();
+    void        WriteFile();
+    void        ReadFile();
+    std::string GetTestWheel_PNG(bool readLocation);
 
     std::string fPath;
 	std::string gdtfPath;

@@ -440,6 +440,8 @@ namespace SceneData
 	private:
 		TXString						fGdtfFile;
 		TXString						fGdtfDmxMode;
+		TXString 						fGobo;
+		double							fGoboRotation;
 		SceneDataFocusPointObjPtr		fFocusPoint;
 		SceneDataPositionObjPtr			fPosition;
 		SceneDataAdressArray			fAdresses;
@@ -454,10 +456,12 @@ namespace SceneData
 	private:
 		TXString						fUnresolvedFocus;
 		TXString						fUnresolvedPosition;
+		TXString						fGoboFullPath;
 		
 	public:
 		TXString						GetUnresolvedFocusUUID();
 		TXString						GetUnresolvedPositionUUID();
+		const TXString&					GetGoboFullPath(SceneDataExchange* exchange);
 		
 	public:
 		
@@ -471,6 +475,8 @@ namespace SceneData
 		Sint8							GetFixtureTypeId();
 		size_t							GetCustomId();
 		const SceneDataAdressArray&		GetAdressesArray();
+		const TXString&					GetGobo();
+		double							GetGoboRotation();
 		
 		void							SetPosition(SceneDataPositionObjPtr ptr);
 		void							SetFocusPoint(SceneDataFocusPointObjPtr ptr);
@@ -482,6 +488,8 @@ namespace SceneData
 		void							SetCustomId(const size_t& value);
 		void							SetFixtureId(const TXString& value);
 		void							SetUnitNumber(Sint32 value);
+		void							SetGobo(const TXString& value);
+		void							SetGoboRotation(double value);
 		
 	protected:
 		virtual	TXString				GetNodeName();
@@ -602,6 +610,8 @@ namespace SceneData
         TFileIdentifierPtrArray				fSVG_FilesToAdd;
         TFileIdentifierPtrArray				fWheel_Image_FilesToAdd;
         TFileIdentifierPtrArray				fFixtureResources_FilesToAdd;
+		
+		std::vector<std::pair<TXString, ISceneDataZipBuffer*>> fBuffersToAdd;
         //
 		TFileIdentifierPtrArray				fFilesInZip;
 		TXStringArray						fRequiredGdtfFiles;
@@ -677,6 +687,7 @@ namespace SceneData
 		bool WriteToFile(const IFileIdentifierPtr&);
 		bool AddNeededGdtfFile(const TXString& gdtfName);
         void AddFileToZip(const IFileIdentifierPtr& file, ERessourceType resType);
+		void AddBufferToZip(const TXString& fileName, ISceneDataZipBuffer* buffer);
 		void AddLocationForGdtfFiles(IFolderIdentifierPtr folder);
 		
 	private:

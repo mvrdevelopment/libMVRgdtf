@@ -21,11 +21,12 @@ private:
     void        ReadFile();
     
     // Test Resources
-    std::string GetTestPNG_ThumbNail();
-    std::string GetTestSVG_ThumbNail();
-    std::string GetTestSVG_Model();
-    std::string GetTest3DS_Model();
-    std::string GetTestWheel_PNG();
+    std::string GetTestPNG_ThumbNail(bool readLocation = false);
+    std::string GetTestSVG_ThumbNail(bool readLocation = false);
+    std::string GetTestSVG_Model(bool readLocation = false);
+    std::string GetTest3DS_Model(bool readLocation = false);
+    std::string GetTestWheel_PNG(bool readLocation = false);
 
     void CheckAttibute(VectorworksMVR::IGdtfAttributePtr attribute, bool hasColor);
+    void CheckAttachedFiles(VectorworksMVR::IGdtfFixturePtr fixture, size_t at, std::string inFile);
 };

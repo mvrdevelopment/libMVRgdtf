@@ -98,6 +98,8 @@ namespace VectorworksMVR
             eGdtfColorSpace             = 70,
             eGdtfFilter                 = 71,
             eGdtfMeasurement            = 72,
+            eGdtfAnimationSystem        = 73,
+            eGdtfConnector              = 74,
 		};
 
         enum class EGdtfParsingError : Sint32
@@ -143,15 +145,20 @@ namespace VectorworksMVR
             eValueError_MatrixRotationFormatMissingLastBracket      = 51,
             eValueError_MatrixRotationTooMuchOrTooLessLines         = 52,
             eValueError_MatrixRotationTooMuchOrTooLessEntries       = 53,
-            eValueError_NoCommaFound             = 54,
-            eFailedToReadDescription                = 55, // The description.xml in not found in the zip archive
-            eXmlParsingError                        = 56, // The XML file structure is damaged
-			eValueError_DateHasWrongFormat	        = 57,
-            eValueError_UnresolvedRdmPersonalityMode= 58,
-            eChannelFunctionMissingAttribute          = 59, // A Channel Function has no Link to a Attribute
+            eValueError_NoCommaFound                    = 54,
+            eFailedToReadDescription                    = 55, // The description.xml in not found in the zip archive
+            eXmlParsingError                            = 56, // The XML file structure is damaged
+			eValueError_DateHasWrongFormat	            = 57,
+            eValueError_UnresolvedRdmPersonalityMode    = 58,
+            eChannelFunctionMissingAttribute            = 59, // A Channel Function has no Link to a Attribute
             eHexConversion_ValueToHight                 = 60,
             eHexConversion_InvalidChar                  = 61,
+            eDmxMacroDmxValueChannelReference           = 62,
+            eChannelFunctionNotStartingWithZero         = 63,
+            eFileWithUnsupportedEncodingInZip           = 64,
 
+            eValueError_NoMatchInEnum_InterpolationTo   = 65,
+            eValueError_NoMatchInEnum_CanHaveChildren   = 66,
 
         };
 		
@@ -596,6 +603,13 @@ namespace VectorworksMVR
             Linear = 0, 
             Step   = 1, 
             Log    = 2,
+        };
+
+        //GDTF 1.1
+        enum class EGdtfCanHaveChildren
+        {
+            eYES    = 0,
+            eNO     = 1,
         };
 
 	}

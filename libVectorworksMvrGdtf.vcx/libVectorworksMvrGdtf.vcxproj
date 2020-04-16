@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug MDd|Win32">
+      <Configuration>Debug MDd</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug MDd|x64">
+      <Configuration>Debug MDd</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="DebugMT|Win32">
       <Configuration>DebugMT</Configuration>
       <Platform>Win32</Platform>
@@ -15,6 +23,14 @@
     </ProjectConfiguration>
     <ProjectConfiguration Include="DebugVS15|x64">
       <Configuration>DebugVS15</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_ReleaseMT|Win32">
+      <Configuration>Debug_ReleaseMT</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_ReleaseMT|x64">
+      <Configuration>Debug_ReleaseMT</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|Win32">
@@ -62,6 +78,7 @@
     <ClCompile Include="..\src\Implementation\CGdtfAttribute.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfBreak.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfColorSpace.cpp" />
+    <ClCompile Include="..\src\Implementation\CGdtfConnector.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfCRI.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfCRIGroup.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfDmxChannel.cpp" />
@@ -94,6 +111,7 @@
     <ClCompile Include="..\src\Implementation\CGdtfUserPreset.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfWheel.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfWheelSlot.cpp" />
+    <ClCompile Include="..\src\Implementation\CGdtfWheelSlotAnimationSystem.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfWheelSlotPrismFacet.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfXmlParsingError.cpp" />
     <ClCompile Include="..\src\Implementation\CGeometryReferenceImpl.cpp" />
@@ -124,6 +142,7 @@
     <ClCompile Include="..\src\Wrapper\RawOSFileimpl.cpp" />
     <ClCompile Include="..\src\Wrapper\TDQuickDraw.cpp" />
     <ClCompile Include="..\src\Wrapper\UTranslateFiles.cpp" />
+    <ClCompile Include="..\src\Wrapper\ZIPFileBuffer.cpp" />
     <ClCompile Include="..\src\Wrapper\ZIPFileImpl.cpp" />
     <ClCompile Include="..\src\XmlFileHelper.cpp" />
     <ClCompile Include="..\src\XMLLib\ErrorHandler.cpp" />
@@ -149,6 +168,7 @@
     <ClInclude Include="..\src\Implementation\CGdtfAttribute.h" />
     <ClInclude Include="..\src\Implementation\CGdtfBreak.h" />
     <ClInclude Include="..\src\Implementation\CGdtfColorSpace.h" />
+    <ClInclude Include="..\src\Implementation\CGdtfConnector.h" />
     <ClInclude Include="..\src\Implementation\CGdtfCRI.h" />
     <ClInclude Include="..\src\Implementation\CGdtfCRIGroup.h" />
     <ClInclude Include="..\src\Implementation\CGdtfDmxChannel.h" />
@@ -181,6 +201,7 @@
     <ClInclude Include="..\src\Implementation\CGdtfUserPreset.h" />
     <ClInclude Include="..\src\Implementation\CGdtfWheel.h" />
     <ClInclude Include="..\src\Implementation\CGdtfWheelSlot.h" />
+    <ClInclude Include="..\src\Implementation\CGdtfWheelSlotAnimationSystem.h" />
     <ClInclude Include="..\src\Implementation\CGdtfWheelSlotPrismFacet.h" />
     <ClInclude Include="..\src\Implementation\CGdtfXmlParsingError.h" />
     <ClInclude Include="..\src\Implementation\CGeometryReferenceImpl.h" />
@@ -199,6 +220,7 @@
     <ClInclude Include="..\src\Interface\IStdFile.h" />
     <ClInclude Include="..\src\Interface\IXMLFile.h" />
     <ClInclude Include="..\src\Interface\IZIPFile.h" />
+    <ClInclude Include="..\src\Interface\IZIPFileBuffer.h" />
     <ClInclude Include="..\src\MCCoordTypes.h" />
     <ClInclude Include="..\src\MCFloat.h" />
     <ClInclude Include="..\src\MCMatrix.h" />
@@ -225,6 +247,7 @@
     <ClInclude Include="..\src\Wrapper\RawOSFileimpl.h" />
     <ClInclude Include="..\src\Wrapper\TDQuickDraw.h" />
     <ClInclude Include="..\src\Wrapper\UTranslateFiles.h" />
+    <ClInclude Include="..\src\Wrapper\ZIPFileBuffer.h" />
     <ClInclude Include="..\src\Wrapper\ZIPFileImpl.h" />
     <ClInclude Include="..\src\XmlFileHelper.h" />
     <ClInclude Include="..\src\XMLLib\ErrorHandler.h" />
@@ -248,6 +271,12 @@
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug MDd|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugMT|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
@@ -261,6 +290,13 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_ReleaseMT|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
@@ -287,6 +323,12 @@
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug MDd|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugMT|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
@@ -301,6 +343,13 @@
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_ReleaseMT|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
@@ -330,6 +379,9 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug MDd|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugMT|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -337,6 +389,9 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_ReleaseMT|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseMT|Win32'" Label="PropertySheets">
@@ -348,6 +403,9 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug MDd|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugMT|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -355,6 +413,9 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_ReleaseMT|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseMT|x64'" Label="PropertySheets">
@@ -367,6 +428,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug MDd|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugMT|Win32'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
@@ -374,6 +438,12 @@
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <TargetExt>.lib</TargetExt>
+    <OutDir>$(SolutionDir)libs\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug MDd|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <TargetExt>.lib</TargetExt>
@@ -394,6 +464,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_ReleaseMT|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseMT|Win32'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
@@ -401,6 +474,12 @@
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <TargetExt>.lib</TargetExt>
+    <OutDir>$(SolutionDir)libs\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_ReleaseMT|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <TargetExt>.lib</TargetExt>
@@ -420,6 +499,20 @@
     <OutDir>$(SolutionDir)libs\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;LIBVECTORWORKSMVRGDTF_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug MDd|Win32'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
@@ -462,6 +555,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;LIBVECTORWORKSMVRGDTF_EXPORTS;EXPORT_STATIC;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);GS_WIN;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)shared\xerces\build\libs\include</AdditionalIncludeDirectories>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>%(AdditionalDependencies);USP10.lib;Rpcrt4.lib;shlwapi.lib;xerces-c_3.lib</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>libc;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <AdditionalLibraryDirectories>$(SolutionDir)libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug MDd|x64'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
@@ -539,6 +652,24 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_ReleaseMT|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;LIBVECTORWORKSMVRGDTF_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseMT|Win32'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -579,9 +710,35 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
+      <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;LIBVECTORWORKSMVRGDTF_EXPORTS;EXPORT_STATIC;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);GS_WIN;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)shared\xerces\build\libs\include</AdditionalIncludeDirectories>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>%(AdditionalDependencies);Rpcrt4.lib;shlwapi.lib;xerces-c_3.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <Lib>
+      <LinkTimeCodeGeneration>false</LinkTimeCodeGeneration>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_ReleaseMT|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;LIBVECTORWORKSMVRGDTF_EXPORTS;EXPORT_STATIC;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);GS_WIN;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>

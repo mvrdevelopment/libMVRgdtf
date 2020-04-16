@@ -18,6 +18,11 @@ namespace VectorworksMVR
         virtual MvrString VCOM_CALLTYPE     GetName();
         virtual VCOMError VCOM_CALLTYPE     SetName(MvrString name);
 
+        virtual VCOMError VCOM_CALLTYPE     GetMacroDMX(IGdtfMacroDMX** outMacroDmx);
+        virtual VCOMError VCOM_CALLTYPE     CreateMacroDMX(IGdtfMacroDMX** outMacroDmx);
+
+        virtual VCOMError VCOM_CALLTYPE     GetMacroVisual(IGdtfMacroVisual** outMacroVisual);
+        virtual VCOMError VCOM_CALLTYPE     CreateMacroVisual(IGdtfMacroVisual** outMacroVisual);
     private:
         SceneData::GdtfMacro* fMacro;
         

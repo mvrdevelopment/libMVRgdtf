@@ -58,6 +58,10 @@ namespace SceneData
     typedef GdtfFilter*	GdtfFilterPtr;
     typedef std::vector<GdtfFilter*>	TGdtfFilterArray;
 
+	class GdtfConnector; 
+    typedef GdtfConnector*	GdtfConnectorPtr;
+    typedef std::vector<GdtfConnector*>	TGdtfConnectorArray;
+
 
 	const Sint32 kDmxBreakOverwriteValue = 0;
 	//------------------------------------------------------------------------------------
@@ -303,6 +307,49 @@ namespace SceneData
 	};
 	typedef GdtfWheelSlotPrismFacet*				GdtfWheelSlotPrismFacetPtr;
 	typedef std::vector<GdtfWheelSlotPrismFacetPtr>	TGdtfWheelSlotPrismFacetArray;
+
+	class GdtfWheelSlotAnimationSystem : public GdtfObject
+	{
+	public:
+		GdtfWheelSlotAnimationSystem();
+		~GdtfWheelSlotAnimationSystem();
+		
+	private:
+		double	fP1_X;
+		double	fP1_Y;
+		double	fP2_X;
+		double	fP2_Y;
+		double	fP3_X;
+		double	fP3_Y;
+		double	fRadius;
+		
+    public:
+        double GetP1_X();
+        double GetP1_Y();
+        double GetP2_X();
+        double GetP2_Y();
+        double GetP3_X();
+        double GetP3_Y();
+        double GetRadius();
+
+        void SetP1_X(double p1_X);
+        void SetP1_Y(double p1_Y);
+        void SetP2_X(double p2_X);
+        void SetP2_Y(double p2_Y);
+        void SetP3_X(double p3_X);
+        void SetP3_Y(double p3_Y);
+        void SetRadius(double radius);
+	public:
+		virtual EGdtfObjectType			GetObjectType();
+		
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+		
+	};
+	typedef GdtfWheelSlotAnimationSystem*				GdtfWheelSlotAnimationSystemPtr;
 	
 	class GdtfWheelSlot : public GdtfObject
 	{
@@ -322,6 +369,7 @@ namespace SceneData
 		TXString						fGoboFile; // MediaFileName
 		GdtfFilter*						fFilter;
 		TXString						fUnresolvedFilter;
+		GdtfWheelSlotAnimationSystem*	fAnimationSystem;
 		
 	public:
 		const TXString&                 GetGobo() const;
@@ -330,12 +378,14 @@ namespace SceneData
 		const TXString&                 GetName() const;
         TGdtfWheelSlotPrismFacetArray   GetPrismFacets();
 		GdtfFilter*                 	GetFilter() const;
+		GdtfWheelSlotAnimationSystem*	GetAnimationSystem() const;
 		
 		void							SetName(const TXString& name);
 		void							SetGobo(const GdtfPNGFile& png);
 		void							SetColor(const CCieColor& color);
 		void							SetFilter(GdtfFilter* filter);
 		GdtfWheelSlotPrismFacet*		AddPrismFacet();
+		GdtfWheelSlotAnimationSystem*	AddAnimationSystem();
 
 		virtual TXString				GetNodeReference();
 
@@ -397,11 +447,12 @@ namespace SceneData
         GdtfPhysicalDescriptions();
         ~GdtfPhysicalDescriptions();
     private:        
-        GdtfColorSpace                  fColorSpace;    
-        TGdtfPhysicalEmitterArray		fEmitters;      
-        TGdtfFilterArray                fFilters;       
-        TGdtfDMXProfileArray            fDmxProfiles;         
-        TGdtf_CRIGroupArray             fCRI_Groups; 
+        GdtfColorSpace                  fColorSpace;
+        TGdtfPhysicalEmitterArray		fEmitters;
+        TGdtfFilterArray                fFilters;
+        TGdtfDMXProfileArray            fDmxProfiles;
+        TGdtf_CRIGroupArray             fCRI_Groups;
+		TGdtfConnectorArray				fConnectors;
     public:
         virtual EGdtfObjectType			GetObjectType();
 
@@ -413,11 +464,13 @@ namespace SceneData
         const TGdtfFilterArray&          GetFilterArray();
         const TGdtfDMXProfileArray&      GetDmxProfileArray();
         const TGdtf_CRIGroupArray&       GetCRIGroupArray();
+		const TGdtfConnectorArray&       GetConnectorArray();
         
         GdtfPhysicalEmitterPtr	        AddEmitter(const TXString& name, CCieColor color);
         GdtfFilterPtr                   AddFilter(const TXString& name,  CCieColor color);
         GdtfDMXProfilePtr               AddDmxProfile();
         GdtfCRIGroupPtr                 AddCRIGroup(double colorTsemp);
+		GdtfConnectorPtr                AddConnector(const TXString& name,  const TXString& type);
 
     protected:
         virtual	TXString				GetNodeName();
@@ -839,6 +892,7 @@ namespace SceneData
 		double				fPhysicalStart;
 		double				fPhysicalEnd;
 		Sint32				fWheelSlotIdx;
+		bool				fValid;
 
 		GdtfDmxChannelFunction* fParentChnlFunction; 
         GdtfDmxChannelSet*      fNextChannelSet;
@@ -864,7 +918,9 @@ namespace SceneData
 		void							SetPhysicalEnd(double end);		
 		void							SetWheelSlot(Sint32 slotIndex);
 
-        void					        SetNextChannelSet(GdtfDmxChannelSet* next);	
+        bool					        SetNextChannelSet(GdtfDmxChannelSet* next, IXMLFileNodePtr objNode);	
+
+		bool 							IsValid();
 				
 	protected:
 		virtual	TXString				GetNodeName();
@@ -889,7 +945,8 @@ namespace SceneData
 		DmxValue				fAdressStart;   
 		double					fPhysicalStart;
 		double					fPhysicalEnd;
-		double					fRealFade;			
+		double					fRealFade;
+		double					fRealAcceleration;				
 		GdtfWheelPtr			fOnWheel;
 		GdtfPhysicalEmitter*	fEmitter;
 
@@ -925,7 +982,8 @@ namespace SceneData
         DmxValue						GetEndAdress() const;
         double							GetPhysicalStart() const;
         double							GetPhysicalEnd() const;
-        double							GetRealFade() const;        
+        double							GetRealFade() const;
+		double							GetRealAcceleration() const;
         GdtfWheelPtr					GetOnWheel() const;
         GdtfPhysicalEmitter*            GetEmitter() const;   
         GdtfFilterPtr                   GetFilter();
@@ -961,7 +1019,8 @@ namespace SceneData
 		void							SetStartAddress(DmxValue address);
 		void							SetPhysicalStart(double start);
 		void							SetPhysicalEnd(double end);
-		void							SetRealFade(double fade);				
+		void							SetRealFade(double fade);
+		void							SetRealAcceleration(double fade);
 		void							SetEmitter(GdtfPhysicalEmitter* newEmit);
         void                            SetFilter(GdtfFilterPtr val);
 
@@ -1152,6 +1211,216 @@ namespace SceneData
 	typedef GdtfDmxRelation*				GdtfDmxRelationPtr;
 	typedef std::vector<GdtfDmxRelation*>	TGdtfDmxRelationArray;
 	
+	//------------------------------------------------------------------------------------
+	// Macro Definitions
+
+	class GdtfMacro : public GdtfObject
+	{
+	public:
+		GdtfMacro();
+		GdtfMacro(const TXString& name);
+		~GdtfMacro();
+
+	private:
+		TXString fName;
+		// Childs
+		GdtfMacroDMX*    fMacroDMX;
+		GdtfMacroVisual* fMacroVisual;
+	public:
+		virtual EGdtfObjectType			GetObjectType();
+	public:
+		// Getter
+		const TXString&  GetName() const;
+		GdtfMacroDMX*    GetMacroDMX() const;
+		GdtfMacroVisual* GetMacroVisual() const;
+		// Setter
+		void SetName(const TXString & name);
+		void SetMacroDMX(GdtfMacroDMX* val);
+		void SetMacroVisual(GdtfMacroVisual* val);
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+		virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+	};
+	typedef GdtfMacro*					GdtfMacroPtr;
+	typedef std::vector<GdtfMacroPtr>	TGdtfMacroArray;
+
+	class GdtfMacroDMXValue : public GdtfObject
+	{
+	public:
+		GdtfMacroDMXValue();
+		GdtfMacroDMXValue(DmxValue dmxVal, GdtfDmxChannelPtr dmxChannel);
+		~GdtfMacroDMXValue();
+	private:
+		TXString 				funresolvedValue;
+		DmxValue				fValue;
+		TXString                funresolvedDMXChannel;
+		GdtfDmxChannelPtr       fDMXChannel;
+	public:
+		virtual EGdtfObjectType			GetObjectType();
+
+	public:
+		// Getter        
+		DmxValue		            GetValue() const;
+		const TXString&				GetUnresolvedDMXChannel() const;
+		GdtfDmxChannelPtr           GetDMXChannel() const;
+		const TXString&      	   	GetUnresolvedDMXValue() const;
+		// Setter       
+		void						SetValue(DmxValue val);
+		void                        SetDMXChannel(GdtfDmxChannelPtr chnl);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+		virtual void                    OnErrorCheck(const IXMLFileNodePtr& pNode);
+	};
+	typedef GdtfMacroDMXValue*	GdtfMacroDMXValuePtr;
+	typedef std::vector<GdtfMacroDMXValue*>	TGdtfMacroDMXValueArray;
+
+	class GdtfMacroDMXStep : public GdtfObject
+	{
+	public:
+		GdtfMacroDMXStep();
+		GdtfMacroDMXStep(double duration);
+		~GdtfMacroDMXStep();
+	private:
+		double fDuration;
+		// Childs
+		TGdtfMacroDMXValueArray fDMXValues;
+	public:
+		virtual EGdtfObjectType	GetObjectType();
+
+	public:
+		// Getter        
+		double GetDuration() const;
+		TGdtfMacroDMXValueArray GetDMXValueArray() const;
+		// Setter               
+		void SetDuration(double d);
+		//
+		GdtfMacroDMXValuePtr AddDmxValue(DmxValue dmxVal, GdtfDmxChannelPtr dmxChannel);
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+		virtual void                    OnErrorCheck(const IXMLFileNodePtr& pNode);
+	};
+	typedef GdtfMacroDMXStep*	GdtfMacroDMXStepPtr;
+	typedef std::vector<GdtfMacroDMXStep*>	TGdtfMacroDMXStepArray;
+
+	class GdtfMacroDMX : public GdtfObject
+	{
+	public:
+		GdtfMacroDMX();
+		~GdtfMacroDMX();
+	private:
+		TGdtfMacroDMXStepArray fDMXSetps;
+	public:
+		virtual EGdtfObjectType			GetObjectType();
+		virtual TGdtfMacroDMXStepArray  GetStepArray();
+	public:
+		GdtfMacroDMXStepPtr AddDmxStep(double& duration);
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+	};
+
+	class GdtfMacroVisualValue : public GdtfObject
+	{
+	public:
+		GdtfMacroVisualValue();
+		GdtfMacroVisualValue(DmxValue dmxVal, GdtfDmxChannelFunctionPtr channelFunctionRef);
+		~GdtfMacroVisualValue();
+	private:
+		TXString 				  funresolvedValue;
+		DmxValue				  fDmxValue;
+		TXString                  fUnresolvedChannelFunctionRef;
+		GdtfDmxChannelFunctionPtr fChannelFunctionRef;
+	public:
+		virtual EGdtfObjectType			GetObjectType();
+
+	public:
+		// Getter        
+		DmxValue                     GetDmxValue() const;
+		const TXString&			     GetUnresolvedChannelFunctionRef() const;
+		GdtfDmxChannelFunctionPtr    GetChannelFunctionRef() const;
+		const TXString&				 GetUnresolvedDMXValue() const;
+		// Setter               
+		void                         SetDmxValue(DmxValue val);
+		void	        			 SetUnresolvedChannelFunctionRef(const TXString& ref);
+		void                         SetChannelFunction(GdtfDmxChannelFunctionPtr ref);
+
+	protected:
+		virtual	TXString			GetNodeName();
+		virtual	void				OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void				OnReadFromNode(const IXMLFileNodePtr& pNode);
+		virtual void                OnErrorCheck(const IXMLFileNodePtr& pNode);
+	};
+
+	typedef GdtfMacroVisualValue*	GdtfMacroVisualValuePtr;
+	typedef std::vector<GdtfMacroVisualValue*>	TGdtfMacroVisualValueArray;
+
+	class GdtfMacroVisualStep : public GdtfObject
+	{
+	public:
+		GdtfMacroVisualStep();
+		~GdtfMacroVisualStep();
+	private:
+		double fDuration;
+		double  fFade;
+		double  fDelay;
+		// Childs
+		TGdtfMacroVisualValueArray fVisualValues;
+
+	public:
+		TGdtfMacroVisualValueArray GetVisualValueArray();
+		virtual EGdtfObjectType	   GetObjectType();
+
+	public:
+		// Getter        
+		double  getDuration();
+		double  getFade();
+		double  getDelay();
+		// Setter
+		void setDuration(double d);
+		void setFade(double f);
+		void setDelay(double d);
+		//
+		GdtfMacroVisualValue* AddVisualValue(DmxValue& dmxVal, GdtfDmxChannelFunctionPtr channelFunctionRef);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+		virtual void                    OnErrorCheck(const IXMLFileNodePtr& pNode);
+	};
+	typedef GdtfMacroVisualStep*	GdtfMacroVisualStepPtr;
+	typedef std::vector<GdtfMacroVisualStep*>	TGdtfMacroVisualStepArray;
+
+	class GdtfMacroVisual : public GdtfObject
+	{
+	public:
+		GdtfMacroVisual();
+		~GdtfMacroVisual();
+	private:
+		TGdtfMacroVisualStepArray	fVisualSteps;
+	public:
+		virtual EGdtfObjectType		GetObjectType();
+
+	public:
+		TGdtfMacroVisualStepArray	GetVisualStepArray();
+
+		GdtfMacroVisualStepPtr		AddVisualStep();
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+	};
+	typedef GdtfMacroVisual*	GdtfMacroVisualPtr;
+
 	class GdtfDmxMode : public GdtfObject
 	{
 	public:
@@ -1165,7 +1434,9 @@ namespace SceneData
 		TXString				fUnresolvedGeomRef;
 		//
 		TGdtfDmxChannelArray	fChannels;
-		TGdtfDmxRelationArray	fRelations;	  	
+		TGdtfDmxRelationArray	fRelations;
+		TGdtfMacroArray			fMacros;
+
 
 	public:		
 		const TXString&				GetModeName() const;
@@ -1180,6 +1451,7 @@ namespace SceneData
 		size_t     					GetFootPrintForBreak(size_t breakId);
 		TSint32Array				GetBreakArray() const;
 		void						GetAddressesFromChannel(TDMXAddressArray& addresses, GdtfDmxChannel* channel, DMXAddress offset) const;
+		const TGdtfMacroArray		GetDmxMacrosArray();
 
 		
 		void						SetName(const TXString& name);
@@ -1187,6 +1459,7 @@ namespace SceneData
 		void						SetGeomRef(GdtfGeometryPtr ptr);
 		void						SetModel(GdtfGeometryPtr ptr);
 		GdtfDmxRelation*			AddDmxRelation(GdtfDmxChannel* master, GdtfDmxChannelFunctionPtr slave, const TXString &name);
+		GdtfMacroPtr				AddMacro(const TXString &name);
 		
 		
 	public:
@@ -1533,210 +1806,6 @@ namespace SceneData
 	typedef GdtfUserPreset*					GdtfUserPresetPtr;
 	typedef std::vector<GdtfUserPresetPtr>	TGdtfUserPresetArray;
 	
-	//------------------------------------------------------------------------------------
-	// Macro Definitions
-
-	class GdtfMacro : public GdtfObject
-	{
-	public:
-		GdtfMacro(const TXString& name);
-		~GdtfMacro();
-		
-	private:
-        TXString fName;
-        // Childs
-        GdtfMacroDMX*    fMacroDMX;   
-        GdtfMacroVisual* fMacroVisual;
-    public:
-        virtual EGdtfObjectType			GetObjectType();    
-    public:
-        // Getter
-        const TXString&  GetName() const;        
-        GdtfMacroDMX*    GetMacroDMX() const;
-        GdtfMacroVisual* GetMacroVisual() const;
-        // Setter
-        void SetName(const TXString & name);
-        void SetMacroDMX(GdtfMacroDMX* val);
-        void SetMacroVisual(GdtfMacroVisual* val);
-	protected:
-		virtual	TXString				GetNodeName();
-		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
-		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
-        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
-	};
-	typedef GdtfMacro*					GdtfMacroPtr;
-	typedef std::vector<GdtfMacroPtr>	TGdtfMacroArray;
-    
-    class GdtfMacroDMXValue : public GdtfObject
-    {
-    public:
-        GdtfMacroDMXValue();
-        GdtfMacroDMXValue(DmxValue dmxVal, GdtfDmxChannelPtr dmxChannel);
-        ~GdtfMacroDMXValue();
-    private:
-        DmxValue				fValue;
-        TXString                funresolvedDMXChannel;   
-        GdtfDmxChannelPtr       fDMXChannel;
-    public:
-        virtual EGdtfObjectType			GetObjectType();
-
-    public:
-        // Getter        
-        DmxValue		            GetValue() const;
-        const TXString&				GetUnresolvedDMXChannel() const;
-        GdtfDmxChannelPtr           GetDMXChannel() const;
-        // Setter       
-        void						SetValue(DmxValue val);
-        void                        SetDMXChannel(GdtfDmxChannelPtr chnl);
-
-    protected:
-        virtual	TXString				GetNodeName();
-        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
-        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
-        virtual void                    OnErrorCheck(const IXMLFileNodePtr& pNode);
-    };
-    typedef GdtfMacroDMXValue*	GdtfMacroDMXValuePtr;
-    typedef std::vector<GdtfMacroDMXValue*>	TGdtfMacroDMXValueArray;
-
-    class GdtfMacroDMXStep : public GdtfObject
-    {
-    public:
-        GdtfMacroDMXStep();
-        GdtfMacroDMXStep(Sint32 duration);
-        ~GdtfMacroDMXStep();
-    private:
-        Sint32 fDuration;
-        // Childs
-        TGdtfMacroDMXValueArray fDMXValues;
-    public:
-        virtual EGdtfObjectType	GetObjectType();
-
-    public:
-        // Getter        
-        Sint32 GetDuration() const;
-        TGdtfMacroDMXValueArray GetDMXValueArray() const;
-        // Setter               
-        void SetDuration(Sint32 d);
-        //
-        GdtfMacroDMXValuePtr AddDmxValue(DmxValue dmxVal, GdtfDmxChannelPtr dmxChannel);
-    protected:
-        virtual	TXString				GetNodeName();
-        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
-        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
-        virtual void                    OnErrorCheck(const IXMLFileNodePtr& pNode);
-    };
-    typedef GdtfMacroDMXStep*	GdtfMacroDMXStepPtr;
-    typedef std::vector<GdtfMacroDMXStep*>	TGdtfMacroDMXStepArray;
-    
-    class GdtfMacroDMX : public GdtfObject
-    {
-    public:
-        GdtfMacroDMX();
-        ~GdtfMacroDMX();
-    private:
-        TGdtfMacroDMXStepArray fDMXSetps;        
-    public:
-        virtual EGdtfObjectType			GetObjectType();
-        virtual TGdtfMacroDMXStepArray  GetStepArray();
-    public:
-        GdtfMacroDMXStepPtr AddDmxStep(Sint32& duration);
-    protected:
-        virtual	TXString				GetNodeName();
-        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
-        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
-    };
-
-    class GdtfMacroVisualValue : public GdtfObject
-    {
-    public:
-        GdtfMacroVisualValue();
-        GdtfMacroVisualValue(DmxValue dmxVal, GdtfDmxChannelFunctionPtr channelFunctionRef);
-        ~GdtfMacroVisualValue();
-    private:
-        DmxValue				  fDmxValue;
-        TXString                  fUnresolvedChannelFunctionRef;
-        GdtfDmxChannelFunctionPtr fChannelFunctionRef;
-    public:
-        virtual EGdtfObjectType			GetObjectType();
-
-    public:
-        // Getter        
-        DmxValue                     GetDmxValue() const;
-        const TXString&			     GetUnresolvedChannelFunctionRef() const;
-        GdtfDmxChannelFunctionPtr    GetChannelFunctionRef() const;
-        // Setter               
-        void                         SetDmxValue(DmxValue val);
-        void	        			 SetUnresolvedChannelFunctionRef(const TXString& ref);
-        void                         SetChannelFunction(GdtfDmxChannelFunctionPtr ref);
-
-    protected:
-        virtual	TXString			GetNodeName();
-        virtual	void				OnPrintToFile(IXMLFileNodePtr pNode);
-        virtual	void				OnReadFromNode(const IXMLFileNodePtr& pNode);
-        virtual void                OnErrorCheck(const IXMLFileNodePtr& pNode);
-    };
-
-    typedef GdtfMacroVisualValue*	GdtfMacroVisualValuePtr;
-    typedef std::vector<GdtfMacroVisualValue*>	TGdtfMacroVisualValueArray;
-    
-    class GdtfMacroVisualStep : public GdtfObject
-    {
-    public:
-        GdtfMacroVisualStep();
-        ~GdtfMacroVisualStep();
-    private:
-        Sint32 fDuration;
-        double  fFade;
-        double  fDelay;
-        // Childs
-        TGdtfMacroVisualValueArray fVisualValues; 
-
-    public:
-        TGdtfMacroVisualValueArray GetVisualValueArray();
-        virtual EGdtfObjectType	   GetObjectType();
-
-    public:
-        // Getter        
-        Sint32  getDuration();
-        double  getFade();
-        double  getDelay();
-        // Setter
-        void setDuration(Sint32 d);
-        void setFade(double f);
-        void setDelay(double d);
-        //
-        GdtfMacroVisualValue* AddVisualValue(DmxValue& dmxVal, GdtfDmxChannelFunctionPtr channelFunctionRef);
-
-    protected:
-        virtual	TXString				GetNodeName();
-        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
-        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
-        virtual void                    OnErrorCheck(const IXMLFileNodePtr& pNode);
-    };
-    typedef GdtfMacroVisualStep*	GdtfMacroVisualStepPtr;
-    typedef std::vector<GdtfMacroVisualStep*>	TGdtfMacroVisualStepArray;
-    
-    class GdtfMacroVisual : public GdtfObject
-    {
-    public:
-        GdtfMacroVisual();
-        ~GdtfMacroVisual();
-    private:        
-        TGdtfMacroVisualStepArray fVisualSteps;
-    public:
-        virtual EGdtfObjectType			GetObjectType();
-
-    public:
-        TGdtfMacroVisualStepArray GetVisualStepArray();
-        
-        GdtfMacroVisualStepPtr AddVisualStep();
-
-    protected:
-        virtual	TXString				GetNodeName();
-        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
-        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
-    };
-    typedef GdtfMacroVisual*	GdtfMacroVisualPtr;
 
 	class GdtfMeasurementPoint : public GdtfObject
 	{
@@ -1770,13 +1839,15 @@ namespace SceneData
     class GdtfMeasurement : public GdtfObject
     {
     public:
-        GdtfMeasurement();
+        GdtfMeasurement(bool forFilter);
         ~GdtfMeasurement();
     private:
         double                      fPhysical;
         double                      fLuminousIntensity;
         double                      fTransmission;
         EGdtfInterpolationTo        fInterpolationTo;
+		bool						fIsForFilter;
+
 
         TGdtfMeasurementPointArray  fMeasurementPoints;
     public:
@@ -1922,13 +1993,50 @@ namespace SceneData
          virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
          virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
      };
+
+	 class GdtfConnector : public GdtfObject
+	{
+	public:
+		GdtfConnector();
+		GdtfConnector(const TXString& name, const TXString& type);
+		~GdtfConnector();
+		
+	private:
+		TXString	fName;
+		TXString	fType;
+		Uint32		fDmxBreak;
+		Sint32		fGender;
+        double		fLength;
+		
+	public:
+        // Getter
+		virtual EGdtfObjectType	GetObjectType();
+        const TXString&			GetName() const;
+		const TXString&			GetType() const;
+		Uint32					GetDmxBreak();
+		Sint32					GetGender();
+		double					GetLength();
+        
+		// Setter
+		void	SetName(const TXString& name);
+		void	SetType(const TXString& type);
+		void	SetDmxBreak(Uint32 dmxBreak);
+		void	SetGender(Sint32 gender);
+        void	SetLength(double length);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+
+	};
 	
 	//------------------------------------------------------------------------------------
 	// GdtfFixture Definition
 	class GdtfFixture : public GdtfObject
 	{
 	public:
-		GdtfFixture(IFileIdentifierPtr file, TXString folderName);
 		GdtfFixture();
 		~GdtfFixture();
 		
@@ -1942,6 +2050,7 @@ namespace SceneData
 		TXString		            fFixtureTypeDescription;
 		GdtfFixtureGUID	            fGuid;
 		TXString		            fTumbnailName;
+		EGdtfCanHaveChildren		fCanHaveChildren;
 		TXString		            fTumbnailFullPath_PNG;
         TXString		            fTumbnailFullPath_SVG;
 		
@@ -1949,7 +2058,6 @@ namespace SceneData
 		bool			            fHasLinkedGuid;
         
         GdtfProtocols				fProtocollContainer;
-        
 		//------------------------------------------------
 		// Storage
         
@@ -1965,11 +2073,11 @@ namespace SceneData
 		TGdtfDmxModeArray				fDmxModes;
 		TGdtfRevisionArray				fRevisions;
 		TGdtfUserPresetArray			fPresets;
-		TGdtfMacroArray					fMacros;	
         GdtfPhysicalDescriptions        fPhysicalDesciptions; 
 		//------------------------------------------------
 		// Reading support
 		TVWArray_IFileIdentifier		fLocalFiles;
+		TXStringArray 					fLocalFilesFullPath;
 		bool							fReaded;
 		IFolderIdentifierPtr			fWorkingFolder;
         TGdtfParsingErrorArray          fParsingErrors;
@@ -1978,16 +2086,18 @@ namespace SceneData
 		// 
 		GdtfAttributePtr 				fNoFeature;
 
-public:
+	public:
         static void                     AddError(const GdtfParsingError& error);
         static TGdtfParsingErrorArray*  __ERROR_CONTAINER_POINTER;
         TGdtfParsingErrorArray&         GetParsingErrorArray();
         
         TXString                        GetFullThumbNailPath(const TXString & fileExtension);
-private:
+		size_t 	GetAttachedFileCount();
+		bool	GetAttachedFileCountAt(size_t at, TXString*& outFile);
+
+	private:
         TGdtfParsingErrorArray          fErrorContainer;
-        
-		
+  
 	public:
 		//----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		// Getter
@@ -1999,11 +2109,14 @@ private:
         GdtfFixtureGUID		        GetGuid() const;
 		GdtfFixtureGUID		        GetLinkedGuid() const;
 		bool				        HasLinkedGuid() const;
-        const TXString&             GetThumbnailName() const;        
-		const GdtfPNGFile&          GetPNGThumnailFullPath();		
+        const TXString&             GetThumbnailName() const;
+		EGdtfCanHaveChildren		GetCanHaveChildren() const;
+		const GdtfPNGFile&          GetPNGThumnailFullPath();
         const TXString&             GetSVGThumnailFullPath();
         GdtfProtocols&				GetProtocollContainer();
-        GdtfPhysicalDescriptions&   GetPhysicalDesciptionsContainer();        
+        GdtfPhysicalDescriptions&   GetPhysicalDesciptionsContainer();
+
+		;
         
         // Setter
 		void				SetName(const TXString& name);
@@ -2013,7 +2126,10 @@ private:
 		void				SetFixtureTypeDescription(const TXString& desc);
 		void				SetGuid(const VWFC::Tools::VWUUID& uuid);
 		void				SetLinkedGuid(const VWFC::Tools::VWUUID& uuid);
-		void				SetThumbnailName(const TXString& fileName);                
+		void				SetThumbnailName(const TXString& fileName);
+		void				SetCanHaveChildren(EGdtfCanHaveChildren canHaveChildren);
+
+
 	public:
 		//----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		// Add calls
@@ -2087,12 +2203,20 @@ private:
 		GdtfDmxModePtr  ResolveDMXMode(const TXString & unresolvedDMXmode);
 
 		void ResolveDmxLogicalChanRefs(GdtfDmxChannelPtr dmxChnl);
-		void ResolveDmxChanelFunctionRefs(GdtfDmxLogicalChannelPtr dmxLogChnl);		
+		void ResolveDmxChanelFunctionRefs(GdtfDmxLogicalChannelPtr dmxLogChnl);
+		void ResolveMacroRefs(GdtfDmxModePtr dmxMode);	
 		//----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		
+	private:
+		bool							ImportFromZip(IZIPFilePtr& zipfile);
+		void 							PrepareWorkingFolder(TXString folderName);
+
 	public:
 		bool							ExportToFile(IZIPFilePtr& zipfile);
-		
+		void							ImportFromFile(IFileIdentifierPtr inZipFile, const TXString& folder);
+		void							ImportFromBuffer(const char*buffer, size_t length, const TXString& folder);
+
+
 		bool							IsReaded();
 		void							GetWorkingFolder(IFolderIdentifierPtr& folder);        
 	};    

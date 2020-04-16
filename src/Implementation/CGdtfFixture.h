@@ -79,10 +79,6 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE		GetPresetAt(size_t at, IGdtfUserPreset** preset );
 		virtual VCOMError VCOM_CALLTYPE     CreatePreset(IGdtfUserPreset** macro);
         
-        virtual VCOMError VCOM_CALLTYPE		GetMacroCount(size_t& count);
-        virtual VCOMError VCOM_CALLTYPE		GetMacroAt(size_t at, IGdtfMacro** macro );
-		virtual VCOMError VCOM_CALLTYPE     CreateMacro(MvrString& name, IGdtfMacro** macro);        		
-        
 		// Protocoll
 		virtual VCOMError VCOM_CALLTYPE     GetRDM(IGdtf_FTRDM ** newFTRDM);
 		virtual VCOMError VCOM_CALLTYPE     CreateRDM(VectorworksMVR::IGdtf_FTRDM ** outFTRDM);
@@ -113,10 +109,35 @@ namespace VectorworksMVR
 
 		//Internal
 		VectorworksMVR::VCOMError			ReadFromFile(IFileIdentifierPtr file, TXString gdtfFileName);
+
+        virtual VCOMError VCOM_CALLTYPE		GetImageRessourcesCount(size_t& count);
+		virtual MvrString VCOM_CALLTYPE		GetImageRessourcesPathAt(size_t at);
+
+        //-----------------------------------------------------------------------------               
+        // BufferWorkflow
+		virtual VCOMError VCOM_CALLTYPE		GetBufferLength(size_t& length);		
+		virtual VCOMError VCOM_CALLTYPE		ToBuffer(char* outBuffer);	
+		virtual VCOMError VCOM_CALLTYPE		FromBuffer(const char* buffer, size_t length);
+        virtual VCOMError VCOM_CALLTYPE		FromBufferInternal(const char* buffer, size_t length, TXString gdtfFileName);
+
+        private:
+        void FreeBuffer();
+
+        //GDTF 1.1
+        virtual VCOMError VCOM_CALLTYPE     GetCanHaveChildren(bool& value);
+        virtual VCOMError VCOM_CALLTYPE     SetCanHaveChildren(GdtfDefines::EGdtfCanHaveChildren value);
+
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetConnectorCount(size_t& count);
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateConnector(MvrString name, MvrString type, VectorworksMVR::IGdtfConnector** outVal);
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetConnectorAt(size_t at, VectorworksMVR::IGdtfConnector** value);
 		
 	private:
         SceneData::GdtfFixture* fFixtureObject;
 		IZIPFilePtr				fZipFile;
+
+        char*                   fBuffer;
+        size_t                  fBufferLength;
+        
 	};
 	
 

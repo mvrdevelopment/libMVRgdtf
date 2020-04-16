@@ -23,17 +23,21 @@
 #include "GdtfError.h"
 #include "CGdtfFilter.h"
 #include "CGdtfColorSpace.h"
+#include "CGdtfConnector.h"
 
 using namespace VectorworksMVR::Filing;
 
 VectorworksMVR::CGdtfFixtureImpl::CGdtfFixtureImpl()
 {
-    fFixtureObject = nullptr;
+    fFixtureObject  = nullptr;
+    fBuffer         = nullptr;
+    fBufferLength   = 0;
 }
 
 VectorworksMVR::CGdtfFixtureImpl::~CGdtfFixtureImpl()
 {
-    if (fFixtureObject) {delete fFixtureObject;}
+    if (fFixtureObject) { delete fFixtureObject;}
+    FreeBuffer();
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::ReadFromFile(MvrString fullPath)
@@ -43,9 +47,8 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::ReadFromFile(MvrStri
     // Create the file pointer on the full path
     IFileIdentifierPtr file (IID_FileIdentifier);
     file->Set(strFullPath);
-	
-    // Read From File
-    return ReadFromFile(file, "" /*During GDTF reading, we read onyl one file*/);
+
+    return ReadFromFile(file, "");
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::OpenForWrite(MvrString fullPath, MvrString name, MvrString manufacturer, const MvrUUID& uuid)
@@ -109,7 +112,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::AddFileToGdtfFile(Mv
 	return kVCOMError_NoError;
 }
 
-
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::Close()
 {
 	if(!fFixtureObject) { return kVCOMError_Failed; }
@@ -123,24 +125,27 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::Close()
 	return kVCOMError_NoError;
 }
 
-
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::ReadFromFile(IFileIdentifierPtr file, TXString gdtfFileName)
-{
+{	
+    IRawOSFilePtr rawFile (IID_RawOSFile);
+    VectorworksMVR::VCOMError retVal = kVCOMError_Failed;
+    if(VCOM_SUCCEEDED(rawFile->Open(file, true, false, false, false)))
+    {
+        Uint64 size = 0;
+        rawFile->GetFileSize(size);
+        
+        if(size > 0)
+        {
+            char* tempBuffer = new char[size + 1];
+            rawFile->Read(0, size, tempBuffer);
+            retVal = FromBufferInternal(tempBuffer, size, gdtfFileName);
+            delete[] tempBuffer;
+        }
+        rawFile->Close();
+        
+    }    
 	
-	// Check there is already a object in here
-	if (fFixtureObject) { delete fFixtureObject; }
-	
-	// Create the new Object
-	fFixtureObject = new SceneData::GdtfFixture( file, gdtfFileName );
-	
-	// Check if this was good
-	if (!fFixtureObject) { return kVCOMError_Failed; }
-	
-	// Check if you can read it
-	if ( ! fFixtureObject->IsReaded()) { return kVCOMError_InvalidArg; }
-	
-	// If everything is OK
-	return kVCOMError_NoError;
+    return retVal;
 }
 
 MvrString VectorworksMVR::CGdtfFixtureImpl::GetName()
@@ -230,7 +235,7 @@ MvrString VectorworksMVR::CGdtfFixtureImpl::GetFixtureThumbnail_PNG_FullPath()
 	return fFixtureObject->GetPNGThumnailFullPath().GetCharPtr();
 }
 
-MvrString VCOM_CALLTYPE VectorworksMVR::CGdtfFixtureImpl::GetFixtureThumbnail_SVG_FullPath()
+MvrString VectorworksMVR::CGdtfFixtureImpl::GetFixtureThumbnail_SVG_FullPath()
 {
 	if(!fFixtureObject) {return "";}
 	
@@ -1243,108 +1248,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreatePreset(Vectorw
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetMacroCount(size_t &count)
-{
-    if(!fFixtureObject) {return kVCOMError_NotInitialized;}
-    
-    count = fFixtureObject->GetMacroArray().size();
-    
-    return kVCOMError_NoError;
-}
-
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetMacroAt(size_t at, VectorworksMVR::IGdtfMacro **macro)
-{
-    // Check if Set
-    if(!fFixtureObject) {return kVCOMError_NotInitialized;}
-    
-    // Check if no Overflow
-    if (at >=  fFixtureObject->GetMacroArray().size()) { return kVCOMError_OutOfBounds;  }
-    
-    
-    SceneData::GdtfMacro* gdtfMacro = fFixtureObject->GetMacroArray()[at];
-    
-    
-    //---------------------------------------------------------------------------
-    // Initialize Object
-    CGdtfMacroImpl* pMacroObj = nullptr;
-    
-    // Query Interface
-    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfMacro, (IVWUnknown**) & pMacroObj)))
-    {
-        // Check Casting
-        CGdtfMacroImpl* pResultInterface = dynamic_cast<CGdtfMacroImpl* >(pMacroObj);
-        if (pResultInterface)
-        {
-            pResultInterface->setPointer(gdtfMacro);
-        }
-        else
-        {
-            pResultInterface->Release();
-            pResultInterface = nullptr;
-            return kVCOMError_NoInterface;
-        }
-    }
-    
-    //---------------------------------------------------------------------------
-    // Check Incomming Object
-    if (*macro)
-    {
-        (*macro)->Release();
-        *macro		= NULL;
-    }
-    
-    //---------------------------------------------------------------------------
-    // Set Out Value
-    *macro		= pMacroObj;
-    
-    return kVCOMError_NoError;
-}
-
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateMacro(MvrString& name, VectorworksMVR::IGdtfMacro **macro)
-{
-	// Check if Set
-	if(!fFixtureObject) {return kVCOMError_NotInitialized;}
-	
-	
-	SceneData::GdtfMacro* gdtfMacro = fFixtureObject->AddMacro(name);
-	
-	
-	//---------------------------------------------------------------------------
-	// Initialize Object
-	CGdtfMacroImpl* pMacroObj = nullptr;
-	
-	// Query Interface
-	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfMacro, (IVWUnknown**) & pMacroObj)))
-	{
-		// Check Casting
-		CGdtfMacroImpl* pResultInterface = dynamic_cast<CGdtfMacroImpl* >(pMacroObj);
-		if (pResultInterface)
-		{
-			pResultInterface->setPointer(gdtfMacro);
-		}
-		else
-		{
-			pResultInterface->Release();
-			pResultInterface = nullptr;
-			return kVCOMError_NoInterface;
-		}
-	}
-	
-	//---------------------------------------------------------------------------
-	// Check Incomming Object
-	if (*macro)
-	{
-		(*macro)->Release();
-		*macro		= NULL;
-	}
-	
-	//---------------------------------------------------------------------------
-	// Set Out Value
-	*macro		= pMacroObj;
-	
-	return kVCOMError_NoError;
-}
-
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetRDM(IGdtf_FTRDM ** value)
 {
 	// Check if Set
@@ -1945,6 +1848,204 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetParsingErrorAt(si
     //---------------------------------------------------------------------------
     // Set Out Value
     *value = pParsingErrorObj;
+
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetImageRessourcesCount(size_t& count)
+{
+    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
+
+    count = fFixtureObject->GetAttachedFileCount();
+
+    return kVCOMError_NoError;
+}
+
+MvrString VectorworksMVR::CGdtfFixtureImpl::GetImageRessourcesPathAt(size_t at)
+{
+    if (!fFixtureObject) { return ""; }
+
+    TXString* fullPathPtr = nullptr;
+
+    if(fFixtureObject->GetAttachedFileCountAt(at, fullPathPtr) && fullPathPtr)
+    {
+        return fullPathPtr->GetCharPtr();
+    }
+
+
+    return "";
+}
+
+VCOMError VectorworksMVR::CGdtfFixtureImpl::GetBufferLength(size_t& length)
+{
+    length = fBufferLength;
+    if(length > 0)  { return kVCOMError_NoError; }
+    return kVCOMError_Failed;
+}
+
+VCOMError VectorworksMVR::CGdtfFixtureImpl::ToBuffer(char* outBuffer)
+{
+    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
+
+    memcpy( outBuffer,  fBuffer, fBufferLength );
+    return kVCOMError_NoError;
+}
+
+VCOMError VectorworksMVR::CGdtfFixtureImpl::FromBuffer(const char* buffer, size_t length)
+{
+    return FromBufferInternal(buffer, length, "" /*Single File Read*/);
+}
+
+VCOMError VectorworksMVR::CGdtfFixtureImpl::FromBufferInternal(const char* buffer, size_t length, TXString gdtfFileName)
+{
+    FreeBuffer();
+    fBufferLength   = length;
+    fBuffer         = new char[fBufferLength + 1];
+    memcpy( fBuffer,  buffer, fBufferLength );
+
+
+	// Check there is already a object in here
+	if (fFixtureObject) { delete fFixtureObject; }
+	
+	// Create the new Object
+	fFixtureObject = new SceneData::GdtfFixture();
+	
+	// Check if this was good
+	if (!fFixtureObject) { return kVCOMError_Failed; }
+
+    fFixtureObject->ImportFromBuffer(buffer,length, gdtfFileName);
+	
+	// Check if you can read it
+	if ( ! fFixtureObject->IsReaded()) { return kVCOMError_InvalidArg; }
+	
+	// If everything is OK
+	return kVCOMError_NoError;
+}
+
+void VectorworksMVR::CGdtfFixtureImpl::FreeBuffer()
+{
+    if(fBuffer) {delete[] fBuffer;}
+    fBufferLength = 0;
+}
+
+//GDTF 1.1
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetCanHaveChildren(bool& value)
+{
+	if(!fFixtureObject) {return kVCOMError_NotInitialized;}
+	
+	value = (fFixtureObject->GetCanHaveChildren() == GdtfDefines::EGdtfCanHaveChildren::eYES);
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::SetCanHaveChildren(GdtfDefines::EGdtfCanHaveChildren value)
+{
+	if(!fFixtureObject) {return kVCOMError_NotInitialized;}
+	
+	fFixtureObject->SetCanHaveChildren(value);
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetConnectorCount(size_t &count)
+{
+    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
+
+    count = fFixtureObject->GetPhysicalDesciptionsContainer().GetConnectorArray().size();
+
+    return kVCOMError_NoError;
+}
+
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetConnectorAt(size_t at, VectorworksMVR::IGdtfConnector** value)
+{
+    // Check if Set
+    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
+
+    // Check if no Overflow
+    if (at >= fFixtureObject->GetPhysicalDesciptionsContainer().GetConnectorArray().size()) { return kVCOMError_OutOfBounds; }
+
+
+    SceneData::GdtfConnector* gdtfConnector = fFixtureObject->GetPhysicalDesciptionsContainer().GetConnectorArray()[at];
+    
+    //---------------------------------------------------------------------------
+    // Initialize Object
+    CGdtfConnectorImpl* pConnectorObj = nullptr;
+
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfConnector, (IVWUnknown**)& pConnectorObj)))
+    {
+        // Check Casting
+        CGdtfConnectorImpl* pResultInterface = dynamic_cast<CGdtfConnectorImpl*>(pConnectorObj);
+        if (pResultInterface)
+        {
+            pResultInterface->setPointer(gdtfConnector);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+
+    //---------------------------------------------------------------------------
+    // Check Incoming Object
+    if (*value)
+    {
+        (*value)->Release();
+        *value = NULL;
+    }
+
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *value = pConnectorObj;
+
+    return kVCOMError_NoError;
+}
+
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateConnector(MvrString name, MvrString type, VectorworksMVR::IGdtfConnector **outVal)
+{
+    // Check if Set
+    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
+
+
+    SceneData::GdtfConnector* gdtfConnector = fFixtureObject->GetPhysicalDesciptionsContainer().AddConnector(name, type);
+
+    //---------------------------------------------------------------------------
+    // Initialize Object
+    CGdtfConnectorImpl* pConnectorObj = nullptr;
+
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfConnector, (IVWUnknown**)& pConnectorObj)))
+    {
+        // Check Casting
+        CGdtfConnectorImpl* pResultInterface = dynamic_cast<CGdtfConnectorImpl*>(pConnectorObj);
+        if (pResultInterface)
+        {
+            pResultInterface->setPointer(gdtfConnector);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+
+    //---------------------------------------------------------------------------
+    // Check Incomming Object
+    if (*outVal)
+    {
+        (*outVal)->Release();
+        *outVal = NULL;
+    }
+
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *outVal = pConnectorObj;
 
     return kVCOMError_NoError;
 }

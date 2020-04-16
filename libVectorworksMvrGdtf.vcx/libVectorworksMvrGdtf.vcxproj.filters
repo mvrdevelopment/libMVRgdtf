@@ -78,6 +78,9 @@
     <ClCompile Include="..\src\Implementation\CGdtfBreak.cpp">
       <Filter>src\Implementation</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Implementation\CGdtfConnector.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\Implementation\CGdtfCRI.cpp">
       <Filter>src\Implementation</Filter>
     </ClCompile>
@@ -157,6 +160,9 @@
       <Filter>src\Implementation</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Implementation\CGdtfWheelSlot.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Implementation\CGdtfWheelSlotAnimationSystem.cpp">
       <Filter>src\Implementation</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Implementation\CGdtfWheelSlotPrismFacet.cpp">
@@ -270,6 +276,9 @@
     <ClCompile Include="..\src\Implementation\CUtility.cpp">
       <Filter>src\Implementation</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Wrapper\ZIPFileBuffer.cpp">
+      <Filter>src\Wrapper</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\XMLLib\ErrorHandler.h">
@@ -362,6 +371,9 @@
     <ClInclude Include="..\src\Implementation\CGdtfBreak.h">
       <Filter>src\Implementation</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Implementation\CGdtfConnector.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
     <ClInclude Include="..\src\Implementation\CGdtfCRI.h">
       <Filter>src\Implementation</Filter>
     </ClInclude>
@@ -441,6 +453,9 @@
       <Filter>src\Implementation</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Implementation\CGdtfWheelSlot.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Implementation\CGdtfWheelSlotAnimationSystem.h">
       <Filter>src\Implementation</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Implementation\CGdtfWheelSlotPrismFacet.h">
@@ -571,6 +586,12 @@
     </ClInclude>
     <ClInclude Include="..\src\Implementation\CUtility.h">
       <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Wrapper\ZIPFileBuffer.h">
+      <Filter>src\Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Interface\IZIPFileBuffer.h">
+      <Filter>src\Interface</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

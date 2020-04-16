@@ -158,7 +158,7 @@ void GdtfDmxUnittest::WriteFile()
 
 		IGdtfDmxChannelFunctionPtr bit8Function3;
 		bit8LogicalChannel2->CreateDmxFunction("Function3", &bit8Function3);
-		bit8Function3->SetStartAddress(170);
+		bit8Function3->SetStartAddress(0);
 		bit8Function3->SetAttribute(attribute1);
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet7;
@@ -294,6 +294,13 @@ void GdtfDmxUnittest::ReadFile()
     IGdtfFixturePtr gdtfRead (IID_IGdtfFixture);
     if(__checkVCOM(gdtfRead->ReadFromFile(fPath.c_str())))
     {
+		size_t bufferLength = 0;
+		__checkVCOM(gdtfRead->GetBufferLength(bufferLength));
+
+		char* buffer = new char[bufferLength + 1];
+		__checkVCOM(gdtfRead->ToBuffer(buffer));
+		delete[] buffer;
+
 		//------------------------------------------------------------------------------
 		// Read the linked GUID
 		MvrUUID guid 		(0,0,0,0);
@@ -379,7 +386,16 @@ void GdtfDmxUnittest::ReadFile()
 		IGdtfGeometryPtr gdtfGeometry;
 		__checkVCOM(gdtfRead->GetGeometryAt(0, &gdtfGeometry));
 		this->checkifEqual("GetGeometryAtGetName() ", gdtfGeometry->GetName(), "Geometry");
+
+		IGdtfGeometryPtr possibleParentGeometry;
+		__checkVCOM_NotSet(gdtfGeometry->GetParent( & possibleParentGeometry));
 		
+		IGdtfGeometryPtr childGeometry;
+		__checkVCOM(gdtfGeometry->GetInternalGeometryAt(0, &childGeometry));
+		__checkVCOM(childGeometry->GetParent( & possibleParentGeometry));
+
+		this->checkifEqual("GeometryParent", gdtfGeometry->GetName(),possibleParentGeometry->GetName());
+
 
 		//------------------------------------------------------------------
 		// Get DMX Mode
@@ -578,11 +594,11 @@ void GdtfDmxUnittest::Check8bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxCh
 
 	IGdtfDmxChannelFunctionPtr bit8Function2;
 	__checkVCOM(bit8LogicalChannel1->GetDmxFunctionAt(1, &bit8Function2));
-	CheckFunction(bit8Function2, "Function2", "Attribute1", 100, 169, eGdtfChannelBitResolution_8);
+	CheckFunction(bit8Function2, "Function2", "Attribute1", 100, 255, eGdtfChannelBitResolution_8);
 
 	IGdtfDmxChannelFunctionPtr bit8Function3;
 	__checkVCOM(bit8LogicalChannel2->GetDmxFunctionAt(0, &bit8Function3));
-	CheckFunction(bit8Function3, "Function3", "Attribute1", 170, 199, eGdtfChannelBitResolution_8);
+	CheckFunction(bit8Function3, "Function3", "Attribute1", 0, 199, eGdtfChannelBitResolution_8);
 
 	IGdtfDmxChannelFunctionPtr bit8Function4;
 	__checkVCOM(bit8LogicalChannel2->GetDmxFunctionAt(1, &bit8Function4));
@@ -636,30 +652,30 @@ void GdtfDmxUnittest::Check8bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxCh
 
 	IGdtfDmxChannelSetPtr bit8ChannelSet10;
 	__checkVCOM(bit8Function2->GetDmxChannelSetAt(4, &bit8ChannelSet5));
-	this->CheckChannelSet(bit8ChannelSet5, "",166,169);
+	this->CheckChannelSet(bit8ChannelSet5, "",166,255);
 	// ---------------------------------------------------------------------------
 	// Check Channel Set Count bit8Function3
 	__checkVCOM(bit8Function3->GetDmxChannelSetCount(count));
-	this->checkifEqual("bit8Function3 Count Channel Set", count, size_t(5));
+	this->checkifEqual("bit8Function3 Count Channel Set", count, size_t(6));
 
 	IGdtfDmxChannelSetPtr bit8ChannelSet11;
-	__checkVCOM(bit8Function3->GetDmxChannelSetAt(0, &bit8ChannelSet11));
+	__checkVCOM(bit8Function3->GetDmxChannelSetAt(1, &bit8ChannelSet11));
 	this->CheckChannelSet(bit8ChannelSet11, "My Name7",170,170);
 
 	IGdtfDmxChannelSetPtr bit8ChannelSet12;
-	__checkVCOM(bit8Function3->GetDmxChannelSetAt(1, &bit8ChannelSet12));
+	__checkVCOM(bit8Function3->GetDmxChannelSetAt(2, &bit8ChannelSet12));
 	this->CheckChannelSet(bit8ChannelSet12, "",171,179);
 
 	IGdtfDmxChannelSetPtr bit8ChannelSet13;
-	__checkVCOM(bit8Function3->GetDmxChannelSetAt(2, &bit8ChannelSet13));
+	__checkVCOM(bit8Function3->GetDmxChannelSetAt(3, &bit8ChannelSet13));
 	this->CheckChannelSet(bit8ChannelSet13, "My Name8",180,180);
 
 	IGdtfDmxChannelSetPtr bit8ChannelSet14;
-	__checkVCOM(bit8Function3->GetDmxChannelSetAt(3, &bit8ChannelSet14));
+	__checkVCOM(bit8Function3->GetDmxChannelSetAt(4, &bit8ChannelSet14));
 	this->CheckChannelSet(bit8ChannelSet14, "My Name9",181,198);
 
 	IGdtfDmxChannelSetPtr bit8ChannelSet15;
-	__checkVCOM(bit8Function3->GetDmxChannelSetAt(4, &bit8ChannelSet15));
+	__checkVCOM(bit8Function3->GetDmxChannelSetAt(5, &bit8ChannelSet15));
 	this->CheckChannelSet(bit8ChannelSet15, "",199,199);
 
 	// ---------------------------------------------------------------------------
@@ -801,34 +817,35 @@ void GdtfDmxUnittest::CheckDmxChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxCha
 
 void GdtfDmxUnittest::CheckChannelSet(IGdtfDmxChannelSetPtr& channelSet, std::string name, DmxValue start, DmxValue end)
 {
-	this->checkifEqual("Check Name ", name, channelSet->GetName());
+	if( ! channelSet) { this->checkifTrue("CheckChannelSet ok", channelSet != nullptr); return;}
+	this->checkifEqual("CheckChannelSet Check Name ", name, channelSet->GetName());
 
 	DmxValue thisStart = 0;
 	__checkVCOM(channelSet->GetDmxStartAddress(thisStart));
-	this->checkifEqual("Check Start ", start, thisStart);
+	this->checkifEqual("CheckChannelSet Check Start " + name, start, thisStart);
 
 	DmxValue thisEnd = 0;
 	__checkVCOM(channelSet->GetDmxEndAddress(thisEnd));
-	this->checkifEqual("Check End ",  end, thisEnd);
+	this->checkifEqual("CheckChannelSet Check End " + name,  end, thisEnd);
 }
 
 void GdtfDmxUnittest::CheckFunction(VectorworksMVR::IGdtfDmxChannelFunctionPtr& function, std::string name, std::string attributeName, DmxValue start, DmxValue end, EGdtfChannelBitResolution resolution)
 {
-	this->checkifEqual("Check Name ", name, function->GetName());
+	this->checkifEqual("CheckFunction Check Name ", name, function->GetName());
 	IGdtfAttributePtr gdtfAttribute;
 	if (__checkVCOM(function->GetAttribute(&gdtfAttribute))) { this->checkifEqual("gdtfAttributeGetName ", attributeName, gdtfAttribute->GetName()); }
 
 	DmxValue thisStart = 0;
 	__checkVCOM(function->GetStartAddress(thisStart));
-	this->checkifEqual("Check Start ", start, thisStart);
+	this->checkifEqual("CheckFunction Check Start " + name, start, thisStart);
 
 	DmxValue thisEnd = 0;
 	__checkVCOM(function->GetEndAddress(thisEnd));
-	this->checkifEqual("Check End ",  end, thisEnd);
+	this->checkifEqual("CheckFunction Check End " + name,  end, thisEnd);
 
 
 	EGdtfChannelBitResolution thisResolution;
 	__checkVCOM(function->GetResolution(thisResolution));
-	this->checkifEqual("CheckResolution ",  (size_t)resolution, (size_t)thisResolution);
+	this->checkifEqual("CheckFunction CheckResolution ",  (size_t)resolution, (size_t)thisResolution);
 
 }
