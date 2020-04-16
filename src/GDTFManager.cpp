@@ -8244,6 +8244,7 @@ void SceneData::GdtfPhysicalDescriptions::OnReadFromNode(const IXMLFileNodePtr &
 									});
 	
 	// Read Properties (PhysicalDescription Child)
+		//PowerConsumption
 	GdtfConverter::TraverseNodes(pNode, XML_GDTF_PropertiesCollect, XML_GDTF_PowerConsumptionNodeName, [this] (IXMLFileNodePtr objNode) -> void
 									{
 										// Create the object
@@ -8257,13 +8258,34 @@ void SceneData::GdtfPhysicalDescriptions::OnReadFromNode(const IXMLFileNodePtr &
 										return;
 									});
 	
-		//Animation System
+		//OperatingTemperature
 	IXMLFileNodePtr OperatingTemperatureNode;
 	pNode->GetChildNode(XML_GDTF_OperatingTemperatureNodeName, &OperatingTemperatureNode);
 	if(OperatingTemperatureNode != nullptr)
-	{;
-		animationSystem->ReadFromNode(OperatingTemperatureNode);
-		fAnimationSystem = animationSystem;
+	{
+		TXString operatingTemperatureLowStr; OperatingTemperatureNode->GetNodeAttributeValue(XML_GDTF_OperatingTemperatureLow, operatingTemperatureLowStr);
+		GdtfConverter::ConvertDouble(operatingTemperatureLowStr, OperatingTemperatureNode, fOperatingTemperatureLow);
+
+		TXString operatingTemperatureHighStr; OperatingTemperatureNode->GetNodeAttributeValue(XML_GDTF_OperatingTemperatureHigh, operatingTemperatureHighStr);
+		GdtfConverter::ConvertDouble(operatingTemperatureHighStr, OperatingTemperatureNode, fOperatingTemperatureHigh);	
+	}
+
+		//Weight
+	IXMLFileNodePtr WeightNode;
+	pNode->GetChildNode(XML_GDTF_WeightNodeName, &WeightNode);
+	if(WeightNode != nullptr)
+	{
+		TXString weightStr; WeightNode->GetNodeAttributeValue(XML_GDTF_WeightValue, weightStr);
+		GdtfConverter::ConvertDouble(weightStr, WeightNode, fWeight);	
+	}
+
+		//LegHeight
+	IXMLFileNodePtr LegHeightNode;
+	pNode->GetChildNode(XML_GDTF_LegHeightNodeName, &LegHeightNode);
+	if(LegHeightNode != nullptr)
+	{
+		TXString legHeightStr; LegHeightNode->GetNodeAttributeValue(XML_GDTF_LegHeightValue, legHeightStr);
+		GdtfConverter::ConvertDouble(legHeightStr, LegHeightNode, fWeight);	
 	}
 	
 }
