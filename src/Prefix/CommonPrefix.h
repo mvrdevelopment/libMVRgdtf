@@ -314,6 +314,7 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_BeamTypeEnum_Wash				"Wash"
 #define XML_GDTF_BeamTypeEnum_Spot				"Spot"
 #define XML_GDTF_BeamTypeEnum_None				"None"
+#define XML_GDTF_BeamTypeEnum_Rectangle			"Rectangle"
 
 
 
