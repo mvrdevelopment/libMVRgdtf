@@ -501,10 +501,10 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString& strValue, const I
 		return true;
 	}
 
-
-	// Split the String ("ValRaw/bytetSpecifier")
-	TXString firstPart;
-	TXString secndPart;
+	// Split the String ("ValRaw/byteSpecifier")
+	TXString 	firstPart;
+	TXString 	secndPart;
+	bool		byteShifting = false;
 
 	// Find first entry
 	ptrdiff_t splitPos = strValue.Find("/");
@@ -515,37 +515,64 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString& strValue, const I
         return false;
     }
 
-
 	SplitStr(strValue, firstPart, secndPart, (size_t)splitPos);
 	//-----------------------------------------------------------------------------------
+
+	if(secndPart.GetLast() == 's')
+	{
+		byteShifting = true;
+		secndPart.Truncate(secndPart.GetLength() - 1);
+	}
 	
 	double dmxValueRaw    = firstPart.atof();
-	Sint32 bytetSpecifier = secndPart.atoi();
+	Sint32 byteSpecifier = secndPart.atoi();
 
 	if( ! (firstPart.IsCompleteNumber() && secndPart.IsCompleteNumber()))
 	{
 		GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_DmxValueHasWrongValue, node);
         SceneData::GdtfFixture::AddError(error);
 		dmxValueRaw 	= 0;
-		bytetSpecifier 	= 1;
+		byteSpecifier 	= 1;
 	}
 
 	// Check if the ByteSpecifier is different to the ChannelResolution.
-	if (bytetSpecifier != chanlReso) 
+	intValue = dmxValueRaw;
+
+	if(byteShifting)
 	{
-        DmxValue maxResolution  = GetChannelMaxDmx((EGdtfChannelBitResolution)bytetSpecifier);        
-        DmxValue maxChannelUnit = GetChannelMaxDmx(chanlReso);
+		if (byteSpecifier != chanlReso) 
+		{
+			Sint32 shift = (8 * (chanlReso - byteSpecifier));
+			if(shift >= 0) 	{ intValue = intValue << shift; }
+			else			{ intValue = intValue >> -shift; }
+		}	
+		else
+		{
+			// We can take the value as it is defined in the document without scaling it to another BitResolution.
+			intValue = dmxValueRaw; 
+		}
 
-		double percentage = (dmxValueRaw / maxResolution);
-
-        intValue = percentage * maxChannelUnit;
-
-	}	
+	}
 	else
 	{
-	    // We can take the value as it is defined in the document without scaling it to another BitResolution.
-		intValue = dmxValueRaw; 
+		if (byteSpecifier != chanlReso) 
+		{
+			DmxValue maxResolution  = GetChannelMaxDmx((EGdtfChannelBitResolution)byteSpecifier);        
+			DmxValue maxChannelUnit = GetChannelMaxDmx(chanlReso);
+
+			double percentage = (dmxValueRaw / maxResolution);
+
+			intValue = percentage * maxChannelUnit;
+
+		}	
+		else
+		{
+			// We can take the value as it is defined in the document without scaling it to another BitResolution.
+			intValue = dmxValueRaw; 
+		}
 	}
+	
+	
 
     if ( GetChannelMaxDmx(chanlReso) < intValue)
     {
