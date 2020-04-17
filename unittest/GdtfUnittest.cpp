@@ -209,6 +209,28 @@ void GdtfUnittest::WriteFile()
 			gdtfConnector->SetLength(9000.1);
 		}
 
+		//------------------------------------------------------------------------------    
+		// Set Properties
+
+			//Set Power Consumptions
+		IGdtfPowerConsumptionPtr gdtfPowerConsumption;
+		if (__checkVCOM(gdtfWrite->CreatePowerConsumption(gdtfConnector, &gdtfPowerConsumption)))
+		{
+            gdtfPowerConsumption->SetValue(42);
+            gdtfPowerConsumption->SetPowerFactor(0.9);
+			gdtfPowerConsumption->SetVoltageLow(12.3);
+			gdtfPowerConsumption->SetVoltageHigh(9000.1);
+			gdtfPowerConsumption->SetFrequencyLow(48.0);
+			//Frequency High is not set so we can check that the default value (60 Hz) is set.
+		}
+
+			//Set OperatingTemperature
+		gdtfWrite->SetOperatingTemperatureLow(-273.15);
+			//Set Weight
+		gdtfWrite->SetWeight(42);
+			//Set LegHeight
+		gdtfWrite->SetLegHeight(0.6);
+
 
 		//------------------------------------------------------------------------------------------------------------------
 		// Set ColorSpace Space
@@ -682,7 +704,68 @@ void GdtfUnittest::ReadFile()
 			this->checkifEqual("Connector Length", length, 9000.1);
 		}
 
+		//------------------------------------------------------------------------------------------------------------------
+        // Properties
+
+			//PowerConsumption        
+        size_t powerConsumptionCount; __checkVCOM(gdtfRead->GetPowerConsumptionCount(powerConsumptionCount));
         
+        this->checkifEqual("PowerConsumption Count", powerConsumptionCount, size_t(1));
+
+        IGdtfPowerConsumptionPtr gdtfPowerConsumption;
+		
+		if(__checkVCOM(gdtfRead->GetPowerConsumptionAt(0, &gdtfPowerConsumption)))
+		{
+			double value;
+			__checkVCOM(gdtfPowerConsumption->GetValue(value));
+			this->checkifEqual("PowerConsumption Value", value, 42.0);
+
+			double powerFactor;
+			__checkVCOM(gdtfPowerConsumption->GetPowerFactor(powerFactor));
+			this->checkifEqual("PowerConsumption PowerFactor", powerFactor, 0.9);
+
+			IGdtfConnectorPtr myConnector;
+			if(__checkVCOM(gdtfPowerConsumption->GetConnector(&myConnector)))
+			{
+				MvrString connectorName = myConnector->GetName();
+				this->checkifEqual("PowerConsumption Connector Name", connectorName, "My connectorName");
+			}
+
+			double voltageLow;
+			__checkVCOM(gdtfPowerConsumption->GetVoltageLow(voltageLow));
+			this->checkifEqual("PowerConsumption VoltageLow", voltageLow, 12.3);
+
+			double voltageHigh;
+			__checkVCOM(gdtfPowerConsumption->GetVoltageHigh(voltageHigh));
+			this->checkifEqual("PowerConsumption VoltageHigh", voltageHigh, 9000.1);
+
+			double frequencyLow;
+			__checkVCOM(gdtfPowerConsumption->GetFrequencyLow(frequencyLow));
+			this->checkifEqual("PowerConsumption FrequencyLow", frequencyLow, 48.0);
+
+			double frequencyHigh;
+			__checkVCOM(gdtfPowerConsumption->GetFrequencyHigh(frequencyHigh));
+			this->checkifEqual("PowerConsumption FrequencyHigh", frequencyHigh, 60.0);
+		}
+
+			//OperatingTemperature 
+		double operatingTemperatureLow;
+		__checkVCOM(gdtfRead->GetOperatingTemperatureLow(operatingTemperatureLow));
+		this->checkifEqual("operatingTemperatureLow", operatingTemperatureLow, -273.15);
+
+		double operatingTemperatureHigh;
+		__checkVCOM(gdtfRead->GetOperatingTemperatureHigh(operatingTemperatureHigh));
+		this->checkifEqual("operatingTemperatureHigh", operatingTemperatureHigh, 40.0);
+
+			//Weight 
+		double weight;
+		__checkVCOM(gdtfRead->GetWeight(weight));
+		this->checkifEqual("weight", weight, 42.0);
+
+			//OperatingTemperature 
+		double legHeight;
+		__checkVCOM(gdtfRead->GetLegHeight(legHeight));
+		this->checkifEqual("legHeight", legHeight, 0.6);
 
 		//------------------------------------------------------------------------------------------------------------------
 		// Set ColorSpace Space

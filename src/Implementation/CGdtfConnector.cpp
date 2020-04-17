@@ -113,7 +113,7 @@ VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfConnectorImpl::SetLength(double len
 	return kVCOMError_NoError;
 }
 
-void VectorworksMVR::CGdtfConnectorImpl::setPointer(SceneData::GdtfConnector* connector)
+void VectorworksMVR::CGdtfConnectorImpl::SetPointer(SceneData::GdtfConnector* connector)
 {
     fConnector = connector;
 }

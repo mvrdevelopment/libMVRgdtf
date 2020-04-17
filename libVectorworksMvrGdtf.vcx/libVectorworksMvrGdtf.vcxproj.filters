@@ -150,6 +150,9 @@
     <ClCompile Include="..\src\Implementation\CGdtfPhysicalEmitter.cpp">
       <Filter>src\Implementation</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Implementation\CGdtfPowerConsumption.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\Implementation\CGdtfRevision.cpp">
       <Filter>src\Implementation</Filter>
     </ClCompile>
@@ -441,6 +444,9 @@
       <Filter>src\Implementation</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Implementation\CGdtfPhysicalEmitter.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Implementation\CGdtfPowerConsumption.h">
       <Filter>src\Implementation</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Implementation\CGdtfRevision.h">
