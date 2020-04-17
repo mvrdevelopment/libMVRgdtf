@@ -213,16 +213,19 @@ namespace VectorworksMVR
 		
 		enum EGdtfModel_PrimitiveType
 		{
-			eGdtfModel_PrimitiveType_Undefined		= 0,
-			eGdtfModel_PrimitiveType_Cube			= 1,
-			eGdtfModel_PrimitiveType_Cylinder		= 2,
-			eGdtfModel_PrimitiveType_Sphere			= 3,
-			eGdtfModel_PrimitiveType_Base			= 4,
-			eGdtfModel_PrimitiveType_Yoke			= 5,
-			eGdtfModel_PrimitiveType_Head			= 6,
-			eGdtfModel_PrimitiveType_Scanner		= 7,
-			eGdtfModel_PrimitiveType_Conventional	= 8,
-            eGdtfModel_PrimitiveType_Pigtail        = 9,
+			eGdtfModel_PrimitiveType_Undefined		    = 0,
+			eGdtfModel_PrimitiveType_Cube			    = 1,
+			eGdtfModel_PrimitiveType_Cylinder		    = 2,
+			eGdtfModel_PrimitiveType_Sphere			    = 3,
+			eGdtfModel_PrimitiveType_Base			    = 4,
+			eGdtfModel_PrimitiveType_Yoke			    = 5,
+			eGdtfModel_PrimitiveType_Head			    = 6,
+			eGdtfModel_PrimitiveType_Scanner		    = 7,
+			eGdtfModel_PrimitiveType_Conventional	    = 8,
+            eGdtfModel_PrimitiveType_Pigtail            = 9,
+            eGdtfModel_PrimitiveType_Base1_1            = 10,
+            eGdtfModel_PrimitiveType_Scanner1_1         = 11,
+            eGdtfModel_PrimitiveType_Conventional1_1    = 12,
 		};
 		
 		enum EGdtfLampType

@@ -612,16 +612,20 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 {
 	switch (value)
 	{
-		case eGdtfModel_PrimitiveType_Cube:			return XML_GDTF_PrimitiveTypeEnum_Cube;
-		case eGdtfModel_PrimitiveType_Sphere:		return XML_GDTF_PrimitiveTypeEnum_Sphere;
-		case eGdtfModel_PrimitiveType_Cylinder:		return XML_GDTF_PrimitiveTypeEnum_Cylinder;
-		case eGdtfModel_PrimitiveType_Undefined:	return XML_GDTF_PrimitiveTypeEnum_Undefined;
-		case eGdtfModel_PrimitiveType_Base:			return XML_GDTF_PrimitiveTypeEnum_Base;
-		case eGdtfModel_PrimitiveType_Head:			return XML_GDTF_PrimitiveTypeEnum_Head;
-		case eGdtfModel_PrimitiveType_Yoke:			return XML_GDTF_PrimitiveTypeEnum_Yoke;
-		case eGdtfModel_PrimitiveType_Scanner:		return XML_GDTF_PrimitiveTypeEnum_Scanner;
-		case eGdtfModel_PrimitiveType_Conventional:	return XML_GDTF_PrimitiveTypeEnum_Conventional;
-        case eGdtfModel_PrimitiveType_Pigtail:      return XML_GDTF_PrimitiveTypeEnum_Pigtail;			
+		case eGdtfModel_PrimitiveType_Cube:				return XML_GDTF_PrimitiveTypeEnum_Cube;
+		case eGdtfModel_PrimitiveType_Sphere:			return XML_GDTF_PrimitiveTypeEnum_Sphere;
+		case eGdtfModel_PrimitiveType_Cylinder:			return XML_GDTF_PrimitiveTypeEnum_Cylinder;
+		case eGdtfModel_PrimitiveType_Undefined:		return XML_GDTF_PrimitiveTypeEnum_Undefined;
+		case eGdtfModel_PrimitiveType_Base:				return XML_GDTF_PrimitiveTypeEnum_Base;
+		case eGdtfModel_PrimitiveType_Head:				return XML_GDTF_PrimitiveTypeEnum_Head;
+		case eGdtfModel_PrimitiveType_Yoke:				return XML_GDTF_PrimitiveTypeEnum_Yoke;
+		case eGdtfModel_PrimitiveType_Scanner:			return XML_GDTF_PrimitiveTypeEnum_Scanner;
+		case eGdtfModel_PrimitiveType_Conventional:		return XML_GDTF_PrimitiveTypeEnum_Conventional;
+        case eGdtfModel_PrimitiveType_Pigtail:      	return XML_GDTF_PrimitiveTypeEnum_Pigtail;
+		case eGdtfModel_PrimitiveType_Base1_1:      	return XML_GDTF_PrimitiveTypeEnum_Base1_1;
+		case eGdtfModel_PrimitiveType_Scanner1_1:      	return XML_GDTF_PrimitiveTypeEnum_Scanner1_1;
+		case eGdtfModel_PrimitiveType_Conventional1_1:	return XML_GDTF_PrimitiveTypeEnum_Conventional1_1;
+		default: 										return XML_GDTF_PrimitiveTypeEnum_Undefined;
 	}
 	
 	// Make Assert
@@ -633,7 +637,10 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 						value == eGdtfModel_PrimitiveType_Yoke ||
 						value == eGdtfModel_PrimitiveType_Scanner ||
 						value == eGdtfModel_PrimitiveType_Conventional ||
-                        value == eGdtfModel_PrimitiveType_Pigtail);
+                        value == eGdtfModel_PrimitiveType_Pigtail ||
+						value == eGdtfModel_PrimitiveType_Base1_1 ||
+						value == eGdtfModel_PrimitiveType_Scanner1_1 ||
+						value == eGdtfModel_PrimitiveType_Conventional1_1);
 	
 	// Return default value
 	return XML_GDTF_PrimitiveTypeEnum_Undefined;
@@ -642,17 +649,20 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 
 /*static*/ bool GdtfConverter::ConvertPrimitiveType(const TXString& value, const IXMLFileNodePtr& node, EGdtfModel_PrimitiveType& type)
 {
-	if		(value == XML_GDTF_PrimitiveTypeEnum_Cube)			{ type = eGdtfModel_PrimitiveType_Cube;		}
-	else if (value == XML_GDTF_PrimitiveTypeEnum_Sphere)		{ type = eGdtfModel_PrimitiveType_Sphere;	}
-	else if (value == XML_GDTF_PrimitiveTypeEnum_Cylinder)		{ type = eGdtfModel_PrimitiveType_Cylinder;	}
-	else if (value == XML_GDTF_PrimitiveTypeEnum_Base)			{ type = eGdtfModel_PrimitiveType_Base;	}
-	else if (value == XML_GDTF_PrimitiveTypeEnum_Head)			{ type = eGdtfModel_PrimitiveType_Head;	}
-	else if (value == XML_GDTF_PrimitiveTypeEnum_Yoke)			{ type = eGdtfModel_PrimitiveType_Yoke;	}
-	else if (value == XML_GDTF_PrimitiveTypeEnum_Scanner)		{ type = eGdtfModel_PrimitiveType_Scanner;	}
-	else if (value == XML_GDTF_PrimitiveTypeEnum_Conventional)	{ type = eGdtfModel_PrimitiveType_Conventional;	}
-	else if (value == XML_GDTF_PrimitiveTypeEnum_Undefined)		{ type = eGdtfModel_PrimitiveType_Undefined; }
-    else if (value == XML_GDTF_PrimitiveTypeEnum_Pigtail)		{ type = eGdtfModel_PrimitiveType_Pigtail; }
-	else if (value == "")										{ type = eGdtfModel_PrimitiveType_Undefined; }
+	if		(value == XML_GDTF_PrimitiveTypeEnum_Cube)				{ type = eGdtfModel_PrimitiveType_Cube;		}
+	else if (value == XML_GDTF_PrimitiveTypeEnum_Sphere)			{ type = eGdtfModel_PrimitiveType_Sphere;	}
+	else if (value == XML_GDTF_PrimitiveTypeEnum_Cylinder)			{ type = eGdtfModel_PrimitiveType_Cylinder;	}
+	else if (value == XML_GDTF_PrimitiveTypeEnum_Base)				{ type = eGdtfModel_PrimitiveType_Base;	}
+	else if (value == XML_GDTF_PrimitiveTypeEnum_Head)				{ type = eGdtfModel_PrimitiveType_Head;	}
+	else if (value == XML_GDTF_PrimitiveTypeEnum_Yoke)				{ type = eGdtfModel_PrimitiveType_Yoke;	}
+	else if (value == XML_GDTF_PrimitiveTypeEnum_Scanner)			{ type = eGdtfModel_PrimitiveType_Scanner;	}
+	else if (value == XML_GDTF_PrimitiveTypeEnum_Conventional)		{ type = eGdtfModel_PrimitiveType_Conventional;	}
+	else if (value == XML_GDTF_PrimitiveTypeEnum_Undefined)			{ type = eGdtfModel_PrimitiveType_Undefined; }
+    else if (value == XML_GDTF_PrimitiveTypeEnum_Pigtail)			{ type = eGdtfModel_PrimitiveType_Pigtail; }
+	else if (value == XML_GDTF_PrimitiveTypeEnum_Base1_1)			{ type = eGdtfModel_PrimitiveType_Base1_1; }
+	else if (value == XML_GDTF_PrimitiveTypeEnum_Scanner1_1)		{ type = eGdtfModel_PrimitiveType_Scanner1_1; }
+	else if (value == XML_GDTF_PrimitiveTypeEnum_Conventional1_1)	{ type = eGdtfModel_PrimitiveType_Conventional1_1; }
+	else if (value == "")											{ type = eGdtfModel_PrimitiveType_Undefined; }
 	else
     {
         type = eGdtfModel_PrimitiveType_Undefined; DSTOP((kEveryone, "Unexpected Input for Primitive Type Enum"));
