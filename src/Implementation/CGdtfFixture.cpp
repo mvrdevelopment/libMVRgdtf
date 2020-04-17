@@ -24,6 +24,7 @@
 #include "CGdtfFilter.h"
 #include "CGdtfColorSpace.h"
 #include "CGdtfConnector.h"
+#include "CGdtfPowerConsumption.h"
 
 using namespace VectorworksMVR::Filing;
 
@@ -1980,7 +1981,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetConnectorAt(size_
         CGdtfConnectorImpl* pResultInterface = dynamic_cast<CGdtfConnectorImpl*>(pConnectorObj);
         if (pResultInterface)
         {
-            pResultInterface->setPointer(gdtfConnector);
+            pResultInterface->SetPointer(gdtfConnector);
         }
         else
         {
@@ -2025,7 +2026,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateConnector(MvrS
         CGdtfConnectorImpl* pResultInterface = dynamic_cast<CGdtfConnectorImpl*>(pConnectorObj);
         if (pResultInterface)
         {
-            pResultInterface->setPointer(gdtfConnector);
+            pResultInterface->SetPointer(gdtfConnector);
         }
         else
         {
@@ -2036,7 +2037,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateConnector(MvrS
     }
 
     //---------------------------------------------------------------------------
-    // Check Incomming Object
+    // Check Incoming Object
     if (*outVal)
     {
         (*outVal)->Release();
@@ -2048,4 +2049,192 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateConnector(MvrS
     *outVal = pConnectorObj;
 
     return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetPowerConsumptionCount(size_t &count)
+{
+    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
+
+    count = fFixtureObject->GetPhysicalDesciptionsContainer().GetPowerConsumptionArray().size();
+
+    return kVCOMError_NoError;
+}
+
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetPowerConsumptionAt(size_t at, VectorworksMVR::IGdtfPowerConsumption** value)
+{
+    // Check if Set
+    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
+
+    // Check if no Overflow
+    if (at >= fFixtureObject->GetPhysicalDesciptionsContainer().GetPowerConsumptionArray().size()) { return kVCOMError_OutOfBounds; }
+
+
+    SceneData::GdtfPowerConsumption* gdtfPowerConsumption = fFixtureObject->GetPhysicalDesciptionsContainer().GetPowerConsumptionArray()[at];
+    
+    //---------------------------------------------------------------------------
+    // Initialize Object
+    CGdtfPowerConsumptionImpl* pPowerConsumptionObj = nullptr;
+
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfPowerConsumption, (IVWUnknown**)& pPowerConsumptionObj)))
+    {
+        // Check Casting
+        CGdtfPowerConsumptionImpl* pResultInterface = dynamic_cast<CGdtfPowerConsumptionImpl*>(pPowerConsumptionObj);
+        if (pResultInterface)
+        {
+            pResultInterface->SetPointer(gdtfPowerConsumption);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+
+    //---------------------------------------------------------------------------
+    // Check Incoming Object
+    if (*value)
+    {
+        (*value)->Release();
+        *value = NULL;
+    }
+
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *value = pPowerConsumptionObj;
+
+    return kVCOMError_NoError;
+}
+
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreatePowerConsumption(VectorworksMVR::IGdtfConnector* connector, VectorworksMVR::IGdtfPowerConsumption** outVal)
+{
+    // Check if Set
+    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
+
+    //Cast Connector
+    if (!connector) { return kVCOMError_InvalidArg; }
+        
+    CGdtfConnectorImpl* connectorImpl = dynamic_cast<CGdtfConnectorImpl*>(connector);
+    if (!connectorImpl) { return kVCOMError_Failed; }
+
+    // Set Object
+    SceneData::GdtfConnector* gdtfConnector = connectorImpl->GetPointer();
+    if (!gdtfConnector) { return kVCOMError_Failed; }
+
+
+    SceneData::GdtfPowerConsumption* gdtfPowerConsumption = fFixtureObject->GetPhysicalDesciptionsContainer().AddPowerConsumption(gdtfConnector);
+
+    //---------------------------------------------------------------------------
+    // Initialize Object
+    CGdtfPowerConsumptionImpl* pPowerConsumptionObj = nullptr;
+
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfPowerConsumption, (IVWUnknown**)& pPowerConsumptionObj)))
+    {
+        // Check Casting
+        CGdtfPowerConsumptionImpl* pResultInterface = dynamic_cast<CGdtfPowerConsumptionImpl*>(pPowerConsumptionObj);
+        if (pResultInterface)
+        {
+            pResultInterface->SetPointer(gdtfPowerConsumption);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+
+    //---------------------------------------------------------------------------
+    // Check Incoming Object
+    if (*outVal)
+    {
+        (*outVal)->Release();
+        *outVal = NULL;
+    }
+
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *outVal = pPowerConsumptionObj;
+
+    return kVCOMError_NoError;
+}
+
+VCOMError VCOM_CALLTYPE	CGdtfFixtureImpl::GetOperatingTemperatureLow(double& value)
+{
+    if(!fFixtureObject) {return kVCOMError_NotInitialized;}
+	
+	value = fFixtureObject->GetPhysicalDesciptionsContainer().GetOperatingTemperatureLow();
+	
+	return kVCOMError_NoError;
+    
+}
+
+VCOMError VCOM_CALLTYPE	CGdtfFixtureImpl::SetOperatingTemperatureLow(double value)
+{
+    if(!fFixtureObject) {return kVCOMError_NotInitialized;}
+	
+	fFixtureObject->GetPhysicalDesciptionsContainer().SetOperatingTemperatureLow(value);
+	
+	return kVCOMError_NoError;
+}
+
+VCOMError VCOM_CALLTYPE	CGdtfFixtureImpl::GetOperatingTemperatureHigh(double& value)
+{
+    if(!fFixtureObject) {return kVCOMError_NotInitialized;}
+	
+	value = fFixtureObject->GetPhysicalDesciptionsContainer().GetOperatingTemperatureHigh();
+	
+	return kVCOMError_NoError;
+    
+}
+
+VCOMError VCOM_CALLTYPE	CGdtfFixtureImpl::SetOperatingTemperatureHigh(double value)
+{
+    if(!fFixtureObject) {return kVCOMError_NotInitialized;}
+	
+	fFixtureObject->GetPhysicalDesciptionsContainer().SetOperatingTemperatureHigh(value);
+	
+	return kVCOMError_NoError;
+}
+
+VCOMError VCOM_CALLTYPE	CGdtfFixtureImpl::GetWeight(double& value)
+{
+    if(!fFixtureObject) {return kVCOMError_NotInitialized;}
+	
+	value = fFixtureObject->GetPhysicalDesciptionsContainer().GetWeight();
+	
+	return kVCOMError_NoError;
+    
+}
+
+VCOMError VCOM_CALLTYPE	CGdtfFixtureImpl::SetWeight(double value)
+{
+    if(!fFixtureObject) {return kVCOMError_NotInitialized;}
+	
+	fFixtureObject->GetPhysicalDesciptionsContainer().SetWeight(value);
+	
+	return kVCOMError_NoError;
+}
+
+VCOMError VCOM_CALLTYPE	CGdtfFixtureImpl::GetLegHeight(double& value)
+{
+    if(!fFixtureObject) {return kVCOMError_NotInitialized;}
+	
+	value = fFixtureObject->GetPhysicalDesciptionsContainer().GetLegHeight();
+	
+	return kVCOMError_NoError;
+    
+}
+
+VCOMError VCOM_CALLTYPE	CGdtfFixtureImpl::SetLegHeight(double value)
+{
+    if(!fFixtureObject) {return kVCOMError_NotInitialized;}
+	
+	fFixtureObject->GetPhysicalDesciptionsContainer().SetLegHeight(value);
+	
+	return kVCOMError_NoError;
 }

@@ -486,6 +486,30 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_ConnectorLength                        "Length"
 
 //-----------------------------------------------------------------------------
+// Properties Collect
+
+#define XML_GDTF_PropertiesCollect	                    "Properties"
+
+#define XML_GDTF_PowerConsumptionNodeName               "PowerConsumption"
+#define XML_GDTF_PowerConsumptionValue                  "Value"
+#define XML_GDTF_PowerConsumptionPowerFactor            "PowerFactor"
+#define XML_GDTF_PowerConsumptionConnector              "Connector"
+#define XML_GDTF_PowerConsumptionVoltageLow             "VoltageLow"
+#define XML_GDTF_PowerConsumptionVoltageHigh            "VoltageHigh"
+#define XML_GDTF_PowerConsumptionFrequencyLow           "FrequencyLow"
+#define XML_GDTF_PowerConsumptionFrequencyHigh          "FrequencyHigh"
+
+#define XML_GDTF_OperatingTemperatureNodeName           "OperatingTemperature"
+#define XML_GDTF_OperatingTemperatureLow                "Low"
+#define XML_GDTF_OperatingTemperatureHigh               "High"
+
+#define XML_GDTF_WeightNodeName                         "Weight"
+#define XML_GDTF_WeightValue                            "Value"
+
+#define XML_GDTF_LegHeightNodeName                      "LegHeight"
+#define XML_GDTF_LegHeightValue                         "Value"
+
+//-----------------------------------------------------------------------------
 // Measurement
 #define XML_GDTF_MeasurementNodeName					"Measurement"
 // Measurement Attribs
