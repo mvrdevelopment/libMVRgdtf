@@ -266,6 +266,14 @@ using namespace SceneData;
 	return true;
 }
 
+/*static*/ bool GdtfConverter::ConvertInteger(const TXString& value, const IXMLFileNodePtr& node, Uint8& intValue)
+{
+    if(value.IsEmpty()) return false;
+
+	intValue = value.atoi();
+	return true;
+}
+
 /*static*/ bool GdtfConverter::ConvertInteger(const TXString& value, const IXMLFileNodePtr& node,size_t& intValue)
 {
     if(value.IsEmpty()) return false;

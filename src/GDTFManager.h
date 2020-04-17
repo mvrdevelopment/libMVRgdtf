@@ -1919,22 +1919,22 @@ namespace SceneData
     {
     public:
         GdtfCRI();
-        GdtfCRI(EGdtfColorSample ces, Sint32 colorTemp);
+        GdtfCRI(EGdtfColorSample ces, Uint8 cri);
         ~GdtfCRI();
     private:
         // Attributes
-        EGdtfColorSample fCES;
-        Sint32           fColorTemperature;
+        EGdtfColorSample	fCES;
+        Uint8           	fCRI;
     public:
         virtual EGdtfObjectType			GetObjectType();
 
     public:
         // Getter                
-        EGdtfColorSample GetColorSample() const;
-        Sint32           GetColorTemperature() const;
+        EGdtfColorSample 	GetColorSample() const;
+        Uint8				GetColorRenderingIndex() const;
         // Setter       
         void SetColorSample(EGdtfColorSample val);
-        void SetColorTemperature(Sint32 val);
+        void SetColorRenderingIndex(Uint8 val);
     protected:
         virtual	TXString				GetNodeName();
         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
@@ -1974,25 +1974,25 @@ namespace SceneData
     };
 
 	class GdtfDMXProfile : public GdtfObject
-     {
-     public:
-         GdtfDMXProfile();
-         ~GdtfDMXProfile();
-     private:
-         // Attributes
-     public:
-         virtual EGdtfObjectType			GetObjectType();
+	{
+	public:
+		GdtfDMXProfile();
+		~GdtfDMXProfile();
+	private:
+		// Attributes
+	public:
+		virtual EGdtfObjectType			GetObjectType();
 
-     public:
-         // Getter        
-         //
-         // Setter       
-         //
-     protected:
-         virtual	TXString				GetNodeName();
-         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
-         virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
-     };
+	public:
+		// Getter        
+		//
+		// Setter       
+		//
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+	};
 
 	 class GdtfConnector : public GdtfObject
 	{

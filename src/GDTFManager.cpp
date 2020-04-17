@@ -6571,7 +6571,7 @@ void SceneData::GdtfCRIGroup::OnPrintToFile(IXMLFileNodePtr pNode)
 
     //------------------------------------------------------------------------------------
     // Print the attributes
-    pNode->SetNodeAttributeValue(XML_GDTF_ColorRenderingIndexGrou_AttrColorTemp, GdtfConverter::ConvertDouble(fColorTemperature) );
+    pNode->SetNodeAttributeValue(XML_GDTF_ColorRenderingIndexGroup_ColorTemp, GdtfConverter::ConvertDouble(fColorTemperature) );
 
     //------------------------------------------------------------------------------------
     // Print the childs
@@ -6589,7 +6589,7 @@ void SceneData::GdtfCRIGroup::OnReadFromNode(const IXMLFileNodePtr & pNode)
 
     //------------------------------------------------------------------------------------
     // Get the attributes	
-    TXString colorTempStr; pNode->GetNodeAttributeValue(XML_GDTF_ColorRenderingIndexGrou_AttrColorTemp, colorTempStr);
+    TXString colorTempStr; pNode->GetNodeAttributeValue(XML_GDTF_ColorRenderingIndexGroup_ColorTemp, colorTempStr);
     GdtfConverter::ConvertDouble(colorTempStr, pNode, fColorTemperature);
 
     // Read the childs
@@ -6615,7 +6615,7 @@ void SceneData::GdtfCRIGroup::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	// Create needed and optional Attribute Arrays
 	TXStringArray needed;
 	TXStringArray optional;
-	optional.push_back(XML_GDTF_ColorRenderingIndexGrou_AttrColorTemp);
+	optional.push_back(XML_GDTF_ColorRenderingIndexGroup_ColorTemp);
 
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
@@ -6625,13 +6625,13 @@ void SceneData::GdtfCRIGroup::OnErrorCheck(const IXMLFileNodePtr& pNode)
 SceneData::GdtfCRI::GdtfCRI()
 {
     fCES = EGdtfColorSample::CES_01;  // Default CES01
-    fColorTemperature = 100;          // The color rendering index for this sample.Size: 1 byte; Default value : 100
+    fCRI = 100;          // The color rendering index for this sample.Size: 1 byte; Default value : 100
 }
 
-SceneData::GdtfCRI::GdtfCRI(EGdtfColorSample ces, Sint32 colorTemp)
+SceneData::GdtfCRI::GdtfCRI(EGdtfColorSample ces, Uint8 cri)
 {
     fCES = ces;
-    fColorTemperature = colorTemp;
+    fCRI = cri;
 }
 
 SceneData::GdtfCRI::~GdtfCRI()
@@ -6648,9 +6648,9 @@ EGdtfColorSample SceneData::GdtfCRI::GetColorSample() const
     return fCES;
 }
 
-Sint32 SceneData::GdtfCRI::GetColorTemperature() const
+Uint8 SceneData::GdtfCRI::GetColorRenderingIndex() const
 {
-    return fColorTemperature;
+    return fCRI;
 }
 
 void SceneData::GdtfCRI::SetColorSample(EGdtfColorSample val)
@@ -6658,9 +6658,9 @@ void SceneData::GdtfCRI::SetColorSample(EGdtfColorSample val)
     fCES = val;
 }
 
-void SceneData::GdtfCRI::SetColorTemperature(Sint32 val)
+void SceneData::GdtfCRI::SetColorRenderingIndex(Uint8 val)
 {
-    fColorTemperature = val;
+    fCRI = val;
 }
 
 TXString SceneData::GdtfCRI::GetNodeName()
@@ -6676,9 +6676,9 @@ void SceneData::GdtfCRI::OnPrintToFile(IXMLFileNodePtr pNode)
 
     //------------------------------------------------------------------------------------
     // Print the attributes
-    pNode->SetNodeAttributeValue(XML_GDTF_ColorRenderingIndex_AttrCES, GdtfConverter::ConvertEGdtfColorSampleEnum(fCES) );
+    pNode->SetNodeAttributeValue(XML_GDTF_ColorRenderingIndex_CES, GdtfConverter::ConvertEGdtfColorSampleEnum(fCES) );
     
-    pNode->SetNodeAttributeValue(XML_GDTF_ColorRenderingIndex_AttrColorTemp, GdtfConverter::ConvertInteger(fColorTemperature) );
+    pNode->SetNodeAttributeValue(XML_GDTF_ColorRenderingIndex_CRI, GdtfConverter::ConvertInteger(fCRI) );
 }
 
 void SceneData::GdtfCRI::OnReadFromNode(const IXMLFileNodePtr & pNode)
@@ -6689,11 +6689,11 @@ void SceneData::GdtfCRI::OnReadFromNode(const IXMLFileNodePtr & pNode)
 
     //------------------------------------------------------------------------------------
     // Get the attributes	
-    TXString cesStr;  pNode->GetNodeAttributeValue(XML_GDTF_ColorRenderingIndex_AttrCES, cesStr);
+    TXString cesStr;  pNode->GetNodeAttributeValue(XML_GDTF_ColorRenderingIndex_CES, cesStr);
     GdtfConverter::ConvertEGdtfColorSampleEnum(cesStr, pNode, fCES);
     //
-    TXString colorTempStr; pNode->GetNodeAttributeValue(XML_GDTF_ColorRenderingIndex_AttrColorTemp, colorTempStr);
-    GdtfConverter::ConvertInteger(colorTempStr, pNode, fColorTemperature);
+    TXString colorRenderingIndexStr; pNode->GetNodeAttributeValue(XML_GDTF_ColorRenderingIndex_CRI, colorRenderingIndexStr);
+    GdtfConverter::ConvertInteger(colorRenderingIndexStr, pNode, fCRI);
 }
 
 void SceneData::GdtfCRI::OnErrorCheck(const IXMLFileNodePtr& pNode)
@@ -6706,8 +6706,8 @@ void SceneData::GdtfCRI::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	// Create needed and optional Attribute Arrays
 	TXStringArray needed;
 	TXStringArray optional;
-	optional.push_back(XML_GDTF_ColorRenderingIndex_AttrCES);
-	optional.push_back(XML_GDTF_ColorRenderingIndex_AttrColorTemp);
+	optional.push_back(XML_GDTF_ColorRenderingIndex_CES);
+	optional.push_back(XML_GDTF_ColorRenderingIndex_CRI);
 
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node

@@ -101,6 +101,7 @@ namespace SceneData
 		static bool		ConvertInteger(					const TXString& value, const IXMLFileNodePtr& node,	Uint32&	intValue);
         static bool		ConvertDmxBreak(				const TXString& value, const IXMLFileNodePtr& node,	Sint32&	intValue);
 		static bool		ConvertInteger(					const TXString& value, const IXMLFileNodePtr& node,	Sint8& intValue);
+		static bool		ConvertInteger(					const TXString& value, const IXMLFileNodePtr& node,	Uint8& intValue);
 		static bool		ConvertInteger(					const TXString& value, const IXMLFileNodePtr& node,	size_t& intValue);
 		static bool		ConvertInteger(					const TXString& value, const IXMLFileNodePtr& node,	Sint32&	intValue,						bool& noneValue);
         static bool     ConvertIntegerArray(				  TXString  values,const IXMLFileNodePtr& node,	TSint32Array& intArray);

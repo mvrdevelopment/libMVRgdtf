@@ -513,10 +513,10 @@ const Sint32 kMVR_MinorVersion = 4;
 //-----------------------------------------------------------------------------
 #define XML_GDTF_ColorRenderingIndexCollect             "CRIs"
 #define XML_GDTF_ColorRenderingIndexGroup               "CRIGroup"
-#define XML_GDTF_ColorRenderingIndexGrou_AttrColorTemp  "ColorTemperature"
+#define XML_GDTF_ColorRenderingIndexGroup_ColorTemp     "ColorTemperature"
 #define XML_GDTF_ColorRenderingIndex                    "CRI"			
-#define XML_GDTF_ColorRenderingIndex_AttrCES            "CES"
-#define XML_GDTF_ColorRenderingIndex_AttrColorTemp      "ColorTemperature"
+#define XML_GDTF_ColorRenderingIndex_CES                "CES"
+#define XML_GDTF_ColorRenderingIndex_CRI                "ColorRenderingIndex"
 
 
 // ColorSample Array

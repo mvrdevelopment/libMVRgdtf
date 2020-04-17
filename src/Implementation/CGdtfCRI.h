@@ -15,10 +15,10 @@ namespace VectorworksMVR
         
         // Getter
         virtual VCOMError VCOM_CALLTYPE     GetColorSample(EGdtfColorSample outVal);
-        virtual VCOMError VCOM_CALLTYPE     GetColorTemperature(Sint32& outVal);
+        virtual VCOMError VCOM_CALLTYPE     GetColorRenderingIndex(Uint8& outVal);
         // Setter
         virtual VCOMError VCOM_CALLTYPE     SetColorSample(EGdtfColorSample val);
-        virtual VCOMError VCOM_CALLTYPE     SetColorTemperature(Sint32 val);
+        virtual VCOMError VCOM_CALLTYPE     SetColorRenderingIndex(Uint8 val);
         //
         virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr);
         virtual void*	  VCOM_CALLTYPE     GetBoundObject();
