@@ -300,6 +300,12 @@ const Sint32 kMVR_MinorVersion = 4;
 
 #define XML_GDTF_FilterShaperNodeName			"FilterShaper"
 
+#define XML_GDTF_MediaServerCameraNodeName		"MediaServerCamera"
+
+#define XML_GDTF_MediaServerLayerNodeName		"MediaServerLayer"
+
+#define XML_GDTF_MediaServerMasterNodeName		"MediaServerMaster"
+
 #define XML_GDTF_LampNodeName					"Beam"
 #define XML_GDTF_LampLampType					"LampType"
 #define XML_GDTF_LampPowerConsumption			"PowerConsumption"

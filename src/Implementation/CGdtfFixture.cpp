@@ -890,14 +890,17 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateGeometry(EGdtf
 	
 	switch (type)
 	{
-		case eGdtfGeometryReference:	gdtfGeometry = fFixtureObject->AddGeometryReference(vwName, scModel, ma); break;
-		case eGdtfGeometryLamp:			gdtfGeometry = fFixtureObject->AddGeometryWithLamp(	vwName, scModel, ma); break;
-		case eGdtfGeometryAxis:			gdtfGeometry = fFixtureObject->AddGeometryWithAxis(	vwName, scModel, ma); break;
-		case eGdtfGeometryShaperFilter:	gdtfGeometry = fFixtureObject->AddGeometryShaper(	vwName, scModel, ma); break;
-		case eGdtfGeometryColorFilter:	gdtfGeometry = fFixtureObject->AddGeometryColor(	vwName, scModel, ma); break;
-		case eGdtfGeometryGoboFilter:	gdtfGeometry = fFixtureObject->AddGeometryGobo(		vwName, scModel, ma); break;
-		case eGdtfGeometryBeamFilter:	gdtfGeometry = fFixtureObject->AddGeometryBeam(		vwName, scModel, ma); break;
-		case eGdtfGeometry:				gdtfGeometry = fFixtureObject->AddGeometry(			vwName, scModel, ma); break;
+		case eGdtfGeometryReference:	        gdtfGeometry = fFixtureObject->AddGeometryReference(        vwName, scModel, ma); break;
+		case eGdtfGeometryLamp:		    	    gdtfGeometry = fFixtureObject->AddGeometryWithLamp(	        vwName, scModel, ma); break;
+		case eGdtfGeometryAxis:			        gdtfGeometry = fFixtureObject->AddGeometryWithAxis(	        vwName, scModel, ma); break;
+		case eGdtfGeometryShaperFilter:	        gdtfGeometry = fFixtureObject->AddGeometryShaper(	        vwName, scModel, ma); break;
+		case eGdtfGeometryColorFilter:	        gdtfGeometry = fFixtureObject->AddGeometryColor(	        vwName, scModel, ma); break;
+		case eGdtfGeometryGoboFilter:	        gdtfGeometry = fFixtureObject->AddGeometryGobo(		        vwName, scModel, ma); break;
+		case eGdtfGeometryBeamFilter:	        gdtfGeometry = fFixtureObject->AddGeometryBeam(		        vwName, scModel, ma); break;
+        case eGdtfGeometryMediaServerCamera:	gdtfGeometry = fFixtureObject->AddGeometryMediaServerCamera(vwName, scModel, ma); break;
+		case eGdtfGeometryMediaServerLayer:		gdtfGeometry = fFixtureObject->AddGeometryMediaServerLayer(	vwName, scModel, ma); break;
+		case eGdtfGeometryMediaServerMaster:	gdtfGeometry = fFixtureObject->AddGeometryMediaServerMaster(vwName, scModel, ma); break;
+		case eGdtfGeometry:				        gdtfGeometry = fFixtureObject->AddGeometry(			        vwName, scModel, ma); break;
 
 		default:
 			return kVCOMError_InvalidArg;

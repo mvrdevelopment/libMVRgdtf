@@ -1514,6 +1514,33 @@ GdtfGeometryPtr GdtfGeometry::AddGeometryBeam(const TXString& name, GdtfModelPtr
 	return geo;
 }
 
+GdtfGeometryPtr GdtfGeometry::AddGeometryMediaServerCamera(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma)
+{
+	GdtfGeometry* geo = new GdtfGeometryMediaServerCamera(name, refToModel, ma, this);
+	
+	fInternalGeometries.push_back(geo);
+	
+	return geo;
+}
+
+GdtfGeometryPtr GdtfGeometry::AddGeometryMediaServerLayer(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma)
+{
+	GdtfGeometry* geo = new GdtfGeometryMediaServerLayer(name, refToModel, ma, this);
+	
+	fInternalGeometries.push_back(geo);
+	
+	return geo;
+}
+
+GdtfGeometryPtr GdtfGeometry::AddGeometryMediaServerMaster(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma)
+{
+	GdtfGeometry* geo = new GdtfGeometryMediaServerMaster(name, refToModel, ma, this);
+	
+	fInternalGeometries.push_back(geo);
+	
+	return geo;
+}
+
 void GdtfGeometry::OnPrintToFile(IXMLFileNodePtr pNode)
 {
 	//------------------------------------------------------------------------------------
@@ -1988,6 +2015,189 @@ EGdtfObjectType GdtfGeometryGoboFilter::GetObjectType()
 TXString GdtfGeometryGoboFilter::GetNodeName()
 {
 	return XML_GDTF_FilterGoboNodeName;
+}
+
+//------------------------------------------------------------------------------------
+// GdtfGeometryMediaServerCamera
+GdtfGeometryMediaServerCamera::GdtfGeometryMediaServerCamera(GdtfGeometry* parent) : GdtfGeometry(parent)
+{
+	
+}
+
+GdtfGeometryMediaServerCamera::GdtfGeometryMediaServerCamera(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma, GdtfGeometry* parent) 
+					  		 : GdtfGeometry(name, refToModel, ma, parent)
+{
+	
+}
+
+GdtfGeometryMediaServerCamera::~GdtfGeometryMediaServerCamera()
+{
+}
+
+void GdtfGeometryMediaServerCamera::OnPrintToFile(IXMLFileNodePtr pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfGeometry::OnPrintToFile(pNode);
+	
+}
+
+void GdtfGeometryMediaServerCamera::OnReadFromNode(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfGeometry::OnReadFromNode(pNode);
+}
+
+void GdtfGeometryMediaServerCamera::OnErrorCheck(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnErrorCheck(pNode);
+
+	//------------------------------------------------------------------------------------
+	// Create needed and optional Attribute Arrays
+	TXStringArray needed;
+	TXStringArray optional;
+	needed.push_back(XML_GDTF_GeometryName);
+	optional.push_back(XML_GDTF_GeometryModelRef);
+	needed.push_back(XML_GDTF_GeometryMatrix);
+
+	//------------------------------------------------------------------------------------
+	// Check Attributes for node
+	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
+}
+
+EGdtfObjectType GdtfGeometryMediaServerCamera::GetObjectType()
+{
+	return EGdtfObjectType::eGdtfGeometryMediaServerCamera;
+}
+
+TXString GdtfGeometryMediaServerCamera::GetNodeName()
+{
+	return XML_GDTF_MediaServerCameraNodeName;
+}
+
+//------------------------------------------------------------------------------------
+// GdtfGeometryMediaServerLayer
+GdtfGeometryMediaServerLayer::GdtfGeometryMediaServerLayer(GdtfGeometry* parent) : GdtfGeometry(parent)
+{
+	
+}
+
+GdtfGeometryMediaServerLayer::GdtfGeometryMediaServerLayer(const TXString& name, GdtfModelPtr refToModel,const VWTransformMatrix& ma, GdtfGeometry* parent) 
+					  		: GdtfGeometry(name,refToModel,ma, parent)
+{
+	
+}
+
+GdtfGeometryMediaServerLayer::~GdtfGeometryMediaServerLayer()
+{
+}
+
+void GdtfGeometryMediaServerLayer::OnPrintToFile(IXMLFileNodePtr pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfGeometry::OnPrintToFile(pNode);
+	
+}
+
+void GdtfGeometryMediaServerLayer::OnReadFromNode(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfGeometry::OnReadFromNode(pNode);
+}
+
+void GdtfGeometryMediaServerLayer::OnErrorCheck(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnErrorCheck(pNode);
+
+	//------------------------------------------------------------------------------------
+	// Create needed and optional Attribute Arrays
+	TXStringArray needed;
+	TXStringArray optional;
+	needed.push_back(XML_GDTF_GeometryName);
+	optional.push_back(XML_GDTF_GeometryModelRef);
+	needed.push_back(XML_GDTF_GeometryMatrix);
+
+	//------------------------------------------------------------------------------------
+	// Check Attributes for node
+	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
+}
+
+EGdtfObjectType GdtfGeometryMediaServerLayer::GetObjectType()
+{
+	return EGdtfObjectType::eGdtfGeometryMediaServerLayer;
+}
+
+TXString GdtfGeometryMediaServerLayer::GetNodeName()
+{
+	return XML_GDTF_MediaServerLayerNodeName;
+}
+
+//------------------------------------------------------------------------------------
+// GdtfGeometryMediaServerMaster
+GdtfGeometryMediaServerMaster::GdtfGeometryMediaServerMaster(GdtfGeometry* parent) : GdtfGeometry(parent)
+{
+	
+}
+
+GdtfGeometryMediaServerMaster::GdtfGeometryMediaServerMaster(const TXString& name, GdtfModelPtr refToModel,const VWTransformMatrix& ma, GdtfGeometry* parent) 
+					  		 : GdtfGeometry(name,refToModel,ma, parent)
+{
+	
+}
+
+GdtfGeometryMediaServerMaster::~GdtfGeometryMediaServerMaster()
+{
+}
+
+void GdtfGeometryMediaServerMaster::OnPrintToFile(IXMLFileNodePtr pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfGeometry::OnPrintToFile(pNode);
+	
+}
+
+void GdtfGeometryMediaServerMaster::OnReadFromNode(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfGeometry::OnReadFromNode(pNode);
+}
+
+void GdtfGeometryMediaServerMaster::OnErrorCheck(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnErrorCheck(pNode);
+
+	//------------------------------------------------------------------------------------
+	// Create needed and optional Attribute Arrays
+	TXStringArray needed;
+	TXStringArray optional;
+	needed.push_back(XML_GDTF_GeometryName);
+	optional.push_back(XML_GDTF_GeometryModelRef);
+	needed.push_back(XML_GDTF_GeometryMatrix);
+
+	//------------------------------------------------------------------------------------
+	// Check Attributes for node
+	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
+}
+
+EGdtfObjectType GdtfGeometryMediaServerMaster::GetObjectType()
+{
+	return EGdtfObjectType::eGdtfGeometryMediaServerMaster;
+}
+
+TXString GdtfGeometryMediaServerMaster::GetNodeName()
+{
+	return XML_GDTF_MediaServerMasterNodeName;
 }
 
 //------------------------------------------------------------------------------------
@@ -6278,6 +6488,33 @@ GdtfGeometryPtr GdtfFixture::AddGeometryGobo(const TXString& name, GdtfModelPtr 
 GdtfGeometryPtr GdtfFixture::AddGeometryBeam(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma)
 {
 	GdtfGeometry* geo = new GdtfGeometryBeamFilter(name, refToModel, ma, nullptr);
+	
+	fGeometries.push_back(geo);
+	
+	return geo;
+}
+
+GdtfGeometryPtr GdtfFixture::AddGeometryMediaServerCamera(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma)
+{
+	GdtfGeometry* geo = new GdtfGeometryMediaServerCamera(name, refToModel, ma, nullptr);
+	
+	fGeometries.push_back(geo);
+	
+	return geo;
+}
+
+GdtfGeometryPtr GdtfFixture::AddGeometryMediaServerLayer(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma)
+{
+	GdtfGeometry* geo = new GdtfGeometryMediaServerLayer(name, refToModel, ma, nullptr);
+	
+	fGeometries.push_back(geo);
+	
+	return geo;
+}
+
+GdtfGeometryPtr GdtfFixture::AddGeometryMediaServerMaster(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma)
+{
+	GdtfGeometry* geo = new GdtfGeometryMediaServerMaster(name, refToModel, ma, nullptr);
 	
 	fGeometries.push_back(geo);
 	

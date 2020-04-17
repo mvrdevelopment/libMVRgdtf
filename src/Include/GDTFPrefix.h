@@ -101,6 +101,9 @@ namespace VectorworksMVR
             eGdtfAnimationSystem        = 73,
             eGdtfConnector              = 74,
             eGdtfPowerConsumption       = 75,
+            eGdtfGeometryMediaServerCamera  = 76,
+			eGdtfGeometryMediaServerLayer	= 77,
+			eGdtfGeometryMediaServerMaster	= 78,
 		};
 
         enum class EGdtfParsingError : Sint32
