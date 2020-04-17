@@ -760,6 +760,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 	if		(value == XML_GDTF_BeamTypeEnum_Wash)			{ unit = EGdtfBeamType::eGdtfBeamType_Wash;		 }
 	else if (value == XML_GDTF_BeamTypeEnum_Spot)			{ unit = EGdtfBeamType::eGdtfBeamType_Spot;		 }
 	else if (value == XML_GDTF_BeamTypeEnum_None)			{ unit = EGdtfBeamType::eGdtfBeamType_None;		 }
+	else if (value == XML_GDTF_BeamTypeEnum_Rectangle)		{ unit = EGdtfBeamType::eGdtfBeamType_Rectangle; }
 	else if (value == "")									{ unit = EGdtfBeamType::eGdtfBeamType_Wash;		 }
 	else													
     {
@@ -776,9 +777,10 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 {
 	switch (value)
 	{
-		case eGdtfBeamType_None: return XML_GDTF_BeamTypeEnum_None;
-		case eGdtfBeamType_Spot: return XML_GDTF_BeamTypeEnum_Spot;
-		case eGdtfBeamType_Wash: return XML_GDTF_BeamTypeEnum_Wash;
+		case eGdtfBeamType_Rectangle: 	return XML_GDTF_BeamTypeEnum_Rectangle;
+		case eGdtfBeamType_None: 		return XML_GDTF_BeamTypeEnum_None;
+		case eGdtfBeamType_Spot: 		return XML_GDTF_BeamTypeEnum_Spot;
+		case eGdtfBeamType_Wash: 		return XML_GDTF_BeamTypeEnum_Wash;
 			
 		default: DSTOP((kEveryone,"This enum for EGdtfBeamType was not implemented!")); break;
 	}

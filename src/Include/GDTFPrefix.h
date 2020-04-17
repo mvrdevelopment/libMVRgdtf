@@ -231,9 +231,10 @@ namespace VectorworksMVR
 		
 		enum EGdtfBeamType
 		{
-			eGdtfBeamType_Wash	= 0, // Default
-			eGdtfBeamType_Spot  = 1,
-			eGdtfBeamType_None  = 2,
+			eGdtfBeamType_Wash	    = 0, // Default
+			eGdtfBeamType_Spot      = 1,
+			eGdtfBeamType_None      = 2,
+            eGdtfBeamType_Rectangle = 3,
 		};
 		
 		enum EGdtfDmxMaster
