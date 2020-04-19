@@ -1519,9 +1519,10 @@ TXString::operator const wchar_t*() const
 	wStr = GetStdWString();
 	return wStr.data();
 #else
-	wStr = GetStdWString();
+	//wStr = GetStdWString();
 
-	return wStr.data();
+	//return wStr.data();
+	return nullptr;
 #endif
 }
 

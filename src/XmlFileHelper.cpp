@@ -345,7 +345,7 @@ bool SceneData::GdtfConverter::ConvertIntegerArray(TXString values, const IXMLFi
 {	
 	// Otherwise return the value
 	TXString valueStr;
-	valueStr << value;
+	valueStr = TXString().itoa(value);
 	return valueStr;
 }
 

@@ -3548,7 +3548,7 @@ TXString GdtfDmxChannelFunction::GetNodeReference()
 		{
 			functionName = GetAttribute()->GetName();
 			functionName += " ";
-			functionName << GetNumberInParent();
+			functionName += TXString().itoa(GetNumberInParent());
 		}
 		
 	}
