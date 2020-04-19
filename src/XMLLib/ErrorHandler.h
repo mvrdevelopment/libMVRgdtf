@@ -1,3 +1,4 @@
+#ifndef __DONT_USE_XERCES_AS_XMLLIB
 #pragma once
 
 #ifndef ERROR_HANDLER_H
@@ -29,4 +30,5 @@ namespace VectorworksMVR
 		};
 	}
 }
+#endif
 #endif

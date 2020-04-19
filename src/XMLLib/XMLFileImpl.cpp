@@ -1,3 +1,4 @@
+#ifndef __DONT_USE_XERCES_AS_XMLLIB
 #include "Prefix/StdAfx.h"
 
 #include "XMLFileImpl.h"
@@ -915,3 +916,4 @@ bool CXMLFileImpl::GetSimpleExist(IXMLFileNode* pRefNode, const TXString& nodePa
 	TXString	value;
 	return VCOM_SUCCEEDED( this->GetSimpleValue( pRefNode, nodePath, value ) );
 }
+#endif

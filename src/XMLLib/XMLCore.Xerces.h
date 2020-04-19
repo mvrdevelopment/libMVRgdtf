@@ -1,3 +1,4 @@
+#ifndef __DONT_USE_XERCES_AS_XMLLIB
 // XMLCore.Xerces.h
 #pragma once
 
@@ -132,4 +133,5 @@ namespace XML
 }
 }
 
+#endif
 #endif

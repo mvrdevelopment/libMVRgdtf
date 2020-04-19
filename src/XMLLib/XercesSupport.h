@@ -1,3 +1,4 @@
+#ifndef __DONT_USE_XERCES_AS_XMLLIB
 //-----------------------------------------------------------------------------
 //----- Copyright deersoft 2015 - 2017 www.deersoft.de
 //-----------------------------------------------------------------------------
@@ -54,3 +55,5 @@ typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument * DOMDocumentPtr;
 typedef DOMElement *			DOMElementPtr;
 typedef DOMNode *				DOMNodePtr;
 typedef	DOMAttr *				DOMAttrPtr;
+
+#endif

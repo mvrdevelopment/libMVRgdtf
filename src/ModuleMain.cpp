@@ -54,6 +54,9 @@
 #include "XMLLib/XMLFileNodeImpl.h"
 #include "XMLLib/XMLFileImpl.h"
 
+#include "XMLFileNodeImpl.h"
+#include "XMLFileImpl.h"
+
 // Wrapper
 #include "Wrapper/FileIdentifier.h"
 #include "Wrapper/FilingWrapper.h"
