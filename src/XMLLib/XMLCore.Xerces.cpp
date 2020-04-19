@@ -1,3 +1,4 @@
+#ifndef __DONT_USE_XERCES_AS_XMLLIB
 // XMLCore.Xerces.cpp
 // XML Core functions
 
@@ -1867,3 +1868,5 @@ VCOMError CXMLMemoryIOBuffer::SetData(void* pBuffer, size_t bufferSize)
 	fBuffer		+= strBuffer;
 	return kVCOMError_NoError;
 }
+
+#endif

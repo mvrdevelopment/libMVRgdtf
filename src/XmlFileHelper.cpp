@@ -2,7 +2,6 @@
 //----- Copyright deersoft 2015 - 2017 www.deersoft.de
 //-----------------------------------------------------------------------------
 
-
 #include "Prefix/StdAfx.h"
 using namespace VectorworksMVR::VWFC;
 
@@ -345,7 +344,7 @@ bool SceneData::GdtfConverter::ConvertIntegerArray(TXString values, const IXMLFi
 {	
 	// Otherwise return the value
 	TXString valueStr;
-	valueStr << value;
+	valueStr = TXString().itoa(value);
 	return valueStr;
 }
 

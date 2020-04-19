@@ -1,3 +1,4 @@
+#ifndef __DONT_USE_XERCES_AS_XMLLIB
 // ErrorHandler.cpp
 //
 // Error handling code for the XML parser.
@@ -26,3 +27,4 @@ bool XMLErrorHandler::handleError(const DOMError &domError)
     // Instructs the serializer to continue serialization if possible.
     return true;
 }
+#endif

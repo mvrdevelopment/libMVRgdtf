@@ -1,3 +1,4 @@
+#ifndef __DONT_USE_XERCES_AS_XMLLIB
 #include "Prefix/StdAfx.h"
 
 #include "XMLCore.Xerces.h"
@@ -1208,3 +1209,4 @@ VCOMError CXMLFileNodeImpl::GetLineNumber(size_t& line, size_t& column)
 	return kVCOMError_Failed;
 }
 
+#endif

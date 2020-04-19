@@ -1,3 +1,4 @@
+#ifndef __DONT_USE_XERCES_AS_XMLLIB
 #pragma once
 #include "XercesSupport.h"
 
@@ -85,3 +86,4 @@ namespace VectorworksMVR
 		};
 	}
 }
+#endif
