@@ -1519,10 +1519,8 @@ TXString::operator const wchar_t*() const
 	wStr = GetStdWString();
 	return wStr.data();
 #else
-	//wStr = GetStdWString();
-
-	//return wStr.data();
-	return nullptr;
+	wStr = GetStdWString();
+	return wStr.data();
 #endif
 }
 
@@ -2120,8 +2118,6 @@ Sint32 TXString::CompareNoCase(const TXString &str) const
 	std::transform(str2.begin(), str2.end(), str2.begin(), ::toupper);
 
 	return str1.compare(str2);
-#elif _DSMAC
-	return 0;
 #else
 	CFStringRef cs1 = this->GetCFStringRef();
     CFStringRef cs2 = str.GetCFStringRef();
