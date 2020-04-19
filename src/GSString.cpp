@@ -1520,7 +1520,6 @@ TXString::operator const wchar_t*() const
 	return wStr.data();
 #else
 	wStr = GetStdWString();
-
 	return wStr.data();
 #endif
 }

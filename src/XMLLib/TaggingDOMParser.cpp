@@ -1,3 +1,4 @@
+#ifndef __DONT_USE_XERCES_AS_XMLLIB
 #include "Prefix/StdAfx.h"
 #include "TaggingDOMParser.h"
 
@@ -86,3 +87,5 @@ void TaggingDOMParser::startElement
 
     tag->link();
 }
+
+#endif

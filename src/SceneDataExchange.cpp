@@ -1089,8 +1089,8 @@ void SceneDataFixtureObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange
 			IXMLFileNodePtr pAdressNode;
 			if ( VCOM_SUCCEEDED( pAdressesNode->CreateChildNode( XML_Val_FixtureAddress, & pAdressNode ) ) )
 			{
-				pAdressNode->SetNodeAttributeValue(XML_Val_FixtureAttrBreak, TXString() << adress.fBreak);
-				pAdressNode->SetNodeValue(									 TXString() << adress.fAbsuluteAdress);
+				pAdressNode->SetNodeAttributeValue(XML_Val_FixtureAttrBreak, TXString().itoa(adress.fBreak));
+				pAdressNode->SetNodeValue(									 TXString().itoa(adress.fAbsuluteAdress));
 			}
 		}
 		

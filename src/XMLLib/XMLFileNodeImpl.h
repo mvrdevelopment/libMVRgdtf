@@ -1,3 +1,4 @@
+#ifndef __DONT_USE_XERCES_AS_XMLLIB
 #pragma once
 #include "Include/VectorworksMVR.h"
 
@@ -70,3 +71,5 @@ namespace VectorworksMVR
 		};
 	}
 }
+
+#endif

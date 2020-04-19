@@ -57,6 +57,10 @@
 #include "XMLLib/XMLFileNodeImpl.h"
 #include "XMLLib/XMLFileImpl.h"
 
+#ifdef __DONT_USE_XERCES_AS_XMLLIB
+#include __DONT_USE_XERCES_AS_XMLLIB
+#endif
+
 // Wrapper
 #include "Wrapper/FileIdentifier.h"
 #include "Wrapper/FilingWrapper.h"

@@ -13,6 +13,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <cstdio>
 
 #if GS_LIN
 #include <cstddef>
