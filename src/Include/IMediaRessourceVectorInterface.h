@@ -952,10 +952,10 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
         virtual MvrString VCOM_CALLTYPE     GetName() = 0;
         // Getter
         virtual VCOMError VCOM_CALLTYPE GetColorSample(GdtfDefines::EGdtfColorSample outVal) = 0;
-        virtual VCOMError VCOM_CALLTYPE GetColorTemperature(Sint32& outVal) = 0;
+        virtual VCOMError VCOM_CALLTYPE GetColorRenderingIndex(Uint8& outVal) = 0;
         // Setter
         virtual VCOMError VCOM_CALLTYPE SetColorSample(GdtfDefines::EGdtfColorSample val) = 0;
-        virtual VCOMError VCOM_CALLTYPE SetColorTemperature(Sint32 val) = 0;
+        virtual VCOMError VCOM_CALLTYPE SetColorRenderingIndex(Uint8 val) = 0;
         //
         virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
         virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;

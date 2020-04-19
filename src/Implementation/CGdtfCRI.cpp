@@ -22,12 +22,12 @@ VectorworksMVR::VCOMError  VectorworksMVR::CGdtfCRIImpl::GetColorSample(EGdtfCol
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError  VectorworksMVR::CGdtfCRIImpl::GetColorTemperature(Sint32& outVal)
+VectorworksMVR::VCOMError  VectorworksMVR::CGdtfCRIImpl::GetColorRenderingIndex(Uint8& outVal)
 {
     // Check Data
     if (!fCRI) return kVCOMError_NotInitialized;
 
-    outVal = fCRI->GetColorTemperature();
+    outVal = fCRI->GetColorRenderingIndex();
 
     return kVCOMError_NoError;
 }
@@ -42,12 +42,12 @@ VectorworksMVR::VCOMError  VectorworksMVR::CGdtfCRIImpl::SetColorSample(EGdtfCol
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError  VectorworksMVR::CGdtfCRIImpl::SetColorTemperature(Sint32 val)
+VectorworksMVR::VCOMError  VectorworksMVR::CGdtfCRIImpl::SetColorRenderingIndex(Uint8 val)
 {
     // Check Pointer
     if (!fCRI) return kVCOMError_NotInitialized;
 
-    fCRI->SetColorTemperature(val);
+    fCRI->SetColorRenderingIndex(val);
 
     return kVCOMError_NoError;
 }

@@ -666,14 +666,17 @@ namespace SceneData
 		void								SetModel(GdtfModelPtr model);
 		void								SetTransformMatrix(const VWTransformMatrix& ma);
 		
-		GdtfGeometry*						AddGeometry(		const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
-		GdtfGeometry*						AddGeometryReference(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
-		GdtfGeometry*						AddGeometryShaper(	const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
-		GdtfGeometry*						AddGeometryColor(	const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
-		GdtfGeometry*						AddGeometryGobo(	const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
-		GdtfGeometry*						AddGeometryBeam(	const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
-		GdtfGeometry*						AddGeometryWithAxis(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
-		GdtfGeometry*						AddGeometryWithLamp(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
+		GdtfGeometry*						AddGeometry(					const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
+		GdtfGeometry*						AddGeometryReference(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
+		GdtfGeometry*						AddGeometryShaper(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
+		GdtfGeometry*						AddGeometryColor(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
+		GdtfGeometry*						AddGeometryGobo(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
+		GdtfGeometry*						AddGeometryBeam(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
+		GdtfGeometry*						AddGeometryMediaServerCamera(	const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
+		GdtfGeometry*						AddGeometryMediaServerLayer(	const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
+		GdtfGeometry*						AddGeometryMediaServerMaster(	const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
+		GdtfGeometry*						AddGeometryWithAxis(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
+		GdtfGeometry*						AddGeometryWithLamp(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
 		
 	protected:
 		virtual	TXString				GetNodeName();
@@ -784,7 +787,61 @@ namespace SceneData
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
         virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
-	};	
+	};
+
+	class GdtfGeometryMediaServerCamera : public GdtfGeometry
+	{
+	public:
+		GdtfGeometryMediaServerCamera(GdtfGeometry* parent);
+		GdtfGeometryMediaServerCamera(const TXString& name, GdtfModelPtr refToModel,const VWTransformMatrix& ma, GdtfGeometry* parent);
+
+		~GdtfGeometryMediaServerCamera();
+		
+	public:
+		virtual EGdtfObjectType			GetObjectType();
+		
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+	};
+
+	class GdtfGeometryMediaServerLayer : public GdtfGeometry
+	{
+	public:
+		GdtfGeometryMediaServerLayer(GdtfGeometry* parent);
+		GdtfGeometryMediaServerLayer(const TXString& name, GdtfModelPtr refToModel,const VWTransformMatrix& ma, GdtfGeometry* parent);
+
+		~GdtfGeometryMediaServerLayer();
+		
+	public:
+		virtual EGdtfObjectType			GetObjectType();
+		
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+	};
+
+	class GdtfGeometryMediaServerMaster : public GdtfGeometry
+	{
+	public:
+		GdtfGeometryMediaServerMaster(GdtfGeometry* parent);
+		GdtfGeometryMediaServerMaster(const TXString& name, GdtfModelPtr refToModel,const VWTransformMatrix& ma, GdtfGeometry* parent);
+
+		~GdtfGeometryMediaServerMaster();
+		
+	public:
+		virtual EGdtfObjectType			GetObjectType();
+		
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+	};
 	
 	class GdtfGeometryLamp : public GdtfGeometry
 	{
@@ -1942,22 +1999,22 @@ namespace SceneData
     {
     public:
         GdtfCRI();
-        GdtfCRI(EGdtfColorSample ces, Sint32 colorTemp);
+        GdtfCRI(EGdtfColorSample ces, Uint8 cri);
         ~GdtfCRI();
     private:
         // Attributes
-        EGdtfColorSample fCES;
-        Sint32           fColorTemperature;
+        EGdtfColorSample	fCES;
+        Uint8           	fCRI;
     public:
         virtual EGdtfObjectType			GetObjectType();
 
     public:
         // Getter                
-        EGdtfColorSample GetColorSample() const;
-        Sint32           GetColorTemperature() const;
+        EGdtfColorSample 	GetColorSample() const;
+        Uint8				GetColorRenderingIndex() const;
         // Setter       
         void SetColorSample(EGdtfColorSample val);
-        void SetColorTemperature(Sint32 val);
+        void SetColorRenderingIndex(Uint8 val);
     protected:
         virtual	TXString				GetNodeName();
         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
@@ -2209,14 +2266,17 @@ namespace SceneData
 		GdtfAttributePtr		AddAttribute(const TXString& name, const TXString& prettyName);
 		
 		GdtfModelPtr			AddModel(const TXString& name);
-		GdtfGeometryPtr			AddGeometry(		const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
-		GdtfGeometryPtr			AddGeometryReference(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
-		GdtfGeometryPtr			AddGeometryShaper(	const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
-		GdtfGeometryPtr			AddGeometryColor(	const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
-		GdtfGeometryPtr			AddGeometryGobo(	const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
-		GdtfGeometryPtr			AddGeometryBeam(	const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
-		GdtfGeometryPtr			AddGeometryWithAxis(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
-		GdtfGeometryPtr			AddGeometryWithLamp(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
+		GdtfGeometryPtr			AddGeometry(					const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
+		GdtfGeometryPtr			AddGeometryReference(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
+		GdtfGeometryPtr			AddGeometryShaper(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
+		GdtfGeometryPtr			AddGeometryColor(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
+		GdtfGeometryPtr			AddGeometryGobo(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
+		GdtfGeometryPtr			AddGeometryBeam(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
+		GdtfGeometryPtr			AddGeometryMediaServerCamera(	const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
+		GdtfGeometryPtr			AddGeometryMediaServerLayer(	const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
+		GdtfGeometryPtr			AddGeometryMediaServerMaster(	const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
+		GdtfGeometryPtr			AddGeometryWithAxis(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
+		GdtfGeometryPtr			AddGeometryWithLamp(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
 				
 		GdtfWheelPtr			AddWheel(TXString name);
 		GdtfDmxModePtr			AddDmxMode(const TXString& name);

@@ -226,14 +226,17 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::CreateGeometry(EGdt
 	
 	switch (type)
 	{
-		case eGdtfGeometryReference:	gdtfGeometry = fGeometry->AddGeometryReference(	vwName, scModel, ma); break;
-		case eGdtfGeometryLamp:			gdtfGeometry = fGeometry->AddGeometryWithLamp(	vwName, scModel, ma); break;
-		case eGdtfGeometryAxis:			gdtfGeometry = fGeometry->AddGeometryWithAxis(	vwName, scModel, ma); break;
-		case eGdtfGeometryShaperFilter:	gdtfGeometry = fGeometry->AddGeometryShaper(	vwName, scModel, ma); break;
-		case eGdtfGeometryColorFilter:	gdtfGeometry = fGeometry->AddGeometryColor(		vwName, scModel, ma); break;
-		case eGdtfGeometryGoboFilter:	gdtfGeometry = fGeometry->AddGeometryGobo(		vwName, scModel, ma); break;
-		case eGdtfGeometryBeamFilter:	gdtfGeometry = fGeometry->AddGeometryBeam(		vwName, scModel, ma); break;
-		case eGdtfGeometry:				gdtfGeometry = fGeometry->AddGeometry(			vwName, scModel, ma); break;
+		case eGdtfGeometryReference:			gdtfGeometry = fGeometry->AddGeometryReference(			vwName, scModel, ma); break;
+		case eGdtfGeometryLamp:					gdtfGeometry = fGeometry->AddGeometryWithLamp(			vwName, scModel, ma); break;
+		case eGdtfGeometryAxis:					gdtfGeometry = fGeometry->AddGeometryWithAxis(			vwName, scModel, ma); break;
+		case eGdtfGeometryShaperFilter:			gdtfGeometry = fGeometry->AddGeometryShaper(			vwName, scModel, ma); break;
+		case eGdtfGeometryColorFilter:			gdtfGeometry = fGeometry->AddGeometryColor(				vwName, scModel, ma); break;
+		case eGdtfGeometryGoboFilter:			gdtfGeometry = fGeometry->AddGeometryGobo(				vwName, scModel, ma); break;
+		case eGdtfGeometryBeamFilter:			gdtfGeometry = fGeometry->AddGeometryBeam(				vwName, scModel, ma); break;
+		case eGdtfGeometryMediaServerCamera:	gdtfGeometry = fGeometry->AddGeometryMediaServerCamera(	vwName, scModel, ma); break;
+		case eGdtfGeometryMediaServerLayer:		gdtfGeometry = fGeometry->AddGeometryMediaServerLayer(	vwName, scModel, ma); break;
+		case eGdtfGeometryMediaServerMaster:	gdtfGeometry = fGeometry->AddGeometryMediaServerMaster(	vwName, scModel, ma); break;
+		case eGdtfGeometry:						gdtfGeometry = fGeometry->AddGeometry(					vwName, scModel, ma); break;
 			
 		default:
 			return kVCOMError_InvalidArg;
@@ -890,7 +893,10 @@ void VectorworksMVR::CGdtfGeometryImpl::SetPointer(SceneData::GdtfGeometry* geom
 						fGeometryType == EGdtfObjectType::eGdtfGeometryBeamFilter ||
 						fGeometryType == EGdtfObjectType::eGdtfGeometryGoboFilter ||
 						fGeometryType == EGdtfObjectType::eGdtfGeometryColorFilter ||
-						fGeometryType == EGdtfObjectType::eGdtfGeometryShaperFilter);
+						fGeometryType == EGdtfObjectType::eGdtfGeometryShaperFilter ||
+						fGeometryType == EGdtfObjectType::eGdtfGeometryMediaServerCamera ||
+						fGeometryType == EGdtfObjectType::eGdtfGeometryMediaServerLayer	||
+						fGeometryType == EGdtfObjectType::eGdtfGeometryMediaServerMaster);
 	
 	
 }
