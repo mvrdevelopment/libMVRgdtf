@@ -282,6 +282,18 @@ void GdtfUnittest::WriteFile()
         __checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometryLamp, "My Lamp Geometry", gdtfModel, ma, &beamGeo));
         beamGeo->SetLuminousIntensity(5);
 
+		//Media server Camera
+		IGdtfGeometryPtr msCameraGeo;        
+        __checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometryMediaServerCamera, "Media server Camera", gdtfModel, ma, &msCameraGeo));
+
+		//Media server Layer
+		IGdtfGeometryPtr msLayerGeo;        
+        __checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometryMediaServerLayer, "Media server Layer", gdtfModel, ma, &msLayerGeo));
+
+		//Media server Master
+		IGdtfGeometryPtr msMasterGeo;        
+        __checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometryMediaServerMaster, "Media server Master", gdtfModel, ma, &msMasterGeo));
+
 		//------------------------------------------------------------------------------
 		// Get dmxModes
 		IGdtfDmxModePtr gdtfDmxMode;
