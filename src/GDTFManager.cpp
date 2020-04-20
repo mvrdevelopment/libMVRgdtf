@@ -241,6 +241,7 @@ EGdtfObjectType GdtfFeature::GetObjectType()
 {
 	return EGdtfObjectType::eGdtfFeature;
 }
+
 TXString GdtfFeature::GetNodeName()
 {
 	return XML_GDTF_FeatureNode;
@@ -6240,10 +6241,13 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 							if		 (childNodeName == XML_GDTF_GeometryAxisNodeName)		{ geometry = new GdtfGeometryAxis(nullptr);}
 							else if (childNodeName == XML_GDTF_GeometryNodeName)			{ geometry = new GdtfGeometry(nullptr);}
 							else if (childNodeName == XML_GDTF_FilterBeamNodeName)			{ geometry = new GdtfGeometryBeamFilter(nullptr);}
-							else if (childNodeName == XML_GDTF_FilterColorNodeName)		{ geometry = new GdtfGeometryColorFilter(nullptr);}
+							else if (childNodeName == XML_GDTF_FilterColorNodeName)			{ geometry = new GdtfGeometryColorFilter(nullptr);}
 							else if (childNodeName == XML_GDTF_FilterGoboNodeName)			{ geometry = new GdtfGeometryGoboFilter(nullptr);}
 							else if (childNodeName == XML_GDTF_FilterShaperNodeName)		{ geometry = new GdtfGeometryShaperFilter(nullptr);}
 							else if (childNodeName == XML_GDTF_LampNodeName)				{ geometry = new GdtfGeometryLamp(nullptr);}
+							else if (childNodeName == XML_GDTF_MediaServerCameraNodeName)	{ geometry = new GdtfGeometryMediaServerCamera(nullptr);}
+							else if (childNodeName == XML_GDTF_MediaServerLayerNodeName)	{ geometry = new GdtfGeometryMediaServerLayer(nullptr);}
+							else if (childNodeName == XML_GDTF_MediaServerMasterNodeName)	{ geometry = new GdtfGeometryMediaServerMaster(nullptr);}
 							else if (childNodeName == XML_GDTF_GeometryReferenceNodeName)	{ geometry = new GdtfGeometryReference(nullptr);}
 							else															{ DSTOP((kEveryone,"There is a node that was not aspected!")); }
 							

@@ -284,15 +284,15 @@ void GdtfUnittest::WriteFile()
 
 		//Media server Camera
 		IGdtfGeometryPtr msCameraGeo;        
-        __checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometryMediaServerCamera, "Media server Camera", gdtfModel, ma, &msCameraGeo));
+        __checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometryMediaServerCamera, "Media Server Camera", gdtfModel, ma, &msCameraGeo));
 
 		//Media server Layer
 		IGdtfGeometryPtr msLayerGeo;        
-        __checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometryMediaServerLayer, "Media server Layer", gdtfModel, ma, &msLayerGeo));
+        __checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometryMediaServerLayer, "Media Server Layer", gdtfModel, ma, &msLayerGeo));
 
 		//Media server Master
 		IGdtfGeometryPtr msMasterGeo;        
-        __checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometryMediaServerMaster, "Media server Master", gdtfModel, ma, &msMasterGeo));
+        __checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometryMediaServerMaster, "Media Server Master", gdtfModel, ma, &msMasterGeo));
 
 		//------------------------------------------------------------------------------
 		// Get dmxModes
@@ -1279,7 +1279,7 @@ void GdtfUnittest::ReadFile()
 		// Geometry Section
 		size_t countGeo = 0;
 		__checkVCOM(gdtfRead->GetGeometryCount(countGeo));
-		this->checkifEqual("Geometry Count ", countGeo, size_t(4));
+		this->checkifEqual("Geometry Count ", countGeo, size_t(7));
 
 		IGdtfGeometryPtr geo1;
 		__checkVCOM(gdtfRead->GetGeometryAt(0, &geo1));
@@ -1289,6 +1289,21 @@ void GdtfUnittest::ReadFile()
 
 		IGdtfGeometryPtr geo3;
 		__checkVCOM(gdtfRead->GetGeometryAt(2, &geo3));
+
+		//----------------------------------------------
+		//Media server geos
+		IGdtfGeometryPtr geo5;
+		__checkVCOM(gdtfRead->GetGeometryAt(4, &geo5));
+		this->checkifEqual("MediaServerCamera Geometry Name ", geo5->GetName(), "Media Server Camera");
+
+		IGdtfGeometryPtr geo6;
+		__checkVCOM(gdtfRead->GetGeometryAt(5, &geo6));
+		this->checkifEqual("MediaServerLayer Geometry Name ", geo6->GetName(), "Media Server Layer");
+
+		IGdtfGeometryPtr geo7;
+		__checkVCOM(gdtfRead->GetGeometryAt(6, &geo7));
+		this->checkifEqual("MediaServerMaster Geometry Name ", geo7->GetName(), "Media Server Master");
+		//----------------------------------------------
 
 		if(geo1 && geo2)
 		{
