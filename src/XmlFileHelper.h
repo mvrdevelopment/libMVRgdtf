@@ -85,6 +85,7 @@ namespace SceneData
 		static TXString	ConvertHexValue(size_t value);
 		static TXString	ConvertEGdtfCanHaveChildren(EGdtfCanHaveChildren value);
 		static TXString	Convert2DPoint(double p_X, double p_Y);
+		static TXString	ConvertBool(bool value);
 
         //-----------------------------------------------------------------------------
         // Convert from String functions:
@@ -120,6 +121,7 @@ namespace SceneData
 		static bool		ConvertHexValue(				const TXString& inVal, const IXMLFileNodePtr& node, size_t& outValue);
 		static bool     ConvertEGdtfCanHaveChildren(	const TXString& inVal, const IXMLFileNodePtr& node, EGdtfCanHaveChildren& outVal);
 		static bool     Convert2DPoint(					const TXString& inVal, const IXMLFileNodePtr& node, double& p_X, 							double& p_Y);
+		static bool     ConvertBool(					const TXString& inVal, const IXMLFileNodePtr& node, bool& outVal);
 
         static bool 	ConvertDmxOffset(const TXString& inVal, const IXMLFileNodePtr& node, DMXAddress& coarse, DMXAddress& fine, DMXAddress& ultra, DMXAddress& uber);
         //-----------------------------------------------------------------------------

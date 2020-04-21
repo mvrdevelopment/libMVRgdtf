@@ -140,6 +140,7 @@ void MvrUnittest::WriteFile()
 			__checkVCOM(fixture1->SetFocusPoint(focusPoint));
 			__checkVCOM(fixture1->SetPosition(position));
 			__checkVCOM(fixture1->SetClass(clas2));
+			__checkVCOM(fixture1->SetCastShadow(true));
 		}
 
 		// And another fixture
@@ -153,6 +154,7 @@ void MvrUnittest::WriteFile()
 			__checkVCOM(fixture2->SetFocusPoint(focusPoint));
 			__checkVCOM(fixture2->SetGoboRotation(32.87));
 			__checkVCOM(fixture2->SetGobo("MWheel_Img1"));
+			__checkVCOM(fixture2->SetCastShadow(false));
 		}
 
 		// Create second Layer
@@ -393,6 +395,10 @@ void MvrUnittest::ReadFile()
 					sceneObj->GetCustomId(customId);
 					checkifEqual("GetCustomId", customId, (size_t)0);
 
+					bool castShadow;
+					sceneObj->GetCastShadow(castShadow);
+					checkifEqual("GetCastShadow", castShadow, true);
+
 					size_t addressCount = 0;
 					__checkVCOM(sceneObj->GetAdressCount(addressCount));
 					for (size_t z = 0; z < addressCount; z++)
@@ -460,6 +466,10 @@ void MvrUnittest::ReadFile()
 					size_t customId;
 					sceneObj->GetCustomId(customId);
 					checkifEqual("GetCustomId", customId, (size_t)0);
+
+					bool castShadow = true;
+					sceneObj->GetCastShadow(castShadow);
+					checkifEqual("GetCastShadow", castShadow, false);
 					
 					size_t addressCount = 0;
 					__checkVCOM(sceneObj->GetAdressCount(addressCount));
@@ -525,6 +535,10 @@ void MvrUnittest::ReadFile()
 					size_t customId;
 					sceneObj->GetCustomId(customId);
 					checkifEqual("GetCustomId", customId, (size_t)0);
+
+					bool castShadow = true;
+					sceneObj->GetCastShadow(castShadow);
+					checkifEqual("GetCastShadow", castShadow, false);
 					
 					size_t addressCount = 0;
 					__checkVCOM(sceneObj->GetAdressCount(addressCount));

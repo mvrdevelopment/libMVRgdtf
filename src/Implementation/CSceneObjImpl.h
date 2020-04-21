@@ -49,6 +49,7 @@ namespace VectorworksMVR
 		virtual MvrString VCOM_CALLTYPE		GetGobo();
 		virtual VCOMError VCOM_CALLTYPE		GetGoboRotation(double& value);
 		virtual MvrString VCOM_CALLTYPE		GetGoboFullPath();
+		virtual VCOMError VCOM_CALLTYPE		GetCastShadow(bool& value);
 
 
 		virtual VCOMError VCOM_CALLTYPE		SetGdtfName(MvrString gdtfName);
@@ -63,6 +64,7 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		SetCustomId(const size_t& outId);
 		virtual VCOMError VCOM_CALLTYPE		SetGobo(MvrString gobo);
 		virtual VCOMError VCOM_CALLTYPE		SetGoboRotation(double rotation);
+		virtual VCOMError VCOM_CALLTYPE		SetCastShadow(bool castShadow);
 		
 		// Implementation
 	public:
