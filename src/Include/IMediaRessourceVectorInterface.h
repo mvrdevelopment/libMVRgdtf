@@ -152,6 +152,28 @@ namespace VectorworksMVR
 		
 	};
 	typedef VCOMPtr<ISymDef>	ISymDefPtr;
+
+	//-------------------------------------------------------------------------------------------------------------
+	enum class EScaleHandlingType
+	{
+		ScaleKeepRatio 		= 0, 
+		ScaleIgnoreRatio 	= 1,
+		KeepSizeCenter 		= 2,
+	};
+
+	class DYNAMIC_ATTRIBUTE IMappingDefinition : public IVWUnknown
+	{
+	public:
+        virtual VCOMError VCOM_CALLTYPE		GetGuid(MvrUUID& guid) = 0;
+		virtual MvrString VCOM_CALLTYPE		GetName() = 0;
+		
+		virtual VCOMError VCOM_CALLTYPE		GetSizeX(const Uint32& sizeX) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetSizeY(const Uint32& sizeY) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE		GetScaleHandling(const EScaleHandlingType& scaleHandling) = 0;
+		
+	};
+	typedef VCOMPtr<IMappingDefinition>	IMappingDefinitionPtr;
 	
 	//-------------------------------------------------------------------------------------------------------------
 	enum class ESceneObjType
@@ -231,10 +253,11 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		AddBufferToMvrFile(MvrString filename, char* buffer, size_t length) = 0;
 		
 		// After this you can generate Aux Objects
-		virtual VCOMError VCOM_CALLTYPE		CreateDataProviderObject(MvrString provider,	MvrString version,	ISceneDataProvider** outSceneDataProvider) = 0;
-		virtual VCOMError VCOM_CALLTYPE		CreatePositionObject(	 const MvrUUID& guid,		MvrString name,		IPosition** outPositionObj) = 0;
-		virtual VCOMError VCOM_CALLTYPE		CreateSymDefObject(		 const MvrUUID& guid,		MvrString name,		ISymDef** outSymDef) = 0;
-		virtual VCOMError VCOM_CALLTYPE		CreateClassObject(		 const MvrUUID& guid,		MvrString name,		IClass** outclass) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateDataProviderObject(		MvrString provider,		MvrString version,	ISceneDataProvider** outSceneDataProvider) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreatePositionObject(	 		const MvrUUID& guid,	MvrString name,		IPosition** outPositionObj) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateSymDefObject(		 		const MvrUUID& guid,	MvrString name,		ISymDef** outSymDef) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateClassObject(		 		const MvrUUID& guid,	MvrString name,		IClass** outclass) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateMappingDefinitionObject(	const MvrUUID& guid,	MvrString name,		IMappingDefinition** outMapDef) = 0;
 		
 		// Then you can generate all other objects
 		virtual VCOMError VCOM_CALLTYPE		CreateLayerObject(	const MvrUUID& guid,								 MvrString name,								ISceneObj**	outLayerObj) = 0;
@@ -242,7 +265,7 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		CreateFixture(		const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outFixture) = 0;
 		virtual VCOMError VCOM_CALLTYPE		CreateSceneObject(	const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outSceneObj) = 0;
 		virtual VCOMError VCOM_CALLTYPE		CreateFocusPoint(	const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj** outFocusPoint) = 0;
-		virtual VCOMError VCOM_CALLTYPE		CreateVideoScreen(	const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**outVideoScreen) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateVideoScreen(	const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj** outVideoScreen) = 0;
 		virtual VCOMError VCOM_CALLTYPE		CreateTruss(		const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outTruss) = 0;
 
 		// Add the end call to write the file to disk
@@ -270,6 +293,10 @@ namespace VectorworksMVR
 		// Get Class objs
 		virtual VCOMError VCOM_CALLTYPE		GetClassCount(size_t& outCount) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetClassAt(size_t at, IClass** outClass ) = 0;
+
+		// Get MappingDefinition objs
+		virtual VCOMError VCOM_CALLTYPE		GetMappingDefinitionCount(size_t& outCount) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetMappingDefinitionAt(size_t at, IMappingDefinition** outMapDef) = 0;
 
         // Get File Traversel
         virtual VCOMError VCOM_CALLTYPE		GetAttachedFileCount(size_t& outCount) = 0;

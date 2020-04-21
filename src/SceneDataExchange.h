@@ -534,7 +534,7 @@ namespace SceneData
 	
 	
 	// ----------------------------------------------------------------------------------------------------------------------------------
-	// SceneDataVideoScreneObj
+	// SceneDataVideoScreenObj
 	class SceneDataVideoScreenObj : public SceneDataObjWithMatrix
 	{
 		
