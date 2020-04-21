@@ -1532,7 +1532,6 @@ CieColor SceneData::GdtfConverter::ConvertCColor(const CCieColor & color)
 
 /*static*/ TXString GdtfConverter::ConvertEGdtfCanHaveChildren(EGdtfCanHaveChildren value)
 {
-
     switch (value)
     {
 		case EGdtfCanHaveChildren::eYES:	return XML_GDTF_CanHaveChildren_Yes;
@@ -1585,6 +1584,24 @@ CieColor SceneData::GdtfConverter::ConvertCColor(const CCieColor & color)
 	}
 
 	return false;
+}
+
+/*static*/ TXString GdtfConverter::ConvertBool(bool value)
+{
+	if(value) 	{ return TXString("true"); }
+	else 		{ return TXString("false"); }
+	
+}
+
+
+/*static*/ bool GdtfConverter::ConvertBool(const TXString& inVal, const IXMLFileNodePtr& node, bool& outVal)
+{
+	outVal = false;
+	if(inVal == "true") 		{ outVal = true; }
+	else if(inVal == "false") 	{ outVal = false; }
+	else						{ return false; }
+
+	return true;
 }
 
 bool SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, const IFileIdentifierPtr& file, ERessourceType resType, bool deleteFile, bool mustExist)
