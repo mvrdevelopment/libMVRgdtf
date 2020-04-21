@@ -1383,7 +1383,7 @@ ESceneDataObjectType SceneDataTrussObj::GetObjectType()
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------------
-// SceneDataTrussObj
+// SceneDataVideoScreenObj
 SceneDataVideoScreenObj::SceneDataVideoScreenObj(const SceneDataGUID& guid) : SceneDataObjWithMatrix(guid)
 {
 	
@@ -1405,7 +1405,7 @@ ESceneDataObjectType SceneDataVideoScreenObj::GetObjectType()
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------------
-// SceneDataTrussObj
+// SceneDataSymbolObj
 SceneDataSymbolObj::SceneDataSymbolObj(const SceneDataGUID& guid) : SceneDataGeoInstanceObj(guid, true /*Is SymbolDef*/)
 {
 	fSymDef = nullptr;

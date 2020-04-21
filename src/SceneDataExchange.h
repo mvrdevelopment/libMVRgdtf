@@ -377,7 +377,7 @@ namespace SceneData
 	
 	
 	// ----------------------------------------------------------------------------------------------------------------------------------
-	// SceneDataObjWithMatrix
+	// SceneDataLayerObj
 	class SceneDataLayerObj : public SceneDataGroupObj
 	{
 		
@@ -396,7 +396,7 @@ namespace SceneData
 	
 	
 	// ----------------------------------------------------------------------------------------------------------------------------------
-	// SceneDataObjWithMatrix
+	// SceneDataFocusPointObj
 	class SceneDataFocusPointObj : public SceneDataObjWithMatrix
 	{
 		
