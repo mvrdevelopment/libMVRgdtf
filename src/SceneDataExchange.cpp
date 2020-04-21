@@ -854,7 +854,7 @@ SceneDataFixtureObj::SceneDataFixtureObj(const SceneDataGUID& guid) : SceneDataO
 	fFixtureTypeId	= 0;
 	fCustomId		= 0;
 	fGoboRotation 	= 0.0;
-	fCastShadow		= true;
+	fCastShadow		= false;
 }
 
 SceneDataFixtureObj::~SceneDataFixtureObj()
