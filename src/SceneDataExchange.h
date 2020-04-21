@@ -228,7 +228,7 @@ namespace SceneData
 	typedef std::vector<SceneDataPositionObjPtr>	SceneDataPositionObjArray;
 	
 	// ----------------------------------------------------------------------------------------------------------------------------------
-	// SceneDataPositionObj
+	// SceneDataClassObj
 	class SceneDataClassObj : public SceneDataAuxObj
 	{
 		
@@ -245,6 +245,32 @@ namespace SceneData
 	};
 	typedef SceneDataClassObj*					SceneDataClassObjPtr;
 	typedef std::vector<SceneDataClassObjPtr>	SceneDataClassObjArray;
+
+	// ----------------------------------------------------------------------------------------------------------------------------------
+	// SceneDataSourceObj
+	class SceneDataSourceObj : public SceneDataObj
+	{
+		
+	public:
+		SceneDataSourceObj(const SceneDataGUID& guid);
+		virtual ~SceneDataSourceObj();
+
+	private:
+		TXString 	fLinkedGeometry;
+		ESourceType fType;
+		
+	protected:
+		virtual TXString 	GetLinkedGeometry();
+		virtual ESourceType	GetType();
+
+		virtual	TXString	GetNodeName();
+
+		virtual	void		OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);
+		virtual	void		OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange);
+		
+	};
+	typedef SceneDataSourceObj* SceneDataSourceObjPtr;
+	typedef std::vector<SceneDataSourceObj>	SceneDataSourceObjArray;
 	
 	
 	

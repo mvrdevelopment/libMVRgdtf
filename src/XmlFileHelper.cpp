@@ -1548,15 +1548,15 @@ CieColor SceneData::GdtfConverter::ConvertCColor(const CCieColor & color)
 /*static*/ bool GdtfConverter::ConvertEGdtfCanHaveChildren(const TXString& inVal, const IXMLFileNodePtr& node, EGdtfCanHaveChildren& outVal)
 {
 	if        (inVal == XML_GDTF_CanHaveChildren_Yes)	{ outVal = EGdtfCanHaveChildren::eYES; }     
-	else if   (inVal == XML_GDTF_CanHaveChildren_No)   { outVal = EGdtfCanHaveChildren::eNO; }    
-	else if   (inVal.IsEmpty())    					{ outVal = EGdtfCanHaveChildren::eYES; } 
+	else if   (inVal == XML_GDTF_CanHaveChildren_No)   	{ outVal = EGdtfCanHaveChildren::eNO; }    
+	else if   (inVal.IsEmpty())    						{ outVal = EGdtfCanHaveChildren::eYES; } 
 	else 
 	{
-	DSTOP((kEveryone, "Unknown Value for EGdtfCanHaveChildren"));
-	GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_CanHaveChildren, node);
-	SceneData::GdtfFixture::AddError(error);
+		DSTOP((kEveryone, "Unknown Value for EGdtfCanHaveChildren"));
+		GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_CanHaveChildren, node);
+		SceneData::GdtfFixture::AddError(error);
 
-	outVal = EGdtfCanHaveChildren::eYES;
+		outVal = EGdtfCanHaveChildren::eYES;
 	}
        
     return true;
@@ -1585,6 +1585,38 @@ CieColor SceneData::GdtfConverter::ConvertCColor(const CCieColor & color)
 	}
 
 	return false;
+}
+
+/*static*/ TXString GdtfConverter::ConvertESourceType(ESourceType value)
+{
+    switch (value)
+    {
+		case ESourceType::DNI:				return XML_Val_SourceTypeDNI;
+		case ESourceType::File:				return XML_Val_SourceTypeFile;
+		case ESourceType::CITP:				return XML_Val_SourceTypeCITP;
+		case ESourceType::CaptureDevice:	return XML_Val_SourceTypeCaptureDevice;
+    }
+
+	DSTOP((kEveryone, "Unknown Enum for ESourceType"));
+
+    return XML_Val_SourceTypeDNI;
+}
+
+
+/*static*/ bool GdtfConverter::ConvertESourceType(const TXString& inVal, const IXMLFileNodePtr& node, ESourceType& outVal)
+{
+	if        (inVal == XML_Val_SourceTypeDNI)				{ outVal = ESourceType::DNI; }     
+	else if   (inVal == XML_Val_SourceTypeFile)   			{ outVal = ESourceType::File; } 
+	else if   (inVal == XML_Val_SourceTypeCITP)   			{ outVal = ESourceType::CITP; }
+	else if   (inVal == XML_Val_SourceTypeCaptureDevice)	{ outVal = ESourceType::CaptureDevice; }   
+	else if   (inVal.IsEmpty())    							{ outVal = ESourceType::DNI; } 
+	else 
+	{
+		DSTOP((kEveryone, "Unknown Value for ESourceType"));
+		outVal = ESourceType::DNI;
+	}
+       
+    return true;
 }
 
 bool SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, const IFileIdentifierPtr& file, ERessourceType resType, bool deleteFile, bool mustExist)

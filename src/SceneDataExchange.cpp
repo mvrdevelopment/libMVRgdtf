@@ -485,7 +485,7 @@ ESceneDataObjectType SceneDataPositionObj::GetObjectType()
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------------
-// SceneDataSymDefObj
+// SceneDataClassObj
 SceneDataClassObj::SceneDataClassObj(const SceneDataGUID& guid) : SceneDataAuxObj(guid)
 {
 	
@@ -522,7 +522,84 @@ ESceneDataObjectType SceneDataClassObj::GetObjectType()
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------------
-// SceneDataAuxObj
+// SceneDataClassObj
+SceneDataSourceObj::SceneDataSourceObj(const SceneDataGUID& guid) : SceneDataObj(guid)
+{
+	
+}
+
+SceneDataSourceObj::~SceneDataSourceObj()
+{
+	
+}
+
+TXString SceneDataSourceObj::GetLinkedGeometry()
+{
+	return fLinkedGeometry;
+}
+
+ESourceType	SceneDataSourceObj::GetType()
+{
+	return fType;
+}
+
+void SceneDataSourceObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
+{
+	// Call parent
+	SceneDataObj::OnPrintToFile(pNode, exchange);
+
+	// Create the children node
+	if(!fLinkedGeometry.IsEmpty())
+	{
+		IXMLFileNodePtr pLinkedGeometryNode;
+		if(VCOM_SUCCEEDED(pNode->CreateChildNode(XML_Val_SourceLinkedGeometry, &pLinkedGeometryNode)))
+		{
+			pLinkedGeometryNode->SetNodeValue(fLinkedGeometry);
+		}
+	}
+
+	IXMLFileNodePtr pTypeNode;
+	if(VCOM_SUCCEEDED(pNode->CreateChildNode(XML_Val_SourceType, &pTypeNode)))
+	{
+		pTypeNode->SetNodeValue(GdtfConverter::ConvertESourceType(fType));
+	}
+
+	
+	
+
+}
+
+void SceneDataSourceObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
+{
+	// Call parent
+	SceneDataObj::OnReadFromNode(pNode, exchange);
+
+	// Read the child node
+	IXMLFileNodePtr pMatrixNode;
+	if ( VCOM_SUCCEEDED( pNode->GetChildNode( XML_Val_MatrixNodeName, & pMatrixNode ) ) )
+	{
+		// Convert Matrix entry
+		TXString value;
+		pMatrixNode->GetNodeValue(value);
+		
+		//
+		GdtfConverter::ConvertMatrix(value, pNode, fMatrix);
+		
+	}
+	else
+	{
+		fMatrix = VWTransformMatrix();
+	}
+	
+}
+
+TXString SceneDataSourceObj::GetNodeName()
+{
+	return TXString( XML_Val_SourceNodeName );
+}
+
+// ----------------------------------------------------------------------------------------------------------------------------------
+// SceneDataObjWithMatrix
 SceneDataObjWithMatrix::SceneDataObjWithMatrix(const SceneDataGUID& guid) : SceneDataObj(guid)
 {
 	fInContainer			= nullptr;

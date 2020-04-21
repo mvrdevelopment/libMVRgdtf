@@ -151,7 +151,25 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		AddSymbol(const STransformMatrix& geometry, ISymDef* symDef) = 0;
 		
 	};
-	typedef VCOMPtr<ISymDef>	ISymDefPtr;
+	typedef VCOMPtr<ISymDef> ISymDefPtr;
+
+	//-------------------------------------------------------------------------------------------------------------
+	enum class ESourceType
+	{
+		DNI,
+		File,
+		CITP,
+		CaptureDevice,
+	};
+
+	class DYNAMIC_ATTRIBUTE ISource : public IVWUnknown
+	{
+	public:
+		virtual MvrString VCOM_CALLTYPE		GetLinkedGeometry() = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetType(ESourceType& sourceType) = 0;
+		
+	};
+	typedef VCOMPtr<ISource> ISourcePtr;
 	
 	//-------------------------------------------------------------------------------------------------------------
 	enum class ESceneObjType

@@ -79,7 +79,16 @@
 
 #define XML_Val_PositionNodeName	"Position"
 
-#define XML_Val_ClassNodeName	"Class"
+#define XML_Val_ClassNodeName	    "Class"
+
+#define XML_Val_SourcesNodeName	        "Sources"
+#define XML_Val_SourceNodeName	        "Source"
+#define XML_Val_SourceLinkedGeometry	"linkedGeometry"
+#define XML_Val_SourceType	            "type"
+#define XML_Val_SourceTypeDNI	        "DNI"
+#define XML_Val_SourceTypeFile	        "File"
+#define XML_Val_SourceTypeCITP	        "CITP"
+#define XML_Val_SourceTypeCaptureDevice	"CaptureDevice"
 
 #define XML_Val_LayerObjectNodeName	"Layer"
 #define XML_Val_FixtureNodeName		"Fixture"
