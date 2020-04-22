@@ -219,6 +219,7 @@ namespace VectorworksMVR
 		virtual MvrString VCOM_CALLTYPE		GetGobo() = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetGoboRotation(double& value) = 0;
 		virtual MvrString VCOM_CALLTYPE		GetGoboFullPath() = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetCastShadow(bool& value) = 0;
 		
 		virtual VCOMError VCOM_CALLTYPE		SetGdtfName(MvrString gdtfName) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetGdtfMode(MvrString gdtfMode) = 0;
@@ -232,6 +233,7 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		SetCustomId(const size_t& Cid) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetGobo(MvrString gobo) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetGoboRotation(double rotation) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetCastShadow(bool castShadow) = 0;
 	};
 	typedef VCOMPtr<ISceneObj>	ISceneObjPtr;
 	

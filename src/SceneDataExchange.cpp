@@ -931,6 +931,7 @@ SceneDataFixtureObj::SceneDataFixtureObj(const SceneDataGUID& guid) : SceneDataO
 	fFixtureTypeId	= 0;
 	fCustomId		= 0;
 	fGoboRotation 	= 0.0;
+	fCastShadow		= false;
 }
 
 SceneDataFixtureObj::~SceneDataFixtureObj()
@@ -1023,6 +1024,11 @@ double SceneDataFixtureObj::GetGoboRotation()
 	return fGoboRotation;
 }
 
+bool SceneDataFixtureObj::GetCastShadow()
+{
+	return fCastShadow;
+}
+
 const SceneDataAdressArray& SceneDataFixtureObj::GetAdressesArray()
 {
 	return fAdresses;
@@ -1106,6 +1112,11 @@ void SceneDataFixtureObj::SetCustomId(const size_t& value)
 void SceneDataFixtureObj::SetFixtureTypeId(const Sint8& value)
 {
 	fFixtureTypeId = value;
+}
+
+void SceneDataFixtureObj::SetCastShadow(bool value)
+{
+	fCastShadow = value;
 }
 
 void SceneDataFixtureObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
@@ -1202,7 +1213,7 @@ void SceneDataFixtureObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange
 	
 	
 	//--------------------------------------------------------------------------------------------
-	// Print the UnitNumber
+	// Print the CustomId
 	IXMLFileNodePtr pCustomId;
 	if ( VCOM_SUCCEEDED( pNode->CreateChildNode( XML_Val_FixtureCustomid, & pCustomId ) ) )
 	{
@@ -1225,6 +1236,14 @@ void SceneDataFixtureObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange
 	{
 		pGoboNode->SetNodeValue(fGobo);
 		pGoboNode->SetNodeAttributeValue(XML_Val_FixtureGoboRotation, GdtfConverter::ConvertDouble(fGoboRotation));
+	}
+
+	//--------------------------------------------------------------------------------------------
+	// Print the CastShadow
+	IXMLFileNodePtr pCastShadowNode;
+	if ( VCOM_SUCCEEDED( pNode->CreateChildNode( XML_Val_FixtureCastShadow, & pCastShadowNode ) ) )
+	{
+		pCastShadowNode->SetNodeValue(GdtfConverter::ConvertBool(fCastShadow));
 	}
 }
 
@@ -1321,6 +1340,16 @@ void SceneDataFixtureObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneData
 		pGoboNode->GetNodeAttributeValue(XML_Val_FixtureGoboRotation, rotationStr);
 
 		GdtfConverter::ConvertDouble(rotationStr, pGoboNode, fGoboRotation);
+	}
+
+	//--------------------------------------------------------------------------------------------
+	// Read the CastShadow
+	IXMLFileNodePtr pCastShadowNode;
+	TXString		castShadow;
+	if (VCOM_SUCCEEDED(pNode->GetChildNode(XML_Val_FixtureCastShadow, &pCastShadowNode)))
+	{
+		pCastShadowNode->GetNodeValue(castShadow);
+		GdtfConverter::ConvertBool(castShadow, pNode, fCastShadow);
 	}
 	
 }

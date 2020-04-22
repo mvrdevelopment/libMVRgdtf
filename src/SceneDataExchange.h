@@ -476,6 +476,7 @@ namespace SceneData
 		CCieColor						fColor;
 		Sint8							fFixtureTypeId;
 		size_t							fCustomId;
+		bool							fCastShadow;
 		
 		
 		// Reading Storage
@@ -503,6 +504,7 @@ namespace SceneData
 		const SceneDataAdressArray&		GetAdressesArray();
 		const TXString&					GetGobo();
 		double							GetGoboRotation();
+		bool							GetCastShadow();
 		
 		void							SetPosition(SceneDataPositionObjPtr ptr);
 		void							SetFocusPoint(SceneDataFocusPointObjPtr ptr);
@@ -516,6 +518,7 @@ namespace SceneData
 		void							SetUnitNumber(Sint32 value);
 		void							SetGobo(const TXString& value);
 		void							SetGoboRotation(double value);
+		void							SetCastShadow(bool value);
 		
 	protected:
 		virtual	TXString				GetNodeName();
