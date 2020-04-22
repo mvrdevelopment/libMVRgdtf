@@ -585,7 +585,8 @@ namespace SceneData
 		SceneDataSourceObjArray	fSources;
 
 	public:
-		virtual void AddSource(TXString value, TXString linkedGeometry, ESourceType type);
+		virtual SceneDataSourceObjArray GetSourceArray();
+		virtual void 					AddSource(TXString value, TXString linkedGeometry, ESourceType type);
 
 	private:
 		virtual	TXString				GetNodeName();

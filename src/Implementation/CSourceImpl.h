@@ -19,9 +19,9 @@ namespace VectorworksMVR
 		virtual MvrString VCOM_CALLTYPE		GetLinkedGeometry();
 		virtual VCOMError VCOM_CALLTYPE		GetType(ESourceType& sourceType);
 
-		virtual VCOMError VCOM_CALLTYPE		SetValue(MvrString value) = 0;
-		virtual VCOMError VCOM_CALLTYPE		SetLinkedGeometry(MvrString linkedGeometry) = 0;
-		virtual VCOMError VCOM_CALLTYPE		SetType(ESourceType sourceType) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetValue(MvrString value);
+		virtual VCOMError VCOM_CALLTYPE		SetLinkedGeometry(MvrString linkedGeometry);
+		virtual VCOMError VCOM_CALLTYPE		SetType(ESourceType sourceType);
 		
 		
 		// Implementation

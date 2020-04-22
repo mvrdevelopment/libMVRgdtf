@@ -1515,6 +1515,11 @@ SceneDataVideoScreenObj::~SceneDataVideoScreenObj()
 	}
 }
 
+SceneDataSourceObjArray SceneDataVideoScreenObj::GetSourceArray()
+{
+	return fSources;
+}
+
 void SceneDataVideoScreenObj::AddSource(TXString value, TXString linkedGeometry, ESourceType type)
 {
 	SceneDataGUID guid(eNoGuid, "Just to initialize");

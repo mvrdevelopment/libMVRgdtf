@@ -65,6 +65,11 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		SetGobo(MvrString gobo);
 		virtual VCOMError VCOM_CALLTYPE		SetGoboRotation(double rotation);
 		virtual VCOMError VCOM_CALLTYPE		SetCastShadow(bool castShadow);
+
+		// Video Screen
+		virtual VCOMError VCOM_CALLTYPE		AddVideoSource(MvrString value, MvrString linkedGeometry, ESourceType type);
+		virtual VCOMError VCOM_CALLTYPE		GetVideoSourceCount(size_t& outCount);
+		virtual VCOMError VCOM_CALLTYPE		GetVideoSourceAt(size_t at, ISource** outSource);
 		
 		// Implementation
 	public:
