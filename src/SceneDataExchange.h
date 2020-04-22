@@ -256,13 +256,20 @@ namespace SceneData
 		virtual ~SceneDataSourceObj();
 
 	private:
+		TXString 	fValue;
 		TXString 	fLinkedGeometry;
 		ESourceType fType;
 		
-	protected:
+	public:
+		virtual TXString 	GetValue();
 		virtual TXString 	GetLinkedGeometry();
 		virtual ESourceType	GetType();
 
+		virtual void 		SetValue(TXString value);
+		virtual void 		SetLinkedGeometry(TXString linkedGeometry);
+		virtual void		SetType(ESourceType type);
+
+	protected:
 		virtual	TXString	GetNodeName();
 
 		virtual	void		OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);

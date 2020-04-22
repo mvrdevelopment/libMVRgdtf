@@ -533,6 +533,11 @@ SceneDataSourceObj::~SceneDataSourceObj()
 	
 }
 
+TXString SceneDataSourceObj::GetValue()
+{
+	return fValue;
+}
+
 TXString SceneDataSourceObj::GetLinkedGeometry()
 {
 	return fLinkedGeometry;
@@ -543,6 +548,21 @@ ESourceType	SceneDataSourceObj::GetType()
 	return fType;
 }
 
+void SceneDataSourceObj::SetValue(TXString value)
+{
+	fValue = value;
+}
+
+void SceneDataSourceObj::SetLinkedGeometry(TXString linkedGeometry)
+{
+	fLinkedGeometry = linkedGeometry;
+}
+
+void SceneDataSourceObj::SetType(ESourceType type)
+{
+	fType = type;
+}
+
 void SceneDataSourceObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
 {
 	// Call parent
@@ -551,22 +571,12 @@ void SceneDataSourceObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange*
 	// Create the children node
 	if(!fLinkedGeometry.IsEmpty())
 	{
-		IXMLFileNodePtr pLinkedGeometryNode;
-		if(VCOM_SUCCEEDED(pNode->CreateChildNode(XML_Val_SourceLinkedGeometry, &pLinkedGeometryNode)))
-		{
-			pLinkedGeometryNode->SetNodeValue(fLinkedGeometry);
-		}
+		pNode->SetNodeAttributeValue(XML_Val_SourceLinkedGeometry, fLinkedGeometry);
 	}
 
-	IXMLFileNodePtr pTypeNode;
-	if(VCOM_SUCCEEDED(pNode->CreateChildNode(XML_Val_SourceType, &pTypeNode)))
-	{
-		pTypeNode->SetNodeValue(GdtfConverter::ConvertESourceType(fType));
-	}
+	pNode->SetNodeAttributeValue(XML_Val_SourceType, GdtfConverter::ConvertESourceType(fType));
 
-	
-	
-
+	pNode->SetNodeValue(fValue);
 }
 
 void SceneDataSourceObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
@@ -574,23 +584,13 @@ void SceneDataSourceObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataE
 	// Call parent
 	SceneDataObj::OnReadFromNode(pNode, exchange);
 
-	// Read the child node
-	IXMLFileNodePtr pMatrixNode;
-	if ( VCOM_SUCCEEDED( pNode->GetChildNode( XML_Val_MatrixNodeName, & pMatrixNode ) ) )
-	{
-		// Convert Matrix entry
-		TXString value;
-		pMatrixNode->GetNodeValue(value);
-		
-		//
-		GdtfConverter::ConvertMatrix(value, pNode, fMatrix);
-		
-	}
-	else
-	{
-		fMatrix = VWTransformMatrix();
-	}
+	pNode->GetNodeAttributeValue(XML_Val_SourceLinkedGeometry, fLinkedGeometry);
+
+	TXString sourceTypeStr;
+	pNode->GetNodeAttributeValue(XML_Val_SourceType, sourceTypeStr);
+	GdtfConverter::ConvertESourceType(sourceTypeStr, pNode, fType);
 	
+	pNode->GetNodeValue(fValue);
 }
 
 TXString SceneDataSourceObj::GetNodeName()

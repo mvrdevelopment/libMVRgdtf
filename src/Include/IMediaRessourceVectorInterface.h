@@ -165,9 +165,13 @@ namespace VectorworksMVR
 	class DYNAMIC_ATTRIBUTE ISource : public IVWUnknown
 	{
 	public:
+		virtual MvrString VCOM_CALLTYPE		GetValue() = 0;
 		virtual MvrString VCOM_CALLTYPE		GetLinkedGeometry() = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetType(ESourceType& sourceType) = 0;
-		
+
+		virtual VCOMError VCOM_CALLTYPE		SetValue(MvrString value) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetLinkedGeometry(MvrString linkedGeometry) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetType(ESourceType sourceType) = 0;
 	};
 	typedef VCOMPtr<ISource> ISourcePtr;
 	
