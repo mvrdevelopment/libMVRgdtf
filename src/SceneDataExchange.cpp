@@ -528,6 +528,13 @@ SceneDataSourceObj::SceneDataSourceObj(const SceneDataGUID& guid) : SceneDataObj
 	
 }
 
+SceneDataSourceObj::SceneDataSourceObj(const SceneDataGUID& guid, TXString value, TXString linkedGeometry, ESourceType type) : SceneDataObj(guid)
+{
+	fValue 			= value;
+	fLinkedGeometry = linkedGeometry;
+	fType 			= type;
+}
+
 SceneDataSourceObj::~SceneDataSourceObj()
 {
 	
@@ -596,6 +603,11 @@ void SceneDataSourceObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataE
 TXString SceneDataSourceObj::GetNodeName()
 {
 	return TXString( XML_Val_SourceNodeName );
+}
+
+ESceneDataObjectType SceneDataSourceObj::GetObjectType()
+{
+	return ESceneDataObjectType::eSourceObject;
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------------
@@ -1492,23 +1504,64 @@ ESceneDataObjectType SceneDataTrussObj::GetObjectType()
 // SceneDataVideoScreenObj
 SceneDataVideoScreenObj::SceneDataVideoScreenObj(const SceneDataGUID& guid) : SceneDataObjWithMatrix(guid)
 {
-	
+	fSources.clear();
 }
 
 SceneDataVideoScreenObj::~SceneDataVideoScreenObj()
 {
-	
+	for(SceneDataSourceObjPtr source : fSources)
+	{
+		delete source;
+	}
+}
+
+void SceneDataVideoScreenObj::AddSource(TXString value, TXString linkedGeometry, ESourceType type)
+{
+	SceneDataGUID guid(eNoGuid, "Just to initialize");
+	SceneDataSourceObjPtr source = new SceneDataSourceObj(guid, value, linkedGeometry, type);
+	fSources.push_back(source);
 }
 
 TXString SceneDataVideoScreenObj::GetNodeName()
 {
-	return TXString( XML_Val_VideoScreenObjectNodeName );
+	return TXString(XML_Val_VideoScreenObjectNodeName);
 }
 
 ESceneDataObjectType SceneDataVideoScreenObj::GetObjectType()
 {
 	return ESceneDataObjectType::eVideoScreen;
 }
+
+void SceneDataVideoScreenObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
+{
+	// Call Parent
+	SceneDataObjWithMatrix::OnPrintToFile(pNode, exchange);
+
+	IXMLFileNodePtr pSourcesNode;
+	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_Val_VideoScreenObjectSources, &pSourcesNode)))
+	{
+		for (SceneDataSourceObjPtr source : fSources)
+		{
+			source->PrintToFile(pSourcesNode, exchange);
+		}
+	}
+}
+
+void SceneDataVideoScreenObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
+{
+	SceneDataObjWithMatrix::OnReadFromNode(pNode, exchange);
+	
+	GdtfConverter::TraverseNodes(pNode, XML_Val_VideoScreenObjectSources, XML_Val_SourceNodeName, [this, exchange] (IXMLFileNodePtr pNode) -> void
+								{
+									SceneDataGUID guid(eNoGuid, "Just to initialize");
+									SceneDataSourceObjPtr source = new SceneDataSourceObj(guid);
+									source->ReadFromNode(pNode, exchange);
+									fSources.push_back(source);
+								}
+								);
+		
+}
+
 
 // ----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataSymbolObj

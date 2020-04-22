@@ -81,7 +81,7 @@
 
 #define XML_Val_ClassNodeName	    "Class"
 
-#define XML_Val_SourcesNodeName	        "Sources"
+
 #define XML_Val_SourceNodeName	        "Source"
 #define XML_Val_SourceLinkedGeometry	"linkedGeometry"
 #define XML_Val_SourceType	            "type"
@@ -131,6 +131,7 @@
 #define XML_Val_TrussObjectNodeName			"Truss"
 
 #define XML_Val_VideoScreenObjectNodeName	"VideoScreen"
+#define XML_Val_VideoScreenObjectSources    "Sources"
 
 #define XML_Val_SymbolObjectNodeName		"Symbol"
 #define XML_Val_GuidSymdefAttrName			"symdef"
