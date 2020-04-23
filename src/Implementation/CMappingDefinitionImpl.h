@@ -22,6 +22,11 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetSizeY(Uint32& sizeY);
 		virtual VCOMError VCOM_CALLTYPE		GetSource(ISource** outSource);
 		virtual VCOMError VCOM_CALLTYPE		GetScaleHandling(EScaleHandlingType& scaleHandling);
+
+		virtual VCOMError VCOM_CALLTYPE		SetSizeX(Uint32 sizeX);
+		virtual VCOMError VCOM_CALLTYPE		SetSizeY(Uint32 sizeY);
+		virtual VCOMError VCOM_CALLTYPE		SetSource(ISource* source);
+		virtual VCOMError VCOM_CALLTYPE		SetScaleHandling(EScaleHandlingType scaleHandling);
 		
 		
 		// Implementation

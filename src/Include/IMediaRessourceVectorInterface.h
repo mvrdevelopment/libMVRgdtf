@@ -193,6 +193,11 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetSizeY(Uint32& sizeY) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetSource(ISource** outSource) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetScaleHandling(EScaleHandlingType& scaleHandling) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE		SetSizeX(Uint32 sizeX) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetSizeY(Uint32 sizeY) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetSource(ISource* source) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetScaleHandling(EScaleHandlingType scaleHandling) = 0;
 		
 	};
 	typedef VCOMPtr<IMappingDefinition>	IMappingDefinitionPtr;

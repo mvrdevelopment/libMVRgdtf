@@ -98,7 +98,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CMappingDefinitionImpl::GetSource(ISou
 		return kVCOMError_Failed;
 	}
 	
-	
 	//---------------------------------------------------------------------------
 	// Check Incoming Object
 	if (*outSource)
@@ -122,6 +121,67 @@ VectorworksMVR::VCOMError VectorworksMVR::CMappingDefinitionImpl::GetScaleHandli
 	
 	// Otherwise return data
 	scaleHandling = fPtr->GetScaleHandling();
+
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CMappingDefinitionImpl::SetSizeX(Uint32 sizeX)
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+	
+	// Otherwise return data
+	fPtr->SetSizeX(sizeX);
+
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CMappingDefinitionImpl::SetSizeY(Uint32 sizeY)
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+	
+	// Otherwise return data
+	fPtr->SetSizeY(sizeY);
+
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CMappingDefinitionImpl::SetSource(ISource* source)
+{	
+	// ------------------------------------------------------------------------------------------
+	// Check the incoming object
+	if (!source) { return kVCOMError_InvalidArg; }
+	
+	// ------------------------------------------------------------------------------------------
+	// Cast to object
+	CSourceImpl* pSource = dynamic_cast<CSourceImpl* >(source);
+	
+	ASSERTN(kEveryone, pSource != nullptr);
+	if ( ! pSource) { return kVCOMError_Failed;	}
+	
+	//
+	SceneData::SceneDataSourceObjPtr scSource = nullptr;
+	pSource->GetPointer(scSource);
+	
+	ASSERTN(kEveryone, scSource != nullptr);
+	if ( ! scSource) { return kVCOMError_InvalidArg; }
+	
+	fPtr->SetSource(scSource);
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CMappingDefinitionImpl::SetScaleHandling(EScaleHandlingType scaleHandling)
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+	
+	// Otherwise return data
+	fPtr->SetScaleHandling(scaleHandling);
 
 	return kVCOMError_NoError;
 }
