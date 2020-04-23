@@ -12,6 +12,8 @@
 #include "CSymDefImpl.h"
 #include "CClassImpl.h"
 
+#include "CSourceImpl.h"
+
 namespace VectorworksMVR
 {
 	class CMediaRessourceVectorImpl : public VCOMImpl<IMediaRessourceVectorInterface>

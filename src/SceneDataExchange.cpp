@@ -485,7 +485,7 @@ ESceneDataObjectType SceneDataPositionObj::GetObjectType()
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------------
-// SceneDataSymDefObj
+// SceneDataClassObj
 SceneDataClassObj::SceneDataClassObj(const SceneDataGUID& guid) : SceneDataAuxObj(guid)
 {
 	
@@ -522,7 +522,98 @@ ESceneDataObjectType SceneDataClassObj::GetObjectType()
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------------
-// SceneDataAuxObj
+// SceneDataClassObj
+SceneDataSourceObj::SceneDataSourceObj(const SceneDataGUID& guid) : SceneDataObj(guid)
+{
+	
+}
+
+SceneDataSourceObj::SceneDataSourceObj(const SceneDataGUID& guid, const TXString& value, const TXString& linkedGeometry, ESourceType type) : SceneDataObj(guid)
+{
+	fValue 			= value;
+	fLinkedGeometry = linkedGeometry;
+	fType 			= type;
+	const char* v = value.GetCharPtr();
+	const char* l = linkedGeometry.GetCharPtr();
+}
+
+SceneDataSourceObj::~SceneDataSourceObj()
+{
+	
+}
+
+const TXString& SceneDataSourceObj::GetValue()
+{
+	return fValue;
+}
+
+const TXString& SceneDataSourceObj::GetLinkedGeometry()
+{
+	return fLinkedGeometry;
+}
+
+ESourceType	SceneDataSourceObj::GetType()
+{
+	return fType;
+}
+
+void SceneDataSourceObj::SetValue(TXString value)
+{
+	fValue = value;
+}
+
+void SceneDataSourceObj::SetLinkedGeometry(TXString linkedGeometry)
+{
+	fLinkedGeometry = linkedGeometry;
+}
+
+void SceneDataSourceObj::SetType(ESourceType type)
+{
+	fType = type;
+}
+
+void SceneDataSourceObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
+{
+	// Call parent
+	SceneDataObj::OnPrintToFile(pNode, exchange);
+
+	// Create the children node
+	if(!fLinkedGeometry.IsEmpty())
+	{
+		pNode->SetNodeAttributeValue(XML_Val_SourceLinkedGeometry, fLinkedGeometry);
+	}
+
+	pNode->SetNodeAttributeValue(XML_Val_SourceType, GdtfConverter::ConvertESourceType(fType));
+
+	pNode->SetNodeValue(fValue);
+}
+
+void SceneDataSourceObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
+{
+	// Call parent
+	SceneDataObj::OnReadFromNode(pNode, exchange);
+
+	pNode->GetNodeAttributeValue(XML_Val_SourceLinkedGeometry, fLinkedGeometry);
+
+	TXString sourceTypeStr;
+	pNode->GetNodeAttributeValue(XML_Val_SourceType, sourceTypeStr);
+	GdtfConverter::ConvertESourceType(sourceTypeStr, pNode, fType);
+	
+	pNode->GetNodeValue(fValue);
+}
+
+TXString SceneDataSourceObj::GetNodeName()
+{
+	return TXString( XML_Val_SourceNodeName );
+}
+
+ESceneDataObjectType SceneDataSourceObj::GetObjectType()
+{
+	return ESceneDataObjectType::eSourceObject;
+}
+
+// ----------------------------------------------------------------------------------------------------------------------------------
+// SceneDataObjWithMatrix
 SceneDataObjWithMatrix::SceneDataObjWithMatrix(const SceneDataGUID& guid) : SceneDataObj(guid)
 {
 	fInContainer			= nullptr;
@@ -854,6 +945,7 @@ SceneDataFixtureObj::SceneDataFixtureObj(const SceneDataGUID& guid) : SceneDataO
 	fFixtureTypeId	= 0;
 	fCustomId		= 0;
 	fGoboRotation 	= 0.0;
+	fCastShadow		= false;
 }
 
 SceneDataFixtureObj::~SceneDataFixtureObj()
@@ -946,6 +1038,11 @@ double SceneDataFixtureObj::GetGoboRotation()
 	return fGoboRotation;
 }
 
+bool SceneDataFixtureObj::GetCastShadow()
+{
+	return fCastShadow;
+}
+
 const SceneDataAdressArray& SceneDataFixtureObj::GetAdressesArray()
 {
 	return fAdresses;
@@ -1029,6 +1126,11 @@ void SceneDataFixtureObj::SetCustomId(const size_t& value)
 void SceneDataFixtureObj::SetFixtureTypeId(const Sint8& value)
 {
 	fFixtureTypeId = value;
+}
+
+void SceneDataFixtureObj::SetCastShadow(bool value)
+{
+	fCastShadow = value;
 }
 
 void SceneDataFixtureObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
@@ -1125,7 +1227,7 @@ void SceneDataFixtureObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange
 	
 	
 	//--------------------------------------------------------------------------------------------
-	// Print the UnitNumber
+	// Print the CustomId
 	IXMLFileNodePtr pCustomId;
 	if ( VCOM_SUCCEEDED( pNode->CreateChildNode( XML_Val_FixtureCustomid, & pCustomId ) ) )
 	{
@@ -1148,6 +1250,14 @@ void SceneDataFixtureObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange
 	{
 		pGoboNode->SetNodeValue(fGobo);
 		pGoboNode->SetNodeAttributeValue(XML_Val_FixtureGoboRotation, GdtfConverter::ConvertDouble(fGoboRotation));
+	}
+
+	//--------------------------------------------------------------------------------------------
+	// Print the CastShadow
+	IXMLFileNodePtr pCastShadowNode;
+	if ( VCOM_SUCCEEDED( pNode->CreateChildNode( XML_Val_FixtureCastShadow, & pCastShadowNode ) ) )
+	{
+		pCastShadowNode->SetNodeValue(GdtfConverter::ConvertBool(fCastShadow));
 	}
 }
 
@@ -1244,6 +1354,16 @@ void SceneDataFixtureObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneData
 		pGoboNode->GetNodeAttributeValue(XML_Val_FixtureGoboRotation, rotationStr);
 
 		GdtfConverter::ConvertDouble(rotationStr, pGoboNode, fGoboRotation);
+	}
+
+	//--------------------------------------------------------------------------------------------
+	// Read the CastShadow
+	IXMLFileNodePtr pCastShadowNode;
+	TXString		castShadow;
+	if (VCOM_SUCCEEDED(pNode->GetChildNode(XML_Val_FixtureCastShadow, &pCastShadowNode)))
+	{
+		pCastShadowNode->GetNodeValue(castShadow);
+		GdtfConverter::ConvertBool(castShadow, pNode, fCastShadow);
 	}
 	
 }
@@ -1383,20 +1503,37 @@ ESceneDataObjectType SceneDataTrussObj::GetObjectType()
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------------
-// SceneDataTrussObj
+// SceneDataVideoScreenObj
 SceneDataVideoScreenObj::SceneDataVideoScreenObj(const SceneDataGUID& guid) : SceneDataObjWithMatrix(guid)
 {
-	
+	fSources.clear();
 }
 
 SceneDataVideoScreenObj::~SceneDataVideoScreenObj()
 {
-	
+	for(SceneDataSourceObjPtr source : fSources)
+	{
+		delete source;
+	}
+}
+
+SceneDataSourceObjArray SceneDataVideoScreenObj::GetSourceArray()
+{
+	return fSources;
+}
+
+void SceneDataVideoScreenObj::AddSource(const TXString& value, const TXString& linkedGeometry, ESourceType type)
+{
+	SceneDataGUID guid(eNoGuid, "Just to initialize");
+	const char* v = value.GetCharPtr();
+	const char* l = linkedGeometry.GetCharPtr();
+	SceneDataSourceObjPtr source = new SceneDataSourceObj(guid, value, linkedGeometry, type);
+	fSources.push_back(source);
 }
 
 TXString SceneDataVideoScreenObj::GetNodeName()
 {
-	return TXString( XML_Val_VideoScreenObjectNodeName );
+	return TXString(XML_Val_VideoScreenObjectNodeName);
 }
 
 ESceneDataObjectType SceneDataVideoScreenObj::GetObjectType()
@@ -1404,8 +1541,39 @@ ESceneDataObjectType SceneDataVideoScreenObj::GetObjectType()
 	return ESceneDataObjectType::eVideoScreen;
 }
 
+void SceneDataVideoScreenObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
+{
+	// Call Parent
+	SceneDataObjWithMatrix::OnPrintToFile(pNode, exchange);
+
+	IXMLFileNodePtr pSourcesNode;
+	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_Val_VideoScreenObjectSources, &pSourcesNode)))
+	{
+		for (SceneDataSourceObjPtr source : fSources)
+		{
+			source->PrintToFile(pSourcesNode, exchange);
+		}
+	}
+}
+
+void SceneDataVideoScreenObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
+{
+	SceneDataObjWithMatrix::OnReadFromNode(pNode, exchange);
+	
+	GdtfConverter::TraverseNodes(pNode, XML_Val_VideoScreenObjectSources, XML_Val_SourceNodeName, [this, exchange] (IXMLFileNodePtr pNode) -> void
+								{
+									SceneDataGUID guid(eNoGuid, "Just to initialize");
+									SceneDataSourceObjPtr source = new SceneDataSourceObj(guid);
+									source->ReadFromNode(pNode, exchange);
+									fSources.push_back(source);
+								}
+								);
+		
+}
+
+
 // ----------------------------------------------------------------------------------------------------------------------------------
-// SceneDataTrussObj
+// SceneDataSymbolObj
 SceneDataSymbolObj::SceneDataSymbolObj(const SceneDataGUID& guid) : SceneDataGeoInstanceObj(guid, true /*Is SymbolDef*/)
 {
 	fSymDef = nullptr;

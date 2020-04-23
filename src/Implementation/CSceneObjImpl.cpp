@@ -741,6 +741,25 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetGoboRotation(double&
 	return kVCOMError_NoError;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetCastShadow(bool& value)
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+	
+	// Check the type is right
+	ASSERTN(kEveryone,fType == ESceneObjType::Fixture);
+	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
+	
+	// Try to cast
+	SceneData::SceneDataFixtureObjPtr fixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	if( ! fixture) return kVCOMError_NoFixtureObj;
+		
+	value = fixture->GetCastShadow();
+
+	return kVCOMError_NoError;
+}
+
 VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetGdtfName(MvrString gdtfName)
 {
 	// Check if this is initialized
@@ -1030,8 +1049,139 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetGoboRotation(double 
 	return kVCOMError_NoError;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetCastShadow(bool castShadow)
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) {return kVCOMError_NotInitialized;}
+	
+	// Check the type is right
+	ASSERTN(kEveryone,fType == ESceneObjType::Fixture);
+	if( fType != ESceneObjType::Fixture) {return kVCOMError_NoFixtureObj;}
+	
+	// Try to cast
+	SceneData::SceneDataFixtureObjPtr fixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	if( ! fixture) {return kVCOMError_NoFixtureObj;}
+	
+	//
+	fixture->SetCastShadow(castShadow);
+	
+	return kVCOMError_NoError;
+}
+
 //------------------------------------------------------------------------------------------------------------------------------------------
-// Fixture
+// Videos Screen
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::AddVideoSource(MvrString value, MvrString linkedGeometry, ESourceType type)
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+	
+	// Check the type is right
+	ASSERTN(kEveryone,fType == ESceneObjType::VideoScreen);
+	if( fType != ESceneObjType::VideoScreen) return kVCOMError_NoVideoScreenObj;
+	
+	// Try to cast
+	SceneData::SceneDataVideoScreenObjPtr videoScreen = dynamic_cast<SceneData::SceneDataVideoScreenObjPtr>(fPtr);
+	if( ! videoScreen) return kVCOMError_NoVideoScreenObj;
+
+	videoScreen->AddSource(value, linkedGeometry, type);
+
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetVideoSourceCount(size_t& outCount)
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+	
+	// Check the type is right
+	ASSERTN(kEveryone,fType == ESceneObjType::VideoScreen);
+	if( fType != ESceneObjType::VideoScreen) return kVCOMError_NoVideoScreenObj;
+	
+	// Try to cast
+	SceneData::SceneDataVideoScreenObjPtr videoScreen = dynamic_cast<SceneData::SceneDataVideoScreenObjPtr>(fPtr);
+	if( ! videoScreen) return kVCOMError_NoVideoScreenObj;
+	
+	outCount = videoScreen->GetSourceArray().size();
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetVideoSourceAt(size_t at, ISource** outSource)
+{
+	//------------------------------------------------------------------------------------------
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+	
+	ASSERTN(kEveryone,fContext);
+	if( ! fContext) return kVCOMError_NotInitialized;
+
+	//------------------------------------------------------------------------------------------
+	// Check the type is right
+	ASSERTN(kEveryone, fType == ESceneObjType::VideoScreen);
+	if( fType != ESceneObjType::VideoScreen) return kVCOMError_NoVideoScreenObj;
+	
+	// Try to cast
+	SceneData::SceneDataVideoScreenObjPtr videoScreen = dynamic_cast<SceneData::SceneDataVideoScreenObjPtr>(fPtr);
+	if( ! videoScreen) return kVCOMError_NoVideoScreenObj;
+	
+	
+	//------------------------------------------------------------------------------------------
+	// Check the position in the array
+	size_t count = videoScreen->GetSourceArray().size();
+	
+	ASSERTN(kEveryone, at < count);
+	if (count < at) { return kVCOMError_InvalidArg; }
+	
+	SceneData::SceneDataSourceObjPtr source = videoScreen->GetSourceArray().at(at);
+	
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CSourceImpl* pSource = nullptr;
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_SourceObj, (IVWUnknown**) &pSource)))
+	{
+		// Check Casting
+		CSourceImpl* pResultInterface = dynamic_cast<CSourceImpl*>(pSource);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(source);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	else
+	{
+		return kVCOMError_Failed;
+	}
+	
+	
+	//---------------------------------------------------------------------------
+	// Check Incoming Object
+	if (*outSource)
+	{
+		(*outSource)->Release();
+		*outSource		= NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*outSource = pSource;
+	
+	return kVCOMError_NoError;
+}
+
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+// Implementation
 void VectorworksMVR::CSceneObjImpl::SetPointer(SceneData::SceneDataObjWithMatrixPtr pointer, SceneData::SceneDataExchange* context)
 {
 	ASSERTN(kEveryone, pointer != nullptr);
@@ -1057,8 +1207,6 @@ void VectorworksMVR::CSceneObjImpl::SetPointer(SceneData::SceneDataObjWithMatrix
 	
 }
 
-//------------------------------------------------------------------------------------------------------------------------------------------
-// Fixture
 void VectorworksMVR::CSceneObjImpl::GetPointer(SceneData::SceneDataObjWithMatrixPtr& pointer, ESceneObjType& type)
 {
 	pointer	= fPtr;

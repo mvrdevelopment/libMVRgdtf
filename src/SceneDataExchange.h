@@ -48,6 +48,7 @@ namespace SceneData
 		ePosition		= -3,
 		eGeometryObj	= -4,
 		eClassObject	= -5,
+		eSourceObject	= -6,
 	};
 	
 	enum class ESearchUuidIn
@@ -228,7 +229,7 @@ namespace SceneData
 	typedef std::vector<SceneDataPositionObjPtr>	SceneDataPositionObjArray;
 	
 	// ----------------------------------------------------------------------------------------------------------------------------------
-	// SceneDataPositionObj
+	// SceneDataClassObj
 	class SceneDataClassObj : public SceneDataAuxObj
 	{
 		
@@ -245,6 +246,41 @@ namespace SceneData
 	};
 	typedef SceneDataClassObj*					SceneDataClassObjPtr;
 	typedef std::vector<SceneDataClassObjPtr>	SceneDataClassObjArray;
+
+	// ----------------------------------------------------------------------------------------------------------------------------------
+	// SceneDataSourceObj
+	class SceneDataSourceObj : public SceneDataObj
+	{
+		
+	public:
+		SceneDataSourceObj(const SceneDataGUID& guid);
+		SceneDataSourceObj(const SceneDataGUID& guid, const TXString& value, const TXString& linkedGeometry, ESourceType type);
+		virtual ~SceneDataSourceObj();
+
+	private:
+		TXString 	fValue;
+		TXString 	fLinkedGeometry;
+		ESourceType fType;
+		
+	public:
+		virtual const TXString& 	GetValue();
+		virtual const TXString& 	GetLinkedGeometry();
+		virtual ESourceType			GetType();
+
+		virtual void 		SetValue(TXString value);
+		virtual void 		SetLinkedGeometry(TXString linkedGeometry);
+		virtual void		SetType(ESourceType type);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual ESceneDataObjectType	GetObjectType();
+
+		virtual	void		OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);
+		virtual	void		OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange);
+		
+	};
+	typedef SceneDataSourceObj* SceneDataSourceObjPtr;
+	typedef std::vector<SceneDataSourceObjPtr>	SceneDataSourceObjArray;
 	
 	
 	
@@ -377,7 +413,7 @@ namespace SceneData
 	
 	
 	// ----------------------------------------------------------------------------------------------------------------------------------
-	// SceneDataObjWithMatrix
+	// SceneDataLayerObj
 	class SceneDataLayerObj : public SceneDataGroupObj
 	{
 		
@@ -396,7 +432,7 @@ namespace SceneData
 	
 	
 	// ----------------------------------------------------------------------------------------------------------------------------------
-	// SceneDataObjWithMatrix
+	// SceneDataFocusPointObj
 	class SceneDataFocusPointObj : public SceneDataObjWithMatrix
 	{
 		
@@ -450,6 +486,7 @@ namespace SceneData
 		CCieColor						fColor;
 		Sint8							fFixtureTypeId;
 		size_t							fCustomId;
+		bool							fCastShadow;
 		
 		
 		// Reading Storage
@@ -477,6 +514,7 @@ namespace SceneData
 		const SceneDataAdressArray&		GetAdressesArray();
 		const TXString&					GetGobo();
 		double							GetGoboRotation();
+		bool							GetCastShadow();
 		
 		void							SetPosition(SceneDataPositionObjPtr ptr);
 		void							SetFocusPoint(SceneDataFocusPointObjPtr ptr);
@@ -490,6 +528,7 @@ namespace SceneData
 		void							SetUnitNumber(Sint32 value);
 		void							SetGobo(const TXString& value);
 		void							SetGoboRotation(double value);
+		void							SetCastShadow(bool value);
 		
 	protected:
 		virtual	TXString				GetNodeName();
@@ -541,10 +580,19 @@ namespace SceneData
 	public:
 		SceneDataVideoScreenObj(const SceneDataGUID& guid);
 		virtual ~SceneDataVideoScreenObj();
+	
+	private:
+		SceneDataSourceObjArray	fSources;
+
+	public:
+		virtual SceneDataSourceObjArray GetSourceArray();
+		virtual void 					AddSource(const TXString& value, const TXString& linkedGeometry, ESourceType type);
 
 	private:
 		virtual	TXString				GetNodeName();
 		virtual ESceneDataObjectType	GetObjectType();
+		virtual void					OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange);
 		
 	};
 	typedef SceneDataVideoScreenObj* SceneDataVideoScreenObjPtr;

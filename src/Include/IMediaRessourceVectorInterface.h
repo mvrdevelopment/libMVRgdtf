@@ -154,6 +154,28 @@ namespace VectorworksMVR
 	typedef VCOMPtr<ISymDef>	ISymDefPtr;
 
 	//-------------------------------------------------------------------------------------------------------------
+	enum class ESourceType
+	{
+		DNI,
+		File,
+		CITP,
+		CaptureDevice,
+	};
+
+	class DYNAMIC_ATTRIBUTE ISource : public IVWUnknown
+	{
+	public:
+		virtual MvrString VCOM_CALLTYPE		GetValue() = 0;
+		virtual MvrString VCOM_CALLTYPE		GetLinkedGeometry() = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetType(ESourceType& sourceType) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE		SetValue(MvrString value) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetLinkedGeometry(MvrString linkedGeometry) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetType(ESourceType sourceType) = 0;
+	};
+	typedef VCOMPtr<ISource> ISourcePtr;
+
+	//-------------------------------------------------------------------------------------------------------------
 	enum class EScaleHandlingType
 	{
 		ScaleKeepRatio 		= 0, 
@@ -223,6 +245,7 @@ namespace VectorworksMVR
 		virtual MvrString VCOM_CALLTYPE		GetGobo() = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetGoboRotation(double& value) = 0;
 		virtual MvrString VCOM_CALLTYPE		GetGoboFullPath() = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetCastShadow(bool& value) = 0;
 		
 		virtual VCOMError VCOM_CALLTYPE		SetGdtfName(MvrString gdtfName) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetGdtfMode(MvrString gdtfMode) = 0;
@@ -236,6 +259,13 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		SetCustomId(const size_t& Cid) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetGobo(MvrString gobo) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetGoboRotation(double rotation) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetCastShadow(bool castShadow) = 0;
+
+
+		// Video Screen
+		virtual VCOMError VCOM_CALLTYPE		AddVideoSource(MvrString value, MvrString linkedGeometry, ESourceType type) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetVideoSourceCount(size_t& outCount) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetVideoSourceAt(size_t at, ISource** outSource) = 0;
 	};
 	typedef VCOMPtr<ISceneObj>	ISceneObjPtr;
 	

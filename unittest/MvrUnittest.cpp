@@ -140,6 +140,7 @@ void MvrUnittest::WriteFile()
 			__checkVCOM(fixture1->SetFocusPoint(focusPoint));
 			__checkVCOM(fixture1->SetPosition(position));
 			__checkVCOM(fixture1->SetClass(clas2));
+			__checkVCOM(fixture1->SetCastShadow(true));
 		}
 
 		// And another fixture
@@ -153,6 +154,7 @@ void MvrUnittest::WriteFile()
 			__checkVCOM(fixture2->SetFocusPoint(focusPoint));
 			__checkVCOM(fixture2->SetGoboRotation(32.87));
 			__checkVCOM(fixture2->SetGobo("MWheel_Img1"));
+			__checkVCOM(fixture2->SetCastShadow(false));
 		}
 
 		// Create second Layer
@@ -174,8 +176,17 @@ void MvrUnittest::WriteFile()
 		}
 
 
+		// Truss
 		ISceneObjPtr trussObject = nullptr;
 		__checkVCOM(mvrWrite->CreateTruss(MvrUUID(1136161271, 1699351080, 75193997, 1748573014), STransformMatrix(), "MyTrussName", layer2, &trussObject));
+
+		// Create Video Screen
+		ISceneObjPtr videoScreen;
+		if (__checkVCOM(mvrWrite->CreateVideoScreen(MvrUUID(1808353427, 683171502, 518343034, 0000000001), STransformMatrix(), "My VideoScreen Name", layer2, &videoScreen)))
+		{
+			__checkVCOM(videoScreen->AddVideoSource("myValue1", "myLinkedGeometry1", ESourceType::File));
+			__checkVCOM(videoScreen->AddVideoSource("myValue2", "myLinkedGeometry2", ESourceType::CITP));
+		}
 
 
 
@@ -234,6 +245,7 @@ void MvrUnittest::ReadFile()
 		MvrUUID fixtureUUID1	(1808353427, 683171502, 518343034, 1766902383);
 		MvrUUID fixtureUUID2	(1136161871, 1699151080, 751939975, 1748783014);
 		MvrUUID fixtureUUID3	(1136161871, 1699151080, 751939975, 1748773014);
+		MvrUUID videoSreenUUID	(1808353427, 683171502, 518343034, 0000000001);
 		MvrUUID resultUUID		(0,0,0,0);
 
         size_t count = 0;
@@ -259,7 +271,7 @@ void MvrUnittest::ReadFile()
 		// Check Object
 		size_t count_Objects = 0;
 		__checkVCOM(mvrRead->GetSceneObjectCount(count_Objects));
-		this->checkifEqual("Check Global Object Count", count_Objects, size_t(5));
+		this->checkifEqual("Check Global Object Count", count_Objects, size_t(6));
 
 		//------------------------------------------------------------------------------------------------
 		// Check File Getters
@@ -393,6 +405,10 @@ void MvrUnittest::ReadFile()
 					sceneObj->GetCustomId(customId);
 					checkifEqual("GetCustomId", customId, (size_t)0);
 
+					bool castShadow;
+					sceneObj->GetCastShadow(castShadow);
+					checkifEqual("GetCastShadow", castShadow, true);
+
 					size_t addressCount = 0;
 					__checkVCOM(sceneObj->GetAdressCount(addressCount));
 					for (size_t z = 0; z < addressCount; z++)
@@ -460,6 +476,10 @@ void MvrUnittest::ReadFile()
 					size_t customId;
 					sceneObj->GetCustomId(customId);
 					checkifEqual("GetCustomId", customId, (size_t)0);
+
+					bool castShadow = true;
+					sceneObj->GetCastShadow(castShadow);
+					checkifEqual("GetCastShadow", castShadow, false);
 					
 					size_t addressCount = 0;
 					__checkVCOM(sceneObj->GetAdressCount(addressCount));
@@ -525,6 +545,10 @@ void MvrUnittest::ReadFile()
 					size_t customId;
 					sceneObj->GetCustomId(customId);
 					checkifEqual("GetCustomId", customId, (size_t)0);
+
+					bool castShadow = true;
+					sceneObj->GetCastShadow(castShadow);
+					checkifEqual("GetCastShadow", castShadow, false);
 					
 					size_t addressCount = 0;
 					__checkVCOM(sceneObj->GetAdressCount(addressCount));
@@ -547,10 +571,44 @@ void MvrUnittest::ReadFile()
 					}
 				}
 
-				if (i==2 && j==0)
+				if (i==1 && j==1)
 				{
 					checkifEqual("ESceneObjType Type ", (Sint32)type ,(Sint32)ESceneObjType::Truss);
+				}
 
+				if (i==1 && j==2)
+				{
+					checkifEqual("ESceneObjType Type ", (Sint32)type ,(Sint32)ESceneObjType::VideoScreen);
+
+					size_t sourceCount;
+					if(__checkVCOM(sceneObj->GetVideoSourceCount(sourceCount)))
+					{
+						checkifEqual("Check Source Count", sourceCount, (size_t)2);
+
+						ISourcePtr source1;
+						if(__checkVCOM(sceneObj->GetVideoSourceAt(0, &source1)))
+						{
+							checkifEqual("Check Source1 value", 			source1->GetValue(), 			"myValue1");
+							checkifEqual("Check Source1 linkedGeometry", 	source1->GetLinkedGeometry(), 	"myLinkedGeometry1");
+							ESourceType type;
+							if(__checkVCOM(source1->GetType(type)))
+							{
+								checkifEqual("Check Source1 type", (size_t)type, (size_t)ESourceType::File);
+							}
+						}
+
+						ISourcePtr source2;
+						if(__checkVCOM(sceneObj->GetVideoSourceAt(1, &source2)))
+						{
+							checkifEqual("Check Source2 value", 			source2->GetValue(), 			"myValue2");
+							checkifEqual("Check Source2 linkedGeometry", 	source2->GetLinkedGeometry(), 	"myLinkedGeometry2");
+							ESourceType type;
+							if(__checkVCOM(source2->GetType(type)))
+							{
+								checkifEqual("Check Source2 type", (size_t)type, (size_t)ESourceType::CITP);
+							}
+						}
+					}
 				}
 							
 				//------------------------------------------------------------------------

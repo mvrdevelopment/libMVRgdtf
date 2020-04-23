@@ -79,7 +79,16 @@
 
 #define XML_Val_PositionNodeName	"Position"
 
-#define XML_Val_ClassNodeName	"Class"
+#define XML_Val_ClassNodeName	    "Class"
+
+
+#define XML_Val_SourceNodeName	        "Source"
+#define XML_Val_SourceLinkedGeometry	"linkedGeometry"
+#define XML_Val_SourceType	            "type"
+#define XML_Val_SourceTypeDNI	        "DNI"
+#define XML_Val_SourceTypeFile	        "File"
+#define XML_Val_SourceTypeCITP	        "CITP"
+#define XML_Val_SourceTypeCaptureDevice	"CaptureDevice"
 
 #define XML_Val_LayerObjectNodeName	"Layer"
 #define XML_Val_FixtureNodeName		"Fixture"
@@ -113,6 +122,7 @@
 #define XML_Val_FixtureCustomid		"CustomId"
 #define XML_Val_FixtureGobo		    "Gobo"
 #define XML_Val_FixtureGoboRotation "rotation"
+#define XML_Val_FixtureCastShadow   "CastShadow"
 
 #define XML_Val_SceneObjectNodeName			"SceneObject"
 
@@ -121,6 +131,7 @@
 #define XML_Val_TrussObjectNodeName			"Truss"
 
 #define XML_Val_VideoScreenObjectNodeName	"VideoScreen"
+#define XML_Val_VideoScreenObjectSources    "Sources"
 
 #define XML_Val_SymbolObjectNodeName		"Symbol"
 #define XML_Val_GuidSymdefAttrName			"symdef"

@@ -127,16 +127,17 @@ namespace VectorworksMVR
 	const VCOMError		kVCOMError_InvalidArg		= 15;
 	const VCOMError		kVCOMError_NoInstance		= 16;
 	
-	const VCOMError		kVCOMError_NoValidContainerObj	      = 457;
-	const VCOMError		kVCOMError_NoLayerObj			      = 458;
-	const VCOMError		kVCOMError_NoFixtureObj			      = 459;
-    const VCOMError		kVCOMError_OutOfBounds                = 460;
+	const VCOMError		kVCOMError_NoVideoScreenObj				= 456;
+	const VCOMError		kVCOMError_NoValidContainerObj	      	= 457;
+	const VCOMError		kVCOMError_NoLayerObj			      	= 458;
+	const VCOMError		kVCOMError_NoFixtureObj			      	= 459;
+    const VCOMError		kVCOMError_OutOfBounds                	= 460;
 	
-	const VCOMError		kVCOMError_NotSet				      = 461;
-	const VCOMError		kVCOMError_WrongGeometryType	      = 462;
-    const VCOMError     kVCOMError_WrongRDMParameterValueType = 463;
-	const VCOMError     kVCOMError_SlaveMasterNotInSameMode   = 464;
-    const VCOMError     kVCOMError_NoObj                      = 465;
+	const VCOMError		kVCOMError_NotSet				      	= 461;
+	const VCOMError		kVCOMError_WrongGeometryType	      	= 462;
+    const VCOMError     kVCOMError_WrongRDMParameterValueType 	= 463;
+	const VCOMError     kVCOMError_SlaveMasterNotInSameMode   	= 464;
+    const VCOMError     kVCOMError_NoObj                      	= 465;
 
 	// ---------------------------------------------------------------------------------------------------
 	extern "C" VCOMError VWQueryInterface(const VWIID& iid, IVWUnknown** outInterface);
