@@ -1115,9 +1115,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetVideoSourceAt(size_t
 	// Check if this is initialized
 	ASSERTN(kEveryone,fPtr);
 	if( ! fPtr) return kVCOMError_NotInitialized;
-	
-	ASSERTN(kEveryone,fContext);
-	if( ! fContext) return kVCOMError_NotInitialized;
 
 	//------------------------------------------------------------------------------------------
 	// Check the type is right

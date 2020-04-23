@@ -178,7 +178,7 @@ namespace VectorworksMVR
 	//-------------------------------------------------------------------------------------------------------------
 	enum class EScaleHandlingType
 	{
-		ScaleKeepRatio 		= 0, 
+		ScaleKeepRatio 		= 0,
 		ScaleIgnoreRatio 	= 1,
 		KeepSizeCenter 		= 2,
 	};
@@ -186,13 +186,13 @@ namespace VectorworksMVR
 	class DYNAMIC_ATTRIBUTE IMappingDefinition : public IVWUnknown
 	{
 	public:
-        virtual VCOMError VCOM_CALLTYPE		GetGuid(MvrUUID& guid) = 0;
 		virtual MvrString VCOM_CALLTYPE		GetName() = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetGuid(MvrUUID& guid) = 0;
 		
-		virtual VCOMError VCOM_CALLTYPE		GetSizeX(const Uint32& sizeX) = 0;
-		virtual VCOMError VCOM_CALLTYPE		GetSizeY(const Uint32& sizeY) = 0;
-
-		virtual VCOMError VCOM_CALLTYPE		GetScaleHandling(const EScaleHandlingType& scaleHandling) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetSizeX(Uint32& sizeX) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetSizeY(Uint32& sizeY) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetSource(ISource** outSource) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetScaleHandling(EScaleHandlingType& scaleHandling) = 0;
 		
 	};
 	typedef VCOMPtr<IMappingDefinition>	IMappingDefinitionPtr;

@@ -18,8 +18,10 @@ namespace VectorworksMVR
 		virtual MvrString VCOM_CALLTYPE		GetName();
 		virtual VCOMError VCOM_CALLTYPE		GetGuid(MvrUUID& guid);
 
-		virtual VCOMError VCOM_CALLTYPE		GetSizeX(const Uint32& sizeX);
-		virtual VCOMError VCOM_CALLTYPE		GetSizeY(const Uint32& sizeY);
+		virtual VCOMError VCOM_CALLTYPE		GetSizeX(Uint32& sizeX);
+		virtual VCOMError VCOM_CALLTYPE		GetSizeY(Uint32& sizeY);
+		virtual VCOMError VCOM_CALLTYPE		GetSource(ISource** outSource);
+		virtual VCOMError VCOM_CALLTYPE		GetScaleHandling(EScaleHandlingType& scaleHandling);
 		
 		
 		// Implementation

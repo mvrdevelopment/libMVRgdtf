@@ -90,6 +90,14 @@
 #define XML_Val_SourceTypeCITP	        "CITP"
 #define XML_Val_SourceTypeCaptureDevice	"CaptureDevice"
 
+#define XML_Val_MappingDefinitionNodeName           "MappingDefinition"
+#define XML_Val_MappingDefinitionSizeX              "SizeX"
+#define XML_Val_MappingDefinitionSizeY              "SizeY"
+#define XML_Val_MappingDefinitionScaleHandling      "ScaleHandling"
+#define XML_Val_ScaleHandlingTypeScaleKeepRatio	    "ScaleKeepRatio"
+#define XML_Val_ScaleHandlingTypeScaleIgnoreRatio   "ScaleIgnoreRatio"
+#define XML_Val_ScaleHandlingTypeKeepSizeCenter	    "KeepSizeCenter"
+
 #define XML_Val_LayerObjectNodeName	"Layer"
 #define XML_Val_FixtureNodeName		"Fixture"
 #define XML_Val_GroupNodeName		"GroupObject"

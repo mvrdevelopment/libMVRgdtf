@@ -35,20 +35,21 @@ namespace SceneData
 	
 	enum ESceneDataObjectType : short
 	{
-		eFixture		= 0,
-		eLayer			= 1,
-		eGroup			= 2,
-		eSymbol			= 3,
-		eSceneObject	= 4,
-		eFocusPoint		= 5,
-		eTruss			= 6,
-		eVideoScreen	= 7,
-		eSymDef			= -1,
-		eProviderObj	= -2,
-		ePosition		= -3,
-		eGeometryObj	= -4,
-		eClassObject	= -5,
-		eSourceObject	= -6,
+		eFixture					= 0,
+		eLayer						= 1,
+		eGroup						= 2,
+		eSymbol						= 3,
+		eSceneObject				= 4,
+		eFocusPoint					= 5,
+		eTruss						= 6,
+		eVideoScreen				= 7,
+		eSymDef						= -1,
+		eProviderObj				= -2,
+		ePosition					= -3,
+		eGeometryObj				= -4,
+		eClassObject				= -5,
+		eSourceObject				= -6,
+		eMappingDefinitionObject	= -7,
 	};
 	
 	enum class ESearchUuidIn
@@ -281,7 +282,43 @@ namespace SceneData
 	};
 	typedef SceneDataSourceObj* SceneDataSourceObjPtr;
 	typedef std::vector<SceneDataSourceObjPtr>	SceneDataSourceObjArray;
-	
+
+	// ----------------------------------------------------------------------------------------------------------------------------------
+	// SceneDataMappingDefinitionObj
+	class SceneDataMappingDefinitionObj : public SceneDataAuxObj
+	{
+
+	public:
+		SceneDataMappingDefinitionObj(const SceneDataGUID& guid);
+		SceneDataMappingDefinitionObj(const SceneDataGUID& guid, Uint32 sizeX, Uint32 sizeY, SceneDataSourceObjPtr source);
+		virtual ~SceneDataMappingDefinitionObj();
+		
+	private:
+		Uint32					fSizeX;
+		Uint32					fSizeY;
+		SceneDataSourceObjPtr 	fSource;
+		EScaleHandlingType		fScaleHandling;
+		
+	public:
+		virtual Uint32 					GetSizeX();
+		virtual Uint32 					GetSizeY();
+		virtual SceneDataSourceObjPtr	GetSource();
+		virtual EScaleHandlingType		GetScaleHandling();
+
+		virtual void 	SetSizeX(Uint32 sizeX);
+		virtual void 	SetSizeY(Uint32 sizeY);
+		virtual void	SetSource(SceneDataSourceObjPtr source);
+		virtual void	SetScaleHandling(EScaleHandlingType scaleHandling);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual ESceneDataObjectType	GetObjectType();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange);
+
+	};
+	typedef SceneDataMappingDefinitionObj*					SceneDataMappingDefinitionObjPtr;
+	typedef std::vector<SceneDataMappingDefinitionObjPtr>	SceneDataMappingDefinitionObjArray;
 	
 	
 	// ----------------------------------------------------------------------------------------------------------------------------------
