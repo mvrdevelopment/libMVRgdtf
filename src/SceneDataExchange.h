@@ -730,11 +730,12 @@ namespace SceneData
 		// ---------------------------------------------------------------------------------------------------------------------
 		// Create calls
 	public:
-		SceneDataProviderObjPtr		CreateDataProviderObject(const TXString& provider, const TXString& version);
-		SceneDataPositionObjPtr		CreatePositionObject(const SceneDataGUID& guid, const TXString& name);
-		SceneDataSymDefObjPtr		CreateSymDefObject(const SceneDataGUID& guid, const TXString& name);
-		SceneDataClassObjPtr		CreateClassObject(const SceneDataGUID& guid, const TXString& name);
-		SceneDataSymbolObjPtr 		CreateSymbol(const SceneDataGUID& guid, const VWTransformMatrix& offset, SceneDataSymDefObjPtr symDef);
+		SceneDataProviderObjPtr				CreateDataProviderObject(const TXString& provider, const TXString& version);
+		SceneDataPositionObjPtr				CreatePositionObject(const SceneDataGUID& guid, const TXString& name);
+		SceneDataSymDefObjPtr				CreateSymDefObject(const SceneDataGUID& guid, const TXString& name);
+		SceneDataClassObjPtr				CreateClassObject(const SceneDataGUID& guid, const TXString& name);
+		SceneDataSymbolObjPtr 				CreateSymbol(const SceneDataGUID& guid, const VWTransformMatrix& offset, SceneDataSymDefObjPtr symDef);
+		SceneDataMappingDefinitionObjPtr	CreateMappingDefinitionObject(const SceneDataGUID& guid, const TXString& name);
 		
 		
 		SceneDataLayerObjPtr		CreateLayerObject(	const SceneDataGUID& guid,									const TXString& name);
@@ -749,10 +750,11 @@ namespace SceneData
 		// ---------------------------------------------------------------------------------------------------------------------
 		// Read calls
 	private:
-		SceneDataProviderObjPtr		ReadDataProviderObject(	const SceneDataGUID& guid,const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
-		SceneDataPositionObjPtr		ReadPositionObject(		const IXMLFileNodePtr& node);
-		SceneDataSymDefObjPtr		ReadSymDefObject(		const IXMLFileNodePtr& node);
-		SceneDataClassObjPtr		ReadClassObject(		const IXMLFileNodePtr& node);
+		SceneDataProviderObjPtr				ReadDataProviderObject(		const SceneDataGUID& guid,const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
+		SceneDataPositionObjPtr				ReadPositionObject(			const IXMLFileNodePtr& node);
+		SceneDataSymDefObjPtr				ReadSymDefObject(			const IXMLFileNodePtr& node);
+		SceneDataClassObjPtr				ReadClassObject(			const IXMLFileNodePtr& node);
+		SceneDataMappingDefinitionObjPtr	ReadMappingDefinitionObject(const IXMLFileNodePtr& node);
 		
 		
 		SceneDataLayerObjPtr		ReadLayerObject(		const SceneDataGUID& guid,const IXMLFileNodePtr& node);

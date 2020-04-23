@@ -736,7 +736,6 @@ void SceneDataMappingDefinitionObj::OnReadFromNode(const IXMLFileNodePtr& pNode,
 		GdtfConverter::ConvertEScaleHandlingType(value, pNode, fScaleHandling);	
 	}
 
-
 }
 
 TXString SceneDataMappingDefinitionObj::GetNodeName()
@@ -2040,6 +2039,39 @@ SceneDataClassObjPtr SceneDataExchange::ReadClassObject(const IXMLFileNodePtr& n
 	fClasses.push_back(newClass);
 	
 	return newClass;
+}
+
+SceneDataMappingDefinitionObjPtr SceneDataExchange::CreateMappingDefinitionObject(const SceneDataGUID& guid, const TXString& name)
+{
+	for (SceneDataAuxObjPtr auxObj : fAuxDataObjs)
+	{
+		if (auxObj->getGuid() == guid)
+		{
+			ASSERTN(kEveryone, auxObj->GetObjectType() == eMappingDefinitionObject);
+			SceneDataMappingDefinitionObjPtr existingMappingDefinition = dynamic_cast<SceneDataMappingDefinitionObjPtr>(auxObj);
+			if (existingMappingDefinition) { return existingMappingDefinition; }
+			
+		}
+	}
+	SceneDataMappingDefinitionObjPtr newMappingDefinition = new SceneDataMappingDefinitionObj(guid);
+	newMappingDefinition->setName(name);
+	
+	fAuxDataObjs.push_back(newMappingDefinition);
+	
+	return newMappingDefinition;
+}
+
+SceneDataMappingDefinitionObjPtr SceneDataExchange::ReadMappingDefinitionObject(const IXMLFileNodePtr& node)
+{
+	TXString uuid;
+	node->GetNodeAttributeValue(XML_Val_GuidAttrName, uuid);
+	
+	SceneDataMappingDefinitionObjPtr newMappingDefinition = new SceneDataMappingDefinitionObj(SceneDataGUID(uuid));
+	newMappingDefinition->ReadFromNode(node, this);
+	
+	fAuxDataObjs.push_back(newMappingDefinition);
+
+	return newMappingDefinition;
 }
 
 SceneDataGroupObjPtr SceneDataExchange::CreateGroupObject(const SceneDataGUID& guid, const VWTransformMatrix& offset, SceneDataGroupObjPtr addToContainer)

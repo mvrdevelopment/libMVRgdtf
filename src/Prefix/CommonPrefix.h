@@ -113,7 +113,7 @@
 
 #define XML_Val_NameAttrName		"name"
 #define XML_Val_GuidAttrName		"uuid"
-#define XML_Val_ClassingNodeName		"Classing"
+#define XML_Val_ClassingNodeName	"Classing"
 
 #define XML_Val_FixtureGDTFSpec		"GDTFSpec"
 #define XML_Val_FixtureDMXMode		"GDTFMode"
