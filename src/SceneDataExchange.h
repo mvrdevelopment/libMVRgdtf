@@ -254,7 +254,7 @@ namespace SceneData
 		
 	public:
 		SceneDataSourceObj(const SceneDataGUID& guid);
-		SceneDataSourceObj(const SceneDataGUID& guid, TXString value, TXString linkedGeometry, ESourceType type);
+		SceneDataSourceObj(const SceneDataGUID& guid, const TXString& value, const TXString& linkedGeometry, ESourceType type);
 		virtual ~SceneDataSourceObj();
 
 	private:
@@ -263,9 +263,9 @@ namespace SceneData
 		ESourceType fType;
 		
 	public:
-		virtual TXString 	GetValue();
-		virtual TXString 	GetLinkedGeometry();
-		virtual ESourceType	GetType();
+		virtual const TXString& 	GetValue();
+		virtual const TXString& 	GetLinkedGeometry();
+		virtual ESourceType			GetType();
 
 		virtual void 		SetValue(TXString value);
 		virtual void 		SetLinkedGeometry(TXString linkedGeometry);
@@ -586,7 +586,7 @@ namespace SceneData
 
 	public:
 		virtual SceneDataSourceObjArray GetSourceArray();
-		virtual void 					AddSource(TXString value, TXString linkedGeometry, ESourceType type);
+		virtual void 					AddSource(const TXString& value, const TXString& linkedGeometry, ESourceType type);
 
 	private:
 		virtual	TXString				GetNodeName();

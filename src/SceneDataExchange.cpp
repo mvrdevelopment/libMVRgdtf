@@ -528,11 +528,13 @@ SceneDataSourceObj::SceneDataSourceObj(const SceneDataGUID& guid) : SceneDataObj
 	
 }
 
-SceneDataSourceObj::SceneDataSourceObj(const SceneDataGUID& guid, TXString value, TXString linkedGeometry, ESourceType type) : SceneDataObj(guid)
+SceneDataSourceObj::SceneDataSourceObj(const SceneDataGUID& guid, const TXString& value, const TXString& linkedGeometry, ESourceType type) : SceneDataObj(guid)
 {
 	fValue 			= value;
 	fLinkedGeometry = linkedGeometry;
 	fType 			= type;
+	const char* v = value.GetCharPtr();
+	const char* l = linkedGeometry.GetCharPtr();
 }
 
 SceneDataSourceObj::~SceneDataSourceObj()
@@ -540,12 +542,12 @@ SceneDataSourceObj::~SceneDataSourceObj()
 	
 }
 
-TXString SceneDataSourceObj::GetValue()
+const TXString& SceneDataSourceObj::GetValue()
 {
 	return fValue;
 }
 
-TXString SceneDataSourceObj::GetLinkedGeometry()
+const TXString& SceneDataSourceObj::GetLinkedGeometry()
 {
 	return fLinkedGeometry;
 }
@@ -1520,9 +1522,11 @@ SceneDataSourceObjArray SceneDataVideoScreenObj::GetSourceArray()
 	return fSources;
 }
 
-void SceneDataVideoScreenObj::AddSource(TXString value, TXString linkedGeometry, ESourceType type)
+void SceneDataVideoScreenObj::AddSource(const TXString& value, const TXString& linkedGeometry, ESourceType type)
 {
 	SceneDataGUID guid(eNoGuid, "Just to initialize");
+	const char* v = value.GetCharPtr();
+	const char* l = linkedGeometry.GetCharPtr();
 	SceneDataSourceObjPtr source = new SceneDataSourceObj(guid, value, linkedGeometry, type);
 	fSources.push_back(source);
 }
