@@ -657,9 +657,20 @@ void SceneDataMappingDefinitionObj::SetSizeY(Uint32 sizeY)
 	fSizeY = sizeY;
 }
 
-void SceneDataMappingDefinitionObj::SetSource(SceneDataSourceObjPtr source)
+void SceneDataMappingDefinitionObj::SetSource(const TXString& value, const TXString& linkedGeometry, ESourceType type)
 {
-	fSource = source;
+	if(!fSource)
+	{
+		SceneDataGUID guid(eNoGuid, "Just to initialize");
+		SceneDataSourceObjPtr source = new SceneDataSourceObj(guid, value, linkedGeometry, type);
+		fSource = source;
+	} 
+	else
+	{
+		fSource->SetValue(value);
+		fSource->SetLinkedGeometry(linkedGeometry);
+		fSource->SetType(type);
+	}
 }
 
 void SceneDataMappingDefinitionObj::SetScaleHandling(EScaleHandlingType scaleHandling)
@@ -2432,8 +2443,6 @@ bool SceneDataExchange::WriteXml(const IFolderIdentifierPtr& folder, IXMLFileIOB
 				}
 				
 				
-				
-				
 				// Create Child Node for AuxData
 				IXMLFileNodePtr pAuxDataNode;
 				if ( VCOM_SUCCEEDED( pSceneNode->CreateChildNode( XML_Val_AuxDataNodeName, & pAuxDataNode ) ) )
@@ -2636,9 +2645,10 @@ void SceneDataExchange::ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xml
 							
 							// ---------------------------------------------------------------------------
 							// Do stuff with Layer
-							if (nodeName == XML_Val_SymDefNodeName)		{ ReadSymDefObject(auxDataObj);		}
-							if (nodeName == XML_Val_PositionNodeName)	{ ReadPositionObject(auxDataObj);	}
-							if (nodeName == XML_Val_ClassNodeName)		{ ReadClassObject(auxDataObj);		}
+							if (nodeName == XML_Val_SymDefNodeName)				{ ReadSymDefObject(auxDataObj);		}
+							if (nodeName == XML_Val_PositionNodeName)			{ ReadPositionObject(auxDataObj);	}
+							if (nodeName == XML_Val_ClassNodeName)				{ ReadClassObject(auxDataObj);		}
+							if (nodeName == XML_Val_MappingDefinitionNodeName)	{ ReadMappingDefinitionObject(auxDataObj); }
 							
 							// ---------------------------------------------------------------------------
 							// Step to the next node

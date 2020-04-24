@@ -149,28 +149,14 @@ VectorworksMVR::VCOMError VectorworksMVR::CMappingDefinitionImpl::SetSizeY(Uint3
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CMappingDefinitionImpl::SetSource(ISource* source)
+VectorworksMVR::VCOMError VectorworksMVR::CMappingDefinitionImpl::SetSource(MvrString value, MvrString linkedGeometry, ESourceType type)
 {	
-	// ------------------------------------------------------------------------------------------
-	// Check the incoming object
-	if (!source) { return kVCOMError_InvalidArg; }
-	
-	// ------------------------------------------------------------------------------------------
-	// Cast to object
-	CSourceImpl* pSource = dynamic_cast<CSourceImpl* >(source);
-	
-	ASSERTN(kEveryone, pSource != nullptr);
-	if ( ! pSource) { return kVCOMError_Failed;	}
-	
-	//
-	SceneData::SceneDataSourceObjPtr scSource = nullptr;
-	pSource->GetPointer(scSource);
-	
-	ASSERTN(kEveryone, scSource != nullptr);
-	if ( ! scSource) { return kVCOMError_InvalidArg; }
-	
-	fPtr->SetSource(scSource);
-	
+	// Check if this is initialized
+	ASSERTN(kEveryone, fPtr);
+	if( !fPtr) return kVCOMError_NotInitialized;
+
+	fPtr->SetSource(value, linkedGeometry, type);
+
 	return kVCOMError_NoError;
 }
 

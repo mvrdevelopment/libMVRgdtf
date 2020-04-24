@@ -25,7 +25,7 @@ namespace VectorworksMVR
 
 		virtual VCOMError VCOM_CALLTYPE		SetSizeX(Uint32 sizeX);
 		virtual VCOMError VCOM_CALLTYPE		SetSizeY(Uint32 sizeY);
-		virtual VCOMError VCOM_CALLTYPE		SetSource(ISource* source);
+		virtual VCOMError VCOM_CALLTYPE		SetSource(MvrString value, MvrString linkedGeometry, ESourceType type);
 		virtual VCOMError VCOM_CALLTYPE		SetScaleHandling(EScaleHandlingType scaleHandling);
 		
 		

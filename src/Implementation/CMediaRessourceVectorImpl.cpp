@@ -271,6 +271,51 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateClass
 	return kVCOMError_NoError;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateMappingDefinitionObject(const MvrUUID& guid,	MvrString name,	IMappingDefinition** outMapDef)
+{
+	//---------------------------------------------------------------------------
+	// Create the obj
+	VWFC::Tools::VWUUID	uuid(guid.a,guid.b,guid.c,guid.d);
+	TXString			nameStr(name);
+	
+	SceneData::SceneDataMappingDefinitionObjPtr scMapDef = fExchangeObj.CreateMappingDefinitionObject(uuid, nameStr);
+	
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CMappingDefinitionImpl* pMappingDefinition = nullptr;
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_MappingDefinitionObj, (IVWUnknown**) & pMappingDefinition)))
+	{
+		// Check Casting
+		CMappingDefinitionImpl* pResultInterface = dynamic_cast<CMappingDefinitionImpl* >(pMappingDefinition);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(scMapDef);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incoming Object
+	if (*outMapDef)
+	{
+		(*outMapDef)->Release();
+		*outMapDef = NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*outMapDef = pMappingDefinition;
+	
+	return kVCOMError_NoError;
+}
+
 VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateLayerObject(	const MvrUUID& guid, MvrString name,								ISceneObj**		outLayerObj)
 {
 	//---------------------------------------------------------------------------
@@ -1045,6 +1090,79 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetClassAt(
 	}
 	
 	DSTOP((kEveryone,"Get Position is out of bounds!"));
+	return kVCOMError_Failed;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetMappingDefinitionCount(size_t& outCount)
+{
+	outCount = 0;
+	for (SceneData::SceneDataAuxObjPtr auxObj : fExchangeObj.GetAuxDataObjects())
+	{
+		if (auxObj->GetObjectType() == SceneData::ESceneDataObjectType::eMappingDefinitionObject) { outCount++; }
+	}
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetMappingDefinitionAt(size_t at, IMappingDefinition** outMapDef)
+{
+	// Prepare a var for local counting
+	size_t mapDefCount = 0;
+	
+	// Now cycle thru aux data
+	for (SceneData::SceneDataAuxObjPtr auxObj : fExchangeObj.GetAuxDataObjects())
+	{
+		if (auxObj->GetObjectType() == SceneData::ESceneDataObjectType::eMappingDefinitionObject)
+		{
+			if (at == mapDefCount)
+			{
+				// Do the cast
+				SceneData::SceneDataMappingDefinitionObjPtr scMapDef = dynamic_cast<SceneData::SceneDataMappingDefinitionObjPtr>(auxObj);
+				ASSERTN(kEveryone, scMapDef != nullptr);
+				if (!scMapDef) { return kVCOMError_Failed; }
+				
+				
+				//---------------------------------------------------------------------------
+				// Initialize Object
+				CMappingDefinitionImpl* pMapDef = nullptr;
+				
+				// Query Interface
+				if (VCOM_SUCCEEDED(VWQueryInterface(IID_MappingDefinitionObj, (IVWUnknown**) & pMapDef)))
+				{
+					// Check Casting
+					CMappingDefinitionImpl* pResultInterface = dynamic_cast<CMappingDefinitionImpl* >(pMapDef);
+					if (pResultInterface)
+					{
+						pResultInterface->SetPointer(scMapDef);
+					}
+					else
+					{
+						pResultInterface->Release();
+						pResultInterface = nullptr;
+						return kVCOMError_NoInterface;
+					}
+				}
+				
+				//---------------------------------------------------------------------------
+				// Check Incomming Object
+				if (*outMapDef)
+				{
+					(*outMapDef)->Release();
+					*outMapDef		= NULL;
+				}
+				
+				//---------------------------------------------------------------------------
+				// Set Out Value
+				*outMapDef		= pMapDef;
+				return kVCOMError_NoError;
+			}
+			
+			// Increase position count
+			mapDefCount++;
+		}
+	}
+	
+	DSTOP((kEveryone,"GetMappingDefinitionAt is out of bounds!"));
 	return kVCOMError_Failed;
 }
 

@@ -307,7 +307,7 @@ namespace SceneData
 
 		virtual void 	SetSizeX(Uint32 sizeX);
 		virtual void 	SetSizeY(Uint32 sizeY);
-		virtual void	SetSource(SceneDataSourceObjPtr source);
+		virtual void	SetSource(const TXString& value, const TXString& linkedGeometry, ESourceType type);
 		virtual void	SetScaleHandling(EScaleHandlingType scaleHandling);
 
 	protected:

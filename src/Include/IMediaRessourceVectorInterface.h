@@ -196,7 +196,7 @@ namespace VectorworksMVR
 
 		virtual VCOMError VCOM_CALLTYPE		SetSizeX(Uint32 sizeX) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetSizeY(Uint32 sizeY) = 0;
-		virtual VCOMError VCOM_CALLTYPE		SetSource(ISource* source) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetSource(MvrString value, MvrString linkedGeometry, ESourceType type) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetScaleHandling(EScaleHandlingType scaleHandling) = 0;
 		
 	};
@@ -265,7 +265,6 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		SetGobo(MvrString gobo) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetGoboRotation(double rotation) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetCastShadow(bool castShadow) = 0;
-
 
 		// Video Screen
 		virtual VCOMError VCOM_CALLTYPE		AddVideoSource(MvrString value, MvrString linkedGeometry, ESourceType type) = 0;
