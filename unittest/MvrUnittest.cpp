@@ -116,6 +116,23 @@ void MvrUnittest::WriteFile()
         IClassPtr clas2 = nullptr;
         __checkVCOM(mvrWrite->CreateClassObject(MvrUUID(122774618, 11892014, 669397348, 947530057), "My second Class", & clas2));
 
+		IMappingDefinitionPtr mapdef1 = nullptr;
+        if(__checkVCOM(mvrWrite->CreateMappingDefinitionObject(MvrUUID(1808353427, 683171502, 518343034, 0000000002), "My MappingDefinition1", &mapdef1)))
+		{
+			__checkVCOM(mapdef1->SetSizeX(1920));
+			__checkVCOM(mapdef1->SetSizeY(1080));
+			__checkVCOM(mapdef1->SetSource("mapDef1SourceValue", "mapDef1SourceLinkedGeo", ESourceType::File));
+			__checkVCOM(mapdef1->SetScaleHandling(EScaleHandlingType::KeepSizeCenter));
+		}
+
+		IMappingDefinitionPtr mapdef2 = nullptr;
+        if(__checkVCOM(mvrWrite->CreateMappingDefinitionObject(MvrUUID(1808353427, 683171502, 518343034, 0000000003), "My MappingDefinition2", &mapdef2)))
+		{
+			__checkVCOM(mapdef2->SetSizeX(1280));
+			__checkVCOM(mapdef2->SetSizeY(720));
+			__checkVCOM(mapdef2->SetSource("mapDef2SourceValue", "mapDef2SourceLinkedGeo", ESourceType::CaptureDevice));
+		}
+
         //------------------------------------------------------------------------------------------------
         // Now write content
         ISceneObjPtr layer1 = nullptr;
@@ -245,7 +262,9 @@ void MvrUnittest::ReadFile()
 		MvrUUID fixtureUUID1	(1808353427, 683171502, 518343034, 1766902383);
 		MvrUUID fixtureUUID2	(1136161871, 1699151080, 751939975, 1748783014);
 		MvrUUID fixtureUUID3	(1136161871, 1699151080, 751939975, 1748773014);
-		MvrUUID videoSreenUUID	(1808353427, 683171502, 518343034, 0000000001);
+		MvrUUID videoScreenUUID	(1808353427, 683171502, 518343034, 0000000001);
+		MvrUUID mappingDefinition1UUID(1808353427, 683171502, 518343034, 0000000002);
+		MvrUUID mappingDefinition2UUID(1808353427, 683171502, 518343034, 0000000003);
 		MvrUUID resultUUID		(0,0,0,0);
 
         size_t count = 0;
@@ -590,11 +609,10 @@ void MvrUnittest::ReadFile()
 						{
 							checkifEqual("Check Source1 value", 			source1->GetValue(), 			"myValue1");
 							checkifEqual("Check Source1 linkedGeometry", 	source1->GetLinkedGeometry(), 	"myLinkedGeometry1");
+
 							ESourceType type;
-							if(__checkVCOM(source1->GetType(type)))
-							{
-								checkifEqual("Check Source1 type", (size_t)type, (size_t)ESourceType::File);
-							}
+							__checkVCOM(source1->GetType(type));
+							checkifEqual("Check Source1 type", (size_t)type, (size_t)ESourceType::File);
 						}
 
 						ISourcePtr source2;
@@ -602,11 +620,10 @@ void MvrUnittest::ReadFile()
 						{
 							checkifEqual("Check Source2 value", 			source2->GetValue(), 			"myValue2");
 							checkifEqual("Check Source2 linkedGeometry", 	source2->GetLinkedGeometry(), 	"myLinkedGeometry2");
+
 							ESourceType type;
-							if(__checkVCOM(source2->GetType(type)))
-							{
-								checkifEqual("Check Source2 type", (size_t)type, (size_t)ESourceType::CITP);
-							}
+							__checkVCOM(source2->GetType(type));
+							checkifEqual("Check Source2 type", (size_t)type, (size_t)ESourceType::CITP);
 						}
 					}
 				}
@@ -719,15 +736,82 @@ void MvrUnittest::ReadFile()
 
 			if(c==0)
 			{
-			checkifEqual("GetClassName", clas->GetName(), "My first Class");
-			checkifEqual("GetClassUUID", resultUUID, classUUID1);
+				checkifEqual("GetClassName", clas->GetName(), "My first Class");
+				checkifEqual("GetClassUUID", resultUUID, classUUID1);
 			}
 			else if(c==1)
 			{
-			checkifEqual("GetClassName", clas->GetName(), "My second Class");
-			checkifEqual("GetClassUUID", resultUUID, classUUID2);
+				checkifEqual("GetClassName", clas->GetName(), "My second Class");
+				checkifEqual("GetClassUUID", resultUUID, classUUID2);
 			}
 		}
+
+		size_t mapDefCount = 0;
+		__checkVCOM(mvrRead->GetMappingDefinitionCount(mapDefCount));
+		
+		checkifEqual("GetMappingDefinitionCount", mapDefCount, (size_t)2);
+		
+		IMappingDefinitionPtr mapDef1 = nullptr;
+		if(__checkVCOM(mvrRead->GetMappingDefinitionAt(0, &mapDef1)))
+		{
+			__checkVCOM(mapDef1->GetGuid(resultUUID));
+			checkifEqual("GetMapDefUUID", resultUUID, mappingDefinition1UUID);
+
+			Uint32 sizeX = 0;
+			__checkVCOM(mapDef1->GetSizeX(sizeX));
+			checkifEqual("GetSizeX", (size_t)sizeX, (size_t)1920);
+
+			Uint32 sizeY = 0;
+			__checkVCOM(mapDef1->GetSizeY(sizeY));
+			checkifEqual("GetSizeY", (size_t)sizeY, (size_t)1080);
+
+			EScaleHandlingType type;
+			__checkVCOM(mapDef1->GetScaleHandling(type));
+			checkifEqual("GetScaleHandling", (size_t)type, (size_t)EScaleHandlingType::KeepSizeCenter);
+
+			ISourcePtr source = nullptr;
+			if(__checkVCOM(mapDef1->GetSource(&source)))
+			{
+				checkifEqual("Check mapDef1Source value", 			source->GetValue(), 			"mapDef1SourceValue");
+				checkifEqual("Check mapDef1Source linkedGeometry", 	source->GetLinkedGeometry(), 	"mapDef1SourceLinkedGeo");
+
+				ESourceType type;
+				__checkVCOM(source->GetType(type));
+				checkifEqual("Check Source1 type", (size_t)type, (size_t)ESourceType::File);
+			}
+		}
+
+		IMappingDefinitionPtr mapDef2 = nullptr;
+		if(__checkVCOM(mvrRead->GetMappingDefinitionAt(1, &mapDef2)))
+		{
+			__checkVCOM(mapDef2->GetGuid(resultUUID));
+			checkifEqual("GetMapDefUUID", resultUUID, mappingDefinition2UUID);
+
+			Uint32 sizeX = 0;
+			__checkVCOM(mapDef2->GetSizeX(sizeX));
+			checkifEqual("GetSizeX", (size_t)sizeX, (size_t)1280);
+
+			Uint32 sizeY = 0;
+			__checkVCOM(mapDef2->GetSizeY(sizeY));
+			checkifEqual("GetSizeY", (size_t)sizeY, (size_t)720);
+
+			EScaleHandlingType type;
+			__checkVCOM(mapDef2->GetScaleHandling(type));
+			checkifEqual("GetScaleHandling", (size_t)type, (size_t)EScaleHandlingType::ScaleKeepRatio);
+
+			ISourcePtr source = nullptr;
+			if(__checkVCOM(mapDef2->GetSource(&source)))
+			{
+				checkifEqual("Check mapDef2Source value", 			source->GetValue(), 			"mapDef2SourceValue");
+				checkifEqual("Check mapDef2Source linkedGeometry", 	source->GetLinkedGeometry(), 	"mapDef2SourceLinkedGeo");
+
+				ESourceType type;
+				__checkVCOM(source->GetType(type));
+				checkifEqual("Check mapDef2Source type", (size_t)type, (size_t)ESourceType::CaptureDevice);
+			}
+		}
+
+		
 
     }
 }
