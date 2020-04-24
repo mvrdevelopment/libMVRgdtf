@@ -201,6 +201,27 @@ namespace VectorworksMVR
 		
 	};
 	typedef VCOMPtr<IMappingDefinition>	IMappingDefinitionPtr;
+
+	//-------------------------------------------------------------------------------------------------------------
+	class DYNAMIC_ATTRIBUTE IMapping : public IVWUnknown
+	{
+	public:
+		virtual VCOMError VCOM_CALLTYPE		GetLinkedDefUuid(MvrUUID& linkedDefUuid) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetUx(Uint32& outValue) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetUy(Uint32& outValue) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetOx(Uint32& outValue) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetOy(Uint32& outValue) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetRz(double& outValue) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE		SetLinkedDefUuid(MvrUUID linkedDefUuid) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetUx(Uint32 value) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetUy(Uint32 value) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetOx(Uint32 value) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetOy(Uint32 value) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetRz(double value) = 0;
+		
+	};
+	typedef VCOMPtr<IMapping>	IMappingPtr;
 	
 	//-------------------------------------------------------------------------------------------------------------
 	enum class ESceneObjType

@@ -50,6 +50,7 @@ namespace SceneData
 		eClassObject				= -5,
 		eSourceObject				= -6,
 		eMappingDefinitionObject	= -7,
+		eMappingObject				= -8,
 	};
 	
 	enum class ESearchUuidIn
@@ -76,7 +77,7 @@ namespace SceneData
 		
 		
 	private:
-		Tools::VWUUID			_uuid;
+		Tools::VWUUID		_uuid;
 		ESceneDataGUIDType	_type;
 		TXString			_typeEntry;
 		
@@ -254,8 +255,8 @@ namespace SceneData
 	{
 		
 	public:
-		SceneDataSourceObj(const SceneDataGUID& guid);
-		SceneDataSourceObj(const SceneDataGUID& guid, const TXString& value, const TXString& linkedGeometry, ESourceType type);
+		SceneDataSourceObj();
+		SceneDataSourceObj(const TXString& value, const TXString& linkedGeometry, ESourceType type);
 		virtual ~SceneDataSourceObj();
 
 	private:
@@ -319,6 +320,50 @@ namespace SceneData
 	};
 	typedef SceneDataMappingDefinitionObj*					SceneDataMappingDefinitionObjPtr;
 	typedef std::vector<SceneDataMappingDefinitionObjPtr>	SceneDataMappingDefinitionObjArray;
+
+	// ----------------------------------------------------------------------------------------------------------------------------------
+	// SceneDataMappingObj
+	class SceneDataMappingObj : public SceneDataObj
+	{
+
+	public:
+		SceneDataMappingObj();
+		SceneDataMappingObj(const SceneDataGUID& linkedDefUuid);
+		virtual ~SceneDataMappingObj();
+		
+	private:
+
+		SceneDataGUID	fLinkedDefUuid;
+		Uint32			fUx;
+		Uint32			fUy;
+		Uint32			fOx;
+		Uint32			fOy;
+		double			fRz;
+		
+	public:
+		virtual SceneDataGUID	GetLinkedDefUuid();
+		virtual Uint32 			GetUx();
+		virtual Uint32 			GetUy();
+		virtual Uint32 			GetOx();
+		virtual Uint32 			GetOy();
+		virtual double 			GetRz();
+
+		virtual void			SetLinkedDefUuid(const SceneDataGUID& linkedDefUuid);
+		virtual void 			SetUx(Uint32 value);
+		virtual void 			SetUy(Uint32 value);
+		virtual void 			SetOx(Uint32 value);
+		virtual void 			SetOy(Uint32 value);
+		virtual void 			SetRz(double value);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual ESceneDataObjectType	GetObjectType();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange);
+
+	};
+	typedef SceneDataMappingObj*				SceneDataMappingObjPtr;
+	typedef std::vector<SceneDataMappingObjPtr>	SceneDataMappingObjArray;
 	
 	
 	// ----------------------------------------------------------------------------------------------------------------------------------

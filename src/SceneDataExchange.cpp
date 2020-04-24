@@ -521,12 +521,12 @@ ESceneDataObjectType SceneDataClassObj::GetObjectType()
 
 // ----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataSourceObj
-SceneDataSourceObj::SceneDataSourceObj(const SceneDataGUID& guid) : SceneDataObj(guid)
+SceneDataSourceObj::SceneDataSourceObj() : SceneDataObj(SceneDataGUID(eNoGuid,""))
 {
 	
 }
 
-SceneDataSourceObj::SceneDataSourceObj(const SceneDataGUID& guid, const TXString& value, const TXString& linkedGeometry, ESourceType type) : SceneDataObj(guid)
+SceneDataSourceObj::SceneDataSourceObj(const TXString& value, const TXString& linkedGeometry, ESourceType type) : SceneDataObj(SceneDataGUID(eNoGuid,""))
 {
 	fValue 			= value;
 	fLinkedGeometry = linkedGeometry;
@@ -661,9 +661,7 @@ void SceneDataMappingDefinitionObj::SetSource(const TXString& value, const TXStr
 {
 	if(!fSource)
 	{
-		SceneDataGUID guid(eNoGuid, "Just to initialize");
-		SceneDataSourceObjPtr source = new SceneDataSourceObj(guid, value, linkedGeometry, type);
-		fSource = source;
+		fSource = new SceneDataSourceObj(value, linkedGeometry, type);
 	} 
 	else
 	{
@@ -732,8 +730,7 @@ void SceneDataMappingDefinitionObj::OnReadFromNode(const IXMLFileNodePtr& pNode,
 	{
 		if(!fSource)
 		{
-			SceneDataGUID guid(eNoGuid, "Just to initialize");
-			fSource = new SceneDataSourceObj(guid);
+			fSource = new SceneDataSourceObj();
 		}
 		
 		fSource->ReadFromNode(pSourceNode, exchange);
@@ -757,6 +754,150 @@ TXString SceneDataMappingDefinitionObj::GetNodeName()
 ESceneDataObjectType SceneDataMappingDefinitionObj::GetObjectType()
 {
 	return ESceneDataObjectType::eMappingDefinitionObject;
+}
+
+// ----------------------------------------------------------------------------------------------------------------------------------
+// SceneDataMappingObj
+SceneDataMappingObj::SceneDataMappingObj() : SceneDataObj(SceneDataGUID(eNoGuid,""))
+{
+	
+}
+
+SceneDataMappingObj::SceneDataMappingObj(const SceneDataGUID& linkedDefUuid) : SceneDataObj(SceneDataGUID(eNoGuid,""))
+{
+	fLinkedDefUuid = linkedDefUuid;
+}
+
+SceneDataMappingObj::~SceneDataMappingObj()
+{
+	
+}
+
+SceneDataGUID SceneDataMappingObj::GetLinkedDefUuid()
+{
+	return fLinkedDefUuid;
+}
+
+Uint32 SceneDataMappingObj::GetUx()
+{
+	return fUx;
+}
+
+Uint32 SceneDataMappingObj::GetUy()
+{
+	return fUy;
+}
+
+Uint32 SceneDataMappingObj::GetOx()
+{
+	return fOx;
+}
+
+Uint32 SceneDataMappingObj::GetOy()
+{
+	return fOy;
+}
+
+double SceneDataMappingObj::GetRz()
+{
+	return fRz;
+}
+
+void SceneDataMappingObj::SetLinkedDefUuid(const SceneDataGUID& linkedDefUuid)
+{
+	fLinkedDefUuid = linkedDefUuid;
+}
+
+void SceneDataMappingObj::SetUx(Uint32 value)
+{
+	fUx = value;
+}
+
+void SceneDataMappingObj::SetUy(Uint32 value)
+{
+	fUy = value;
+}
+
+void SceneDataMappingObj::SetOx(Uint32 value)
+{
+	fOx = value;
+}
+
+void SceneDataMappingObj::SetOy(Uint32 value)
+{
+	fOy = value;
+}
+
+void SceneDataMappingObj::SetRz(double value)
+{
+	fRz = value;
+}
+
+
+void SceneDataMappingObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
+{
+	// Call parent
+	SceneDataObj::OnPrintToFile(pNode, exchange);
+
+	// Set attributes
+	pNode->SetNodeAttributeValue(XML_Val_MappingLinkedDefUuid, fLinkedDefUuid);
+
+	// Create the children node
+	IXMLFileNodePtr pUxNode;
+	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_Val_MappingUx, &pUxNode)))
+	{
+		pUxNode->SetNodeValue(GdtfConverter::ConvertInteger(fUx));
+	}
+
+	IXMLFileNodePtr pUyNode;
+	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_Val_MappingUy, &pUyNode)))
+	{
+		pUyNode->SetNodeValue(GdtfConverter::ConvertInteger(fUy));
+	}
+
+	IXMLFileNodePtr pOxNode;
+	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_Val_MappingOx, &pOxNode)))
+	{
+		pOxNode->SetNodeValue(GdtfConverter::ConvertInteger(fOx));
+	}
+
+	IXMLFileNodePtr pOyNode;
+	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_Val_MappingOy, &pOyNode)))
+	{
+		pOyNode->SetNodeValue(GdtfConverter::ConvertInteger(fOy));
+	}
+
+	IXMLFileNodePtr pRzNode;
+	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_Val_MappingRz, &pRzNode)))
+	{
+		pRzNode->SetNodeValue(GdtfConverter::ConvertDouble(fRz));
+	}
+
+	
+}
+
+void SceneDataMappingObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
+{
+	// Call parent
+	SceneDataObj::OnReadFromNode(pNode, exchange);
+
+	pNode->GetNodeAttributeValue(XML_Val_SourceLinkedGeometry, fLinkedGeometry);
+
+	TXString sourceTypeStr;
+	pNode->GetNodeAttributeValue(XML_Val_SourceType, sourceTypeStr);
+	GdtfConverter::ConvertESourceType(sourceTypeStr, pNode, fType);
+	
+	pNode->GetNodeValue(fValue);
+}
+
+TXString SceneDataMappingObj::GetNodeName()
+{
+	return TXString(XML_Val_MappingNodeName);
+}
+
+ESceneDataObjectType SceneDataMappingObj::GetObjectType()
+{
+	return ESceneDataObjectType::eMappingObject;
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------------
@@ -1670,9 +1811,7 @@ void SceneDataVideoScreenObj::SetVideoSource(const TXString& value, const TXStri
 {
 	if(!fSource)
 	{
-		SceneDataGUID guid(eNoGuid, "Just to initialize");
-		SceneDataSourceObjPtr source = new SceneDataSourceObj(guid, value, linkedGeometry, type);
-		fSource = source;
+		fSource = new SceneDataSourceObj(value, linkedGeometry, type);
 	} 
 	else
 	{
@@ -1718,9 +1857,9 @@ void SceneDataVideoScreenObj::OnReadFromNode(const IXMLFileNodePtr& pNode, Scene
 		{
 			if(!fSource)
 			{
-				SceneDataGUID guid(eNoGuid, "Just to initialize");
-				fSource = new SceneDataSourceObj(guid);
+				fSource = new SceneDataSourceObj();
 			}
+
 			fSource->ReadFromNode(pSourceNode, exchange);
 		}
 	}

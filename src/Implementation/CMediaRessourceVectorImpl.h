@@ -13,6 +13,7 @@
 #include "CClassImpl.h"
 
 #include "CSourceImpl.h"
+#include "CMappingImpl.h"
 
 namespace VectorworksMVR
 {
