@@ -1071,7 +1071,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetCastShadow(bool cast
 
 //------------------------------------------------------------------------------------------------------------------------------------------
 // Videos Screen
-VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::AddVideoSource(MvrString value, MvrString linkedGeometry, ESourceType type)
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetVideoSource(MvrString value, MvrString linkedGeometry, ESourceType type)
 {
 	// Check if this is initialized
 	ASSERTN(kEveryone,fPtr);
@@ -1085,31 +1085,12 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::AddVideoSource(MvrStrin
 	SceneData::SceneDataVideoScreenObjPtr videoScreen = dynamic_cast<SceneData::SceneDataVideoScreenObjPtr>(fPtr);
 	if( ! videoScreen) return kVCOMError_NoVideoScreenObj;
 
-	videoScreen->AddSource(value, linkedGeometry, type);
+	videoScreen->SetVideoSource(value, linkedGeometry, type);
 
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetVideoSourceCount(size_t& outCount)
-{
-	// Check if this is initialized
-	ASSERTN(kEveryone,fPtr);
-	if( ! fPtr) return kVCOMError_NotInitialized;
-	
-	// Check the type is right
-	ASSERTN(kEveryone,fType == ESceneObjType::VideoScreen);
-	if( fType != ESceneObjType::VideoScreen) return kVCOMError_NoVideoScreenObj;
-	
-	// Try to cast
-	SceneData::SceneDataVideoScreenObjPtr videoScreen = dynamic_cast<SceneData::SceneDataVideoScreenObjPtr>(fPtr);
-	if( ! videoScreen) return kVCOMError_NoVideoScreenObj;
-	
-	outCount = videoScreen->GetSourceArray().size();
-	
-	return kVCOMError_NoError;
-}
-
-VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetVideoSourceAt(size_t at, ISource** outSource)
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetVideoSource(ISource** outSource)
 {
 	//------------------------------------------------------------------------------------------
 	// Check if this is initialized
@@ -1124,16 +1105,9 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetVideoSourceAt(size_t
 	// Try to cast
 	SceneData::SceneDataVideoScreenObjPtr videoScreen = dynamic_cast<SceneData::SceneDataVideoScreenObjPtr>(fPtr);
 	if( ! videoScreen) return kVCOMError_NoVideoScreenObj;
+
 	
-	
-	//------------------------------------------------------------------------------------------
-	// Check the position in the array
-	size_t count = videoScreen->GetSourceArray().size();
-	
-	ASSERTN(kEveryone, at < count);
-	if (count < at) { return kVCOMError_InvalidArg; }
-	
-	SceneData::SceneDataSourceObjPtr source = videoScreen->GetSourceArray().at(at);
+	SceneData::SceneDataSourceObjPtr source = videoScreen->GetVideoSource();
 	
 	//---------------------------------------------------------------------------
 	// Initialize Object

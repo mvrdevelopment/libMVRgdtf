@@ -267,9 +267,8 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		SetCastShadow(bool castShadow) = 0;
 
 		// Video Screen
-		virtual VCOMError VCOM_CALLTYPE		AddVideoSource(MvrString value, MvrString linkedGeometry, ESourceType type) = 0;
-		virtual VCOMError VCOM_CALLTYPE		GetVideoSourceCount(size_t& outCount) = 0;
-		virtual VCOMError VCOM_CALLTYPE		GetVideoSourceAt(size_t at, ISource** outSource) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetVideoSource(MvrString value, MvrString linkedGeometry, ESourceType type) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetVideoSource(ISource** outSource) = 0;
 	};
 	typedef VCOMPtr<ISceneObj>	ISceneObjPtr;
 	

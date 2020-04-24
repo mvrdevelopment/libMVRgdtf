@@ -1653,27 +1653,33 @@ ESceneDataObjectType SceneDataTrussObj::GetObjectType()
 // SceneDataVideoScreenObj
 SceneDataVideoScreenObj::SceneDataVideoScreenObj(const SceneDataGUID& guid) : SceneDataObjWithMatrix(guid)
 {
-	fSources.clear();
+	fSource = nullptr;
 }
 
 SceneDataVideoScreenObj::~SceneDataVideoScreenObj()
 {
-	for(SceneDataSourceObjPtr source : fSources)
+	delete fSource;
+}
+
+SceneDataSourceObjPtr SceneDataVideoScreenObj::GetVideoSource()
+{
+	return fSource;
+}
+
+void SceneDataVideoScreenObj::SetVideoSource(const TXString& value, const TXString& linkedGeometry, ESourceType type)
+{
+	if(!fSource)
 	{
-		delete source;
+		SceneDataGUID guid(eNoGuid, "Just to initialize");
+		SceneDataSourceObjPtr source = new SceneDataSourceObj(guid, value, linkedGeometry, type);
+		fSource = source;
+	} 
+	else
+	{
+		fSource->SetValue(value);
+		fSource->SetLinkedGeometry(linkedGeometry);
+		fSource->SetType(type);
 	}
-}
-
-SceneDataSourceObjArray SceneDataVideoScreenObj::GetSourceArray()
-{
-	return fSources;
-}
-
-void SceneDataVideoScreenObj::AddSource(const TXString& value, const TXString& linkedGeometry, ESourceType type)
-{
-	SceneDataGUID guid(eNoGuid, "Just to initialize");
-	SceneDataSourceObjPtr source = new SceneDataSourceObj(guid, value, linkedGeometry, type);
-	fSources.push_back(source);
 }
 
 TXString SceneDataVideoScreenObj::GetNodeName()
@@ -1694,25 +1700,30 @@ void SceneDataVideoScreenObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExch
 	IXMLFileNodePtr pSourcesNode;
 	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_Val_VideoScreenObjectSources, &pSourcesNode)))
 	{
-		for (SceneDataSourceObjPtr source : fSources)
-		{
-			source->PrintToFile(pSourcesNode, exchange);
-		}
+		if(fSource) { fSource->PrintToFile(pSourcesNode, exchange); }
 	}
 }
 
 void SceneDataVideoScreenObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
 {
 	SceneDataObjWithMatrix::OnReadFromNode(pNode, exchange);
-	
-	GdtfConverter::TraverseNodes(pNode, XML_Val_VideoScreenObjectSources, XML_Val_SourceNodeName, [this, exchange] (IXMLFileNodePtr pNode) -> void
-								{
-									SceneDataGUID guid(eNoGuid, "Just to initialize");
-									SceneDataSourceObjPtr source = new SceneDataSourceObj(guid);
-									source->ReadFromNode(pNode, exchange);
-									fSources.push_back(source);
-								}
-								);
+
+	IXMLFileNodePtr pSourcesNode;	
+	pNode->GetChildNode(XML_Val_VideoScreenObjectSources, &pSourcesNode);
+	if(pSourcesNode)
+	{
+		IXMLFileNodePtr pSourceNode;
+		pSourcesNode->GetChildNode(XML_Val_SourceNodeName, &pSourceNode);
+		if(pSourceNode)
+		{
+			if(!fSource)
+			{
+				SceneDataGUID guid(eNoGuid, "Just to initialize");
+				fSource = new SceneDataSourceObj(guid);
+			}
+			fSource->ReadFromNode(pSourceNode, exchange);
+		}
+	}
 		
 }
 

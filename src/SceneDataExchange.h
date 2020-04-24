@@ -619,11 +619,11 @@ namespace SceneData
 		virtual ~SceneDataVideoScreenObj();
 	
 	private:
-		SceneDataSourceObjArray	fSources;
+		SceneDataSourceObjPtr	fSource;
 
 	public:
-		virtual SceneDataSourceObjArray GetSourceArray();
-		virtual void 					AddSource(const TXString& value, const TXString& linkedGeometry, ESourceType type);
+		virtual SceneDataSourceObjPtr 	GetVideoSource();
+		virtual void 					SetVideoSource(const TXString& value, const TXString& linkedGeometry, ESourceType type);
 
 	private:
 		virtual	TXString				GetNodeName();
