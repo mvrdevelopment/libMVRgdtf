@@ -188,7 +188,7 @@ void MvrUnittest::WriteFile()
 			__checkVCOM(fixture2->SetGobo("MWheel_Img1"));
 			__checkVCOM(fixture2->SetCastShadow(false));
 			//Mappings
-			__checkVCOM(fixture2->AddMapping(mappingDefinition2UUID));
+			__checkVCOM(fixture2->AddMapping(mappingDefinition1UUID));
 			IMappingPtr mapping1;
 			if(__checkVCOM(fixture2->GetMappingAt(0, &mapping1)))
 			{
