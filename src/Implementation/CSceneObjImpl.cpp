@@ -1164,7 +1164,16 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::AddMapping(MvrUUID mapD
 	
 	// ------------------------------------------------------------------------------------------
 	// Add mapping
-	fixture->AddMapping(SceneData::SceneDataGUID(VWUUID(mapDefUuid.a, mapDefUuid.b, mapDefUuid.c, mapDefUuid.d)));
+
+	SceneData::SceneDataGUID newMappingUuid = SceneData::SceneDataGUID(VWUUID(mapDefUuid.a, mapDefUuid.b, mapDefUuid.c, mapDefUuid.d));
+
+	// A fixture can't have 2 mappings with the same linked mappingDef
+	for(SceneData::SceneDataMappingObjPtr mapping : fixture->GetMappingsArray())
+	{
+		if(mapping->GetLinkedDefUuid() == newMappingUuid) { return kVCOMError_InvalidArg; }
+	}
+
+	fixture->AddMapping(newMappingUuid);
 	return kVCOMError_NoError;
 }
 
