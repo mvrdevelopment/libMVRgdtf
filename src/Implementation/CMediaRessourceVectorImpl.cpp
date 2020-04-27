@@ -774,6 +774,75 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateVideo
 	return kVCOMError_NoError;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateProjector(const MvrUUID& guid, const STransformMatrix& offset, MvrString name, ISceneObj* addToContainer, ISceneObj** outProjector)
+{
+	//---------------------------------------------------------------------------
+	// Read Container
+	CSceneObjImpl* pContainer = dynamic_cast<CSceneObjImpl* >(addToContainer);
+	
+	ASSERTN(kEveryone, pContainer != nullptr);
+	if ( ! pContainer) { return kVCOMError_NoValidContainerObj; }
+	
+	
+	SceneData::SceneDataObjWithMatrixPtr	obj		= nullptr;
+	ESceneObjType							type	= ESceneObjType::Layer;
+	pContainer->GetPointer(obj, type);
+	
+	
+	ASSERTN(kEveryone, type == ESceneObjType::Layer || type ==  ESceneObjType::Group);
+	if ( ! (type == ESceneObjType::Layer || type ==  ESceneObjType::Group) ) { return kVCOMError_NoValidContainerObj; }
+	
+	SceneData::SceneDataGroupObjPtr group = dynamic_cast<SceneData::SceneDataGroupObjPtr>(obj);
+	
+	ASSERTN(kEveryone, group != nullptr);
+	if ( ! group) { return kVCOMError_NoValidContainerObj; }
+	
+	//---------------------------------------------------------------------------
+	// Create the obj
+	VWFC::Tools::VWUUID	uuid	(guid.a,guid.b,guid.c,guid.d);
+	TXString	nameStr ( name );
+	
+	VWTransformMatrix ma;
+	GdtfUtil::ConvertMatrix(offset, ma);
+	
+	SceneData::SceneDataProjectorObjPtr ptr = fExchangeObj.CreateProjector(uuid, ma, nameStr, group);
+	
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CSceneObjImpl* pProjector = nullptr;
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_SceneObject, (IVWUnknown**) & pProjector)))
+	{
+		// Check Casting
+		CSceneObjImpl* pResultInterface = dynamic_cast<CSceneObjImpl* >(pProjector);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(ptr, GetExchangeObj());
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incomming Object
+	if (*outProjector)
+	{
+		(*outProjector)->Release();
+		*outProjector		= NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*outProjector = pProjector;
+	
+	return kVCOMError_NoError;
+}
+
 VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::Close()
 {
 	//------------------------------------------------------------------

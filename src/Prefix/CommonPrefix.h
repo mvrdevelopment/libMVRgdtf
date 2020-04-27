@@ -150,6 +150,11 @@
 #define XML_Val_VideoScreenObjectNodeName	"VideoScreen"
 #define XML_Val_VideoScreenObjectSources    "Sources"
 
+#define XML_Val_ProjectorObjectNodeName	        "Projector"
+#define XML_Val_ProjectorObjectProjections      "Projections"
+#define XML_Val_ProjectorObjectProjection       "Projection"
+#define XML_Val_ProjectorObjectScaleHandling    "ScaleHandling"
+
 #define XML_Val_SymbolObjectNodeName		"Symbol"
 #define XML_Val_GuidSymdefAttrName			"symdef"
 
