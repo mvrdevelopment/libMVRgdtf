@@ -569,6 +569,7 @@ namespace SceneData
 		Sint8							fFixtureTypeId;
 		size_t							fCustomId;
 		bool							fCastShadow;
+		SceneDataMappingObjArray		fMappings;
 		
 		
 		// Reading Storage
@@ -597,6 +598,7 @@ namespace SceneData
 		const TXString&					GetGobo();
 		double							GetGoboRotation();
 		bool							GetCastShadow();
+		SceneDataMappingObjArray		GetMappingsArray();
 		
 		void							SetPosition(SceneDataPositionObjPtr ptr);
 		void							SetFocusPoint(SceneDataFocusPointObjPtr ptr);
@@ -611,6 +613,7 @@ namespace SceneData
 		void							SetGobo(const TXString& value);
 		void							SetGoboRotation(double value);
 		void							SetCastShadow(bool value);
+		void							AddMapping(SceneDataGUID mappingDefinitionUuid);
 		
 	protected:
 		virtual	TXString				GetNodeName();

@@ -760,6 +760,85 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetCastShadow(bool& val
 	return kVCOMError_NoError;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetMappingCount(size_t& outMappings)
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+	
+	// Check the type is right
+	ASSERTN(kEveryone,fType == ESceneObjType::Fixture);
+	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
+	
+	// Try to cast
+	SceneData::SceneDataFixtureObjPtr fixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	if( ! fixture) return kVCOMError_NoFixtureObj;
+	
+	outMappings = fixture->GetMappingsArray().size();
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetMappingAt(size_t at, IMapping** outMapping)
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+	
+	// Check the type is right
+	ASSERTN(kEveryone,fType == ESceneObjType::Fixture);
+	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
+
+	// Try to cast
+	SceneData::SceneDataFixtureObjPtr fixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	if( ! fixture) return kVCOMError_NoFixtureObj;
+	
+	//------------------------------------------------------------------------------------------
+	// Check the position in the array
+	size_t count = fixture->GetMappingsArray().size();
+	
+	
+	ASSERTN(kEveryone, at < count);
+	if (count < at) { return kVCOMError_InvalidArg; }
+	
+	SceneData::SceneDataMappingObjPtr pScMapping = fixture->GetMappingsArray().at(at);
+	
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CMappingImpl* pMapping = nullptr;
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_MappingObj, (IVWUnknown**) & pMapping)))
+	{
+		// Check Casting
+		CMappingImpl* pResultInterface = dynamic_cast<CMappingImpl* >(pMapping);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(pScMapping);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incoming Object
+	if (*outMapping)
+	{
+		(*outMapping)->Release();
+		*outMapping		= NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*outMapping	= pMapping;
+	
+	return kVCOMError_NoError;
+}
+
 VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetGdtfName(MvrString gdtfName)
 {
 	// Check if this is initialized
@@ -1066,6 +1145,26 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetCastShadow(bool cast
 	//
 	fixture->SetCastShadow(castShadow);
 	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::AddMapping(MvrUUID mapDefUuid)
+{
+	// ------------------------------------------------------------------------------------------
+	// Check the type is right
+	ASSERTN(kEveryone,fType == ESceneObjType::Fixture);
+	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
+
+	// ------------------------------------------------------------------------------------------
+	// Cast to this object
+	SceneData::SceneDataFixtureObjPtr fixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	
+	ASSERTN(kEveryone, fixture != nullptr);
+	if ( ! fixture) { return kVCOMError_Failed; }
+	
+	// ------------------------------------------------------------------------------------------
+	// Add mapping
+	fixture->AddMapping(SceneData::SceneDataGUID(VWUUID(mapDefUuid.a, mapDefUuid.b, mapDefUuid.c, mapDefUuid.d)));
 	return kVCOMError_NoError;
 }
 

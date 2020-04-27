@@ -50,6 +50,8 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetGoboRotation(double& value);
 		virtual MvrString VCOM_CALLTYPE		GetGoboFullPath();
 		virtual VCOMError VCOM_CALLTYPE		GetCastShadow(bool& value);
+		virtual VCOMError VCOM_CALLTYPE		GetMappingCount(size_t& outMappings);
+		virtual VCOMError VCOM_CALLTYPE		GetMappingAt(size_t at, IMapping** outMapping);
 
 
 		virtual VCOMError VCOM_CALLTYPE		SetGdtfName(MvrString gdtfName);
@@ -65,6 +67,7 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		SetGobo(MvrString gobo);
 		virtual VCOMError VCOM_CALLTYPE		SetGoboRotation(double rotation);
 		virtual VCOMError VCOM_CALLTYPE		SetCastShadow(bool castShadow);
+		virtual VCOMError VCOM_CALLTYPE		AddMapping(MvrUUID mapDefUuid);
 
 		// Video Screen
 		virtual VCOMError VCOM_CALLTYPE		SetVideoSource(MvrString value, MvrString linkedGeometry, ESourceType type);

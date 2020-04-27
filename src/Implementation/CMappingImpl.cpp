@@ -25,7 +25,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMappingImpl::GetLinkedDefUuid(MvrUUID
 	if( ! fPtr) return kVCOMError_NotInitialized;
 	
 	// Otherise return data
-	fPtr->GetLinkedDef().GetUuidObj().GetUUID(linkedDefUuid.a, linkedDefUuid.b, linkedDefUuid.c, linkedDefUuid.d);
+	fPtr->GetLinkedDefUuid().GetUuidObj().GetUUID(linkedDefUuid.a, linkedDefUuid.b, linkedDefUuid.c, linkedDefUuid.d);
 
 	return kVCOMError_NoError;
 }

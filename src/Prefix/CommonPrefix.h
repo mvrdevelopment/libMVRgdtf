@@ -139,6 +139,7 @@
 #define XML_Val_FixtureGobo		    "Gobo"
 #define XML_Val_FixtureGoboRotation "rotation"
 #define XML_Val_FixtureCastShadow   "CastShadow"
+#define XML_Val_FixtureMappings     "Mappings"
 
 #define XML_Val_SceneObjectNodeName			"SceneObject"
 

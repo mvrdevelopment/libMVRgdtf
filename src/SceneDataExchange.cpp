@@ -758,14 +758,16 @@ ESceneDataObjectType SceneDataMappingDefinitionObj::GetObjectType()
 
 // ----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataMappingObj
-SceneDataMappingObj::SceneDataMappingObj() : SceneDataObj(SceneDataGUID(eNoGuid,""))
+SceneDataMappingObj::SceneDataMappingObj() : SceneDataObj(SceneDataGUID(eNoGuid,"")),
+					 fLinkedDefUuid(SceneDataGUID(eNoGuid,""))
 {
 	
 }
 
-SceneDataMappingObj::SceneDataMappingObj(const SceneDataGUID& linkedDefUuid) : SceneDataObj(SceneDataGUID(eNoGuid,""))
+SceneDataMappingObj::SceneDataMappingObj(const SceneDataGUID& linkedDefUuid) : SceneDataObj(SceneDataGUID(eNoGuid,"")),
+					 fLinkedDefUuid(linkedDefUuid)
 {
-	fLinkedDefUuid = linkedDefUuid;
+
 }
 
 SceneDataMappingObj::~SceneDataMappingObj()
@@ -840,7 +842,7 @@ void SceneDataMappingObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange
 	SceneDataObj::OnPrintToFile(pNode, exchange);
 
 	// Set attributes
-	pNode->SetNodeAttributeValue(XML_Val_MappingLinkedDefUuid, fLinkedDefUuid);
+	pNode->SetNodeAttributeValue(XML_Val_MappingLinkedDefUuid, fLinkedDefUuid.GetUUIDString());
 
 	// Create the children node
 	IXMLFileNodePtr pUxNode;
@@ -872,7 +874,6 @@ void SceneDataMappingObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange
 	{
 		pRzNode->SetNodeValue(GdtfConverter::ConvertDouble(fRz));
 	}
-
 	
 }
 
@@ -881,13 +882,49 @@ void SceneDataMappingObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneData
 	// Call parent
 	SceneDataObj::OnReadFromNode(pNode, exchange);
 
-	pNode->GetNodeAttributeValue(XML_Val_SourceLinkedGeometry, fLinkedGeometry);
+	TXString uuidStr;
+	pNode->GetNodeAttributeValue(XML_Val_MappingLinkedDefUuid, uuidStr);
+	fLinkedDefUuid = SceneDataGUID(uuidStr);
 
-	TXString sourceTypeStr;
-	pNode->GetNodeAttributeValue(XML_Val_SourceType, sourceTypeStr);
-	GdtfConverter::ConvertESourceType(sourceTypeStr, pNode, fType);
-	
-	pNode->GetNodeValue(fValue);
+	IXMLFileNodePtr pUxNode;
+	if(VCOM_SUCCEEDED(pNode->GetChildNode(XML_Val_MappingUx, &pUxNode)))
+	{
+		TXString value;
+		pUxNode->GetNodeValue(value);
+		GdtfConverter::ConvertInteger(value, pUxNode, fUx);
+	}
+
+	IXMLFileNodePtr pUyNode;
+	if(VCOM_SUCCEEDED(pNode->GetChildNode(XML_Val_MappingUy, &pUyNode)))
+	{
+		TXString value;
+		pUyNode->GetNodeValue(value);
+		GdtfConverter::ConvertInteger(value, pUyNode, fUy);
+	}
+
+	IXMLFileNodePtr pOxNode;
+	if(VCOM_SUCCEEDED(pNode->GetChildNode(XML_Val_MappingOx, &pOxNode)))
+	{
+		TXString value;
+		pOxNode->GetNodeValue(value);
+		GdtfConverter::ConvertInteger(value, pOxNode, fOx);
+	}
+
+	IXMLFileNodePtr pOyNode;
+	if(VCOM_SUCCEEDED(pNode->GetChildNode(XML_Val_MappingOy, &pOyNode)))
+	{
+		TXString value;
+		pOyNode->GetNodeValue(value);
+		GdtfConverter::ConvertInteger(value, pOyNode, fOy);
+	}
+
+	IXMLFileNodePtr pRzNode;
+	if(VCOM_SUCCEEDED(pNode->GetChildNode(XML_Val_MappingRz, &pRzNode)))
+	{
+		TXString value;
+		pRzNode->GetNodeValue(value);
+		GdtfConverter::ConvertDouble(value, pRzNode, fRz);
+	}
 }
 
 TXString SceneDataMappingObj::GetNodeName()
@@ -1238,7 +1275,10 @@ SceneDataFixtureObj::SceneDataFixtureObj(const SceneDataGUID& guid) : SceneDataO
 
 SceneDataFixtureObj::~SceneDataFixtureObj()
 {
-	
+	for(SceneDataMappingObjPtr mapping : fMappings)
+	{
+		delete mapping;
+	}	
 }
 
 TXString SceneDataFixtureObj::GetUnresolvedFocusUUID()
@@ -1331,6 +1371,11 @@ bool SceneDataFixtureObj::GetCastShadow()
 	return fCastShadow;
 }
 
+SceneDataMappingObjArray SceneDataFixtureObj::GetMappingsArray()
+{
+	return fMappings;
+}
+
 const SceneDataAdressArray& SceneDataFixtureObj::GetAdressesArray()
 {
 	return fAdresses;
@@ -1419,6 +1464,11 @@ void SceneDataFixtureObj::SetFixtureTypeId(const Sint8& value)
 void SceneDataFixtureObj::SetCastShadow(bool value)
 {
 	fCastShadow = value;
+}
+
+void SceneDataFixtureObj::AddMapping(SceneDataGUID mappingDefinitionUuid)
+{
+	fMappings.push_back(new SceneDataMappingObj(mappingDefinitionUuid));
 }
 
 void SceneDataFixtureObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
@@ -1547,6 +1597,17 @@ void SceneDataFixtureObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange
 	{
 		pCastShadowNode->SetNodeValue(GdtfConverter::ConvertBool(fCastShadow));
 	}
+
+	//--------------------------------------------------------------------------------------------
+	// Print Mappings
+	IXMLFileNodePtr pMappingsNode;
+	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_Val_FixtureMappings, &pMappingsNode)))
+	{
+		for (const SceneDataMappingObjPtr mapping : fMappings)
+		{
+			mapping->PrintToFile(pMappingsNode, exchange);
+		}
+	}
 }
 
 void SceneDataFixtureObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
@@ -1653,6 +1714,16 @@ void SceneDataFixtureObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneData
 		pCastShadowNode->GetNodeValue(castShadow);
 		GdtfConverter::ConvertBool(castShadow, pNode, fCastShadow);
 	}
+
+	//--------------------------------------------------------------------------------------------
+	// Read Mappings
+	GdtfConverter::TraverseNodes(pNode, XML_Val_FixtureMappings, XML_Val_MappingNodeName, [this, exchange] (IXMLFileNodePtr pNode) -> void
+								{
+									SceneDataMappingObjPtr mapping = new SceneDataMappingObj();
+									mapping->ReadFromNode(pNode, exchange);
+									fMappings.push_back(mapping);
+								}
+								);
 	
 }
 
