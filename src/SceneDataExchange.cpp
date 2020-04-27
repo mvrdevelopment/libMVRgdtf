@@ -533,8 +533,6 @@ SceneDataSourceObj::SceneDataSourceObj(const SceneDataGUID& guid, const TXString
 	fValue 			= value;
 	fLinkedGeometry = linkedGeometry;
 	fType 			= type;
-	const char* v = value.GetCharPtr();
-	const char* l = linkedGeometry.GetCharPtr();
 }
 
 SceneDataSourceObj::~SceneDataSourceObj()
@@ -1525,8 +1523,6 @@ SceneDataSourceObjArray SceneDataVideoScreenObj::GetSourceArray()
 void SceneDataVideoScreenObj::AddSource(const TXString& value, const TXString& linkedGeometry, ESourceType type)
 {
 	SceneDataGUID guid(eNoGuid, "Just to initialize");
-	const char* v = value.GetCharPtr();
-	const char* l = linkedGeometry.GetCharPtr();
 	SceneDataSourceObjPtr source = new SceneDataSourceObj(guid, value, linkedGeometry, type);
 	fSources.push_back(source);
 }
