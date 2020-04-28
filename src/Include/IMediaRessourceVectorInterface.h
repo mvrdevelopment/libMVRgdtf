@@ -292,8 +292,14 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		AddMapping(MvrUUID mapDefUuid) = 0;
 
 		// Video Screen
-		virtual VCOMError VCOM_CALLTYPE		SetVideoSource(MvrString value, MvrString linkedGeometry, ESourceType type) = 0;
-		virtual VCOMError VCOM_CALLTYPE		GetVideoSource(ISource** outSource) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetVideoScreenSource(MvrString value, MvrString linkedGeometry, ESourceType type) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetVideoScreenSource(ISource** outSource) = 0;
+
+		// Projector
+		virtual VCOMError VCOM_CALLTYPE		SetProjectorSource(MvrString value, MvrString linkedGeometry, ESourceType type) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetProjectorSource(ISource** outSource) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetScaleHandling(EScaleHandlingType scaleHandling) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetScaleHandling(EScaleHandlingType& outScaleHandling) = 0;
 	};
 	typedef VCOMPtr<ISceneObj>	ISceneObjPtr;
 	

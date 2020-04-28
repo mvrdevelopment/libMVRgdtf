@@ -829,7 +829,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateProje
 	}
 	
 	//---------------------------------------------------------------------------
-	// Check Incomming Object
+	// Check Incoming Object
 	if (*outProjector)
 	{
 		(*outProjector)->Release();

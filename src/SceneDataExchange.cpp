@@ -1980,12 +1980,12 @@ void SceneDataProjectorObj::SetScaleHandling(EScaleHandlingType scaleHandling)
 
 TXString SceneDataProjectorObj::GetNodeName()
 {
-	return TXString(XML_Val_VideoScreenObjectNodeName);
+	return TXString(XML_Val_ProjectorObjectNodeName);
 }
 
 ESceneDataObjectType SceneDataProjectorObj::GetObjectType()
 {
-	return ESceneDataObjectType::eVideoScreen;
+	return ESceneDataObjectType::eProjector;
 }
 
 void SceneDataProjectorObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
