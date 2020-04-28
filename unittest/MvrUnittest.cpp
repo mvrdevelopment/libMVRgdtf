@@ -237,7 +237,15 @@ void MvrUnittest::WriteFile()
 		ISceneObjPtr videoScreen;
 		if (__checkVCOM(mvrWrite->CreateVideoScreen(MvrUUID(1808353427, 683171502, 518343034, 0000000001), STransformMatrix(), "My VideoScreen Name", layer2, &videoScreen)))
 		{
-			__checkVCOM(videoScreen->SetVideoSource("myValue1", "myLinkedGeometry1", ESourceType::File));
+			__checkVCOM(videoScreen->SetVideoScreenSource("myValue1", "myLinkedGeometry1", ESourceType::File));
+		}
+
+		// Create projector
+		ISceneObjPtr projector;
+		if (__checkVCOM(mvrWrite->CreateProjector(MvrUUID(1808353427, 683171502, 518343034, 0000000004), STransformMatrix(), "My projector Name", layer2, &projector)))
+		{
+			__checkVCOM(projector->SetProjectorSource("myValueP", "myLinkedGeometryP", ESourceType::File));
+			__checkVCOM(projector->SetScaleHandling(EScaleHandlingType::ScaleIgnoreRatio));
 		}
 
 
@@ -300,6 +308,7 @@ void MvrUnittest::ReadFile()
 		MvrUUID videoScreenUUID	(1808353427, 683171502, 518343034, 0000000001);
 		MvrUUID mappingDefinition1UUID(1808353427, 683171502, 518343034, 0000000002);
 		MvrUUID mappingDefinition2UUID(1808353427, 683171502, 518343034, 0000000003);
+		MvrUUID projectorUUID	(1808353427, 683171502, 518343034, 0000000004);
 		MvrUUID resultUUID		(0,0,0,0);
 
         size_t count = 0;
@@ -700,7 +709,7 @@ void MvrUnittest::ReadFile()
 					checkifEqual("ESceneObjType Type ", (Sint32)type ,(Sint32)ESceneObjType::VideoScreen);
 
 					ISourcePtr source1;
-					if(__checkVCOM(sceneObj->GetVideoSource(&source1)))
+					if(__checkVCOM(sceneObj->GetVideoScreenSource(&source1)))
 					{
 						checkifEqual("Check Source1 value", 			source1->GetValue(), 			"myValue1");
 						checkifEqual("Check Source1 linkedGeometry", 	source1->GetLinkedGeometry(), 	"myLinkedGeometry1");
@@ -709,6 +718,26 @@ void MvrUnittest::ReadFile()
 						__checkVCOM(source1->GetType(type));
 						checkifEqual("Check Source1 type", (size_t)type, (size_t)ESourceType::File);
 					}
+				}
+
+				if (i==1 && j==3)
+				{
+					checkifEqual("ESceneObjType Type ", (Sint32)type ,(Sint32)ESceneObjType::Projector);
+
+					ISourcePtr source1;
+					if(__checkVCOM(sceneObj->GetProjectorSource(&source1)))
+					{
+						checkifEqual("Check SourceP value", 			source1->GetValue(), 			"myValueP");
+						checkifEqual("Check SourceP linkedGeometry", 	source1->GetLinkedGeometry(), 	"myLinkedGeometryP");
+
+						ESourceType type;
+						__checkVCOM(source1->GetType(type));
+						checkifEqual("Check SourceP type", (size_t)type, (size_t)ESourceType::File);
+					}
+
+					EScaleHandlingType scaleHandlingType;
+					__checkVCOM(sceneObj->GetScaleHandling(scaleHandlingType));
+					checkifEqual("Check Projector ScaleHandling", (size_t)scaleHandlingType, (size_t)EScaleHandlingType::ScaleIgnoreRatio);
 				}
 							
 				//------------------------------------------------------------------------
