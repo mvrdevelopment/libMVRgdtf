@@ -8,6 +8,11 @@
 #ifdef GCC7_ERROR
 #pragma GCC diagnostic ignored "-Wmisleading-indentation"
 #endif
+
+#ifdef DONT_INCLUDE_MINI_ZIP
+#define MINIZ_HEADER_FILE_ONLY 1
+#endif
+
 #include "Minizip/Source/miniz.c"
 #pragma GCC diagnostic pop
 
