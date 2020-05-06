@@ -288,6 +288,9 @@
     <ClCompile Include="..\src\Wrapper\ZIPFileBuffer.cpp">
       <Filter>src\Wrapper</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Implementation\CSourceImpl.cpp">
+      <Filter>src\Wrapper</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\XMLLib\ErrorHandler.h">
@@ -610,6 +613,9 @@
     </ClInclude>
     <ClInclude Include="..\src\Interface\IZIPFileBuffer.h">
       <Filter>src\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Implementation\CSourceImpl.h">
+      <Filter>src\Wrapper</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
