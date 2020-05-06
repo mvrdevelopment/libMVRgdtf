@@ -116,6 +116,27 @@ void MvrUnittest::WriteFile()
         IClassPtr clas2 = nullptr;
         __checkVCOM(mvrWrite->CreateClassObject(MvrUUID(122774618, 11892014, 669397348, 947530057), "My second Class", & clas2));
 
+
+		MvrUUID mappingDefinition1UUID(1808353427, 683171502, 518343034, 0000000002);
+		MvrUUID mappingDefinition2UUID(1808353427, 683171502, 518343034, 0000000003);
+
+		IMappingDefinitionPtr mapdef1 = nullptr;
+        if(__checkVCOM(mvrWrite->CreateMappingDefinitionObject(mappingDefinition1UUID, "My MappingDefinition1", &mapdef1)))
+		{
+			__checkVCOM(mapdef1->SetSizeX(1920));
+			__checkVCOM(mapdef1->SetSizeY(1080));
+			__checkVCOM(mapdef1->SetSource("mapDef1SourceValue", "mapDef1SourceLinkedGeo", ESourceType::File));
+			__checkVCOM(mapdef1->SetScaleHandling(EScaleHandlingType::KeepSizeCenter));
+		}
+
+		IMappingDefinitionPtr mapdef2 = nullptr;
+        if(__checkVCOM(mvrWrite->CreateMappingDefinitionObject(mappingDefinition2UUID, "My MappingDefinition2", &mapdef2)))
+		{
+			__checkVCOM(mapdef2->SetSizeX(1280));
+			__checkVCOM(mapdef2->SetSizeY(720));
+			__checkVCOM(mapdef2->SetSource("mapDef2SourceValue", "mapDef2SourceLinkedGeo", ESourceType::CaptureDevice));
+		}
+
         //------------------------------------------------------------------------------------------------
         // Now write content
         ISceneObjPtr layer1 = nullptr;
@@ -141,6 +162,17 @@ void MvrUnittest::WriteFile()
 			__checkVCOM(fixture1->SetPosition(position));
 			__checkVCOM(fixture1->SetClass(clas2));
 			__checkVCOM(fixture1->SetCastShadow(true));
+			//Mappings
+			__checkVCOM(fixture1->AddMapping(mappingDefinition1UUID));
+			IMappingPtr mapping1;
+			if(__checkVCOM(fixture1->GetMappingAt(0, &mapping1)))
+			{
+				__checkVCOM(mapping1->SetUx(1));
+				__checkVCOM(mapping1->SetUy(2));
+				__checkVCOM(mapping1->SetOx(3));
+				__checkVCOM(mapping1->SetOy(4));
+				__checkVCOM(mapping1->SetRz(5.6));
+			}
 		}
 
 		// And another fixture
@@ -155,6 +187,27 @@ void MvrUnittest::WriteFile()
 			__checkVCOM(fixture2->SetGoboRotation(32.87));
 			__checkVCOM(fixture2->SetGobo("MWheel_Img1"));
 			__checkVCOM(fixture2->SetCastShadow(false));
+			//Mappings
+			__checkVCOM(fixture2->AddMapping(mappingDefinition1UUID));
+			IMappingPtr mapping1;
+			if(__checkVCOM(fixture2->GetMappingAt(0, &mapping1)))
+			{
+				__checkVCOM(mapping1->SetUx(7));
+				__checkVCOM(mapping1->SetUy(8));
+				__checkVCOM(mapping1->SetOx(9));
+				__checkVCOM(mapping1->SetOy(10));
+				__checkVCOM(mapping1->SetRz(11.12));
+			}
+			__checkVCOM(fixture2->AddMapping(mappingDefinition2UUID));
+			IMappingPtr mapping2;
+			if(__checkVCOM(fixture2->GetMappingAt(1, &mapping2)))
+			{
+				__checkVCOM(mapping2->SetUx(13));
+				__checkVCOM(mapping2->SetUy(14));
+				__checkVCOM(mapping2->SetOx(15));
+				__checkVCOM(mapping2->SetOy(16));
+				__checkVCOM(mapping2->SetRz(17.18));
+			}
 		}
 
 		// Create second Layer
@@ -184,8 +237,15 @@ void MvrUnittest::WriteFile()
 		ISceneObjPtr videoScreen;
 		if (__checkVCOM(mvrWrite->CreateVideoScreen(MvrUUID(1808353427, 683171502, 518343034, 0000000001), STransformMatrix(), "My VideoScreen Name", layer2, &videoScreen)))
 		{
-			__checkVCOM(videoScreen->AddVideoSource("myValue1", "myLinkedGeometry1", ESourceType::File));
-			__checkVCOM(videoScreen->AddVideoSource("myValue2", "myLinkedGeometry2", ESourceType::CITP));
+			__checkVCOM(videoScreen->SetVideoScreenSource("myValue1", "myLinkedGeometry1", ESourceType::File));
+		}
+
+		// Create projector
+		ISceneObjPtr projector;
+		if (__checkVCOM(mvrWrite->CreateProjector(MvrUUID(1808353427, 683171502, 518343034, 0000000004), STransformMatrix(), "My projector Name", layer2, &projector)))
+		{
+			__checkVCOM(projector->SetProjectorSource("myValueP", "myLinkedGeometryP", ESourceType::File));
+			__checkVCOM(projector->SetScaleHandling(EScaleHandlingType::ScaleIgnoreRatio));
 		}
 
 
@@ -245,7 +305,10 @@ void MvrUnittest::ReadFile()
 		MvrUUID fixtureUUID1	(1808353427, 683171502, 518343034, 1766902383);
 		MvrUUID fixtureUUID2	(1136161871, 1699151080, 751939975, 1748783014);
 		MvrUUID fixtureUUID3	(1136161871, 1699151080, 751939975, 1748773014);
-		MvrUUID videoSreenUUID	(1808353427, 683171502, 518343034, 0000000001);
+		MvrUUID videoScreenUUID	(1808353427, 683171502, 518343034, 0000000001);
+		MvrUUID mappingDefinition1UUID(1808353427, 683171502, 518343034, 0000000002);
+		MvrUUID mappingDefinition2UUID(1808353427, 683171502, 518343034, 0000000003);
+		MvrUUID projectorUUID	(1808353427, 683171502, 518343034, 0000000004);
 		MvrUUID resultUUID		(0,0,0,0);
 
         size_t count = 0;
@@ -429,6 +492,30 @@ void MvrUnittest::ReadFile()
 						}
 					}
 
+					//Mappings
+					size_t mappingCount;
+					__checkVCOM(sceneObj->GetMappingCount(mappingCount));
+					checkifEqual("GetMappingCount", mappingCount, (size_t)1);
+
+					IMappingPtr mapping1;
+					if(__checkVCOM(sceneObj->GetMappingAt(0, &mapping1)))
+					{
+						Uint32 ux, uy, ox, oy;
+						double rz;
+						__checkVCOM(mapping1->GetUx(ux));
+						__checkVCOM(mapping1->GetUy(uy));
+						__checkVCOM(mapping1->GetOx(ox));
+						__checkVCOM(mapping1->GetOy(oy));
+						__checkVCOM(mapping1->GetRz(rz));
+
+						checkifEqual("Check GetUx ", (size_t)ux, 	(size_t)1);
+						checkifEqual("Check GetUy ", (size_t)uy, 	(size_t)2);
+						checkifEqual("Check GetOx ", (size_t)ox, 	(size_t)3);
+						checkifEqual("Check GetOy ", (size_t)oy, 	(size_t)4);
+						checkifEqual("Check GetRz ", 		 rz, 			5.6);
+					}
+
+					//Linked Fixture
 					IGdtfFixturePtr gdtfLinkedFixture;
 					__checkVCOM(sceneObj->GetGdtfFixture( & gdtfLinkedFixture));
 
@@ -499,6 +586,47 @@ void MvrUnittest::ReadFile()
 								checkifEqual("Check fBreakId ", 	 	adress.fBreakId, 		(size_t)1);
 							}
 						}
+					}
+
+					//Mappings
+					size_t mappingCount;
+					__checkVCOM(sceneObj->GetMappingCount(mappingCount));
+					checkifEqual("GetMappingCount", mappingCount, (size_t)2);
+
+					IMappingPtr mapping1;
+					if(__checkVCOM(sceneObj->GetMappingAt(0, &mapping1)))
+					{
+						Uint32 ux, uy, ox, oy;
+						double rz;
+						__checkVCOM(mapping1->GetUx(ux));
+						__checkVCOM(mapping1->GetUy(uy));
+						__checkVCOM(mapping1->GetOx(ox));
+						__checkVCOM(mapping1->GetOy(oy));
+						__checkVCOM(mapping1->GetRz(rz));
+
+						checkifEqual("Check GetUx ", (size_t)ux, 	(size_t)7);
+						checkifEqual("Check GetUy ", (size_t)uy, 	(size_t)8);
+						checkifEqual("Check GetOx ", (size_t)ox, 	(size_t)9);
+						checkifEqual("Check GetOy ", (size_t)oy, 	(size_t)10);
+						checkifEqual("Check GetRz ", 		 rz, 			11.12);
+					}
+
+					IMappingPtr mapping2;
+					if(__checkVCOM(sceneObj->GetMappingAt(1, &mapping2)))
+					{
+						Uint32 ux, uy, ox, oy;
+						double rz;
+						__checkVCOM(mapping2->GetUx(ux));
+						__checkVCOM(mapping2->GetUy(uy));
+						__checkVCOM(mapping2->GetOx(ox));
+						__checkVCOM(mapping2->GetOy(oy));
+						__checkVCOM(mapping2->GetRz(rz));
+
+						checkifEqual("Check GetUx ", (size_t)ux, 	(size_t)13);
+						checkifEqual("Check GetUy ", (size_t)uy, 	(size_t)14);
+						checkifEqual("Check GetOx ", (size_t)ox, 	(size_t)15);
+						checkifEqual("Check GetOy ", (size_t)oy, 	(size_t)16);
+						checkifEqual("Check GetRz ", 		 rz, 			17.18);
 					}
 				}
 				
@@ -580,35 +708,36 @@ void MvrUnittest::ReadFile()
 				{
 					checkifEqual("ESceneObjType Type ", (Sint32)type ,(Sint32)ESceneObjType::VideoScreen);
 
-					size_t sourceCount;
-					if(__checkVCOM(sceneObj->GetVideoSourceCount(sourceCount)))
+					ISourcePtr source1;
+					if(__checkVCOM(sceneObj->GetVideoScreenSource(&source1)))
 					{
-						checkifEqual("Check Source Count", sourceCount, (size_t)2);
+						checkifEqual("Check Source1 value", 			source1->GetValue(), 			"myValue1");
+						checkifEqual("Check Source1 linkedGeometry", 	source1->GetLinkedGeometry(), 	"myLinkedGeometry1");
 
-						ISourcePtr source1;
-						if(__checkVCOM(sceneObj->GetVideoSourceAt(0, &source1)))
-						{
-							checkifEqual("Check Source1 value", 			source1->GetValue(), 			"myValue1");
-							checkifEqual("Check Source1 linkedGeometry", 	source1->GetLinkedGeometry(), 	"myLinkedGeometry1");
-							ESourceType type;
-							if(__checkVCOM(source1->GetType(type)))
-							{
-								checkifEqual("Check Source1 type", (size_t)type, (size_t)ESourceType::File);
-							}
-						}
-
-						ISourcePtr source2;
-						if(__checkVCOM(sceneObj->GetVideoSourceAt(1, &source2)))
-						{
-							checkifEqual("Check Source2 value", 			source2->GetValue(), 			"myValue2");
-							checkifEqual("Check Source2 linkedGeometry", 	source2->GetLinkedGeometry(), 	"myLinkedGeometry2");
-							ESourceType type;
-							if(__checkVCOM(source2->GetType(type)))
-							{
-								checkifEqual("Check Source2 type", (size_t)type, (size_t)ESourceType::CITP);
-							}
-						}
+						ESourceType type;
+						__checkVCOM(source1->GetType(type));
+						checkifEqual("Check Source1 type", (size_t)type, (size_t)ESourceType::File);
 					}
+				}
+
+				if (i==1 && j==3)
+				{
+					checkifEqual("ESceneObjType Type ", (Sint32)type ,(Sint32)ESceneObjType::Projector);
+
+					ISourcePtr source1;
+					if(__checkVCOM(sceneObj->GetProjectorSource(&source1)))
+					{
+						checkifEqual("Check SourceP value", 			source1->GetValue(), 			"myValueP");
+						checkifEqual("Check SourceP linkedGeometry", 	source1->GetLinkedGeometry(), 	"myLinkedGeometryP");
+
+						ESourceType type;
+						__checkVCOM(source1->GetType(type));
+						checkifEqual("Check SourceP type", (size_t)type, (size_t)ESourceType::File);
+					}
+
+					EScaleHandlingType scaleHandlingType;
+					__checkVCOM(sceneObj->GetScaleHandling(scaleHandlingType));
+					checkifEqual("Check Projector ScaleHandling", (size_t)scaleHandlingType, (size_t)EScaleHandlingType::ScaleIgnoreRatio);
 				}
 							
 				//------------------------------------------------------------------------
@@ -719,15 +848,82 @@ void MvrUnittest::ReadFile()
 
 			if(c==0)
 			{
-			checkifEqual("GetClassName", clas->GetName(), "My first Class");
-			checkifEqual("GetClassUUID", resultUUID, classUUID1);
+				checkifEqual("GetClassName", clas->GetName(), "My first Class");
+				checkifEqual("GetClassUUID", resultUUID, classUUID1);
 			}
 			else if(c==1)
 			{
-			checkifEqual("GetClassName", clas->GetName(), "My second Class");
-			checkifEqual("GetClassUUID", resultUUID, classUUID2);
+				checkifEqual("GetClassName", clas->GetName(), "My second Class");
+				checkifEqual("GetClassUUID", resultUUID, classUUID2);
 			}
 		}
+
+		size_t mapDefCount = 0;
+		__checkVCOM(mvrRead->GetMappingDefinitionCount(mapDefCount));
+		
+		checkifEqual("GetMappingDefinitionCount", mapDefCount, (size_t)2);
+		
+		IMappingDefinitionPtr mapDef1 = nullptr;
+		if(__checkVCOM(mvrRead->GetMappingDefinitionAt(0, &mapDef1)))
+		{
+			__checkVCOM(mapDef1->GetGuid(resultUUID));
+			checkifEqual("GetMapDefUUID", resultUUID, mappingDefinition1UUID);
+
+			Uint32 sizeX = 0;
+			__checkVCOM(mapDef1->GetSizeX(sizeX));
+			checkifEqual("GetSizeX", (size_t)sizeX, (size_t)1920);
+
+			Uint32 sizeY = 0;
+			__checkVCOM(mapDef1->GetSizeY(sizeY));
+			checkifEqual("GetSizeY", (size_t)sizeY, (size_t)1080);
+
+			EScaleHandlingType type;
+			__checkVCOM(mapDef1->GetScaleHandling(type));
+			checkifEqual("GetScaleHandling", (size_t)type, (size_t)EScaleHandlingType::KeepSizeCenter);
+
+			ISourcePtr source = nullptr;
+			if(__checkVCOM(mapDef1->GetSource(&source)))
+			{
+				checkifEqual("Check mapDef1Source value", 			source->GetValue(), 			"mapDef1SourceValue");
+				checkifEqual("Check mapDef1Source linkedGeometry", 	source->GetLinkedGeometry(), 	"mapDef1SourceLinkedGeo");
+
+				ESourceType type;
+				__checkVCOM(source->GetType(type));
+				checkifEqual("Check Source1 type", (size_t)type, (size_t)ESourceType::File);
+			}
+		}
+
+		IMappingDefinitionPtr mapDef2 = nullptr;
+		if(__checkVCOM(mvrRead->GetMappingDefinitionAt(1, &mapDef2)))
+		{
+			__checkVCOM(mapDef2->GetGuid(resultUUID));
+			checkifEqual("GetMapDefUUID", resultUUID, mappingDefinition2UUID);
+
+			Uint32 sizeX = 0;
+			__checkVCOM(mapDef2->GetSizeX(sizeX));
+			checkifEqual("GetSizeX", (size_t)sizeX, (size_t)1280);
+
+			Uint32 sizeY = 0;
+			__checkVCOM(mapDef2->GetSizeY(sizeY));
+			checkifEqual("GetSizeY", (size_t)sizeY, (size_t)720);
+
+			EScaleHandlingType type;
+			__checkVCOM(mapDef2->GetScaleHandling(type));
+			checkifEqual("GetScaleHandling", (size_t)type, (size_t)EScaleHandlingType::ScaleKeepRatio);
+
+			ISourcePtr source = nullptr;
+			if(__checkVCOM(mapDef2->GetSource(&source)))
+			{
+				checkifEqual("Check mapDef2Source value", 			source->GetValue(), 			"mapDef2SourceValue");
+				checkifEqual("Check mapDef2Source linkedGeometry", 	source->GetLinkedGeometry(), 	"mapDef2SourceLinkedGeo");
+
+				ESourceType type;
+				__checkVCOM(source->GetType(type));
+				checkifEqual("Check mapDef2Source type", (size_t)type, (size_t)ESourceType::CaptureDevice);
+			}
+		}
+
+		
 
     }
 }

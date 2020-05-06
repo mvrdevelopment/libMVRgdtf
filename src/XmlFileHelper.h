@@ -87,6 +87,7 @@ namespace SceneData
 		static TXString	Convert2DPoint(double p_X, double p_Y);
 		static TXString	ConvertBool(bool value);
 		static TXString	ConvertESourceType(ESourceType value);
+		static TXString	ConvertEScaleHandlingType(EScaleHandlingType value);
 		
 
         //-----------------------------------------------------------------------------
@@ -125,6 +126,7 @@ namespace SceneData
 		static bool     Convert2DPoint(					const TXString& inVal, const IXMLFileNodePtr& node, double& p_X, 							double& p_Y);
 		static bool     ConvertBool(					const TXString& inVal, const IXMLFileNodePtr& node, bool& outVal);
 		static bool     ConvertESourceType(				const TXString& inVal, const IXMLFileNodePtr& node, ESourceType& outVal);
+		static bool     ConvertEScaleHandlingType(		const TXString& inVal, const IXMLFileNodePtr& node, EScaleHandlingType& outVal);
 		
 
         static bool 	ConvertDmxOffset(const TXString& inVal, const IXMLFileNodePtr& node, DMXAddress& coarse, DMXAddress& fine, DMXAddress& ultra, DMXAddress& uber);

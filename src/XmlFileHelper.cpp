@@ -1636,6 +1636,36 @@ CieColor SceneData::GdtfConverter::ConvertCColor(const CCieColor & color)
     return true;
 }
 
+/*static*/ TXString GdtfConverter::ConvertEScaleHandlingType(EScaleHandlingType value)
+{
+    switch (value)
+    {
+		case EScaleHandlingType::ScaleKeepRatio:				return XML_Val_ScaleHandlingTypeScaleKeepRatio;
+		case EScaleHandlingType::ScaleIgnoreRatio:				return XML_Val_ScaleHandlingTypeScaleIgnoreRatio;
+		case EScaleHandlingType::KeepSizeCenter:				return XML_Val_ScaleHandlingTypeKeepSizeCenter;
+    }
+
+	DSTOP((kEveryone, "Unknown Enum for EScaleHandlingType"));
+
+    return XML_Val_ScaleHandlingTypeScaleKeepRatio;
+}
+
+
+/*static*/ bool GdtfConverter::ConvertEScaleHandlingType(const TXString& inVal, const IXMLFileNodePtr& node, EScaleHandlingType& outVal)
+{
+	if        (inVal == XML_Val_ScaleHandlingTypeScaleKeepRatio)	{ outVal = EScaleHandlingType::ScaleKeepRatio; }     
+	else if   (inVal == XML_Val_ScaleHandlingTypeScaleIgnoreRatio)  { outVal = EScaleHandlingType::ScaleIgnoreRatio; } 
+	else if   (inVal == XML_Val_ScaleHandlingTypeKeepSizeCenter)	{ outVal = EScaleHandlingType::KeepSizeCenter; }  
+	else if   (inVal.IsEmpty())    									{ outVal = EScaleHandlingType::ScaleKeepRatio; } 
+	else 
+	{
+		DSTOP((kEveryone, "Unknown Value for EScaleHandlingType"));
+		outVal = EScaleHandlingType::ScaleKeepRatio;
+	}
+       
+    return true;
+}
+
 bool SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, const IFileIdentifierPtr& file, ERessourceType resType, bool deleteFile, bool mustExist)
 {
 	//-------------------------------------------------------------------------------------------------

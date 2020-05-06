@@ -90,6 +90,22 @@
 #define XML_Val_SourceTypeCITP	        "CITP"
 #define XML_Val_SourceTypeCaptureDevice	"CaptureDevice"
 
+#define XML_Val_MappingDefinitionNodeName           "MappingDefinition"
+#define XML_Val_MappingDefinitionSizeX              "SizeX"
+#define XML_Val_MappingDefinitionSizeY              "SizeY"
+#define XML_Val_MappingDefinitionScaleHandling      "ScaleHandling"
+#define XML_Val_ScaleHandlingTypeScaleKeepRatio	    "ScaleKeepRatio"
+#define XML_Val_ScaleHandlingTypeScaleIgnoreRatio   "ScaleIgnoreRatio"
+#define XML_Val_ScaleHandlingTypeKeepSizeCenter	    "KeepSizeCenter"
+
+#define XML_Val_MappingNodeName	        "Mapping"
+#define XML_Val_MappingLinkedDefUuid	"linkedDef"
+#define XML_Val_MappingUx	            "ux"
+#define XML_Val_MappingUy	            "uy"
+#define XML_Val_MappingOx	            "ox"
+#define XML_Val_MappingOy	            "oy"
+#define XML_Val_MappingRz	            "rz"
+
 #define XML_Val_LayerObjectNodeName	"Layer"
 #define XML_Val_FixtureNodeName		"Fixture"
 #define XML_Val_GroupNodeName		"GroupObject"
@@ -105,7 +121,7 @@
 
 #define XML_Val_NameAttrName		"name"
 #define XML_Val_GuidAttrName		"uuid"
-#define XML_Val_ClassingNodeName		"Classing"
+#define XML_Val_ClassingNodeName	"Classing"
 
 #define XML_Val_FixtureGDTFSpec		"GDTFSpec"
 #define XML_Val_FixtureDMXMode		"GDTFMode"
@@ -123,6 +139,7 @@
 #define XML_Val_FixtureGobo		    "Gobo"
 #define XML_Val_FixtureGoboRotation "rotation"
 #define XML_Val_FixtureCastShadow   "CastShadow"
+#define XML_Val_FixtureMappings     "Mappings"
 
 #define XML_Val_SceneObjectNodeName			"SceneObject"
 
@@ -132,6 +149,11 @@
 
 #define XML_Val_VideoScreenObjectNodeName	"VideoScreen"
 #define XML_Val_VideoScreenObjectSources    "Sources"
+
+#define XML_Val_ProjectorObjectNodeName	        "Projector"
+#define XML_Val_ProjectorObjectProjections      "Projections"
+#define XML_Val_ProjectorObjectProjection       "Projection"
+#define XML_Val_ProjectorObjectScaleHandling    "ScaleHandling"
 
 #define XML_Val_SymbolObjectNodeName		"Symbol"
 #define XML_Val_GuidSymdefAttrName			"symdef"

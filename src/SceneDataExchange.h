@@ -35,20 +35,23 @@ namespace SceneData
 	
 	enum ESceneDataObjectType : short
 	{
-		eFixture		= 0,
-		eLayer			= 1,
-		eGroup			= 2,
-		eSymbol			= 3,
-		eSceneObject	= 4,
-		eFocusPoint		= 5,
-		eTruss			= 6,
-		eVideoScreen	= 7,
-		eSymDef			= -1,
-		eProviderObj	= -2,
-		ePosition		= -3,
-		eGeometryObj	= -4,
-		eClassObject	= -5,
-		eSourceObject	= -6,
+		eFixture					= 0,
+		eLayer						= 1,
+		eGroup						= 2,
+		eSymbol						= 3,
+		eSceneObject				= 4,
+		eFocusPoint					= 5,
+		eTruss						= 6,
+		eVideoScreen				= 7,
+		eProjector					= 8,
+		eSymDef						= -1,
+		eProviderObj				= -2,
+		ePosition					= -3,
+		eGeometryObj				= -4,
+		eClassObject				= -5,
+		eSourceObject				= -6,
+		eMappingDefinitionObject	= -7,
+		eMappingObject				= -8,
 	};
 	
 	enum class ESearchUuidIn
@@ -75,7 +78,7 @@ namespace SceneData
 		
 		
 	private:
-		Tools::VWUUID			_uuid;
+		Tools::VWUUID		_uuid;
 		ESceneDataGUIDType	_type;
 		TXString			_typeEntry;
 		
@@ -253,8 +256,8 @@ namespace SceneData
 	{
 		
 	public:
-		SceneDataSourceObj(const SceneDataGUID& guid);
-		SceneDataSourceObj(const SceneDataGUID& guid, const TXString& value, const TXString& linkedGeometry, ESourceType type);
+		SceneDataSourceObj();
+		SceneDataSourceObj(const TXString& value, const TXString& linkedGeometry, ESourceType type);
 		virtual ~SceneDataSourceObj();
 
 	private:
@@ -281,7 +284,87 @@ namespace SceneData
 	};
 	typedef SceneDataSourceObj* SceneDataSourceObjPtr;
 	typedef std::vector<SceneDataSourceObjPtr>	SceneDataSourceObjArray;
-	
+
+	// ----------------------------------------------------------------------------------------------------------------------------------
+	// SceneDataMappingDefinitionObj
+	class SceneDataMappingDefinitionObj : public SceneDataAuxObj
+	{
+
+	public:
+		SceneDataMappingDefinitionObj(const SceneDataGUID& guid);
+		SceneDataMappingDefinitionObj(const SceneDataGUID& guid, Uint32 sizeX, Uint32 sizeY, SceneDataSourceObjPtr source);
+		virtual ~SceneDataMappingDefinitionObj();
+		
+	private:
+		Uint32					fSizeX;
+		Uint32					fSizeY;
+		SceneDataSourceObjPtr 	fSource;
+		EScaleHandlingType		fScaleHandling;
+		
+	public:
+		virtual Uint32 					GetSizeX();
+		virtual Uint32 					GetSizeY();
+		virtual SceneDataSourceObjPtr	GetSource();
+		virtual EScaleHandlingType		GetScaleHandling();
+
+		virtual void 	SetSizeX(Uint32 sizeX);
+		virtual void 	SetSizeY(Uint32 sizeY);
+		virtual void	SetSource(const TXString& value, const TXString& linkedGeometry, ESourceType type);
+		virtual void	SetScaleHandling(EScaleHandlingType scaleHandling);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual ESceneDataObjectType	GetObjectType();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange);
+
+	};
+	typedef SceneDataMappingDefinitionObj*					SceneDataMappingDefinitionObjPtr;
+	typedef std::vector<SceneDataMappingDefinitionObjPtr>	SceneDataMappingDefinitionObjArray;
+
+	// ----------------------------------------------------------------------------------------------------------------------------------
+	// SceneDataMappingObj
+	class SceneDataMappingObj : public SceneDataObj
+	{
+
+	public:
+		SceneDataMappingObj();
+		SceneDataMappingObj(const SceneDataGUID& linkedDefUuid);
+		virtual ~SceneDataMappingObj();
+		
+	private:
+
+		SceneDataGUID	fLinkedDefUuid;
+		Uint32			fUx;
+		Uint32			fUy;
+		Uint32			fOx;
+		Uint32			fOy;
+		double			fRz;
+		
+	public:
+		virtual SceneDataGUID	GetLinkedDefUuid();
+		virtual Uint32 			GetUx();
+		virtual Uint32 			GetUy();
+		virtual Uint32 			GetOx();
+		virtual Uint32 			GetOy();
+		virtual double 			GetRz();
+
+		virtual void			SetLinkedDefUuid(const SceneDataGUID& linkedDefUuid);
+		virtual void 			SetUx(Uint32 value);
+		virtual void 			SetUy(Uint32 value);
+		virtual void 			SetOx(Uint32 value);
+		virtual void 			SetOy(Uint32 value);
+		virtual void 			SetRz(double value);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual ESceneDataObjectType	GetObjectType();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange);
+
+	};
+	typedef SceneDataMappingObj*				SceneDataMappingObjPtr;
+	typedef std::vector<SceneDataMappingObjPtr>	SceneDataMappingObjArray;
 	
 	
 	// ----------------------------------------------------------------------------------------------------------------------------------
@@ -487,6 +570,7 @@ namespace SceneData
 		Sint8							fFixtureTypeId;
 		size_t							fCustomId;
 		bool							fCastShadow;
+		SceneDataMappingObjArray		fMappings;
 		
 		
 		// Reading Storage
@@ -515,6 +599,7 @@ namespace SceneData
 		const TXString&					GetGobo();
 		double							GetGoboRotation();
 		bool							GetCastShadow();
+		SceneDataMappingObjArray		GetMappingsArray();
 		
 		void							SetPosition(SceneDataPositionObjPtr ptr);
 		void							SetFocusPoint(SceneDataFocusPointObjPtr ptr);
@@ -529,6 +614,7 @@ namespace SceneData
 		void							SetGobo(const TXString& value);
 		void							SetGoboRotation(double value);
 		void							SetCastShadow(bool value);
+		void							AddMapping(SceneDataGUID mappingDefinitionUuid);
 		
 	protected:
 		virtual	TXString				GetNodeName();
@@ -573,7 +659,7 @@ namespace SceneData
 	
 	
 	// ----------------------------------------------------------------------------------------------------------------------------------
-	// SceneDataVideoScreneObj
+	// SceneDataVideoScreenObj
 	class SceneDataVideoScreenObj : public SceneDataObjWithMatrix
 	{
 		
@@ -582,11 +668,11 @@ namespace SceneData
 		virtual ~SceneDataVideoScreenObj();
 	
 	private:
-		SceneDataSourceObjArray	fSources;
+		SceneDataSourceObjPtr	fSource;
 
 	public:
-		virtual SceneDataSourceObjArray GetSourceArray();
-		virtual void 					AddSource(const TXString& value, const TXString& linkedGeometry, ESourceType type);
+		virtual SceneDataSourceObjPtr 	GetVideoSource();
+		virtual void 					SetVideoSource(const TXString& value, const TXString& linkedGeometry, ESourceType type);
 
 	private:
 		virtual	TXString				GetNodeName();
@@ -596,6 +682,35 @@ namespace SceneData
 		
 	};
 	typedef SceneDataVideoScreenObj* SceneDataVideoScreenObjPtr;
+
+	// ----------------------------------------------------------------------------------------------------------------------------------
+	// SceneDataProjectorObj
+	class SceneDataProjectorObj : public SceneDataObjWithMatrix
+	{
+		
+	public:
+		SceneDataProjectorObj(const SceneDataGUID& guid);
+		virtual ~SceneDataProjectorObj();
+	
+	private:
+		SceneDataSourceObjPtr 	fSource;
+		EScaleHandlingType		fScaleHandling;
+
+	public:
+		virtual SceneDataSourceObjPtr 	GetVideoSource();
+		virtual EScaleHandlingType		GetScaleHandling();
+
+		virtual void 					SetVideoSource(const TXString& value, const TXString& linkedGeometry, ESourceType type);
+		virtual void					SetScaleHandling(EScaleHandlingType scaleHandling);
+
+	private:
+		virtual	TXString				GetNodeName();
+		virtual ESceneDataObjectType	GetObjectType();
+		virtual void					OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange);
+		
+	};
+	typedef SceneDataProjectorObj* SceneDataProjectorObjPtr;
 	
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataSymbolObj
@@ -693,11 +808,12 @@ namespace SceneData
 		// ---------------------------------------------------------------------------------------------------------------------
 		// Create calls
 	public:
-		SceneDataProviderObjPtr		CreateDataProviderObject(const TXString& provider, const TXString& version);
-		SceneDataPositionObjPtr		CreatePositionObject(const SceneDataGUID& guid, const TXString& name);
-		SceneDataSymDefObjPtr		CreateSymDefObject(const SceneDataGUID& guid, const TXString& name);
-		SceneDataClassObjPtr		CreateClassObject(const SceneDataGUID& guid, const TXString& name);
-		SceneDataSymbolObjPtr 		CreateSymbol(const SceneDataGUID& guid, const VWTransformMatrix& offset, SceneDataSymDefObjPtr symDef);
+		SceneDataProviderObjPtr				CreateDataProviderObject(const TXString& provider, const TXString& version);
+		SceneDataPositionObjPtr				CreatePositionObject(const SceneDataGUID& guid, const TXString& name);
+		SceneDataSymDefObjPtr				CreateSymDefObject(const SceneDataGUID& guid, const TXString& name);
+		SceneDataClassObjPtr				CreateClassObject(const SceneDataGUID& guid, const TXString& name);
+		SceneDataSymbolObjPtr 				CreateSymbol(const SceneDataGUID& guid, const VWTransformMatrix& offset, SceneDataSymDefObjPtr symDef);
+		SceneDataMappingDefinitionObjPtr	CreateMappingDefinitionObject(const SceneDataGUID& guid, const TXString& name);
 		
 		
 		SceneDataLayerObjPtr		CreateLayerObject(	const SceneDataGUID& guid,									const TXString& name);
@@ -707,15 +823,17 @@ namespace SceneData
 		SceneDataFocusPointObjPtr	CreateFocusPoint(	const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
 		SceneDataTrussObjPtr		CreateTruss(		const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
 		SceneDataVideoScreenObjPtr	CreateVideoScreen(	const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
+		SceneDataProjectorObjPtr	CreateProjector(	const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
 		
 		
 		// ---------------------------------------------------------------------------------------------------------------------
 		// Read calls
 	private:
-		SceneDataProviderObjPtr		ReadDataProviderObject(	const SceneDataGUID& guid,const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
-		SceneDataPositionObjPtr		ReadPositionObject(		const IXMLFileNodePtr& node);
-		SceneDataSymDefObjPtr		ReadSymDefObject(		const IXMLFileNodePtr& node);
-		SceneDataClassObjPtr		ReadClassObject(		const IXMLFileNodePtr& node);
+		SceneDataProviderObjPtr				ReadDataProviderObject(		const SceneDataGUID& guid,const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
+		SceneDataPositionObjPtr				ReadPositionObject(			const IXMLFileNodePtr& node);
+		SceneDataSymDefObjPtr				ReadSymDefObject(			const IXMLFileNodePtr& node);
+		SceneDataClassObjPtr				ReadClassObject(			const IXMLFileNodePtr& node);
+		SceneDataMappingDefinitionObjPtr	ReadMappingDefinitionObject(const IXMLFileNodePtr& node);
 		
 		
 		SceneDataLayerObjPtr		ReadLayerObject(		const SceneDataGUID& guid,const IXMLFileNodePtr& node);
@@ -725,6 +843,7 @@ namespace SceneData
 		SceneDataFocusPointObjPtr	ReadFocusPoint(			const SceneDataGUID& guid,const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
 		SceneDataTrussObjPtr		ReadTruss(				const SceneDataGUID& guid,const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
 		SceneDataVideoScreenObjPtr	ReadVideoScreen(		const SceneDataGUID& guid,const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
+		SceneDataProjectorObjPtr	ReadProjector(			const SceneDataGUID& guid,const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
 		
 	private:
 		

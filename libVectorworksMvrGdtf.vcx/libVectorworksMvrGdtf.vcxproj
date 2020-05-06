@@ -116,10 +116,13 @@
     <ClCompile Include="..\src\Implementation\CGdtfWheelSlotPrismFacet.cpp" />
     <ClCompile Include="..\src\Implementation\CGdtfXmlParsingError.cpp" />
     <ClCompile Include="..\src\Implementation\CGeometryReferenceImpl.cpp" />
+    <ClCompile Include="..\src\Implementation\CMappingImpl.cpp" />
+    <ClCompile Include="..\src\Implementation\CMappingDefinitionImpl.cpp" />
     <ClCompile Include="..\src\Implementation\CMediaRessourceVectorImpl.cpp" />
     <ClCompile Include="..\src\Implementation\CPositionImpl.cpp" />
     <ClCompile Include="..\src\Implementation\CSceneDataProviderImpl.cpp" />
     <ClCompile Include="..\src\Implementation\CSceneObjImpl.cpp" />
+    <ClCompile Include="..\src\Implementation\CSourceImpl.cpp" />
     <ClCompile Include="..\src\Implementation\CSymDefImpl.cpp" />
     <ClCompile Include="..\src\Implementation\CUtility.cpp" />
     <ClCompile Include="..\src\MCCoordTypes.cpp" />
@@ -207,10 +210,13 @@
     <ClInclude Include="..\src\Implementation\CGdtfWheelSlotPrismFacet.h" />
     <ClInclude Include="..\src\Implementation\CGdtfXmlParsingError.h" />
     <ClInclude Include="..\src\Implementation\CGeometryReferenceImpl.h" />
+    <ClInclude Include="..\src\Implementation\CMappingImpl.h" />
+    <ClInclude Include="..\src\Implementation\CMappingDefinitionImpl.h" />
     <ClInclude Include="..\src\Implementation\CMediaRessourceVectorImpl.h" />
     <ClInclude Include="..\src\Implementation\CPositionImpl.h" />
     <ClInclude Include="..\src\Implementation\CSceneDataProviderImpl.h" />
     <ClInclude Include="..\src\Implementation\CSceneObjImpl.h" />
+    <ClInclude Include="..\src\Implementation\CSourceImpl.h" />
     <ClInclude Include="..\src\Implementation\CSymDefImpl.h" />
     <ClInclude Include="..\src\Implementation\CUtility.h" />
     <ClInclude Include="..\src\Include\GDTFPrefix.h" />

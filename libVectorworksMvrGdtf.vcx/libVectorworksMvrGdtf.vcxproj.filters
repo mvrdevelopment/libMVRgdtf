@@ -174,6 +174,12 @@
     <ClCompile Include="..\src\Implementation\CGeometryReferenceImpl.cpp">
       <Filter>src\Implementation</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Implementation\CMappingImpl.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Implementation\CMappingDefinitionImpl.cpp">
+      <Filter>src\Implementation</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\Implementation\CMediaRessourceVectorImpl.cpp">
       <Filter>src\Implementation</Filter>
     </ClCompile>
@@ -280,6 +286,9 @@
       <Filter>src\Implementation</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Wrapper\ZIPFileBuffer.cpp">
+      <Filter>src\Wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Implementation\CSourceImpl.cpp">
       <Filter>src\Wrapper</Filter>
     </ClCompile>
   </ItemGroup>
@@ -470,6 +479,12 @@
     <ClInclude Include="..\src\Implementation\CGeometryReferenceImpl.h">
       <Filter>src\Implementation</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Implementation\CMappingImpl.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Implementation\CMappingDefinitionImpl.h">
+      <Filter>src\Implementation</Filter>
+    </ClInclude>
     <ClInclude Include="..\src\Implementation\CMediaRessourceVectorImpl.h">
       <Filter>src\Implementation</Filter>
     </ClInclude>
@@ -598,6 +613,9 @@
     </ClInclude>
     <ClInclude Include="..\src\Interface\IZIPFileBuffer.h">
       <Filter>src\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Implementation\CSourceImpl.h">
+      <Filter>src\Wrapper</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
