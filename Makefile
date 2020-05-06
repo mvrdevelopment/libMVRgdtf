@@ -48,6 +48,14 @@ endif
 # OSX defaults
 OSX_VERSION		?= 10.10
 
+
+# Include Minizp
+INCLUDE_MINI_ZIP ?= 0
+ifeq ($(INCLUDE_MINI_ZIP), 1)
+    CXXFLAGS 			+= -DDONT_INCLUDE_MINI_ZIP
+endif
+
+
 # Library: set platform compiler, linker and e.t.c. options
 # Windows
 ifeq ($(OS),Windows_NT)
