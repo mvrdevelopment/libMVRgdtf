@@ -201,6 +201,27 @@ namespace VectorworksMVR
 		
 	};
 	typedef VCOMPtr<IMappingDefinition>	IMappingDefinitionPtr;
+
+	//-------------------------------------------------------------------------------------------------------------
+	class DYNAMIC_ATTRIBUTE IMapping : public IVWUnknown
+	{
+	public:
+		virtual VCOMError VCOM_CALLTYPE		GetLinkedDefUuid(MvrUUID& linkedDefUuid) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetUx(Uint32& outValue) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetUy(Uint32& outValue) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetOx(Uint32& outValue) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetOy(Uint32& outValue) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetRz(double& outValue) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE		SetLinkedDefUuid(MvrUUID linkedDefUuid) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetUx(Uint32 value) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetUy(Uint32 value) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetOx(Uint32 value) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetOy(Uint32 value) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetRz(double value) = 0;
+		
+	};
+	typedef VCOMPtr<IMapping>	IMappingPtr;
 	
 	//-------------------------------------------------------------------------------------------------------------
 	enum class ESceneObjType
@@ -251,6 +272,8 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetGoboRotation(double& value) = 0;
 		virtual MvrString VCOM_CALLTYPE		GetGoboFullPath() = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetCastShadow(bool& value) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetMappingCount(size_t& outMappings) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetMappingAt(size_t at, IMapping** outMapping) = 0;
 		
 		virtual VCOMError VCOM_CALLTYPE		SetGdtfName(MvrString gdtfName) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetGdtfMode(MvrString gdtfMode) = 0;
@@ -265,6 +288,7 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		SetGobo(MvrString gobo) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetGoboRotation(double rotation) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetCastShadow(bool castShadow) = 0;
+		virtual VCOMError VCOM_CALLTYPE		AddMapping(MvrUUID mapDefUuid) = 0;
 
 		// Video Screen
 		virtual VCOMError VCOM_CALLTYPE		SetVideoSource(MvrString value, MvrString linkedGeometry, ESourceType type) = 0;
