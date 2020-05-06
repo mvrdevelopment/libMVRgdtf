@@ -1937,6 +1937,115 @@ void SceneDataVideoScreenObj::OnReadFromNode(const IXMLFileNodePtr& pNode, Scene
 		
 }
 
+// ----------------------------------------------------------------------------------------------------------------------------------
+// SceneDataProjectorObj
+SceneDataProjectorObj::SceneDataProjectorObj(const SceneDataGUID& guid) : SceneDataObjWithMatrix(guid)
+{
+	fSource = nullptr;
+}
+
+SceneDataProjectorObj::~SceneDataProjectorObj()
+{
+	delete fSource;
+}
+
+SceneDataSourceObjPtr SceneDataProjectorObj::GetVideoSource()
+{
+	return fSource;
+}
+
+EScaleHandlingType	SceneDataProjectorObj::GetScaleHandling()
+{
+	return fScaleHandling;
+}
+
+void SceneDataProjectorObj::SetVideoSource(const TXString& value, const TXString& linkedGeometry, ESourceType type)
+{
+	if(!fSource)
+	{
+		fSource = new SceneDataSourceObj(value, linkedGeometry, type);
+	} 
+	else
+	{
+		fSource->SetValue(value);
+		fSource->SetLinkedGeometry(linkedGeometry);
+		fSource->SetType(type);
+	}
+}
+
+void SceneDataProjectorObj::SetScaleHandling(EScaleHandlingType scaleHandling)
+{
+	fScaleHandling = scaleHandling;
+}
+
+TXString SceneDataProjectorObj::GetNodeName()
+{
+	return TXString(XML_Val_ProjectorObjectNodeName);
+}
+
+ESceneDataObjectType SceneDataProjectorObj::GetObjectType()
+{
+	return ESceneDataObjectType::eProjector;
+}
+
+void SceneDataProjectorObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
+{
+	// Call Parent
+	SceneDataObjWithMatrix::OnPrintToFile(pNode, exchange);
+
+	IXMLFileNodePtr pProjectionsNode;
+	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_Val_ProjectorObjectProjections, &pProjectionsNode)))
+	{
+		IXMLFileNodePtr pProjectionNode;
+		if (VCOM_SUCCEEDED(pProjectionsNode->CreateChildNode(XML_Val_ProjectorObjectProjection, &pProjectionNode)))
+		{
+			if(fSource) { fSource->PrintToFile(pProjectionNode, exchange); }
+
+			IXMLFileNodePtr pScaleHandlingNode;
+			if (VCOM_SUCCEEDED(pProjectionNode->CreateChildNode(XML_Val_ProjectorObjectScaleHandling, &pScaleHandlingNode)))
+			{
+				pScaleHandlingNode->SetNodeValue(GdtfConverter::ConvertEScaleHandlingType(fScaleHandling));
+			}
+		}
+	}
+}
+
+void SceneDataProjectorObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
+{
+	SceneDataObjWithMatrix::OnReadFromNode(pNode, exchange);
+
+	IXMLFileNodePtr pProjectionsNode;	
+	pNode->GetChildNode(XML_Val_ProjectorObjectProjections, &pProjectionsNode);
+	if(pProjectionsNode)
+	{
+		IXMLFileNodePtr pProjectionNode;
+		pProjectionsNode->GetChildNode(XML_Val_ProjectorObjectProjection, &pProjectionNode);
+		if(pProjectionNode)
+		{
+			IXMLFileNodePtr pSourceNode;
+			pProjectionNode->GetChildNode(XML_Val_SourceNodeName, &pSourceNode);
+			if(pSourceNode)
+			{
+				if(!fSource)
+				{
+					fSource = new SceneDataSourceObj();
+				}
+
+				fSource->ReadFromNode(pSourceNode, exchange);
+			}
+
+			IXMLFileNodePtr pScaleHandlingNode;
+			if(VCOM_SUCCEEDED(pProjectionNode->GetChildNode(XML_Val_ProjectorObjectScaleHandling, &pScaleHandlingNode)))
+			{
+				TXString value;
+				pScaleHandlingNode->GetNodeValue(value);
+				GdtfConverter::ConvertEScaleHandlingType(value, pScaleHandlingNode, fScaleHandling);	
+			}
+		}
+	}
+		
+}
+
 
 // ----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataSymbolObj
@@ -2495,13 +2604,36 @@ SceneDataVideoScreenObjPtr SceneDataExchange::ReadVideoScreen(const SceneDataGUI
 	SceneDataVideoScreenObjPtr newVSObj = new SceneDataVideoScreenObj(guid);
 	addToContainer->AddObject(newVSObj);
 	
-	
 	//----------------------------------------------------------------------------
 	// Read
 	newVSObj->ReadFromNode(node, this);
 	
-	
 	return newVSObj;
+}
+
+SceneDataProjectorObjPtr SceneDataExchange::CreateProjector(const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name, SceneDataGroupObjPtr addToContainer)
+{
+	SceneDataProjectorObjPtr newProjectorObj = new SceneDataProjectorObj(guid);
+	addToContainer->AddObject(newProjectorObj);
+	
+	newProjectorObj->setName(name);
+	newProjectorObj->SetTransformMatrix(offset);
+		
+	return newProjectorObj;
+}
+
+SceneDataProjectorObjPtr SceneDataExchange::ReadProjector(const SceneDataGUID& guid,const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer)
+{
+	//----------------------------------------------------------------------------
+	// Create new Object
+	SceneDataProjectorObjPtr newProjectorObj = new SceneDataProjectorObj(guid);
+	addToContainer->AddObject(newProjectorObj);
+	
+	//----------------------------------------------------------------------------
+	// Read
+	newProjectorObj->ReadFromNode(node, this);
+	
+	return newProjectorObj;
 }
 
 SceneDataSymbolObjPtr SceneDataExchange::CreateSymbol(const SceneDataGUID& guid, const VWTransformMatrix& offset, SceneDataSymDefObjPtr symDef)

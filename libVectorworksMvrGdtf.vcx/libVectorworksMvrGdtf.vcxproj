@@ -122,6 +122,7 @@
     <ClCompile Include="..\src\Implementation\CPositionImpl.cpp" />
     <ClCompile Include="..\src\Implementation\CSceneDataProviderImpl.cpp" />
     <ClCompile Include="..\src\Implementation\CSceneObjImpl.cpp" />
+    <ClCompile Include="..\src\Implementation\CSourceImpl.cpp" />
     <ClCompile Include="..\src\Implementation\CSymDefImpl.cpp" />
     <ClCompile Include="..\src\Implementation\CUtility.cpp" />
     <ClCompile Include="..\src\MCCoordTypes.cpp" />
@@ -215,6 +216,7 @@
     <ClInclude Include="..\src\Implementation\CPositionImpl.h" />
     <ClInclude Include="..\src\Implementation\CSceneDataProviderImpl.h" />
     <ClInclude Include="..\src\Implementation\CSceneObjImpl.h" />
+    <ClInclude Include="..\src\Implementation\CSourceImpl.h" />
     <ClInclude Include="..\src\Implementation\CSymDefImpl.h" />
     <ClInclude Include="..\src\Implementation\CUtility.h" />
     <ClInclude Include="..\src\Include\GDTFPrefix.h" />

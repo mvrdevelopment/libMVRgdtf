@@ -43,6 +43,7 @@ namespace SceneData
 		eFocusPoint					= 5,
 		eTruss						= 6,
 		eVideoScreen				= 7,
+		eProjector					= 8,
 		eSymDef						= -1,
 		eProviderObj				= -2,
 		ePosition					= -3,
@@ -681,6 +682,35 @@ namespace SceneData
 		
 	};
 	typedef SceneDataVideoScreenObj* SceneDataVideoScreenObjPtr;
+
+	// ----------------------------------------------------------------------------------------------------------------------------------
+	// SceneDataProjectorObj
+	class SceneDataProjectorObj : public SceneDataObjWithMatrix
+	{
+		
+	public:
+		SceneDataProjectorObj(const SceneDataGUID& guid);
+		virtual ~SceneDataProjectorObj();
+	
+	private:
+		SceneDataSourceObjPtr 	fSource;
+		EScaleHandlingType		fScaleHandling;
+
+	public:
+		virtual SceneDataSourceObjPtr 	GetVideoSource();
+		virtual EScaleHandlingType		GetScaleHandling();
+
+		virtual void 					SetVideoSource(const TXString& value, const TXString& linkedGeometry, ESourceType type);
+		virtual void					SetScaleHandling(EScaleHandlingType scaleHandling);
+
+	private:
+		virtual	TXString				GetNodeName();
+		virtual ESceneDataObjectType	GetObjectType();
+		virtual void					OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange);
+		
+	};
+	typedef SceneDataProjectorObj* SceneDataProjectorObjPtr;
 	
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataSymbolObj
@@ -793,6 +823,7 @@ namespace SceneData
 		SceneDataFocusPointObjPtr	CreateFocusPoint(	const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
 		SceneDataTrussObjPtr		CreateTruss(		const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
 		SceneDataVideoScreenObjPtr	CreateVideoScreen(	const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
+		SceneDataProjectorObjPtr	CreateProjector(	const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
 		
 		
 		// ---------------------------------------------------------------------------------------------------------------------
@@ -812,6 +843,7 @@ namespace SceneData
 		SceneDataFocusPointObjPtr	ReadFocusPoint(			const SceneDataGUID& guid,const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
 		SceneDataTrussObjPtr		ReadTruss(				const SceneDataGUID& guid,const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
 		SceneDataVideoScreenObjPtr	ReadVideoScreen(		const SceneDataGUID& guid,const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
+		SceneDataProjectorObjPtr	ReadProjector(			const SceneDataGUID& guid,const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
 		
 	private:
 		
