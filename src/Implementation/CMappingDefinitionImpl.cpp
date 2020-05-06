@@ -113,7 +113,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMappingDefinitionImpl::GetSource(ISou
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CMappingDefinitionImpl::GetScaleHandling(EScaleHandlingType& scaleHandling)
+VectorworksMVR::VCOMError VectorworksMVR::CMappingDefinitionImpl::GetScaleHandling(GdtfDefines::EScaleHandlingType& scaleHandling)
 {
 	// Check if this is initialized
 	ASSERTN(kEveryone,fPtr);
@@ -149,7 +149,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMappingDefinitionImpl::SetSizeY(Uint3
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CMappingDefinitionImpl::SetSource(MvrString value, MvrString linkedGeometry, ESourceType type)
+VectorworksMVR::VCOMError VectorworksMVR::CMappingDefinitionImpl::SetSource(MvrString value, MvrString linkedGeometry, GdtfDefines::ESourceType type)
 {	
 	// Check if this is initialized
 	ASSERTN(kEveryone, fPtr);
@@ -160,7 +160,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMappingDefinitionImpl::SetSource(MvrS
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CMappingDefinitionImpl::SetScaleHandling(EScaleHandlingType scaleHandling)
+VectorworksMVR::VCOMError VectorworksMVR::CMappingDefinitionImpl::SetScaleHandling(GdtfDefines::EScaleHandlingType scaleHandling)
 {
 	// Check if this is initialized
 	ASSERTN(kEveryone,fPtr);

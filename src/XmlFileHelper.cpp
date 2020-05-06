@@ -1604,11 +1604,11 @@ CieColor SceneData::GdtfConverter::ConvertCColor(const CCieColor & color)
 	return true;
 }
 
-/*static*/ TXString GdtfConverter::ConvertESourceType(ESourceType value)
+/*static*/ TXString GdtfConverter::ConvertESourceType(GdtfDefines::ESourceType value)
 {
     switch (value)
     {
-		case ESourceType::DNI:				return XML_Val_SourceTypeDNI;
+		case ESourceType::NDI:				return XML_Val_SourceTypeNDI;
 		case ESourceType::File:				return XML_Val_SourceTypeFile;
 		case ESourceType::CITP:				return XML_Val_SourceTypeCITP;
 		case ESourceType::CaptureDevice:	return XML_Val_SourceTypeCaptureDevice;
@@ -1616,27 +1616,27 @@ CieColor SceneData::GdtfConverter::ConvertCColor(const CCieColor & color)
 
 	DSTOP((kEveryone, "Unknown Enum for ESourceType"));
 
-    return XML_Val_SourceTypeDNI;
+    return XML_Val_SourceTypeNDI;
 }
 
 
-/*static*/ bool GdtfConverter::ConvertESourceType(const TXString& inVal, const IXMLFileNodePtr& node, ESourceType& outVal)
+/*static*/ bool GdtfConverter::ConvertESourceType(const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::ESourceType& outVal)
 {
-	if        (inVal == XML_Val_SourceTypeDNI)				{ outVal = ESourceType::DNI; }     
+	if        (inVal == XML_Val_SourceTypeNDI)				{ outVal = ESourceType::NDI; }     
 	else if   (inVal == XML_Val_SourceTypeFile)   			{ outVal = ESourceType::File; } 
 	else if   (inVal == XML_Val_SourceTypeCITP)   			{ outVal = ESourceType::CITP; }
 	else if   (inVal == XML_Val_SourceTypeCaptureDevice)	{ outVal = ESourceType::CaptureDevice; }   
-	else if   (inVal.IsEmpty())    							{ outVal = ESourceType::DNI; } 
+	else if   (inVal.IsEmpty())    							{ outVal = ESourceType::NDI; } 
 	else 
 	{
 		DSTOP((kEveryone, "Unknown Value for ESourceType"));
-		outVal = ESourceType::DNI;
+		outVal = ESourceType::NDI;
 	}
        
     return true;
 }
 
-/*static*/ TXString GdtfConverter::ConvertEScaleHandlingType(EScaleHandlingType value)
+/*static*/ TXString GdtfConverter::ConvertEScaleHandlingType(GdtfDefines::EScaleHandlingType value)
 {
     switch (value)
     {
@@ -1651,7 +1651,7 @@ CieColor SceneData::GdtfConverter::ConvertCColor(const CCieColor & color)
 }
 
 
-/*static*/ bool GdtfConverter::ConvertEScaleHandlingType(const TXString& inVal, const IXMLFileNodePtr& node, EScaleHandlingType& outVal)
+/*static*/ bool GdtfConverter::ConvertEScaleHandlingType(const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EScaleHandlingType& outVal)
 {
 	if        (inVal == XML_Val_ScaleHandlingTypeScaleKeepRatio)	{ outVal = EScaleHandlingType::ScaleKeepRatio; }     
 	else if   (inVal == XML_Val_ScaleHandlingTypeScaleIgnoreRatio)  { outVal = EScaleHandlingType::ScaleIgnoreRatio; } 

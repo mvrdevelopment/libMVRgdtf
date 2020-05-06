@@ -526,7 +526,7 @@ SceneDataSourceObj::SceneDataSourceObj() : SceneDataObj(SceneDataGUID(eNoGuid,""
 	
 }
 
-SceneDataSourceObj::SceneDataSourceObj(const TXString& value, const TXString& linkedGeometry, ESourceType type) : SceneDataObj(SceneDataGUID(eNoGuid,""))
+SceneDataSourceObj::SceneDataSourceObj(const TXString& value, const TXString& linkedGeometry, GdtfDefines::ESourceType type) : SceneDataObj(SceneDataGUID(eNoGuid,""))
 {
 	fValue 			= value;
 	fLinkedGeometry = linkedGeometry;
@@ -548,7 +548,7 @@ const TXString& SceneDataSourceObj::GetLinkedGeometry()
 	return fLinkedGeometry;
 }
 
-ESourceType	SceneDataSourceObj::GetType()
+GdtfDefines::ESourceType	SceneDataSourceObj::GetType()
 {
 	return fType;
 }
@@ -563,7 +563,7 @@ void SceneDataSourceObj::SetLinkedGeometry(TXString linkedGeometry)
 	fLinkedGeometry = linkedGeometry;
 }
 
-void SceneDataSourceObj::SetType(ESourceType type)
+void SceneDataSourceObj::SetType(GdtfDefines::ESourceType type)
 {
 	fType = type;
 }
@@ -657,7 +657,7 @@ void SceneDataMappingDefinitionObj::SetSizeY(Uint32 sizeY)
 	fSizeY = sizeY;
 }
 
-void SceneDataMappingDefinitionObj::SetSource(const TXString& value, const TXString& linkedGeometry, ESourceType type)
+void SceneDataMappingDefinitionObj::SetSource(const TXString& value, const TXString& linkedGeometry, GdtfDefines::ESourceType type)
 {
 	if(!fSource)
 	{
@@ -671,7 +671,7 @@ void SceneDataMappingDefinitionObj::SetSource(const TXString& value, const TXStr
 	}
 }
 
-void SceneDataMappingDefinitionObj::SetScaleHandling(EScaleHandlingType scaleHandling)
+void SceneDataMappingDefinitionObj::SetScaleHandling(GdtfDefines::EScaleHandlingType scaleHandling)
 {
 	fScaleHandling = scaleHandling;
 }
@@ -1878,7 +1878,7 @@ SceneDataSourceObjPtr SceneDataVideoScreenObj::GetVideoSource()
 	return fSource;
 }
 
-void SceneDataVideoScreenObj::SetVideoSource(const TXString& value, const TXString& linkedGeometry, ESourceType type)
+void SceneDataVideoScreenObj::SetVideoSource(const TXString& value, const TXString& linkedGeometry, GdtfDefines::ESourceType type)
 {
 	if(!fSource)
 	{
@@ -1960,7 +1960,7 @@ EScaleHandlingType	SceneDataProjectorObj::GetScaleHandling()
 	return fScaleHandling;
 }
 
-void SceneDataProjectorObj::SetVideoSource(const TXString& value, const TXString& linkedGeometry, ESourceType type)
+void SceneDataProjectorObj::SetVideoSource(const TXString& value, const TXString& linkedGeometry, GdtfDefines::ESourceType type)
 {
 	if(!fSource)
 	{
@@ -1974,7 +1974,7 @@ void SceneDataProjectorObj::SetVideoSource(const TXString& value, const TXString
 	}
 }
 
-void SceneDataProjectorObj::SetScaleHandling(EScaleHandlingType scaleHandling)
+void SceneDataProjectorObj::SetScaleHandling(GdtfDefines::EScaleHandlingType scaleHandling)
 {
 	fScaleHandling = scaleHandling;
 }

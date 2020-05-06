@@ -9,6 +9,7 @@
 
 #include "Include/VectorworksMVR.h"
 using namespace VectorworksMVR;
+using namespace VectorworksMVR::GdtfDefines;
 
 #define __checkVCOM(x) checkVCOM(x, #x)
 #define __checkVCOM_Failed(x) this->checkVCOM_NotSet(x, #x)
@@ -714,7 +715,7 @@ void MvrUnittest::ReadFile()
 						checkifEqual("Check Source1 value", 			source1->GetValue(), 			"myValue1");
 						checkifEqual("Check Source1 linkedGeometry", 	source1->GetLinkedGeometry(), 	"myLinkedGeometry1");
 
-						ESourceType type;
+						GdtfDefines::ESourceType type;
 						__checkVCOM(source1->GetType(type));
 						checkifEqual("Check Source1 type", (size_t)type, (size_t)ESourceType::File);
 					}
@@ -730,7 +731,7 @@ void MvrUnittest::ReadFile()
 						checkifEqual("Check SourceP value", 			source1->GetValue(), 			"myValueP");
 						checkifEqual("Check SourceP linkedGeometry", 	source1->GetLinkedGeometry(), 	"myLinkedGeometryP");
 
-						ESourceType type;
+						GdtfDefines::ESourceType type;
 						__checkVCOM(source1->GetType(type));
 						checkifEqual("Check SourceP type", (size_t)type, (size_t)ESourceType::File);
 					}
@@ -887,7 +888,7 @@ void MvrUnittest::ReadFile()
 				checkifEqual("Check mapDef1Source value", 			source->GetValue(), 			"mapDef1SourceValue");
 				checkifEqual("Check mapDef1Source linkedGeometry", 	source->GetLinkedGeometry(), 	"mapDef1SourceLinkedGeo");
 
-				ESourceType type;
+				GdtfDefines::ESourceType type;
 				__checkVCOM(source->GetType(type));
 				checkifEqual("Check Source1 type", (size_t)type, (size_t)ESourceType::File);
 			}
@@ -917,7 +918,7 @@ void MvrUnittest::ReadFile()
 				checkifEqual("Check mapDef2Source value", 			source->GetValue(), 			"mapDef2SourceValue");
 				checkifEqual("Check mapDef2Source linkedGeometry", 	source->GetLinkedGeometry(), 	"mapDef2SourceLinkedGeo");
 
-				ESourceType type;
+				GdtfDefines::ESourceType type;
 				__checkVCOM(source->GetType(type));
 				checkifEqual("Check mapDef2Source type", (size_t)type, (size_t)ESourceType::CaptureDevice);
 			}

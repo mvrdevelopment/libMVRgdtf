@@ -154,35 +154,22 @@ namespace VectorworksMVR
 	typedef VCOMPtr<ISymDef>	ISymDefPtr;
 
 	//-------------------------------------------------------------------------------------------------------------
-	enum class ESourceType
-	{
-		DNI,
-		File,
-		CITP,
-		CaptureDevice,
-	};
+
 
 	class DYNAMIC_ATTRIBUTE ISource : public IVWUnknown
 	{
 	public:
 		virtual MvrString VCOM_CALLTYPE		GetValue() = 0;
 		virtual MvrString VCOM_CALLTYPE		GetLinkedGeometry() = 0;
-		virtual VCOMError VCOM_CALLTYPE		GetType(ESourceType& sourceType) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetType(GdtfDefines::ESourceType& sourceType) = 0;
 
 		virtual VCOMError VCOM_CALLTYPE		SetValue(MvrString value) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetLinkedGeometry(MvrString linkedGeometry) = 0;
-		virtual VCOMError VCOM_CALLTYPE		SetType(ESourceType sourceType) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetType(GdtfDefines::ESourceType type) = 0;
 	};
 	typedef VCOMPtr<ISource> ISourcePtr;
 
 	//-------------------------------------------------------------------------------------------------------------
-	enum class EScaleHandlingType
-	{
-		ScaleKeepRatio 		= 0,
-		ScaleIgnoreRatio 	= 1,
-		KeepSizeCenter 		= 2,
-	};
-
 	class DYNAMIC_ATTRIBUTE IMappingDefinition : public IVWUnknown
 	{
 	public:
@@ -192,12 +179,12 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetSizeX(Uint32& sizeX) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetSizeY(Uint32& sizeY) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetSource(ISource** outSource) = 0;
-		virtual VCOMError VCOM_CALLTYPE		GetScaleHandling(EScaleHandlingType& scaleHandling) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetScaleHandling(GdtfDefines::EScaleHandlingType& scaleHandling) = 0;
 
 		virtual VCOMError VCOM_CALLTYPE		SetSizeX(Uint32 sizeX) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetSizeY(Uint32 sizeY) = 0;
-		virtual VCOMError VCOM_CALLTYPE		SetSource(MvrString value, MvrString linkedGeometry, ESourceType type) = 0;
-		virtual VCOMError VCOM_CALLTYPE		SetScaleHandling(EScaleHandlingType scaleHandling) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetSource(MvrString value, MvrString linkedGeometry, GdtfDefines::ESourceType) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetScaleHandling(GdtfDefines::EScaleHandlingType scaleHandling) = 0;
 		
 	};
 	typedef VCOMPtr<IMappingDefinition>	IMappingDefinitionPtr;
@@ -292,14 +279,14 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		AddMapping(MvrUUID mapDefUuid) = 0;
 
 		// Video Screen
-		virtual VCOMError VCOM_CALLTYPE		SetVideoScreenSource(MvrString value, MvrString linkedGeometry, ESourceType type) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetVideoScreenSource(MvrString value, MvrString linkedGeometry, GdtfDefines::ESourceType) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetVideoScreenSource(ISource** outSource) = 0;
 
 		// Projector
-		virtual VCOMError VCOM_CALLTYPE		SetProjectorSource(MvrString value, MvrString linkedGeometry, ESourceType type) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetProjectorSource(MvrString value, MvrString linkedGeometry, GdtfDefines::ESourceType) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetProjectorSource(ISource** outSource) = 0;
-		virtual VCOMError VCOM_CALLTYPE		SetScaleHandling(EScaleHandlingType scaleHandling) = 0;
-		virtual VCOMError VCOM_CALLTYPE		GetScaleHandling(EScaleHandlingType& outScaleHandling) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetScaleHandling(GdtfDefines::EScaleHandlingType scaleHandling) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetScaleHandling(GdtfDefines::EScaleHandlingType& outScaleHandling) = 0;
 	};
 	typedef VCOMPtr<ISceneObj>	ISceneObjPtr;
 	

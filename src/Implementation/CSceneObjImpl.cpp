@@ -1179,7 +1179,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::AddMapping(MvrUUID mapD
 
 //------------------------------------------------------------------------------------------------------------------------------------------
 // Videos Screen
-VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetVideoScreenSource(MvrString value, MvrString linkedGeometry, ESourceType type)
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetVideoScreenSource(MvrString value, MvrString linkedGeometry, GdtfDefines::ESourceType type)
 {
 	// Check if this is initialized
 	ASSERTN(kEveryone,fPtr);
@@ -1260,7 +1260,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetVideoScreenSource(IS
 
 //------------------------------------------------------------------------------------------------------------------------------------------
 // Projector
-VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetProjectorSource(MvrString value, MvrString linkedGeometry, ESourceType type)
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetProjectorSource(MvrString value, MvrString linkedGeometry, GdtfDefines::ESourceType type)
 {
 	// Check if this is initialized
 	ASSERTN(kEveryone,fPtr);
@@ -1339,7 +1339,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetProjectorSource(ISou
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetScaleHandling(EScaleHandlingType scaleHandling)
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetScaleHandling(GdtfDefines::EScaleHandlingType scaleHandling)
 {
 	// Check if this is initialized
 	ASSERTN(kEveryone,fPtr);
@@ -1358,7 +1358,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetScaleHandling(EScale
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetScaleHandling(EScaleHandlingType& outScaleHandling)
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetScaleHandling(GdtfDefines::EScaleHandlingType& outScaleHandling)
 {
 	//------------------------------------------------------------------------------------------
 	// Check if this is initialized

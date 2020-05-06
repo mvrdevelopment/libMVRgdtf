@@ -620,6 +620,21 @@ namespace VectorworksMVR
             eNO     = 1,
         };
 
+        enum class ESourceType
+        {
+            NDI = 0,
+            File = 1,
+            CITP = 3,
+            CaptureDevice = 4,
+        };
+
+        enum class EScaleHandlingType
+        {
+            ScaleKeepRatio 		= 0,
+            ScaleIgnoreRatio 	= 1,
+            KeepSizeCenter 		= 2,
+        };
+
 	}
 }
 

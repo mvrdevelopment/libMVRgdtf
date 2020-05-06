@@ -36,7 +36,7 @@ MvrString VectorworksMVR::CSourceImpl::GetLinkedGeometry()
 	return fPtr->GetLinkedGeometry().GetCharPtr();
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CSourceImpl::GetType(ESourceType& sourceType)
+VectorworksMVR::VCOMError VectorworksMVR::CSourceImpl::GetType(GdtfDefines::ESourceType& sourceType)
 {
 	// Check if this is initialized
 	ASSERTN(kEveryone,fPtr);
@@ -70,7 +70,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSourceImpl::SetLinkedGeometry(MvrStri
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CSourceImpl::SetType(ESourceType sourceType)
+VectorworksMVR::VCOMError VectorworksMVR::CSourceImpl::SetType(GdtfDefines::ESourceType sourceType)
 {
 	// Check if this is initialized
 	ASSERTN(kEveryone, fPtr);

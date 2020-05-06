@@ -21,12 +21,12 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetSizeX(Uint32& sizeX);
 		virtual VCOMError VCOM_CALLTYPE		GetSizeY(Uint32& sizeY);
 		virtual VCOMError VCOM_CALLTYPE		GetSource(ISource** outSource);
-		virtual VCOMError VCOM_CALLTYPE		GetScaleHandling(EScaleHandlingType& scaleHandling);
+		virtual VCOMError VCOM_CALLTYPE		GetScaleHandling(GdtfDefines::EScaleHandlingType& scaleHandling);
 
 		virtual VCOMError VCOM_CALLTYPE		SetSizeX(Uint32 sizeX);
 		virtual VCOMError VCOM_CALLTYPE		SetSizeY(Uint32 sizeY);
-		virtual VCOMError VCOM_CALLTYPE		SetSource(MvrString value, MvrString linkedGeometry, ESourceType type);
-		virtual VCOMError VCOM_CALLTYPE		SetScaleHandling(EScaleHandlingType scaleHandling);
+		virtual VCOMError VCOM_CALLTYPE		SetSource(MvrString value, MvrString linkedGeometry, GdtfDefines::ESourceType);
+		virtual VCOMError VCOM_CALLTYPE		SetScaleHandling(GdtfDefines::EScaleHandlingType scaleHandling);
 		
 		
 		// Implementation

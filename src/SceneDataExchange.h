@@ -257,13 +257,13 @@ namespace SceneData
 		
 	public:
 		SceneDataSourceObj();
-		SceneDataSourceObj(const TXString& value, const TXString& linkedGeometry, ESourceType type);
+		SceneDataSourceObj(const TXString& value, const TXString& linkedGeometry, GdtfDefines::ESourceType);
 		virtual ~SceneDataSourceObj();
 
 	private:
 		TXString 	fValue;
 		TXString 	fLinkedGeometry;
-		ESourceType fType;
+		GdtfDefines::ESourceType fType;
 		
 	public:
 		virtual const TXString& 	GetValue();
@@ -272,7 +272,7 @@ namespace SceneData
 
 		virtual void 		SetValue(TXString value);
 		virtual void 		SetLinkedGeometry(TXString linkedGeometry);
-		virtual void		SetType(ESourceType type);
+		virtual void		SetType(GdtfDefines::ESourceType);
 
 	protected:
 		virtual	TXString				GetNodeName();
@@ -309,8 +309,8 @@ namespace SceneData
 
 		virtual void 	SetSizeX(Uint32 sizeX);
 		virtual void 	SetSizeY(Uint32 sizeY);
-		virtual void	SetSource(const TXString& value, const TXString& linkedGeometry, ESourceType type);
-		virtual void	SetScaleHandling(EScaleHandlingType scaleHandling);
+		virtual void	SetSource(const TXString& value, const TXString& linkedGeometry, GdtfDefines::ESourceType);
+		virtual void	SetScaleHandling(GdtfDefines::EScaleHandlingType scaleHandling);
 
 	protected:
 		virtual	TXString				GetNodeName();
@@ -672,7 +672,7 @@ namespace SceneData
 
 	public:
 		virtual SceneDataSourceObjPtr 	GetVideoSource();
-		virtual void 					SetVideoSource(const TXString& value, const TXString& linkedGeometry, ESourceType type);
+		virtual void 					SetVideoSource(const TXString& value, const TXString& linkedGeometry, GdtfDefines::ESourceType);
 
 	private:
 		virtual	TXString				GetNodeName();
@@ -700,8 +700,8 @@ namespace SceneData
 		virtual SceneDataSourceObjPtr 	GetVideoSource();
 		virtual EScaleHandlingType		GetScaleHandling();
 
-		virtual void 					SetVideoSource(const TXString& value, const TXString& linkedGeometry, ESourceType type);
-		virtual void					SetScaleHandling(EScaleHandlingType scaleHandling);
+		virtual void 					SetVideoSource(const TXString& value, const TXString& linkedGeometry, GdtfDefines::ESourceType);
+		virtual void					SetScaleHandling(GdtfDefines::EScaleHandlingType scaleHandling);
 
 	private:
 		virtual	TXString				GetNodeName();

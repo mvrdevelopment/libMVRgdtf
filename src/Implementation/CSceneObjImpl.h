@@ -70,14 +70,14 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		AddMapping(MvrUUID mapDefUuid);
 
 		// Video Screen
-		virtual VCOMError VCOM_CALLTYPE		SetVideoScreenSource(MvrString value, MvrString linkedGeometry, ESourceType type);
+		virtual VCOMError VCOM_CALLTYPE		SetVideoScreenSource(MvrString value, MvrString linkedGeometry, GdtfDefines::ESourceType);
 		virtual VCOMError VCOM_CALLTYPE		GetVideoScreenSource(ISource** outSource);
 
 		// Projector
-		virtual VCOMError VCOM_CALLTYPE		SetProjectorSource(MvrString value, MvrString linkedGeometry, ESourceType type);
+		virtual VCOMError VCOM_CALLTYPE		SetProjectorSource(MvrString value, MvrString linkedGeometry, GdtfDefines::ESourceType);
 		virtual VCOMError VCOM_CALLTYPE		GetProjectorSource(ISource** outSource);
-		virtual VCOMError VCOM_CALLTYPE		SetScaleHandling(EScaleHandlingType scaleHandling);
-		virtual VCOMError VCOM_CALLTYPE		GetScaleHandling(EScaleHandlingType& outScaleHandling);
+		virtual VCOMError VCOM_CALLTYPE		SetScaleHandling(GdtfDefines::EScaleHandlingType scaleHandling);
+		virtual VCOMError VCOM_CALLTYPE		GetScaleHandling(GdtfDefines::EScaleHandlingType& outScaleHandling);
 		
 		// Implementation
 	public:

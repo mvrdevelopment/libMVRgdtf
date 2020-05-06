@@ -85,7 +85,7 @@
 #define XML_Val_SourceNodeName	        "Source"
 #define XML_Val_SourceLinkedGeometry	"linkedGeometry"
 #define XML_Val_SourceType	            "type"
-#define XML_Val_SourceTypeDNI	        "DNI"
+#define XML_Val_SourceTypeNDI	        "NDI"
 #define XML_Val_SourceTypeFile	        "File"
 #define XML_Val_SourceTypeCITP	        "CITP"
 #define XML_Val_SourceTypeCaptureDevice	"CaptureDevice"
