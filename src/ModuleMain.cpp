@@ -83,12 +83,18 @@ extern "C" VectorworksMVR::VCOMError VWQueryInterface(const VectorworksMVR::VWII
         resultInterface = new VectorworksMVR::CSceneDataProviderImpl();
     else if (iid == VectorworksMVR::IID_SceneObject)
         resultInterface = new VectorworksMVR::CSceneObjImpl();
+    else if (iid == VectorworksMVR::IID_SourceObj)
+        resultInterface = new VectorworksMVR::CSourceImpl();
     else if (iid == VectorworksMVR::IID_ISymDef)
         resultInterface = new VectorworksMVR::CSymDefImpl();
     else if (iid == VectorworksMVR::IID_IClass)
         resultInterface = new VectorworksMVR::CClassImpl();
     else if (iid == VectorworksMVR::IID_PositionObj)
         resultInterface = new VectorworksMVR::CPositionImpl();
+    else if (iid == VectorworksMVR::IID_MappingDefinitionObj)
+        resultInterface = new VectorworksMVR::CMappingDefinitionImpl();
+    else if (iid == VectorworksMVR::IID_MappingObj)
+        resultInterface = new VectorworksMVR::CMappingImpl();
     else if (iid == VectorworksMVR::IID_GeometryReference)
         resultInterface = new VectorworksMVR::CGeometryReferenceImpl();
     else if (iid == VectorworksMVR::IID_IGdtfFixture)

@@ -1547,15 +1547,15 @@ CieColor SceneData::GdtfConverter::ConvertCColor(const CCieColor & color)
 /*static*/ bool GdtfConverter::ConvertEGdtfCanHaveChildren(const TXString& inVal, const IXMLFileNodePtr& node, EGdtfCanHaveChildren& outVal)
 {
 	if        (inVal == XML_GDTF_CanHaveChildren_Yes)	{ outVal = EGdtfCanHaveChildren::eYES; }     
-	else if   (inVal == XML_GDTF_CanHaveChildren_No)   { outVal = EGdtfCanHaveChildren::eNO; }    
-	else if   (inVal.IsEmpty())    					{ outVal = EGdtfCanHaveChildren::eYES; } 
+	else if   (inVal == XML_GDTF_CanHaveChildren_No)   	{ outVal = EGdtfCanHaveChildren::eNO; }    
+	else if   (inVal.IsEmpty())    						{ outVal = EGdtfCanHaveChildren::eYES; } 
 	else 
 	{
-	DSTOP((kEveryone, "Unknown Value for EGdtfCanHaveChildren"));
-	GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_CanHaveChildren, node);
-	SceneData::GdtfFixture::AddError(error);
+		DSTOP((kEveryone, "Unknown Value for EGdtfCanHaveChildren"));
+		GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_CanHaveChildren, node);
+		SceneData::GdtfFixture::AddError(error);
 
-	outVal = EGdtfCanHaveChildren::eYES;
+		outVal = EGdtfCanHaveChildren::eYES;
 	}
        
     return true;
@@ -1602,6 +1602,68 @@ CieColor SceneData::GdtfConverter::ConvertCColor(const CCieColor & color)
 	else						{ return false; }
 
 	return true;
+}
+
+/*static*/ TXString GdtfConverter::ConvertESourceType(GdtfDefines::ESourceType value)
+{
+    switch (value)
+    {
+		case ESourceType::NDI:				return XML_Val_SourceTypeNDI;
+		case ESourceType::File:				return XML_Val_SourceTypeFile;
+		case ESourceType::CITP:				return XML_Val_SourceTypeCITP;
+		case ESourceType::CaptureDevice:	return XML_Val_SourceTypeCaptureDevice;
+    }
+
+	DSTOP((kEveryone, "Unknown Enum for ESourceType"));
+
+    return XML_Val_SourceTypeNDI;
+}
+
+
+/*static*/ bool GdtfConverter::ConvertESourceType(const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::ESourceType& outVal)
+{
+	if        (inVal == XML_Val_SourceTypeNDI)				{ outVal = ESourceType::NDI; }     
+	else if   (inVal == XML_Val_SourceTypeFile)   			{ outVal = ESourceType::File; } 
+	else if   (inVal == XML_Val_SourceTypeCITP)   			{ outVal = ESourceType::CITP; }
+	else if   (inVal == XML_Val_SourceTypeCaptureDevice)	{ outVal = ESourceType::CaptureDevice; }   
+	else if   (inVal.IsEmpty())    							{ outVal = ESourceType::NDI; } 
+	else 
+	{
+		DSTOP((kEveryone, "Unknown Value for ESourceType"));
+		outVal = ESourceType::NDI;
+	}
+       
+    return true;
+}
+
+/*static*/ TXString GdtfConverter::ConvertEScaleHandlingType(GdtfDefines::EScaleHandlingType value)
+{
+    switch (value)
+    {
+		case EScaleHandlingType::ScaleKeepRatio:				return XML_Val_ScaleHandlingTypeScaleKeepRatio;
+		case EScaleHandlingType::ScaleIgnoreRatio:				return XML_Val_ScaleHandlingTypeScaleIgnoreRatio;
+		case EScaleHandlingType::KeepSizeCenter:				return XML_Val_ScaleHandlingTypeKeepSizeCenter;
+    }
+
+	DSTOP((kEveryone, "Unknown Enum for EScaleHandlingType"));
+
+    return XML_Val_ScaleHandlingTypeScaleKeepRatio;
+}
+
+
+/*static*/ bool GdtfConverter::ConvertEScaleHandlingType(const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EScaleHandlingType& outVal)
+{
+	if        (inVal == XML_Val_ScaleHandlingTypeScaleKeepRatio)	{ outVal = EScaleHandlingType::ScaleKeepRatio; }     
+	else if   (inVal == XML_Val_ScaleHandlingTypeScaleIgnoreRatio)  { outVal = EScaleHandlingType::ScaleIgnoreRatio; } 
+	else if   (inVal == XML_Val_ScaleHandlingTypeKeepSizeCenter)	{ outVal = EScaleHandlingType::KeepSizeCenter; }  
+	else if   (inVal.IsEmpty())    									{ outVal = EScaleHandlingType::ScaleKeepRatio; } 
+	else 
+	{
+		DSTOP((kEveryone, "Unknown Value for EScaleHandlingType"));
+		outVal = EScaleHandlingType::ScaleKeepRatio;
+	}
+       
+    return true;
 }
 
 bool SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, const IFileIdentifierPtr& file, ERessourceType resType, bool deleteFile, bool mustExist)
