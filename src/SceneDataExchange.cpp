@@ -1890,6 +1890,7 @@ void SceneDataVideoScreenObj::SetVideoSource(const TXString& value, const TXStri
 		fSource->SetLinkedGeometry(linkedGeometry);
 		fSource->SetType(type);
 	}
+
 }
 
 TXString SceneDataVideoScreenObj::GetNodeName()
