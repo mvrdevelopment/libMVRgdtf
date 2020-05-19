@@ -1538,9 +1538,9 @@ CieColor SceneData::GdtfConverter::ConvertCColor(const CCieColor & color)
 
 /*static*/ bool GdtfConverter::ConvertEGdtfCanHaveChildren(const TXString& inVal, const IXMLFileNodePtr& node, bool& outVal)
 {
-	if        (inVal == XML_GDTF_CanHaveChildren_Yes)	{ outVal = outVal = true; }     
-	else if   (inVal == XML_GDTF_CanHaveChildren_No)   	{ outVal = outVal = false; }    
-	else if   (inVal.IsEmpty())    						{ outVal = outVal = true; } 
+	if        (inVal == XML_GDTF_CanHaveChildren_Yes)	{ outVal = true; }     
+	else if   (inVal == XML_GDTF_CanHaveChildren_No)   	{ outVal = false; }    
+	else if   (inVal.IsEmpty())    						{ outVal = true; } 
 	else 
 	{
 		DSTOP((kEveryone, "Unknown Value for EGdtfCanHaveChildren"));
