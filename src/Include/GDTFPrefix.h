@@ -613,13 +613,6 @@ namespace VectorworksMVR
             Log    = 2,
         };
 
-        //GDTF 1.1
-        enum class EGdtfCanHaveChildren
-        {
-            eYES    = 0,
-            eNO     = 1,
-        };
-
         enum class ESourceType
         {
             NDI = 0,

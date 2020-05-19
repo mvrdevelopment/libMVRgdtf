@@ -6659,7 +6659,7 @@ const TXString& GdtfFixture::GetThumbnailName() const
     return fTumbnailName;
 }
 
-EGdtfCanHaveChildren GdtfFixture::GetCanHaveChildren() const
+bool GdtfFixture::GetCanHaveChildren() const
 {
     return fCanHaveChildren;
 }
@@ -6745,7 +6745,7 @@ void GdtfFixture::SetThumbnailName(const TXString& fileName)
 	fTumbnailName = fileName;
 }
 
-void GdtfFixture::SetCanHaveChildren(EGdtfCanHaveChildren canHaveChildren)
+void GdtfFixture::SetCanHaveChildren(bool canHaveChildren)
 {
 	fCanHaveChildren = canHaveChildren;
 }
