@@ -60,7 +60,7 @@ void GdtfUnittest::WriteFile()
 		__checkVCOM(gdtfWrite->SetFixtureThumbnail("MyThumbnail"));
 		__checkVCOM(gdtfWrite->SetLinkedFixtureGUID(linkedUuid));
 
-		__checkVCOM(gdtfWrite->SetCanHaveChildren(EGdtfCanHaveChildren::eNO));
+		__checkVCOM(gdtfWrite->SetCanHaveChildren(false));
 
         //------------------------------------------------------------------------------    
         // Add Test Resources

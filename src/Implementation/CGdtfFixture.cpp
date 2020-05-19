@@ -1938,12 +1938,12 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetCanHaveChildren(b
 {
 	if(!fFixtureObject) {return kVCOMError_NotInitialized;}
 	
-	value = (fFixtureObject->GetCanHaveChildren() == GdtfDefines::EGdtfCanHaveChildren::eYES);
+	value = fFixtureObject->GetCanHaveChildren();
 	
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::SetCanHaveChildren(GdtfDefines::EGdtfCanHaveChildren value)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::SetCanHaveChildren(bool value)
 {
 	if(!fFixtureObject) {return kVCOMError_NotInitialized;}
 	

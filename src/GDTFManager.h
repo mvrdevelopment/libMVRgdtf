@@ -2179,7 +2179,7 @@ namespace SceneData
 		TXString		            fFixtureTypeDescription;
 		GdtfFixtureGUID	            fGuid;
 		TXString		            fTumbnailName;
-		EGdtfCanHaveChildren		fCanHaveChildren;
+		bool						fCanHaveChildren;
 		TXString		            fTumbnailFullPath_PNG;
         TXString		            fTumbnailFullPath_SVG;
 		
@@ -2239,7 +2239,7 @@ namespace SceneData
 		GdtfFixtureGUID		        GetLinkedGuid() const;
 		bool				        HasLinkedGuid() const;
         const TXString&             GetThumbnailName() const;
-		EGdtfCanHaveChildren		GetCanHaveChildren() const;
+		bool						GetCanHaveChildren() const;
 		const GdtfPNGFile&          GetPNGThumnailFullPath();
         const TXString&             GetSVGThumnailFullPath();
         GdtfProtocols&				GetProtocollContainer();
@@ -2256,7 +2256,7 @@ namespace SceneData
 		void				SetGuid(const VWFC::Tools::VWUUID& uuid);
 		void				SetLinkedGuid(const VWFC::Tools::VWUUID& uuid);
 		void				SetThumbnailName(const TXString& fileName);
-		void				SetCanHaveChildren(EGdtfCanHaveChildren canHaveChildren);
+		void				SetCanHaveChildren(bool canHaveChildren);
 
 
 	public:
