@@ -3631,6 +3631,7 @@ GdtfDmxChannelFunction::GdtfDmxChannelFunction(const TXString& name, GdtfDmxLogi
 	fPhysicalStart			= 0;
 	fPhysicalEnd			= 1;
 	fRealFade				= 0;
+	fRealAcceleration = 0;
 	fOnWheel				= nullptr;
 	fEmitter				= nullptr;				
 	fAttribute				= nullptr;
