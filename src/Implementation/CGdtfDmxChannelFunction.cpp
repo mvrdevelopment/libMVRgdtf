@@ -47,7 +47,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetAttrib
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfAttribute, (IVWUnknown**) & pAttributeObj)))
     {
         // Check Casting
-        CGdtfAttributeImpl* pResultInterface = dynamic_cast<CGdtfAttributeImpl* >(pAttributeObj);
+        CGdtfAttributeImpl* pResultInterface = static_cast<CGdtfAttributeImpl* >(pAttributeObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfAttribute);
@@ -148,7 +148,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetOnWhee
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfWheel, (IVWUnknown**) & pWheelObj)))
     {
         // Check Casting
-        CGdtfWheelImpl* pResultInterface = dynamic_cast<CGdtfWheelImpl* >(pWheelObj);
+        CGdtfWheelImpl* pResultInterface = static_cast<CGdtfWheelImpl* >(pWheelObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfWheel);
@@ -191,7 +191,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetEmitte
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfPhysicalEmitter, (IVWUnknown**) & pEmitter)))
     {
         // Check Casting
-        CGdtfPhysicalEmitterImpl* pResultInterface = dynamic_cast<CGdtfPhysicalEmitterImpl* >(pEmitter);
+        CGdtfPhysicalEmitterImpl* pResultInterface = static_cast<CGdtfPhysicalEmitterImpl* >(pEmitter);
         if (pResultInterface)
         {
             pResultInterface->setPointer(gdtfEmitter);
@@ -235,7 +235,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetFilter
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfFilter, (IVWUnknown**)& pFilterObj)))
     {
         // Check Casting
-        CGdtfFilterImpl* pResultInterface = dynamic_cast<CGdtfFilterImpl*>(pFilterObj);
+        CGdtfFilterImpl* pResultInterface = static_cast<CGdtfFilterImpl*>(pFilterObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfFilter);
@@ -280,7 +280,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetAttrib
 	if ( ! attribute) { return kVCOMError_InvalidArg; }
 	
 	// Cast
-	CGdtfAttributeImpl* subAttrImpl = dynamic_cast<CGdtfAttributeImpl*>(attribute);
+	CGdtfAttributeImpl* subAttrImpl = static_cast<CGdtfAttributeImpl*>(attribute);
 	if ( ! subAttrImpl) { return kVCOMError_Failed; }
 	
 	//
@@ -349,7 +349,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetOnWhee
 	if ( ! fFunction)	{ return kVCOMError_NotInitialized; }
 	if ( ! wheel)		{ return kVCOMError_InvalidArg; }
 	
-	CGdtfWheelImpl* wheelImpl = dynamic_cast<CGdtfWheelImpl*>(wheel);
+	CGdtfWheelImpl* wheelImpl = static_cast<CGdtfWheelImpl*>(wheel);
 	if ( ! wheelImpl)	{ return kVCOMError_Failed; }
 	
 	SceneData::GdtfWheelPtr scWheel = wheelImpl->GetPointer();
@@ -366,7 +366,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetEmitte
 	if ( ! fFunction)	{ return kVCOMError_NotInitialized; }
 	if ( ! emitter)		{ return kVCOMError_InvalidArg; }
 	
-	CGdtfPhysicalEmitterImpl* emitterImpl = dynamic_cast<CGdtfPhysicalEmitterImpl*>(emitter);
+	CGdtfPhysicalEmitterImpl* emitterImpl = static_cast<CGdtfPhysicalEmitterImpl*>(emitter);
 	if ( ! emitterImpl)	{ return kVCOMError_Failed; }
 	
 	SceneData::GdtfPhysicalEmitter* gdtfEmitter = emitterImpl->GetPointer();
@@ -383,7 +383,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetFilter
     if (!newFilter) { return kVCOMError_InvalidArg; }
 
     // Cast
-    CGdtfFilterImpl* FilterImpl = dynamic_cast<CGdtfFilterImpl*>(newFilter);
+    CGdtfFilterImpl* FilterImpl = static_cast<CGdtfFilterImpl*>(newFilter);
     if (!FilterImpl) { return kVCOMError_Failed; }
 
     // Set Object
@@ -422,7 +422,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetDmxCha
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDmxChannelSet, (IVWUnknown**) & pChannelSetObj)))
     {
         // Check Casting
-        CGdtfDmxChannelSetImpl* pResultInterface = dynamic_cast<CGdtfDmxChannelSetImpl* >(pChannelSetObj);
+        CGdtfDmxChannelSetImpl* pResultInterface = static_cast<CGdtfDmxChannelSetImpl* >(pChannelSetObj);
         if (pResultInterface)
         {
             pResultInterface->setPointer(gdtfChannelSet);
@@ -469,7 +469,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::CreateDmx
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDmxChannelSet, (IVWUnknown**) & pChannelSetObj)))
 	{
 		// Check Casting
-		CGdtfDmxChannelSetImpl* pResultInterface = dynamic_cast<CGdtfDmxChannelSetImpl* >(pChannelSetObj);
+		CGdtfDmxChannelSetImpl* pResultInterface = static_cast<CGdtfDmxChannelSetImpl* >(pChannelSetObj);
 		if (pResultInterface)
 		{
 			pResultInterface->setPointer(gdtfChannelSet);
@@ -545,7 +545,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetModeMa
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDmxChannel, (IVWUnknown**) & pChannelImpl)))
 	{
 		// Check Casting
-		CGdtfDmxChannelImpl* pResultInterface = dynamic_cast<CGdtfDmxChannelImpl* >(pChannelImpl);
+		CGdtfDmxChannelImpl* pResultInterface = static_cast<CGdtfDmxChannelImpl* >(pChannelImpl);
 		if (pResultInterface)
 		{
 			pResultInterface->setPointer(gdtfChannel);
@@ -592,7 +592,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetModeMa
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDmxChannelFunction, (IVWUnknown**) & pFunctionImpl)))
 	{
 		// Check Casting
-		CGdtfDmxChannelFunctionImpl* pResultInterface = dynamic_cast<CGdtfDmxChannelFunctionImpl* >(pFunctionImpl);
+		CGdtfDmxChannelFunctionImpl* pResultInterface = static_cast<CGdtfDmxChannelFunctionImpl* >(pFunctionImpl);
 		if (pResultInterface)
 		{
 			pResultInterface->setPointer(gdtfFunction);
@@ -626,7 +626,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetModeMa
 	if ( ! fFunction)	{ return kVCOMError_NotInitialized; }
 	if ( ! channel)		{ return kVCOMError_InvalidArg; }
 	
-	CGdtfDmxChannelImpl* channelImpl = dynamic_cast<CGdtfDmxChannelImpl*>(channel);
+	CGdtfDmxChannelImpl* channelImpl = static_cast<CGdtfDmxChannelImpl*>(channel);
 	if ( ! channelImpl)	{ return kVCOMError_Failed; }
 	
 	SceneData::GdtfDmxChannelPtr scChannel = channelImpl->getPointer();
@@ -646,7 +646,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetModeMa
 	if ( ! fFunction)	{ return kVCOMError_NotInitialized; }
 	if ( ! function)		{ return kVCOMError_InvalidArg; }
 	
-	CGdtfDmxChannelFunctionImpl* functionImpl = dynamic_cast<CGdtfDmxChannelFunctionImpl*>(function);
+	CGdtfDmxChannelFunctionImpl* functionImpl = static_cast<CGdtfDmxChannelFunctionImpl*>(function);
 	if ( ! functionImpl)	{ return kVCOMError_Failed; }
 	
 	SceneData::GdtfDmxChannelFunctionPtr scFunction = functionImpl->getPointer();
@@ -676,7 +676,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetParent
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDmxLogicalChannel, (IVWUnknown**) & pLogicalChannel)))
     {
         // Check Casting
-        CGdtfDmxLogicalChannelImpl* pResultInterface = dynamic_cast<CGdtfDmxLogicalChannelImpl* >(pLogicalChannel);
+        CGdtfDmxLogicalChannelImpl* pResultInterface = static_cast<CGdtfDmxLogicalChannelImpl* >(pLogicalChannel);
         if (pResultInterface)
         {
             pResultInterface->setPointer(gdtfLogicalChannel);

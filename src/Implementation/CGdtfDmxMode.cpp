@@ -47,7 +47,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxModeImpl::GetGeometry(Vectorwo
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfGeometry, (IVWUnknown**) & pGeoObj)))
     {
         // Check Casting
-        CGdtfGeometryImpl* pResultInterface = dynamic_cast<CGdtfGeometryImpl*>(pGeoObj);
+        CGdtfGeometryImpl* pResultInterface = static_cast<CGdtfGeometryImpl*>(pGeoObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfGeo);
@@ -82,7 +82,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxModeImpl::SetGeometry(IGdtfGeo
 	if ( ! model)		{ return kVCOMError_InvalidArg; }
 	
 	// Cast
-	CGdtfGeometryImpl* geoImpl = dynamic_cast<CGdtfGeometryImpl*>(model);
+	CGdtfGeometryImpl* geoImpl = static_cast<CGdtfGeometryImpl*>(model);
 	if ( ! geoImpl)		{ return kVCOMError_Failed; }
 	
 	// Set Object
@@ -123,7 +123,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxModeImpl::GetDmxChannelAt(size
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDmxChannel, (IVWUnknown**) & pDmxChannelObj)))
     {
         // Check Casting
-        CGdtfDmxChannelImpl* pResultInterface = dynamic_cast<CGdtfDmxChannelImpl* >(pDmxChannelObj);
+        CGdtfDmxChannelImpl* pResultInterface = static_cast<CGdtfDmxChannelImpl* >(pDmxChannelObj);
         if (pResultInterface)
         {
             pResultInterface->setPointer(gdtfDmxChannel);
@@ -157,7 +157,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxModeImpl::CreateDmxChannel(IGd
 	if ( ! fDmxMode) return kVCOMError_NotInitialized;
     if( ! geometry)  return kVCOMError_InvalidArg;
 
-    CGdtfGeometryImpl* geometryImpl = dynamic_cast<CGdtfGeometryImpl*>(geometry);
+    CGdtfGeometryImpl* geometryImpl = static_cast<CGdtfGeometryImpl*>(geometry);
     if(! geometryImpl) return kVCOMError_Failed;
 
     SceneData::GdtfGeometry* gdtfGeometry = geometryImpl->GetPointer();
@@ -173,7 +173,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxModeImpl::CreateDmxChannel(IGd
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDmxChannel, (IVWUnknown**) & pDmxChannelObj)))
 	{
 		// Check Casting
-		CGdtfDmxChannelImpl* pResultInterface = dynamic_cast<CGdtfDmxChannelImpl* >(pDmxChannelObj);
+		CGdtfDmxChannelImpl* pResultInterface = static_cast<CGdtfDmxChannelImpl* >(pDmxChannelObj);
 		if (pResultInterface)
 		{
 			pResultInterface->setPointer(gdtfDmxChannel);
@@ -233,7 +233,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxModeImpl::GetDmxRelationAt(siz
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDmxRelation, (IVWUnknown**) & pDmxRelationObj)))
     {
         // Check Casting
-        CGdtfDmxRelationImpl* pResultInterface = dynamic_cast<CGdtfDmxRelationImpl* >(pDmxRelationObj);
+        CGdtfDmxRelationImpl* pResultInterface = static_cast<CGdtfDmxRelationImpl* >(pDmxRelationObj);
         if (pResultInterface)
         {
             pResultInterface->setPointer(gdtfDmxRelation);
@@ -268,10 +268,10 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxModeImpl::CreateDmxRelation(Mv
     if ( ! slave)  { return kVCOMError_InvalidArg; }
         
 	// Cast
-	CGdtfDmxChannelImpl* dmxChanImpl = dynamic_cast<CGdtfDmxChannelImpl*>(master);
+	CGdtfDmxChannelImpl* dmxChanImpl = static_cast<CGdtfDmxChannelImpl*>(master);
 	if ( ! dmxChanImpl)		{ return kVCOMError_Failed; }
 
-	CGdtfDmxChannelFunctionImpl* dmxFunctionImpl = dynamic_cast<CGdtfDmxChannelFunctionImpl*>(slave);
+	CGdtfDmxChannelFunctionImpl* dmxFunctionImpl = static_cast<CGdtfDmxChannelFunctionImpl*>(slave);
 	if ( ! dmxFunctionImpl)		{ return kVCOMError_Failed; }
 	
 	// Get Scene Objects
@@ -300,7 +300,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxModeImpl::CreateDmxRelation(Mv
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDmxRelation, (IVWUnknown**) & pDmxRelationObj)))
     {
         // Check Casting
-        CGdtfDmxRelationImpl* pResultInterface = dynamic_cast<CGdtfDmxRelationImpl* >(pDmxRelationObj);
+        CGdtfDmxRelationImpl* pResultInterface = static_cast<CGdtfDmxRelationImpl* >(pDmxRelationObj);
         if (pResultInterface)
         {
             pResultInterface->setPointer(gdtfDmxRelation);
@@ -361,7 +361,7 @@ VectorworksMVR::VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfDmxModeImpl::GetDmx
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfMacro, (IVWUnknown**)& pDmxMacroObj)))
 	{
 		// Check Casting
-		CGdtfMacroImpl* pResultInterface = dynamic_cast<CGdtfMacroImpl*>(pDmxMacroObj);
+		CGdtfMacroImpl* pResultInterface = static_cast<CGdtfMacroImpl*>(pDmxMacroObj);
 		if (pResultInterface)
 		{
 			pResultInterface->setPointer(gdtfDmxMacro);
@@ -404,7 +404,7 @@ VectorworksMVR::VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfDmxModeImpl::Create
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfMacro, (IVWUnknown**)& pDmxMacroObj)))
 	{
 		// Check Casting
-		CGdtfMacroImpl* pResultInterface = dynamic_cast<CGdtfMacroImpl*>(pDmxMacroObj);
+		CGdtfMacroImpl* pResultInterface = static_cast<CGdtfMacroImpl*>(pDmxMacroObj);
 		if (pResultInterface)
 		{
 			pResultInterface->setPointer(gdtfDmxMacro);

@@ -151,7 +151,7 @@ inline Sint32 PIN(Sint32 v, Sint32 lo, Sint32 hi, Bool8& outWasPinned)
 ///////////////////////////////////////////////////////////////////////////////
 //	Casting macros (can be used as l-values.)
 // Do not use these unless you need them. Do not use them for convenience.
-// If you think you need to cast, try const_cast, static_cast, or dynamic_cast.
+// If you think you need to cast, try const_cast, static_cast, or static_cast.
 
 #define CAST(Type, thing)	(*((Type *) &(thing)))
 #define CAST_SHORT(x)		(*((short *) &(x)))

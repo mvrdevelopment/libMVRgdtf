@@ -103,7 +103,7 @@ VectorworksMVR::VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfMacroVisualStepImpl
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfMacroVisualValue, (IVWUnknown**)& pVisualValue)))
     {
         // Check Casting
-        CGdtfMacroVisualValueImpl* pResultInterface = dynamic_cast<CGdtfMacroVisualValueImpl*>(pVisualValue);
+        CGdtfMacroVisualValueImpl* pResultInterface = static_cast<CGdtfMacroVisualValueImpl*>(pVisualValue);
         
         if (pResultInterface)
         {
@@ -141,7 +141,7 @@ VectorworksMVR::VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfMacroVisualStepImpl
     // Cast the ChannelFunction
     if (!channelFunction) { return kVCOMError_InvalidArg; }
 
-    CGdtfDmxChannelFunctionImpl* chnlFuncImpl = dynamic_cast<CGdtfDmxChannelFunctionImpl*>(channelFunction);
+    CGdtfDmxChannelFunctionImpl* chnlFuncImpl = static_cast<CGdtfDmxChannelFunctionImpl*>(channelFunction);
     if (!chnlFuncImpl) { return kVCOMError_Failed; }
 
     // Set Object
@@ -158,7 +158,7 @@ VectorworksMVR::VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfMacroVisualStepImpl
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfMacroVisualValue, (IVWUnknown**)& pMacroVisualValueObj)))
     {
         // Check Casting
-        CGdtfMacroVisualValueImpl* pResultInterface = dynamic_cast<CGdtfMacroVisualValueImpl*>(pMacroVisualValueObj);
+        CGdtfMacroVisualValueImpl* pResultInterface = static_cast<CGdtfMacroVisualValueImpl*>(pMacroVisualValueObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfMacroVisualValue);

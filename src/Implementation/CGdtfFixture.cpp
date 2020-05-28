@@ -322,7 +322,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetActivationGroupAt
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfActivationGroup, (IVWUnknown**) & pActivationGroupObj)))
     {
         // Check Casting
-        CGdtfActivationGroupImpl* pResultInterface = dynamic_cast<CGdtfActivationGroupImpl* >(pActivationGroupObj);
+        CGdtfActivationGroupImpl* pResultInterface = static_cast<CGdtfActivationGroupImpl* >(pActivationGroupObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfActivationGroup);
@@ -368,7 +368,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateActivationGrou
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfActivationGroup, (IVWUnknown**) & pActivationGroupObj)))
 	{
 		// Check Casting
-		CGdtfActivationGroupImpl* pResultInterface = dynamic_cast<CGdtfActivationGroupImpl* >(pActivationGroupObj);
+		CGdtfActivationGroupImpl* pResultInterface = static_cast<CGdtfActivationGroupImpl* >(pActivationGroupObj);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(gdtfActivationGroup);
@@ -425,7 +425,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetFeatureGroupAt(si
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfFeatureGroup, (IVWUnknown**) & pFeatureGroupObj)))
     {
         // Check Casting
-        CGdtfFeatureGroupImpl* pResultInterface = dynamic_cast<CGdtfFeatureGroupImpl* >(pFeatureGroupObj);
+        CGdtfFeatureGroupImpl* pResultInterface = static_cast<CGdtfFeatureGroupImpl* >(pFeatureGroupObj);
         if (pResultInterface)
         {
             pResultInterface->setPointer(gdtfFeatureGroup);
@@ -473,7 +473,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateFeatureGroup(M
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfFeatureGroup, (IVWUnknown**) & pFeatureGroupObj)))
 	{
 		// Check Casting
-		CGdtfFeatureGroupImpl* pResultInterface = dynamic_cast<CGdtfFeatureGroupImpl* >(pFeatureGroupObj);
+		CGdtfFeatureGroupImpl* pResultInterface = static_cast<CGdtfFeatureGroupImpl* >(pFeatureGroupObj);
 		if (pResultInterface)
 		{
 			pResultInterface->setPointer(gdtfFeatureGroup);
@@ -529,7 +529,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetAttributeAt(size_
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfAttribute, (IVWUnknown**) & pAttributeObj)))
     {
         // Check Casting
-        CGdtfAttributeImpl* pResultInterface = dynamic_cast<CGdtfAttributeImpl* >(pAttributeObj);
+        CGdtfAttributeImpl* pResultInterface = static_cast<CGdtfAttributeImpl* >(pAttributeObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfAttribute);
@@ -576,7 +576,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateAttribute(MvrS
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfAttribute, (IVWUnknown**) & pAttributeObj)))
 	{
 		// Check Casting
-		CGdtfAttributeImpl* pResultInterface = dynamic_cast<CGdtfAttributeImpl* >(pAttributeObj);
+		CGdtfAttributeImpl* pResultInterface = static_cast<CGdtfAttributeImpl* >(pAttributeObj);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(gdtfAttribute);
@@ -633,7 +633,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetWheelAt(size_t at
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfWheel, (IVWUnknown**) & pWheelObj)))
     {
         // Check Casting
-        CGdtfWheelImpl* pResultInterface = dynamic_cast<CGdtfWheelImpl* >(pWheelObj);
+        CGdtfWheelImpl* pResultInterface = static_cast<CGdtfWheelImpl* >(pWheelObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfWheel);
@@ -676,7 +676,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateWheel(MvrStrin
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfWheel, (IVWUnknown**) & pWheelObj)))
 	{
 		// Check Casting
-		CGdtfWheelImpl* pResultInterface = dynamic_cast<CGdtfWheelImpl* >(pWheelObj);
+		CGdtfWheelImpl* pResultInterface = static_cast<CGdtfWheelImpl* >(pWheelObj);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(gdtfWheel);
@@ -733,7 +733,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetModelAt(size_t at
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfModel, (IVWUnknown**) & pModelObj)))
     {
         // Check Casting
-        CGdtfModelImpl* pResultInterface = dynamic_cast<CGdtfModelImpl* >(pModelObj);
+        CGdtfModelImpl* pResultInterface = static_cast<CGdtfModelImpl* >(pModelObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfModel);
@@ -779,7 +779,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateModel(MvrStrin
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfModel, (IVWUnknown**) & pModelObj)))
 	{
 		// Check Casting
-		CGdtfModelImpl* pResultInterface = dynamic_cast<CGdtfModelImpl* >(pModelObj);
+		CGdtfModelImpl* pResultInterface = static_cast<CGdtfModelImpl* >(pModelObj);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(gdtfModel);
@@ -836,7 +836,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetGeometryAt(size_t
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfGeometry, (IVWUnknown**) & pGeometryObj)))
     {
         // Check Casting
-        CGdtfGeometryImpl* pResultInterface = dynamic_cast<CGdtfGeometryImpl* >(pGeometryObj);
+        CGdtfGeometryImpl* pResultInterface = static_cast<CGdtfGeometryImpl* >(pGeometryObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfGeometry);
@@ -873,7 +873,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateGeometry(EGdtf
 	// Extract Model
 	SceneData::GdtfModelPtr scModel = nullptr;
 
-	CGdtfModelImpl* modelInterface = dynamic_cast<CGdtfModelImpl*>(model);
+	CGdtfModelImpl* modelInterface = static_cast<CGdtfModelImpl*>(model);
 	if( modelInterface)
 	{
 		scModel = modelInterface->GetPointer();
@@ -917,7 +917,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateGeometry(EGdtf
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfGeometry, (IVWUnknown**) & pGeometryObj)))
 	{
 		// Check Casting
-		CGdtfGeometryImpl* pResultInterface = dynamic_cast<CGdtfGeometryImpl* >(pGeometryObj);
+		CGdtfGeometryImpl* pResultInterface = static_cast<CGdtfGeometryImpl* >(pGeometryObj);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(gdtfGeometry);
@@ -974,7 +974,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetDmxModeAt(size_t 
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDmxMode, (IVWUnknown**) & pDmxModeObj)))
     {
         // Check Casting
-        CGdtfDmxModeImpl* pResultInterface = dynamic_cast<CGdtfDmxModeImpl* >(pDmxModeObj);
+        CGdtfDmxModeImpl* pResultInterface = static_cast<CGdtfDmxModeImpl* >(pDmxModeObj);
         if (pResultInterface)
         {
             pResultInterface->setPointer(gdtfDmxMode);
@@ -1020,7 +1020,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateDmxMode(MvrStr
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDmxMode, (IVWUnknown**) & pDmxModeObj)))
 	{
 		// Check Casting
-		CGdtfDmxModeImpl* pResultInterface = dynamic_cast<CGdtfDmxModeImpl* >(pDmxModeObj);
+		CGdtfDmxModeImpl* pResultInterface = static_cast<CGdtfDmxModeImpl* >(pDmxModeObj);
 		if (pResultInterface)
 		{
 			pResultInterface->setPointer(gdtfDmxMode);
@@ -1077,7 +1077,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetRevisionAt(size_t
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfRevision, (IVWUnknown**) & pRevisionObj)))
     {
         // Check Casting
-        CGdtfRevisionImpl* pResultInterface = dynamic_cast<CGdtfRevisionImpl* >(pRevisionObj);
+        CGdtfRevisionImpl* pResultInterface = static_cast<CGdtfRevisionImpl* >(pRevisionObj);
         if (pResultInterface)
         {
             pResultInterface->setPointer(gdtfRevision);
@@ -1123,7 +1123,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateRevision(MvrSt
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfRevision, (IVWUnknown**) & pRevisionObj)))
 	{
 		// Check Casting
-		CGdtfRevisionImpl* pResultInterface = dynamic_cast<CGdtfRevisionImpl* >(pRevisionObj);
+		CGdtfRevisionImpl* pResultInterface = static_cast<CGdtfRevisionImpl* >(pRevisionObj);
 		if (pResultInterface)
 		{
 			pResultInterface->setPointer(gdtfRevision);
@@ -1180,7 +1180,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetPresetAt(size_t a
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfUserPreset, (IVWUnknown**) & pPresetObj)))
     {
         // Check Casting
-        CGdtfUserPresetImpl* pResultInterface = dynamic_cast<CGdtfUserPresetImpl* >(pPresetObj);
+        CGdtfUserPresetImpl* pResultInterface = static_cast<CGdtfUserPresetImpl* >(pPresetObj);
         if (pResultInterface)
         {
             pResultInterface->setPointer(gdtfPreset);
@@ -1224,7 +1224,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreatePreset(Vectorw
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfUserPreset, (IVWUnknown**) & pPresetObj)))
 	{
 		// Check Casting
-		CGdtfUserPresetImpl* pResultInterface = dynamic_cast<CGdtfUserPresetImpl* >(pPresetObj);
+		CGdtfUserPresetImpl* pResultInterface = static_cast<CGdtfUserPresetImpl* >(pPresetObj);
 		if (pResultInterface)
 		{
 			pResultInterface->setPointer(gdtfPreset);
@@ -1268,7 +1268,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetRDM(IGdtf_FTRDM *
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfTRDM, (IVWUnknown**)& pRdm)))
 	{
 		// Check Casting
-		CGdtf_FTRDMImpl* pResultInterface = dynamic_cast<CGdtf_FTRDMImpl*>(pRdm);
+		CGdtf_FTRDMImpl* pResultInterface = static_cast<CGdtf_FTRDMImpl*>(pRdm);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(gdtfRdm);
@@ -1313,7 +1313,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateRDM(Vectorwork
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfTRDM, (IVWUnknown**)& pRdm)))
 	{
 		// Check Casting
-		CGdtf_FTRDMImpl* pResultInterface = dynamic_cast<CGdtf_FTRDMImpl*>(pRdm);
+		CGdtf_FTRDMImpl* pResultInterface = static_cast<CGdtf_FTRDMImpl*>(pRdm);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(gdtfRdm);
@@ -1358,7 +1358,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetColorSpace(Vector
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfColorSpace, (IVWUnknown**)& pColorSpaceObj)))
     {
         // Check Casting
-        CGdtfColorSpaceImpl* pResultInterface = dynamic_cast<CGdtfColorSpaceImpl*>(pColorSpaceObj);
+        CGdtfColorSpaceImpl* pResultInterface = static_cast<CGdtfColorSpaceImpl*>(pColorSpaceObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfColorSpace);
@@ -1416,7 +1416,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetEmitterAt(size_t 
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfPhysicalEmitter, (IVWUnknown**)& pEmitterObj)))
     {
         // Check Casting
-        CGdtfPhysicalEmitterImpl* pResultInterface = dynamic_cast<CGdtfPhysicalEmitterImpl*>(pEmitterObj);
+        CGdtfPhysicalEmitterImpl* pResultInterface = static_cast<CGdtfPhysicalEmitterImpl*>(pEmitterObj);
         if (pResultInterface)
         {
             pResultInterface->setPointer(gdtfEmitter);
@@ -1461,7 +1461,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateEmitter(MvrStr
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfPhysicalEmitter, (IVWUnknown**)& pEmitterObj)))
     {
         // Check Casting
-        CGdtfPhysicalEmitterImpl* pResultInterface = dynamic_cast<CGdtfPhysicalEmitterImpl*>(pEmitterObj);
+        CGdtfPhysicalEmitterImpl* pResultInterface = static_cast<CGdtfPhysicalEmitterImpl*>(pEmitterObj);
         if (pResultInterface)
         {
             pResultInterface->setPointer(gdtfEmitter);
@@ -1520,7 +1520,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetFilterAt(size_t a
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfFilter, (IVWUnknown**)& pFilterObj)))
     {
         // Check Casting
-        CGdtfFilterImpl* pResultInterface = dynamic_cast<CGdtfFilterImpl*>(pFilterObj);
+        CGdtfFilterImpl* pResultInterface = static_cast<CGdtfFilterImpl*>(pFilterObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfFilter);
@@ -1564,7 +1564,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateFilter(MvrStri
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfFilter, (IVWUnknown**)& pFilterObj)))
     {
         // Check Casting
-        CGdtfFilterImpl* pResultInterface = dynamic_cast<CGdtfFilterImpl*>(pFilterObj);
+        CGdtfFilterImpl* pResultInterface = static_cast<CGdtfFilterImpl*>(pFilterObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfFilter);
@@ -1623,7 +1623,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetDMXProfileAt(size
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDMXProfile, (IVWUnknown**)& pDMXProfileObj)))
     {
         // Check Casting
-        CGdtfDMXProfileImpl* pResultInterface = dynamic_cast<CGdtfDMXProfileImpl*>(pDMXProfileObj);
+        CGdtfDMXProfileImpl* pResultInterface = static_cast<CGdtfDMXProfileImpl*>(pDMXProfileObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfDMXProfile);
@@ -1668,7 +1668,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateDMXProfile(Vec
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDMXProfile, (IVWUnknown**)& pDMXProfileObj)))
     {
         // Check Casting
-        CGdtfDMXProfileImpl* pResultInterface = dynamic_cast<CGdtfDMXProfileImpl*>(pDMXProfileObj);
+        CGdtfDMXProfileImpl* pResultInterface = static_cast<CGdtfDMXProfileImpl*>(pDMXProfileObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfDMXProfile);
@@ -1726,7 +1726,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetCRIGroupAt(size_t
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfCRIGroup, (IVWUnknown**)& pCRIGroupObj)))
     {
         // Check Casting
-        CGdtfCRIGroupImpl* pResultInterface = dynamic_cast<CGdtfCRIGroupImpl*>(pCRIGroupObj);
+        CGdtfCRIGroupImpl* pResultInterface = static_cast<CGdtfCRIGroupImpl*>(pCRIGroupObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfCRIGroup);
@@ -1771,7 +1771,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateCRIGroup(doubl
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfCRIGroup, (IVWUnknown**)& pCRIGroupObj)))
     {
         // Check Casting
-        CGdtfCRIGroupImpl* pResultInterface = dynamic_cast<CGdtfCRIGroupImpl*>(pCRIGroupObj);
+        CGdtfCRIGroupImpl* pResultInterface = static_cast<CGdtfCRIGroupImpl*>(pCRIGroupObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfCRIGroup);
@@ -1828,7 +1828,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetParsingErrorAt(si
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfXmlParsingError, (IVWUnknown**)& pParsingErrorObj)))
     {
         // Check Casting
-        CGdtfXmlParsingErrorImpl* pResultInterface = dynamic_cast<CGdtfXmlParsingErrorImpl*>(pParsingErrorObj);
+        CGdtfXmlParsingErrorImpl* pResultInterface = static_cast<CGdtfXmlParsingErrorImpl*>(pParsingErrorObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfParsingError);
@@ -1981,7 +1981,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetConnectorAt(size_
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfConnector, (IVWUnknown**)& pConnectorObj)))
     {
         // Check Casting
-        CGdtfConnectorImpl* pResultInterface = dynamic_cast<CGdtfConnectorImpl*>(pConnectorObj);
+        CGdtfConnectorImpl* pResultInterface = static_cast<CGdtfConnectorImpl*>(pConnectorObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfConnector);
@@ -2026,7 +2026,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateConnector(MvrS
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfConnector, (IVWUnknown**)& pConnectorObj)))
     {
         // Check Casting
-        CGdtfConnectorImpl* pResultInterface = dynamic_cast<CGdtfConnectorImpl*>(pConnectorObj);
+        CGdtfConnectorImpl* pResultInterface = static_cast<CGdtfConnectorImpl*>(pConnectorObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfConnector);
@@ -2083,7 +2083,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetPowerConsumptionA
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfPowerConsumption, (IVWUnknown**)& pPowerConsumptionObj)))
     {
         // Check Casting
-        CGdtfPowerConsumptionImpl* pResultInterface = dynamic_cast<CGdtfPowerConsumptionImpl*>(pPowerConsumptionObj);
+        CGdtfPowerConsumptionImpl* pResultInterface = static_cast<CGdtfPowerConsumptionImpl*>(pPowerConsumptionObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfPowerConsumption);
@@ -2120,7 +2120,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreatePowerConsumpti
     //Cast Connector
     if (!connector) { return kVCOMError_InvalidArg; }
         
-    CGdtfConnectorImpl* connectorImpl = dynamic_cast<CGdtfConnectorImpl*>(connector);
+    CGdtfConnectorImpl* connectorImpl = static_cast<CGdtfConnectorImpl*>(connector);
     if (!connectorImpl) { return kVCOMError_Failed; }
 
     // Set Object
@@ -2138,7 +2138,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreatePowerConsumpti
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfPowerConsumption, (IVWUnknown**)& pPowerConsumptionObj)))
     {
         // Check Casting
-        CGdtfPowerConsumptionImpl* pResultInterface = dynamic_cast<CGdtfPowerConsumptionImpl*>(pPowerConsumptionObj);
+        CGdtfPowerConsumptionImpl* pResultInterface = static_cast<CGdtfPowerConsumptionImpl*>(pPowerConsumptionObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfPowerConsumption);

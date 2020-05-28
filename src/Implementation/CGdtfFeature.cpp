@@ -93,7 +93,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFeatureImpl::GetAttributeAt(size_
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfAttribute, (IVWUnknown**) & pAttributeObj)))
 	{
 		// Check Casting
-		CGdtfAttributeImpl* pResultInterface = dynamic_cast<CGdtfAttributeImpl* >(pAttributeObj);
+		CGdtfAttributeImpl* pResultInterface = static_cast<CGdtfAttributeImpl* >(pAttributeObj);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(gdtfAttribute);
@@ -137,7 +137,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFeatureImpl::GetFeatureGroup(IGdt
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfFeatureGroup, (IVWUnknown**) & pGroup)))
 	{
 		// Check Casting
-		CGdtfFeatureGroupImpl* pResultInterface = dynamic_cast<CGdtfFeatureGroupImpl* >(pGroup);
+		CGdtfFeatureGroupImpl* pResultInterface = static_cast<CGdtfFeatureGroupImpl* >(pGroup);
 		if (pResultInterface)
 		{
 			pResultInterface->setPointer(gdtfGroup);

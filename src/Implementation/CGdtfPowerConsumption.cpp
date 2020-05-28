@@ -54,7 +54,7 @@ VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfPowerConsumptionImpl::GetConnector(
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfConnector, (IVWUnknown**)& pConnectorObj)))
     {
         // Check Casting
-        CGdtfConnectorImpl* pResultInterface = dynamic_cast<CGdtfConnectorImpl*>(pConnectorObj);
+        CGdtfConnectorImpl* pResultInterface = static_cast<CGdtfConnectorImpl*>(pConnectorObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfConnector);
@@ -150,7 +150,7 @@ VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfPowerConsumptionImpl::SetConnector(
     if (!connector) { return kVCOMError_InvalidArg; }
 
     // Cast
-    CGdtfConnectorImpl* connectorImpl = dynamic_cast<CGdtfConnectorImpl*>(connector);
+    CGdtfConnectorImpl* connectorImpl = static_cast<CGdtfConnectorImpl*>(connector);
     if (!connectorImpl) { return kVCOMError_Failed; }
 
     // Set Object

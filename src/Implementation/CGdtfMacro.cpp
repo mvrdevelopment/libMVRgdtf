@@ -60,7 +60,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfMacroImpl::CreateMacroDMX(Vectorw
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfMacroDMX, (IVWUnknown**)& pMacroDmx)))
 	{
 		// Check Casting
-		CGdtfMacroDMXImpl* pResultInterface = dynamic_cast<CGdtfMacroDMXImpl* >(pMacroDmx);
+		CGdtfMacroDMXImpl* pResultInterface = static_cast<CGdtfMacroDMXImpl* >(pMacroDmx);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(gdtfMacroDmx);
@@ -104,7 +104,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfMacroImpl::CreateMacroVisual(Vect
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfMacroVisual, (IVWUnknown**)& pMacroVisual)))
 	{
 		// Check Casting
-		CGdtfMacroVisualImpl* pResultInterface = dynamic_cast<CGdtfMacroVisualImpl* >(pMacroVisual);
+		CGdtfMacroVisualImpl* pResultInterface = static_cast<CGdtfMacroVisualImpl* >(pMacroVisual);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(gdtfMacroVisual);
@@ -149,7 +149,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfMacroImpl::GetMacroDMX(IGdtfMacro
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfMacroDMX, (IVWUnknown**)& pMacroDmx)))
 	{
 		// Check Casting
-		CGdtfMacroDMXImpl* pResultInterface = dynamic_cast<CGdtfMacroDMXImpl*>(pMacroDmx);
+		CGdtfMacroDMXImpl* pResultInterface = static_cast<CGdtfMacroDMXImpl*>(pMacroDmx);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(gdtfMacroDmx);
@@ -196,7 +196,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfMacroImpl::GetMacroVisual(IGdtfMa
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfMacroVisual, (IVWUnknown**)& pMacroVisual)))
 	{
 		// Check Casting
-		CGdtfMacroVisualImpl* pResultInterface = dynamic_cast<CGdtfMacroVisualImpl*>(pMacroVisual);
+		CGdtfMacroVisualImpl* pResultInterface = static_cast<CGdtfMacroVisualImpl*>(pMacroVisual);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(gdtfMacroVisual);

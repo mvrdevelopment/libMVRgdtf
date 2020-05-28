@@ -124,7 +124,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::GetGeometry(Vecto
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfGeometry, (IVWUnknown**) & pGeoObj)))
     {
         // Check Casting
-        CGdtfGeometryImpl* pResultInterface = dynamic_cast<CGdtfGeometryImpl*>(pGeoObj);
+        CGdtfGeometryImpl* pResultInterface = static_cast<CGdtfGeometryImpl*>(pGeoObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfGeo);
@@ -241,7 +241,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::SetGeometry(IGdtf
 	if ( ! geo)			{ return kVCOMError_InvalidArg; }
 	
 	// Cast
-	CGdtfGeometryImpl* geoImpl = dynamic_cast<CGdtfGeometryImpl*>(geo);
+	CGdtfGeometryImpl* geoImpl = static_cast<CGdtfGeometryImpl*>(geo);
 	if( ! geoImpl)		{ return kVCOMError_Failed; }
 	
 	//
@@ -279,7 +279,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::GetLogicalChannel
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDmxLogicalChannel, (IVWUnknown**) & pDmxLogicalChannelObj)))
     {
         // Check Casting
-        CGdtfDmxLogicalChannelImpl* pResultInterface = dynamic_cast<CGdtfDmxLogicalChannelImpl* >(pDmxLogicalChannelObj);
+        CGdtfDmxLogicalChannelImpl* pResultInterface = static_cast<CGdtfDmxLogicalChannelImpl* >(pDmxLogicalChannelObj);
         if (pResultInterface)
         {
             pResultInterface->setPointer(gdtfDmxLogicalChannel);
@@ -313,7 +313,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::CreateLogicalChan
 	if ( ! fChannel)  { return kVCOMError_NotInitialized; }
 	if ( ! attribute) { return kVCOMError_InvalidArg; }
 	
-	CGdtfAttributeImpl* attributeImpl = dynamic_cast<CGdtfAttributeImpl*>(attribute);
+	CGdtfAttributeImpl* attributeImpl = static_cast<CGdtfAttributeImpl*>(attribute);
 	if( ! attributeImpl) { return kVCOMError_Failed; }
 
 	SceneData::GdtfAttributePtr scAttribute = attributeImpl->GetPointer();
@@ -328,7 +328,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::CreateLogicalChan
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDmxLogicalChannel, (IVWUnknown**) & pDmxLogicalChannelObj)))
 	{
 		// Check Casting
-		CGdtfDmxLogicalChannelImpl* pResultInterface = dynamic_cast<CGdtfDmxLogicalChannelImpl* >(pDmxLogicalChannelObj);
+		CGdtfDmxLogicalChannelImpl* pResultInterface = static_cast<CGdtfDmxLogicalChannelImpl* >(pDmxLogicalChannelObj);
 		if (pResultInterface)
 		{
 			pResultInterface->setPointer(gdtfDmxLogicalChannel);

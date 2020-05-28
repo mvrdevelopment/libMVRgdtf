@@ -298,7 +298,7 @@ VCOMError CFolderIdentifier::Set(IFolderIdentifier* pParentFolder, const TXStrin
 	if ( pParentFolder == NULL || folderName.IsEmpty() )
 		return kVCOMError_InvalidArg;
 
-	CFolderIdentifier*	pParent	= dynamic_cast<CFolderIdentifier*>( pParentFolder );
+	CFolderIdentifier*	pParent	= static_cast<CFolderIdentifier*>( pParentFolder );
 	if ( pParent == NULL || pParent->farrFolderHierarchy.size() <= 0 )
 		return kVCOMError_InvalidArg;
 
@@ -405,7 +405,7 @@ VCOMError CFolderIdentifier::GetParentFolder(IFolderIdentifier** ppOutParentFold
 	if ( error != kVCOMError_NoError )
 		return error;
 
-	CFolderIdentifier*	pParentFolder	= dynamic_cast<CFolderIdentifier*>( *ppOutParentFolderID );
+	CFolderIdentifier*	pParentFolder	= static_cast<CFolderIdentifier*>( *ppOutParentFolderID );
 	if ( pParentFolder == NULL )
 		return kVCOMError_Failed;
 
@@ -579,7 +579,7 @@ bool CFolderIdentifier::EnumerateContentsHandler(IFolderContentListener* pListen
 					IFolderIdentifier*	pFolderID	= NULL;
 					VCOMError			error		= VWQueryInterface( IID_FolderIdentifier, (IVWUnknown**) & pFolderID );
 					if ( error == kVCOMError_NoError ) {
-						CFolderIdentifier*	pFolderInst	= dynamic_cast<CFolderIdentifier*>( pFolderID );
+						CFolderIdentifier*	pFolderInst	= static_cast<CFolderIdentifier*>( pFolderID );
 						if ( pFolderInst ) {
 							pFolderInst->SetFullPath( fullPath );
 
@@ -613,7 +613,7 @@ bool CFolderIdentifier::EnumerateContentsHandler(IFolderContentListener* pListen
 					IFileIdentifier*	pFileID		= NULL;
 					VCOMError			error		= VWQueryInterface( IID_FileIdentifier, (IVWUnknown**) & pFileID );
 					if ( error == kVCOMError_NoError ) {
-						CFileIdentifier*	pFileInst	= dynamic_cast<CFileIdentifier*>( pFileID );
+						CFileIdentifier*	pFileInst	= static_cast<CFileIdentifier*>( pFileID );
 						if ( pFileInst ) {
 							pFileInst->SetFileFullPath( fullPath );
 
@@ -684,7 +684,7 @@ bool CFolderIdentifier::EnumerateContentsHandler(IFolderContentListener* pListen
 						IFolderIdentifier*	pFolderID	= NULL;
 						VCOMError			error		= ::VWQueryInterface( IID_FolderIdentifier, (IVWUnknown**) & pFolderID );
 						if ( error == kVCOMError_NoError ) {
-							CFolderIdentifier*	pFolderInst	= dynamic_cast<CFolderIdentifier*>( pFolderID );
+							CFolderIdentifier*	pFolderInst	= static_cast<CFolderIdentifier*>( pFolderID );
 							if ( pFolderInst ) {
 								pFolderInst->SetFullPath( fullPath );
 
@@ -724,7 +724,7 @@ bool CFolderIdentifier::EnumerateContentsHandler(IFolderContentListener* pListen
 						IFileIdentifier*	pFileID		= NULL;
 						VCOMError			error		= VWQueryInterface( IID_FileIdentifier, (IVWUnknown**) & pFileID );
 						if ( error == kVCOMError_NoError ) {
-							CFileIdentifier*	pFileInst	= dynamic_cast<CFileIdentifier*>( pFileID );
+							CFileIdentifier*	pFileInst	= static_cast<CFileIdentifier*>( pFileID );
 							if ( pFileInst ) {
 								pFileInst->SetFileFullPath( fullPath );
 
@@ -988,7 +988,7 @@ VCOMError CFolderIdentifier::DuplicateOnDisk(IFolderIdentifier * newFolder, bool
 	if ( ! folderID.SetByFullPath( fullPath ) )
 		return kVCOMError_BadPathSpecified;
 
-	CFolderIdentifier*	pDestFolder	= dynamic_cast<CFolderIdentifier*>( newFolder );
+	CFolderIdentifier*	pDestFolder	= static_cast<CFolderIdentifier*>( newFolder );
 	const TXString newPath = pDestFolder->GetFullPath();
 	TFolderIdentifier	destFolderID;
 	

@@ -115,7 +115,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFilterImpl::GetMeasurementAt(size
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfMeasurement, (IVWUnknown**)& pMeasurementObj)))
     {
         // Check Casting
-        CGdtfMeasurementImpl* pResultInterface = dynamic_cast<CGdtfMeasurementImpl*>(pMeasurementObj);
+        CGdtfMeasurementImpl* pResultInterface = static_cast<CGdtfMeasurementImpl*>(pMeasurementObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfMeasurement);
@@ -159,7 +159,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFilterImpl::CreateMeasurement(Vec
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfMeasurement, (IVWUnknown**)& pMeasurementObj)))
     {
         // Check Casting
-        CGdtfMeasurementImpl* pResultInterface = dynamic_cast<CGdtfMeasurementImpl*>(pMeasurementObj);
+        CGdtfMeasurementImpl* pResultInterface = static_cast<CGdtfMeasurementImpl*>(pMeasurementObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfMeasurement);

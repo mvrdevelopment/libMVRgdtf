@@ -43,7 +43,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxLogicalChannelImpl::GetAttribu
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfAttribute, (IVWUnknown**) & pAttributeObj)))
     {
         // Check Casting
-        CGdtfAttributeImpl* pResultInterface = dynamic_cast<CGdtfAttributeImpl* >(pAttributeObj);
+        CGdtfAttributeImpl* pResultInterface = static_cast<CGdtfAttributeImpl* >(pAttributeObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfAttribute);
@@ -78,7 +78,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxLogicalChannelImpl::SetAttribu
 	if ( ! attribute)		{ return kVCOMError_InvalidArg; }
 	
 	// Cast Interface
-	CGdtfAttributeImpl* attrImpl = dynamic_cast<CGdtfAttributeImpl*>(attribute);
+	CGdtfAttributeImpl* attrImpl = static_cast<CGdtfAttributeImpl*>(attribute);
 	if ( ! attrImpl) { return kVCOMError_Failed; }
 	
 	// Get Pointer
@@ -197,7 +197,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxLogicalChannelImpl::GetDmxFunc
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDmxChannelFunction, (IVWUnknown**) & pFunctionObj)))
     {
         // Check Casting
-        CGdtfDmxChannelFunctionImpl* pResultInterface = dynamic_cast<CGdtfDmxChannelFunctionImpl* >(pFunctionObj);
+        CGdtfDmxChannelFunctionImpl* pResultInterface = static_cast<CGdtfDmxChannelFunctionImpl* >(pFunctionObj);
         if (pResultInterface)
         {
             pResultInterface->setPointer(gdtfFunction);
@@ -242,7 +242,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxLogicalChannelImpl::CreateDmxF
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDmxChannelFunction, (IVWUnknown**) & pFunctionObj)))
 	{
 		// Check Casting
-		CGdtfDmxChannelFunctionImpl* pResultInterface = dynamic_cast<CGdtfDmxChannelFunctionImpl* >(pFunctionObj);
+		CGdtfDmxChannelFunctionImpl* pResultInterface = static_cast<CGdtfDmxChannelFunctionImpl* >(pFunctionObj);
 		if (pResultInterface)
 		{
 			pResultInterface->setPointer(gdtfFunction);
@@ -286,7 +286,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxLogicalChannelImpl::GetParentD
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDmxChannel, (IVWUnknown**) & pDmxChannel)))
     {
         // Check Casting
-        CGdtfDmxChannelImpl* pResultInterface = dynamic_cast<CGdtfDmxChannelImpl* >(pDmxChannel);
+        CGdtfDmxChannelImpl* pResultInterface = static_cast<CGdtfDmxChannelImpl* >(pDmxChannel);
         if (pResultInterface)
         {
             pResultInterface->setPointer(gdtDmxChannel);

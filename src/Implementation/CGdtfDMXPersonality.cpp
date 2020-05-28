@@ -41,7 +41,7 @@ VCOMError VCOM_CALLTYPE CGdtfDMXPersonalityImpl::GetDmxMode(IGdtfDmxMode **outDm
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDmxMode, (IVWUnknown**)& pDmxModeObj)))
     {
         // Check Casting
-        CGdtfDmxModeImpl* pResultInterface = dynamic_cast<CGdtfDmxModeImpl*>(pDmxModeObj);
+        CGdtfDmxModeImpl* pResultInterface = static_cast<CGdtfDmxModeImpl*>(pDmxModeObj);
         if (pResultInterface)
         {
             pResultInterface->setPointer(gdtfDmxMode);
@@ -85,7 +85,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDMXPersonalityImpl::SetDmxMode (I
     if (!newDmxMode) { return kVCOMError_InvalidArg; }
 
     // Cast
-    CGdtfDmxModeImpl* DmxModeImpl = dynamic_cast<CGdtfDmxModeImpl*>(newDmxMode);
+    CGdtfDmxModeImpl* DmxModeImpl = static_cast<CGdtfDmxModeImpl*>(newDmxMode);
     if (!DmxModeImpl) { return kVCOMError_Failed; }
 
     // Set Object

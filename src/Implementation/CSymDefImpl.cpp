@@ -85,7 +85,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSymDefImpl::GetGeometryAt(size_t at, 
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GeometryReference, (IVWUnknown**) & pGeometryRef)))
 	{
 		// Check Casting
-		CGeometryReferenceImpl* pResultInterface = dynamic_cast<CGeometryReferenceImpl* >(pGeometryRef);
+		CGeometryReferenceImpl* pResultInterface = static_cast<CGeometryReferenceImpl* >(pGeometryRef);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(pScGeoObjInst, pScGeoObjInst->IsSymDef(), fContext);
@@ -143,7 +143,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSymDefImpl::AddSymbol(const STransfor
 	
 	//------------------------------------------------------------------------------------------
 	// Cast incomming symDef
-	CSymDefImpl* pSymDef = dynamic_cast<CSymDefImpl*>(symDef);
+	CSymDefImpl* pSymDef = static_cast<CSymDefImpl*>(symDef);
 	
 	// Check Casting
 	ASSERTN(kEveryone, pSymDef != nullptr);

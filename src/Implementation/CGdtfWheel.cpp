@@ -56,7 +56,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelImpl::GetWheelSlotAt(size_t 
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfWheelSlot, (IVWUnknown**) & pWheelSlotObj)))
     {
         // Check Casting
-        CGdtfWheelSlotImpl* pResultInterface = dynamic_cast<CGdtfWheelSlotImpl* >(pWheelSlotObj);
+        CGdtfWheelSlotImpl* pResultInterface = static_cast<CGdtfWheelSlotImpl* >(pWheelSlotObj);
         if (pResultInterface)
         {
             pResultInterface->setPointer(gdtfWheelSlot);
@@ -102,7 +102,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelImpl::CreateWheelSlot(MvrStr
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfWheelSlot, (IVWUnknown**) & pWheelSlotObj)))
 	{
 		// Check Casting
-		CGdtfWheelSlotImpl* pResultInterface = dynamic_cast<CGdtfWheelSlotImpl* >(pWheelSlotObj);
+		CGdtfWheelSlotImpl* pResultInterface = static_cast<CGdtfWheelSlotImpl* >(pWheelSlotObj);
 		if (pResultInterface)
 		{
 			pResultInterface->setPointer(gdtfWheelSlot);

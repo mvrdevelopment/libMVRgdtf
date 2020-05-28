@@ -42,7 +42,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxRelationImpl::GetMasterChannel
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDmxChannel, (IVWUnknown**) & pDmxChannelObj)))
     {
         // Check Casting
-        CGdtfDmxChannelImpl* pResultInterface = dynamic_cast<CGdtfDmxChannelImpl* >(pDmxChannelObj);
+        CGdtfDmxChannelImpl* pResultInterface = static_cast<CGdtfDmxChannelImpl* >(pDmxChannelObj);
         if (pResultInterface)
         {
             pResultInterface->setPointer(gdtfDmxChannel);
@@ -86,7 +86,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxRelationImpl::GetSlaveChannel(
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDmxChannelFunction, (IVWUnknown**) & pDmxFunction)))
     {
         // Check Casting
-        CGdtfDmxChannelFunctionImpl* pResultInterface = dynamic_cast<CGdtfDmxChannelFunctionImpl* >(pDmxFunction);
+        CGdtfDmxChannelFunctionImpl* pResultInterface = static_cast<CGdtfDmxChannelFunctionImpl* >(pDmxFunction);
         if (pResultInterface)
         {
             pResultInterface->setPointer(gdtfDmxFunction);

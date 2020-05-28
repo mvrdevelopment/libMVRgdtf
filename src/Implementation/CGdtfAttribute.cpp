@@ -53,7 +53,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfAttributeImpl::GetActivationGroup
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfActivationGroup, (IVWUnknown**) & pActivationGroupObj)))
     {
         // Check Casting
-        CGdtfActivationGroupImpl* pResultInterface = dynamic_cast<CGdtfActivationGroupImpl* >(pActivationGroupObj);
+        CGdtfActivationGroupImpl* pResultInterface = static_cast<CGdtfActivationGroupImpl* >(pActivationGroupObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfActivationGroup);
@@ -99,7 +99,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfAttributeImpl::GetFeature(Vectorw
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfFeature, (IVWUnknown**) & pFeatureObj)))
     {
         // Check Casting
-        CGdtfFeatureImpl* pResultInterface = dynamic_cast<CGdtfFeatureImpl* >(pFeatureObj);
+        CGdtfFeatureImpl* pResultInterface = static_cast<CGdtfFeatureImpl* >(pFeatureObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfFeature);
@@ -143,7 +143,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfAttributeImpl::GetMainAttribute(I
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfAttribute, (IVWUnknown**) & pAttributeObj)))
     {
         // Check Casting
-        CGdtfAttributeImpl* pResultInterface = dynamic_cast<CGdtfAttributeImpl* >(pAttributeObj);
+        CGdtfAttributeImpl* pResultInterface = static_cast<CGdtfAttributeImpl* >(pAttributeObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfAttribute);
@@ -203,7 +203,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfAttributeImpl::SetActivationGroup
 	if( ! activationGroup)	return kVCOMError_InvalidArg;
 	
 	// Cast Act Group
-	CGdtfActivationGroupImpl* actGoupImpl = dynamic_cast<CGdtfActivationGroupImpl*>(activationGroup);
+	CGdtfActivationGroupImpl* actGoupImpl = static_cast<CGdtfActivationGroupImpl*>(activationGroup);
 	if( ! actGoupImpl)		return kVCOMError_Failed;
 	
 	// Now set
@@ -224,7 +224,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfAttributeImpl::SetFeature(IGdtfFe
 	if( ! feature)	return kVCOMError_InvalidArg;
 	
 	// Cast Act Group
-	CGdtfFeatureImpl* featureImpl = dynamic_cast<CGdtfFeatureImpl*>(feature);
+	CGdtfFeatureImpl* featureImpl = static_cast<CGdtfFeatureImpl*>(feature);
 	if( ! featureImpl)		return kVCOMError_Failed;
 	
 	// Now set
@@ -245,7 +245,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfAttributeImpl::SetMainAttribute(I
 	if( ! mainAttrib)	return kVCOMError_InvalidArg;
 	
 	// Cast Act Group
-	CGdtfAttributeImpl* attrImpl = dynamic_cast<CGdtfAttributeImpl*>(mainAttrib);
+	CGdtfAttributeImpl* attrImpl = static_cast<CGdtfAttributeImpl*>(mainAttrib);
 	if( ! attrImpl)		return kVCOMError_Failed;
 	
 	// Now set

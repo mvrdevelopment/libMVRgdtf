@@ -94,8 +94,8 @@ namespace VectorworksMVR
 
 	// ---------------------------------------------------------------------------------------------------
 	// We define Dynamic Attribute modificator so VCOM and other C++ interfaces
-	//		could participate in dynamic_cast operator on Mac.
-	// This is a bug (or issue) in Mac compiler that causes dynamic_cast operator to fail
+	//		could participate in static_cast operator on Mac.
+	// This is a bug (or issue) in Mac compiler that causes static_cast operator to fail
 	//		if the interface instance is from local memory of a DLL!
 	#ifdef _WIN32
 	# define DYNAMIC_ATTRIBUTE
@@ -158,9 +158,9 @@ namespace VectorworksMVR
 														IVWUnknown*	pInterface		= NULL;
 														VCOMError err = VectorworksMVR::VWQueryInterface( iid, & pInterface );
 														if ( err == kVCOMError_NoError ) {
-															// Vlado: Temporally removed 'dynamic_cast'
+															// Vlado: Temporally removed 'static_cast'
 															// because on new Mac OS it is failing to cast properly
-															//fPtr = dynamic_cast<T*>( pInterface );
+															//fPtr = static_cast<T*>( pInterface );
 															fPtr = (T*)( pInterface );
 															if ( fPtr == NULL ) {
 																if ( pInterface ) {

@@ -89,7 +89,7 @@ VCOMError CGdtf_FTRDMImpl::GetSoftwareVersionIDAt(size_t at, IGdtfSoftwareVersio
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfSoftwareVersionID, (IVWUnknown**)& pSoftwareVersionIDObj)))
     {
         // Check Casting
-        CGdtfSoftwareVersionIDImpl* pResultInterface = dynamic_cast<CGdtfSoftwareVersionIDImpl*>(pSoftwareVersionIDObj);
+        CGdtfSoftwareVersionIDImpl* pResultInterface = static_cast<CGdtfSoftwareVersionIDImpl*>(pSoftwareVersionIDObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfSoftwareVersionID);
@@ -134,7 +134,7 @@ VCOMError CGdtf_FTRDMImpl::CreateSoftwareVersionID(size_t value, IGdtfSoftwareVe
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfSoftwareVersionID, (IVWUnknown**)& pSoftwareVersionIDObj)))
     {
         // Check Casting
-        CGdtfSoftwareVersionIDImpl* pResultInterface = dynamic_cast<CGdtfSoftwareVersionIDImpl*>(pSoftwareVersionIDObj);
+        CGdtfSoftwareVersionIDImpl* pResultInterface = static_cast<CGdtfSoftwareVersionIDImpl*>(pSoftwareVersionIDObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfSoftwareVersionID);

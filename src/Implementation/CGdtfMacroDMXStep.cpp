@@ -62,7 +62,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfMacroDMXStepImpl::GetDMXValueAt(s
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfMacroDMXValue, (IVWUnknown**)& pDmxVal)))
     {
         // Check Casting
-        CGdtfMacroDMXValueImpl* pResultInterface = dynamic_cast<CGdtfMacroDMXValueImpl* >(pDmxVal);
+        CGdtfMacroDMXValueImpl* pResultInterface = static_cast<CGdtfMacroDMXValueImpl* >(pDmxVal);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfDmxValue);
@@ -98,7 +98,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfMacroDMXStepImpl::CreateDMXValue(
         
     if (!dmxChannel) { return kVCOMError_InvalidArg; }
         
-    CGdtfDmxChannelImpl* DMXChannelImpl = dynamic_cast<CGdtfDmxChannelImpl*>(dmxChannel);
+    CGdtfDmxChannelImpl* DMXChannelImpl = static_cast<CGdtfDmxChannelImpl*>(dmxChannel);
     if (!DMXChannelImpl) { return kVCOMError_Failed; }
 
     // Set Object
@@ -116,7 +116,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfMacroDMXStepImpl::CreateDMXValue(
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfMacroDMXValue, (IVWUnknown**)& pDmxVal)))
     {
         // Check Casting
-        CGdtfMacroDMXValueImpl* pResultInterface = dynamic_cast<CGdtfMacroDMXValueImpl*>(pDmxVal);
+        CGdtfMacroDMXValueImpl* pResultInterface = static_cast<CGdtfMacroDMXValueImpl*>(pDmxVal);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfDmxValue);
