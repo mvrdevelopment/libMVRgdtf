@@ -55,7 +55,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetModel(Vectorwork
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfModel, (IVWUnknown**) & pModelObj)))
     {
         // Check Casting
-        CGdtfModelImpl* pResultInterface = dynamic_cast<CGdtfModelImpl* >(pModelObj);
+        CGdtfModelImpl* pResultInterface = static_cast<CGdtfModelImpl* >(pModelObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfModel);
@@ -113,7 +113,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetParent(Vectorwor
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfGeometry, (IVWUnknown**) & pGeometry)))
     {
         // Check Casting
-        CGdtfGeometryImpl* pResultInterface = dynamic_cast<CGdtfGeometryImpl* >(pGeometry);
+        CGdtfGeometryImpl* pResultInterface = static_cast<CGdtfGeometryImpl* >(pGeometry);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfGeometry);
@@ -171,7 +171,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetInternalGeometry
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfGeometry, (IVWUnknown**) & pGeometryObj)))
     {
         // Check Casting
-        CGdtfGeometryImpl* pResultInterface = dynamic_cast<CGdtfGeometryImpl* >(pGeometryObj);
+        CGdtfGeometryImpl* pResultInterface = static_cast<CGdtfGeometryImpl* >(pGeometryObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfGeometry);
@@ -208,7 +208,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::CreateGeometry(EGdt
 	// Extract Model
 	SceneData::GdtfModelPtr scModel = nullptr;
 
-	CGdtfModelImpl* modelInterface = dynamic_cast<CGdtfModelImpl*>(model);
+	CGdtfModelImpl* modelInterface = static_cast<CGdtfModelImpl*>(model);
 	if( modelInterface)
 	{
 		scModel = modelInterface->GetPointer();
@@ -253,7 +253,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::CreateGeometry(EGdt
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfGeometry, (IVWUnknown**) & pGeometryObj)))
 	{
 		// Check Casting
-		CGdtfGeometryImpl* pResultInterface = dynamic_cast<CGdtfGeometryImpl* >(pGeometryObj);
+		CGdtfGeometryImpl* pResultInterface = static_cast<CGdtfGeometryImpl* >(pGeometryObj);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(gdtfGeometry);
@@ -289,7 +289,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetLampType(EGdtfLa
 	// Check if it is the right type
 	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLamp) return kVCOMError_WrongGeometryType;
 	
-	SceneData::GdtfGeometryLamp* lamp = dynamic_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
+	SceneData::GdtfGeometryLamp* lamp = static_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
 	if ( ! lamp) { return kVCOMError_Failed; }
 	
 	lampType = lamp->GetLampType();
@@ -304,7 +304,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetPowerConsumption
 	// Check if it is the right type
 	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLamp) return kVCOMError_WrongGeometryType;
 	
-	SceneData::GdtfGeometryLamp* lamp = dynamic_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
+	SceneData::GdtfGeometryLamp* lamp = static_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
 	if ( ! lamp) { return kVCOMError_Failed; }
 	
 	powerConsumption = lamp->GetPowerConsumption();
@@ -319,7 +319,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetLuminousIntensit
 	// Check if it is the right type
 	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLamp) return kVCOMError_WrongGeometryType;
 	
-	SceneData::GdtfGeometryLamp* lamp = dynamic_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
+	SceneData::GdtfGeometryLamp* lamp = static_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
 	if ( ! lamp) { return kVCOMError_Failed; }
 	
 	luminousIntensity = lamp->GetLuminousIntensity();
@@ -334,7 +334,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetColorTemperature
 	// Check if it is the right type
 	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLamp) return kVCOMError_WrongGeometryType;
 	
-	SceneData::GdtfGeometryLamp* lamp = dynamic_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
+	SceneData::GdtfGeometryLamp* lamp = static_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
 	if ( ! lamp) { return kVCOMError_Failed; }
 	
 	colorTemperature = lamp->GetColorTemperature();
@@ -349,7 +349,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetBeamAngle(double
 	// Check if it is the right type
 	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLamp) return kVCOMError_WrongGeometryType;
 	
-	SceneData::GdtfGeometryLamp* lamp = dynamic_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
+	SceneData::GdtfGeometryLamp* lamp = static_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
 	if ( ! lamp) { return kVCOMError_Failed; }
 	
 	beamAngle = lamp->GetBeamAngle();
@@ -364,7 +364,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetFieldAngle(doubl
 	// Check if it is the right type
 	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLamp) return kVCOMError_WrongGeometryType;
 	
-	SceneData::GdtfGeometryLamp* lamp = dynamic_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
+	SceneData::GdtfGeometryLamp* lamp = static_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
 	if ( ! lamp) { return kVCOMError_Failed; }
 	
 	fldAngle = lamp->GetFieldAngle();
@@ -379,7 +379,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetBeamRadius(doubl
 	// Check if it is the right type
 	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLamp) return kVCOMError_WrongGeometryType;
 	
-	SceneData::GdtfGeometryLamp* lamp = dynamic_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
+	SceneData::GdtfGeometryLamp* lamp = static_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
 	if ( ! lamp) { return kVCOMError_Failed; }
 	
 	radius= lamp->GetBeamRadius();
@@ -394,7 +394,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetBeamType(GdtfDef
 	// Check if it is the right type
 	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLamp) return kVCOMError_WrongGeometryType;
 	
-	SceneData::GdtfGeometryLamp* lamp = dynamic_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
+	SceneData::GdtfGeometryLamp* lamp = static_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
 	if ( ! lamp) { return kVCOMError_Failed; }
 	
 	type = lamp->GetBeamType();
@@ -409,7 +409,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetColorIndex(Sint3
 	// Check if it is the right type
 	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLamp) return kVCOMError_WrongGeometryType;
 	
-	SceneData::GdtfGeometryLamp* lamp = dynamic_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
+	SceneData::GdtfGeometryLamp* lamp = static_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
 	if ( ! lamp) { return kVCOMError_Failed; }
 	
 	idx= lamp->GetColorIndex();
@@ -441,7 +441,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetModel(IGdtfModel
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfModel, (IVWUnknown**) & pModelObj)))
     {
         // Check Casting
-        CGdtfModelImpl* pResultInterface = dynamic_cast<CGdtfModelImpl* >(pModelObj);
+        CGdtfModelImpl* pResultInterface = static_cast<CGdtfModelImpl* >(pModelObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfModel);
@@ -491,7 +491,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetLampType(EGdtfLa
 	// Check if it is the right type
 	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLamp) return kVCOMError_WrongGeometryType;
 	
-	SceneData::GdtfGeometryLamp* lamp = dynamic_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
+	SceneData::GdtfGeometryLamp* lamp = static_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
 	if ( ! lamp) { return kVCOMError_Failed; }
 	
 	lamp->SetLampType(lampType);
@@ -506,7 +506,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetPowerConsumption
 	// Check if it is the right type
 	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLamp) return kVCOMError_WrongGeometryType;
 	
-	SceneData::GdtfGeometryLamp* lamp = dynamic_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
+	SceneData::GdtfGeometryLamp* lamp = static_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
 	if ( ! lamp) { return kVCOMError_Failed; }
 	
 	lamp->SetPowerConsumption(powerConsumption);
@@ -521,7 +521,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetLuminousIntensit
 	// Check if it is the right type
 	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLamp) return kVCOMError_WrongGeometryType;
 	
-	SceneData::GdtfGeometryLamp* lamp = dynamic_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
+	SceneData::GdtfGeometryLamp* lamp = static_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
 	if ( ! lamp) { return kVCOMError_Failed; }
 	
 	lamp->SetLuminousIntensity(luminousIntensity);
@@ -536,7 +536,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetColorTemperature
 	// Check if it is the right type
 	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLamp) return kVCOMError_WrongGeometryType;
 	
-	SceneData::GdtfGeometryLamp* lamp = dynamic_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
+	SceneData::GdtfGeometryLamp* lamp = static_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
 	if ( ! lamp) { return kVCOMError_Failed; }
 	
 	lamp->SetColorTemperature(colorTemperature);
@@ -551,7 +551,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetBeamAngle(double
 	// Check if it is the right type
 	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLamp) return kVCOMError_WrongGeometryType;
 	
-	SceneData::GdtfGeometryLamp* lamp = dynamic_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
+	SceneData::GdtfGeometryLamp* lamp = static_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
 	if ( ! lamp) { return kVCOMError_Failed; }
 	
 	lamp->SetBeamAngle(beamAngle);
@@ -566,7 +566,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetFieldAngle(doubl
 	// Check if it is the right type
 	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLamp) return kVCOMError_WrongGeometryType;
 	
-	SceneData::GdtfGeometryLamp* lamp = dynamic_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
+	SceneData::GdtfGeometryLamp* lamp = static_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
 	if ( ! lamp) { return kVCOMError_Failed; }
 	
 	lamp->SetFieldAngle(fldAngle);
@@ -581,7 +581,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetBeamRadius(doubl
 	// Check if it is the right type
 	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLamp) return kVCOMError_WrongGeometryType;
 	
-	SceneData::GdtfGeometryLamp* lamp = dynamic_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
+	SceneData::GdtfGeometryLamp* lamp = static_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
 	if ( ! lamp) { return kVCOMError_Failed; }
 	
 	lamp->SetBeamRadius(radius);
@@ -596,7 +596,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetBeamType(EGdtfBe
 	// Check if it is the right type
 	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLamp) return kVCOMError_WrongGeometryType;
 	
-	SceneData::GdtfGeometryLamp* lamp = dynamic_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
+	SceneData::GdtfGeometryLamp* lamp = static_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
 	if ( ! lamp) { return kVCOMError_Failed; }
 	
     lamp->SetBeamType(type);
@@ -611,7 +611,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetColorIndex(Sint3
 	// Check if it is the right type
 	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLamp) return kVCOMError_WrongGeometryType;
 	
-	SceneData::GdtfGeometryLamp* lamp = dynamic_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
+	SceneData::GdtfGeometryLamp* lamp = static_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
 	if ( ! lamp) { return kVCOMError_Failed; }
 	
 	lamp->SetColorIndex(idx);
@@ -626,7 +626,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetBreakCount(size_
 	// Check if it is the right type
 	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryReference) return kVCOMError_WrongGeometryType;
 	
-	SceneData::GdtfGeometryReferencePtr ref = dynamic_cast<SceneData::GdtfGeometryReferencePtr>(fGeometry);
+	SceneData::GdtfGeometryReferencePtr ref = static_cast<SceneData::GdtfGeometryReferencePtr>(fGeometry);
 	if ( ! ref) { return kVCOMError_Failed; }
 	
 	count = ref->GetBreakArray().size();
@@ -641,7 +641,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetBreakAt(size_t a
 	// Check if it is the right type
 	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryReference) return kVCOMError_WrongGeometryType;
 	
-	SceneData::GdtfGeometryReferencePtr ref = dynamic_cast<SceneData::GdtfGeometryReferencePtr>(fGeometry);
+	SceneData::GdtfGeometryReferencePtr ref = static_cast<SceneData::GdtfGeometryReferencePtr>(fGeometry);
 	if ( ! ref) { return kVCOMError_Failed; }
 	
 	// check overflow
@@ -657,7 +657,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetBreakAt(size_t a
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfBreak, (IVWUnknown**) & pBreakObj)))
 	{
 		// Check Casting
-		CGdtfBreakImpl* pResultInterface = dynamic_cast<CGdtfBreakImpl* >(pBreakObj);
+		CGdtfBreakImpl* pResultInterface = static_cast<CGdtfBreakImpl* >(pBreakObj);
 		if (pResultInterface)
 		{
 			pResultInterface->setPointer(gdtfBreakP);
@@ -693,7 +693,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::CreateBreak(Sint32 
 	// Check if it is the right type
 	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryReference) return kVCOMError_WrongGeometryType;
 	
-	SceneData::GdtfGeometryReferencePtr ref = dynamic_cast<SceneData::GdtfGeometryReferencePtr>(fGeometry);
+	SceneData::GdtfGeometryReferencePtr ref = static_cast<SceneData::GdtfGeometryReferencePtr>(fGeometry);
 	if ( ! ref) { return kVCOMError_Failed; }
 	
 	
@@ -710,7 +710,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::CreateBreak(Sint32 
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfBreak, (IVWUnknown**) & pBreakObj)))
 	{
 		// Check Casting
-		CGdtfBreakImpl* pResultInterface = dynamic_cast<CGdtfBreakImpl* >(pBreakObj);
+		CGdtfBreakImpl* pResultInterface = static_cast<CGdtfBreakImpl* >(pBreakObj);
 		if (pResultInterface)
 		{
 			pResultInterface->setPointer(cdBreak);
@@ -746,7 +746,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetGeometryReferenc
 	// Check if it is the right type
 	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryReference) return kVCOMError_WrongGeometryType;
 	
-	SceneData::GdtfGeometryReferencePtr ref = dynamic_cast<SceneData::GdtfGeometryReferencePtr>(fGeometry);
+	SceneData::GdtfGeometryReferencePtr ref = static_cast<SceneData::GdtfGeometryReferencePtr>(fGeometry);
 	if ( ! ref) { return kVCOMError_Failed; }
 	
 		
@@ -761,7 +761,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetGeometryReferenc
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfGeometry, (IVWUnknown**) & pGeoObj)))
 	{
 		// Check Casting
-		CGdtfGeometryImpl* pResultInterface = dynamic_cast<CGdtfGeometryImpl* >(pGeoObj);
+		CGdtfGeometryImpl* pResultInterface = static_cast<CGdtfGeometryImpl* >(pGeoObj);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(gdtfGeometry);
@@ -798,13 +798,13 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetGeometryReferenc
 	// Check if it is the right type
 	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryReference) return kVCOMError_WrongGeometryType;
 	
-	SceneData::GdtfGeometryReferencePtr ref = dynamic_cast<SceneData::GdtfGeometryReferencePtr>(fGeometry);
+	SceneData::GdtfGeometryReferencePtr ref = static_cast<SceneData::GdtfGeometryReferencePtr>(fGeometry);
 	if ( ! ref) { return kVCOMError_Failed; }
 	
 		
 	//---------------------------------------------------------------------------
 	// Initialize Object
-	CGdtfGeometryImpl*			pGeoObj			= dynamic_cast<CGdtfGeometryImpl*> (geometry);
+	CGdtfGeometryImpl*			pGeoObj			= static_cast<CGdtfGeometryImpl*> (geometry);
 	if(!pGeoObj) { return kVCOMError_InvalidArg; }
 	
 	SceneData::GdtfGeometry*	gdtfGeometryToSet 	= pGeoObj->GetPointer();
@@ -819,7 +819,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetCountLinkedDmxCh
 	count = 0;
 
 	// Check interface
-	CGdtfDmxModeImpl* modeInterface = dynamic_cast<CGdtfDmxModeImpl*>(forMode);
+	CGdtfDmxModeImpl* modeInterface = static_cast<CGdtfDmxModeImpl*>(forMode);
 	if( ! modeInterface) { return kVCOMError_InvalidArg; }
 
 	// Get Array
@@ -835,7 +835,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetCountLinkedDmxCh
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetLinkedDmxChannelAt(size_t at, IGdtfDmxChannel** outChannel, IGdtfDmxMode * forMode)
 {
 	// Check interface
-	CGdtfDmxModeImpl* modeInterface = dynamic_cast<CGdtfDmxModeImpl*>(forMode);
+	CGdtfDmxModeImpl* modeInterface = static_cast<CGdtfDmxModeImpl*>(forMode);
 	if( ! modeInterface) { return kVCOMError_InvalidArg; }
 
 	// Get Array
@@ -853,7 +853,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetLinkedDmxChannel
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDmxChannel, (IVWUnknown**) & pChannObj)))
 	{
 		// Check Casting
-		CGdtfDmxChannelImpl* pResultInterface = dynamic_cast<CGdtfDmxChannelImpl* >(pChannObj);
+		CGdtfDmxChannelImpl* pResultInterface = static_cast<CGdtfDmxChannelImpl* >(pChannObj);
 		if (pResultInterface)
 		{
 			pResultInterface->setPointer(channels[at]);

@@ -1613,7 +1613,7 @@ void GdtfGeometry::OnReadFromNode(const IXMLFileNodePtr& pNode)
 												GdtfBreakPtr breakObj = new GdtfBreak();
 												breakObj->ReadFromNode(objNode);
 												
-												GdtfGeometryReferencePtr refGeo = dynamic_cast<GdtfGeometryReferencePtr>(this);
+												GdtfGeometryReferencePtr refGeo = static_cast<GdtfGeometryReferencePtr>(this);
 												refGeo->fBreaks.push_back(breakObj);
 												return;
 											}
@@ -2872,7 +2872,7 @@ TSint32Array GdtfDmxMode::GetBreakArray() const
 		// Handle Geo Refs
 		if(geometry->GetObjectType() == eGdtfGeometryReference )
 		{
-			GdtfGeometryReferencePtr geoRef = dynamic_cast<GdtfGeometryReferencePtr>(geometry);
+			GdtfGeometryReferencePtr geoRef = static_cast<GdtfGeometryReferencePtr>(geometry);
 			ASSERTN(kEveryone, geoRef != nullptr);
 			if(geoRef)
 			{
@@ -2955,7 +2955,7 @@ size_t GdtfDmxMode::GetFootPrintForBreak(size_t breakId)
 		// if the current geometry is a geometry reference do stuff
 		if(geoToCheck->GetObjectType() == eGdtfGeometryReference)
 		{
-			GdtfGeometryReferencePtr geoRef 	= dynamic_cast<GdtfGeometryReferencePtr>(geoToCheck); ASSERTN(kEveryone, geoRef);
+			GdtfGeometryReferencePtr geoRef 	= static_cast<GdtfGeometryReferencePtr>(geoToCheck); ASSERTN(kEveryone, geoRef);
 			GdtfGeometryPtr 		 refedGeo   = geoRef->GetLinkedGeometry();
 			TSint32Array 			 breakIdsOfReference;
 			TGdtfGeometryArray 		 geometriesInReferencedTree = {refedGeo};
@@ -5461,7 +5461,7 @@ void GdtfFixture::ResolveGeometryRefs_Recursive(GdtfGeometryPtr geometry)
 	// Resolve Geo Refs
 	if(geometry->GetObjectType() == eGdtfGeometryReference)
 	{
-		GdtfGeometryReferencePtr geoRef = dynamic_cast<GdtfGeometryReferencePtr>(geometry);
+		GdtfGeometryReferencePtr geoRef = static_cast<GdtfGeometryReferencePtr>(geometry);
 		ASSERTN(kEveryone, geoRef != nullptr);
 		if(geoRef)
 		{

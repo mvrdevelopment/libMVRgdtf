@@ -104,7 +104,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateDataP
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_SceneDataProvider, (IVWUnknown**) & pProviderObj)))
 	{
 		// Check Casting
-		CSceneDataProviderImpl* pResultInterface = dynamic_cast<CSceneDataProviderImpl* >(pProviderObj);
+		CSceneDataProviderImpl* pResultInterface = static_cast<CSceneDataProviderImpl* >(pProviderObj);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(ptr);
@@ -149,7 +149,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreatePosit
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_PositionObj, (IVWUnknown**) & pPosition)))
 	{
 		// Check Casting
-		CPositionImpl* pResultInterface = dynamic_cast<CPositionImpl* >(pPosition);
+		CPositionImpl* pResultInterface = static_cast<CPositionImpl* >(pPosition);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(scPostion);
@@ -198,7 +198,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateSymDe
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_ISymDef, (IVWUnknown**) & pSymDef)))
 	{
 		// Check Casting
-		CSymDefImpl* pResultInterface = dynamic_cast<CSymDefImpl* >(pSymDef);
+		CSymDefImpl* pResultInterface = static_cast<CSymDefImpl* >(pSymDef);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(scSymDef, GetExchangeObj());
@@ -243,7 +243,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateClass
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_IClass, (IVWUnknown**) & pClass)))
 	{
 		// Check Casting
-		CClassImpl* pResultInterface = dynamic_cast<CClassImpl* >(pClass);
+		CClassImpl* pResultInterface = static_cast<CClassImpl* >(pClass);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(scClass);
@@ -288,7 +288,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateMappi
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_MappingDefinitionObj, (IVWUnknown**) & pMappingDefinition)))
 	{
 		// Check Casting
-		CMappingDefinitionImpl* pResultInterface = dynamic_cast<CMappingDefinitionImpl* >(pMappingDefinition);
+		CMappingDefinitionImpl* pResultInterface = static_cast<CMappingDefinitionImpl* >(pMappingDefinition);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(scMapDef);
@@ -333,7 +333,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateLayer
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_SceneObject, (IVWUnknown**) & pProviderObj)))
 	{
 		// Check Casting
-		CSceneObjImpl* pResultInterface = dynamic_cast<CSceneObjImpl* >(pProviderObj);
+		CSceneObjImpl* pResultInterface = static_cast<CSceneObjImpl* >(pProviderObj);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(ptr, GetExchangeObj());
@@ -365,7 +365,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateGroup
 {
 	//---------------------------------------------------------------------------
 	// Read Container
-	CSceneObjImpl* pContainer = dynamic_cast<CSceneObjImpl* >(addToContainer);
+	CSceneObjImpl* pContainer = static_cast<CSceneObjImpl* >(addToContainer);
 	
 	ASSERTN(kEveryone, pContainer != nullptr);
 	if ( ! pContainer) { return kVCOMError_NoValidContainerObj; }
@@ -379,7 +379,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateGroup
 	ASSERTN(kEveryone, type == ESceneObjType::Layer || type ==  ESceneObjType::Group);
 	if ( ! (type == ESceneObjType::Layer || type ==  ESceneObjType::Group) ) { return kVCOMError_NoValidContainerObj; }
 	
-	SceneData::SceneDataGroupObjPtr group = dynamic_cast<SceneData::SceneDataGroupObjPtr>(obj);
+	SceneData::SceneDataGroupObjPtr group = static_cast<SceneData::SceneDataGroupObjPtr>(obj);
 	
 	ASSERTN(kEveryone, group != nullptr);
 	if ( ! group) { return kVCOMError_NoValidContainerObj; }
@@ -401,7 +401,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateGroup
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_SceneObject, (IVWUnknown**) & pGroupObj)))
 	{
 		// Check Casting
-		CSceneObjImpl* pResultInterface = dynamic_cast<CSceneObjImpl* >(pGroupObj);
+		CSceneObjImpl* pResultInterface = static_cast<CSceneObjImpl* >(pGroupObj);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(ptr, GetExchangeObj());
@@ -434,7 +434,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateFixtu
 	
 	//---------------------------------------------------------------------------
 	// Read Container
-	CSceneObjImpl* pContainer = dynamic_cast<CSceneObjImpl* >(addToContainer);
+	CSceneObjImpl* pContainer = static_cast<CSceneObjImpl* >(addToContainer);
 	
 	ASSERTN(kEveryone, pContainer != nullptr);
 	if ( ! pContainer) { return kVCOMError_NoValidContainerObj; }
@@ -448,7 +448,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateFixtu
 	ASSERTN(kEveryone, type == ESceneObjType::Layer || type ==  ESceneObjType::Group);
 	if ( ! (type == ESceneObjType::Layer || type ==  ESceneObjType::Group) ) { return kVCOMError_NoValidContainerObj; }
 	
-	SceneData::SceneDataGroupObjPtr group = dynamic_cast<SceneData::SceneDataGroupObjPtr>(obj);
+	SceneData::SceneDataGroupObjPtr group = static_cast<SceneData::SceneDataGroupObjPtr>(obj);
 	
 	ASSERTN(kEveryone, group != nullptr);
 	if ( ! group) { return kVCOMError_NoValidContainerObj; }
@@ -471,7 +471,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateFixtu
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_SceneObject, (IVWUnknown**) & pProviderObj)))
 	{
 		// Check Casting
-		CSceneObjImpl* pResultInterface = dynamic_cast<CSceneObjImpl* >(pProviderObj);
+		CSceneObjImpl* pResultInterface = static_cast<CSceneObjImpl* >(pProviderObj);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(ptr, GetExchangeObj());
@@ -503,7 +503,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateScene
 {
 	//---------------------------------------------------------------------------
 	// Read Container
-	CSceneObjImpl* pContainer = dynamic_cast<CSceneObjImpl* >(addToContainer);
+	CSceneObjImpl* pContainer = static_cast<CSceneObjImpl* >(addToContainer);
 	
 	ASSERTN(kEveryone, pContainer != nullptr);
 	if ( ! pContainer) { return kVCOMError_NoValidContainerObj; }
@@ -517,7 +517,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateScene
 	ASSERTN(kEveryone, type == ESceneObjType::Layer || type ==  ESceneObjType::Group);
 	if ( ! (type == ESceneObjType::Layer || type ==  ESceneObjType::Group) ) { return kVCOMError_NoValidContainerObj; }
 	
-	SceneData::SceneDataGroupObjPtr group = dynamic_cast<SceneData::SceneDataGroupObjPtr>(obj);
+	SceneData::SceneDataGroupObjPtr group = static_cast<SceneData::SceneDataGroupObjPtr>(obj);
 	
 	ASSERTN(kEveryone, group != nullptr);
 	if ( ! group) { return kVCOMError_NoValidContainerObj; }
@@ -539,7 +539,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateScene
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_SceneObject, (IVWUnknown**) & pSceneObj)))
 	{
 		// Check Casting
-		CSceneObjImpl* pResultInterface = dynamic_cast<CSceneObjImpl* >(pSceneObj);
+		CSceneObjImpl* pResultInterface = static_cast<CSceneObjImpl* >(pSceneObj);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(ptr, GetExchangeObj());
@@ -571,7 +571,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateFocus
 {
 	//---------------------------------------------------------------------------
 	// Read Container
-	CSceneObjImpl* pContainer = dynamic_cast<CSceneObjImpl* >(addToContainer);
+	CSceneObjImpl* pContainer = static_cast<CSceneObjImpl* >(addToContainer);
 	
 	ASSERTN(kEveryone, pContainer != nullptr);
 	if ( ! pContainer) { return kVCOMError_NoValidContainerObj; }
@@ -585,7 +585,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateFocus
 	ASSERTN(kEveryone, type == ESceneObjType::Layer || type ==  ESceneObjType::Group);
 	if ( ! (type == ESceneObjType::Layer || type ==  ESceneObjType::Group) ) { return kVCOMError_NoValidContainerObj; }
 	
-	SceneData::SceneDataGroupObjPtr group = dynamic_cast<SceneData::SceneDataGroupObjPtr>(obj);
+	SceneData::SceneDataGroupObjPtr group = static_cast<SceneData::SceneDataGroupObjPtr>(obj);
 	
 	ASSERTN(kEveryone, group != nullptr);
 	if ( ! group) { return kVCOMError_NoValidContainerObj; }
@@ -608,7 +608,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateFocus
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_SceneObject, (IVWUnknown**) & pProviderObj)))
 	{
 		// Check Casting
-		CSceneObjImpl* pResultInterface = dynamic_cast<CSceneObjImpl* >(pProviderObj);
+		CSceneObjImpl* pResultInterface = static_cast<CSceneObjImpl* >(pProviderObj);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(ptr, GetExchangeObj());
@@ -640,7 +640,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateTruss
 {
 	//---------------------------------------------------------------------------
 	// Read Container
-	CSceneObjImpl* pContainer = dynamic_cast<CSceneObjImpl* >(addToContainer);
+	CSceneObjImpl* pContainer = static_cast<CSceneObjImpl* >(addToContainer);
 	
 	ASSERTN(kEveryone, pContainer != nullptr);
 	if ( ! pContainer) { return kVCOMError_NoValidContainerObj; }
@@ -654,7 +654,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateTruss
 	ASSERTN(kEveryone, type == ESceneObjType::Layer || type ==  ESceneObjType::Group);
 	if ( ! (type == ESceneObjType::Layer || type ==  ESceneObjType::Group) ) { return kVCOMError_NoValidContainerObj; }
 	
-	SceneData::SceneDataGroupObjPtr group = dynamic_cast<SceneData::SceneDataGroupObjPtr>(obj);
+	SceneData::SceneDataGroupObjPtr group = static_cast<SceneData::SceneDataGroupObjPtr>(obj);
 	
 	ASSERTN(kEveryone, group != nullptr);
 	if ( ! group) { return kVCOMError_NoValidContainerObj; }
@@ -677,7 +677,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateTruss
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_SceneObject, (IVWUnknown**) & pTrussObj)))
 	{
 		// Check Casting
-		CSceneObjImpl* pResultInterface = dynamic_cast<CSceneObjImpl* >(pTrussObj);
+		CSceneObjImpl* pResultInterface = static_cast<CSceneObjImpl* >(pTrussObj);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(ptr, GetExchangeObj());
@@ -709,7 +709,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateVideo
 {
 	//---------------------------------------------------------------------------
 	// Read Container
-	CSceneObjImpl* pContainer = dynamic_cast<CSceneObjImpl* >(addToContainer);
+	CSceneObjImpl* pContainer = static_cast<CSceneObjImpl* >(addToContainer);
 	
 	ASSERTN(kEveryone, pContainer != nullptr);
 	if ( ! pContainer) { return kVCOMError_NoValidContainerObj; }
@@ -723,7 +723,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateVideo
 	ASSERTN(kEveryone, type == ESceneObjType::Layer || type ==  ESceneObjType::Group);
 	if ( ! (type == ESceneObjType::Layer || type ==  ESceneObjType::Group) ) { return kVCOMError_NoValidContainerObj; }
 	
-	SceneData::SceneDataGroupObjPtr group = dynamic_cast<SceneData::SceneDataGroupObjPtr>(obj);
+	SceneData::SceneDataGroupObjPtr group = static_cast<SceneData::SceneDataGroupObjPtr>(obj);
 	
 	ASSERTN(kEveryone, group != nullptr);
 	if ( ! group) { return kVCOMError_NoValidContainerObj; }
@@ -746,7 +746,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateVideo
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_SceneObject, (IVWUnknown**) & pVideoScreen)))
 	{
 		// Check Casting
-		CSceneObjImpl* pResultInterface = dynamic_cast<CSceneObjImpl* >(pVideoScreen);
+		CSceneObjImpl* pResultInterface = static_cast<CSceneObjImpl* >(pVideoScreen);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(ptr, GetExchangeObj());
@@ -778,7 +778,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateProje
 {
 	//---------------------------------------------------------------------------
 	// Read Container
-	CSceneObjImpl* pContainer = dynamic_cast<CSceneObjImpl* >(addToContainer);
+	CSceneObjImpl* pContainer = static_cast<CSceneObjImpl* >(addToContainer);
 	
 	ASSERTN(kEveryone, pContainer != nullptr);
 	if ( ! pContainer) { return kVCOMError_NoValidContainerObj; }
@@ -792,7 +792,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateProje
 	ASSERTN(kEveryone, type == ESceneObjType::Layer || type ==  ESceneObjType::Group);
 	if ( ! (type == ESceneObjType::Layer || type ==  ESceneObjType::Group) ) { return kVCOMError_NoValidContainerObj; }
 	
-	SceneData::SceneDataGroupObjPtr group = dynamic_cast<SceneData::SceneDataGroupObjPtr>(obj);
+	SceneData::SceneDataGroupObjPtr group = static_cast<SceneData::SceneDataGroupObjPtr>(obj);
 	
 	ASSERTN(kEveryone, group != nullptr);
 	if ( ! group) { return kVCOMError_NoValidContainerObj; }
@@ -815,7 +815,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateProje
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_SceneObject, (IVWUnknown**) & pProjector)))
 	{
 		// Check Casting
-		CSceneObjImpl* pResultInterface = dynamic_cast<CSceneObjImpl* >(pProjector);
+		CSceneObjImpl* pResultInterface = static_cast<CSceneObjImpl* >(pProjector);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(ptr, GetExchangeObj());
@@ -916,7 +916,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetDataProv
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_SceneDataProvider, (IVWUnknown**) & pSymDef)))
 	{
 		// Check Casting
-		CSceneDataProviderImpl* pResultInterface = dynamic_cast<CSceneDataProviderImpl* >(pSymDef);
+		CSceneDataProviderImpl* pResultInterface = static_cast<CSceneDataProviderImpl* >(pSymDef);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(provider);
@@ -967,7 +967,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetPosition
 			if (at == positionCount)
 			{
 				// Do the cast
-				SceneData::SceneDataPositionObjPtr scPosition = dynamic_cast<SceneData::SceneDataPositionObjPtr>(auxObj);
+				SceneData::SceneDataPositionObjPtr scPosition = static_cast<SceneData::SceneDataPositionObjPtr>(auxObj);
 				ASSERTN(kEveryone, scPosition != nullptr);
 				if (!scPosition) { return kVCOMError_Failed; }
 				
@@ -980,7 +980,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetPosition
 				if (VCOM_SUCCEEDED(VWQueryInterface(IID_PositionObj, (IVWUnknown**) & pPosition)))
 				{
 					// Check Casting
-					CPositionImpl* pResultInterface = dynamic_cast<CPositionImpl* >(pPosition);
+					CPositionImpl* pResultInterface = static_cast<CPositionImpl* >(pPosition);
 					if (pResultInterface)
 					{
 						pResultInterface->SetPointer(scPosition);
@@ -1040,7 +1040,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetSymDefAt
 			if (at == symDefCount)
 			{
 				// Do the cast
-				SceneData::SceneDataSymDefObjPtr scSymDef = dynamic_cast<SceneData::SceneDataSymDefObjPtr>(auxObj);
+				SceneData::SceneDataSymDefObjPtr scSymDef = static_cast<SceneData::SceneDataSymDefObjPtr>(auxObj);
 				ASSERTN(kEveryone, scSymDef != nullptr);
 				if (!scSymDef) { return kVCOMError_Failed; }
 				
@@ -1053,7 +1053,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetSymDefAt
 				if (VCOM_SUCCEEDED(VWQueryInterface(IID_ISymDef, (IVWUnknown**) & pSymDef)))
 				{
 					// Check Casting
-					CSymDefImpl* pResultInterface = dynamic_cast<CSymDefImpl* >(pSymDef);
+					CSymDefImpl* pResultInterface = static_cast<CSymDefImpl* >(pSymDef);
 					if (pResultInterface)
 					{
 						pResultInterface->SetPointer(scSymDef, GetExchangeObj());
@@ -1113,7 +1113,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetClassAt(
 			if (at == classCount)
 			{
 				// Do the cast
-				SceneData::SceneDataClassObjPtr scClass = dynamic_cast<SceneData::SceneDataClassObjPtr>(auxObj);
+				SceneData::SceneDataClassObjPtr scClass = static_cast<SceneData::SceneDataClassObjPtr>(auxObj);
 				ASSERTN(kEveryone, scClass != nullptr);
 				if (!scClass) { return kVCOMError_Failed; }
 				
@@ -1126,7 +1126,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetClassAt(
 				if (VCOM_SUCCEEDED(VWQueryInterface(IID_IClass, (IVWUnknown**) & pClass)))
 				{
 					// Check Casting
-					CClassImpl* pResultInterface = dynamic_cast<CClassImpl* >(pClass);
+					CClassImpl* pResultInterface = static_cast<CClassImpl* >(pClass);
 					if (pResultInterface)
 					{
 						pResultInterface->SetPointer(scClass);
@@ -1186,7 +1186,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetMappingD
 			if (at == mapDefCount)
 			{
 				// Do the cast
-				SceneData::SceneDataMappingDefinitionObjPtr scMapDef = dynamic_cast<SceneData::SceneDataMappingDefinitionObjPtr>(auxObj);
+				SceneData::SceneDataMappingDefinitionObjPtr scMapDef = static_cast<SceneData::SceneDataMappingDefinitionObjPtr>(auxObj);
 				ASSERTN(kEveryone, scMapDef != nullptr);
 				if (!scMapDef) { return kVCOMError_Failed; }
 				
@@ -1199,7 +1199,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetMappingD
 				if (VCOM_SUCCEEDED(VWQueryInterface(IID_MappingDefinitionObj, (IVWUnknown**) & pMapDef)))
 				{
 					// Check Casting
-					CMappingDefinitionImpl* pResultInterface = dynamic_cast<CMappingDefinitionImpl* >(pMapDef);
+					CMappingDefinitionImpl* pResultInterface = static_cast<CMappingDefinitionImpl* >(pMapDef);
 					if (pResultInterface)
 					{
 						pResultInterface->SetPointer(scMapDef);
@@ -1260,7 +1260,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetFirstLay
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_SceneObject, (IVWUnknown**) & pLayerObj)))
 	{
 		// Check Casting
-		CSceneObjImpl* pResultInterface = dynamic_cast<CSceneObjImpl* >(pLayerObj);
+		CSceneObjImpl* pResultInterface = static_cast<CSceneObjImpl* >(pLayerObj);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(layer, GetExchangeObj());
@@ -1288,7 +1288,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetFirstChi
 	
 	// ------------------------------------------------------------------------------------------
 	// Cast to object
-	CSceneObjImpl* pContainer = dynamic_cast<CSceneObjImpl* >(container);
+	CSceneObjImpl* pContainer = static_cast<CSceneObjImpl* >(container);
 	
 	//
 	SceneData::SceneDataObjWithMatrixPtr	layer	= nullptr;
@@ -1310,7 +1310,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetFirstChi
 	
 	
 	// Do the last casting
-	SceneData::SceneDataGroupObjPtr scGroupObj = dynamic_cast<SceneData::SceneDataGroupObjPtr >(layer);
+	SceneData::SceneDataGroupObjPtr scGroupObj = static_cast<SceneData::SceneDataGroupObjPtr >(layer);
 	if(!scGroupObj) { return kVCOMError_NoValidContainerObj; }
 	
 	//---------------------------------------------------------------------------
@@ -1327,7 +1327,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetFirstChi
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_SceneObject, (IVWUnknown**) & pSceneObject)))
 	{
 		// Check Casting
-		CSceneObjImpl* pResultInterface = dynamic_cast<CSceneObjImpl* >(pSceneObject);
+		CSceneObjImpl* pResultInterface = static_cast<CSceneObjImpl* >(pSceneObject);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(child, GetExchangeObj());
@@ -1366,7 +1366,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetNextObje
 	
 	// ------------------------------------------------------------------------------------------
 	// Cast to object
-	CSceneObjImpl* pContainer = dynamic_cast<CSceneObjImpl* >(object);
+	CSceneObjImpl* pContainer = static_cast<CSceneObjImpl* >(object);
 	
 	//
 	SceneData::SceneDataObjWithMatrixPtr	scObject	= nullptr;
@@ -1401,7 +1401,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetNextObje
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_SceneObject, (IVWUnknown**) & pSceneObject)))
 	{
 		// Check Casting
-		CSceneObjImpl* pResultInterface = dynamic_cast<CSceneObjImpl* >(pSceneObject);
+		CSceneObjImpl* pResultInterface = static_cast<CSceneObjImpl* >(pSceneObject);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(scNextObj, GetExchangeObj());

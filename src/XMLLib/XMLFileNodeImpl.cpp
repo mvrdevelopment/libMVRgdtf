@@ -530,7 +530,7 @@ VCOMError CXMLFileNodeImpl::GetChildNode(const TXString& name, size_t arrayIndex
 	if ( pFoundChild ) {
 		CXMLFileImpl::SetLastError( kVCOMError_XMLFile_UnknownError );
 		if ( VCOM_SUCCEEDED( ::VWQueryInterface( IID_XMLFileNode, (IVWUnknown**) & pResultNode ) ) ) {
-			CXMLFileNodeImpl*	pOutNodeImpl	= dynamic_cast<CXMLFileNodeImpl*>( pResultNode );
+			CXMLFileNodeImpl*	pOutNodeImpl	= static_cast<CXMLFileNodeImpl*>( pResultNode );
 			if ( pOutNodeImpl ) {
 				pOutNodeImpl->SetData( fpDomDocument, pFoundChild );
 				CXMLFileImpl::SetLastError( kVCOMError_NoError );
@@ -609,7 +609,7 @@ VCOMError CXMLFileNodeImpl::GetChildNode(const TXString& name, const TXString& a
 	if ( pFoundChild ) {
 		CXMLFileImpl::SetLastError( kVCOMError_XMLFile_UnknownError );
 		if ( VCOM_SUCCEEDED( ::VWQueryInterface( IID_XMLFileNode, (IVWUnknown**) & pResultNode ) ) ) {
-			CXMLFileNodeImpl*	pOutNodeImpl	= dynamic_cast<CXMLFileNodeImpl*>( pResultNode );
+			CXMLFileNodeImpl*	pOutNodeImpl	= static_cast<CXMLFileNodeImpl*>( pResultNode );
 			if ( pOutNodeImpl ) {
 				pOutNodeImpl->SetData( fpDomDocument, pFoundChild );
 				CXMLFileImpl::SetLastError( kVCOMError_NoError );
@@ -655,7 +655,7 @@ VCOMError CXMLFileNodeImpl::GetParentNode(IXMLFileNode** ppOutNode)
 	}
 	else {
 		if ( VCOM_SUCCEEDED( ::VWQueryInterface( IID_XMLFileNode, (IVWUnknown**) & pResultNode ) ) ) {
-			CXMLFileNodeImpl*	pOutNodeImpl	= dynamic_cast<CXMLFileNodeImpl*>( pResultNode );
+			CXMLFileNodeImpl*	pOutNodeImpl	= static_cast<CXMLFileNodeImpl*>( pResultNode );
 			if ( pOutNodeImpl ) {
 				pOutNodeImpl->SetData( fpDomDocument, pParentNode );
 				CXMLFileImpl::SetLastError( kVCOMError_NoError );
@@ -701,7 +701,7 @@ VCOMError CXMLFileNodeImpl::GetFirstChildNode(IXMLFileNode** ppOutNode)
 				CXMLFileImpl::SetLastError( kVCOMError_XMLFile_UnknownError );
 
 				if ( VCOM_SUCCEEDED( ::VWQueryInterface( IID_XMLFileNode, (IVWUnknown**) & pResultNode ) ) ) {
-					CXMLFileNodeImpl*	pOutNodeImpl	= dynamic_cast<CXMLFileNodeImpl*>( pResultNode );
+					CXMLFileNodeImpl*	pOutNodeImpl	= static_cast<CXMLFileNodeImpl*>( pResultNode );
 					if ( pOutNodeImpl ) {
 						pOutNodeImpl->SetData( fpDomDocument, pCurNode );
 						CXMLFileImpl::SetLastError( kVCOMError_NoError );
@@ -752,7 +752,7 @@ VCOMError CXMLFileNodeImpl::GetLastChildNode(IXMLFileNode** ppOutNode)
 				CXMLFileImpl::SetLastError( kVCOMError_XMLFile_UnknownError );
 
 				if ( VCOM_SUCCEEDED( ::VWQueryInterface( IID_XMLFileNode, (IVWUnknown**) & pResultNode ) ) ) {
-					CXMLFileNodeImpl*	pOutNodeImpl	= dynamic_cast<CXMLFileNodeImpl*>( pResultNode );
+					CXMLFileNodeImpl*	pOutNodeImpl	= static_cast<CXMLFileNodeImpl*>( pResultNode );
 					if ( pOutNodeImpl ) {
 						pOutNodeImpl->SetData( fpDomDocument, pCurNode );
 						CXMLFileImpl::SetLastError( kVCOMError_NoError );
@@ -804,7 +804,7 @@ VCOMError CXMLFileNodeImpl::GetNextSiblingNode(IXMLFileNode** ppOutNode)
 			CXMLFileImpl::SetLastError( kVCOMError_XMLFile_UnknownError );
 
 			if ( VCOM_SUCCEEDED( ::VWQueryInterface( IID_XMLFileNode, (IVWUnknown**) & pResultNode ) ) ) {
-				CXMLFileNodeImpl*	pOutNodeImpl	= dynamic_cast<CXMLFileNodeImpl*>( pResultNode );
+				CXMLFileNodeImpl*	pOutNodeImpl	= static_cast<CXMLFileNodeImpl*>( pResultNode );
 				if ( pOutNodeImpl ) {
 					pOutNodeImpl->SetData( fpDomDocument, pCurNode );
 					CXMLFileImpl::SetLastError( kVCOMError_NoError );
@@ -852,7 +852,7 @@ VCOMError CXMLFileNodeImpl::GetPrevSiblingNode(IXMLFileNode** ppOutNode)
 			CXMLFileImpl::SetLastError( kVCOMError_XMLFile_UnknownError );
 
 			if ( VCOM_SUCCEEDED( ::VWQueryInterface( IID_XMLFileNode, (IVWUnknown**) & pResultNode ) ) ) {
-				CXMLFileNodeImpl*	pOutNodeImpl	= dynamic_cast<CXMLFileNodeImpl*>( pResultNode );
+				CXMLFileNodeImpl*	pOutNodeImpl	= static_cast<CXMLFileNodeImpl*>( pResultNode );
 				if ( pOutNodeImpl ) {
 					pOutNodeImpl->SetData( fpDomDocument, pCurNode );
 					CXMLFileImpl::SetLastError( kVCOMError_NoError );
@@ -905,7 +905,7 @@ VCOMError CXMLFileNodeImpl::FindChildNode(const TXString& nodeName, IXMLFileNode
 					CXMLFileImpl::SetLastError( kVCOMError_XMLFile_UnknownError );
 
 					if ( VCOM_SUCCEEDED( ::VWQueryInterface( IID_XMLFileNode, (IVWUnknown**) & pResultNode ) ) ) {
-						CXMLFileNodeImpl*	pOutNodeImpl	= dynamic_cast<CXMLFileNodeImpl*>( pResultNode );
+						CXMLFileNodeImpl*	pOutNodeImpl	= static_cast<CXMLFileNodeImpl*>( pResultNode );
 						if ( pOutNodeImpl ) {
 							pOutNodeImpl->SetData( fpDomDocument, pCurNode );
 							CXMLFileImpl::SetLastError( kVCOMError_NoError );
@@ -1028,7 +1028,7 @@ VCOMError CXMLFileNodeImpl::CreateChildNodeBeforeIndex(const TXString& name, siz
 				
                 CXMLFileImpl::SetLastError( kVCOMError_XMLFile_UnknownError );
                 if ( VCOM_SUCCEEDED( ::VWQueryInterface( IID_XMLFileNode, (IVWUnknown**) & pResultNode ) ) ) {
-                    CXMLFileNodeImpl*	pOutNodeImpl	= dynamic_cast<CXMLFileNodeImpl*>( pResultNode );
+                    CXMLFileNodeImpl*	pOutNodeImpl	= static_cast<CXMLFileNodeImpl*>( pResultNode );
                     if ( pOutNodeImpl ) {
                         pOutNodeImpl->SetData( fpDomDocument, pChildNode );
                         CXMLFileImpl::SetLastError( kVCOMError_NoError );
@@ -1070,7 +1070,7 @@ VCOMError CXMLFileNodeImpl::AddCopyOfExistingNodeBeforeIndex(const IXMLFileNode*
     
     IXMLFileNode*	pResultNode		= NULL;
     
-    const CXMLFileNodeImpl* nodeToCopy = dynamic_cast<const CXMLFileNodeImpl*>(existingNode);
+    const CXMLFileNodeImpl* nodeToCopy = static_cast<const CXMLFileNodeImpl*>(existingNode);
     if ( nodeToCopy == NULL )
         return kVCOMError_InvalidArg;
     
@@ -1121,7 +1121,7 @@ VCOMError CXMLFileNodeImpl::AddCopyOfExistingNodeBeforeIndex(const IXMLFileNode*
             CXMLFileImpl::SetLastError( kVCOMError_XMLFile_UnknownError );
             
             if ( VCOM_SUCCEEDED( ::VWQueryInterface( IID_XMLFileNode, (IVWUnknown**) & pResultNode ) ) ) {
-                CXMLFileNodeImpl*	pOutNodeImpl	= dynamic_cast<CXMLFileNodeImpl*>( pResultNode );
+                CXMLFileNodeImpl*	pOutNodeImpl	= static_cast<CXMLFileNodeImpl*>( pResultNode );
                 if ( pOutNodeImpl ) {
                     pOutNodeImpl->SetData( fpDomDocument, pChildNode );
                     CXMLFileImpl::SetLastError( kVCOMError_NoError );

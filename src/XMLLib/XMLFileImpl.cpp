@@ -552,7 +552,7 @@ VCOMError CXMLFileImpl::GetRootNode(IXMLFileNode** ppOutNode)
 
 	VCOMError	error	= kVCOMError_Failed;
 	if ( VCOM_SUCCEEDED( ::VWQueryInterface( IID_XMLFileNode, (IVWUnknown**) ppOutNode ) ) ) {
-		CXMLFileNodeImpl*	pOutNodeImpl	= dynamic_cast<CXMLFileNodeImpl*>( *ppOutNode );
+		CXMLFileNodeImpl*	pOutNodeImpl	= static_cast<CXMLFileNodeImpl*>( *ppOutNode );
 		if ( pOutNodeImpl ) {
 			pOutNodeImpl->SetData( fpDomDocument, fpDocRoot );
 			error		= kVCOMError_NoError;
@@ -829,14 +829,14 @@ VCOMError  CXMLFileImpl::DoSimpleNode(IXMLFileNode* pRefNode, const TXString& no
 		}
 	}
 
-	CXMLFileNodeImpl*	xmlNodeImpl	= dynamic_cast<CXMLFileNodeImpl*>( (IVWUnknown*) xmlNode );
+	CXMLFileNodeImpl*	xmlNodeImpl	= static_cast<CXMLFileNodeImpl*>( (IVWUnknown*) xmlNode );
 	if ( VCOM_SUCCEEDED( err ) && xmlNodeImpl ) {
 		if ( ppOutNode && *ppOutNode == NULL ) {
 			::VWQueryInterface( IID_XMLFileNode, (IVWUnknown**) ppOutNode );
 		}
 
 		if ( ppOutNode ) {
-			CXMLFileNodeImpl*	pOutNodeImpl	= dynamic_cast<CXMLFileNodeImpl*>( *ppOutNode );
+			CXMLFileNodeImpl*	pOutNodeImpl	= static_cast<CXMLFileNodeImpl*>( *ppOutNode );
 			if ( pOutNodeImpl ) {
 				pOutNodeImpl->SetData( fpDomDocument, xmlNodeImpl->GetNode() );
 				err		= kVCOMError_NoError;

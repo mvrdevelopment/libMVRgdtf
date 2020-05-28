@@ -38,7 +38,7 @@ VectorworksMVR::VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfMacroVisualValueImp
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDmxChannelFunction, (IVWUnknown**)& pChannelFunc)))
     {
         // Check Casting
-        CGdtfDmxChannelFunctionImpl* pResultInterface = dynamic_cast<CGdtfDmxChannelFunctionImpl* >(pChannelFunc);
+        CGdtfDmxChannelFunctionImpl* pResultInterface = static_cast<CGdtfDmxChannelFunctionImpl* >(pChannelFunc);
         if (pResultInterface)
         {
             pResultInterface->setPointer(gdtfDmxChannel);
@@ -85,7 +85,7 @@ VectorworksMVR::VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfMacroVisualValueImp
     if (!newValue)	return kVCOMError_InvalidArg;
 
     // Cast
-    CGdtfDmxChannelFunctionImpl* channelFuncImplem = dynamic_cast<CGdtfDmxChannelFunctionImpl*>(newValue);
+    CGdtfDmxChannelFunctionImpl* channelFuncImplem = static_cast<CGdtfDmxChannelFunctionImpl*>(newValue);
     if (!channelFuncImplem)		return kVCOMError_Failed;
 
     // Now set

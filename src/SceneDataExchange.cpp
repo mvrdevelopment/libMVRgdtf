@@ -2179,7 +2179,7 @@ SceneDataSymDefObjPtr SceneDataExchange::GetSymDefByUUID(const SceneDataGUID& gu
 	{
 		if (auxObj->getGuid() == guid)
 		{
-			SceneDataSymDefObjPtr symDef = dynamic_cast<SceneDataSymDefObjPtr>(auxObj);
+			SceneDataSymDefObjPtr symDef = static_cast<SceneDataSymDefObjPtr>(auxObj);
 			
 			ASSERTN(kEveryone, symDef != nullptr);
 			return symDef;
@@ -2203,7 +2203,7 @@ SceneDataSymDefObjPtr SceneDataExchange::CreateSymDefObject(const SceneDataGUID&
 		if (auxObj->getGuid() == guid)
 		{
 			ASSERTN(kEveryone, auxObj->GetObjectType() == eSymDef);
-			SceneDataSymDefObjPtr existingSymDef = dynamic_cast<SceneDataSymDefObjPtr>(auxObj);
+			SceneDataSymDefObjPtr existingSymDef = static_cast<SceneDataSymDefObjPtr>(auxObj);
 			if (existingSymDef) { return existingSymDef; }
 			
 		}
@@ -2237,7 +2237,7 @@ SceneDataLayerObjPtr SceneDataExchange::CreateLayerObject(const SceneDataGUID& g
 	
 	if(fChildObjs.size() > 0)
 	{
-		SceneDataLayerObjPtr lastLayer = dynamic_cast<SceneDataLayerObjPtr>(fChildObjs.back());
+		SceneDataLayerObjPtr lastLayer = static_cast<SceneDataLayerObjPtr>(fChildObjs.back());
 		ASSERTN(kEveryone, lastLayer != nullptr);
 		if(lastLayer)	{ lastLayer->SetNextLayer(newLayer); }
 	}	
@@ -2259,7 +2259,7 @@ SceneDataLayerObjPtr SceneDataExchange::ReadLayerObject(const SceneDataGUID& gui
 	// Set the Next Object properlly
 	if (before)
 	{
-		SceneDataLayerObjPtr lastLayer = dynamic_cast<SceneDataLayerObjPtr>(before);
+		SceneDataLayerObjPtr lastLayer = static_cast<SceneDataLayerObjPtr>(before);
 		
 		ASSERTN(kEveryone, lastLayer != nullptr);
 		if (lastLayer) { lastLayer->SetNextLayer(newLayer); }
@@ -2282,7 +2282,7 @@ SceneDataPositionObjPtr SceneDataExchange::CreatePositionObject(const SceneDataG
 	for (SceneDataAuxObjPtr auxObj : fAuxDataObjs)
 	{
 		// Try to cast
-		SceneDataPositionObjPtr position = dynamic_cast<SceneDataPositionObjPtr>(auxObj);
+		SceneDataPositionObjPtr position = static_cast<SceneDataPositionObjPtr>(auxObj);
 		
 		// If this is a position and the name is the same
 		if (position && position->getName() == name)
@@ -2337,7 +2337,7 @@ SceneDataClassObjPtr SceneDataExchange::CreateClassObject(const SceneDataGUID& g
 	for (SceneDataAuxObjPtr auxObj : fAuxDataObjs)
 	{
 		// Try to cast
-		SceneDataClassObjPtr clas = dynamic_cast<SceneDataClassObjPtr>(auxObj);
+		SceneDataClassObjPtr clas = static_cast<SceneDataClassObjPtr>(auxObj);
 		
 		// If this is a position and the name is the same
 		if (clas && clas->getName() == name)
@@ -2390,7 +2390,7 @@ SceneDataMappingDefinitionObjPtr SceneDataExchange::CreateMappingDefinitionObjec
 		if (auxObj->getGuid() == guid)
 		{
 			ASSERTN(kEveryone, auxObj->GetObjectType() == eMappingDefinitionObject);
-			SceneDataMappingDefinitionObjPtr existingMappingDefinition = dynamic_cast<SceneDataMappingDefinitionObjPtr>(auxObj);
+			SceneDataMappingDefinitionObjPtr existingMappingDefinition = static_cast<SceneDataMappingDefinitionObjPtr>(auxObj);
 			if (existingMappingDefinition) { return existingMappingDefinition; }
 			
 		}
@@ -3129,7 +3129,7 @@ void SceneDataExchange::ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xml
             {
                 if (geoObj->IsSymDef())
                 {
-				    SceneDataSymbolObjPtr symObj = dynamic_cast<SceneDataSymbolObjPtr>(geoObj);
+				    SceneDataSymbolObjPtr symObj = static_cast<SceneDataSymbolObjPtr>(geoObj);
 				    SceneDataSymDefObjPtr ptr    = fSymDefMap[symObj->GetUnresolvedSymDef()];
 				
 				    ASSERTN(kEveryone, ptr);
@@ -3144,7 +3144,7 @@ void SceneDataExchange::ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xml
 		{
 			if(geoObj->IsSymDef())
 			{
-				SceneDataSymbolObjPtr symObj = dynamic_cast<SceneDataSymbolObjPtr>(geoObj);
+				SceneDataSymbolObjPtr symObj = static_cast<SceneDataSymbolObjPtr>(geoObj);
 				SceneDataSymDefObjPtr ptr    = fSymDefMap[symObj->GetUnresolvedSymDef()];
 				
 				ASSERTN(kEveryone, ptr);

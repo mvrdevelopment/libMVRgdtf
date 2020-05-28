@@ -81,7 +81,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMappingDefinitionImpl::GetSource(ISou
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_SourceObj, (IVWUnknown**) &pSource)))
 	{
 		// Check Casting
-		CSourceImpl* pResultInterface = dynamic_cast<CSourceImpl*>(pSource);
+		CSourceImpl* pResultInterface = static_cast<CSourceImpl*>(pSource);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(source);

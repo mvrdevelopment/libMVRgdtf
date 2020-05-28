@@ -178,7 +178,7 @@ VCOMError CFileIdentifier::Set(IFolderIdentifier* pFolderID, const TXString& fil
 	if ( pFolderID == NULL || fileName.IsEmpty() )
 		return kVCOMError_InvalidArg;
 
-	CFolderIdentifier*	pTheFolder	= dynamic_cast<CFolderIdentifier*>( pFolderID );
+	CFolderIdentifier*	pTheFolder	= static_cast<CFolderIdentifier*>( pFolderID );
 	if ( pTheFolder == NULL )
 		return kVCOMError_InvalidArg;
 
@@ -410,7 +410,7 @@ VCOMError CFileIdentifier::GetFolder(IFolderIdentifier** ppOutParentFolderID)
 	if ( error != kVCOMError_NoError ) 
 		return kVCOMError_Failed;
 
-	CFolderIdentifier*	pParentFolder	= dynamic_cast<CFolderIdentifier*>( *ppOutParentFolderID );
+	CFolderIdentifier*	pParentFolder	= static_cast<CFolderIdentifier*>( *ppOutParentFolderID );
 	if ( pParentFolder == NULL )
 		return kVCOMError_Failed;
 
@@ -618,7 +618,7 @@ VCOMError CFileIdentifier::DuplicateOnDisk(IFileIdentifier *pDestFileID, bool bO
 	if ( VCOM_FAILED( this->IsSet() ) )
 		return kVCOMError_NotInitialized;
 
-	CFileIdentifier	*destinationFile = dynamic_cast<CFileIdentifier*>( pDestFileID );
+	CFileIdentifier	*destinationFile = static_cast<CFileIdentifier*>( pDestFileID );
 	if ( destinationFile == NULL )
 		return kVCOMError_InvalidArg;
 

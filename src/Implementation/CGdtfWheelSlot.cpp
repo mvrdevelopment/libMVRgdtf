@@ -114,7 +114,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotImpl::GetPrismFacetAt(si
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfWheelSlotPrismFacet, (IVWUnknown**) & pPrismFacetObj)))
     {
         // Check Casting
-        CGdtfWheelSlotPrismFacetImpl* pResultInterface = dynamic_cast<CGdtfWheelSlotPrismFacetImpl* >(pPrismFacetObj);
+        CGdtfWheelSlotPrismFacetImpl* pResultInterface = static_cast<CGdtfWheelSlotPrismFacetImpl* >(pPrismFacetObj);
         if (pResultInterface)
         {
             pResultInterface->setPointer(gdtfPrismFacet);
@@ -164,7 +164,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotImpl::CreatePrismFacet(c
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfWheelSlotPrismFacet, (IVWUnknown**) & pPrismFacetObj)))
 	{
 		// Check Casting
-		CGdtfWheelSlotPrismFacetImpl* pResultInterface = dynamic_cast<CGdtfWheelSlotPrismFacetImpl* >(pPrismFacetObj);
+		CGdtfWheelSlotPrismFacetImpl* pResultInterface = static_cast<CGdtfWheelSlotPrismFacetImpl* >(pPrismFacetObj);
 		if (pResultInterface)
 		{
 			pResultInterface->setPointer(gdtfPrismFacet);
@@ -208,7 +208,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotImpl::GetAnimationSystem
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfWheelSlotAnimationSystem, (IVWUnknown**) & pAnimationSystemObj)))
     {
         // Check Casting
-        CGdtfWheelSlotAnimationSystemImpl* pResultInterface = dynamic_cast<CGdtfWheelSlotAnimationSystemImpl* >(pAnimationSystemObj);
+        CGdtfWheelSlotAnimationSystemImpl* pResultInterface = static_cast<CGdtfWheelSlotAnimationSystemImpl* >(pAnimationSystemObj);
         if (pResultInterface)
         {
             pResultInterface->setPointer(gdtfAnimationSystem);
@@ -258,7 +258,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotImpl::CreateAnimationSys
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfWheelSlotAnimationSystem, (IVWUnknown**) & pAnimationSystemObj)))
 	{
 		// Check Casting
-		CGdtfWheelSlotAnimationSystemImpl* pResultInterface = dynamic_cast<CGdtfWheelSlotAnimationSystemImpl* >(pAnimationSystemObj);
+		CGdtfWheelSlotAnimationSystemImpl* pResultInterface = static_cast<CGdtfWheelSlotAnimationSystemImpl* >(pAnimationSystemObj);
 		if (pResultInterface)
 		{
 			pResultInterface->setPointer(gdtfAnimationSystem);
@@ -327,7 +327,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotImpl::GetFilter(IGdtfFil
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfFilter, (IVWUnknown**)& pFilterObj)))
     {
         // Check Casting
-        CGdtfFilterImpl* pResultInterface = dynamic_cast<CGdtfFilterImpl*>(pFilterObj);
+        CGdtfFilterImpl* pResultInterface = static_cast<CGdtfFilterImpl*>(pFilterObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfFilter);
@@ -361,7 +361,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotImpl::SetFilter (IGdtfFi
     if (!newFilter) { return kVCOMError_InvalidArg; }
 
     // Cast
-    CGdtfFilterImpl* FilterImpl = dynamic_cast<CGdtfFilterImpl*>(newFilter);
+    CGdtfFilterImpl* FilterImpl = static_cast<CGdtfFilterImpl*>(newFilter);
     if (!FilterImpl) { return kVCOMError_Failed; }
 
     // Set Object

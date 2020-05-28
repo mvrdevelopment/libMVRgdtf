@@ -38,7 +38,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfMacroDMXImpl::CreateStep(double& 
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfMacroDMXStep, (IVWUnknown**)& pMAcroStepObj)))
     {
         // Check Casting
-        CGdtfMacroDMXStepImpl* pResultInterface = dynamic_cast<CGdtfMacroDMXStepImpl* >(pMAcroStepObj);
+        CGdtfMacroDMXStepImpl* pResultInterface = static_cast<CGdtfMacroDMXStepImpl* >(pMAcroStepObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfMacroStep);
@@ -112,7 +112,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfMacroDMXImpl::GetStepAt(size_t at
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfMacroDMXStep, (IVWUnknown**)& pMacroObj)))
     {
         // Check Casting
-        CGdtfMacroDMXStepImpl* pResultInterface = dynamic_cast<CGdtfMacroDMXStepImpl* >(pMacroObj);
+        CGdtfMacroDMXStepImpl* pResultInterface = static_cast<CGdtfMacroDMXStepImpl* >(pMacroObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfMacroStep);

@@ -68,7 +68,7 @@ VCOMError VCOM_CALLTYPE CGdtfSoftwareVersionIDImpl::GetDMXPersonalityAt(size_t a
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDMXPersonality, (IVWUnknown**)& pDMXPersonalityObj)))
     {
         // Check Casting
-        CGdtfDMXPersonalityImpl* pResultInterface = dynamic_cast<CGdtfDMXPersonalityImpl*>(pDMXPersonalityObj);
+        CGdtfDMXPersonalityImpl* pResultInterface = static_cast<CGdtfDMXPersonalityImpl*>(pDMXPersonalityObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfDMXPersonality);
@@ -103,7 +103,7 @@ VCOMError VCOM_CALLTYPE CGdtfSoftwareVersionIDImpl::CreateDMXPersonality(size_t 
     if (!fSoftwareVersionID) { return kVCOMError_NotInitialized; }
 
 
-    CGdtfDmxModeImpl* mode = dynamic_cast<CGdtfDmxModeImpl*>(dmxMode);
+    CGdtfDmxModeImpl* mode = static_cast<CGdtfDmxModeImpl*>(dmxMode);
 
     SceneData::GdtfDMXPersonality* gdtfDMXPersonality = fSoftwareVersionID->AddDMXPersonality(dmxPersonalityValue, mode->getPointer() );
 
@@ -115,7 +115,7 @@ VCOMError VCOM_CALLTYPE CGdtfSoftwareVersionIDImpl::CreateDMXPersonality(size_t 
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDMXPersonality, (IVWUnknown**)& pDMXPersonalityObj)))
     {
         // Check Casting
-        CGdtfDMXPersonalityImpl* pResultInterface = dynamic_cast<CGdtfDMXPersonalityImpl*>(pDMXPersonalityObj);
+        CGdtfDMXPersonalityImpl* pResultInterface = static_cast<CGdtfDMXPersonalityImpl*>(pDMXPersonalityObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfDMXPersonality);

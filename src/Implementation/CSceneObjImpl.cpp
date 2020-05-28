@@ -110,7 +110,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetGeometryAt(size_t at
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GeometryReference, (IVWUnknown**) & pGeometryRef)))
 	{
 		// Check Casting
-		CGeometryReferenceImpl* pResultInterface = dynamic_cast<CGeometryReferenceImpl* >(pGeometryRef);
+		CGeometryReferenceImpl* pResultInterface = static_cast<CGeometryReferenceImpl* >(pGeometryRef);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(pScGeoObjInst, pScGeoObjInst->IsSymDef(), fContext);
@@ -168,7 +168,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::AddSymbol(const STransf
 	
 	//------------------------------------------------------------------------------------------
 	// Cast incomming symDef
-	CSymDefImpl* pSymDef = dynamic_cast<CSymDefImpl*>(symDef);
+	CSymDefImpl* pSymDef = static_cast<CSymDefImpl*>(symDef);
 	
 	// Check Casting
 	ASSERTN(kEveryone, pSymDef != nullptr);
@@ -219,7 +219,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetClass(IClass** outCl
 	
 	//---------------------------------------------------------------------------
 	// Check if you can cast this
-	SceneData::SceneDataObjWithMatrixPtr scObj = dynamic_cast<SceneData::SceneDataObjWithMatrixPtr>(fPtr);
+	SceneData::SceneDataObjWithMatrixPtr scObj = static_cast<SceneData::SceneDataObjWithMatrixPtr>(fPtr);
 	
 	ASSERTN(kEveryone, scObj);
 	if	( scObj == nullptr) { return kVCOMError_Failed; }
@@ -235,7 +235,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetClass(IClass** outCl
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_IClass, (IVWUnknown**) & pClass)))
 	{
 		// Check Casting
-		CClassImpl* pResultInterface = dynamic_cast<CClassImpl* >(pClass);
+		CClassImpl* pResultInterface = static_cast<CClassImpl* >(pClass);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(scClass);
@@ -276,7 +276,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetClass(IClass* clas)
 	
 	// ------------------------------------------------------------------------------------------
 	// Cast to object
-	CClassImpl* pClass = dynamic_cast<CClassImpl* >(clas);
+	CClassImpl* pClass = static_cast<CClassImpl* >(clas);
 	
 	ASSERTN(kEveryone, pClass != nullptr);
 	if ( ! pClass) { return kVCOMError_Failed;	}
@@ -290,7 +290,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetClass(IClass* clas)
 	
 	// ------------------------------------------------------------------------------------------
 	// Cast to this object
-	SceneData::SceneDataObjWithMatrixPtr scObj = dynamic_cast<SceneData::SceneDataObjWithMatrixPtr>(fPtr);
+	SceneData::SceneDataObjWithMatrixPtr scObj = static_cast<SceneData::SceneDataObjWithMatrixPtr>(fPtr);
 	
 	ASSERTN(kEveryone, scObj != nullptr);
 	if ( ! scObj) { return kVCOMError_Failed; }
@@ -317,7 +317,7 @@ MvrString VectorworksMVR::CSceneObjImpl::GetGdtfName()
 	if( fType != ESceneObjType::Fixture) return "";
 	
 	// Try to cast
-	SceneData::SceneDataFixtureObjPtr fixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
 	if( ! fixture) return "";
 	
 	return fixture->GetGdtfFile().GetCharPtr();
@@ -334,7 +334,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetGdtfFixture(IGdtfFix
 	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
 	
 	// Try to cast
-	SceneData::SceneDataFixtureObjPtr fixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
 	if( ! fixture) return kVCOMError_NoFixtureObj;
 	
 	
@@ -369,7 +369,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetGdtfFixture(IGdtfFix
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_IGdtfFixture, (IVWUnknown**) & pGdtfFixture)))
 	{
 		// Check Casting
-		CGdtfFixtureImpl* pResultInterface = dynamic_cast<CGdtfFixtureImpl* >(pGdtfFixture);
+		CGdtfFixtureImpl* pResultInterface = static_cast<CGdtfFixtureImpl* >(pGdtfFixture);
 		if (pResultInterface)
 		{
 			read = VCOM_SUCCEEDED( pResultInterface->ReadFromFile(gdtfFile, workingFolderName) );
@@ -413,7 +413,7 @@ MvrString VectorworksMVR::CSceneObjImpl::GetGdtfMode()
 	if( fType != ESceneObjType::Fixture) return "";
 	
 	// Try to cast
-	SceneData::SceneDataFixtureObjPtr fixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
 	if( ! fixture) return "";
 	
 	
@@ -437,7 +437,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetFocusPoint(ISceneObj
 	
 	//---------------------------------------------------------------------------
 	// Check if you can cast this
-	SceneData::SceneDataFixtureObjPtr scFixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	SceneData::SceneDataFixtureObjPtr scFixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
 
 	ASSERTN(kEveryone, scFixture);
 	if	( scFixture == nullptr) { return kVCOMError_Failed; }
@@ -457,7 +457,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetFocusPoint(ISceneObj
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_SceneObject, (IVWUnknown**) & pFocusPoint)))
 	{
 		// Check Casting
-		CSceneObjImpl* pResultInterface = dynamic_cast<CSceneObjImpl* >(pFocusPoint);
+		CSceneObjImpl* pResultInterface = static_cast<CSceneObjImpl* >(pFocusPoint);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(focus, fContext);
@@ -499,7 +499,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetPosition(IPosition**
 	
 	//---------------------------------------------------------------------------
 	// Check if you can cast this
-	SceneData::SceneDataFixtureObjPtr scFixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	SceneData::SceneDataFixtureObjPtr scFixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
 	
 	ASSERTN(kEveryone, scFixture);
 	if	( scFixture == nullptr) { return kVCOMError_Failed; }
@@ -513,7 +513,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetPosition(IPosition**
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_PositionObj, (IVWUnknown**) & pPosition)))
 	{
 		// Check Casting
-		CPositionImpl* pResultInterface = dynamic_cast<CPositionImpl* >(pPosition);
+		CPositionImpl* pResultInterface = static_cast<CPositionImpl* >(pPosition);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(scFixture->GetPosition());
@@ -552,7 +552,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetAdressCount(size_t& 
 	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
 	
 	// Try to cast
-	SceneData::SceneDataFixtureObjPtr fixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
 	if( ! fixture) return kVCOMError_NoFixtureObj;
 	
 	outAdresses = fixture->GetAdressesArray().size();
@@ -571,7 +571,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetAdressAt(size_t at, 
 	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
 	
 	// Try to cast
-	SceneData::SceneDataFixtureObjPtr fixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
 	if( ! fixture) return kVCOMError_NoFixtureObj;
 	
 	// Check the psotion of the array
@@ -600,7 +600,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetUnitNumber(Sint32& o
 	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
 	
 	// Try to cast
-	SceneData::SceneDataFixtureObjPtr fixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
 	if( ! fixture) return kVCOMError_NoFixtureObj;
 	
 	outUnitNumber = fixture->GetUnitNumber();
@@ -619,7 +619,7 @@ MvrString VectorworksMVR::CSceneObjImpl::GetFixtureId()
 	if( fType != ESceneObjType::Fixture) return "";
 	
 	// Try to cast
-	SceneData::SceneDataFixtureObjPtr fixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
 	if( ! fixture) return "";
 	
 	return fixture->GetFixtureId().GetCharPtr();
@@ -636,7 +636,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetColor(CieColor& outC
 	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
 	
 	// Try to cast
-	SceneData::SceneDataFixtureObjPtr fixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
 	if( ! fixture) return kVCOMError_NoFixtureObj;
 	
 	// Get the color
@@ -660,7 +660,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetFixtureTypeId(Sint8&
 	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
 	
 	// Try to cast
-	SceneData::SceneDataFixtureObjPtr fixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
 	if( ! fixture) return kVCOMError_NoFixtureObj;
 	
 	outType = fixture->GetFixtureTypeId();
@@ -679,7 +679,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetCustomId(size_t& out
 	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
 	
 	// Try to cast
-	SceneData::SceneDataFixtureObjPtr fixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
 	if( ! fixture) return kVCOMError_NoFixtureObj;
 	
 	outId = fixture->GetCustomId();
@@ -698,7 +698,7 @@ MvrString VectorworksMVR::CSceneObjImpl::GetGobo()
 	if( fType != ESceneObjType::Fixture) return "";
 	
 	// Try to cast
-	SceneData::SceneDataFixtureObjPtr fixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
 	if( ! fixture) return "";
 	
 	return fixture->GetGobo().GetCharPtr();
@@ -715,7 +715,7 @@ MvrString VectorworksMVR::CSceneObjImpl::GetGoboFullPath()
 	if( fType != ESceneObjType::Fixture) return "";
 	
 	// Try to cast
-	SceneData::SceneDataFixtureObjPtr fixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
 	if( ! fixture) return "";
 	
 
@@ -733,7 +733,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetGoboRotation(double&
 	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
 	
 	// Try to cast
-	SceneData::SceneDataFixtureObjPtr fixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
 	if( ! fixture) return kVCOMError_NoFixtureObj;
 		
 	value = fixture->GetGoboRotation();
@@ -752,7 +752,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetCastShadow(bool& val
 	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
 	
 	// Try to cast
-	SceneData::SceneDataFixtureObjPtr fixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
 	if( ! fixture) return kVCOMError_NoFixtureObj;
 		
 	value = fixture->GetCastShadow();
@@ -771,7 +771,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetMappingCount(size_t&
 	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
 	
 	// Try to cast
-	SceneData::SceneDataFixtureObjPtr fixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
 	if( ! fixture) return kVCOMError_NoFixtureObj;
 	
 	outMappings = fixture->GetMappingsArray().size();
@@ -790,7 +790,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetMappingAt(size_t at,
 	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
 
 	// Try to cast
-	SceneData::SceneDataFixtureObjPtr fixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
 	if( ! fixture) return kVCOMError_NoFixtureObj;
 	
 	//------------------------------------------------------------------------------------------
@@ -811,7 +811,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetMappingAt(size_t at,
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_MappingObj, (IVWUnknown**) & pMapping)))
 	{
 		// Check Casting
-		CMappingImpl* pResultInterface = dynamic_cast<CMappingImpl* >(pMapping);
+		CMappingImpl* pResultInterface = static_cast<CMappingImpl* >(pMapping);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(pScMapping);
@@ -850,7 +850,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetGdtfName(MvrString g
 	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
 	
 	// Try to cast
-	SceneData::SceneDataFixtureObjPtr fixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
 	if( ! fixture) return kVCOMError_NoFixtureObj;
 	
 	//
@@ -871,7 +871,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetGdtfMode(MvrString g
 	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
 	
 	// Try to cast
-	SceneData::SceneDataFixtureObjPtr fixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
 	if( ! fixture) return kVCOMError_NoFixtureObj;
 	
 	//
@@ -894,7 +894,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetFocusPoint(ISceneObj
 	
 	// ------------------------------------------------------------------------------------------
 	// Cast to object
-	CSceneObjImpl* pFocusPoint = dynamic_cast<CSceneObjImpl* >(focusPoint);
+	CSceneObjImpl* pFocusPoint = static_cast<CSceneObjImpl* >(focusPoint);
 	
 	ASSERTN(kEveryone, pFocusPoint != nullptr);
 	if ( ! pFocusPoint) { return kVCOMError_Failed;	}
@@ -904,14 +904,14 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetFocusPoint(ISceneObj
 	SceneData::SceneDataObjWithMatrixPtr	scFpParent	= nullptr;
 	pFocusPoint->GetPointer(scFpParent, type);
 	
-	SceneData::SceneDataFocusPointObjPtr scFocusPoint = dynamic_cast<SceneData::SceneDataFocusPointObjPtr>(scFpParent);
+	SceneData::SceneDataFocusPointObjPtr scFocusPoint = static_cast<SceneData::SceneDataFocusPointObjPtr>(scFpParent);
 	
 	ASSERTN(kEveryone, scFocusPoint != nullptr);
 	if ( ! scFocusPoint) { return kVCOMError_InvalidArg; }
 	
 	// ------------------------------------------------------------------------------------------
 	// Cast to this object
-	SceneData::SceneDataFixtureObjPtr scThisFixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	SceneData::SceneDataFixtureObjPtr scThisFixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
 	
 	ASSERTN(kEveryone, scThisFixture != nullptr);
 	if ( ! scThisFixture) { return kVCOMError_Failed; }
@@ -937,7 +937,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetPosition(IPosition* 
 	
 	// ------------------------------------------------------------------------------------------
 	// Cast to object
-	CPositionImpl* pPosition = dynamic_cast<CPositionImpl* >(position);
+	CPositionImpl* pPosition = static_cast<CPositionImpl* >(position);
 	
 	ASSERTN(kEveryone, pPosition != nullptr);
 	if ( ! pPosition) { return kVCOMError_Failed;	}
@@ -951,7 +951,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetPosition(IPosition* 
 	
 	// ------------------------------------------------------------------------------------------
 	// Cast to this object
-	SceneData::SceneDataFixtureObjPtr scThisFixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	SceneData::SceneDataFixtureObjPtr scThisFixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
 	
 	ASSERTN(kEveryone, scThisFixture != nullptr);
 	if ( ! scThisFixture) { return kVCOMError_Failed; }
@@ -974,7 +974,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::AddAdress(const size_t&
 	
 	// ------------------------------------------------------------------------------------------
 	// Cast to this object
-	SceneData::SceneDataFixtureObjPtr scThisFixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	SceneData::SceneDataFixtureObjPtr scThisFixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
 	
 	ASSERTN(kEveryone, scThisFixture != nullptr);
 	if ( ! scThisFixture) { return kVCOMError_Failed; }
@@ -997,7 +997,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetUnitNumber(const Sin
 	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
 	
 	// Try to cast
-	SceneData::SceneDataFixtureObjPtr fixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
 	if( ! fixture) return kVCOMError_NoFixtureObj;
 	
 	//
@@ -1017,7 +1017,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetFixtureId(MvrString 
 	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
 	
 	// Try to cast
-	SceneData::SceneDataFixtureObjPtr fixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
 	if( ! fixture) return kVCOMError_NoFixtureObj;
 	
 	//
@@ -1038,7 +1038,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetColor(const CieColor
 	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
 	
 	// Try to cast
-	SceneData::SceneDataFixtureObjPtr fixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
 	if( ! fixture) return kVCOMError_NoFixtureObj;
 	
 	//
@@ -1058,7 +1058,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetFixtureTypeId(const 
 	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
 	
 	// Try to cast
-	SceneData::SceneDataFixtureObjPtr fixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
 	if( ! fixture) return kVCOMError_NoFixtureObj;
 	
 	//
@@ -1078,7 +1078,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetCustomId(const size_
 	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
 	
 	// Try to cast
-	SceneData::SceneDataFixtureObjPtr fixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
 	if( ! fixture) return kVCOMError_NoFixtureObj;
 	
 	//
@@ -1098,7 +1098,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetGobo(MvrString gobo)
 	if( fType != ESceneObjType::Fixture) {return kVCOMError_NoFixtureObj;}
 	
 	// Try to cast
-	SceneData::SceneDataFixtureObjPtr fixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
 	if( ! fixture) {return kVCOMError_NoFixtureObj;}
 	
 	//
@@ -1119,7 +1119,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetGoboRotation(double 
 	if( fType != ESceneObjType::Fixture) {return kVCOMError_NoFixtureObj;}
 	
 	// Try to cast
-	SceneData::SceneDataFixtureObjPtr fixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
 	if( ! fixture) {return kVCOMError_NoFixtureObj;}
 	
 	//
@@ -1139,7 +1139,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetCastShadow(bool cast
 	if( fType != ESceneObjType::Fixture) {return kVCOMError_NoFixtureObj;}
 	
 	// Try to cast
-	SceneData::SceneDataFixtureObjPtr fixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
 	if( ! fixture) {return kVCOMError_NoFixtureObj;}
 	
 	//
@@ -1157,7 +1157,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::AddMapping(MvrUUID mapD
 
 	// ------------------------------------------------------------------------------------------
 	// Cast to this object
-	SceneData::SceneDataFixtureObjPtr fixture = dynamic_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
 	
 	ASSERTN(kEveryone, fixture != nullptr);
 	if ( ! fixture) { return kVCOMError_Failed; }
@@ -1190,7 +1190,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetVideoScreenSource(Mv
 	if( fType != ESceneObjType::VideoScreen) return kVCOMError_NoVideoScreenObj;
 	
 	// Try to cast
-	SceneData::SceneDataVideoScreenObjPtr videoScreen = dynamic_cast<SceneData::SceneDataVideoScreenObjPtr>(fPtr);
+	SceneData::SceneDataVideoScreenObjPtr videoScreen = static_cast<SceneData::SceneDataVideoScreenObjPtr>(fPtr);
 	if( ! videoScreen) return kVCOMError_NoVideoScreenObj;
 
 	videoScreen->SetVideoSource(value, linkedGeometry, type);
@@ -1211,7 +1211,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetVideoScreenSource(IS
 	if( fType != ESceneObjType::VideoScreen) return kVCOMError_NoVideoScreenObj;
 	
 	// Try to cast
-	SceneData::SceneDataVideoScreenObjPtr videoScreen = dynamic_cast<SceneData::SceneDataVideoScreenObjPtr>(fPtr);
+	SceneData::SceneDataVideoScreenObjPtr videoScreen = static_cast<SceneData::SceneDataVideoScreenObjPtr>(fPtr);
 	if( ! videoScreen) return kVCOMError_NoVideoScreenObj;
 
 	
@@ -1225,7 +1225,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetVideoScreenSource(IS
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_SourceObj, (IVWUnknown**) &pSource)))
 	{
 		// Check Casting
-		CSourceImpl* pResultInterface = dynamic_cast<CSourceImpl*>(pSource);
+		CSourceImpl* pResultInterface = static_cast<CSourceImpl*>(pSource);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(source);
@@ -1271,7 +1271,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetProjectorSource(MvrS
 	if( fType != ESceneObjType::Projector) return kVCOMError_NoProjectorObj;
 	
 	// Try to cast
-	SceneData::SceneDataProjectorObjPtr projector = dynamic_cast<SceneData::SceneDataProjectorObjPtr>(fPtr);
+	SceneData::SceneDataProjectorObjPtr projector = static_cast<SceneData::SceneDataProjectorObjPtr>(fPtr);
 	if( ! projector) return kVCOMError_NoProjectorObj;
 
 	projector->SetVideoSource(value, linkedGeometry, type);
@@ -1292,7 +1292,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetProjectorSource(ISou
 	if( fType != ESceneObjType::Projector) return kVCOMError_NoProjectorObj;
 	
 	// Try to cast
-	SceneData::SceneDataProjectorObjPtr projector = dynamic_cast<SceneData::SceneDataProjectorObjPtr>(fPtr);
+	SceneData::SceneDataProjectorObjPtr projector = static_cast<SceneData::SceneDataProjectorObjPtr>(fPtr);
 	if( ! projector) return kVCOMError_NoProjectorObj;
 
 	
@@ -1306,7 +1306,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetProjectorSource(ISou
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_SourceObj, (IVWUnknown**) &pSource)))
 	{
 		// Check Casting
-		CSourceImpl* pResultInterface = dynamic_cast<CSourceImpl*>(pSource);
+		CSourceImpl* pResultInterface = static_cast<CSourceImpl*>(pSource);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(source);
@@ -1350,7 +1350,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetScaleHandling(GdtfDe
 	if( fType != ESceneObjType::Projector) return kVCOMError_NoProjectorObj;
 	
 	// Try to cast
-	SceneData::SceneDataProjectorObjPtr projector = dynamic_cast<SceneData::SceneDataProjectorObjPtr>(fPtr);
+	SceneData::SceneDataProjectorObjPtr projector = static_cast<SceneData::SceneDataProjectorObjPtr>(fPtr);
 	if( ! projector) return kVCOMError_NoProjectorObj;
 
 	projector->SetScaleHandling(scaleHandling);
@@ -1371,7 +1371,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetScaleHandling(GdtfDe
 	if( fType != ESceneObjType::Projector) return kVCOMError_NoProjectorObj;
 	
 	// Try to cast
-	SceneData::SceneDataProjectorObjPtr projector = dynamic_cast<SceneData::SceneDataProjectorObjPtr>(fPtr);
+	SceneData::SceneDataProjectorObjPtr projector = static_cast<SceneData::SceneDataProjectorObjPtr>(fPtr);
 	if( ! projector) return kVCOMError_NoProjectorObj;
 
 	//---------------------------------------------------------------------------

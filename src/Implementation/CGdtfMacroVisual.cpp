@@ -43,7 +43,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfMacroVisualImpl::GetVisualStepAt(
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfMacroVisualStep, (IVWUnknown**)& pVisualStep)))
     {
         // Check Casting
-        CGdtfMacroVisualStepImpl* pResultInterface = dynamic_cast<CGdtfMacroVisualStepImpl*>(pVisualStep);
+        CGdtfMacroVisualStepImpl* pResultInterface = static_cast<CGdtfMacroVisualStepImpl*>(pVisualStep);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfMacroVisStep);
@@ -86,7 +86,7 @@ VectorworksMVR::VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfMacroVisualImpl::Cr
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfMacroVisualStep, (IVWUnknown**)& pVisualStep)))
     {
         // Check Casting
-        CGdtfMacroVisualStepImpl* pResultInterface = dynamic_cast<CGdtfMacroVisualStepImpl*>(pVisualStep);
+        CGdtfMacroVisualStepImpl* pResultInterface = static_cast<CGdtfMacroVisualStepImpl*>(pVisualStep);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfVisualStep);

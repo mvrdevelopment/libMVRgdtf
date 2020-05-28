@@ -62,7 +62,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfCRIGroupImpl::GetCRIAt(size_t at,
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfCRI, (IVWUnknown**)& pCRIObj)))
     {
         // Check Casting
-        CGdtfCRIImpl* pResultInterface = dynamic_cast<CGdtfCRIImpl*>(pCRIObj);
+        CGdtfCRIImpl* pResultInterface = static_cast<CGdtfCRIImpl*>(pCRIObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfCRI);
@@ -107,7 +107,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfCRIGroupImpl::CreateCRI(EGdtfColo
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfCRI, (IVWUnknown**)& pCRIObj)))
     {
         // Check Casting
-        CGdtfCRIImpl* pResultInterface = dynamic_cast<CGdtfCRIImpl*>(pCRIObj);
+        CGdtfCRIImpl* pResultInterface = static_cast<CGdtfCRIImpl*>(pCRIObj);
         if (pResultInterface)
         {
             pResultInterface->SetPointer(gdtfCRI);

@@ -36,7 +36,7 @@ MvrString VectorworksMVR::CGeometryReferenceImpl::GetFileForGeometry()
 	if( ! fPtr ) return nullptr;
 	
 	// Do the actual cast
-	SceneData::SceneDataGeometryObjPtr geoObj = dynamic_cast<SceneData::SceneDataGeometryObjPtr>(fPtr);
+	SceneData::SceneDataGeometryObjPtr geoObj = static_cast<SceneData::SceneDataGeometryObjPtr>(fPtr);
 	
 	ASSERTN(kEveryone, geoObj != nullptr );
 	if (!geoObj) { return ""; }
@@ -57,7 +57,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGeometryReferenceImpl::GetSymDef(ISym
 	if( ! fIsSymbol) return kVCOMError_Failed;
 	
 	// Cast to Symdef
-	SceneData::SceneDataSymbolObjPtr scSymObj = dynamic_cast<SceneData::SceneDataSymbolObjPtr>(fPtr);
+	SceneData::SceneDataSymbolObjPtr scSymObj = static_cast<SceneData::SceneDataSymbolObjPtr>(fPtr);
 	if(!scSymObj)	{ return kVCOMError_Failed; }
 	
 	SceneData::SceneDataSymDefObjPtr scSymDef = scSymObj->GetSymDef();
@@ -71,7 +71,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGeometryReferenceImpl::GetSymDef(ISym
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_ISymDef, (IVWUnknown**) & pSymDef)))
 	{
 		// Check Casting
-		CSymDefImpl* pResultInterface = dynamic_cast<CSymDefImpl* >(pSymDef);
+		CSymDefImpl* pResultInterface = static_cast<CSymDefImpl* >(pSymDef);
 		if (pResultInterface)
 		{
 			pResultInterface->SetPointer(scSymDef, fContext);

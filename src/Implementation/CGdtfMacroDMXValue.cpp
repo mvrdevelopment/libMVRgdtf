@@ -56,7 +56,7 @@ VectorworksMVR::VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfMacroDMXValueImpl::
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDmxChannel, (IVWUnknown**)& pDmxChannel)))
     {
         // Check Casting
-        CGdtfDmxChannelImpl* pResultInterface = dynamic_cast<CGdtfDmxChannelImpl* >(pDmxChannel);
+        CGdtfDmxChannelImpl* pResultInterface = static_cast<CGdtfDmxChannelImpl* >(pDmxChannel);
         if (pResultInterface)
         {
             pResultInterface->setPointer(gdtfDmxChannel);
