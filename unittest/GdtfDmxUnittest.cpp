@@ -420,7 +420,7 @@ void GdtfDmxUnittest::ReadFile()
 
 		size_t footprint = 0;
 		__checkVCOM(mode->GetFootprintForBreak(break2, footprint));
-		this->checkifEqual("Check the footprint", footprint, size_t(6));
+		this->checkifEqual("Check the footprint", footprint, size_t(19));
 		
 
 		//----------------------------------------------------------------
