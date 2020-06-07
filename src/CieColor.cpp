@@ -88,7 +88,7 @@ void CCieColor::GetRGBColor(CRGBColor& rgb) const
 	// New Rgb vals
 	double r, g, b;
 
-	// Convert CIE_xyY to CIE_xyz		
+	// Convert CIE_xyY to CIE_XYZ		
 	if (std::fabs(fy) < 0.000001) // Watch out for the case where y = 0. In that case, you may want to set X = Y = Z = 0.
 	{
 		x_tmp = 0;		
@@ -104,18 +104,28 @@ void CCieColor::GetRGBColor(CRGBColor& rgb) const
 		z_tmp = ((1 - fx - fy) * fY_luminanceScaled) / fy;		
 	}	
 
-	// Convert CIE_xyz to linear RGB (values[0..1])
+	// Convert CIE_XYZ to linear RGB (values[0..1])
 	r = (x_tmp * 3.24071	 + y_tmp * (-1.53726)  + z_tmp * (-0.498571));
 	g = (x_tmp * (-0.969258) + y_tmp * 1.87599     + z_tmp * 0.0415557);
-	b = (x_tmp * 0.0556352   + y_tmp * (-0.203996) + z_tmp * 1.05707);	
+	b = (x_tmp * 0.0556352   + y_tmp * (-0.203996) + z_tmp * 1.05707);
+
+	if (r > 0.0031308)  { r = 1.055 * (pow(r, (1 / 2.4))) - 0.055; }
+    else                { r = 12.92 * r; }
+    if (g > 0.0031308)  { g = 1.055 * (pow(g, (1 / 2.4))) - 0.055; }
+    else                { g = 12.92 * g; }
+    if (b > 0.0031308)  { b = 1.055 * (pow(b, (1 / 2.4))) - 0.055; }
+    else             	{ b = 12.92 * b; }
+
+	
+
+	// Clamp between 0 and 1
+	if (r < 0) { r = 0; };  if (g < 0){ g = 0; }; if (b < 0){ b = 0; };
+	if (r > 1) { r = 1; };  if (g > 1){ g = 1; }; if (b > 1){ b = 1; };
 
 	// Convert linearRGB[0..1] to sRGB [0..255]
 	r *= 255;	g *= 255;	b *= 255;
 
-	// Some values get negative by little rounding errors. Put them to 0.
-	if (r < 0){ r = 0; };  if (g < 0){ g = 0; }; if (b < 0){ b = 0; };
-
-	 rgb.SetColor((Uint8) r, (Uint8) g, (Uint8) b);
+	rgb.SetColor((Sint32) r, (Sint32) g, (Sint32)b);
 }
 
 void CCieColor::CheckRGBValue(Uint8& value) const
