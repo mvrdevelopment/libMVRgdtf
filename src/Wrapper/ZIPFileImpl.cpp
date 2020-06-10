@@ -567,7 +567,7 @@ VCOMError CZIPFileImpl::AddFile(const TXString& inPath, IZIPFileIOBuffer* inputB
 			zipFileInfo.dwCompressedSize = (Uint32)compressedSize; 
 			zipFileInfo.dwUncompressedSize = (Uint32)uncompressedSize; 
 			zipFileInfo.dwCompressionMethod = compressionMethod;
-			zipFileInfo.dwFlags = 8;
+			zipFileInfo.dwFlags = 0;
 			zipFileInfo.dwExternalAttrib = 0;
 			zipFileInfo.dwInternalAttrib = 0;
 			zipFileInfo.dwOffsetOfLocalHeader = (Uint32)centralDirPosition;
@@ -646,7 +646,7 @@ VCOMError CZIPFileImpl::AddFile(const TXString& inPath, IZIPFileIOBuffer* inputB
 			zipFileInfo.dwCompressionMethod = compressionMethod;
 			zipFileInfo.dwDosTime = 0;
 			zipFileInfo.dwDosDate = 0;
-			zipFileInfo.dwFlags = 8;
+			zipFileInfo.dwFlags = 0;
 			zipFileInfo.dwExternalAttrib = 0;
 			zipFileInfo.dwInternalAttrib = 0;
 			zipFileInfo.dwOffsetOfLocalHeader = 0;
