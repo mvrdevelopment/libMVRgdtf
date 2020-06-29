@@ -46,8 +46,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfAttributeImpl::GetActivationGroup
     //---------------------------------------------------------------------------
     // Initialize Object
     CGdtfActivationGroupImpl* pActivationGroupObj = nullptr;
-	
-	if (!pActivationGroupObj) { return kVCOMError_NotSet; }
     
     // Query Interface
     if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfActivationGroup, (IVWUnknown**) & pActivationGroupObj)))
