@@ -1151,6 +1151,11 @@ void GdtfUnittest::ReadFile()
 				__checkVCOM(gdtfActivationGroups->GetAttributeAt(0, &gdtfMainAttribute));
 				this->checkifEqual("gdtfMainAttribute GetName()", gdtfMainAttribute->GetName(), "My MainAttributeName");
 
+					//Check if the linked activation group is right
+				IGdtfActivationGroupPtr	linkedActivationGroup;
+				__checkVCOM(gdtfMainAttribute->GetActivationGroup(&linkedActivationGroup));
+				this->checkifEqual("linkedActivationGroup GetName()", linkedActivationGroup->GetName(), "My actGroupName");
+
 				double lyLinkTest = 0;
 				gdtfMainAttribute->BindToObject( & lyLinkTest);
 
