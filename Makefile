@@ -53,6 +53,7 @@ OSX_VERSION		?= 10.10
 INCLUDE_MINI_ZIP ?= 0
 ifeq ($(INCLUDE_MINI_ZIP), 1)
     CXXFLAGS 			+= -DDONT_INCLUDE_MINI_ZIP
+	TargetLibName		:= $(addsuffix _NO_MZ,$(TargetLibName))
 endif
 
 
