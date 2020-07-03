@@ -5,6 +5,8 @@
 
 #include "Include/IMediaRessourceVectorInterface.h"
 #include "GDTFManager.h"
+#include "../Wrapper/ZIPFileImpl.h"
+
 
 namespace VectorworksMVR
 {	
@@ -18,7 +20,10 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE		ReadFromFile(MvrString fullPath);
 		
 		virtual VCOMError VCOM_CALLTYPE		OpenForWrite(MvrString fullPath, MvrString name, MvrString manufacturer, const MvrUUID& uuid);
-		virtual VCOMError VCOM_CALLTYPE		AddFileToGdtfFile(MvrString fullPath, ERessourceType resType);
+		virtual VCOMError VCOM_CALLTYPE		OpenForWrite(MvrString name, MvrString manufacturer, const MvrUUID& uuid);
+
+        virtual VCOMError VCOM_CALLTYPE		AddFileToGdtfFile(MvrString fullPath, ERessourceType resType);
+        virtual VCOMError VCOM_CALLTYPE		AddBufferToGdtfFile(MvrString filename, const char* inBuffer, size_t length, GdtfDefines::ERessourceType resType);
 		virtual VCOMError VCOM_CALLTYPE		Close();
 		
         virtual MvrString VCOM_CALLTYPE		GetName();
@@ -148,8 +153,9 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		SetLegHeight(double value);
 		
 	private:
-        SceneData::GdtfFixture* fFixtureObject;
-		IZIPFilePtr				fZipFile;
+        SceneData::GdtfFixture*             fFixtureObject;
+		IZIPFilePtr				            fZipFile;
+        std::vector<CZIPFileIOBufferImpl*>  fBuffersAdded;
 
         char*                   fBuffer;
         size_t                  fBufferLength;
