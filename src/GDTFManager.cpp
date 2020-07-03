@@ -2227,6 +2227,8 @@ void GdtfGeometryLamp::InitializeMembersWithDefaultsVals()
 	fBeamAngle			= 25;
     fFieldAngle         = 25;
 	fBeamRadius			= 50; //0.05m
+	fThrowRatio			= 1;
+	fRectangleRatio		= 1.7777;
 	fBeamType			= EGdtfBeamType::eGdtfBeamType_Wash;
 	fColorIndex			= 100;
 }
@@ -2270,6 +2272,16 @@ void SceneData::GdtfGeometryLamp::SetBeamRadius(double radius)
     fBeamRadius = radius;
 }
 
+void SceneData::GdtfGeometryLamp::SetThrowRatio(double ratio)
+{
+    fThrowRatio = ratio;
+}
+
+void SceneData::GdtfGeometryLamp::SetRectangleRatio(double radius)
+{
+    fRectangleRatio = radius;
+}
+
 void SceneData::GdtfGeometryLamp::SetBeamType(EGdtfBeamType type)
 {
     fBeamType = type;
@@ -2296,6 +2308,8 @@ void GdtfGeometryLamp::OnPrintToFile(IXMLFileNodePtr pNode)
 	pNode->SetNodeAttributeValue(XML_GDTF_BeamAngle,				GdtfConverter::ConvertDouble(fBeamAngle));
 	pNode->SetNodeAttributeValue(XML_GDTF_BeamRadius,				GdtfConverter::ConvertDouble(fBeamRadius));
 	pNode->SetNodeAttributeValue(XML_GDTF_FieldAngle,				GdtfConverter::ConvertDouble(fFieldAngle));
+	pNode->SetNodeAttributeValue(XML_GDTF_ThrowRatio,				GdtfConverter::ConvertDouble(fThrowRatio));
+	pNode->SetNodeAttributeValue(XML_GDTF_RectangleRatio,			GdtfConverter::ConvertDouble(fRectangleRatio));
 	pNode->SetNodeAttributeValue(XML_GDTF_BeamType,					GdtfConverter::ConvertBeamType(fBeamType));
 	pNode->SetNodeAttributeValue(XML_GDTF_BeamColorRenderingIndex,	GdtfConverter::ConvertInteger(fColorIndex));
 	
@@ -2310,15 +2324,17 @@ void GdtfGeometryLamp::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	
 	// ------------------------------------------------------------------------------------
 	// Print node attributes
-	TXString lampType;	pNode->GetNodeAttributeValue(XML_GDTF_LampLampType,				lampType);	GdtfConverter::ConvertLampeType(lampType, 	pNode,	fLampType);
-	TXString power;		pNode->GetNodeAttributeValue(XML_GDTF_LampPowerConsumption,		power);		GdtfConverter::ConvertDouble(power, 		pNode,	fPowerConsuption);
-	TXString lum;		pNode->GetNodeAttributeValue(XML_GDTF_LampLuminousFlux,	lum);		GdtfConverter::ConvertDouble(lum, 			pNode,	fLuminousIntensity);
-	TXString colorTemp;	pNode->GetNodeAttributeValue(XML_GDTF_ColorTemperature,			colorTemp);	GdtfConverter::ConvertDouble(colorTemp, 	pNode,	fColorTemperature);
-	TXString angle;		pNode->GetNodeAttributeValue(XML_GDTF_BeamAngle,				angle);		GdtfConverter::ConvertDouble(angle, 		pNode,	fBeamAngle);
-	TXString radius;	pNode->GetNodeAttributeValue(XML_GDTF_BeamRadius,				radius);	GdtfConverter::ConvertDouble(radius, 		pNode,	fBeamRadius);
-	TXString fieldAngle;pNode->GetNodeAttributeValue(XML_GDTF_FieldAngle,				fieldAngle);GdtfConverter::ConvertDouble(fieldAngle, 	pNode,	fFieldAngle);
-	TXString type;		pNode->GetNodeAttributeValue(XML_GDTF_BeamType,					type);		GdtfConverter::ConvertBeamType(type, 		pNode,	fBeamType);
-	TXString colorIndex;pNode->GetNodeAttributeValue(XML_GDTF_BeamColorRenderingIndex,	colorIndex);GdtfConverter::ConvertInteger(colorIndex, 	pNode,	fColorIndex);
+	TXString lampType;		pNode->GetNodeAttributeValue(XML_GDTF_LampLampType,				lampType);		GdtfConverter::ConvertLampeType(lampType, 	pNode,	fLampType);
+	TXString power;			pNode->GetNodeAttributeValue(XML_GDTF_LampPowerConsumption,		power);			GdtfConverter::ConvertDouble(power, 		pNode,	fPowerConsuption);
+	TXString lum;			pNode->GetNodeAttributeValue(XML_GDTF_LampLuminousFlux,			lum);			GdtfConverter::ConvertDouble(lum, 			pNode,	fLuminousIntensity);
+	TXString colorTemp;		pNode->GetNodeAttributeValue(XML_GDTF_ColorTemperature,			colorTemp);		GdtfConverter::ConvertDouble(colorTemp, 	pNode,	fColorTemperature);
+	TXString angle;			pNode->GetNodeAttributeValue(XML_GDTF_BeamAngle,				angle);			GdtfConverter::ConvertDouble(angle, 		pNode,	fBeamAngle);
+	TXString radius;		pNode->GetNodeAttributeValue(XML_GDTF_BeamRadius,				radius);		GdtfConverter::ConvertDouble(radius, 		pNode,	fBeamRadius);
+	TXString fieldAngle;	pNode->GetNodeAttributeValue(XML_GDTF_FieldAngle,				fieldAngle);	GdtfConverter::ConvertDouble(fieldAngle, 	pNode,	fFieldAngle);
+	TXString throwRatio;	pNode->GetNodeAttributeValue(XML_GDTF_ThrowRatio,				throwRatio);	GdtfConverter::ConvertDouble(throwRatio, 	pNode,	fThrowRatio);
+	TXString rectangleRatio;pNode->GetNodeAttributeValue(XML_GDTF_RectangleRatio,			rectangleRatio);GdtfConverter::ConvertDouble(rectangleRatio,pNode,	fRectangleRatio);
+	TXString type;			pNode->GetNodeAttributeValue(XML_GDTF_BeamType,					type);			GdtfConverter::ConvertBeamType(type, 		pNode,	fBeamType);
+	TXString colorIndex;	pNode->GetNodeAttributeValue(XML_GDTF_BeamColorRenderingIndex,	colorIndex);	GdtfConverter::ConvertInteger(colorIndex, 	pNode,	fColorIndex);
 }
 
 void GdtfGeometryLamp::OnErrorCheck(const IXMLFileNodePtr& pNode)
@@ -2340,6 +2356,8 @@ void GdtfGeometryLamp::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	optional.push_back(XML_GDTF_BeamAngle);
 	optional.push_back(XML_GDTF_FieldAngle);
 	optional.push_back(XML_GDTF_BeamRadius);
+	optional.push_back(XML_GDTF_ThrowRatio);
+	optional.push_back(XML_GDTF_RectangleRatio);
 	optional.push_back(XML_GDTF_BeamType);
 	optional.push_back(XML_GDTF_BeamColorRenderingIndex);
 	optional.push_back(XML_GDTF_GeometryModelRef);
@@ -2393,6 +2411,16 @@ double SceneData::GdtfGeometryLamp::GetFieldAngle()
 double SceneData::GdtfGeometryLamp::GetBeamRadius()
 {
     return fBeamRadius;
+}
+
+double SceneData::GdtfGeometryLamp::GetThrowRatio()
+{
+	return fThrowRatio;
+}
+
+double SceneData::GdtfGeometryLamp::GetRectangleRatio()
+{
+	return fRectangleRatio;
 }
 
 EGdtfBeamType SceneData::GdtfGeometryLamp::GetBeamType()

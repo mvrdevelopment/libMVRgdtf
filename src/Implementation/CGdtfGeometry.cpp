@@ -386,6 +386,36 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetBeamRadius(doubl
 	return kVCOMError_NoError;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetThrowRatio(double & radius)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLamp) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryLamp* lamp = static_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
+	if ( ! lamp) { return kVCOMError_Failed; }
+	
+	radius= lamp->GetThrowRatio();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetRectangleRatio(double & radius)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLamp) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryLamp* lamp = static_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
+	if ( ! lamp) { return kVCOMError_Failed; }
+	
+	radius= lamp->GetRectangleRatio();
+	return kVCOMError_NoError;
+}
+
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetBeamType(GdtfDefines::EGdtfBeamType & type)
 {
 	// Check Pointer
@@ -585,6 +615,36 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetBeamRadius(doubl
 	if ( ! lamp) { return kVCOMError_Failed; }
 	
 	lamp->SetBeamRadius(radius);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetThrowRatio(double ratio)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLamp) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryLamp* lamp = static_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
+	if ( ! lamp) { return kVCOMError_Failed; }
+	
+	lamp->SetThrowRatio(ratio);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetRectangleRatio(double ratio)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLamp) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryLamp* lamp = static_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
+	if ( ! lamp) { return kVCOMError_Failed; }
+	
+	lamp->SetRectangleRatio(ratio);
 	return kVCOMError_NoError;
 }
 

@@ -34,6 +34,8 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE     GetBeamAngle(double& beamAngle);
         virtual VCOMError VCOM_CALLTYPE     GetFieldAngle(double& fldAngle);
         virtual VCOMError VCOM_CALLTYPE     GetBeamRadius(double& radius);
+        virtual VCOMError VCOM_CALLTYPE     GetThrowRatio(double& radius);
+        virtual VCOMError VCOM_CALLTYPE     GetRectangleRatio(double& radius);
         virtual VCOMError VCOM_CALLTYPE     GetBeamType(EGdtfBeamType & type);
         virtual VCOMError VCOM_CALLTYPE     GetColorIndex(Sint32& idx);
 
@@ -47,6 +49,8 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE     SetBeamAngle(double beamAngle);
         virtual VCOMError VCOM_CALLTYPE     SetFieldAngle(double fldAngle);
         virtual VCOMError VCOM_CALLTYPE     SetBeamRadius(double radius);
+        virtual VCOMError VCOM_CALLTYPE     SetThrowRatio(double ratio);
+        virtual VCOMError VCOM_CALLTYPE     SetRectangleRatio(double ratio);
         virtual VCOMError VCOM_CALLTYPE     SetBeamType(EGdtfBeamType type);
         virtual VCOMError VCOM_CALLTYPE     SetColorIndex(Sint32 idx);
 		
