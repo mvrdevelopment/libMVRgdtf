@@ -253,6 +253,12 @@ VCOMError CZIPFileImpl::Close()
 	return kVCOMError_NoError;
 }
 
+VCOMError CZIPFileImpl::ToBuffer(char*& p, size_t& inLength)
+{
+	fpOpenedFile->Copy(p, inLength);
+	return kVCOMError_NoError;
+}
+
 VCOMError CZIPFileImpl::GetSize(Uint64& outValue)
 {
 	if ( fpOpenedFile )

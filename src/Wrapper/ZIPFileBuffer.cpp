@@ -147,3 +147,10 @@ VCOMError VectorworksMVR::Filing::ZIPFileBuffer::CleanBuffer()
 	return kVCOMError_NoError;
 }
 
+
+void ZIPFileBuffer::Copy(char*& p, size_t& inLength)
+{	
+	inLength = fZIPFileBufferSize;
+	p = new char[fZIPFileBufferSize];
+	memcpy(p, fpZIPFileBuffer, inLength);
+}

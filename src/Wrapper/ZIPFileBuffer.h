@@ -22,6 +22,7 @@ namespace VectorworksMVR
 			VCOMError 	Read(Uint64 position, Uint64& inoutSize, void* pOutBuffer);
 			VCOMError 	Write(Uint64 position, Uint64 size, const void* pBuffer);
 			VCOMError 	CleanBuffer();
+			void 		Copy(char*& p, size_t& inLength);
 
 		private:
 			Uint8*						fpZIPFileBuffer;

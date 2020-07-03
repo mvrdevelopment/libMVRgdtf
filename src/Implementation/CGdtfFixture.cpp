@@ -179,6 +179,9 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::Close()
 	fFixtureObject->ExportToFile(fZipFile);
 	
 	fZipFile->Close();
+
+    FreeBuffer();
+    fZipFile->ToBuffer(fBuffer, fBufferLength);
 	
 	// Read From File
 	return kVCOMError_NoError;

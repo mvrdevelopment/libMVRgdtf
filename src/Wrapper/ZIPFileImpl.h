@@ -75,6 +75,8 @@ namespace VectorworksMVR
 			virtual VCOMError VCOM_CALLTYPE	OpenWrite(IFileIdentifier* pFileID);
 			virtual VCOMError VCOM_CALLTYPE	OpenNewWrite(IFileIdentifier* pFileID, bool compressFiles = true);
 			virtual VCOMError VCOM_CALLTYPE	Close();
+			virtual VCOMError VCOM_CALLTYPE	ToBuffer(char*& p, size_t& lengt);
+
 
 			virtual VCOMError VCOM_CALLTYPE	GetSize(Uint64& outValue);
 
