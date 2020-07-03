@@ -94,6 +94,7 @@
     <ClCompile Include="..\unittest\Utility.cpp" />
     <ClCompile Include="..\unittest\UtilityTest.cpp" />
     <ClCompile Include="..\unittest\XmlConversionTest.cpp" />
+    <ClCompile Include="..\unittest\GdtfBufferWrite.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\unittest\ChannelFunctionStartTest.h" />
@@ -123,6 +124,7 @@
     <ClInclude Include="..\unittest\Utility.h" />
     <ClInclude Include="..\unittest\UtilityTest.h" />
     <ClInclude Include="..\unittest\XmlConversionTest.h" />
+    <ClInclude Include="..\unittest\GdtfBufferWrite.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
