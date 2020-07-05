@@ -50,13 +50,12 @@ void GdtfBufferWrite::Write()
     {
     	gdtfFixture->SetShortName("Short Name");
 
-		
-
-		fBuffer = new char[fBufferLength];
-
+	
 		gdtfFixture->Close();
 
 		__checkVCOM(gdtfFixture->GetBufferLength(fBufferLength));
+
+		fBuffer = new char[fBufferLength];
 		__checkVCOM(gdtfFixture->ToBuffer(fBuffer));
 
     }
