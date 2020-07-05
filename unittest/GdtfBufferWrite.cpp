@@ -23,13 +23,15 @@ using namespace VectorworksMVR::GdtfDefines;
 
 GdtfBufferWrite::GdtfBufferWrite(const std::string& currentDir)
 {
-	fBufferLength = 0;
-	fBuffer = nullptr;
+	fBufferLength 	= 0;
+	fBuffer 		= nullptr;
+	fFileBuffer 	= nullptr;
 }
 
 GdtfBufferWrite::~GdtfBufferWrite()
 {
 	delete[] fBuffer;
+	delete[] fFileBuffer;
 }
 
 bool GdtfBufferWrite::ExecuteTest()
@@ -50,6 +52,10 @@ void GdtfBufferWrite::Write()
     {
     	gdtfFixture->SetShortName("Short Name");
 
+		fFileBuffer = new char[2048];
+
+		gdtfFixture->AddBufferToGdtfFile("test.png", fFileBuffer, 2048, ERessourceType::RessoureFixture);
+		gdtfFixture->SetFixtureThumbnail("test.png");
 	
 		gdtfFixture->Close();
 
@@ -66,7 +72,8 @@ void GdtfBufferWrite::Read()
 	IGdtfFixturePtr gdtfFixture (IID_IGdtfFixture);
 	if(__checkVCOM(gdtfFixture->FromBuffer(fBuffer, fBufferLength)))
 	{
-		this->checkifEqual("GetShortName "				, gdtfFixture->GetShortName()	, "Short Name");
+		this->checkifEqual("GetShortName "				, gdtfFixture->GetShortName()			, "Short Name");
+		this->checkifEqual("GetFixtureThumbnail "	    , gdtfFixture->GetFixtureThumbnail()	, "test.png");
 
 	}
 }

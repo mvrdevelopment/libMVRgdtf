@@ -18,6 +18,7 @@ protected:
 
 
     char*   fBuffer;
+    char*   fFileBuffer;
     size_t  fBufferLength;
 
 
