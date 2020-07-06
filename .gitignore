@@ -46,6 +46,7 @@ bin/
 obj/
 testfiles/
 enc_temp_folder/
+build/
 
 # exclude specific files
 \.vscode/settings\.json
