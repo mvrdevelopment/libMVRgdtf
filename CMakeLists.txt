@@ -5,7 +5,7 @@ project(MvrGdtf)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(CMAKE_GENERATOR_PLATFORM x64)
+set_target_properties(MvrGdtf PROPERTIES LINK_FLAGS /MACHINE:X64)
 
 find_package(PythonInterp REQUIRED)
 
