@@ -7,10 +7,10 @@ include_directories(${PROJECT_SOURCE_DIR}/src)
 
 # setup the platform macros
 if (WIN32)
-    add_definitions(GS_WIN)
+    add_compile_definitions(GS_WIN)
 elseif(UNIX)
     if (NOT APPLE)
-        add_definitions(GS_LIN)        
+    add_compile_definitions(GS_LIN)        
     endif(NOT APPLE)
 endif(WIN32)
 
