@@ -1,10 +1,14 @@
 cmake_minimum_required(VERSION 3.10)
 
+if (WIN32)
 set(CMAKE_GENERATOR_PLATFORM x64)
+endif(WIN32)
+
+ADD_DEFINITIONS(-DUNICODE)
+ADD_DEFINITIONS(-D_UNICODE)
 
 # create the project
 project(MvrGdtf)
-
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
