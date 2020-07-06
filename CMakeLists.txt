@@ -3,6 +3,10 @@ cmake_minimum_required(VERSION 3.10)
 # create the project
 project(MvrGdtf)
 
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_GENERATOR_PLATFORM x64)
+
 find_package(PythonInterp REQUIRED)
 
 # run python script for extracting and generating xerces
@@ -41,9 +45,6 @@ set(OBJDIR ${PROJECT_SOURCE_DIR}/obj)
 set(BINDIR ${PROJECT_SOURCE_DIR}/x64/Release)
 set(LIBDIR_PRE ${PROJECT_SOURCE_DIR}/libs)
 set(LIBDIR_POST ${PROJECT_SOURCE_DIR}/release)
-
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 
 
