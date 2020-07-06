@@ -1,11 +1,12 @@
 cmake_minimum_required(VERSION 3.10)
 
+set(CMAKE_GENERATOR_PLATFORM x64)
+
 # create the project
 project(MvrGdtf)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-set_target_properties(MvrGdtf PROPERTIES LINK_FLAGS /MACHINE:X64)
 
 find_package(PythonInterp REQUIRED)
 
@@ -53,7 +54,6 @@ set(LIBDIR_POST ${PROJECT_SOURCE_DIR}/release)
 file(GLOB_RECURSE libSourceFiles ${SRCDIR}/*.cpp)
 
 add_library(VectorworksMvrGdtf STATIC ${libSourceFiles})
-
 
 # add deps
 
