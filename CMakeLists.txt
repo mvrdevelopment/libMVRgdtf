@@ -5,6 +5,15 @@ project(MvrGdtf)
 
 include_directories(${PROJECT_SOURCE_DIR}/src)
 
+# setup the platform macros
+if (WIN32)
+    add_definitions()
+elseif(UNIX)
+    if (NOT APPLE)
+        add_definitions()        
+    endif(APPLE)
+endif()
+
 # default values
 set(SRCDIR ${PROJECT_SOURCE_DIR}/src)
 set(SRCDIR_IMPL ${PROJECT_SOURCE_DIR}/src/Implementation)
