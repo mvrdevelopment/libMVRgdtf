@@ -28,5 +28,5 @@ if not os.path.isfile("shared/lib/libxerces-c.a"):
         os.mkdir("build")
     os.chdir("build")
 
-    os.system("cmake -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_INSTALL_PREFIX:PATH=.\libs ..")
-    os.system("cmake --build .")
+    os.system("cmake -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_INSTALL_PREFIX:PATH=libs ..")
+    os.system("cmake --build . --target install")

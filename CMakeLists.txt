@@ -12,7 +12,7 @@ execute_process(COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/scripts/build
 message("Xerces build output: " ${PY_OUTPUT})
 
 include_directories(${PROJECT_SOURCE_DIR}/src
-                    ${PROJECT_SOURCE_DIR}/shared/xerces/src)
+                    ${PROJECT_SOURCE_DIR}/shared/xerces/build/libs/include)
 
 
 
