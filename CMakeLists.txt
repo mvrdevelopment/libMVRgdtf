@@ -3,6 +3,14 @@ cmake_minimum_required(VERSION 3.10)
 # create the project
 project(MvrGdtf)
 
+find_package(PythonInterp REQUIRED)
+
+# run python script for extracting and generating xerces
+execute_process(COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/scripts/gen_xerces.py
+                WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+                RESULT_VARIABLE PY_OUTPUT)
+message("Xerces build output: " ${PY_OUTPUT})
+
 include_directories(${PROJECT_SOURCE_DIR}/src
                     ${PROJECT_SOURCE_DIR}/shared/include)
 
