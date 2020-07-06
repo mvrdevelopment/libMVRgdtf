@@ -3,15 +3,21 @@ cmake_minimum_required(VERSION 3.10)
 # create the project
 project(MvrGdtf)
 
-include_directories(${PROJECT_SOURCE_DIR}/src)
+include_directories(${PROJECT_SOURCE_DIR}/src
+                    ${PROJECT_SOURCE_DIR}/shared/include)
+
+
+
 
 # setup the platform macros
 if (WIN32)
     add_compile_definitions(GS_WIN)
 elseif(UNIX)
-    if (NOT APPLE)
+    if (APPLE)
+    add_compile_definitions(GS_MAC)
+    else()
     add_compile_definitions(GS_LIN)        
-    endif(NOT APPLE)
+    endif(APPLE)
 endif(WIN32)
 
 # default values
@@ -36,7 +42,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 # source files
 file(GLOB_RECURSE libSourceFiles ${SRCDIR}/*.cpp)
 
-add_library(libMvrGdtf ${libSourceFiles})
+add_library(VectorworksMvrGdtf STATIC ${libSourceFiles})
+
+
+# add deps
+
+
+
+## xerces
+add_subdirectory(${PROJECT_SOURCE_DIR}/shared/xerces-c-3.2.2)
 
 
 
