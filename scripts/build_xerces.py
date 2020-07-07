@@ -2,6 +2,7 @@ import sys
 import os.path
 import urllib
 import zipfile
+import shutil
 
 print("Building Xerces-c-lib")
 
@@ -9,8 +10,9 @@ XERCES_VERSION = "3.2.2"
 XERCES_ZIP_FILE = "shared/xerces-c-" + XERCES_VERSION + ".zip"
 XERCES_DIR_PATH = "shared/xerces-c-" + XERCES_VERSION
 
+pathToLibFile = "libs/lib/xerces-c.a"
 if sys.platform == "win32":
-    pathToLibFile = ""
+    pathToLibFile = "libs/lib/xerces-c_3D.lib"
 
 # check for other system lib file (.lib [for windows])
 if not os.path.isfile(pathToLibFile):
@@ -31,9 +33,11 @@ if not os.path.isfile(pathToLibFile):
             os.mkdir("build")
         os.chdir("build")
 
-        extraCmakeOptions += "-DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_INSTALL_PREFIX:PATH=libs -Dxmlch-type=wchar_t -DCMAKE_CXX_FLAGS_RELEASE:STRING=Release"
+        extraCmakeOptions += "-DCMAKE_GENERATOR_PLATFORM=x64 -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_INSTALL_PREFIX:PATH=libs -Dxmlch-type=wchar_t -DCMAKE_CXX_FLAGS_RELEASE:STRING=Release"
         os.system("cmake "+ extraCmakeOptions +" ..")
         os.system("cmake --build . --target install")
+
+        shutil.copytree("libs", "../../../libs")
     #we need some more cases for linux and should check all configure-options
     if sys.platform == "darwin" or sys.platform.startswith("linux"):
         os.system("make")

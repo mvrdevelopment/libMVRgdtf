@@ -41,7 +41,7 @@ execute_process(COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/scripts/build
 # setup the platform macros
 if (WIN32)
     set(XERCES_INCLUDE ${PROJECT_SOURCE_DIR}/shared/xerces/build/libs/include)
-    set(XERCES_LIB ${PROJECT_SOURCE_DIR}/libs/xerces-c_3D.lib)
+    set(XERCES_LIB ${PROJECT_SOURCE_DIR}/libs/lib/xerces-c_3D.lib)
 else()
     set(XERCES_INCLUDE ${PROJECT_SOURCE_DIR}/shared/include)
     set(XERCES_LIB ${PROJECT_SOURCE_DIR}/libs/libxerces-c.a)
