@@ -386,7 +386,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetBeamRadius(doubl
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetThrowRatio(double & radius)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetThrowRatio(double & ratio)
 {
 	// Check Pointer
 	if( ! fGeometry) return kVCOMError_NotInitialized;
@@ -397,11 +397,11 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetThrowRatio(doubl
 	SceneData::GdtfGeometryLamp* lamp = static_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
 	if ( ! lamp) { return kVCOMError_Failed; }
 	
-	radius= lamp->GetThrowRatio();
+	ratio= lamp->GetThrowRatio();
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetRectangleRatio(double & radius)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetRectangleRatio(double & ratio)
 {
 	// Check Pointer
 	if( ! fGeometry) return kVCOMError_NotInitialized;
@@ -412,7 +412,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetRectangleRatio(d
 	SceneData::GdtfGeometryLamp* lamp = static_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
 	if ( ! lamp) { return kVCOMError_Failed; }
 	
-	radius= lamp->GetRectangleRatio();
+	ratio= lamp->GetRectangleRatio();
 	return kVCOMError_NoError;
 }
 
