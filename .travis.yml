@@ -40,7 +40,10 @@ matrix:
         - CMD //C runMSBuild_xerces.bat "-MT -O2 -Ob2 -DNDEBUG" "Release" "10.0.17134.0" "Visual Studio 15 2017 Win64"
         - CMD //C runMSBuild_lib.bat $BUILD_TYPE
 
+install:
+- mkdir build
+- cd build
+- cmake ..
+
 script:
-- make dependencies -j 2
-- make -j 2
-- make test
+- make -j

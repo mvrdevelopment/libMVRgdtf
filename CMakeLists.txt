@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
+message("OSX: " ${OSX_VERSION})
+
 if (WIN32)
 set(CMAKE_GENERATOR_PLATFORM x64)
 endif(WIN32)
@@ -58,6 +60,14 @@ elseif(UNIX)
     endif(APPLE)
 endif(WIN32)
 
+
+# Flag DDONT_INCLUDE_MINI_ZIP
+# Flag OSX_VERSION
+# Flag CXX
+
+# CXX_FLAGS_CUSTOM
+# XERCES_CONFIGURE_ENCODER
+# ADDIONAL_LD
 
 # add the executable
 # add_executable(libMvrGdtfUnitTest )
