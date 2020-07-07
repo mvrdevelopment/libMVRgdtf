@@ -40,15 +40,17 @@ execute_process(COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/scripts/build
 
 # setup the platform macros
 if (WIN32)
-    set(EXTERN_INCLUDE ${PROJECT_SOURCE_DIR}/shared/xerces/build/libs/include)
+    set(XERCES_INCLUDE ${PROJECT_SOURCE_DIR}/shared/xerces/build/libs/include)
+    set(XERCES_LIB ${PROJECT_SOURCE_DIR}/libs/xerces-c_3D.lib)
 else()
-    set(EXTERN_INCLUDE ${PROJECT_SOURCE_DIR}/shared/include)
+    set(XERCES_INCLUDE ${PROJECT_SOURCE_DIR}/shared/include)
+    set(XERCES_LIB ${PROJECT_SOURCE_DIR}/libs/libxerces-c.a)
 endif(WIN32)
 
 
 
 include_directories(${PROJECT_SOURCE_DIR}/src
-                    ${EXTERN_INCLUDE})
+                    ${XERCES_INCLUDE})
 
 # default values
 # those can be removed probably
@@ -65,7 +67,7 @@ set(SRC_TESTDIR ${PROJECT_SOURCE_DIR}/unittest)
 file(GLOB_RECURSE libSourceFiles ${SRCDIR}/*.cpp)
 add_library(VectorworksMvrGdtf STATIC ${libSourceFiles})
 
-target_link_libraries(VectorworksMvrGdtf ${PROJECT_SOURCE_DIR}/libs/libxerces-c.a)
+target_link_libraries(VectorworksMvrGdtf ${XERCES_LIB})
 #################################################
 
 
