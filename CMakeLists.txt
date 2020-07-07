@@ -27,6 +27,10 @@ project(MvrGdtf)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+# Set output dir
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/libs/)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/libs/)
+
 
 
 #################################################
@@ -71,7 +75,6 @@ file(GLOB_RECURSE libSourceFiles ${SRCDIR}/*.cpp)
 add_library(VectorworksMvrGdtf STATIC ${libSourceFiles})
 
 target_link_libraries(VectorworksMvrGdtf ${XERCES_LIB})
-set_target_properties(VectorworksMvrGdtf PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/libs/)
 #################################################
 
 
