@@ -10,7 +10,7 @@ XERCES_VERSION = "3.2.2"
 XERCES_ZIP_FILE = "shared/xerces-c-" + XERCES_VERSION + ".zip"
 XERCES_DIR_PATH = "shared/xerces-c-" + XERCES_VERSION
 
-pathToLibFile = "libs/lib/xerces-c.a"
+pathToLibFile = "libs/libxerces-c.a"
 if sys.platform == "win32":
     pathToLibFile = "libs/lib/xerces-c_3D.lib"
 
