@@ -18,22 +18,22 @@ find_package(PythonInterp REQUIRED)
 execute_process(COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/scripts/build_xerces.py
                 WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
                 RESULT_VARIABLE PY_OUTPUT)
-message("Xerces build output: " ${PY_OUTPUT})
 
 
 
 
 # setup the platform macros
 if (WIN32)
-    add_compile_definitions(GS_WIN)
     set(EXTERN_INCLUDE ${PROJECT_SOURCE_DIR}/shared/xerces/build/libs/include)
+
+        add_compile_definitions(GS_WIN)
 elseif(UNIX)
     set(EXTERN_INCLUDE ${PROJECT_SOURCE_DIR}/shared/include)
 
     if (APPLE)
-    add_compile_definitions(GS_MAC)
+        add_compile_definitions(GS_MAC)
     else()
-    add_compile_definitions(GS_LIN)        
+        add_compile_definitions(GS_LIN)        
     endif(APPLE)
 endif(WIN32)
 
@@ -45,16 +45,6 @@ include_directories(${PROJECT_SOURCE_DIR}/src
 # default values
 # those can be removed probably
 set(SRCDIR ${PROJECT_SOURCE_DIR}/src)
-set(SRCDIR_IMPL ${PROJECT_SOURCE_DIR}/src/Implementation)
-set(SRCDIR_S256 ${PROJECT_SOURCE_DIR}/src/sha256)
-set(SRCDIR_WRAP ${PROJECT_SOURCE_DIR}/src/Wrapper)
-set(SRCDIR_XMLL ${PROJECT_SOURCE_DIR}/src/XMLLib)
-
-set(SRCDIR_UNIT ${PROJECT_SOURCE_DIR}/unittest)
-set(OBJDIR ${PROJECT_SOURCE_DIR}/obj)
-set(BINDIR ${PROJECT_SOURCE_DIR}/x64/Release)
-set(LIBDIR_PRE ${PROJECT_SOURCE_DIR}/libs)
-set(LIBDIR_POST ${PROJECT_SOURCE_DIR}/release)
 
 
 
@@ -63,10 +53,6 @@ set(LIBDIR_POST ${PROJECT_SOURCE_DIR}/release)
 file(GLOB_RECURSE libSourceFiles ${SRCDIR}/*.cpp)
 
 add_library(VectorworksMvrGdtf STATIC ${libSourceFiles})
-
-# add deps
-
-
 
 # add the executable
 # add_executable(libMvrGdtfUnitTest )
