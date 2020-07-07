@@ -37,7 +37,7 @@ if not os.path.isfile("shared/lib/libxerces-c.a"):
         os.system("cmake -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_INSTALL_PREFIX:PATH=libs "+ extraCmakeOptions +" ..")
         os.system("cmake --build . --target install")
     #we need some more cases for linux and should check all configure-options
-    if sys.platform == "darwin":
+    if sys.platform == "darwin" or sys.platform.startswith("linux"):
         os.system("make")
 
     

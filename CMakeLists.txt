@@ -25,16 +25,8 @@ execute_process(COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/scripts/build
 # setup the platform macros
 if (WIN32)
     set(EXTERN_INCLUDE ${PROJECT_SOURCE_DIR}/shared/xerces/build/libs/include)
-
-        add_compile_definitions(GS_WIN)
-elseif(UNIX)
+else()
     set(EXTERN_INCLUDE ${PROJECT_SOURCE_DIR}/shared/include)
-
-    if (APPLE)
-        add_compile_definitions(GS_MAC)
-    else()
-        add_compile_definitions(GS_LIN)        
-    endif(APPLE)
 endif(WIN32)
 
 
@@ -53,6 +45,19 @@ set(SRCDIR ${PROJECT_SOURCE_DIR}/src)
 file(GLOB_RECURSE libSourceFiles ${SRCDIR}/*.cpp)
 
 add_library(VectorworksMvrGdtf STATIC ${libSourceFiles})
+
+# setup the platform macros
+if (WIN32)
+    target_compile_definitions(VectorworksMvrGdtf PUBLIC GS_WIN)
+elseif(UNIX)
+    if (APPLE)
+        target_compile_definitions(VectorworksMvrGdtf PUBLIC GS_MAC)
+    else()
+        target_compile_definitions(VectorworksMvrGdtf PUBLIC GS_LIN)
+        #add_compile_definitions(GS_LIN)        
+    endif(APPLE)
+endif(WIN32)
+
 
 # add the executable
 # add_executable(libMvrGdtfUnitTest )
