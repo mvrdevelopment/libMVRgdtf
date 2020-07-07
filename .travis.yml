@@ -32,12 +32,10 @@ matrix:
     - env: BUILD_TYPE="Release"
       os: windows
       script:
-        - CMD //C runMSBuild_xerces.bat "-MD -O2 -Ob2 -DNDEBUG" "Release" "10.0.17134.0" "Visual Studio 15 2017 Win64"
         - CMD //C runMSBuild_lib.bat $BUILD_TYPE
     - env: BUILD_TYPE="ReleaseMT"
       os: windows
       script:
-        - CMD //C runMSBuild_xerces.bat "-MT -O2 -Ob2 -DNDEBUG" "Release" "10.0.17134.0" "Visual Studio 15 2017 Win64"
         - CMD //C runMSBuild_lib.bat $BUILD_TYPE
 
 install:

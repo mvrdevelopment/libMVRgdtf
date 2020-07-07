@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
 
-message("OSX: " ${OSX_VERSION})
-
 if (WIN32)
 set(CMAKE_GENERATOR_PLATFORM x64)
+elseif(APPLE)
+set(CMAKE_OSX_DEPLOYMENT_TARGET $ENV{OSX_VERSION} CACHE)
 endif(WIN32)
 
 ADD_DEFINITIONS(-DUNICODE)
@@ -62,9 +62,14 @@ elseif(UNIX)
     endif(APPLE)
 endif(WIN32)
 
+if($ENV{INCLUDE_MINI_ZIP})
+    target_compile_definitions(VectorworksMvrGdtf PUBLIC DONT_INCLUDE_MINI_ZIP)
+endif($ENV{INCLUDE_MINI_ZIP})
 
-# Flag DDONT_INCLUDE_MINI_ZIP
-# Flag OSX_VERSION
+
+
+# Flag DDONT_INCLUDE_MINI_ZIP   -check
+# Flag OSX_VERSION              -check
 # Flag CXX
 
 # CXX_FLAGS_CUSTOM
