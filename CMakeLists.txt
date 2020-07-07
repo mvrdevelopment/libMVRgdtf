@@ -20,22 +20,27 @@ execute_process(COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/scripts/build
                 RESULT_VARIABLE PY_OUTPUT)
 message("Xerces build output: " ${PY_OUTPUT})
 
-include_directories(${PROJECT_SOURCE_DIR}/src
-                    ${PROJECT_SOURCE_DIR}/shared/xerces/build/libs/include)
-
 
 
 
 # setup the platform macros
 if (WIN32)
     add_compile_definitions(GS_WIN)
+    set(EXTERN_INCLUDE ${PROJECT_SOURCE_DIR}/shared/xerces/build/libs/include)
 elseif(UNIX)
+    set(EXTERN_INCLUDE ${PROJECT_SOURCE_DIR}/shared/include)
+
     if (APPLE)
     add_compile_definitions(GS_MAC)
     else()
     add_compile_definitions(GS_LIN)        
     endif(APPLE)
 endif(WIN32)
+
+
+
+include_directories(${PROJECT_SOURCE_DIR}/src
+                    ${EXTERN_INCLUDE})
 
 # default values
 # those can be removed probably

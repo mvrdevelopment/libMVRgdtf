@@ -24,10 +24,11 @@ if not os.path.isfile("shared/lib/libxerces-c.a"):
             zip_ref.extractall("shared")
             os.rename(XERCES_DIR_PATH, "shared/xerces")
 
-    os.chdir("shared/xerces")
+    os.chdir("shared")
 
     extraCmakeOptions = "";
     if sys.platform == "win32":
+        os.chdir("xerces")
         if not os.path.isdir("build"):
             os.mkdir("build")
         os.chdir("build")
@@ -37,8 +38,6 @@ if not os.path.isfile("shared/lib/libxerces-c.a"):
         os.system("cmake --build . --target install")
     #we need some more cases for linux and should check all configure-options
     if sys.platform == "darwin":
-        os.system("./configure --enable-transcoder-gnuiconv --enable-transcoder-macosunicodeconverter")
         os.system("make")
-        os.system("make install")
 
     
