@@ -2277,9 +2277,9 @@ void SceneData::GdtfGeometryLamp::SetThrowRatio(double ratio)
     fThrowRatio = ratio;
 }
 
-void SceneData::GdtfGeometryLamp::SetRectangleRatio(double radius)
+void SceneData::GdtfGeometryLamp::SetRectangleRatio(double ratio)
 {
-    fRectangleRatio = radius;
+    fRectangleRatio = ratio;
 }
 
 void SceneData::GdtfGeometryLamp::SetBeamType(EGdtfBeamType type)
