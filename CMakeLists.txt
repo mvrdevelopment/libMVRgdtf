@@ -3,7 +3,10 @@ cmake_minimum_required(VERSION 3.10)
 if (WIN32)
 set(CMAKE_GENERATOR_PLATFORM x64)
 elseif(APPLE)
-set(CMAKE_OSX_DEPLOYMENT_TARGET $ENV{OSX_VERSION} CACHE)
+    if($ENV{OSX_VERSION})
+    message("Setting osx version: " $ENV{OSX_VERSION})
+        set(CMAKE_OSX_DEPLOYMENT_TARGET $ENV{OSX_VERSION})
+    endif($ENV{OSX_VERSION})
 endif(WIN32)
 
 ADD_DEFINITIONS(-DUNICODE)
@@ -41,36 +44,68 @@ include_directories(${PROJECT_SOURCE_DIR}/src
 # default values
 # those can be removed probably
 set(SRCDIR ${PROJECT_SOURCE_DIR}/src)
+set(SRC_TESTDIR ${PROJECT_SOURCE_DIR}/unittest)
+
+
+
+
 
 
 
 # Add libary
 # source files
 file(GLOB_RECURSE libSourceFiles ${SRCDIR}/*.cpp)
-
 add_library(VectorworksMvrGdtf STATIC ${libSourceFiles})
+
+target_link_libraries(VectorworksMvrGdtf ${PROJECT_SOURCE_DIR}/libs/libxerces-c.a)
+
+
+#################################################
+############### add unit tests ##################
+file(GLOB_RECURSE unitTestSourceFiles ${SRC_TESTDIR}/*.cpp)
+add_executable(MvrGdtfUnitTest  ${unitTestSourceFiles})
+
+add_definitions(-DGITPATH="${PROJECT_SOURCE_DIR}")
+target_link_libraries(MvrGdtfUnitTest VectorworksMvrGdtf)
+#add_dependencies(MvrGdtfUnitTest VectorworksMvrGdtf)
+#################################################
+
 
 # setup the platform macros
 if (WIN32)
     target_compile_definitions(VectorworksMvrGdtf PUBLIC GS_WIN)
     target_compile_definitions(VectorworksMvrGdtf PUBLIC _WINDOWS)
+
+    target_compile_definitions(MvrGdtfUnitTest PUBLIC GS_WIN)
+    target_compile_definitions(MvrGdtfUnitTest PUBLIC _WINDOWS)
 elseif(UNIX)
     if (APPLE)
         target_compile_definitions(VectorworksMvrGdtf PUBLIC GS_MAC)
+        
+        target_compile_definitions(MvrGdtfUnitTest PUBLIC GS_MAC)
 
         find_library( MAC_CORESERVICE CoreServices )
         find_library( MAC_COREFOUNDATION CoreFoundation )
 
         target_link_libraries(VectorworksMvrGdtf ${MAC_CORESERVICE} ${MAC_COREFOUNDATION})
+        target_link_libraries(MvrGdtfUnitTest ${MAC_CORESERVICE} ${MAC_COREFOUNDATION})
     else()
         target_compile_definitions(VectorworksMvrGdtf PUBLIC GS_LIN)
         target_compile_definitions(VectorworksMvrGdtf PUBLIC _LINUX)
+
+        target_compile_definitions(MvrGdtfUnitTest PUBLIC GS_LIN)
+        target_compile_definitions(MvrGdtfUnitTest PUBLIC _LINUX)
+
+
+
+        target_link_libraries(VectorworksMvrGdtf uuid)
+        target_link_libraries(MvrGdtfUnitTest    uuid)
         #add_compile_definitions(GS_LIN)        
     endif(APPLE)
 
 
-    target_link_libraries(VectorworksMvrGdtf    uuid
-                                                pthread)
+    target_link_libraries(VectorworksMvrGdtf    pthread)
+    target_link_libraries(MvrGdtfUnitTest       pthread)
 endif(WIN32)
 
 # Include mini-zip
@@ -88,8 +123,6 @@ if($ENV{XERCES_CONFIGURE_ENCODER})
 endif($ENV{XERCES_CONFIGURE_ENCODER})
 
 
-
-
 # Flag DDONT_INCLUDE_MINI_ZIP   -check
 # Flag OSX_VERSION              -check
 # Flag CXX
@@ -97,6 +130,3 @@ endif($ENV{XERCES_CONFIGURE_ENCODER})
 # CXX_FLAGS_CUSTOM              -check
 # XERCES_CONFIGURE_ENCODER      -check
 # ADDIONAL_LD                   -check
-
-# add the executable
-# add_executable(libMvrGdtfUnitTest )

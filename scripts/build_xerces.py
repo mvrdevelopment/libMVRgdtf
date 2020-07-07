@@ -11,7 +11,7 @@ XERCES_DIR_PATH = "shared/xerces-c-" + XERCES_VERSION
 
 
 # check for other system lib file (.lib [for windows])
-if not os.path.isfile("shared/lib/libxerces-c.a"):
+if not os.path.isfile("libs/libxerces-c.a"):
     if not os.path.isfile(XERCES_ZIP_FILE):
         print("Downloading xerces")
         urllib.urlretrieve("http://archive.apache.org/dist/xerces/c/3/sources/xerces-c-" + XERCES_VERSION + ".zip", XERCES_ZIP_FILE)
