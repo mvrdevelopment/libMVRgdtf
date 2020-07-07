@@ -1,4 +1,7 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.9.4)
+
+# pre setup for some vars
+set(UNITTEST TRUE CACHE STRING "If enabled the tests wont be build!")
 
 if (WIN32)
 set(CMAKE_GENERATOR_PLATFORM x64)
@@ -62,51 +65,55 @@ target_link_libraries(VectorworksMvrGdtf ${PROJECT_SOURCE_DIR}/libs/libxerces-c.
 
 #################################################
 ############### add unit tests ##################
+if (UNITTEST)
+
 file(GLOB_RECURSE unitTestSourceFiles ${SRC_TESTDIR}/*.cpp)
 add_executable(MvrGdtfUnitTest  ${unitTestSourceFiles})
 
 add_definitions(-DGITPATH="${PROJECT_SOURCE_DIR}")
 target_link_libraries(MvrGdtfUnitTest VectorworksMvrGdtf)
-#add_dependencies(MvrGdtfUnitTest VectorworksMvrGdtf)
+    
+endif (UNITTEST)
 #################################################
 
 
 # setup the platform macros
 if (WIN32)
-    target_compile_definitions(VectorworksMvrGdtf PUBLIC GS_WIN)
-    target_compile_definitions(VectorworksMvrGdtf PUBLIC _WINDOWS)
-
-    target_compile_definitions(MvrGdtfUnitTest PUBLIC GS_WIN)
-    target_compile_definitions(MvrGdtfUnitTest PUBLIC _WINDOWS)
+    set(PREPROCESSORS ${PREPROCESSORS} PUBLIC GS_WIN)
+    set(PREPROCESSORS ${PREPROCESSORS} PUBLIC _WINDOWS)
 elseif(UNIX)
     if (APPLE)
-        target_compile_definitions(VectorworksMvrGdtf PUBLIC GS_MAC)
-        
-        target_compile_definitions(MvrGdtfUnitTest PUBLIC GS_MAC)
+        set(PREPROCESSORS ${PREPROCESSORS} PUBLIC GS_MAC)
+        set(PREPROCESSORS ${PREPROCESSORS} PUBLIC __APPLE__)
 
         find_library( MAC_CORESERVICE CoreServices )
         find_library( MAC_COREFOUNDATION CoreFoundation )
-
-        target_link_libraries(VectorworksMvrGdtf ${MAC_CORESERVICE} ${MAC_COREFOUNDATION})
-        target_link_libraries(MvrGdtfUnitTest ${MAC_CORESERVICE} ${MAC_COREFOUNDATION})
+        
+        set(EXTRA_LIBS ${EXTRA_LIBS} ${MAC_CORESERVICE} ${MAC_COREFOUNDATION})
     else()
-        target_compile_definitions(VectorworksMvrGdtf PUBLIC GS_LIN)
-        target_compile_definitions(VectorworksMvrGdtf PUBLIC _LINUX)
+        set(PREPROCESSORS ${PREPROCESSORS} PUBLIC GS_LIN)
+        set(PREPROCESSORS ${PREPROCESSORS} PUBLIC _LINUX)
 
-        target_compile_definitions(MvrGdtfUnitTest PUBLIC GS_LIN)
-        target_compile_definitions(MvrGdtfUnitTest PUBLIC _LINUX)
-
-
-
-        target_link_libraries(VectorworksMvrGdtf uuid)
-        target_link_libraries(MvrGdtfUnitTest    uuid)
+        set(EXTRA_LIBS ${EXTRA_LIBS} uuid)
         #add_compile_definitions(GS_LIN)        
     endif(APPLE)
 
-
-    target_link_libraries(VectorworksMvrGdtf    pthread)
-    target_link_libraries(MvrGdtfUnitTest       pthread)
+    set(EXTRA_LIBS ${EXTRA_LIBS} pthread)
 endif(WIN32)
+
+
+#################################################
+# Add the preprocessors
+# Link extra libs
+target_compile_definitions(VectorworksMvrGdtf ${PREPROCESSORS})
+target_link_libraries(VectorworksMvrGdtf ${EXTRA_LIBS})
+
+if(${UNITTEST})
+target_compile_definitions(MvrGdtfUnitTest ${PREPROCESSORS})
+target_link_libraries(MvrGdtfUnitTest ${EXTRA_LIBS})
+endif(${UNITTEST})
+#################################################
+
 
 # Include mini-zip
 if(not $ENV{INCLUDE_MINI_ZIP})
