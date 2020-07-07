@@ -14,8 +14,10 @@ project(MvrGdtf)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-find_package(PythonInterp REQUIRED)
 
+
+
+find_package(PythonInterp REQUIRED)
 # run python script for extracting and generating xerces
 execute_process(COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/scripts/build_xerces.py
                 WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
@@ -55,16 +57,36 @@ if (WIN32)
 elseif(UNIX)
     if (APPLE)
         target_compile_definitions(VectorworksMvrGdtf PUBLIC GS_MAC)
+
+        find_library( MAC_CORESERVICE CoreServices )
+        find_library( MAC_COREFOUNDATION CoreFoundation )
+
+        target_link_libraries(VectorworksMvrGdtf ${MAC_CORESERVICE} ${MAC_COREFOUNDATION})
     else()
         target_compile_definitions(VectorworksMvrGdtf PUBLIC GS_LIN)
         target_compile_definitions(VectorworksMvrGdtf PUBLIC _LINUX)
         #add_compile_definitions(GS_LIN)        
     endif(APPLE)
+
+
+    target_link_libraries(VectorworksMvrGdtf    uuid
+                                                pthread)
 endif(WIN32)
 
-if($ENV{INCLUDE_MINI_ZIP})
+# Include mini-zip
+if(not $ENV{INCLUDE_MINI_ZIP})
     target_compile_definitions(VectorworksMvrGdtf PUBLIC DONT_INCLUDE_MINI_ZIP)
-endif($ENV{INCLUDE_MINI_ZIP})
+endif(not $ENV{INCLUDE_MINI_ZIP})
+
+set(CMAKE_EXE_LINKER_FLAGS  ${CMAKE_EXE_LINKER_FLAGS}
+                            $ENV{ADDIONAL_LD})
+
+add_compile_options($ENV{CXX_FLAGS_CUSTOM})
+
+if($ENV{XERCES_CONFIGURE_ENCODER})
+    add_compile_options($ENV{XERCES_CONFIGURE_ENCODER})
+endif($ENV{XERCES_CONFIGURE_ENCODER})
+
 
 
 
@@ -72,9 +94,9 @@ endif($ENV{INCLUDE_MINI_ZIP})
 # Flag OSX_VERSION              -check
 # Flag CXX
 
-# CXX_FLAGS_CUSTOM
-# XERCES_CONFIGURE_ENCODER
-# ADDIONAL_LD
+# CXX_FLAGS_CUSTOM              -check
+# XERCES_CONFIGURE_ENCODER      -check
+# ADDIONAL_LD                   -check
 
 # add the executable
 # add_executable(libMvrGdtfUnitTest )
