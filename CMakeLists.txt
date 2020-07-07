@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.9.4)
 # pre setup for some vars
 set(UNITTEST TRUE CACHE STRING "If enabled the tests wont be build!")
 
+#################################################
+# System setup
 if (WIN32)
 set(CMAKE_GENERATOR_PLATFORM x64)
 elseif(APPLE)
@@ -15,13 +17,17 @@ endif(WIN32)
 ADD_DEFINITIONS(-DUNICODE)
 ADD_DEFINITIONS(-D_UNICODE)
 
+#################################################
+
+
+#################################################
 # create the project
 project(MvrGdtf)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-
-
+#################################################
+# Building Xerces
 
 find_package(PythonInterp REQUIRED)
 # run python script for extracting and generating xerces
@@ -29,7 +35,7 @@ execute_process(COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/scripts/build
                 WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
                 RESULT_VARIABLE PY_OUTPUT)
 
-
+#################################################
 
 
 # setup the platform macros
@@ -54,13 +60,13 @@ set(SRC_TESTDIR ${PROJECT_SOURCE_DIR}/unittest)
 
 
 
-
-# Add libary
-# source files
+#################################################
+# Add libVectorworksMvrGdtf lib
 file(GLOB_RECURSE libSourceFiles ${SRCDIR}/*.cpp)
 add_library(VectorworksMvrGdtf STATIC ${libSourceFiles})
 
 target_link_libraries(VectorworksMvrGdtf ${PROJECT_SOURCE_DIR}/libs/libxerces-c.a)
+#################################################
 
 
 #################################################
@@ -77,6 +83,8 @@ endif (UNITTEST)
 #################################################
 
 
+
+#################################################
 # setup the platform macros
 if (WIN32)
     set(PREPROCESSORS ${PREPROCESSORS} PUBLIC GS_WIN)
@@ -100,6 +108,7 @@ elseif(UNIX)
 
     set(EXTRA_LIBS ${EXTRA_LIBS} pthread)
 endif(WIN32)
+#################################################
 
 
 #################################################
@@ -120,6 +129,8 @@ if(not $ENV{INCLUDE_MINI_ZIP})
     target_compile_definitions(VectorworksMvrGdtf PUBLIC DONT_INCLUDE_MINI_ZIP)
 endif(not $ENV{INCLUDE_MINI_ZIP})
 
+
+# Additional options
 set(CMAKE_EXE_LINKER_FLAGS  ${CMAKE_EXE_LINKER_FLAGS}
                             $ENV{ADDIONAL_LD})
 
@@ -129,11 +140,5 @@ if($ENV{XERCES_CONFIGURE_ENCODER})
     add_compile_options($ENV{XERCES_CONFIGURE_ENCODER})
 endif($ENV{XERCES_CONFIGURE_ENCODER})
 
-
-# Flag DDONT_INCLUDE_MINI_ZIP   -check
-# Flag OSX_VERSION              -check
 # Flag CXX
 
-# CXX_FLAGS_CUSTOM              -check
-# XERCES_CONFIGURE_ENCODER      -check
-# ADDIONAL_LD                   -check

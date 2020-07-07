@@ -42,6 +42,8 @@ install:
 - mkdir build
 - cd build
 - cmake ..
+- cd ..
 
 script:
+- cd build
 - make -j 2
