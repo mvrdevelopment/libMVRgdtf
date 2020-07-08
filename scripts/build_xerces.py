@@ -33,9 +33,10 @@ if not os.path.isfile(pathToLibFile):
             os.mkdir("build")
         os.chdir("build")
 
-        extraCmakeOptions += "-DCMAKE_GENERATOR_PLATFORM=x64 -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_INSTALL_PREFIX:PATH=libs -Dxmlch-type=wchar_t -DCMAKE_CXX_FLAGS_RELEASE:STRING=Release"
+       
+        extraCmakeOptions += "-G \"Visual Studio 15 2017 Win64\" -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_INSTALL_PREFIX:PATH=libs -DCMAKE_CONFIGURATION_TYPES=\"Release\" -Dxmlch-type=wchar_t -DCMAKE_CXX_FLAGS_RELEASE:STRING=\"-MD -DNDEBUG\""
         os.system("cmake "+ extraCmakeOptions +" ..")
-        os.system("cmake --build . --target install")
+        os.system("cmake --build . --config Release --target install")
 
         shutil.copytree("libs", "../../../libs")
     #we need some more cases for linux and should check all configure-options
