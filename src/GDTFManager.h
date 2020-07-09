@@ -2338,7 +2338,10 @@ namespace SceneData
 
 		void ResolveDmxLogicalChanRefs(GdtfDmxChannelPtr dmxChnl);
 		void ResolveDmxChanelFunctionRefs(GdtfDmxLogicalChannelPtr dmxLogChnl);
-		void ResolveMacroRefs(GdtfDmxModePtr dmxMode);	
+		void ResolveMacroRefs(GdtfDmxModePtr dmxMode);
+	
+	private:
+		void CheckForMissingModeMasters();
 		//----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		
 	private:

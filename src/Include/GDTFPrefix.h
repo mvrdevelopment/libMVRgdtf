@@ -160,9 +160,9 @@ namespace VectorworksMVR
             eDmxMacroDmxValueChannelReference           = 62,
             eChannelFunctionNotStartingWithZero         = 63,
             eFileWithUnsupportedEncodingInZip           = 64,
-
             eValueError_NoMatchInEnum_InterpolationTo   = 65,
             eValueError_NoMatchInEnum_CanHaveChildren   = 66,
+            eFixtureChannelFunctionMissingModeMaster    = 67, //If 2 channel functions use the same DMX range, Mode masters should be defined
 
         };
 		
