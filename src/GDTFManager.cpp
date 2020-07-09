@@ -5956,7 +5956,7 @@ void GdtfFixture::CheckForMissingModeMasters()
 						DmxValue currentFunctionStart	= currentFunction->GetStartAdress();
 						DmxValue currentFunctionEnd		= currentFunction->GetEndAdress();
 						
-						if(functionStart < currentFunctionEnd && currentFunctionStart < functionEnd)
+						if(functionStart <= currentFunctionEnd && currentFunctionStart <= functionEnd)
 						{
 							//These two functions have conflicting DMX ranges.
 
@@ -5973,18 +5973,18 @@ void GdtfFixture::CheckForMissingModeMasters()
 							else
 							{
 								//If there is one, we have to check if they're the same.
-								GdtfDmxChannel* 		currentFunctionMMChannel 	= function->GetModeMaster_Channel();
-								GdtfDmxChannelFunction* currentFunctionMMFunction	= function->GetModeMaster_Function();
+								GdtfDmxChannel* 		currentFunctionMMChannel 	= currentFunction->GetModeMaster_Channel();
+								GdtfDmxChannelFunction* currentFunctionMMFunction	= currentFunction->GetModeMaster_Function();
 								if(functionMMChannel == currentFunctionMMChannel || functionMMFunction == currentFunctionMMFunction)
 								{
 									//If they're the same we have to check that their ranges don't overlap.
-									DmxValue functionMMStart 	= function->GetModeMasterDmxStart();
-									DmxValue functionMMEnd		= function->GetModeMasterDmxEnd();
+									DmxValue functionMMStart 		= function->GetModeMasterDmxStart();
+									DmxValue functionMMEnd			= function->GetModeMasterDmxEnd();
 
-									DmxValue currentFunctionMMStart 	= function->GetModeMasterDmxStart();
-									DmxValue currentFunctionMMEnd		= function->GetModeMasterDmxEnd();
+									DmxValue currentFunctionMMStart	= currentFunction->GetModeMasterDmxStart();
+									DmxValue currentFunctionMMEnd	= currentFunction->GetModeMasterDmxEnd();
 									
-									if(functionMMStart < currentFunctionMMEnd && currentFunctionMMStart < functionMMEnd)
+									if(functionMMStart <= currentFunctionMMEnd && currentFunctionMMStart <= functionMMEnd)
 									{
 										//If they do, we throw an error.
 										GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureChannelFunctionMissingModeMaster);
