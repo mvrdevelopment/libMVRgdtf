@@ -29,14 +29,14 @@ matrix:
       osx_image: xcode10.1
       os: osx
     # Windows 2016 Server
-    - env:  CXX_FLAGS="-MD -O2 -Ob2 -DNDEBUG"
+    - env:  BUILD_TYPE="Release"
       os: windows
       script:
-        - CMD //C runMSBuild_lib.bat "Release"
-    - env: CXX_FLAGS="-MT -O2 -Ob2 -DNDEBUG"
+        - CMD //C runMSBuild_lib.bat $BUILD_TYPE
+    - env: BUILD_TYPE="ReleaseMT"
       os: windows
       script:
-        - CMD //C runMSBuild_lib.bat "Release"
+        - CMD //C runMSBuild_lib.bat $BUILD_TYPE
 
 install:
 - mkdir build
