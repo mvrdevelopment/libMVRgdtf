@@ -350,6 +350,8 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_BeamAngle						"BeamAngle"
 #define XML_GDTF_BeamRadius						"BeamRadius"
 #define XML_GDTF_FieldAngle						"FieldAngle"
+#define XML_GDTF_ThrowRatio						"ThrowRatio"
+#define XML_GDTF_RectangleRatio					"RectangleRatio"
 #define XML_GDTF_BeamType						"BeamType"
 #define XML_GDTF_BeamColorRenderingIndex        "ColorRenderingIndex"				
 
