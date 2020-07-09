@@ -580,6 +580,8 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE     GetBeamAngle(double& beamAngle) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetFieldAngle(double& fldAngle) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetBeamRadius(double& radius) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetThrowRatio(double& ratio) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetRectangleRatio(double& ratio) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetBeamType(GdtfDefines::EGdtfBeamType & type) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetColorIndex(Sint32& idx) = 0;
 
@@ -594,6 +596,8 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE     SetBeamAngle(double beamAngle) = 0;
         virtual VCOMError VCOM_CALLTYPE     SetFieldAngle(double fldAngle) = 0;
         virtual VCOMError VCOM_CALLTYPE     SetBeamRadius(double radius) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetThrowRatio(double ratio) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetRectangleRatio(double ratio) = 0;
         virtual VCOMError VCOM_CALLTYPE     SetBeamType(GdtfDefines::EGdtfBeamType type) = 0;
         virtual VCOMError VCOM_CALLTYPE     SetColorIndex(Sint32 idx) = 0;
 		
@@ -1119,7 +1123,10 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
         virtual VCOMError VCOM_CALLTYPE		ReadFromFile(MvrString fullPath) = 0;
 		
 		virtual VCOMError VCOM_CALLTYPE		OpenForWrite(MvrString fullPath, MvrString name, MvrString manufacturer, const MvrUUID& uuid) = 0;
+		virtual VCOMError VCOM_CALLTYPE		OpenForWrite(MvrString name, MvrString manufacturer, const MvrUUID& uuid) = 0;
 		virtual VCOMError VCOM_CALLTYPE		AddFileToGdtfFile(MvrString fullPath, GdtfDefines::ERessourceType resType) = 0;
+		virtual VCOMError VCOM_CALLTYPE		AddBufferToGdtfFile(MvrString filename, const char* inBuffer, size_t length, GdtfDefines::ERessourceType resType) = 0;
+
 		virtual VCOMError VCOM_CALLTYPE		Close() = 0;
         
         virtual MvrString VCOM_CALLTYPE		GetName() = 0;

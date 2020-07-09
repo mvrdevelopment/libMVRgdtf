@@ -859,6 +859,8 @@ namespace SceneData
 		double			fBeamAngle;			// Unit ?? -> Degree
         double          fFieldAngle;
 		double			fBeamRadius;		// Unit Meter
+		double			fThrowRatio;
+		double			fRectangleRatio;
 		EGdtfBeamType	fBeamType;			// Unit Meter
 		Sint32			fColorIndex;
 		
@@ -872,6 +874,8 @@ namespace SceneData
         double                          GetBeamAngle();
         double                          GetFieldAngle();
         double                          GetBeamRadius();
+        double                          GetThrowRatio();
+        double                          GetRectangleRatio();
         EGdtfBeamType                   GetBeamType();
         Sint32                          GetColorIndex();
 
@@ -883,6 +887,8 @@ namespace SceneData
 		void							SetBeamAngle(double angle);
         void                            SetFieldAngle(double angle);
         void                            SetBeamRadius(double radius);
+        void                            SetThrowRatio(double ratio);
+        void                            SetRectangleRatio(double ratio);
         void                            SetBeamType(EGdtfBeamType type);
         void                            SetColorIndex(Sint32 idx);
 		

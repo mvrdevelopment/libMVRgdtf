@@ -37,6 +37,7 @@ VectorworksMVR::CGdtfFixtureImpl::CGdtfFixtureImpl()
 
 VectorworksMVR::CGdtfFixtureImpl::~CGdtfFixtureImpl()
 {
+    for(auto b : fBuffersAdded) {delete b;}
     if (fFixtureObject) { delete fFixtureObject;}
     FreeBuffer();
 }
@@ -66,6 +67,42 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::OpenForWrite(MvrStri
 	
 	// If there is an existing fixture loaded, delete the old one and start from scratch
 	if (fFixtureObject) { delete fFixtureObject; }
+    for(auto b : fBuffersAdded) {delete b;} fBuffersAdded.clear();
+	
+	// Create the newFixture
+	fFixtureObject = new SceneData::GdtfFixture();
+	
+	TXString	vwName			(name);
+	TXString	vwManufacturer (manufacturer);
+	VWFC::Tools::VWUUID vwUuid = VWFC::Tools::VWUUID(uuid.a, uuid.b, uuid.c, uuid.d);
+	
+	fFixtureObject->SetName(vwName);
+	fFixtureObject->SetManufacturer(vwManufacturer);
+	fFixtureObject->SetGuid(vwUuid);
+	
+	fZipFile = IZIPFilePtr(IID_ZIPFile);
+	fZipFile->OpenNewWrite(file, false);
+	
+	
+	// Read From File
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::OpenForWrite(MvrString name, MvrString manufacturer, const MvrUUID& uuid)
+{	
+	TXString strFullPath ( "" );
+	
+	// Create the file pointer on the full path
+	IFileIdentifierPtr file (IID_FileIdentifier);
+	file->Set(strFullPath);
+	
+	bool fileExists = false;
+	file->ExistsOnDisk(fileExists);
+	if(fileExists) { file->DeleteOnDisk(); }
+	
+	// If there is an existing fixture loaded, delete the old one and start from scratch
+	if (fFixtureObject) { delete fFixtureObject; }
+    for(auto b : fBuffersAdded) {delete b;} fBuffersAdded.clear();
 	
 	// Create the newFixture
 	fFixtureObject = new SceneData::GdtfFixture();
@@ -113,6 +150,27 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::AddFileToGdtfFile(Mv
 	return kVCOMError_NoError;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::AddBufferToGdtfFile(MvrString filename, const char* inBuffer, size_t length, GdtfDefines::ERessourceType resType)
+{
+	if(!fFixtureObject) { return kVCOMError_Failed; }
+	if(!fZipFile)		{ return kVCOMError_Failed; }
+	TXString strFileName ( filename );
+	
+	
+    // Append the SubFoldername for resources.
+    strFileName = SceneData::SceneDataZip::GetResourceSubFolder(resType) + strFileName;
+
+    CZIPFileIOBufferImpl* buffer = new CZIPFileIOBufferImpl();
+    buffer->SetData((void*)inBuffer, length);
+    fBuffersAdded.push_back(buffer);
+
+
+	fZipFile->AddFile(strFileName, buffer);	
+	
+	// Read From File
+	return kVCOMError_NoError;
+}
+
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::Close()
 {
 	if(!fFixtureObject) { return kVCOMError_Failed; }
@@ -121,6 +179,9 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::Close()
 	fFixtureObject->ExportToFile(fZipFile);
 	
 	fZipFile->Close();
+
+    FreeBuffer();
+    fZipFile->ToBuffer(fBuffer, fBufferLength);
 	
 	// Read From File
 	return kVCOMError_NoError;
@@ -1910,6 +1971,7 @@ VCOMError VectorworksMVR::CGdtfFixtureImpl::FromBufferInternal(const char* buffe
 
 	// Check there is already a object in here
 	if (fFixtureObject) { delete fFixtureObject; }
+    for(auto b : fBuffersAdded) {delete b;} fBuffersAdded.clear();
 	
 	// Create the new Object
 	fFixtureObject = new SceneData::GdtfFixture();
