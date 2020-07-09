@@ -33,10 +33,11 @@ bool GdtfDmxChannelSetBug::ExecuteTest()
     {
         size_t countErrors = 0;
         __checkVCOM(gdtfFile->GetParsingErrorCount(countErrors));
-        checkifEqual("Count Errors", countErrors, (size_t)5);
+
+        checkifEqual("Count Errors", countErrors, (size_t)11);
 
 
-		 IGdtfXmlParsingErrorPtr error;
+		IGdtfXmlParsingErrorPtr error;
 		__checkVCOM(gdtfFile->GetParsingErrorAt(0, & error));
         ReadError(error, 4091,88,GdtfDefines::EGdtfParsingError::eValueError_DmxValueHasWrongValue);
 
@@ -51,6 +52,25 @@ bool GdtfDmxChannelSetBug::ExecuteTest()
 		
 		__checkVCOM(gdtfFile->GetParsingErrorAt(4, & error));
         ReadError(error, 4534,75,GdtfDefines::EGdtfParsingError::eValueError_DmxValueHasWrongValue);
+
+		//Mode Master Errors
+		__checkVCOM(gdtfFile->GetParsingErrorAt(5, & error));
+        ReadError(error, 0, 0, GdtfDefines::EGdtfParsingError::eFixtureChannelFunctionMissingModeMaster);
+
+		__checkVCOM(gdtfFile->GetParsingErrorAt(6, & error));
+        ReadError(error, 0, 0, GdtfDefines::EGdtfParsingError::eFixtureChannelFunctionMissingModeMaster);
+
+		__checkVCOM(gdtfFile->GetParsingErrorAt(7, & error));
+        ReadError(error, 0, 0, GdtfDefines::EGdtfParsingError::eFixtureChannelFunctionMissingModeMaster);
+
+		__checkVCOM(gdtfFile->GetParsingErrorAt(8, & error));
+        ReadError(error, 0, 0, GdtfDefines::EGdtfParsingError::eFixtureChannelFunctionMissingModeMaster);
+
+		__checkVCOM(gdtfFile->GetParsingErrorAt(9, & error));
+        ReadError(error, 0, 0, GdtfDefines::EGdtfParsingError::eFixtureChannelFunctionMissingModeMaster);
+
+		__checkVCOM(gdtfFile->GetParsingErrorAt(10, & error));
+        ReadError(error, 0, 0, GdtfDefines::EGdtfParsingError::eFixtureChannelFunctionMissingModeMaster);
 
 
     }

@@ -245,6 +245,8 @@ void GdtfDmxUnittest::WriteFile()
 		__checkVCOM(function24bit_3->SetAttribute(attribute1));
 
 
+		__checkVCOM(function24bit_1->SetModeMasterChannel(bit16channel, 0, 39));
+		__checkVCOM(function24bit_2->SetModeMasterChannel(bit16channel, 40, 79));
 		__checkVCOM(function24bit_3->SetModeMasterChannel(bit16channel, 80, 179));
 
 
