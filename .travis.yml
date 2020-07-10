@@ -36,7 +36,7 @@ matrix:
     - env: CXX_FLAG="-MT"
       os: windows
       script:
-        - CMD //C runMSBuild_lib.bat "ReleaseMT"
+        - CMD //C runMSBuild_lib.bat "Release"
 
 install:
 - mkdir build
