@@ -36,6 +36,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/libs/)
 #################################################
 # Building Xerces
 
+
 find_package(PythonInterp REQUIRED)
 # run python script for extracting and generating xerces
 execute_process(COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/scripts/build_xerces.py
