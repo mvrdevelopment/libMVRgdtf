@@ -10,7 +10,7 @@ set(PYTHON_ARGS "TETSASDLKAJSDLKAJSDLKJASDLKJASDLKJASD")
 # System setup
 if (WIN32)
 set(CMAKE_GENERATOR_PLATFORM x64)
-set(PYTHON_ARGS "MD")
+set(PYTHON_ARGS "-MD")
 elseif(APPLE)
     if($ENV{OSX_VERSION})
     message("Setting osx version: " $ENV{OSX_VERSION})
@@ -41,6 +41,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/libs/)
 # Building Xerces
 
 if(WIN32)
+    set(PYTHON_ARGS ${WIN_RELEASE_TYPE})
 endif(WIN32)
 
 
