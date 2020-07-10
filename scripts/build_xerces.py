@@ -8,7 +8,7 @@ print("Building Xerces-c-lib")
 
 windowsReleaseType = "-MD"
 if sys.platform == "win32":
-    if (len(sys.argv >= 2)):
+    if (len(sys.argv) >= 2):
         windowsReleaseType = sys.argv[1]
 
 XERCES_VERSION = "3.2.2"
