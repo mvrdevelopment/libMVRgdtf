@@ -95,20 +95,20 @@ void DmxChannelSetFormatingTest::WriteFile(VectorworksMVR::IGdtfFixturePtr& fixt
 
 		IGdtfDmxChannelFunctionPtr bit8Function2;
 		bit8LogicalChannel1->CreateDmxFunction("Function2", &bit8Function2);
-		bit8Function2->SetStartAddress(0);
+		bit8Function2->SetStartAddress(700);
 		bit8Function2->SetAttribute(attribute1);
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet2;
-		bit8Function2->CreateDmxChannelSet("My Name1", 32768, 65535, &bit8ChannelSet2);
+		bit8Function2->CreateDmxChannelSet("My Name1", 750, 799, &bit8ChannelSet2);
 
 
 		IGdtfDmxChannelFunctionPtr bit8Function3;
 		bit8LogicalChannel1->CreateDmxFunction("Function3", &bit8Function3);
-		bit8Function3->SetStartAddress(0);
+		bit8Function3->SetStartAddress(800);
 		bit8Function3->SetAttribute(attribute1);
 
 		IGdtfDmxChannelSetPtr bit8ChannelSet3;
-		bit8Function3->CreateDmxChannelSet("My Name1", 32768, 65535, &bit8ChannelSet3);
+		bit8Function3->CreateDmxChannelSet("My Name1", 850, 65535, &bit8ChannelSet3);
 		
 
 }
@@ -128,15 +128,15 @@ void DmxChannelSetFormatingTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixtu
 
 	IGdtfDmxChannelFunctionPtr bit8Function2;
 	__checkVCOM(bit8LogicalChannel1->GetDmxFunctionAt(2, &bit8Function2));
-	CheckFunction(bit8Function2);
+	CheckFunction(bit8Function2, 700, 799);
 
 	IGdtfDmxChannelFunctionPtr bit8Function3;
-	__checkVCOM(bit8LogicalChannel1->GetDmxFunctionAt(3, &bit8Function2));
-	CheckFunction(bit8Function2);
+	__checkVCOM(bit8LogicalChannel1->GetDmxFunctionAt(3, &bit8Function3));
+	CheckFunction(bit8Function3, 800, 65535);
 
 }
 
-void DmxChannelSetFormatingTest::CheckFunction(IGdtfDmxChannelFunctionPtr bit8Function1)
+void DmxChannelSetFormatingTest::CheckFunction(IGdtfDmxChannelFunctionPtr bit8Function1, VectorworksMVR::GdtfDefines::DmxValue start, VectorworksMVR::GdtfDefines::DmxValue end)
 {
 	size_t count;
 	__checkVCOM(bit8Function1->GetDmxChannelSetCount(count));
@@ -144,11 +144,11 @@ void DmxChannelSetFormatingTest::CheckFunction(IGdtfDmxChannelFunctionPtr bit8Fu
 
 	IGdtfDmxChannelSetPtr bit8ChannelSet1;
 	__checkVCOM(bit8Function1->GetDmxChannelSetAt(0, &bit8ChannelSet1));
-	this->CheckChannelSet(bit8ChannelSet1, "",0,32767);
+	this->CheckChannelSet(bit8ChannelSet1, "", start, start+49);
 
 	IGdtfDmxChannelSetPtr bit8ChannelSet2;
 	__checkVCOM(bit8Function1->GetDmxChannelSetAt(1, &bit8ChannelSet2));
-	this->CheckChannelSet(bit8ChannelSet2, "My Name1",32768, 65535);
+	this->CheckChannelSet(bit8ChannelSet2, "My Name1", start+50, end);
 }
 
 
