@@ -33,12 +33,10 @@ matrix:
       os: windows
       script:
         - CMD //C runMSBuild_lib.bat "Release"
-        - CMD //C Release/MvrGdtfUnitTest.exe
     - env: CXX_FLAG="-MT"
       os: windows
       script:
         - CMD //C runMSBuild_lib.bat "Release"
-        - CMD //C Release/MvrGdtfUnitTest.exe
 
 install:
 - mkdir build
