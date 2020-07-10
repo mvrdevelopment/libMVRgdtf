@@ -2,11 +2,15 @@ cmake_minimum_required(VERSION 3.9.4)
 
 # pre setup for some vars
 set(UNITTEST TRUE CACHE STRING "If enabled the tests wont be build!")
+set(WIN_RELEASE_TYPE CACHE STRING "Set '-MD' or '-MT' for windows build")
 
+
+set(PYTHON_ARGS "TETSASDLKAJSDLKAJSDLKJASDLKJASDLKJASD")
 #################################################
 # System setup
 if (WIN32)
 set(CMAKE_GENERATOR_PLATFORM x64)
+set(PYTHON_ARGS "MD")
 elseif(APPLE)
     if($ENV{OSX_VERSION})
     message("Setting osx version: " $ENV{OSX_VERSION})
@@ -36,10 +40,13 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/libs/)
 #################################################
 # Building Xerces
 
+if(WIN32)
+endif(WIN32)
+
 
 find_package(PythonInterp REQUIRED)
 # run python script for extracting and generating xerces
-execute_process(COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/scripts/build_xerces.py
+execute_process(COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/scripts/build_xerces.py ${PYTHON_ARGS}
                 WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
                 RESULT_VARIABLE PY_OUTPUT)
 

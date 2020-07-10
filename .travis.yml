@@ -29,11 +29,11 @@ matrix:
       osx_image: xcode10.1
       os: osx
     # Windows 2016 Server
-    - env: CXX_FLAG="-MD -O2 -Ob2 -DNDEBUG"
+    - env: CXX_FLAG="-MD"
       os: windows
       script:
         - CMD //C runMSBuild_lib.bat "Release"
-    - env: CXX_FLAG="-MT -O2 -Ob2 -DNDEBUG"
+    - env: CXX_FLAG="-MT"
       os: windows
       script:
         - CMD //C runMSBuild_lib.bat "ReleaseMT"
@@ -41,7 +41,7 @@ matrix:
 install:
 - mkdir build
 - cd build
-- cmake -DCMAKE_CXX_FLAGS_RELEASE:STRING=$CXX_FLAG ..
+- cmake -DWIN_RELEASE_TYPE:STRING=$CXX_FLAG ..
 - cd ..
 
 script:
