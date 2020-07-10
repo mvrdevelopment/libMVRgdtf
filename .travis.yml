@@ -47,3 +47,4 @@ install:
 script:
 - cd build
 - make -j 2
+- ./MvrGdtfUnitTest
