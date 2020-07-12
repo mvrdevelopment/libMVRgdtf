@@ -17,7 +17,7 @@ XERCES_DIR_PATH = "shared/xerces-c-" + XERCES_VERSION
 
 pathToLibFile = "libs/libxerces-c.a"
 if sys.platform == "win32":
-    pathToLibFile = "libs/lib/xerces-c_3ddd.lib"
+    pathToLibFile = "libs/lib/xerces-c_3.lib"
 
 # check for other system lib file (.lib [for windows])
 if not os.path.isfile(pathToLibFile):
