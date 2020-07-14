@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 
 #if defined(_WINDOWS)
 # include <Shlobj.h>
