@@ -41,7 +41,7 @@ matrix:
 install:
 - mkdir build
 - cd build
-- cmake -DWIN_RELEASE_TYPE:STRING=$CXX_FLAG ..
+- cmake -DWIN_RUNTIME_LIB:STRING=$CXX_FLAG ..
 - cd ..
 
 script:

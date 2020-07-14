@@ -1,8 +1,9 @@
+SET(CMAKE_POLICY_DEFAULT_CMP0074 NEW)
 cmake_minimum_required(VERSION 3.9.4)
 
 # pre setup for some vars
 set(UNITTEST TRUE CACHE STRING "If enabled the tests wont be build!")
-set(WIN_RELEASE_TYPE CACHE STRING "Set '-MD' or '-MT' for windows build")
+set(WIN_RUNTIME_LIB "-MD" CACHE STRING "Set '-MD' or '-MT' for windows build")
 
 
 set(PYTHON_ARGS "TETSASDLKAJSDLKAJSDLKJASDLKJASDLKJASD")
@@ -10,8 +11,8 @@ set(PYTHON_ARGS "TETSASDLKAJSDLKAJSDLKJASDLKJASDLKJASD")
 # System setup
 if (WIN32)
 set(CMAKE_GENERATOR_PLATFORM x64)
-set(CMAKE_CXX_FLAGS_RELEASE "-MD")
-set(PYTHON_ARGS "-MD")
+message("MSVC Runtime lib: " ${WIN_RUNTIME_LIB})
+set(CMAKE_CXX_FLAGS_RELEASE ${WIN_RUNTIME_LIB})
 elseif(APPLE)
     if($ENV{OSX_VERSION})
     message("Setting osx version: " $ENV{OSX_VERSION})
@@ -44,10 +45,8 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/libs/)
 # Building Xerces
 
 if(WIN32)
-    set(PYTHON_ARGS ${WIN_RELEASE_TYPE})
-    set(CMAKE_CXX_FLAGS_RELEASE ${WIN_RELEASE_TYPE} /permissive-)
+    set(PYTHON_ARGS ${WIN_RUNTIME_LIB})
 endif(WIN32)
-
 
 find_package(PythonInterp REQUIRED)
 # run python script for extracting and generating xerces
