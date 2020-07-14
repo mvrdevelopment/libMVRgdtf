@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 
 #if defined(_WINDOWS)
 # include <Shlobj.h>
@@ -25,11 +26,15 @@
 
 std::string UnitTestUtil::GetTestResourceFolder()
 {
+	std::string str = (GITPATH);
 #ifdef _WINDOWS
-    return std::string(GITPATH) + kSeparator + "files";
-#else
-    return std::string(GITPATH) + kSeparator + "unittest" + kSeparator + "files";
+	std::replace( str.begin(), str.end(), '/', '\\'); 
 #endif
+	str += kSeparator;
+	str += "unittest";
+	str += kSeparator;
+	str += "files";
+    return str;
 }
 
 bool UnitTestUtil::GetFolderAppDataLocal(std::string& outPath)
