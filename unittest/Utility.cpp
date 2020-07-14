@@ -29,7 +29,10 @@ std::string UnitTestUtil::GetTestResourceFolder()
 #ifdef _WINDOWS
 	std::replace( str.begin(), str.end(), '/', '\\'); 
 #endif
-	str + kSeparator + "unittest" + kSeparator + "files";
+	str += kSeparator;
+	str += "unittest";
+	str += kSeparator;
+	str += "files";
     return str;
 }
 
