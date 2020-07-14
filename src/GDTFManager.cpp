@@ -3079,7 +3079,16 @@ size_t GdtfDmxMode::GetFootPrintForBreak(size_t breakId)
 		}
 	}
 
-	return addresses.size();
+	DMXAddress max = 0, min = 512;
+	for (DMXAddress adr : addresses)
+	{
+		if(adr > max) max = adr;
+		if(adr < min) min = adr;
+	}
+
+	DMXAddress footprint = max - min + 1;
+
+	return footprint;
 }
 void GdtfDmxMode::GetAddressesFromChannel(TDMXAddressArray& addresses, GdtfDmxChannel* channel, DMXAddress offset) const
 {
