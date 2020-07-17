@@ -8,17 +8,18 @@ The GDTF file format is standartisied in [DIN SPEC 15800](https://www.beuth.de/d
 
 ## Current project status
 
-The libary
+The libary currently supports all GDTF 1.1 features and supports OSX, Windows, Linus and iOS.
 
 ## Building
 
 Use CMake to build the project. Building should be as easy as:
 
 ```` bash
-cmake CMakeLists.txt
+mkdir build
+cd build
+cmake ..
 make
 ````
-For more information look into [BUILDING.md](BUILDING.md).
 
 ### Repository structure
 
