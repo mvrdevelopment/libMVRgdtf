@@ -151,10 +151,26 @@ endif(${UNITTEST})
 #################################################
 
 
+set(LIB_OUTPUT_NAME "MvrGdtf")
+set_target_properties(MvrGdtf PROPERTIES OUTPUT_NAME ${LIB_OUTPUT_NAME})
+
 # Include mini-zip
-if(not $ENV{INCLUDE_MINI_ZIP})
+if($ENV{DO_NOT_INCLUDE_MINI_ZIP})
+    message("MINIZIP is not part of the symbols")
     target_compile_definitions(MvrGdtf PUBLIC DONT_INCLUDE_MINI_ZIP)
-endif(not $ENV{INCLUDE_MINI_ZIP})
+
+    get_target_property(OUTPUT_NAME_OLD MvrGdtf OUTPUT_NAME)
+    set(OUTPUT_NAME_OLD "${OUTPUT_NAME_OLD}_NO_MZ")
+
+    set_target_properties(MvrGdtf PROPERTIES OUTPUT_NAME ${OUTPUT_NAME_OLD})
+endif($ENV{DO_NOT_INCLUDE_MINI_ZIP})
+
+#Append Runtime
+if (WIN32)
+    get_target_property(OUTPUT_NAME_OLD MvrGdtf OUTPUT_NAME)
+    set(OUTPUT_NAME_OLD "${OUTPUT_NAME_OLD}_${WIN_RUNTIME_LIB}")
+    set_target_properties(MvrGdtf PROPERTIES OUTPUT_NAME ${OUTPUT_NAME_OLD})
+endif(WIN32)
 
 
 # Additional options
