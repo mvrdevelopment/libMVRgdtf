@@ -128,6 +128,8 @@ elseif(UNIX)
     else()
         set(PREPROCESSORS ${PREPROCESSORS} PUBLIC GS_LIN)
         set(PREPROCESSORS ${PREPROCESSORS} PUBLIC _LINUX)
+        
+        set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
         set(EXTRA_LIBS ${EXTRA_LIBS} uuid)
         #add_compile_definitions(GS_LIN)        
