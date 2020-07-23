@@ -60,7 +60,7 @@ execute_process(COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/scripts/build
 # setup the platform macros
 if (WIN32)
     set(XERCES_INCLUDE ${PROJECT_SOURCE_DIR}/shared/xerces/build/libs/include)
-    set(XERCES_LIB ${PROJECT_SOURCE_DIR}/libs/lib/xerces-c_3.lib)
+    set(XERCES_LIB ${PROJECT_SOURCE_DIR}/libs/xerces-c_3.lib)
 else()
     set(XERCES_INCLUDE ${PROJECT_SOURCE_DIR}/shared/include)
     set(XERCES_LIB ${PROJECT_SOURCE_DIR}/libs/libxerces-c.a)
@@ -116,6 +116,10 @@ if (WIN32)
     
     set(EXTRA_LIBS ${EXTRA_LIBS} rpcrt4)
     set(EXTRA_LIBS ${EXTRA_LIBS} shlwapi)
+
+    set_target_properties( MvrGdtf PROPERTIES RUNTIME_OUTPUT_DIRECTORY    ${PROJECT_SOURCE_DIR}/libs/ )
+    set_target_properties( MvrGdtf PROPERTIES LIBRARY_OUTPUT_DIRECTORY   ${PROJECT_SOURCE_DIR}/libs/ )
+    set_target_properties( MvrGdtf PROPERTIES ARCHIVE_OUTPUT_DIRECTORY  ${PROJECT_SOURCE_DIR}/libs/ )
 elseif(UNIX)
     if (APPLE)
         set(PREPROCESSORS ${PREPROCESSORS} PUBLIC GS_MAC)
