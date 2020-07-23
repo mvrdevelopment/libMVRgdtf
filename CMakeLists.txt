@@ -82,11 +82,11 @@ set(SRC_TESTDIR ${PROJECT_SOURCE_DIR}/unittest)
 
 
 #################################################
-# Add libVectorworksMvrGdtf lib
+# Add libMvrGdtf lib
 file(GLOB_RECURSE libSourceFiles ${SRCDIR}/*.cpp)
-add_library(VectorworksMvrGdtf STATIC ${libSourceFiles})
+add_library(MvrGdtf STATIC ${libSourceFiles})
 
-target_link_libraries(VectorworksMvrGdtf ${XERCES_LIB})
+target_link_libraries(MvrGdtf ${XERCES_LIB})
 #################################################
 
 
@@ -98,7 +98,7 @@ file(GLOB_RECURSE unitTestSourceFiles ${SRC_TESTDIR}/*.cpp)
 add_executable(MvrGdtfUnitTest  ${unitTestSourceFiles})
 
 add_definitions(-DGITPATH="${PROJECT_SOURCE_DIR}")
-target_link_libraries(MvrGdtfUnitTest VectorworksMvrGdtf)
+target_link_libraries(MvrGdtfUnitTest MvrGdtf)
     
 endif (UNITTEST)
 #################################################
@@ -111,7 +111,7 @@ if (WIN32)
     set(PREPROCESSORS ${PREPROCESSORS} PUBLIC GS_WIN)
     set(PREPROCESSORS ${PREPROCESSORS} PUBLIC _WINDOWS)
     set(PREPROCESSORS ${PREPROCESSORS} PUBLIC EXPORT_STATIC)
-    set(PREPROCESSORS ${PREPROCESSORS} PUBLIC LIBVECTORWORKSMVRGDTF_EXPORTS)
+    set(PREPROCESSORS ${PREPROCESSORS} PUBLIC LIBMvrGdtf_EXPORTS)
     
     
     set(EXTRA_LIBS ${EXTRA_LIBS} rpcrt4)
@@ -141,8 +141,8 @@ endif(WIN32)
 #################################################
 # Add the preprocessors
 # Link extra libs
-target_compile_definitions(VectorworksMvrGdtf ${PREPROCESSORS})
-target_link_libraries(VectorworksMvrGdtf ${EXTRA_LIBS})
+target_compile_definitions(MvrGdtf ${PREPROCESSORS})
+target_link_libraries(MvrGdtf ${EXTRA_LIBS})
 
 if(${UNITTEST})
 target_compile_definitions(MvrGdtfUnitTest ${PREPROCESSORS})
@@ -153,7 +153,7 @@ endif(${UNITTEST})
 
 # Include mini-zip
 if(not $ENV{INCLUDE_MINI_ZIP})
-    target_compile_definitions(VectorworksMvrGdtf PUBLIC DONT_INCLUDE_MINI_ZIP)
+    target_compile_definitions(MvrGdtf PUBLIC DONT_INCLUDE_MINI_ZIP)
 endif(not $ENV{INCLUDE_MINI_ZIP})
 
 
