@@ -170,7 +170,7 @@ endif($ENV{DO_NOT_INCLUDE_MINI_ZIP})
 #Append Runtime
 if (WIN32)
     get_target_property(OUTPUT_NAME_OLD MvrGdtf OUTPUT_NAME)
-    set(OUTPUT_NAME_OLD "${OUTPUT_NAME_OLD}_${WIN_RUNTIME_LIB}")
+    set(OUTPUT_NAME_OLD "${OUTPUT_NAME_OLD}${WIN_RUNTIME_LIB}")
     set_target_properties(MvrGdtf PROPERTIES OUTPUT_NAME ${OUTPUT_NAME_OLD})
 endif(WIN32)
 
