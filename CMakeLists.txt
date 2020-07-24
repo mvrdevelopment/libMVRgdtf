@@ -5,6 +5,7 @@ cmake_minimum_required(VERSION 3.9.4)
 set(UNITTEST FALSE CACHE STRING "If enabled the tests wont be build!")
 set(WIN_RUNTIME_LIB "-MD" CACHE STRING "Set '-MD' or '-MT' for windows build")
 
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 set(PYTHON_ARGS "TETSASDLKAJSDLKAJSDLKJASDLKJASDLKJASD")
 #################################################
@@ -132,8 +133,6 @@ elseif(UNIX)
     else()
         set(PREPROCESSORS ${PREPROCESSORS} PUBLIC GS_LIN)
         set(PREPROCESSORS ${PREPROCESSORS} PUBLIC _LINUX)
-        
-        set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
         set(EXTRA_LIBS ${EXTRA_LIBS} uuid)
         #add_compile_definitions(GS_LIN)        
