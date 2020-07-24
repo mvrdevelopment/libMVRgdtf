@@ -2,7 +2,7 @@ SET(CMAKE_POLICY_DEFAULT_CMP0074 NEW)
 cmake_minimum_required(VERSION 3.9.4)
 
 # pre setup for some vars
-set(UNITTEST TRUE CACHE STRING "If enabled the tests wont be build!")
+set(UNITTEST FALSE CACHE STRING "If enabled the tests wont be build!")
 set(WIN_RUNTIME_LIB "-MD" CACHE STRING "Set '-MD' or '-MT' for windows build")
 
 
