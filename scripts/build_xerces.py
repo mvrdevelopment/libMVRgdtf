@@ -17,7 +17,7 @@ XERCES_DIR_PATH = "shared/xerces-c-" + XERCES_VERSION
 
 pathToLibFile = "libs/libxerces-c.a"
 if sys.platform == "win32":
-    pathToLibFile = "libs/lib/xerces-c_3.lib"
+    pathToLibFile = "libs/xerces-c_3.lib"
 
 # check for other system lib file (.lib [for windows])
 if not os.path.isfile(pathToLibFile):
@@ -43,7 +43,7 @@ if not os.path.isfile(pathToLibFile):
         os.system("cmake "+ extraCmakeOptions +" ..")
         os.system("cmake --build . --config Release --target install")
 
-        shutil.copytree("libs", "../../../libs")
+        shutil.copytree("libs/lib", "../../../libs")
     #we need some more cases for linux and should check all configure-options
     if sys.platform == "darwin" or sys.platform.startswith("linux"):
         os.system("make")

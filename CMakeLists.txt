@@ -2,9 +2,10 @@ SET(CMAKE_POLICY_DEFAULT_CMP0074 NEW)
 cmake_minimum_required(VERSION 3.9.4)
 
 # pre setup for some vars
-set(UNITTEST TRUE CACHE STRING "If enabled the tests wont be build!")
+set(UNITTEST FALSE CACHE STRING "If enabled the tests wont be build!")
 set(WIN_RUNTIME_LIB "-MD" CACHE STRING "Set '-MD' or '-MT' for windows build")
 
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 set(PYTHON_ARGS "TETSASDLKAJSDLKAJSDLKJASDLKJASDLKJASD")
 #################################################
@@ -49,10 +50,13 @@ if(WIN32)
 endif(WIN32)
 
 find_package(PythonInterp REQUIRED)
+
+message("Start building Xerces")
 # run python script for extracting and generating xerces
 execute_process(COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/scripts/build_xerces.py ${PYTHON_ARGS}
                 WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
                 RESULT_VARIABLE PY_OUTPUT)
+message("End building Xerces")
 
 #################################################
 
@@ -60,7 +64,7 @@ execute_process(COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/scripts/build
 # setup the platform macros
 if (WIN32)
     set(XERCES_INCLUDE ${PROJECT_SOURCE_DIR}/shared/xerces/build/libs/include)
-    set(XERCES_LIB ${PROJECT_SOURCE_DIR}/libs/lib/xerces-c_3.lib)
+    set(XERCES_LIB ${PROJECT_SOURCE_DIR}/libs/xerces-c_3.lib)
 else()
     set(XERCES_INCLUDE ${PROJECT_SOURCE_DIR}/shared/include)
     set(XERCES_LIB ${PROJECT_SOURCE_DIR}/libs/libxerces-c.a)
@@ -82,11 +86,11 @@ set(SRC_TESTDIR ${PROJECT_SOURCE_DIR}/unittest)
 
 
 #################################################
-# Add libVectorworksMvrGdtf lib
+# Add libMvrGdtf lib
 file(GLOB_RECURSE libSourceFiles ${SRCDIR}/*.cpp)
-add_library(VectorworksMvrGdtf STATIC ${libSourceFiles})
+add_library(MvrGdtf STATIC ${libSourceFiles})
 
-target_link_libraries(VectorworksMvrGdtf ${XERCES_LIB})
+target_link_libraries(MvrGdtf ${XERCES_LIB})
 #################################################
 
 
@@ -98,7 +102,7 @@ file(GLOB_RECURSE unitTestSourceFiles ${SRC_TESTDIR}/*.cpp)
 add_executable(MvrGdtfUnitTest  ${unitTestSourceFiles})
 
 add_definitions(-DGITPATH="${PROJECT_SOURCE_DIR}")
-target_link_libraries(MvrGdtfUnitTest VectorworksMvrGdtf)
+target_link_libraries(MvrGdtfUnitTest MvrGdtf)
     
 endif (UNITTEST)
 #################################################
@@ -111,11 +115,15 @@ if (WIN32)
     set(PREPROCESSORS ${PREPROCESSORS} PUBLIC GS_WIN)
     set(PREPROCESSORS ${PREPROCESSORS} PUBLIC _WINDOWS)
     set(PREPROCESSORS ${PREPROCESSORS} PUBLIC EXPORT_STATIC)
-    set(PREPROCESSORS ${PREPROCESSORS} PUBLIC LIBVECTORWORKSMVRGDTF_EXPORTS)
+    set(PREPROCESSORS ${PREPROCESSORS} PUBLIC LIBMvrGdtf_EXPORTS)
     
     
     set(EXTRA_LIBS ${EXTRA_LIBS} rpcrt4)
     set(EXTRA_LIBS ${EXTRA_LIBS} shlwapi)
+
+    set_target_properties( MvrGdtf PROPERTIES RUNTIME_OUTPUT_DIRECTORY    ${PROJECT_SOURCE_DIR}/libs/ )
+    set_target_properties( MvrGdtf PROPERTIES LIBRARY_OUTPUT_DIRECTORY   ${PROJECT_SOURCE_DIR}/libs/ )
+    set_target_properties( MvrGdtf PROPERTIES ARCHIVE_OUTPUT_DIRECTORY  ${PROJECT_SOURCE_DIR}/libs/ )
 elseif(UNIX)
     if (APPLE)
         set(PREPROCESSORS ${PREPROCESSORS} PUBLIC GS_MAC)
@@ -141,8 +149,8 @@ endif(WIN32)
 #################################################
 # Add the preprocessors
 # Link extra libs
-target_compile_definitions(VectorworksMvrGdtf ${PREPROCESSORS})
-target_link_libraries(VectorworksMvrGdtf ${EXTRA_LIBS})
+target_compile_definitions(MvrGdtf ${PREPROCESSORS})
+target_link_libraries(MvrGdtf ${EXTRA_LIBS})
 
 if(${UNITTEST})
 target_compile_definitions(MvrGdtfUnitTest ${PREPROCESSORS})
@@ -151,10 +159,26 @@ endif(${UNITTEST})
 #################################################
 
 
+set(LIB_OUTPUT_NAME "MvrGdtf")
+set_target_properties(MvrGdtf PROPERTIES OUTPUT_NAME ${LIB_OUTPUT_NAME})
+
 # Include mini-zip
-if(not $ENV{INCLUDE_MINI_ZIP})
-    target_compile_definitions(VectorworksMvrGdtf PUBLIC DONT_INCLUDE_MINI_ZIP)
-endif(not $ENV{INCLUDE_MINI_ZIP})
+if($ENV{DO_NOT_INCLUDE_MINI_ZIP})
+    message("MINIZIP is not part of the symbols")
+    target_compile_definitions(MvrGdtf PUBLIC DONT_INCLUDE_MINI_ZIP)
+
+    get_target_property(OUTPUT_NAME_OLD MvrGdtf OUTPUT_NAME)
+    set(OUTPUT_NAME_OLD "${OUTPUT_NAME_OLD}_NO_MZ")
+
+    set_target_properties(MvrGdtf PROPERTIES OUTPUT_NAME ${OUTPUT_NAME_OLD})
+endif($ENV{DO_NOT_INCLUDE_MINI_ZIP})
+
+#Append Runtime
+if (WIN32)
+    get_target_property(OUTPUT_NAME_OLD MvrGdtf OUTPUT_NAME)
+    set(OUTPUT_NAME_OLD "${OUTPUT_NAME_OLD}${WIN_RUNTIME_LIB}")
+    set_target_properties(MvrGdtf PROPERTIES OUTPUT_NAME ${OUTPUT_NAME_OLD})
+endif(WIN32)
 
 
 # Additional options
