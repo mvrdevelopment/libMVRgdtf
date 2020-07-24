@@ -5979,60 +5979,63 @@ void GdtfFixture::CheckForMissingModeMasters()
 			{
 				TGdtfDmxChannelFuntionArray channelFunctions = logicalChannel->GetDmxChannelFunctions();
 
-				for(size_t i = 0; i < channelFunctions.size() - 1; i++)
-				{
-					GdtfDmxChannelFunctionPtr function = channelFunctions[i];
-					// ----------------------------------------------------------------------------------------
-					DmxValue functionStart 	= function->GetStartAdress();
-					DmxValue functionEnd	= function->GetEndAdress();
+                if(channelFunctions.size() > 0)
+                {
+                    for(size_t i = 0; i < channelFunctions.size() - 1; i++)
+                    {
+                        GdtfDmxChannelFunctionPtr function = channelFunctions[i];
+                        // ----------------------------------------------------------------------------------------
+                        DmxValue functionStart 	= function->GetStartAdress();
+                        DmxValue functionEnd	= function->GetEndAdress();
 
-					for(size_t j = i+1; j < channelFunctions.size(); j++)
-					{
-						GdtfDmxChannelFunctionPtr currentFunction = channelFunctions[j];
+                        for(size_t j = i+1; j < channelFunctions.size(); j++)
+                        {
+                            GdtfDmxChannelFunctionPtr currentFunction = channelFunctions[j];
 
-						DmxValue currentFunctionStart	= currentFunction->GetStartAdress();
-						DmxValue currentFunctionEnd		= currentFunction->GetEndAdress();
-						
-						if(functionStart <= currentFunctionEnd && currentFunctionStart <= functionEnd)
-						{
-							//These two functions have conflicting DMX ranges.
+                            DmxValue currentFunctionStart	= currentFunction->GetStartAdress();
+                            DmxValue currentFunctionEnd		= currentFunction->GetEndAdress();
+                            
+                            if(functionStart <= currentFunctionEnd && currentFunctionStart <= functionEnd)
+                            {
+                                //These two functions have conflicting DMX ranges.
 
-							GdtfDmxChannel* 		functionMMChannel 	= function->GetModeMaster_Channel();
-							GdtfDmxChannelFunction* functionMMFunction 	= function->GetModeMaster_Function();
+                                GdtfDmxChannel* 		functionMMChannel 	= function->GetModeMaster_Channel();
+                                GdtfDmxChannelFunction* functionMMFunction 	= function->GetModeMaster_Function();
 
-							//First we check if a mode master is defined
-							if(!functionMMChannel && !functionMMFunction)
-							{
-								//If not, we throw an error.
-								GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureChannelFunctionMissingModeMaster);
-								SceneData::GdtfFixture::AddError(error);
-							}
-							else
-							{
-								//If there is one, we have to check if they're the same.
-								GdtfDmxChannel* 		currentFunctionMMChannel 	= currentFunction->GetModeMaster_Channel();
-								GdtfDmxChannelFunction* currentFunctionMMFunction	= currentFunction->GetModeMaster_Function();
-								if(functionMMChannel == currentFunctionMMChannel || functionMMFunction == currentFunctionMMFunction)
-								{
-									//If they're the same we have to check that their ranges don't overlap.
-									DmxValue functionMMStart 		= function->GetModeMasterDmxStart();
-									DmxValue functionMMEnd			= function->GetModeMasterDmxEnd();
+                                //First we check if a mode master is defined
+                                if(!functionMMChannel && !functionMMFunction)
+                                {
+                                    //If not, we throw an error.
+                                    GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureChannelFunctionMissingModeMaster);
+                                    SceneData::GdtfFixture::AddError(error);
+                                }
+                                else
+                                {
+                                    //If there is one, we have to check if they're the same.
+                                    GdtfDmxChannel* 		currentFunctionMMChannel 	= currentFunction->GetModeMaster_Channel();
+                                    GdtfDmxChannelFunction* currentFunctionMMFunction	= currentFunction->GetModeMaster_Function();
+                                    if(functionMMChannel == currentFunctionMMChannel || functionMMFunction == currentFunctionMMFunction)
+                                    {
+                                        //If they're the same we have to check that their ranges don't overlap.
+                                        DmxValue functionMMStart 		= function->GetModeMasterDmxStart();
+                                        DmxValue functionMMEnd			= function->GetModeMasterDmxEnd();
 
-									DmxValue currentFunctionMMStart	= currentFunction->GetModeMasterDmxStart();
-									DmxValue currentFunctionMMEnd	= currentFunction->GetModeMasterDmxEnd();
-									
-									if(functionMMStart <= currentFunctionMMEnd && currentFunctionMMStart <= functionMMEnd)
-									{
-										//If they do, we throw an error.
-										GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureChannelFunctionMissingModeMaster);
-										SceneData::GdtfFixture::AddError(error);
-									}
-								}
-							}
-							break;
-						}
-					}
-				}
+                                        DmxValue currentFunctionMMStart	= currentFunction->GetModeMasterDmxStart();
+                                        DmxValue currentFunctionMMEnd	= currentFunction->GetModeMasterDmxEnd();
+                                        
+                                        if(functionMMStart <= currentFunctionMMEnd && currentFunctionMMStart <= functionMMEnd)
+                                        {
+                                            //If they do, we throw an error.
+                                            GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureChannelFunctionMissingModeMaster);
+                                            SceneData::GdtfFixture::AddError(error);
+                                        }
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
 			}
 		}
 	}	
