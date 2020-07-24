@@ -2443,7 +2443,7 @@ SceneDataFixtureObjPtr SceneDataExchange::CreateFixture(const SceneDataGUID& gui
 	SceneDataFixtureObjPtr newFixture = new SceneDataFixtureObj(guid);
 	addToContainer->AddObject(newFixture);
 	
-	
+
 	//----------------------------------------------------------------------------
 	// Set Members
 	newFixture->setName(name);
@@ -2455,6 +2455,17 @@ SceneDataFixtureObjPtr SceneDataExchange::CreateFixture(const SceneDataGUID& gui
 
 SceneDataFixtureObjPtr SceneDataExchange::ReadFixture(const SceneDataGUID& guid, const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer)
 {
+	//----------------------------------------------------------------------------
+	// Check if the uuid isn't duplicated
+	for(SceneDataFixtureObjPtr fixture : fFixtures)
+	{
+		SceneDataGUID currentGuid = fixture->getGuid();
+		if(currentGuid == guid)
+		{
+			DSTOP((kEveryone, "Some fixture UUID is duplicated"));
+		}
+	}
+
 	//----------------------------------------------------------------------------
 	// Create new object
 	SceneDataFixtureObjPtr newFixture =  new SceneDataFixtureObj(guid);
