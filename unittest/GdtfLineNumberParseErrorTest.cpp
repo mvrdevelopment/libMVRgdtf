@@ -39,7 +39,7 @@ void GdtfLineNumberParseErrorTest::ReadFile()
 
 	size_t countErrors = 0;
 	__checkVCOM(gdtfRead->GetParsingErrorCount(countErrors));
-	checkifEqual("Count Errors", countErrors, size_t(13));
+	checkifEqual("Count Errors", countErrors, size_t(16));
 
 	PrintParsingErrorList(gdtfRead);
 	resetFailedTestState();
