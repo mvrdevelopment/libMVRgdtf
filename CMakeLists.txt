@@ -50,10 +50,13 @@ if(WIN32)
 endif(WIN32)
 
 find_package(PythonInterp REQUIRED)
+
+message("Start building Xerces")
 # run python script for extracting and generating xerces
 execute_process(COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/scripts/build_xerces.py ${PYTHON_ARGS}
                 WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
                 RESULT_VARIABLE PY_OUTPUT)
+message("End building Xerces")
 
 #################################################
 
