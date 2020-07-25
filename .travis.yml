@@ -36,10 +36,12 @@ matrix:
       os: windows
       script:
         - CMD //C runMSBuild_lib.bat "Release"
+        - CMD //C runMSUnitTest.bat
     - env: CXX_FLAG="-MT"
       os: windows
       script:
         - CMD //C runMSBuild_lib.bat "Release"
+        - CMD //C runMSUnitTest.bat
 
 install:
 - mkdir build
