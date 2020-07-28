@@ -105,5 +105,8 @@ namespace VectorworksMVR
 
 		virtual VCOMError VCOM_CALLTYPE		GetSceneObjectCount(size_t& countObjects );
 
+		// Check for duplicated uuids
+		virtual VCOMError VCOM_CALLTYPE		GetDuplicatedUuids(bool& outDuplicated);
+
 	};
 }

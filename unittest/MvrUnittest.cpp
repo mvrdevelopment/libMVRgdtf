@@ -638,6 +638,10 @@ void MvrUnittest::ReadFile()
 				if (i==0 && j==3)
 				{
 					checkifEqual("Fixture4 name ", 		sceneObj->GetName(), 	 "My Fixture4 Name");
+
+					bool duplicatedUuids = false;
+					__checkVCOM(mvrRead->GetDuplicatedUuids(duplicatedUuids));
+					checkifEqual("Duplicated Uuids", duplicatedUuids, true);
 				}
 				
 				// ------------------------------------------------------------------------------

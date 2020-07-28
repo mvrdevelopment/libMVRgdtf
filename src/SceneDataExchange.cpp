@@ -2125,6 +2125,8 @@ SceneDataExchange::SceneDataExchange()
 	// check if this was good
 	fWorkingFolder->ExistsOnDisk(exists);
 	ASSERTN(kEveryone, exists = true);
+
+	fDuplicatedUuids = false;
 }
 
 SceneDataExchange::~SceneDataExchange()
@@ -2151,6 +2153,9 @@ void SceneDataExchange::InitializeForImport()
 	//------------------------------------------------
 	// Start Undo System
 	fUndoStarted = true;
+
+	//Reset the flag (back to false)
+	fDuplicatedUuids = false;
 }
 
 SceneDataProviderObjArray& SceneDataExchange::GetProviderObjects()
@@ -3238,6 +3243,7 @@ void SceneDataExchange::ProcessGroup(const IXMLFileNodePtr& node, SceneDataGroup
 							SceneDataGUID currentGuid = sceneObject->getGuid();
 							if(currentGuid == guid)
 							{
+								fDuplicatedUuids = true;
 								DSTOP((kEveryone, "Some scene object's UUID is duplicated"));
 							}
 						}
@@ -3289,4 +3295,9 @@ bool SceneDataExchange::GetAttachedFileCountAt(size_t at, IFileIdentifierPtr& ou
 	if(retVal)	{ outFile = fFilesInZip.at(at); }
 
     return retVal;
+}
+
+bool SceneDataExchange::GetDuplicatedUuids() const
+{
+	return fDuplicatedUuids;
 }
