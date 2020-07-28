@@ -2456,17 +2456,6 @@ SceneDataFixtureObjPtr SceneDataExchange::CreateFixture(const SceneDataGUID& gui
 SceneDataFixtureObjPtr SceneDataExchange::ReadFixture(const SceneDataGUID& guid, const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer)
 {
 	//----------------------------------------------------------------------------
-	// Check if the uuid isn't duplicated
-	for(SceneDataFixtureObjPtr fixture : fFixtures)
-	{
-		SceneDataGUID currentGuid = fixture->getGuid();
-		if(currentGuid == guid)
-		{
-			DSTOP((kEveryone, "Some fixture UUID is duplicated"));
-		}
-	}
-
-	//----------------------------------------------------------------------------
 	// Create new object
 	SceneDataFixtureObjPtr newFixture =  new SceneDataFixtureObj(guid);
 	addToContainer->AddObject(newFixture);
@@ -3237,10 +3226,24 @@ void SceneDataExchange::ProcessGroup(const IXMLFileNodePtr& node, SceneDataGroup
 					else if	( nodeName == XML_Val_VideoScreenObjectNodeName)	{ obj = ReadVideoScreen(	SceneDataGUID(groupUuid),objNode, addToContainer); }
 					else if ( nodeName == XML_Val_GroupNodeName)				{ ProcessGroup(objNode, addToContainer, true); }
 					
-					
+
 					// ---------------------------------------------------------------------------
 					// Add the object to list if it is a scene object
-					if (obj) { fSceneObjects.push_back(obj); }
+					if(obj)
+					{
+						// Check if the uuid isn't duplicated
+						SceneDataGUID guid = SceneDataGUID(groupUuid);
+						for(SceneDataObjWithMatrixPtr sceneObject : fSceneObjects)
+						{
+							SceneDataGUID currentGuid = sceneObject->getGuid();
+							if(currentGuid == guid)
+							{
+								DSTOP((kEveryone, "Some scene object's UUID is duplicated"));
+							}
+						}
+
+						fSceneObjects.push_back(obj);
+					}
 				}
 				
 				
