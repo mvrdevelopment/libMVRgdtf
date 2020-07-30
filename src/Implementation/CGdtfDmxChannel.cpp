@@ -77,16 +77,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::GetUber(Sint32& u
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::GetDefaultValue(DmxValue &defaultValue)
-{
-	// Check Pointer
-	if ( ! fChannel) { return kVCOMError_NotInitialized; }
-	
-    defaultValue = fChannel->GetDefaultValue();
-    
-    return kVCOMError_NoError;
-}
-
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::GetHighlight(DmxValue &highlight)
 {
 	// Check Pointer
@@ -208,16 +198,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::SetUber(Sint32 ub
 	if ( ! fChannel) { return kVCOMError_NotInitialized; }
 	
 	fChannel->SetDmxUber(uber);
-	
-	return kVCOMError_NoError;
-}
-
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::SetDefaultValue(DmxValue defaultValue)
-{
-	// Check Pointer
-	if ( ! fChannel) { return kVCOMError_NotInitialized; }
-	
-	fChannel->SetDefaultValue(defaultValue);
 	
 	return kVCOMError_NoError;
 }

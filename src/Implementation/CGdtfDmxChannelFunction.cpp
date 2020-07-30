@@ -722,3 +722,23 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetRealAc
     fFunction->SetRealAcceleration(value);
     return kVCOMError_NoError;
 }
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetDefaultValue(DmxValue &defaultValue)
+{
+	// Check Pointer
+	if ( ! fFunction) { return kVCOMError_NotInitialized; }
+	
+    defaultValue = fFunction->GetDefaultValue();
+    
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetDefaultValue(DmxValue defaultValue)
+{
+	// Check Pointer
+	if ( ! fFunction) { return kVCOMError_NotInitialized; }
+	
+	fFunction->SetDefaultValue(defaultValue);
+	
+	return kVCOMError_NoError;
+}

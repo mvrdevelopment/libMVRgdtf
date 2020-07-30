@@ -21,7 +21,6 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetFine(Sint32& fine);
         virtual VCOMError VCOM_CALLTYPE     GetUltra(Sint32& ultra);
 		virtual VCOMError VCOM_CALLTYPE	    GetUber(Sint32& uber);        
-        virtual VCOMError VCOM_CALLTYPE     GetDefaultValue(DmxValue& defaultValue);
         virtual VCOMError VCOM_CALLTYPE     GetHighlight(DmxValue& highlight);
 		virtual VCOMError VCOM_CALLTYPE     HasHighlight(bool& highlight);
 		virtual VCOMError VCOM_CALLTYPE     GetGeometry(VectorworksMVR::IGdtfGeometry **geo);
@@ -32,7 +31,6 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE     SetFine(Sint32 fine);
 		virtual VCOMError VCOM_CALLTYPE     SetUltra(Sint32 ultra);
 		virtual VCOMError VCOM_CALLTYPE     SetUber(Sint32 uber);		
-		virtual VCOMError VCOM_CALLTYPE     SetDefaultValue(DmxValue defaultValue);
 		virtual VCOMError VCOM_CALLTYPE     SetHighlight(DmxValue highlight);
 		virtual VCOMError VCOM_CALLTYPE     SetGeometry(IGdtfGeometry* model);
 		

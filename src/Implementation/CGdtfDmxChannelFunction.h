@@ -57,6 +57,9 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetRealAcceleration(double& value);
 		virtual VCOMError VCOM_CALLTYPE     SetRealAcceleration(double value);
 
+        virtual VCOMError VCOM_CALLTYPE     GetDefaultValue(DmxValue& defaultValue);
+        virtual VCOMError VCOM_CALLTYPE     SetDefaultValue(DmxValue defaultValue);
+
 	private:
         SceneData::GdtfDmxChannelFunction* fFunction;
         
