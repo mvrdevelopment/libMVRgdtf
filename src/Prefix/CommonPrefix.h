@@ -389,6 +389,7 @@ const Sint32 kMVR_MinorVersion = 4;
 
 #define XML_GDTF_DMXChannelHighlight			"Highlight"
 #define XML_GDTF_DMXChannelGeometry				"Geometry"
+#define XML_GDTF_DMXChannelInitialFunction  	"InitialFunction"
 
 #define XML_GDTF_DMXFChannel_NONEVALUE			    "None"
 #define XML_GDTF_DMXChannelDMXBreak_OverwriteValue	"Overwrite"

@@ -33,13 +33,13 @@ bool ChannelFunctionStartTest::ExecuteTest()
     {
         IGdtfXmlParsingErrorPtr error;
 		__checkVCOM(gdtfFile->GetParsingErrorAt(0, & error));
-        ReadError(error, 887,172,GdtfDefines::EGdtfParsingError::eChannelFunctionNotStartingWithZero);
+        ReadError(error, 887, 172, GdtfDefines::EGdtfParsingError::eChannelFunctionNotStartingWithZero);
 
 		__checkVCOM(gdtfFile->GetParsingErrorAt(1, & error));
-        ReadError(error, 1037,75,GdtfDefines::EGdtfParsingError::eValueError_DmxValueHasWrongValue);
+        ReadError(error, 1037, 75, GdtfDefines::EGdtfParsingError::eValueError_DmxValueHasWrongValue);
 
 		__checkVCOM(gdtfFile->GetParsingErrorAt(2, & error));
-        ReadError(error, 1663,172,GdtfDefines::EGdtfParsingError::eChannelFunctionNotStartingWithZero);
+        ReadError(error, 1663, 172, GdtfDefines::EGdtfParsingError::eChannelFunctionNotStartingWithZero);
 
 
     }

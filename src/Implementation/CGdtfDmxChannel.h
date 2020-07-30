@@ -40,7 +40,10 @@ namespace VectorworksMVR
 		
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr);
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject();
-		
+
+        // GDTF 1.1
+		virtual VCOMError VCOM_CALLTYPE     GetInitialFunction(IGdtfDmxChannelFunction** function);
+		virtual VCOMError VCOM_CALLTYPE     SetInitialFunction(IGdtfDmxChannelFunction* function);
         
     private:
         SceneData::GdtfDmxChannel* fChannel;

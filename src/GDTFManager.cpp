@@ -2867,7 +2867,6 @@ TGdtfDmxChannelArray GdtfDmxMode::GetChannelsForGeometry(GdtfGeometryPtr geometr
 	return array;
 }
 
-
 const TXString& GdtfDmxMode::GetUnresolvedGeomRef()
 {
 	return fUnresolvedGeomRef;
@@ -3116,7 +3115,9 @@ GdtfDmxChannel::GdtfDmxChannel(GdtfDmxMode* parent)
 	fUltra					= 0;
 	fUber					= 0;
 	fHeighlight				= 0;	fHeighlightNone = true;
+	fDefaultValue_old		= 0;
 	fGeomRef				= nullptr;
+	fInitialFunction		= nullptr;
 
 	ASSERTN(kEveryone, parent != nullptr);
 	fParent = parent;
@@ -3191,7 +3192,8 @@ void GdtfDmxChannel::OnPrintToFile(IXMLFileNodePtr pNode)
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelDMXBreak,			GdtfConverter::ConvertDmxBreak(fDmxBreak));
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelOffset,				GdtfConverter::ConvertDmxOffset(fCoarse, fFine, fUltra, fUber));
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelHighlight,			GdtfConverter::ConvertDMXValue(fHeighlight,	chanelReso, fHeighlightNone));
-	if (fGeomRef) { pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelGeometry,			fGeomRef->GetNodeReference()); }
+	if (fGeomRef) 			{ pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelGeometry,			fGeomRef->GetNodeReference()); }
+	if (fInitialFunction) 	{ pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelInitialFunction,	fInitialFunction->GetNodeReference()); }
 	
 	// ------------------------------------------------------------------------------------
 	// LogicalChannels
@@ -3217,14 +3219,13 @@ void GdtfDmxChannel::OnReadFromNode(const IXMLFileNodePtr& pNode)
 		GdtfConverter::ConvertDmxOffset(offset, pNode, fCoarse, fFine, fUltra, fUber);
 	}	
 
-	// ++++++++++++++++++++++++++++++++++++++++++
 	// In GDTF 1.0, default value was in the DMX channel, this is for old files :
-	// TXString defVal;	
-	// if (pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelDefault, defVal) == kVCOMError_NoError)
-	// {
-	// 	GdtfConverter::ConvertDMXValue(defVal, pNode, this->GetChannelBitResolution(), fDefaultValue);
-	// }
-	// ++++++++++++++++++++++++++++++++++++++++++
+	TXString defVal;	
+	if (pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionDefault, defVal) == kVCOMError_NoError)
+	{
+		GdtfConverter::ConvertDMXValue(defVal, pNode, this->GetChannelBitResolution(), fDefaultValue_old);
+	}
+	// ------------------------------------------------------------------------------------
 
 	//
 	TXString highlight;	
@@ -3233,7 +3234,8 @@ void GdtfDmxChannel::OnReadFromNode(const IXMLFileNodePtr& pNode)
 		GdtfConverter::ConvertDMXValue(highlight, pNode, this->GetChannelBitResolution(), fHeighlight, fHeighlightNone);
 	}	
 	
-	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelGeometry, fUnresolvedGeomRef);	
+	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelGeometry, 			fUnresolvedGeomRef);
+	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelInitialFunction, 	fUnresolvedInitialFunction);	
 	
 	// ------------------------------------------------------------------------------------
 	// LogicalChannels	
@@ -3275,9 +3277,12 @@ void GdtfDmxChannel::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	TXStringArray needed;
 	TXStringArray optional;
 	needed.push_back(XML_GDTF_DMXChannelGeometry);
+	optional.push_back(XML_GDTF_DMXChannelInitialFunction);
 	optional.push_back(XML_GDTF_DMXChannelDMXBreak);
 	optional.push_back(XML_GDTF_DMXChannelOffset);
 	optional.push_back(XML_GDTF_DMXChannelHighlight);
+	//Default for GDTF 1.0 files
+	optional.push_back(XML_GDTF_DMXChannelFuntionDefault);
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
 	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
@@ -3356,6 +3361,11 @@ bool GdtfDmxChannel::HasHighlight() const
 	return !fHeighlightNone;
 }
 
+DmxValue GdtfDmxChannel::GetOldDefaultValue() const
+{
+	return fDefaultValue_old;
+}
+
 void GdtfDmxChannel::SetGeomRef(GdtfGeometryPtr newGeom)
 {
 	fGeomRef = newGeom;
@@ -3366,14 +3376,29 @@ GdtfGeometryPtr GdtfDmxChannel::GetGeomRef()
 	return fGeomRef;
 }
 
-const TGdtfDmxLogicalChannelArray GdtfDmxChannel::GetLogicalChannelArray()
-{
-	return fLogicalChannels;
-}
-
 TXString GdtfDmxChannel::GetUnresolvedGeomRef() const
 {
 	return fUnresolvedGeomRef;
+}
+
+void GdtfDmxChannel::SetInitialFunction(GdtfDmxChannelFunctionPtr initialFunction)
+{
+	fInitialFunction = initialFunction;
+}
+
+GdtfDmxChannelFunctionPtr GdtfDmxChannel::GetInitialFunction()
+{
+	return fInitialFunction;
+}
+
+TXString GdtfDmxChannel::GetUnresolvedInitialFunction() const
+{
+	return fUnresolvedInitialFunction;
+}
+
+const TGdtfDmxLogicalChannelArray GdtfDmxChannel::GetLogicalChannelArray()
+{
+	return fLogicalChannels;
 }
 
 EGdtfChannelBitResolution SceneData::GdtfDmxChannel::GetChannelBitResolution()
@@ -5885,6 +5910,49 @@ void GdtfFixture::ResolveDmxChannelRefs(GdtfDmxModePtr dmxMode)
 		// ----------------------------------------------------------------------------------------
 		// DmxChannel.LogicalChannelArray
 		ResolveDmxLogicalChanRefs(chnl);
+
+		// ----------------------------------------------------------------------------------------
+		// DmxChannel.InitialFunction
+		GdtfDmxChannelFunctionPtr initialFunctionPtr = nullptr;
+		TXString unresolvedInitialFunction = chnl->GetUnresolvedInitialFunction();
+		if (!unresolvedInitialFunction.IsEmpty())
+		{
+			for (GdtfDmxLogicalChannelPtr logicalChannel : chnl->GetLogicalChannelArray())
+			{
+				for (GdtfDmxChannelFunctionPtr channelFunction : logicalChannel->GetDmxChannelFunctions())
+				{
+					if (channelFunction->GetNodeReference() == unresolvedInitialFunction) { initialFunctionPtr = channelFunction; break;}
+				}
+				
+				if (initialFunctionPtr != nullptr) { break; }
+			}
+			
+			ASSERTN(kEveryone, initialFunctionPtr != nullptr);
+			if (initialFunctionPtr) { chnl->SetInitialFunction(initialFunctionPtr); }
+			else
+			{
+				IXMLFileNodePtr node;
+				chnl->GetNode(node);
+				GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureDMXChannelUnresolvedChannelFunction, node);
+				SceneData::GdtfFixture::AddError(error);
+			}
+		}
+		else
+		{
+			//If there is no initialfunction defined, we set the first one by default
+			if(chnl->GetLogicalChannelArray().size() > 0 && chnl->GetLogicalChannelArray()[0]->GetDmxChannelFunctions().size() > 0)
+			{
+				chnl->SetInitialFunction(chnl->GetLogicalChannelArray()[0]->GetDmxChannelFunctions()[0]);
+			}
+			else
+			{
+				IXMLFileNodePtr node;
+				chnl->GetNode(node);
+				GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureDMXChannelMissingChannelFunction, node);
+				SceneData::GdtfFixture::AddError(error);
+			}
+			
+		}
 	} 	
 }
 
@@ -5969,7 +6037,18 @@ void GdtfFixture::ResolveDmxChanelFunctionRefs(GdtfDmxLogicalChannelPtr dmxLogCh
             GdtfFilter* filter = getFilterByRef(unresolvedFilterRef);
             chnlFunc->SetFilter(filter);
         }
-        // ----------------------------------------------------------------------------------------		
+        // ----------------------------------------------------------------------------------------
+		// DmxChannelFunction.Default (For GDTF 1.0 files)
+		if(chnlFunc->GetDefaultValue() == 0)
+		{
+			DmxValue oldDefault = dmxLogChnl->GetParentDMXChannel()->GetOldDefaultValue();
+			if(oldDefault > 0)
+			{
+				chnlFunc->SetDefaultValue(oldDefault);
+			}
+		}
+		
+
 	}
 }
 
