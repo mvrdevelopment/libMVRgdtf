@@ -3680,6 +3680,7 @@ GdtfDmxChannelFunction::GdtfDmxChannelFunction(GdtfDmxLogicalChannel* parent)
 GdtfDmxChannelFunction::GdtfDmxChannelFunction(const TXString& name, GdtfDmxLogicalChannel* parent)
 {
 	fName					= name;
+	fDefaultValue			= 0;
 	fAdressStart			= 0;
 	fPhysicalStart			= 0;
 	fPhysicalEnd			= 1;
