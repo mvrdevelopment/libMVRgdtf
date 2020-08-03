@@ -1028,6 +1028,7 @@ namespace SceneData
 		TXString				fName;
 		GdtfAttribute*		    fAttribute;
 		TXString				fOrignalAttribute;
+		DmxValue				fDefaultValue;
 		DmxValue				fAdressStart;   
 		double					fPhysicalStart;
 		double					fPhysicalEnd;
@@ -1064,6 +1065,7 @@ namespace SceneData
         const TXString&					GetName() const;
         GdtfAttribute*				    GetAttribute();
 		const TXString&					GetOriginalAttribute();
+		DmxValue						GetDefaultValue() const;
         DmxValue						GetStartAdress() const;
         DmxValue						GetEndAdress() const;
         double							GetPhysicalStart() const;
@@ -1101,7 +1103,8 @@ namespace SceneData
 		void							SetWheel(GdtfWheelPtr newWhl);
 		void							SetName(const TXString& name);
 		void							SetOriginalAttribute(const TXString& attribute);
-		void							SetAttribute(GdtfAttribute* newAttr);		
+		void							SetAttribute(GdtfAttribute* newAttr);
+		void							SetDefaultValue(DmxValue defaultValue);
 		void							SetStartAddress(DmxValue address);
 		void							SetPhysicalStart(double start);
 		void							SetPhysicalEnd(double end);
@@ -1192,11 +1195,13 @@ namespace SceneData
 		DMXAddress					fCoarse;
 		DMXAddress					fFine;			
 		DMXAddress					fUltra;			
-		DMXAddress                  fUber;				
-		DmxValue					fDefaultValue;
+		DMXAddress                  fUber;
 		DmxValue					fHeighlight;	bool fHeighlightNone;
+		DmxValue					fDefaultValue_old;
 		GdtfGeometryPtr				fGeomRef;
 		TXString					fUnresolvedGeomRef;
+		GdtfDmxChannelFunctionPtr	fInitialFunction;
+		TXString					fUnresolvedInitialFunction;
 		//
 		TGdtfDmxLogicalChannelArray	fLogicalChannels;		
 
@@ -1213,13 +1218,15 @@ namespace SceneData
         Sint32								GetCoarse() const;
         Sint32								GetFine() const;
         Sint32								GetUltra() const;
-		Sint32								GetUber() const;        
-        DmxValue							GetDefaultValue() const;
+		Sint32								GetUber() const;
         DmxValue							GetHighlight() const;
 		bool								HasHighlight() const;
+		DmxValue							GetOldDefaultValue() const;
         const TGdtfDmxLogicalChannelArray	GetLogicalChannelArray();
 		GdtfGeometryPtr						GetGeomRef();
 		TXString							GetUnresolvedGeomRef() const;
+		GdtfDmxChannelFunctionPtr			GetInitialFunction();
+		TXString							GetUnresolvedInitialFunction() const;
 		EGdtfChannelBitResolution			GetChannelBitResolution();
 		DmxValue							GetChannelMaxDmx();
 		bool								IsVirtual() const;
@@ -1229,12 +1236,12 @@ namespace SceneData
 		void								SetDmxCoarse(Sint32 coarse);
 		void								SetDmxFine(Sint32 fine);
 		void								SetDmxUltra(Sint32 ultra);
-		void								SetDmxUber(Sint32 uber);		
-		void								SetDefaultValue(DmxValue defaultValue);
+		void								SetDmxUber(Sint32 uber);
 		void								SetHighlight(DmxValue highlight);
 		void								SetModel(GdtfModelPtr ptr);
 		GdtfDmxLogicalChannel*				AddLogicalChannel();
 		void								SetGeomRef(GdtfGeometryPtr newGeom);
+		void								SetInitialFunction(GdtfDmxChannelFunctionPtr initialFunction);
 
         // Get Parent
         GdtfDmxMode*						GetParentMode();

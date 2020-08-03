@@ -18,9 +18,9 @@ private:
 
     std::string fPath;
 
-    void CheckDmxChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxChannel, Sint32 dmxBreak, Sint32 coarse, Sint32 fine, Sint32 ultra, Sint32 uber, VectorworksMVR::GdtfDefines::DmxValue defaultValue, VectorworksMVR::GdtfDefines::DmxValue highlight, double MibFade, double dmxChangeLimit, VectorworksMVR::GdtfDefines::EGdtfChannelBitResolution resolution);
+    void CheckDmxChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxChannel, Sint32 dmxBreak, Sint32 coarse, Sint32 fine, Sint32 ultra, Sint32 uber, VectorworksMVR::GdtfDefines::DmxValue highlight, double MibFade, double dmxChangeLimit, VectorworksMVR::GdtfDefines::EGdtfChannelBitResolution resolution);
     void CheckChannelSet(VectorworksMVR::IGdtfDmxChannelSetPtr& channelSet, std::string name, VectorworksMVR::GdtfDefines::DmxValue start, VectorworksMVR::GdtfDefines::DmxValue end);
-    void CheckFunction(VectorworksMVR::IGdtfDmxChannelFunctionPtr& function, std::string name, std::string attributeName, VectorworksMVR::GdtfDefines::DmxValue start, VectorworksMVR::GdtfDefines::DmxValue end, VectorworksMVR::GdtfDefines::EGdtfChannelBitResolution resolution);
+    void CheckFunction(VectorworksMVR::IGdtfDmxChannelFunctionPtr& function, std::string name, std::string attributeName, VectorworksMVR::GdtfDefines::DmxValue defaultValue, VectorworksMVR::GdtfDefines::DmxValue start, VectorworksMVR::GdtfDefines::DmxValue end, VectorworksMVR::GdtfDefines::EGdtfChannelBitResolution resolution);
 
     void Check8bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxChannel);
     void Check24bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxChannel);

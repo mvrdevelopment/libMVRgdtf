@@ -309,7 +309,6 @@ void GdtfUnittest::WriteFile()
 				__checkVCOM(gdtfDmxChannel->SetFine(2));
 				__checkVCOM(gdtfDmxChannel->SetUltra(3));
 				__checkVCOM(gdtfDmxChannel->SetUber(4));
-				__checkVCOM(gdtfDmxChannel->SetDefaultValue(5));
 				__checkVCOM(gdtfDmxChannel->SetHighlight(6));
 				__checkVCOM(gdtfDmxChannel->SetDmxBreak(7));
 				__checkVCOM(gdtfDmxChannel->SetGeometry(childGeo));
@@ -329,6 +328,7 @@ void GdtfUnittest::WriteFile()
 						IGdtfAttributePtr attribute;
 						__checkVCOM(gdftChannelFunction->SetAttribute(gdtfAttribute));
 						__checkVCOM(gdftChannelFunction->SetOriginalAttribute("My orginalAttribute"));
+						__checkVCOM(gdftChannelFunction->SetDefaultValue(5));
 						__checkVCOM(gdftChannelFunction->SetStartAddress(0));
 						__checkVCOM(gdftChannelFunction->SetPhysicalStart(2));
 						__checkVCOM(gdftChannelFunction->SetPhysicalEnd(3));
@@ -874,11 +874,6 @@ void GdtfUnittest::ReadFile()
 					__checkVCOM(gdtfDmxChannel->GetUber(uber));
 					this->checkifEqual("gdtfDmxChannelGetUber ", uber, 4);
 
-					// Default Value
-					GdtfDefines::DmxValue def;
-					__checkVCOM(gdtfDmxChannel->GetDefaultValue(def));
-					this->checkifEqual("gdtfDmxChannelGetDefaultValue ", def, GdtfDefines::DmxValue(5));
-
 					// Highlight
 					GdtfDefines::DmxValue highlight;
 					__checkVCOM(gdtfDmxChannel->GetHighlight(highlight));
@@ -988,6 +983,11 @@ void GdtfUnittest::ReadFile()
 								//OriginalAttribute
 								MvrString ogAttribute = gdtfFunction->GetOriginalAttribute();
 								this->checkifEqual("gdtfFunctionGetOriginalAttribute ", ogAttribute, "My orginalAttribute");
+
+								// Default Value
+								GdtfDefines::DmxValue def;
+								__checkVCOM(gdtfFunction->GetDefaultValue(def));
+								this->checkifEqual("gdtfFunctionGetDefaultValue ", def, GdtfDefines::DmxValue(5));
 
 								//Start Address
 								GdtfDefines::DmxValue dmxStartAddress;

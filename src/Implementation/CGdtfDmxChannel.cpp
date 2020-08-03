@@ -5,6 +5,7 @@
 #include "CGdtfDmxChannel.h"
 #include "CGdtfGeometry.h"
 #include "CGdtfDmxLogicalChannel.h"
+#include "CGdtfDmxChannelFunction.h"
 #include "CGdtfAttribute.h"
 
 using namespace VectorworksMVR::Filing;
@@ -73,16 +74,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::GetUber(Sint32& u
 	if ( ! fChannel) { return kVCOMError_NotInitialized; }
 	
     uber = fChannel->GetUber();
-    
-    return kVCOMError_NoError;
-}
-
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::GetDefaultValue(DmxValue &defaultValue)
-{
-	// Check Pointer
-	if ( ! fChannel) { return kVCOMError_NotInitialized; }
-	
-    defaultValue = fChannel->GetDefaultValue();
     
     return kVCOMError_NoError;
 }
@@ -208,16 +199,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::SetUber(Sint32 ub
 	if ( ! fChannel) { return kVCOMError_NotInitialized; }
 	
 	fChannel->SetDmxUber(uber);
-	
-	return kVCOMError_NoError;
-}
-
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::SetDefaultValue(DmxValue defaultValue)
-{
-	// Check Pointer
-	if ( ! fChannel) { return kVCOMError_NotInitialized; }
-	
-	fChannel->SetDefaultValue(defaultValue);
 	
 	return kVCOMError_NoError;
 }
@@ -382,4 +363,68 @@ void* VectorworksMVR::CGdtfDmxChannelImpl::GetBoundObject()
 	if(!fChannel) return nullptr;
 	
 	return fChannel->GetBind();
+}
+
+// GDTF 1.1
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::GetInitialFunction(IGdtfDmxChannelFunction** function)
+{
+	// Check Pointer
+	if ( ! fChannel) { return kVCOMError_NotInitialized; }
+    
+    //---------------------------------------------------------------------------
+    // Initialize Object
+	SceneData::GdtfDmxChannelFunction*	gdtfDmxInitialFunction = fChannel->GetInitialFunction();
+    CGdtfDmxChannelFunctionImpl*		pDmxChannelFunctionObj = nullptr;
+    
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDmxChannelFunction, (IVWUnknown**) & pDmxChannelFunctionObj)))
+    {
+        // Check Casting
+        CGdtfDmxChannelFunctionImpl* pResultInterface = static_cast<CGdtfDmxChannelFunctionImpl* >(pDmxChannelFunctionObj);
+        if (pResultInterface)
+        {
+            pResultInterface->setPointer(gdtfDmxInitialFunction);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+    
+    //---------------------------------------------------------------------------
+    // Check Incoming Object
+    if (*function)
+    {
+        (*function)->Release();
+        *function = NULL;
+    }
+    
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *function = pDmxChannelFunctionObj;
+    
+    return kVCOMError_NoError;
+
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::SetInitialFunction(IGdtfDmxChannelFunction* function)
+{
+	// Check Pointer
+	if ( ! fChannel) { return kVCOMError_NotInitialized; }
+	if ( ! function)			{ return kVCOMError_InvalidArg; }
+	
+	// Cast
+	CGdtfDmxChannelFunctionImpl* functionImpl = static_cast<CGdtfDmxChannelFunctionImpl*>(function);
+	if( ! functionImpl)		{ return kVCOMError_Failed; }
+	
+	//
+	SceneData::GdtfDmxChannelFunctionPtr scFunction = functionImpl->getPointer();
+	if ( ! scFunction) { return kVCOMError_Failed;}
+	
+	fChannel->SetInitialFunction(scFunction);
+	
+	return kVCOMError_NoError;
+
 }

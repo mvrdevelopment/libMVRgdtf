@@ -693,8 +693,8 @@ namespace VectorworksMVR
 		// GDTF 1.1
 		virtual VCOMError VCOM_CALLTYPE     GetRealAcceleration(double& value) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetRealAcceleration(double value) = 0;
-
-
+		virtual VCOMError VCOM_CALLTYPE     GetDefaultValue(GdtfDefines::DmxValue& defaultValue) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetDefaultValue(GdtfDefines::DmxValue defaultValue) = 0;
     };
 	typedef VCOMPtr<IGdtfDmxChannelFunction>	IGdtfDmxChannelFunctionPtr;
         
@@ -736,7 +736,6 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetFine(Sint32& fine) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetUltra(Sint32& ultra) = 0;
 		virtual VCOMError VCOM_CALLTYPE     GetUber(Sint32& uber) = 0;        
-        virtual VCOMError VCOM_CALLTYPE     GetDefaultValue(GdtfDefines::DmxValue& defaultValue) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetHighlight(GdtfDefines::DmxValue& highlight) = 0;
 		virtual VCOMError VCOM_CALLTYPE     HasHighlight(bool& highlight) = 0;
 		virtual VCOMError VCOM_CALLTYPE     GetGeometry(IGdtfGeometry** model) = 0;
@@ -746,7 +745,6 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE     SetFine(Sint32 fine) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetUltra(Sint32 ultra) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetUber (Sint32  uber) = 0;				
-		virtual VCOMError VCOM_CALLTYPE     SetDefaultValue(GdtfDefines::DmxValue defaultValue) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetHighlight(GdtfDefines::DmxValue highlight) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetGeometry(IGdtfGeometry* model) = 0;
 		
@@ -759,6 +757,10 @@ namespace VectorworksMVR
 
         // 0.3.20
         virtual VCOMError VCOM_CALLTYPE     GetResolution(GdtfDefines::EGdtfChannelBitResolution& resolution) = 0;
+
+		// GDTF 1.1
+		virtual VCOMError VCOM_CALLTYPE     GetInitialFunction(IGdtfDmxChannelFunction** function) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetInitialFunction(IGdtfDmxChannelFunction* function) = 0;
     };
 	typedef VCOMPtr<IGdtfDmxChannel>	IGdtfDmxChannelPtr;
     
