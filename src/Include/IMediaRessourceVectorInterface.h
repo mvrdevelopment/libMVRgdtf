@@ -362,6 +362,9 @@ namespace VectorworksMVR
 
         // Get Count Scene Object
         virtual VCOMError VCOM_CALLTYPE		GetSceneObjectCount(size_t& countObjects ) = 0;
+
+		// Check for duplicated uuids
+		virtual VCOMError VCOM_CALLTYPE		GetDuplicatedUuids(bool& outDuplicated) = 0;
 				
 	};
 	typedef VCOMPtr<IMediaRessourceVectorInterface>	IMediaRessourceVectorInterfacePtr;

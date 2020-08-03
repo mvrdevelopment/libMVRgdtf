@@ -2125,6 +2125,8 @@ SceneDataExchange::SceneDataExchange()
 	// check if this was good
 	fWorkingFolder->ExistsOnDisk(exists);
 	ASSERTN(kEveryone, exists = true);
+
+	fDuplicatedUuids = false;
 }
 
 SceneDataExchange::~SceneDataExchange()
@@ -2151,6 +2153,9 @@ void SceneDataExchange::InitializeForImport()
 	//------------------------------------------------
 	// Start Undo System
 	fUndoStarted = true;
+
+	//Reset the flag (back to false)
+	fDuplicatedUuids = false;
 }
 
 SceneDataProviderObjArray& SceneDataExchange::GetProviderObjects()
@@ -2443,7 +2448,7 @@ SceneDataFixtureObjPtr SceneDataExchange::CreateFixture(const SceneDataGUID& gui
 	SceneDataFixtureObjPtr newFixture = new SceneDataFixtureObj(guid);
 	addToContainer->AddObject(newFixture);
 	
-	
+
 	//----------------------------------------------------------------------------
 	// Set Members
 	newFixture->setName(name);
@@ -3226,10 +3231,25 @@ void SceneDataExchange::ProcessGroup(const IXMLFileNodePtr& node, SceneDataGroup
 					else if	( nodeName == XML_Val_VideoScreenObjectNodeName)	{ obj = ReadVideoScreen(	SceneDataGUID(groupUuid),objNode, addToContainer); }
 					else if ( nodeName == XML_Val_GroupNodeName)				{ ProcessGroup(objNode, addToContainer, true); }
 					
-					
+
 					// ---------------------------------------------------------------------------
 					// Add the object to list if it is a scene object
-					if (obj) { fSceneObjects.push_back(obj); }
+					if(obj)
+					{
+						// Check if the uuid isn't duplicated
+						SceneDataGUID guid = SceneDataGUID(groupUuid);
+						for(SceneDataObjWithMatrixPtr sceneObject : fSceneObjects)
+						{
+							SceneDataGUID currentGuid = sceneObject->getGuid();
+							if(currentGuid == guid)
+							{
+								fDuplicatedUuids = true;
+								DSTOP((kEveryone, "Some scene object's UUID is duplicated"));
+							}
+						}
+
+						fSceneObjects.push_back(obj);
+					}
 				}
 				
 				
@@ -3275,4 +3295,9 @@ bool SceneDataExchange::GetAttachedFileCountAt(size_t at, IFileIdentifierPtr& ou
 	if(retVal)	{ outFile = fFilesInZip.at(at); }
 
     return retVal;
+}
+
+bool SceneDataExchange::GetDuplicatedUuids() const
+{
+	return fDuplicatedUuids;
 }

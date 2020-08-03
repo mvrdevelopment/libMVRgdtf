@@ -785,6 +785,9 @@ namespace SceneData
 		
 		//
 		size_t							fCountExportedGeometryProviders;
+
+		//Duplicated Uuids flag
+		bool fDuplicatedUuids;
 		
 	public:
 		// ---------------------------------------------------------------------------------------------------------------------
@@ -866,11 +869,12 @@ namespace SceneData
 		// ---------------------------------------------------------------------------------------------------------------------
 		// Read calls
 	public:
-		bool ReadFromFile(const IFileIdentifierPtr&);
+		bool 	ReadFromFile(const IFileIdentifierPtr&);
 
 		size_t 	GetAttachedFileCount();
 		bool	GetAttachedFileCountAt(size_t at, IFileIdentifierPtr& outFile);
-		
+
+		bool	GetDuplicatedUuids() const;		
 		
 	private:
 		void ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xmlFile);

@@ -1448,3 +1448,9 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetSceneObj
 	countObjects = fExchangeObj.GetSceneDataObjects().size();
 	return kVCOMError_NoError;
 }
+
+VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetDuplicatedUuids(bool& outDuplicated)
+{
+	outDuplicated = fExchangeObj.GetDuplicatedUuids();
+	return kVCOMError_NoError;
+}

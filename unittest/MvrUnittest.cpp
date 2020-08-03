@@ -211,6 +211,9 @@ void MvrUnittest::WriteFile()
 			}
 		}
 
+		ISceneObjPtr fixture4 = nullptr;
+		__checkVCOM(mvrWrite->CreateFixture(MvrUUID(1136161871, 1699151080, 751939975, 1748783014), STransformMatrix(), "My Fixture4 Name", layer1, &fixture4));
+
 		// Create second Layer
 		ISceneObjPtr layer2 = nullptr;
 		__checkVCOM(mvrWrite->CreateLayerObject(MvrUUID(465143117, 742747285, 1361655924, 1172316525), "My Layer 2", &layer2));
@@ -228,7 +231,6 @@ void MvrUnittest::WriteFile()
 
 			mvrWrite->AddFileToMvrFile(GetTestWheel_PNG(false).c_str());
 		}
-
 
 		// Truss
 		ISceneObjPtr trussObject = nullptr;
@@ -306,6 +308,7 @@ void MvrUnittest::ReadFile()
 		MvrUUID fixtureUUID1	(1808353427, 683171502, 518343034, 1766902383);
 		MvrUUID fixtureUUID2	(1136161871, 1699151080, 751939975, 1748783014);
 		MvrUUID fixtureUUID3	(1136161871, 1699151080, 751939975, 1748773014);
+		MvrUUID fixtureUUID4	(1136161871, 1699151080, 751939975, 1748783014);//This uuid is the same as fixtureUUID2 to test duplicated uuids;
 		MvrUUID videoScreenUUID	(1808353427, 683171502, 518343034, 0000000001);
 		MvrUUID mappingDefinition1UUID(1808353427, 683171502, 518343034, 0000000002);
 		MvrUUID mappingDefinition2UUID(1808353427, 683171502, 518343034, 0000000003);
@@ -335,7 +338,7 @@ void MvrUnittest::ReadFile()
 		// Check Object
 		size_t count_Objects = 0;
 		__checkVCOM(mvrRead->GetSceneObjectCount(count_Objects));
-		this->checkifEqual("Check Global Object Count", count_Objects, size_t(6));
+		this->checkifEqual("Check Global Object Count", count_Objects, size_t(7));
 
 		//------------------------------------------------------------------------------------------------
 		// Check File Getters
@@ -629,6 +632,16 @@ void MvrUnittest::ReadFile()
 						checkifEqual("Check GetOy ", (size_t)oy, 	(size_t)16);
 						checkifEqual("Check GetRz ", 		 rz, 			17.18);
 					}
+				}
+				// ------------------------------------------------------------------------------
+				// Get Fixture4
+				if (i==0 && j==3)
+				{
+					checkifEqual("Fixture4 name ", 		sceneObj->GetName(), 	 "My Fixture4 Name");
+
+					bool duplicatedUuids = false;
+					__checkVCOM(mvrRead->GetDuplicatedUuids(duplicatedUuids));
+					checkifEqual("Duplicated Uuids", duplicatedUuids, true);
 				}
 				
 				// ------------------------------------------------------------------------------
