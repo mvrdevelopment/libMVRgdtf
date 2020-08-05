@@ -1609,6 +1609,7 @@ void GdtfGeometry::OnReadFromNode(const IXMLFileNodePtr& pNode)
 										else if (childNodeName == XML_GDTF_MediaServerLayerNodeName)	{ geometry = new GdtfGeometryMediaServerLayer(this);}
 										else if (childNodeName == XML_GDTF_MediaServerMasterNodeName)	{ geometry = new GdtfGeometryMediaServerMaster(this);}
 										else if (childNodeName == XML_GDTF_GeometryReferenceNodeName)	{ geometry = new GdtfGeometryReference(this);}
+										else if (childNodeName == XML_GDTF_DisplayNodeName)				{ geometry = new GdtfGeometryDisplay(this);}
 										else if (childNodeName == XML_GDTF_BreakNodeName)				{ hasBreak = true; }
 										else															{ DSTOP((kEveryone,"There is a node that was not aspected!")); }
 										

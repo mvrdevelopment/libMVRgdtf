@@ -50,6 +50,10 @@ void GdtfEmptyModelTest::WriteFile(VectorworksMVR::IGdtfFixturePtr& fixture)
         
         __checkVCOM(geometry1->CreateGeometry(EGdtfObjectType::eGdtfGeometryReference, "Geometry3", filledModel, STransformMatrix(), &geometry3));
         __checkVCOM(geometry3->SetGeometryReference(geometry1));
+
+        IGdtfGeometryPtr    geometry4;
+        __checkVCOM(geometry1->CreateGeometry(EGdtfObjectType::eGdtfGeometryDisplay, "Geometry4", filledModel, STransformMatrix(), &geometry4));
+        __checkVCOM(geometry4->SetTexture("Texture.png"));
     }
 
 }
@@ -77,7 +81,7 @@ void GdtfEmptyModelTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
 
         size_t second_level = 0;
         __checkVCOM(geometry1->GetInternalGeometryCount(second_level));
-        checkifEqual("Second Level Geometry Count", second_level, (size_t)2);
+        checkifEqual("Second Level Geometry Count", second_level, (size_t)3);
 
         if(second_level == 2)
         {
@@ -95,8 +99,11 @@ void GdtfEmptyModelTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
             __checkVCOM(geometry3->GetModel( & linkedModel));
              checkifEqual("Model Name", linkedModel->GetName(), "Model");
 
+            IGdtfGeometryPtr geometry4;
+            __checkVCOM(geometry1->GetInternalGeometryAt(2, &geometry4));
+            checkifEqual("Second Level Geometry Name", geometry4->GetName(), "Geometry4");
 
-
+            checkifEqual("Check Texture", geometry4->GetTexture(), "Texture.png");
         }
     }
 

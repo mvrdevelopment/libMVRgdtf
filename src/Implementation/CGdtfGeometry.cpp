@@ -982,7 +982,8 @@ void VectorworksMVR::CGdtfGeometryImpl::SetPointer(SceneData::GdtfGeometry* geom
 						fGeometryType == EGdtfObjectType::eGdtfGeometryShaperFilter ||
 						fGeometryType == EGdtfObjectType::eGdtfGeometryMediaServerCamera ||
 						fGeometryType == EGdtfObjectType::eGdtfGeometryMediaServerLayer	||
-						fGeometryType == EGdtfObjectType::eGdtfGeometryMediaServerMaster);
+						fGeometryType == EGdtfObjectType::eGdtfGeometryMediaServerMaster ||
+						fGeometryType == EGdtfObjectType::eGdtfGeometryDisplay);
 	
 	
 }
