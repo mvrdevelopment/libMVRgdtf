@@ -61,6 +61,10 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE     GetGeometryReference(IGdtfGeometry** geometry);
 		virtual VCOMError VCOM_CALLTYPE     SetGeometryReference(IGdtfGeometry*  geometry);
 
+        // Display
+		virtual MvrString VCOM_CALLTYPE		GetTexture();
+		virtual VCOMError VCOM_CALLTYPE		SetTexture(MvrString texture);
+
         // Helpers
         virtual VCOMError VCOM_CALLTYPE     GetCountLinkedDmxChannel(size_t& count, IGdtfDmxMode * forMode);
         virtual VCOMError VCOM_CALLTYPE     GetLinkedDmxChannelAt(size_t at, IGdtfDmxChannel** outChannel, IGdtfDmxMode * forMode);

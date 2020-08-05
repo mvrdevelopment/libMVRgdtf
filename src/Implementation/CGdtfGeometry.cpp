@@ -236,6 +236,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::CreateGeometry(EGdt
 		case eGdtfGeometryMediaServerCamera:	gdtfGeometry = fGeometry->AddGeometryMediaServerCamera(	vwName, scModel, ma); break;
 		case eGdtfGeometryMediaServerLayer:		gdtfGeometry = fGeometry->AddGeometryMediaServerLayer(	vwName, scModel, ma); break;
 		case eGdtfGeometryMediaServerMaster:	gdtfGeometry = fGeometry->AddGeometryMediaServerMaster(	vwName, scModel, ma); break;
+        case eGdtfGeometryDisplay:              gdtfGeometry = fGeometry->AddGeometryDisplay(          	vwName, scModel, ma); break;
 		case eGdtfGeometry:						gdtfGeometry = fGeometry->AddGeometry(					vwName, scModel, ma); break;
 			
 		default:
@@ -870,6 +871,31 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetGeometryReferenc
 	SceneData::GdtfGeometry*	gdtfGeometryToSet 	= pGeoObj->GetPointer();
 	ref->SetLinkedGeometry(gdtfGeometryToSet);
 	
+	return kVCOMError_NoError;
+}
+
+MvrString VectorworksMVR::CGdtfGeometryImpl::GetTexture() 
+{
+	if(!fGeometry) return "";
+
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryDisplay) return "";
+
+	SceneData::GdtfGeometryDisplayPtr display = static_cast<SceneData::GdtfGeometryDisplayPtr>(fGeometry);
+	if(!display) return "";
+
+	return display->GetTexture();
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetTexture(MvrString texture)
+{
+	if (!fGeometry) return kVCOMError_NotInitialized;
+	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryDisplay) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometryDisplayPtr display = static_cast<SceneData::GdtfGeometryDisplayPtr>(fGeometry);
+	if(!display) return kVCOMError_Failed;
+
+	display->SetTexture(texture);
 	return kVCOMError_NoError;
 }
 
