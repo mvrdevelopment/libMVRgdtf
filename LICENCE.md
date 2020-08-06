@@ -189,7 +189,7 @@ The GDTF Group consists of the following companies:
 - Vectorworks, Inc.
 
 Licensed under the My Virtual Rig (MVR)License, Version 1.0 (the "License"); you may not use this software except in compliance with the License. You may obtain a copy of the License at 
-https://gdtf-share.com/wiki/MVR_portable_library   
+https://github.com/mvrdevelopment/libMVRgdtf/blob/master/README.md 
 
 
 This software is provided 'as-is', without any express or implied
