@@ -623,8 +623,9 @@ namespace VectorworksMVR
 		// 0.6.3
 		virtual VCOMError VCOM_CALLTYPE     GetParent(IGdtfGeometry** model) = 0;
 
-
-
+		// Display
+		virtual MvrString VCOM_CALLTYPE		GetTexture() = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetTexture(MvrString texture) = 0;
 	};
 	typedef VCOMPtr<IGdtfGeometry>	IGdtfGeometryPtr;
     

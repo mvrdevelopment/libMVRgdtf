@@ -1542,6 +1542,15 @@ GdtfGeometryPtr GdtfGeometry::AddGeometryMediaServerMaster(const TXString& name,
 	return geo;
 }
 
+GdtfGeometryPtr GdtfGeometry::AddGeometryDisplay(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma)
+{
+	GdtfGeometry* geo = new GdtfGeometryDisplay(name, refToModel, ma, this);
+
+	fInternalGeometries.push_back(geo);
+
+	return geo;
+}
+
 void GdtfGeometry::OnPrintToFile(IXMLFileNodePtr pNode)
 {
 	//------------------------------------------------------------------------------------
@@ -1600,6 +1609,7 @@ void GdtfGeometry::OnReadFromNode(const IXMLFileNodePtr& pNode)
 										else if (childNodeName == XML_GDTF_MediaServerLayerNodeName)	{ geometry = new GdtfGeometryMediaServerLayer(this);}
 										else if (childNodeName == XML_GDTF_MediaServerMasterNodeName)	{ geometry = new GdtfGeometryMediaServerMaster(this);}
 										else if (childNodeName == XML_GDTF_GeometryReferenceNodeName)	{ geometry = new GdtfGeometryReference(this);}
+										else if (childNodeName == XML_GDTF_DisplayNodeName)				{ geometry = new GdtfGeometryDisplay(this);}
 										else if (childNodeName == XML_GDTF_BreakNodeName)				{ hasBreak = true; }
 										else															{ DSTOP((kEveryone,"There is a node that was not aspected!")); }
 										
@@ -2202,6 +2212,82 @@ EGdtfObjectType GdtfGeometryMediaServerMaster::GetObjectType()
 TXString GdtfGeometryMediaServerMaster::GetNodeName()
 {
 	return XML_GDTF_MediaServerMasterNodeName;
+}
+
+//------------------------------------------------------------------------------------
+// GdtfGeometryDisplay
+GdtfGeometryDisplay::GdtfGeometryDisplay(GdtfGeometry* parent)
+					:GdtfGeometry(parent)
+{
+	fTexture = "";
+}
+
+GdtfGeometryDisplay::GdtfGeometryDisplay(const TXString& name, GdtfModelPtr refToModel,const VWTransformMatrix& ma, GdtfGeometry* parent) 
+					:GdtfGeometry(name,refToModel,ma, parent)
+{	
+}
+
+GdtfGeometryDisplay::~GdtfGeometryDisplay()
+{
+}
+
+TXString GdtfGeometryDisplay::GetTexture() 
+{
+	return fTexture;
+}
+
+void GdtfGeometryDisplay::SetTexture(const TXString& texture) 
+{
+	fTexture = texture;
+}
+
+void GdtfGeometryDisplay::OnPrintToFile(IXMLFileNodePtr pNode) 
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfGeometry::OnPrintToFile(pNode);
+	pNode->SetNodeAttributeValue(XML_GDTF_DisplayTexture, fTexture);
+}
+
+void GdtfGeometryDisplay::OnReadFromNode(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfGeometry::OnReadFromNode(pNode);
+
+	TXString texture = "";
+	pNode->GetNodeAttributeValue(XML_GDTF_DisplayTexture, texture);
+	fTexture = texture;
+}
+
+void GdtfGeometryDisplay::OnErrorCheck(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnErrorCheck(pNode);
+
+	//------------------------------------------------------------------------------------
+	// Create needed and optional Attribute Arrays
+	TXStringArray needed;
+	TXStringArray optional;
+	needed.push_back(XML_GDTF_GeometryName);
+	optional.push_back(XML_GDTF_GeometryModelRef);
+	needed.push_back(XML_GDTF_GeometryMatrix);
+	needed.push_back(XML_GDTF_DisplayTexture);
+
+	//------------------------------------------------------------------------------------
+	// Check Attributes for node
+	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
+}
+
+EGdtfObjectType GdtfGeometryDisplay::GetObjectType() 
+{
+	return EGdtfObjectType::eGdtfGeometryDisplay;
+}
+
+TXString GdtfGeometryDisplay::GetNodeName()
+{
+	return XML_GDTF_DisplayNodeName;
 }
 
 //------------------------------------------------------------------------------------
@@ -6718,6 +6804,15 @@ GdtfGeometryPtr GdtfFixture::AddGeometryMediaServerMaster(const TXString& name, 
 {
 	GdtfGeometry* geo = new GdtfGeometryMediaServerMaster(name, refToModel, ma, nullptr);
 	
+	fGeometries.push_back(geo);
+	
+	return geo;
+}
+
+GdtfGeometryPtr GdtfFixture::AddGeometryDisplay(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma)
+{
+	GdtfGeometry* geo = new GdtfGeometryDisplay(name, refToModel, ma, nullptr);
+
 	fGeometries.push_back(geo);
 	
 	return geo;
