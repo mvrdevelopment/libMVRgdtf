@@ -83,7 +83,7 @@ void GdtfEmptyModelTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
         __checkVCOM(geometry1->GetInternalGeometryCount(second_level));
         checkifEqual("Second Level Geometry Count", second_level, (size_t)3);
 
-        if(second_level == 2)
+        if(second_level == 3)
         {
             IGdtfGeometryPtr geometry2;
             __checkVCOM(geometry1->GetInternalGeometryAt(0, &geometry2));

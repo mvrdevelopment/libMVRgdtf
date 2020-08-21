@@ -2224,14 +2224,15 @@ GdtfGeometryDisplay::GdtfGeometryDisplay(GdtfGeometry* parent)
 
 GdtfGeometryDisplay::GdtfGeometryDisplay(const TXString& name, GdtfModelPtr refToModel,const VWTransformMatrix& ma, GdtfGeometry* parent) 
 					:GdtfGeometry(name,refToModel,ma, parent)
-{	
+{
+	fTexture = "";	
 }
 
 GdtfGeometryDisplay::~GdtfGeometryDisplay()
 {
 }
 
-TXString GdtfGeometryDisplay::GetTexture() 
+const TXString& GdtfGeometryDisplay::GetTexture() 
 {
 	return fTexture;
 }
@@ -2255,9 +2256,7 @@ void GdtfGeometryDisplay::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// Call the parent
 	GdtfGeometry::OnReadFromNode(pNode);
 
-	TXString texture = "";
-	pNode->GetNodeAttributeValue(XML_GDTF_DisplayTexture, texture);
-	fTexture = texture;
+	pNode->GetNodeAttributeValue(XML_GDTF_DisplayTexture, fTexture);
 }
 
 void GdtfGeometryDisplay::OnErrorCheck(const IXMLFileNodePtr& pNode)
@@ -6530,6 +6529,7 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 							else if (childNodeName == XML_GDTF_MediaServerLayerNodeName)	{ geometry = new GdtfGeometryMediaServerLayer(nullptr);}
 							else if (childNodeName == XML_GDTF_MediaServerMasterNodeName)	{ geometry = new GdtfGeometryMediaServerMaster(nullptr);}
 							else if (childNodeName == XML_GDTF_GeometryReferenceNodeName)	{ geometry = new GdtfGeometryReference(nullptr);}
+							else if (childNodeName == XML_GDTF_DisplayNodeName)				{ geometry = new GdtfGeometryDisplay(nullptr);}
 							else															{ DSTOP((kEveryone,"There is a node that was not aspected!")); }
 							
 							ASSERTN(kEveryone, geometry != nullptr);
