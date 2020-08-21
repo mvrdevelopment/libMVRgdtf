@@ -857,9 +857,9 @@ namespace SceneData
 
 	public:
 		virtual EGdtfObjectType			GetObjectType();
-		TXString	GetTexture();
+		const TXString&	GetTexture();
 
-		void		SetTexture(const TXString& texture);
+		void			SetTexture(const TXString& texture);
 
 	protected:
 		virtual	TXString				GetNodeName();

@@ -883,7 +883,7 @@ MvrString VectorworksMVR::CGdtfGeometryImpl::GetTexture()
 	SceneData::GdtfGeometryDisplayPtr display = static_cast<SceneData::GdtfGeometryDisplayPtr>(fGeometry);
 	if(!display) return "";
 
-	return display->GetTexture();
+	return display->GetTexture().GetCharPtr();
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetTexture(MvrString texture)
