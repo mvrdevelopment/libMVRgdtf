@@ -8682,20 +8682,20 @@ void SceneData::GdtfPhysicalDescriptions::OnPrintToFile(IXMLFileNodePtr pNode)
 		}
 
 		IXMLFileNodePtr OperatingTemperatureNode;
-		if(VCOM_SUCCEEDED(pNode->CreateChildNode(XML_GDTF_OperatingTemperatureNodeName, &OperatingTemperatureNode)))
+		if(VCOM_SUCCEEDED(PropertiesNode->CreateChildNode(XML_GDTF_OperatingTemperatureNodeName, &OperatingTemperatureNode)))
 		{
 			OperatingTemperatureNode->SetNodeAttributeValue(XML_GDTF_OperatingTemperatureLow,	GdtfConverter::ConvertDouble(fOperatingTemperatureLow));
 			OperatingTemperatureNode->SetNodeAttributeValue(XML_GDTF_OperatingTemperatureHigh, GdtfConverter::ConvertDouble(fOperatingTemperatureHigh));
 		}
 
 		IXMLFileNodePtr WeightNode;
-		if(VCOM_SUCCEEDED(pNode->CreateChildNode(XML_GDTF_WeightNodeName, &WeightNode)))
+		if(VCOM_SUCCEEDED(PropertiesNode->CreateChildNode(XML_GDTF_WeightNodeName, &WeightNode)))
 		{
 			WeightNode->SetNodeAttributeValue(XML_GDTF_WeightValue,	GdtfConverter::ConvertDouble(fWeight));
 		}
 
 		IXMLFileNodePtr LegHeightNode;
-		if(VCOM_SUCCEEDED(pNode->CreateChildNode(XML_GDTF_LegHeightNodeName, &LegHeightNode)))
+		if(VCOM_SUCCEEDED(PropertiesNode->CreateChildNode(XML_GDTF_LegHeightNodeName, &LegHeightNode)))
 		{
 			LegHeightNode->SetNodeAttributeValue(XML_GDTF_LegHeightValue,	GdtfConverter::ConvertDouble(fLegHeight));
 		}
@@ -8796,34 +8796,38 @@ void SceneData::GdtfPhysicalDescriptions::OnReadFromNode(const IXMLFileNodePtr &
 										return;
 									});
 	
-		//OperatingTemperature
-	IXMLFileNodePtr OperatingTemperatureNode;
-	pNode->GetChildNode(XML_GDTF_OperatingTemperatureNodeName, &OperatingTemperatureNode);
-	if(OperatingTemperatureNode != nullptr)
+	IXMLFileNodePtr PropertiesNode;
+	if(VCOM_SUCCEEDED(pNode->GetChildNode(XML_GDTF_PropertiesCollect, & PropertiesNode)))
 	{
-		TXString operatingTemperatureLowStr; OperatingTemperatureNode->GetNodeAttributeValue(XML_GDTF_OperatingTemperatureLow, operatingTemperatureLowStr);
-		GdtfConverter::ConvertDouble(operatingTemperatureLowStr, OperatingTemperatureNode, fOperatingTemperatureLow);
+		//OperatingTemperature
+		IXMLFileNodePtr OperatingTemperatureNode;
+		PropertiesNode->GetChildNode(XML_GDTF_OperatingTemperatureNodeName, &OperatingTemperatureNode);
+		if(OperatingTemperatureNode != nullptr)
+		{
+			TXString operatingTemperatureLowStr; OperatingTemperatureNode->GetNodeAttributeValue(XML_GDTF_OperatingTemperatureLow, operatingTemperatureLowStr);
+			GdtfConverter::ConvertDouble(operatingTemperatureLowStr, OperatingTemperatureNode, fOperatingTemperatureLow);
 
-		TXString operatingTemperatureHighStr; OperatingTemperatureNode->GetNodeAttributeValue(XML_GDTF_OperatingTemperatureHigh, operatingTemperatureHighStr);
-		GdtfConverter::ConvertDouble(operatingTemperatureHighStr, OperatingTemperatureNode, fOperatingTemperatureHigh);	
-	}
+			TXString operatingTemperatureHighStr; OperatingTemperatureNode->GetNodeAttributeValue(XML_GDTF_OperatingTemperatureHigh, operatingTemperatureHighStr);
+			GdtfConverter::ConvertDouble(operatingTemperatureHighStr, OperatingTemperatureNode, fOperatingTemperatureHigh);	
+		}
 
 		//Weight
-	IXMLFileNodePtr WeightNode;
-	pNode->GetChildNode(XML_GDTF_WeightNodeName, &WeightNode);
-	if(WeightNode != nullptr)
-	{
-		TXString weightStr; WeightNode->GetNodeAttributeValue(XML_GDTF_WeightValue, weightStr);
-		GdtfConverter::ConvertDouble(weightStr, WeightNode, fWeight);	
-	}
+		IXMLFileNodePtr WeightNode;
+		PropertiesNode->GetChildNode(XML_GDTF_WeightNodeName, &WeightNode);
+		if(WeightNode != nullptr)
+		{
+			TXString weightStr; WeightNode->GetNodeAttributeValue(XML_GDTF_WeightValue, weightStr);
+			GdtfConverter::ConvertDouble(weightStr, WeightNode, fWeight);	
+		}
 
 		//LegHeight
-	IXMLFileNodePtr LegHeightNode;
-	pNode->GetChildNode(XML_GDTF_LegHeightNodeName, &LegHeightNode);
-	if(LegHeightNode != nullptr)
-	{
-		TXString legHeightStr; LegHeightNode->GetNodeAttributeValue(XML_GDTF_LegHeightValue, legHeightStr);
-		GdtfConverter::ConvertDouble(legHeightStr, LegHeightNode, fLegHeight);	
+		IXMLFileNodePtr LegHeightNode;
+		PropertiesNode->GetChildNode(XML_GDTF_LegHeightNodeName, &LegHeightNode);
+		if(LegHeightNode != nullptr)
+		{
+			TXString legHeightStr; LegHeightNode->GetNodeAttributeValue(XML_GDTF_LegHeightValue, legHeightStr);
+			GdtfConverter::ConvertDouble(legHeightStr, LegHeightNode, fLegHeight);	
+		}
 	}
 	
 }
