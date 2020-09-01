@@ -528,7 +528,7 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_ConnectorNodeName                      "Connector"
 #define XML_GDTF_ConnectorName                          "Name"
 #define XML_GDTF_ConnectorType                          "Type"
-#define XML_GDTF_ConnectorDmxBreak                      "DmxBreak"
+#define XML_GDTF_ConnectorDmxBreak                      "DMXBreak"
 #define XML_GDTF_ConnectorGender                        "Gender"
 #define XML_GDTF_ConnectorLength                        "Length"
 
