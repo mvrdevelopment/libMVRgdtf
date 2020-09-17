@@ -46,7 +46,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/libs/)
 # Building Xerces
 
 if(WIN32)
-    set(PYTHON_ARGS ${WIN_RUNTIME_LIB})
+    set(PYTHON_ARGS ${WIN_RUNTIME_LIB} ${CMAKE_GENERATOR})
 endif(WIN32)
 
 find_package(PythonInterp REQUIRED)

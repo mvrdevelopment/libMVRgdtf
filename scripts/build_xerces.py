@@ -7,9 +7,11 @@ import shutil
 print("Building Xerces-c-lib")
 
 windowsReleaseType = "-MD"
+windowsVSVersion = "Visual Studio 15 2017 Win64"
 if sys.platform == "win32":
     if (len(sys.argv) >= 2):
         windowsReleaseType = sys.argv[1]
+        windowsVSVersion = sys.argv[2]
 
 XERCES_VERSION = "3.2.2"
 XERCES_ZIP_FILE = "shared/xerces-c-" + XERCES_VERSION + ".zip"
@@ -39,7 +41,7 @@ if not os.path.isfile(pathToLibFile):
         os.chdir("build")
 
        
-        extraCmakeOptions += "-G \"Visual Studio 15 2017 Win64\" -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_INSTALL_PREFIX:PATH=libs -DCMAKE_CONFIGURATION_TYPES=\"Release\" -Dxmlch-type=wchar_t -DCMAKE_CXX_FLAGS_RELEASE:STRING=\""+ windowsReleaseType +" -O2 -Ob2 -DNDEBUG\""
+        extraCmakeOptions += "-G \"" + windowsVSVersion+ "\" -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_INSTALL_PREFIX:PATH=libs -DCMAKE_CONFIGURATION_TYPES=\"Release\" -Dxmlch-type=wchar_t -DCMAKE_CXX_FLAGS_RELEASE:STRING=\""+ windowsReleaseType +" -O2 -Ob2 -DNDEBUG\""
         os.system("cmake "+ extraCmakeOptions +" ..")
         os.system("cmake --build . --config Release --target install")
 
