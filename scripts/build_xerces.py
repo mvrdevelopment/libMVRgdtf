@@ -20,7 +20,7 @@ if not os.path.isdir("build"):
 os.chdir("build")
 
 if sys.platform == "win32":
-    os.system("")
+    os.system("cmake -G \"Visual Studio 15 2017 Win64\" -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_INSTALL_PREFIX:PATH=libs -DCMAKE_CONFIGURATION_TYPES=\"Release\" -Dxmlch-type=wchar_t -DCMAKE_CXX_FLAGS_RELEASE:STRING=\"-MD -O2 -Ob2 -DNDEBUG\" ..")
 else:
     os.system("cmake .. -DBUILD_SHARED_LIBS=OFF -Dxmlch-type=uint16_t -Dnetwork=OFF")
 
