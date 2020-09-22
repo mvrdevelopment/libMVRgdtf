@@ -45,7 +45,7 @@ set(XERCES_INCLUDE ${XERCES_INCLUDE} ${PROJECT_SOURCE_DIR}/../xerces-c/src/)
 set(XERCES_INCLUDE ${XERCES_INCLUDE} ${PROJECT_SOURCE_DIR}/../xerces-c/build/src/)
 
 if (WIN32)
-set(XERCES_LIB ${PROJECT_SOURCE_DIR}/../xerces-c/build/src/libxerces-c-3.2.lib)
+set(XERCES_LIB ${PROJECT_SOURCE_DIR}/../xerces-c/build/src/Release/xerces-c_3.lib)
 else()
 set(XERCES_LIB ${PROJECT_SOURCE_DIR}/../xerces-c/build/src/libxerces-c-3.2.a)
 endif(WIN32)
