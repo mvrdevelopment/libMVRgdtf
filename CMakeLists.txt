@@ -7,7 +7,6 @@ set(WIN_RUNTIME_LIB "-MD" CACHE STRING "Set '-MD' or '-MT' for windows build")
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-set(PYTHON_ARGS "TETSASDLKAJSDLKAJSDLKJASDLKJASDLKJASD")
 #################################################
 # System setup
 if (WIN32)
@@ -41,33 +40,14 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/libs/)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/libs/)
 
 
-
-#################################################
-# Building Xerces
-
-if(WIN32)
-    set(PYTHON_ARGS ${WIN_RUNTIME_LIB})
-endif(WIN32)
-
-find_package(PythonInterp REQUIRED)
-
-message("Start building Xerces")
-# run python script for extracting and generating xerces
-execute_process(COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/scripts/build_xerces.py ${PYTHON_ARGS}
-                WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-                RESULT_VARIABLE PY_OUTPUT)
-message("End building Xerces")
-
-#################################################
-
-
 # setup the platform macros
+set(XERCES_INCLUDE ${XERCES_INCLUDE} ${PROJECT_SOURCE_DIR}/../xerces-c/src/)
+set(XERCES_INCLUDE ${XERCES_INCLUDE} ${PROJECT_SOURCE_DIR}/../xerces-c/build/src/)
+
 if (WIN32)
-    set(XERCES_INCLUDE ${PROJECT_SOURCE_DIR}/shared/xerces/build/libs/include)
-    set(XERCES_LIB ${PROJECT_SOURCE_DIR}/libs/xerces-c_3.lib)
+set(XERCES_LIB ${PROJECT_SOURCE_DIR}/../xerces-c/build/src/libxerces-c-3.2.lib)
 else()
-    set(XERCES_INCLUDE ${PROJECT_SOURCE_DIR}/shared/include)
-    set(XERCES_LIB ${PROJECT_SOURCE_DIR}/libs/libxerces-c.a)
+set(XERCES_LIB ${PROJECT_SOURCE_DIR}/../xerces-c/build/src/libxerces-c-3.2.a)
 endif(WIN32)
 
 
@@ -99,11 +79,13 @@ target_link_libraries(MvrGdtf ${XERCES_LIB})
 if (UNITTEST)
 
 file(GLOB_RECURSE unitTestSourceFiles ${SRC_TESTDIR}/*.cpp)
-add_executable(MvrGdtfUnitTest  ${unitTestSourceFiles})
+add_executable(MvrGdtfUnitTest ${unitTestSourceFiles})
 
 add_definitions(-DGITPATH="${PROJECT_SOURCE_DIR}")
+
 target_link_libraries(MvrGdtfUnitTest MvrGdtf)
-    
+target_link_libraries(MvrGdtfUnitTest ${XERCES_LIB})
+
 endif (UNITTEST)
 #################################################
 
@@ -144,6 +126,7 @@ elseif(UNIX)
     set(EXTRA_LIBS ${EXTRA_LIBS} pthread)
 endif(WIN32)
 #################################################
+
 
 
 #################################################
