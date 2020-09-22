@@ -5,9 +5,8 @@ cmake_minimum_required(VERSION 3.9.4)
 set(UNITTEST FALSE CACHE STRING "If enabled the tests wont be build!")
 set(WIN_RUNTIME_LIB "-MD" CACHE STRING "Set '-MD' or '-MT' for windows build")
 
-set(XERCES_ROOT_PATH ${CMAKE_SOURCE_DIR}/../xerces-c CACHE STRING "Set the build path where you called cmake.")
 
-# 
+set(XERCES_ROOT_PATH ${CMAKE_SOURCE_DIR}/../xerces-c CACHE STRING "Set the build path where you called cmake.")
 set(XERCES_INCLUDE_PATH ${XERCES_ROOT_PATH}/src ${XERCES_ROOT_PATH}/build/src CACHE STRING "Set the include path")
 
 if (WIN32)
@@ -140,12 +139,11 @@ endif(${UNITTEST})
 #################################################
 
 
-set(LIB_OUTPUT_NAME "MvrGdtf")
+set(LIB_OUTPUT_NAME "MvrGdtf" CACHE STRING "The output name of the lib file")
 set_target_properties(MvrGdtf PROPERTIES OUTPUT_NAME ${LIB_OUTPUT_NAME})
 
 # Include mini-zip
 if($ENV{DO_NOT_INCLUDE_MINI_ZIP})
-    message("MINIZIP is not part of the symbols")
     target_compile_definitions(MvrGdtf PUBLIC DONT_INCLUDE_MINI_ZIP)
 
     get_target_property(OUTPUT_NAME_OLD MvrGdtf OUTPUT_NAME)
