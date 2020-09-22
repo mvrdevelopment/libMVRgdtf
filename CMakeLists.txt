@@ -5,6 +5,18 @@ cmake_minimum_required(VERSION 3.9.4)
 set(UNITTEST FALSE CACHE STRING "If enabled the tests wont be build!")
 set(WIN_RUNTIME_LIB "-MD" CACHE STRING "Set '-MD' or '-MT' for windows build")
 
+set(XERCES_ROOT_PATH ${CMAKE_SOURCE_DIR}/../xerces-c CACHE STRING "Set the build path where you called cmake.")
+
+# 
+set(XERCES_INCLUDE_PATH ${XERCES_ROOT_PATH}/src ${XERCES_ROOT_PATH}/build/src CACHE STRING "Set the include path")
+
+if (WIN32)
+    set(XERCES_LIB_PATH ${CMAKE_SOURCE_DIR}/../xerces-c/build/src/Release/xerces-c_3.lib CACHE STRING "Set the xerces libary path")
+else()
+    set(XERCES_LIB_PATH ${CMAKE_SOURCE_DIR}/../xerces-c/build/src/libxerces-c-3.2.a CACHE STRING "Set the xerces libary path")
+endif(WIN32)
+
+
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 #################################################
@@ -36,29 +48,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 
 # Set output dir
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/libs/)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/libs/)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/libs/)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/libs/)
 
-
-# setup the platform macros
-set(XERCES_INCLUDE ${XERCES_INCLUDE} ${PROJECT_SOURCE_DIR}/../xerces-c/src/)
-set(XERCES_INCLUDE ${XERCES_INCLUDE} ${PROJECT_SOURCE_DIR}/../xerces-c/build/src/)
-
-if (WIN32)
-set(XERCES_LIB ${PROJECT_SOURCE_DIR}/../xerces-c/build/src/Release/xerces-c_3.lib)
-else()
-set(XERCES_LIB ${PROJECT_SOURCE_DIR}/../xerces-c/build/src/libxerces-c-3.2.a)
-endif(WIN32)
-
-
-
-include_directories(${PROJECT_SOURCE_DIR}/src
-                    ${XERCES_INCLUDE})
+include_directories(${CMAKE_SOURCE_DIR}/src
+                    ${XERCES_INCLUDE_PATH})
 
 # default values
 # those can be removed probably
-set(SRCDIR ${PROJECT_SOURCE_DIR}/src)
-set(SRC_TESTDIR ${PROJECT_SOURCE_DIR}/unittest)
+set(SRCDIR ${CMAKE_SOURCE_DIR}/src)
+set(SRC_TESTDIR ${CMAKE_SOURCE_DIR}/unittest)
 
 
 
@@ -70,7 +69,7 @@ set(SRC_TESTDIR ${PROJECT_SOURCE_DIR}/unittest)
 file(GLOB_RECURSE libSourceFiles ${SRCDIR}/*.cpp)
 add_library(MvrGdtf STATIC ${libSourceFiles})
 
-target_link_libraries(MvrGdtf ${XERCES_LIB})
+target_link_libraries(MvrGdtf ${XERCES_LIB_PATH})
 #################################################
 
 
@@ -81,10 +80,9 @@ if (UNITTEST)
 file(GLOB_RECURSE unitTestSourceFiles ${SRC_TESTDIR}/*.cpp)
 add_executable(MvrGdtfUnitTest ${unitTestSourceFiles})
 
-add_definitions(-DGITPATH="${PROJECT_SOURCE_DIR}")
+add_definitions(-DGITPATH="${CMAKE_SOURCE_DIR}")
 
 target_link_libraries(MvrGdtfUnitTest MvrGdtf)
-target_link_libraries(MvrGdtfUnitTest ${XERCES_LIB})
 
 endif (UNITTEST)
 #################################################
@@ -103,9 +101,9 @@ if (WIN32)
     set(EXTRA_LIBS ${EXTRA_LIBS} rpcrt4)
     set(EXTRA_LIBS ${EXTRA_LIBS} shlwapi)
 
-    set_target_properties( MvrGdtf PROPERTIES RUNTIME_OUTPUT_DIRECTORY    ${PROJECT_SOURCE_DIR}/libs/ )
-    set_target_properties( MvrGdtf PROPERTIES LIBRARY_OUTPUT_DIRECTORY   ${PROJECT_SOURCE_DIR}/libs/ )
-    set_target_properties( MvrGdtf PROPERTIES ARCHIVE_OUTPUT_DIRECTORY  ${PROJECT_SOURCE_DIR}/libs/ )
+    set_target_properties( MvrGdtf PROPERTIES RUNTIME_OUTPUT_DIRECTORY    ${CMAKE_SOURCE_DIR}/libs/ )
+    set_target_properties( MvrGdtf PROPERTIES LIBRARY_OUTPUT_DIRECTORY   ${CMAKE_SOURCE_DIR}/libs/ )
+    set_target_properties( MvrGdtf PROPERTIES ARCHIVE_OUTPUT_DIRECTORY  ${CMAKE_SOURCE_DIR}/libs/ )
 elseif(UNIX)
     if (APPLE)
         set(PREPROCESSORS ${PREPROCESSORS} PUBLIC GS_MAC)
