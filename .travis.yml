@@ -34,22 +34,38 @@ matrix:
     # Windows 2016 Server
     - env: CXX_FLAG="-MD"
       os: windows
+      install:
+        - cmake -G "Visual Studio 15 2017 Win64" -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_INSTALL_PREFIX:PATH=libs -DCMAKE_CONFIGURATION_TYPES="Release" -Dxmlch-type=wchar_t -DCMAKE_CXX_FLAGS_RELEASE:STRING="$CXX_FLAG -O2 -Ob2 -DNDEBUG" ..
       script:
+        - cd ..
         - CMD //C runMSBuild_lib.bat "Release"
         - CMD //C runMSUnitTest.bat
     - env: CXX_FLAG="-MT"
       os: windows
+      install:
+        - cmake -G "Visual Studio 15 2017 Win64" -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_INSTALL_PREFIX:PATH=libs -DCMAKE_CONFIGURATION_TYPES="Release" -Dxmlch-type=wchar_t -DCMAKE_CXX_FLAGS_RELEASE:STRING="$CXX_FLAG -O2 -Ob2 -DNDEBUG" ..
       script:
+        - cd ..
         - CMD //C runMSBuild_lib.bat "Release"
         - CMD //C runMSUnitTest.bat
 
+before_install:
+- cd ..
+- git --branch xerces-3.2.2 https://github.com/apache/xerces-c.git
+- cd xerces-c
+- mkdir build
+- cd build
+
 install:
+- cmake .. -DBUILD_SHARED_LIBS=OFF -Dxmlch-type=uint16_t -Dnetwork=OFF
+- cmake --build . --config Release --target install
+- cd ..
+- cd ..
+- cd libMVRgdtf
 - mkdir build
 - cd build
 - cmake -DWIN_RUNTIME_LIB:STRING=$CXX_FLAG -DUNITTEST=true ..
-- cd ..
 
 script:
-- cd build
 - make -j 2
 - ./MvrGdtfUnitTest
