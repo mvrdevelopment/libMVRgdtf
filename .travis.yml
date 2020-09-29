@@ -6,18 +6,15 @@ matrix:
   include:
     # GCC 5
     - env: Ubuntu Build
-      sudo: required
       dist: xenial
     - env: Ubuntu Build
       sudo: required
       dist: xenial
       compiler: clang
     - env: XERCES_CONFIGURE_ENCODER="--enable-transcoder-icu" ADDIONAL_LD=" -licuuc"
-      sudo: required
       dist: xenial
       compiler: clang
     - env: Ubuntu Build
-      sudo: required
       dist: bionic
       compiler: gcc
     # Xcode 9.4 g++
@@ -58,6 +55,8 @@ before_install:
 
 install:
 - cmake .. -DBUILD_SHARED_LIBS=OFF -Dxmlch-type=uint16_t -Dnetwork=OFF
+
+before_script:
 - cmake --build . --config Release --target install
 - cd ..
 - cd ..
