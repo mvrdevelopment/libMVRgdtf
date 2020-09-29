@@ -51,7 +51,7 @@ matrix:
 
 before_install:
 - cd ..
-- git --branch v3.2.2 https://github.com/apache/xerces-c.git
+- git clone --branch v3.2.2 https://github.com/apache/xerces-c.git
 - cd xerces-c
 - mkdir build
 - cd build
