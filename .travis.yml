@@ -7,16 +7,20 @@ matrix:
     # GCC 5
     - env: Ubuntu Build
       dist: xenial
+      sudo: required
     - env: Ubuntu Build
       sudo: required
       dist: xenial
       compiler: clang
+      sudo: required
     - env: XERCES_CONFIGURE_ENCODER="--enable-transcoder-icu" ADDIONAL_LD=" -licuuc"
       dist: xenial
       compiler: clang
+      sudo: required
     - env: Ubuntu Build
       dist: bionic
       compiler: gcc
+      sudo: required
     # Xcode 9.4 g++
     - env: OSX_VERSION=10.10
       osx_image: xcode8.3
