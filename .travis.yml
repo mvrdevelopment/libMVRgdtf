@@ -5,10 +5,10 @@ os:
 matrix:
   include:
     # GCC 5
-    - env: Ubuntu Build
+    - env: XERCES_CONFIGURE_ENCODER="--enable-transcoder-gnuiconv"
       dist: xenial
       sudo: required
-    - env: Ubuntu Build
+    - env: XERCES_CONFIGURE_ENCODER="--enable-transcoder-gnuiconv"
       sudo: required
       dist: xenial
       compiler: clang
@@ -17,7 +17,7 @@ matrix:
       dist: xenial
       compiler: clang
       sudo: required
-    - env: Ubuntu Build
+    - env: XERCES_CONFIGURE_ENCODER="--enable-transcoder-gnuiconv"
       dist: bionic
       compiler: gcc
       sudo: required
