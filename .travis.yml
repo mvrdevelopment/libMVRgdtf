@@ -58,7 +58,7 @@ before_install:
 - cd build
 
 install:
-- cmake .. -DBUILD_SHARED_LIBS=OFF -Dxmlch-type=uint16_t -Dnetwork=OFF
+- cmake .. -DBUILD_SHARED_LIBS=OFF -Dxmlch-type=uint16_t -Dnetwork=OFF $XERCES_CONFIGURE_ENCODER $ADDIONAL_LD
 
 before_script:
 - cmake --build . --config Release
