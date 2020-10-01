@@ -5,19 +5,19 @@ os:
 matrix:
   include:
     # GCC 5
-    - env: XERCES_CONFIGURE_ENCODER="--enable-transcoder-gnuiconv"
+    - env: XERCES_CONFIGURE_ENCODER="gnuiconv"
       dist: xenial
       sudo: required
-    - env: XERCES_CONFIGURE_ENCODER="--enable-transcoder-gnuiconv"
+    - env: XERCES_CONFIGURE_ENCODER="gnuiconv"
       sudo: required
-      dist: xenial
-      compiler: clang
-      sudo: required
-    - env: XERCES_CONFIGURE_ENCODER="--enable-transcoder-icu" ADDIONAL_LD=" -licuuc"
       dist: xenial
       compiler: clang
       sudo: required
-    - env: XERCES_CONFIGURE_ENCODER="--enable-transcoder-gnuiconv"
+    - env: XERCES_CONFIGURE_ENCODER="icu" ADDIONAL_LD=" -licuuc"
+      dist: xenial
+      compiler: clang
+      sudo: required
+    - env: XERCES_CONFIGURE_ENCODER="gnuiconv"
       dist: bionic
       compiler: gcc
       sudo: required
@@ -58,7 +58,7 @@ before_install:
 - cd build
 
 install:
-- cmake .. -DBUILD_SHARED_LIBS=OFF -Dxmlch-type=uint16_t -Dnetwork=OFF $XERCES_CONFIGURE_ENCODER $ADDIONAL_LD
+- cmake .. -DBUILD_SHARED_LIBS=OFF -Dxmlch-type=uint16_t -Dnetwork=OFF -Dtranscoder=$XERCES_CONFIGURE_ENCODER 
 
 before_script:
 - cmake --build . --config Release
