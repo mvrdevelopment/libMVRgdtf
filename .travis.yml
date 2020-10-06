@@ -5,51 +5,70 @@ os:
 matrix:
   include:
     # GCC 5
-    - env: Ubuntu Build
-      sudo: required
+    - env: XERCES_CONFIGURE_ENCODER="gnuiconv"
       dist: xenial
-    - env: Ubuntu Build
       sudo: required
-      dist: xenial
-      compiler: clang
-    - env: XERCES_CONFIGURE_ENCODER="--enable-transcoder-icu" ADDIONAL_LD=" -licuuc"
+    - env: XERCES_CONFIGURE_ENCODER="gnuiconv"
       sudo: required
       dist: xenial
       compiler: clang
-    - env: Ubuntu Build
       sudo: required
+    - env: XERCES_CONFIGURE_ENCODER="icu" ADDIONAL_LD=" -licuuc"
+      dist: xenial
+      compiler: clang
+      sudo: required
+    - env: XERCES_CONFIGURE_ENCODER="gnuiconv"
       dist: bionic
       compiler: gcc
+      sudo: required
     # Xcode 9.4 g++
-    - env: OSX_VERSION=10.10
+    - env: OSX_VERSION=10.10 XERCES_CONFIGURE_ENCODER="macosunicodeconverter"
       osx_image: xcode8.3
       os: osx
       # Xcode 9.4 Clang
-    - env: OSX_VERSION=10.14
+    - env: OSX_VERSION=10.14 XERCES_CONFIGURE_ENCODER="macosunicodeconverter"
       osx_image: xcode10.1
       os: osx
-    - env: OSX_VERSION=10.14
+    - env: OSX_VERSION=10.14 XERCES_CONFIGURE_ENCODER="macosunicodeconverter"
       osx_image: xcode11.3
       os: osx
     # Windows 2016 Server
-    - env: CXX_FLAG="-MD"
+    - env: CXX_FLAG="-MD" XERCES_CONFIGURE_ENCODER="windows"
       os: windows
+      install:
+        - cmake -G "Visual Studio 15 2017 Win64" -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_INSTALL_PREFIX:PATH=libs -DCMAKE_CONFIGURATION_TYPES="Release" -Dxmlch-type=wchar_t -DCMAKE_CXX_FLAGS_RELEASE:STRING="$CXX_FLAG -O2 -Ob2 -DNDEBUG" ..
       script:
+        - cd ..
         - CMD //C runMSBuild_lib.bat "Release"
         - CMD //C runMSUnitTest.bat
-    - env: CXX_FLAG="-MT"
+    - env: CXX_FLAG="-MT" XERCES_CONFIGURE_ENCODER="windows"
       os: windows
+      install:
+        - cmake -G "Visual Studio 15 2017 Win64" -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_INSTALL_PREFIX:PATH=libs -DCMAKE_CONFIGURATION_TYPES="Release" -Dxmlch-type=wchar_t -DCMAKE_CXX_FLAGS_RELEASE:STRING="$CXX_FLAG -O2 -Ob2 -DNDEBUG" ..
       script:
+        - cd ..
         - CMD //C runMSBuild_lib.bat "Release"
         - CMD //C runMSUnitTest.bat
 
+before_install:
+- cd ..
+- git clone --branch v3.2.2 https://github.com/apache/xerces-c.git
+- cd xerces-c
+- mkdir build
+- cd build
+
 install:
+- cmake .. -DBUILD_SHARED_LIBS=OFF -Dxmlch-type=uint16_t -Dnetwork=OFF -Dtranscoder=$XERCES_CONFIGURE_ENCODER 
+
+before_script:
+- cmake --build . --config Release
+- cd ..
+- cd ..
+- cd libMVRgdtf
 - mkdir build
 - cd build
 - cmake -DWIN_RUNTIME_LIB:STRING=$CXX_FLAG -DUNITTEST=true ..
-- cd ..
 
 script:
-- cd build
 - make -j 2
 - ./MvrGdtfUnitTest
