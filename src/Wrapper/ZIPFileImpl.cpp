@@ -925,7 +925,8 @@ size_t CZIPFileImpl::Deflate( void* pData, size_t dataSize, void* outData )
 	if ( streamToDeflate ) 
 		delete streamToDeflate;
 
-	return outSize;
+	// skip extended adler-32
+	return outSize-4;
 }
 
 bool CZIPFileImpl::Write( IZIPFileIOBuffer* inputBuffer, IFileIdentifier* pFileID )
