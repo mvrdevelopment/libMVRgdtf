@@ -6,11 +6,6 @@ set(UNITTEST FALSE CACHE BOOL "If enabled the tests wont be build!")
 set(WIN_RUNTIME_LIB "-MD" CACHE STRING "Set '-MD' or '-MT' for windows build")
 
 set(DO_NOT_INCLUDE_MINI_ZIP FALSE CACHE BOOL "Set if we dont want mini-zip")
-set(DEBUG_BUILD FALSE CACHE BOOL "If enabled, this will generate debug symbols")
-
-if(DEBUG_BUILD)
-set(CMAKE_BUILD_TYPE Debug)
-endif(DEBUG_BUILD)
 
 set(XERCES_ROOT_PATH ${CMAKE_SOURCE_DIR}/../xerces-c CACHE STRING "Set the build path where you called cmake.")
 set(XERCES_INCLUDE_PATH ${XERCES_ROOT_PATH}/src ${XERCES_ROOT_PATH}/build/src CACHE STRING "Set the include path")
@@ -20,7 +15,6 @@ if (WIN32)
 else()
     set(XERCES_LIB_PATH ${CMAKE_SOURCE_DIR}/../xerces-c/build/src/libxerces-c-3.2.a CACHE STRING "Set the xerces libary path")
 endif(WIN32)
-
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
