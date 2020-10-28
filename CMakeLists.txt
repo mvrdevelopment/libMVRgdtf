@@ -2,9 +2,15 @@ SET(CMAKE_POLICY_DEFAULT_CMP0074 NEW)
 cmake_minimum_required(VERSION 3.9.4)
 
 # pre setup for some vars
-set(UNITTEST FALSE CACHE STRING "If enabled the tests wont be build!")
+set(UNITTEST FALSE CACHE BOOL "If enabled the tests wont be build!")
 set(WIN_RUNTIME_LIB "-MD" CACHE STRING "Set '-MD' or '-MT' for windows build")
 
+set(DO_NOT_INCLUDE_MINI_ZIP FALSE CACHE BOOL "Set if we dont want mini-zip")
+set(DEBUG_BUILD FALSE CACHE BOOL "If enabled, this will generate debug symbols")
+
+if(DEBUG_BUILD)
+set(CMAKE_BUILD_TYPE Debug)
+endif(DEBUG_BUILD)
 
 set(XERCES_ROOT_PATH ${CMAKE_SOURCE_DIR}/../xerces-c CACHE STRING "Set the build path where you called cmake.")
 set(XERCES_INCLUDE_PATH ${XERCES_ROOT_PATH}/src ${XERCES_ROOT_PATH}/build/src CACHE STRING "Set the include path")
@@ -143,14 +149,14 @@ set(LIB_OUTPUT_NAME "MvrGdtf" CACHE STRING "The output name of the lib file")
 set_target_properties(MvrGdtf PROPERTIES OUTPUT_NAME ${LIB_OUTPUT_NAME})
 
 # Include mini-zip
-if($ENV{DO_NOT_INCLUDE_MINI_ZIP})
+if(${DO_NOT_INCLUDE_MINI_ZIP})
     target_compile_definitions(MvrGdtf PUBLIC DONT_INCLUDE_MINI_ZIP)
 
     get_target_property(OUTPUT_NAME_OLD MvrGdtf OUTPUT_NAME)
     set(OUTPUT_NAME_OLD "${OUTPUT_NAME_OLD}_NO_MZ")
 
     set_target_properties(MvrGdtf PROPERTIES OUTPUT_NAME ${OUTPUT_NAME_OLD})
-endif($ENV{DO_NOT_INCLUDE_MINI_ZIP})
+endif(${DO_NOT_INCLUDE_MINI_ZIP})
 
 #Append Runtime
 if (WIN32)

@@ -67,7 +67,7 @@ before_script:
 - cd libMVRgdtf
 - mkdir build
 - cd build
-- cmake -DWIN_RUNTIME_LIB:STRING=$CXX_FLAG -DUNITTEST=true ..
+- cmake -DWIN_RUNTIME_LIB:STRING=$CXX_FLAG -DUNITTEST=TRUE ..
 
 script:
 - make -j 2
