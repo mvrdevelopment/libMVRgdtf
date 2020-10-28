@@ -35,11 +35,10 @@ uint32_t CFileIdentifier::Release()
 	if ( fRefCnt > 0 ) {
 		fRefCnt --;
 
-		// mechanizm for immediate delete of the interface instance
+		// mechanism for immediate delete of the interface instance
 		if ( fRefCnt == 0 ) {
-			//::GS_VWNotifyDeleteInterface( this );
+			delete this;
 			// EXIT IMMEDIATELY! 'this' no longer exist!!!
-			// TODO
 			return 0;
 		}
 	}

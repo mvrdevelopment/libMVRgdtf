@@ -136,6 +136,7 @@ public:
                                             // mechanizm for immediate delete of the interface instance
                                             if ( fRefCnt == 0 ) {
                                                 this->OnRefCountZero();
+                                                delete this;
                                                 //::GS_VWNotifyDeleteInterface( this );
                                                 // EXIT IMMEDIATELY! 'this' no longer exist!!!
                                                 return 0;

@@ -51,7 +51,7 @@ uint32_t CFolderIdentifier::Release()
 		farrFolderHierarchy.clear();
 
 		// mechanizm for immediate delete of the interface instance
-		//::GS_VWNotifyDeleteInterface( this ); TODO
+		delete this;
 		// EXIT IMMEDIATELY! 'this' no longer exist!!!
 		return 0;
 	}

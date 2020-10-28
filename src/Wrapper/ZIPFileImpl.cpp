@@ -149,7 +149,7 @@ uint32_t CZIPFileImpl::Release()
 
 		// mechanizm for immediate delete of the interface instance
 		if ( fRefCnt == 0 ) {
-			// ::GS_VWNotifyDeleteInterface( this ); TODO
+			delete this;
 			// EXIT IMMEDIATELY! 'this' no longer exist!!!
 			return 0;
 		}
