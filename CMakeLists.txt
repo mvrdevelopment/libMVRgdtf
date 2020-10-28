@@ -144,14 +144,14 @@ set(LIB_OUTPUT_NAME "MvrGdtf" CACHE STRING "The output name of the lib file")
 set_target_properties(MvrGdtf PROPERTIES OUTPUT_NAME ${LIB_OUTPUT_NAME})
 
 # Include mini-zip
-if(${DO_NOT_INCLUDE_MINI_ZIP})
+if(${DO_NOT_INCLUDE_MINI_ZIP} OR DEFINED ENV{DO_NOT_INCLUDE_MINI_ZIP})
     target_compile_definitions(MvrGdtf PUBLIC DONT_INCLUDE_MINI_ZIP)
 
     get_target_property(OUTPUT_NAME_OLD MvrGdtf OUTPUT_NAME)
     set(OUTPUT_NAME_OLD "${OUTPUT_NAME_OLD}_NO_MZ")
 
     set_target_properties(MvrGdtf PROPERTIES OUTPUT_NAME ${OUTPUT_NAME_OLD})
-endif(${DO_NOT_INCLUDE_MINI_ZIP})
+endif()
 
 #Append Runtime
 if (WIN32)
