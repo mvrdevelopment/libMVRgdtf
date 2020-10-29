@@ -107,9 +107,9 @@ uint32_t CXMLFileImpl::Release()
 	if ( fRefCnt > 0 ) {
 		fRefCnt --;
 
-		// mechanizm for immediate delete of the interface instance
+		// mechanism for immediate deletion of the interface instance
 		if ( fRefCnt == 0 ) {
-			delete this;
+			// delete this;
 			// EXIT IMMEDIATELY! 'this' no longer exist!!!
 			return 0;
 		}

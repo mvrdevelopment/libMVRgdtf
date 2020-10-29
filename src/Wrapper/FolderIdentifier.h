@@ -10,7 +10,7 @@ namespace VectorworksMVR
 	namespace Filing
 	{
 		// ----------------------------------------------------------------------------------------------------
-		class CFolderIdentifier : public IFolderIdentifier
+		class CFolderIdentifier : public VCOMImmediateImpl<IFolderIdentifier>
 		{
 		public:
 										CFolderIdentifier();
@@ -49,10 +49,6 @@ namespace VectorworksMVR
 
 			virtual VCOMError	VCOM_CALLTYPE	EnumerateContents(TFolderContentCallback_Folder folderCallback, TFolderContentCallback_File fileCallback, bool bReqursive);
 
-		// IVWUnknown
-		public:
-			virtual uint32_t	VCOM_CALLTYPE	AddRef();
-			virtual uint32_t	VCOM_CALLTYPE	Release();
 
 		// Tools
 		public:
@@ -63,7 +59,6 @@ namespace VectorworksMVR
 			bool				EnumerateContentsHandler(IFolderContentListener* pListener, const CFolderIdentifier& folder, bool bReqursive, VCOMError& outError);
 			
 		private:
-			Sint32				fRefCnt;
 			// this actually keep the full path
 			// this is done like this (and not just TFolderIdentifier)
 			// because TFolderIdentifier::SetByFullPath on mac requeres the path to exist
