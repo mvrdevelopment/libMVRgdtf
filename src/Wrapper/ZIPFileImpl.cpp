@@ -149,7 +149,7 @@ uint32_t CZIPFileImpl::Release()
 
 		// mechanism for immediate deletion of the interface instance
 		if ( fRefCnt == 0 ) {
-			// delete this;
+			delete this;
 			// EXIT IMMEDIATELY! 'this' no longer exist!!!
 			return 0;
 		}
