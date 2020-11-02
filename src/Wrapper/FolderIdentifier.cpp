@@ -27,10 +27,36 @@ using namespace VectorworksMVR::Filing;
 // ----------------------------------------------------------------------------------------------------
 CFolderIdentifier::CFolderIdentifier()
 {
+	fRefCnt		= 0;
 }
 
 CFolderIdentifier::~CFolderIdentifier()
 {
+}
+
+uint32_t CFolderIdentifier::AddRef()
+{
+	fRefCnt ++;
+	return fRefCnt;
+}
+
+uint32_t CFolderIdentifier::Release()
+{
+	ASSERTN( kEveryone, fRefCnt > 0 );
+	if ( fRefCnt > 0 ) {
+		fRefCnt --;
+	}
+	
+	if (fRefCnt == 0) {
+		farrFolderHierarchy.clear();
+
+		// mechanism for immediate delete of the interface instance
+		delete this;
+		// EXIT IMMEDIATELY! 'this' no longer exist!!!
+		return 0;
+	}
+	
+	return fRefCnt;
 }
 
 

@@ -20,7 +20,7 @@ CFileIdentifier::CFileIdentifier()
 
 CFileIdentifier::~CFileIdentifier()
 {
-	fFolderID.Release();
+	// fFolderID.Release();
 }
 
 uint32_t CFileIdentifier::AddRef()

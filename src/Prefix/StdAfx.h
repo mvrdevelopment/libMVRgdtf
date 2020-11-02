@@ -147,7 +147,12 @@ public:
 
 protected:
     // notification when this instance ref count goes down to zero
-    virtual void                    OnRefCountZero() { if ( fParent ) { fParent->Release(); } fParent = NULL; }
+    virtual void                    OnRefCountZero()
+    {
+        if ( fParent ) 
+        { fParent->Release(); } 
+        fParent = NULL;
+    }
 
 protected:
     RefNumType    fRefCnt;
@@ -181,7 +186,12 @@ public:
 
 protected:
     // notification when this instance ref count goes down to zero
-    virtual void					OnRefCountZero() { if ( fParent ) { fParent->Release(); } fParent = NULL; }
+    virtual void					OnRefCountZero()
+    {
+        if ( fParent )
+        { fParent->Release(); }
+        fParent = NULL;
+    }
 
 protected:
     RefNumType	fRefCnt;
