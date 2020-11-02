@@ -114,8 +114,6 @@ VCOMError CZIPFileIOBufferImpl::SetData(void* pBuffer, size_t bufferSize)
 // ----------------------------------------------------------------------------------------------------
 CZIPFileImpl::CZIPFileImpl()
 {
-	fRefCnt					= 0;
-
 	fpOpenedFile			= NULL;
 	fpOpenedFileID			= NULL;
 
@@ -134,27 +132,6 @@ CZIPFileImpl::~CZIPFileImpl()
 		delete fpOpenedFile;
 		fpOpenedFile = nullptr;
 	}
-}
-uint32_t CZIPFileImpl::AddRef()
-{
-	fRefCnt ++;
-	return fRefCnt;
-}
-
-uint32_t CZIPFileImpl::Release()
-{
-	ASSERTN( kEveryone, fRefCnt > 0 );
-	if ( fRefCnt > 0 ) {
-		fRefCnt --;
-
-		// mechanism for immediate deletion of the interface instance
-		if ( fRefCnt == 0 ) {
-			delete this;
-			// EXIT IMMEDIATELY! 'this' no longer exist!!!
-			return 0;
-		}
-	}
-	return fRefCnt;
 }
 
 VCOMError CZIPFileImpl::OpenRead(IFileIdentifier* pFileID)
