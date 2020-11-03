@@ -18,6 +18,12 @@ endif(WIN32)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
+set(DEBUG FALSE CACHE BOOL "If enabled, debug flags will be set")
+
+if(DEBUG)
+set(CMAKE_BUILD_TYPE Debug)
+endif(DEBUG)
+
 #################################################
 # System setup
 if (WIN32)
