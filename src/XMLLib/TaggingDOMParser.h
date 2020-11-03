@@ -5,6 +5,8 @@ namespace VectorworksMVR
 {
 	namespace XML
 	{
+		class TagDataHandler;
+
 		struct Tag {
 			public:
 				inline Tag()
@@ -35,50 +37,6 @@ namespace VectorworksMVR
 					inline ~Tag(){}
 		};
 
-		class TagDataHandler : public DOMUserDataHandler
-		{
-			private:
-				// TaggingDOMParser* parser;
-
-			public:
-				TagDataHandler() //: parser(0)
-				{
-				}
-
-				virtual ~TagDataHandler()
-				{
-				}
-
-				// inline void setParser(TaggingDOMParser* parser)
-				// {
-				//     this->parser = parser;
-				// }
-
-				virtual void handle(DOMOperationType operation,
-								const XMLCh* const key,
-								void* data,
-								const DOMNode* src,
-								DOMNode* dst)
-				{
-					Tag* srcTag = static_cast<Tag*>(data);
-					switch(operation){
-						// import and clone are basically the same case, in both, the node
-						// is cloned
-						case NODE_IMPORTED:
-						case NODE_CLONED:
-						srcTag->link();
-							break;
-						case NODE_DELETED:
-							srcTag->unlink();
-							break;
-						case NODE_RENAMED:
-						default:
-							// do nothing on rename
-							break;
-					}
-				}
-		};
-
 		class TaggingDOMParser : public XercesDOMParser
 		{
 		public:
@@ -96,7 +54,7 @@ namespace VectorworksMVR
 			);
 
 		private:
-			TagDataHandler dataHandler;
+			TagDataHandler* dataHandler;
 
 		protected:
 			Tag* createTag();
