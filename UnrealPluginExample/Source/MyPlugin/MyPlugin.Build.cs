@@ -1,5 +1,6 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
+
 using System;
 using System.IO;
 using UnrealBuildTool;
@@ -21,14 +22,22 @@ public class MyPlugin : ModuleRules
 			new string[] {
 				// ... add other private include paths required here ...
                 Path.Combine(ModuleDirectory, "..", "..", "Deps", "include")
-			}
+            }
 			);
-        
-        PublicAdditionalLibraries.Add(Path.Combine(ModuleDirectory, "..", "..", "Deps", "lib", "libMvrGdtf.a"));
-        PublicAdditionalLibraries.Add(Path.Combine(ModuleDirectory, "..", "..", "Deps", "lib", "libxerces-c-3.2.a"));
-			
 		
-		PublicDependencyModuleNames.AddRange(
+        if (Target.Platform == UnrealTargetPlatform.Win64)
+        {
+            PublicAdditionalLibraries.Add(Path.Combine(ModuleDirectory, "..", "..", "Deps", "lib", "MvrGdtf-MD.lib"));
+            PublicAdditionalLibraries.Add(Path.Combine(ModuleDirectory, "..", "..", "Deps", "lib", "xerces-c_3.lib"));
+            PublicAdditionalLibraries.Add("Shlwapi.lib");
+        }
+        else
+        {
+            PublicAdditionalLibraries.Add(Path.Combine(ModuleDirectory, "..", "..", "Deps", "lib", "libMvrGdtf.a"));
+            PublicAdditionalLibraries.Add(Path.Combine(ModuleDirectory, "..", "..", "Deps", "lib", "libxerces-c-3.2.a"));
+        }
+
+        PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
 				"Core",
