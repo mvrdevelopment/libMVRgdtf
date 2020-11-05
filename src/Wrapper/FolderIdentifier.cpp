@@ -27,37 +27,14 @@ using namespace VectorworksMVR::Filing;
 // ----------------------------------------------------------------------------------------------------
 CFolderIdentifier::CFolderIdentifier()
 {
-	fRefCnt		= 0;
+	
 }
 
 CFolderIdentifier::~CFolderIdentifier()
 {
+	farrFolderHierarchy.clear();
 }
 
-uint32_t CFolderIdentifier::AddRef()
-{
-	fRefCnt ++;
-	return fRefCnt;
-}
-
-uint32_t CFolderIdentifier::Release()
-{
-	ASSERTN( kEveryone, fRefCnt > 0 );
-	if ( fRefCnt > 0 ) {
-		fRefCnt --;
-	}
-	
-	if (fRefCnt == 0) {
-		farrFolderHierarchy.clear();
-
-		// mechanizm for immediate delete of the interface instance
-		//::GS_VWNotifyDeleteInterface( this ); TODO
-		// EXIT IMMEDIATELY! 'this' no longer exist!!!
-		return 0;
-	}
-	
-	return fRefCnt;
-}
 
 VCOMError CFolderIdentifier::SetFullPath(const TXString& fullPath)
 {

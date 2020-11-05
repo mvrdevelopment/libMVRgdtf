@@ -59,15 +59,11 @@ namespace VectorworksMVR
 
 		// ----------------------------------------------------------------------------------------------------
 
-		class  CZIPFileImpl : public IZIPFile
+		class  CZIPFileImpl : public VCOMImpl<IZIPFile>
 		{
 		public:
 			CZIPFileImpl();
 			virtual							~CZIPFileImpl();
-
-		public:
-			virtual uint32_t	VCOM_CALLTYPE	AddRef();
-			virtual uint32_t	VCOM_CALLTYPE	Release();
 
 		public:
 			virtual VCOMError VCOM_CALLTYPE	OpenRead(IFileIdentifier* pFileID);
@@ -126,7 +122,6 @@ namespace VectorworksMVR
 			void	GetDosDateAndTime( Uint16& dosDate, Uint16& dosTime);
 	
 		private:
-			uint32_t							fRefCnt;
 
 			bool							fbOpenedWrite;
 			bool							fbCompressFiles;

@@ -136,6 +136,7 @@ public:
                                             // mechanizm for immediate delete of the interface instance
                                             if ( fRefCnt == 0 ) {
                                                 this->OnRefCountZero();
+                                                delete this;
                                                 //::GS_VWNotifyDeleteInterface( this );
                                                 // EXIT IMMEDIATELY! 'this' no longer exist!!!
                                                 return 0;
@@ -146,7 +147,12 @@ public:
 
 protected:
     // notification when this instance ref count goes down to zero
-    virtual void                    OnRefCountZero() { if ( fParent ) { fParent->Release(); } fParent = NULL; }
+    virtual void                    OnRefCountZero()
+    {
+        if ( fParent ) 
+        { fParent->Release(); } 
+        fParent = NULL;
+    }
 
 protected:
     RefNumType    fRefCnt;
@@ -180,7 +186,12 @@ public:
 
 protected:
     // notification when this instance ref count goes down to zero
-    virtual void					OnRefCountZero() { if ( fParent ) { fParent->Release(); } fParent = NULL; }
+    virtual void					OnRefCountZero()
+    {
+        if ( fParent )
+        { fParent->Release(); }
+        fParent = NULL;
+    }
 
 protected:
     RefNumType	fRefCnt;

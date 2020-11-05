@@ -114,8 +114,6 @@ VCOMError CZIPFileIOBufferImpl::SetData(void* pBuffer, size_t bufferSize)
 // ----------------------------------------------------------------------------------------------------
 CZIPFileImpl::CZIPFileImpl()
 {
-	fRefCnt					= 0;
-
 	fpOpenedFile			= NULL;
 	fpOpenedFileID			= NULL;
 
@@ -134,27 +132,6 @@ CZIPFileImpl::~CZIPFileImpl()
 		delete fpOpenedFile;
 		fpOpenedFile = nullptr;
 	}
-}
-uint32_t CZIPFileImpl::AddRef()
-{
-	fRefCnt ++;
-	return fRefCnt;
-}
-
-uint32_t CZIPFileImpl::Release()
-{
-	ASSERTN( kEveryone, fRefCnt > 0 );
-	if ( fRefCnt > 0 ) {
-		fRefCnt --;
-
-		// mechanizm for immediate delete of the interface instance
-		if ( fRefCnt == 0 ) {
-			// ::GS_VWNotifyDeleteInterface( this ); TODO
-			// EXIT IMMEDIATELY! 'this' no longer exist!!!
-			return 0;
-		}
-	}
-	return fRefCnt;
 }
 
 VCOMError CZIPFileImpl::OpenRead(IFileIdentifier* pFileID)
@@ -925,7 +902,8 @@ size_t CZIPFileImpl::Deflate( void* pData, size_t dataSize, void* outData )
 	if ( streamToDeflate ) 
 		delete streamToDeflate;
 
-	return outSize;
+	// skip extended adler-32
+	return outSize-4;
 }
 
 bool CZIPFileImpl::Write( IZIPFileIOBuffer* inputBuffer, IFileIdentifier* pFileID )

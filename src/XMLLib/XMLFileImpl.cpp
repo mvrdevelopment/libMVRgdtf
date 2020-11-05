@@ -56,8 +56,6 @@ private:
 // ----------------------------------------------------------------------------------------------------
 CXMLFileImpl::CXMLFileImpl()
 {
-	fRefCnt					= 0;
-
 	fLastError				= kVCOMError_NoError;
 	fpImpl					= NULL;
 	fpXercesDOMParser		= NULL;
@@ -93,28 +91,6 @@ CXMLFileImpl::~CXMLFileImpl()
 	// quit, there are many leaks reported. This change appears to fix over
 	// 3000 leaks. [BAF 10/27/15]
 	XMLPlatformUtils::Terminate();
-}
-
-uint32_t CXMLFileImpl::AddRef()
-{
-	fRefCnt ++;
-	return fRefCnt;
-}
-
-uint32_t CXMLFileImpl::Release()
-{
-	ASSERTN( kEveryone, fRefCnt > 0 );
-	if ( fRefCnt > 0 ) {
-		fRefCnt --;
-
-		// mechanizm for immediate delete of the interface instance
-		if ( fRefCnt == 0 ) {
-			//::VWNotifyDeleteInterface( this ); TODO
-			// EXIT IMMEDIATELY! 'this' no longer exist!!!
-			return 0;
-		}
-	}
-	return fRefCnt;
 }
 
 VCOMError CXMLFileImpl::CreateNew(const TXString& rootName)
