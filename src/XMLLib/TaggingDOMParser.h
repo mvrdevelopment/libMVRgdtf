@@ -5,7 +5,6 @@ namespace VectorworksMVR
 {
 	namespace XML
 	{
-
 		class TagDataHandler;
 
 		struct Tag {

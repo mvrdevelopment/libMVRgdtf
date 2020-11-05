@@ -14,7 +14,7 @@ namespace VectorworksMVR
 		// {D9B3E5F2-3799-11DB-9C35-00508D5E9851}
 		static const VWIID IID_XMLFileNode = { 0xD9B3E5F2, 0x3799, 0x11DB, { 0x9C, 0x35, 0x00, 0x50, 0x8D, 0x5E, 0x98, 0x51 } };
 
-		class CXMLFileNodeImpl : public IXMLFileNode
+		class CXMLFileNodeImpl : public VCOMImpl<IXMLFileNode>
 		{
 		public:
 			CXMLFileNodeImpl();
@@ -55,17 +55,10 @@ namespace VectorworksMVR
 			virtual VCOMError   VCOM_CALLTYPE   AddCopyOfExistingNodeBeforeIndex(const IXMLFileNode* existingNode, size_t index, IXMLFileNode** ppOutNode);
 			virtual VCOMError   VCOM_CALLTYPE   GetLineNumber(size_t& line, size_t& column);
 
-			// IVWUnknown
-		public:
-			virtual uint32_t	VCOM_CALLTYPE	AddRef();
-			virtual uint32_t	VCOM_CALLTYPE	Release();
-
 		private:
 			VCOMError						FindAttribute(const TXString& attrName, DOMAttrPtr& outFoundAttr);
 
 		private:
-			Sint32				fRefCnt;
-
 			DOMDocumentPtr		fpDomDocument;
 			DOMNodePtr			fpNode;
 		};

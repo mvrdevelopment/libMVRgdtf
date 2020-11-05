@@ -14,7 +14,7 @@ namespace VectorworksMVR
 	namespace Filing
 	{
 		// ----------------------------------------------------------------------------------------------------
-		class CFileIdentifier : public IFileIdentifier
+		class CFileIdentifier : public VCOMImpl<IFileIdentifier>
 		{
 		public:
 									CFileIdentifier();
@@ -51,18 +51,12 @@ namespace VectorworksMVR
 			virtual VCOMError	VCOM_CALLTYPE	SetAttributesTimeDateReference(EAttributesTimeReference ref, const SAttributesDateTime& data);
 			virtual VCOMError	VCOM_CALLTYPE	GetFileSize (size_t& outSize);
 
-		// IVWUnknown
-		public:
-			virtual uint32_t	VCOM_CALLTYPE	AddRef();
-			virtual uint32_t	VCOM_CALLTYPE	Release();
-
 		// Tools
 		public:
 			static void			ValidateFilename(TXString& outName);
 			static void			ConvertFilename(TXString& outName);
 
 		private:
-			Sint32				fRefCnt;
 			CFolderIdentifier	fFolderID;
 			TXString			fFileName;
 		};

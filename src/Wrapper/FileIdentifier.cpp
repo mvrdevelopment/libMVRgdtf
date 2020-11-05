@@ -13,37 +13,12 @@ using namespace VectorworksMVR::Filing;
 // ----------------------------------------------------------------------------------------------------
 CFileIdentifier::CFileIdentifier()
 {
-	fRefCnt		 = 0;
-
 	fFolderID.AddRef();
 }
 
 CFileIdentifier::~CFileIdentifier()
 {
-	fFolderID.Release();
-}
 
-uint32_t CFileIdentifier::AddRef()
-{
-	fRefCnt ++;
-	return fRefCnt;
-}
-
-uint32_t CFileIdentifier::Release()
-{
-	ASSERTN( kEveryone, fRefCnt > 0 );
-	if ( fRefCnt > 0 ) {
-		fRefCnt --;
-
-		// mechanizm for immediate delete of the interface instance
-		if ( fRefCnt == 0 ) {
-			//::GS_VWNotifyDeleteInterface( this );
-			// EXIT IMMEDIATELY! 'this' no longer exist!!!
-			// TODO
-			return 0;
-		}
-	}
-	return fRefCnt;
 }
 
 TXString  CFileIdentifier::GetFileFullPath() const
