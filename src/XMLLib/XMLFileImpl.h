@@ -13,7 +13,7 @@ namespace VectorworksMVR
 
 
 		// ----------------------------------------------------------------------------------------------------
-		class CXMLFileImpl : public IXMLFile, DOMErrorHandler
+		class CXMLFileImpl : public VCOMImpl<IXMLFile>, DOMErrorHandler
 		{
 		public:
 			CXMLFileImpl();
@@ -41,11 +41,6 @@ namespace VectorworksMVR
 			virtual bool		VCOM_CALLTYPE	GetSimpleExist(const TXString& nodePath);							// check to see if exist -- for organizing loops more efficiently
 			virtual bool		VCOM_CALLTYPE	GetSimpleExist(IXMLFileNode* pRefNode, const TXString& nodePath);	// check to see if exist
 
-		// IVWUnknown
-		public:
-			virtual uint32_t	VCOM_CALLTYPE	AddRef();
-			virtual uint32_t	VCOM_CALLTYPE	Release();
-
 			// DOMErrorHandler
 		public:
 			bool							handleError(const DOMError& domError);
@@ -68,8 +63,6 @@ namespace VectorworksMVR
 			virtual VCOMError				DoSimpleNode(IXMLFileNode* pRefNode, const TXString& nodePath, IXMLFileNode** ppOutNode, TXString& outValue, bool doWrite);
 
 		private:
-			Sint32					fRefCnt;
-
 			DOMImplementationPtr	fpImpl;
 
 			XercesDOMParserPtr		fpXercesDOMParser;		// Pointer to Xerces DOM parser structure

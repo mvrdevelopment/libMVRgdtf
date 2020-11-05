@@ -13,7 +13,6 @@ using namespace VectorworksMVR::XML;
 // ----------------------------------------------------------------------------------------------------
 CXMLFileNodeImpl::CXMLFileNodeImpl()
 {
-	fRefCnt			= 0;
 	fpDomDocument	= NULL;
 	fpNode			= NULL;
 }
@@ -22,28 +21,6 @@ CXMLFileNodeImpl::~CXMLFileNodeImpl()
 {
 	fpDomDocument	= NULL;
 	fpNode			= NULL;
-}
-
-uint32_t CXMLFileNodeImpl::AddRef()
-{
-	fRefCnt ++;
-	return fRefCnt;
-}
-
-uint32_t CXMLFileNodeImpl::Release()
-{
-	ASSERTN( kEveryone, fRefCnt > 0 );
-	if ( fRefCnt > 0 ) {
-		fRefCnt --;
-
-		// mechanizm for immediate delete of the interface instance
-		if ( fRefCnt == 0 ) {
-			// ::GS_VWNotifyDeleteInterface( this ); TODO
-			// EXIT IMMEDIATELY! 'this' no longer exist!!!
-			return 0;
-		}
-	}
-	return fRefCnt;
 }
 
 void CXMLFileNodeImpl::SetData(DOMDocumentPtr pDomDocument, DOMNodePtr pNode)
