@@ -198,7 +198,8 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotImpl::GetAnimationSystem
 	if( ! fWheelSlot) return kVCOMError_NotInitialized;    
     
     SceneData::GdtfWheelSlotAnimationSystem* gdtfAnimationSystem = fWheelSlot->GetAnimationSystem();
-    
+
+    if (!gdtfAnimationSystem) { return kVCOMError_NotSet; }    
     
     //---------------------------------------------------------------------------
     // Initialize Object
