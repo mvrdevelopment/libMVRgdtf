@@ -125,6 +125,9 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		FromBuffer(const char* buffer, size_t length);
         virtual VCOMError VCOM_CALLTYPE		FromBufferInternal(const char* buffer, size_t length, TXString gdtfFileName);
 
+        
+        virtual VCOMError VCOM_CALLTYPE     RefreshBuffer();
+
         private:
         void FreeBuffer();
 

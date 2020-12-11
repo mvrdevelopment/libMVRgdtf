@@ -1989,6 +1989,29 @@ VCOMError VectorworksMVR::CGdtfFixtureImpl::FromBufferInternal(const char* buffe
 	return kVCOMError_NoError;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::RefreshBuffer()
+{
+    if(!fFixtureObject) { return kVCOMError_Failed; }
+    
+    TXString strFullPath ( "" );
+	
+	// Create the file pointer on the full path
+	IFileIdentifierPtr file (IID_FileIdentifier);
+	file->Set(strFullPath);
+
+    fZipFile = IZIPFilePtr(IID_ZIPFile);
+	fZipFile->OpenNewWrite(file, false);
+
+    fFixtureObject->ExportToFile(fZipFile);
+	
+	fZipFile->Close();
+
+    FreeBuffer();
+    fZipFile->ToBuffer(fBuffer, fBufferLength);
+
+    return kVCOMError_NoError;
+}
+
 void VectorworksMVR::CGdtfFixtureImpl::FreeBuffer()
 {
     if(fBuffer) {delete[] fBuffer;}

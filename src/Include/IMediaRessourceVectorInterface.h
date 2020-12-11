@@ -1232,6 +1232,7 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		virtual VCOMError VCOM_CALLTYPE		GetBufferLength(size_t& length) = 0;		
 		virtual VCOMError VCOM_CALLTYPE		ToBuffer(char* outBuffer) = 0;	
 		virtual VCOMError VCOM_CALLTYPE		FromBuffer(const char* inBuffer, size_t length) = 0;
+		virtual VCOMError VCOM_CALLTYPE     RefreshBuffer() = 0;
 
 		//-----------------------------------------------------------------------------
 		// GDTF 1.1
