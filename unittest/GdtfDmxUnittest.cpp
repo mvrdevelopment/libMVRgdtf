@@ -51,7 +51,6 @@ void GdtfDmxUnittest::WriteFile()
 		IGdtfFeatureGroupPtr featureGroup;
 		__checkVCOM(gdtfWrite->CreateFeatureGroup("FeatureGroup","FeatureGroup", &featureGroup));
 
-
 		IGdtfFeaturePtr feature;
 		__checkVCOM(featureGroup->CreateFeature("Feature", & feature));
 

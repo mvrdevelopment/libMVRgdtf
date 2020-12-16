@@ -10,7 +10,7 @@ using namespace VectorworksMVR::Filing;
 VectorworksMVR::CMediaRessourceVectorImpl::CMediaRessourceVectorImpl()
 {
 	fWriteMode	= false;
-	fReadMode	= false;;
+	fReadMode	= false;
 
 }
 
@@ -873,6 +873,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::OpenForRead
 	//---------------------------------------------------------------------------
 	// Initialize & Read
 	fExchangeObj.InitializeForImport();
+	fReadMode = true;
 	
 	if (fExchangeObj.ReadFromFile(fPath))	
 	{ 
