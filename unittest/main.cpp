@@ -29,6 +29,7 @@
 #include "ChannelFunctionStartTest.h"
 #include "CrashFileOpen.h"
 #include "GdtfBufferWrite.h"
+#include "GdtfRefreshBufferTest.h"
 
 using namespace VectorworksMVR;					
 
@@ -109,6 +110,9 @@ int main(int argc, char* argv[])
 
 	GdtfBufferWrite test19(base);
 	bool test19_ok = test19.RunTest();
+
+	GdtfRefreshBufferTest test20(base);
+	bool test20_ok = test20.RunTest();
 
     return  (mvrFailed || gdtfFailed || gdtfDmxFailed || errorFailed || modeMasterFailed || test1_ok || test2_ok|| test3_ok || test4_ok || test5_ok || test6_ok || test7_ok || test8_ok || test9_ok || test10_ok || test11_ok || test12_ok || test13_ok || test14_ok || test15_ok || test16_ok || test17_ok || test18_ok || test19_ok);
 }
