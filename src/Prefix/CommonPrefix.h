@@ -498,7 +498,7 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_DMXPersonalityDMXMode                   "DMXMode"
 //
 #define XML_GDTF_SoftwareVersionID_NodeNam               "SoftwareVersionID"
-#define XML_GDTF_SoftwareVersionID_Value                 "SoftwareVersionID_Value"
+#define XML_GDTF_SoftwareVersionID_Value                 "Value"
 //
 #define XML_GDTF_ArtNet                                  "Art-Net"
 #define XML_GDTF_sACN                                    "sACN"
