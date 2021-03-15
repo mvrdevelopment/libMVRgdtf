@@ -123,7 +123,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::OpenForWrite(MvrStri
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::AddFileToGdtfFile(MvrString fullPath, ERessourceType resType)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::AddFileToGdtfFile(MvrString fullPath, ERessourceType resType, MvrString newFileName)
 {
 	if(!fFixtureObject) { return kVCOMError_Failed; }
 	if(!fZipFile)		{ return kVCOMError_Failed; }
@@ -138,13 +138,17 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::AddFileToGdtfFile(Mv
 	
 	// Check if the file exists
 	if (!fileExisis) { return kVCOMError_Failed; }
-	
-	TXString fileName; file->GetFileName(fileName);
+
+    TXString strFileName(newFileName);
+    if(strFileName.IsEmpty())
+    {
+        file->GetFileName(strFileName);
+    }
 	
     // Append the SubFoldername for resources.
-    fileName = SceneData::SceneDataZip::GetResourceSubFolder(resType) + fileName;
+    strFileName = SceneData::SceneDataZip::GetResourceSubFolder(resType) + strFileName;
 
-	fZipFile->AddFile(fileName, file);	
+	fZipFile->AddFile(strFileName, file);	
 	
 	// Read From File
 	return kVCOMError_NoError;

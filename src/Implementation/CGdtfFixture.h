@@ -22,7 +22,7 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		OpenForWrite(MvrString fullPath, MvrString name, MvrString manufacturer, const MvrUUID& uuid);
 		virtual VCOMError VCOM_CALLTYPE		OpenForWrite(MvrString name, MvrString manufacturer, const MvrUUID& uuid);
 
-        virtual VCOMError VCOM_CALLTYPE		AddFileToGdtfFile(MvrString fullPath, ERessourceType resType);
+        virtual VCOMError VCOM_CALLTYPE		AddFileToGdtfFile(MvrString fullPath, ERessourceType resType, MvrString newFileName = "");
         virtual VCOMError VCOM_CALLTYPE		AddBufferToGdtfFile(MvrString filename, const char* inBuffer, size_t length, GdtfDefines::ERessourceType resType);
 		virtual VCOMError VCOM_CALLTYPE		Close();
 		
