@@ -205,7 +205,7 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTFPhysicalUnitEnum_Length				"Length"
 #define XML_GDTFPhysicalUnitEnum_Mass				"Mass"
 #define XML_GDTFPhysicalUnitEnum_Time				"Time"
-#define XML_GDTFPhysicalUnitEnum_Temperatur			"Temperatur"
+#define XML_GDTFPhysicalUnitEnum_Temperatur			"Temperature"
 #define XML_GDTFPhysicalUnitEnum_LuminousItensity	"LuminousIntensity"
 #define XML_GDTFPhysicalUnitEnum_Angle				"Angle"
 #define XML_GDTFPhysicalUnitEnum_Force				"Force"
