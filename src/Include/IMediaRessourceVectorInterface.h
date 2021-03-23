@@ -1130,7 +1130,7 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		
 		virtual VCOMError VCOM_CALLTYPE		OpenForWrite(MvrString fullPath, MvrString name, MvrString manufacturer, const MvrUUID& uuid) = 0;
 		virtual VCOMError VCOM_CALLTYPE		OpenForWrite(MvrString name, MvrString manufacturer, const MvrUUID& uuid) = 0;
-		virtual VCOMError VCOM_CALLTYPE		AddFileToGdtfFile(MvrString fullPath, GdtfDefines::ERessourceType resType) = 0;
+		virtual VCOMError VCOM_CALLTYPE		AddFileToGdtfFile(MvrString fullPath, GdtfDefines::ERessourceType resType, MvrString newFileName = "") = 0;
 		virtual VCOMError VCOM_CALLTYPE		AddBufferToGdtfFile(MvrString filename, const char* inBuffer, size_t length, GdtfDefines::ERessourceType resType) = 0;
 
 		virtual VCOMError VCOM_CALLTYPE		Close() = 0;
