@@ -22,6 +22,7 @@ namespace VectorworksMVR
             Model3DS,
             ImageWheel,
             RessoureFixture,
+            ModelGLTF,
         };
 		
 		enum EGdtfObjectType

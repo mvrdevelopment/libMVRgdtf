@@ -1713,12 +1713,15 @@ TXString SceneData::SceneDataZip::GetResourceSubFolder(ERessourceType resType)
     case ERessourceType::ModelSVG:
         return "models" + TXString(kSeperator) + "svg" + TXString(kSeperator);
         break;
+	case ERessourceType::ModelGLTF:
+        return "models" + TXString(kSeperator) + "glTF" + TXString(kSeperator);
+        break;
     case ERessourceType::RessoureFixture:
         return  "";
         break;
     }    
 
-    DSTOP((kEveryone, "Unaspected Enum for GetResourceSubFolder(ERessourceType resType)"));
+    DSTOP((kEveryone, "Unexpected Enum for GetResourceSubFolder(ERessourceType resType)"));
 
     return  "";
 }

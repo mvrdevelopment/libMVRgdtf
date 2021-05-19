@@ -771,6 +771,7 @@ namespace SceneData
 		//
         TFileIdentifierPtrArray				f3DS_FilesToAdd;
         TFileIdentifierPtrArray				fSVG_FilesToAdd;
+		TFileIdentifierPtrArray				fglTF_FilesToAdd;
         TFileIdentifierPtrArray				fWheel_Image_FilesToAdd;
         TFileIdentifierPtrArray				fFixtureResources_FilesToAdd;
 		

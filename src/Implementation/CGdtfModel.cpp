@@ -89,6 +89,14 @@ MvrString VectorworksMVR::CGdtfModelImpl::GetGeometryFile_SVG_FullPath()
 	return fModel->GetGeometryFile_SVG_FullPath().GetCharPtr();
 }
 
+MvrString VectorworksMVR::CGdtfModelImpl::GetGeometryFile_glTF_FullPath()
+{
+	// Check Pointer
+	if ( ! fModel) return "";
+	
+	return fModel->GetGeometryFile_glTF_FullPath().GetCharPtr();
+}
+
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfModelImpl::SetName(MvrString name)
 {
 	if(!fModel) return kVCOMError_NotInitialized;	

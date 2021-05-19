@@ -1341,11 +1341,11 @@ const TXString& GdtfModel::GetGeometryFile_3DS_FullPath()
 	IFolderIdentifierPtr folder (IID_FolderIdentifier);
 	fParentFixture->GetWorkingFolder(folder);
 
-	IFolderIdentifierPtr model3DsFolter (IID_FolderIdentifier);
-	model3DsFolter->Set(folder, "models3ds");
+	IFolderIdentifierPtr model3DsFolder (IID_FolderIdentifier);
+	model3DsFolder->Set(folder, "models3ds");
 
 	IFileIdentifierPtr file (IID_FileIdentifier);
-	file->Set(model3DsFolter, fGeometryFile + ".3ds");
+	file->Set(model3DsFolder, fGeometryFile + ".3ds");
 
 	bool fileExists = false;
 	if(VCOM_SUCCEEDED(file->ExistsOnDisk(fileExists)) && fileExists)
@@ -1364,11 +1364,11 @@ const TXString & SceneData::GdtfModel::GetGeometryFile_SVG_FullPath()
 	IFolderIdentifierPtr folder (IID_FolderIdentifier);
 	fParentFixture->GetWorkingFolder(folder);
 
-	IFolderIdentifierPtr modelsvgFolter (IID_FolderIdentifier);
-	modelsvgFolter->Set(folder, "modelssvg");
+	IFolderIdentifierPtr svgModelsFolder (IID_FolderIdentifier);
+	svgModelsFolder->Set(folder, "modelssvg");
 
 	IFileIdentifierPtr file (IID_FileIdentifier);
-	file->Set(modelsvgFolter, fGeometryFile + ".svg");
+	file->Set(svgModelsFolder, fGeometryFile + ".svg");
 
 
 	bool fileExists = false;
@@ -1378,6 +1378,30 @@ const TXString & SceneData::GdtfModel::GetGeometryFile_SVG_FullPath()
 	}
 	
 	return fFullPathSVG;
+}
+
+const TXString & SceneData::GdtfModel::GetGeometryFile_glTF_FullPath()
+{
+	// Set to store
+	fFullPathGLTF = "";
+	// Set to store
+	IFolderIdentifierPtr folder (IID_FolderIdentifier);
+	fParentFixture->GetWorkingFolder(folder);
+
+	IFolderIdentifierPtr glTFModelsFolder (IID_FolderIdentifier);
+	glTFModelsFolder->Set(folder, "modelsgltf");
+
+	IFileIdentifierPtr file (IID_FileIdentifier);
+	file->Set(glTFModelsFolder, fGeometryFile + ".glb");
+
+
+	bool fileExists = false;
+	if(VCOM_SUCCEEDED(file->ExistsOnDisk(fileExists)) && fileExists)
+	{
+		file->GetFileFullPath(fFullPathGLTF);
+	}
+	
+	return fFullPathGLTF;
 }
 
 const TXString& GdtfModel::GetName() const

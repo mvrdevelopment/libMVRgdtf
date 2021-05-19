@@ -2699,6 +2699,11 @@ bool SceneDataExchange::WriteToFile(const IFileIdentifierPtr& file)
 		SceneDataZip::AddFileToZip(zipfile, fSVG_FilesToAdd.at(i), ERessourceType::ModelSVG, false/*Delete*/);
 	}
 
+	for (size_t i = 0; i < fglTF_FilesToAdd.size(); i++)
+	{        
+		SceneDataZip::AddFileToZip(zipfile, fglTF_FilesToAdd.at(i),  ERessourceType::ModelGLTF, false/*Delete*/);
+	}
+
 	for (size_t i = 0; i < fWheel_Image_FilesToAdd.size(); i++)
 	{        
 		SceneDataZip::AddFileToZip(zipfile, fWheel_Image_FilesToAdd.at(i), ERessourceType::ImageWheel, false/*Delete*/);
@@ -3273,10 +3278,11 @@ void SceneDataExchange::AddFileToZip(const IFileIdentifierPtr& file, ERessourceT
 		case ERessourceType::ImageWheel: 		fWheel_Image_FilesToAdd.push_back(file); return;
 		case ERessourceType::Model3DS: 			f3DS_FilesToAdd.push_back(file); return;
 		case ERessourceType::ModelSVG: 			fSVG_FilesToAdd.push_back(file); return;
+		case ERessourceType::ModelGLTF: 		fglTF_FilesToAdd.push_back(file); return;
 		case ERessourceType::RessoureFixture: 	fFixtureResources_FilesToAdd.push_back(file);return;
     }        
 
-	DSTOP((kEveryone, "Unaspected ERessourceType Enum for AddFileToZip"));
+	DSTOP((kEveryone, "Unexpected ERessourceType Enum for AddFileToZip"));
 }
 
 void SceneDataExchange::AddBufferToZip(const TXString& fileName, ISceneDataZipBuffer* buffer)
