@@ -1394,12 +1394,22 @@ const TXString & SceneData::GdtfModel::GetGeometryFile_GLTF_FullPath()
 	IFileIdentifierPtr file (IID_FileIdentifier);
 	file->Set(gltfModelsFolder, fGeometryFile + ".glb");
 
-
 	bool fileExists = false;
 	if(VCOM_SUCCEEDED(file->ExistsOnDisk(fileExists)) && fileExists)
 	{
 		file->GetFileFullPath(fFullPathGLTF);
 	}
+	else
+	{
+		//There are two glTF file format: binary (.glb) or JSON-like (.gltf)
+		//If we don't find a .glb file, we try with .gltf
+		file->Set(gltfModelsFolder, fGeometryFile + ".gltf");
+		if(VCOM_SUCCEEDED(file->ExistsOnDisk(fileExists)) && fileExists)
+		{
+			file->GetFileFullPath(fFullPathGLTF);
+		}
+	}
+	
 	
 	return fFullPathGLTF;
 }
