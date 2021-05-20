@@ -1714,7 +1714,7 @@ TXString SceneData::SceneDataZip::GetResourceSubFolder(ERessourceType resType)
         return "models" + TXString(kSeperator) + "svg" + TXString(kSeperator);
         break;
 	case ERessourceType::ModelGLTF:
-        return "models" + TXString(kSeperator) + "glTF" + TXString(kSeperator);
+        return "models" + TXString(kSeperator) + "gltf" + TXString(kSeperator);
         break;
     case ERessourceType::RessoureFixture:
         return  "";

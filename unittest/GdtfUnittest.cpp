@@ -430,7 +430,7 @@ void GdtfUnittest::ReadFile()
 		// Check the file content
 		size_t ressourceFiles = 0;
 		__checkVCOM(gdtfRead->GetImageRessourcesCount(ressourceFiles));
-		this->checkifEqual("GetImageRessourcesCount", ressourceFiles, size_t(5));
+		this->checkifEqual("GetImageRessourcesCount", ressourceFiles, size_t(6));
 
 		CheckAttachedFiles(gdtfRead, 0, this->GetTestPNG_ThumbNail(true));
 		CheckAttachedFiles(gdtfRead, 1, this->GetTestSVG_ThumbNail(true));

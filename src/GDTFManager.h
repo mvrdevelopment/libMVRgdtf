@@ -605,7 +605,7 @@ namespace SceneData
 		const TXString&					GetGeometryFileName() const;
 		const TXString&					GetGeometryFile_3DS_FullPath();
         const TXString&				    GetGeometryFile_SVG_FullPath();
-		const TXString&					GetGeometryFile_glTF_FullPath();
+		const TXString&					GetGeometryFile_GLTF_FullPath();
 		// Setter
 		void						    SetName(const TXString& name);
 		void					    	SetLength(const double& length);

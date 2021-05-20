@@ -24,7 +24,7 @@ namespace VectorworksMVR
         virtual MvrString VCOM_CALLTYPE     GetGeometryFileName();
 		virtual MvrString VCOM_CALLTYPE     GetGeometryFile_3DS_FullPath();
         virtual MvrString VCOM_CALLTYPE     GetGeometryFile_SVG_FullPath();
-        virtual MvrString VCOM_CALLTYPE     GetGeometryFile_glTF_FullPath();
+        virtual MvrString VCOM_CALLTYPE     GetGeometryFile_GLTF_FullPath();
 		
         virtual VCOMError VCOM_CALLTYPE     SetName(MvrString name);
 		virtual VCOMError VCOM_CALLTYPE     SetLength(double length);

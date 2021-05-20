@@ -1380,7 +1380,7 @@ const TXString & SceneData::GdtfModel::GetGeometryFile_SVG_FullPath()
 	return fFullPathSVG;
 }
 
-const TXString & SceneData::GdtfModel::GetGeometryFile_glTF_FullPath()
+const TXString & SceneData::GdtfModel::GetGeometryFile_GLTF_FullPath()
 {
 	// Set to store
 	fFullPathGLTF = "";
@@ -1388,11 +1388,11 @@ const TXString & SceneData::GdtfModel::GetGeometryFile_glTF_FullPath()
 	IFolderIdentifierPtr folder (IID_FolderIdentifier);
 	fParentFixture->GetWorkingFolder(folder);
 
-	IFolderIdentifierPtr glTFModelsFolder (IID_FolderIdentifier);
-	glTFModelsFolder->Set(folder, "modelsgltf");
+	IFolderIdentifierPtr gltfModelsFolder (IID_FolderIdentifier);
+	gltfModelsFolder->Set(folder, "modelsgltf");
 
 	IFileIdentifierPtr file (IID_FileIdentifier);
-	file->Set(glTFModelsFolder, fGeometryFile + ".glb");
+	file->Set(gltfModelsFolder, fGeometryFile + ".glb");
 
 
 	bool fileExists = false;
