@@ -1080,9 +1080,9 @@ void GdtfWheelSlot::OnPrintToFile(IXMLFileNodePtr pNode)
 	// ------------------------------------------------------------------------------------
 	// Print node attributes
 	pNode->SetNodeAttributeValue(XML_GDTF_WheelSlotName,	fName);
-	pNode->SetNodeAttributeValue(XML_GDTF_WheelSlotColor,		GdtfConverter::ConvertColor(fColor));
+	if(!fFilter) 	{ pNode->SetNodeAttributeValue(XML_GDTF_WheelSlotColor,		GdtfConverter::ConvertColor(fColor)); }
 	if(fGobo != "")	{ pNode->SetNodeAttributeValue(XML_GDTF_WheelSlotPicture,	fGobo); }
-	if(fFilter)	{ pNode->SetNodeAttributeValue(XML_GDTF_WheelSlotFilter,		fFilter->GetNodeReference()); }
+	if(fFilter)		{ pNode->SetNodeAttributeValue(XML_GDTF_WheelSlotFilter,	fFilter->GetNodeReference()); }
 	
 	//------------------------------------------------------------------------------------
 	// Print the children
