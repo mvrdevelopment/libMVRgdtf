@@ -232,8 +232,20 @@ void GdtfRefreshBufferTest::AddMode(IGdtfFixturePtr gdtfWrite)
 	//----------------------------------------------------------------
 	// Create Attribute
 	IGdtfAttributePtr attribute1;
-	__checkVCOM(gdtfWrite->CreateAttribute("Attribute1","Pretty", &attribute1));
+	__checkVCOM(gdtfWrite->CreateAttribute("Attribute1", "Pretty", &attribute1));
 	attribute1->SetFeature(feature);
+
+	IGdtfAttributePtr attribute2;
+	__checkVCOM(gdtfWrite->CreateAttribute("Attribute2", "Pretty", &attribute2));
+	attribute2->SetFeature(feature);
+
+	IGdtfAttributePtr attribute3;
+	__checkVCOM(gdtfWrite->CreateAttribute("Attribute3", "Pretty", &attribute3));
+	attribute3->SetFeature(feature);
+
+	IGdtfAttributePtr attribute4;
+	__checkVCOM(gdtfWrite->CreateAttribute("Attribute4", "Pretty", &attribute4));
+	attribute4->SetFeature(feature);
 
 	//----------------------------------------------------------------
 	// Create Model
@@ -282,13 +294,13 @@ void GdtfRefreshBufferTest::AddMode(IGdtfFixturePtr gdtfWrite)
 
 				// First Logical Channel
 				IGdtfDmxLogicalChannelPtr gdtfLogicalChannel;
-				gdtfChannel2->CreateLogicalChannel(attribute1, &gdtfLogicalChannel);
-				gdtfLogicalChannel->SetAttribute(attribute1);
+				gdtfChannel2->CreateLogicalChannel(attribute2, &gdtfLogicalChannel);
+				gdtfLogicalChannel->SetAttribute(attribute2);
 
 				IGdtfDmxChannelFunctionPtr gdtfFunction;
 				gdtfLogicalChannel->CreateDmxFunction("FunctionTest", &gdtfFunction);
 				gdtfFunction->SetStartAddress(0);
-				gdtfFunction->SetAttribute(attribute1);
+				gdtfFunction->SetAttribute(attribute2);
 			}
 
 			Sint32 footprint3 = 8;
@@ -303,13 +315,13 @@ void GdtfRefreshBufferTest::AddMode(IGdtfFixturePtr gdtfWrite)
 
 				// First Logical Channel
 				IGdtfDmxLogicalChannelPtr gdtfLogicalChannel;
-				gdtfChannel2->CreateLogicalChannel(attribute1, &gdtfLogicalChannel);
-				gdtfLogicalChannel->SetAttribute(attribute1);
+				gdtfChannel2->CreateLogicalChannel(attribute3, &gdtfLogicalChannel);
+				gdtfLogicalChannel->SetAttribute(attribute3);
 
 				IGdtfDmxChannelFunctionPtr gdtfFunction;
 				gdtfLogicalChannel->CreateDmxFunction("FunctionTest", &gdtfFunction);
 				gdtfFunction->SetStartAddress(0);
-				gdtfFunction->SetAttribute(attribute1);                              
+				gdtfFunction->SetAttribute(attribute3);                              
 				
 			}
 
@@ -324,13 +336,13 @@ void GdtfRefreshBufferTest::AddMode(IGdtfFixturePtr gdtfWrite)
 
 				// First Logical Channel
 				IGdtfDmxLogicalChannelPtr gdtfLogicalChannel;
-				gdtfChannel2->CreateLogicalChannel(attribute1, &gdtfLogicalChannel);
-				gdtfLogicalChannel->SetAttribute(attribute1);
+				gdtfChannel2->CreateLogicalChannel(attribute4, &gdtfLogicalChannel);
+				gdtfLogicalChannel->SetAttribute(attribute4);
 
 				IGdtfDmxChannelFunctionPtr gdtfFunction;
 				gdtfLogicalChannel->CreateDmxFunction("FunctionTest", &gdtfFunction);
 				gdtfFunction->SetStartAddress(0);
-				gdtfFunction->SetAttribute(attribute1);                             
+				gdtfFunction->SetAttribute(attribute4);                             
 				
 			}
 
