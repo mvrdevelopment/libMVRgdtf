@@ -187,7 +187,6 @@ void GdtfRefreshBufferTest::ReadFile()
 					this->checkifEqual("Check the footprint4", footprint, size_t(10));
 
 					PrintParsingErrorList(gdtfLinkedFixture);
-
 				}
 
 				ISceneObjPtr next = nullptr;
