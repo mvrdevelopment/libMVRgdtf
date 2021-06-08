@@ -166,6 +166,7 @@ namespace VectorworksMVR
             eFixtureChannelFunctionMissingModeMaster    = 67, //If 2 channel functions use the same DMX range, Mode masters should be defined
             eFixtureDMXChannelMissingChannelFunction    = 68, //A DMX channel should always have at least 1 channel function
             eFixtureDMXChannelUnresolvedChannelFunction = 69, //A DMX channel has an unresolved initial function
+            eFixtureLogicalChannelNoUniqueGeometryAttribute = 70, //Two logical channels have the same attribute/geometry combination
 
         };
 		

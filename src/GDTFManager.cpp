@@ -3058,7 +3058,7 @@ size_t GdtfDmxMode::GetFootPrintForBreak(size_t breakId)
 		// if channel is linked to the current geometry and the breaks match add the dmx addresses to the footprint 
 		for (GdtfDmxChannelPtr channel : fChannels)
 		{
-			if(channel->GetGeomRef() == geoToCheck && channel->GetDmxBreak() == (Sint32)breakId) 
+			if(channel->GetGeomRef() == geoToCheck && channel->GetDmxBreak() == (Sint32)breakId && ! channel->IsVirtual()) 
 			{
 				GetAddressesFromChannel(addressesOfGeo, channel, 0);
 			}
@@ -3119,7 +3119,9 @@ size_t GdtfDmxMode::GetFootPrintForBreak(size_t breakId)
 
 					for(GdtfDmxChannelPtr channel : fChannels)
 					{
-						if(channel->GetGeomRef() == geometryInRefToCheck && channel->GetDmxBreak() == (Sint32)breakId) 
+						if(channel->GetGeomRef() == geometryInRefToCheck 
+							&& channel->GetDmxBreak() == (Sint32)breakId &&
+							! channel->IsVirtual())  
 						{
 							GetAddressesFromChannel(addressesOfGeo, channel, offset);
 						}
@@ -3143,7 +3145,7 @@ size_t GdtfDmxMode::GetFootPrintForBreak(size_t breakId)
 
 						for(GdtfDmxChannelPtr channel : fChannels)
 						{
-							if(channel->GetGeomRef() == geometryInRefToCheck && channel->GetDmxBreak() == kDmxBreakOverwriteValue) 
+							if(channel->GetGeomRef() == geometryInRefToCheck && channel->GetDmxBreak() == kDmxBreakOverwriteValue  && ! channel->IsVirtual()) 
 							{
 								GetAddressesFromChannel(addressesOfGeo, channel, overwriteBreak->GetDmxAddress()-1);
 							}
@@ -6062,17 +6064,62 @@ void GdtfFixture::ResolveDmxLogicalChanRefs(GdtfDmxChannelPtr dmxChnl)
 {		
 	for ( GdtfDmxLogicalChannelPtr logChnl : dmxChnl->GetLogicalChannelArray() )
 	{
+		IXMLFileNodePtr node;
+		logChnl->GetNode(node);
+
 		// ----------------------------------------------------------------------------------------
 		// DmxLogicalChannel.Attribute		
 		GdtfAttributePtr attrPtr = getAttributeByRef(logChnl->GetUnresolvedAttribRef());
 				
 		ASSERTN(kEveryone, attrPtr != nullptr);
-		if (attrPtr != nullptr)	{ logChnl->SetAttribute(attrPtr); }
+		if (attrPtr != nullptr)
+		{
+			//Check for logical channels with the same geometry/attribute combination
+			TXString attributeName 	= attrPtr->GetName();
+			TXString geometryName 	= dmxChnl->GetGeomRef()->GetName();
+
+			bool alreadyExists = false;
+			GdtfDmxModePtr mode = dmxChnl->GetParentMode();
+			
+			for(GdtfDmxChannelPtr channel : mode->GetChannelArray())
+			{
+				GdtfGeometryPtr currentGeometry = channel->GetGeomRef();
+				if(currentGeometry == nullptr) { break; }
+				TXString currentGeometryName = currentGeometry->GetName();
+				for(GdtfDmxLogicalChannelPtr logicalChannel : channel->GetLogicalChannelArray())
+				{
+					TXString currentAttributeName = "";
+					GdtfAttributePtr currentAttribute = logicalChannel->GetAttribute();
+					if(currentAttribute != nullptr)
+					{
+						currentAttributeName = currentAttribute->GetName();
+					}
+
+					if(geometryName.EqualNoCase(currentGeometryName) && attributeName.EqualNoCase(currentAttributeName))
+					{
+						alreadyExists = true;
+						break;
+					}
+				}
+
+				if(alreadyExists) { break; }
+			}
+
+			if(alreadyExists)
+			{
+				GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureLogicalChannelNoUniqueGeometryAttribute, node);
+				SceneData::GdtfFixture::AddError(error);
+			}
+
+			//--------------------------
+			//Set Attribute
+			logChnl->SetAttribute(attrPtr);
+			
+		}
 		else
 		{
-			IXMLFileNodePtr node;
-			logChnl->GetNode(node);
-			GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureLogicalChannelMissingAttribute, node); SceneData::GdtfFixture::AddError(error);
+			GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureLogicalChannelMissingAttribute, node);
+			SceneData::GdtfFixture::AddError(error);
 		}
 		
 		
