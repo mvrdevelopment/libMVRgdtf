@@ -25,6 +25,8 @@ private:
     std::string GetTestSVG_ThumbNail(bool readLocation = false);
     std::string GetTestSVG_Model(bool readLocation = false);
     std::string GetTest3DS_Model(bool readLocation = false);
+    std::string GetTestGLTF_Model_glb(bool readLocation = false);
+    std::string GetTestGLTF_Model(bool readLocation = false);
     std::string GetTestWheel_PNG(bool readLocation = false);
 
     void CheckAttibute(VectorworksMVR::IGdtfAttributePtr attribute, bool hasColor);

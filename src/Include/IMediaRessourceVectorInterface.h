@@ -535,6 +535,7 @@ namespace VectorworksMVR
         virtual MvrString VCOM_CALLTYPE     GetGeometryFileName() = 0;
 		virtual MvrString VCOM_CALLTYPE     GetGeometryFile_3DS_FullPath() = 0;
         virtual MvrString VCOM_CALLTYPE     GetGeometryFile_SVG_FullPath() = 0;
+		virtual MvrString VCOM_CALLTYPE     GetGeometryFile_GLTF_FullPath() = 0;
 
                 
         virtual VCOMError VCOM_CALLTYPE     SetName(MvrString name) = 0;

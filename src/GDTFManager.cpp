@@ -1341,11 +1341,11 @@ const TXString& GdtfModel::GetGeometryFile_3DS_FullPath()
 	IFolderIdentifierPtr folder (IID_FolderIdentifier);
 	fParentFixture->GetWorkingFolder(folder);
 
-	IFolderIdentifierPtr model3DsFolter (IID_FolderIdentifier);
-	model3DsFolter->Set(folder, "models3ds");
+	IFolderIdentifierPtr model3DsFolder (IID_FolderIdentifier);
+	model3DsFolder->Set(folder, "models3ds");
 
 	IFileIdentifierPtr file (IID_FileIdentifier);
-	file->Set(model3DsFolter, fGeometryFile + ".3ds");
+	file->Set(model3DsFolder, fGeometryFile + ".3ds");
 
 	bool fileExists = false;
 	if(VCOM_SUCCEEDED(file->ExistsOnDisk(fileExists)) && fileExists)
@@ -1364,11 +1364,11 @@ const TXString & SceneData::GdtfModel::GetGeometryFile_SVG_FullPath()
 	IFolderIdentifierPtr folder (IID_FolderIdentifier);
 	fParentFixture->GetWorkingFolder(folder);
 
-	IFolderIdentifierPtr modelsvgFolter (IID_FolderIdentifier);
-	modelsvgFolter->Set(folder, "modelssvg");
+	IFolderIdentifierPtr svgModelsFolder (IID_FolderIdentifier);
+	svgModelsFolder->Set(folder, "modelssvg");
 
 	IFileIdentifierPtr file (IID_FileIdentifier);
-	file->Set(modelsvgFolter, fGeometryFile + ".svg");
+	file->Set(svgModelsFolder, fGeometryFile + ".svg");
 
 
 	bool fileExists = false;
@@ -1378,6 +1378,40 @@ const TXString & SceneData::GdtfModel::GetGeometryFile_SVG_FullPath()
 	}
 	
 	return fFullPathSVG;
+}
+
+const TXString & SceneData::GdtfModel::GetGeometryFile_GLTF_FullPath()
+{
+	// Set to store
+	fFullPathGLTF = "";
+	// Set to store
+	IFolderIdentifierPtr folder (IID_FolderIdentifier);
+	fParentFixture->GetWorkingFolder(folder);
+
+	IFolderIdentifierPtr gltfModelsFolder (IID_FolderIdentifier);
+	gltfModelsFolder->Set(folder, "modelsgltf");
+
+	IFileIdentifierPtr file (IID_FileIdentifier);
+	file->Set(gltfModelsFolder, fGeometryFile + ".glb");
+
+	bool fileExists = false;
+	if(VCOM_SUCCEEDED(file->ExistsOnDisk(fileExists)) && fileExists)
+	{
+		file->GetFileFullPath(fFullPathGLTF);
+	}
+	else
+	{
+		//There are two glTF file format: binary (.glb) or JSON-like (.gltf)
+		//If we don't find a .glb file, we try with .gltf
+		file->Set(gltfModelsFolder, fGeometryFile + ".gltf");
+		if(VCOM_SUCCEEDED(file->ExistsOnDisk(fileExists)) && fileExists)
+		{
+			file->GetFileFullPath(fFullPathGLTF);
+		}
+	}
+	
+	
+	return fFullPathGLTF;
 }
 
 const TXString& GdtfModel::GetName() const
@@ -2968,8 +3002,13 @@ TSint32Array GdtfDmxMode::GetBreakArray() const
 	// Prepare Arrays
 	TSint32Array 							breaks;
 	std::vector<GdtfGeometryReferencePtr>  	geometryRefs;
-	TGdtfGeometryArray  					geometrysToCheck = {fGeomRef};
+	TGdtfGeometryArray  					geometrysToCheck;
 
+	if(fGeomRef)
+	{
+		geometrysToCheck.push_back(fGeomRef);
+	}
+    
 	//------------------------------------------------------------------------------------------------------------
 	// Get All Geometry References
 	while(geometrysToCheck.size() > 0)
@@ -3044,7 +3083,12 @@ size_t GdtfDmxMode::GetFootPrintForBreak(size_t breakId)
 	//------------------------------------------------------------------------------------------------------------
 	// Prepare arrays
 	TDMXAddressArray 	addresses;
-	TGdtfGeometryArray  geometriesInGeoTree = {fGeomRef};
+    TGdtfGeometryArray  geometriesInGeoTree;
+    
+    if(fGeomRef)
+    {
+        geometriesInGeoTree.push_back(fGeomRef);
+    }
 
 	// iterate through every geometry in the geometry tree of the mode 
 	while(geometriesInGeoTree.size() > 0)
