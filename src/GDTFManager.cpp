@@ -2968,8 +2968,13 @@ TSint32Array GdtfDmxMode::GetBreakArray() const
 	// Prepare Arrays
 	TSint32Array 							breaks;
 	std::vector<GdtfGeometryReferencePtr>  	geometryRefs;
-	TGdtfGeometryArray  					geometrysToCheck = {fGeomRef};
+	TGdtfGeometryArray  					geometrysToCheck;
 
+	if(fGeomRef)
+	{
+		geometrysToCheck.push_back(fGeomRef);
+	}
+    
 	//------------------------------------------------------------------------------------------------------------
 	// Get All Geometry References
 	while(geometrysToCheck.size() > 0)
@@ -3044,7 +3049,12 @@ size_t GdtfDmxMode::GetFootPrintForBreak(size_t breakId)
 	//------------------------------------------------------------------------------------------------------------
 	// Prepare arrays
 	TDMXAddressArray 	addresses;
-	TGdtfGeometryArray  geometriesInGeoTree = {fGeomRef};
+    TGdtfGeometryArray  geometriesInGeoTree;
+    
+    if(fGeomRef)
+    {
+        geometriesInGeoTree.push_back(fGeomRef);
+    }
 
 	// iterate through every geometry in the geometry tree of the mode 
 	while(geometriesInGeoTree.size() > 0)
