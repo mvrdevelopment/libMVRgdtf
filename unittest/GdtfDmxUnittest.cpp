@@ -76,6 +76,10 @@ void GdtfDmxUnittest::WriteFile()
 		__checkVCOM(gdtfWrite->CreateAttribute("Attribute5","Pretty", &attribute5));
 		attribute5->SetFeature(feature);
 
+		IGdtfAttributePtr attribute6;
+		__checkVCOM(gdtfWrite->CreateAttribute("Attribute6","Pretty", &attribute6));
+		attribute6->SetFeature(feature);
+
 		//----------------------------------------------------------------
 		// Create Model
 		IGdtfModelPtr model;
@@ -152,8 +156,8 @@ void GdtfDmxUnittest::WriteFile()
 
 		// Second Logical Channel
 		IGdtfDmxLogicalChannelPtr bit8LogicalChannel2;
-		bit8channel->CreateLogicalChannel(attribute1, &bit8LogicalChannel2);
-		bit8LogicalChannel2->SetAttribute(attribute1);
+		bit8channel->CreateLogicalChannel(attribute6, &bit8LogicalChannel2);
+		bit8LogicalChannel2->SetAttribute(attribute6);
 
 		IGdtfDmxChannelFunctionPtr bit8Function3;
 		bit8LogicalChannel2->CreateDmxFunction("Function3", &bit8Function3);
@@ -314,7 +318,7 @@ void GdtfDmxUnittest::ReadFile()
 		// Read the Attributes
 		size_t countAttributes = 0;
 		__checkVCOM(gdtfRead->GetAttributeCount(countAttributes));
-		this->checkifEqual("Check Count Attributes ", countAttributes, size_t(5));
+		this->checkifEqual("Check Count Attributes ", countAttributes, size_t(6));
 
 		// Check Attribute
 		IGdtfAttributePtr	gdtfAttribute1;
@@ -341,6 +345,11 @@ void GdtfDmxUnittest::ReadFile()
 		__checkVCOM(gdtfRead->GetAttributeAt(4, &gdtfAttribute5));
 		this->checkifEqual("gdtfAttribute GetName() ", gdtfAttribute5->GetName(), "Attribute5");
 		this->checkifEqual("gdtfAttribute GetName() ", gdtfAttribute5->GetPrettyName(), "Pretty");
+
+		IGdtfAttributePtr	gdtfAttribute6;
+		__checkVCOM(gdtfRead->GetAttributeAt(5, &gdtfAttribute6));
+		this->checkifEqual("gdtfAttribute GetName() ", gdtfAttribute6->GetName(), "Attribute6");
+		this->checkifEqual("gdtfAttribute GetName() ", gdtfAttribute6->GetPrettyName(), "Pretty");
 
 		//------------------------------------------------------------------------------    
 		// Extract Geometry & Models

@@ -434,8 +434,14 @@ VectorworksMVR::VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfDmxModeImpl::Create
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxModeImpl::GetBreakCount(size_t & count)
 {
-    count = fDmxMode->GetBreakArray().size();
-    return kVCOMError_NoError;
+	if(fDmxMode)
+	{
+		count = fDmxMode->GetBreakArray().size();
+		return kVCOMError_NoError;
+	}
+    
+	return kVCOMError_Failed;
+    
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxModeImpl::GetBreakAt(size_t at, size_t& breakId)
