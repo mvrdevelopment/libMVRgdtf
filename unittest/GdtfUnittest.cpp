@@ -64,11 +64,13 @@ void GdtfUnittest::WriteFile()
 
         //------------------------------------------------------------------------------    
         // Add Test Resources
-        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestPNG_ThumbNail().c_str(), ERessourceType::RessoureFixture) );
-        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestSVG_ThumbNail().c_str(), ERessourceType::RessoureFixture) );
-        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestWheel_PNG().c_str(),     ERessourceType::ImageWheel) );
-        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTest3DS_Model().c_str(),     ERessourceType::Model3DS) );
-        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestSVG_Model().c_str(),     ERessourceType::ModelSVG) );
+        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestPNG_ThumbNail().c_str(), 	ERessourceType::RessoureFixture) );
+        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestSVG_ThumbNail().c_str(), 	ERessourceType::RessoureFixture) );
+        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestWheel_PNG().c_str(),     	ERessourceType::ImageWheel) );
+        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTest3DS_Model().c_str(),     	ERessourceType::Model3DS) );
+        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestSVG_Model().c_str(),     	ERessourceType::ModelSVG) );
+		__checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestGLTF_Model_glb().c_str(),	ERessourceType::ModelGLTF) );
+		__checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestGLTF_Model().c_str(),    	ERessourceType::ModelGLTF) );
         
 		//------------------------------------------------------------------------------    
 		// Set Attributes
@@ -429,13 +431,15 @@ void GdtfUnittest::ReadFile()
 		// Check the file content
 		size_t ressourceFiles = 0;
 		__checkVCOM(gdtfRead->GetImageRessourcesCount(ressourceFiles));
-		this->checkifEqual("GetImageRessourcesCount", ressourceFiles, size_t(5));
+		this->checkifEqual("GetImageRessourcesCount", ressourceFiles, size_t(7));
 
 		CheckAttachedFiles(gdtfRead, 0, this->GetTestPNG_ThumbNail(true));
 		CheckAttachedFiles(gdtfRead, 1, this->GetTestSVG_ThumbNail(true));
 		CheckAttachedFiles(gdtfRead, 2, this->GetTestWheel_PNG(true));
 		CheckAttachedFiles(gdtfRead, 3, this->GetTest3DS_Model(true));
 		CheckAttachedFiles(gdtfRead, 4, this->GetTestSVG_Model(true));
+		CheckAttachedFiles(gdtfRead, 5, this->GetTestGLTF_Model_glb(true));
+		CheckAttachedFiles(gdtfRead, 6, this->GetTestGLTF_Model(true));
 
 
 		
@@ -1438,7 +1442,7 @@ std::string GdtfUnittest::GetTestSVG_ThumbNail(bool readLocation)
 std::string GdtfUnittest::GetTestSVG_Model(bool readLocation)
 {
 	std::string path;
-	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator+ "modelssvg" + kSeparator;; }
+	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator+ "modelssvg" + kSeparator; }
 	else 				{ path = fTestResourcesFolder + kSeparator; }
     path += "MyModel.svg";
     return path;
@@ -1447,10 +1451,30 @@ std::string GdtfUnittest::GetTestSVG_Model(bool readLocation)
 std::string GdtfUnittest::GetTest3DS_Model(bool readLocation)
 {
 	std::string path;
-	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator+ "models3ds" + kSeparator;; }
+	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator+ "models3ds" + kSeparator; }
 	else 				{ path = fTestResourcesFolder + kSeparator; }
 	
     path += "MyModel.3ds";
+    return path;
+}
+
+std::string GdtfUnittest::GetTestGLTF_Model_glb(bool readLocation)
+{
+	std::string path;
+	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator+ "modelsgltf" + kSeparator; }
+	else 				{ path = fTestResourcesFolder + kSeparator; }
+	
+    path += "MyModel.glb";
+    return path;
+}
+
+std::string GdtfUnittest::GetTestGLTF_Model(bool readLocation)
+{
+	std::string path;
+	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator+ "modelsgltf" + kSeparator; }
+	else 				{ path = fTestResourcesFolder + kSeparator; }
+	
+    path += "Fox.gltf";
     return path;
 }
 
