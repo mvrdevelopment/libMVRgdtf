@@ -1291,6 +1291,33 @@ void GdtfModel::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	TXString height;	pNode->GetNodeAttributeValue(XML_GDTF_ModelHeight,			height);	GdtfConverter::ConvertDouble(height, 		pNode, 	fHeight);
 	TXString type;		pNode->GetNodeAttributeValue(XML_GDTF_ModelPrimitiveType,	type);		GdtfConverter::ConvertPrimitiveType(type, 	pNode, 	fPrimitiveType);
 						pNode->GetNodeAttributeValue(XML_GDTF_ModelFile,			fGeometryFile);
+
+	if(!fGeometryFile.IsEmpty())
+	{
+		TXString filename3DS = fGeometryFile + ".3ds";
+		TXString filenameSVG = fGeometryFile + ".svg";
+		TXString filenameGLTF = fGeometryFile + ".glb";
+
+		std::map<TXString, std::pair<char*, size_t> > fileBuffers = fParentFixture->GetFileBuffers();
+
+		auto buffer = fileBuffers.find(filename3DS);
+		if(buffer != fileBuffers.end())
+		{
+			fBuffer3DS = buffer->second.first;
+		}
+
+		buffer = fileBuffers.find(filenameSVG);
+		if(buffer != fileBuffers.end())
+		{
+			fBufferSVG = buffer->second.first;
+		}
+
+		buffer = fileBuffers.find(filenameGLTF);
+		if(buffer != fileBuffers.end())
+		{
+			fBufferGLTF = buffer->second.first;
+		}
+
 }
 
 void GdtfModel::OnErrorCheck(const IXMLFileNodePtr& pNode)
@@ -5306,7 +5333,7 @@ bool GdtfFixture::ImportFromZip(IZIPFilePtr& zipfile)
 				//-----------------------------------------------------------------------------
 				// Prepare pointer to the new files            
 				
-				// Seperate filename und folder
+				// Separate filename und folder
 				TXString fileNameWithoutFolder = TXString(fileName).Replace("/", TXString(kSeperator) );	
 	#ifndef _WINDOWS
 				fileNameWithoutFolder          = TXString(fileName).Replace("\\", TXString(kSeperator) ); // It seems some zips come also with this.
@@ -5316,6 +5343,12 @@ bool GdtfFixture::ImportFromZip(IZIPFilePtr& zipfile)
 				// flatten the folder structure
 				subFolder = subFolder.Replace(TXString(kSeperator), "");
 				subFolder = kSeperator + subFolder;
+
+				// write the data into the filebuffer map.
+				size_t	size = 0;							buffer.GetDataSize(size);
+				void*	data = malloc(size * sizeof(char));	buffer.CopyDataInto(data, size);
+				std::pair<char*, size_t> bufferPair = std::make_pair((char*)data, size);
+				fFileBuffers[fileNameWithoutFolder] = bufferPair;
 
 				//-----------------------------------------------------------------------------
 				IFolderIdentifierPtr targetFolder (IID_FolderIdentifier);
@@ -5345,7 +5378,7 @@ bool GdtfFixture::ImportFromZip(IZIPFilePtr& zipfile)
 		
 		inPath = fileName;
 	}
-		
+	
 	zipfile->Close();
 	
 	//-------------------------------------------------------------------------------------------------
@@ -6989,6 +7022,11 @@ const TGdtfRevisionArray& GdtfFixture::GetRevisionArray()
 const TGdtfUserPresetArray& GdtfFixture::GetPresetArray()
 {
     return fPresets;
+}
+
+const std::map<TXString, std::pair<char*, size_t> >& GdtfFixture::GetFileBuffers()
+{
+	return fFileBuffers;
 }
 
 GdtfProtocols& GdtfFixture::GetProtocollContainer()

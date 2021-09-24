@@ -591,6 +591,11 @@ namespace SceneData
 		TXString					fFullPath3DS;
         TXString					fFullPathSVG;
 		TXString					fFullPathGLTF;
+
+		char*						fBufferSVG;
+		char*						fBuffer3DS;
+		char*						fBufferGLTF;
+
 		//
 		GdtfFixture*				fParentFixture;
 		
@@ -2256,6 +2261,8 @@ namespace SceneData
 		// 
 		GdtfAttributePtr 				fNoFeature;
 
+		std::map<TXString, std::pair<char*, size_t> > fFileBuffers;
+
 	public:
         static void                     AddError(const GdtfParsingError& error);
         static TGdtfParsingErrorArray*  __ERROR_CONTAINER_POINTER;
@@ -2285,8 +2292,6 @@ namespace SceneData
         const TXString&             GetSVGThumnailFullPath();
         GdtfProtocols&				GetProtocollContainer();
         GdtfPhysicalDescriptions&   GetPhysicalDesciptionsContainer();
-
-		;
         
         // Setter
 		void				SetName(const TXString& name);
@@ -2340,6 +2345,8 @@ namespace SceneData
         const TGdtfRevisionArray&               GetRevisionArray();
         const TGdtfUserPresetArray&             GetPresetArray();
         const TGdtfMacroArray&                  GetMacroArray();
+
+		const std::map<TXString, std::pair<char*, size_t> >& GetFileBuffers();
         
 	public:
 		virtual EGdtfObjectType			GetObjectType();
