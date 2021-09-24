@@ -8,6 +8,8 @@
 #include <iostream>
 #include "Utility.h"
 
+#include "Wrapper/ZIPFileImpl.h"
+
 using namespace SceneData;
 
 //------------------------------------------------------------------------------------
@@ -1210,6 +1212,9 @@ GdtfModel::GdtfModel(GdtfFixture* fixture)
 	fPrimitiveType	= eGdtfModel_PrimitiveType_Undefined;
 	fGeometryFile	= "";
 	fParentFixture	= fixture;
+	fBuffer3DS 		= nullptr;
+	fBufferSVG 		= nullptr;
+	fBufferGLTF		= nullptr;
 }
 
 GdtfModel::GdtfModel(const TXString& name, GdtfFixture* fixture)
@@ -1221,6 +1226,9 @@ GdtfModel::GdtfModel(const TXString& name, GdtfFixture* fixture)
 	fPrimitiveType	= eGdtfModel_PrimitiveType_Undefined;
 	fGeometryFile	= "";
 	fParentFixture	= fixture;
+	fBuffer3DS 		= nullptr;
+	fBufferSVG 		= nullptr;
+	fBufferGLTF		= nullptr;
 }
 
 GdtfModel::~GdtfModel()
@@ -1316,8 +1324,8 @@ void GdtfModel::OnReadFromNode(const IXMLFileNodePtr& pNode)
 		if(buffer != fileBuffers.end())
 		{
 			fBufferGLTF = buffer->second.first;
-		}
-
+		}	
+	}
 }
 
 void GdtfModel::OnErrorCheck(const IXMLFileNodePtr& pNode)
@@ -6360,6 +6368,12 @@ GdtfFixture::~GdtfFixture()
 		IFileIdentifierPtr file = fLocalFiles[i];
 		file->DeleteOnDisk();
 	}
+
+	//Delete buffers
+	for (auto it = fFileBuffers.begin(); it != fFileBuffers.end(); it++)
+	{
+		delete it->second.first;
+	}
 }
 
 size_t GdtfFixture::GetAttachedFileCount()
@@ -6787,9 +6801,40 @@ bool GdtfFixture::ExportToFile(IZIPFilePtr& zipfile)
 	
 	
 	//------------------------------------------------------------------------------------
-	// Add tp ZIP
+	// Add to ZIP
 	SceneDataZip::AddFileToZip(zipfile, zipXmlBuffer, TXString(XML_GDTF_GDTFFILENAME) );
 
+	//------------------------------------------------------------------------------------
+	// Add meshes
+
+	for (auto it = fFileBuffers.begin(); it != fFileBuffers.end(); it++)
+	{
+		TXString strFileName;
+
+		if(it->first.EndsWith("3ds"))
+		{
+			strFileName = SceneData::SceneDataZip::GetResourceSubFolder(ERessourceType::Model3DS) + it->first;
+		}
+
+		if(it->first.EndsWith("svg"))
+		{
+			strFileName = SceneData::SceneDataZip::GetResourceSubFolder(ERessourceType::ModelSVG) + it->first;
+		}
+
+		if(it->first.EndsWith("glb"))
+		{
+			strFileName = SceneData::SceneDataZip::GetResourceSubFolder(ERessourceType::ModelGLTF) + it->first;
+		}
+
+		if(!strFileName.IsEmpty())
+		{
+			CZIPFileIOBufferImpl* buffer = new CZIPFileIOBufferImpl();
+			buffer->SetData((void*)it->second.first, it->second.second);
+			zipfile->AddFile(strFileName, buffer);
+
+			delete buffer;
+		}
+	}
 	
 	return true;
 }
