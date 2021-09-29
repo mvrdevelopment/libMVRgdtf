@@ -5354,7 +5354,7 @@ bool GdtfFixture::ImportFromZip(IZIPFilePtr& zipfile)
 
 				// write the data into the filebuffer map.
 				size_t	size = 0;							buffer.GetDataSize(size);
-				void*	data = malloc(size * sizeof(char));	buffer.CopyDataInto(data, size);
+				void*	data = malloc(size * sizeof(char));	buffer.CopyDataInto(data, size); //data is deleted in the GdtfFixture destructor.
 				std::pair<char*, size_t> bufferPair = std::make_pair((char*)data, size);
 				fFileBuffers[fileNameWithoutFolder] = bufferPair;
 
