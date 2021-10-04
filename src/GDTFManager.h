@@ -592,9 +592,13 @@ namespace SceneData
         TXString					fFullPathSVG;
 		TXString					fFullPathGLTF;
 
-		char*						fBufferSVG;
 		char*						fBuffer3DS;
+		char*						fBufferSVG;
 		char*						fBufferGLTF;
+
+		size_t						fBufferSize3DS;
+		size_t						fBufferSizeSVG;
+		size_t						fBufferSizeGLTF;
 
 		//
 		GdtfFixture*				fParentFixture;
@@ -611,6 +615,11 @@ namespace SceneData
 		const TXString&					GetGeometryFile_3DS_FullPath();
         const TXString&				    GetGeometryFile_SVG_FullPath();
 		const TXString&					GetGeometryFile_GLTF_FullPath();
+
+		void						    GetBuffer3DS(void* bufferToCopy, size_t& length);
+		void						    GetBufferSVG(void* bufferToCopy, size_t& length);
+		void						    GetBufferGLTF(void* bufferToCopy, size_t& length);
+
 		// Setter
 		void						    SetName(const TXString& name);
 		void					    	SetLength(const double& length);
@@ -618,6 +627,11 @@ namespace SceneData
 		void						    SetHeight(const double& height);
 		void						    SetPrimitiveType(const EGdtfModel_PrimitiveType& type);        
 		void						    SetGeometryFile(const TXString& file);
+
+		void						    SetBuffer3DS(void* bufferToCopy, size_t length);
+		void						    SetBufferSVG(void* bufferToCopy, size_t length);
+		void						    SetBufferGLTF(void* bufferToCopy, size_t length);
+
 	public:
 		virtual EGdtfObjectType			GetObjectType();
 		virtual TXString				GetNodeReference();

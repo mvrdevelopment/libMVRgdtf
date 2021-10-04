@@ -1215,6 +1215,9 @@ GdtfModel::GdtfModel(GdtfFixture* fixture)
 	fBuffer3DS 		= nullptr;
 	fBufferSVG 		= nullptr;
 	fBufferGLTF		= nullptr;
+	fBufferSize3DS	= 0;
+	fBufferSizeSVG	= 0;
+	fBufferSizeGLTF	= 0;
 }
 
 GdtfModel::GdtfModel(const TXString& name, GdtfFixture* fixture)
@@ -1229,10 +1232,16 @@ GdtfModel::GdtfModel(const TXString& name, GdtfFixture* fixture)
 	fBuffer3DS 		= nullptr;
 	fBufferSVG 		= nullptr;
 	fBufferGLTF		= nullptr;
+	fBufferSize3DS	= 0;
+	fBufferSizeSVG	= 0;
+	fBufferSizeGLTF	= 0;
 }
 
 GdtfModel::~GdtfModel()
 {
+	if(fBuffer3DS) 	{ delete[] fBuffer3DS; 	fBufferSize3DS = 0; }
+	if(fBufferSVG)	{ delete[] fBufferSVG; 	fBufferSizeSVG = 0; }
+	if(fBufferGLTF) { delete[] fBufferGLTF; fBufferSizeGLTF = 0; }
 }
 
 void GdtfModel::SetName(const TXString& name)
@@ -1263,6 +1272,45 @@ void GdtfModel::SetPrimitiveType(const EGdtfModel_PrimitiveType &type)
 void GdtfModel::SetGeometryFile(const TXString &file)
 {
 	fGeometryFile = file;
+}
+
+void GdtfModel::SetBuffer3DS(void* bufferToCopy, size_t length)
+{
+	if(fBuffer3DS)
+	{
+		delete[] fBuffer3DS;
+		fBuffer3DS = nullptr;
+	}
+
+	fBuffer3DS		= new char[length];
+	fBufferSize3DS	= length;
+	memcpy(fBuffer3DS, bufferToCopy, length);
+}
+
+void GdtfModel::SetBufferSVG(void* bufferToCopy, size_t length)
+{
+	if(fBufferSVG)
+	{
+		delete[] fBufferSVG;
+		fBufferSVG = nullptr;
+	}
+
+	fBufferSVG 		= new char[length];
+	fBufferSizeSVG 	= length;
+	memcpy(fBufferSVG, bufferToCopy, length);
+}
+
+void GdtfModel::SetBufferGLTF(void* bufferToCopy, size_t length)
+{
+	if(fBufferGLTF)
+	{
+		delete[] fBufferGLTF;
+		fBufferGLTF = nullptr;
+	}
+
+	fBufferGLTF			= new char[length];
+	fBufferSizeGLTF 	= length;
+	memcpy(fBufferGLTF, bufferToCopy, length);
 }
 
 void GdtfModel::OnPrintToFile(IXMLFileNodePtr pNode)
@@ -1311,19 +1359,40 @@ void GdtfModel::OnReadFromNode(const IXMLFileNodePtr& pNode)
 		auto buffer = fileBuffers.find(filename3DS);
 		if(buffer != fileBuffers.end())
 		{
-			fBuffer3DS = buffer->second.first;
+			fBufferSize3DS	= buffer->second.second;
+			fBuffer3DS		= new char[fBufferSize3DS];
+			memcpy(fBuffer3DS, buffer->second.first, fBufferSize3DS);
+		}
+		else if(fBufferSize3DS > 0)
+		{
+			std::pair<char*, size_t> bufferPair = std::make_pair(fBuffer3DS, fBufferSize3DS);
+			fileBuffers[filename3DS] = bufferPair;
 		}
 
 		buffer = fileBuffers.find(filenameSVG);
 		if(buffer != fileBuffers.end())
 		{
-			fBufferSVG = buffer->second.first;
+			fBufferSizeSVG	= buffer->second.second;
+			fBufferSVG		= new char[fBufferSizeSVG];
+			memcpy(fBufferSVG, buffer->second.first, fBufferSizeSVG);
+		}
+		else if(fBufferSizeSVG > 0)
+		{
+			std::pair<char*, size_t> bufferPair = std::make_pair(fBufferSVG, fBufferSizeSVG);
+			fileBuffers[filenameSVG] = bufferPair;
 		}
 
 		buffer = fileBuffers.find(filenameGLTF);
 		if(buffer != fileBuffers.end())
 		{
-			fBufferGLTF = buffer->second.first;
+			fBufferSizeGLTF	= buffer->second.second;
+			fBufferGLTF		= new char[fBufferSizeGLTF];
+			memcpy(fBufferGLTF, buffer->second.first, fBufferSizeGLTF);
+		}
+		else if(fBufferSizeGLTF > 0)
+		{
+			std::pair<char*, size_t> bufferPair = std::make_pair(fBufferGLTF, fBufferSizeGLTF);
+			fileBuffers[filenameGLTF] = bufferPair;
 		}	
 	}
 }
@@ -1472,6 +1541,45 @@ double GdtfModel::GetHeight() const
 EGdtfModel_PrimitiveType GdtfModel::GetPrimitiveType() const
 {
 	return fPrimitiveType;
+}
+
+void GdtfModel::GetBuffer3DS(void* bufferToCopy, size_t& length)
+{
+	if(fBuffer3DS)
+	{
+		delete[] fBuffer3DS;
+		fBuffer3DS = nullptr;
+	}
+
+	bufferToCopy = new char[fBufferSize3DS];
+	length = fBufferSize3DS;
+	memcpy(bufferToCopy, fBuffer3DS, fBufferSize3DS);
+}
+
+void GdtfModel::GetBufferSVG(void* bufferToCopy, size_t& length)
+{
+	if(fBufferSVG)
+	{
+		delete[] fBufferSVG;
+		fBufferSVG = nullptr;
+	}
+
+	bufferToCopy = new char[fBufferSizeSVG];
+	length = fBufferSizeSVG;
+	memcpy(bufferToCopy, fBufferSVG, fBufferSizeSVG);
+}
+
+void GdtfModel::GetBufferGLTF(void* bufferToCopy, size_t& length)
+{
+	if(fBufferGLTF)
+	{
+		delete[] fBufferGLTF;
+		fBufferGLTF = nullptr;
+	}
+
+	bufferToCopy = new char[fBufferSizeGLTF];
+	length = fBufferSizeGLTF;
+	memcpy(bufferToCopy, fBufferGLTF, fBufferSizeGLTF);
 }
 
 //------------------------------------------------------------------------------------
