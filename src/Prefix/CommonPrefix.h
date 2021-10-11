@@ -380,6 +380,7 @@ const Sint32 kMVR_MinorVersion = 4;
 
 #define XML_GDTF_DMXModeNodeName				"DMXMode"
 #define XML_GDTF_DMXModeName					"Name"
+#define XML_GDTF_DMXModeDescription				"Description"
 #define XML_GDTF_DMXModeGeometryRef				"Geometry"
 #define XML_GDTF_DMXModeDMXChannels				"DMXChannels"
 #define XML_GDTF_DMXModeRelations				"Relations"

@@ -2778,7 +2778,8 @@ void GdtfDmxMode::OnPrintToFile(IXMLFileNodePtr pNode)
 	
 	// ------------------------------------------------------------------------------------
 	// Print node attributes
-	pNode->SetNodeAttributeValue(XML_GDTF_DMXModeName,				fName);
+	pNode->SetNodeAttributeValue(XML_GDTF_DMXModeName, 			fName);
+	pNode->SetNodeAttributeValue(XML_GDTF_DMXModeDescription, 	fDescription);
 	if (fGeomRef) { pNode->SetNodeAttributeValue(XML_GDTF_DMXModeGeometryRef,		fGeomRef->GetNodeReference()); } ;
 	
 	// ------------------------------------------------------------------------------------
@@ -2825,8 +2826,9 @@ void GdtfDmxMode::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	
 	// ------------------------------------------------------------------------------------
 	// Print node attributes
-	pNode->GetNodeAttributeValue(XML_GDTF_DMXModeName,		  fName);
-	pNode->GetNodeAttributeValue(XML_GDTF_DMXModeGeometryRef, fUnresolvedGeomRef);
+	pNode->GetNodeAttributeValue(XML_GDTF_DMXModeName,		  	fName);
+	pNode->GetNodeAttributeValue(XML_GDTF_DMXModeDescription,	fDescription);
+	pNode->GetNodeAttributeValue(XML_GDTF_DMXModeGeometryRef, 	fUnresolvedGeomRef);
 	// ------------------------------------------------------------------------------------
 	// Print Channels
 	
@@ -2874,6 +2876,7 @@ void GdtfDmxMode::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	TXStringArray optional;
 	needed.push_back(XML_GDTF_DMXModeName);
 	needed.push_back(XML_GDTF_DMXModeGeometryRef);
+	optional.push_back(XML_GDTF_DMXModeDescription);
 	
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
@@ -2946,6 +2949,16 @@ const TXString& GdtfDmxMode::GetModeName() const
 void GdtfDmxMode::SetName(const TXString &name)
 {
 	fName = name;
+}
+
+const TXString& GdtfDmxMode::GetDescription() const
+{
+	return fDescription;
+}
+
+void GdtfDmxMode::SetDescription(const TXString &description)
+{
+	fDescription = description;
 }
 
 void GdtfDmxMode::SetGeomRef(GdtfGeometryPtr ptr)

@@ -912,6 +912,10 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
         virtual VCOMError VCOM_CALLTYPE     GetBreakCount(size_t& count) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetFootprintForBreak(size_t inBreak, size_t& footprint) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetBreakAt(size_t at, size_t &breakId) = 0;
+
+		// GDTF 1.2
+		virtual MvrString VCOM_CALLTYPE		GetDescription() = 0;
+		virtual VCOMError VCOM_CALLTYPE 	SetDescription(MvrString description) = 0;
     };
 	typedef VCOMPtr<IGdtfDmxMode>	IGdtfDmxModePtr;
     

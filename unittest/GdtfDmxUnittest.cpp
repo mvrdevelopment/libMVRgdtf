@@ -31,7 +31,7 @@ GdtfDmxUnittest::~GdtfDmxUnittest()
 
 bool GdtfDmxUnittest::ExecuteTest()
 {
-	std::cout << "=                                     GdtfUnittest DMX Unit Test                           =" << std::endl;
+	std::cout << "=                                     GdtfDmxUnittest                                      =" << std::endl;
     WriteFile();
     ReadFile();
 
@@ -107,6 +107,7 @@ void GdtfDmxUnittest::WriteFile()
 
 		IGdtfDmxModePtr mode;
 		__checkVCOM(gdtfWrite->CreateDmxMode("Mode", &mode));
+		__checkVCOM(mode->SetDescription("Mode Description"));
 		__checkVCOM(mode->SetGeometry(geometry));
 
 		//----------------------------------------------------------------
@@ -415,6 +416,8 @@ void GdtfDmxUnittest::ReadFile()
 
 		IGdtfDmxModePtr mode;
 		__checkVCOM(gdtfRead->GetDmxModeAt(0, &mode));
+		
+		this->checkifEqual("Check DMX Mode Description", mode->GetDescription(), "Mode Description");
 
 		size_t countChannels = 0;
 		__checkVCOM(mode->GetDmxChannelCount(countChannels));

@@ -1549,7 +1549,8 @@ namespace SceneData
 		~GdtfDmxMode();
 		
 	private:
-		TXString				fName;			
+		TXString				fName;
+		TXString				fDescription;			
 		GdtfGeometryPtr			fGeomRef;
 		GdtfFixture*			fFixture;
 		TXString				fUnresolvedGeomRef;
@@ -1561,6 +1562,7 @@ namespace SceneData
 
 	public:		
 		const TXString&				GetModeName() const;
+		const TXString&				GetDescription() const;
 		const TGdtfDmxChannelArray	GetChannelArray() const;		
 		GdtfDmxChannelPtr			GetMasterByRef(const TXString& ref) const;
 		GdtfDmxChannelFunctionPtr	GetSlaveByRef(const TXString& ref) const;
@@ -1576,6 +1578,7 @@ namespace SceneData
 
 		
 		void						SetName(const TXString& name);
+		void						SetDescription(const TXString& description);
 		GdtfDmxChannelPtr			AddChannel();
 		void						SetGeomRef(GdtfGeometryPtr ptr);
 		void						SetModel(GdtfGeometryPtr ptr);

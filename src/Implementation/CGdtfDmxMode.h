@@ -16,6 +16,9 @@ namespace VectorworksMVR
         virtual ~CGdtfDmxModeImpl();
         
         virtual MvrString VCOM_CALLTYPE     GetName();
+
+        virtual MvrString VCOM_CALLTYPE     GetDescription();
+        virtual VCOMError VCOM_CALLTYPE     SetDescription(MvrString description);
 		
 		virtual VCOMError VCOM_CALLTYPE     GetGeometry(VectorworksMVR::IGdtfGeometry **geo);
 		virtual VCOMError VCOM_CALLTYPE     SetGeometry(IGdtfGeometry* model);
