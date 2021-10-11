@@ -484,6 +484,7 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_RevisionText							"Text"
 #define XML_GDTF_RevisionDate							"Date"
 #define XML_GDTF_RevisionUserId							"UserID"
+#define XML_GDTF_RevisionModifiedBy						"ModifiedBy"
 // -------------------------------------------------------------------------------
 // Protocolls
 #define XML_GDTF_Protocols                              "Protocols"

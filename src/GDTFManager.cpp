@@ -4710,6 +4710,7 @@ GdtfRevision::GdtfRevision()
 	fDateS.fHour	= 0;
 	fDateS.fMinute	= 0;
 	fDateS.fSecond	= 0;
+	fModifiedBy 	= "";
     
 }
 
@@ -4729,6 +4730,7 @@ void GdtfRevision::OnPrintToFile(IXMLFileNodePtr pNode)
 	pNode->SetNodeAttributeValue(XML_GDTF_RevisionText,			fText);
 	pNode->SetNodeAttributeValue(XML_GDTF_RevisionDate,			SceneData::GdtfConverter::ConvertDate(fDateS));
 	pNode->SetNodeAttributeValue(XML_GDTF_RevisionUserId,		SceneData::GdtfConverter::ConvertInteger(fUserId));
+	pNode->SetNodeAttributeValue(XML_GDTF_RevisionModifiedBy,	fModifiedBy);
 	
 }
 
@@ -4741,9 +4743,10 @@ void GdtfRevision::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	
 	// ------------------------------------------------------------------------------------
 	// Print node attributes
-						pNode->GetNodeAttributeValue(XML_GDTF_RevisionText,		fText);
-	TXString date;		pNode->GetNodeAttributeValue(XML_GDTF_RevisionDate, 	date);		GdtfConverter::ConvertDate(date, pNode, fDateS);
-	TXString userid;	pNode->GetNodeAttributeValue(XML_GDTF_RevisionUserId, 	userid);	GdtfConverter::ConvertInteger(userid, pNode, fUserId);
+						pNode->GetNodeAttributeValue(XML_GDTF_RevisionText,			fText);
+	TXString date;		pNode->GetNodeAttributeValue(XML_GDTF_RevisionDate, 		date);		GdtfConverter::ConvertDate(date, pNode, fDateS);
+	TXString userid;	pNode->GetNodeAttributeValue(XML_GDTF_RevisionUserId, 		userid);	GdtfConverter::ConvertInteger(userid, pNode, fUserId);
+						pNode->GetNodeAttributeValue(XML_GDTF_RevisionModifiedBy,	fModifiedBy);
 
 }
 
@@ -4760,6 +4763,7 @@ void GdtfRevision::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	needed.push_back(XML_GDTF_RevisionDate);
 	optional.push_back(XML_GDTF_RevisionText);
 	optional.push_back(XML_GDTF_RevisionUserId);
+	optional.push_back(XML_GDTF_RevisionModifiedBy);
 
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
@@ -4791,9 +4795,14 @@ void GdtfRevision::SetDate(const STime& date)
 	fDateS.fSecond	= date.fSecond;
 }
 
-const STime& GdtfRevision::GetDate() const
+void GdtfRevision::SetUserId(size_t value) 
 {
-	return fDateS;
+	fUserId = value;
+}
+
+void GdtfRevision::SetModifiedBy(const TXString& modifiedBy)
+{
+	fModifiedBy = modifiedBy;
 }
 
 const TXString& GdtfRevision::GetText() const
@@ -4801,15 +4810,22 @@ const TXString& GdtfRevision::GetText() const
 	return fText;
 }
 
+const STime& GdtfRevision::GetDate() const
+{
+	return fDateS;
+}
+
 size_t GdtfRevision::GetUserId() const
 {
 	return fUserId;
 }
 
-void GdtfRevision::SetUserId(size_t value) 
+const TXString& GdtfRevision::GetModifiedBy() const
 {
-	fUserId = value;
+	return fModifiedBy;
 }
+
+
 
 //------------------------------------------------------------------------------------
 // GdtfPhysicalEmitter

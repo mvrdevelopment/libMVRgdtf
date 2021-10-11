@@ -921,12 +921,16 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
         virtual MvrString VCOM_CALLTYPE     GetText() = 0;
         virtual VCOMError VCOM_CALLTYPE     GetDate(STime& date) = 0;
 
-        virtual VCOMError VCOM_CALLTYPE     SetText(MvrString txt)  = 0;
-        virtual VCOMError VCOM_CALLTYPE     SetDate(STime date)  = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetText(MvrString txt) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetDate(STime date) = 0;
 
 		// GDTF 1.0
 		virtual VCOMError VCOM_CALLTYPE     GetUserId(size_t& userId) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetUserId(size_t userId) = 0;
+
+		// GDTF 1.2
+		virtual MvrString VCOM_CALLTYPE     GetModifiedBy() = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetModifiedBy(MvrString modifiedBy) = 0;
     };
 	typedef VCOMPtr<IGdtfRevision>	IGdtfRevisionPtr;
     

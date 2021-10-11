@@ -369,6 +369,7 @@ void GdtfUnittest::WriteFile()
 		timestamp.fHour = 22; timestamp.fMinute = 33; timestamp.fSecond = 44;
 		__checkVCOM(gdtfWrite->CreateRevision("Revision TestText", timestamp, &rev));
 		__checkVCOM(rev->SetUserId(254));
+		__checkVCOM(rev->SetModifiedBy("unit test"));
 
         //------------------------------------------------------------------------------    
         // Add RDM 
@@ -1371,9 +1372,8 @@ void GdtfUnittest::ReadFile()
 		this->checkifEqual("Check RevDatefMinute",	expTimestamp.fMinute,	Uint16(33));
 		this->checkifEqual("Check RevDatefSecond",	expTimestamp.fSecond, 	Uint16(44));
 		this->checkifEqual("Check UserId",			userId, 				size_t(254));
+		this->checkifEqual("Check ModifiedBy", rev->GetModifiedBy(), "unit test");
 
-
-		
 
         //------------------------------------------------------------------------------    
         // Read RDM         

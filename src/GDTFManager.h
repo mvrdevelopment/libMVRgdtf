@@ -1608,6 +1608,7 @@ namespace SceneData
 		TXString	fText;
 		STime       fDateS;
 		size_t		fUserId;
+		TXString	fModifiedBy;
 		
 	public:
 		virtual EGdtfObjectType			GetObjectType();
@@ -1617,10 +1618,12 @@ namespace SceneData
 		const STime&    GetDate() const;
 		const TXString&	GetText() const;
 		size_t			GetUserId() const;
+		const TXString&	GetModifiedBy() const;
         // Setter        
 		void			SetText(const TXString& text);
         void            SetDate(const STime& date);
 		void 			SetUserId(size_t userId);
+		void			SetModifiedBy(const TXString& text);
 		
 	protected:
 		virtual	TXString				GetNodeName();
