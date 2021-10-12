@@ -880,17 +880,20 @@ namespace SceneData
 		~GdtfGeometryLamp();
 		
 	private:
-		EGdtfLampType	fLampType;
-		double			fPowerConsuption;	// Unit ?? -> W cos phi???
-		double			fLuminousIntensity;
-		double			fColorTemperature;
-		double			fBeamAngle;			// Unit ?? -> Degree
-        double          fFieldAngle;
-		double			fBeamRadius;		// Unit Meter
-		double			fThrowRatio;
-		double			fRectangleRatio;
-		EGdtfBeamType	fBeamType;			// Unit Meter
-		Sint32			fColorIndex;
+		EGdtfLampType			fLampType;
+		double					fPowerConsuption;	// Unit ?? -> W cos phi???
+		double					fLuminousIntensity;
+		double					fColorTemperature;
+		double					fBeamAngle;			// Unit ?? -> Degree
+        double          		fFieldAngle;
+		double					fBeamRadius;		// Unit Meter
+		double					fThrowRatio;
+		double					fRectangleRatio;
+		EGdtfBeamType			fBeamType;			// Unit Meter
+		Sint32					fColorIndex;
+		GdtfPhysicalEmitter*	fEmitterSpectrum;
+
+		TXString 				fUnresolvedEmitterRef;
 		
 	public:
 		// Getter
@@ -906,6 +909,9 @@ namespace SceneData
         double                          GetRectangleRatio();
         EGdtfBeamType                   GetBeamType();
         Sint32                          GetColorIndex();
+		GdtfPhysicalEmitter*            GetEmitterSpectrum();
+
+		TXString						GetUnresolvedEmitterRef() const;
 
 		// Setter
 		void							SetLampType(EGdtfLampType type);
@@ -919,6 +925,7 @@ namespace SceneData
         void                            SetRectangleRatio(double ratio);
         void                            SetBeamType(EGdtfBeamType type);
         void                            SetColorIndex(Sint32 idx);
+		void							SetEmitterSpectrum(GdtfPhysicalEmitter* emitterSpectrum);
 		
 	protected:
         void                            InitializeMembersWithDefaultsVals();
@@ -927,6 +934,7 @@ namespace SceneData
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
         virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
 	};
+	typedef GdtfGeometryLamp*			GdtfGeometryLampePtr;
 	
 	class GdtfBreak : public GdtfObject
 	{

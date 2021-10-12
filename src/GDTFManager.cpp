@@ -2350,6 +2350,7 @@ void GdtfGeometryLamp::InitializeMembersWithDefaultsVals()
 	fRectangleRatio		= 1.7777;
 	fBeamType			= EGdtfBeamType::eGdtfBeamType_Wash;
 	fColorIndex			= 100;
+	fEmitterSpectrum	= nullptr;
 }
 
 GdtfGeometryLamp::~GdtfGeometryLamp()
@@ -2411,6 +2412,11 @@ void SceneData::GdtfGeometryLamp::SetColorIndex(Sint32 idx)
     fColorIndex = idx;
 }
 
+void GdtfGeometryLamp::SetEmitterSpectrum(GdtfPhysicalEmitter* emitterSpectrum)
+{
+    fEmitterSpectrum = emitterSpectrum;
+}
+
 void GdtfGeometryLamp::OnPrintToFile(IXMLFileNodePtr pNode)
 {
 	//------------------------------------------------------------------------------------
@@ -2431,6 +2437,8 @@ void GdtfGeometryLamp::OnPrintToFile(IXMLFileNodePtr pNode)
 	pNode->SetNodeAttributeValue(XML_GDTF_RectangleRatio,			GdtfConverter::ConvertDouble(fRectangleRatio));
 	pNode->SetNodeAttributeValue(XML_GDTF_BeamType,					GdtfConverter::ConvertBeamType(fBeamType));
 	pNode->SetNodeAttributeValue(XML_GDTF_BeamColorRenderingIndex,	GdtfConverter::ConvertInteger(fColorIndex));
+
+	if (fEmitterSpectrum) {pNode->SetNodeAttributeValue(XML_GDTF_BeamEmitterSpectrum, fEmitterSpectrum->GetNodeReference()); };
 	
 }
 
@@ -2454,6 +2462,8 @@ void GdtfGeometryLamp::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	TXString rectangleRatio;pNode->GetNodeAttributeValue(XML_GDTF_RectangleRatio,			rectangleRatio);GdtfConverter::ConvertDouble(rectangleRatio,pNode,	fRectangleRatio);
 	TXString type;			pNode->GetNodeAttributeValue(XML_GDTF_BeamType,					type);			GdtfConverter::ConvertBeamType(type, 		pNode,	fBeamType);
 	TXString colorIndex;	pNode->GetNodeAttributeValue(XML_GDTF_BeamColorRenderingIndex,	colorIndex);	GdtfConverter::ConvertInteger(colorIndex, 	pNode,	fColorIndex);
+
+	pNode->GetNodeAttributeValue(XML_GDTF_BeamEmitterSpectrum, fUnresolvedEmitterRef);
 }
 
 void GdtfGeometryLamp::OnErrorCheck(const IXMLFileNodePtr& pNode)
@@ -2480,6 +2490,7 @@ void GdtfGeometryLamp::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	optional.push_back(XML_GDTF_BeamType);
 	optional.push_back(XML_GDTF_BeamColorRenderingIndex);
 	optional.push_back(XML_GDTF_GeometryModelRef);
+	optional.push_back(XML_GDTF_BeamEmitterSpectrum);
 
 	
 	//------------------------------------------------------------------------------------
@@ -2522,34 +2533,44 @@ double GdtfGeometryLamp::GetBeamAngle()
 	return fBeamAngle;
 }
 
-double SceneData::GdtfGeometryLamp::GetFieldAngle()
+double GdtfGeometryLamp::GetFieldAngle()
 {
     return fFieldAngle;
 }
 
-double SceneData::GdtfGeometryLamp::GetBeamRadius()
+double GdtfGeometryLamp::GetBeamRadius()
 {
     return fBeamRadius;
 }
 
-double SceneData::GdtfGeometryLamp::GetThrowRatio()
+double GdtfGeometryLamp::GetThrowRatio()
 {
 	return fThrowRatio;
 }
 
-double SceneData::GdtfGeometryLamp::GetRectangleRatio()
+double GdtfGeometryLamp::GetRectangleRatio()
 {
 	return fRectangleRatio;
 }
 
-EGdtfBeamType SceneData::GdtfGeometryLamp::GetBeamType()
+EGdtfBeamType GdtfGeometryLamp::GetBeamType()
 {
     return fBeamType;
 }
 
-Sint32 SceneData::GdtfGeometryLamp::GetColorIndex()
+Sint32 GdtfGeometryLamp::GetColorIndex()
 {
     return fColorIndex;
+}
+
+GdtfPhysicalEmitter* GdtfGeometryLamp::GetEmitterSpectrum()
+{
+    return fEmitterSpectrum;
+}
+
+TXString GdtfGeometryLamp::GetUnresolvedEmitterRef() const
+{
+	return fUnresolvedEmitterRef;
 }
 
 //------------------------------------------------------------------------------------
@@ -5683,6 +5704,18 @@ void GdtfFixture::ResolveGeometryRefs_Recursive(GdtfGeometryPtr geometry)
 			geometry->GetNode(node);
 			GdtfParsingError error (GdtfDefines::EGdtfParsingError::eGeometryReferenceUnresolvedLink, node);
 			SceneData::GdtfFixture::AddError(error);
+		}
+	}
+
+	if(geometry->GetObjectType() == eGdtfGeometryLamp)
+	{
+		GdtfGeometryLampePtr geoLamp = static_cast<GdtfGeometryLampePtr>(geometry);
+
+		TXString unresolvedEmitterRef = geoLamp->GetUnresolvedEmitterRef();
+		if ( ! unresolvedEmitterRef.IsEmpty())
+		{
+			GdtfPhysicalEmitterPtr emitterPtr = getEmiterByRef(unresolvedEmitterRef);
+			geoLamp->SetEmitterSpectrum(emitterPtr);
 		}
 	}
 	

@@ -357,6 +357,7 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_RectangleRatio					"RectangleRatio"
 #define XML_GDTF_BeamType						"BeamType"
 #define XML_GDTF_BeamColorRenderingIndex        "ColorRenderingIndex"				
+#define XML_GDTF_BeamEmitterSpectrum            "EmitterSpectrum"				
 
 #define XML_GDTF_BeamTypeEnum_Wash				"Wash"
 #define XML_GDTF_BeamTypeEnum_Spot				"Spot"

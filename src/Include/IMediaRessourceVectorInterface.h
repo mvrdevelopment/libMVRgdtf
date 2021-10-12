@@ -627,6 +627,11 @@ namespace VectorworksMVR
 		// Display
 		virtual MvrString VCOM_CALLTYPE		GetTexture() = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetTexture(MvrString texture) = 0;
+
+		// GDTF 1.2
+		// Lamp
+		virtual VCOMError VCOM_CALLTYPE     GetEmitterSpectrum(IGdtfPhysicalEmitter** outEmitter) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetEmitterSpectrum(IGdtfPhysicalEmitter* newEmitter) = 0;
 	};
 	typedef VCOMPtr<IGdtfGeometry>	IGdtfGeometryPtr;
     
