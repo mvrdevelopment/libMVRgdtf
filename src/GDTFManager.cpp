@@ -5015,6 +5015,7 @@ TXString GdtfUserPreset::GetNodeName()
 // Macro
 GdtfMacro::GdtfMacro()
 {
+	fChannelFunction = nullptr;
 	fMacroDMX = nullptr;
 	fMacroVisual = nullptr;
 }
@@ -5042,8 +5043,10 @@ void GdtfMacro::OnPrintToFile(IXMLFileNodePtr pNode)
 	// Print node attributes
 	pNode->SetNodeAttributeValue(XML_GDTF_MacroName, fName);
 
+	if(fChannelFunction) { pNode->SetNodeAttributeValue(XML_GDTF_MacroChannelFunction, fChannelFunction->GetNodeReference()); }
+
 	//------------------------------------------------------------------------------------
-    // Print the childs
+    // Print the children
     if (fMacroDMX != nullptr) 
     {
         fMacroDMX->WriteToNode(pNode);
@@ -5061,9 +5064,11 @@ void GdtfMacro::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	GdtfObject::OnReadFromNode(pNode);
     //------------------------------------------------------------------------------------
     // Get the attributes	
-    pNode->GetNodeAttributeValue(XML_GDTF_MacroName, fName);    
+    pNode->GetNodeAttributeValue(XML_GDTF_MacroName, fName);
+    pNode->GetNodeAttributeValue(XML_GDTF_MacroChannelFunction, fUnresolvedChannelFunction);
+
     //------------------------------------------------------------------------------------
-    // Read the childs
+    // Read the children
 	IXMLFileNodePtr macroDmxNode;
     if(VCOM_SUCCEEDED(pNode->GetChildNode(XML_GDTF_MacroDMX, &macroDmxNode)))
 	{
@@ -5092,6 +5097,7 @@ void GdtfMacro::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	TXStringArray needed;
 	TXStringArray optional;
 	needed.push_back(XML_GDTF_MacroName);
+	optional.push_back(XML_GDTF_MacroChannelFunction);
 	
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
@@ -5108,6 +5114,16 @@ GdtfMacroDMX* SceneData::GdtfMacro::GetMacroDMX() const
     return fMacroDMX;
 }
 
+GdtfDmxChannelFunction* SceneData::GdtfMacro::GetChannelFunction() const
+{
+    return fChannelFunction;
+}
+
+const TXString & SceneData::GdtfMacro::GetUnresolvedChannelFunction() const
+{
+    return fUnresolvedChannelFunction;
+}
+
 GdtfMacroVisual* SceneData::GdtfMacro::GetMacroVisual() const
 {
     return fMacroVisual;
@@ -5116,6 +5132,11 @@ GdtfMacroVisual* SceneData::GdtfMacro::GetMacroVisual() const
 void SceneData::GdtfMacro::SetName(const TXString & name)
 {
     fName = name;
+}
+
+void SceneData::GdtfMacro::SetChannelFunction(GdtfDmxChannelFunction* channelFunction)
+{
+    fChannelFunction = channelFunction;
 }
 
 void SceneData::GdtfMacro::SetMacroDMX(GdtfMacroDMX* val)
@@ -5795,6 +5816,13 @@ void GdtfFixture::ResolveMacroRefs(GdtfDmxModePtr dmxMode)
 {
 	for (GdtfMacroPtr macro : dmxMode->GetDmxMacrosArray())
 	{
+		TXString unresolvedChannelFunction = macro->GetUnresolvedChannelFunction();
+		if ( ! unresolvedChannelFunction.IsEmpty())
+		{
+			GdtfDmxChannelFunctionPtr channelFunctionPtr = getDmxFunctionByRef(unresolvedChannelFunction, dmxMode);
+			macro->SetChannelFunction(channelFunctionPtr);
+		}
+
 		if(macro->GetMacroDMX())
 		{
 			for (GdtfMacroDMXStepPtr step : macro->GetMacroDMX()->GetStepArray())

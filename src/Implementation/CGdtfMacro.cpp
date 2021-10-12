@@ -3,6 +3,7 @@
 //-----------------------------------------------------------------------------
 #include "Prefix/StdAfx.h"
 #include "CGdtfMacro.h"
+#include "CGdtfDmxChannelFunction.h"
 #include "CGdtfMacroDMX.h"
 #include "CGdtfMacroVisual.h"
 
@@ -35,14 +36,65 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfMacroImpl::SetName(MvrString name
     return kVCOMError_NoError;
 }
 
-void VectorworksMVR::CGdtfMacroImpl::setPointer(SceneData::GdtfMacro *macro)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfMacroImpl::GetChannelFunction(IGdtfDmxChannelFunction** outChannelFunction)
 {
-    fMacro = macro;
+	// Check if Set
+	if (!fMacro) { return kVCOMError_NotInitialized; }
+	
+
+	SceneData::GdtfDmxChannelFunction* gdtfChannelFunction = fMacro->GetChannelFunction();
+	if( !gdtfChannelFunction ) { return kVCOMError_NotSet; }
+
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CGdtfDmxChannelFunctionImpl* pChannelFunction = nullptr;
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDmxChannelFunction, (IVWUnknown**)& pChannelFunction)))
+	{
+		// Check Casting
+		CGdtfDmxChannelFunctionImpl* pResultInterface = static_cast<CGdtfDmxChannelFunctionImpl*>(pChannelFunction);
+		if (pResultInterface)
+		{
+			pResultInterface->setPointer(gdtfChannelFunction);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incomming Object
+	if ( *outChannelFunction)
+	{
+		(*outChannelFunction)->Release();
+		 outChannelFunction = NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out outMacroDmx
+	 *outChannelFunction = pChannelFunction;
+	
+	return kVCOMError_NoError;
 }
 
-SceneData::GdtfMacro* VectorworksMVR::CGdtfMacroImpl::getPointer()
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfMacroImpl::SetChannelFunction(IGdtfDmxChannelFunction* newChannelFunction)
 {
-    return fMacro;
+	// Check if Set
+	if (!fMacro) { return kVCOMError_NotInitialized; }	
+		
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CGdtfDmxChannelFunctionImpl* pChannelFunctionObj = static_cast<CGdtfDmxChannelFunctionImpl*> (newChannelFunction);
+	if(!pChannelFunctionObj) { return kVCOMError_InvalidArg; }
+	
+	SceneData::GdtfDmxChannelFunction* gdtfChannelFunction = pChannelFunctionObj->getPointer();
+	fMacro->SetChannelFunction(gdtfChannelFunction);
+	
+	return kVCOMError_NoError;
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfMacroImpl::CreateMacroDMX(VectorworksMVR::IGdtfMacroDMX** outMacroDmx)
@@ -222,4 +274,14 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfMacroImpl::GetMacroVisual(IGdtfMa
 	 *outMacroVisual = pMacroVisual;
 	
 	return kVCOMError_NoError;
+}
+
+void VectorworksMVR::CGdtfMacroImpl::setPointer(SceneData::GdtfMacro *macro)
+{
+    fMacro = macro;
+}
+
+SceneData::GdtfMacro* VectorworksMVR::CGdtfMacroImpl::getPointer()
+{
+    return fMacro;
 }

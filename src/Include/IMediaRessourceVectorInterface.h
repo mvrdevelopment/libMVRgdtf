@@ -793,6 +793,10 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		
 		virtual VCOMError VCOM_CALLTYPE		GetMacroVisual(IGdtfMacroVisual** outMacroVisual) = 0;
 		virtual VCOMError VCOM_CALLTYPE		CreateMacroVisual(IGdtfMacroVisual** outMacroVisual) = 0;
+
+		// GDTF 1.2
+		virtual VCOMError VCOM_CALLTYPE     GetChannelFunction(IGdtfDmxChannelFunction** outChannelFunction) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetChannelFunction(IGdtfDmxChannelFunction* newChannelFunction) = 0;
 	};
 	typedef VCOMPtr<IGdtfMacro>	IGdtfMacroPtr;
 

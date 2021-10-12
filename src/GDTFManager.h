@@ -1343,19 +1343,25 @@ namespace SceneData
 		~GdtfMacro();
 
 	private:
-		TXString fName;
-		// Childs
+		TXString 				fName;
+		GdtfDmxChannelFunction* fChannelFunction;
+
+		TXString				fUnresolvedChannelFunction;
+		// Children
 		GdtfMacroDMX*    fMacroDMX;
 		GdtfMacroVisual* fMacroVisual;
 	public:
 		virtual EGdtfObjectType			GetObjectType();
 	public:
 		// Getter
-		const TXString&  GetName() const;
-		GdtfMacroDMX*    GetMacroDMX() const;
-		GdtfMacroVisual* GetMacroVisual() const;
+		const TXString&  		GetName() const;
+		GdtfDmxChannelFunction* GetChannelFunction() const;
+		const TXString&  		GetUnresolvedChannelFunction() const;
+		GdtfMacroDMX*    		GetMacroDMX() const;
+		GdtfMacroVisual* 		GetMacroVisual() const;
 		// Setter
 		void SetName(const TXString & name);
+		void SetChannelFunction(GdtfDmxChannelFunction* channelFunction);
 		void SetMacroDMX(GdtfMacroDMX* val);
 		void SetMacroVisual(GdtfMacroVisual* val);
 	protected:
