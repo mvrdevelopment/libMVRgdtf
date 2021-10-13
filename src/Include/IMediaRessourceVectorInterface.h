@@ -1264,6 +1264,13 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		virtual VCOMError VCOM_CALLTYPE		GetLegHeight(double& value) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetLegHeight(double value) = 0;
 
+		//-----------------------------------------------------------------------------
+        // GDTF 1.2
+        // PhysicalDescriptions
+		virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetAdditionalColorSpaceCount(size_t& count) = 0;
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateAdditionalColorSpace(MvrString name, GdtfDefines::EGdtfColorSpace colorSpace, VectorworksMVR::IGdtfColorSpace** outVal) = 0;
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetAdditionalColorSpaceAt(size_t at, VectorworksMVR::IGdtfColorSpace** value) = 0;
+
 	};
     typedef VCOMPtr<IGdtfFixture>	IGdtfFixturePtr;
     const   VWIID IID_IGdtfFixture = { 0x8f7bba09, 0x0753, 0x4971, {0xa9, 0x1b, 0x51, 0xce, 0x96, 0xd2, 0xb6, 0x3f}};

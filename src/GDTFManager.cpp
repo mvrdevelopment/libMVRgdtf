@@ -8556,13 +8556,14 @@ SceneData::GdtfPhysicalDescriptions::GdtfPhysicalDescriptions()
 
 SceneData::GdtfPhysicalDescriptions::~GdtfPhysicalDescriptions()
 {
-    for (GdtfPhysicalEmitter* 	o : fEmitters)    		{ delete o; }
-    for (GdtfFilter*          	o : fFilters)     		{ delete o; }
-    for (GdtfDMXProfile*      	o : fDmxProfiles) 		{ delete o; }
-    for (GdtfCRIGroup*        	o : fCRI_Groups)  		{ delete o; }
-	for (GdtfConnector*       	o : fConnectors)  		{ delete o; }
+    for (GdtfColorSpace* 		o : fAdditionalColorSpaces)	{ delete o; }
+    for (GdtfPhysicalEmitter* 	o : fEmitters)    			{ delete o; }
+    for (GdtfFilter*          	o : fFilters)     			{ delete o; }
+    for (GdtfDMXProfile*      	o : fDmxProfiles) 			{ delete o; }
+    for (GdtfCRIGroup*        	o : fCRI_Groups)  			{ delete o; }
+	for (GdtfConnector*       	o : fConnectors)  			{ delete o; }
 
-	for (GdtfPowerConsumption*	o : fPowerConsumptions) { delete o; }
+	for (GdtfPowerConsumption*	o : fPowerConsumptions) 	{ delete o; }
 }
 
 EGdtfObjectType SceneData::GdtfPhysicalDescriptions::GetObjectType()
@@ -8573,6 +8574,11 @@ EGdtfObjectType SceneData::GdtfPhysicalDescriptions::GetObjectType()
 GdtfColorSpace* SceneData::GdtfPhysicalDescriptions::GetColorSpace()
 {
     return & fColorSpace;
+}
+
+const TGdtfColorSpaceArray& SceneData::GdtfPhysicalDescriptions::GetAdditionalColorSpaceArray()
+{
+    return fAdditionalColorSpaces;
 }
 
 const TGdtfPhysicalEmitterArray& SceneData::GdtfPhysicalDescriptions::GetPhysicalEmitterArray()
@@ -8645,6 +8651,15 @@ void GdtfPhysicalDescriptions::SetLegHeight(double value)
 	fLegHeight = value;
 }
 
+GdtfColorSpacePtr SceneData::GdtfPhysicalDescriptions::AddAdditionalColorSpace(const TXString & name, EGdtfColorSpace colorSpace)
+{
+	GdtfColorSpacePtr gdtfColorSpace = new GdtfColorSpace(name, colorSpace);
+	
+	fAdditionalColorSpaces.push_back(gdtfColorSpace);
+	
+	return gdtfColorSpace;
+}
+
 GdtfPhysicalEmitterPtr SceneData::GdtfPhysicalDescriptions::AddEmitter(const TXString & name, CCieColor color)
 {
 	GdtfPhysicalEmitterPtr emitter = new  GdtfPhysicalEmitter(name, color);
@@ -8710,6 +8725,16 @@ void SceneData::GdtfPhysicalDescriptions::OnPrintToFile(IXMLFileNodePtr pNode)
     //------------------------------------------------------------------------------------
     // Print the attributes        
     fColorSpace.WriteToNode(pNode);
+
+	// Print AdditionalColorSpaces (physicalDescription child)
+	IXMLFileNodePtr additionalColorSpaceGroupNode;
+	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_GDTF_PhysicalDescriptionsColorSpaceCollect, & additionalColorSpaceGroupNode)))
+	{
+		for (GdtfColorSpacePtr colorSpace : fAdditionalColorSpaces)
+		{
+			colorSpace->WriteToNode(additionalColorSpaceGroupNode);
+		}
+	}
     
     //------------------------------------------------------------------------------------
     // Print Filter        
@@ -8805,6 +8830,20 @@ void SceneData::GdtfPhysicalDescriptions::OnReadFromNode(const IXMLFileNodePtr &
 	}
 
 	// ------------------------------------------------------------------------------------
+	// Read AdditionalColorSpaces (PhysicalDescription Child)
+	GdtfConverter::TraverseNodes(pNode, XML_GDTF_PhysicalDescriptionsColorSpaceCollect, XML_GDTF_ColorSpaceNode, [this] (IXMLFileNodePtr objNode) -> void
+									{
+										// Create the object
+										GdtfColorSpacePtr colorSpace = new GdtfColorSpace();
+										 
+										// Read from node
+										colorSpace->ReadFromNode(objNode);
+										 
+										// Add to list
+										fAdditionalColorSpaces.push_back(colorSpace);
+										return;
+									});
+
 	// Read Filters
 	GdtfConverter::TraverseNodes(pNode, XML_GDTF_FiltersCollect, XML_GDTF_FilterNode, [this] (IXMLFileNodePtr objNode) -> void
 									{
@@ -8926,8 +8965,14 @@ void SceneData::GdtfPhysicalDescriptions::OnReadFromNode(const IXMLFileNodePtr &
 
 SceneData::GdtfColorSpace::GdtfColorSpace()
 {
-    fColorSpace = EGdtfColorSpace::sRGB;
 	fUniqueName = "";
+    fColorSpace = EGdtfColorSpace::sRGB;
+}
+
+SceneData::GdtfColorSpace::GdtfColorSpace(const TXString& name, EGdtfColorSpace colorSpace)
+{
+	fUniqueName = name;
+    fColorSpace = colorSpace;
 }
 
 SceneData::GdtfColorSpace::~GdtfColorSpace()
@@ -9049,7 +9094,7 @@ void SceneData::GdtfColorSpace::OnReadFromNode(const IXMLFileNodePtr & pNode)
     //------------------------------------------------------------------------------------
     // Get the attributes
 	pNode->GetNodeAttributeValue(XML_GDTF_ColorSpace_Name, fUniqueName);
-	
+
     TXString colorSpaceStr; pNode->GetNodeAttributeValue(XML_GDTF_ColorSpace_Mode, colorSpaceStr);
     GdtfConverter::ConvertEGdtfColorSpace( colorSpaceStr, pNode, fColorSpace);
     

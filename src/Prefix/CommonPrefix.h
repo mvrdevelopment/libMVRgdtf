@@ -515,6 +515,7 @@ const Sint32 kMVR_MinorVersion = 4;
 // -------------------------------------------------------------------------------
 #define XML_GDTF_UserPresetNodeName						"FTPreset"
 
+#define XML_GDTF_PhysicalDescriptionsColorSpaceCollect	"AdditionalColorSpaces"
 #define XML_GDTF_PhysicalDescriptionsEmitterCollect	    "Emitters"
 #define XML_GDTF_EmitterNodeName						"Emitter"
 #define XML_GDTF_EmitterName							"Name"
