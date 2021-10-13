@@ -8927,6 +8927,7 @@ void SceneData::GdtfPhysicalDescriptions::OnReadFromNode(const IXMLFileNodePtr &
 SceneData::GdtfColorSpace::GdtfColorSpace()
 {
     fColorSpace = EGdtfColorSpace::sRGB;
+	fUniqueName = "";
 }
 
 SceneData::GdtfColorSpace::~GdtfColorSpace()
@@ -8936,6 +8937,11 @@ SceneData::GdtfColorSpace::~GdtfColorSpace()
 EGdtfObjectType SceneData::GdtfColorSpace::GetObjectType()
 {
     return EGdtfObjectType::eGdtfColorSpace;
+}
+
+const TXString& SceneData::GdtfColorSpace::GetName() const
+{
+	return fUniqueName;
 }
 
 EGdtfColorSpace SceneData::GdtfColorSpace::GetColorSpace()
@@ -8979,6 +8985,11 @@ CCieColor SceneData::GdtfColorSpace::GetWhite()
     return color;
 }
 
+void SceneData::GdtfColorSpace::SetName(const TXString& name)
+{
+	fUniqueName = name;
+}
+
 void SceneData::GdtfColorSpace::SetColorSpace(EGdtfColorSpace val)
 {
     fColorSpace = val;
@@ -9018,6 +9029,7 @@ void SceneData::GdtfColorSpace::OnPrintToFile(IXMLFileNodePtr pNode)
     //------------------------------------------------------------------------------------
     // Print the attributes        
     pNode->SetNodeAttributeValue(XML_GDTF_ColorSpace_Mode, GdtfConverter::ConvertEGdtfColorSpace(fColorSpace) );
+	pNode->SetNodeAttributeValue(XML_GDTF_ColorSpace_Name, fUniqueName);
     
     if (fColorSpace == EGdtfColorSpace::Custom)
     {
@@ -9038,6 +9050,8 @@ void SceneData::GdtfColorSpace::OnReadFromNode(const IXMLFileNodePtr & pNode)
     // Get the attributes	
     TXString colorSpaceStr; pNode->GetNodeAttributeValue(XML_GDTF_ColorSpace_Mode, colorSpaceStr);
     GdtfConverter::ConvertEGdtfColorSpace( colorSpaceStr, pNode, fColorSpace);
+
+	pNode->GetNodeAttributeValue(XML_GDTF_ColorSpace_Name, fUniqueName);
     
     if (fColorSpace == EGdtfColorSpace::Custom)
     {
@@ -9063,6 +9077,7 @@ void SceneData::GdtfColorSpace::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	optional.push_back(XML_GDTF_ColorSpace_Blue);
 	optional.push_back(XML_GDTF_ColorSpace_WhitePoint);
 	optional.push_back(XML_GDTF_ColorSpace_Mode);
+	optional.push_back(XML_GDTF_ColorSpace_Name);
 
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node

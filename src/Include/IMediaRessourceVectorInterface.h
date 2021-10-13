@@ -1031,8 +1031,12 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
         virtual VCOMError VCOM_CALLTYPE	SetWhite(CieColor outVal) = 0;
 
 
-        virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
-        virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+        virtual VCOMError VCOM_CALLTYPE BindToObject(void* objAddr) = 0;
+        virtual void*	  VCOM_CALLTYPE GetBoundObject() = 0;
+
+		// GDTF 1.2
+		virtual MvrString VCOM_CALLTYPE GetName() = 0;
+		virtual VCOMError VCOM_CALLTYPE SetName(MvrString name) = 0;
     };
     typedef VCOMPtr<IGdtfColorSpace>	IGdtfColorSpacePtr;
 

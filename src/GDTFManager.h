@@ -416,21 +416,24 @@ namespace SceneData
     private:
         EGdtfColorSpace  fColorSpace;
 
-        CCieColor        fRed;
-        CCieColor        fGreen;
-        CCieColor        fBlue;
-        CCieColor        fWhitePoint;
+		TXString		fUniqueName;
+        CCieColor       fRed;
+        CCieColor       fGreen;
+        CCieColor       fBlue;
+        CCieColor       fWhitePoint;
     public:
         virtual EGdtfObjectType			GetObjectType();
 
     public:
-        // Getter        
+        // Getter
+		const TXString&       GetName() const;
         EGdtfColorSpace		  GetColorSpace();
         CCieColor		      GetRed();
         CCieColor             GetGreen();
         CCieColor		      GetBlue();
 		CCieColor             GetWhite();
         // Setter       
+		void							SetName(const TXString& name);
         void        		            SetColorSpace(EGdtfColorSpace val);
         void                            SetRed(CCieColor val);
         void                            SetGreen(CCieColor val);
