@@ -9027,9 +9027,9 @@ void SceneData::GdtfColorSpace::OnPrintToFile(IXMLFileNodePtr pNode)
     GdtfObject::OnPrintToFile(pNode);
 
     //------------------------------------------------------------------------------------
-    // Print the attributes        
+    // Print the attributes
+	pNode->SetNodeAttributeValue(XML_GDTF_ColorSpace_Name, fUniqueName);     
     pNode->SetNodeAttributeValue(XML_GDTF_ColorSpace_Mode, GdtfConverter::ConvertEGdtfColorSpace(fColorSpace) );
-	pNode->SetNodeAttributeValue(XML_GDTF_ColorSpace_Name, fUniqueName);
     
     if (fColorSpace == EGdtfColorSpace::Custom)
     {
@@ -9047,11 +9047,11 @@ void SceneData::GdtfColorSpace::OnReadFromNode(const IXMLFileNodePtr & pNode)
     GdtfObject::OnReadFromNode(pNode);
 
     //------------------------------------------------------------------------------------
-    // Get the attributes	
+    // Get the attributes
+	pNode->GetNodeAttributeValue(XML_GDTF_ColorSpace_Name, fUniqueName);
+	
     TXString colorSpaceStr; pNode->GetNodeAttributeValue(XML_GDTF_ColorSpace_Mode, colorSpaceStr);
     GdtfConverter::ConvertEGdtfColorSpace( colorSpaceStr, pNode, fColorSpace);
-
-	pNode->GetNodeAttributeValue(XML_GDTF_ColorSpace_Name, fUniqueName);
     
     if (fColorSpace == EGdtfColorSpace::Custom)
     {
