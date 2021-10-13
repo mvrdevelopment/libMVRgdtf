@@ -5023,6 +5023,7 @@ GdtfMacro::GdtfMacro()
 GdtfMacro::GdtfMacro(const TXString& name)
 {
     fName = name;
+	fChannelFunction = nullptr;
     fMacroDMX = nullptr;
     fMacroVisual = nullptr;
 }

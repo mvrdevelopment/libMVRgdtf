@@ -71,7 +71,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfMacroImpl::GetChannelFunction(IGd
 	if ( *outChannelFunction)
 	{
 		(*outChannelFunction)->Release();
-		 outChannelFunction = NULL;
+		outChannelFunction = NULL;
 	}
 	
 	//---------------------------------------------------------------------------
