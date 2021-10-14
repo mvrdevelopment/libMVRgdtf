@@ -2094,6 +2094,46 @@ namespace SceneData
         virtual void                    OnErrorCheck(const IXMLFileNodePtr& pNode);
     };
 
+	class GdtfPoint : public GdtfObject
+	{
+	public:
+		GdtfPoint();
+		GdtfPoint(double DMXPercentage, double CFC3, double CFC2, double CFC1, double CFC0);
+		~GdtfPoint();
+	private:
+		// Attributes
+		double	fDMXPercentage;
+		double	fCFC3;
+		double	fCFC2;
+		double	fCFC1;
+		double	fCFC0;
+	public:
+		virtual EGdtfObjectType			GetObjectType();
+
+	public:
+		// Getters
+		double         GetDMXPercentage() const;
+		double         GetCFC3() const;
+		double         GetCFC2() const;
+		double         GetCFC1() const;
+		double         GetCFC0() const;
+        
+        // Setters
+        void           SetDMXPercentage(double dmxPercentage);
+        void           SetCFC3(double CFC3);
+        void           SetCFC2(double CFC2);
+        void           SetCFC1(double CFC1);
+        void           SetCFC0(double CFC0);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+		virtual	void 					OnErrorCheck(const IXMLFileNodePtr& pNode);
+	};
+	typedef GdtfPoint*	GdtfPointPtr;
+    typedef std::vector<GdtfPoint*>	TGdtfPointArray;
+
 	class GdtfDMXProfile : public GdtfObject
 	{
 	public:
@@ -2101,18 +2141,25 @@ namespace SceneData
 		~GdtfDMXProfile();
 	private:
 		// Attributes
+		TXString 		fUniqueName;
+
+		// Children
+		TGdtfPointArray fPoints;
 	public:
 		virtual EGdtfObjectType			GetObjectType();
 
 	public:
-		// Getter        
-		//
-		// Setter       
-		//
+		// Getters
+		const TXString&	GetName() const;
+		TGdtfPointArray GetPointArray() const;
+		// Setters
+		void 			SetName(const TXString& name);
+		GdtfPointPtr	AddPoint(double DMXPercentage, double CFC3, double CFC2, double CFC1, double CFC0);
 	protected:
 		virtual	TXString				GetNodeName();
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+		virtual	void 					OnErrorCheck(const IXMLFileNodePtr& pNode);
 	};
 
 	class GdtfConnector : public GdtfObject

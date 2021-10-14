@@ -14,6 +14,13 @@ namespace VectorworksMVR
         CGdtfDMXProfileImpl();
         virtual ~CGdtfDMXProfileImpl();
 
+        virtual MvrString VCOM_CALLTYPE		GetName();
+        virtual VCOMError VCOM_CALLTYPE		SetName(MvrString name);
+
+        virtual VCOMError VCOM_CALLTYPE		GetPointCount(size_t& count);
+        virtual VCOMError VCOM_CALLTYPE		GetPointAt(size_t at, IGdtfPoint** point);
+        virtual VCOMError VCOM_CALLTYPE		CreatePoint(double DMXPercentage, double CFC3, double CFC2, double CFC1, double CFC0, IGdtfPoint** point);
+
         virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr);
         virtual void*	  VCOM_CALLTYPE     GetBoundObject();
 

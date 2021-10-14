@@ -1068,15 +1068,43 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
 	};
     typedef VCOMPtr<IGdtfCRIGroup>	IGdtfCRIGroupPtr;
+
+	class DYNAMIC_ATTRIBUTE IGdtfPoint : public IVWUnknown
+	{
+	public:
+		virtual VCOMError VCOM_CALLTYPE		GetDMXPercentage(double& dmxPercentage) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCFC3(double& cfc3) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCFC2(double& cfc2) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCFC1(double& cfc1) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCFC0(double& cfc0) = 0;
+
+
+        virtual VCOMError VCOM_CALLTYPE		SetDMXPercentage(double dmxPercentage) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetCFC3(double cfc3) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetCFC2(double cfc2) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetCFC1(double cfc1) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetCFC0(double cfc0) = 0;
+
+		
+		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+	};
+	typedef VCOMPtr<IGdtfPoint>	IGdtfPointPtr;
 	
 	class DYNAMIC_ATTRIBUTE IGdtfDMXProfile : public IVWUnknown
 	{
 	public:
 		virtual MvrString VCOM_CALLTYPE     GetName() = 0;
 		
-		
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+
+		// GDTF 1.2
+		virtual VCOMError VCOM_CALLTYPE		SetName(MvrString name) = 0;
+
+        virtual VCOMError VCOM_CALLTYPE		GetPointCount(size_t& count) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetPointAt(size_t at, IGdtfPoint** point) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreatePoint(double DMXPercentage, double CFC3, double CFC2, double CFC1, double CFC0, IGdtfPoint** point) = 0;
 	};
 	typedef VCOMPtr<IGdtfDMXProfile>	IGdtfDMXProfilePtr;
 

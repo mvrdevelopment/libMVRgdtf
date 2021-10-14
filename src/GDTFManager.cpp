@@ -7132,17 +7132,182 @@ void GdtfFixture::SetCanHaveChildren(bool canHaveChildren)
 	fCanHaveChildren = canHaveChildren;
 }
 
+//------------------------------------------------------------------------------------
+// Point
+SceneData::GdtfPoint::GdtfPoint()
+{
+	fDMXPercentage = 0;
+	fCFC3 = 0;
+	fCFC2 = 0;
+	fCFC1 = 0;
+	fCFC0 = 0;
+}
+
+SceneData::GdtfPoint::GdtfPoint(double DMXPercentage, double CFC3, double CFC2, double CFC1, double CFC0)
+{
+	fDMXPercentage = DMXPercentage;
+	fCFC3 = CFC3;
+	fCFC2 = CFC2;
+	fCFC1 = CFC1;
+	fCFC0 = CFC0;
+}
+
+SceneData::GdtfPoint::~GdtfPoint()
+{
+}
+
+EGdtfObjectType SceneData::GdtfPoint::GetObjectType()
+{
+    return EGdtfObjectType::eGdtfPoint;
+}
+
+// Getters
+double SceneData::GdtfPoint::GetDMXPercentage() const
+{
+	return fDMXPercentage;
+}
+
+double SceneData::GdtfPoint::GetCFC3() const
+{
+	return fCFC3;
+}
+
+double SceneData::GdtfPoint::GetCFC2() const
+{
+	return fCFC2;
+}
+
+double SceneData::GdtfPoint::GetCFC1() const
+{
+	return fCFC1;
+}
+
+double SceneData::GdtfPoint::GetCFC0() const
+{
+	return fCFC0;
+}
+        
+// Setters
+void SceneData::GdtfPoint::SetDMXPercentage(double dmxPercentage)
+{
+	fDMXPercentage = dmxPercentage;
+}
+
+void SceneData::GdtfPoint::SetCFC3(double CFC3)
+{
+	fCFC3 = CFC3;
+}
+
+void SceneData::GdtfPoint::SetCFC2(double CFC2)
+{
+	fCFC2 = CFC2;
+}
+
+void SceneData::GdtfPoint::SetCFC1(double CFC1)
+{
+	fCFC1 = CFC1;
+}
+
+void SceneData::GdtfPoint::SetCFC0(double CFC0)
+{
+	fCFC0 = CFC0;
+}
+
+TXString SceneData::GdtfPoint::GetNodeName()
+{
+    return XML_GDTF_Point;
+}
+
+void SceneData::GdtfPoint::OnPrintToFile(IXMLFileNodePtr pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnPrintToFile(pNode);
+	
+	//------------------------------------------------------------------------------------
+    // Print the attributes
+	pNode->SetNodeAttributeValue(XML_GDTF_PointDMXPercentage, 	GdtfConverter::ConvertDouble(fDMXPercentage) );
+	pNode->SetNodeAttributeValue(XML_GDTF_PointCFC3, 			GdtfConverter::ConvertDouble(fCFC3) );
+	pNode->SetNodeAttributeValue(XML_GDTF_PointCFC2, 			GdtfConverter::ConvertDouble(fCFC2) );
+	pNode->SetNodeAttributeValue(XML_GDTF_PointCFC1, 			GdtfConverter::ConvertDouble(fCFC1) );
+	pNode->SetNodeAttributeValue(XML_GDTF_PointCFC0, 			GdtfConverter::ConvertDouble(fCFC0) );
+
+}
+
+void SceneData::GdtfPoint::OnReadFromNode(const IXMLFileNodePtr & pNode)
+{
+    //------------------------------------------------------------------------------------
+    // Call the parent
+    GdtfObject::OnReadFromNode(pNode);
+
+    //------------------------------------------------------------------------------------
+    // Get the attributes	
+    TXString dmxPercentage;	pNode->GetNodeAttributeValue(XML_GDTF_PointDMXPercentage, dmxPercentage); 	GdtfConverter::ConvertDouble(dmxPercentage, pNode, fDMXPercentage);
+	TXString cfc3;			pNode->GetNodeAttributeValue(XML_GDTF_PointCFC3, cfc3); 					GdtfConverter::ConvertDouble(cfc3, pNode, fCFC3);
+	TXString cfc2;			pNode->GetNodeAttributeValue(XML_GDTF_PointCFC2, cfc2); 					GdtfConverter::ConvertDouble(cfc2, pNode, fCFC2);
+	TXString cfc1;			pNode->GetNodeAttributeValue(XML_GDTF_PointCFC1, cfc1); 					GdtfConverter::ConvertDouble(cfc1, pNode, fCFC1);
+	TXString cfc0;			pNode->GetNodeAttributeValue(XML_GDTF_PointCFC0, cfc0); 					GdtfConverter::ConvertDouble(cfc0, pNode, fCFC0);
+}
+
+void SceneData::GdtfPoint::OnErrorCheck(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnErrorCheck(pNode);
+
+	//------------------------------------------------------------------------------------
+	// Create needed and optional Attribute Arrays
+	TXStringArray needed;
+	TXStringArray optional;
+	optional.push_back(XML_GDTF_PointDMXPercentage);
+	optional.push_back(XML_GDTF_PointCFC3);
+	optional.push_back(XML_GDTF_PointCFC2);
+	optional.push_back(XML_GDTF_PointCFC1);
+	optional.push_back(XML_GDTF_PointCFC0);
+
+	//------------------------------------------------------------------------------------
+	// Check Attributes for node
+	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
+}
+
+//------------------------------------------------------------------------------------
+// DMXProfile
+
 SceneData::GdtfDMXProfile::GdtfDMXProfile()
 {
+	fUniqueName = "";
 }
 
 SceneData::GdtfDMXProfile::~GdtfDMXProfile()
 {
+	for(GdtfPointPtr point : fPoints) { delete point; }
 }
 
 EGdtfObjectType SceneData::GdtfDMXProfile::GetObjectType()
 {
     return EGdtfObjectType::eGdtfDMXProfile;
+}
+
+const TXString&	SceneData::GdtfDMXProfile::GetName() const
+{
+	return fUniqueName;
+}
+
+TGdtfPointArray SceneData::GdtfDMXProfile::GetPointArray() const
+{
+	return fPoints;
+}
+
+void SceneData::GdtfDMXProfile::SetName(const TXString& name)
+{
+	fUniqueName = name;
+}
+
+GdtfPointPtr SceneData::GdtfDMXProfile::AddPoint(double DMXPercentage, double CFC3, double CFC2, double CFC1, double CFC0)
+{
+	GdtfPointPtr point = new GdtfPoint(DMXPercentage, CFC3, CFC2, CFC1, CFC0);
+	fPoints.push_back(point);
+	return point;
 }
 
 TXString SceneData::GdtfDMXProfile::GetNodeName()
@@ -7155,15 +7320,57 @@ void SceneData::GdtfDMXProfile::OnPrintToFile(IXMLFileNodePtr pNode)
 	//------------------------------------------------------------------------------------
 	// Call the parent
 	GdtfObject::OnPrintToFile(pNode);
+	
 	//------------------------------------------------------------------------------------
+    // Print the attributes
+    pNode->SetNodeAttributeValue(XML_GDTF_DMX_ProfileName, fUniqueName);
+
+    //------------------------------------------------------------------------------------
+    // Print the children
+    for (GdtfPoint* point : fPoints)
+    {
+        point->WriteToNode(pNode);
+    }
 }
 
 void SceneData::GdtfDMXProfile::OnReadFromNode(const IXMLFileNodePtr & pNode)
 {
+    //------------------------------------------------------------------------------------
+    // Call the parent
+    GdtfObject::OnReadFromNode(pNode);
+
+    //------------------------------------------------------------------------------------
+    // Get the attributes	
+    pNode->GetNodeAttributeValue(XML_GDTF_DMX_ProfileName, fUniqueName);
+
+    // Read the children
+    GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_Point, [this](IXMLFileNodePtr objNode) -> void
+    {
+        GdtfPoint* point = new GdtfPoint();
+
+        point->ReadFromNode(objNode);
+
+        fPoints.push_back(point);
+
+        return;
+    });
+}
+
+void SceneData::GdtfDMXProfile::OnErrorCheck(const IXMLFileNodePtr& pNode)
+{
 	//------------------------------------------------------------------------------------
 	// Call the parent
-	GdtfObject::OnReadFromNode(pNode);
+	GdtfObject::OnErrorCheck(pNode);
+
 	//------------------------------------------------------------------------------------
+	// Create needed and optional Attribute Arrays
+	TXStringArray needed;
+	TXStringArray optional;
+	optional.push_back(XML_GDTF_DMX_ProfileName);
+
+	//------------------------------------------------------------------------------------
+	// Check Attributes for node
+	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
 }
 
 SceneData::GdtfCRIGroup::GdtfCRIGroup()
@@ -7226,7 +7433,7 @@ void SceneData::GdtfCRIGroup::OnPrintToFile(IXMLFileNodePtr pNode)
     pNode->SetNodeAttributeValue(XML_GDTF_ColorRenderingIndexGroup_ColorTemp, GdtfConverter::ConvertDouble(fColorTemperature) );
 
     //------------------------------------------------------------------------------------
-    // Print the childs
+    // Print the children
     for (GdtfCRI* cri : fCRI_Array)
     {
         cri->WriteToNode(pNode);
@@ -7244,7 +7451,7 @@ void SceneData::GdtfCRIGroup::OnReadFromNode(const IXMLFileNodePtr & pNode)
     TXString colorTempStr; pNode->GetNodeAttributeValue(XML_GDTF_ColorRenderingIndexGroup_ColorTemp, colorTempStr);
     GdtfConverter::ConvertDouble(colorTempStr, pNode, fColorTemperature);
 
-    // Read the childs
+    // Read the children
     GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_ColorRenderingIndex, [this](IXMLFileNodePtr objNode) -> void
     {
         GdtfCRI* cri = new GdtfCRI();
