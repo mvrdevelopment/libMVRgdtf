@@ -1585,6 +1585,15 @@ GdtfGeometryPtr GdtfGeometry::AddGeometryDisplay(const TXString& name, GdtfModel
 	return geo;
 }
 
+GdtfGeometryPtr GdtfGeometry::AddGeometryMagnet(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma)
+{
+	GdtfGeometry* geo = new GdtfGeometryMagnet(name, refToModel, ma, this);
+
+	fInternalGeometries.push_back(geo);
+
+	return geo;
+}
+
 void GdtfGeometry::OnPrintToFile(IXMLFileNodePtr pNode)
 {
 	//------------------------------------------------------------------------------------
@@ -1644,6 +1653,7 @@ void GdtfGeometry::OnReadFromNode(const IXMLFileNodePtr& pNode)
 										else if (childNodeName == XML_GDTF_MediaServerMasterNodeName)	{ geometry = new GdtfGeometryMediaServerMaster(this);}
 										else if (childNodeName == XML_GDTF_GeometryReferenceNodeName)	{ geometry = new GdtfGeometryReference(this);}
 										else if (childNodeName == XML_GDTF_DisplayNodeName)				{ geometry = new GdtfGeometryDisplay(this);}
+										else if (childNodeName == XML_GDTF_MagnetNodeName)				{ geometry = new GdtfGeometryMagnet(this);}
 										else if (childNodeName == XML_GDTF_BreakNodeName)				{ hasBreak = true; }
 										else															{ DSTOP((kEveryone,"There is a node that was not aspected!")); }
 										
@@ -2321,6 +2331,65 @@ EGdtfObjectType GdtfGeometryDisplay::GetObjectType()
 TXString GdtfGeometryDisplay::GetNodeName()
 {
 	return XML_GDTF_DisplayNodeName;
+}
+
+//------------------------------------------------------------------------------------
+// GdtfGeometryMagnet
+GdtfGeometryMagnet::GdtfGeometryMagnet(GdtfGeometry* parent)
+					:GdtfGeometry(parent)
+{
+}
+
+GdtfGeometryMagnet::GdtfGeometryMagnet(const TXString& name, GdtfModelPtr refToModel,const VWTransformMatrix& ma, GdtfGeometry* parent) 
+					:GdtfGeometry(name, refToModel, ma, parent)
+{
+}
+
+GdtfGeometryMagnet::~GdtfGeometryMagnet()
+{
+}
+
+void GdtfGeometryMagnet::OnPrintToFile(IXMLFileNodePtr pNode) 
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfGeometry::OnPrintToFile(pNode);
+}
+
+void GdtfGeometryMagnet::OnReadFromNode(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfGeometry::OnReadFromNode(pNode);
+}
+
+void GdtfGeometryMagnet::OnErrorCheck(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnErrorCheck(pNode);
+
+	//------------------------------------------------------------------------------------
+	// Create needed and optional Attribute Arrays
+	TXStringArray needed;
+	TXStringArray optional;
+	needed.push_back(XML_GDTF_GeometryName);
+	optional.push_back(XML_GDTF_GeometryModelRef);
+	needed.push_back(XML_GDTF_GeometryMatrix);
+
+	//------------------------------------------------------------------------------------
+	// Check Attributes for node
+	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
+}
+
+EGdtfObjectType GdtfGeometryMagnet::GetObjectType() 
+{
+	return EGdtfObjectType::eGdtfGeometryMagnet;
+}
+
+TXString GdtfGeometryMagnet::GetNodeName()
+{
+	return XML_GDTF_MagnetNodeName;
 }
 
 //------------------------------------------------------------------------------------
@@ -6904,6 +6973,15 @@ GdtfGeometryPtr GdtfFixture::AddGeometryMediaServerMaster(const TXString& name, 
 GdtfGeometryPtr GdtfFixture::AddGeometryDisplay(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma)
 {
 	GdtfGeometry* geo = new GdtfGeometryDisplay(name, refToModel, ma, nullptr);
+
+	fGeometries.push_back(geo);
+	
+	return geo;
+}
+
+GdtfGeometryPtr GdtfFixture::AddGeometryMagnet(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma)
+{
+	GdtfGeometry* geo = new GdtfGeometryMagnet(name, refToModel, ma, nullptr);
 
 	fGeometries.push_back(geo);
 	

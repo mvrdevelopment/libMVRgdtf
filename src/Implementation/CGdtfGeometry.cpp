@@ -237,6 +237,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::CreateGeometry(EGdt
 		case eGdtfGeometryMediaServerLayer:		gdtfGeometry = fGeometry->AddGeometryMediaServerLayer(	vwName, scModel, ma); break;
 		case eGdtfGeometryMediaServerMaster:	gdtfGeometry = fGeometry->AddGeometryMediaServerMaster(	vwName, scModel, ma); break;
         case eGdtfGeometryDisplay:              gdtfGeometry = fGeometry->AddGeometryDisplay(          	vwName, scModel, ma); break;
+        case eGdtfGeometryMagnet:              	gdtfGeometry = fGeometry->AddGeometryMagnet(          	vwName, scModel, ma); break;
 		case eGdtfGeometry:						gdtfGeometry = fGeometry->AddGeometry(					vwName, scModel, ma); break;
 			
 		default:
@@ -983,7 +984,8 @@ void VectorworksMVR::CGdtfGeometryImpl::SetPointer(SceneData::GdtfGeometry* geom
 						fGeometryType == EGdtfObjectType::eGdtfGeometryMediaServerCamera ||
 						fGeometryType == EGdtfObjectType::eGdtfGeometryMediaServerLayer	||
 						fGeometryType == EGdtfObjectType::eGdtfGeometryMediaServerMaster ||
-						fGeometryType == EGdtfObjectType::eGdtfGeometryDisplay);
+						fGeometryType == EGdtfObjectType::eGdtfGeometryDisplay ||
+						fGeometryType == EGdtfObjectType::eGdtfGeometryMagnet);
 	
 	
 }

@@ -345,6 +345,8 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_DisplayNodeName                "Display"
 #define XML_GDTF_DisplayTexture                 "Texture"
 
+#define XML_GDTF_MagnetNodeName                "Magnet"
+
 #define XML_GDTF_LampNodeName					"Beam"
 #define XML_GDTF_LampLampType					"LampType"
 #define XML_GDTF_LampPowerConsumption			"PowerConsumption"

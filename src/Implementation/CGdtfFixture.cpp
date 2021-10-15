@@ -966,6 +966,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateGeometry(EGdtf
 		case eGdtfGeometryMediaServerLayer:		gdtfGeometry = fFixtureObject->AddGeometryMediaServerLayer(	vwName, scModel, ma); break;
 		case eGdtfGeometryMediaServerMaster:	gdtfGeometry = fFixtureObject->AddGeometryMediaServerMaster(vwName, scModel, ma); break;
         case eGdtfGeometryDisplay:              gdtfGeometry = fFixtureObject->AddGeometryDisplay(          vwName, scModel, ma); break;
+        case eGdtfGeometryMagnet:               gdtfGeometry = fFixtureObject->AddGeometryMagnet(           vwName, scModel, ma); break;
 		case eGdtfGeometry:				        gdtfGeometry = fFixtureObject->AddGeometry(			        vwName, scModel, ma); break;
 
 		default:

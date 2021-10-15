@@ -54,6 +54,9 @@ void GdtfEmptyModelTest::WriteFile(VectorworksMVR::IGdtfFixturePtr& fixture)
         IGdtfGeometryPtr    geometry4;
         __checkVCOM(geometry1->CreateGeometry(EGdtfObjectType::eGdtfGeometryDisplay, "Geometry4", filledModel, STransformMatrix(), &geometry4));
         __checkVCOM(geometry4->SetTexture("Texture.png"));
+
+        IGdtfGeometryPtr    geometry5;
+        __checkVCOM(geometry1->CreateGeometry(EGdtfObjectType::eGdtfGeometryMagnet, "Geometry5 Magnet", filledModel, STransformMatrix(), &geometry5));
     }
 
 }
@@ -81,7 +84,7 @@ void GdtfEmptyModelTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
 
         size_t second_level = 0;
         __checkVCOM(geometry1->GetInternalGeometryCount(second_level));
-        checkifEqual("Second Level Geometry Count", second_level, (size_t)3);
+        checkifEqual("Second Level Geometry Count", second_level, (size_t)4);
 
         if(second_level == 3)
         {
@@ -104,6 +107,10 @@ void GdtfEmptyModelTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
             checkifEqual("Second Level Geometry Name", geometry4->GetName(), "Geometry4");
 
             checkifEqual("Check Texture", geometry4->GetTexture(), "Texture.png");
+
+            IGdtfGeometryPtr geometry5;
+            __checkVCOM(geometry1->GetInternalGeometryAt(3, &geometry5));
+            checkifEqual("Magnet Geometry Name", geometry4->GetName(), "Geometry5 Magnet");
         }
     }
 

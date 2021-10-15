@@ -680,6 +680,7 @@ namespace SceneData
 		GdtfGeometry*						AddGeometryWithAxis(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
 		GdtfGeometry*						AddGeometryWithLamp(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
 		GdtfGeometry*						AddGeometryDisplay(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
+		GdtfGeometry*						AddGeometryMagnet(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 
 	protected:
 		virtual	TXString				GetNodeName();
@@ -870,6 +871,27 @@ namespace SceneData
         virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
 	};
 	typedef GdtfGeometryDisplay* GdtfGeometryDisplayPtr;
+
+	class GdtfGeometryMagnet : public GdtfGeometry
+	{
+	public:
+		GdtfGeometryMagnet(GdtfGeometry* parent);
+		GdtfGeometryMagnet(const TXString& name, GdtfModelPtr refToModel,const VWTransformMatrix& ma, GdtfGeometry* parent);
+
+		~GdtfGeometryMagnet();
+	
+	private:
+
+	public:
+		virtual EGdtfObjectType			GetObjectType();
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+	};
+	typedef GdtfGeometryMagnet* GdtfGeometryMagnetPtr;
 	
 	class GdtfGeometryLamp : public GdtfGeometry
 	{
@@ -2319,6 +2341,7 @@ namespace SceneData
 		GdtfGeometryPtr			AddGeometryWithAxis(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
 		GdtfGeometryPtr			AddGeometryWithLamp(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
 		GdtfGeometryPtr			AddGeometryDisplay(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
+		GdtfGeometryPtr			AddGeometryMagnet(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 
 		GdtfWheelPtr			AddWheel(TXString name);
 		GdtfDmxModePtr			AddDmxMode(const TXString& name);
