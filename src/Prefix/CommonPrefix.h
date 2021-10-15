@@ -345,7 +345,19 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_DisplayNodeName                "Display"
 #define XML_GDTF_DisplayTexture                 "Texture"
 
-#define XML_GDTF_MagnetNodeName                "Magnet"
+#define XML_GDTF_LaserNodeName                  "Laser"
+#define XML_GDTF_LaserColorType                 "ColorType"
+#define XML_GDTF_LaserColor                     "Color"
+#define XML_GDTF_LaserOutputStrength            "OutputStrength"
+#define XML_GDTF_LaserEmitter                   "Emitter"
+#define XML_GDTF_LaserBeamDiameter              "BeamDiameter"
+#define XML_GDTF_LaserBeamDivergenceMin         "BeamDivergenceMin"
+#define XML_GDTF_LaserBeamDivergenceMax         "BeamDivergenceMax"
+#define XML_GDTF_LaserScanAnglePan              "ScanAnglePan"
+#define XML_GDTF_LaserScanAngleTilt             "ScanAngleTilt"
+#define XML_GDTF_LaserScanSpeed                 "ScanSpeed"
+
+#define XML_GDTF_MagnetNodeName                 "Magnet"
 
 #define XML_GDTF_LampNodeName					"Beam"
 #define XML_GDTF_LampLampType					"LampType"

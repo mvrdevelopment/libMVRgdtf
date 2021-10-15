@@ -1585,6 +1585,15 @@ GdtfGeometryPtr GdtfGeometry::AddGeometryDisplay(const TXString& name, GdtfModel
 	return geo;
 }
 
+GdtfGeometryPtr GdtfGeometry::AddGeometryLaser(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma)
+{
+	GdtfGeometry* geo = new AddGeometryLaser(name, refToModel, ma, this);
+
+	fInternalGeometries.push_back(geo);
+
+	return geo;
+}
+
 GdtfGeometryPtr GdtfGeometry::AddGeometryMagnet(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma)
 {
 	GdtfGeometry* geo = new GdtfGeometryMagnet(name, refToModel, ma, this);
@@ -2331,6 +2340,116 @@ EGdtfObjectType GdtfGeometryDisplay::GetObjectType()
 TXString GdtfGeometryDisplay::GetNodeName()
 {
 	return XML_GDTF_DisplayNodeName;
+}
+
+//------------------------------------------------------------------------------------
+// GdtfGeometryLaser
+GdtfGeometryLaser::GdtfGeometryLaser(GdtfGeometry* parent)
+					:GdtfGeometry(parent)
+{
+	fEmitter = nullptr;
+}
+
+GdtfGeometryLaser::GdtfGeometryLaser(const TXString& name, GdtfModelPtr refToModel,const VWTransformMatrix& ma, GdtfGeometry* parent) 
+					:GdtfGeometry(name, refToModel, ma, parent)
+{
+	fEmitter = nullptr;
+}
+
+GdtfGeometryLaser::~GdtfGeometryLaser()
+{
+}
+
+EGdtfLaserColorType	GdtfGeometryLaser::GetColorType() const
+{
+	return fColorType;
+}
+
+double GdtfGeometryLaser::GetColor() const
+{
+	return fColor;
+}
+double GdtfGeometryLaser::GetOutputStrength() const
+{
+	return fOutputStrength;
+}
+
+GdtfPhysicalEmitter* GdtfGeometryLaser::GetEmitter() const
+{
+	return fEmitter;
+}
+
+double GdtfGeometryLaser::GetBeamDiameter() const
+{
+	return fBeamDiameter;
+}
+
+double GdtfGeometryLaser::GetBeamDivergenceMin() const
+{
+	return fBeamDivergenceMin;
+}
+
+double GdtfGeometryLaser::GetBeamDivergenceMax() const
+{
+	return fBeamDivergenceMax;
+}
+
+double GdtfGeometryLaser::GetScanAnglePan() const
+{
+	return fScanAnglePan;
+}
+
+double GdtfGeometryLaser::GetScanAngleTilt() const
+{
+	return fScanAngleTilt;
+}
+
+double GdtfGeometryLaser::GetScanSpeed() const
+{
+	return fScanSpeed;
+}
+
+void GdtfGeometryLaser::OnPrintToFile(IXMLFileNodePtr pNode) 
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfGeometry::OnPrintToFile(pNode);
+}
+
+void GdtfGeometryLaser::OnReadFromNode(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfGeometry::OnReadFromNode(pNode);
+}
+
+void GdtfGeometryLaser::OnErrorCheck(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnErrorCheck(pNode);
+
+	//------------------------------------------------------------------------------------
+	// Create needed and optional Attribute Arrays
+	TXStringArray needed;
+	TXStringArray optional;
+	needed.push_back(XML_GDTF_GeometryName);
+	optional.push_back(XML_GDTF_GeometryModelRef);
+	needed.push_back(XML_GDTF_GeometryMatrix);
+
+	//------------------------------------------------------------------------------------
+	// Check Attributes for node
+	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
+}
+
+EGdtfObjectType GdtfGeometryLaser::GetObjectType() 
+{
+	return EGdtfObjectType::eGdtfGeometryLaser;
+}
+
+TXString GdtfGeometryLaser::GetNodeName()
+{
+	return XML_GDTF_LaserNodeName;
 }
 
 //------------------------------------------------------------------------------------
@@ -6973,6 +7092,15 @@ GdtfGeometryPtr GdtfFixture::AddGeometryMediaServerMaster(const TXString& name, 
 GdtfGeometryPtr GdtfFixture::AddGeometryDisplay(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma)
 {
 	GdtfGeometry* geo = new GdtfGeometryDisplay(name, refToModel, ma, nullptr);
+
+	fGeometries.push_back(geo);
+	
+	return geo;
+}
+
+GdtfGeometryPtr GdtfFixture::AddGeometryLaser(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma)
+{
+	GdtfGeometry* geo = new AddGeometryLaser(name, refToModel, ma, nullptr);
 
 	fGeometries.push_back(geo);
 	

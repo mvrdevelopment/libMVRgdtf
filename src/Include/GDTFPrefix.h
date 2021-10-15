@@ -106,6 +106,11 @@ namespace VectorworksMVR
 			eGdtfGeometryMediaServerLayer	= 77,
 			eGdtfGeometryMediaServerMaster	= 78,
             eGdtfGeometryDisplay            = 79,
+            eGdtfGeometryLaser              = 81,
+            eGdtfGeometryWiringObject       = 82,
+            eGdtfGeometryInventory          = 83,
+            eGdtfGeometryStructure          = 84,
+            eGdtfGeometrySupport            = 85,
             eGdtfGeometryMagnet             = 86,
 		};
 
@@ -632,6 +637,12 @@ namespace VectorworksMVR
             ScaleKeepRatio 		= 0,
             ScaleIgnoreRatio 	= 1,
             KeepSizeCenter 		= 2,
+        };
+
+        enum class EGdtfLaserColorType
+        {
+            RGB                 = 0,
+            SingleWaveLength    = 1,
         };
 
 	}

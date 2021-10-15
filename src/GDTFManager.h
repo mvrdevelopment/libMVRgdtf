@@ -680,6 +680,7 @@ namespace SceneData
 		GdtfGeometry*						AddGeometryWithAxis(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
 		GdtfGeometry*						AddGeometryWithLamp(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
 		GdtfGeometry*						AddGeometryDisplay(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
+		GdtfGeometry*						AddGeometryLaser(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 		GdtfGeometry*						AddGeometryMagnet(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 
 	protected:
@@ -871,6 +872,61 @@ namespace SceneData
         virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
 	};
 	typedef GdtfGeometryDisplay* GdtfGeometryDisplayPtr;
+
+	class GdtfGeometryLaser : public GdtfGeometry
+	{
+	public:
+		GdtfGeometryLaser(GdtfGeometry* parent);
+		GdtfGeometryLaser(const TXString& name, GdtfModelPtr refToModel,const VWTransformMatrix& ma, GdtfGeometry* parent);
+
+		~GdtfGeometryLaser();
+	
+	private:
+		EGdtfLaserColorType fColorType;
+		double				fColor; //Wavelength
+		double				fOutputStrength;
+		GdtfPhysicalEmitter fEmitter;
+		double 				fBeamDiameter;
+		double				fBeamDivergenceMin;
+		double				fBeamDivergenceMax;
+		double				fScanAnglePan;
+		double				fScanAngleTilt;
+		double				fScanSpeed;
+
+	public:
+		virtual EGdtfObjectType			GetObjectType();
+
+		// Getters
+        EGdtfLaserColorType		GetColorType() const;
+		double                  GetColor() const;
+		double                  GetOutputStrength() const;
+		GdtfPhysicalEmitter*    GetEmitter() const;
+		double                  GetBeamDiameter() const;
+		double                  GetBeamDivergenceMin() const;
+		double                  GetBeamDivergenceMax() const;
+		double                  GetScanAnglePan() const;
+		double                  GetScanAngleTilt() const;
+		double                  GetScanSpeed() const;
+
+		// Setters
+		void					SetColorType(const EGdtfLaserColorType& colorType);
+		void					SetColor(double waveLength);
+		void					SetOutputStrength(double outputStrength);
+		void		    		SetEmitter(GdtfPhysicalEmitter* emitter);
+		void					SetBeamDiameter(double beamDiameter);
+		void					SetBeamDivergenceMin(double beamDivergenceMin);
+		void					SetBeamDivergenceMax(double beamDivergenceMax);
+		void					SetScanAnglePan(double scanAnglePan);
+		void					SetScanAngleTilt(double scanAngleTilt);
+		void					SetScanSpeed(double scanSpeed);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+	};
+	typedef GdtfGeometryLaser* GdtfGeometryLaserPtr;
 
 	class GdtfGeometryMagnet : public GdtfGeometry
 	{
@@ -1123,7 +1179,7 @@ namespace SceneData
         double							GetRealFade() const;
 		double							GetRealAcceleration() const;
         GdtfWheelPtr					GetOnWheel() const;
-        GdtfPhysicalEmitter*            GetEmitter() const;   
+        GdtfPhysicalEmitter*            GetEmitter() const;
         GdtfFilterPtr                   GetFilter();
 
 
@@ -2341,6 +2397,7 @@ namespace SceneData
 		GdtfGeometryPtr			AddGeometryWithAxis(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
 		GdtfGeometryPtr			AddGeometryWithLamp(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
 		GdtfGeometryPtr			AddGeometryDisplay(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
+		GdtfGeometryPtr			AddGeometryLaser(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 		GdtfGeometryPtr			AddGeometryMagnet(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 
 		GdtfWheelPtr			AddWheel(TXString name);
