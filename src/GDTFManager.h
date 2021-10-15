@@ -444,6 +444,31 @@ namespace SceneData
 
     };
 
+	class GdtfGamut : public GdtfObject
+	{
+    public:
+        GdtfGamut();
+        GdtfGamut(const TXString& name, const CCieColor& col);
+        ~GdtfGamut();
+    private:
+        TXString                        fUniqueName;
+        TGdtfMeasurementArray           fGamutPoints;
+    public:
+        virtual EGdtfObjectType		    GetObjectType();
+        virtual TXString				GetNodeReference();
+    public:            
+        const TXString&		            GetName();
+        const TGdtfMeasurementArray&    GetGamutPoints();
+        // Setter       
+        void						    SetName(const TXString& name);
+        GdtfMeasurement*                AddGamutPoint(CCieColor newPoint);
+    protected:
+        virtual	TXString				GetNodeName();
+        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);        
+    };
+	typedef GdtfGamut*					GdtfGamutPtr;
+	typedef std::vector<GdtfGamutPtr>	TGdtfGamutArray;
 
     class GdtfPhysicalDescriptions : public GdtfObject
     {
@@ -452,6 +477,7 @@ namespace SceneData
         ~GdtfPhysicalDescriptions();
     private:        
         GdtfColorSpace                  fColorSpace;
+		TGdtfGamutArray					fGamuts;
         TGdtfPhysicalEmitterArray		fEmitters;
         TGdtfFilterArray                fFilters;
         TGdtfDMXProfileArray            fDmxProfiles;
@@ -472,6 +498,7 @@ namespace SceneData
         // Getter        
         GdtfColorSpace*                  GetColorSpace();
 
+        const TGdtfGamutArray& 				GetGamutArray();
         const TGdtfPhysicalEmitterArray& 	GetPhysicalEmitterArray();
         const TGdtfFilterArray&          	GetFilterArray();
         const TGdtfDMXProfileArray&      	GetDmxProfileArray();
@@ -488,6 +515,7 @@ namespace SceneData
 		void								SetWeight(double value);
 		void								SetLegHeight(double value);
         
+        GdtfGamutPtr	        		AddGamut(const TXString& name, CCieColor color1, CCieColor color2, CCieColor color3);
         GdtfPhysicalEmitterPtr	        AddEmitter(const TXString& name, CCieColor color);
         GdtfFilterPtr                   AddFilter(const TXString& name,  CCieColor color);
         GdtfDMXProfilePtr               AddDmxProfile();
@@ -500,7 +528,7 @@ namespace SceneData
         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
         virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
     };
-    typedef GdtfPhysicalDescriptions*	GdtfPhysicalDescriptionsPtr;	
+    typedef GdtfPhysicalDescriptions*	GdtfPhysicalDescriptionsPtr;
 
     class GdtfFilter : public GdtfObject
     {
