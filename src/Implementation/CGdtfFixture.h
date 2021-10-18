@@ -131,7 +131,7 @@ namespace VectorworksMVR
         private:
         void FreeBuffer();
 
-        //GDTF 1.1
+        // GDTF 1.1
         virtual VCOMError VCOM_CALLTYPE     GetCanHaveChildren(bool& value);
         virtual VCOMError VCOM_CALLTYPE     SetCanHaveChildren(bool value);
 

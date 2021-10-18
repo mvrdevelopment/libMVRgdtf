@@ -69,6 +69,33 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetCountLinkedDmxChannel(size_t& count, IGdtfDmxMode * forMode);
         virtual VCOMError VCOM_CALLTYPE     GetLinkedDmxChannelAt(size_t at, IGdtfDmxChannel** outChannel, IGdtfDmxMode * forMode);
 
+        // GDTF 1.2
+        // Laser
+        virtual VCOMError VCOM_CALLTYPE		GetColorType(GdtfDefines::EGdtfLaserColorType& colorType);
+        virtual VCOMError VCOM_CALLTYPE		GetLaserColor(double& waveLength);
+        virtual VCOMError VCOM_CALLTYPE		GetOutputStrength(double& outputStrength);
+        virtual VCOMError VCOM_CALLTYPE		GetEmitter(IGdtfPhysicalEmitter** emitter);
+        virtual VCOMError VCOM_CALLTYPE		GetBeamDiameter(double& beamDiameter);
+        virtual VCOMError VCOM_CALLTYPE		GetBeamDivergenceMin(double& beamDivergenceMin);
+        virtual VCOMError VCOM_CALLTYPE		GetBeamDivergenceMax(double& beamDivergenceMax);
+        virtual VCOMError VCOM_CALLTYPE		GetScanAnglePan(double& scanAnglePan);
+        virtual VCOMError VCOM_CALLTYPE		GetScanAngleTilt(double& scanAngleTilt);
+        virtual VCOMError VCOM_CALLTYPE		GetScanSpeed(double& scanSpeed);
+
+        virtual VCOMError VCOM_CALLTYPE		SetColorType(GdtfDefines::EGdtfLaserColorType colorType);
+		virtual VCOMError VCOM_CALLTYPE		SetLaserColor(double waveLength);
+        virtual VCOMError VCOM_CALLTYPE		SetOutputStrength(double outputStrength);
+        virtual VCOMError VCOM_CALLTYPE		SetEmitter(IGdtfPhysicalEmitter* emitter);
+        virtual VCOMError VCOM_CALLTYPE		SetBeamDiameter(double beamDiameter);
+        virtual VCOMError VCOM_CALLTYPE		SetBeamDivergenceMin(double beamDivergenceMin);
+        virtual VCOMError VCOM_CALLTYPE		SetBeamDivergenceMax(double beamDivergenceMax);
+        virtual VCOMError VCOM_CALLTYPE		SetScanAnglePan(double scanAnglePan);
+        virtual VCOMError VCOM_CALLTYPE		SetScanAngleTilt(double scanAngleTilt);
+        virtual VCOMError VCOM_CALLTYPE		SetScanSpeed(double scanSpeed);
+
+        // virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetProtocolCount(size_t& count); +++++++
+        // virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateProtocol(VectorworksMVR::IGdtfConnector* connector, VectorworksMVR::IGdtfPowerConsumption** outVal); +++++++
+        // virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetProtocolAt(size_t at, VectorworksMVR::IGdtfPowerConsumption** value); +++++++
 
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr);
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject();

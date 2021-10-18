@@ -9,6 +9,7 @@
 #include "Utility.h"
 #include "CGdtfDmxMode.h"
 #include "CGdtfDmxChannel.h"
+#include "CGdtfPhysicalEmitter.h"
 
 using namespace VectorworksMVR::Filing;
 
@@ -69,7 +70,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetModel(Vectorwork
     }
     
     //---------------------------------------------------------------------------
-    // Check Incomming Object
+    // Check Incoming Object
     if (*model)
     {
         (*model)->Release();
@@ -237,6 +238,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::CreateGeometry(EGdt
 		case eGdtfGeometryMediaServerLayer:		gdtfGeometry = fGeometry->AddGeometryMediaServerLayer(	vwName, scModel, ma); break;
 		case eGdtfGeometryMediaServerMaster:	gdtfGeometry = fGeometry->AddGeometryMediaServerMaster(	vwName, scModel, ma); break;
         case eGdtfGeometryDisplay:              gdtfGeometry = fGeometry->AddGeometryDisplay(          	vwName, scModel, ma); break;
+        case eGdtfGeometryLaser:              	gdtfGeometry = fGeometry->AddGeometryLaser(          	vwName, scModel, ma); break;
         case eGdtfGeometryMagnet:              	gdtfGeometry = fGeometry->AddGeometryMagnet(          	vwName, scModel, ma); break;
 		case eGdtfGeometry:						gdtfGeometry = fGeometry->AddGeometry(					vwName, scModel, ma); break;
 			
@@ -487,7 +489,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetModel(IGdtfModel
     }
     
     //---------------------------------------------------------------------------
-    // Check Incomming Object
+    // Check Incoming Object
     if (*model)
     {
         (*model)->Release();
@@ -499,7 +501,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetModel(IGdtfModel
     *model	= pModelObj;
     
     return kVCOMError_NoError;   
- }
+}
     
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetTransformMatrix(STransformMatrix & transformMatrix)
@@ -954,7 +956,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetLinkedDmxChannel
 	}
 	
 	//---------------------------------------------------------------------------
-	// Check Incomming Object
+	// Check Incoming Object
 	if (*outChannel)
 	{
 		(*outChannel)->Release();
@@ -968,6 +970,356 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetLinkedDmxChannel
 	return kVCOMError_NoError;
 }
 
+//---------------------------------------------------------------------------
+// Laser
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetColorType(EGdtfLaserColorType& colorType)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLaser) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryLaser* laser = static_cast<SceneData::GdtfGeometryLaser*>(fGeometry);
+	if ( ! laser) { return kVCOMError_Failed; }
+	
+	colorType = laser->GetColorType();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetLaserColor(double& wavelength)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLaser) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryLaser* laser = static_cast<SceneData::GdtfGeometryLaser*>(fGeometry);
+	if ( ! laser) { return kVCOMError_Failed; }
+	
+	wavelength = laser->GetColor();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetOutputStrength(double& outputStrength)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLaser) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryLaser* laser = static_cast<SceneData::GdtfGeometryLaser*>(fGeometry);
+	if ( ! laser) { return kVCOMError_Failed; }
+	
+	outputStrength = laser->GetOutputStrength();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetEmitter(VectorworksMVR::IGdtfPhysicalEmitter** emitter)
+{
+	// Check Pointer
+	if ( ! fGeometry) { return kVCOMError_NotInitialized; }
+
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLaser) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryLaser* laser = static_cast<SceneData::GdtfGeometryLaser*>(fGeometry);
+	if ( ! laser) { return kVCOMError_Failed; }
+    
+    //---------------------------------------------------------------------------
+    // Initialize Object
+	SceneData::GdtfPhysicalEmitter*	gdtfEmitter = laser->GetEmitter();
+	if ( ! gdtfEmitter)	{ return kVCOMError_NotSet; }
+
+    CGdtfPhysicalEmitterImpl* pEmitterObj = nullptr;
+    
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfPhysicalEmitter, (IVWUnknown**) & pEmitterObj)))
+    {
+        // Check Casting
+        CGdtfPhysicalEmitterImpl* pResultInterface = static_cast<CGdtfPhysicalEmitterImpl* >(pEmitterObj);
+        if (pResultInterface)
+        {
+            pResultInterface->setPointer(gdtfEmitter);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+    
+    //---------------------------------------------------------------------------
+    // Check Incoming Object
+    if (*emitter)
+    {
+        (*emitter)->Release();
+        *emitter = NULL;
+    }
+    
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *emitter = pEmitterObj;
+    
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetBeamDiameter(double& beamDiameter)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLaser) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryLaser* laser = static_cast<SceneData::GdtfGeometryLaser*>(fGeometry);
+	if ( ! laser) { return kVCOMError_Failed; }
+	
+	beamDiameter = laser->GetBeamDiameter();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetBeamDivergenceMin(double& beamDivergenceMin)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLaser) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryLaser* laser = static_cast<SceneData::GdtfGeometryLaser*>(fGeometry);
+	if ( ! laser) { return kVCOMError_Failed; }
+	
+	beamDivergenceMin = laser->GetBeamDivergenceMin();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetBeamDivergenceMax(double& beamDivergenceMax)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLaser) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryLaser* laser = static_cast<SceneData::GdtfGeometryLaser*>(fGeometry);
+	if ( ! laser) { return kVCOMError_Failed; }
+	
+	beamDivergenceMax = laser->GetBeamDivergenceMax();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetScanAnglePan(double& scanAnglePan)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLaser) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryLaser* laser = static_cast<SceneData::GdtfGeometryLaser*>(fGeometry);
+	if ( ! laser) { return kVCOMError_Failed; }
+	
+	scanAnglePan = laser->GetScanAnglePan();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetScanAngleTilt(double& scanAngleTilt)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLaser) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryLaser* laser = static_cast<SceneData::GdtfGeometryLaser*>(fGeometry);
+	if ( ! laser) { return kVCOMError_Failed; }
+	
+	scanAngleTilt = laser->GetScanAngleTilt();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetScanSpeed(double& scanSpeed)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLaser) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryLaser* laser = static_cast<SceneData::GdtfGeometryLaser*>(fGeometry);
+	if ( ! laser) { return kVCOMError_Failed; }
+	
+	scanSpeed = laser->GetScanSpeed();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetColorType(EGdtfLaserColorType colorType)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLaser) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryLaser* laser = static_cast<SceneData::GdtfGeometryLaser*>(fGeometry);
+	if ( ! laser) { return kVCOMError_Failed; }
+	
+	laser->SetColorType(colorType);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetLaserColor(double wavelength)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLaser) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryLaser* laser = static_cast<SceneData::GdtfGeometryLaser*>(fGeometry);
+	if ( ! laser) { return kVCOMError_Failed; }
+	
+	laser->SetColor(wavelength);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetOutputStrength(double outputStrength)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLaser) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryLaser* laser = static_cast<SceneData::GdtfGeometryLaser*>(fGeometry);
+	if ( ! laser) { return kVCOMError_Failed; }
+	
+	laser->SetOutputStrength(outputStrength);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetEmitter(IGdtfPhysicalEmitter* emitter)
+{
+	// Check Pointer
+	if ( ! fGeometry)	{ return kVCOMError_NotInitialized; }
+	if ( ! emitter)		{ return kVCOMError_InvalidArg; }
+
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLaser) return kVCOMError_WrongGeometryType;
+
+	// Cast laser	
+	SceneData::GdtfGeometryLaser* laser = static_cast<SceneData::GdtfGeometryLaser*>(fGeometry);
+	if ( ! laser) { return kVCOMError_Failed; }
+
+	// Cast emitter	
+	CGdtfPhysicalEmitterImpl* emitterImpl = static_cast<CGdtfPhysicalEmitterImpl*>(emitter);
+	if ( ! emitterImpl)	{ return kVCOMError_Failed; }
+	
+	SceneData::GdtfPhysicalEmitter* gdtfEmitter = emitterImpl->GetPointer();
+	if ( ! gdtfEmitter)		{ return kVCOMError_Failed; }
+	
+	laser->SetEmitter(gdtfEmitter);
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetBeamDiameter(double beamDiameter)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLaser) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryLaser* laser = static_cast<SceneData::GdtfGeometryLaser*>(fGeometry);
+	if ( ! laser) { return kVCOMError_Failed; }
+	
+	laser->SetBeamDiameter(beamDiameter);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetBeamDivergenceMin(double beamDivergenceMin)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLaser) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryLaser* laser = static_cast<SceneData::GdtfGeometryLaser*>(fGeometry);
+	if ( ! laser) { return kVCOMError_Failed; }
+	
+	laser->SetBeamDivergenceMin(beamDivergenceMin);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetBeamDivergenceMax(double beamDivergenceMax)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLaser) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryLaser* laser = static_cast<SceneData::GdtfGeometryLaser*>(fGeometry);
+	if ( ! laser) { return kVCOMError_Failed; }
+	
+	laser->SetBeamDivergenceMax(beamDivergenceMax);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetScanAnglePan(double scanAnglePan)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLaser) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryLaser* laser = static_cast<SceneData::GdtfGeometryLaser*>(fGeometry);
+	if ( ! laser) { return kVCOMError_Failed; }
+	
+	laser->SetScanAnglePan(scanAnglePan);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetScanAngleTilt(double scanAngleTilt)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLaser) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryLaser* laser = static_cast<SceneData::GdtfGeometryLaser*>(fGeometry);
+	if ( ! laser) { return kVCOMError_Failed; }
+	
+	laser->SetScanAngleTilt(scanAngleTilt);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetScanSpeed(double scanSpeed)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLaser) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryLaser* laser = static_cast<SceneData::GdtfGeometryLaser*>(fGeometry);
+	if ( ! laser) { return kVCOMError_Failed; }
+	
+	laser->SetScanSpeed(scanSpeed);
+	return kVCOMError_NoError;
+}
+
+
+//---------------------------------------------------------------------------
 void VectorworksMVR::CGdtfGeometryImpl::SetPointer(SceneData::GdtfGeometry* geometry)
 {
 	fGeometry		= geometry;
@@ -985,6 +1337,7 @@ void VectorworksMVR::CGdtfGeometryImpl::SetPointer(SceneData::GdtfGeometry* geom
 						fGeometryType == EGdtfObjectType::eGdtfGeometryMediaServerLayer	||
 						fGeometryType == EGdtfObjectType::eGdtfGeometryMediaServerMaster ||
 						fGeometryType == EGdtfObjectType::eGdtfGeometryDisplay ||
+						fGeometryType == EGdtfObjectType::eGdtfGeometryLaser ||
 						fGeometryType == EGdtfObjectType::eGdtfGeometryMagnet);
 	
 	

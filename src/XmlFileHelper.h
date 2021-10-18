@@ -88,6 +88,7 @@ namespace SceneData
 		static TXString	ConvertBool(bool value);
 		static TXString	ConvertESourceType(GdtfDefines::ESourceType);
 		static TXString	ConvertEScaleHandlingType(GdtfDefines::EScaleHandlingType value);
+		static TXString	ConvertLaserColorTypeEnum(GdtfDefines::EGdtfLaserColorType value);
 		
 
         //-----------------------------------------------------------------------------
@@ -127,6 +128,7 @@ namespace SceneData
 		static bool     ConvertBool(					const TXString& inVal, const IXMLFileNodePtr& node, bool& outVal);
 		static bool     ConvertESourceType(				const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::ESourceType& outVal);
 		static bool     ConvertEScaleHandlingType(		const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EScaleHandlingType& outVal);
+		static bool     ConvertLaserColorTypeEnum(		const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfLaserColorType& outVal);
 		
 
         static bool 	ConvertDmxOffset(const TXString& inVal, const IXMLFileNodePtr& node, DMXAddress& coarse, DMXAddress& fine, DMXAddress& ultra, DMXAddress& uber);

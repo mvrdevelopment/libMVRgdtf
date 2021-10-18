@@ -627,6 +627,30 @@ namespace VectorworksMVR
 		// Display
 		virtual MvrString VCOM_CALLTYPE		GetTexture() = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetTexture(MvrString texture) = 0;
+
+		// GDTF 1.2
+        // Laser
+        virtual VCOMError VCOM_CALLTYPE		GetColorType(GdtfDefines::EGdtfLaserColorType& colorType) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetLaserColor(double& waveLength) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetOutputStrength(double& outputStrength) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetEmitter(IGdtfPhysicalEmitter** emitter) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetBeamDiameter(double& beamDiameter) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetBeamDivergenceMin(double& beamDivergenceMin) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetBeamDivergenceMax(double& beamDivergenceMax) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetScanAnglePan(double& scanAnglePan) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetScanAngleTilt(double& scanAngleTilt) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetScanSpeed(double& scanSpeed) = 0;
+
+        virtual VCOMError VCOM_CALLTYPE		SetColorType(GdtfDefines::EGdtfLaserColorType colorType) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetLaserColor(double waveLength) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetOutputStrength(double outputStrength) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetEmitter(IGdtfPhysicalEmitter* emitter) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetBeamDiameter(double beamDiameter) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetBeamDivergenceMin(double beamDivergenceMin) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetBeamDivergenceMax(double beamDivergenceMax) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetScanAnglePan(double scanAnglePan) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetScanAngleTilt(double scanAngleTilt) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetScanSpeed(double scanSpeed) = 0;
 	};
 	typedef VCOMPtr<IGdtfGeometry>	IGdtfGeometryPtr;
     

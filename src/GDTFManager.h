@@ -882,16 +882,18 @@ namespace SceneData
 		~GdtfGeometryLaser();
 	
 	private:
-		EGdtfLaserColorType fColorType;
-		double				fColor; //Wavelength
-		double				fOutputStrength;
-		GdtfPhysicalEmitter fEmitter;
-		double 				fBeamDiameter;
-		double				fBeamDivergenceMin;
-		double				fBeamDivergenceMax;
-		double				fScanAnglePan;
-		double				fScanAngleTilt;
-		double				fScanSpeed;
+		EGdtfLaserColorType 	fColorType;
+		double					fColor; //Wavelength
+		double					fOutputStrength;
+		GdtfPhysicalEmitter*	fEmitter;
+		double 					fBeamDiameter;
+		double					fBeamDivergenceMin;
+		double					fBeamDivergenceMax;
+		double					fScanAnglePan;
+		double					fScanAngleTilt;
+		double					fScanSpeed;
+
+		TXString 				fUnresolvedEmitter;
 
 	public:
 		virtual EGdtfObjectType			GetObjectType();
@@ -907,6 +909,8 @@ namespace SceneData
 		double                  GetScanAnglePan() const;
 		double                  GetScanAngleTilt() const;
 		double                  GetScanSpeed() const;
+
+		const TXString&			GetUnresolvedEmitter() const;
 
 		// Setters
 		void					SetColorType(const EGdtfLaserColorType& colorType);

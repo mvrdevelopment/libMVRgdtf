@@ -98,6 +98,9 @@
 #define XML_Val_ScaleHandlingTypeScaleIgnoreRatio   "ScaleIgnoreRatio"
 #define XML_Val_ScaleHandlingTypeKeepSizeCenter	    "KeepSizeCenter"
 
+#define XML_Val_LaserColorTypeRGB                   "RGB"
+#define XML_Val_LaserColorTypeSingleWaveLength      "SingleWaveLength"
+
 #define XML_Val_MappingNodeName	        "Mapping"
 #define XML_Val_MappingLinkedDefUuid	"linkedDef"
 #define XML_Val_MappingUx	            "ux"

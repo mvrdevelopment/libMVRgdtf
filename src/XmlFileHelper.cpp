@@ -1658,6 +1658,34 @@ CieColor SceneData::GdtfConverter::ConvertCColor(const CCieColor & color)
     return true;
 }
 
+/*static*/ TXString GdtfConverter::ConvertLaserColorTypeEnum(GdtfDefines::EGdtfLaserColorType value)
+{
+    switch (value)
+    {
+		case EGdtfLaserColorType::RGB:							return XML_Val_LaserColorTypeRGB;
+		case EGdtfLaserColorType::SingleWaveLength:				return XML_Val_LaserColorTypeSingleWaveLength;
+    }
+
+	DSTOP((kEveryone, "Unknown Enum for EScaleHandlingType"));
+
+    return XML_Val_ScaleHandlingTypeScaleKeepRatio;
+}
+
+
+/*static*/ bool GdtfConverter::ConvertLaserColorTypeEnum(const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfLaserColorType& outVal)
+{
+	if        (inVal == XML_Val_LaserColorTypeRGB)				{ outVal = EGdtfLaserColorType::RGB; }     
+	else if   (inVal == XML_Val_LaserColorTypeSingleWaveLength) { outVal = EGdtfLaserColorType::SingleWaveLength; }
+	else if   (inVal.IsEmpty())    								{ outVal = EGdtfLaserColorType::RGB; } 
+	else 
+	{
+		DSTOP((kEveryone, "Unknown Value for EScaleHandlingType"));
+		outVal = EGdtfLaserColorType::RGB;
+	}
+       
+    return true;
+}
+
 bool SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, const IFileIdentifierPtr& file, ERessourceType resType, bool deleteFile, bool mustExist)
 {
 	//-------------------------------------------------------------------------------------------------

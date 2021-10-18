@@ -1587,7 +1587,7 @@ GdtfGeometryPtr GdtfGeometry::AddGeometryDisplay(const TXString& name, GdtfModel
 
 GdtfGeometryPtr GdtfGeometry::AddGeometryLaser(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma)
 {
-	GdtfGeometry* geo = new AddGeometryLaser(name, refToModel, ma, this);
+	GdtfGeometry* geo = new GdtfGeometryLaser(name, refToModel, ma, this);
 
 	fInternalGeometries.push_back(geo);
 
@@ -2409,11 +2409,80 @@ double GdtfGeometryLaser::GetScanSpeed() const
 	return fScanSpeed;
 }
 
+const TXString&	GdtfGeometryLaser::GetUnresolvedEmitter() const
+{
+	return fUnresolvedEmitter;
+}
+
+void GdtfGeometryLaser::SetColorType(const EGdtfLaserColorType& colorType)
+{
+	fColorType = colorType;
+}
+
+void GdtfGeometryLaser::SetColor(double waveLength)
+{
+	fColor = waveLength;
+}
+
+void GdtfGeometryLaser::SetOutputStrength(double outputStrength)
+{
+	fOutputStrength = outputStrength;
+}
+
+void GdtfGeometryLaser::SetEmitter(GdtfPhysicalEmitter* emitter)
+{
+	fEmitter = emitter;
+}
+
+void GdtfGeometryLaser::SetBeamDiameter(double beamDiameter)
+{
+	fBeamDiameter = beamDiameter;
+}
+
+void GdtfGeometryLaser::SetBeamDivergenceMin(double beamDivergenceMin)
+{
+	fBeamDivergenceMin = beamDivergenceMin;
+}
+
+void GdtfGeometryLaser::SetBeamDivergenceMax(double beamDivergenceMax)
+{
+	fBeamDivergenceMax = beamDivergenceMax;
+}
+
+void GdtfGeometryLaser::SetScanAnglePan(double scanAnglePan)
+{
+	fScanAnglePan = scanAnglePan;
+}
+
+void GdtfGeometryLaser::SetScanAngleTilt(double scanAngleTilt)
+{
+	fScanAngleTilt = scanAngleTilt;
+}
+
+void GdtfGeometryLaser::SetScanSpeed(double scanSpeed)
+{
+	fScanSpeed = scanSpeed;
+}
+
 void GdtfGeometryLaser::OnPrintToFile(IXMLFileNodePtr pNode) 
 {
 	//------------------------------------------------------------------------------------
 	// Call the parent
 	GdtfGeometry::OnPrintToFile(pNode);
+
+	// Attributes
+	pNode->SetNodeAttributeValue(XML_GDTF_LaserColorType, 			GdtfConverter::ConvertLaserColorTypeEnum(fColorType));
+	pNode->SetNodeAttributeValue(XML_GDTF_LaserColor,				GdtfConverter::ConvertDouble(fColor));
+	pNode->SetNodeAttributeValue(XML_GDTF_LaserOutputStrength,		GdtfConverter::ConvertDouble(fOutputStrength));
+	if(fEmitter)	{ pNode->SetNodeAttributeValue(XML_GDTF_LaserEmitter, fEmitter->GetNodeReference()); }
+	pNode->SetNodeAttributeValue(XML_GDTF_LaserBeamDiameter,		GdtfConverter::ConvertDouble(fBeamDiameter));
+	pNode->SetNodeAttributeValue(XML_GDTF_LaserBeamDivergenceMin,	GdtfConverter::ConvertDouble(fBeamDivergenceMin));
+	pNode->SetNodeAttributeValue(XML_GDTF_LaserBeamDivergenceMax,	GdtfConverter::ConvertDouble(fBeamDivergenceMax));
+	pNode->SetNodeAttributeValue(XML_GDTF_LaserScanAnglePan,		GdtfConverter::ConvertDouble(fScanAnglePan));
+	pNode->SetNodeAttributeValue(XML_GDTF_LaserScanAngleTilt,		GdtfConverter::ConvertDouble(fScanAngleTilt));
+	pNode->SetNodeAttributeValue(XML_GDTF_LaserScanSpeed,			GdtfConverter::ConvertDouble(fScanSpeed));
+
+	// Children
 }
 
 void GdtfGeometryLaser::OnReadFromNode(const IXMLFileNodePtr& pNode)
@@ -2421,6 +2490,17 @@ void GdtfGeometryLaser::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	//------------------------------------------------------------------------------------
 	// Call the parent
 	GdtfGeometry::OnReadFromNode(pNode);
+
+	TXString colorType;			pNode->GetNodeAttributeValue(XML_GDTF_LaserColorType,			colorType);			GdtfConverter::ConvertLaserColorTypeEnum(colorType, pNode, fColorType);
+	TXString color;				pNode->GetNodeAttributeValue(XML_GDTF_LaserColor,				color);				GdtfConverter::ConvertDouble(color, pNode, fColor);
+	TXString outputStrength;	pNode->GetNodeAttributeValue(XML_GDTF_LaserOutputStrength,		outputStrength);	GdtfConverter::ConvertDouble(outputStrength, pNode, fOutputStrength);
+	pNode->GetNodeAttributeValue(XML_GDTF_LaserEmitter,	fUnresolvedEmitter);
+	TXString beamDiameter;		pNode->GetNodeAttributeValue(XML_GDTF_LaserBeamDiameter,		beamDiameter);		GdtfConverter::ConvertDouble(beamDiameter, pNode, fBeamDiameter);
+	TXString beamDivergenceMin;	pNode->GetNodeAttributeValue(XML_GDTF_LaserBeamDivergenceMin,	beamDivergenceMin);	GdtfConverter::ConvertDouble(beamDivergenceMin, pNode, fBeamDivergenceMin);
+	TXString beamDivergenceMax;	pNode->GetNodeAttributeValue(XML_GDTF_LaserBeamDivergenceMax,	beamDivergenceMax);	GdtfConverter::ConvertDouble(beamDivergenceMax, pNode, fBeamDivergenceMax);
+	TXString scanAnglePan;		pNode->GetNodeAttributeValue(XML_GDTF_LaserScanAnglePan,		scanAnglePan);		GdtfConverter::ConvertDouble(scanAnglePan, pNode, fScanAnglePan);
+	TXString scanAngleTilt;		pNode->GetNodeAttributeValue(XML_GDTF_LaserScanAngleTilt,		scanAngleTilt);		GdtfConverter::ConvertDouble(scanAngleTilt, pNode, fScanAngleTilt);
+	TXString scanSpeed;			pNode->GetNodeAttributeValue(XML_GDTF_LaserScanSpeed,			scanSpeed);			GdtfConverter::ConvertDouble(scanSpeed, pNode, fScanSpeed);
 }
 
 void GdtfGeometryLaser::OnErrorCheck(const IXMLFileNodePtr& pNode)
@@ -2436,6 +2516,18 @@ void GdtfGeometryLaser::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	needed.push_back(XML_GDTF_GeometryName);
 	optional.push_back(XML_GDTF_GeometryModelRef);
 	needed.push_back(XML_GDTF_GeometryMatrix);
+
+	needed.push_back(XML_GDTF_LaserColorType);
+	if(fColorType == EGdtfLaserColorType::SingleWaveLength) { needed.push_back(XML_GDTF_LaserColor); }
+	else 													{ optional.push_back(XML_GDTF_LaserColor); }
+	needed.push_back(XML_GDTF_LaserOutputStrength);
+	optional.push_back(XML_GDTF_LaserEmitter);
+	needed.push_back(XML_GDTF_LaserBeamDiameter);
+	needed.push_back(XML_GDTF_LaserBeamDivergenceMin);
+	needed.push_back(XML_GDTF_LaserBeamDivergenceMax);
+	needed.push_back(XML_GDTF_LaserScanAnglePan);
+	needed.push_back(XML_GDTF_LaserScanAngleTilt);
+	needed.push_back(XML_GDTF_LaserScanSpeed);
 
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
@@ -5873,6 +5965,20 @@ void GdtfFixture::ResolveGeometryRefs_Recursive(GdtfGeometryPtr geometry)
 			SceneData::GdtfFixture::AddError(error);
 		}
 	}
+	else if (geometry->GetObjectType() == eGdtfGeometryLaser)
+	{
+		GdtfGeometryLaserPtr geoLaser = static_cast<GdtfGeometryLaserPtr>(geometry);
+		ASSERTN(kEveryone, geoLaser != nullptr);
+		if(geoLaser)
+		{
+			TXString unresolvedEmitterRef = geoLaser->GetUnresolvedEmitter();
+			if ( ! unresolvedEmitterRef.IsEmpty())
+			{
+				GdtfPhysicalEmitterPtr emitterPtr = getEmiterByRef(unresolvedEmitterRef);
+				geoLaser->SetEmitter(emitterPtr);
+			}
+		}
+	}
 	
 	// Now traverse child geometry
 	for (GdtfGeometryPtr internalGeometry : geometry->GetInternalGeometries())
@@ -7100,7 +7206,7 @@ GdtfGeometryPtr GdtfFixture::AddGeometryDisplay(const TXString& name, GdtfModelP
 
 GdtfGeometryPtr GdtfFixture::AddGeometryLaser(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma)
 {
-	GdtfGeometry* geo = new AddGeometryLaser(name, refToModel, ma, nullptr);
+	GdtfGeometry* geo = new GdtfGeometryLaser(name, refToModel, ma, nullptr);
 
 	fGeometries.push_back(geo);
 	
