@@ -1662,9 +1662,10 @@ void GdtfGeometry::OnReadFromNode(const IXMLFileNodePtr& pNode)
 										else if (childNodeName == XML_GDTF_MediaServerMasterNodeName)	{ geometry = new GdtfGeometryMediaServerMaster(this);}
 										else if (childNodeName == XML_GDTF_GeometryReferenceNodeName)	{ geometry = new GdtfGeometryReference(this);}
 										else if (childNodeName == XML_GDTF_DisplayNodeName)				{ geometry = new GdtfGeometryDisplay(this);}
+										else if (childNodeName == XML_GDTF_LaserNodeName)				{ geometry = new GdtfGeometryLaser(this);}
 										else if (childNodeName == XML_GDTF_MagnetNodeName)				{ geometry = new GdtfGeometryMagnet(this);}
 										else if (childNodeName == XML_GDTF_BreakNodeName)				{ hasBreak = true; }
-										else															{ DSTOP((kEveryone,"There is a node that was not aspected!")); }
+										else															{ DSTOP((kEveryone,"There is a node that was not expected!")); }
 										
 										
 										if (hasBreak)
@@ -2350,7 +2351,7 @@ GdtfGeometryLaser::GdtfGeometryLaser(GdtfGeometry* parent)
 	fEmitter = nullptr;
 }
 
-GdtfGeometryLaser::GdtfGeometryLaser(const TXString& name, GdtfModelPtr refToModel,const VWTransformMatrix& ma, GdtfGeometry* parent) 
+GdtfGeometryLaser::GdtfGeometryLaser(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma, GdtfGeometry* parent) 
 					:GdtfGeometry(name, refToModel, ma, parent)
 {
 	fEmitter = nullptr;
@@ -2551,7 +2552,7 @@ GdtfGeometryMagnet::GdtfGeometryMagnet(GdtfGeometry* parent)
 {
 }
 
-GdtfGeometryMagnet::GdtfGeometryMagnet(const TXString& name, GdtfModelPtr refToModel,const VWTransformMatrix& ma, GdtfGeometry* parent) 
+GdtfGeometryMagnet::GdtfGeometryMagnet(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma, GdtfGeometry* parent) 
 					:GdtfGeometry(name, refToModel, ma, parent)
 {
 }
@@ -6904,7 +6905,7 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	GdtfConverter::TraverseMultiNodes(pNode, XML_GDTF_FixtureChildNodeGeomertries, [this] (IXMLFileNodePtr objNode,const TXString& childNodeName) -> void
 						{
 							GdtfGeometryPtr geometry = nullptr;
-							if		 (childNodeName == XML_GDTF_GeometryAxisNodeName)		{ geometry = new GdtfGeometryAxis(nullptr);}
+							if		(childNodeName == XML_GDTF_GeometryAxisNodeName)		{ geometry = new GdtfGeometryAxis(nullptr);}
 							else if (childNodeName == XML_GDTF_GeometryNodeName)			{ geometry = new GdtfGeometry(nullptr);}
 							else if (childNodeName == XML_GDTF_FilterBeamNodeName)			{ geometry = new GdtfGeometryBeamFilter(nullptr);}
 							else if (childNodeName == XML_GDTF_FilterColorNodeName)			{ geometry = new GdtfGeometryColorFilter(nullptr);}
@@ -6916,7 +6917,9 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 							else if (childNodeName == XML_GDTF_MediaServerMasterNodeName)	{ geometry = new GdtfGeometryMediaServerMaster(nullptr);}
 							else if (childNodeName == XML_GDTF_GeometryReferenceNodeName)	{ geometry = new GdtfGeometryReference(nullptr);}
 							else if (childNodeName == XML_GDTF_DisplayNodeName)				{ geometry = new GdtfGeometryDisplay(nullptr);}
-							else															{ DSTOP((kEveryone,"There is a node that was not aspected!")); }
+							else if (childNodeName == XML_GDTF_LaserNodeName)				{ geometry = new GdtfGeometryLaser(nullptr);}
+							else if (childNodeName == XML_GDTF_MagnetNodeName)				{ geometry = new GdtfGeometryMagnet(nullptr);}
+							else															{ DSTOP((kEveryone,"There is a node that was not expected!")); }
 							
 							ASSERTN(kEveryone, geometry != nullptr);
 							if (geometry)
