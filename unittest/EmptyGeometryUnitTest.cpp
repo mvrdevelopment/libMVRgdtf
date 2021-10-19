@@ -55,8 +55,23 @@ void GdtfEmptyModelTest::WriteFile(VectorworksMVR::IGdtfFixturePtr& fixture)
         __checkVCOM(geometry1->CreateGeometry(EGdtfObjectType::eGdtfGeometryDisplay, "Geometry4", filledModel, STransformMatrix(), &geometry4));
         __checkVCOM(geometry4->SetTexture("Texture.png"));
 
+        // Magnet
         IGdtfGeometryPtr    geometry5;
         __checkVCOM(geometry1->CreateGeometry(EGdtfObjectType::eGdtfGeometryMagnet, "Geometry5 Magnet", filledModel, STransformMatrix(), &geometry5));
+
+        // Laser
+        IGdtfGeometryPtr    geometry6;
+        __checkVCOM(geometry1->CreateGeometry(EGdtfObjectType::eGdtfGeometryLaser, "Geometry6 Laser", filledModel, STransformMatrix(), &geometry6));
+
+        __checkVCOM(geometry6->SetColorType(EGdtfLaserColorType::SingleWaveLength));
+        __checkVCOM(geometry6->SetLaserColor(1.1));
+        __checkVCOM(geometry6->SetOutputStrength(1.2));
+        __checkVCOM(geometry6->SetBeamDiameter(1.3));
+        __checkVCOM(geometry6->SetBeamDivergenceMin(1.4));
+        __checkVCOM(geometry6->SetBeamDivergenceMax(1.5));
+        __checkVCOM(geometry6->SetScanAnglePan(1.6));
+        __checkVCOM(geometry6->SetScanAngleTilt(1.7));
+        __checkVCOM(geometry6->SetScanSpeed(1.8));
     }
 
 }
@@ -84,9 +99,9 @@ void GdtfEmptyModelTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
 
         size_t second_level = 0;
         __checkVCOM(geometry1->GetInternalGeometryCount(second_level));
-        checkifEqual("Second Level Geometry Count", second_level, (size_t)4);
+        checkifEqual("Second Level Geometry Count", second_level, (size_t)5);
 
-        if(second_level == 3)
+        if(second_level == 5)
         {
             IGdtfGeometryPtr geometry2;
             __checkVCOM(geometry1->GetInternalGeometryAt(0, &geometry2));
@@ -108,9 +123,51 @@ void GdtfEmptyModelTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
 
             checkifEqual("Check Texture", geometry4->GetTexture(), "Texture.png");
 
-            IGdtfGeometryPtr geometry5;
-            __checkVCOM(geometry1->GetInternalGeometryAt(3, &geometry5));
-            checkifEqual("Magnet Geometry Name", geometry4->GetName(), "Geometry5 Magnet");
+            // Magnet
+            IGdtfGeometryPtr geoMagnet;
+            __checkVCOM(geometry1->GetInternalGeometryAt(3, &geoMagnet));
+            checkifEqual("Magnet Geometry Name", geoMagnet->GetName(), "Geometry5 Magnet");
+
+            // Laser
+            IGdtfGeometryPtr geoLaser;
+            __checkVCOM(geometry1->GetInternalGeometryAt(4, &geoLaser));
+            checkifEqual("Laser Geometry Name", geoLaser->GetName(), "Geometry6 Laser");
+
+            EGdtfLaserColorType colorType = EGdtfLaserColorType::RGB;
+            __checkVCOM(geoLaser->GetColorType(colorType));
+            checkifEqual("Laser ColorType", (size_t)colorType, (size_t)EGdtfLaserColorType::SingleWaveLength);
+
+            double colorWaveLength = 0.0;
+            __checkVCOM(geoLaser->GetLaserColor(colorWaveLength));
+            checkifEqual("Laser Color", colorWaveLength, 1.1);
+
+            double outputStrength = 0.0;
+            __checkVCOM(geoLaser->GetOutputStrength(outputStrength));
+            checkifEqual("Laser OutputStrength", outputStrength, 1.2);
+
+            double beamDiameter = 0.0;
+            __checkVCOM(geoLaser->GetBeamDiameter(beamDiameter));
+            checkifEqual("Laser BeamDiameter", beamDiameter, 1.3);
+
+            double beamDivergenceMin = 0.0;
+            __checkVCOM(geoLaser->GetBeamDivergenceMin(beamDivergenceMin));
+            checkifEqual("Laser BeamDivergenceMin", beamDivergenceMin, 1.4);
+
+            double beamDivergenceMax = 0.0;
+            __checkVCOM(geoLaser->GetBeamDivergenceMax(beamDivergenceMax));
+            checkifEqual("Laser BeamDivergenceMax", beamDivergenceMax, 1.5);
+
+            double scanAnglePan = 0.0;
+            __checkVCOM(geoLaser->GetScanAnglePan(scanAnglePan));
+            checkifEqual("Laser ScanAnglePan", scanAnglePan, 1.6);
+
+            double scanAngleTilt = 0.0;
+            __checkVCOM(geoLaser->GetScanAngleTilt(scanAngleTilt));
+            checkifEqual("Laser ScanAngleTilt", scanAngleTilt, 1.7);
+
+            double scanSpeed = 0.0;
+            __checkVCOM(geoLaser->GetScanSpeed(scanSpeed));
+            checkifEqual("Laser ScanSpeed", scanSpeed, 1.8);
         }
     }
 
