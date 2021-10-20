@@ -360,6 +360,13 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_LaserScanAngleTilt             "ScanAngleTilt"
 #define XML_GDTF_LaserScanSpeed                 "ScanSpeed"
 
+#define XML_GDTF_PinPatchNodeName               "PinPatch"
+#define XML_GDTF_PinPatchToWiringObject         "ToWiringObject"
+#define XML_GDTF_PinPatchFromPin                "FromPin"
+#define XML_GDTF_PinPatchToPin                  "ToPin"
+
+#define XML_GDTF_WiringObjectNodeName           "WiringObject"
+
 #define XML_GDTF_MagnetNodeName                 "Magnet"
 
 #define XML_GDTF_LampNodeName					"Beam"

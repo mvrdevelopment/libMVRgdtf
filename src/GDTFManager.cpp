@@ -2546,6 +2546,109 @@ TXString GdtfGeometryLaser::GetNodeName()
 }
 
 //------------------------------------------------------------------------------------
+// GdtfPinPatch
+GdtfPinPatch::GdtfPinPatch()
+{
+	fToWiringObject = nullptr;
+}
+
+GdtfPinPatch::GdtfPinPatch(GdtfGeometryWiringObjectPtr toWiringObject, size_t fromPin, size_t toPin)
+{
+	fToWiringObject = toWiringObject;
+	fFromPin 		= fromPin;
+	fToPin 			= toPin;
+}
+
+GdtfPinPatch::~GdtfPinPatch()
+{
+}
+
+GdtfGeometryWiringObjectPtr GdtfPinPatch::GetToWiringObject() const
+{
+	return fToWiringObject;
+}
+
+size_t GdtfPinPatch::GetFromPin() const
+{
+	return fFromPin;
+}
+
+size_t GdtfPinPatch::GetToPin() const
+{
+	return fToPin;
+}
+
+const TXString&	GdtfPinPatch::GetUnresolvedWiringObject() const
+{
+	return fUnresolvedWiringObject;
+}
+
+void GdtfPinPatch::SetToWiringObject(GdtfGeometryWiringObjectPtr toWiringObject)
+{
+	fToWiringObject = toWiringObject;
+}
+
+void GdtfPinPatch::SetFromPin(size_t fromPin)
+{
+	fFromPin = fromPin;
+}
+
+void GdtfPinPatch::SetToPin(size_t toPin)
+{
+	fToPin = toPin;
+}
+
+void GdtfPinPatch::OnPrintToFile(IXMLFileNodePtr pNode) 
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnPrintToFile(pNode);
+
+	if(fToWiringObject)	{ pNode->SetNodeAttributeValue(XML_GDTF_PinPatchToWiringObject, fToWiringObject->GetNodeReference()); }
+	pNode->SetNodeAttributeValue(XML_GDTF_PinPatchFromPin,	GdtfConverter::ConvertInteger(fFromPin));
+	pNode->SetNodeAttributeValue(XML_GDTF_PinPatchToPin,	GdtfConverter::ConvertInteger(fToPin));
+}
+
+void GdtfPinPatch::OnReadFromNode(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnReadFromNode(pNode);
+
+	pNode->GetNodeAttributeValue(XML_GDTF_PinPatchToWiringObject, fUnresolvedWiringObject);
+	TXString fromPin;	pNode->GetNodeAttributeValue(XML_GDTF_PinPatchFromPin,	fromPin);	GdtfConverter::ConvertInteger(fromPin, 	pNode,	fFromPin);
+	TXString toPin;		pNode->GetNodeAttributeValue(XML_GDTF_PinPatchToPin,	toPin);		GdtfConverter::ConvertInteger(toPin, 	pNode,	fToPin);
+}
+
+void GdtfPinPatch::OnErrorCheck(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnErrorCheck(pNode);
+
+	//------------------------------------------------------------------------------------
+	// Create needed and optional Attribute Arrays
+	TXStringArray needed;
+	TXStringArray optional;
+	needed.push_back(XML_GDTF_PinPatchToWiringObject);
+	needed.push_back(XML_GDTF_PinPatchFromPin);
+	needed.push_back(XML_GDTF_PinPatchToPin);
+	//------------------------------------------------------------------------------------
+	// Check Attributes for node
+	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
+}
+
+EGdtfObjectType GdtfPinPatch::GetObjectType() 
+{
+	return EGdtfObjectType::eGdtfPinPatch;
+}
+
+TXString GdtfPinPatch::GetNodeName()
+{
+	return XML_GDTF_PinPatchNodeName;
+}
+
+//------------------------------------------------------------------------------------
 // GdtfGeometryMagnet
 GdtfGeometryMagnet::GdtfGeometryMagnet(GdtfGeometry* parent)
 					:GdtfGeometry(parent)

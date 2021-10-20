@@ -66,6 +66,9 @@ namespace SceneData
     typedef GdtfPowerConsumption*	GdtfPowerConsumptionPtr;
     typedef std::vector<GdtfPowerConsumption*>	TGdtfPowerConsumptionArray;
 
+	class GdtfGeometryWiringObject;
+	typedef GdtfGeometryWiringObject* GdtfGeometryWiringObjectPtr;
+
 
 	const Sint32 kDmxBreakOverwriteValue = 0;
 	//------------------------------------------------------------------------------------
@@ -931,6 +934,44 @@ namespace SceneData
         virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
 	};
 	typedef GdtfGeometryLaser* GdtfGeometryLaserPtr;
+
+	class GdtfPinPatch : public GdtfObject
+	{
+	public:
+		GdtfPinPatch();
+		GdtfPinPatch(GdtfGeometryWiringObjectPtr toWiringObject, size_t fromPin, size_t toPin);
+
+		~GdtfPinPatch();
+	
+	private:
+		GdtfGeometryWiringObjectPtr	fToWiringObject;
+		size_t						fFromPin;
+		size_t						fToPin;
+
+		TXString					fUnresolvedWiringObject;
+
+	public:
+		virtual EGdtfObjectType			GetObjectType();
+
+		// Getters
+		GdtfGeometryWiringObjectPtr 	GetToWiringObject() const;
+		size_t							GetFromPin() const;
+		size_t							GetToPin() const;
+
+		const TXString&					GetUnresolvedWiringObject() const;
+
+		// Setters
+		void	SetToWiringObject(GdtfGeometryWiringObjectPtr toWiringObject);
+		void	SetFromPin(size_t fromPin);
+		void	SetToPin(size_t toPin);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+	};
+	typedef GdtfPinPatch* GdtfPinPatchPtr;
 
 	class GdtfGeometryMagnet : public GdtfGeometry
 	{

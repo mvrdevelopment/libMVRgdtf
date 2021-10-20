@@ -75,6 +75,7 @@ namespace VectorworksMVR
 	class IMediaRessourceVectorInterface;
 	class IGdtfFixture;
 	class IGdtfAttribute;
+	class IGdtfGeometry;
     class IGdtfPhysicalEmitter;
     class IGdtfMacroDMXStep;
     class IGdtfMacroDMXValue;
@@ -563,6 +564,22 @@ namespace VectorworksMVR
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
 	};
 	typedef VCOMPtr<IGdtfBreak>	IGdtfBreakPtr;
+
+	class DYNAMIC_ATTRIBUTE IGdtfPinPatch : public IVWUnknown
+	{
+	public:
+		virtual VCOMError VCOM_CALLTYPE     GetLinkedWiringObject(IGdtfGeometry** toWiringObject) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetFromPin(size_t& fromPin) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetToPin(size_t& toPin) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE     SetLinkedWiringObject(IGdtfGeometry* toWiringObject) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetFromPin(size_t fromPin) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetToPin(size_t toPin) = 0;
+		
+		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+	};
+	typedef VCOMPtr<IGdtfPinPatch>	IGdtfPinPatchPtr;
 	
     class DYNAMIC_ATTRIBUTE IGdtfGeometry : public IVWUnknown
     {

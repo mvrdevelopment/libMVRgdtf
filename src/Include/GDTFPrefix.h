@@ -112,6 +112,8 @@ namespace VectorworksMVR
             eGdtfGeometryStructure          = 84,
             eGdtfGeometrySupport            = 85,
             eGdtfGeometryMagnet             = 86,
+            eGdtfLaserProtocol              = 87,
+            eGdtfPinPatch                   = 88,
 		};
 
         enum class EGdtfParsingError : Sint32
