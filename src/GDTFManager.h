@@ -971,7 +971,90 @@ namespace SceneData
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
         virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
 	};
-	typedef GdtfPinPatch* GdtfPinPatchPtr;
+	typedef GdtfPinPatch* 					GdtfPinPatchPtr;
+	typedef std::vector<GdtfPinPatchPtr> 	TGdtfPinPatchArray;
+
+	class GdtfGeometryWiringObject : public GdtfGeometry
+	{
+	public:
+		GdtfGeometryWiringObject(GdtfGeometry* parent);
+		GdtfGeometryWiringObject(const TXString& name, GdtfModelPtr refToModel,const VWTransformMatrix& ma, GdtfGeometry* parent);
+
+		~GdtfGeometryWiringObject();
+	
+	private:
+		// Attributes
+		TXString 			fConnectorType;
+		EGdtfComponentType 	fComponentType;
+		TXString 			fSignalType;
+		size_t 				fPinCount;
+		size_t 				fSignalLayer;
+		EGdtfOrientation 	fOrientation;
+		TXString 			fWireGroup;
+		double 				fElectricalPayload; //Consumer
+		double 				fVoltageRangeMin; 	//Consumer
+		double 				fVoltageRangeMax; 	//Consumer
+		double 				fFrequencyRangeMin; //Consumer
+		double 				fFrequencyRangeMax; //Consumer
+		double 				fCosPhi; 			//Consumer
+		double 				fMaxPayLoad; 		//PowerSource
+		double 				fVoltage; 			//PowerSource
+		double 				fFuseCurrent; 		//Fuse
+		EGdtfFuseRating 	fFuseRating; 		//Fuse
+
+		// Children
+		TGdtfPinPatchArray 	fPinPatches;
+
+	public:
+		virtual EGdtfObjectType		GetObjectType();
+
+		// Getters
+        const TXString&				GetConnectorType() const;
+		EGdtfComponentType      	GetComponentType() const;
+		const TXString&         	GetSignalType() const;
+		size_t    					GetPinCount() const;
+		size_t                  	GetSignalLayer() const;
+		EGdtfOrientation        	GetOrientation() const;
+		const TXString&         	GetWireGroup() const;
+		double                  	GetElectricalPayload() const;
+		double                  	GetVoltageRangeMin() const;
+		double                 		GetVoltageRangeMax() const;
+		double                  	GetFrequencyRangeMin() const;
+		double                  	GetFrequencyRangeMax() const;
+		double                  	GetCosPhi() const;
+		double                  	GetMaxPayLoad() const;
+		double                  	GetVoltage() const;
+		double                  	GetFuseCurrent() const;
+		EGdtfFuseRating         	GetFuseRating() const;
+		const TGdtfPinPatchArray&	GetPinPatchArray() const;
+
+		// Setters
+		void						SetConnectorType(const TXString& connectorType);
+		void      					SetComponentType(const EGdtfComponentType& componentType);
+		void         				SetSignalType(const TXString& signalType);
+		void    					SetPinCount(size_t pinCount);
+		void                  		SetSignalLayer(size_t signalLayer);
+		void        				SetOrientation(EGdtfOrientation orientation);
+		void         				SetWireGroup(const TXString& wireGroup);
+		void                  		SetElectricalPayload(double electricalPayload);
+		void                  		SetVoltageRangeMin(double voltageRangeMin);
+		void                  		SetVoltageRangeMax(double voltageRangeMax);
+		void                  		SetFrequencyRangeMin(double frequencyRangeMin);
+		void                  		SetFrequencyRangeMax(double frequencyRangeMax);
+		void                  		SetCosPhi(double cosPhi);
+		void                  		SetMaxPayLoad(double maxPayload);
+		void                 		SetVoltage(double voltage);
+		void                  		SetFuseCurrent(double fuseCurrent);
+		void         				SetFuseRating(const EGdtfFuseRating& fuseRating);
+		GdtfPinPatchPtr         	CreatePinPatch(GdtfGeometryWiringObject* toWiringObject, size_t fromPin, size_t toPin);
+
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+	};
 
 	class GdtfGeometryMagnet : public GdtfGeometry
 	{

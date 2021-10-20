@@ -2649,6 +2649,350 @@ TXString GdtfPinPatch::GetNodeName()
 }
 
 //------------------------------------------------------------------------------------
+// GdtfGeometryWiringObject
+GdtfGeometryWiringObject::GdtfGeometryWiringObject(GdtfGeometry* parent)
+					:GdtfGeometry(parent)
+{
+}
+
+GdtfGeometryWiringObject::GdtfGeometryWiringObject(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma, GdtfGeometry* parent) 
+					:GdtfGeometry(name, refToModel, ma, parent)
+{
+}
+
+GdtfGeometryWiringObject::~GdtfGeometryWiringObject()
+{
+	for(GdtfPinPatchPtr pinPatch : fPinPatches) { delete pinPatch; }
+}
+
+const TXString&	GdtfGeometryWiringObject::GetConnectorType() const
+{
+	return fConnectorType;
+}
+
+EGdtfComponentType GdtfGeometryWiringObject::GetComponentType() const
+{
+	return fComponentType;
+}
+
+const TXString& GdtfGeometryWiringObject::GetSignalType() const
+{
+	return fSignalType;
+}
+
+size_t GdtfGeometryWiringObject::GetPinCount() const
+{
+	return fPinCount;
+}
+
+size_t GdtfGeometryWiringObject::GetSignalLayer() const
+{
+	return fSignalLayer;
+}
+
+EGdtfOrientation GdtfGeometryWiringObject::GetOrientation() const
+{
+	return fOrientation;
+}
+
+const TXString& GdtfGeometryWiringObject::GetWireGroup() const
+{
+	return fWireGroup;
+}
+
+double GdtfGeometryWiringObject::GetElectricalPayload() const
+{
+	return fElectricalPayload;
+}
+
+double GdtfGeometryWiringObject::GetVoltageRangeMin() const
+{
+	return fVoltageRangeMin;
+}
+
+double GdtfGeometryWiringObject::GetVoltageRangeMax() const
+{
+	return fVoltageRangeMax;
+}
+
+double GdtfGeometryWiringObject::GetFrequencyRangeMin() const
+{
+	return fFrequencyRangeMin;
+}
+
+double GdtfGeometryWiringObject::GetFrequencyRangeMax() const
+{
+	return fFrequencyRangeMax;
+}
+
+double GdtfGeometryWiringObject::GetCosPhi() const
+{
+	return fCosPhi;
+}
+
+double GdtfGeometryWiringObject::GetMaxPayLoad() const
+{
+	return fMaxPayLoad;
+}
+
+double GdtfGeometryWiringObject::GetVoltage() const
+{
+	return fVoltage;
+}
+
+double GdtfGeometryWiringObject::GetFuseCurrent() const
+{
+	return fFuseCurrent;
+}
+
+EGdtfFuseRating GdtfGeometryWiringObject::GetFuseRating() const
+{
+	return fFuseRating;
+}
+
+const TGdtfPinPatchArray& GdtfGeometryWiringObject::GetPinPatchArray() const
+{
+	return fPinPatches;
+}
+
+void GdtfGeometryWiringObject::SetConnectorType(const TXString& connectorType)
+{
+	fConnectorType = connectorType;
+}
+
+void GdtfGeometryWiringObject::SetComponentType(const EGdtfComponentType& componentType)
+{
+	fComponentType = componentType;
+}
+
+void GdtfGeometryWiringObject::SetSignalType(const TXString& signalType)
+{
+	fSignalType = signalType;
+}
+
+void GdtfGeometryWiringObject::SetPinCount(size_t pinCount)
+{
+	fPinCount = pinCount;
+}
+
+void GdtfGeometryWiringObject::SetSignalLayer(size_t signalLayer)
+{
+	fSignalLayer = signalLayer;
+}
+
+void GdtfGeometryWiringObject::SetOrientation(EGdtfOrientation orientation)
+{
+	fOrientation = orientation;
+}
+
+void GdtfGeometryWiringObject::SetWireGroup(const TXString& wireGroup)
+{
+	fWireGroup = wireGroup;
+}
+
+void GdtfGeometryWiringObject::SetElectricalPayload(double electricalPayload)
+{
+	fElectricalPayload = electricalPayload;
+}
+
+void GdtfGeometryWiringObject::SetVoltageRangeMin(double voltageRangeMin)
+{
+	fVoltageRangeMin = voltageRangeMin;
+}
+
+void GdtfGeometryWiringObject::SetVoltageRangeMax(double voltageRangeMax)
+{
+	fVoltageRangeMax = voltageRangeMax;
+}
+
+void GdtfGeometryWiringObject::SetFrequencyRangeMin(double frequencyRangeMin)
+{
+	fFrequencyRangeMin = frequencyRangeMin;
+}
+
+void GdtfGeometryWiringObject::SetFrequencyRangeMax(double frequencyRangeMax)
+{
+	fFrequencyRangeMax = frequencyRangeMax;
+}
+
+void GdtfGeometryWiringObject::SetCosPhi(double cosPhi)
+{
+	fCosPhi = cosPhi;
+}
+
+void GdtfGeometryWiringObject::SetMaxPayLoad(double maxPayload)
+{
+	fMaxPayLoad = maxPayload;
+}
+
+void GdtfGeometryWiringObject::SetVoltage(double voltage)
+{
+	fVoltage = voltage;
+}
+
+void GdtfGeometryWiringObject::SetFuseCurrent(double fuseCurrent)
+{
+	fFuseCurrent = fuseCurrent;
+}
+
+void GdtfGeometryWiringObject::SetFuseRating(const EGdtfFuseRating& fuseRating)
+{
+	fFuseRating = fuseRating;
+}
+
+GdtfPinPatchPtr GdtfGeometryWiringObject::CreatePinPatch(GdtfGeometryWiringObject* toWiringObject, size_t fromPin, size_t toPin)
+{
+	GdtfPinPatchPtr pinPatch = new GdtfPinPatch(toWiringObject, fromPin, toPin);
+    fPinPatches.push_back(pinPatch);
+	return pinPatch;
+}
+
+void GdtfGeometryWiringObject::OnPrintToFile(IXMLFileNodePtr pNode) 
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfGeometry::OnPrintToFile(pNode);
+
+	pNode->SetNodeAttributeValue(XML_GDTF_WiringObjectComponentType, 		GdtfConverter::ConvertComponentTypeEnum(fComponentType));
+	pNode->SetNodeAttributeValue(XML_GDTF_WiringObjectConnectorType, 		fConnectorType);
+	pNode->SetNodeAttributeValue(XML_GDTF_WiringObjectSignalType, 			fSignalType);
+	pNode->SetNodeAttributeValue(XML_GDTF_WiringObjectPinCount,				GdtfConverter::ConvertInteger(fPinCount));
+	pNode->SetNodeAttributeValue(XML_GDTF_WiringObjectSignalLayer,			GdtfConverter::ConvertInteger(fSignalLayer));
+	pNode->SetNodeAttributeValue(XML_GDTF_WiringObjectOrientation, 			GdtfConverter::ConvertOrientationEnum(fOrientation));
+	pNode->SetNodeAttributeValue(XML_GDTF_WiringObjectWireGroup, 			fWireGroup);
+	pNode->SetNodeAttributeValue(XML_GDTF_WiringObjectElectricalPayload,	GdtfConverter::ConvertDouble(fElectricalPayload));
+	pNode->SetNodeAttributeValue(XML_GDTF_WiringObjectVoltageRangeMin,		GdtfConverter::ConvertDouble(fVoltageRangeMin));
+	pNode->SetNodeAttributeValue(XML_GDTF_WiringObjectVoltageRangeMax,		GdtfConverter::ConvertDouble(fVoltageRangeMax));
+	pNode->SetNodeAttributeValue(XML_GDTF_WiringObjectFrequencyRangeMin,	GdtfConverter::ConvertDouble(fFrequencyRangeMin));
+	pNode->SetNodeAttributeValue(XML_GDTF_WiringObjectFrequencyRangeMax,	GdtfConverter::ConvertDouble(fFrequencyRangeMax));
+	pNode->SetNodeAttributeValue(XML_GDTF_WiringObjectCosPhi,				GdtfConverter::ConvertDouble(fCosPhi));
+	pNode->SetNodeAttributeValue(XML_GDTF_WiringObjectMaxPayLoad,			GdtfConverter::ConvertDouble(fMaxPayLoad));
+	pNode->SetNodeAttributeValue(XML_GDTF_WiringObjectVoltage,				GdtfConverter::ConvertDouble(fVoltage));
+	pNode->SetNodeAttributeValue(XML_GDTF_WiringObjectFuseCurrent,			GdtfConverter::ConvertDouble(fFuseCurrent));
+	pNode->SetNodeAttributeValue(XML_GDTF_WiringObjectFuseRating, 			GdtfConverter::ConvertFuseRatingEnum(fFuseRating));
+
+	for(GdtfPinPatchPtr pinPatch : fPinPatches)
+	{
+		pinPatch->WriteToNode(pNode);
+	}
+
+}
+
+void GdtfGeometryWiringObject::OnReadFromNode(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfGeometry::OnReadFromNode(pNode);
+
+	TXString componentType;		pNode->GetNodeAttributeValue(XML_GDTF_WiringObjectComponentType, componentType); 			GdtfConverter::ConvertComponentTypeEnum(componentType, pNode, fComponentType);
+								pNode->GetNodeAttributeValue(XML_GDTF_WiringObjectConnectorType, fConnectorType);
+								pNode->GetNodeAttributeValue(XML_GDTF_WiringObjectSignalType, fSignalType);
+	TXString pinCount;			pNode->GetNodeAttributeValue(XML_GDTF_WiringObjectPinCount, pinCount); 						GdtfConverter::ConvertInteger(pinCount, pNode, fPinCount);
+	TXString signalLayer;		pNode->GetNodeAttributeValue(XML_GDTF_WiringObjectSignalLayer, signalLayer); 				GdtfConverter::ConvertInteger(pinCount, pNode, fSignalLayer);
+	TXString orientation;		pNode->GetNodeAttributeValue(XML_GDTF_WiringObjectOrientation, orientation); 				GdtfConverter::ConvertOrientationEnum(orientation, pNode, fOrientation);
+								pNode->GetNodeAttributeValue(XML_GDTF_WiringObjectWireGroup, fWireGroup);
+	TXString electricalPayload;	pNode->GetNodeAttributeValue(XML_GDTF_WiringObjectElectricalPayload, electricalPayload); 	GdtfConverter::ConvertDouble(electricalPayload, pNode, fElectricalPayload);
+	TXString voltageRangeMin;	pNode->GetNodeAttributeValue(XML_GDTF_WiringObjectVoltageRangeMin, voltageRangeMin); 		GdtfConverter::ConvertDouble(voltageRangeMin, pNode, fVoltageRangeMin);
+	TXString voltageRangeMax;	pNode->GetNodeAttributeValue(XML_GDTF_WiringObjectVoltageRangeMax, voltageRangeMax); 		GdtfConverter::ConvertDouble(voltageRangeMax, pNode, fVoltageRangeMax);
+	TXString frequencyRangeMin;	pNode->GetNodeAttributeValue(XML_GDTF_WiringObjectFrequencyRangeMin, frequencyRangeMin); 	GdtfConverter::ConvertDouble(frequencyRangeMin, pNode, fFrequencyRangeMin);
+	TXString frequencyRangeMax;	pNode->GetNodeAttributeValue(XML_GDTF_WiringObjectFrequencyRangeMax, frequencyRangeMax); 	GdtfConverter::ConvertDouble(frequencyRangeMax, pNode, fFrequencyRangeMax);
+	TXString cosPhi;			pNode->GetNodeAttributeValue(XML_GDTF_WiringObjectCosPhi, cosPhi); 							GdtfConverter::ConvertDouble(cosPhi, pNode, fCosPhi);
+	TXString maxPayLoad;		pNode->GetNodeAttributeValue(XML_GDTF_WiringObjectMaxPayLoad, maxPayLoad); 					GdtfConverter::ConvertDouble(maxPayLoad, pNode, fMaxPayLoad);
+	TXString voltage;			pNode->GetNodeAttributeValue(XML_GDTF_WiringObjectVoltage, voltage); 						GdtfConverter::ConvertDouble(voltage, pNode, fVoltage);
+	TXString fuseCurrent;		pNode->GetNodeAttributeValue(XML_GDTF_WiringObjectFuseCurrent, fuseCurrent); 				GdtfConverter::ConvertDouble(fuseCurrent, pNode, fFuseCurrent);
+	TXString fuseRating;		pNode->GetNodeAttributeValue(XML_GDTF_WiringObjectFuseRating, fuseRating); 					GdtfConverter::ConvertFuseRatingEnum(fuseRating, pNode, fFuseRating);
+
+	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_PinPatchNodeName, [this] (IXMLFileNodePtr objNode) -> void
+								{ 
+									GdtfPinPatchPtr pinPatch = new GdtfPinPatch();
+									
+									pinPatch->ReadFromNode(objNode);
+									
+									fPinPatches.push_back(pinPatch);
+									return;
+								});
+
+}
+
+void GdtfGeometryWiringObject::OnErrorCheck(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnErrorCheck(pNode);
+
+	//------------------------------------------------------------------------------------
+	// Create needed and optional Attribute Arrays
+	TXStringArray needed;
+	TXStringArray optional;
+	needed.push_back(XML_GDTF_GeometryName);
+	optional.push_back(XML_GDTF_GeometryModelRef);
+	needed.push_back(XML_GDTF_GeometryMatrix);
+
+	needed.push_back(XML_GDTF_WiringObjectComponentType);
+	needed.push_back(XML_GDTF_WiringObjectConnectorType);
+	needed.push_back(XML_GDTF_WiringObjectSignalType);
+	needed.push_back(XML_GDTF_WiringObjectPinCount);
+	needed.push_back(XML_GDTF_WiringObjectSignalLayer);
+	needed.push_back(XML_GDTF_WiringObjectOrientation);
+	needed.push_back(XML_GDTF_WiringObjectWireGroup);
+	if(fComponentType == EGdtfComponentType::Consumer)
+	{
+		needed.push_back(XML_GDTF_WiringObjectElectricalPayload);
+		needed.push_back(XML_GDTF_WiringObjectVoltageRangeMin);
+		needed.push_back(XML_GDTF_WiringObjectVoltageRangeMax);
+		needed.push_back(XML_GDTF_WiringObjectFrequencyRangeMin);
+		needed.push_back(XML_GDTF_WiringObjectFrequencyRangeMax);
+		needed.push_back(XML_GDTF_WiringObjectCosPhi);
+	}
+	else
+	{
+		optional.push_back(XML_GDTF_WiringObjectElectricalPayload);
+		optional.push_back(XML_GDTF_WiringObjectVoltageRangeMin);
+		optional.push_back(XML_GDTF_WiringObjectVoltageRangeMax);
+		optional.push_back(XML_GDTF_WiringObjectFrequencyRangeMin);
+		optional.push_back(XML_GDTF_WiringObjectFrequencyRangeMax);
+		optional.push_back(XML_GDTF_WiringObjectCosPhi);
+
+	}
+
+	if(fComponentType == EGdtfComponentType::PowerSource)
+	{
+		needed.push_back(XML_GDTF_WiringObjectMaxPayLoad);
+		needed.push_back(XML_GDTF_WiringObjectVoltage);
+	}
+	else
+	{
+		optional.push_back(XML_GDTF_WiringObjectMaxPayLoad);
+		optional.push_back(XML_GDTF_WiringObjectVoltage);
+	}
+
+	if(fComponentType == EGdtfComponentType::Fuse)
+	{
+		needed.push_back(XML_GDTF_WiringObjectFuseCurrent);
+		needed.push_back(XML_GDTF_WiringObjectFuseRating);
+	}
+	else
+	{
+		optional.push_back(XML_GDTF_WiringObjectFuseCurrent);
+		optional.push_back(XML_GDTF_WiringObjectFuseRating);
+	}
+
+	//------------------------------------------------------------------------------------
+	// Check Attributes for node
+	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
+}
+
+EGdtfObjectType GdtfGeometryWiringObject::GetObjectType() 
+{
+	return EGdtfObjectType::eGdtfGeometryWiringObject;
+}
+
+TXString GdtfGeometryWiringObject::GetNodeName()
+{
+	return XML_GDTF_WiringObjectNodeName;
+}
+
+//------------------------------------------------------------------------------------
 // GdtfGeometryMagnet
 GdtfGeometryMagnet::GdtfGeometryMagnet(GdtfGeometry* parent)
 					:GdtfGeometry(parent)

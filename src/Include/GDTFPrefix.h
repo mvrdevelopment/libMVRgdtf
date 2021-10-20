@@ -647,6 +647,36 @@ namespace VectorworksMVR
             SingleWaveLength    = 1,
         };
 
+        enum class EGdtfComponentType
+        {
+            Input           = 0, 
+            Output          = 1,
+            PowerSource     = 2,
+            Consumer        = 3,
+            Fuse            = 4,
+            NetworkProvider = 5,
+            NetworkInput    = 6,
+            NetworkOutput   = 7,
+            NetworkInOut    = 8,
+        };
+
+        enum class EGdtfOrientation
+        {
+            Left    = 0, 
+            Right   = 1,
+            Top     = 2,
+            Bottom  = 3,
+        };
+
+        enum class EGdtfFuseRating
+        {
+            B = 0, 
+            C = 1,
+            D = 2,
+            K = 3,
+            Z = 4,
+        };
+
 	}
 }
 

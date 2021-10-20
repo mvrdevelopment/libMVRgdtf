@@ -89,6 +89,9 @@ namespace SceneData
 		static TXString	ConvertESourceType(GdtfDefines::ESourceType);
 		static TXString	ConvertEScaleHandlingType(GdtfDefines::EScaleHandlingType value);
 		static TXString	ConvertLaserColorTypeEnum(GdtfDefines::EGdtfLaserColorType value);
+		static TXString	ConvertComponentTypeEnum(GdtfDefines::EGdtfComponentType value);
+		static TXString	ConvertOrientationEnum(GdtfDefines::EGdtfOrientation value);
+		static TXString	ConvertFuseRatingEnum(GdtfDefines::EGdtfFuseRating value);
 		
 
         //-----------------------------------------------------------------------------
@@ -129,6 +132,9 @@ namespace SceneData
 		static bool     ConvertESourceType(				const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::ESourceType& outVal);
 		static bool     ConvertEScaleHandlingType(		const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EScaleHandlingType& outVal);
 		static bool     ConvertLaserColorTypeEnum(		const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfLaserColorType& outVal);
+		static bool     ConvertComponentTypeEnum(		const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfComponentType& outVal);
+		static bool     ConvertOrientationEnum(			const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfOrientation& outVal);
+		static bool     ConvertFuseRatingEnum(			const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfFuseRating& outVal);
 		
 
         static bool 	ConvertDmxOffset(const TXString& inVal, const IXMLFileNodePtr& node, DMXAddress& coarse, DMXAddress& fine, DMXAddress& ultra, DMXAddress& uber);
