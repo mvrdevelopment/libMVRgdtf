@@ -10,6 +10,7 @@
 #include "CGdtfDmxMode.h"
 #include "CGdtfDmxChannel.h"
 #include "CGdtfPhysicalEmitter.h"
+#include "CGdtfPinPatch.h"
 
 using namespace VectorworksMVR::Filing;
 
@@ -239,6 +240,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::CreateGeometry(EGdt
 		case eGdtfGeometryMediaServerMaster:	gdtfGeometry = fGeometry->AddGeometryMediaServerMaster(	vwName, scModel, ma); break;
         case eGdtfGeometryDisplay:              gdtfGeometry = fGeometry->AddGeometryDisplay(          	vwName, scModel, ma); break;
         case eGdtfGeometryLaser:              	gdtfGeometry = fGeometry->AddGeometryLaser(          	vwName, scModel, ma); break;
+        case eGdtfGeometryWiringObject:         gdtfGeometry = fGeometry->AddGeometryWiringObject(      vwName, scModel, ma); break;
         case eGdtfGeometryMagnet:              	gdtfGeometry = fGeometry->AddGeometryMagnet(          	vwName, scModel, ma); break;
 		case eGdtfGeometry:						gdtfGeometry = fGeometry->AddGeometry(					vwName, scModel, ma); break;
 			
@@ -1318,6 +1320,638 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetScanSpeed(double
 	return kVCOMError_NoError;
 }
 
+//---------------------------------------------------------------------------
+// WiringObject
+
+MvrString VectorworksMVR::CGdtfGeometryImpl::GetConnectorType() 
+{
+	if(!fGeometry) return "";
+
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryWiringObject) return "";
+
+	SceneData::GdtfGeometryWiringObjectPtr wiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(fGeometry);
+	if(!wiringObject) return "";
+
+	return wiringObject->GetConnectorType().GetCharPtr();
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetComponentType(EGdtfComponentType& componentType)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryWiringObject) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryWiringObjectPtr wiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(fGeometry);
+	if ( ! wiringObject) { return kVCOMError_Failed; }
+	
+	componentType = wiringObject->GetComponentType();
+	return kVCOMError_NoError;
+}
+
+MvrString VectorworksMVR::CGdtfGeometryImpl::GetSignalType() 
+{
+	if(!fGeometry) return "";
+
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryWiringObject) return "";
+
+	SceneData::GdtfGeometryWiringObjectPtr wiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(fGeometry);
+	if(!wiringObject) return "";
+
+	return wiringObject->GetSignalType().GetCharPtr();
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetPinCount(size_t& pinCount)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryWiringObject) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryWiringObjectPtr wiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(fGeometry);
+	if ( ! wiringObject) { return kVCOMError_Failed; }
+	
+	pinCount = wiringObject->GetPinCount();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetSignalLayer(size_t& signalLayer)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryWiringObject) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryWiringObjectPtr wiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(fGeometry);
+	if ( ! wiringObject) { return kVCOMError_Failed; }
+	
+	signalLayer = wiringObject->GetSignalLayer();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetOrientation(EGdtfOrientation& orientation)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryWiringObject) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryWiringObjectPtr wiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(fGeometry);
+	if ( ! wiringObject) { return kVCOMError_Failed; }
+	
+	orientation = wiringObject->GetOrientation();
+	return kVCOMError_NoError;
+}
+
+MvrString VectorworksMVR::CGdtfGeometryImpl::GetWireGroup() 
+{
+	if(!fGeometry) return "";
+
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryWiringObject) return "";
+
+	SceneData::GdtfGeometryWiringObjectPtr wiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(fGeometry);
+	if(!wiringObject) return "";
+
+	return wiringObject->GetWireGroup().GetCharPtr();
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetElectricalPayload(double& electricalPayload)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryWiringObject) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryWiringObjectPtr wiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(fGeometry);
+	if ( ! wiringObject) { return kVCOMError_Failed; }
+	
+	electricalPayload = wiringObject->GetElectricalPayload();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetVoltageRangeMin(double& voltageRangeMin)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryWiringObject) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryWiringObjectPtr wiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(fGeometry);
+	if ( ! wiringObject) { return kVCOMError_Failed; }
+	
+	voltageRangeMin = wiringObject->GetVoltageRangeMin();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetVoltageRangeMax(double& voltageRangeMax)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryWiringObject) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryWiringObjectPtr wiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(fGeometry);
+	if ( ! wiringObject) { return kVCOMError_Failed; }
+	
+	voltageRangeMax = wiringObject->GetVoltageRangeMax();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetFrequencyRangeMin(double& frequencyRangeMin)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryWiringObject) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryWiringObjectPtr wiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(fGeometry);
+	if ( ! wiringObject) { return kVCOMError_Failed; }
+	
+	frequencyRangeMin = wiringObject->GetFrequencyRangeMin();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetFrequencyRangeMax(double& frequencyRangeMax)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryWiringObject) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryWiringObjectPtr wiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(fGeometry);
+	if ( ! wiringObject) { return kVCOMError_Failed; }
+	
+	frequencyRangeMax = wiringObject->GetFrequencyRangeMax();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetCosPhi(double& cosPhi)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryWiringObject) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryWiringObjectPtr wiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(fGeometry);
+	if ( ! wiringObject) { return kVCOMError_Failed; }
+	
+	cosPhi = wiringObject->GetCosPhi();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetMaxPayLoad(double& maxPayload)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryWiringObject) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryWiringObjectPtr wiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(fGeometry);
+	if ( ! wiringObject) { return kVCOMError_Failed; }
+	
+	maxPayload = wiringObject->GetMaxPayLoad();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetVoltage(double& voltage)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryWiringObject) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryWiringObjectPtr wiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(fGeometry);
+	if ( ! wiringObject) { return kVCOMError_Failed; }
+	
+	voltage = wiringObject->GetVoltage();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetFuseCurrent(double& fuseCurrent)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryWiringObject) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryWiringObjectPtr wiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(fGeometry);
+	if ( ! wiringObject) { return kVCOMError_Failed; }
+	
+	fuseCurrent = wiringObject->GetFuseCurrent();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetFuseRating(EGdtfFuseRating& fuseRating)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryWiringObject) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryWiringObjectPtr wiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(fGeometry);
+	if ( ! wiringObject) { return kVCOMError_Failed; }
+	
+	fuseRating = wiringObject->GetFuseRating();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetConnectorType(MvrString connectorType)
+{
+	// Check Pointer
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryWiringObject) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometryWiringObjectPtr wiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(fGeometry);
+	if(!wiringObject) return kVCOMError_Failed;
+
+	wiringObject->SetConnectorType(connectorType);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetComponentType(EGdtfComponentType componentType)
+{
+	// Check Pointer
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryWiringObject) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometryWiringObjectPtr wiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(fGeometry);
+	if(!wiringObject) return kVCOMError_Failed;
+
+	wiringObject->SetComponentType(componentType);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetSignalType(MvrString signalType)
+{
+	// Check Pointer
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryWiringObject) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometryWiringObjectPtr wiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(fGeometry);
+	if(!wiringObject) return kVCOMError_Failed;
+
+	wiringObject->SetSignalType(signalType);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetPinCount(size_t pinCount)
+{
+	// Check Pointer
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryWiringObject) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometryWiringObjectPtr wiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(fGeometry);
+	if(!wiringObject) return kVCOMError_Failed;
+
+	wiringObject->SetPinCount(pinCount);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetSignalLayer(size_t signalLayer)
+{
+	// Check Pointer
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryWiringObject) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometryWiringObjectPtr wiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(fGeometry);
+	if(!wiringObject) return kVCOMError_Failed;
+
+	wiringObject->SetSignalLayer(signalLayer);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetOrientation(EGdtfOrientation orientation)
+{
+	// Check Pointer
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryWiringObject) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometryWiringObjectPtr wiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(fGeometry);
+	if(!wiringObject) return kVCOMError_Failed;
+
+	wiringObject->SetOrientation(orientation);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetWireGroup(MvrString wireGroup)
+{
+	// Check Pointer
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryWiringObject) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometryWiringObjectPtr wiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(fGeometry);
+	if(!wiringObject) return kVCOMError_Failed;
+
+	wiringObject->SetWireGroup(wireGroup);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetElectricalPayload(double electricalPayload)
+{
+	// Check Pointer
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryWiringObject) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometryWiringObjectPtr wiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(fGeometry);
+	if(!wiringObject) return kVCOMError_Failed;
+
+	wiringObject->SetElectricalPayload(electricalPayload);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetVoltageRangeMin(double voltageRangeMin)
+{
+	// Check Pointer
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryWiringObject) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometryWiringObjectPtr wiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(fGeometry);
+	if(!wiringObject) return kVCOMError_Failed;
+
+	wiringObject->SetVoltageRangeMin(voltageRangeMin);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetVoltageRangeMax(double voltageRangeMax)
+{
+	// Check Pointer
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryWiringObject) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometryWiringObjectPtr wiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(fGeometry);
+	if(!wiringObject) return kVCOMError_Failed;
+
+	wiringObject->SetVoltageRangeMax(voltageRangeMax);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetFrequencyRangeMin(double frequencyRangeMin)
+{
+	// Check Pointer
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryWiringObject) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometryWiringObjectPtr wiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(fGeometry);
+	if(!wiringObject) return kVCOMError_Failed;
+
+	wiringObject->SetFrequencyRangeMin(frequencyRangeMin);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetFrequencyRangeMax(double frequencyRangeMax)
+{
+	// Check Pointer
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryWiringObject) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometryWiringObjectPtr wiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(fGeometry);
+	if(!wiringObject) return kVCOMError_Failed;
+
+	wiringObject->SetFrequencyRangeMax(frequencyRangeMax);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetCosPhi(double cosPhi)
+{
+	// Check Pointer
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryWiringObject) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometryWiringObjectPtr wiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(fGeometry);
+	if(!wiringObject) return kVCOMError_Failed;
+
+	wiringObject->SetCosPhi(cosPhi);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetMaxPayLoad(double maxPayload)
+{
+	// Check Pointer
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryWiringObject) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometryWiringObjectPtr wiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(fGeometry);
+	if(!wiringObject) return kVCOMError_Failed;
+
+	wiringObject->SetMaxPayLoad(maxPayload);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetVoltage(double voltage)
+{
+	// Check Pointer
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryWiringObject) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometryWiringObjectPtr wiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(fGeometry);
+	if(!wiringObject) return kVCOMError_Failed;
+
+	wiringObject->SetVoltage(voltage);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetFuseCurrent(double fuseCurrent)
+{
+	// Check Pointer
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryWiringObject) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometryWiringObjectPtr wiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(fGeometry);
+	if(!wiringObject) return kVCOMError_Failed;
+
+	wiringObject->SetFuseCurrent(fuseCurrent);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetFuseRating(EGdtfFuseRating fuseRating)
+{
+	// Check Pointer
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryWiringObject) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometryWiringObjectPtr wiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(fGeometry);
+	if(!wiringObject) return kVCOMError_Failed;
+
+	wiringObject->SetFuseRating(fuseRating);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetPinPatchCount(size_t &count)
+{
+	// Check Pointer
+	if ( ! fGeometry) { return kVCOMError_NotInitialized; }
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryWiringObject) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryWiringObjectPtr wiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(fGeometry);
+	if ( ! wiringObject) { return kVCOMError_Failed; }
+	
+	count = wiringObject->GetPinPatchArray().size();
+	return kVCOMError_NoError;
+};
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetPinPatchAt(size_t at, VectorworksMVR::IGdtfPinPatch** pinPatch)
+{
+	// Check Pointer
+	if ( ! fGeometry) { return kVCOMError_NotInitialized; }
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryWiringObject) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryWiringObjectPtr wiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(fGeometry);
+	if ( ! wiringObject) { return kVCOMError_Failed; }
+	
+	// check overflow
+	if (wiringObject->GetPinPatchArray().size() < at) { return kVCOMError_OutOfBounds; }
+	
+	
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CGdtfPinPatchImpl*			pPinPatchObj = nullptr;
+	SceneData::GdtfPinPatch*	gdtfPinPatch = wiringObject->GetPinPatchArray()[at];
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfPinPatch, (IVWUnknown**) & pPinPatchObj)))
+	{
+		// Check Casting
+		CGdtfPinPatchImpl* pResultInterface = static_cast<CGdtfPinPatchImpl* >(pPinPatchObj);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(gdtfPinPatch);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incomming Object
+	if (*pinPatch)
+	{
+		(*pinPatch)->Release();
+		*pinPatch = NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*pinPatch = pPinPatchObj;
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::CreatePinPatch(VectorworksMVR::IGdtfGeometry* toWiringObject, size_t fromPin, size_t toPin, VectorworksMVR::IGdtfPinPatch** pinPatch)
+{
+	// Check Pointer
+	if ( ! fGeometry) { return kVCOMError_NotInitialized; }
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryWiringObject) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryWiringObjectPtr wiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(fGeometry);
+	if ( ! wiringObject) { return kVCOMError_Failed; }
+
+	// Check the argument type
+	if ( ! toWiringObject) { return kVCOMError_InvalidArg; }
+
+	CGdtfGeometryImpl* toWiringObjectImpl = static_cast<CGdtfGeometryImpl*>(toWiringObject);
+	if ( ! toWiringObjectImpl)	{ return kVCOMError_InvalidArg; }
+
+	if ( toWiringObjectImpl->fGeometryType != EGdtfObjectType::eGdtfGeometryWiringObject) { return kVCOMError_InvalidArg; }
+
+	SceneData::GdtfGeometryWiringObjectPtr gdtfToWiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(toWiringObjectImpl->fGeometry);
+	if ( ! gdtfToWiringObject)		{ return kVCOMError_InvalidArg; }
+	
+	SceneData::GdtfPinPatchPtr gdtfPinPatch = wiringObject->CreatePinPatch(gdtfToWiringObject, fromPin, toPin);
+	
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CGdtfPinPatchImpl* pPinPatchObj	= nullptr;
+	
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfPinPatch, (IVWUnknown**) & pPinPatchObj)))
+	{
+		// Check Casting
+		CGdtfPinPatchImpl* pResultInterface = static_cast<CGdtfPinPatchImpl* >(pPinPatchObj);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(gdtfPinPatch);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incomming Object
+	if (*pinPatch)
+	{
+		(*pinPatch)->Release();
+		*pinPatch = NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*pinPatch = pPinPatchObj;
+	
+	return kVCOMError_NoError;
+}
+
 
 //---------------------------------------------------------------------------
 void VectorworksMVR::CGdtfGeometryImpl::SetPointer(SceneData::GdtfGeometry* geometry)
@@ -1338,6 +1972,7 @@ void VectorworksMVR::CGdtfGeometryImpl::SetPointer(SceneData::GdtfGeometry* geom
 						fGeometryType == EGdtfObjectType::eGdtfGeometryMediaServerMaster ||
 						fGeometryType == EGdtfObjectType::eGdtfGeometryDisplay ||
 						fGeometryType == EGdtfObjectType::eGdtfGeometryLaser ||
+						fGeometryType == EGdtfObjectType::eGdtfGeometryWiringObject ||
 						fGeometryType == EGdtfObjectType::eGdtfGeometryMagnet);
 	
 	

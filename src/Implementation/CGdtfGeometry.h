@@ -93,9 +93,50 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE		SetScanAngleTilt(double scanAngleTilt);
         virtual VCOMError VCOM_CALLTYPE		SetScanSpeed(double scanSpeed);
 
-        // virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetProtocolCount(size_t& count); +++++++
-        // virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateProtocol(VectorworksMVR::IGdtfConnector* connector, VectorworksMVR::IGdtfPowerConsumption** outVal); +++++++
-        // virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetProtocolAt(size_t at, VectorworksMVR::IGdtfPowerConsumption** value); +++++++
+        // virtual VCOMError VCOM_CALLTYPE GetProtocolCount(size_t& count); +++++++
+        // virtual VCOMError VCOM_CALLTYPE CreateProtocol(VectorworksMVR::IGdtfConnector* connector, VectorworksMVR::IGdtfPowerConsumption** outVal); +++++++
+        // virtual VCOMError VCOM_CALLTYPE GetProtocolAt(size_t at, VectorworksMVR::IGdtfPowerConsumption** value); +++++++
+
+        // WiringObject
+        virtual MvrString VCOM_CALLTYPE     GetConnectorType();
+        virtual VCOMError VCOM_CALLTYPE		GetComponentType(GdtfDefines::EGdtfComponentType& componentType);
+        virtual MvrString VCOM_CALLTYPE     GetSignalType();
+        virtual VCOMError VCOM_CALLTYPE     GetPinCount(size_t& pinCount);
+        virtual VCOMError VCOM_CALLTYPE     GetSignalLayer(size_t& signalLayer);
+        virtual VCOMError VCOM_CALLTYPE		GetOrientation(GdtfDefines::EGdtfOrientation& orientation);
+        virtual MvrString VCOM_CALLTYPE     GetWireGroup();
+        virtual VCOMError VCOM_CALLTYPE		GetElectricalPayload(double& electricalPayload);
+        virtual VCOMError VCOM_CALLTYPE		GetVoltageRangeMin(double& voltageRangeMin);
+        virtual VCOMError VCOM_CALLTYPE		GetVoltageRangeMax(double& voltageRangeMax);
+        virtual VCOMError VCOM_CALLTYPE		GetFrequencyRangeMin(double& frequencyRangeMin);
+        virtual VCOMError VCOM_CALLTYPE		GetFrequencyRangeMax(double& frequencyRangeMax);
+        virtual VCOMError VCOM_CALLTYPE		GetCosPhi(double& cosPhi);
+        virtual VCOMError VCOM_CALLTYPE		GetMaxPayLoad(double& maxPayload);
+        virtual VCOMError VCOM_CALLTYPE		GetVoltage(double& voltage);
+        virtual VCOMError VCOM_CALLTYPE		GetFuseCurrent(double& fuseCurrent);
+        virtual VCOMError VCOM_CALLTYPE		GetFuseRating(GdtfDefines::EGdtfFuseRating& fuseRating);
+
+        virtual VCOMError VCOM_CALLTYPE     SetConnectorType(MvrString connectorType);
+        virtual VCOMError VCOM_CALLTYPE		SetComponentType(GdtfDefines::EGdtfComponentType componentType);
+        virtual VCOMError VCOM_CALLTYPE     SetSignalType(MvrString signalType);
+        virtual VCOMError VCOM_CALLTYPE     SetPinCount(size_t pinCount);
+        virtual VCOMError VCOM_CALLTYPE     SetSignalLayer(size_t signalLayer);
+        virtual VCOMError VCOM_CALLTYPE		SetOrientation(GdtfDefines::EGdtfOrientation orientation);
+        virtual VCOMError VCOM_CALLTYPE     SetWireGroup(MvrString wireGroup);
+        virtual VCOMError VCOM_CALLTYPE		SetElectricalPayload(double electricalPayload);
+        virtual VCOMError VCOM_CALLTYPE		SetVoltageRangeMin(double voltageRangeMin);
+        virtual VCOMError VCOM_CALLTYPE		SetVoltageRangeMax(double voltageRangeMax);
+        virtual VCOMError VCOM_CALLTYPE		SetFrequencyRangeMin(double frequencyRangeMin);
+        virtual VCOMError VCOM_CALLTYPE		SetFrequencyRangeMax(double frequencyRangeMax);
+        virtual VCOMError VCOM_CALLTYPE		SetCosPhi(double cosPhi);
+        virtual VCOMError VCOM_CALLTYPE		SetMaxPayLoad(double maxPayload);
+        virtual VCOMError VCOM_CALLTYPE		SetVoltage(double voltage);
+        virtual VCOMError VCOM_CALLTYPE		SetFuseCurrent(double fuseCurrent);
+        virtual VCOMError VCOM_CALLTYPE		SetFuseRating(GdtfDefines::EGdtfFuseRating fuseRating);
+
+        virtual VCOMError VCOM_CALLTYPE     GetPinPatchCount(size_t& count);
+        virtual VCOMError VCOM_CALLTYPE     CreatePinPatch(VectorworksMVR::IGdtfGeometry* toWiringObject, size_t fromPin, size_t toPin, VectorworksMVR::IGdtfPinPatch** pinPatch);
+        virtual VCOMError VCOM_CALLTYPE     GetPinPatchAt(size_t at, VectorworksMVR::IGdtfPinPatch** pinPatch);
 
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr);
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject();

@@ -668,6 +668,47 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE		SetScanAnglePan(double scanAnglePan) = 0;
         virtual VCOMError VCOM_CALLTYPE		SetScanAngleTilt(double scanAngleTilt) = 0;
         virtual VCOMError VCOM_CALLTYPE		SetScanSpeed(double scanSpeed) = 0;
+
+		// WiringObject
+		virtual MvrString VCOM_CALLTYPE     GetConnectorType() = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetComponentType(GdtfDefines::EGdtfComponentType& componentType) = 0;
+        virtual MvrString VCOM_CALLTYPE     GetSignalType() = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetPinCount(size_t& pinCount) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetSignalLayer(size_t& signalLayer) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetOrientation(GdtfDefines::EGdtfOrientation& orientation) = 0;
+        virtual MvrString VCOM_CALLTYPE     GetWireGroup() = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetElectricalPayload(double& electricalPayload) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetVoltageRangeMin(double& voltageRangeMin) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetVoltageRangeMax(double& voltageRangeMax) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetFrequencyRangeMin(double& frequencyRangeMin) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetFrequencyRangeMax(double& frequencyRangeMax) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCosPhi(double& cosPhi) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetMaxPayLoad(double& maxPayload) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetVoltage(double& voltage) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetFuseCurrent(double& fuseCurrent) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetFuseRating(GdtfDefines::EGdtfFuseRating& fuseRating) = 0;
+
+        virtual VCOMError VCOM_CALLTYPE     SetConnectorType(MvrString connectorType) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetComponentType(GdtfDefines::EGdtfComponentType componentType) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetSignalType(MvrString signalType) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetPinCount(size_t pinCount) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetSignalLayer(size_t signalLayer) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetOrientation(GdtfDefines::EGdtfOrientation orientation) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetWireGroup(MvrString wireGroup) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetElectricalPayload(double electricalPayload) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetVoltageRangeMin(double voltageRangeMin) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetVoltageRangeMax(double voltageRangeMax) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetFrequencyRangeMin(double frequencyRangeMin) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetFrequencyRangeMax(double frequencyRangeMax) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetCosPhi(double cosPhi) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetMaxPayLoad(double maxPayload) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetVoltage(double voltage) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetFuseCurrent(double fuseCurrent) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetFuseRating(GdtfDefines::EGdtfFuseRating fuseRating) = 0;
+
+        virtual VCOMError VCOM_CALLTYPE 	GetPinPatchCount(size_t& count) = 0;
+        virtual VCOMError VCOM_CALLTYPE 	CreatePinPatch(VectorworksMVR::IGdtfGeometry* toWiringObject, size_t fromPin, size_t toPin, VectorworksMVR::IGdtfPinPatch** outPinPatch) = 0;
+        virtual VCOMError VCOM_CALLTYPE 	GetPinPatchAt(size_t at, VectorworksMVR::IGdtfPinPatch** outPinPatch) = 0;
 	};
 	typedef VCOMPtr<IGdtfGeometry>	IGdtfGeometryPtr;
     

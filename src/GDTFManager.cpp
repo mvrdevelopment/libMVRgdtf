@@ -1594,6 +1594,15 @@ GdtfGeometryPtr GdtfGeometry::AddGeometryLaser(const TXString& name, GdtfModelPt
 	return geo;
 }
 
+GdtfGeometryPtr GdtfGeometry::AddGeometryWiringObject(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma)
+{
+	GdtfGeometry* geo = new GdtfGeometryWiringObject(name, refToModel, ma, this);
+
+	fInternalGeometries.push_back(geo);
+
+	return geo;
+}
+
 GdtfGeometryPtr GdtfGeometry::AddGeometryMagnet(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma)
 {
 	GdtfGeometry* geo = new GdtfGeometryMagnet(name, refToModel, ma, this);
@@ -1663,6 +1672,7 @@ void GdtfGeometry::OnReadFromNode(const IXMLFileNodePtr& pNode)
 										else if (childNodeName == XML_GDTF_GeometryReferenceNodeName)	{ geometry = new GdtfGeometryReference(this);}
 										else if (childNodeName == XML_GDTF_DisplayNodeName)				{ geometry = new GdtfGeometryDisplay(this);}
 										else if (childNodeName == XML_GDTF_LaserNodeName)				{ geometry = new GdtfGeometryLaser(this);}
+										else if (childNodeName == XML_GDTF_WiringObjectNodeName)		{ geometry = new GdtfGeometryWiringObject(this);}
 										else if (childNodeName == XML_GDTF_MagnetNodeName)				{ geometry = new GdtfGeometryMagnet(this);}
 										else if (childNodeName == XML_GDTF_BreakNodeName)				{ hasBreak = true; }
 										else															{ DSTOP((kEveryone,"There is a node that was not expected!")); }
@@ -7365,6 +7375,7 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 							else if (childNodeName == XML_GDTF_GeometryReferenceNodeName)	{ geometry = new GdtfGeometryReference(nullptr);}
 							else if (childNodeName == XML_GDTF_DisplayNodeName)				{ geometry = new GdtfGeometryDisplay(nullptr);}
 							else if (childNodeName == XML_GDTF_LaserNodeName)				{ geometry = new GdtfGeometryLaser(nullptr);}
+							else if (childNodeName == XML_GDTF_WiringObjectNodeName)		{ geometry = new GdtfGeometryWiringObject(nullptr);}
 							else if (childNodeName == XML_GDTF_MagnetNodeName)				{ geometry = new GdtfGeometryMagnet(nullptr);}
 							else															{ DSTOP((kEveryone,"There is a node that was not expected!")); }
 							
@@ -7657,6 +7668,15 @@ GdtfGeometryPtr GdtfFixture::AddGeometryDisplay(const TXString& name, GdtfModelP
 GdtfGeometryPtr GdtfFixture::AddGeometryLaser(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma)
 {
 	GdtfGeometry* geo = new GdtfGeometryLaser(name, refToModel, ma, nullptr);
+
+	fGeometries.push_back(geo);
+	
+	return geo;
+}
+
+GdtfGeometryPtr GdtfFixture::AddGeometryWiringObject(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma)
+{
+	GdtfGeometry* geo = new GdtfGeometryWiringObject(name, refToModel, ma, nullptr);
 
 	fGeometries.push_back(geo);
 	

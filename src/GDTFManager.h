@@ -684,6 +684,7 @@ namespace SceneData
 		GdtfGeometry*						AddGeometryWithLamp(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
 		GdtfGeometry*						AddGeometryDisplay(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 		GdtfGeometry*						AddGeometryLaser(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
+		GdtfGeometry*						AddGeometryWiringObject(		const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 		GdtfGeometry*						AddGeometryMagnet(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 
 	protected:
@@ -2526,6 +2527,7 @@ namespace SceneData
 		GdtfGeometryPtr			AddGeometryWithLamp(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
 		GdtfGeometryPtr			AddGeometryDisplay(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 		GdtfGeometryPtr			AddGeometryLaser(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
+		GdtfGeometryPtr			AddGeometryWiringObject(		const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 		GdtfGeometryPtr			AddGeometryMagnet(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 
 		GdtfWheelPtr			AddWheel(TXString name);
