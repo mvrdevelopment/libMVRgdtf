@@ -6446,6 +6446,24 @@ void GdtfFixture::ResolveGeometryRefs_Recursive(GdtfGeometryPtr geometry)
 			}
 		}
 	}
+	else if (geometry->GetObjectType() == eGdtfGeometryWiringObject)
+	{
+		GdtfGeometryWiringObjectPtr geoWiringObject = static_cast<GdtfGeometryWiringObjectPtr>(geometry);
+		ASSERTN(kEveryone, geoWiringObject != nullptr);
+		if(geoWiringObject)
+		{
+			for(GdtfPinPatchPtr pinPatch : geoWiringObject->GetPinPatchArray())
+			{
+				TXString unresolvedWiringObject = pinPatch->GetUnresolvedWiringObject();
+				if ( ! unresolvedWiringObject.IsEmpty())
+				{
+					GdtfGeometryPtr wiringObjectGeo = ResolveGeometryRef(unresolvedWiringObject, fGeometries);
+					GdtfGeometryWiringObjectPtr toWiringObject = static_cast<GdtfGeometryWiringObjectPtr>(wiringObjectGeo);
+					pinPatch->SetToWiringObject(toWiringObject);
+				}
+			}
+		}
+	}
 	
 	// Now traverse child geometry
 	for (GdtfGeometryPtr internalGeometry : geometry->GetInternalGeometries())
