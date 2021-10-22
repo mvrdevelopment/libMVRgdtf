@@ -1746,12 +1746,12 @@ CieColor SceneData::GdtfConverter::ConvertCColor(const CCieColor & color)
 
 /*static*/ bool GdtfConverter::ConvertOrientationEnum(const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfOrientation& outVal)
 {
-	if        (inVal == XML_Val_OrientationLeft)	{ outVal = EGdtfOrientation::Left; }
-	if        (inVal == XML_Val_OrientationRight)	{ outVal = EGdtfOrientation::Right; }
-	if        (inVal == XML_Val_OrientationTop)		{ outVal = EGdtfOrientation::Top; }
-	if        (inVal == XML_Val_OrientationBottom)	{ outVal = EGdtfOrientation::Bottom; }
+	if      (inVal == XML_Val_OrientationLeft)		{ outVal = EGdtfOrientation::Left; }
+	else if	(inVal == XML_Val_OrientationRight)		{ outVal = EGdtfOrientation::Right; }
+	else if (inVal == XML_Val_OrientationTop)		{ outVal = EGdtfOrientation::Top; }
+	else if (inVal == XML_Val_OrientationBottom)	{ outVal = EGdtfOrientation::Bottom; }
 
-	else if   (inVal.IsEmpty())    					{ outVal = EGdtfOrientation::Left; } 
+	else if (inVal.IsEmpty())    					{ outVal = EGdtfOrientation::Left; } 
 	else 
 	{
 		DSTOP((kEveryone, "Unknown Value for EGdtfOrientation"));
@@ -1780,13 +1780,13 @@ CieColor SceneData::GdtfConverter::ConvertCColor(const CCieColor & color)
 
 /*static*/ bool GdtfConverter::ConvertFuseRatingEnum(const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfFuseRating& outVal)
 {
-	if        (inVal == XML_Val_FuseRatingB)	{ outVal = EGdtfFuseRating::B; }
-	if        (inVal == XML_Val_FuseRatingC)	{ outVal = EGdtfFuseRating::C; }
-	if        (inVal == XML_Val_FuseRatingD)	{ outVal = EGdtfFuseRating::D; }
-	if        (inVal == XML_Val_FuseRatingK)	{ outVal = EGdtfFuseRating::K; }
-	if        (inVal == XML_Val_FuseRatingZ)	{ outVal = EGdtfFuseRating::Z; }
+	if		(inVal == XML_Val_FuseRatingB)	{ outVal = EGdtfFuseRating::B; }
+	else if (inVal == XML_Val_FuseRatingC)	{ outVal = EGdtfFuseRating::C; }
+	else if (inVal == XML_Val_FuseRatingD)	{ outVal = EGdtfFuseRating::D; }
+	else if (inVal == XML_Val_FuseRatingK)	{ outVal = EGdtfFuseRating::K; }
+	else if (inVal == XML_Val_FuseRatingZ)	{ outVal = EGdtfFuseRating::Z; }
 
-	else if   (inVal.IsEmpty())    				{ outVal = EGdtfFuseRating::B; } 
+	else if	(inVal.IsEmpty())    			{ outVal = EGdtfFuseRating::B; } 
 	else 
 	{
 		DSTOP((kEveryone, "Unknown Value for EGdtfFuseRating"));

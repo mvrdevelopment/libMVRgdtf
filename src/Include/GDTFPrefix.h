@@ -121,7 +121,7 @@ namespace VectorworksMVR
             
             eNodeMissingMandatoryAttribute                  = 0, // A Attribute but is mandatory is missing
             eNodeWrongAttribute                             = 1, // A Attribute that as not aspected is in the node
-            eNodeWrongName                                  = 2, // A Node that was not aspected is a child of the node
+            eNodeWrongName                                  = 2, // A Node that was not expected is a child of the node
             eGeometryMissingModelReference                  = 4, // A Geometry doesn't have a linked model
             eBreakObjectInNonGeometryReference              = 5, // A Break Node is in a non Geometry Reference Node
             eFixtureNoGdtfFileInXmlBuffer                   = 6, // No GDTF File found in path

@@ -1675,6 +1675,7 @@ void GdtfGeometry::OnReadFromNode(const IXMLFileNodePtr& pNode)
 										else if (childNodeName == XML_GDTF_WiringObjectNodeName)		{ geometry = new GdtfGeometryWiringObject(this);}
 										else if (childNodeName == XML_GDTF_MagnetNodeName)				{ geometry = new GdtfGeometryMagnet(this);}
 										else if (childNodeName == XML_GDTF_BreakNodeName)				{ hasBreak = true; }
+										else if (childNodeName == XML_GDTF_PinPatchNodeName)			{ return; /* PinPatches are handled in the WiringObject OnReadFromNode function */ }
 										else															{ DSTOP((kEveryone,"There is a node that was not expected!")); }
 										
 										
@@ -2358,13 +2359,15 @@ TXString GdtfGeometryDisplay::GetNodeName()
 GdtfGeometryLaser::GdtfGeometryLaser(GdtfGeometry* parent)
 					:GdtfGeometry(parent)
 {
-	fEmitter = nullptr;
+	fColorType 	= EGdtfLaserColorType::RGB;
+	fEmitter 	= nullptr;
 }
 
 GdtfGeometryLaser::GdtfGeometryLaser(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma, GdtfGeometry* parent) 
 					:GdtfGeometry(name, refToModel, ma, parent)
 {
-	fEmitter = nullptr;
+	fColorType 	= EGdtfLaserColorType::RGB;
+	fEmitter 	= nullptr;
 }
 
 GdtfGeometryLaser::~GdtfGeometryLaser()
@@ -2663,11 +2666,17 @@ TXString GdtfPinPatch::GetNodeName()
 GdtfGeometryWiringObject::GdtfGeometryWiringObject(GdtfGeometry* parent)
 					:GdtfGeometry(parent)
 {
+	fComponentType 	= EGdtfComponentType::Input;
+	fOrientation 	= EGdtfOrientation::Left;
+	fFuseRating 	= EGdtfFuseRating::B;
 }
 
 GdtfGeometryWiringObject::GdtfGeometryWiringObject(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma, GdtfGeometry* parent) 
 					:GdtfGeometry(name, refToModel, ma, parent)
 {
+	fComponentType 	= EGdtfComponentType::Input;
+	fOrientation 	= EGdtfOrientation::Left;
+	fFuseRating 	= EGdtfFuseRating::B;
 }
 
 GdtfGeometryWiringObject::~GdtfGeometryWiringObject()
@@ -2898,7 +2907,7 @@ void GdtfGeometryWiringObject::OnReadFromNode(const IXMLFileNodePtr& pNode)
 								pNode->GetNodeAttributeValue(XML_GDTF_WiringObjectConnectorType, fConnectorType);
 								pNode->GetNodeAttributeValue(XML_GDTF_WiringObjectSignalType, fSignalType);
 	TXString pinCount;			pNode->GetNodeAttributeValue(XML_GDTF_WiringObjectPinCount, pinCount); 						GdtfConverter::ConvertInteger(pinCount, pNode, fPinCount);
-	TXString signalLayer;		pNode->GetNodeAttributeValue(XML_GDTF_WiringObjectSignalLayer, signalLayer); 				GdtfConverter::ConvertInteger(pinCount, pNode, fSignalLayer);
+	TXString signalLayer;		pNode->GetNodeAttributeValue(XML_GDTF_WiringObjectSignalLayer, signalLayer); 				GdtfConverter::ConvertInteger(signalLayer, pNode, fSignalLayer);
 	TXString orientation;		pNode->GetNodeAttributeValue(XML_GDTF_WiringObjectOrientation, orientation); 				GdtfConverter::ConvertOrientationEnum(orientation, pNode, fOrientation);
 								pNode->GetNodeAttributeValue(XML_GDTF_WiringObjectWireGroup, fWireGroup);
 	TXString electricalPayload;	pNode->GetNodeAttributeValue(XML_GDTF_WiringObjectElectricalPayload, electricalPayload); 	GdtfConverter::ConvertDouble(electricalPayload, pNode, fElectricalPayload);
