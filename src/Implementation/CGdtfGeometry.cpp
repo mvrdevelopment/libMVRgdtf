@@ -1890,7 +1890,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetPinPatchAt(size_
 	
 	return kVCOMError_NoError;
 }
-
+./
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::CreatePinPatch(VectorworksMVR::IGdtfGeometry* toWiringObject, size_t fromPin, size_t toPin, VectorworksMVR::IGdtfPinPatch** pinPatch)
 {
 	// Check Pointer
@@ -1908,9 +1908,11 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::CreatePinPatch(Vect
 	CGdtfGeometryImpl* toWiringObjectImpl = static_cast<CGdtfGeometryImpl*>(toWiringObject);
 	if ( ! toWiringObjectImpl)	{ return kVCOMError_InvalidArg; }
 
-	if ( toWiringObjectImpl->fGeometryType != EGdtfObjectType::eGdtfGeometryWiringObject) { return kVCOMError_InvalidArg; }
+	SceneData::GdtfGeometryPtr gdtfGeometry = toWiringObjectImpl->GetPointer();
 
-	SceneData::GdtfGeometryWiringObjectPtr gdtfToWiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(toWiringObjectImpl->fGeometry);
+	if ( gdtfGeometry->GetObjectType() != EGdtfObjectType::eGdtfGeometryWiringObject) { return kVCOMError_InvalidArg; }
+
+	SceneData::GdtfGeometryWiringObjectPtr gdtfToWiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(gdtfGeometry);
 	if ( ! gdtfToWiringObject)		{ return kVCOMError_InvalidArg; }
 	
 	SceneData::GdtfPinPatchPtr gdtfPinPatch = wiringObject->CreatePinPatch(gdtfToWiringObject, fromPin, toPin);

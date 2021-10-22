@@ -3,6 +3,7 @@
 //-----------------------------------------------------------------------------
 #include "Prefix/StdAfx.h"
 #include "CGdtfPinPatch.h"
+#include "CGdtfGeometry.h"
 
 
 using namespace VectorworksMVR::Filing;
@@ -79,22 +80,26 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfPinPatchImpl::GetToPin(size_t& to
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetLinkedWiringObject(IGdtfGeometry* toWiringObject)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfPinPatchImpl::SetLinkedWiringObject(IGdtfGeometry* toWiringObject)
 {
 	// Check Pointer
 	if ( ! fPinPatch) 		{ return kVCOMError_NotInitialized; }
 	if ( ! toWiringObject) 	{ return kVCOMError_InvalidArg; }
 	
-	// Cast
-	CGdtfGeometryImpl* wiringObjImpl = static_cast<CGdtfGeometryImpl*>(attribute);
-	if ( ! wiringObjImpl) { return kVCOMError_Failed; }
+	/// Check the argument type
+	if ( ! toWiringObject) { return kVCOMError_InvalidArg; }
+
+	CGdtfGeometryImpl* toWiringObjectImpl = static_cast<CGdtfGeometryImpl*>(toWiringObject);
+	if ( ! toWiringObjectImpl)	{ return kVCOMError_InvalidArg; }
+
+	SceneData::GdtfGeometryPtr gdtfGeometry = toWiringObjectImpl->GetPointer();
+
+	if ( gdtfGeometry->GetObjectType() != EGdtfObjectType::eGdtfGeometryWiringObject) { return kVCOMError_InvalidArg; }
+
+	SceneData::GdtfGeometryWiringObjectPtr gdtfToWiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(gdtfGeometry);
+	if ( ! gdtfToWiringObject)		{ return kVCOMError_InvalidArg; }
 	
-	//
-	SceneData::GdtfGeometryWiringObject wiringObject = nullptr;
-	wiringObject = wiringObjImpl->GetPointer();
-	if( ! wiringObject) { return kVCOMError_Failed; }
-	
-	fPinPatch->SetToWiringObject(wiringObject);
+	fPinPatch->SetToWiringObject(gdtfToWiringObject);
 	
 	return kVCOMError_NoError;
 }
