@@ -272,7 +272,41 @@ void GdtfEmptyModelTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
         __checkVCOM(geoWiringObject->GetFuseRating(fuseRating));
         checkifEqual("WiringObject FuseRating", (size_t)fuseRating, (size_t)EGdtfFuseRating::Z);
 
+
+        size_t pinPatchCount = 0;
+        __checkVCOM(geoWiringObject->GetPinPatchCount(pinPatchCount));
+        checkifEqual("WiringObject PinPatch count", pinPatchCount, (size_t)2);
+
+        IGdtfPinPatchPtr pinPatch1;
+        __checkVCOM(geoWiringObject->GetPinPatchAt(0, &pinPatch1));
+
+        IGdtfGeometryPtr toWiringObject1;
+        __checkVCOM(pinPatch1->GetLinkedWiringObject(&toWiringObject1));
+        checkifEqual("PinPatch1 toWiringObject name", toWiringObject1->GetName(), "toWiringObject8");
+
+        size_t fromPin1 = 0;
+        __checkVCOM(pinPatch1->GetFromPin(fromPin1));
+        checkifEqual("PinPatch1 fromPin", fromPin1, (size_t)1);
+
+        size_t toPin1 = 0;
+        __checkVCOM(pinPatch1->GetToPin(toPin1));
+        checkifEqual("PinPatch1 toPin", toPin1, (size_t)2);
         
+        IGdtfPinPatchPtr pinPatch2;
+        __checkVCOM(geoWiringObject->GetPinPatchAt(1, &pinPatch2));
+
+        IGdtfGeometryPtr toWiringObject2;
+        __checkVCOM(pinPatch2->GetLinkedWiringObject(&toWiringObject2));
+        checkifEqual("PinPatch2 toWiringObject name", toWiringObject2->GetName(), "toWiringObject9");
+
+        size_t fromPin2 = 0;
+        __checkVCOM(pinPatch2->GetFromPin(fromPin2));
+        checkifEqual("PinPatch2 fromPin", fromPin2, (size_t)3);
+
+        size_t toPin2 = 0;
+        __checkVCOM(pinPatch2->GetToPin(toPin2));
+        checkifEqual("PinPatch2 toPin", toPin2, (size_t)4);
+
     }
 
 }
