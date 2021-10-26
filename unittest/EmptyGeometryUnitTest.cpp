@@ -73,6 +73,13 @@ void GdtfEmptyModelTest::WriteFile(VectorworksMVR::IGdtfFixturePtr& fixture)
         __checkVCOM(geometry6->SetScanAngleTilt(1.7));
         __checkVCOM(geometry6->SetScanSpeed(1.8));
 
+        IGdtfLaserProtocolPtr laserProtocol1;
+        __checkVCOM(geometry6->CreateLaserProtocol("My Laser Protocol 1", &laserProtocol1));
+
+        IGdtfLaserProtocolPtr laserProtocol2;
+        __checkVCOM(geometry6->CreateLaserProtocol("You shouldn't be seeing this", &laserProtocol2));
+        __checkVCOM(laserProtocol2->SetName("My Laser Protocol 2"));
+
         // WiringObject
         IGdtfGeometryPtr geometry7;
         __checkVCOM(geometry1->CreateGeometry(EGdtfObjectType::eGdtfGeometryWiringObject, "Geometry7 WiringObject", filledModel, STransformMatrix(), &geometry7));
@@ -164,6 +171,7 @@ void GdtfEmptyModelTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
         __checkVCOM(geometry1->GetInternalGeometryAt(3, &geoMagnet));
         checkifEqual("Magnet Geometry Name", geoMagnet->GetName(), "Geometry5 Magnet");
 
+        //-------------------------------------------------------------------------------------------------
         // Laser
         IGdtfGeometryPtr geoLaser;
         __checkVCOM(geometry1->GetInternalGeometryAt(4, &geoLaser));
@@ -205,6 +213,20 @@ void GdtfEmptyModelTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
         __checkVCOM(geoLaser->GetScanSpeed(scanSpeed));
         checkifEqual("Laser ScanSpeed", scanSpeed, 1.8);
 
+        size_t laserProtocolCount = 0;
+        __checkVCOM(geoLaser->GetLaserProtocolCount(laserProtocolCount));
+        checkifEqual("LaserProtocol count", laserProtocolCount, (size_t)2);
+
+        IGdtfLaserProtocolPtr laserProtocol1;
+        __checkVCOM(geoLaser->GetLaserProtocolAt(0, &laserProtocol1));
+        checkifEqual("LaserProtocol 1 Name", laserProtocol1->GetName(), "My Laser Protocol 1");
+
+        IGdtfLaserProtocolPtr laserProtocol2;
+        __checkVCOM(geoLaser->GetLaserProtocolAt(1, &laserProtocol2));
+        checkifEqual("LaserProtocol 2 Name", laserProtocol2->GetName(), "My Laser Protocol 2");
+
+
+        //-------------------------------------------------------------------------------------------------
         // WiringObject
         IGdtfGeometryPtr geoWiringObject;
         __checkVCOM(geometry1->GetInternalGeometryAt(5, &geoWiringObject));
