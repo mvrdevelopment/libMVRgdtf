@@ -116,6 +116,11 @@ void GdtfEmptyModelTest::WriteFile(VectorworksMVR::IGdtfFixturePtr& fixture)
         pinPatch2->SetLinkedWiringObject(toWiringObject9);
         pinPatch2->SetFromPin(3);
         pinPatch2->SetToPin(4);
+
+        // Inventory
+        IGdtfGeometryPtr geometry10;
+        __checkVCOM(geometry1->CreateGeometry(EGdtfObjectType::eGdtfGeometryInventory, "Geometry10 Inventory", filledModel, STransformMatrix(), &geometry10));
+        __checkVCOM(geometry10->SetInventoryCount(10));
     }
 
 }
@@ -143,7 +148,7 @@ void GdtfEmptyModelTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
 
         size_t second_level = 0;
         __checkVCOM(geometry1->GetInternalGeometryCount(second_level));
-        checkifEqual("Second Level Geometry Count", second_level, (size_t)8);
+        checkifEqual("Second Level Geometry Count", second_level, (size_t)9);
 
 
         IGdtfGeometryPtr geometry2;
@@ -328,6 +333,16 @@ void GdtfEmptyModelTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
         size_t toPin2 = 0;
         __checkVCOM(pinPatch2->GetToPin(toPin2));
         checkifEqual("PinPatch2 toPin", toPin2, (size_t)4);
+
+        //-------------------------------------------------------------------------------------------------
+        // Inventory
+        IGdtfGeometryPtr geoInventory;
+        __checkVCOM(geometry1->GetInternalGeometryAt(8, &geoInventory));
+        checkifEqual("Inventory Geometry Name", geoInventory->GetName(), "Geometry10 Inventory");
+
+        size_t inventoryCount = 0;
+        __checkVCOM(geoInventory->GetInventoryCount(inventoryCount));
+        checkifEqual("Inventory Count", inventoryCount, (size_t)10);
 
     }
 

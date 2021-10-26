@@ -138,6 +138,10 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetPinPatchAt(size_t at, VectorworksMVR::IGdtfPinPatch** pinPatch);
         virtual VCOMError VCOM_CALLTYPE     CreatePinPatch(VectorworksMVR::IGdtfGeometry* toWiringObject, size_t fromPin, size_t toPin, VectorworksMVR::IGdtfPinPatch** pinPatch);
 
+        // Inventory
+		virtual VCOMError VCOM_CALLTYPE     GetInventoryCount(size_t& count);
+		virtual VCOMError VCOM_CALLTYPE     SetInventoryCount(size_t count);
+
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr);
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject();
 		

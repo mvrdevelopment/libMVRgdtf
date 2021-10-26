@@ -408,6 +408,9 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_WiringObjectFuseCurrent        "FuseCurrent"
 #define XML_GDTF_WiringObjectFuseRating         "FuseRating"
 
+#define XML_GDTF_InventoryNodeName              "Inventory"
+#define XML_GDTF_InventoryCount                 "Count"
+
 #define XML_GDTF_MagnetNodeName                 "Magnet"
 
 #define XML_GDTF_LampNodeName					"Beam"

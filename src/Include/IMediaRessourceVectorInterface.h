@@ -724,6 +724,10 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE 	GetPinPatchCount(size_t& count) = 0;
         virtual VCOMError VCOM_CALLTYPE 	GetPinPatchAt(size_t at, VectorworksMVR::IGdtfPinPatch** outPinPatch) = 0;
         virtual VCOMError VCOM_CALLTYPE 	CreatePinPatch(VectorworksMVR::IGdtfGeometry* toWiringObject, size_t fromPin, size_t toPin, VectorworksMVR::IGdtfPinPatch** outPinPatch) = 0;
+
+		// Inventory
+		virtual VCOMError VCOM_CALLTYPE     GetInventoryCount(size_t& count) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetInventoryCount(size_t count) = 0;
 	};
 	typedef VCOMPtr<IGdtfGeometry>	IGdtfGeometryPtr;
     

@@ -685,6 +685,7 @@ namespace SceneData
 		GdtfGeometry*						AddGeometryDisplay(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 		GdtfGeometry*						AddGeometryLaser(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 		GdtfGeometry*						AddGeometryWiringObject(		const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
+		GdtfGeometry*						AddGeometryInventory(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 		GdtfGeometry*						AddGeometryMagnet(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 
 	protected:
@@ -1091,6 +1092,34 @@ namespace SceneData
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
         virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
 	};
+
+	class GdtfGeometryInventory : public GdtfGeometry
+	{
+	public:
+		GdtfGeometryInventory(GdtfGeometry* parent);
+		GdtfGeometryInventory(const TXString& name, GdtfModelPtr refToModel,const VWTransformMatrix& ma, GdtfGeometry* parent);
+
+		~GdtfGeometryInventory();
+	
+	private:
+		size_t fCount;
+
+	public:
+		virtual EGdtfObjectType			GetObjectType();
+
+		// Getters
+		size_t    						GetCount() const;
+
+		// Setters
+		void    						SetCount(size_t count);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+	};
+	typedef GdtfGeometryInventory* GdtfGeometryInventoryPtr;
 
 	class GdtfGeometryMagnet : public GdtfGeometry
 	{
@@ -2563,6 +2592,7 @@ namespace SceneData
 		GdtfGeometryPtr			AddGeometryDisplay(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 		GdtfGeometryPtr			AddGeometryLaser(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 		GdtfGeometryPtr			AddGeometryWiringObject(		const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
+		GdtfGeometryPtr			AddGeometryInventory(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 		GdtfGeometryPtr			AddGeometryMagnet(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 
 		GdtfWheelPtr			AddWheel(TXString name);

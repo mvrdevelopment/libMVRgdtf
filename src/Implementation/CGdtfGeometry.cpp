@@ -242,6 +242,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::CreateGeometry(EGdt
         case eGdtfGeometryDisplay:              gdtfGeometry = fGeometry->AddGeometryDisplay(          	vwName, scModel, ma); break;
         case eGdtfGeometryLaser:              	gdtfGeometry = fGeometry->AddGeometryLaser(          	vwName, scModel, ma); break;
         case eGdtfGeometryWiringObject:         gdtfGeometry = fGeometry->AddGeometryWiringObject(      vwName, scModel, ma); break;
+        case eGdtfGeometryInventory:            gdtfGeometry = fGeometry->AddGeometryInventory(         vwName, scModel, ma); break;
         case eGdtfGeometryMagnet:              	gdtfGeometry = fGeometry->AddGeometryMagnet(          	vwName, scModel, ma); break;
 		case eGdtfGeometry:						gdtfGeometry = fGeometry->AddGeometry(					vwName, scModel, ma); break;
 			
@@ -2071,6 +2072,37 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::CreatePinPatch(Vect
 	return kVCOMError_NoError;
 }
 
+// Inventory
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetInventoryCount(size_t& count)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryInventory) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryInventoryPtr inventory = static_cast<SceneData::GdtfGeometryInventoryPtr>(fGeometry);
+	if ( ! inventory) { return kVCOMError_Failed; }
+	
+	count = inventory->GetCount();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetInventoryCount(size_t count)
+{
+	// Check Pointer
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryInventory) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometryInventoryPtr inventory = static_cast<SceneData::GdtfGeometryInventoryPtr>(fGeometry);
+	if(!inventory) return kVCOMError_Failed;
+
+	inventory->SetCount(count);
+	return kVCOMError_NoError;
+}
+
 
 //---------------------------------------------------------------------------
 void VectorworksMVR::CGdtfGeometryImpl::SetPointer(SceneData::GdtfGeometry* geometry)
@@ -2092,6 +2124,7 @@ void VectorworksMVR::CGdtfGeometryImpl::SetPointer(SceneData::GdtfGeometry* geom
 						fGeometryType == EGdtfObjectType::eGdtfGeometryDisplay ||
 						fGeometryType == EGdtfObjectType::eGdtfGeometryLaser ||
 						fGeometryType == EGdtfObjectType::eGdtfGeometryWiringObject ||
+						fGeometryType == EGdtfObjectType::eGdtfGeometryInventory ||
 						fGeometryType == EGdtfObjectType::eGdtfGeometryMagnet);
 	
 	
