@@ -93,9 +93,9 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE		SetScanAngleTilt(double scanAngleTilt);
         virtual VCOMError VCOM_CALLTYPE		SetScanSpeed(double scanSpeed);
 
-        // virtual VCOMError VCOM_CALLTYPE GetProtocolCount(size_t& count); +++++++
-        // virtual VCOMError VCOM_CALLTYPE CreateProtocol(VectorworksMVR::IGdtfConnector* connector, VectorworksMVR::IGdtfPowerConsumption** outVal); +++++++
-        // virtual VCOMError VCOM_CALLTYPE GetProtocolAt(size_t at, VectorworksMVR::IGdtfPowerConsumption** value); +++++++
+        virtual VCOMError VCOM_CALLTYPE 	GetLaserProtocolCount(size_t& count);
+        virtual VCOMError VCOM_CALLTYPE 	GetLaserProtocolAt(size_t at, VectorworksMVR::IGdtfLaserProtocol** outLaserProtocol);
+        virtual VCOMError VCOM_CALLTYPE 	CreateLaserProtocol(MvrString name, VectorworksMVR::IGdtfLaserProtocol** outLaserProtocol);
 
         // WiringObject
         virtual MvrString VCOM_CALLTYPE     GetConnectorType();
@@ -135,8 +135,8 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE		SetFuseRating(GdtfDefines::EGdtfFuseRating fuseRating);
 
         virtual VCOMError VCOM_CALLTYPE     GetPinPatchCount(size_t& count);
-        virtual VCOMError VCOM_CALLTYPE     CreatePinPatch(VectorworksMVR::IGdtfGeometry* toWiringObject, size_t fromPin, size_t toPin, VectorworksMVR::IGdtfPinPatch** pinPatch);
         virtual VCOMError VCOM_CALLTYPE     GetPinPatchAt(size_t at, VectorworksMVR::IGdtfPinPatch** pinPatch);
+        virtual VCOMError VCOM_CALLTYPE     CreatePinPatch(VectorworksMVR::IGdtfGeometry* toWiringObject, size_t fromPin, size_t toPin, VectorworksMVR::IGdtfPinPatch** pinPatch);
 
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr);
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject();

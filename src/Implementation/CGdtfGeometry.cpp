@@ -10,6 +10,7 @@
 #include "CGdtfDmxMode.h"
 #include "CGdtfDmxChannel.h"
 #include "CGdtfPhysicalEmitter.h"
+#include "CGdtfLaserProtocol.h"
 #include "CGdtfPinPatch.h"
 
 using namespace VectorworksMVR::Filing;
@@ -1320,6 +1321,122 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetScanSpeed(double
 	return kVCOMError_NoError;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetLaserProtocolCount(size_t &count)
+{
+	// Check Pointer
+	if ( ! fGeometry) { return kVCOMError_NotInitialized; }
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLaser) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryLaserPtr laser = static_cast<SceneData::GdtfGeometryLaserPtr>(fGeometry);
+	if ( ! laser) { return kVCOMError_Failed; }
+	
+	count = laser->GetLaserProtocolArray().size();
+	return kVCOMError_NoError;
+};
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetLaserProtocolAt(size_t at, VectorworksMVR::IGdtfLaserProtocol** laserProtocol)
+{
+	// Check Pointer
+	if ( ! fGeometry) { return kVCOMError_NotInitialized; }
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLaser) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryLaserPtr laser = static_cast<SceneData::GdtfGeometryLaserPtr>(fGeometry);
+	if ( ! laser) { return kVCOMError_Failed; }
+	
+	// check overflow
+	if (laser->GetLaserProtocolArray().size() < at) { return kVCOMError_OutOfBounds; }
+	
+	
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CGdtfLaserProtocolImpl*			pLaserProtocolObj = nullptr;
+	SceneData::GdtfLaserProtocol*	gdtfLaserProtocol = laser->GetLaserProtocolArray()[at];
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfLaserProtocol, (IVWUnknown**) & pLaserProtocolObj)))
+	{
+		// Check Casting
+		CGdtfLaserProtocolImpl* pResultInterface = static_cast<CGdtfLaserProtocolImpl* >(pLaserProtocolObj);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(gdtfLaserProtocol);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incoming Object
+	if (*laserProtocol)
+	{
+		(*laserProtocol)->Release();
+		*laserProtocol = NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*laserProtocol = pLaserProtocolObj;
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::CreateLaserProtocol(MvrString name, VectorworksMVR::IGdtfLaserProtocol** laserProtocol)
+{
+	// Check Pointer
+	if ( ! fGeometry) { return kVCOMError_NotInitialized; }
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLaser) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryLaserPtr laser = static_cast<SceneData::GdtfGeometryLaserPtr>(fGeometry);
+	if ( ! laser) { return kVCOMError_Failed; }
+	
+	SceneData::GdtfLaserProtocolPtr gdtfLaserProtocol = laser->CreateLaserProtocol(name);
+	
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CGdtfLaserProtocolImpl* pLaserProtocolObj	= nullptr;
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfLaserProtocol, (IVWUnknown**) & pLaserProtocolObj)))
+	{
+		// Check Casting
+		CGdtfLaserProtocolImpl* pResultInterface = static_cast<CGdtfLaserProtocolImpl* >(pLaserProtocolObj);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(gdtfLaserProtocol);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incoming Object
+	if (*laserProtocol)
+	{
+		(*laserProtocol)->Release();
+		*laserProtocol = NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*laserProtocol = pLaserProtocolObj;
+	
+	return kVCOMError_NoError;
+}
+
 //---------------------------------------------------------------------------
 // WiringObject
 
@@ -1877,7 +1994,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetPinPatchAt(size_
 	}
 	
 	//---------------------------------------------------------------------------
-	// Check Incomming Object
+	// Check Incoming Object
 	if (*pinPatch)
 	{
 		(*pinPatch)->Release();
@@ -1940,7 +2057,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::CreatePinPatch(Vect
 	}
 	
 	//---------------------------------------------------------------------------
-	// Check Incomming Object
+	// Check Incoming Object
 	if (*pinPatch)
 	{
 		(*pinPatch)->Release();

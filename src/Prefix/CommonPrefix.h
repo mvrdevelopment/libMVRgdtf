@@ -369,6 +369,9 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_DisplayNodeName                "Display"
 #define XML_GDTF_DisplayTexture                 "Texture"
 
+#define XML_GDTF_LaserProtocolNodeName          "Protocol"
+#define XML_GDTF_LaserProtocolName              "Name"
+
 #define XML_GDTF_LaserNodeName                  "Laser"
 #define XML_GDTF_LaserColorType                 "ColorType"
 #define XML_GDTF_LaserColor                     "Color"

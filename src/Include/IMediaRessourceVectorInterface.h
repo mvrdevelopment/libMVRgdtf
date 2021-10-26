@@ -514,7 +514,7 @@ namespace VectorworksMVR
     class DYNAMIC_ATTRIBUTE IGdtfWheel : public IVWUnknown
     {
 		public:
-        virtual MvrString VCOM_CALLTYPE     GetName() = 0;        
+        virtual MvrString VCOM_CALLTYPE     GetName() = 0;
         
         virtual VCOMError VCOM_CALLTYPE     GetWheelSlotCount(size_t& outCount) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetWheelSlotAt(size_t at, IGdtfWheelSlot** outPosition) = 0;
@@ -564,6 +564,17 @@ namespace VectorworksMVR
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
 	};
 	typedef VCOMPtr<IGdtfBreak>	IGdtfBreakPtr;
+
+	class DYNAMIC_ATTRIBUTE IGdtfLaserProtocol : public IVWUnknown
+	{
+	public:
+		virtual MvrString VCOM_CALLTYPE     GetName() = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetName(MvrString name) = 0;
+		
+		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+	};
+	typedef VCOMPtr<IGdtfLaserProtocol>	IGdtfLaserProtocolPtr;
 
 	class DYNAMIC_ATTRIBUTE IGdtfPinPatch : public IVWUnknown
 	{
@@ -669,6 +680,10 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE		SetScanAngleTilt(double scanAngleTilt) = 0;
         virtual VCOMError VCOM_CALLTYPE		SetScanSpeed(double scanSpeed) = 0;
 
+		virtual VCOMError VCOM_CALLTYPE 	GetLaserProtocolCount(size_t& count) = 0;
+        virtual VCOMError VCOM_CALLTYPE 	GetLaserProtocolAt(size_t at, VectorworksMVR::IGdtfLaserProtocol** outLaserProtocol) = 0;
+        virtual VCOMError VCOM_CALLTYPE 	CreateLaserProtocol(MvrString name, VectorworksMVR::IGdtfLaserProtocol** outLaserProtocol) = 0;
+
 		// WiringObject
 		virtual MvrString VCOM_CALLTYPE     GetConnectorType() = 0;
         virtual VCOMError VCOM_CALLTYPE		GetComponentType(GdtfDefines::EGdtfComponentType& componentType) = 0;
@@ -707,8 +722,8 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE		SetFuseRating(GdtfDefines::EGdtfFuseRating fuseRating) = 0;
 
         virtual VCOMError VCOM_CALLTYPE 	GetPinPatchCount(size_t& count) = 0;
-        virtual VCOMError VCOM_CALLTYPE 	CreatePinPatch(VectorworksMVR::IGdtfGeometry* toWiringObject, size_t fromPin, size_t toPin, VectorworksMVR::IGdtfPinPatch** outPinPatch) = 0;
         virtual VCOMError VCOM_CALLTYPE 	GetPinPatchAt(size_t at, VectorworksMVR::IGdtfPinPatch** outPinPatch) = 0;
+        virtual VCOMError VCOM_CALLTYPE 	CreatePinPatch(VectorworksMVR::IGdtfGeometry* toWiringObject, size_t fromPin, size_t toPin, VectorworksMVR::IGdtfPinPatch** outPinPatch) = 0;
 	};
 	typedef VCOMPtr<IGdtfGeometry>	IGdtfGeometryPtr;
     

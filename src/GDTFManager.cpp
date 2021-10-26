@@ -1675,7 +1675,8 @@ void GdtfGeometry::OnReadFromNode(const IXMLFileNodePtr& pNode)
 										else if (childNodeName == XML_GDTF_WiringObjectNodeName)		{ geometry = new GdtfGeometryWiringObject(this);}
 										else if (childNodeName == XML_GDTF_MagnetNodeName)				{ geometry = new GdtfGeometryMagnet(this);}
 										else if (childNodeName == XML_GDTF_BreakNodeName)				{ hasBreak = true; }
-										else if (childNodeName == XML_GDTF_PinPatchNodeName)			{ return; /* PinPatches are handled in the WiringObject OnReadFromNode function */ }
+										else if (childNodeName == XML_GDTF_LaserProtocolNodeName)		{ return; /* Laser Protocols are handled in the Laser OnReadFromNode function */ }
+										else if (childNodeName == XML_GDTF_PinPatchNodeName)			{ return; /* Pin Patches are handled in the WiringObject OnReadFromNode function */ }
 										else															{ DSTOP((kEveryone,"There is a node that was not expected!")); }
 										
 										
@@ -2355,6 +2356,76 @@ TXString GdtfGeometryDisplay::GetNodeName()
 }
 
 //------------------------------------------------------------------------------------
+// GdtfLaserProtocol
+GdtfLaserProtocol::GdtfLaserProtocol()
+{
+	fName = "";
+}
+
+GdtfLaserProtocol::GdtfLaserProtocol(const TXString& name)
+{
+	fName = name;
+}
+
+GdtfLaserProtocol::~GdtfLaserProtocol()
+{
+}
+
+const TXString&	GdtfLaserProtocol::GetName() const
+{
+	return fName;
+}
+
+void GdtfLaserProtocol::SetName(const TXString& name)
+{
+	fName = name;
+}
+
+void GdtfLaserProtocol::OnPrintToFile(IXMLFileNodePtr pNode) 
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnPrintToFile(pNode);
+
+	pNode->SetNodeAttributeValue(XML_GDTF_LaserProtocolName, fName);
+}
+
+void GdtfLaserProtocol::OnReadFromNode(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnReadFromNode(pNode);
+
+	pNode->GetNodeAttributeValue(XML_GDTF_LaserProtocolName, fName);
+}
+
+void GdtfLaserProtocol::OnErrorCheck(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnErrorCheck(pNode);
+
+	//------------------------------------------------------------------------------------
+	// Create needed and optional Attribute Arrays
+	TXStringArray needed;
+	TXStringArray optional;
+	needed.push_back(XML_GDTF_LaserProtocolName);
+	//------------------------------------------------------------------------------------
+	// Check Attributes for node
+	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
+}
+
+EGdtfObjectType GdtfLaserProtocol::GetObjectType() 
+{
+	return EGdtfObjectType::eGdtfLaserProtocol;
+}
+
+TXString GdtfLaserProtocol::GetNodeName()
+{
+	return XML_GDTF_LaserProtocolNodeName;
+}
+
+//------------------------------------------------------------------------------------
 // GdtfGeometryLaser
 GdtfGeometryLaser::GdtfGeometryLaser(GdtfGeometry* parent)
 					:GdtfGeometry(parent)
@@ -2372,6 +2443,7 @@ GdtfGeometryLaser::GdtfGeometryLaser(const TXString& name, GdtfModelPtr refToMod
 
 GdtfGeometryLaser::~GdtfGeometryLaser()
 {
+	for(GdtfLaserProtocolPtr laserProtocol : fLaserProtocols) { delete laserProtocol; }
 }
 
 EGdtfLaserColorType	GdtfGeometryLaser::GetColorType() const
@@ -2428,6 +2500,11 @@ const TXString&	GdtfGeometryLaser::GetUnresolvedEmitter() const
 	return fUnresolvedEmitter;
 }
 
+const TGdtfLaserProtocolArray& GdtfGeometryLaser::GetLaserProtocolArray() const
+{
+	return fLaserProtocols;
+}
+
 void GdtfGeometryLaser::SetColorType(const EGdtfLaserColorType& colorType)
 {
 	fColorType = colorType;
@@ -2478,6 +2555,13 @@ void GdtfGeometryLaser::SetScanSpeed(double scanSpeed)
 	fScanSpeed = scanSpeed;
 }
 
+GdtfLaserProtocolPtr GdtfGeometryLaser::CreateLaserProtocol(const TXString& name)
+{
+	GdtfLaserProtocolPtr laserProtocol = new GdtfLaserProtocol(name);
+    fLaserProtocols.push_back(laserProtocol);
+	return laserProtocol;
+}
+
 void GdtfGeometryLaser::OnPrintToFile(IXMLFileNodePtr pNode) 
 {
 	//------------------------------------------------------------------------------------
@@ -2497,6 +2581,10 @@ void GdtfGeometryLaser::OnPrintToFile(IXMLFileNodePtr pNode)
 	pNode->SetNodeAttributeValue(XML_GDTF_LaserScanSpeed,			GdtfConverter::ConvertDouble(fScanSpeed));
 
 	// Children
+	for(GdtfLaserProtocolPtr laserProtocol : fLaserProtocols)
+	{
+		laserProtocol->WriteToNode(pNode);
+	}
 }
 
 void GdtfGeometryLaser::OnReadFromNode(const IXMLFileNodePtr& pNode)
@@ -2515,6 +2603,16 @@ void GdtfGeometryLaser::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	TXString scanAnglePan;		pNode->GetNodeAttributeValue(XML_GDTF_LaserScanAnglePan,		scanAnglePan);		GdtfConverter::ConvertDouble(scanAnglePan, pNode, fScanAnglePan);
 	TXString scanAngleTilt;		pNode->GetNodeAttributeValue(XML_GDTF_LaserScanAngleTilt,		scanAngleTilt);		GdtfConverter::ConvertDouble(scanAngleTilt, pNode, fScanAngleTilt);
 	TXString scanSpeed;			pNode->GetNodeAttributeValue(XML_GDTF_LaserScanSpeed,			scanSpeed);			GdtfConverter::ConvertDouble(scanSpeed, pNode, fScanSpeed);
+
+	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_LaserProtocolNodeName, [this] (IXMLFileNodePtr objNode) -> void
+								{ 
+									GdtfLaserProtocolPtr laserProtocol = new GdtfLaserProtocol();
+									
+									laserProtocol->ReadFromNode(objNode);
+									
+									fLaserProtocols.push_back(laserProtocol);
+									return;
+								});
 }
 
 void GdtfGeometryLaser::OnErrorCheck(const IXMLFileNodePtr& pNode)

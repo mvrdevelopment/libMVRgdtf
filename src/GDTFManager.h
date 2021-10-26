@@ -877,6 +877,35 @@ namespace SceneData
 	};
 	typedef GdtfGeometryDisplay* GdtfGeometryDisplayPtr;
 
+	class GdtfLaserProtocol : public GdtfObject
+	{
+	public:
+		GdtfLaserProtocol();
+		GdtfLaserProtocol(const TXString& name);
+
+		~GdtfLaserProtocol();
+	
+	private:
+		TXString fName;
+
+	public:
+		virtual EGdtfObjectType			GetObjectType();
+
+		// Getters
+		const TXString&	GetName() const;
+
+		// Setters
+		void			SetName(const TXString& name);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+	};
+	typedef GdtfLaserProtocol*					GdtfLaserProtocolPtr;
+	typedef std::vector<GdtfLaserProtocolPtr> 	TGdtfLaserProtocolArray;
+
 	class GdtfGeometryLaser : public GdtfGeometry
 	{
 	public:
@@ -899,34 +928,40 @@ namespace SceneData
 
 		TXString 				fUnresolvedEmitter;
 
+		TGdtfLaserProtocolArray	fLaserProtocols;
+
 	public:
 		virtual EGdtfObjectType			GetObjectType();
 
 		// Getters
-        EGdtfLaserColorType		GetColorType() const;
-		double                  GetColor() const;
-		double                  GetOutputStrength() const;
-		GdtfPhysicalEmitter*    GetEmitter() const;
-		double                  GetBeamDiameter() const;
-		double                  GetBeamDivergenceMin() const;
-		double                  GetBeamDivergenceMax() const;
-		double                  GetScanAnglePan() const;
-		double                  GetScanAngleTilt() const;
-		double                  GetScanSpeed() const;
+        EGdtfLaserColorType				GetColorType() const;
+		double                  		GetColor() const;
+		double                  		GetOutputStrength() const;
+		GdtfPhysicalEmitter*    		GetEmitter() const;
+		double                  		GetBeamDiameter() const;
+		double                  		GetBeamDivergenceMin() const;
+		double                 			GetBeamDivergenceMax() const;
+		double                  		GetScanAnglePan() const;
+		double                  		GetScanAngleTilt() const;
+		double                  		GetScanSpeed() const;
 
-		const TXString&			GetUnresolvedEmitter() const;
+		const TXString&					GetUnresolvedEmitter() const;
+
+		const TGdtfLaserProtocolArray&	GetLaserProtocolArray() const;
 
 		// Setters
-		void					SetColorType(const EGdtfLaserColorType& colorType);
-		void					SetColor(double waveLength);
-		void					SetOutputStrength(double outputStrength);
-		void		    		SetEmitter(GdtfPhysicalEmitter* emitter);
-		void					SetBeamDiameter(double beamDiameter);
-		void					SetBeamDivergenceMin(double beamDivergenceMin);
-		void					SetBeamDivergenceMax(double beamDivergenceMax);
-		void					SetScanAnglePan(double scanAnglePan);
-		void					SetScanAngleTilt(double scanAngleTilt);
-		void					SetScanSpeed(double scanSpeed);
+		void							SetColorType(const EGdtfLaserColorType& colorType);
+		void							SetColor(double waveLength);
+		void							SetOutputStrength(double outputStrength);
+		void		    				SetEmitter(GdtfPhysicalEmitter* emitter);
+		void							SetBeamDiameter(double beamDiameter);
+		void							SetBeamDivergenceMin(double beamDivergenceMin);
+		void							SetBeamDivergenceMax(double beamDivergenceMax);
+		void							SetScanAnglePan(double scanAnglePan);
+		void							SetScanAngleTilt(double scanAngleTilt);
+		void							SetScanSpeed(double scanSpeed);
+
+		GdtfLaserProtocolPtr         	CreateLaserProtocol(const TXString& name);
 
 	protected:
 		virtual	TXString				GetNodeName();

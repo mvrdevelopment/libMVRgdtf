@@ -51,6 +51,7 @@
 #include "Implementation/CGdtfConnector.h"
 #include "Implementation/CGdtfPowerConsumption.h"
 #include "Implementation/CUtility.h"
+#include "Implementation/CGdtfLaserProtocol.h"
 #include "Implementation/CGdtfPinPatch.h"
 
 
@@ -188,6 +189,8 @@ extern "C" VectorworksMVR::VCOMError VWQueryInterface(const VectorworksMVR::VWII
 		resultInterface = new XML::CXMLFileNodeImpl();
     else if (iid == VectorworksMVR::IID_IUtility)
 		resultInterface = new CUtilityImpl();
+    else if (iid == VectorworksMVR::IID_GdtfLaserProtocol)
+		resultInterface = new CGdtfLaserProtocolImpl();
     else if (iid == VectorworksMVR::IID_GdtfPinPatch)
 		resultInterface = new CGdtfPinPatchImpl();
 	
