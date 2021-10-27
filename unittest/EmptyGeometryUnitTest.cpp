@@ -121,6 +121,16 @@ void GdtfEmptyModelTest::WriteFile(VectorworksMVR::IGdtfFixturePtr& fixture)
         IGdtfGeometryPtr geometry10;
         __checkVCOM(geometry1->CreateGeometry(EGdtfObjectType::eGdtfGeometryInventory, "Geometry10 Inventory", filledModel, STransformMatrix(), &geometry10));
         __checkVCOM(geometry10->SetInventoryCount(10));
+
+        // Structure
+        IGdtfGeometryPtr geometry11;
+        __checkVCOM(geometry1->CreateGeometry(EGdtfObjectType::eGdtfGeometryStructure, "Geometry11 Structure", filledModel, STransformMatrix(), &geometry11));
+        __checkVCOM(geometry11->SetStructureLinkedGeometry(geometry10));
+        __checkVCOM(geometry11->SetStructureType(EGdtfStructureType::Detail));
+        __checkVCOM(geometry11->SetCrossSectionType(EGdtfCrossSectionType::TrussFramework));
+        __checkVCOM(geometry11->SetCrossSectionHeight(1.1));
+        __checkVCOM(geometry11->SetCrossSectionWallThickness(1.2));
+        __checkVCOM(geometry11->SetTrussCrossSection("My TrussCrossSection"));
     }
 
 }
@@ -148,7 +158,7 @@ void GdtfEmptyModelTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
 
         size_t second_level = 0;
         __checkVCOM(geometry1->GetInternalGeometryCount(second_level));
-        checkifEqual("Second Level Geometry Count", second_level, (size_t)9);
+        checkifEqual("Second Level Geometry Count", second_level, (size_t)10);
 
 
         IGdtfGeometryPtr geometry2;
@@ -343,6 +353,34 @@ void GdtfEmptyModelTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
         size_t inventoryCount = 0;
         __checkVCOM(geoInventory->GetInventoryCount(inventoryCount));
         checkifEqual("Inventory Count", inventoryCount, (size_t)10);
+
+        //-------------------------------------------------------------------------------------------------
+        // Structure
+        IGdtfGeometryPtr geoStructure;
+        __checkVCOM(geometry1->GetInternalGeometryAt(9, &geoStructure));
+        checkifEqual("Structure Geometry Name", geoStructure->GetName(), "Geometry11 Structure");
+
+        IGdtfGeometryPtr structureLinkedGeometry;
+        __checkVCOM(geoStructure->GetStructureLinkedGeometry(&structureLinkedGeometry));
+        checkifEqual("Structure linked geometry name", structureLinkedGeometry->GetName(), "Geometry10 Inventory");
+
+        EGdtfStructureType structureType = EGdtfStructureType::CenterLineBased;
+        __checkVCOM(geoStructure->GetStructureType(structureType));
+        checkifEqual("Structure StructureType", (size_t)structureType, (size_t)EGdtfStructureType::Detail);
+
+        EGdtfCrossSectionType crossSectionType = EGdtfCrossSectionType::Tube;
+        __checkVCOM(geoStructure->GetCrossSectionType(crossSectionType));
+        checkifEqual("Structure CrossSectionType", (size_t)crossSectionType, (size_t)EGdtfCrossSectionType::TrussFramework);
+
+        double crossSectionHeight = 0.0;
+        __checkVCOM(geoStructure->GetCrossSectionHeight(crossSectionHeight));
+        checkifEqual("Structure CrossSectionHeight", crossSectionHeight, 1.1);
+
+        double crossSectionWallThickness = 0.0;
+        __checkVCOM(geoStructure->GetCrossSectionWallThickness(crossSectionWallThickness));
+        checkifEqual("Structure CrossSectionWallThickness", crossSectionWallThickness, 1.2);
+
+        checkifEqual("Structure TrussCrossSection", geoStructure->GetTrussCrossSection(), "My TrussCrossSection");
 
     }
 
