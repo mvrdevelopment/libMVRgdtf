@@ -142,6 +142,21 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE     GetInventoryCount(size_t& count);
 		virtual VCOMError VCOM_CALLTYPE     SetInventoryCount(size_t count);
 
+        // Structure
+        virtual VCOMError VCOM_CALLTYPE		GetStructureLinkedGeometry(IGdtfGeometry** linkedGeometry);
+        virtual VCOMError VCOM_CALLTYPE		GetStructureType(GdtfDefines::EGdtfStructureType& structureType);
+        virtual VCOMError VCOM_CALLTYPE		GetCrossSectionType(GdtfDefines::EGdtfCrossSectionType& crossSectionType);
+        virtual VCOMError VCOM_CALLTYPE		GetCrossSectionHeight(double& crossSectionHeight);
+        virtual VCOMError VCOM_CALLTYPE		GetCrossSectionWallThickness(double& crossSectionWallThickness);
+        virtual MvrString VCOM_CALLTYPE		GetTrussCrossSection();
+
+        virtual VCOMError VCOM_CALLTYPE	    SetStructureLinkedGeometry(IGdtfGeometry* linkedGeometry);
+		virtual VCOMError VCOM_CALLTYPE	    SetStructureType(GdtfDefines::EGdtfStructureType structureType);
+		virtual VCOMError VCOM_CALLTYPE	    SetCrossSectionType(GdtfDefines::EGdtfCrossSectionType crossSectionType);
+		virtual VCOMError VCOM_CALLTYPE	    SetCrossSectionHeight(double crossSectionHeight);
+		virtual VCOMError VCOM_CALLTYPE	    SetCrossSectionWallThickness(double crossSectionWallThickness);
+		virtual VCOMError VCOM_CALLTYPE	    SetTrussCrossSection(MvrString trussCrossSection);
+
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr);
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject();
 		

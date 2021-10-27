@@ -92,6 +92,8 @@ namespace SceneData
 		static TXString	ConvertComponentTypeEnum(GdtfDefines::EGdtfComponentType value);
 		static TXString	ConvertOrientationEnum(GdtfDefines::EGdtfOrientation value);
 		static TXString	ConvertFuseRatingEnum(GdtfDefines::EGdtfFuseRating value);
+		static TXString	ConvertStructureTypeEnum(GdtfDefines::EGdtfStructureType value);
+		static TXString	ConvertCrossSectionTypeEnum(GdtfDefines::EGdtfCrossSectionType value);
 		
 
         //-----------------------------------------------------------------------------
@@ -135,6 +137,8 @@ namespace SceneData
 		static bool     ConvertComponentTypeEnum(		const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfComponentType& outVal);
 		static bool     ConvertOrientationEnum(			const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfOrientation& outVal);
 		static bool     ConvertFuseRatingEnum(			const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfFuseRating& outVal);
+		static bool     ConvertStructureTypeEnum(		const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfStructureType& outVal);
+		static bool     ConvertCrossSectionTypeEnum(	const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfCrossSectionType& outVal);
 		
 
         static bool 	ConvertDmxOffset(const TXString& inVal, const IXMLFileNodePtr& node, DMXAddress& coarse, DMXAddress& fine, DMXAddress& ultra, DMXAddress& uber);

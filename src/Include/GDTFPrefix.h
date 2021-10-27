@@ -677,6 +677,18 @@ namespace VectorworksMVR
             Z = 4,
         };
 
+        enum class EGdtfStructureType
+        {
+            CenterLineBased = 0, 
+            Detail          = 1,
+        };
+
+        enum class EGdtfCrossSectionType
+        {
+            TrussFramework  = 0, 
+            Tube            = 1,
+        };
+
 	}
 }
 

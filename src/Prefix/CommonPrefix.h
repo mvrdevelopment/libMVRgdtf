@@ -122,6 +122,12 @@
 #define XML_Val_FuseRatingK       "K"
 #define XML_Val_FuseRatingZ       "Z"
 
+#define XML_Val_StructureTypeCenterLineBased    "CenterLineBased"
+#define XML_Val_StructureTypeDetail             "Detail"
+
+#define XML_Val_CrossSectionTypeTrussFramework  "TrussFramework"
+#define XML_Val_CrossSectionTypeTube            "Tube"
+
 #define XML_Val_MappingNodeName	        "Mapping"
 #define XML_Val_MappingLinkedDefUuid	"linkedDef"
 #define XML_Val_MappingUx	            "ux"
@@ -410,6 +416,14 @@ const Sint32 kMVR_MinorVersion = 4;
 
 #define XML_GDTF_InventoryNodeName              "Inventory"
 #define XML_GDTF_InventoryCount                 "Count"
+
+#define XML_GDTF_StructureNodeName                  "Structure"
+#define XML_GDTF_StructureLinkedGeometry            "LinkedGeometry"
+#define XML_GDTF_StructureStructureType             "StructureType"
+#define XML_GDTF_StructureCrossSectionType          "CrossSectionType"
+#define XML_GDTF_StructureCrossSectionHeight        "CrossSectionHeight"
+#define XML_GDTF_StructureCrossSectionWallThickness "CrossSectionWallThickness"
+#define XML_GDTF_StructureTrussCrossSection         "TrussCrossSection"
 
 #define XML_GDTF_MagnetNodeName                 "Magnet"
 

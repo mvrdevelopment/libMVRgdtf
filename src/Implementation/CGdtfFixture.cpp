@@ -968,6 +968,8 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateGeometry(EGdtf
         case eGdtfGeometryDisplay:              gdtfGeometry = fFixtureObject->AddGeometryDisplay(          vwName, scModel, ma); break;
         case eGdtfGeometryLaser:                gdtfGeometry = fFixtureObject->AddGeometryLaser(            vwName, scModel, ma); break;
         case eGdtfGeometryWiringObject:         gdtfGeometry = fFixtureObject->AddGeometryWiringObject(     vwName, scModel, ma); break;
+        case eGdtfGeometryInventory:            gdtfGeometry = fFixtureObject->AddGeometryInventory(        vwName, scModel, ma); break;
+        case eGdtfGeometryStructure:            gdtfGeometry = fFixtureObject->AddGeometryStructure(        vwName, scModel, ma); break;
         case eGdtfGeometryMagnet:               gdtfGeometry = fFixtureObject->AddGeometryMagnet(           vwName, scModel, ma); break;
 		case eGdtfGeometry:				        gdtfGeometry = fFixtureObject->AddGeometry(			        vwName, scModel, ma); break;
 

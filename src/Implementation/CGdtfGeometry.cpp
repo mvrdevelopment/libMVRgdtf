@@ -243,6 +243,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::CreateGeometry(EGdt
         case eGdtfGeometryLaser:              	gdtfGeometry = fGeometry->AddGeometryLaser(          	vwName, scModel, ma); break;
         case eGdtfGeometryWiringObject:         gdtfGeometry = fGeometry->AddGeometryWiringObject(      vwName, scModel, ma); break;
         case eGdtfGeometryInventory:            gdtfGeometry = fGeometry->AddGeometryInventory(         vwName, scModel, ma); break;
+        case eGdtfGeometryStructure:            gdtfGeometry = fGeometry->AddGeometryStructure(         vwName, scModel, ma); break;
         case eGdtfGeometryMagnet:              	gdtfGeometry = fGeometry->AddGeometryMagnet(          	vwName, scModel, ma); break;
 		case eGdtfGeometry:						gdtfGeometry = fGeometry->AddGeometry(					vwName, scModel, ma); break;
 			
@@ -2103,6 +2104,227 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetInventoryCount(s
 	return kVCOMError_NoError;
 }
 
+// Structure
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetStructureLinkedGeometry(VectorworksMVR::IGdtfGeometry** geometry)
+{
+	// Check Pointer
+	if ( ! fGeometry) { return kVCOMError_NotInitialized; }
+
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryStructure) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometryStructurePtr structure = static_cast<SceneData::GdtfGeometryStructurePtr>(fGeometry);
+	if(!structure) return kVCOMError_Failed;
+    
+    //---------------------------------------------------------------------------
+    // Initialize Object
+	SceneData::GdtfGeometry* gdtfGeometry = structure->GetLinkedGeometry();
+	if ( ! gdtfGeometry) { return kVCOMError_NotSet; }
+
+    CGdtfGeometryImpl* pGeometry = nullptr;
+    
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfGeometry, (IVWUnknown**) & pGeometry)))
+    {
+        // Check Casting
+        CGdtfGeometryImpl* pResultInterface = static_cast<CGdtfGeometryImpl* >(pGeometry);
+        if (pResultInterface)
+        {
+            pResultInterface->SetPointer(gdtfGeometry);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+    
+    //---------------------------------------------------------------------------
+    // Check Incoming Object
+    if (*geometry)
+    {
+        (*geometry)->Release();
+        *geometry = NULL;
+    }
+    
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *geometry = pGeometry;
+    
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetStructureType(GdtfDefines::EGdtfStructureType& structureType)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryStructure) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryStructurePtr structure = static_cast<SceneData::GdtfGeometryStructurePtr>(fGeometry);
+	if ( ! structure) { return kVCOMError_Failed; }
+	
+	structureType = structure->GetStructureType();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetCrossSectionType(GdtfDefines::EGdtfCrossSectionType& crossSectionType)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryStructure) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryStructurePtr structure = static_cast<SceneData::GdtfGeometryStructurePtr>(fGeometry);
+	if ( ! structure) { return kVCOMError_Failed; }
+	
+	crossSectionType = structure->GetCrossSectionType();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetCrossSectionHeight(double& crossSectionHeight)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryStructure) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryStructurePtr structure = static_cast<SceneData::GdtfGeometryStructurePtr>(fGeometry);
+	if ( ! structure) { return kVCOMError_Failed; }
+	
+	crossSectionHeight = structure->GetCrossSectionHeight();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetCrossSectionWallThickness(double& crossSectionWallThickness)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryStructure) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryStructurePtr structure = static_cast<SceneData::GdtfGeometryStructurePtr>(fGeometry);
+	if ( ! structure) { return kVCOMError_Failed; }
+	
+	crossSectionWallThickness = structure->GetCrossSectionWallThickness();
+	return kVCOMError_NoError;
+}
+
+MvrString VectorworksMVR::CGdtfGeometryImpl::GetTrussCrossSection() 
+{
+	if(!fGeometry) return "";
+
+	// Check if it is the right type
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryStructure) return "";
+
+	SceneData::GdtfGeometryStructurePtr structure = static_cast<SceneData::GdtfGeometryStructurePtr>(fGeometry);
+	if(!structure) return "";
+
+	return structure->GetTrussCrossSection().GetCharPtr();
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetStructureLinkedGeometry(IGdtfGeometry* linkedGeometry)
+{
+	// Check Pointer
+	if ( ! fGeometry) { return kVCOMError_NotInitialized; }
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryStructure) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryStructurePtr structure = static_cast<SceneData::GdtfGeometryStructurePtr>(fGeometry);
+	if ( ! structure) { return kVCOMError_Failed; }
+	
+		
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CGdtfGeometryImpl* pGeoObj = static_cast<CGdtfGeometryImpl*> (linkedGeometry);
+	if(!pGeoObj) { return kVCOMError_InvalidArg; }
+	
+	SceneData::GdtfGeometry* gdtfGeometryToSet = pGeoObj->GetPointer();
+	structure->SetLinkedGeometry(gdtfGeometryToSet);
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetStructureType(GdtfDefines::EGdtfStructureType structureType)
+{
+	// Check Pointer
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryStructure) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometryStructurePtr structure = static_cast<SceneData::GdtfGeometryStructurePtr>(fGeometry);
+	if(!structure) return kVCOMError_Failed;
+
+	structure->SetStructureType(structureType);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetCrossSectionType(GdtfDefines::EGdtfCrossSectionType crossSectionType)
+{
+	// Check Pointer
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryStructure) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometryStructurePtr structure = static_cast<SceneData::GdtfGeometryStructurePtr>(fGeometry);
+	if(!structure) return kVCOMError_Failed;
+
+	structure->SetCrossSectionType(crossSectionType);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetCrossSectionHeight(double crossSectionHeight)
+{
+	// Check Pointer
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryStructure) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometryStructurePtr structure = static_cast<SceneData::GdtfGeometryStructurePtr>(fGeometry);
+	if(!structure) return kVCOMError_Failed;
+
+	structure->SetCrossSectionHeight(crossSectionHeight);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetCrossSectionWallThickness(double crossSectionWallThickness)
+{
+	// Check Pointer
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryStructure) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometryStructurePtr structure = static_cast<SceneData::GdtfGeometryStructurePtr>(fGeometry);
+	if(!structure) return kVCOMError_Failed;
+
+	structure->SetCrossSectionWallThickness(crossSectionWallThickness);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetTrussCrossSection(MvrString trussCrossSection)
+{
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryStructure) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometryStructurePtr structure = static_cast<SceneData::GdtfGeometryStructurePtr>(fGeometry);
+	if(!structure) return kVCOMError_Failed;
+
+	structure->SetTrussCrossSection(trussCrossSection);
+	return kVCOMError_NoError;
+}
 
 //---------------------------------------------------------------------------
 void VectorworksMVR::CGdtfGeometryImpl::SetPointer(SceneData::GdtfGeometry* geometry)
@@ -2125,6 +2347,7 @@ void VectorworksMVR::CGdtfGeometryImpl::SetPointer(SceneData::GdtfGeometry* geom
 						fGeometryType == EGdtfObjectType::eGdtfGeometryLaser ||
 						fGeometryType == EGdtfObjectType::eGdtfGeometryWiringObject ||
 						fGeometryType == EGdtfObjectType::eGdtfGeometryInventory ||
+						fGeometryType == EGdtfObjectType::eGdtfGeometryStructure ||
 						fGeometryType == EGdtfObjectType::eGdtfGeometryMagnet);
 	
 	

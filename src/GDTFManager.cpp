@@ -1612,6 +1612,15 @@ GdtfGeometryPtr GdtfGeometry::AddGeometryInventory(const TXString& name, GdtfMod
 	return geo;
 }
 
+GdtfGeometryPtr GdtfGeometry::AddGeometryStructure(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma)
+{
+	GdtfGeometry* geo = new GdtfGeometryStructure(name, refToModel, ma, this);
+
+	fInternalGeometries.push_back(geo);
+
+	return geo;
+}
+
 GdtfGeometryPtr GdtfGeometry::AddGeometryMagnet(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma)
 {
 	GdtfGeometry* geo = new GdtfGeometryMagnet(name, refToModel, ma, this);
@@ -1683,6 +1692,7 @@ void GdtfGeometry::OnReadFromNode(const IXMLFileNodePtr& pNode)
 										else if (childNodeName == XML_GDTF_LaserNodeName)				{ geometry = new GdtfGeometryLaser(this);}
 										else if (childNodeName == XML_GDTF_WiringObjectNodeName)		{ geometry = new GdtfGeometryWiringObject(this);}
 										else if (childNodeName == XML_GDTF_InventoryNodeName)			{ geometry = new GdtfGeometryInventory(this);}
+										else if (childNodeName == XML_GDTF_StructureNodeName)			{ geometry = new GdtfGeometryStructure(this);}
 										else if (childNodeName == XML_GDTF_MagnetNodeName)				{ geometry = new GdtfGeometryMagnet(this);}
 										else if (childNodeName == XML_GDTF_BreakNodeName)				{ hasBreak = true; }
 										else if (childNodeName == XML_GDTF_LaserProtocolNodeName)		{ return; /* Laser Protocols are handled in the Laser OnReadFromNode function */ }
@@ -3191,6 +3201,162 @@ EGdtfObjectType GdtfGeometryInventory::GetObjectType()
 TXString GdtfGeometryInventory::GetNodeName()
 {
 	return XML_GDTF_InventoryNodeName;
+}
+
+//------------------------------------------------------------------------------------
+// GdtfGeometryStructure
+GdtfGeometryStructure::GdtfGeometryStructure(GdtfGeometry* parent)
+					:GdtfGeometry(parent)
+{
+	fLinkedGeometry = nullptr;
+	fTrussCrossSection = "";
+}
+
+GdtfGeometryStructure::GdtfGeometryStructure(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma, GdtfGeometry* parent) 
+					:GdtfGeometry(name, refToModel, ma, parent)
+{
+	fLinkedGeometry = nullptr;
+	fTrussCrossSection = "";
+}
+
+GdtfGeometryStructure::~GdtfGeometryStructure()
+{
+}
+
+GdtfGeometry* GdtfGeometryStructure::GetLinkedGeometry() const
+{
+	return fLinkedGeometry;
+}
+
+EGdtfStructureType GdtfGeometryStructure::GetStructureType() const
+{
+	return fStructureType;
+}
+
+EGdtfCrossSectionType GdtfGeometryStructure::GetCrossSectionType() const
+{
+	return fCrossSectionType;
+}
+
+double GdtfGeometryStructure::GetCrossSectionHeight() const
+{
+	return fCrossSectionHeight;
+}
+
+double GdtfGeometryStructure::GetCrossSectionWallThickness() const
+{
+	return fCrossSectionWallThickness;
+}
+
+const TXString& GdtfGeometryStructure::GetTrussCrossSection() const
+{
+	return fTrussCrossSection;
+}
+
+const TXString&	GdtfGeometryStructure::GetUnresolvedLinkedGeometry() const
+{
+	return fUnresolvedLinkedGeometry;
+}
+
+void GdtfGeometryStructure::SetLinkedGeometry(GdtfGeometry* linkedGeometry)
+{
+	fLinkedGeometry = linkedGeometry;
+}
+
+void GdtfGeometryStructure::SetStructureType(const EGdtfStructureType& structureType)
+{
+	fStructureType = structureType;
+}
+
+void GdtfGeometryStructure::SetCrossSectionType(const EGdtfCrossSectionType& crossSectionType)
+{
+	fCrossSectionType = crossSectionType;
+}
+
+void GdtfGeometryStructure::SetCrossSectionHeight(double crossSectionHeight)
+{
+	fCrossSectionHeight = crossSectionHeight;
+}
+
+void GdtfGeometryStructure::SetCrossSectionWallThickness(double crossSectionWallThickness)
+{
+	fCrossSectionWallThickness = crossSectionWallThickness;
+}
+
+void GdtfGeometryStructure::SetTrussCrossSection(const TXString& trussCrossSection)
+{
+	fTrussCrossSection = trussCrossSection;
+}
+
+void GdtfGeometryStructure::OnPrintToFile(IXMLFileNodePtr pNode) 
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfGeometry::OnPrintToFile(pNode);
+
+	pNode->SetNodeAttributeValue(XML_GDTF_StructureLinkedGeometry,				fLinkedGeometry->GetNodeReference());
+	pNode->SetNodeAttributeValue(XML_GDTF_StructureStructureType,				GdtfConverter::ConvertStructureTypeEnum(fStructureType));
+	pNode->SetNodeAttributeValue(XML_GDTF_StructureCrossSectionType,			GdtfConverter::ConvertCrossSectionTypeEnum(fCrossSectionType));
+	pNode->SetNodeAttributeValue(XML_GDTF_StructureCrossSectionHeight,			GdtfConverter::ConvertDouble(fCrossSectionHeight));
+	pNode->SetNodeAttributeValue(XML_GDTF_StructureCrossSectionWallThickness,	GdtfConverter::ConvertDouble(fCrossSectionWallThickness));
+	pNode->SetNodeAttributeValue(XML_GDTF_StructureTrussCrossSection,			fTrussCrossSection);
+}
+
+void GdtfGeometryStructure::OnReadFromNode(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfGeometry::OnReadFromNode(pNode);
+										pNode->GetNodeAttributeValue(XML_GDTF_StructureLinkedGeometry, fUnresolvedLinkedGeometry);
+	TXString structureType;				pNode->GetNodeAttributeValue(XML_GDTF_StructureStructureType, structureType);							GdtfConverter::ConvertStructureTypeEnum(structureType, pNode, fStructureType);
+	TXString crossSectionType;			pNode->GetNodeAttributeValue(XML_GDTF_StructureCrossSectionType, crossSectionType);						GdtfConverter::ConvertCrossSectionTypeEnum(crossSectionType, pNode, fCrossSectionType);
+	TXString crossSectionHeight;		pNode->GetNodeAttributeValue(XML_GDTF_StructureCrossSectionHeight, crossSectionHeight);					GdtfConverter::ConvertDouble(crossSectionHeight, pNode, fCrossSectionHeight);
+	TXString crossSectionWallThickness;	pNode->GetNodeAttributeValue(XML_GDTF_StructureCrossSectionWallThickness, crossSectionWallThickness);	GdtfConverter::ConvertDouble(crossSectionWallThickness, pNode, fCrossSectionWallThickness);
+										pNode->GetNodeAttributeValue(XML_GDTF_StructureTrussCrossSection, fTrussCrossSection);
+}
+
+void GdtfGeometryStructure::OnErrorCheck(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnErrorCheck(pNode);
+
+	//------------------------------------------------------------------------------------
+	// Create needed and optional Attribute Arrays
+	TXStringArray needed;
+	TXStringArray optional;
+	needed.push_back(XML_GDTF_GeometryName);
+	optional.push_back(XML_GDTF_GeometryModelRef);
+	needed.push_back(XML_GDTF_GeometryMatrix);
+	needed.push_back(XML_GDTF_StructureLinkedGeometry);
+	needed.push_back(XML_GDTF_StructureStructureType);
+	needed.push_back(XML_GDTF_StructureCrossSectionType);
+	if(fCrossSectionType == EGdtfCrossSectionType::Tube)
+	{
+		needed.push_back(XML_GDTF_StructureCrossSectionHeight);
+		needed.push_back(XML_GDTF_StructureCrossSectionWallThickness);
+		optional.push_back(XML_GDTF_StructureTrussCrossSection);
+	}
+	else /* TrussFramework */
+	{
+		optional.push_back(XML_GDTF_StructureCrossSectionHeight);
+		optional.push_back(XML_GDTF_StructureCrossSectionWallThickness);
+		needed.push_back(XML_GDTF_StructureTrussCrossSection);
+	}
+
+	//------------------------------------------------------------------------------------
+	// Check Attributes for node
+	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
+}
+
+EGdtfObjectType GdtfGeometryStructure::GetObjectType() 
+{
+	return EGdtfObjectType::eGdtfGeometryStructure;
+}
+
+TXString GdtfGeometryStructure::GetNodeName()
+{
+	return XML_GDTF_StructureNodeName;
 }
 
 //------------------------------------------------------------------------------------
@@ -6646,6 +6812,20 @@ void GdtfFixture::ResolveGeometryRefs_Recursive(GdtfGeometryPtr geometry)
 			}
 		}
 	}
+	else if (geometry->GetObjectType() == eGdtfGeometryStructure)
+	{
+		GdtfGeometryStructurePtr geoStructure = static_cast<GdtfGeometryStructurePtr>(geometry);
+		ASSERTN(kEveryone, geoStructure != nullptr);
+		if(geoStructure)
+		{
+			TXString unresolvedLinkedGeometry = geoStructure->GetUnresolvedLinkedGeometry();
+			if ( ! unresolvedLinkedGeometry.IsEmpty())
+			{
+				GdtfGeometryPtr linkedGeometry = ResolveGeometryRef(unresolvedLinkedGeometry, fGeometries);
+				geoStructure->SetLinkedGeometry(linkedGeometry);
+			}
+		}
+	}
 	
 	// Now traverse child geometry
 	for (GdtfGeometryPtr internalGeometry : geometry->GetInternalGeometries())
@@ -7586,6 +7766,7 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 							else if (childNodeName == XML_GDTF_LaserNodeName)				{ geometry = new GdtfGeometryLaser(nullptr);}
 							else if (childNodeName == XML_GDTF_WiringObjectNodeName)		{ geometry = new GdtfGeometryWiringObject(nullptr);}
 							else if (childNodeName == XML_GDTF_InventoryNodeName)			{ geometry = new GdtfGeometryInventory(nullptr);}
+							else if (childNodeName == XML_GDTF_StructureNodeName)			{ geometry = new GdtfGeometryStructure(nullptr);}
 							else if (childNodeName == XML_GDTF_MagnetNodeName)				{ geometry = new GdtfGeometryMagnet(nullptr);}
 							else															{ DSTOP((kEveryone,"There is a node that was not expected!")); }
 							
@@ -7896,6 +8077,15 @@ GdtfGeometryPtr GdtfFixture::AddGeometryWiringObject(const TXString& name, GdtfM
 GdtfGeometryPtr GdtfFixture::AddGeometryInventory(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma)
 {
 	GdtfGeometry* geo = new GdtfGeometryInventory(name, refToModel, ma, nullptr);
+
+	fGeometries.push_back(geo);
+	
+	return geo;
+}
+
+GdtfGeometryPtr GdtfFixture::AddGeometryStructure(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma)
+{
+	GdtfGeometry* geo = new GdtfGeometryStructure(name, refToModel, ma, nullptr);
 
 	fGeometries.push_back(geo);
 	

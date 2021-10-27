@@ -728,6 +728,21 @@ namespace VectorworksMVR
 		// Inventory
 		virtual VCOMError VCOM_CALLTYPE     GetInventoryCount(size_t& count) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetInventoryCount(size_t count) = 0;
+
+		// Structure
+        virtual VCOMError VCOM_CALLTYPE		GetStructureLinkedGeometry(IGdtfGeometry** linkedGeometry) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetStructureType(GdtfDefines::EGdtfStructureType& structureType) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCrossSectionType(GdtfDefines::EGdtfCrossSectionType& crossSectionType) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCrossSectionHeight(double& crossSectionHeight) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCrossSectionWallThickness(double& crossSectionWallThickness) = 0;
+        virtual MvrString VCOM_CALLTYPE		GetTrussCrossSection() = 0;
+
+        virtual VCOMError VCOM_CALLTYPE	    SetStructureLinkedGeometry(IGdtfGeometry* linkedGeometry) = 0;
+		virtual VCOMError VCOM_CALLTYPE	    SetStructureType(GdtfDefines::EGdtfStructureType structureType) = 0;
+		virtual VCOMError VCOM_CALLTYPE	    SetCrossSectionType(GdtfDefines::EGdtfCrossSectionType crossSectionType) = 0;
+		virtual VCOMError VCOM_CALLTYPE	    SetCrossSectionHeight(double crossSectionHeight) = 0;
+		virtual VCOMError VCOM_CALLTYPE	    SetCrossSectionWallThickness(double crossSectionWallThickness) = 0;
+		virtual VCOMError VCOM_CALLTYPE	    SetTrussCrossSection(MvrString trussCrossSection) = 0;
 	};
 	typedef VCOMPtr<IGdtfGeometry>	IGdtfGeometryPtr;
     

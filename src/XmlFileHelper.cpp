@@ -1796,6 +1796,62 @@ CieColor SceneData::GdtfConverter::ConvertCColor(const CCieColor & color)
     return true;
 }
 
+/*static*/ TXString GdtfConverter::ConvertStructureTypeEnum(GdtfDefines::EGdtfStructureType value)
+{
+    switch (value)
+    {
+		case EGdtfStructureType::CenterLineBased:	return XML_Val_StructureTypeCenterLineBased;
+		case EGdtfStructureType::Detail:			return XML_Val_StructureTypeDetail;
+    }
+
+	DSTOP((kEveryone, "Unknown Enum for EGdtfStructureType"));
+
+    return XML_Val_StructureTypeCenterLineBased;
+}
+
+/*static*/ bool GdtfConverter::ConvertStructureTypeEnum(const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfStructureType& outVal)
+{
+	if		(inVal == XML_Val_StructureTypeCenterLineBased)	{ outVal = EGdtfStructureType::CenterLineBased; }
+	else if (inVal == XML_Val_StructureTypeDetail)			{ outVal = EGdtfStructureType::Detail; }
+	else if	(inVal.IsEmpty())    							{ outVal = EGdtfStructureType::CenterLineBased; }
+
+	else 
+	{
+		DSTOP((kEveryone, "Unknown Value for EGdtfStructureType"));
+		outVal = EGdtfStructureType::CenterLineBased;
+	}
+       
+    return true;
+}
+
+/*static*/ TXString GdtfConverter::ConvertCrossSectionTypeEnum(GdtfDefines::EGdtfCrossSectionType value)
+{
+    switch (value)
+    {
+		case EGdtfCrossSectionType::TrussFramework:	return XML_Val_CrossSectionTypeTrussFramework;
+		case EGdtfCrossSectionType::Tube:			return XML_Val_CrossSectionTypeTube;
+    }
+
+	DSTOP((kEveryone, "Unknown Enum for EGdtfCrossSectionType"));
+
+    return XML_Val_CrossSectionTypeTrussFramework;
+}
+
+/*static*/ bool GdtfConverter::ConvertCrossSectionTypeEnum(const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfCrossSectionType& outVal)
+{
+	if		(inVal == XML_Val_CrossSectionTypeTrussFramework)	{ outVal = EGdtfCrossSectionType::TrussFramework; }
+	else if (inVal == XML_Val_CrossSectionTypeTube)				{ outVal = EGdtfCrossSectionType::Tube; }
+	else if	(inVal.IsEmpty())    								{ outVal = EGdtfCrossSectionType::TrussFramework; }
+
+	else 
+	{
+		DSTOP((kEveryone, "Unknown Value for EGdtfCrossSectionType"));
+		outVal = EGdtfCrossSectionType::TrussFramework;
+	}
+       
+    return true;
+}
+
 
 bool SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, const IFileIdentifierPtr& file, ERessourceType resType, bool deleteFile, bool mustExist)
 {

@@ -686,6 +686,7 @@ namespace SceneData
 		GdtfGeometry*						AddGeometryLaser(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 		GdtfGeometry*						AddGeometryWiringObject(		const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 		GdtfGeometry*						AddGeometryInventory(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
+		GdtfGeometry*						AddGeometryStructure(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 		GdtfGeometry*						AddGeometryMagnet(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 
 	protected:
@@ -1120,6 +1121,53 @@ namespace SceneData
         virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
 	};
 	typedef GdtfGeometryInventory* GdtfGeometryInventoryPtr;
+
+	class GdtfGeometryStructure : public GdtfGeometry
+	{
+	public:
+		GdtfGeometryStructure(GdtfGeometry* parent);
+		GdtfGeometryStructure(const TXString& name, GdtfModelPtr refToModel,const VWTransformMatrix& ma, GdtfGeometry* parent);
+
+		~GdtfGeometryStructure();
+	
+	private:
+		GdtfGeometry*   		fLinkedGeometry;
+		EGdtfStructureType 		fStructureType;
+		EGdtfCrossSectionType 	fCrossSectionType;
+		double					fCrossSectionHeight; //Tube
+		double					fCrossSectionWallThickness; //Tube
+		TXString				fTrussCrossSection; //TrussFramework
+
+		TXString 				fUnresolvedLinkedGeometry;
+
+	public:
+		virtual EGdtfObjectType			GetObjectType();
+
+		// Getters
+        GdtfGeometry*					GetLinkedGeometry() const;
+		EGdtfStructureType				GetStructureType() const;
+		EGdtfCrossSectionType			GetCrossSectionType() const;
+		double							GetCrossSectionHeight() const;
+		double							GetCrossSectionWallThickness() const;
+		const TXString&					GetTrussCrossSection() const;
+
+		const TXString&					GetUnresolvedLinkedGeometry() const;
+
+		// Setters
+        void							SetLinkedGeometry(GdtfGeometry* linkedGeometry);
+		void							SetStructureType(const EGdtfStructureType& structureType);
+		void							SetCrossSectionType(const EGdtfCrossSectionType& crossSectionType);
+		void							SetCrossSectionHeight(double crossSectionHeight);
+		void							SetCrossSectionWallThickness(double crossSectionWallThickness);
+		void							SetTrussCrossSection(const TXString& trussCrossSection);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+	};
+	typedef GdtfGeometryStructure* GdtfGeometryStructurePtr;
 
 	class GdtfGeometryMagnet : public GdtfGeometry
 	{
@@ -2593,6 +2641,7 @@ namespace SceneData
 		GdtfGeometryPtr			AddGeometryLaser(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 		GdtfGeometryPtr			AddGeometryWiringObject(		const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 		GdtfGeometryPtr			AddGeometryInventory(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
+		GdtfGeometryPtr			AddGeometryStructure(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 		GdtfGeometryPtr			AddGeometryMagnet(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 
 		GdtfWheelPtr			AddWheel(TXString name);
