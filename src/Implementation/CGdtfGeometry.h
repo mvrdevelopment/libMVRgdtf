@@ -157,6 +157,39 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE	    SetCrossSectionWallThickness(double crossSectionWallThickness);
 		virtual VCOMError VCOM_CALLTYPE	    SetTrussCrossSection(MvrString trussCrossSection);
 
+        // Support
+		virtual VCOMError VCOM_CALLTYPE     GetSupportType(GdtfDefines::EGdtfSupportType& supportType);
+        virtual VCOMError VCOM_CALLTYPE		GetCapacityX(double& capacityX);
+        virtual VCOMError VCOM_CALLTYPE		GetCapacityY(double& capacityY);
+        virtual VCOMError VCOM_CALLTYPE		GetCapacityZ(double& capacityZ);
+        virtual VCOMError VCOM_CALLTYPE		GetCapacityXX(double& capacityXX);
+        virtual VCOMError VCOM_CALLTYPE		GetCapacityYY(double& capacityYY);
+        virtual VCOMError VCOM_CALLTYPE		GetCapacityZZ(double& capacityZZ);
+		virtual MvrString VCOM_CALLTYPE     GetRopeCrossSection();
+		virtual VCOMError VCOM_CALLTYPE	    GetRopeOffset(SVector3& ropeOffset);
+		virtual VCOMError VCOM_CALLTYPE     GetResistanceX(double& resistanceX);
+		virtual VCOMError VCOM_CALLTYPE     GetResistanceY(double& resistanceY);
+		virtual VCOMError VCOM_CALLTYPE     GetResistanceZ(double& resistanceZ);
+		virtual VCOMError VCOM_CALLTYPE     GetResistanceXX(double& resistanceXX);
+		virtual VCOMError VCOM_CALLTYPE     GetResistanceYY(double& resistanceYY);
+		virtual VCOMError VCOM_CALLTYPE     GetResistanceZZ(double& resistanceZZ);
+
+		virtual VCOMError VCOM_CALLTYPE     SetSupportType(GdtfDefines::EGdtfSupportType supportType);
+		virtual VCOMError VCOM_CALLTYPE		SetCapacityX(double capacityX);
+		virtual VCOMError VCOM_CALLTYPE		SetCapacityY(double capacityY);
+		virtual VCOMError VCOM_CALLTYPE		SetCapacityZ(double capacityZ);
+		virtual VCOMError VCOM_CALLTYPE		SetCapacityXX(double capacityXX);
+		virtual VCOMError VCOM_CALLTYPE		SetCapacityYY(double capacityYY);
+		virtual VCOMError VCOM_CALLTYPE		SetCapacityZZ(double capacityZZ);
+		virtual VCOMError VCOM_CALLTYPE		SetRopeCrossSection(MvrString ropeCrossSection);
+		virtual VCOMError VCOM_CALLTYPE		SetRopeOffset(double x, double y, double z);
+		virtual VCOMError VCOM_CALLTYPE		SetResistanceX(double resistanceX);
+		virtual VCOMError VCOM_CALLTYPE		SetResistanceY(double resistanceY);
+		virtual VCOMError VCOM_CALLTYPE		SetResistanceZ(double resistanceZ);
+		virtual VCOMError VCOM_CALLTYPE		SetResistanceXX(double resistanceXX);
+		virtual VCOMError VCOM_CALLTYPE		SetResistanceYY(double resistanceYY);
+		virtual VCOMError VCOM_CALLTYPE		SetResistanceZZ(double resistanceZZ);
+
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr);
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject();
 		

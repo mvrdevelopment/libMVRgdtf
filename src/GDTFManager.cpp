@@ -1621,6 +1621,15 @@ GdtfGeometryPtr GdtfGeometry::AddGeometryStructure(const TXString& name, GdtfMod
 	return geo;
 }
 
+GdtfGeometryPtr GdtfGeometry::AddGeometrySupport(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma)
+{
+	GdtfGeometry* geo = new GdtfGeometrySupport(name, refToModel, ma, this);
+
+	fInternalGeometries.push_back(geo);
+
+	return geo;
+}
+
 GdtfGeometryPtr GdtfGeometry::AddGeometryMagnet(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma)
 {
 	GdtfGeometry* geo = new GdtfGeometryMagnet(name, refToModel, ma, this);
@@ -1693,6 +1702,7 @@ void GdtfGeometry::OnReadFromNode(const IXMLFileNodePtr& pNode)
 										else if (childNodeName == XML_GDTF_WiringObjectNodeName)		{ geometry = new GdtfGeometryWiringObject(this);}
 										else if (childNodeName == XML_GDTF_InventoryNodeName)			{ geometry = new GdtfGeometryInventory(this);}
 										else if (childNodeName == XML_GDTF_StructureNodeName)			{ geometry = new GdtfGeometryStructure(this);}
+										else if (childNodeName == XML_GDTF_SupportNodeName)				{ geometry = new GdtfGeometrySupport(this);}
 										else if (childNodeName == XML_GDTF_MagnetNodeName)				{ geometry = new GdtfGeometryMagnet(this);}
 										else if (childNodeName == XML_GDTF_BreakNodeName)				{ hasBreak = true; }
 										else if (childNodeName == XML_GDTF_LaserProtocolNodeName)		{ return; /* Laser Protocols are handled in the Laser OnReadFromNode function */ }
@@ -3357,6 +3367,277 @@ EGdtfObjectType GdtfGeometryStructure::GetObjectType()
 TXString GdtfGeometryStructure::GetNodeName()
 {
 	return XML_GDTF_StructureNodeName;
+}
+
+//------------------------------------------------------------------------------------
+// GdtfGeometrySupport
+GdtfGeometrySupport::GdtfGeometrySupport(GdtfGeometry* parent)
+					:GdtfGeometry(parent)
+{
+	fRopeCrossSection = "";
+}
+
+GdtfGeometrySupport::GdtfGeometrySupport(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma, GdtfGeometry* parent) 
+					:GdtfGeometry(name, refToModel, ma, parent)
+{
+	fRopeCrossSection = "";
+}
+
+GdtfGeometrySupport::~GdtfGeometrySupport()
+{
+}
+
+EGdtfSupportType GdtfGeometrySupport::GetSupportType() const
+{
+	return fSupportType;
+}
+
+double GdtfGeometrySupport::GetCapacityX() const
+{
+	return fCapacityX;
+}
+
+double GdtfGeometrySupport::GetCapacityY() const
+{
+	return fCapacityY;
+}
+
+double GdtfGeometrySupport::GetCapacityZ() const
+{
+	return fCapacityZ;
+}
+
+double GdtfGeometrySupport::GetCapacityXX() const
+{
+	return fCapacityXX;
+}
+
+double GdtfGeometrySupport::GetCapacityYY() const
+{
+	return fCapacityYY;
+}
+
+double GdtfGeometrySupport::GetCapacityZZ() const
+{
+	return fCapacityZZ;
+}
+
+const TXString& GdtfGeometrySupport::GetRopeCrossSection() const
+{
+	return fRopeCrossSection;
+}
+
+VWPoint3D GdtfGeometrySupport::GetRopeOffset()
+{
+	return fRopeOffset;
+}
+
+double GdtfGeometrySupport::GetResistanceX() const
+{
+	return fResistanceX;
+}
+
+double GdtfGeometrySupport::GetResistanceY() const
+{
+	return fResistanceY;
+}
+
+double GdtfGeometrySupport::GetResistanceZ() const
+{
+	return fResistanceZ;
+}
+
+double GdtfGeometrySupport::GetResistanceXX() const
+{
+	return fResistanceXX;
+}
+
+double GdtfGeometrySupport::GetResistanceYY() const
+{
+	return fResistanceYY;
+}
+
+double GdtfGeometrySupport::GetResistanceZZ() const
+{
+	return fResistanceZZ;
+}
+
+void GdtfGeometrySupport::SetSupportType(const EGdtfSupportType& supportType)
+{
+	fSupportType = supportType;
+}
+
+void GdtfGeometrySupport::SetCapacityX(double capacityX)
+{
+	fCapacityX = capacityX;
+}
+
+void GdtfGeometrySupport::SetCapacityY(double capacityY)
+{
+	fCapacityY = capacityY;
+}
+
+void GdtfGeometrySupport::SetCapacityZ(double capacityZ)
+{
+	fCapacityZ = capacityZ;
+}
+
+void GdtfGeometrySupport::SetCapacityXX(double capacityXX)
+{
+	fCapacityXX = capacityXX;
+}
+
+void GdtfGeometrySupport::SetCapacityYY(double capacityYY)
+{
+	fCapacityYY = capacityYY;
+}
+
+void GdtfGeometrySupport::SetCapacityZZ(double capacityZZ)
+{
+	fCapacityZZ = capacityZZ;
+}
+
+void GdtfGeometrySupport::SetRopeCrossSection(const TXString& ropeCrossSection)
+{
+	fRopeCrossSection = ropeCrossSection;
+}
+
+void GdtfGeometrySupport::SetRopeOffset(double x, double y, double z)
+{
+	fRopeOffset.SetPoint(x, y, z);
+}
+
+void GdtfGeometrySupport::SetResistanceX(double resistanceX)
+{
+	fResistanceX = resistanceX;
+}
+
+void GdtfGeometrySupport::SetResistanceY(double resistanceY)
+{
+	fResistanceY = resistanceY;
+}
+
+void GdtfGeometrySupport::SetResistanceZ(double resistanceZ)
+{
+	fResistanceZ = resistanceZ;
+}
+
+void GdtfGeometrySupport::SetResistanceXX(double resistanceXX)
+{
+	fResistanceXX = resistanceXX;
+}
+
+void GdtfGeometrySupport::SetResistanceYY(double resistanceYY)
+{
+	fResistanceYY = resistanceYY;
+}
+
+void GdtfGeometrySupport::SetResistanceZZ(double resistanceZZ)
+{
+	fResistanceZZ = resistanceZZ;
+}
+
+void GdtfGeometrySupport::OnPrintToFile(IXMLFileNodePtr pNode) 
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfGeometry::OnPrintToFile(pNode);
+
+	pNode->SetNodeAttributeValue(XML_GDTF_SupportSupportType,		GdtfConverter::ConvertSupportTypeEnum(fSupportType));
+	pNode->SetNodeAttributeValue(XML_GDTF_SupportCapacityX,			GdtfConverter::ConvertDouble(fCapacityX));
+	pNode->SetNodeAttributeValue(XML_GDTF_SupportCapacityY,			GdtfConverter::ConvertDouble(fCapacityY));
+	pNode->SetNodeAttributeValue(XML_GDTF_SupportCapacityZ,			GdtfConverter::ConvertDouble(fCapacityZ));
+	pNode->SetNodeAttributeValue(XML_GDTF_SupportCapacityXX,		GdtfConverter::ConvertDouble(fCapacityXX));
+	pNode->SetNodeAttributeValue(XML_GDTF_SupportCapacityYY,		GdtfConverter::ConvertDouble(fCapacityYY));
+	pNode->SetNodeAttributeValue(XML_GDTF_SupportCapacityZZ,		GdtfConverter::ConvertDouble(fCapacityZZ));
+	pNode->SetNodeAttributeValue(XML_GDTF_SupportRopeCrossSection,	fRopeCrossSection);
+	pNode->SetNodeAttributeValue(XML_GDTF_SupportRopeOffset,		GdtfConverter::ConvertVector3(fRopeOffset));
+	pNode->SetNodeAttributeValue(XML_GDTF_SupportResistanceX,		GdtfConverter::ConvertDouble(fResistanceX));
+	pNode->SetNodeAttributeValue(XML_GDTF_SupportResistanceY,		GdtfConverter::ConvertDouble(fResistanceY));
+	pNode->SetNodeAttributeValue(XML_GDTF_SupportResistanceZ,		GdtfConverter::ConvertDouble(fResistanceZ));
+	pNode->SetNodeAttributeValue(XML_GDTF_SupportResistanceXX,		GdtfConverter::ConvertDouble(fResistanceXX));
+	pNode->SetNodeAttributeValue(XML_GDTF_SupportResistanceYY,		GdtfConverter::ConvertDouble(fResistanceYY));
+	pNode->SetNodeAttributeValue(XML_GDTF_SupportResistanceZZ,		GdtfConverter::ConvertDouble(fResistanceZZ));
+}
+
+void GdtfGeometrySupport::OnReadFromNode(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfGeometry::OnReadFromNode(pNode);
+	TXString supportType;	pNode->GetNodeAttributeValue(XML_GDTF_SupportSupportType, supportType);		GdtfConverter::ConvertSupportTypeEnum(supportType, pNode, fSupportType);
+	TXString capacityX;		pNode->GetNodeAttributeValue(XML_GDTF_SupportCapacityX, capacityX);			GdtfConverter::ConvertDouble(capacityX, pNode, fCapacityX);
+	TXString capacityY;		pNode->GetNodeAttributeValue(XML_GDTF_SupportCapacityY, capacityY);			GdtfConverter::ConvertDouble(capacityY, pNode, fCapacityY);
+	TXString capacityZ;		pNode->GetNodeAttributeValue(XML_GDTF_SupportCapacityZ, capacityZ);			GdtfConverter::ConvertDouble(capacityZ, pNode, fCapacityZ);
+	TXString capacityXX;	pNode->GetNodeAttributeValue(XML_GDTF_SupportCapacityXX, capacityXX);		GdtfConverter::ConvertDouble(capacityXX, pNode, fCapacityXX);
+	TXString capacityYY;	pNode->GetNodeAttributeValue(XML_GDTF_SupportCapacityYY, capacityYY);		GdtfConverter::ConvertDouble(capacityYY, pNode, fCapacityYY);
+	TXString capacityZZ;	pNode->GetNodeAttributeValue(XML_GDTF_SupportCapacityZZ, capacityZZ);		GdtfConverter::ConvertDouble(capacityZZ, pNode, fCapacityZZ);
+							pNode->GetNodeAttributeValue(XML_GDTF_SupportRopeCrossSection, fRopeCrossSection);
+	TXString ropeOffset;	pNode->GetNodeAttributeValue(XML_GDTF_SupportRopeOffset, ropeOffset);		GdtfConverter::ConvertVector3(ropeOffset, pNode, fRopeOffset);
+	TXString resistanceX;	pNode->GetNodeAttributeValue(XML_GDTF_SupportResistanceX, resistanceX);		GdtfConverter::ConvertDouble(resistanceX, pNode, fResistanceX);
+	TXString resistanceY;	pNode->GetNodeAttributeValue(XML_GDTF_SupportResistanceY, resistanceY);		GdtfConverter::ConvertDouble(resistanceY, pNode, fResistanceY);
+	TXString resistanceZ;	pNode->GetNodeAttributeValue(XML_GDTF_SupportResistanceZ, resistanceZ);		GdtfConverter::ConvertDouble(resistanceZ, pNode, fResistanceZ);
+	TXString resistanceXX;	pNode->GetNodeAttributeValue(XML_GDTF_SupportResistanceXX, resistanceXX);	GdtfConverter::ConvertDouble(resistanceXX, pNode, fResistanceXX);
+	TXString resistanceYY;	pNode->GetNodeAttributeValue(XML_GDTF_SupportResistanceYY, resistanceYY);	GdtfConverter::ConvertDouble(resistanceYY, pNode, fResistanceYY);
+	TXString resistanceZZ;	pNode->GetNodeAttributeValue(XML_GDTF_SupportResistanceZZ, resistanceZZ);	GdtfConverter::ConvertDouble(resistanceZZ, pNode, fResistanceZZ);
+}
+
+void GdtfGeometrySupport::OnErrorCheck(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnErrorCheck(pNode);
+
+	//------------------------------------------------------------------------------------
+	// Create needed and optional Attribute Arrays
+	TXStringArray needed;
+	TXStringArray optional;
+	needed.push_back(XML_GDTF_GeometryName);
+	optional.push_back(XML_GDTF_GeometryModelRef);
+	needed.push_back(XML_GDTF_GeometryMatrix);
+	needed.push_back(XML_GDTF_SupportSupportType);
+	needed.push_back(XML_GDTF_SupportCapacityX);
+	needed.push_back(XML_GDTF_SupportCapacityY);
+	needed.push_back(XML_GDTF_SupportCapacityZ);
+	needed.push_back(XML_GDTF_SupportCapacityXX);
+	needed.push_back(XML_GDTF_SupportCapacityYY);
+	needed.push_back(XML_GDTF_SupportCapacityZZ);
+	if(fSupportType == EGdtfSupportType::Rope)
+	{
+		needed.push_back(XML_GDTF_SupportRopeCrossSection);
+		needed.push_back(XML_GDTF_SupportRopeOffset);
+		optional.push_back(XML_GDTF_SupportResistanceX);
+		optional.push_back(XML_GDTF_SupportResistanceY);
+		optional.push_back(XML_GDTF_SupportResistanceZ);
+		optional.push_back(XML_GDTF_SupportResistanceXX);
+		optional.push_back(XML_GDTF_SupportResistanceYY);
+		optional.push_back(XML_GDTF_SupportResistanceZZ);
+	}
+	else /* GroundSupport */
+	{
+		optional.push_back(XML_GDTF_SupportRopeCrossSection);
+		optional.push_back(XML_GDTF_SupportRopeOffset);
+		needed.push_back(XML_GDTF_SupportResistanceX);
+		needed.push_back(XML_GDTF_SupportResistanceY);
+		needed.push_back(XML_GDTF_SupportResistanceZ);
+		needed.push_back(XML_GDTF_SupportResistanceXX);
+		needed.push_back(XML_GDTF_SupportResistanceYY);
+		needed.push_back(XML_GDTF_SupportResistanceZZ);
+	}
+
+	//------------------------------------------------------------------------------------
+	// Check Attributes for node
+	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
+}
+
+EGdtfObjectType GdtfGeometrySupport::GetObjectType() 
+{
+	return EGdtfObjectType::eGdtfGeometrySupport;
+}
+
+TXString GdtfGeometrySupport::GetNodeName()
+{
+	return XML_GDTF_SupportNodeName;
 }
 
 //------------------------------------------------------------------------------------
@@ -7767,6 +8048,7 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 							else if (childNodeName == XML_GDTF_WiringObjectNodeName)		{ geometry = new GdtfGeometryWiringObject(nullptr);}
 							else if (childNodeName == XML_GDTF_InventoryNodeName)			{ geometry = new GdtfGeometryInventory(nullptr);}
 							else if (childNodeName == XML_GDTF_StructureNodeName)			{ geometry = new GdtfGeometryStructure(nullptr);}
+							else if (childNodeName == XML_GDTF_SupportNodeName)				{ geometry = new GdtfGeometrySupport(nullptr);}
 							else if (childNodeName == XML_GDTF_MagnetNodeName)				{ geometry = new GdtfGeometryMagnet(nullptr);}
 							else															{ DSTOP((kEveryone,"There is a node that was not expected!")); }
 							
@@ -8086,6 +8368,15 @@ GdtfGeometryPtr GdtfFixture::AddGeometryInventory(const TXString& name, GdtfMode
 GdtfGeometryPtr GdtfFixture::AddGeometryStructure(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma)
 {
 	GdtfGeometry* geo = new GdtfGeometryStructure(name, refToModel, ma, nullptr);
+
+	fGeometries.push_back(geo);
+	
+	return geo;
+}
+
+GdtfGeometryPtr GdtfFixture::AddGeometrySupport(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma)
+{
+	GdtfGeometry* geo = new GdtfGeometrySupport(name, refToModel, ma, nullptr);
 
 	fGeometries.push_back(geo);
 	

@@ -32,6 +32,16 @@ Converts a VWTransformMatrix to a STransformMatrix.
     smatrix.ox = vwmatrix.fMatrix.mat[3][0]; smatrix.oy = vwmatrix.fMatrix.mat[3][1]; smatrix.oz = vwmatrix.fMatrix.mat[3][2];
 }
 
+/*static*/ void GdtfUtil::ConvertVector3(const VWPoint3D & vector, VectorworksMVR::SVector3 & svector)
+/*
+Converts a VWPoint3D to a SVector3.
+*/
+{
+    svector.x = vector.x;
+    svector.y = vector.y;
+    svector.z = vector.z;
+}
+
 TXString SystemUtil::ExtractFolderFromPath(TXString& path) 
 /* 
    Deletes the folder part from the incoming string so that only the fileNam remains and returns it.    

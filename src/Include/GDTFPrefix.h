@@ -689,6 +689,12 @@ namespace VectorworksMVR
             Tube            = 1,
         };
 
+        enum class EGdtfSupportType
+        {
+            Rope            = 0, 
+            GroundSupport   = 1,
+        };
+
 	}
 }
 

@@ -27,6 +27,11 @@ namespace VectorworksMVR
 		double ox,oy,oz;
 	};
 
+	struct SVector3
+	{
+		double x, y, z;
+	};
+
     struct STime
 	{
 		Uint16	fYear;
@@ -743,6 +748,39 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE	    SetCrossSectionHeight(double crossSectionHeight) = 0;
 		virtual VCOMError VCOM_CALLTYPE	    SetCrossSectionWallThickness(double crossSectionWallThickness) = 0;
 		virtual VCOMError VCOM_CALLTYPE	    SetTrussCrossSection(MvrString trussCrossSection) = 0;
+
+		// Support
+		virtual VCOMError VCOM_CALLTYPE     GetSupportType(GdtfDefines::EGdtfSupportType& supportType) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCapacityX(double& capacityX) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCapacityY(double& capacityY) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCapacityZ(double& capacityZ) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCapacityXX(double& capacityXX) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCapacityYY(double& capacityYY) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCapacityZZ(double& capacityZZ) = 0;
+		virtual MvrString VCOM_CALLTYPE     GetRopeCrossSection() = 0;
+		virtual VCOMError VCOM_CALLTYPE	    GetRopeOffset(SVector3& ropeOffset) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetResistanceX(double& resistanceX) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetResistanceY(double& resistanceY) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetResistanceZ(double& resistanceZ) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetResistanceXX(double& resistanceXX) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetResistanceYY(double& resistanceYY) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetResistanceZZ(double& resistanceZZ) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE     SetSupportType(GdtfDefines::EGdtfSupportType supportType) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetCapacityX(double capacityX) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetCapacityY(double capacityY) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetCapacityZ(double capacityZ) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetCapacityXX(double capacityXX) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetCapacityYY(double capacityYY) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetCapacityZZ(double capacityZZ) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetRopeCrossSection(MvrString ropeCrossSection) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetRopeOffset(double x, double y, double z) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetResistanceX(double resistanceX) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetResistanceY(double resistanceY) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetResistanceZ(double resistanceZ) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetResistanceXX(double resistanceXX) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetResistanceYY(double resistanceYY) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetResistanceZZ(double resistanceZZ) = 0;
 	};
 	typedef VCOMPtr<IGdtfGeometry>	IGdtfGeometryPtr;
     

@@ -833,6 +833,13 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 	return XML_GDTF_BeamTypeEnum_Wash;
 }
 
+/*static*/ TXString GdtfConverter::ConvertVector3(const VWPoint3D& value)
+{
+	TXString vectorString;
+	vectorString << "{" << value.x << "," << value.y << "," << value.z << "}";
+	return vectorString;
+}
+
 
 /*static*/ TXString GdtfConverter::ConvertMatrix(const VWTransformMatrix& ma, bool fourLines)
 {
@@ -858,6 +865,55 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 
 	
 	return value;
+}
+
+/*static*/ bool GdtfConverter::ConvertVector3(const TXString& value, const IXMLFileNodePtr& node, VWPoint3D& vector)
+{
+	// ----------------------------------------------------------------
+	// If the String is empty, use the DefaultMaterix
+	if (value.IsEmpty()) { vector = VWPoint3D(); return true; }
+	
+	
+	// ----------------------------------------------------------------
+	// Split string
+	TXString strVal = value;
+	
+	
+	// ----------------------------------------------------------------
+	// Delete first element
+	ASSERTN(kEveryone, strVal.GetAt(0) == '{');
+	if (strVal.GetAt(0) == '{') { strVal.Delete(0,1); }
+    else
+    {
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_MatrixFormatMissingFirstBracket, node);
+        SceneData::GdtfFixture::AddError(error); 
+    }
+	
+	// Delete last element
+	ASSERTN(kEveryone, strVal.GetLast() == '}');
+	if (strVal.GetLast() == '}') { strVal.DeleteLast(); }
+    else
+    {
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_MatrixFormatMissingLastBracket, node);
+        SceneData::GdtfFixture::AddError(error);
+    }
+
+	std::vector<double> vectorAsArray;
+	Deserialize(strVal, node, vectorAsArray);
+
+	if (vectorAsArray.size() != 3)
+	{
+		DSTOP((kEveryone, "Unexpected Format of Vector"));
+		GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_MatrixFormatTooMuchOrTooLessEntries, node);
+		SceneData::GdtfFixture::AddError(error);
+		return false;
+	}
+	else
+	{
+		vector.SetPoint(vectorAsArray[0], vectorAsArray[1], vectorAsArray[2]);
+	}
+
+	return true;
 }
 
 /*static*/ bool GdtfConverter::ConvertMatrix(const TXString& value, const IXMLFileNodePtr& node,VWTransformMatrix& matrix)
@@ -909,7 +965,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 		pos = strVal.Find("}{");
 	}
 
-	// Apped the rest
+	// Append the rest
 	lines.push_back(strVal);
 
 	if (lines.size() != 4)
@@ -1847,6 +1903,34 @@ CieColor SceneData::GdtfConverter::ConvertCColor(const CCieColor & color)
 	{
 		DSTOP((kEveryone, "Unknown Value for EGdtfCrossSectionType"));
 		outVal = EGdtfCrossSectionType::TrussFramework;
+	}
+       
+    return true;
+}
+
+/*static*/ TXString GdtfConverter::ConvertSupportTypeEnum(GdtfDefines::EGdtfSupportType value)
+{
+    switch (value)
+    {
+		case EGdtfSupportType::Rope:			return XML_Val_SupportTypeRope;
+		case EGdtfSupportType::GroundSupport:	return XML_Val_SupportTypeGroundSupport;
+    }
+
+	DSTOP((kEveryone, "Unknown Enum for EGdtfSupportType"));
+
+    return XML_Val_SupportTypeRope;
+}
+
+/*static*/ bool GdtfConverter::ConvertSupportTypeEnum(const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfSupportType& outVal)
+{
+	if		(inVal == XML_Val_SupportTypeRope)			{ outVal = EGdtfSupportType::Rope; }
+	else if (inVal == XML_Val_SupportTypeGroundSupport)	{ outVal = EGdtfSupportType::GroundSupport; }
+	else if	(inVal.IsEmpty())    						{ outVal = EGdtfSupportType::Rope; }
+
+	else 
+	{
+		DSTOP((kEveryone, "Unknown Value for EGdtfSupportType"));
+		outVal = EGdtfSupportType::Rope;
 	}
        
     return true;

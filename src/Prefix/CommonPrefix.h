@@ -128,6 +128,9 @@
 #define XML_Val_CrossSectionTypeTrussFramework  "TrussFramework"
 #define XML_Val_CrossSectionTypeTube            "Tube"
 
+#define XML_Val_SupportTypeRope                 "Rope"
+#define XML_Val_SupportTypeGroundSupport        "GroundSupport"
+
 #define XML_Val_MappingNodeName	        "Mapping"
 #define XML_Val_MappingLinkedDefUuid	"linkedDef"
 #define XML_Val_MappingUx	            "ux"
@@ -424,6 +427,23 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_StructureCrossSectionHeight        "CrossSectionHeight"
 #define XML_GDTF_StructureCrossSectionWallThickness "CrossSectionWallThickness"
 #define XML_GDTF_StructureTrussCrossSection         "TrussCrossSection"
+
+#define XML_GDTF_SupportNodeName                    "Support"
+#define XML_GDTF_SupportSupportType                 "SupportType"
+#define XML_GDTF_SupportCapacityX                   "CapacityX"
+#define XML_GDTF_SupportCapacityY                   "CapacityY"
+#define XML_GDTF_SupportCapacityZ                   "CapacityZ"
+#define XML_GDTF_SupportCapacityXX                  "CapacityXX"
+#define XML_GDTF_SupportCapacityYY                  "CapacityYY"
+#define XML_GDTF_SupportCapacityZZ                  "CapacityZZ"
+#define XML_GDTF_SupportRopeCrossSection            "RopeCrossSection"
+#define XML_GDTF_SupportRopeOffset                  "RopeOffset"
+#define XML_GDTF_SupportResistanceX                 "ResistanceX"
+#define XML_GDTF_SupportResistanceY                 "ResistanceY"
+#define XML_GDTF_SupportResistanceZ                 "ResistanceZ"
+#define XML_GDTF_SupportResistanceXX                "ResistanceXX"
+#define XML_GDTF_SupportResistanceYY                "ResistanceYY"
+#define XML_GDTF_SupportResistanceZZ                "ResistanceZZ"
 
 #define XML_GDTF_MagnetNodeName                 "Magnet"
 

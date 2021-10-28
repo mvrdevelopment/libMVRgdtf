@@ -244,6 +244,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::CreateGeometry(EGdt
         case eGdtfGeometryWiringObject:         gdtfGeometry = fGeometry->AddGeometryWiringObject(      vwName, scModel, ma); break;
         case eGdtfGeometryInventory:            gdtfGeometry = fGeometry->AddGeometryInventory(         vwName, scModel, ma); break;
         case eGdtfGeometryStructure:            gdtfGeometry = fGeometry->AddGeometryStructure(         vwName, scModel, ma); break;
+        case eGdtfGeometrySupport:              gdtfGeometry = fGeometry->AddGeometrySupport(          	vwName, scModel, ma); break;
         case eGdtfGeometryMagnet:              	gdtfGeometry = fGeometry->AddGeometryMagnet(          	vwName, scModel, ma); break;
 		case eGdtfGeometry:						gdtfGeometry = fGeometry->AddGeometry(					vwName, scModel, ma); break;
 			
@@ -2073,6 +2074,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::CreatePinPatch(Vect
 	return kVCOMError_NoError;
 }
 
+//---------------------------------------------------------------------------
 // Inventory
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetInventoryCount(size_t& count)
 {
@@ -2104,6 +2106,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetInventoryCount(s
 	return kVCOMError_NoError;
 }
 
+//---------------------------------------------------------------------------
 // Structure
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetStructureLinkedGeometry(VectorworksMVR::IGdtfGeometry** geometry)
@@ -2327,6 +2330,457 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetTrussCrossSectio
 }
 
 //---------------------------------------------------------------------------
+// Support
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetSupportType(GdtfDefines::EGdtfSupportType& supportType)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometrySupport) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySupportPtr support = static_cast<SceneData::GdtfGeometrySupportPtr>(fGeometry);
+	if(!support) return kVCOMError_Failed;
+	
+	supportType = support->GetSupportType();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetCapacityX(double& capacityX)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometrySupport) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySupportPtr support = static_cast<SceneData::GdtfGeometrySupportPtr>(fGeometry);
+	if(!support) return kVCOMError_Failed;
+	
+	capacityX = support->GetCapacityX();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetCapacityY(double& capacityY)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometrySupport) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySupportPtr support = static_cast<SceneData::GdtfGeometrySupportPtr>(fGeometry);
+	if(!support) return kVCOMError_Failed;
+	
+	capacityY = support->GetCapacityY();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetCapacityZ(double& capacityZ)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometrySupport) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySupportPtr support = static_cast<SceneData::GdtfGeometrySupportPtr>(fGeometry);
+	if(!support) return kVCOMError_Failed;
+	
+	capacityZ = support->GetCapacityZ();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetCapacityXX(double& capacityXX)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometrySupport) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySupportPtr support = static_cast<SceneData::GdtfGeometrySupportPtr>(fGeometry);
+	if(!support) return kVCOMError_Failed;
+	
+	capacityXX = support->GetCapacityXX();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetCapacityYY(double& capacityYY)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometrySupport) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySupportPtr support = static_cast<SceneData::GdtfGeometrySupportPtr>(fGeometry);
+	if(!support) return kVCOMError_Failed;
+	
+	capacityYY = support->GetCapacityYY();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetCapacityZZ(double& capacityZZ)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometrySupport) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySupportPtr support = static_cast<SceneData::GdtfGeometrySupportPtr>(fGeometry);
+	if(!support) return kVCOMError_Failed;
+	
+	capacityZZ = support->GetCapacityZZ();
+	return kVCOMError_NoError;
+}
+
+MvrString VectorworksMVR::CGdtfGeometryImpl::GetRopeCrossSection()
+{
+	if(!fGeometry) return "";
+
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometrySupport) return "";
+
+	SceneData::GdtfGeometrySupportPtr support = static_cast<SceneData::GdtfGeometrySupportPtr>(fGeometry);
+	if(!support) return "";
+
+	return support->GetRopeCrossSection().GetCharPtr();
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetRopeOffset(SVector3& ropeOffset)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometrySupport) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySupportPtr support = static_cast<SceneData::GdtfGeometrySupportPtr>(fGeometry);
+	if(!support) return kVCOMError_Failed;
+	
+	GdtfUtil::ConvertVector3(support->GetRopeOffset(), ropeOffset);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetResistanceX(double& resistanceX)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometrySupport) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySupportPtr support = static_cast<SceneData::GdtfGeometrySupportPtr>(fGeometry);
+	if(!support) return kVCOMError_Failed;
+	
+	resistanceX = support->GetResistanceX();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetResistanceY(double& resistanceY)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometrySupport) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySupportPtr support = static_cast<SceneData::GdtfGeometrySupportPtr>(fGeometry);
+	if(!support) return kVCOMError_Failed;
+	
+	resistanceY = support->GetResistanceY();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetResistanceZ(double& resistanceZ)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometrySupport) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySupportPtr support = static_cast<SceneData::GdtfGeometrySupportPtr>(fGeometry);
+	if(!support) return kVCOMError_Failed;
+	
+	resistanceZ = support->GetResistanceZ();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetResistanceXX(double& resistanceXX)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometrySupport) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySupportPtr support = static_cast<SceneData::GdtfGeometrySupportPtr>(fGeometry);
+	if(!support) return kVCOMError_Failed;
+	
+	resistanceXX = support->GetResistanceXX();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetResistanceYY(double& resistanceYY)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometrySupport) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySupportPtr support = static_cast<SceneData::GdtfGeometrySupportPtr>(fGeometry);
+	if(!support) return kVCOMError_Failed;
+	
+	resistanceYY = support->GetResistanceYY();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetResistanceZZ(double& resistanceZZ)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometrySupport) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySupportPtr support = static_cast<SceneData::GdtfGeometrySupportPtr>(fGeometry);
+	if(!support) return kVCOMError_Failed;
+	
+	resistanceZZ = support->GetResistanceZZ();
+	return kVCOMError_NoError;
+}
+
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetSupportType(GdtfDefines::EGdtfSupportType supportType)
+{
+	// Check Pointer
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometrySupport) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySupportPtr support = static_cast<SceneData::GdtfGeometrySupportPtr>(fGeometry);
+	if(!support) return kVCOMError_Failed;
+
+	support->SetSupportType(supportType);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetCapacityX(double capacityX)
+{
+	// Check Pointer
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometrySupport) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySupportPtr support = static_cast<SceneData::GdtfGeometrySupportPtr>(fGeometry);
+	if(!support) return kVCOMError_Failed;
+
+	support->SetCapacityX(capacityX);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetCapacityY(double capacityY)
+{
+	// Check Pointer
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometrySupport) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySupportPtr support = static_cast<SceneData::GdtfGeometrySupportPtr>(fGeometry);
+	if(!support) return kVCOMError_Failed;
+
+	support->SetCapacityY(capacityY);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetCapacityZ(double capacityZ)
+{
+	// Check Pointer
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometrySupport) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySupportPtr support = static_cast<SceneData::GdtfGeometrySupportPtr>(fGeometry);
+	if(!support) return kVCOMError_Failed;
+
+	support->SetCapacityZ(capacityZ);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetCapacityXX(double capacityXX)
+{
+	// Check Pointer
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometrySupport) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySupportPtr support = static_cast<SceneData::GdtfGeometrySupportPtr>(fGeometry);
+	if(!support) return kVCOMError_Failed;
+
+	support->SetCapacityXX(capacityXX);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetCapacityYY(double capacityYY)
+{
+	// Check Pointer
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometrySupport) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySupportPtr support = static_cast<SceneData::GdtfGeometrySupportPtr>(fGeometry);
+	if(!support) return kVCOMError_Failed;
+
+	support->SetCapacityYY(capacityYY);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetCapacityZZ(double capacityZZ)
+{
+	// Check Pointer
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometrySupport) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySupportPtr support = static_cast<SceneData::GdtfGeometrySupportPtr>(fGeometry);
+	if(!support) return kVCOMError_Failed;
+
+	support->SetCapacityZZ(capacityZZ);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetRopeCrossSection(MvrString ropeCrossSection)
+{
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometrySupport) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySupportPtr support = static_cast<SceneData::GdtfGeometrySupportPtr>(fGeometry);
+	if(!support) return kVCOMError_Failed;
+
+	support->SetRopeCrossSection(ropeCrossSection);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetRopeOffset(double x, double y, double z)
+{
+	// Check Pointer
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometrySupport) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySupportPtr support = static_cast<SceneData::GdtfGeometrySupportPtr>(fGeometry);
+	if(!support) return kVCOMError_Failed;
+
+	support->SetRopeOffset(x, y, z);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetResistanceX(double resistanceX)
+{
+	// Check Pointer
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometrySupport) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySupportPtr support = static_cast<SceneData::GdtfGeometrySupportPtr>(fGeometry);
+	if(!support) return kVCOMError_Failed;
+
+	support->SetResistanceX(resistanceX);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetResistanceY(double resistanceY)
+{
+	// Check Pointer
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometrySupport) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySupportPtr support = static_cast<SceneData::GdtfGeometrySupportPtr>(fGeometry);
+	if(!support) return kVCOMError_Failed;
+
+	support->SetResistanceY(resistanceY);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetResistanceZ(double resistanceZ)
+{
+	// Check Pointer
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometrySupport) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySupportPtr support = static_cast<SceneData::GdtfGeometrySupportPtr>(fGeometry);
+	if(!support) return kVCOMError_Failed;
+
+	support->SetResistanceZ(resistanceZ);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetResistanceXX(double resistanceXX)
+{
+	// Check Pointer
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometrySupport) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySupportPtr support = static_cast<SceneData::GdtfGeometrySupportPtr>(fGeometry);
+	if(!support) return kVCOMError_Failed;
+
+	support->SetResistanceXX(resistanceXX);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetResistanceYY(double resistanceYY)
+{
+	// Check Pointer
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometrySupport) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySupportPtr support = static_cast<SceneData::GdtfGeometrySupportPtr>(fGeometry);
+	if(!support) return kVCOMError_Failed;
+
+	support->SetResistanceYY(resistanceYY);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetResistanceZZ(double resistanceZZ)
+{
+	// Check Pointer
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometrySupport) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySupportPtr support = static_cast<SceneData::GdtfGeometrySupportPtr>(fGeometry);
+	if(!support) return kVCOMError_Failed;
+
+	support->SetResistanceZZ(resistanceZZ);
+	return kVCOMError_NoError;
+}
+
+//---------------------------------------------------------------------------
 void VectorworksMVR::CGdtfGeometryImpl::SetPointer(SceneData::GdtfGeometry* geometry)
 {
 	fGeometry		= geometry;
@@ -2348,9 +2802,8 @@ void VectorworksMVR::CGdtfGeometryImpl::SetPointer(SceneData::GdtfGeometry* geom
 						fGeometryType == EGdtfObjectType::eGdtfGeometryWiringObject ||
 						fGeometryType == EGdtfObjectType::eGdtfGeometryInventory ||
 						fGeometryType == EGdtfObjectType::eGdtfGeometryStructure ||
+						fGeometryType == EGdtfObjectType::eGdtfGeometrySupport ||
 						fGeometryType == EGdtfObjectType::eGdtfGeometryMagnet);
-	
-	
 }
 
 SceneData::GdtfGeometry* VectorworksMVR::CGdtfGeometryImpl::GetPointer()

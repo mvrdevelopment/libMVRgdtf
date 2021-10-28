@@ -687,6 +687,7 @@ namespace SceneData
 		GdtfGeometry*						AddGeometryWiringObject(		const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 		GdtfGeometry*						AddGeometryInventory(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 		GdtfGeometry*						AddGeometryStructure(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
+		GdtfGeometry*						AddGeometrySupport(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 		GdtfGeometry*						AddGeometryMagnet(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 
 	protected:
@@ -1168,6 +1169,77 @@ namespace SceneData
         virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
 	};
 	typedef GdtfGeometryStructure* GdtfGeometryStructurePtr;
+
+	class GdtfGeometrySupport : public GdtfGeometry
+	{
+	public:
+		GdtfGeometrySupport(GdtfGeometry* parent);
+		GdtfGeometrySupport(const TXString& name, GdtfModelPtr refToModel,const VWTransformMatrix& ma, GdtfGeometry* parent);
+
+		~GdtfGeometrySupport();
+	
+	private:
+		EGdtfSupportType		fSupportType;
+		double 					fCapacityX;
+		double 					fCapacityY;
+		double 					fCapacityZ;
+		double 					fCapacityXX;
+		double 					fCapacityYY;
+		double 					fCapacityZZ;
+		TXString 				fRopeCrossSection; 	//Rope
+		VWPoint3D 				fRopeOffset; 		//Rope
+		double 					fResistanceX;		//GroundSupport
+		double 					fResistanceY;		//GroundSupport
+		double 					fResistanceZ;		//GroundSupport
+		double 					fResistanceXX;		//GroundSupport
+		double 					fResistanceYY;		//GroundSupport
+		double 					fResistanceZZ;		//GroundSupport
+
+	public:
+		virtual EGdtfObjectType			GetObjectType();
+
+		// Getters
+		EGdtfSupportType				GetSupportType() const;
+		double							GetCapacityX() const;
+		double							GetCapacityY() const;
+		double							GetCapacityZ() const;
+		double							GetCapacityXX() const;
+		double							GetCapacityYY() const;
+		double							GetCapacityZZ() const;
+		const TXString&					GetRopeCrossSection() const;
+		VWPoint3D						GetRopeOffset();
+		double							GetResistanceX() const;
+		double							GetResistanceY() const;
+		double							GetResistanceZ() const;
+		double							GetResistanceXX() const;
+		double							GetResistanceYY() const;
+		double							GetResistanceZZ() const;
+
+
+		// Setters
+		void							SetSupportType(const EGdtfSupportType& supportType);
+		void							SetCapacityX(double capacityX);
+		void							SetCapacityY(double capacityY);
+		void							SetCapacityZ(double capacityZ);
+		void							SetCapacityXX(double capacityXX);
+		void							SetCapacityYY(double capacityYY);
+		void							SetCapacityZZ(double capacityZZ);
+		void							SetRopeCrossSection(const TXString& ropeCrossSection);
+		void							SetRopeOffset(double x, double y, double z);
+		void							SetResistanceX(double resistanceX);
+		void							SetResistanceY(double resistanceY);
+		void							SetResistanceZ(double resistanceZ);
+		void							SetResistanceXX(double resistanceXX);
+		void							SetResistanceYY(double resistanceYY);
+		void							SetResistanceZZ(double resistanceZZ);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+	};
+	typedef GdtfGeometrySupport* GdtfGeometrySupportPtr;
 
 	class GdtfGeometryMagnet : public GdtfGeometry
 	{
@@ -2642,6 +2714,7 @@ namespace SceneData
 		GdtfGeometryPtr			AddGeometryWiringObject(		const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 		GdtfGeometryPtr			AddGeometryInventory(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 		GdtfGeometryPtr			AddGeometryStructure(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
+		GdtfGeometryPtr			AddGeometrySupport(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 		GdtfGeometryPtr			AddGeometryMagnet(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 
 		GdtfWheelPtr			AddWheel(TXString name);
