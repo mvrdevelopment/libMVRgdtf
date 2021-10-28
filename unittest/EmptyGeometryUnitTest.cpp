@@ -131,6 +131,25 @@ void GdtfEmptyModelTest::WriteFile(VectorworksMVR::IGdtfFixturePtr& fixture)
         __checkVCOM(geometry11->SetCrossSectionHeight(1.1));
         __checkVCOM(geometry11->SetCrossSectionWallThickness(1.2));
         __checkVCOM(geometry11->SetTrussCrossSection("My TrussCrossSection"));
+
+        // Support
+        IGdtfGeometryPtr geometry12;
+        __checkVCOM(geometry1->CreateGeometry(EGdtfObjectType::eGdtfGeometrySupport, "Geometry12 Support", filledModel, STransformMatrix(), &geometry12));
+        __checkVCOM(geometry12->SetSupportType(EGdtfSupportType::GroundSupport));
+        __checkVCOM(geometry12->SetCapacityX(1.1));
+        __checkVCOM(geometry12->SetCapacityY(1.2));
+        __checkVCOM(geometry12->SetCapacityZ(1.3));
+        __checkVCOM(geometry12->SetCapacityXX(1.4));
+        __checkVCOM(geometry12->SetCapacityYY(1.5));
+        __checkVCOM(geometry12->SetCapacityZZ(1.6));
+        __checkVCOM(geometry12->SetRopeCrossSection("My RopeCrossSection"));
+        __checkVCOM(geometry12->SetRopeOffset(0.1, 0.2, 0.3));
+        __checkVCOM(geometry12->SetResistanceX(2.1));
+        __checkVCOM(geometry12->SetResistanceY(2.2));
+        __checkVCOM(geometry12->SetResistanceZ(2.3));
+        __checkVCOM(geometry12->SetResistanceXX(2.4));
+        __checkVCOM(geometry12->SetResistanceYY(2.5));
+        __checkVCOM(geometry12->SetResistanceZZ(2.6));
     }
 
 }
@@ -158,7 +177,7 @@ void GdtfEmptyModelTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
 
         size_t second_level = 0;
         __checkVCOM(geometry1->GetInternalGeometryCount(second_level));
-        checkifEqual("Second Level Geometry Count", second_level, (size_t)10);
+        checkifEqual("Second Level Geometry Count", second_level, (size_t)11);
 
 
         IGdtfGeometryPtr geometry2;
@@ -382,6 +401,71 @@ void GdtfEmptyModelTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
 
         checkifEqual("Structure TrussCrossSection", geoStructure->GetTrussCrossSection(), "My TrussCrossSection");
 
+        //-------------------------------------------------------------------------------------------------
+        // Support
+        IGdtfGeometryPtr geoSupport;
+        __checkVCOM(geometry1->GetInternalGeometryAt(10, &geoSupport));
+        checkifEqual("Support Geometry Name", geoSupport->GetName(), "Geometry12 Support");
+
+        EGdtfSupportType supportType = EGdtfSupportType::Rope;
+        __checkVCOM(geoSupport->GetSupportType(supportType));
+        checkifEqual("Support SupportType", (size_t)supportType, (size_t)EGdtfSupportType::GroundSupport);
+
+        double capacityX = 0.0;
+        __checkVCOM(geoSupport->GetCapacityX(capacityX));
+        checkifEqual("Support CapacityX", capacityX, 1.1);
+
+        double capacityY = 0.0;
+        __checkVCOM(geoSupport->GetCapacityY(capacityY));
+        checkifEqual("Support CapacityY", capacityY, 1.2);
+
+        double capacityZ = 0.0;
+        __checkVCOM(geoSupport->GetCapacityZ(capacityZ));
+        checkifEqual("Support CapacityZ", capacityZ, 1.3);
+
+        double capacityXX = 0.0;
+        __checkVCOM(geoSupport->GetCapacityXX(capacityXX));
+        checkifEqual("Support CapacityXX", capacityXX, 1.4);
+
+        double capacityYY = 0.0;
+        __checkVCOM(geoSupport->GetCapacityYY(capacityYY));
+        checkifEqual("Support CapacityYY", capacityYY, 1.5);
+
+        double capacityZZ = 0.0;
+        __checkVCOM(geoSupport->GetCapacityZZ(capacityZZ));
+        checkifEqual("Support CapacityZZ", capacityZZ, 1.6);
+
+        checkifEqual("Support RopeCrossSection", geoSupport->GetRopeCrossSection(), "My RopeCrossSection");
+
+        SVector3 ropeOffset;
+        __checkVCOM(geoSupport->GetRopeOffset(ropeOffset));
+        checkifEqual("Support RopeOffset X", ropeOffset.x, 0.1);
+        checkifEqual("Support RopeOffset Y", ropeOffset.y, 0.2);
+        checkifEqual("Support RopeOffset Z", ropeOffset.z, 0.3);
+
+        double resistanceX = 0.0;
+        __checkVCOM(geoSupport->GetResistanceX(resistanceX));
+        checkifEqual("Support ResistanceX", resistanceX, 2.1);
+
+        double resistanceY = 0.0;
+        __checkVCOM(geoSupport->GetResistanceY(resistanceY));
+        checkifEqual("Support ResistanceY", resistanceY, 2.2);
+
+        double resistanceZ = 0.0;
+        __checkVCOM(geoSupport->GetResistanceZ(resistanceZ));
+        checkifEqual("Support ResistanceZ", resistanceZ, 2.3);
+
+        double resistanceXX = 0.0;
+        __checkVCOM(geoSupport->GetResistanceXX(resistanceXX));
+        checkifEqual("Support ResistanceXX", resistanceXX, 2.4);
+
+        double resistanceYY = 0.0;
+        __checkVCOM(geoSupport->GetResistanceYY(resistanceYY));
+        checkifEqual("Support ResistanceYY", resistanceYY, 2.5);
+
+        double resistanceZZ = 0.0;
+        __checkVCOM(geoSupport->GetResistanceZZ(resistanceZZ));
+        checkifEqual("Support ResistanceZZ", resistanceZZ, 2.6);
     }
 
 }
