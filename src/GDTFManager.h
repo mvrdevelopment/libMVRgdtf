@@ -1656,15 +1656,15 @@ namespace SceneData
         // Getter        
         GdtfFTRDM*                  GetRDM();              
         GdtfArtNet*                 GetArtNet();            
-        GdtfsAcn*                   Get_sACN();              
+        GdtfsAcn*                   GetSACN();              
         GdtfKiNET*                  GetKiNET();             
         GdtfPosiStageNet*           GetPosiStageNet();      
         GdtfOpenSoundControl*       GetOpenSoundControl();  
         GdtfCITP*                   GetCITP();              
         // Setter    
         GdtfFTRDM*                  CreateRDM();
-        void                        SetArtNet(GdtfArtNet* val);
-        void                        Set_sACN(GdtfsAcn* val);
+        GdtfArtNet*                 CreateArtNet();
+        GdtfsAcn*                   CreateSACN();
         void                        SetKiNET(GdtfKiNET* val);
         void                        SetPosiStageNet(GdtfPosiStageNet* val);
         void                        SetOpenSoundControl(GdtfOpenSoundControl* val);

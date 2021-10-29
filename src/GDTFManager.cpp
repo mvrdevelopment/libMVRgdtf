@@ -7608,7 +7608,7 @@ GdtfArtNet * SceneData::GdtfProtocols::GetArtNet()
 	return fArtNet;
 }
 
-GdtfsAcn * SceneData::GdtfProtocols::Get_sACN()
+GdtfsAcn * SceneData::GdtfProtocols::GetSACN()
 {
 	return fsACN;
 }
@@ -7639,14 +7639,16 @@ GdtfFTRDM * SceneData::GdtfProtocols::CreateRDM()
 	return fRDM;
 }
 
-void SceneData::GdtfProtocols::SetArtNet(GdtfArtNet * val)
+GdtfArtNet* SceneData::GdtfProtocols::CreateArtNet()
 {
-	fArtNet = val;
+	fArtNet = new GdtfArtNet();
+	return fArtNet;
 }
 
-void SceneData::GdtfProtocols::Set_sACN(GdtfsAcn * val)
+GdtfsAcn* SceneData::GdtfProtocols::CreateSACN()
 {
-	fsACN = val;
+	fsACN = new GdtfsAcn();
+	return fsACN;
 }
 
 void SceneData::GdtfProtocols::SetKiNET(GdtfKiNET * val)

@@ -19,6 +19,8 @@
 #include "CGdtfDmxProfile.h"
 #include "CGdtfCRIGroup.h"
 #include "CGdtfFTRDM.h"
+#include "CGdtfArtNet.h"
+#include "CGdtfSACN.h"
 #include "CGdtfXmlParsingError.h"
 #include "GdtfError.h"
 #include "CGdtfFilter.h"
@@ -1348,7 +1350,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetRDM(IGdtf_FTRDM *
 	}
 	
 	//---------------------------------------------------------------------------
-	// Check Incomming Object
+	// Check Incoming Object
 	if (*value)
 	{
 		(*value)->Release();
@@ -1393,7 +1395,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateRDM(Vectorwork
 	}
 	
 	//---------------------------------------------------------------------------
-	// Check Incomming Object
+	// Check Incoming Object
 	if (*outFTRDM)
 	{
 		(*outFTRDM)->Release();
@@ -1403,6 +1405,182 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateRDM(Vectorwork
 	//---------------------------------------------------------------------------
 	// Set Out Value
 	*outFTRDM = pRdm;
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetArtNet(IGdtfArtNet** artNet)
+{
+	// Check if Set
+	if (!fFixtureObject) { return kVCOMError_NotInitialized; }
+	
+
+	SceneData::GdtfArtNetPtr gdtfArtNet = fFixtureObject->GetProtocollContainer().GetArtNet();
+	
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CGdtfArtNetImpl* pArtNet = nullptr;
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfArtNet, (IVWUnknown**)& pArtNet)))
+	{
+		// Check Casting
+		CGdtfArtNetImpl* pResultInterface = static_cast<CGdtfArtNetImpl*>(pArtNet);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(gdtfArtNet);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incoming Object
+	if (*artNet)
+	{
+		(*artNet)->Release();
+		*artNet = NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*artNet = pArtNet;
+	
+	return kVCOMError_NoError;
+}
+
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateArtNet(IGdtfArtNet** artNet)
+{
+	// Check if Set
+	if (!fFixtureObject) { return kVCOMError_NotInitialized; }
+	
+	
+	SceneData::GdtfArtNetPtr gdtfArtNet = fFixtureObject->GetProtocollContainer().CreateArtNet();
+	
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CGdtfArtNetImpl* pArtNet = nullptr;
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfArtNet, (IVWUnknown**)& pArtNet)))
+	{
+		// Check Casting
+		CGdtfArtNetImpl* pResultInterface = static_cast<CGdtfArtNetImpl*>(pArtNet);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(gdtfArtNet);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incoming Object
+	if (*artNet)
+	{
+		(*artNet)->Release();
+		*artNet = NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*artNet = pArtNet;
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetSACN(IGdtfSACN** sACN)
+{
+	// Check if Set
+	if (!fFixtureObject) { return kVCOMError_NotInitialized; }
+	
+	SceneData::GdtfsAcnPtr gdtfSACN = fFixtureObject->GetProtocollContainer().GetSACN();
+	
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CGdtfSACNImpl* pSACN = nullptr;
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfSACN, (IVWUnknown**)& pSACN)))
+	{
+		// Check Casting
+		CGdtfSACNImpl* pResultInterface = static_cast<CGdtfSACNImpl*>(pSACN);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(gdtfSACN);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incoming Object
+	if (*sACN)
+	{
+		(*sACN)->Release();
+		*sACN = NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*sACN = pSACN;
+	
+	return kVCOMError_NoError;
+}
+
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateSACN(IGdtfSACN** sACN)
+{
+	// Check if Set
+	if (!fFixtureObject) { return kVCOMError_NotInitialized; }
+	
+	SceneData::GdtfsAcnPtr gdtfSACN = fFixtureObject->GetProtocollContainer().CreateSACN();
+	
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CGdtfSACNImpl* pSACN = nullptr;
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfSACN, (IVWUnknown**)& pSACN)))
+	{
+		// Check Casting
+		CGdtfSACNImpl* pResultInterface = static_cast<CGdtfSACNImpl*>(pSACN);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(gdtfSACN);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incoming Object
+	if (*sACN)
+	{
+		(*sACN)->Release();
+		*sACN = NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*sACN = pSACN;
 	
 	return kVCOMError_NoError;
 }

@@ -84,9 +84,15 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE		GetPresetAt(size_t at, IGdtfUserPreset** preset );
 		virtual VCOMError VCOM_CALLTYPE     CreatePreset(IGdtfUserPreset** macro);
         
-		// Protocoll
+		// Protocols
 		virtual VCOMError VCOM_CALLTYPE     GetRDM(IGdtf_FTRDM ** newFTRDM);
 		virtual VCOMError VCOM_CALLTYPE     CreateRDM(VectorworksMVR::IGdtf_FTRDM ** outFTRDM);
+
+        virtual VCOMError VCOM_CALLTYPE     GetArtNet(IGdtfArtNet** artNet);
+		virtual VCOMError VCOM_CALLTYPE     CreateArtNet(IGdtfArtNet** artNet);
+
+		virtual VCOMError VCOM_CALLTYPE     GetSACN(IGdtfSACN** sACN);
+		virtual VCOMError VCOM_CALLTYPE     CreateSACN(IGdtfSACN** sACN);
         
         // PhysicalDescriptions
         virtual VCOMError                             GetColorSpace(VectorworksMVR::IGdtfColorSpace ** outColorSpace);
