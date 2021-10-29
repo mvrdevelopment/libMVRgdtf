@@ -59,7 +59,8 @@ void GdtfUnittest::WriteFile()
 		__checkVCOM(gdtfWrite->SetLongName("My Long Long Name"));
 		__checkVCOM(gdtfWrite->SetFixtureThumbnail("MyThumbnail"));
 		__checkVCOM(gdtfWrite->SetLinkedFixtureGUID(linkedUuid));
-
+		__checkVCOM(gdtfWrite->SetThumbnailOffsetX(1));
+		__checkVCOM(gdtfWrite->SetThumbnailOffsetY(2));
 		__checkVCOM(gdtfWrite->SetCanHaveChildren(false));
 
         //------------------------------------------------------------------------------    
@@ -422,6 +423,14 @@ void GdtfUnittest::ReadFile()
 
 		__checkVCOM(gdtfRead->GetFixtureGUID(resultUUID));
 		this->checkifEqual("GetFixtureGUID fixtureUUID ", fixtureUUID, resultUUID);
+
+		size_t thumbnailOffsetX;
+		__checkVCOM(gdtfRead->GetThumbnailOffsetX(thumbnailOffsetX));
+		this->checkifEqual("GetThumbnailOffsetX ", thumbnailOffsetX, (size_t)1);
+
+		size_t thumbnailOffsetY;
+		__checkVCOM(gdtfRead->GetThumbnailOffsetY(thumbnailOffsetY));
+		this->checkifEqual("GetThumbnailOffsetY ", thumbnailOffsetY, (size_t)2);
 
 		bool canHaveChildren;
 		__checkVCOM(gdtfRead->GetCanHaveChildren(canHaveChildren));

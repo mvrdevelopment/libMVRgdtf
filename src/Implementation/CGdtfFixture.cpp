@@ -309,6 +309,42 @@ MvrString VectorworksMVR::CGdtfFixtureImpl::GetFixtureThumbnail_SVG_FullPath()
 	return fFixtureObject->GetSVGThumnailFullPath().GetCharPtr();
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetThumbnailOffsetX(size_t& offsetX)
+{
+    if(!fFixtureObject) {return kVCOMError_NotInitialized;}
+    
+    offsetX = fFixtureObject->GetThumbnailOffsetX();
+    
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::SetThumbnailOffsetX(size_t offsetX)
+{
+    if(!fFixtureObject) {return kVCOMError_NotInitialized;}
+    
+    fFixtureObject->SetThumbnailOffsetX(offsetX);
+    
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetThumbnailOffsetY(size_t& offsetY)
+{
+    if(!fFixtureObject) {return kVCOMError_NotInitialized;}
+    
+    offsetY = fFixtureObject->GetThumbnailOffsetY();
+    
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::SetThumbnailOffsetY(size_t offsetY)
+{
+    if(!fFixtureObject) {return kVCOMError_NotInitialized;}
+    
+    fFixtureObject->SetThumbnailOffsetY(offsetY);
+    
+    return kVCOMError_NoError;
+}
+
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::SetFixtureTypeDescription(MvrString descrip)
 {
 	if(!fFixtureObject) {return kVCOMError_NotInitialized;}

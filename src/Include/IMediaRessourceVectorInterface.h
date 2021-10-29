@@ -1260,6 +1260,15 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		virtual VCOMError VCOM_CALLTYPE		GetLegHeight(double& value) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetLegHeight(double value) = 0;
 
+		//-----------------------------------------------------------------------------
+		// GDTF 1.2
+
+		virtual VCOMError VCOM_CALLTYPE		GetThumbnailOffsetX(size_t& offsetX) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetThumbnailOffsetX(size_t offsetX) = 0;	
+
+		virtual VCOMError VCOM_CALLTYPE		GetThumbnailOffsetY(size_t& offsetY) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetThumbnailOffsetY(size_t offsetY) = 0;
+
 	};
     typedef VCOMPtr<IGdtfFixture>	IGdtfFixturePtr;
     const   VWIID IID_IGdtfFixture = { 0x8f7bba09, 0x0753, 0x4971, {0xa9, 0x1b, 0x51, 0xce, 0x96, 0xd2, 0xb6, 0x3f}};

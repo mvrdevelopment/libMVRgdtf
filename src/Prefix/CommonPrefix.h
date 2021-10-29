@@ -167,22 +167,24 @@ const Sint32 kMVR_MinorVersion = 4;
 // ----------------------------------------------------------------------------------------------------------------------------------
 // GDTF XML Values
 
-#define XML_GDTF_GDTFFILENAME			"description.xml"
+#define XML_GDTF_GDTFFILENAME			    "description.xml"
 
-#define XML_GDTF_ROOTNODENAME			"GDTF"
-#define XML_GDTF_ROOTNODEATTRVERSION	"DataVersion"
-#define XML_GDTF_CurrentVersion			"1.1"
+#define XML_GDTF_ROOTNODENAME			    "GDTF"
+#define XML_GDTF_ROOTNODEATTRVERSION	    "DataVersion"
+#define XML_GDTF_CurrentVersion			    "1.1"
 
-#define XML_GDTF_FixtureNodeName		"FixtureType"
-#define XML_GDTF_FixtureName			"Name"
-#define XML_GDTF_FixtureShortName		"ShortName"
-#define XML_GDTF_FixtureLongName		"LongName"
-#define XML_GDTF_FixtureManufacturer	"Manufacturer"
-#define XML_GDTF_FixtureDescription		"Description"
-#define XML_GDTF_FixtureTypeID			"FixtureTypeID"
-#define XML_GDTF_FixtureThumbnail		"Thumbnail"
-#define XML_GDTF_FixtureCanHaveChildren "CanHaveChildren"
-#define XML_GDTF_LinkedUuid				"RefFT"
+#define XML_GDTF_FixtureNodeName		    "FixtureType"
+#define XML_GDTF_FixtureName			    "Name"
+#define XML_GDTF_FixtureShortName		    "ShortName"
+#define XML_GDTF_FixtureLongName		    "LongName"
+#define XML_GDTF_FixtureManufacturer	    "Manufacturer"
+#define XML_GDTF_FixtureDescription		    "Description"
+#define XML_GDTF_FixtureTypeID			    "FixtureTypeID"
+#define XML_GDTF_FixtureThumbnail		    "Thumbnail"
+#define XML_GDTF_FixtureThumbnailOffsetX	"ThumbnailOffsetX"
+#define XML_GDTF_FixtureThumbnailOffsetY    "ThumbnailOffsetY"
+#define XML_GDTF_FixtureCanHaveChildren     "CanHaveChildren"
+#define XML_GDTF_LinkedUuid				    "RefFT"
 
 #define XML_GDTF_FixtureChildNodeAttributeDef		"AttributeDefinitions"
 #define XML_GDTF_FixtureChildNodeActivationGroupDef	"ActivationGroups"

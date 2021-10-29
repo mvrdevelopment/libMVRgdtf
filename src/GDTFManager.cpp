@@ -6367,6 +6367,8 @@ void GdtfFixture::OnPrintToFile(IXMLFileNodePtr pNode)
 	pNode->SetNodeAttributeValue(XML_GDTF_FixtureDescription,		fFixtureTypeDescription);
 	pNode->SetNodeAttributeValue(XML_GDTF_FixtureTypeID,			GdtfConverter::ConvertUUID(fGuid));
 	pNode->SetNodeAttributeValue(XML_GDTF_FixtureThumbnail,			fTumbnailName);
+	pNode->SetNodeAttributeValue(XML_GDTF_FixtureThumbnailOffsetX,	GdtfConverter::ConvertInteger(fThumbnailOffsetX));
+	pNode->SetNodeAttributeValue(XML_GDTF_FixtureThumbnailOffsetY,	GdtfConverter::ConvertInteger(fThumbnailOffsetY));
 	pNode->SetNodeAttributeValue(XML_GDTF_FixtureCanHaveChildren,	GdtfConverter::ConvertEGdtfCanHaveChildren(fCanHaveChildren));
 	
 	if(fHasLinkedGuid)
@@ -6500,7 +6502,9 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	pNode->GetNodeAttributeValue(XML_GDTF_FixtureDescription,				fFixtureTypeDescription);
 	TXString uuid; pNode->GetNodeAttributeValue(XML_GDTF_FixtureTypeID,		uuid );	GdtfConverter::ConvertUUID(uuid, pNode, fGuid);
 	pNode->GetNodeAttributeValue(XML_GDTF_FixtureThumbnail,					fTumbnailName);
-	TXString canHaveChildren; pNode->GetNodeAttributeValue(XML_GDTF_FixtureCanHaveChildren,	 canHaveChildren); GdtfConverter::ConvertEGdtfCanHaveChildren(canHaveChildren, pNode, fCanHaveChildren);
+	TXString thumbnailOffsetX; 	pNode->GetNodeAttributeValue(XML_GDTF_FixtureThumbnailOffsetX, thumbnailOffsetX); 	GdtfConverter::ConvertInteger(thumbnailOffsetX, pNode, fThumbnailOffsetX);
+	TXString thumbnailOffsetY; 	pNode->GetNodeAttributeValue(XML_GDTF_FixtureThumbnailOffsetY, thumbnailOffsetY); 	GdtfConverter::ConvertInteger(thumbnailOffsetY, pNode, fThumbnailOffsetY);
+	TXString canHaveChildren; 	pNode->GetNodeAttributeValue(XML_GDTF_FixtureCanHaveChildren,	 canHaveChildren); 	GdtfConverter::ConvertEGdtfCanHaveChildren(canHaveChildren, pNode, fCanHaveChildren);
 	
 	
 	TXString linkedUuid;
@@ -6696,6 +6700,8 @@ void GdtfFixture::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	needed.push_back(XML_GDTF_FixtureTypeID);
 	optional.push_back(XML_GDTF_FixtureThumbnail);
 	optional.push_back(XML_GDTF_LinkedUuid);
+	optional.push_back(XML_GDTF_FixtureThumbnailOffsetX);
+	optional.push_back(XML_GDTF_FixtureThumbnailOffsetY);
 	optional.push_back(XML_GDTF_FixtureCanHaveChildren);
 
 	//------------------------------------------------------------------------------------
@@ -7041,6 +7047,16 @@ const TXString& GdtfFixture::GetThumbnailName() const
     return fTumbnailName;
 }
 
+size_t GdtfFixture::GetThumbnailOffsetX() const
+{
+    return fThumbnailOffsetX;
+}
+
+size_t GdtfFixture::GetThumbnailOffsetY() const
+{
+    return fThumbnailOffsetY;
+}
+
 bool GdtfFixture::GetCanHaveChildren() const
 {
     return fCanHaveChildren;
@@ -7125,6 +7141,16 @@ void GdtfFixture::SetLinkedGuid(const VWFC::Tools::VWUUID& uuid)
 void GdtfFixture::SetThumbnailName(const TXString& fileName)
 {
 	fTumbnailName = fileName;
+}
+
+void GdtfFixture::SetThumbnailOffsetX(size_t thumbnailOffsetX)
+{
+	fThumbnailOffsetX = thumbnailOffsetX;
+}
+
+void GdtfFixture::SetThumbnailOffsetY(size_t thumbnailOffsetY)
+{
+	fThumbnailOffsetY = thumbnailOffsetY;
 }
 
 void GdtfFixture::SetCanHaveChildren(bool canHaveChildren)
