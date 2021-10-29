@@ -1282,6 +1282,20 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
         virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
     };
     typedef VCOMPtr<IGdtf_FTRDM>	IGdtfTRDMPtr;
+
+	class DYNAMIC_ATTRIBUTE IGdtfMap : public IVWUnknown
+	{
+	public:
+		virtual VCOMError VCOM_CALLTYPE     GetKey(Uint32& key) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetValue(Uint32& value) = 0;
+
+        virtual VCOMError VCOM_CALLTYPE     SetKey(Uint32 key) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetValue(Uint32 value) = 0;
+		
+		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+	};
+	typedef VCOMPtr<IGdtfMap>	IGdtfMapPtr;
     
     
     class DYNAMIC_ATTRIBUTE IGdtfDMXPersonality : public IVWUnknown

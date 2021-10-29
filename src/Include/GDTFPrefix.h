@@ -106,6 +106,7 @@ namespace VectorworksMVR
 			eGdtfGeometryMediaServerLayer	= 77,
 			eGdtfGeometryMediaServerMaster	= 78,
             eGdtfGeometryDisplay            = 79,
+            eGdtfMap                        = 89,
 		};
 
         enum class EGdtfParsingError : Sint32

@@ -1768,6 +1768,35 @@ namespace SceneData
     typedef GdtfSoftwareVersionID*	GdtfSoftwareVersionIDPtr;
     typedef std::vector<GdtfSoftwareVersionID*>	TGdtfSoftwareVersionIDArray;
 
+	class GdtfMap : public GdtfObject
+    {
+    public:
+        GdtfMap();
+		GdtfMap(Uint32 key, Uint32 value);
+        ~GdtfMap();
+    private:
+        Uint32 fKey;
+		Uint32 fValue;
+
+    public:
+        virtual EGdtfObjectType			GetObjectType();
+
+    public:
+        // Getters
+		Uint32 							GetKey() const;
+		Uint32 							GetValue() const;
+
+        // Setters
+		void 							SetKey(Uint32 key);
+		void 							SetValue(Uint32 value);
+
+    protected:
+        virtual	TXString				GetNodeName();
+        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+		virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+    };
+    typedef GdtfMap* GdtfMapPtr;
 
     class GdtfArtNet : public GdtfObject
     {

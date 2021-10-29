@@ -7764,6 +7764,92 @@ void SceneData::GdtfProtocols::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
 }
 
+//------------------------------------------------------------------------------------
+// GdtfMap
+GdtfMap::GdtfMap()
+{
+}
+
+GdtfMap::GdtfMap(Uint32 key, Uint32 value)
+{
+	fKey 	= key;
+	fValue 	= value;
+}
+
+GdtfMap::~GdtfMap()
+{
+}
+
+Uint32 GdtfMap::GetKey() const
+{
+	return fKey;
+}
+
+Uint32 GdtfMap::GetValue() const
+{
+	return fValue;
+}
+
+void GdtfMap::SetKey(Uint32 key)
+{
+	fKey = key;
+}
+
+void GdtfMap::SetValue(Uint32 value)
+{
+	fValue = value;
+}
+
+void GdtfMap::OnPrintToFile(IXMLFileNodePtr pNode) 
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnPrintToFile(pNode);
+
+	pNode->SetNodeAttributeValue(XML_GDTF_MapKey,	GdtfConverter::ConvertInteger(fKey));
+	pNode->SetNodeAttributeValue(XML_GDTF_MapValue,	GdtfConverter::ConvertInteger(fValue));
+}
+
+void GdtfMap::OnReadFromNode(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnReadFromNode(pNode);
+
+	TXString key;	pNode->GetNodeAttributeValue(XML_GDTF_MapKey,	key);	GdtfConverter::ConvertInteger(key, pNode, fKey);
+	TXString value;	pNode->GetNodeAttributeValue(XML_GDTF_MapValue,	value);	GdtfConverter::ConvertInteger(value, pNode,	fValue);
+}
+
+void GdtfMap::OnErrorCheck(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnErrorCheck(pNode);
+
+	//------------------------------------------------------------------------------------
+	// Create needed and optional Attribute Arrays
+	TXStringArray needed;
+	TXStringArray optional;
+	needed.push_back(XML_GDTF_MapKey);
+	needed.push_back(XML_GDTF_MapValue);
+	//------------------------------------------------------------------------------------
+	// Check Attributes for node
+	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
+}
+
+EGdtfObjectType GdtfMap::GetObjectType() 
+{
+	return EGdtfObjectType::eGdtfMap;
+}
+
+TXString GdtfMap::GetNodeName()
+{
+	return XML_GDTF_MapNodeName;
+}
+
+//------------------------------------------------------------------------------------
+// GdtfArtNet
+
 SceneData::GdtfArtNet::GdtfArtNet()
 {
 }
