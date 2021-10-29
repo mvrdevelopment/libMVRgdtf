@@ -81,6 +81,8 @@ namespace VectorworksMVR
     class IGdtfMacroVisualStep;
     class IGdtfMacroVisualValue;
     class IGdtf_FTRDM;
+    class IGdtfArtNet;
+    class IGdtfSACN;
 	class IGdtfFeatureGroup;
 	class IGdtfDmxChannel;
     class IGdtfDmxLogicalChannel;
@@ -1260,6 +1262,14 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		virtual VCOMError VCOM_CALLTYPE		GetLegHeight(double& value) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetLegHeight(double value) = 0;
 
+		//-----------------------------------------------------------------------------
+		// GDTF 1.2
+		virtual VCOMError VCOM_CALLTYPE     GetArtNet(IGdtfArtNet** artNet) = 0;
+		virtual VCOMError VCOM_CALLTYPE     CreateArtNet(IGdtfArtNet** artNet) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE     GetSACN(IGdtfSACN** sACN) = 0;
+		virtual VCOMError VCOM_CALLTYPE     CreateSACN(IGdtfSACN** sACN) = 0;
+
 	};
     typedef VCOMPtr<IGdtfFixture>	IGdtfFixturePtr;
     const   VWIID IID_IGdtfFixture = { 0x8f7bba09, 0x0753, 0x4971, {0xa9, 0x1b, 0x51, 0xce, 0x96, 0xd2, 0xb6, 0x3f}};
@@ -1296,6 +1306,30 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
 	};
 	typedef VCOMPtr<IGdtfMap>	IGdtfMapPtr;
+
+	class DYNAMIC_ATTRIBUTE IGdtfArtNet : public IVWUnknown
+    {
+    public:
+        virtual VCOMError VCOM_CALLTYPE  	GetMapCount(size_t& count) = 0;
+        virtual VCOMError VCOM_CALLTYPE  	GetMapAt(size_t at, IGdtfMap** map) = 0;
+        virtual VCOMError VCOM_CALLTYPE  	CreateMap(Uint32 key, Uint32 value, IGdtfMap** map) = 0;
+        
+        virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+        virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+    };
+    typedef VCOMPtr<IGdtfArtNet>	IGdtfArtNetPtr;
+
+	class DYNAMIC_ATTRIBUTE IGdtfSACN : public IVWUnknown
+    {
+    public:
+        virtual VCOMError VCOM_CALLTYPE  	GetMapCount(size_t& count) = 0;
+        virtual VCOMError VCOM_CALLTYPE  	GetMapAt(size_t at, IGdtfMap** map) = 0;
+        virtual VCOMError VCOM_CALLTYPE  	CreateMap(Uint32 key, Uint32 value, IGdtfMap** map) = 0;
+        
+        virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+        virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+    };
+    typedef VCOMPtr<IGdtfSACN>	IGdtfSACNPtr;
     
     
     class DYNAMIC_ATTRIBUTE IGdtfDMXPersonality : public IVWUnknown

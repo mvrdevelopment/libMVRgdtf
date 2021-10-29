@@ -7856,6 +7856,51 @@ SceneData::GdtfArtNet::GdtfArtNet()
 
 SceneData::GdtfArtNet::~GdtfArtNet()
 {
+	for(GdtfMapPtr map : fMaps) { delete map; }
+}
+
+const TGdtfMapArray& GdtfArtNet::GetMapArray()
+{
+	return fMaps;
+}
+
+GdtfMapPtr GdtfArtNet::CreateMap(Uint32 key, Uint32 value)
+{
+	GdtfMapPtr map = new GdtfMap(key, value);
+	fMaps.push_back(map);
+	return map;
+}
+
+void GdtfArtNet::OnPrintToFile(IXMLFileNodePtr pNode) 
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnPrintToFile(pNode);
+
+	for(GdtfMapPtr map : fMaps)
+	{
+		map->WriteToNode(pNode);
+	}
+}
+
+void GdtfArtNet::OnReadFromNode(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnReadFromNode(pNode);
+
+	// Read the children
+    GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_MapNodeName, [this](IXMLFileNodePtr objNode) -> void
+    {
+        GdtfMapPtr map = new GdtfMap();
+
+        map->ReadFromNode(objNode);
+
+        fMaps.push_back(map);
+
+        return;
+    });
+
 }
 
 EGdtfObjectType SceneData::GdtfArtNet::GetObjectType()
@@ -7868,12 +7913,60 @@ TXString SceneData::GdtfArtNet::GetNodeName()
 	return XML_GDTF_ArtNet;
 }
 
+//------------------------------------------------------------------------------------
+// GdtfsAcn
+
 SceneData::GdtfsAcn::GdtfsAcn()
 {
 }
 
 SceneData::GdtfsAcn::~GdtfsAcn()
 {
+	for(GdtfMapPtr map : fMaps) { delete map; }
+}
+
+const TGdtfMapArray& GdtfsAcn::GetMapArray()
+{
+	return fMaps;
+}
+
+GdtfMapPtr GdtfsAcn::CreateMap(Uint32 key, Uint32 value)
+{
+	GdtfMapPtr map = new GdtfMap(key, value);
+	fMaps.push_back(map);
+	return map;
+}
+
+void GdtfsAcn::OnPrintToFile(IXMLFileNodePtr pNode) 
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnPrintToFile(pNode);
+
+	for(GdtfMapPtr map : fMaps)
+	{
+		map->WriteToNode(pNode);
+	}
+}
+
+void GdtfsAcn::OnReadFromNode(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnReadFromNode(pNode);
+
+	// Read the children
+    GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_MapNodeName, [this](IXMLFileNodePtr objNode) -> void
+    {
+        GdtfMapPtr map = new GdtfMap();
+
+        map->ReadFromNode(objNode);
+
+        fMaps.push_back(map);
+
+        return;
+    });
+
 }
 
 EGdtfObjectType SceneData::GdtfsAcn::GetObjectType()
@@ -7885,6 +7978,9 @@ TXString SceneData::GdtfsAcn::GetNodeName()
 {
 	return XML_GDTF_sACN;
 }
+
+//------------------------------------------------------------------------------------
+// GdtfKiNET
 
 SceneData::GdtfKiNET::GdtfKiNET()
 {
@@ -7904,6 +8000,9 @@ TXString SceneData::GdtfKiNET::GetNodeName()
 	return XML_GDTF_KiNET;
 }
 
+//------------------------------------------------------------------------------------
+// GdtfPosiStageNet
+
 SceneData::GdtfPosiStageNet::GdtfPosiStageNet()
 {
 }
@@ -7921,6 +8020,9 @@ TXString SceneData::GdtfPosiStageNet::GetNodeName()
 {
 	return XML_GDTF_PosiStageNet;
 }
+
+//------------------------------------------------------------------------------------
+// GdtfOpenSoundControl
 
 SceneData::GdtfOpenSoundControl::GdtfOpenSoundControl()
 {
@@ -7940,6 +8042,9 @@ TXString SceneData::GdtfOpenSoundControl::GetNodeName()
 	return XML_GDTF_OpenSoundControl;
 }
 
+//------------------------------------------------------------------------------------
+// GdtfCITP
+
 SceneData::GdtfCITP::GdtfCITP()
 {
 }
@@ -7957,6 +8062,9 @@ TXString SceneData::GdtfCITP::GetNodeName()
 {
 	return XML_GDTF_CITP;
 }
+
+//------------------------------------------------------------------------------------
+// GdtfMacroDMX
 
 SceneData::GdtfMacroDMX::GdtfMacroDMX()
 {

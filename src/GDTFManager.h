@@ -1797,6 +1797,7 @@ namespace SceneData
 		virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
     };
     typedef GdtfMap* GdtfMapPtr;
+    typedef std::vector<GdtfMapPtr>	TGdtfMapArray;
 
     class GdtfArtNet : public GdtfObject
     {
@@ -1804,20 +1805,21 @@ namespace SceneData
         GdtfArtNet();
         ~GdtfArtNet();
     private:
-        // Atributes
-        // TODO: This TYPE not defined in the docu to this day(26.09.18). Implement later.
+        TGdtfMapArray					fMaps;
     public:
         virtual EGdtfObjectType			GetObjectType();
 
     public:
-        // Getter        
-        //...
-        // Setter       
-        // ...
+		// Getters
+		const TGdtfMapArray&  			GetMapArray();
+
+		// Setters
+		GdtfMapPtr  					CreateMap(Uint32 key, Uint32 value);
+        
     protected:
-        virtual	TXString				    GetNodeName();
-        // virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
-        // virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	TXString				GetNodeName();
+        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
     };
     typedef GdtfArtNet*	GdtfArtNetPtr;
     
@@ -1827,20 +1829,21 @@ namespace SceneData
         GdtfsAcn();
         ~GdtfsAcn();
     private:
-        // Atributes
-        // TODO: This TYPE not defined in the docu to this day(26.09.18). Implement later.
+        TGdtfMapArray					fMaps;
     public:
         virtual EGdtfObjectType			GetObjectType();
 
     public:
-        // Getter        
-        // ...
-        // Setter       
-        // ...
+		// Getters
+		const TGdtfMapArray&  			GetMapArray();
+
+		// Setters
+		GdtfMapPtr  					CreateMap(Uint32 key, Uint32 value);
+
     protected:
         virtual	TXString				GetNodeName();
-        // virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
-        // virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
     };
     typedef GdtfsAcn*	GdtfsAcnPtr;    
 
