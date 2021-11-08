@@ -801,11 +801,14 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 }
 /*static*/ bool GdtfConverter::ConvertBeamType(const TXString& value, const IXMLFileNodePtr& node,EGdtfBeamType& unit)
 {
-	if		(value == XML_GDTF_BeamTypeEnum_Wash)			{ unit = EGdtfBeamType::eGdtfBeamType_Wash;		 }
-	else if (value == XML_GDTF_BeamTypeEnum_Spot)			{ unit = EGdtfBeamType::eGdtfBeamType_Spot;		 }
-	else if (value == XML_GDTF_BeamTypeEnum_None)			{ unit = EGdtfBeamType::eGdtfBeamType_None;		 }
-	else if (value == XML_GDTF_BeamTypeEnum_Rectangle)		{ unit = EGdtfBeamType::eGdtfBeamType_Rectangle; }
-	else if (value == "")									{ unit = EGdtfBeamType::eGdtfBeamType_Wash;		 }
+	if		(value == XML_GDTF_BeamTypeEnum_Wash)			{ unit = EGdtfBeamType::eGdtfBeamType_Wash;		 	}
+	else if (value == XML_GDTF_BeamTypeEnum_Spot)			{ unit = EGdtfBeamType::eGdtfBeamType_Spot;		 	}
+	else if (value == XML_GDTF_BeamTypeEnum_None)			{ unit = EGdtfBeamType::eGdtfBeamType_None;		 	}
+	else if (value == XML_GDTF_BeamTypeEnum_Rectangle)		{ unit = EGdtfBeamType::eGdtfBeamType_Rectangle; 	}
+	else if (value == XML_GDTF_BeamTypeEnum_PC)				{ unit = EGdtfBeamType::eGdtfBeamType_PC;			}
+	else if (value == XML_GDTF_BeamTypeEnum_Fresnel)		{ unit = EGdtfBeamType::eGdtfBeamType_Fresnel; 		}
+	else if (value == XML_GDTF_BeamTypeEnum_Glow)			{ unit = EGdtfBeamType::eGdtfBeamType_Glow; 		}
+	else if (value == "")									{ unit = EGdtfBeamType::eGdtfBeamType_Wash;		 	}
 	else													
     {
         unit = EGdtfBeamType::eGdtfBeamType_Wash; DSTOP((kEveryone, "Unexpected Input for EGdtfBeamType Enum"));
@@ -825,6 +828,9 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 		case eGdtfBeamType_None: 		return XML_GDTF_BeamTypeEnum_None;
 		case eGdtfBeamType_Spot: 		return XML_GDTF_BeamTypeEnum_Spot;
 		case eGdtfBeamType_Wash: 		return XML_GDTF_BeamTypeEnum_Wash;
+		case eGdtfBeamType_PC: 			return XML_GDTF_BeamTypeEnum_PC;
+		case eGdtfBeamType_Fresnel: 	return XML_GDTF_BeamTypeEnum_Fresnel;
+		case eGdtfBeamType_Glow: 		return XML_GDTF_BeamTypeEnum_Glow;
 			
 		default: DSTOP((kEveryone,"This enum for EGdtfBeamType was not implemented!")); break;
 	}

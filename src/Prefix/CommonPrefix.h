@@ -200,22 +200,24 @@ const Sint32 kMVR_MinorVersion = 4;
 // ----------------------------------------------------------------------------------------------------------------------------------
 // GDTF XML Values
 
-#define XML_GDTF_GDTFFILENAME			"description.xml"
+#define XML_GDTF_GDTFFILENAME			    "description.xml"
 
-#define XML_GDTF_ROOTNODENAME			"GDTF"
-#define XML_GDTF_ROOTNODEATTRVERSION	"DataVersion"
-#define XML_GDTF_CurrentVersion			"1.1"
+#define XML_GDTF_ROOTNODENAME			    "GDTF"
+#define XML_GDTF_ROOTNODEATTRVERSION	    "DataVersion"
+#define XML_GDTF_CurrentVersion			    "1.1"
 
-#define XML_GDTF_FixtureNodeName		"FixtureType"
-#define XML_GDTF_FixtureName			"Name"
-#define XML_GDTF_FixtureShortName		"ShortName"
-#define XML_GDTF_FixtureLongName		"LongName"
-#define XML_GDTF_FixtureManufacturer	"Manufacturer"
-#define XML_GDTF_FixtureDescription		"Description"
-#define XML_GDTF_FixtureTypeID			"FixtureTypeID"
-#define XML_GDTF_FixtureThumbnail		"Thumbnail"
-#define XML_GDTF_FixtureCanHaveChildren "CanHaveChildren"
-#define XML_GDTF_LinkedUuid				"RefFT"
+#define XML_GDTF_FixtureNodeName		    "FixtureType"
+#define XML_GDTF_FixtureName			    "Name"
+#define XML_GDTF_FixtureShortName		    "ShortName"
+#define XML_GDTF_FixtureLongName		    "LongName"
+#define XML_GDTF_FixtureManufacturer	    "Manufacturer"
+#define XML_GDTF_FixtureDescription		    "Description"
+#define XML_GDTF_FixtureTypeID			    "FixtureTypeID"
+#define XML_GDTF_FixtureThumbnail		    "Thumbnail"
+#define XML_GDTF_FixtureThumbnailOffsetX	"ThumbnailOffsetX"
+#define XML_GDTF_FixtureThumbnailOffsetY    "ThumbnailOffsetY"
+#define XML_GDTF_FixtureCanHaveChildren     "CanHaveChildren"
+#define XML_GDTF_LinkedUuid				    "RefFT"
 
 #define XML_GDTF_FixtureChildNodeAttributeDef		"AttributeDefinitions"
 #define XML_GDTF_FixtureChildNodeActivationGroupDef	"ActivationGroups"
@@ -298,12 +300,13 @@ const Sint32 kMVR_MinorVersion = 4;
 // ColorSpace
 #define XML_GDTF_ColorSpaceNode         "ColorSpace"
 
-// ColorSpace Atributtes
-#define XML_GDTF_ColorSpace_Mode       "Mode"
-#define XML_GDTF_ColorSpace_Red        "Red"
-#define XML_GDTF_ColorSpace_Green      "Green"
-#define XML_GDTF_ColorSpace_Blue	   "Blue"
-#define XML_GDTF_ColorSpace_WhitePoint "WhitePoint"
+// ColorSpace Attributes
+#define XML_GDTF_ColorSpace_Mode        "Mode"
+#define XML_GDTF_ColorSpace_Name        "Name"
+#define XML_GDTF_ColorSpace_Red         "Red"
+#define XML_GDTF_ColorSpace_Green       "Green"
+#define XML_GDTF_ColorSpace_Blue	    "Blue"
+#define XML_GDTF_ColorSpace_WhitePoint  "WhitePoint"
 //-----------------------------------------------------------------------------
 // Filter
 #define XML_GDTF_FiltersCollect         "Filters"
@@ -459,11 +462,15 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_RectangleRatio					"RectangleRatio"
 #define XML_GDTF_BeamType						"BeamType"
 #define XML_GDTF_BeamColorRenderingIndex        "ColorRenderingIndex"				
+#define XML_GDTF_BeamEmitterSpectrum            "EmitterSpectrum"				
 
 #define XML_GDTF_BeamTypeEnum_Wash				"Wash"
 #define XML_GDTF_BeamTypeEnum_Spot				"Spot"
 #define XML_GDTF_BeamTypeEnum_None				"None"
 #define XML_GDTF_BeamTypeEnum_Rectangle			"Rectangle"
+#define XML_GDTF_BeamTypeEnum_PC			    "PC"
+#define XML_GDTF_BeamTypeEnum_Fresnel			"Fresnel"
+#define XML_GDTF_BeamTypeEnum_Glow			    "Glow"
 
 
 
@@ -482,6 +489,7 @@ const Sint32 kMVR_MinorVersion = 4;
 
 #define XML_GDTF_DMXModeNodeName				"DMXMode"
 #define XML_GDTF_DMXModeName					"Name"
+#define XML_GDTF_DMXModeDescription				"Description"
 #define XML_GDTF_DMXModeGeometryRef				"Geometry"
 #define XML_GDTF_DMXModeDMXChannels				"DMXChannels"
 #define XML_GDTF_DMXModeRelations				"Relations"
@@ -556,6 +564,7 @@ const Sint32 kMVR_MinorVersion = 4;
 // Macros
 #define XML_GDTF_MacroNodeName							"FTMacro"
 #define XML_GDTF_MacroName                              "Name"
+#define XML_GDTF_MacroChannelFunction                   "ChannelFunction"
 #define XML_GDTF_MacroDMX                               "MacroDMX"  
 #define XML_GDTF_MacroDMXStep                           "MacroDMXStep"
 #define XML_GDTF_MacroDMXStepDuration                   "Duration"
@@ -586,6 +595,7 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_RevisionText							"Text"
 #define XML_GDTF_RevisionDate							"Date"
 #define XML_GDTF_RevisionUserId							"UserID"
+#define XML_GDTF_RevisionModifiedBy						"ModifiedBy"
 // -------------------------------------------------------------------------------
 // Protocolls
 #define XML_GDTF_Protocols                              "Protocols"
@@ -595,19 +605,23 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_FTRDM_AttrDeviceModelID                "DeviceModelID"
 #define XML_GDTF_FTRDM_AttrSoftwareVersionIDs           "SoftwareVersionIDs"
 //
-#define XML_GDTF_DMXPersonalityNodeNam                   "DMXPersonality"
-#define XML_GDTF_DMXPersonalityValue                     "Value"   
-#define XML_GDTF_DMXPersonalityDMXMode                   "DMXMode"
+#define XML_GDTF_DMXPersonalityNodeNam                  "DMXPersonality"
+#define XML_GDTF_DMXPersonalityValue                    "Value"   
+#define XML_GDTF_DMXPersonalityDMXMode                  "DMXMode"
 //
-#define XML_GDTF_SoftwareVersionID_NodeNam               "SoftwareVersionID"
-#define XML_GDTF_SoftwareVersionID_Value                 "Value"
+#define XML_GDTF_SoftwareVersionID_NodeNam              "SoftwareVersionID"
+#define XML_GDTF_SoftwareVersionID_Value                "Value"
 //
-#define XML_GDTF_ArtNet                                  "Art-Net"
-#define XML_GDTF_sACN                                    "sACN"
-#define XML_GDTF_KiNET                                   "KiNET"
-#define XML_GDTF_PosiStageNet                            "PosiStageNet"
-#define XML_GDTF_OpenSoundControl                        "OpenSoundControl"
-#define XML_GDTF_CITP                                    "CITP"
+#define XML_GDTF_MapNodeName                            "Map"
+#define XML_GDTF_MapKey                                 "Key"
+#define XML_GDTF_MapValue                               "Value"
+
+#define XML_GDTF_ArtNet                                 "Art-Net"
+#define XML_GDTF_sACN                                   "sACN"
+#define XML_GDTF_KiNET                                  "KiNET"
+#define XML_GDTF_PosiStageNet                           "PosiStageNet"
+#define XML_GDTF_OpenSoundControl                       "OpenSoundControl"
+#define XML_GDTF_CITP                                   "CITP"
 
 #define XML_GDTF_ThresholdOperator_Is                   "Is"
 #define XML_GDTF_ThresholdOperator_IsNot                "IsNot"
@@ -616,6 +630,7 @@ const Sint32 kMVR_MinorVersion = 4;
 // -------------------------------------------------------------------------------
 #define XML_GDTF_UserPresetNodeName						"FTPreset"
 
+#define XML_GDTF_PhysicalDescriptionsColorSpaceCollect	"AdditionalColorSpaces"
 #define XML_GDTF_PhysicalDescriptionsEmitterCollect	    "Emitters"
 #define XML_GDTF_EmitterNodeName						"Emitter"
 #define XML_GDTF_EmitterName							"Name"
@@ -625,6 +640,14 @@ const Sint32 kMVR_MinorVersion = 4;
 
 #define XML_GDTF_DMX_ProfileCollect                     "DMXProfiles"
 #define XML_GDTF_DMX_Profile                            "DMXProfile"
+#define XML_GDTF_DMX_ProfileName                        "Name"
+
+#define XML_GDTF_Point                                  "Point"
+#define XML_GDTF_PointDMXPercentage                     "DMXPercentage"
+#define XML_GDTF_PointCFC3                              "CFC3"
+#define XML_GDTF_PointCFC2                              "CFC2"
+#define XML_GDTF_PointCFC1                              "CFC1"
+#define XML_GDTF_PointCFC0                              "CFC0"
 
 #define XML_GDTF_ConnectorCollect	                    "Connectors"
 #define XML_GDTF_ConnectorNodeName                      "Connector"

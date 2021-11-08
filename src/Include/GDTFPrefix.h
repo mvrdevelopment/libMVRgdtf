@@ -106,6 +106,7 @@ namespace VectorworksMVR
 			eGdtfGeometryMediaServerLayer	= 77,
 			eGdtfGeometryMediaServerMaster	= 78,
             eGdtfGeometryDisplay            = 79,
+            eGdtfPoint                      = 80,
             eGdtfGeometryLaser              = 81,
             eGdtfGeometryWiringObject       = 82,
             eGdtfGeometryInventory          = 83,
@@ -114,6 +115,7 @@ namespace VectorworksMVR
             eGdtfGeometryMagnet             = 86,
             eGdtfLaserProtocol              = 87,
             eGdtfPinPatch                   = 88,
+            eGdtfMap                        = 89,
 		};
 
         enum class EGdtfParsingError : Sint32
@@ -255,6 +257,9 @@ namespace VectorworksMVR
 			eGdtfBeamType_Spot      = 1,
 			eGdtfBeamType_None      = 2,
             eGdtfBeamType_Rectangle = 3,
+            eGdtfBeamType_PC        = 4,
+            eGdtfBeamType_Fresnel   = 5,
+            eGdtfBeamType_Glow      = 6,
 		};
 		
 		enum EGdtfDmxMaster

@@ -59,7 +59,8 @@ void GdtfUnittest::WriteFile()
 		__checkVCOM(gdtfWrite->SetLongName("My Long Long Name"));
 		__checkVCOM(gdtfWrite->SetFixtureThumbnail("MyThumbnail"));
 		__checkVCOM(gdtfWrite->SetLinkedFixtureGUID(linkedUuid));
-
+		__checkVCOM(gdtfWrite->SetThumbnailOffsetX(1));
+		__checkVCOM(gdtfWrite->SetThumbnailOffsetY(2));
 		__checkVCOM(gdtfWrite->SetCanHaveChildren(false));
 
         //------------------------------------------------------------------------------    
@@ -127,6 +128,15 @@ void GdtfUnittest::WriteFile()
         IGdtfMeasurementPtr gdtfMeasureB;  __checkVCOM(gdtfFilter->CreateMeasurement(&gdtfMeasureB) );
         IGdtfMeasurementPtr gdtfMeasureC;  __checkVCOM(gdtfFilter->CreateMeasurement(&gdtfMeasureC) );
 
+		//------------------------------------------------------------------------------------------------------------------
+		// DMXProfiles
+		IGdtfDMXProfilePtr gdtfDMXProfile1; __checkVCOM(gdtfWrite->CreateDMXProfile(&gdtfDMXProfile1));
+		__checkVCOM(gdtfDMXProfile1->SetName("DMXProfile 1"));
+		
+		IGdtfPointPtr gdtfPoint1; __checkVCOM(gdtfDMXProfile1->CreatePoint(0, 0, 4, -4, 1, &gdtfPoint1));
+		IGdtfPointPtr gdtfPoint2; __checkVCOM(gdtfDMXProfile1->CreatePoint(0.75, 64, 0, 0, 0, &gdtfPoint2));
+
+		IGdtfDMXProfilePtr gdtfDMXProfile2; __checkVCOM(gdtfWrite->CreateDMXProfile(&gdtfDMXProfile2));
 
 		//------------------------------------------------------------------------------    
 		// Set Wheels
@@ -240,6 +250,12 @@ void GdtfUnittest::WriteFile()
 		__checkVCOM(gdtfWrite->GetColorSpace( & colorSpace));
 		__checkVCOM(colorSpace->SetColorSpace(EGdtfColorSpace::ANSI));
 
+		//------------------------------------------------------------------------------------------------------------------
+		// Set AdditionalColorSpace
+		IGdtfColorSpacePtr additionalColorSpace1, additionalColorSpace2;
+		__checkVCOM(gdtfWrite->CreateAdditionalColorSpace("My AdditionalColorSpace 1", EGdtfColorSpace::ProPhoto, &additionalColorSpace1));
+		__checkVCOM(gdtfWrite->CreateAdditionalColorSpace("My AdditionalColorSpace 2", EGdtfColorSpace::sRGB, &additionalColorSpace2));
+
         //------------------------------------------------------------------------------------------------------------------
 		// Handle Models
 		IGdtfModelPtr gdtfModel;
@@ -283,6 +299,7 @@ void GdtfUnittest::WriteFile()
         IGdtfGeometryPtr beamGeo;        
         __checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometryLamp, "My Lamp Geometry", gdtfModel, ma, &beamGeo));
         beamGeo->SetLuminousIntensity(5);
+		beamGeo->SetEmitterSpectrum(gdtfEmitter);
 
 		//Media server Camera
 		IGdtfGeometryPtr msCameraGeo;        
@@ -369,6 +386,7 @@ void GdtfUnittest::WriteFile()
 		timestamp.fHour = 22; timestamp.fMinute = 33; timestamp.fSecond = 44;
 		__checkVCOM(gdtfWrite->CreateRevision("Revision TestText", timestamp, &rev));
 		__checkVCOM(rev->SetUserId(254));
+		__checkVCOM(rev->SetModifiedBy("unit test"));
 
         //------------------------------------------------------------------------------    
         // Add RDM 
@@ -380,7 +398,29 @@ void GdtfUnittest::WriteFile()
         //------------------------------------------------------------------------------    
         // Add SoftwareVersionID
         IGdtfSoftwareVersionIDPtr softID;
-        __checkVCOM (rdm->CreateSoftwareVersionID( 22, &softID));        
+        __checkVCOM (rdm->CreateSoftwareVersionID( 22, &softID));
+
+		//------------------------------------------------------------------------------    
+        // Add ArtNet
+        IGdtfArtNetPtr artNet;
+        __checkVCOM(gdtfWrite->CreateArtNet(&artNet));
+		IGdtfMapPtr artNetMap1;
+        __checkVCOM(artNet->CreateMap(1, 2, &artNetMap1));
+		IGdtfMapPtr artNetMap2;
+        __checkVCOM(artNet->CreateMap(1, 2, &artNetMap2));
+        __checkVCOM(artNetMap2->SetKey(3));
+        __checkVCOM(artNetMap2->SetValue(4));
+
+		//------------------------------------------------------------------------------    
+        // Add sACN
+        IGdtfSACNPtr sACN;
+        __checkVCOM(gdtfWrite->CreateSACN(&sACN));
+		IGdtfMapPtr sACNMap1;
+        __checkVCOM(sACN->CreateMap(5, 6, &sACNMap1));
+		IGdtfMapPtr sACNMap2;
+        __checkVCOM(sACN->CreateMap(5, 6, &sACNMap2));
+        __checkVCOM(sACNMap2->SetKey(7));
+        __checkVCOM(sACNMap2->SetValue(8));
 
         //------------------------------------------------------------------------------    
         // Add DMXPersonality
@@ -422,6 +462,14 @@ void GdtfUnittest::ReadFile()
 
 		__checkVCOM(gdtfRead->GetFixtureGUID(resultUUID));
 		this->checkifEqual("GetFixtureGUID fixtureUUID ", fixtureUUID, resultUUID);
+
+		size_t thumbnailOffsetX;
+		__checkVCOM(gdtfRead->GetThumbnailOffsetX(thumbnailOffsetX));
+		this->checkifEqual("GetThumbnailOffsetX ", thumbnailOffsetX, (size_t)1);
+
+		size_t thumbnailOffsetY;
+		__checkVCOM(gdtfRead->GetThumbnailOffsetY(thumbnailOffsetY));
+		this->checkifEqual("GetThumbnailOffsetY ", thumbnailOffsetY, (size_t)2);
 
 		bool canHaveChildren;
 		__checkVCOM(gdtfRead->GetCanHaveChildren(canHaveChildren));
@@ -686,9 +734,45 @@ void GdtfUnittest::ReadFile()
 
 
         // Filter.Measurements
-        // (The Meaurement attributes are check in the Emitter test.)
+        // (The Measurement attributes are checked in the Emitter test.)
         size_t measruementCount; __checkVCOM(gdtfFilter->GetMeasurementCount(measruementCount));
         this->checkifEqual(" Filter.Measurements Count", measruementCount, size_t(3) );
+
+		//------------------------------------------------------------------------------------------------------------------
+		// DMXProfiles
+		size_t dmxProfileCount; __checkVCOM(gdtfRead->GetDMXProfileCount(dmxProfileCount));
+		this->checkifEqual("DMXProfile Count", dmxProfileCount, size_t(2));
+
+		IGdtfDMXProfilePtr gdtfDMXProfile1; __checkVCOM(gdtfRead->GetDMXProfileAt(0, &gdtfDMXProfile1));
+
+		size_t pointCount; __checkVCOM(gdtfDMXProfile1->GetPointCount(pointCount));
+		this->checkifEqual("DMXProfile Count", pointCount, size_t(2));
+
+		IGdtfPointPtr gdtfPoint1; __checkVCOM(gdtfDMXProfile1->GetPointAt(0, &gdtfPoint1));
+		double dmxPercentage; __checkVCOM(gdtfPoint1->GetDMXPercentage(dmxPercentage));
+		double cfc3; __checkVCOM(gdtfPoint1->GetCFC3(cfc3));
+		double cfc2; __checkVCOM(gdtfPoint1->GetCFC2(cfc2));
+		double cfc1; __checkVCOM(gdtfPoint1->GetCFC1(cfc1));
+		double cfc0; __checkVCOM(gdtfPoint1->GetCFC0(cfc0));
+
+		this->checkifEqual("Point 1 DMXPercentage", dmxPercentage, (double)0);
+		this->checkifEqual("Point 1 CFC3", cfc3, (double)0);
+		this->checkifEqual("Point 1 CFC2", cfc2, (double)4);
+		this->checkifEqual("Point 1 CFC1", cfc1, (double)-4);
+		this->checkifEqual("Point 1 CFC0", cfc0, (double)1);
+
+		IGdtfPointPtr gdtfPoint2; __checkVCOM(gdtfDMXProfile1->GetPointAt(1, &gdtfPoint2));
+		__checkVCOM(gdtfPoint2->GetDMXPercentage(dmxPercentage));
+		__checkVCOM(gdtfPoint2->GetCFC3(cfc3));
+		__checkVCOM(gdtfPoint2->GetCFC2(cfc2));
+		__checkVCOM(gdtfPoint2->GetCFC1(cfc1));
+		__checkVCOM(gdtfPoint2->GetCFC0(cfc0));
+
+		this->checkifEqual("Point 2 DMXPercentage", dmxPercentage, (double)0.75);
+		this->checkifEqual("Point 2 CFC3", cfc3, (double)64);
+		this->checkifEqual("Point 2 CFC2", cfc2, (double)0);
+		this->checkifEqual("Point 2 CFC1", cfc1, (double)0);
+		this->checkifEqual("Point 2 CFC0", cfc0, (double)0);
 
 
         //------------------------------------------------------------------------------------------------------------------
@@ -814,7 +898,32 @@ void GdtfUnittest::ReadFile()
 		checkifEqual("ANSI Color Green", 	ansiColor_Green, 	gdtfColor_Green);
 		checkifEqual("ANSI Color Blue", 	ansiColor_Blue, 	gdtfColor_Blue);
 		checkifEqual("ANSI Color White", 	ansiColor_White,	gdtfColor_White);
-		
+
+		//------------------------------------------------------------------------------------------------------------------
+		// Check AdditionalColorSpace
+		size_t additionalColorSpaceCount = 0;
+		__checkVCOM(gdtfRead->GetAdditionalColorSpaceCount(additionalColorSpaceCount));
+		checkifEqual("AdditionalColorSpace Count ", additionalColorSpaceCount, (size_t)2);
+
+		// 1
+		IGdtfColorSpacePtr additionalColorSpace1;
+		__checkVCOM(gdtfRead->GetAdditionalColorSpaceAt(0, &additionalColorSpace1));
+
+		checkifEqual("AdditionalColorSpace 1 Name ", additionalColorSpace1->GetName(), "My AdditionalColorSpace 1");
+
+		EGdtfColorSpace colorSpace1 = EGdtfColorSpace::ANSI;
+		__checkVCOM(additionalColorSpace1->GetColorSpace(colorSpace1));
+		checkifEqual("AdditionalColorSpace 1 ColorSpace ", (size_t)colorSpace1, (size_t)EGdtfColorSpace::ProPhoto);
+
+		// 2
+		IGdtfColorSpacePtr additionalColorSpace2;
+		__checkVCOM(gdtfRead->GetAdditionalColorSpaceAt(1, &additionalColorSpace2));
+
+		checkifEqual("AdditionalColorSpace 2 Name ", additionalColorSpace2->GetName(), "My AdditionalColorSpace 2");
+
+		EGdtfColorSpace colorSpace2 = EGdtfColorSpace::ANSI;
+		__checkVCOM(additionalColorSpace2->GetColorSpace(colorSpace2));
+		checkifEqual("AdditionalColorSpace 2 ColorSpace ", (size_t)colorSpace2, (size_t)EGdtfColorSpace::sRGB);
 
 		//------------------------------------------------------------------------------    
 		// Fill with DMX
@@ -1299,6 +1408,9 @@ void GdtfUnittest::ReadFile()
 		IGdtfGeometryPtr geo3;
 		__checkVCOM(gdtfRead->GetGeometryAt(2, &geo3));
 
+		IGdtfGeometryPtr geo4;
+		__checkVCOM(gdtfRead->GetGeometryAt(3, &geo4));
+
 		//----------------------------------------------
 		//Media server geos
 		IGdtfGeometryPtr geo5;
@@ -1348,6 +1460,18 @@ void GdtfUnittest::ReadFile()
 			this->checkifEqual("Check Adress", (Sint32)3,breakId);
 		}
 
+		if(geo4)
+		{
+			//Lamp
+			IGdtfPhysicalEmitterPtr gdtfEmitter;
+			if (__checkVCOM(geo4->GetEmitterSpectrum(&gdtfEmitter)))
+			{
+				MvrString emitterName = gdtfEmitter->GetName();
+				this->checkifEqual("GetEmitterSpectrum ", emitterName, "My emitterName");
+			}
+			
+		}
+
 		//--------------------------------------------------------------------------------
 		// Read Revision
 		size_t countRevs = 0;
@@ -1371,9 +1495,8 @@ void GdtfUnittest::ReadFile()
 		this->checkifEqual("Check RevDatefMinute",	expTimestamp.fMinute,	Uint16(33));
 		this->checkifEqual("Check RevDatefSecond",	expTimestamp.fSecond, 	Uint16(44));
 		this->checkifEqual("Check UserId",			userId, 				size_t(254));
+		this->checkifEqual("Check ModifiedBy", rev->GetModifiedBy(), "unit test");
 
-
-		
 
         //------------------------------------------------------------------------------    
         // Read RDM         
@@ -1400,6 +1523,68 @@ void GdtfUnittest::ReadFile()
         size_t softIDVal;
         __checkVCOM (softID->GetValue(softIDVal));
         this->checkifEqual("SoftwareVersionID Value", Sint32(softIDVal), Sint32(22));
+
+		//------------------------------------------------------------------------------    
+        // Read ArtNet
+        IGdtfArtNetPtr artNet;
+        __checkVCOM(gdtfRead->GetArtNet(&artNet));
+        
+        size_t artNetMapCount = 0;
+        __checkVCOM(artNet->GetMapCount(artNetMapCount));
+        checkifEqual("Check ArtNet Map Count", artNetMapCount, size_t(2));
+
+		IGdtfMapPtr artNetMap1;
+		__checkVCOM(artNet->GetMapAt(0, &artNetMap1));
+
+		Uint32 artNetMap1Key = 0;
+		__checkVCOM(artNetMap1->GetKey(artNetMap1Key));
+		checkifEqual("Check ArtNet Map 1 Key", artNetMap1Key, (Uint32)1);
+
+		Uint32 artNetMap1Value = 0;
+		__checkVCOM(artNetMap1->GetValue(artNetMap1Value));
+		checkifEqual("Check ArtNet Map 1 Value", artNetMap1Value, (Uint32)2);
+
+		IGdtfMapPtr artNetMap2;
+		__checkVCOM(artNet->GetMapAt(1, &artNetMap2));
+
+		Uint32 artNetMap2Key = 0;
+		__checkVCOM(artNetMap2->GetKey(artNetMap2Key));
+		checkifEqual("Check ArtNet Map 2 Key", artNetMap2Key, (Uint32)3);
+
+		Uint32 artNetMap2Value = 0;
+		__checkVCOM(artNetMap2->GetValue(artNetMap2Value));
+		checkifEqual("Check ArtNet Map 2 Value", artNetMap2Value, (Uint32)4);
+
+		//------------------------------------------------------------------------------    
+        // Read sACN
+        IGdtfSACNPtr sACN;
+        __checkVCOM(gdtfRead->GetSACN(&sACN));
+        
+        size_t sACNMapCount = 0;
+        __checkVCOM(sACN->GetMapCount(sACNMapCount));
+        checkifEqual("Check SACN Map Count", sACNMapCount, size_t(2));
+
+		IGdtfMapPtr sACNMap1;
+		__checkVCOM(sACN->GetMapAt(0, &sACNMap1));
+
+		Uint32 sACNMap1Key = 0;
+		__checkVCOM(sACNMap1->GetKey(sACNMap1Key));
+		checkifEqual("Check SACN Map 1 Key", sACNMap1Key, (Uint32)5);
+
+		Uint32 sACNMap1Value = 0;
+		__checkVCOM(sACNMap1->GetValue(sACNMap1Value));
+		checkifEqual("Check SACN Map 1 Value", sACNMap1Value, (Uint32)6);
+
+		IGdtfMapPtr sACNMap2;
+		__checkVCOM(sACN->GetMapAt(1, &sACNMap2));
+
+		Uint32 sACNMap2Key = 0;
+		__checkVCOM(sACNMap2->GetKey(sACNMap2Key));
+		checkifEqual("Check SACN Map 2 Key", sACNMap2Key, (Uint32)7);
+
+		Uint32 sACNMap2Value = 0;
+		__checkVCOM(sACNMap2->GetValue(sACNMap2Value));
+		checkifEqual("Check SACN Map 2 Value", sACNMap2Value, (Uint32)8);
 
         //------------------------------------------------------------------------------    
         // Read DMXPersonality

@@ -97,6 +97,36 @@ MvrString VectorworksMVR::CGdtfModelImpl::GetGeometryFile_GLTF_FullPath()
 	return fModel->GetGeometryFile_GLTF_FullPath().GetCharPtr();
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfModelImpl::GetBuffer3DS(void* bufferToCopy, size_t& length)
+{
+	// Check Pointer
+	if ( ! fModel) return kVCOMError_NotInitialized;
+
+	fModel->GetBuffer3DS(bufferToCopy, length);
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfModelImpl::GetBufferSVG(void* bufferToCopy, size_t& length)
+{
+	// Check Pointer
+	if ( ! fModel) return kVCOMError_NotInitialized;
+
+	fModel->GetBufferSVG(bufferToCopy, length);
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfModelImpl::GetBufferGLTF(void* bufferToCopy, size_t& length)
+{
+	// Check Pointer
+	if ( ! fModel) return kVCOMError_NotInitialized;
+
+	fModel->GetBufferGLTF(bufferToCopy, length);
+	
+	return kVCOMError_NoError;
+}
+
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfModelImpl::SetName(MvrString name)
 {
 	if(!fModel) return kVCOMError_NotInitialized;	
@@ -153,6 +183,36 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfModelImpl::SetGeometryFile(MvrStr
 	
 	TXString vwPath (path);
 	fModel->SetGeometryFile(vwPath);
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfModelImpl::SetBuffer3DS(void* bufferToCopy, size_t length)
+{
+	// Check Pointer
+	if ( ! fModel) return kVCOMError_NotInitialized;
+
+	fModel->SetBuffer3DS(bufferToCopy, length);
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfModelImpl::SetBufferSVG(void* bufferToCopy, size_t length)
+{
+	// Check Pointer
+	if ( ! fModel) return kVCOMError_NotInitialized;
+
+	fModel->SetBufferSVG(bufferToCopy, length);
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfModelImpl::SetBufferGLTF(void* bufferToCopy, size_t length)
+{
+	// Check Pointer
+	if ( ! fModel) return kVCOMError_NotInitialized;
+
+	fModel->SetBufferGLTF(bufferToCopy, length);
 	
 	return kVCOMError_NoError;
 }

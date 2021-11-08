@@ -45,8 +45,13 @@
 #include "Implementation/CGdtfDMXPersonality.h"
 #include "Implementation/CGdtfSoftwareVersionID.h"
 #include "Implementation/CGdtfFTRDM.h"
+#include "Implementation/CGdtfMap.h"
+#include "Implementation/CGdtfArtNet.h"
+#include "Implementation/CGdtfSACN.h"
 #include "Implementation/CGdtfMeasurement.h"
 #include "Implementation/CGdtfFilter.h"
+#include "Implementation/CGdtfDmxProfile.h"
+#include "Implementation/CGdtfPoint.h"
 #include "Implementation/CGdtfColorSpace.h"
 #include "Implementation/CGdtfConnector.h"
 #include "Implementation/CGdtfPowerConsumption.h"
@@ -161,6 +166,12 @@ extern "C" VectorworksMVR::VCOMError VWQueryInterface(const VectorworksMVR::VWII
         resultInterface = new CGdtfXmlParsingErrorImpl();
     else if (iid == VectorworksMVR::IID_GdtfTRDM)
         resultInterface = new CGdtf_FTRDMImpl();
+    else if (iid == VectorworksMVR::IID_GdtfMap)
+        resultInterface = new CGdtfMapImpl();
+    else if (iid == VectorworksMVR::IID_GdtfArtNet)
+        resultInterface = new CGdtfArtNetImpl();
+    else if (iid == VectorworksMVR::IID_GdtfSACN)
+        resultInterface = new CGdtfSACNImpl();
     else if (iid == VectorworksMVR::IID_GdtfDMXPersonality)
         resultInterface = new CGdtfDMXPersonalityImpl();
     else if (iid == VectorworksMVR::IID_GdtfSoftwareVersionID)
@@ -169,6 +180,10 @@ extern "C" VectorworksMVR::VCOMError VWQueryInterface(const VectorworksMVR::VWII
         resultInterface = new CGdtfMeasurementImpl();
     else if (iid == VectorworksMVR::IID_GdtfFilter)
         resultInterface = new CGdtfFilterImpl();
+    else if (iid == VectorworksMVR::IID_GdtfDMXProfile)
+        resultInterface = new CGdtfDMXProfileImpl();
+    else if (iid == VectorworksMVR::IID_GdtfPoint)
+        resultInterface = new CGdtfPointImpl();
     else if (iid == VectorworksMVR::IID_GdtfColorSpace)
         resultInterface = new CGdtfColorSpaceImpl();
     else if (iid == VectorworksMVR::IID_GdtfConnector)

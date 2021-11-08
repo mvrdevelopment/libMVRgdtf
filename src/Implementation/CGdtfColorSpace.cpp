@@ -19,6 +19,14 @@ VectorworksMVR::CGdtfColorSpaceImpl::~CGdtfColorSpaceImpl()
 {   
 }
 
+MvrString VectorworksMVR::CGdtfColorSpaceImpl::GetName()
+{
+	// Check Pointer
+	if ( ! fColorSpace) return "";
+	
+    return fColorSpace->GetName();
+}
+
 VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::GetColorSpace(EGdtfColorSpace& outVal)
 {
 	//Check Pointer
@@ -67,6 +75,15 @@ VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::GetWhite(CieColor& 
     outVal = SceneData::GdtfConverter::ConvertCColor( fColorSpace->GetWhite() );
 
     return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfColorSpaceImpl::SetName(MvrString name)
+{
+	if(!fColorSpace) return kVCOMError_NotInitialized;	
+	
+    fColorSpace->SetName(name);
+
+   	return kVCOMError_NoError;   
 }
 
 VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfColorSpaceImpl::SetColorSpace(EGdtfColorSpace val)

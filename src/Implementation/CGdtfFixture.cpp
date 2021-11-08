@@ -19,6 +19,8 @@
 #include "CGdtfDmxProfile.h"
 #include "CGdtfCRIGroup.h"
 #include "CGdtfFTRDM.h"
+#include "CGdtfArtNet.h"
+#include "CGdtfSACN.h"
 #include "CGdtfXmlParsingError.h"
 #include "GdtfError.h"
 #include "CGdtfFilter.h"
@@ -307,6 +309,42 @@ MvrString VectorworksMVR::CGdtfFixtureImpl::GetFixtureThumbnail_SVG_FullPath()
 	
 	
 	return fFixtureObject->GetSVGThumnailFullPath().GetCharPtr();
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetThumbnailOffsetX(size_t& offsetX)
+{
+    if(!fFixtureObject) {return kVCOMError_NotInitialized;}
+    
+    offsetX = fFixtureObject->GetThumbnailOffsetX();
+    
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::SetThumbnailOffsetX(size_t offsetX)
+{
+    if(!fFixtureObject) {return kVCOMError_NotInitialized;}
+    
+    fFixtureObject->SetThumbnailOffsetX(offsetX);
+    
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetThumbnailOffsetY(size_t& offsetY)
+{
+    if(!fFixtureObject) {return kVCOMError_NotInitialized;}
+    
+    offsetY = fFixtureObject->GetThumbnailOffsetY();
+    
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::SetThumbnailOffsetY(size_t offsetY)
+{
+    if(!fFixtureObject) {return kVCOMError_NotInitialized;}
+    
+    fFixtureObject->SetThumbnailOffsetY(offsetY);
+    
+    return kVCOMError_NoError;
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::SetFixtureTypeDescription(MvrString descrip)
@@ -1354,7 +1392,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetRDM(IGdtf_FTRDM *
 	}
 	
 	//---------------------------------------------------------------------------
-	// Check Incomming Object
+	// Check Incoming Object
 	if (*value)
 	{
 		(*value)->Release();
@@ -1399,7 +1437,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateRDM(Vectorwork
 	}
 	
 	//---------------------------------------------------------------------------
-	// Check Incomming Object
+	// Check Incoming Object
 	if (*outFTRDM)
 	{
 		(*outFTRDM)->Release();
@@ -1409,6 +1447,182 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateRDM(Vectorwork
 	//---------------------------------------------------------------------------
 	// Set Out Value
 	*outFTRDM = pRdm;
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetArtNet(IGdtfArtNet** artNet)
+{
+	// Check if Set
+	if (!fFixtureObject) { return kVCOMError_NotInitialized; }
+	
+
+	SceneData::GdtfArtNetPtr gdtfArtNet = fFixtureObject->GetProtocollContainer().GetArtNet();
+	
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CGdtfArtNetImpl* pArtNet = nullptr;
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfArtNet, (IVWUnknown**)& pArtNet)))
+	{
+		// Check Casting
+		CGdtfArtNetImpl* pResultInterface = static_cast<CGdtfArtNetImpl*>(pArtNet);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(gdtfArtNet);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incoming Object
+	if (*artNet)
+	{
+		(*artNet)->Release();
+		*artNet = NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*artNet = pArtNet;
+	
+	return kVCOMError_NoError;
+}
+
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateArtNet(IGdtfArtNet** artNet)
+{
+	// Check if Set
+	if (!fFixtureObject) { return kVCOMError_NotInitialized; }
+	
+	
+	SceneData::GdtfArtNetPtr gdtfArtNet = fFixtureObject->GetProtocollContainer().CreateArtNet();
+	
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CGdtfArtNetImpl* pArtNet = nullptr;
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfArtNet, (IVWUnknown**)& pArtNet)))
+	{
+		// Check Casting
+		CGdtfArtNetImpl* pResultInterface = static_cast<CGdtfArtNetImpl*>(pArtNet);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(gdtfArtNet);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incoming Object
+	if (*artNet)
+	{
+		(*artNet)->Release();
+		*artNet = NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*artNet = pArtNet;
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetSACN(IGdtfSACN** sACN)
+{
+	// Check if Set
+	if (!fFixtureObject) { return kVCOMError_NotInitialized; }
+	
+	SceneData::GdtfsAcnPtr gdtfSACN = fFixtureObject->GetProtocollContainer().GetSACN();
+	
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CGdtfSACNImpl* pSACN = nullptr;
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfSACN, (IVWUnknown**)& pSACN)))
+	{
+		// Check Casting
+		CGdtfSACNImpl* pResultInterface = static_cast<CGdtfSACNImpl*>(pSACN);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(gdtfSACN);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incoming Object
+	if (*sACN)
+	{
+		(*sACN)->Release();
+		*sACN = NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*sACN = pSACN;
+	
+	return kVCOMError_NoError;
+}
+
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateSACN(IGdtfSACN** sACN)
+{
+	// Check if Set
+	if (!fFixtureObject) { return kVCOMError_NotInitialized; }
+	
+	SceneData::GdtfsAcnPtr gdtfSACN = fFixtureObject->GetProtocollContainer().CreateSACN();
+	
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CGdtfSACNImpl* pSACN = nullptr;
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfSACN, (IVWUnknown**)& pSACN)))
+	{
+		// Check Casting
+		CGdtfSACNImpl* pResultInterface = static_cast<CGdtfSACNImpl*>(pSACN);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(gdtfSACN);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incoming Object
+	if (*sACN)
+	{
+		(*sACN)->Release();
+		*sACN = NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*sACN = pSACN;
 	
 	return kVCOMError_NoError;
 }
@@ -1458,6 +1672,106 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetColorSpace(Vector
     return kVCOMError_NoError;
 }
 
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetAdditionalColorSpaceCount(size_t &count)
+{
+    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
+
+    count = fFixtureObject->GetPhysicalDesciptionsContainer().GetAdditionalColorSpaceArray().size();
+
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetAdditionalColorSpaceAt(size_t at, VectorworksMVR::IGdtfColorSpace** value)
+{
+    // Check if Set
+    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
+
+    // Check if no Overflow
+    if (at >= fFixtureObject->GetPhysicalDesciptionsContainer().GetAdditionalColorSpaceArray().size()) { return kVCOMError_OutOfBounds; }
+
+
+    SceneData::GdtfColorSpace* gdtfColorSpace = fFixtureObject->GetPhysicalDesciptionsContainer().GetAdditionalColorSpaceArray()[at];
+    
+    //---------------------------------------------------------------------------
+    // Initialize Object
+    CGdtfColorSpaceImpl* pColorSpaceObj = nullptr;
+
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfColorSpace, (IVWUnknown**)& pColorSpaceObj)))
+    {
+        // Check Casting
+        CGdtfColorSpaceImpl* pResultInterface = static_cast<CGdtfColorSpaceImpl*>(pColorSpaceObj);
+        if (pResultInterface)
+        {
+            pResultInterface->SetPointer(gdtfColorSpace);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+
+    //---------------------------------------------------------------------------
+    // Check Incomming Object
+    if (*value)
+    {
+        (*value)->Release();
+        *value = NULL;
+    }
+
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *value = pColorSpaceObj;
+
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateAdditionalColorSpace(MvrString name, GdtfDefines::EGdtfColorSpace colorSpace, VectorworksMVR::IGdtfColorSpace** outVal)
+{
+    // Check if Set
+    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
+
+
+    SceneData::GdtfColorSpace* gdtfColorSpace = fFixtureObject->GetPhysicalDesciptionsContainer().AddAdditionalColorSpace(name, colorSpace);
+
+    //---------------------------------------------------------------------------
+    // Initialize Object
+    CGdtfColorSpaceImpl* pColorSpaceObj = nullptr;
+
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfColorSpace, (IVWUnknown**)& pColorSpaceObj)))
+    {
+        // Check Casting
+        CGdtfColorSpaceImpl* pResultInterface = static_cast<CGdtfColorSpaceImpl*>(pColorSpaceObj);
+        if (pResultInterface)
+        {
+            pResultInterface->SetPointer(gdtfColorSpace);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+
+    //---------------------------------------------------------------------------
+    // Check Incomming Object
+    if (*outVal)
+    {
+        (*outVal)->Release();
+        *outVal = NULL;
+    }
+
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *outVal = pColorSpaceObj;
+
+    return kVCOMError_NoError;
+}
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetEmitterCount(size_t &count)
 {
@@ -1754,7 +2068,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateDMXProfile(Vec
     }
 
     //---------------------------------------------------------------------------
-    // Check Incomming Object
+    // Check Incoming Object
     if (*outVal)
     {
         (*outVal)->Release();
