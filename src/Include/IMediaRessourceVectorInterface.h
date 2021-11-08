@@ -81,6 +81,8 @@ namespace VectorworksMVR
     class IGdtfMacroVisualStep;
     class IGdtfMacroVisualValue;
     class IGdtf_FTRDM;
+    class IGdtfArtNet;
+    class IGdtfSACN;
 	class IGdtfFeatureGroup;
 	class IGdtfDmxChannel;
     class IGdtfDmxLogicalChannel;
@@ -1317,8 +1319,12 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		virtual VCOMError VCOM_CALLTYPE		SetLegHeight(double value) = 0;
 
 		//-----------------------------------------------------------------------------
-        // GDTF 1.2
-        // PhysicalDescriptions
+		// GDTF 1.2
+		virtual VCOMError VCOM_CALLTYPE     GetArtNet(IGdtfArtNet** artNet) = 0;
+		virtual VCOMError VCOM_CALLTYPE     CreateArtNet(IGdtfArtNet** artNet) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE     GetSACN(IGdtfSACN** sACN) = 0;
+		virtual VCOMError VCOM_CALLTYPE     CreateSACN(IGdtfSACN** sACN) = 0;
 		virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetAdditionalColorSpaceCount(size_t& count) = 0;
         virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateAdditionalColorSpace(MvrString name, GdtfDefines::EGdtfColorSpace colorSpace, VectorworksMVR::IGdtfColorSpace** outVal) = 0;
         virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetAdditionalColorSpaceAt(size_t at, VectorworksMVR::IGdtfColorSpace** value) = 0;
@@ -1350,6 +1356,44 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
         virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
     };
     typedef VCOMPtr<IGdtf_FTRDM>	IGdtfTRDMPtr;
+
+	class DYNAMIC_ATTRIBUTE IGdtfMap : public IVWUnknown
+	{
+	public:
+		virtual VCOMError VCOM_CALLTYPE     GetKey(Uint32& key) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetValue(Uint32& value) = 0;
+
+        virtual VCOMError VCOM_CALLTYPE     SetKey(Uint32 key) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetValue(Uint32 value) = 0;
+		
+		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+	};
+	typedef VCOMPtr<IGdtfMap>	IGdtfMapPtr;
+
+	class DYNAMIC_ATTRIBUTE IGdtfArtNet : public IVWUnknown
+    {
+    public:
+        virtual VCOMError VCOM_CALLTYPE  	GetMapCount(size_t& count) = 0;
+        virtual VCOMError VCOM_CALLTYPE  	GetMapAt(size_t at, IGdtfMap** map) = 0;
+        virtual VCOMError VCOM_CALLTYPE  	CreateMap(Uint32 key, Uint32 value, IGdtfMap** map) = 0;
+        
+        virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+        virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+    };
+    typedef VCOMPtr<IGdtfArtNet>	IGdtfArtNetPtr;
+
+	class DYNAMIC_ATTRIBUTE IGdtfSACN : public IVWUnknown
+    {
+    public:
+        virtual VCOMError VCOM_CALLTYPE  	GetMapCount(size_t& count) = 0;
+        virtual VCOMError VCOM_CALLTYPE  	GetMapAt(size_t at, IGdtfMap** map) = 0;
+        virtual VCOMError VCOM_CALLTYPE  	CreateMap(Uint32 key, Uint32 value, IGdtfMap** map) = 0;
+        
+        virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+        virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+    };
+    typedef VCOMPtr<IGdtfSACN>	IGdtfSACNPtr;
     
     
     class DYNAMIC_ATTRIBUTE IGdtfDMXPersonality : public IVWUnknown

@@ -398,7 +398,29 @@ void GdtfUnittest::WriteFile()
         //------------------------------------------------------------------------------    
         // Add SoftwareVersionID
         IGdtfSoftwareVersionIDPtr softID;
-        __checkVCOM (rdm->CreateSoftwareVersionID( 22, &softID));        
+        __checkVCOM (rdm->CreateSoftwareVersionID( 22, &softID));
+
+		//------------------------------------------------------------------------------    
+        // Add ArtNet
+        IGdtfArtNetPtr artNet;
+        __checkVCOM(gdtfWrite->CreateArtNet(&artNet));
+		IGdtfMapPtr artNetMap1;
+        __checkVCOM(artNet->CreateMap(1, 2, &artNetMap1));
+		IGdtfMapPtr artNetMap2;
+        __checkVCOM(artNet->CreateMap(1, 2, &artNetMap2));
+        __checkVCOM(artNetMap2->SetKey(3));
+        __checkVCOM(artNetMap2->SetValue(4));
+
+		//------------------------------------------------------------------------------    
+        // Add sACN
+        IGdtfSACNPtr sACN;
+        __checkVCOM(gdtfWrite->CreateSACN(&sACN));
+		IGdtfMapPtr sACNMap1;
+        __checkVCOM(sACN->CreateMap(5, 6, &sACNMap1));
+		IGdtfMapPtr sACNMap2;
+        __checkVCOM(sACN->CreateMap(5, 6, &sACNMap2));
+        __checkVCOM(sACNMap2->SetKey(7));
+        __checkVCOM(sACNMap2->SetValue(8));
 
         //------------------------------------------------------------------------------    
         // Add DMXPersonality
@@ -1501,6 +1523,68 @@ void GdtfUnittest::ReadFile()
         size_t softIDVal;
         __checkVCOM (softID->GetValue(softIDVal));
         this->checkifEqual("SoftwareVersionID Value", Sint32(softIDVal), Sint32(22));
+
+		//------------------------------------------------------------------------------    
+        // Read ArtNet
+        IGdtfArtNetPtr artNet;
+        __checkVCOM(gdtfRead->GetArtNet(&artNet));
+        
+        size_t artNetMapCount = 0;
+        __checkVCOM(artNet->GetMapCount(artNetMapCount));
+        checkifEqual("Check ArtNet Map Count", artNetMapCount, size_t(2));
+
+		IGdtfMapPtr artNetMap1;
+		__checkVCOM(artNet->GetMapAt(0, &artNetMap1));
+
+		Uint32 artNetMap1Key = 0;
+		__checkVCOM(artNetMap1->GetKey(artNetMap1Key));
+		checkifEqual("Check ArtNet Map 1 Key", artNetMap1Key, (Uint32)1);
+
+		Uint32 artNetMap1Value = 0;
+		__checkVCOM(artNetMap1->GetValue(artNetMap1Value));
+		checkifEqual("Check ArtNet Map 1 Value", artNetMap1Value, (Uint32)2);
+
+		IGdtfMapPtr artNetMap2;
+		__checkVCOM(artNet->GetMapAt(1, &artNetMap2));
+
+		Uint32 artNetMap2Key = 0;
+		__checkVCOM(artNetMap2->GetKey(artNetMap2Key));
+		checkifEqual("Check ArtNet Map 2 Key", artNetMap2Key, (Uint32)3);
+
+		Uint32 artNetMap2Value = 0;
+		__checkVCOM(artNetMap2->GetValue(artNetMap2Value));
+		checkifEqual("Check ArtNet Map 2 Value", artNetMap2Value, (Uint32)4);
+
+		//------------------------------------------------------------------------------    
+        // Read sACN
+        IGdtfSACNPtr sACN;
+        __checkVCOM(gdtfRead->GetSACN(&sACN));
+        
+        size_t sACNMapCount = 0;
+        __checkVCOM(sACN->GetMapCount(sACNMapCount));
+        checkifEqual("Check SACN Map Count", sACNMapCount, size_t(2));
+
+		IGdtfMapPtr sACNMap1;
+		__checkVCOM(sACN->GetMapAt(0, &sACNMap1));
+
+		Uint32 sACNMap1Key = 0;
+		__checkVCOM(sACNMap1->GetKey(sACNMap1Key));
+		checkifEqual("Check SACN Map 1 Key", sACNMap1Key, (Uint32)5);
+
+		Uint32 sACNMap1Value = 0;
+		__checkVCOM(sACNMap1->GetValue(sACNMap1Value));
+		checkifEqual("Check SACN Map 1 Value", sACNMap1Value, (Uint32)6);
+
+		IGdtfMapPtr sACNMap2;
+		__checkVCOM(sACN->GetMapAt(1, &sACNMap2));
+
+		Uint32 sACNMap2Key = 0;
+		__checkVCOM(sACNMap2->GetKey(sACNMap2Key));
+		checkifEqual("Check SACN Map 2 Key", sACNMap2Key, (Uint32)7);
+
+		Uint32 sACNMap2Value = 0;
+		__checkVCOM(sACNMap2->GetValue(sACNMap2Value));
+		checkifEqual("Check SACN Map 2 Value", sACNMap2Value, (Uint32)8);
 
         //------------------------------------------------------------------------------    
         // Read DMXPersonality
