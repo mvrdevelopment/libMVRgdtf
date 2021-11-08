@@ -66,6 +66,9 @@ namespace SceneData
     typedef GdtfPowerConsumption*	GdtfPowerConsumptionPtr;
     typedef std::vector<GdtfPowerConsumption*>	TGdtfPowerConsumptionArray;
 
+	class GdtfGeometryWiringObject;
+	typedef GdtfGeometryWiringObject* GdtfGeometryWiringObjectPtr;
+
 
 	const Sint32 kDmxBreakOverwriteValue = 0;
 	//------------------------------------------------------------------------------------
@@ -708,6 +711,12 @@ namespace SceneData
 		GdtfGeometry*						AddGeometryWithAxis(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
 		GdtfGeometry*						AddGeometryWithLamp(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
 		GdtfGeometry*						AddGeometryDisplay(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
+		GdtfGeometry*						AddGeometryLaser(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
+		GdtfGeometry*						AddGeometryWiringObject(		const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
+		GdtfGeometry*						AddGeometryInventory(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
+		GdtfGeometry*						AddGeometryStructure(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
+		GdtfGeometry*						AddGeometrySupport(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
+		GdtfGeometry*						AddGeometryMagnet(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 
 	protected:
 		virtual	TXString				GetNodeName();
@@ -898,6 +907,388 @@ namespace SceneData
         virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
 	};
 	typedef GdtfGeometryDisplay* GdtfGeometryDisplayPtr;
+
+	class GdtfLaserProtocol : public GdtfObject
+	{
+	public:
+		GdtfLaserProtocol();
+		GdtfLaserProtocol(const TXString& name);
+
+		~GdtfLaserProtocol();
+	
+	private:
+		TXString fName;
+
+	public:
+		virtual EGdtfObjectType			GetObjectType();
+
+		// Getters
+		const TXString&	GetName() const;
+
+		// Setters
+		void			SetName(const TXString& name);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+	};
+	typedef GdtfLaserProtocol*					GdtfLaserProtocolPtr;
+	typedef std::vector<GdtfLaserProtocolPtr> 	TGdtfLaserProtocolArray;
+
+	class GdtfGeometryLaser : public GdtfGeometry
+	{
+	public:
+		GdtfGeometryLaser(GdtfGeometry* parent);
+		GdtfGeometryLaser(const TXString& name, GdtfModelPtr refToModel,const VWTransformMatrix& ma, GdtfGeometry* parent);
+
+		~GdtfGeometryLaser();
+	
+	private:
+		EGdtfLaserColorType 	fColorType;
+		double					fColor; //Wavelength
+		double					fOutputStrength;
+		GdtfPhysicalEmitter*	fEmitter;
+		double 					fBeamDiameter;
+		double					fBeamDivergenceMin;
+		double					fBeamDivergenceMax;
+		double					fScanAnglePan;
+		double					fScanAngleTilt;
+		double					fScanSpeed;
+
+		TXString 				fUnresolvedEmitter;
+
+		TGdtfLaserProtocolArray	fLaserProtocols;
+
+	public:
+		virtual EGdtfObjectType			GetObjectType();
+
+		// Getters
+        EGdtfLaserColorType				GetColorType() const;
+		double                  		GetColor() const;
+		double                  		GetOutputStrength() const;
+		GdtfPhysicalEmitter*    		GetEmitter() const;
+		double                  		GetBeamDiameter() const;
+		double                  		GetBeamDivergenceMin() const;
+		double                 			GetBeamDivergenceMax() const;
+		double                  		GetScanAnglePan() const;
+		double                  		GetScanAngleTilt() const;
+		double                  		GetScanSpeed() const;
+
+		const TXString&					GetUnresolvedEmitter() const;
+
+		const TGdtfLaserProtocolArray&	GetLaserProtocolArray() const;
+
+		// Setters
+		void							SetColorType(const EGdtfLaserColorType& colorType);
+		void							SetColor(double waveLength);
+		void							SetOutputStrength(double outputStrength);
+		void		    				SetEmitter(GdtfPhysicalEmitter* emitter);
+		void							SetBeamDiameter(double beamDiameter);
+		void							SetBeamDivergenceMin(double beamDivergenceMin);
+		void							SetBeamDivergenceMax(double beamDivergenceMax);
+		void							SetScanAnglePan(double scanAnglePan);
+		void							SetScanAngleTilt(double scanAngleTilt);
+		void							SetScanSpeed(double scanSpeed);
+
+		GdtfLaserProtocolPtr         	CreateLaserProtocol(const TXString& name);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+	};
+	typedef GdtfGeometryLaser* GdtfGeometryLaserPtr;
+
+	class GdtfPinPatch : public GdtfObject
+	{
+	public:
+		GdtfPinPatch();
+		GdtfPinPatch(GdtfGeometryWiringObjectPtr toWiringObject, size_t fromPin, size_t toPin);
+
+		~GdtfPinPatch();
+	
+	private:
+		GdtfGeometryWiringObjectPtr	fToWiringObject;
+		size_t						fFromPin;
+		size_t						fToPin;
+
+		TXString					fUnresolvedWiringObject;
+
+	public:
+		virtual EGdtfObjectType			GetObjectType();
+
+		// Getters
+		GdtfGeometryWiringObjectPtr 	GetToWiringObject() const;
+		size_t							GetFromPin() const;
+		size_t							GetToPin() const;
+
+		const TXString&					GetUnresolvedWiringObject() const;
+
+		// Setters
+		void	SetToWiringObject(GdtfGeometryWiringObjectPtr toWiringObject);
+		void	SetFromPin(size_t fromPin);
+		void	SetToPin(size_t toPin);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+	};
+	typedef GdtfPinPatch* 					GdtfPinPatchPtr;
+	typedef std::vector<GdtfPinPatchPtr> 	TGdtfPinPatchArray;
+
+	class GdtfGeometryWiringObject : public GdtfGeometry
+	{
+	public:
+		GdtfGeometryWiringObject(GdtfGeometry* parent);
+		GdtfGeometryWiringObject(const TXString& name, GdtfModelPtr refToModel,const VWTransformMatrix& ma, GdtfGeometry* parent);
+
+		~GdtfGeometryWiringObject();
+	
+	private:
+		// Attributes
+		TXString 			fConnectorType;
+		EGdtfComponentType 	fComponentType;
+		TXString 			fSignalType;
+		size_t 				fPinCount;
+		size_t 				fSignalLayer;
+		EGdtfOrientation 	fOrientation;
+		TXString 			fWireGroup;
+		double 				fElectricalPayload; //Consumer
+		double 				fVoltageRangeMin; 	//Consumer
+		double 				fVoltageRangeMax; 	//Consumer
+		double 				fFrequencyRangeMin; //Consumer
+		double 				fFrequencyRangeMax; //Consumer
+		double 				fCosPhi; 			//Consumer
+		double 				fMaxPayLoad; 		//PowerSource
+		double 				fVoltage; 			//PowerSource
+		double 				fFuseCurrent; 		//Fuse
+		EGdtfFuseRating 	fFuseRating; 		//Fuse
+
+		// Children
+		TGdtfPinPatchArray 	fPinPatches;
+
+	public:
+		virtual EGdtfObjectType		GetObjectType();
+
+		// Getters
+        const TXString&				GetConnectorType() const;
+		EGdtfComponentType      	GetComponentType() const;
+		const TXString&         	GetSignalType() const;
+		size_t    					GetPinCount() const;
+		size_t                  	GetSignalLayer() const;
+		EGdtfOrientation        	GetOrientation() const;
+		const TXString&         	GetWireGroup() const;
+		double                  	GetElectricalPayload() const;
+		double                  	GetVoltageRangeMin() const;
+		double                 		GetVoltageRangeMax() const;
+		double                  	GetFrequencyRangeMin() const;
+		double                  	GetFrequencyRangeMax() const;
+		double                  	GetCosPhi() const;
+		double                  	GetMaxPayLoad() const;
+		double                  	GetVoltage() const;
+		double                  	GetFuseCurrent() const;
+		EGdtfFuseRating         	GetFuseRating() const;
+		const TGdtfPinPatchArray&	GetPinPatchArray() const;
+
+		// Setters
+		void						SetConnectorType(const TXString& connectorType);
+		void      					SetComponentType(const EGdtfComponentType& componentType);
+		void         				SetSignalType(const TXString& signalType);
+		void    					SetPinCount(size_t pinCount);
+		void                  		SetSignalLayer(size_t signalLayer);
+		void        				SetOrientation(EGdtfOrientation orientation);
+		void         				SetWireGroup(const TXString& wireGroup);
+		void                  		SetElectricalPayload(double electricalPayload);
+		void                  		SetVoltageRangeMin(double voltageRangeMin);
+		void                  		SetVoltageRangeMax(double voltageRangeMax);
+		void                  		SetFrequencyRangeMin(double frequencyRangeMin);
+		void                  		SetFrequencyRangeMax(double frequencyRangeMax);
+		void                  		SetCosPhi(double cosPhi);
+		void                  		SetMaxPayLoad(double maxPayload);
+		void                 		SetVoltage(double voltage);
+		void                  		SetFuseCurrent(double fuseCurrent);
+		void         				SetFuseRating(const EGdtfFuseRating& fuseRating);
+		GdtfPinPatchPtr         	CreatePinPatch(GdtfGeometryWiringObject* toWiringObject, size_t fromPin, size_t toPin);
+
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+	};
+
+	class GdtfGeometryInventory : public GdtfGeometry
+	{
+	public:
+		GdtfGeometryInventory(GdtfGeometry* parent);
+		GdtfGeometryInventory(const TXString& name, GdtfModelPtr refToModel,const VWTransformMatrix& ma, GdtfGeometry* parent);
+
+		~GdtfGeometryInventory();
+	
+	private:
+		size_t fCount;
+
+	public:
+		virtual EGdtfObjectType			GetObjectType();
+
+		// Getters
+		size_t    						GetCount() const;
+
+		// Setters
+		void    						SetCount(size_t count);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+	};
+	typedef GdtfGeometryInventory* GdtfGeometryInventoryPtr;
+
+	class GdtfGeometryStructure : public GdtfGeometry
+	{
+	public:
+		GdtfGeometryStructure(GdtfGeometry* parent);
+		GdtfGeometryStructure(const TXString& name, GdtfModelPtr refToModel,const VWTransformMatrix& ma, GdtfGeometry* parent);
+
+		~GdtfGeometryStructure();
+	
+	private:
+		GdtfGeometry*   		fLinkedGeometry;
+		EGdtfStructureType 		fStructureType;
+		EGdtfCrossSectionType 	fCrossSectionType;
+		double					fCrossSectionHeight; //Tube
+		double					fCrossSectionWallThickness; //Tube
+		TXString				fTrussCrossSection; //TrussFramework
+
+		TXString 				fUnresolvedLinkedGeometry;
+
+	public:
+		virtual EGdtfObjectType			GetObjectType();
+
+		// Getters
+        GdtfGeometry*					GetLinkedGeometry() const;
+		EGdtfStructureType				GetStructureType() const;
+		EGdtfCrossSectionType			GetCrossSectionType() const;
+		double							GetCrossSectionHeight() const;
+		double							GetCrossSectionWallThickness() const;
+		const TXString&					GetTrussCrossSection() const;
+
+		const TXString&					GetUnresolvedLinkedGeometry() const;
+
+		// Setters
+        void							SetLinkedGeometry(GdtfGeometry* linkedGeometry);
+		void							SetStructureType(const EGdtfStructureType& structureType);
+		void							SetCrossSectionType(const EGdtfCrossSectionType& crossSectionType);
+		void							SetCrossSectionHeight(double crossSectionHeight);
+		void							SetCrossSectionWallThickness(double crossSectionWallThickness);
+		void							SetTrussCrossSection(const TXString& trussCrossSection);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+	};
+	typedef GdtfGeometryStructure* GdtfGeometryStructurePtr;
+
+	class GdtfGeometrySupport : public GdtfGeometry
+	{
+	public:
+		GdtfGeometrySupport(GdtfGeometry* parent);
+		GdtfGeometrySupport(const TXString& name, GdtfModelPtr refToModel,const VWTransformMatrix& ma, GdtfGeometry* parent);
+
+		~GdtfGeometrySupport();
+	
+	private:
+		EGdtfSupportType		fSupportType;
+		double 					fCapacityX;
+		double 					fCapacityY;
+		double 					fCapacityZ;
+		double 					fCapacityXX;
+		double 					fCapacityYY;
+		double 					fCapacityZZ;
+		TXString 				fRopeCrossSection; 	//Rope
+		VWPoint3D 				fRopeOffset; 		//Rope
+		double 					fResistanceX;		//GroundSupport
+		double 					fResistanceY;		//GroundSupport
+		double 					fResistanceZ;		//GroundSupport
+		double 					fResistanceXX;		//GroundSupport
+		double 					fResistanceYY;		//GroundSupport
+		double 					fResistanceZZ;		//GroundSupport
+
+	public:
+		virtual EGdtfObjectType			GetObjectType();
+
+		// Getters
+		EGdtfSupportType				GetSupportType() const;
+		double							GetCapacityX() const;
+		double							GetCapacityY() const;
+		double							GetCapacityZ() const;
+		double							GetCapacityXX() const;
+		double							GetCapacityYY() const;
+		double							GetCapacityZZ() const;
+		const TXString&					GetRopeCrossSection() const;
+		VWPoint3D						GetRopeOffset();
+		double							GetResistanceX() const;
+		double							GetResistanceY() const;
+		double							GetResistanceZ() const;
+		double							GetResistanceXX() const;
+		double							GetResistanceYY() const;
+		double							GetResistanceZZ() const;
+
+
+		// Setters
+		void							SetSupportType(const EGdtfSupportType& supportType);
+		void							SetCapacityX(double capacityX);
+		void							SetCapacityY(double capacityY);
+		void							SetCapacityZ(double capacityZ);
+		void							SetCapacityXX(double capacityXX);
+		void							SetCapacityYY(double capacityYY);
+		void							SetCapacityZZ(double capacityZZ);
+		void							SetRopeCrossSection(const TXString& ropeCrossSection);
+		void							SetRopeOffset(double x, double y, double z);
+		void							SetResistanceX(double resistanceX);
+		void							SetResistanceY(double resistanceY);
+		void							SetResistanceZ(double resistanceZ);
+		void							SetResistanceXX(double resistanceXX);
+		void							SetResistanceYY(double resistanceYY);
+		void							SetResistanceZZ(double resistanceZZ);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+	};
+	typedef GdtfGeometrySupport* GdtfGeometrySupportPtr;
+
+	class GdtfGeometryMagnet : public GdtfGeometry
+	{
+	public:
+		GdtfGeometryMagnet(GdtfGeometry* parent);
+		GdtfGeometryMagnet(const TXString& name, GdtfModelPtr refToModel,const VWTransformMatrix& ma, GdtfGeometry* parent);
+
+		~GdtfGeometryMagnet();
+	
+	private:
+
+	public:
+		virtual EGdtfObjectType			GetObjectType();
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+	};
+	typedef GdtfGeometryMagnet* GdtfGeometryMagnetPtr;
 	
 	class GdtfGeometryLamp : public GdtfGeometry
 	{
@@ -1137,7 +1528,7 @@ namespace SceneData
         double							GetRealFade() const;
 		double							GetRealAcceleration() const;
         GdtfWheelPtr					GetOnWheel() const;
-        GdtfPhysicalEmitter*            GetEmitter() const;   
+        GdtfPhysicalEmitter*            GetEmitter() const;
         GdtfFilterPtr                   GetFilter();
 
 
@@ -2452,6 +2843,12 @@ namespace SceneData
 		GdtfGeometryPtr			AddGeometryWithAxis(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
 		GdtfGeometryPtr			AddGeometryWithLamp(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
 		GdtfGeometryPtr			AddGeometryDisplay(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
+		GdtfGeometryPtr			AddGeometryLaser(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
+		GdtfGeometryPtr			AddGeometryWiringObject(		const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
+		GdtfGeometryPtr			AddGeometryInventory(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
+		GdtfGeometryPtr			AddGeometryStructure(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
+		GdtfGeometryPtr			AddGeometrySupport(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
+		GdtfGeometryPtr			AddGeometryMagnet(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 
 		GdtfWheelPtr			AddWheel(TXString name);
 		GdtfDmxModePtr			AddDmxMode(const TXString& name);

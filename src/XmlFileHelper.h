@@ -69,6 +69,7 @@ namespace SceneData
 		static TXString	ConvertDMXAdress(DMXAddress value);
 		static TXString	ConvertDMXValue(DmxValue value, EGdtfChannelBitResolution chanlReso, bool noneValue=false);		
 		static TXString	ConvertPrimitiveType(EGdtfModel_PrimitiveType value);
+		static TXString ConvertVector3(const VWPoint3D& value);
 		static TXString ConvertMatrix(const VWTransformMatrix& ma, bool fourLines);
 		static TXString ConvertRotation(const VWTransformMatrix& ma);
 		static TXString	ConvertLampeType(EGdtfLampType value);		
@@ -88,6 +89,13 @@ namespace SceneData
 		static TXString	ConvertBool(bool value);
 		static TXString	ConvertESourceType(GdtfDefines::ESourceType);
 		static TXString	ConvertEScaleHandlingType(GdtfDefines::EScaleHandlingType value);
+		static TXString	ConvertLaserColorTypeEnum(GdtfDefines::EGdtfLaserColorType value);
+		static TXString	ConvertComponentTypeEnum(GdtfDefines::EGdtfComponentType value);
+		static TXString	ConvertOrientationEnum(GdtfDefines::EGdtfOrientation value);
+		static TXString	ConvertFuseRatingEnum(GdtfDefines::EGdtfFuseRating value);
+		static TXString	ConvertStructureTypeEnum(GdtfDefines::EGdtfStructureType value);
+		static TXString	ConvertCrossSectionTypeEnum(GdtfDefines::EGdtfCrossSectionType value);
+		static TXString	ConvertSupportTypeEnum(GdtfDefines::EGdtfSupportType value);
 		
 
         //-----------------------------------------------------------------------------
@@ -97,6 +105,7 @@ namespace SceneData
 		static bool		ConvertColor(					const TXString& value, const IXMLFileNodePtr& node,	CCieColor& color);
 		static bool		ConvertDouble(					const TXString& value, const IXMLFileNodePtr& node,	double& doubleValue);
 		static bool     ConvertDoubleArray(				  	  TXString  values,const IXMLFileNodePtr& node,	TDoubleArray& doubleArray);
+		static bool		ConvertVector3(					const TXString& value, const IXMLFileNodePtr& node,	VWPoint3D& vector);
 		static bool		ConvertMatrix(					const TXString& value, const IXMLFileNodePtr& node,	VWTransformMatrix& ma);
 		static bool		ConvertRotation(				const TXString& value, const IXMLFileNodePtr& node,	VWTransformMatrix& ma);
 		static bool		ConvertPrimitiveType(			const TXString& value, const IXMLFileNodePtr& node,	EGdtfModel_PrimitiveType& type);
@@ -127,6 +136,13 @@ namespace SceneData
 		static bool     ConvertBool(					const TXString& inVal, const IXMLFileNodePtr& node, bool& outVal);
 		static bool     ConvertESourceType(				const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::ESourceType& outVal);
 		static bool     ConvertEScaleHandlingType(		const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EScaleHandlingType& outVal);
+		static bool     ConvertLaserColorTypeEnum(		const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfLaserColorType& outVal);
+		static bool     ConvertComponentTypeEnum(		const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfComponentType& outVal);
+		static bool     ConvertOrientationEnum(			const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfOrientation& outVal);
+		static bool     ConvertFuseRatingEnum(			const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfFuseRating& outVal);
+		static bool     ConvertStructureTypeEnum(		const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfStructureType& outVal);
+		static bool     ConvertCrossSectionTypeEnum(	const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfCrossSectionType& outVal);
+		static bool     ConvertSupportTypeEnum(			const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfSupportType& outVal);
 		
 
         static bool 	ConvertDmxOffset(const TXString& inVal, const IXMLFileNodePtr& node, DMXAddress& coarse, DMXAddress& fine, DMXAddress& ultra, DMXAddress& uber);

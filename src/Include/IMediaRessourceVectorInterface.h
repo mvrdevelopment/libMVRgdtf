@@ -27,6 +27,11 @@ namespace VectorworksMVR
 		double ox,oy,oz;
 	};
 
+	struct SVector3
+	{
+		double x, y, z;
+	};
+
     struct STime
 	{
 		Uint16	fYear;
@@ -75,6 +80,7 @@ namespace VectorworksMVR
 	class IMediaRessourceVectorInterface;
 	class IGdtfFixture;
 	class IGdtfAttribute;
+	class IGdtfGeometry;
     class IGdtfPhysicalEmitter;
     class IGdtfMacroDMXStep;
     class IGdtfMacroDMXValue;
@@ -515,7 +521,7 @@ namespace VectorworksMVR
     class DYNAMIC_ATTRIBUTE IGdtfWheel : public IVWUnknown
     {
 		public:
-        virtual MvrString VCOM_CALLTYPE     GetName() = 0;        
+        virtual MvrString VCOM_CALLTYPE     GetName() = 0;
         
         virtual VCOMError VCOM_CALLTYPE     GetWheelSlotCount(size_t& outCount) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetWheelSlotAt(size_t at, IGdtfWheelSlot** outPosition) = 0;
@@ -572,6 +578,33 @@ namespace VectorworksMVR
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
 	};
 	typedef VCOMPtr<IGdtfBreak>	IGdtfBreakPtr;
+
+	class DYNAMIC_ATTRIBUTE IGdtfLaserProtocol : public IVWUnknown
+	{
+	public:
+		virtual MvrString VCOM_CALLTYPE     GetName() = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetName(MvrString name) = 0;
+		
+		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+	};
+	typedef VCOMPtr<IGdtfLaserProtocol>	IGdtfLaserProtocolPtr;
+
+	class DYNAMIC_ATTRIBUTE IGdtfPinPatch : public IVWUnknown
+	{
+	public:
+		virtual VCOMError VCOM_CALLTYPE     GetLinkedWiringObject(IGdtfGeometry** toWiringObject) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetFromPin(size_t& fromPin) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetToPin(size_t& toPin) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE     SetLinkedWiringObject(IGdtfGeometry* toWiringObject) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetFromPin(size_t fromPin) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetToPin(size_t toPin) = 0;
+		
+		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+	};
+	typedef VCOMPtr<IGdtfPinPatch>	IGdtfPinPatchPtr;
 	
     class DYNAMIC_ATTRIBUTE IGdtfGeometry : public IVWUnknown
     {
@@ -641,6 +674,126 @@ namespace VectorworksMVR
 		// Lamp
 		virtual VCOMError VCOM_CALLTYPE     GetEmitterSpectrum(IGdtfPhysicalEmitter** outEmitter) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetEmitterSpectrum(IGdtfPhysicalEmitter* newEmitter) = 0;
+
+        // Laser
+        virtual VCOMError VCOM_CALLTYPE		GetColorType(GdtfDefines::EGdtfLaserColorType& colorType) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetLaserColor(double& waveLength) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetOutputStrength(double& outputStrength) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetEmitter(IGdtfPhysicalEmitter** emitter) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetBeamDiameter(double& beamDiameter) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetBeamDivergenceMin(double& beamDivergenceMin) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetBeamDivergenceMax(double& beamDivergenceMax) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetScanAnglePan(double& scanAnglePan) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetScanAngleTilt(double& scanAngleTilt) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetScanSpeed(double& scanSpeed) = 0;
+
+        virtual VCOMError VCOM_CALLTYPE		SetColorType(GdtfDefines::EGdtfLaserColorType colorType) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetLaserColor(double waveLength) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetOutputStrength(double outputStrength) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetEmitter(IGdtfPhysicalEmitter* emitter) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetBeamDiameter(double beamDiameter) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetBeamDivergenceMin(double beamDivergenceMin) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetBeamDivergenceMax(double beamDivergenceMax) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetScanAnglePan(double scanAnglePan) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetScanAngleTilt(double scanAngleTilt) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetScanSpeed(double scanSpeed) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE 	GetLaserProtocolCount(size_t& count) = 0;
+        virtual VCOMError VCOM_CALLTYPE 	GetLaserProtocolAt(size_t at, VectorworksMVR::IGdtfLaserProtocol** outLaserProtocol) = 0;
+        virtual VCOMError VCOM_CALLTYPE 	CreateLaserProtocol(MvrString name, VectorworksMVR::IGdtfLaserProtocol** outLaserProtocol) = 0;
+
+		// WiringObject
+		virtual MvrString VCOM_CALLTYPE     GetConnectorType() = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetComponentType(GdtfDefines::EGdtfComponentType& componentType) = 0;
+        virtual MvrString VCOM_CALLTYPE     GetSignalType() = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetPinCount(size_t& pinCount) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetSignalLayer(size_t& signalLayer) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetOrientation(GdtfDefines::EGdtfOrientation& orientation) = 0;
+        virtual MvrString VCOM_CALLTYPE     GetWireGroup() = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetElectricalPayload(double& electricalPayload) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetVoltageRangeMin(double& voltageRangeMin) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetVoltageRangeMax(double& voltageRangeMax) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetFrequencyRangeMin(double& frequencyRangeMin) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetFrequencyRangeMax(double& frequencyRangeMax) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCosPhi(double& cosPhi) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetMaxPayLoad(double& maxPayload) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetVoltage(double& voltage) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetFuseCurrent(double& fuseCurrent) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetFuseRating(GdtfDefines::EGdtfFuseRating& fuseRating) = 0;
+
+        virtual VCOMError VCOM_CALLTYPE     SetConnectorType(MvrString connectorType) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetComponentType(GdtfDefines::EGdtfComponentType componentType) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetSignalType(MvrString signalType) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetPinCount(size_t pinCount) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetSignalLayer(size_t signalLayer) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetOrientation(GdtfDefines::EGdtfOrientation orientation) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetWireGroup(MvrString wireGroup) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetElectricalPayload(double electricalPayload) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetVoltageRangeMin(double voltageRangeMin) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetVoltageRangeMax(double voltageRangeMax) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetFrequencyRangeMin(double frequencyRangeMin) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetFrequencyRangeMax(double frequencyRangeMax) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetCosPhi(double cosPhi) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetMaxPayLoad(double maxPayload) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetVoltage(double voltage) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetFuseCurrent(double fuseCurrent) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetFuseRating(GdtfDefines::EGdtfFuseRating fuseRating) = 0;
+
+        virtual VCOMError VCOM_CALLTYPE 	GetPinPatchCount(size_t& count) = 0;
+        virtual VCOMError VCOM_CALLTYPE 	GetPinPatchAt(size_t at, VectorworksMVR::IGdtfPinPatch** outPinPatch) = 0;
+        virtual VCOMError VCOM_CALLTYPE 	CreatePinPatch(VectorworksMVR::IGdtfGeometry* toWiringObject, size_t fromPin, size_t toPin, VectorworksMVR::IGdtfPinPatch** outPinPatch) = 0;
+
+		// Inventory
+		virtual VCOMError VCOM_CALLTYPE     GetInventoryCount(size_t& count) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetInventoryCount(size_t count) = 0;
+
+		// Structure
+        virtual VCOMError VCOM_CALLTYPE		GetStructureLinkedGeometry(IGdtfGeometry** linkedGeometry) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetStructureType(GdtfDefines::EGdtfStructureType& structureType) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCrossSectionType(GdtfDefines::EGdtfCrossSectionType& crossSectionType) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCrossSectionHeight(double& crossSectionHeight) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCrossSectionWallThickness(double& crossSectionWallThickness) = 0;
+        virtual MvrString VCOM_CALLTYPE		GetTrussCrossSection() = 0;
+
+        virtual VCOMError VCOM_CALLTYPE	    SetStructureLinkedGeometry(IGdtfGeometry* linkedGeometry) = 0;
+		virtual VCOMError VCOM_CALLTYPE	    SetStructureType(GdtfDefines::EGdtfStructureType structureType) = 0;
+		virtual VCOMError VCOM_CALLTYPE	    SetCrossSectionType(GdtfDefines::EGdtfCrossSectionType crossSectionType) = 0;
+		virtual VCOMError VCOM_CALLTYPE	    SetCrossSectionHeight(double crossSectionHeight) = 0;
+		virtual VCOMError VCOM_CALLTYPE	    SetCrossSectionWallThickness(double crossSectionWallThickness) = 0;
+		virtual VCOMError VCOM_CALLTYPE	    SetTrussCrossSection(MvrString trussCrossSection) = 0;
+
+		// Support
+		virtual VCOMError VCOM_CALLTYPE     GetSupportType(GdtfDefines::EGdtfSupportType& supportType) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCapacityX(double& capacityX) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCapacityY(double& capacityY) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCapacityZ(double& capacityZ) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCapacityXX(double& capacityXX) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCapacityYY(double& capacityYY) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCapacityZZ(double& capacityZZ) = 0;
+		virtual MvrString VCOM_CALLTYPE     GetRopeCrossSection() = 0;
+		virtual VCOMError VCOM_CALLTYPE	    GetRopeOffset(SVector3& ropeOffset) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetResistanceX(double& resistanceX) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetResistanceY(double& resistanceY) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetResistanceZ(double& resistanceZ) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetResistanceXX(double& resistanceXX) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetResistanceYY(double& resistanceYY) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetResistanceZZ(double& resistanceZZ) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE     SetSupportType(GdtfDefines::EGdtfSupportType supportType) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetCapacityX(double capacityX) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetCapacityY(double capacityY) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetCapacityZ(double capacityZ) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetCapacityXX(double capacityXX) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetCapacityYY(double capacityYY) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetCapacityZZ(double capacityZZ) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetRopeCrossSection(MvrString ropeCrossSection) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetRopeOffset(double x, double y, double z) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetResistanceX(double resistanceX) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetResistanceY(double resistanceY) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetResistanceZ(double resistanceZ) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetResistanceXX(double resistanceXX) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetResistanceYY(double resistanceYY) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetResistanceZZ(double resistanceZZ) = 0;
 	};
 	typedef VCOMPtr<IGdtfGeometry>	IGdtfGeometryPtr;
     

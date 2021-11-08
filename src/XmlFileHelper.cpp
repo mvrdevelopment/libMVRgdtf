@@ -839,6 +839,13 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 	return XML_GDTF_BeamTypeEnum_Wash;
 }
 
+/*static*/ TXString GdtfConverter::ConvertVector3(const VWPoint3D& value)
+{
+	TXString vectorString;
+	vectorString << "{" << value.x << "," << value.y << "," << value.z << "}";
+	return vectorString;
+}
+
 
 /*static*/ TXString GdtfConverter::ConvertMatrix(const VWTransformMatrix& ma, bool fourLines)
 {
@@ -864,6 +871,55 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 
 	
 	return value;
+}
+
+/*static*/ bool GdtfConverter::ConvertVector3(const TXString& value, const IXMLFileNodePtr& node, VWPoint3D& vector)
+{
+	// ----------------------------------------------------------------
+	// If the String is empty, use the DefaultMaterix
+	if (value.IsEmpty()) { vector = VWPoint3D(); return true; }
+	
+	
+	// ----------------------------------------------------------------
+	// Split string
+	TXString strVal = value;
+	
+	
+	// ----------------------------------------------------------------
+	// Delete first element
+	ASSERTN(kEveryone, strVal.GetAt(0) == '{');
+	if (strVal.GetAt(0) == '{') { strVal.Delete(0,1); }
+    else
+    {
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_MatrixFormatMissingFirstBracket, node);
+        SceneData::GdtfFixture::AddError(error); 
+    }
+	
+	// Delete last element
+	ASSERTN(kEveryone, strVal.GetLast() == '}');
+	if (strVal.GetLast() == '}') { strVal.DeleteLast(); }
+    else
+    {
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_MatrixFormatMissingLastBracket, node);
+        SceneData::GdtfFixture::AddError(error);
+    }
+
+	std::vector<double> vectorAsArray;
+	Deserialize(strVal, node, vectorAsArray);
+
+	if (vectorAsArray.size() != 3)
+	{
+		DSTOP((kEveryone, "Unexpected Format of Vector"));
+		GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_MatrixFormatTooMuchOrTooLessEntries, node);
+		SceneData::GdtfFixture::AddError(error);
+		return false;
+	}
+	else
+	{
+		vector.SetPoint(vectorAsArray[0], vectorAsArray[1], vectorAsArray[2]);
+	}
+
+	return true;
 }
 
 /*static*/ bool GdtfConverter::ConvertMatrix(const TXString& value, const IXMLFileNodePtr& node,VWTransformMatrix& matrix)
@@ -915,7 +971,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 		pos = strVal.Find("}{");
 	}
 
-	// Apped the rest
+	// Append the rest
 	lines.push_back(strVal);
 
 	if (lines.size() != 4)
@@ -1663,6 +1719,229 @@ CieColor SceneData::GdtfConverter::ConvertCColor(const CCieColor & color)
        
     return true;
 }
+
+
+/*static*/ TXString GdtfConverter::ConvertLaserColorTypeEnum(GdtfDefines::EGdtfLaserColorType value)
+{
+    switch (value)
+    {
+		case EGdtfLaserColorType::RGB:							return XML_Val_LaserColorTypeRGB;
+		case EGdtfLaserColorType::SingleWaveLength:				return XML_Val_LaserColorTypeSingleWaveLength;
+    }
+
+	DSTOP((kEveryone, "Unknown Enum for EGdtfLaserColorType"));
+
+    return XML_Val_LaserColorTypeRGB;
+}
+
+/*static*/ bool GdtfConverter::ConvertLaserColorTypeEnum(const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfLaserColorType& outVal)
+{
+	if        (inVal == XML_Val_LaserColorTypeRGB)				{ outVal = EGdtfLaserColorType::RGB; }     
+	else if   (inVal == XML_Val_LaserColorTypeSingleWaveLength) { outVal = EGdtfLaserColorType::SingleWaveLength; }
+	else if   (inVal.IsEmpty())    								{ outVal = EGdtfLaserColorType::RGB; } 
+	else 
+	{
+		DSTOP((kEveryone, "Unknown Value for EGdtfLaserColorType"));
+		outVal = EGdtfLaserColorType::RGB;
+	}
+       
+    return true;
+}
+
+
+/*static*/ TXString GdtfConverter::ConvertComponentTypeEnum(GdtfDefines::EGdtfComponentType value)
+{
+    switch (value)
+    {
+		case EGdtfComponentType::Input:				return XML_Val_ComponentTypeInput;
+		case EGdtfComponentType::Output:			return XML_Val_ComponentTypeOutput;
+		case EGdtfComponentType::PowerSource:		return XML_Val_ComponentTypePowerSource;
+		case EGdtfComponentType::Consumer:			return XML_Val_ComponentTypeConsumer;
+		case EGdtfComponentType::Fuse:				return XML_Val_ComponentTypeFuse;
+		case EGdtfComponentType::NetworkProvider:	return XML_Val_ComponentTypeNetworkProvider;
+		case EGdtfComponentType::NetworkInput:		return XML_Val_ComponentTypeNetworkInput;
+		case EGdtfComponentType::NetworkOutput:		return XML_Val_ComponentTypeNetworkOutput;
+		case EGdtfComponentType::NetworkInOut:		return XML_Val_ComponentTypeNetworkInOut;
+    }
+
+	DSTOP((kEveryone, "Unknown Enum for EGdtfComponentType"));
+
+    return XML_Val_ComponentTypeInput;
+}
+
+/*static*/ bool GdtfConverter::ConvertComponentTypeEnum(const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfComponentType& outVal)
+{
+	if        (inVal == XML_Val_ComponentTypeInput)				{ outVal = EGdtfComponentType::Input; }     
+	else if   (inVal == XML_Val_ComponentTypeOutput) 			{ outVal = EGdtfComponentType::Output; }
+	else if   (inVal == XML_Val_ComponentTypePowerSource) 		{ outVal = EGdtfComponentType::PowerSource; }
+	else if   (inVal == XML_Val_ComponentTypeConsumer) 			{ outVal = EGdtfComponentType::Consumer; }
+	else if   (inVal == XML_Val_ComponentTypeFuse) 				{ outVal = EGdtfComponentType::Fuse; }
+	else if   (inVal == XML_Val_ComponentTypeNetworkProvider) 	{ outVal = EGdtfComponentType::NetworkProvider; }
+	else if   (inVal == XML_Val_ComponentTypeNetworkInput) 		{ outVal = EGdtfComponentType::NetworkInput; }
+	else if   (inVal == XML_Val_ComponentTypeNetworkOutput) 	{ outVal = EGdtfComponentType::NetworkOutput; }
+	else if   (inVal == XML_Val_ComponentTypeNetworkInOut) 		{ outVal = EGdtfComponentType::NetworkInOut; }
+	else if   (inVal.IsEmpty())    								{ outVal = EGdtfComponentType::Input; } 
+	else 
+	{
+		DSTOP((kEveryone, "Unknown Value for EGdtfComponentType"));
+		outVal = EGdtfComponentType::Input;
+	}
+       
+    return true;
+}
+
+
+/*static*/ TXString GdtfConverter::ConvertOrientationEnum(GdtfDefines::EGdtfOrientation value)
+{
+    switch (value)
+    {
+		case EGdtfOrientation::Left:	return XML_Val_OrientationLeft;
+		case EGdtfOrientation::Right:	return XML_Val_OrientationRight;
+		case EGdtfOrientation::Top:		return XML_Val_OrientationTop;
+		case EGdtfOrientation::Bottom:	return XML_Val_OrientationBottom;
+    }
+
+	DSTOP((kEveryone, "Unknown Enum for EGdtfOrientation"));
+
+    return XML_Val_OrientationLeft;
+}
+
+/*static*/ bool GdtfConverter::ConvertOrientationEnum(const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfOrientation& outVal)
+{
+	if      (inVal == XML_Val_OrientationLeft)		{ outVal = EGdtfOrientation::Left; }
+	else if	(inVal == XML_Val_OrientationRight)		{ outVal = EGdtfOrientation::Right; }
+	else if (inVal == XML_Val_OrientationTop)		{ outVal = EGdtfOrientation::Top; }
+	else if (inVal == XML_Val_OrientationBottom)	{ outVal = EGdtfOrientation::Bottom; }
+
+	else if (inVal.IsEmpty())    					{ outVal = EGdtfOrientation::Left; } 
+	else 
+	{
+		DSTOP((kEveryone, "Unknown Value for EGdtfOrientation"));
+		outVal = EGdtfOrientation::Left;
+	}
+       
+    return true;
+}
+
+
+/*static*/ TXString GdtfConverter::ConvertFuseRatingEnum(GdtfDefines::EGdtfFuseRating value)
+{
+    switch (value)
+    {
+		case EGdtfFuseRating::B:	return XML_Val_FuseRatingB;
+		case EGdtfFuseRating::C:	return XML_Val_FuseRatingC;
+		case EGdtfFuseRating::D:	return XML_Val_FuseRatingD;
+		case EGdtfFuseRating::K:	return XML_Val_FuseRatingK;
+		case EGdtfFuseRating::Z:	return XML_Val_FuseRatingZ;
+    }
+
+	DSTOP((kEveryone, "Unknown Enum for EGdtfFuseRating"));
+
+    return XML_Val_FuseRatingB;
+}
+
+/*static*/ bool GdtfConverter::ConvertFuseRatingEnum(const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfFuseRating& outVal)
+{
+	if		(inVal == XML_Val_FuseRatingB)	{ outVal = EGdtfFuseRating::B; }
+	else if (inVal == XML_Val_FuseRatingC)	{ outVal = EGdtfFuseRating::C; }
+	else if (inVal == XML_Val_FuseRatingD)	{ outVal = EGdtfFuseRating::D; }
+	else if (inVal == XML_Val_FuseRatingK)	{ outVal = EGdtfFuseRating::K; }
+	else if (inVal == XML_Val_FuseRatingZ)	{ outVal = EGdtfFuseRating::Z; }
+
+	else if	(inVal.IsEmpty())    			{ outVal = EGdtfFuseRating::B; } 
+	else 
+	{
+		DSTOP((kEveryone, "Unknown Value for EGdtfFuseRating"));
+		outVal = EGdtfFuseRating::B;
+	}
+       
+    return true;
+}
+
+/*static*/ TXString GdtfConverter::ConvertStructureTypeEnum(GdtfDefines::EGdtfStructureType value)
+{
+    switch (value)
+    {
+		case EGdtfStructureType::CenterLineBased:	return XML_Val_StructureTypeCenterLineBased;
+		case EGdtfStructureType::Detail:			return XML_Val_StructureTypeDetail;
+    }
+
+	DSTOP((kEveryone, "Unknown Enum for EGdtfStructureType"));
+
+    return XML_Val_StructureTypeCenterLineBased;
+}
+
+/*static*/ bool GdtfConverter::ConvertStructureTypeEnum(const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfStructureType& outVal)
+{
+	if		(inVal == XML_Val_StructureTypeCenterLineBased)	{ outVal = EGdtfStructureType::CenterLineBased; }
+	else if (inVal == XML_Val_StructureTypeDetail)			{ outVal = EGdtfStructureType::Detail; }
+	else if	(inVal.IsEmpty())    							{ outVal = EGdtfStructureType::CenterLineBased; }
+
+	else 
+	{
+		DSTOP((kEveryone, "Unknown Value for EGdtfStructureType"));
+		outVal = EGdtfStructureType::CenterLineBased;
+	}
+       
+    return true;
+}
+
+/*static*/ TXString GdtfConverter::ConvertCrossSectionTypeEnum(GdtfDefines::EGdtfCrossSectionType value)
+{
+    switch (value)
+    {
+		case EGdtfCrossSectionType::TrussFramework:	return XML_Val_CrossSectionTypeTrussFramework;
+		case EGdtfCrossSectionType::Tube:			return XML_Val_CrossSectionTypeTube;
+    }
+
+	DSTOP((kEveryone, "Unknown Enum for EGdtfCrossSectionType"));
+
+    return XML_Val_CrossSectionTypeTrussFramework;
+}
+
+/*static*/ bool GdtfConverter::ConvertCrossSectionTypeEnum(const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfCrossSectionType& outVal)
+{
+	if		(inVal == XML_Val_CrossSectionTypeTrussFramework)	{ outVal = EGdtfCrossSectionType::TrussFramework; }
+	else if (inVal == XML_Val_CrossSectionTypeTube)				{ outVal = EGdtfCrossSectionType::Tube; }
+	else if	(inVal.IsEmpty())    								{ outVal = EGdtfCrossSectionType::TrussFramework; }
+
+	else 
+	{
+		DSTOP((kEveryone, "Unknown Value for EGdtfCrossSectionType"));
+		outVal = EGdtfCrossSectionType::TrussFramework;
+	}
+       
+    return true;
+}
+
+/*static*/ TXString GdtfConverter::ConvertSupportTypeEnum(GdtfDefines::EGdtfSupportType value)
+{
+    switch (value)
+    {
+		case EGdtfSupportType::Rope:			return XML_Val_SupportTypeRope;
+		case EGdtfSupportType::GroundSupport:	return XML_Val_SupportTypeGroundSupport;
+    }
+
+	DSTOP((kEveryone, "Unknown Enum for EGdtfSupportType"));
+
+    return XML_Val_SupportTypeRope;
+}
+
+/*static*/ bool GdtfConverter::ConvertSupportTypeEnum(const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfSupportType& outVal)
+{
+	if		(inVal == XML_Val_SupportTypeRope)			{ outVal = EGdtfSupportType::Rope; }
+	else if (inVal == XML_Val_SupportTypeGroundSupport)	{ outVal = EGdtfSupportType::GroundSupport; }
+	else if	(inVal.IsEmpty())    						{ outVal = EGdtfSupportType::Rope; }
+
+	else 
+	{
+		DSTOP((kEveryone, "Unknown Value for EGdtfSupportType"));
+		outVal = EGdtfSupportType::Rope;
+	}
+       
+    return true;
+}
+
 
 bool SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, const IFileIdentifierPtr& file, ERessourceType resType, bool deleteFile, bool mustExist)
 {
