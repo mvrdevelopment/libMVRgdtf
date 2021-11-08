@@ -1942,6 +1942,52 @@ CieColor SceneData::GdtfConverter::ConvertCColor(const CCieColor & color)
     return true;
 }
 
+/*static*/ TXString GdtfConverter::ConvertSubPhysicalUnitTypeEnum(GdtfDefines::EGdtfSubPhysicalUnitType value)
+{
+    switch (value)
+    {
+		case EGdtfSubPhysicalUnitType::PlacementOffset:	return XML_Val_SubPhysicalUnitTypePlacementOffset;
+		case EGdtfSubPhysicalUnitType::Amplitude:		return XML_Val_SubPhysicalUnitTypeAmplitude;
+		case EGdtfSubPhysicalUnitType::AmplitudeMin:	return XML_Val_SubPhysicalUnitTypeAmplitudeMin;
+		case EGdtfSubPhysicalUnitType::AmplitudeMax:	return XML_Val_SubPhysicalUnitTypeAmplitudeMax;
+		case EGdtfSubPhysicalUnitType::Duration:		return XML_Val_SubPhysicalUnitTypeDuration;
+		case EGdtfSubPhysicalUnitType::DutyCycle:		return XML_Val_SubPhysicalUnitTypeDutyCycle;
+		case EGdtfSubPhysicalUnitType::TimeOffset:		return XML_Val_SubPhysicalUnitTypeTimeOffset;
+		case EGdtfSubPhysicalUnitType::MinimumOpening:	return XML_Val_SubPhysicalUnitTypeMinimumOpening;
+		case EGdtfSubPhysicalUnitType::Value:			return XML_Val_SubPhysicalUnitTypeValue;
+		case EGdtfSubPhysicalUnitType::RatioHorizontal:	return XML_Val_SubPhysicalUnitTypeRatioHorizontal;
+		case EGdtfSubPhysicalUnitType::RatioVertical:	return XML_Val_SubPhysicalUnitTypeRatioVertical;
+    }
+
+	DSTOP((kEveryone, "Unknown Enum for EGdtfSubPhysicalUnitType"));
+
+    return XML_Val_SubPhysicalUnitTypePlacementOffset;
+}
+
+/*static*/ bool GdtfConverter::ConvertSubPhysicalUnitTypeEnum(	const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfSubPhysicalUnitType& outVal)
+{
+	if		(inVal == XML_Val_SubPhysicalUnitTypePlacementOffset)	{ outVal = EGdtfSubPhysicalUnitType::PlacementOffset; }
+	else if (inVal == XML_Val_SubPhysicalUnitTypeAmplitude)			{ outVal = EGdtfSubPhysicalUnitType::Amplitude; }
+	else if (inVal == XML_Val_SubPhysicalUnitTypeAmplitudeMin)		{ outVal = EGdtfSubPhysicalUnitType::AmplitudeMin; }
+	else if (inVal == XML_Val_SubPhysicalUnitTypeAmplitudeMax)		{ outVal = EGdtfSubPhysicalUnitType::AmplitudeMax; }
+	else if (inVal == XML_Val_SubPhysicalUnitTypeDuration)			{ outVal = EGdtfSubPhysicalUnitType::Duration; }
+	else if (inVal == XML_Val_SubPhysicalUnitTypeDutyCycle)			{ outVal = EGdtfSubPhysicalUnitType::DutyCycle; }
+	else if (inVal == XML_Val_SubPhysicalUnitTypeTimeOffset)		{ outVal = EGdtfSubPhysicalUnitType::TimeOffset; }
+	else if (inVal == XML_Val_SubPhysicalUnitTypeMinimumOpening)	{ outVal = EGdtfSubPhysicalUnitType::MinimumOpening; }
+	else if (inVal == XML_Val_SubPhysicalUnitTypeValue)				{ outVal = EGdtfSubPhysicalUnitType::Value; }
+	else if (inVal == XML_Val_SubPhysicalUnitTypeRatioHorizontal)	{ outVal = EGdtfSubPhysicalUnitType::RatioHorizontal; }
+	else if (inVal == XML_Val_SubPhysicalUnitTypeRatioVertical)		{ outVal = EGdtfSubPhysicalUnitType::RatioVertical; }
+	else if	(inVal.IsEmpty())    									{ outVal = EGdtfSubPhysicalUnitType::PlacementOffset; }
+
+	else 
+	{
+		DSTOP((kEveryone, "Unknown Value for EGdtfSubPhysicalUnitType"));
+		outVal = EGdtfSubPhysicalUnitType::PlacementOffset;
+	}
+       
+    return true;
+}
+
 
 bool SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, const IFileIdentifierPtr& file, ERessourceType resType, bool deleteFile, bool mustExist)
 {

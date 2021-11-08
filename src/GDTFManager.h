@@ -222,6 +222,45 @@ namespace SceneData
 	typedef GdtfFeatureGroup*				GdtfFeatureGroupPtr;
 	typedef std::vector<GdtfFeatureGroupPtr>TGdtfFeatureGroupArray;
 
+	class GdtfSubPhysicalUnit : public GdtfObject
+	{
+	public:
+		GdtfSubPhysicalUnit();
+		GdtfSubPhysicalUnit(EGdtfSubPhysicalUnitType type, EGdtfPhysicalUnit physicalUnit);
+		~GdtfSubPhysicalUnit();
+		
+	private:
+		EGdtfSubPhysicalUnitType 	fType;
+        EGdtfPhysicalUnit       	fPhysicalUnit;
+		double						fPhysicalFrom;
+		double						fPhysicalTo;
+		
+	private:
+		
+	public:
+        // Getter
+        EGdtfSubPhysicalUnitType        GetType() const;
+        EGdtfPhysicalUnit               GetPhysicalUnit() const;
+		double							GetPhysicalFrom() const;
+        double							GetPhysicalTo() const;
+        // Setter
+        void                            SetType(const EGdtfSubPhysicalUnitType& type);
+        void                            SetPhysicalUnit(const EGdtfPhysicalUnit& physicalUnit);
+        void                            SetPhysicalFrom(double physicalFrom);
+        void                            SetPhysicalTo(double physicalTo);
+		
+		virtual EGdtfObjectType			GetObjectType();
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+
+	};
+	typedef GdtfSubPhysicalUnit*				GdtfSubPhysicalUnitPtr;
+	typedef std::vector<GdtfSubPhysicalUnit*> 	TGdtfSubPhysicalUnitArray;
+
 	
 	class GdtfAttribute : public GdtfObject
 	{
@@ -1101,7 +1140,7 @@ namespace SceneData
 		void         				SetSignalType(const TXString& signalType);
 		void    					SetPinCount(size_t pinCount);
 		void                  		SetSignalLayer(size_t signalLayer);
-		void        				SetOrientation(EGdtfOrientation orientation);
+		void        				SetOrientation(const EGdtfOrientation& orientation);
 		void         				SetWireGroup(const TXString& wireGroup);
 		void                  		SetElectricalPayload(double electricalPayload);
 		void                  		SetVoltageRangeMin(double voltageRangeMin);

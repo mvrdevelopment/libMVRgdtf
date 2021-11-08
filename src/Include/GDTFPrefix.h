@@ -116,6 +116,7 @@ namespace VectorworksMVR
             eGdtfLaserProtocol              = 87,
             eGdtfPinPatch                   = 88,
             eGdtfMap                        = 89,
+            eGdtfSubPhysicalUnit            = 90,
 		};
 
         enum class EGdtfParsingError : Sint32
@@ -698,6 +699,21 @@ namespace VectorworksMVR
         {
             Rope            = 0, 
             GroundSupport   = 1,
+        };
+
+        enum class EGdtfSubPhysicalUnitType
+        {
+            PlacementOffset = 0,
+            Amplitude       = 1,
+            AmplitudeMin    = 2,
+            AmplitudeMax    = 3,
+            Duration        = 4,
+            DutyCycle       = 5,
+            TimeOffset      = 6,
+            MinimumOpening  = 7,
+            Value           = 8,
+            RatioHorizontal = 9,
+            RatioVertical   = 10,
         };
 
 	}
