@@ -1313,6 +1313,36 @@ void GdtfModel::SetBufferGLTF(void* bufferToCopy, size_t length)
 	memcpy(fBufferGLTF, bufferToCopy, length);
 }
 
+void GdtfModel::SetSVGOffsetX(double svgOffsetX)
+{
+	fSVGOffsetX = svgOffsetX;
+}
+
+void GdtfModel::SetSVGOffsetY(double svgOffsetY)
+{
+	fSVGOffsetY = svgOffsetY;
+}
+
+void GdtfModel::SetSVGSideOffsetX(double svgSideOffsetX)
+{
+	fSVGSideOffsetX = svgSideOffsetX;
+}
+
+void GdtfModel::SetSVGSideOffsetY(double svgSideOffsetY)
+{
+	fSVGSideOffsetY = svgSideOffsetY;
+}
+
+void GdtfModel::SetSVGFrontOffsetX(double svgFrontOffsetX)
+{
+	fSVGFrontOffsetX = svgFrontOffsetX;
+}
+
+void GdtfModel::SetSVGFrontOffsetY(double svgFrontOffsetY)
+{
+	fSVGFrontOffsetY = svgFrontOffsetY;
+}
+
 void GdtfModel::OnPrintToFile(IXMLFileNodePtr pNode)
 {
 	//------------------------------------------------------------------------------------
@@ -1328,6 +1358,12 @@ void GdtfModel::OnPrintToFile(IXMLFileNodePtr pNode)
 	pNode->SetNodeAttributeValue(XML_GDTF_ModelHeight,			GdtfConverter::ConvertDouble(fHeight));
 	pNode->SetNodeAttributeValue(XML_GDTF_ModelPrimitiveType,	GdtfConverter::ConvertPrimitiveType(fPrimitiveType));
 	pNode->SetNodeAttributeValue(XML_GDTF_ModelFile,			fGeometryFile);
+	pNode->SetNodeAttributeValue(XML_GDTF_ModelSVGOffsetX,		GdtfConverter::ConvertDouble(fSVGOffsetX));
+	pNode->SetNodeAttributeValue(XML_GDTF_ModelSVGOffsetY,		GdtfConverter::ConvertDouble(fSVGOffsetY));
+	pNode->SetNodeAttributeValue(XML_GDTF_ModelSVGSideOffsetX,	GdtfConverter::ConvertDouble(fSVGSideOffsetX));
+	pNode->SetNodeAttributeValue(XML_GDTF_ModelSVGSideOffsetY,	GdtfConverter::ConvertDouble(fSVGSideOffsetY));
+	pNode->SetNodeAttributeValue(XML_GDTF_ModelSVGFrontOffsetX,	GdtfConverter::ConvertDouble(fSVGFrontOffsetX));
+	pNode->SetNodeAttributeValue(XML_GDTF_ModelSVGFrontOffsetY,	GdtfConverter::ConvertDouble(fSVGFrontOffsetY));
 }
 
 void GdtfModel::OnReadFromNode(const IXMLFileNodePtr& pNode)
@@ -1342,11 +1378,17 @@ void GdtfModel::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	pNode->GetNodeAttributeValue(XML_GDTF_ModelName,			fUniqueName);
 	
 	// Convert Doubles
-	TXString length;	pNode->GetNodeAttributeValue(XML_GDTF_ModelLength,			length);	GdtfConverter::ConvertDouble(length, 		pNode, 	fLength);
-	TXString width;		pNode->GetNodeAttributeValue(XML_GDTF_ModelWidth,			width);		GdtfConverter::ConvertDouble(width, 		pNode,  fWidth);
-	TXString height;	pNode->GetNodeAttributeValue(XML_GDTF_ModelHeight,			height);	GdtfConverter::ConvertDouble(height, 		pNode, 	fHeight);
-	TXString type;		pNode->GetNodeAttributeValue(XML_GDTF_ModelPrimitiveType,	type);		GdtfConverter::ConvertPrimitiveType(type, 	pNode, 	fPrimitiveType);
-						pNode->GetNodeAttributeValue(XML_GDTF_ModelFile,			fGeometryFile);
+	TXString length;			pNode->GetNodeAttributeValue(XML_GDTF_ModelLength,			length);			GdtfConverter::ConvertDouble(length, 			pNode, 	fLength);
+	TXString width;				pNode->GetNodeAttributeValue(XML_GDTF_ModelWidth,			width);				GdtfConverter::ConvertDouble(width, 			pNode,  fWidth);
+	TXString height;			pNode->GetNodeAttributeValue(XML_GDTF_ModelHeight,			height);			GdtfConverter::ConvertDouble(height, 			pNode, 	fHeight);
+	TXString svgOffsetX;		pNode->GetNodeAttributeValue(XML_GDTF_ModelSVGOffsetX,		svgOffsetX);		GdtfConverter::ConvertDouble(svgOffsetX, 		pNode, 	fSVGOffsetX);
+	TXString svgOffsetY;		pNode->GetNodeAttributeValue(XML_GDTF_ModelSVGOffsetY,		svgOffsetY);		GdtfConverter::ConvertDouble(svgOffsetY, 		pNode, 	fSVGOffsetY);
+	TXString svgSideOffsetX;	pNode->GetNodeAttributeValue(XML_GDTF_ModelSVGSideOffsetX,	svgSideOffsetX);	GdtfConverter::ConvertDouble(svgSideOffsetX, 	pNode, 	fSVGSideOffsetX);
+	TXString svgSideOffsetY;	pNode->GetNodeAttributeValue(XML_GDTF_ModelSVGSideOffsetY,	svgSideOffsetY);	GdtfConverter::ConvertDouble(svgSideOffsetY, 	pNode, 	fSVGSideOffsetY);
+	TXString svgFrontOffsetX;	pNode->GetNodeAttributeValue(XML_GDTF_ModelSVGFrontOffsetX,	svgFrontOffsetX);	GdtfConverter::ConvertDouble(svgFrontOffsetX,	pNode, 	fSVGFrontOffsetX);
+	TXString svgFrontOffsetY;	pNode->GetNodeAttributeValue(XML_GDTF_ModelSVGFrontOffsetY,	svgFrontOffsetY);	GdtfConverter::ConvertDouble(svgFrontOffsetY, 	pNode, 	fSVGFrontOffsetY);
+	TXString type;				pNode->GetNodeAttributeValue(XML_GDTF_ModelPrimitiveType,	type);				GdtfConverter::ConvertPrimitiveType(type, 		pNode, 	fPrimitiveType);
+								pNode->GetNodeAttributeValue(XML_GDTF_ModelFile,			fGeometryFile);
 
 	if(!fGeometryFile.IsEmpty())
 	{
@@ -1413,6 +1455,12 @@ void GdtfModel::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	optional.push_back(XML_GDTF_ModelWidth);
 	optional.push_back(XML_GDTF_ModelHeight);
 	optional.push_back(XML_GDTF_ModelPrimitiveType);
+	optional.push_back(XML_GDTF_ModelSVGOffsetX);
+	optional.push_back(XML_GDTF_ModelSVGOffsetY);
+	optional.push_back(XML_GDTF_ModelSVGSideOffsetX);
+	optional.push_back(XML_GDTF_ModelSVGSideOffsetY);
+	optional.push_back(XML_GDTF_ModelSVGFrontOffsetX);
+	optional.push_back(XML_GDTF_ModelSVGFrontOffsetY);
 
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
@@ -1580,6 +1628,36 @@ void GdtfModel::GetBufferGLTF(void* bufferToCopy, size_t& length)
 	bufferToCopy = new char[fBufferSizeGLTF];
 	length = fBufferSizeGLTF;
 	memcpy(bufferToCopy, fBufferGLTF, fBufferSizeGLTF);
+}
+
+double GdtfModel::GetSVGOffsetX() const
+{
+	return fSVGOffsetX;
+}
+
+double GdtfModel::GetSVGOffsetY() const
+{
+	return fSVGOffsetY;
+}
+
+double GdtfModel::GetSVGSideOffsetX() const
+{
+	return fSVGSideOffsetX;
+}
+
+double GdtfModel::GetSVGSideOffsetY() const
+{
+	return fSVGSideOffsetY;
+}
+
+double GdtfModel::GetSVGFrontOffsetX() const
+{
+	return fSVGFrontOffsetX;
+}
+
+double GdtfModel::GetSVGFrontOffsetY() const
+{
+	return fSVGFrontOffsetY;
 }
 
 //------------------------------------------------------------------------------------

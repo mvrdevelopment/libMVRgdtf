@@ -612,6 +612,12 @@ namespace SceneData
 		size_t						fBufferSizeSVG;
 		size_t						fBufferSizeGLTF;
 
+		double						fSVGOffsetX;
+		double						fSVGOffsetY;
+		double						fSVGSideOffsetX;
+		double						fSVGSideOffsetY;
+		double						fSVGFrontOffsetX;
+		double						fSVGFrontOffsetY;
 		//
 		GdtfFixture*				fParentFixture;
 		
@@ -632,6 +638,13 @@ namespace SceneData
 		void						    GetBufferSVG(void* bufferToCopy, size_t& length);
 		void						    GetBufferGLTF(void* bufferToCopy, size_t& length);
 
+		double                          GetSVGOffsetX() const;
+		double                          GetSVGOffsetY() const;
+		double                          GetSVGSideOffsetX() const;
+		double                          GetSVGSideOffsetY() const;
+		double                          GetSVGFrontOffsetX() const;
+		double                          GetSVGFrontOffsetY() const;
+
 		// Setter
 		void						    SetName(const TXString& name);
 		void					    	SetLength(const double& length);
@@ -643,6 +656,13 @@ namespace SceneData
 		void						    SetBuffer3DS(void* bufferToCopy, size_t length);
 		void						    SetBufferSVG(void* bufferToCopy, size_t length);
 		void						    SetBufferGLTF(void* bufferToCopy, size_t length);
+
+		void							SetSVGOffsetX(double svgOffsetX);
+		void							SetSVGOffsetY(double svgOffsetY);
+		void							SetSVGSideOffsetX(double svgSideOffsetX);
+		void							SetSVGSideOffsetY(double svgSideOffsetY);
+		void							SetSVGFrontOffsetX(double svgFrontOffsetX);
+		void							SetSVGFrontOffsetY(double svgFrontOffsetY);
 
 	public:
 		virtual EGdtfObjectType			GetObjectType();

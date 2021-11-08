@@ -127,6 +127,66 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfModelImpl::GetBufferGLTF(void* bu
 	return kVCOMError_NoError;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfModelImpl::GetSVGOffsetX(double& svgOffsetX)
+{
+	// Check Pointer
+	if ( ! fModel) return kVCOMError_NotInitialized;
+	
+    svgOffsetX = fModel->GetSVGOffsetX();
+    
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfModelImpl::GetSVGOffsetY(double& svgOffsetY)
+{
+	// Check Pointer
+	if ( ! fModel) return kVCOMError_NotInitialized;
+	
+    svgOffsetY = fModel->GetSVGOffsetY();
+    
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfModelImpl::GetSVGSideOffsetX(double& svgSideOffsetX)
+{
+	// Check Pointer
+	if ( ! fModel) return kVCOMError_NotInitialized;
+	
+    svgSideOffsetX = fModel->GetSVGSideOffsetX();
+    
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfModelImpl::GetSVGSideOffsetY(double& svgSideOffsetY)
+{
+	// Check Pointer
+	if ( ! fModel) return kVCOMError_NotInitialized;
+	
+    svgSideOffsetY = fModel->GetSVGSideOffsetY();
+    
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfModelImpl::GetSVGFrontOffsetX(double& svgFrontOffsetX)
+{
+	// Check Pointer
+	if ( ! fModel) return kVCOMError_NotInitialized;
+	
+    svgFrontOffsetX = fModel->GetSVGFrontOffsetX();
+    
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfModelImpl::GetSVGFrontOffsetY(double& svgFrontOffsetY)
+{
+	// Check Pointer
+	if ( ! fModel) return kVCOMError_NotInitialized;
+	
+    svgFrontOffsetY = fModel->GetSVGFrontOffsetY();
+    
+    return kVCOMError_NoError;
+}
+
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfModelImpl::SetName(MvrString name)
 {
 	if(!fModel) return kVCOMError_NotInitialized;	
@@ -213,6 +273,66 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfModelImpl::SetBufferGLTF(void* bu
 	if ( ! fModel) return kVCOMError_NotInitialized;
 
 	fModel->SetBufferGLTF(bufferToCopy, length);
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfModelImpl::SetSVGOffsetX(double svgOffsetX)
+{
+	// Check Pointer
+	if ( ! fModel) return kVCOMError_NotInitialized;
+	
+	fModel->SetSVGOffsetX(svgOffsetX);
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfModelImpl::SetSVGOffsetY(double svgOffsetY)
+{
+	// Check Pointer
+	if ( ! fModel) return kVCOMError_NotInitialized;
+	
+	fModel->SetSVGOffsetY(svgOffsetY);
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfModelImpl::SetSVGSideOffsetX(double svgSideOffsetX)
+{
+	// Check Pointer
+	if ( ! fModel) return kVCOMError_NotInitialized;
+	
+	fModel->SetSVGSideOffsetX(svgSideOffsetX);
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfModelImpl::SetSVGSideOffsetY(double svgSideOffsetY)
+{
+	// Check Pointer
+	if ( ! fModel) return kVCOMError_NotInitialized;
+	
+	fModel->SetSVGSideOffsetY(svgSideOffsetY);
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfModelImpl::SetSVGFrontOffsetX(double svgFrontOffsetX)
+{
+	// Check Pointer
+	if ( ! fModel) return kVCOMError_NotInitialized;
+	
+	fModel->SetSVGFrontOffsetX(svgFrontOffsetX);
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfModelImpl::SetSVGFrontOffsetY(double svgFrontOffsetY)
+{
+	// Check Pointer
+	if ( ! fModel) return kVCOMError_NotInitialized;
+	
+	fModel->SetSVGFrontOffsetY(svgFrontOffsetY);
 	
 	return kVCOMError_NoError;
 }
