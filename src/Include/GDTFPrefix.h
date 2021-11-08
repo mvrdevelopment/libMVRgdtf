@@ -247,6 +247,9 @@ namespace VectorworksMVR
 			eGdtfBeamType_Spot      = 1,
 			eGdtfBeamType_None      = 2,
             eGdtfBeamType_Rectangle = 3,
+            eGdtfBeamType_PC        = 4,
+            eGdtfBeamType_Fresnel   = 5,
+            eGdtfBeamType_Glow      = 6,
 		};
 		
 		enum EGdtfDmxMaster

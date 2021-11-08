@@ -2350,6 +2350,7 @@ void GdtfGeometryLamp::InitializeMembersWithDefaultsVals()
 	fRectangleRatio		= 1.7777;
 	fBeamType			= EGdtfBeamType::eGdtfBeamType_Wash;
 	fColorIndex			= 100;
+	fEmitterSpectrum	= nullptr;
 }
 
 GdtfGeometryLamp::~GdtfGeometryLamp()
@@ -2411,6 +2412,11 @@ void SceneData::GdtfGeometryLamp::SetColorIndex(Sint32 idx)
     fColorIndex = idx;
 }
 
+void GdtfGeometryLamp::SetEmitterSpectrum(GdtfPhysicalEmitter* emitterSpectrum)
+{
+    fEmitterSpectrum = emitterSpectrum;
+}
+
 void GdtfGeometryLamp::OnPrintToFile(IXMLFileNodePtr pNode)
 {
 	//------------------------------------------------------------------------------------
@@ -2431,6 +2437,8 @@ void GdtfGeometryLamp::OnPrintToFile(IXMLFileNodePtr pNode)
 	pNode->SetNodeAttributeValue(XML_GDTF_RectangleRatio,			GdtfConverter::ConvertDouble(fRectangleRatio));
 	pNode->SetNodeAttributeValue(XML_GDTF_BeamType,					GdtfConverter::ConvertBeamType(fBeamType));
 	pNode->SetNodeAttributeValue(XML_GDTF_BeamColorRenderingIndex,	GdtfConverter::ConvertInteger(fColorIndex));
+
+	if (fEmitterSpectrum) {pNode->SetNodeAttributeValue(XML_GDTF_BeamEmitterSpectrum, fEmitterSpectrum->GetNodeReference()); };
 	
 }
 
@@ -2454,6 +2462,8 @@ void GdtfGeometryLamp::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	TXString rectangleRatio;pNode->GetNodeAttributeValue(XML_GDTF_RectangleRatio,			rectangleRatio);GdtfConverter::ConvertDouble(rectangleRatio,pNode,	fRectangleRatio);
 	TXString type;			pNode->GetNodeAttributeValue(XML_GDTF_BeamType,					type);			GdtfConverter::ConvertBeamType(type, 		pNode,	fBeamType);
 	TXString colorIndex;	pNode->GetNodeAttributeValue(XML_GDTF_BeamColorRenderingIndex,	colorIndex);	GdtfConverter::ConvertInteger(colorIndex, 	pNode,	fColorIndex);
+
+	pNode->GetNodeAttributeValue(XML_GDTF_BeamEmitterSpectrum, fUnresolvedEmitterRef);
 }
 
 void GdtfGeometryLamp::OnErrorCheck(const IXMLFileNodePtr& pNode)
@@ -2480,6 +2490,7 @@ void GdtfGeometryLamp::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	optional.push_back(XML_GDTF_BeamType);
 	optional.push_back(XML_GDTF_BeamColorRenderingIndex);
 	optional.push_back(XML_GDTF_GeometryModelRef);
+	optional.push_back(XML_GDTF_BeamEmitterSpectrum);
 
 	
 	//------------------------------------------------------------------------------------
@@ -2522,34 +2533,44 @@ double GdtfGeometryLamp::GetBeamAngle()
 	return fBeamAngle;
 }
 
-double SceneData::GdtfGeometryLamp::GetFieldAngle()
+double GdtfGeometryLamp::GetFieldAngle()
 {
     return fFieldAngle;
 }
 
-double SceneData::GdtfGeometryLamp::GetBeamRadius()
+double GdtfGeometryLamp::GetBeamRadius()
 {
     return fBeamRadius;
 }
 
-double SceneData::GdtfGeometryLamp::GetThrowRatio()
+double GdtfGeometryLamp::GetThrowRatio()
 {
 	return fThrowRatio;
 }
 
-double SceneData::GdtfGeometryLamp::GetRectangleRatio()
+double GdtfGeometryLamp::GetRectangleRatio()
 {
 	return fRectangleRatio;
 }
 
-EGdtfBeamType SceneData::GdtfGeometryLamp::GetBeamType()
+EGdtfBeamType GdtfGeometryLamp::GetBeamType()
 {
     return fBeamType;
 }
 
-Sint32 SceneData::GdtfGeometryLamp::GetColorIndex()
+Sint32 GdtfGeometryLamp::GetColorIndex()
 {
     return fColorIndex;
+}
+
+GdtfPhysicalEmitter* GdtfGeometryLamp::GetEmitterSpectrum()
+{
+    return fEmitterSpectrum;
+}
+
+TXString GdtfGeometryLamp::GetUnresolvedEmitterRef() const
+{
+	return fUnresolvedEmitterRef;
 }
 
 //------------------------------------------------------------------------------------
@@ -2778,7 +2799,8 @@ void GdtfDmxMode::OnPrintToFile(IXMLFileNodePtr pNode)
 	
 	// ------------------------------------------------------------------------------------
 	// Print node attributes
-	pNode->SetNodeAttributeValue(XML_GDTF_DMXModeName,				fName);
+	pNode->SetNodeAttributeValue(XML_GDTF_DMXModeName, 			fName);
+	pNode->SetNodeAttributeValue(XML_GDTF_DMXModeDescription, 	fDescription);
 	if (fGeomRef) { pNode->SetNodeAttributeValue(XML_GDTF_DMXModeGeometryRef,		fGeomRef->GetNodeReference()); } ;
 	
 	// ------------------------------------------------------------------------------------
@@ -2825,8 +2847,9 @@ void GdtfDmxMode::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	
 	// ------------------------------------------------------------------------------------
 	// Print node attributes
-	pNode->GetNodeAttributeValue(XML_GDTF_DMXModeName,		  fName);
-	pNode->GetNodeAttributeValue(XML_GDTF_DMXModeGeometryRef, fUnresolvedGeomRef);
+	pNode->GetNodeAttributeValue(XML_GDTF_DMXModeName,		  	fName);
+	pNode->GetNodeAttributeValue(XML_GDTF_DMXModeDescription,	fDescription);
+	pNode->GetNodeAttributeValue(XML_GDTF_DMXModeGeometryRef, 	fUnresolvedGeomRef);
 	// ------------------------------------------------------------------------------------
 	// Print Channels
 	
@@ -2874,6 +2897,7 @@ void GdtfDmxMode::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	TXStringArray optional;
 	needed.push_back(XML_GDTF_DMXModeName);
 	needed.push_back(XML_GDTF_DMXModeGeometryRef);
+	optional.push_back(XML_GDTF_DMXModeDescription);
 	
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
@@ -2946,6 +2970,16 @@ const TXString& GdtfDmxMode::GetModeName() const
 void GdtfDmxMode::SetName(const TXString &name)
 {
 	fName = name;
+}
+
+const TXString& GdtfDmxMode::GetDescription() const
+{
+	return fDescription;
+}
+
+void GdtfDmxMode::SetDescription(const TXString &description)
+{
+	fDescription = description;
 }
 
 void GdtfDmxMode::SetGeomRef(GdtfGeometryPtr ptr)
@@ -4710,6 +4744,7 @@ GdtfRevision::GdtfRevision()
 	fDateS.fHour	= 0;
 	fDateS.fMinute	= 0;
 	fDateS.fSecond	= 0;
+	fModifiedBy 	= "";
     
 }
 
@@ -4729,6 +4764,7 @@ void GdtfRevision::OnPrintToFile(IXMLFileNodePtr pNode)
 	pNode->SetNodeAttributeValue(XML_GDTF_RevisionText,			fText);
 	pNode->SetNodeAttributeValue(XML_GDTF_RevisionDate,			SceneData::GdtfConverter::ConvertDate(fDateS));
 	pNode->SetNodeAttributeValue(XML_GDTF_RevisionUserId,		SceneData::GdtfConverter::ConvertInteger(fUserId));
+	pNode->SetNodeAttributeValue(XML_GDTF_RevisionModifiedBy,	fModifiedBy);
 	
 }
 
@@ -4741,9 +4777,10 @@ void GdtfRevision::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	
 	// ------------------------------------------------------------------------------------
 	// Print node attributes
-						pNode->GetNodeAttributeValue(XML_GDTF_RevisionText,		fText);
-	TXString date;		pNode->GetNodeAttributeValue(XML_GDTF_RevisionDate, 	date);		GdtfConverter::ConvertDate(date, pNode, fDateS);
-	TXString userid;	pNode->GetNodeAttributeValue(XML_GDTF_RevisionUserId, 	userid);	GdtfConverter::ConvertInteger(userid, pNode, fUserId);
+						pNode->GetNodeAttributeValue(XML_GDTF_RevisionText,			fText);
+	TXString date;		pNode->GetNodeAttributeValue(XML_GDTF_RevisionDate, 		date);		GdtfConverter::ConvertDate(date, pNode, fDateS);
+	TXString userid;	pNode->GetNodeAttributeValue(XML_GDTF_RevisionUserId, 		userid);	GdtfConverter::ConvertInteger(userid, pNode, fUserId);
+						pNode->GetNodeAttributeValue(XML_GDTF_RevisionModifiedBy,	fModifiedBy);
 
 }
 
@@ -4760,6 +4797,7 @@ void GdtfRevision::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	needed.push_back(XML_GDTF_RevisionDate);
 	optional.push_back(XML_GDTF_RevisionText);
 	optional.push_back(XML_GDTF_RevisionUserId);
+	optional.push_back(XML_GDTF_RevisionModifiedBy);
 
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
@@ -4791,9 +4829,14 @@ void GdtfRevision::SetDate(const STime& date)
 	fDateS.fSecond	= date.fSecond;
 }
 
-const STime& GdtfRevision::GetDate() const
+void GdtfRevision::SetUserId(size_t value) 
 {
-	return fDateS;
+	fUserId = value;
+}
+
+void GdtfRevision::SetModifiedBy(const TXString& modifiedBy)
+{
+	fModifiedBy = modifiedBy;
 }
 
 const TXString& GdtfRevision::GetText() const
@@ -4801,15 +4844,22 @@ const TXString& GdtfRevision::GetText() const
 	return fText;
 }
 
+const STime& GdtfRevision::GetDate() const
+{
+	return fDateS;
+}
+
 size_t GdtfRevision::GetUserId() const
 {
 	return fUserId;
 }
 
-void GdtfRevision::SetUserId(size_t value) 
+const TXString& GdtfRevision::GetModifiedBy() const
 {
-	fUserId = value;
+	return fModifiedBy;
 }
+
+
 
 //------------------------------------------------------------------------------------
 // GdtfPhysicalEmitter
@@ -5015,6 +5065,7 @@ TXString GdtfUserPreset::GetNodeName()
 // Macro
 GdtfMacro::GdtfMacro()
 {
+	fChannelFunction = nullptr;
 	fMacroDMX = nullptr;
 	fMacroVisual = nullptr;
 }
@@ -5022,6 +5073,7 @@ GdtfMacro::GdtfMacro()
 GdtfMacro::GdtfMacro(const TXString& name)
 {
     fName = name;
+	fChannelFunction = nullptr;
     fMacroDMX = nullptr;
     fMacroVisual = nullptr;
 }
@@ -5042,8 +5094,10 @@ void GdtfMacro::OnPrintToFile(IXMLFileNodePtr pNode)
 	// Print node attributes
 	pNode->SetNodeAttributeValue(XML_GDTF_MacroName, fName);
 
+	if(fChannelFunction) { pNode->SetNodeAttributeValue(XML_GDTF_MacroChannelFunction, fChannelFunction->GetNodeReference()); }
+
 	//------------------------------------------------------------------------------------
-    // Print the childs
+    // Print the children
     if (fMacroDMX != nullptr) 
     {
         fMacroDMX->WriteToNode(pNode);
@@ -5061,9 +5115,11 @@ void GdtfMacro::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	GdtfObject::OnReadFromNode(pNode);
     //------------------------------------------------------------------------------------
     // Get the attributes	
-    pNode->GetNodeAttributeValue(XML_GDTF_MacroName, fName);    
+    pNode->GetNodeAttributeValue(XML_GDTF_MacroName, fName);
+    pNode->GetNodeAttributeValue(XML_GDTF_MacroChannelFunction, fUnresolvedChannelFunction);
+
     //------------------------------------------------------------------------------------
-    // Read the childs
+    // Read the children
 	IXMLFileNodePtr macroDmxNode;
     if(VCOM_SUCCEEDED(pNode->GetChildNode(XML_GDTF_MacroDMX, &macroDmxNode)))
 	{
@@ -5092,6 +5148,7 @@ void GdtfMacro::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	TXStringArray needed;
 	TXStringArray optional;
 	needed.push_back(XML_GDTF_MacroName);
+	optional.push_back(XML_GDTF_MacroChannelFunction);
 	
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
@@ -5108,6 +5165,16 @@ GdtfMacroDMX* SceneData::GdtfMacro::GetMacroDMX() const
     return fMacroDMX;
 }
 
+GdtfDmxChannelFunction* SceneData::GdtfMacro::GetChannelFunction() const
+{
+    return fChannelFunction;
+}
+
+const TXString & SceneData::GdtfMacro::GetUnresolvedChannelFunction() const
+{
+    return fUnresolvedChannelFunction;
+}
+
 GdtfMacroVisual* SceneData::GdtfMacro::GetMacroVisual() const
 {
     return fMacroVisual;
@@ -5116,6 +5183,11 @@ GdtfMacroVisual* SceneData::GdtfMacro::GetMacroVisual() const
 void SceneData::GdtfMacro::SetName(const TXString & name)
 {
     fName = name;
+}
+
+void SceneData::GdtfMacro::SetChannelFunction(GdtfDmxChannelFunction* channelFunction)
+{
+    fChannelFunction = channelFunction;
 }
 
 void SceneData::GdtfMacro::SetMacroDMX(GdtfMacroDMX* val)
@@ -5685,6 +5757,18 @@ void GdtfFixture::ResolveGeometryRefs_Recursive(GdtfGeometryPtr geometry)
 			SceneData::GdtfFixture::AddError(error);
 		}
 	}
+
+	if(geometry->GetObjectType() == eGdtfGeometryLamp)
+	{
+		GdtfGeometryLampePtr geoLamp = static_cast<GdtfGeometryLampePtr>(geometry);
+
+		TXString unresolvedEmitterRef = geoLamp->GetUnresolvedEmitterRef();
+		if ( ! unresolvedEmitterRef.IsEmpty())
+		{
+			GdtfPhysicalEmitterPtr emitterPtr = getEmiterByRef(unresolvedEmitterRef);
+			geoLamp->SetEmitterSpectrum(emitterPtr);
+		}
+	}
 	
 	// Now traverse child geometry
 	for (GdtfGeometryPtr internalGeometry : geometry->GetInternalGeometries())
@@ -5795,6 +5879,13 @@ void GdtfFixture::ResolveMacroRefs(GdtfDmxModePtr dmxMode)
 {
 	for (GdtfMacroPtr macro : dmxMode->GetDmxMacrosArray())
 	{
+		TXString unresolvedChannelFunction = macro->GetUnresolvedChannelFunction();
+		if ( ! unresolvedChannelFunction.IsEmpty())
+		{
+			GdtfDmxChannelFunctionPtr channelFunctionPtr = getDmxFunctionByRef(unresolvedChannelFunction, dmxMode);
+			macro->SetChannelFunction(channelFunctionPtr);
+		}
+
 		if(macro->GetMacroDMX())
 		{
 			for (GdtfMacroDMXStepPtr step : macro->GetMacroDMX()->GetStepArray())

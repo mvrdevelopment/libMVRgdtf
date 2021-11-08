@@ -889,17 +889,20 @@ namespace SceneData
 		~GdtfGeometryLamp();
 		
 	private:
-		EGdtfLampType	fLampType;
-		double			fPowerConsuption;	// Unit ?? -> W cos phi???
-		double			fLuminousIntensity;
-		double			fColorTemperature;
-		double			fBeamAngle;			// Unit ?? -> Degree
-        double          fFieldAngle;
-		double			fBeamRadius;		// Unit Meter
-		double			fThrowRatio;
-		double			fRectangleRatio;
-		EGdtfBeamType	fBeamType;			// Unit Meter
-		Sint32			fColorIndex;
+		EGdtfLampType			fLampType;
+		double					fPowerConsuption;	// Unit ?? -> W cos phi???
+		double					fLuminousIntensity;
+		double					fColorTemperature;
+		double					fBeamAngle;			// Unit ?? -> Degree
+        double          		fFieldAngle;
+		double					fBeamRadius;		// Unit Meter
+		double					fThrowRatio;
+		double					fRectangleRatio;
+		EGdtfBeamType			fBeamType;			// Unit Meter
+		Sint32					fColorIndex;
+		GdtfPhysicalEmitter*	fEmitterSpectrum;
+
+		TXString 				fUnresolvedEmitterRef;
 		
 	public:
 		// Getter
@@ -915,6 +918,9 @@ namespace SceneData
         double                          GetRectangleRatio();
         EGdtfBeamType                   GetBeamType();
         Sint32                          GetColorIndex();
+		GdtfPhysicalEmitter*            GetEmitterSpectrum();
+
+		TXString						GetUnresolvedEmitterRef() const;
 
 		// Setter
 		void							SetLampType(EGdtfLampType type);
@@ -928,6 +934,7 @@ namespace SceneData
         void                            SetRectangleRatio(double ratio);
         void                            SetBeamType(EGdtfBeamType type);
         void                            SetColorIndex(Sint32 idx);
+		void							SetEmitterSpectrum(GdtfPhysicalEmitter* emitterSpectrum);
 		
 	protected:
         void                            InitializeMembersWithDefaultsVals();
@@ -936,6 +943,7 @@ namespace SceneData
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
         virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
 	};
+	typedef GdtfGeometryLamp*			GdtfGeometryLampePtr;
 	
 	class GdtfBreak : public GdtfObject
 	{
@@ -1352,19 +1360,25 @@ namespace SceneData
 		~GdtfMacro();
 
 	private:
-		TXString fName;
-		// Childs
+		TXString 				fName;
+		GdtfDmxChannelFunction* fChannelFunction;
+
+		TXString				fUnresolvedChannelFunction;
+		// Children
 		GdtfMacroDMX*    fMacroDMX;
 		GdtfMacroVisual* fMacroVisual;
 	public:
 		virtual EGdtfObjectType			GetObjectType();
 	public:
 		// Getter
-		const TXString&  GetName() const;
-		GdtfMacroDMX*    GetMacroDMX() const;
-		GdtfMacroVisual* GetMacroVisual() const;
+		const TXString&  		GetName() const;
+		GdtfDmxChannelFunction* GetChannelFunction() const;
+		const TXString&  		GetUnresolvedChannelFunction() const;
+		GdtfMacroDMX*    		GetMacroDMX() const;
+		GdtfMacroVisual* 		GetMacroVisual() const;
 		// Setter
 		void SetName(const TXString & name);
+		void SetChannelFunction(GdtfDmxChannelFunction* channelFunction);
 		void SetMacroDMX(GdtfMacroDMX* val);
 		void SetMacroVisual(GdtfMacroVisual* val);
 	protected:
@@ -1558,7 +1572,8 @@ namespace SceneData
 		~GdtfDmxMode();
 		
 	private:
-		TXString				fName;			
+		TXString				fName;
+		TXString				fDescription;			
 		GdtfGeometryPtr			fGeomRef;
 		GdtfFixture*			fFixture;
 		TXString				fUnresolvedGeomRef;
@@ -1570,6 +1585,7 @@ namespace SceneData
 
 	public:		
 		const TXString&				GetModeName() const;
+		const TXString&				GetDescription() const;
 		const TGdtfDmxChannelArray	GetChannelArray() const;		
 		GdtfDmxChannelPtr			GetMasterByRef(const TXString& ref) const;
 		GdtfDmxChannelFunctionPtr	GetSlaveByRef(const TXString& ref) const;
@@ -1585,6 +1601,7 @@ namespace SceneData
 
 		
 		void						SetName(const TXString& name);
+		void						SetDescription(const TXString& description);
 		GdtfDmxChannelPtr			AddChannel();
 		void						SetGeomRef(GdtfGeometryPtr ptr);
 		void						SetModel(GdtfGeometryPtr ptr);
@@ -1617,6 +1634,7 @@ namespace SceneData
 		TXString	fText;
 		STime       fDateS;
 		size_t		fUserId;
+		TXString	fModifiedBy;
 		
 	public:
 		virtual EGdtfObjectType			GetObjectType();
@@ -1626,10 +1644,12 @@ namespace SceneData
 		const STime&    GetDate() const;
 		const TXString&	GetText() const;
 		size_t			GetUserId() const;
+		const TXString&	GetModifiedBy() const;
         // Setter        
 		void			SetText(const TXString& text);
         void            SetDate(const STime& date);
 		void 			SetUserId(size_t userId);
+		void			SetModifiedBy(const TXString& text);
 		
 	protected:
 		virtual	TXString				GetNodeName();
