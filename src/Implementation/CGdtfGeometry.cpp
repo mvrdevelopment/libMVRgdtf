@@ -9,6 +9,7 @@
 #include "Utility.h"
 #include "CGdtfDmxMode.h"
 #include "CGdtfDmxChannel.h"
+#include "CGdtfPhysicalEmitter.h"
 
 using namespace VectorworksMVR::Filing;
 
@@ -69,7 +70,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetModel(Vectorwork
     }
     
     //---------------------------------------------------------------------------
-    // Check Incomming Object
+    // Check Incoming Object
     if (*model)
     {
         (*model)->Release();
@@ -447,6 +448,56 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetColorIndex(Sint3
 	return kVCOMError_NoError;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetEmitterSpectrum(IGdtfPhysicalEmitter** outEmitter)
+{
+	// Check Pointer
+	if( ! fGeometry) return kVCOMError_NotInitialized;
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLamp) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryLamp* lamp = static_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
+	if ( ! lamp) { return kVCOMError_Failed; }
+	
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CGdtfPhysicalEmitterImpl*		pEmitterObj		= nullptr;
+	SceneData::GdtfPhysicalEmitter*	gdtfEmitter 	= lamp->GetEmitterSpectrum();
+
+	if(!gdtfEmitter) { return kVCOMError_NotSet; }
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfPhysicalEmitter, (IVWUnknown**) & pEmitterObj)))
+	{
+		// Check Casting
+		CGdtfPhysicalEmitterImpl* pResultInterface = static_cast<CGdtfPhysicalEmitterImpl* >(pEmitterObj);
+		if (pResultInterface)
+		{
+			pResultInterface->setPointer(gdtfEmitter);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incoming Object
+	if (*outEmitter)
+	{
+		(*outEmitter)->Release();
+		*outEmitter		= NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*outEmitter		= pEmitterObj;
+
+	return kVCOMError_NoError;
+}
+
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetName(MvrString name)
 {
 	if( ! fGeometry) return kVCOMError_NotInitialized;	
@@ -679,6 +730,28 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetColorIndex(Sint3
 	return kVCOMError_NoError;    
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetEmitterSpectrum(IGdtfPhysicalEmitter* newEmitter)
+{
+	// Check Pointer
+	if ( ! fGeometry) { return kVCOMError_NotInitialized; }
+	
+	// Check if it is the right type
+	if ( fGeometryType != EGdtfObjectType::eGdtfGeometryLamp) return kVCOMError_WrongGeometryType;
+	
+	SceneData::GdtfGeometryLamp* lamp = static_cast<SceneData::GdtfGeometryLamp*>(fGeometry);
+	if ( ! lamp) { return kVCOMError_Failed; }
+	
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CGdtfPhysicalEmitterImpl* pEmitterObj = static_cast<CGdtfPhysicalEmitterImpl*> (newEmitter);
+	if(!pEmitterObj) { return kVCOMError_InvalidArg; }
+	
+	SceneData::GdtfPhysicalEmitter* gdtfEmitter = pEmitterObj->GetPointer();
+	lamp->SetEmitterSpectrum(gdtfEmitter);
+	
+	return kVCOMError_NoError;
+}
+
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetBreakCount(size_t &count)
 {
 	// Check Pointer
@@ -836,7 +909,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetGeometryReferenc
 	}
 	
 	//---------------------------------------------------------------------------
-	// Check Incomming Object
+	// Check Incoming Object
 	if (*geometry)
 	{
 		(*geometry)->Release();

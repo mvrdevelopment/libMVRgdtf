@@ -81,6 +81,24 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfRevisionImpl::SetUserId(size_t us
     return kVCOMError_NoError;
 }
 
+MvrString VectorworksMVR::CGdtfRevisionImpl::GetModifiedBy()
+{
+	// Check if valid
+	if(!fRevision) return "";
+	
+	return fRevision->GetModifiedBy().GetCharPtr();
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfRevisionImpl::SetModifiedBy(MvrString modifiedBy)
+{
+	// Check if valid
+	if(!fRevision) { return kVCOMError_NotInitialized; }
+    
+    fRevision->SetModifiedBy(modifiedBy);
+
+    return kVCOMError_NoError;
+}
+
 void VectorworksMVR::CGdtfRevisionImpl::setPointer(SceneData::GdtfRevision *revision)
 {
     fRevision = revision;

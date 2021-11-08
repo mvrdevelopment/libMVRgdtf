@@ -629,6 +629,11 @@ namespace VectorworksMVR
 		// Display
 		virtual MvrString VCOM_CALLTYPE		GetTexture() = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetTexture(MvrString texture) = 0;
+
+		// GDTF 1.2
+		// Lamp
+		virtual VCOMError VCOM_CALLTYPE     GetEmitterSpectrum(IGdtfPhysicalEmitter** outEmitter) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetEmitterSpectrum(IGdtfPhysicalEmitter* newEmitter) = 0;
 	};
 	typedef VCOMPtr<IGdtfGeometry>	IGdtfGeometryPtr;
     
@@ -795,6 +800,10 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		
 		virtual VCOMError VCOM_CALLTYPE		GetMacroVisual(IGdtfMacroVisual** outMacroVisual) = 0;
 		virtual VCOMError VCOM_CALLTYPE		CreateMacroVisual(IGdtfMacroVisual** outMacroVisual) = 0;
+
+		// GDTF 1.2
+		virtual VCOMError VCOM_CALLTYPE     GetChannelFunction(IGdtfDmxChannelFunction** outChannelFunction) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetChannelFunction(IGdtfDmxChannelFunction* newChannelFunction) = 0;
 	};
 	typedef VCOMPtr<IGdtfMacro>	IGdtfMacroPtr;
 
@@ -914,6 +923,10 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
         virtual VCOMError VCOM_CALLTYPE     GetBreakCount(size_t& count) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetFootprintForBreak(size_t inBreak, size_t& footprint) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetBreakAt(size_t at, size_t &breakId) = 0;
+
+		// GDTF 1.2
+		virtual MvrString VCOM_CALLTYPE		GetDescription() = 0;
+		virtual VCOMError VCOM_CALLTYPE 	SetDescription(MvrString description) = 0;
     };
 	typedef VCOMPtr<IGdtfDmxMode>	IGdtfDmxModePtr;
     
@@ -923,12 +936,16 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
         virtual MvrString VCOM_CALLTYPE     GetText() = 0;
         virtual VCOMError VCOM_CALLTYPE     GetDate(STime& date) = 0;
 
-        virtual VCOMError VCOM_CALLTYPE     SetText(MvrString txt)  = 0;
-        virtual VCOMError VCOM_CALLTYPE     SetDate(STime date)  = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetText(MvrString txt) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetDate(STime date) = 0;
 
 		// GDTF 1.0
 		virtual VCOMError VCOM_CALLTYPE     GetUserId(size_t& userId) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetUserId(size_t userId) = 0;
+
+		// GDTF 1.2
+		virtual MvrString VCOM_CALLTYPE     GetModifiedBy() = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetModifiedBy(MvrString modifiedBy) = 0;
     };
 	typedef VCOMPtr<IGdtfRevision>	IGdtfRevisionPtr;
     
@@ -1269,6 +1286,12 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 
 		virtual VCOMError VCOM_CALLTYPE     GetSACN(IGdtfSACN** sACN) = 0;
 		virtual VCOMError VCOM_CALLTYPE     CreateSACN(IGdtfSACN** sACN) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE		GetThumbnailOffsetX(size_t& offsetX) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetThumbnailOffsetX(size_t offsetX) = 0;	
+
+		virtual VCOMError VCOM_CALLTYPE		GetThumbnailOffsetY(size_t& offsetY) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetThumbnailOffsetY(size_t offsetY) = 0;
 
 	};
     typedef VCOMPtr<IGdtfFixture>	IGdtfFixturePtr;

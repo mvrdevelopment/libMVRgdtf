@@ -31,6 +31,24 @@ MvrString VectorworksMVR::CGdtfDmxModeImpl::GetName()
     return fDmxMode->GetModeName().GetCharPtr();
 }
 
+MvrString VectorworksMVR::CGdtfDmxModeImpl::GetDescription()
+{
+	// Check Pointer
+	if ( ! fDmxMode) return "";
+	
+    return fDmxMode->GetDescription().GetCharPtr();
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxModeImpl::SetDescription(MvrString description)
+{
+	// Check if valid
+	if(!fDmxMode) { return kVCOMError_NotInitialized; }
+    
+    fDmxMode->SetDescription(description);
+
+    return kVCOMError_NoError;
+}
+
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxModeImpl::GetGeometry(VectorworksMVR::IGdtfGeometry **geo)
 {
 	// Check Pointer

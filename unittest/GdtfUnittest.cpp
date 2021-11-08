@@ -59,7 +59,8 @@ void GdtfUnittest::WriteFile()
 		__checkVCOM(gdtfWrite->SetLongName("My Long Long Name"));
 		__checkVCOM(gdtfWrite->SetFixtureThumbnail("MyThumbnail"));
 		__checkVCOM(gdtfWrite->SetLinkedFixtureGUID(linkedUuid));
-
+		__checkVCOM(gdtfWrite->SetThumbnailOffsetX(1));
+		__checkVCOM(gdtfWrite->SetThumbnailOffsetY(2));
 		__checkVCOM(gdtfWrite->SetCanHaveChildren(false));
 
         //------------------------------------------------------------------------------    
@@ -283,6 +284,7 @@ void GdtfUnittest::WriteFile()
         IGdtfGeometryPtr beamGeo;        
         __checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometryLamp, "My Lamp Geometry", gdtfModel, ma, &beamGeo));
         beamGeo->SetLuminousIntensity(5);
+		beamGeo->SetEmitterSpectrum(gdtfEmitter);
 
 		//Media server Camera
 		IGdtfGeometryPtr msCameraGeo;        
@@ -369,6 +371,7 @@ void GdtfUnittest::WriteFile()
 		timestamp.fHour = 22; timestamp.fMinute = 33; timestamp.fSecond = 44;
 		__checkVCOM(gdtfWrite->CreateRevision("Revision TestText", timestamp, &rev));
 		__checkVCOM(rev->SetUserId(254));
+		__checkVCOM(rev->SetModifiedBy("unit test"));
 
         //------------------------------------------------------------------------------    
         // Add RDM 
@@ -444,6 +447,14 @@ void GdtfUnittest::ReadFile()
 
 		__checkVCOM(gdtfRead->GetFixtureGUID(resultUUID));
 		this->checkifEqual("GetFixtureGUID fixtureUUID ", fixtureUUID, resultUUID);
+
+		size_t thumbnailOffsetX;
+		__checkVCOM(gdtfRead->GetThumbnailOffsetX(thumbnailOffsetX));
+		this->checkifEqual("GetThumbnailOffsetX ", thumbnailOffsetX, (size_t)1);
+
+		size_t thumbnailOffsetY;
+		__checkVCOM(gdtfRead->GetThumbnailOffsetY(thumbnailOffsetY));
+		this->checkifEqual("GetThumbnailOffsetY ", thumbnailOffsetY, (size_t)2);
 
 		bool canHaveChildren;
 		__checkVCOM(gdtfRead->GetCanHaveChildren(canHaveChildren));
@@ -1321,6 +1332,9 @@ void GdtfUnittest::ReadFile()
 		IGdtfGeometryPtr geo3;
 		__checkVCOM(gdtfRead->GetGeometryAt(2, &geo3));
 
+		IGdtfGeometryPtr geo4;
+		__checkVCOM(gdtfRead->GetGeometryAt(3, &geo4));
+
 		//----------------------------------------------
 		//Media server geos
 		IGdtfGeometryPtr geo5;
@@ -1370,6 +1384,18 @@ void GdtfUnittest::ReadFile()
 			this->checkifEqual("Check Adress", (Sint32)3,breakId);
 		}
 
+		if(geo4)
+		{
+			//Lamp
+			IGdtfPhysicalEmitterPtr gdtfEmitter;
+			if (__checkVCOM(geo4->GetEmitterSpectrum(&gdtfEmitter)))
+			{
+				MvrString emitterName = gdtfEmitter->GetName();
+				this->checkifEqual("GetEmitterSpectrum ", emitterName, "My emitterName");
+			}
+			
+		}
+
 		//--------------------------------------------------------------------------------
 		// Read Revision
 		size_t countRevs = 0;
@@ -1393,9 +1419,8 @@ void GdtfUnittest::ReadFile()
 		this->checkifEqual("Check RevDatefMinute",	expTimestamp.fMinute,	Uint16(33));
 		this->checkifEqual("Check RevDatefSecond",	expTimestamp.fSecond, 	Uint16(44));
 		this->checkifEqual("Check UserId",			userId, 				size_t(254));
+		this->checkifEqual("Check ModifiedBy", rev->GetModifiedBy(), "unit test");
 
-
-		
 
         //------------------------------------------------------------------------------    
         // Read RDM         
