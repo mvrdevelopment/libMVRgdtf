@@ -1784,7 +1784,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateDMXProfile(Vec
     }
 
     //---------------------------------------------------------------------------
-    // Check Incomming Object
+    // Check Incoming Object
     if (*outVal)
     {
         (*outVal)->Release();

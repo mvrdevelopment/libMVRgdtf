@@ -532,6 +532,14 @@ const Sint32 kMVR_MinorVersion = 4;
 
 #define XML_GDTF_DMX_ProfileCollect                     "DMXProfiles"
 #define XML_GDTF_DMX_Profile                            "DMXProfile"
+#define XML_GDTF_DMX_ProfileName                        "Name"
+
+#define XML_GDTF_Point                                  "Point"
+#define XML_GDTF_PointDMXPercentage                     "DMXPercentage"
+#define XML_GDTF_PointCFC3                              "CFC3"
+#define XML_GDTF_PointCFC2                              "CFC2"
+#define XML_GDTF_PointCFC1                              "CFC1"
+#define XML_GDTF_PointCFC0                              "CFC0"
 
 #define XML_GDTF_ConnectorCollect	                    "Connectors"
 #define XML_GDTF_ConnectorNodeName                      "Connector"
