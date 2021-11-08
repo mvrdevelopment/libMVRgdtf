@@ -459,6 +459,7 @@ const Sint32 kMVR_MinorVersion = 4;
 // Macros
 #define XML_GDTF_MacroNodeName							"FTMacro"
 #define XML_GDTF_MacroName                              "Name"
+#define XML_GDTF_MacroChannelFunction                   "ChannelFunction"
 #define XML_GDTF_MacroDMX                               "MacroDMX"  
 #define XML_GDTF_MacroDMXStep                           "MacroDMXStep"
 #define XML_GDTF_MacroDMXStepDuration                   "Duration"
