@@ -8,6 +8,8 @@
 #include <iostream>
 #include "Utility.h"
 
+#include "Wrapper/ZIPFileImpl.h"
+
 using namespace SceneData;
 
 //------------------------------------------------------------------------------------
@@ -1210,6 +1212,12 @@ GdtfModel::GdtfModel(GdtfFixture* fixture)
 	fPrimitiveType	= eGdtfModel_PrimitiveType_Undefined;
 	fGeometryFile	= "";
 	fParentFixture	= fixture;
+	fBuffer3DS 		= nullptr;
+	fBufferSVG 		= nullptr;
+	fBufferGLTF		= nullptr;
+	fBufferSize3DS	= 0;
+	fBufferSizeSVG	= 0;
+	fBufferSizeGLTF	= 0;
 }
 
 GdtfModel::GdtfModel(const TXString& name, GdtfFixture* fixture)
@@ -1221,10 +1229,19 @@ GdtfModel::GdtfModel(const TXString& name, GdtfFixture* fixture)
 	fPrimitiveType	= eGdtfModel_PrimitiveType_Undefined;
 	fGeometryFile	= "";
 	fParentFixture	= fixture;
+	fBuffer3DS 		= nullptr;
+	fBufferSVG 		= nullptr;
+	fBufferGLTF		= nullptr;
+	fBufferSize3DS	= 0;
+	fBufferSizeSVG	= 0;
+	fBufferSizeGLTF	= 0;
 }
 
 GdtfModel::~GdtfModel()
 {
+	if(fBuffer3DS) 	{ delete[] fBuffer3DS; 	fBufferSize3DS = 0; }
+	if(fBufferSVG)	{ delete[] fBufferSVG; 	fBufferSizeSVG = 0; }
+	if(fBufferGLTF) { delete[] fBufferGLTF; fBufferSizeGLTF = 0; }
 }
 
 void GdtfModel::SetName(const TXString& name)
@@ -1255,6 +1272,45 @@ void GdtfModel::SetPrimitiveType(const EGdtfModel_PrimitiveType &type)
 void GdtfModel::SetGeometryFile(const TXString &file)
 {
 	fGeometryFile = file;
+}
+
+void GdtfModel::SetBuffer3DS(void* bufferToCopy, size_t length)
+{
+	if(fBuffer3DS)
+	{
+		delete[] fBuffer3DS;
+		fBuffer3DS = nullptr;
+	}
+
+	fBuffer3DS		= new char[length];
+	fBufferSize3DS	= length;
+	memcpy(fBuffer3DS, bufferToCopy, length);
+}
+
+void GdtfModel::SetBufferSVG(void* bufferToCopy, size_t length)
+{
+	if(fBufferSVG)
+	{
+		delete[] fBufferSVG;
+		fBufferSVG = nullptr;
+	}
+
+	fBufferSVG 		= new char[length];
+	fBufferSizeSVG 	= length;
+	memcpy(fBufferSVG, bufferToCopy, length);
+}
+
+void GdtfModel::SetBufferGLTF(void* bufferToCopy, size_t length)
+{
+	if(fBufferGLTF)
+	{
+		delete[] fBufferGLTF;
+		fBufferGLTF = nullptr;
+	}
+
+	fBufferGLTF			= new char[length];
+	fBufferSizeGLTF 	= length;
+	memcpy(fBufferGLTF, bufferToCopy, length);
 }
 
 void GdtfModel::OnPrintToFile(IXMLFileNodePtr pNode)
@@ -1291,6 +1347,54 @@ void GdtfModel::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	TXString height;	pNode->GetNodeAttributeValue(XML_GDTF_ModelHeight,			height);	GdtfConverter::ConvertDouble(height, 		pNode, 	fHeight);
 	TXString type;		pNode->GetNodeAttributeValue(XML_GDTF_ModelPrimitiveType,	type);		GdtfConverter::ConvertPrimitiveType(type, 	pNode, 	fPrimitiveType);
 						pNode->GetNodeAttributeValue(XML_GDTF_ModelFile,			fGeometryFile);
+
+	if(!fGeometryFile.IsEmpty())
+	{
+		TXString filename3DS = fGeometryFile + ".3ds";
+		TXString filenameSVG = fGeometryFile + ".svg";
+		TXString filenameGLTF = fGeometryFile + ".glb";
+
+		std::map<TXString, std::pair<char*, size_t> > fileBuffers = fParentFixture->GetFileBuffers();
+
+		auto buffer = fileBuffers.find(filename3DS);
+		if(buffer != fileBuffers.end())
+		{
+			fBufferSize3DS	= buffer->second.second;
+			fBuffer3DS		= new char[fBufferSize3DS];
+			memcpy(fBuffer3DS, buffer->second.first, fBufferSize3DS);
+		}
+		else if(fBufferSize3DS > 0)
+		{
+			std::pair<char*, size_t> bufferPair = std::make_pair(fBuffer3DS, fBufferSize3DS);
+			fileBuffers[filename3DS] = bufferPair;
+		}
+
+		buffer = fileBuffers.find(filenameSVG);
+		if(buffer != fileBuffers.end())
+		{
+			fBufferSizeSVG	= buffer->second.second;
+			fBufferSVG		= new char[fBufferSizeSVG];
+			memcpy(fBufferSVG, buffer->second.first, fBufferSizeSVG);
+		}
+		else if(fBufferSizeSVG > 0)
+		{
+			std::pair<char*, size_t> bufferPair = std::make_pair(fBufferSVG, fBufferSizeSVG);
+			fileBuffers[filenameSVG] = bufferPair;
+		}
+
+		buffer = fileBuffers.find(filenameGLTF);
+		if(buffer != fileBuffers.end())
+		{
+			fBufferSizeGLTF	= buffer->second.second;
+			fBufferGLTF		= new char[fBufferSizeGLTF];
+			memcpy(fBufferGLTF, buffer->second.first, fBufferSizeGLTF);
+		}
+		else if(fBufferSizeGLTF > 0)
+		{
+			std::pair<char*, size_t> bufferPair = std::make_pair(fBufferGLTF, fBufferSizeGLTF);
+			fileBuffers[filenameGLTF] = bufferPair;
+		}	
+	}
 }
 
 void GdtfModel::OnErrorCheck(const IXMLFileNodePtr& pNode)
@@ -1437,6 +1541,45 @@ double GdtfModel::GetHeight() const
 EGdtfModel_PrimitiveType GdtfModel::GetPrimitiveType() const
 {
 	return fPrimitiveType;
+}
+
+void GdtfModel::GetBuffer3DS(void* bufferToCopy, size_t& length)
+{
+	if(fBuffer3DS)
+	{
+		delete[] fBuffer3DS;
+		fBuffer3DS = nullptr;
+	}
+
+	bufferToCopy = new char[fBufferSize3DS];
+	length = fBufferSize3DS;
+	memcpy(bufferToCopy, fBuffer3DS, fBufferSize3DS);
+}
+
+void GdtfModel::GetBufferSVG(void* bufferToCopy, size_t& length)
+{
+	if(fBufferSVG)
+	{
+		delete[] fBufferSVG;
+		fBufferSVG = nullptr;
+	}
+
+	bufferToCopy = new char[fBufferSizeSVG];
+	length = fBufferSizeSVG;
+	memcpy(bufferToCopy, fBufferSVG, fBufferSizeSVG);
+}
+
+void GdtfModel::GetBufferGLTF(void* bufferToCopy, size_t& length)
+{
+	if(fBufferGLTF)
+	{
+		delete[] fBufferGLTF;
+		fBufferGLTF = nullptr;
+	}
+
+	bufferToCopy = new char[fBufferSizeGLTF];
+	length = fBufferSizeGLTF;
+	memcpy(bufferToCopy, fBufferGLTF, fBufferSizeGLTF);
 }
 
 //------------------------------------------------------------------------------------
@@ -5378,7 +5521,7 @@ bool GdtfFixture::ImportFromZip(IZIPFilePtr& zipfile)
 				//-----------------------------------------------------------------------------
 				// Prepare pointer to the new files            
 				
-				// Seperate filename und folder
+				// Separate filename und folder
 				TXString fileNameWithoutFolder = TXString(fileName).Replace("/", TXString(kSeperator) );	
 	#ifndef _WINDOWS
 				fileNameWithoutFolder          = TXString(fileName).Replace("\\", TXString(kSeperator) ); // It seems some zips come also with this.
@@ -5388,6 +5531,12 @@ bool GdtfFixture::ImportFromZip(IZIPFilePtr& zipfile)
 				// flatten the folder structure
 				subFolder = subFolder.Replace(TXString(kSeperator), "");
 				subFolder = kSeperator + subFolder;
+
+				// write the data into the filebuffer map.
+				size_t	size = 0;							buffer.GetDataSize(size);
+				void*	data = malloc(size * sizeof(char));	buffer.CopyDataInto(data, size); //data is deleted in the GdtfFixture destructor.
+				std::pair<char*, size_t> bufferPair = std::make_pair((char*)data, size);
+				fFileBuffers[fileNameWithoutFolder] = bufferPair;
 
 				//-----------------------------------------------------------------------------
 				IFolderIdentifierPtr targetFolder (IID_FolderIdentifier);
@@ -5417,7 +5566,7 @@ bool GdtfFixture::ImportFromZip(IZIPFilePtr& zipfile)
 		
 		inPath = fileName;
 	}
-		
+	
 	zipfile->Close();
 	
 	//-------------------------------------------------------------------------------------------------
@@ -6418,6 +6567,12 @@ GdtfFixture::~GdtfFixture()
 		IFileIdentifierPtr file = fLocalFiles[i];
 		file->DeleteOnDisk();
 	}
+
+	//Delete buffers
+	for (auto it = fFileBuffers.begin(); it != fFileBuffers.end(); it++)
+	{
+		delete it->second.first;
+	}
 }
 
 size_t GdtfFixture::GetAttachedFileCount()
@@ -6458,6 +6613,8 @@ void GdtfFixture::OnPrintToFile(IXMLFileNodePtr pNode)
 	pNode->SetNodeAttributeValue(XML_GDTF_FixtureDescription,		fFixtureTypeDescription);
 	pNode->SetNodeAttributeValue(XML_GDTF_FixtureTypeID,			GdtfConverter::ConvertUUID(fGuid));
 	pNode->SetNodeAttributeValue(XML_GDTF_FixtureThumbnail,			fTumbnailName);
+	pNode->SetNodeAttributeValue(XML_GDTF_FixtureThumbnailOffsetX,	GdtfConverter::ConvertInteger(fThumbnailOffsetX));
+	pNode->SetNodeAttributeValue(XML_GDTF_FixtureThumbnailOffsetY,	GdtfConverter::ConvertInteger(fThumbnailOffsetY));
 	pNode->SetNodeAttributeValue(XML_GDTF_FixtureCanHaveChildren,	GdtfConverter::ConvertEGdtfCanHaveChildren(fCanHaveChildren));
 	
 	if(fHasLinkedGuid)
@@ -6591,7 +6748,9 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	pNode->GetNodeAttributeValue(XML_GDTF_FixtureDescription,				fFixtureTypeDescription);
 	TXString uuid; pNode->GetNodeAttributeValue(XML_GDTF_FixtureTypeID,		uuid );	GdtfConverter::ConvertUUID(uuid, pNode, fGuid);
 	pNode->GetNodeAttributeValue(XML_GDTF_FixtureThumbnail,					fTumbnailName);
-	TXString canHaveChildren; pNode->GetNodeAttributeValue(XML_GDTF_FixtureCanHaveChildren,	 canHaveChildren); GdtfConverter::ConvertEGdtfCanHaveChildren(canHaveChildren, pNode, fCanHaveChildren);
+	TXString thumbnailOffsetX; 	pNode->GetNodeAttributeValue(XML_GDTF_FixtureThumbnailOffsetX, thumbnailOffsetX); 	GdtfConverter::ConvertInteger(thumbnailOffsetX, pNode, fThumbnailOffsetX);
+	TXString thumbnailOffsetY; 	pNode->GetNodeAttributeValue(XML_GDTF_FixtureThumbnailOffsetY, thumbnailOffsetY); 	GdtfConverter::ConvertInteger(thumbnailOffsetY, pNode, fThumbnailOffsetY);
+	TXString canHaveChildren; 	pNode->GetNodeAttributeValue(XML_GDTF_FixtureCanHaveChildren,	 canHaveChildren); 	GdtfConverter::ConvertEGdtfCanHaveChildren(canHaveChildren, pNode, fCanHaveChildren);
 	
 	
 	TXString linkedUuid;
@@ -6787,6 +6946,8 @@ void GdtfFixture::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	needed.push_back(XML_GDTF_FixtureTypeID);
 	optional.push_back(XML_GDTF_FixtureThumbnail);
 	optional.push_back(XML_GDTF_LinkedUuid);
+	optional.push_back(XML_GDTF_FixtureThumbnailOffsetX);
+	optional.push_back(XML_GDTF_FixtureThumbnailOffsetY);
 	optional.push_back(XML_GDTF_FixtureCanHaveChildren);
 
 	//------------------------------------------------------------------------------------
@@ -6845,9 +7006,40 @@ bool GdtfFixture::ExportToFile(IZIPFilePtr& zipfile)
 	
 	
 	//------------------------------------------------------------------------------------
-	// Add tp ZIP
+	// Add to ZIP
 	SceneDataZip::AddFileToZip(zipfile, zipXmlBuffer, TXString(XML_GDTF_GDTFFILENAME) );
 
+	//------------------------------------------------------------------------------------
+	// Add meshes
+
+	for (auto it = fFileBuffers.begin(); it != fFileBuffers.end(); it++)
+	{
+		TXString strFileName;
+
+		if(it->first.EndsWith("3ds"))
+		{
+			strFileName = SceneData::SceneDataZip::GetResourceSubFolder(ERessourceType::Model3DS) + it->first;
+		}
+
+		if(it->first.EndsWith("svg"))
+		{
+			strFileName = SceneData::SceneDataZip::GetResourceSubFolder(ERessourceType::ModelSVG) + it->first;
+		}
+
+		if(it->first.EndsWith("glb"))
+		{
+			strFileName = SceneData::SceneDataZip::GetResourceSubFolder(ERessourceType::ModelGLTF) + it->first;
+		}
+
+		if(!strFileName.IsEmpty())
+		{
+			CZIPFileIOBufferImpl* buffer = new CZIPFileIOBufferImpl();
+			buffer->SetData((void*)it->second.first, it->second.second);
+			zipfile->AddFile(strFileName, buffer);
+
+			delete buffer;
+		}
+	}
 	
 	return true;
 }
@@ -7082,6 +7274,11 @@ const TGdtfUserPresetArray& GdtfFixture::GetPresetArray()
     return fPresets;
 }
 
+const std::map<TXString, std::pair<char*, size_t> >& GdtfFixture::GetFileBuffers()
+{
+	return fFileBuffers;
+}
+
 GdtfProtocols& GdtfFixture::GetProtocollContainer()
 {
 	return fProtocollContainer;
@@ -7130,6 +7327,16 @@ bool GdtfFixture::HasLinkedGuid() const
 const TXString& GdtfFixture::GetThumbnailName() const
 {
     return fTumbnailName;
+}
+
+size_t GdtfFixture::GetThumbnailOffsetX() const
+{
+    return fThumbnailOffsetX;
+}
+
+size_t GdtfFixture::GetThumbnailOffsetY() const
+{
+    return fThumbnailOffsetY;
 }
 
 bool GdtfFixture::GetCanHaveChildren() const
@@ -7218,22 +7425,197 @@ void GdtfFixture::SetThumbnailName(const TXString& fileName)
 	fTumbnailName = fileName;
 }
 
+void GdtfFixture::SetThumbnailOffsetX(size_t thumbnailOffsetX)
+{
+	fThumbnailOffsetX = thumbnailOffsetX;
+}
+
+void GdtfFixture::SetThumbnailOffsetY(size_t thumbnailOffsetY)
+{
+	fThumbnailOffsetY = thumbnailOffsetY;
+}
+
 void GdtfFixture::SetCanHaveChildren(bool canHaveChildren)
 {
 	fCanHaveChildren = canHaveChildren;
 }
 
+//------------------------------------------------------------------------------------
+// Point
+SceneData::GdtfPoint::GdtfPoint()
+{
+	fDMXPercentage = 0;
+	fCFC3 = 0;
+	fCFC2 = 0;
+	fCFC1 = 0;
+	fCFC0 = 0;
+}
+
+SceneData::GdtfPoint::GdtfPoint(double DMXPercentage, double CFC3, double CFC2, double CFC1, double CFC0)
+{
+	fDMXPercentage = DMXPercentage;
+	fCFC3 = CFC3;
+	fCFC2 = CFC2;
+	fCFC1 = CFC1;
+	fCFC0 = CFC0;
+}
+
+SceneData::GdtfPoint::~GdtfPoint()
+{
+}
+
+EGdtfObjectType SceneData::GdtfPoint::GetObjectType()
+{
+    return EGdtfObjectType::eGdtfPoint;
+}
+
+// Getters
+double SceneData::GdtfPoint::GetDMXPercentage() const
+{
+	return fDMXPercentage;
+}
+
+double SceneData::GdtfPoint::GetCFC3() const
+{
+	return fCFC3;
+}
+
+double SceneData::GdtfPoint::GetCFC2() const
+{
+	return fCFC2;
+}
+
+double SceneData::GdtfPoint::GetCFC1() const
+{
+	return fCFC1;
+}
+
+double SceneData::GdtfPoint::GetCFC0() const
+{
+	return fCFC0;
+}
+        
+// Setters
+void SceneData::GdtfPoint::SetDMXPercentage(double dmxPercentage)
+{
+	fDMXPercentage = dmxPercentage;
+}
+
+void SceneData::GdtfPoint::SetCFC3(double CFC3)
+{
+	fCFC3 = CFC3;
+}
+
+void SceneData::GdtfPoint::SetCFC2(double CFC2)
+{
+	fCFC2 = CFC2;
+}
+
+void SceneData::GdtfPoint::SetCFC1(double CFC1)
+{
+	fCFC1 = CFC1;
+}
+
+void SceneData::GdtfPoint::SetCFC0(double CFC0)
+{
+	fCFC0 = CFC0;
+}
+
+TXString SceneData::GdtfPoint::GetNodeName()
+{
+    return XML_GDTF_Point;
+}
+
+void SceneData::GdtfPoint::OnPrintToFile(IXMLFileNodePtr pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnPrintToFile(pNode);
+	
+	//------------------------------------------------------------------------------------
+    // Print the attributes
+	pNode->SetNodeAttributeValue(XML_GDTF_PointDMXPercentage, 	GdtfConverter::ConvertDouble(fDMXPercentage) );
+	pNode->SetNodeAttributeValue(XML_GDTF_PointCFC3, 			GdtfConverter::ConvertDouble(fCFC3) );
+	pNode->SetNodeAttributeValue(XML_GDTF_PointCFC2, 			GdtfConverter::ConvertDouble(fCFC2) );
+	pNode->SetNodeAttributeValue(XML_GDTF_PointCFC1, 			GdtfConverter::ConvertDouble(fCFC1) );
+	pNode->SetNodeAttributeValue(XML_GDTF_PointCFC0, 			GdtfConverter::ConvertDouble(fCFC0) );
+
+}
+
+void SceneData::GdtfPoint::OnReadFromNode(const IXMLFileNodePtr & pNode)
+{
+    //------------------------------------------------------------------------------------
+    // Call the parent
+    GdtfObject::OnReadFromNode(pNode);
+
+    //------------------------------------------------------------------------------------
+    // Get the attributes	
+    TXString dmxPercentage;	pNode->GetNodeAttributeValue(XML_GDTF_PointDMXPercentage, dmxPercentage); 	GdtfConverter::ConvertDouble(dmxPercentage, pNode, fDMXPercentage);
+	TXString cfc3;			pNode->GetNodeAttributeValue(XML_GDTF_PointCFC3, cfc3); 					GdtfConverter::ConvertDouble(cfc3, pNode, fCFC3);
+	TXString cfc2;			pNode->GetNodeAttributeValue(XML_GDTF_PointCFC2, cfc2); 					GdtfConverter::ConvertDouble(cfc2, pNode, fCFC2);
+	TXString cfc1;			pNode->GetNodeAttributeValue(XML_GDTF_PointCFC1, cfc1); 					GdtfConverter::ConvertDouble(cfc1, pNode, fCFC1);
+	TXString cfc0;			pNode->GetNodeAttributeValue(XML_GDTF_PointCFC0, cfc0); 					GdtfConverter::ConvertDouble(cfc0, pNode, fCFC0);
+}
+
+void SceneData::GdtfPoint::OnErrorCheck(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnErrorCheck(pNode);
+
+	//------------------------------------------------------------------------------------
+	// Create needed and optional Attribute Arrays
+	TXStringArray needed;
+	TXStringArray optional;
+	optional.push_back(XML_GDTF_PointDMXPercentage);
+	optional.push_back(XML_GDTF_PointCFC3);
+	optional.push_back(XML_GDTF_PointCFC2);
+	optional.push_back(XML_GDTF_PointCFC1);
+	optional.push_back(XML_GDTF_PointCFC0);
+
+	//------------------------------------------------------------------------------------
+	// Check Attributes for node
+	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
+}
+
+//------------------------------------------------------------------------------------
+// DMXProfile
+
 SceneData::GdtfDMXProfile::GdtfDMXProfile()
 {
+	fUniqueName = "";
 }
 
 SceneData::GdtfDMXProfile::~GdtfDMXProfile()
 {
+	for(GdtfPointPtr point : fPoints) { delete point; }
 }
 
 EGdtfObjectType SceneData::GdtfDMXProfile::GetObjectType()
 {
     return EGdtfObjectType::eGdtfDMXProfile;
+}
+
+const TXString&	SceneData::GdtfDMXProfile::GetName() const
+{
+	return fUniqueName;
+}
+
+TGdtfPointArray SceneData::GdtfDMXProfile::GetPointArray() const
+{
+	return fPoints;
+}
+
+void SceneData::GdtfDMXProfile::SetName(const TXString& name)
+{
+	fUniqueName = name;
+}
+
+GdtfPointPtr SceneData::GdtfDMXProfile::AddPoint(double DMXPercentage, double CFC3, double CFC2, double CFC1, double CFC0)
+{
+	GdtfPointPtr point = new GdtfPoint(DMXPercentage, CFC3, CFC2, CFC1, CFC0);
+	fPoints.push_back(point);
+	return point;
 }
 
 TXString SceneData::GdtfDMXProfile::GetNodeName()
@@ -7246,15 +7628,57 @@ void SceneData::GdtfDMXProfile::OnPrintToFile(IXMLFileNodePtr pNode)
 	//------------------------------------------------------------------------------------
 	// Call the parent
 	GdtfObject::OnPrintToFile(pNode);
+	
 	//------------------------------------------------------------------------------------
+    // Print the attributes
+    pNode->SetNodeAttributeValue(XML_GDTF_DMX_ProfileName, fUniqueName);
+
+    //------------------------------------------------------------------------------------
+    // Print the children
+    for (GdtfPoint* point : fPoints)
+    {
+        point->WriteToNode(pNode);
+    }
 }
 
 void SceneData::GdtfDMXProfile::OnReadFromNode(const IXMLFileNodePtr & pNode)
 {
+    //------------------------------------------------------------------------------------
+    // Call the parent
+    GdtfObject::OnReadFromNode(pNode);
+
+    //------------------------------------------------------------------------------------
+    // Get the attributes	
+    pNode->GetNodeAttributeValue(XML_GDTF_DMX_ProfileName, fUniqueName);
+
+    // Read the children
+    GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_Point, [this](IXMLFileNodePtr objNode) -> void
+    {
+        GdtfPoint* point = new GdtfPoint();
+
+        point->ReadFromNode(objNode);
+
+        fPoints.push_back(point);
+
+        return;
+    });
+}
+
+void SceneData::GdtfDMXProfile::OnErrorCheck(const IXMLFileNodePtr& pNode)
+{
 	//------------------------------------------------------------------------------------
 	// Call the parent
-	GdtfObject::OnReadFromNode(pNode);
+	GdtfObject::OnErrorCheck(pNode);
+
 	//------------------------------------------------------------------------------------
+	// Create needed and optional Attribute Arrays
+	TXStringArray needed;
+	TXStringArray optional;
+	optional.push_back(XML_GDTF_DMX_ProfileName);
+
+	//------------------------------------------------------------------------------------
+	// Check Attributes for node
+	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
 }
 
 SceneData::GdtfCRIGroup::GdtfCRIGroup()
@@ -7317,7 +7741,7 @@ void SceneData::GdtfCRIGroup::OnPrintToFile(IXMLFileNodePtr pNode)
     pNode->SetNodeAttributeValue(XML_GDTF_ColorRenderingIndexGroup_ColorTemp, GdtfConverter::ConvertDouble(fColorTemperature) );
 
     //------------------------------------------------------------------------------------
-    // Print the childs
+    // Print the children
     for (GdtfCRI* cri : fCRI_Array)
     {
         cri->WriteToNode(pNode);
@@ -7335,7 +7759,7 @@ void SceneData::GdtfCRIGroup::OnReadFromNode(const IXMLFileNodePtr & pNode)
     TXString colorTempStr; pNode->GetNodeAttributeValue(XML_GDTF_ColorRenderingIndexGroup_ColorTemp, colorTempStr);
     GdtfConverter::ConvertDouble(colorTempStr, pNode, fColorTemperature);
 
-    // Read the childs
+    // Read the children
     GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_ColorRenderingIndex, [this](IXMLFileNodePtr objNode) -> void
     {
         GdtfCRI* cri = new GdtfCRI();

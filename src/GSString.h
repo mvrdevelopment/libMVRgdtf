@@ -441,6 +441,9 @@ public:
 	Sint32 Compare(const TXString &str) const;
 	Sint32 CompareNoCase(const TXString &str) const;
 
+	// Compare parts
+	bool EndsWith(const TXString &suffix) const;
+
 	// Comparison operators
 	friend bool operator==(const TXString& lhs, const TXString& rhs);
 	friend bool operator==(const TXString& lhs, const char* rhs);

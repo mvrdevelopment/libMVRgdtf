@@ -59,7 +59,8 @@ void GdtfUnittest::WriteFile()
 		__checkVCOM(gdtfWrite->SetLongName("My Long Long Name"));
 		__checkVCOM(gdtfWrite->SetFixtureThumbnail("MyThumbnail"));
 		__checkVCOM(gdtfWrite->SetLinkedFixtureGUID(linkedUuid));
-
+		__checkVCOM(gdtfWrite->SetThumbnailOffsetX(1));
+		__checkVCOM(gdtfWrite->SetThumbnailOffsetY(2));
 		__checkVCOM(gdtfWrite->SetCanHaveChildren(false));
 
         //------------------------------------------------------------------------------    
@@ -127,6 +128,15 @@ void GdtfUnittest::WriteFile()
         IGdtfMeasurementPtr gdtfMeasureB;  __checkVCOM(gdtfFilter->CreateMeasurement(&gdtfMeasureB) );
         IGdtfMeasurementPtr gdtfMeasureC;  __checkVCOM(gdtfFilter->CreateMeasurement(&gdtfMeasureC) );
 
+		//------------------------------------------------------------------------------------------------------------------
+		// DMXProfiles
+		IGdtfDMXProfilePtr gdtfDMXProfile1; __checkVCOM(gdtfWrite->CreateDMXProfile(&gdtfDMXProfile1));
+		__checkVCOM(gdtfDMXProfile1->SetName("DMXProfile 1"));
+		
+		IGdtfPointPtr gdtfPoint1; __checkVCOM(gdtfDMXProfile1->CreatePoint(0, 0, 4, -4, 1, &gdtfPoint1));
+		IGdtfPointPtr gdtfPoint2; __checkVCOM(gdtfDMXProfile1->CreatePoint(0.75, 64, 0, 0, 0, &gdtfPoint2));
+
+		IGdtfDMXProfilePtr gdtfDMXProfile2; __checkVCOM(gdtfWrite->CreateDMXProfile(&gdtfDMXProfile2));
 
 		//------------------------------------------------------------------------------    
 		// Set Wheels
@@ -431,6 +441,14 @@ void GdtfUnittest::ReadFile()
 		__checkVCOM(gdtfRead->GetFixtureGUID(resultUUID));
 		this->checkifEqual("GetFixtureGUID fixtureUUID ", fixtureUUID, resultUUID);
 
+		size_t thumbnailOffsetX;
+		__checkVCOM(gdtfRead->GetThumbnailOffsetX(thumbnailOffsetX));
+		this->checkifEqual("GetThumbnailOffsetX ", thumbnailOffsetX, (size_t)1);
+
+		size_t thumbnailOffsetY;
+		__checkVCOM(gdtfRead->GetThumbnailOffsetY(thumbnailOffsetY));
+		this->checkifEqual("GetThumbnailOffsetY ", thumbnailOffsetY, (size_t)2);
+
 		bool canHaveChildren;
 		__checkVCOM(gdtfRead->GetCanHaveChildren(canHaveChildren));
 		this->checkifEqual("GetCanHaveChildren ", canHaveChildren, false);
@@ -694,9 +712,45 @@ void GdtfUnittest::ReadFile()
 
 
         // Filter.Measurements
-        // (The Meaurement attributes are check in the Emitter test.)
+        // (The Measurement attributes are checked in the Emitter test.)
         size_t measruementCount; __checkVCOM(gdtfFilter->GetMeasurementCount(measruementCount));
         this->checkifEqual(" Filter.Measurements Count", measruementCount, size_t(3) );
+
+		//------------------------------------------------------------------------------------------------------------------
+		// DMXProfiles
+		size_t dmxProfileCount; __checkVCOM(gdtfRead->GetDMXProfileCount(dmxProfileCount));
+		this->checkifEqual("DMXProfile Count", dmxProfileCount, size_t(2));
+
+		IGdtfDMXProfilePtr gdtfDMXProfile1; __checkVCOM(gdtfRead->GetDMXProfileAt(0, &gdtfDMXProfile1));
+
+		size_t pointCount; __checkVCOM(gdtfDMXProfile1->GetPointCount(pointCount));
+		this->checkifEqual("DMXProfile Count", pointCount, size_t(2));
+
+		IGdtfPointPtr gdtfPoint1; __checkVCOM(gdtfDMXProfile1->GetPointAt(0, &gdtfPoint1));
+		double dmxPercentage; __checkVCOM(gdtfPoint1->GetDMXPercentage(dmxPercentage));
+		double cfc3; __checkVCOM(gdtfPoint1->GetCFC3(cfc3));
+		double cfc2; __checkVCOM(gdtfPoint1->GetCFC2(cfc2));
+		double cfc1; __checkVCOM(gdtfPoint1->GetCFC1(cfc1));
+		double cfc0; __checkVCOM(gdtfPoint1->GetCFC0(cfc0));
+
+		this->checkifEqual("Point 1 DMXPercentage", dmxPercentage, (double)0);
+		this->checkifEqual("Point 1 CFC3", cfc3, (double)0);
+		this->checkifEqual("Point 1 CFC2", cfc2, (double)4);
+		this->checkifEqual("Point 1 CFC1", cfc1, (double)-4);
+		this->checkifEqual("Point 1 CFC0", cfc0, (double)1);
+
+		IGdtfPointPtr gdtfPoint2; __checkVCOM(gdtfDMXProfile1->GetPointAt(1, &gdtfPoint2));
+		__checkVCOM(gdtfPoint2->GetDMXPercentage(dmxPercentage));
+		__checkVCOM(gdtfPoint2->GetCFC3(cfc3));
+		__checkVCOM(gdtfPoint2->GetCFC2(cfc2));
+		__checkVCOM(gdtfPoint2->GetCFC1(cfc1));
+		__checkVCOM(gdtfPoint2->GetCFC0(cfc0));
+
+		this->checkifEqual("Point 2 DMXPercentage", dmxPercentage, (double)0.75);
+		this->checkifEqual("Point 2 CFC3", cfc3, (double)64);
+		this->checkifEqual("Point 2 CFC2", cfc2, (double)0);
+		this->checkifEqual("Point 2 CFC1", cfc1, (double)0);
+		this->checkifEqual("Point 2 CFC0", cfc0, (double)0);
 
 
         //------------------------------------------------------------------------------------------------------------------

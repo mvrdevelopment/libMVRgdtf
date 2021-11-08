@@ -37,6 +37,12 @@ namespace VectorworksMVR
 		virtual MvrString VCOM_CALLTYPE     GetFixtureThumbnail_PNG_FullPath();
         virtual MvrString VCOM_CALLTYPE     GetFixtureThumbnail_SVG_FullPath();
 
+        virtual VCOMError VCOM_CALLTYPE		GetThumbnailOffsetX(size_t& offsetX);
+		virtual VCOMError VCOM_CALLTYPE		SetThumbnailOffsetX(size_t offsetX);	
+
+		virtual VCOMError VCOM_CALLTYPE		GetThumbnailOffsetY(size_t& offsetY);
+		virtual VCOMError VCOM_CALLTYPE		SetThumbnailOffsetY(size_t offsetY);
+
 		virtual VCOMError VCOM_CALLTYPE		GetLinkedFixtureGUID(MvrUUID& uuid);
 		virtual VCOMError VCOM_CALLTYPE		HasLinkedFixtureGUID(bool& has);
 		
