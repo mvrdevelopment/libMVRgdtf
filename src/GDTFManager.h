@@ -20,7 +20,7 @@ namespace SceneData
 	// Forward declarations
 	class GdtfPhysicalEmitter; 
     typedef GdtfPhysicalEmitter*				GdtfPhysicalEmitterPtr;
-    typedef std::vector<GdtfPhysicalEmitter*>	TGdtfPhysicalEmitterArray;    	
+    typedef std::vector<GdtfPhysicalEmitter*>	TGdtfPhysicalEmitterArray;
 
 	class GdtfFeatureGroup;
 	class GdtfAttribute;
@@ -412,25 +412,29 @@ namespace SceneData
     {
     public:
         GdtfColorSpace();
+		GdtfColorSpace(const TXString& name, EGdtfColorSpace colorSpace);
         ~GdtfColorSpace();
     private:
         EGdtfColorSpace  fColorSpace;
 
-        CCieColor        fRed;
-        CCieColor        fGreen;
-        CCieColor        fBlue;
-        CCieColor        fWhitePoint;
+		TXString		fUniqueName;
+        CCieColor       fRed;
+        CCieColor       fGreen;
+        CCieColor       fBlue;
+        CCieColor       fWhitePoint;
     public:
         virtual EGdtfObjectType			GetObjectType();
 
     public:
-        // Getter        
+        // Getter
+		const TXString&       GetName() const;
         EGdtfColorSpace		  GetColorSpace();
         CCieColor		      GetRed();
         CCieColor             GetGreen();
         CCieColor		      GetBlue();
 		CCieColor             GetWhite();
         // Setter       
+		void							SetName(const TXString& name);
         void        		            SetColorSpace(EGdtfColorSpace val);
         void                            SetRed(CCieColor val);
         void                            SetGreen(CCieColor val);
@@ -443,6 +447,8 @@ namespace SceneData
 		virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
 
     };
+	typedef GdtfColorSpace*					GdtfColorSpacePtr;
+    typedef std::vector<GdtfColorSpace*>	TGdtfColorSpaceArray; 
 
 
     class GdtfPhysicalDescriptions : public GdtfObject
@@ -452,6 +458,7 @@ namespace SceneData
         ~GdtfPhysicalDescriptions();
     private:        
         GdtfColorSpace                  fColorSpace;
+		TGdtfColorSpaceArray			fAdditionalColorSpaces;
         TGdtfPhysicalEmitterArray		fEmitters;
         TGdtfFilterArray                fFilters;
         TGdtfDMXProfileArray            fDmxProfiles;
@@ -472,6 +479,7 @@ namespace SceneData
         // Getter        
         GdtfColorSpace*                  GetColorSpace();
 
+        const TGdtfColorSpaceArray& 		GetAdditionalColorSpaceArray();
         const TGdtfPhysicalEmitterArray& 	GetPhysicalEmitterArray();
         const TGdtfFilterArray&          	GetFilterArray();
         const TGdtfDMXProfileArray&      	GetDmxProfileArray();
@@ -487,7 +495,8 @@ namespace SceneData
 		void								SetOperatingTemperatureHigh(double value);
 		void								SetWeight(double value);
 		void								SetLegHeight(double value);
-        
+
+		GdtfColorSpacePtr				AddAdditionalColorSpace(const TXString& name, EGdtfColorSpace colorSpace);
         GdtfPhysicalEmitterPtr	        AddEmitter(const TXString& name, CCieColor color);
         GdtfFilterPtr                   AddFilter(const TXString& name,  CCieColor color);
         GdtfDMXProfilePtr               AddDmxProfile();

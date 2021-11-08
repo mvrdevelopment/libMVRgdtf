@@ -267,12 +267,13 @@ const Sint32 kMVR_MinorVersion = 4;
 // ColorSpace
 #define XML_GDTF_ColorSpaceNode         "ColorSpace"
 
-// ColorSpace Atributtes
-#define XML_GDTF_ColorSpace_Mode       "Mode"
-#define XML_GDTF_ColorSpace_Red        "Red"
-#define XML_GDTF_ColorSpace_Green      "Green"
-#define XML_GDTF_ColorSpace_Blue	   "Blue"
-#define XML_GDTF_ColorSpace_WhitePoint "WhitePoint"
+// ColorSpace Attributes
+#define XML_GDTF_ColorSpace_Mode        "Mode"
+#define XML_GDTF_ColorSpace_Name        "Name"
+#define XML_GDTF_ColorSpace_Red         "Red"
+#define XML_GDTF_ColorSpace_Green       "Green"
+#define XML_GDTF_ColorSpace_Blue	    "Blue"
+#define XML_GDTF_ColorSpace_WhitePoint  "WhitePoint"
 //-----------------------------------------------------------------------------
 // Filter
 #define XML_GDTF_FiltersCollect         "Filters"
@@ -523,6 +524,7 @@ const Sint32 kMVR_MinorVersion = 4;
 // -------------------------------------------------------------------------------
 #define XML_GDTF_UserPresetNodeName						"FTPreset"
 
+#define XML_GDTF_PhysicalDescriptionsColorSpaceCollect	"AdditionalColorSpaces"
 #define XML_GDTF_PhysicalDescriptionsEmitterCollect	    "Emitters"
 #define XML_GDTF_EmitterNodeName						"Emitter"
 #define XML_GDTF_EmitterName							"Name"

@@ -12,13 +12,15 @@ namespace VectorworksMVR
         CGdtfColorSpaceImpl();
         virtual ~CGdtfColorSpaceImpl();
 
-        // Getter        
+        // Getter
+        virtual MvrString VCOM_CALLTYPE GetName();
         virtual VCOMError VCOM_CALLTYPE GetColorSpace(EGdtfColorSpace& outVal);
         virtual VCOMError VCOM_CALLTYPE	GetRed (CieColor& outVal);
         virtual VCOMError VCOM_CALLTYPE GetGreen(CieColor& outVal);
         virtual VCOMError VCOM_CALLTYPE	GetBlue(CieColor& outVal);
         virtual VCOMError VCOM_CALLTYPE	GetWhite(CieColor& outVal);
-        // Setter       
+        // Setter
+        virtual VCOMError VCOM_CALLTYPE SetName(MvrString name);
         virtual VCOMError VCOM_CALLTYPE SetColorSpace(EGdtfColorSpace val);
         virtual VCOMError VCOM_CALLTYPE SetRed(CieColor val);
         virtual VCOMError VCOM_CALLTYPE SetGreen(CieColor val);

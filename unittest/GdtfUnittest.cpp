@@ -250,6 +250,12 @@ void GdtfUnittest::WriteFile()
 		__checkVCOM(gdtfWrite->GetColorSpace( & colorSpace));
 		__checkVCOM(colorSpace->SetColorSpace(EGdtfColorSpace::ANSI));
 
+		//------------------------------------------------------------------------------------------------------------------
+		// Set AdditionalColorSpace
+		IGdtfColorSpacePtr additionalColorSpace1, additionalColorSpace2;
+		__checkVCOM(gdtfWrite->CreateAdditionalColorSpace("My AdditionalColorSpace 1", EGdtfColorSpace::ProPhoto, &additionalColorSpace1));
+		__checkVCOM(gdtfWrite->CreateAdditionalColorSpace("My AdditionalColorSpace 2", EGdtfColorSpace::sRGB, &additionalColorSpace2));
+
         //------------------------------------------------------------------------------------------------------------------
 		// Handle Models
 		IGdtfModelPtr gdtfModel;
@@ -870,7 +876,32 @@ void GdtfUnittest::ReadFile()
 		checkifEqual("ANSI Color Green", 	ansiColor_Green, 	gdtfColor_Green);
 		checkifEqual("ANSI Color Blue", 	ansiColor_Blue, 	gdtfColor_Blue);
 		checkifEqual("ANSI Color White", 	ansiColor_White,	gdtfColor_White);
-		
+
+		//------------------------------------------------------------------------------------------------------------------
+		// Check AdditionalColorSpace
+		size_t additionalColorSpaceCount = 0;
+		__checkVCOM(gdtfRead->GetAdditionalColorSpaceCount(additionalColorSpaceCount));
+		checkifEqual("AdditionalColorSpace Count ", additionalColorSpaceCount, (size_t)2);
+
+		// 1
+		IGdtfColorSpacePtr additionalColorSpace1;
+		__checkVCOM(gdtfRead->GetAdditionalColorSpaceAt(0, &additionalColorSpace1));
+
+		checkifEqual("AdditionalColorSpace 1 Name ", additionalColorSpace1->GetName(), "My AdditionalColorSpace 1");
+
+		EGdtfColorSpace colorSpace1 = EGdtfColorSpace::ANSI;
+		__checkVCOM(additionalColorSpace1->GetColorSpace(colorSpace1));
+		checkifEqual("AdditionalColorSpace 1 ColorSpace ", (size_t)colorSpace1, (size_t)EGdtfColorSpace::ProPhoto);
+
+		// 2
+		IGdtfColorSpacePtr additionalColorSpace2;
+		__checkVCOM(gdtfRead->GetAdditionalColorSpaceAt(1, &additionalColorSpace2));
+
+		checkifEqual("AdditionalColorSpace 2 Name ", additionalColorSpace2->GetName(), "My AdditionalColorSpace 2");
+
+		EGdtfColorSpace colorSpace2 = EGdtfColorSpace::ANSI;
+		__checkVCOM(additionalColorSpace2->GetColorSpace(colorSpace2));
+		checkifEqual("AdditionalColorSpace 2 ColorSpace ", (size_t)colorSpace2, (size_t)EGdtfColorSpace::sRGB);
 
 		//------------------------------------------------------------------------------    
 		// Fill with DMX
