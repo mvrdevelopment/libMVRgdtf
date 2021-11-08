@@ -283,6 +283,7 @@ void GdtfUnittest::WriteFile()
         IGdtfGeometryPtr beamGeo;        
         __checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometryLamp, "My Lamp Geometry", gdtfModel, ma, &beamGeo));
         beamGeo->SetLuminousIntensity(5);
+		beamGeo->SetEmitterSpectrum(gdtfEmitter);
 
 		//Media server Camera
 		IGdtfGeometryPtr msCameraGeo;        
@@ -1300,6 +1301,9 @@ void GdtfUnittest::ReadFile()
 		IGdtfGeometryPtr geo3;
 		__checkVCOM(gdtfRead->GetGeometryAt(2, &geo3));
 
+		IGdtfGeometryPtr geo4;
+		__checkVCOM(gdtfRead->GetGeometryAt(3, &geo4));
+
 		//----------------------------------------------
 		//Media server geos
 		IGdtfGeometryPtr geo5;
@@ -1347,6 +1351,18 @@ void GdtfUnittest::ReadFile()
 			Sint32 breakId = 0;
 			__checkVCOM(gdtfBreak->GetDmxBreak(breakId));
 			this->checkifEqual("Check Adress", (Sint32)3,breakId);
+		}
+
+		if(geo4)
+		{
+			//Lamp
+			IGdtfPhysicalEmitterPtr gdtfEmitter;
+			if (__checkVCOM(geo4->GetEmitterSpectrum(&gdtfEmitter)))
+			{
+				MvrString emitterName = gdtfEmitter->GetName();
+				this->checkifEqual("GetEmitterSpectrum ", emitterName, "My emitterName");
+			}
+			
 		}
 
 		//--------------------------------------------------------------------------------
