@@ -292,6 +292,7 @@ void GdtfUnittest::WriteFile()
         IGdtfGeometryPtr beamGeo;        
         __checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometryLamp, "My Lamp Geometry", gdtfModel, ma, &beamGeo));
         beamGeo->SetLuminousIntensity(5);
+		beamGeo->SetEmitterSpectrum(gdtfEmitter);
 
 		//Media server Camera
 		IGdtfGeometryPtr msCameraGeo;        
@@ -378,6 +379,7 @@ void GdtfUnittest::WriteFile()
 		timestamp.fHour = 22; timestamp.fMinute = 33; timestamp.fSecond = 44;
 		__checkVCOM(gdtfWrite->CreateRevision("Revision TestText", timestamp, &rev));
 		__checkVCOM(rev->SetUserId(254));
+		__checkVCOM(rev->SetModifiedBy("unit test"));
 
         //------------------------------------------------------------------------------    
         // Add RDM 
@@ -1344,6 +1346,9 @@ void GdtfUnittest::ReadFile()
 		IGdtfGeometryPtr geo3;
 		__checkVCOM(gdtfRead->GetGeometryAt(2, &geo3));
 
+		IGdtfGeometryPtr geo4;
+		__checkVCOM(gdtfRead->GetGeometryAt(3, &geo4));
+
 		//----------------------------------------------
 		//Media server geos
 		IGdtfGeometryPtr geo5;
@@ -1393,6 +1398,18 @@ void GdtfUnittest::ReadFile()
 			this->checkifEqual("Check Adress", (Sint32)3,breakId);
 		}
 
+		if(geo4)
+		{
+			//Lamp
+			IGdtfPhysicalEmitterPtr gdtfEmitter;
+			if (__checkVCOM(geo4->GetEmitterSpectrum(&gdtfEmitter)))
+			{
+				MvrString emitterName = gdtfEmitter->GetName();
+				this->checkifEqual("GetEmitterSpectrum ", emitterName, "My emitterName");
+			}
+			
+		}
+
 		//--------------------------------------------------------------------------------
 		// Read Revision
 		size_t countRevs = 0;
@@ -1416,9 +1433,8 @@ void GdtfUnittest::ReadFile()
 		this->checkifEqual("Check RevDatefMinute",	expTimestamp.fMinute,	Uint16(33));
 		this->checkifEqual("Check RevDatefSecond",	expTimestamp.fSecond, 	Uint16(44));
 		this->checkifEqual("Check UserId",			userId, 				size_t(254));
+		this->checkifEqual("Check ModifiedBy", rev->GetModifiedBy(), "unit test");
 
-
-		
 
         //------------------------------------------------------------------------------    
         // Read RDM         

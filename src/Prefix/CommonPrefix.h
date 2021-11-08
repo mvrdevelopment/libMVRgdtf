@@ -357,11 +357,15 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_RectangleRatio					"RectangleRatio"
 #define XML_GDTF_BeamType						"BeamType"
 #define XML_GDTF_BeamColorRenderingIndex        "ColorRenderingIndex"				
+#define XML_GDTF_BeamEmitterSpectrum            "EmitterSpectrum"				
 
 #define XML_GDTF_BeamTypeEnum_Wash				"Wash"
 #define XML_GDTF_BeamTypeEnum_Spot				"Spot"
 #define XML_GDTF_BeamTypeEnum_None				"None"
 #define XML_GDTF_BeamTypeEnum_Rectangle			"Rectangle"
+#define XML_GDTF_BeamTypeEnum_PC			    "PC"
+#define XML_GDTF_BeamTypeEnum_Fresnel			"Fresnel"
+#define XML_GDTF_BeamTypeEnum_Glow			    "Glow"
 
 
 
@@ -380,6 +384,7 @@ const Sint32 kMVR_MinorVersion = 4;
 
 #define XML_GDTF_DMXModeNodeName				"DMXMode"
 #define XML_GDTF_DMXModeName					"Name"
+#define XML_GDTF_DMXModeDescription				"Description"
 #define XML_GDTF_DMXModeGeometryRef				"Geometry"
 #define XML_GDTF_DMXModeDMXChannels				"DMXChannels"
 #define XML_GDTF_DMXModeRelations				"Relations"
@@ -454,6 +459,7 @@ const Sint32 kMVR_MinorVersion = 4;
 // Macros
 #define XML_GDTF_MacroNodeName							"FTMacro"
 #define XML_GDTF_MacroName                              "Name"
+#define XML_GDTF_MacroChannelFunction                   "ChannelFunction"
 #define XML_GDTF_MacroDMX                               "MacroDMX"  
 #define XML_GDTF_MacroDMXStep                           "MacroDMXStep"
 #define XML_GDTF_MacroDMXStepDuration                   "Duration"
@@ -484,6 +490,7 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_RevisionText							"Text"
 #define XML_GDTF_RevisionDate							"Date"
 #define XML_GDTF_RevisionUserId							"UserID"
+#define XML_GDTF_RevisionModifiedBy						"ModifiedBy"
 // -------------------------------------------------------------------------------
 // Protocolls
 #define XML_GDTF_Protocols                              "Protocols"

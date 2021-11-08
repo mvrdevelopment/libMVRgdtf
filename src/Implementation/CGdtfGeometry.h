@@ -38,6 +38,7 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetRectangleRatio(double& ratio);
         virtual VCOMError VCOM_CALLTYPE     GetBeamType(EGdtfBeamType & type);
         virtual VCOMError VCOM_CALLTYPE     GetColorIndex(Sint32& idx);
+        virtual VCOMError VCOM_CALLTYPE     GetEmitterSpectrum(IGdtfPhysicalEmitter** outEmitter);
 
         virtual VCOMError VCOM_CALLTYPE     SetName(MvrString name);
         virtual VCOMError VCOM_CALLTYPE     SetModel(IGdtfModel** model);
@@ -53,6 +54,7 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     SetRectangleRatio(double ratio);
         virtual VCOMError VCOM_CALLTYPE     SetBeamType(EGdtfBeamType type);
         virtual VCOMError VCOM_CALLTYPE     SetColorIndex(Sint32 idx);
+        virtual VCOMError VCOM_CALLTYPE     SetEmitterSpectrum(IGdtfPhysicalEmitter* newEmitter);
 		
 		// Reference
 		virtual VCOMError VCOM_CALLTYPE     GetBreakCount(size_t& count);
