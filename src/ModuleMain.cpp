@@ -50,6 +50,8 @@
 #include "Implementation/CGdtfSACN.h"
 #include "Implementation/CGdtfMeasurement.h"
 #include "Implementation/CGdtfFilter.h"
+#include "Implementation/CGdtfDmxProfile.h"
+#include "Implementation/CGdtfPoint.h"
 #include "Implementation/CGdtfColorSpace.h"
 #include "Implementation/CGdtfConnector.h"
 #include "Implementation/CGdtfPowerConsumption.h"
@@ -176,6 +178,10 @@ extern "C" VectorworksMVR::VCOMError VWQueryInterface(const VectorworksMVR::VWII
         resultInterface = new CGdtfMeasurementImpl();
     else if (iid == VectorworksMVR::IID_GdtfFilter)
         resultInterface = new CGdtfFilterImpl();
+    else if (iid == VectorworksMVR::IID_GdtfDMXProfile)
+        resultInterface = new CGdtfDMXProfileImpl();
+    else if (iid == VectorworksMVR::IID_GdtfPoint)
+        resultInterface = new CGdtfPointImpl();
     else if (iid == VectorworksMVR::IID_GdtfColorSpace)
         resultInterface = new CGdtfColorSpaceImpl();
     else if (iid == VectorworksMVR::IID_GdtfConnector)

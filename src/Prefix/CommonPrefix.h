@@ -267,12 +267,13 @@ const Sint32 kMVR_MinorVersion = 4;
 // ColorSpace
 #define XML_GDTF_ColorSpaceNode         "ColorSpace"
 
-// ColorSpace Atributtes
-#define XML_GDTF_ColorSpace_Mode       "Mode"
-#define XML_GDTF_ColorSpace_Red        "Red"
-#define XML_GDTF_ColorSpace_Green      "Green"
-#define XML_GDTF_ColorSpace_Blue	   "Blue"
-#define XML_GDTF_ColorSpace_WhitePoint "WhitePoint"
+// ColorSpace Attributes
+#define XML_GDTF_ColorSpace_Mode        "Mode"
+#define XML_GDTF_ColorSpace_Name        "Name"
+#define XML_GDTF_ColorSpace_Red         "Red"
+#define XML_GDTF_ColorSpace_Green       "Green"
+#define XML_GDTF_ColorSpace_Blue	    "Blue"
+#define XML_GDTF_ColorSpace_WhitePoint  "WhitePoint"
 //-----------------------------------------------------------------------------
 // Filter
 #define XML_GDTF_FiltersCollect         "Filters"
@@ -527,6 +528,7 @@ const Sint32 kMVR_MinorVersion = 4;
 // -------------------------------------------------------------------------------
 #define XML_GDTF_UserPresetNodeName						"FTPreset"
 
+#define XML_GDTF_PhysicalDescriptionsColorSpaceCollect	"AdditionalColorSpaces"
 #define XML_GDTF_PhysicalDescriptionsEmitterCollect	    "Emitters"
 #define XML_GDTF_EmitterNodeName						"Emitter"
 #define XML_GDTF_EmitterName							"Name"
@@ -536,6 +538,14 @@ const Sint32 kMVR_MinorVersion = 4;
 
 #define XML_GDTF_DMX_ProfileCollect                     "DMXProfiles"
 #define XML_GDTF_DMX_Profile                            "DMXProfile"
+#define XML_GDTF_DMX_ProfileName                        "Name"
+
+#define XML_GDTF_Point                                  "Point"
+#define XML_GDTF_PointDMXPercentage                     "DMXPercentage"
+#define XML_GDTF_PointCFC3                              "CFC3"
+#define XML_GDTF_PointCFC2                              "CFC2"
+#define XML_GDTF_PointCFC1                              "CFC1"
+#define XML_GDTF_PointCFC0                              "CFC0"
 
 #define XML_GDTF_ConnectorCollect	                    "Connectors"
 #define XML_GDTF_ConnectorNodeName                      "Connector"

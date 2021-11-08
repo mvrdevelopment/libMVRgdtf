@@ -538,7 +538,10 @@ namespace VectorworksMVR
 		virtual MvrString VCOM_CALLTYPE     GetGeometryFile_3DS_FullPath() = 0;
         virtual MvrString VCOM_CALLTYPE     GetGeometryFile_SVG_FullPath() = 0;
 		virtual MvrString VCOM_CALLTYPE     GetGeometryFile_GLTF_FullPath() = 0;
-
+		
+		virtual VCOMError VCOM_CALLTYPE     GetBuffer3DS(void* bufferToCopy, size_t& length) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetBufferSVG(void* bufferToCopy, size_t& length) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetBufferGLTF(void* bufferToCopy, size_t& length) = 0;
                 
         virtual VCOMError VCOM_CALLTYPE     SetName(MvrString name) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetLength(double length) = 0;
@@ -546,6 +549,10 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE     SetHeight(double height) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetPrimitiveType(GdtfDefines::EGdtfModel_PrimitiveType type) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetGeometryFile(MvrString path) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE     SetBuffer3DS(void* bufferToCopy, size_t length) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetBufferSVG(void* bufferToCopy, size_t length) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetBufferGLTF(void* bufferToCopy, size_t length) = 0;
 		
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
@@ -1050,8 +1057,12 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
         virtual VCOMError VCOM_CALLTYPE	SetWhite(CieColor outVal) = 0;
 
 
-        virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
-        virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+        virtual VCOMError VCOM_CALLTYPE BindToObject(void* objAddr) = 0;
+        virtual void*	  VCOM_CALLTYPE GetBoundObject() = 0;
+
+		// GDTF 1.2
+		virtual MvrString VCOM_CALLTYPE GetName() = 0;
+		virtual VCOMError VCOM_CALLTYPE SetName(MvrString name) = 0;
     };
     typedef VCOMPtr<IGdtfColorSpace>	IGdtfColorSpacePtr;
 
@@ -1087,15 +1098,43 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
 	};
     typedef VCOMPtr<IGdtfCRIGroup>	IGdtfCRIGroupPtr;
+
+	class DYNAMIC_ATTRIBUTE IGdtfPoint : public IVWUnknown
+	{
+	public:
+		virtual VCOMError VCOM_CALLTYPE		GetDMXPercentage(double& dmxPercentage) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCFC3(double& cfc3) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCFC2(double& cfc2) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCFC1(double& cfc1) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCFC0(double& cfc0) = 0;
+
+
+        virtual VCOMError VCOM_CALLTYPE		SetDMXPercentage(double dmxPercentage) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetCFC3(double cfc3) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetCFC2(double cfc2) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetCFC1(double cfc1) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetCFC0(double cfc0) = 0;
+
+		
+		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+	};
+	typedef VCOMPtr<IGdtfPoint>	IGdtfPointPtr;
 	
 	class DYNAMIC_ATTRIBUTE IGdtfDMXProfile : public IVWUnknown
 	{
 	public:
 		virtual MvrString VCOM_CALLTYPE     GetName() = 0;
 		
-		
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+
+		// GDTF 1.2
+		virtual VCOMError VCOM_CALLTYPE		SetName(MvrString name) = 0;
+
+        virtual VCOMError VCOM_CALLTYPE		GetPointCount(size_t& count) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetPointAt(size_t at, IGdtfPoint** point) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreatePoint(double DMXPercentage, double CFC3, double CFC2, double CFC1, double CFC0, IGdtfPoint** point) = 0;
 	};
 	typedef VCOMPtr<IGdtfDMXProfile>	IGdtfDMXProfilePtr;
 
@@ -1286,7 +1325,9 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 
 		virtual VCOMError VCOM_CALLTYPE     GetSACN(IGdtfSACN** sACN) = 0;
 		virtual VCOMError VCOM_CALLTYPE     CreateSACN(IGdtfSACN** sACN) = 0;
-
+		virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetAdditionalColorSpaceCount(size_t& count) = 0;
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateAdditionalColorSpace(MvrString name, GdtfDefines::EGdtfColorSpace colorSpace, VectorworksMVR::IGdtfColorSpace** outVal) = 0;
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetAdditionalColorSpaceAt(size_t at, VectorworksMVR::IGdtfColorSpace** value) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetThumbnailOffsetX(size_t& offsetX) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetThumbnailOffsetX(size_t offsetX) = 0;	
 

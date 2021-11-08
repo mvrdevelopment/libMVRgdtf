@@ -2139,6 +2139,13 @@ Sint32 TXString::CompareNoCase(const TXString &str) const
 }
 
 //=======================================================================================
+// Compares this string end with suffix.
+bool TXString::EndsWith(const TXString &suffix) const
+{
+    return stdUStr.size() >= suffix.stdUStr.size() && 0 == stdUStr.compare(stdUStr.size()-suffix.stdUStr.size(), suffix.stdUStr.size(), suffix.stdUStr);
+}
+
+//=======================================================================================
 // '==' comparison operator. This comparison is case insensitive.
 bool operator==(const TXString& lhs, const TXString& rhs)
 {

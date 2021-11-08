@@ -103,6 +103,10 @@ namespace VectorworksMVR
         // PhysicalDescriptions
         virtual VCOMError                             GetColorSpace(VectorworksMVR::IGdtfColorSpace ** outColorSpace);
 
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetAdditionalColorSpaceCount(size_t& count);
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateAdditionalColorSpace(MvrString name, GdtfDefines::EGdtfColorSpace colorSpace, VectorworksMVR::IGdtfColorSpace** outVal);
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetAdditionalColorSpaceAt(size_t at, VectorworksMVR::IGdtfColorSpace** value);
+
         virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetEmitterCount(size_t& count);
         virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateEmitter(MvrString name, CieColor color, VectorworksMVR::IGdtfPhysicalEmitter** outVal);
         virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetEmitterAt(size_t at, VectorworksMVR::IGdtfPhysicalEmitter** value);
