@@ -8,6 +8,8 @@
 #include <iostream>
 #include "Utility.h"
 
+#include "Wrapper/ZIPFileImpl.h"
+
 using namespace SceneData;
 
 //------------------------------------------------------------------------------------
@@ -1210,6 +1212,12 @@ GdtfModel::GdtfModel(GdtfFixture* fixture)
 	fPrimitiveType	= eGdtfModel_PrimitiveType_Undefined;
 	fGeometryFile	= "";
 	fParentFixture	= fixture;
+	fBuffer3DS 		= nullptr;
+	fBufferSVG 		= nullptr;
+	fBufferGLTF		= nullptr;
+	fBufferSize3DS	= 0;
+	fBufferSizeSVG	= 0;
+	fBufferSizeGLTF	= 0;
 }
 
 GdtfModel::GdtfModel(const TXString& name, GdtfFixture* fixture)
@@ -1221,10 +1229,19 @@ GdtfModel::GdtfModel(const TXString& name, GdtfFixture* fixture)
 	fPrimitiveType	= eGdtfModel_PrimitiveType_Undefined;
 	fGeometryFile	= "";
 	fParentFixture	= fixture;
+	fBuffer3DS 		= nullptr;
+	fBufferSVG 		= nullptr;
+	fBufferGLTF		= nullptr;
+	fBufferSize3DS	= 0;
+	fBufferSizeSVG	= 0;
+	fBufferSizeGLTF	= 0;
 }
 
 GdtfModel::~GdtfModel()
 {
+	if(fBuffer3DS) 	{ delete[] fBuffer3DS; 	fBufferSize3DS = 0; }
+	if(fBufferSVG)	{ delete[] fBufferSVG; 	fBufferSizeSVG = 0; }
+	if(fBufferGLTF) { delete[] fBufferGLTF; fBufferSizeGLTF = 0; }
 }
 
 void GdtfModel::SetName(const TXString& name)
@@ -1255,6 +1272,45 @@ void GdtfModel::SetPrimitiveType(const EGdtfModel_PrimitiveType &type)
 void GdtfModel::SetGeometryFile(const TXString &file)
 {
 	fGeometryFile = file;
+}
+
+void GdtfModel::SetBuffer3DS(void* bufferToCopy, size_t length)
+{
+	if(fBuffer3DS)
+	{
+		delete[] fBuffer3DS;
+		fBuffer3DS = nullptr;
+	}
+
+	fBuffer3DS		= new char[length];
+	fBufferSize3DS	= length;
+	memcpy(fBuffer3DS, bufferToCopy, length);
+}
+
+void GdtfModel::SetBufferSVG(void* bufferToCopy, size_t length)
+{
+	if(fBufferSVG)
+	{
+		delete[] fBufferSVG;
+		fBufferSVG = nullptr;
+	}
+
+	fBufferSVG 		= new char[length];
+	fBufferSizeSVG 	= length;
+	memcpy(fBufferSVG, bufferToCopy, length);
+}
+
+void GdtfModel::SetBufferGLTF(void* bufferToCopy, size_t length)
+{
+	if(fBufferGLTF)
+	{
+		delete[] fBufferGLTF;
+		fBufferGLTF = nullptr;
+	}
+
+	fBufferGLTF			= new char[length];
+	fBufferSizeGLTF 	= length;
+	memcpy(fBufferGLTF, bufferToCopy, length);
 }
 
 void GdtfModel::OnPrintToFile(IXMLFileNodePtr pNode)
@@ -1291,6 +1347,54 @@ void GdtfModel::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	TXString height;	pNode->GetNodeAttributeValue(XML_GDTF_ModelHeight,			height);	GdtfConverter::ConvertDouble(height, 		pNode, 	fHeight);
 	TXString type;		pNode->GetNodeAttributeValue(XML_GDTF_ModelPrimitiveType,	type);		GdtfConverter::ConvertPrimitiveType(type, 	pNode, 	fPrimitiveType);
 						pNode->GetNodeAttributeValue(XML_GDTF_ModelFile,			fGeometryFile);
+
+	if(!fGeometryFile.IsEmpty())
+	{
+		TXString filename3DS = fGeometryFile + ".3ds";
+		TXString filenameSVG = fGeometryFile + ".svg";
+		TXString filenameGLTF = fGeometryFile + ".glb";
+
+		std::map<TXString, std::pair<char*, size_t> > fileBuffers = fParentFixture->GetFileBuffers();
+
+		auto buffer = fileBuffers.find(filename3DS);
+		if(buffer != fileBuffers.end())
+		{
+			fBufferSize3DS	= buffer->second.second;
+			fBuffer3DS		= new char[fBufferSize3DS];
+			memcpy(fBuffer3DS, buffer->second.first, fBufferSize3DS);
+		}
+		else if(fBufferSize3DS > 0)
+		{
+			std::pair<char*, size_t> bufferPair = std::make_pair(fBuffer3DS, fBufferSize3DS);
+			fileBuffers[filename3DS] = bufferPair;
+		}
+
+		buffer = fileBuffers.find(filenameSVG);
+		if(buffer != fileBuffers.end())
+		{
+			fBufferSizeSVG	= buffer->second.second;
+			fBufferSVG		= new char[fBufferSizeSVG];
+			memcpy(fBufferSVG, buffer->second.first, fBufferSizeSVG);
+		}
+		else if(fBufferSizeSVG > 0)
+		{
+			std::pair<char*, size_t> bufferPair = std::make_pair(fBufferSVG, fBufferSizeSVG);
+			fileBuffers[filenameSVG] = bufferPair;
+		}
+
+		buffer = fileBuffers.find(filenameGLTF);
+		if(buffer != fileBuffers.end())
+		{
+			fBufferSizeGLTF	= buffer->second.second;
+			fBufferGLTF		= new char[fBufferSizeGLTF];
+			memcpy(fBufferGLTF, buffer->second.first, fBufferSizeGLTF);
+		}
+		else if(fBufferSizeGLTF > 0)
+		{
+			std::pair<char*, size_t> bufferPair = std::make_pair(fBufferGLTF, fBufferSizeGLTF);
+			fileBuffers[filenameGLTF] = bufferPair;
+		}	
+	}
 }
 
 void GdtfModel::OnErrorCheck(const IXMLFileNodePtr& pNode)
@@ -1437,6 +1541,45 @@ double GdtfModel::GetHeight() const
 EGdtfModel_PrimitiveType GdtfModel::GetPrimitiveType() const
 {
 	return fPrimitiveType;
+}
+
+void GdtfModel::GetBuffer3DS(void* bufferToCopy, size_t& length)
+{
+	if(fBuffer3DS)
+	{
+		delete[] fBuffer3DS;
+		fBuffer3DS = nullptr;
+	}
+
+	bufferToCopy = new char[fBufferSize3DS];
+	length = fBufferSize3DS;
+	memcpy(bufferToCopy, fBuffer3DS, fBufferSize3DS);
+}
+
+void GdtfModel::GetBufferSVG(void* bufferToCopy, size_t& length)
+{
+	if(fBufferSVG)
+	{
+		delete[] fBufferSVG;
+		fBufferSVG = nullptr;
+	}
+
+	bufferToCopy = new char[fBufferSizeSVG];
+	length = fBufferSizeSVG;
+	memcpy(bufferToCopy, fBufferSVG, fBufferSizeSVG);
+}
+
+void GdtfModel::GetBufferGLTF(void* bufferToCopy, size_t& length)
+{
+	if(fBufferGLTF)
+	{
+		delete[] fBufferGLTF;
+		fBufferGLTF = nullptr;
+	}
+
+	bufferToCopy = new char[fBufferSizeGLTF];
+	length = fBufferSizeGLTF;
+	memcpy(bufferToCopy, fBufferGLTF, fBufferSizeGLTF);
 }
 
 //------------------------------------------------------------------------------------
@@ -5378,7 +5521,7 @@ bool GdtfFixture::ImportFromZip(IZIPFilePtr& zipfile)
 				//-----------------------------------------------------------------------------
 				// Prepare pointer to the new files            
 				
-				// Seperate filename und folder
+				// Separate filename und folder
 				TXString fileNameWithoutFolder = TXString(fileName).Replace("/", TXString(kSeperator) );	
 	#ifndef _WINDOWS
 				fileNameWithoutFolder          = TXString(fileName).Replace("\\", TXString(kSeperator) ); // It seems some zips come also with this.
@@ -5388,6 +5531,12 @@ bool GdtfFixture::ImportFromZip(IZIPFilePtr& zipfile)
 				// flatten the folder structure
 				subFolder = subFolder.Replace(TXString(kSeperator), "");
 				subFolder = kSeperator + subFolder;
+
+				// write the data into the filebuffer map.
+				size_t	size = 0;							buffer.GetDataSize(size);
+				void*	data = malloc(size * sizeof(char));	buffer.CopyDataInto(data, size); //data is deleted in the GdtfFixture destructor.
+				std::pair<char*, size_t> bufferPair = std::make_pair((char*)data, size);
+				fFileBuffers[fileNameWithoutFolder] = bufferPair;
 
 				//-----------------------------------------------------------------------------
 				IFolderIdentifierPtr targetFolder (IID_FolderIdentifier);
@@ -5417,7 +5566,7 @@ bool GdtfFixture::ImportFromZip(IZIPFilePtr& zipfile)
 		
 		inPath = fileName;
 	}
-		
+	
 	zipfile->Close();
 	
 	//-------------------------------------------------------------------------------------------------
@@ -6418,6 +6567,12 @@ GdtfFixture::~GdtfFixture()
 		IFileIdentifierPtr file = fLocalFiles[i];
 		file->DeleteOnDisk();
 	}
+
+	//Delete buffers
+	for (auto it = fFileBuffers.begin(); it != fFileBuffers.end(); it++)
+	{
+		delete it->second.first;
+	}
 }
 
 size_t GdtfFixture::GetAttachedFileCount()
@@ -6851,9 +7006,40 @@ bool GdtfFixture::ExportToFile(IZIPFilePtr& zipfile)
 	
 	
 	//------------------------------------------------------------------------------------
-	// Add tp ZIP
+	// Add to ZIP
 	SceneDataZip::AddFileToZip(zipfile, zipXmlBuffer, TXString(XML_GDTF_GDTFFILENAME) );
 
+	//------------------------------------------------------------------------------------
+	// Add meshes
+
+	for (auto it = fFileBuffers.begin(); it != fFileBuffers.end(); it++)
+	{
+		TXString strFileName;
+
+		if(it->first.EndsWith("3ds"))
+		{
+			strFileName = SceneData::SceneDataZip::GetResourceSubFolder(ERessourceType::Model3DS) + it->first;
+		}
+
+		if(it->first.EndsWith("svg"))
+		{
+			strFileName = SceneData::SceneDataZip::GetResourceSubFolder(ERessourceType::ModelSVG) + it->first;
+		}
+
+		if(it->first.EndsWith("glb"))
+		{
+			strFileName = SceneData::SceneDataZip::GetResourceSubFolder(ERessourceType::ModelGLTF) + it->first;
+		}
+
+		if(!strFileName.IsEmpty())
+		{
+			CZIPFileIOBufferImpl* buffer = new CZIPFileIOBufferImpl();
+			buffer->SetData((void*)it->second.first, it->second.second);
+			zipfile->AddFile(strFileName, buffer);
+
+			delete buffer;
+		}
+	}
 	
 	return true;
 }
@@ -7086,6 +7272,11 @@ const TGdtfRevisionArray& GdtfFixture::GetRevisionArray()
 const TGdtfUserPresetArray& GdtfFixture::GetPresetArray()
 {
     return fPresets;
+}
+
+const std::map<TXString, std::pair<char*, size_t> >& GdtfFixture::GetFileBuffers()
+{
+	return fFileBuffers;
 }
 
 GdtfProtocols& GdtfFixture::GetProtocollContainer()
