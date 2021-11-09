@@ -97,6 +97,17 @@ void GdtfUnittest::WriteFile()
 			cieCol.fy	= 0.2;
 			cieCol.f_Y	= 0.3;
 			__checkVCOM(gdtfMainAttribute->SetColor(cieCol));
+
+			IGdtfSubPhysicalUnitPtr subPhysicalUnit1;
+			__checkVCOM(gdtfMainAttribute->CreateSubPhysicalUnit(EGdtfSubPhysicalUnitType::Duration, &subPhysicalUnit1));
+			__checkVCOM(subPhysicalUnit1->SetPhysicalFrom(1.1));
+			__checkVCOM(subPhysicalUnit1->SetPhysicalTo(1.2));
+
+			IGdtfSubPhysicalUnitPtr subPhysicalUnit2;
+			__checkVCOM(gdtfMainAttribute->CreateSubPhysicalUnit(EGdtfSubPhysicalUnitType::DutyCycle, &subPhysicalUnit2));
+			__checkVCOM(subPhysicalUnit2->SetType(EGdtfSubPhysicalUnitType::PlacementOffset));
+			__checkVCOM(subPhysicalUnit2->SetPhysicalFrom(2.1));
+			__checkVCOM(subPhysicalUnit2->SetPhysicalTo(2.2));
 		}
 		
 		IGdtfAttributePtr		gdtfAttribute;
@@ -1327,7 +1338,7 @@ void GdtfUnittest::ReadFile()
 
 		for(size_t i = 0; i < countAttributes; i++)
 		{
-			if (countAttributes == 0)
+			if (i == 0)
 			{
 				IGdtfAttributePtr attribute;
 				__checkVCOM(gdtfRead->GetAttributeAt(i, &attribute));
@@ -1336,9 +1347,43 @@ void GdtfUnittest::ReadFile()
 				__checkVCOM(attribute->GetPhysicalUnit(unit));
 				this->checkifEqual("Check Physical Unit ", (Sint32)unit, (Sint32)EGdtfPhysicalUnit::Acceleration);
 				this->checkifEqual("Check Attribute Name ", "My MainAttributeName", attribute->GetName());
+
+				
+				size_t subPhysicalUnitCount = 0;
+				__checkVCOM(attribute->GetSubPhysicalUnitCount(subPhysicalUnitCount));
+
+				IGdtfSubPhysicalUnitPtr subPhysicalUnit1;
+				__checkVCOM(attribute->GetSubPhysicalUnitAt(0, &subPhysicalUnit1));
+
+				EGdtfSubPhysicalUnitType type1;
+				__checkVCOM(subPhysicalUnit1->GetType(type1));
+				this->checkifEqual("Check SubPhysicalUnit 1 Type ", (Sint32)type1, (Sint32)EGdtfSubPhysicalUnitType::Duration);
+
+				double physicalFrom1 = 0.0;
+				__checkVCOM(subPhysicalUnit1->GetPhysicalFrom(physicalFrom1));
+				this->checkifEqual("Check SubPhysicalUnit 1 PhysicalFrom ", physicalFrom1, (double)1.1);
+
+				double physicalTo1 = 0.0;
+				__checkVCOM(subPhysicalUnit1->GetPhysicalTo(physicalTo1));
+				this->checkifEqual("Check SubPhysicalUnit 1 PhysicalTo ", physicalTo1, (double)1.2);
+
+				IGdtfSubPhysicalUnitPtr subPhysicalUnit2;
+				__checkVCOM(attribute->GetSubPhysicalUnitAt(1, &subPhysicalUnit2));
+
+				EGdtfSubPhysicalUnitType type2;
+				__checkVCOM(subPhysicalUnit2->GetType(type2));
+				this->checkifEqual("Check SubPhysicalUnit 2 Type ", (Sint32)type2, (Sint32)EGdtfSubPhysicalUnitType::PlacementOffset);
+
+				double physicalFrom2 = 0.0;
+				__checkVCOM(subPhysicalUnit2->GetPhysicalFrom(physicalFrom2));
+				this->checkifEqual("Check SubPhysicalUnit 2 PhysicalFrom ", physicalFrom2, (double)2.1);
+
+				double physicalTo2 = 0.0;
+				__checkVCOM(subPhysicalUnit2->GetPhysicalTo(physicalTo2));
+				this->checkifEqual("Check SubPhysicalUnit 2 PhysicalTo ", physicalTo2, (double)2.2);
 			}
 
-			if (countAttributes == 1)
+			if (i == 1)
 			{
 				IGdtfAttributePtr attribute;
 				__checkVCOM(gdtfRead->GetAttributeAt(i, &attribute));

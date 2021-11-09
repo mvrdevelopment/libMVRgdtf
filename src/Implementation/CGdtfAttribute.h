@@ -28,6 +28,10 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     SetMainAttribute(IGdtfAttribute* mainAttrib);
         virtual VCOMError VCOM_CALLTYPE     SetPhysicalUnit(GdtfDefines::EGdtfPhysicalUnit unit);
         virtual VCOMError VCOM_CALLTYPE     SetColor(const CieColor & col);
+
+        virtual VCOMError VCOM_CALLTYPE 	GetSubPhysicalUnitCount(size_t& count);
+        virtual VCOMError VCOM_CALLTYPE 	GetSubPhysicalUnitAt(size_t at, VectorworksMVR::IGdtfSubPhysicalUnit** outSubPhysicalUnit);
+        virtual VCOMError VCOM_CALLTYPE 	CreateSubPhysicalUnit(GdtfDefines::EGdtfSubPhysicalUnitType type, VectorworksMVR::IGdtfSubPhysicalUnit** outSubPhysicalUnit);
 		
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr);
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject();

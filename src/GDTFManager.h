@@ -270,15 +270,19 @@ namespace SceneData
 		~GdtfAttribute();
 		
 	private:
-		TXString				fName;
-		TXString				fPrettyName;
-		GdtfActivationGroupPtr	fActivationGroup;
-		GdtfFeaturePtr          fFeature;
-        GdtfAttribute*          fMainAttribute;
-        EGdtfPhysicalUnit       fPhysicalUnit;
-        CCieColor               fColor;
-		bool					fHasColor;
-		//		
+		// Attributes
+		TXString					fName;
+		TXString					fPrettyName;
+		GdtfActivationGroupPtr		fActivationGroup;
+		GdtfFeaturePtr          	fFeature;
+        GdtfAttribute*          	fMainAttribute;
+        EGdtfPhysicalUnit       	fPhysicalUnit;
+        CCieColor               	fColor;
+		bool						fHasColor;
+		// Children
+		TGdtfSubPhysicalUnitArray	fSubPhysicalUnits;
+
+		
 		
 	private:
 		// Unresolved Ptrs
@@ -295,8 +299,10 @@ namespace SceneData
         GdtfAttribute*                  GetMainAttribute();
         EGdtfPhysicalUnit               GetPhysicalUnit();
         CCieColor                       GetColor();		
-		bool                       		HasColor() const;	
-        // Setter
+		bool                       		HasColor() const;
+		TGdtfSubPhysicalUnitArray		GetSubPhysicalUnitArray() const;
+
+		// Setters
 		void							SetName(const TXString& name);
 		void							SetPrettyName(const TXString& name);
 		void							SetFeature(GdtfFeaturePtr newFeat);
@@ -304,6 +310,7 @@ namespace SceneData
         void                            SetMainAttribute(GdtfAttribute* attr);
         void                            SetPhysicalUnit(EGdtfPhysicalUnit unit);
         void                            SetColor(const CCieColor & col);
+		GdtfSubPhysicalUnitPtr			CreateSubPhysicalUnit(EGdtfSubPhysicalUnitType type);
 		
 		virtual EGdtfObjectType			GetObjectType();
 		virtual TXString				GetNodeReference();

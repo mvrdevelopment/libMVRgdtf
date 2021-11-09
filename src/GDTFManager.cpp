@@ -543,6 +543,7 @@ GdtfAttribute::GdtfAttribute(const TXString& name, const TXString& prettyName)
 
 GdtfAttribute::~GdtfAttribute()
 {
+	for(GdtfSubPhysicalUnitPtr subPhysicalUnit : fSubPhysicalUnits) { delete subPhysicalUnit; }
 }
 
 void GdtfAttribute::SetName(const TXString &name)
@@ -580,6 +581,13 @@ void SceneData::GdtfAttribute::SetColor(const CCieColor & col)
     fColor = col;
 }
 
+GdtfSubPhysicalUnitPtr GdtfAttribute::CreateSubPhysicalUnit(EGdtfSubPhysicalUnitType type)
+{
+	GdtfSubPhysicalUnitPtr subPhysicalUnit = new GdtfSubPhysicalUnit(type);
+    fSubPhysicalUnits.push_back(subPhysicalUnit);
+	return subPhysicalUnit;
+}
+
 void GdtfAttribute::OnPrintToFile(IXMLFileNodePtr pNode)
 {
 	//------------------------------------------------------------------------------------
@@ -598,6 +606,11 @@ void GdtfAttribute::OnPrintToFile(IXMLFileNodePtr pNode)
 	if(fHasColor) 			{ pNode->SetNodeAttributeValue(XML_GDTF_AttributeColor, GdtfConverter::ConvertColor(fColor)); }
 
     pNode->SetNodeAttributeValue(XML_GDTF_AttributePhysicalUnit, GdtfConverter::ConvertPhysicalUnitEnum(fPhysicalUnit));
+
+	for(GdtfSubPhysicalUnitPtr subPhysicalUnit : fSubPhysicalUnits)
+	{
+		subPhysicalUnit->WriteToNode(pNode);
+	}
 	
 }
 
@@ -623,7 +636,20 @@ void GdtfAttribute::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	{
 		GdtfConverter::ConvertColor(colorStr, pNode, fColor);
 		fHasColor = true;
-	}	
+	}
+
+	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_SubPhysicalUnitNodeName, [this] (IXMLFileNodePtr objNode) -> void
+								 {
+									 // Create the object
+									 GdtfSubPhysicalUnitPtr subPhysicalUnit = new GdtfSubPhysicalUnit();
+									 
+									 // Read from node
+									 subPhysicalUnit->ReadFromNode(objNode);
+									 
+									 // Add to list
+									 fSubPhysicalUnits.push_back(subPhysicalUnit);
+									 return;
+								 });
 }
 
 void GdtfAttribute::OnErrorCheck(const IXMLFileNodePtr& pNode)
@@ -682,6 +708,11 @@ bool GdtfAttribute::HasColor() const
 {
 	return fHasColor;
 }
+
+TGdtfSubPhysicalUnitArray GdtfAttribute::GetSubPhysicalUnitArray() const
+{
+	return fSubPhysicalUnits;
+}		
 
 void GdtfAttribute::SetFeature(GdtfFeaturePtr newFeat)
 {
