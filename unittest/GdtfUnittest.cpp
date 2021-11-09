@@ -1348,7 +1348,7 @@ void GdtfUnittest::ReadFile()
 				this->checkifEqual("Check Physical Unit ", (Sint32)unit, (Sint32)EGdtfPhysicalUnit::Acceleration);
 				this->checkifEqual("Check Attribute Name ", "My MainAttributeName", attribute->GetName());
 
-				
+				// SubPhysicalUnits
 				size_t subPhysicalUnitCount = 0;
 				__checkVCOM(attribute->GetSubPhysicalUnitCount(subPhysicalUnitCount));
 
