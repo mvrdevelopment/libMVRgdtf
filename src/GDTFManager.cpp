@@ -414,10 +414,10 @@ GdtfSubPhysicalUnit::GdtfSubPhysicalUnit()
 {
 }
 
-GdtfSubPhysicalUnit::GdtfSubPhysicalUnit(EGdtfSubPhysicalUnitType type, EGdtfPhysicalUnit physicalUnit)
+GdtfSubPhysicalUnit::GdtfSubPhysicalUnit(EGdtfSubPhysicalUnitType type)
 {
 	fType 			= type;
-	fPhysicalUnit 	= physicalUnit;
+	fPhysicalUnit 	= GdtfConverter::GetUnitFromSubPhysical(type);
 }
 
 GdtfSubPhysicalUnit::~GdtfSubPhysicalUnit()
@@ -446,7 +446,8 @@ double GdtfSubPhysicalUnit::GetPhysicalTo() const
 
 void GdtfSubPhysicalUnit::SetType(const EGdtfSubPhysicalUnitType& type)
 {
-	fType = type;
+	fType 			= type;
+	fPhysicalUnit 	= GdtfConverter::GetUnitFromSubPhysical(type);
 }
 
 void GdtfSubPhysicalUnit::SetPhysicalUnit(const EGdtfPhysicalUnit& physicalUnit)

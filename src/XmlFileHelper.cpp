@@ -2234,6 +2234,25 @@ void GdtfConverter::TraverseMultiNodes(IXMLFileNodePtr root, const TXString& chi
 	}
 }
 
+GdtfDefines::EGdtfPhysicalUnit GdtfConverter::GetUnitFromSubPhysical(GdtfDefines::EGdtfSubPhysicalUnitType subPhysicalUnit)
+{
+	switch(subPhysicalUnit)
+	{
+		case EGdtfSubPhysicalUnitType::PlacementOffset: return EGdtfPhysicalUnit::Angle;
+		case EGdtfSubPhysicalUnitType::Amplitude: 		return EGdtfPhysicalUnit::Percent;
+		case EGdtfSubPhysicalUnitType::AmplitudeMin: 	return EGdtfPhysicalUnit::Percent;
+		case EGdtfSubPhysicalUnitType::AmplitudeMax: 	return EGdtfPhysicalUnit::Percent;
+		case EGdtfSubPhysicalUnitType::Duration: 		return EGdtfPhysicalUnit::Time;
+		case EGdtfSubPhysicalUnitType::DutyCycle: 		return EGdtfPhysicalUnit::Percent;
+		case EGdtfSubPhysicalUnitType::TimeOffset: 		return EGdtfPhysicalUnit::Percent;
+		case EGdtfSubPhysicalUnitType::MinimumOpening: 	return EGdtfPhysicalUnit::Percent;
+		case EGdtfSubPhysicalUnitType::Value: 			return EGdtfPhysicalUnit::Percent;
+		case EGdtfSubPhysicalUnitType::RatioHorizontal: return EGdtfPhysicalUnit::Percent;
+		case EGdtfSubPhysicalUnitType::RatioVertical:	return EGdtfPhysicalUnit::Percent;
+		default: 										return EGdtfPhysicalUnit::Percent;
+	}
+}
+
 DmxValue GdtfConverter::GetChannelMaxDmx(EGdtfChannelBitResolution chanlReso)
 {
 	DmxValue maxVal = 0;

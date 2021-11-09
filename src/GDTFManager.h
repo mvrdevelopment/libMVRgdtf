@@ -226,7 +226,7 @@ namespace SceneData
 	{
 	public:
 		GdtfSubPhysicalUnit();
-		GdtfSubPhysicalUnit(EGdtfSubPhysicalUnitType type, EGdtfPhysicalUnit physicalUnit);
+		GdtfSubPhysicalUnit(EGdtfSubPhysicalUnitType type);
 		~GdtfSubPhysicalUnit();
 		
 	private:

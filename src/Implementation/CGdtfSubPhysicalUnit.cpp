@@ -26,15 +26,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfSubPhysicalUnitImpl::GetType(Gdtf
     return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfSubPhysicalUnitImpl::GetPhysicalUnit(GdtfDefines::EGdtfPhysicalUnit& physicalUnit)
-{
-	// Check Pointer
-	if ( ! fSubPhysicalUnit) return kVCOMError_NotInitialized;
-	
-    physicalUnit = fSubPhysicalUnit->GetPhysicalUnit();
-    return kVCOMError_NoError;
-}
-
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfSubPhysicalUnitImpl::GetPhysicalFrom(double& physicalFrom)
 {
 	// Check Pointer
@@ -59,16 +50,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfSubPhysicalUnitImpl::SetType(Gdtf
 	if( ! fSubPhysicalUnit) return kVCOMError_NotInitialized;
 
     fSubPhysicalUnit->SetType(type);
-
-	return kVCOMError_NoError;
-}
-
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfSubPhysicalUnitImpl::SetPhysicalUnit(GdtfDefines::EGdtfPhysicalUnit physicalUnit)
-{
-	// Check Pointer
-	if( ! fSubPhysicalUnit) return kVCOMError_NotInitialized;
-
-    fSubPhysicalUnit->SetPhysicalUnit(physicalUnit);
 
 	return kVCOMError_NoError;
 }

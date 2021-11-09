@@ -159,6 +159,8 @@ namespace SceneData
 		
 		typedef		std::function<void(IXMLFileNodePtr objNode,const TXString& childNodeName)>	TProcessMultiNodeCall;
 		static void		TraverseMultiNodes(IXMLFileNodePtr root, const TXString& childContainerNodeName, TProcessMultiNodeCall processNodeFunction);
+
+		static GdtfDefines::EGdtfPhysicalUnit GetUnitFromSubPhysical(GdtfDefines::EGdtfSubPhysicalUnitType type);
 		
 	private:
 		static bool		Deserialize(const TXString& value, const IXMLFileNodePtr& node, std::vector<double>& doubleArr);

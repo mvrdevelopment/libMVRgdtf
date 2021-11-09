@@ -16,12 +16,10 @@ namespace VectorworksMVR
         virtual ~CGdtfSubPhysicalUnitImpl();
         
         virtual VCOMError VCOM_CALLTYPE     GetType(GdtfDefines::EGdtfSubPhysicalUnitType& type);
-        virtual VCOMError VCOM_CALLTYPE     GetPhysicalUnit(GdtfDefines::EGdtfPhysicalUnit& physicalUnit);
 		virtual VCOMError VCOM_CALLTYPE     GetPhysicalFrom(double& physicalFrom);
 		virtual VCOMError VCOM_CALLTYPE     GetPhysicalTo(double& physicalTo);
 
 		virtual VCOMError VCOM_CALLTYPE     SetType(GdtfDefines::EGdtfSubPhysicalUnitType type);
-		virtual VCOMError VCOM_CALLTYPE     SetPhysicalUnit(GdtfDefines::EGdtfPhysicalUnit physicalUnit);
         virtual VCOMError VCOM_CALLTYPE     SetPhysicalFrom(double physicalFrom);
         virtual VCOMError VCOM_CALLTYPE     SetPhysicalTo(double physicalTo);
 
