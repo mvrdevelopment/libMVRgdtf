@@ -138,7 +138,7 @@ void GdtfRefreshBufferTest::ReadFile()
 					// Get DMX Mode
 					size_t countDmxModes;
 					__checkVCOM(gdtfLinkedFixture->GetDmxModeCount(countDmxModes));
-					this->checkifEqual("Check Count DMX Modes", countDmxModes, size_t(2)); //++++
+					this->checkifEqual("Check Count DMX Modes", countDmxModes, size_t(2));
 
 					//------------------------------------------------------------------
 					// Get DMX Mode TEST
@@ -255,7 +255,7 @@ void GdtfRefreshBufferTest::AddMode(IGdtfFixturePtr gdtfWrite)
 	IGdtfGeometryPtr geometry;
 	__checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometry, "Geometry", model, STransformMatrix(), &geometry));
 
-	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//----------------------------------------------------------------
 	for(size_t i = 1; i < 2; i++)
 	{
 		IGdtfDmxModePtr gdtfMode;
@@ -348,7 +348,7 @@ void GdtfRefreshBufferTest::AddMode(IGdtfFixturePtr gdtfWrite)
 
 			
 		}
-		//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		//----------------------------------------------------------------
 
     }
 }

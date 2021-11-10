@@ -17,6 +17,9 @@ namespace VectorworksMVR
 
         virtual MvrString VCOM_CALLTYPE     GetName();
         virtual VCOMError VCOM_CALLTYPE     SetName(MvrString name);
+        
+        virtual VCOMError VCOM_CALLTYPE     GetChannelFunction(IGdtfDmxChannelFunction** outChannelFunction);
+        virtual VCOMError VCOM_CALLTYPE     SetChannelFunction(IGdtfDmxChannelFunction* newChannelFunction);
 
         virtual VCOMError VCOM_CALLTYPE     GetMacroDMX(IGdtfMacroDMX** outMacroDmx);
         virtual VCOMError VCOM_CALLTYPE     CreateMacroDMX(IGdtfMacroDMX** outMacroDmx);

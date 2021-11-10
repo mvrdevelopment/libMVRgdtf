@@ -31,6 +31,8 @@ void GdtfCustomColorSpaceTest::WriteFile(VectorworksMVR::IGdtfFixturePtr& fixtur
     IGdtfColorSpacePtr colorSpace;
     __checkVCOM(fixture->GetColorSpace(&colorSpace));
 
+    __checkVCOM(colorSpace->SetName("My ColorSpace"));
+
    __checkVCOM(colorSpace->SetColorSpace(EGdtfColorSpace::Custom));
     	
     CieColor in_Red;	in_Red.fx   = 1; 	in_Red.fy   = 2;	in_Red.f_Y   = 3;
@@ -49,6 +51,8 @@ void GdtfCustomColorSpaceTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture
 {  
     IGdtfColorSpacePtr colorSpace;
     __checkVCOM(fixture->GetColorSpace(&colorSpace));
+
+    checkifEqual("ColorSpace Name", colorSpace->GetName(), "My ColorSpace");
 
     EGdtfColorSpace colorSpaceEnum;
    __checkVCOM(colorSpace->GetColorSpace(colorSpaceEnum));

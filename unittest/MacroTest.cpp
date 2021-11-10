@@ -63,7 +63,7 @@ void GdtfMacroTest::WriteFile(VectorworksMVR::IGdtfFixturePtr& fixture)
     channel1->CreateLogicalChannel(attribute, &logicalChannel1);
 
     IGdtfDmxChannelFunctionPtr channelFunction1;
-    logicalChannel1->CreateDmxFunction("function", &channelFunction1);
+    logicalChannel1->CreateDmxFunction("function1", &channelFunction1);
 
     IGdtfDmxChannelPtr channel2;
     dmxMode->CreateDmxChannel(geometry, &channel2);
@@ -74,10 +74,11 @@ void GdtfMacroTest::WriteFile(VectorworksMVR::IGdtfFixturePtr& fixture)
     channel2->CreateLogicalChannel(attribute2, &logicalChannel2);
 
     IGdtfDmxChannelFunctionPtr channelFunction2;
-    logicalChannel2->CreateDmxFunction("function", &channelFunction2);
+    logicalChannel2->CreateDmxFunction("function2", &channelFunction2);
 
     IGdtfMacroPtr macro1;
     dmxMode->CreateDmxMacro("macro1", &macro1);
+    macro1->SetChannelFunction(channelFunction1);
 
     IGdtfMacroDMXPtr macro1dmx;
     macro1->CreateMacroDMX(&macro1dmx);
@@ -124,6 +125,10 @@ void GdtfMacroTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
     IGdtfMacroPtr macro1;
     __checkVCOM( mode->GetDmxMacroAt(0, &macro1));
     checkifEqual("Macro Name", macro1->GetName(), "macro1");
+
+    IGdtfDmxChannelFunctionPtr channelFunctionFromMacro1;
+    __checkVCOM( macro1->GetChannelFunction(&channelFunctionFromMacro1));
+    checkifEqual("check macro channel function", channelFunctionFromMacro1->GetName(), "function1");
 
     IGdtfMacroVisualPtr notSetVisual;
     __checkVCOM_NotSet(macro1->GetMacroVisual(&notSetVisual));

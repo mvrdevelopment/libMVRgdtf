@@ -106,6 +106,16 @@ namespace VectorworksMVR
 			eGdtfGeometryMediaServerLayer	= 77,
 			eGdtfGeometryMediaServerMaster	= 78,
             eGdtfGeometryDisplay            = 79,
+            eGdtfPoint                      = 80,
+            eGdtfGeometryLaser              = 81,
+            eGdtfGeometryWiringObject       = 82,
+            eGdtfGeometryInventory          = 83,
+            eGdtfGeometryStructure          = 84,
+            eGdtfGeometrySupport            = 85,
+            eGdtfGeometryMagnet             = 86,
+            eGdtfLaserProtocol              = 87,
+            eGdtfPinPatch                   = 88,
+            eGdtfMap                        = 89,
 		};
 
         enum class EGdtfParsingError : Sint32
@@ -113,7 +123,7 @@ namespace VectorworksMVR
             
             eNodeMissingMandatoryAttribute                  = 0, // A Attribute but is mandatory is missing
             eNodeWrongAttribute                             = 1, // A Attribute that as not aspected is in the node
-            eNodeWrongName                                  = 2, // A Node that was not aspected is a child of the node
+            eNodeWrongName                                  = 2, // A Node that was not expected is a child of the node
             eGeometryMissingModelReference                  = 4, // A Geometry doesn't have a linked model
             eBreakObjectInNonGeometryReference              = 5, // A Break Node is in a non Geometry Reference Node
             eFixtureNoGdtfFileInXmlBuffer                   = 6, // No GDTF File found in path
@@ -247,6 +257,9 @@ namespace VectorworksMVR
 			eGdtfBeamType_Spot      = 1,
 			eGdtfBeamType_None      = 2,
             eGdtfBeamType_Rectangle = 3,
+            eGdtfBeamType_PC        = 4,
+            eGdtfBeamType_Fresnel   = 5,
+            eGdtfBeamType_Glow      = 6,
 		};
 		
 		enum EGdtfDmxMaster
@@ -631,6 +644,60 @@ namespace VectorworksMVR
             ScaleKeepRatio 		= 0,
             ScaleIgnoreRatio 	= 1,
             KeepSizeCenter 		= 2,
+        };
+
+        enum class EGdtfLaserColorType
+        {
+            RGB                 = 0,
+            SingleWaveLength    = 1,
+        };
+
+        enum class EGdtfComponentType
+        {
+            Input           = 0, 
+            Output          = 1,
+            PowerSource     = 2,
+            Consumer        = 3,
+            Fuse            = 4,
+            NetworkProvider = 5,
+            NetworkInput    = 6,
+            NetworkOutput   = 7,
+            NetworkInOut    = 8,
+        };
+
+        enum class EGdtfOrientation
+        {
+            Left    = 0, 
+            Right   = 1,
+            Top     = 2,
+            Bottom  = 3,
+        };
+
+        enum class EGdtfFuseRating
+        {
+            B = 0, 
+            C = 1,
+            D = 2,
+            K = 3,
+            Z = 4,
+        };
+
+        enum class EGdtfStructureType
+        {
+            CenterLineBased = 0, 
+            Detail          = 1,
+        };
+
+        enum class EGdtfCrossSectionType
+        {
+            TrussFramework  = 0, 
+            Tube            = 1,
+        };
+
+        enum class EGdtfSupportType
+        {
+            Rope            = 0, 
+            GroundSupport   = 1,
         };
 
 	}

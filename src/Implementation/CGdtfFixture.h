@@ -37,6 +37,12 @@ namespace VectorworksMVR
 		virtual MvrString VCOM_CALLTYPE     GetFixtureThumbnail_PNG_FullPath();
         virtual MvrString VCOM_CALLTYPE     GetFixtureThumbnail_SVG_FullPath();
 
+        virtual VCOMError VCOM_CALLTYPE		GetThumbnailOffsetX(size_t& offsetX);
+		virtual VCOMError VCOM_CALLTYPE		SetThumbnailOffsetX(size_t offsetX);	
+
+		virtual VCOMError VCOM_CALLTYPE		GetThumbnailOffsetY(size_t& offsetY);
+		virtual VCOMError VCOM_CALLTYPE		SetThumbnailOffsetY(size_t offsetY);
+
 		virtual VCOMError VCOM_CALLTYPE		GetLinkedFixtureGUID(MvrUUID& uuid);
 		virtual VCOMError VCOM_CALLTYPE		HasLinkedFixtureGUID(bool& has);
 		
@@ -84,12 +90,22 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE		GetPresetAt(size_t at, IGdtfUserPreset** preset );
 		virtual VCOMError VCOM_CALLTYPE     CreatePreset(IGdtfUserPreset** macro);
         
-		// Protocoll
+		// Protocols
 		virtual VCOMError VCOM_CALLTYPE     GetRDM(IGdtf_FTRDM ** newFTRDM);
 		virtual VCOMError VCOM_CALLTYPE     CreateRDM(VectorworksMVR::IGdtf_FTRDM ** outFTRDM);
+
+        virtual VCOMError VCOM_CALLTYPE     GetArtNet(IGdtfArtNet** artNet);
+		virtual VCOMError VCOM_CALLTYPE     CreateArtNet(IGdtfArtNet** artNet);
+
+		virtual VCOMError VCOM_CALLTYPE     GetSACN(IGdtfSACN** sACN);
+		virtual VCOMError VCOM_CALLTYPE     CreateSACN(IGdtfSACN** sACN);
         
         // PhysicalDescriptions
         virtual VCOMError                             GetColorSpace(VectorworksMVR::IGdtfColorSpace ** outColorSpace);
+
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetAdditionalColorSpaceCount(size_t& count);
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateAdditionalColorSpace(MvrString name, GdtfDefines::EGdtfColorSpace colorSpace, VectorworksMVR::IGdtfColorSpace** outVal);
+        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetAdditionalColorSpaceAt(size_t at, VectorworksMVR::IGdtfColorSpace** value);
 
         virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetEmitterCount(size_t& count);
         virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateEmitter(MvrString name, CieColor color, VectorworksMVR::IGdtfPhysicalEmitter** outVal);
@@ -131,7 +147,7 @@ namespace VectorworksMVR
         private:
         void FreeBuffer();
 
-        //GDTF 1.1
+        // GDTF 1.1
         virtual VCOMError VCOM_CALLTYPE     GetCanHaveChildren(bool& value);
         virtual VCOMError VCOM_CALLTYPE     SetCanHaveChildren(bool value);
 
