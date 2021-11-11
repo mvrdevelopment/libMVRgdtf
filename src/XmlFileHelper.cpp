@@ -196,8 +196,7 @@ using namespace SceneData;
 	// Prepare Array
 	std::vector<double> d_arr;
 	
-	Deserialize(strVal,node,  d_arr);
-	
+	Deserialize(strVal, node,  d_arr);
 	
 	// ------------------------------------------------------------
 	// Check if you have three valies
@@ -213,6 +212,93 @@ using namespace SceneData;
 	// Set Out Color and return true
 	color = CCieColor(d_arr[0],d_arr[1],d_arr[2]);
 	
+	return true;
+}
+
+TXString SceneData::GdtfConverter::ConvertColorArray(TCCieColorArray & colors)
+/* Takes an CCieColor-Array and returns it as string in the format: "{x,y,Y}{x,y,Y}...{x,y,Y}" */
+{   
+    TXString arrayStr;
+    
+    // Add the Values
+    for (size_t idx = 0; idx < colors.size(); idx++)
+    {
+		CCieColorPtr color = colors.at(idx);
+        arrayStr << "{" << color->Get_x() << "," << color->Get_y() << "," << color->Get_Y_luminance() << "}";       
+    }
+
+    return arrayStr;
+}
+
+bool SceneData::GdtfConverter::ConvertColorArray(TXString values, const IXMLFileNodePtr& node, TCCieColorArray& colorArray)
+/* Takes string in the format: "{x,y,Y}{x,y,Y}...{x,y,Y}" and fills the values into the colorArray. */
+{
+    // ----------------------------------------------------------------
+	// If the String is empty, use the DefaultMatrix
+	if (values.IsEmpty()) { return true; }
+
+	TXString strVal = values;
+	// ----------------------------------------------------------------
+	// Delete first element
+	ASSERTN(kEveryone, strVal.GetAt(0) == '{');
+	if (strVal.GetAt(0) == '{') { strVal.Delete(0,1); }
+    else
+    {
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_ColorArrayWrongFormat, node);
+        SceneData::GdtfFixture::AddError(error); 
+    }
+	
+	// Delete last element
+	ASSERTN(kEveryone, strVal.GetLast() == '}');
+	if (strVal.GetLast() == '}') { strVal.DeleteLast(); }
+    else
+    {
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_ColorArrayWrongFormat, node);
+        SceneData::GdtfFixture::AddError(error);
+    }
+	
+	// ----------------------------------------------------------------
+	// Split into parts
+	std::vector<TXString> lines;
+	ptrdiff_t pos = strVal.Find("}{");
+    while (pos > 0 )
+	{
+		// Copy string
+		TXString strValInner;
+		for (ptrdiff_t i = 0; i < pos; i++)	{ strValInner += strVal.GetAt(i); }
+		
+		// Try to cast
+		lines.push_back(strValInner);
+		
+		// Delete and find next
+		strVal.Delete(0, pos + 2);
+		pos = strVal.Find("}{");
+	}
+
+	// Append the rest
+	lines.push_back(strVal);
+	
+	// ----------------------------------------------------------------
+	// Do the conversion
+	for (size_t i = 0; i < lines.size(); i++)
+	{
+		std::vector<double> arr;
+		Deserialize(lines.at(i), node, arr);
+		
+		// Use this for 4x4 matrix and 4x3 matrix
+		if (arr.size() == 3)
+		{
+			CCieColorPtr color = new CCieColor(arr[0], arr[1], arr[2]);
+			colorArray.push_back(color);
+		}
+		else
+		{
+			DSTOP((kEveryone, "Unexpected Format of ColorArray"));
+            GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_ColorArrayWrongFormat, node);
+            SceneData::GdtfFixture::AddError(error);
+		}
+	}
+
 	return true;
 }
 
@@ -846,33 +932,6 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 	return vectorString;
 }
 
-
-/*static*/ TXString GdtfConverter::ConvertMatrix(const VWTransformMatrix& ma, bool fourLines)
-{
-	TXString value;
-	if(fourLines)
-	{
-		// For GDTF
-		value << "{" << ma.GetUVector().x  << "," << ma.GetUVector().y << "," << ma.GetUVector().z << "," << ma.GetOffset().x << "}";
-		value << "{" << ma.GetVVector().x  << "," << ma.GetVVector().y << "," << ma.GetVVector().z << "," << ma.GetOffset().y << "}";
-		value << "{" << ma.GetWVector().x  << "," << ma.GetWVector().y << "," << ma.GetWVector().z << "," << ma.GetOffset().z << "}";
-		value << "{" << "0"                << "," << "0"               << "," << "0"               << "," << "1"              << "}";
-
-	}
-	else
-	{
-		// For MVR
-		value << "{" << ma.GetUVector().x  << "," << ma.GetUVector().y << "," << ma.GetUVector().z << "}";
-		value << "{" << ma.GetVVector().x  << "," << ma.GetVVector().y << "," << ma.GetVVector().z << "}";
-		value << "{" << ma.GetWVector().x  << "," << ma.GetWVector().y << "," << ma.GetWVector().z << "}";
-		value << "{" << ma.GetOffset().x   << "," << ma.GetOffset().y  << "," << ma.GetOffset().z  << "}";
-	}
-	
-
-	
-	return value;
-}
-
 /*static*/ bool GdtfConverter::ConvertVector3(const TXString& value, const IXMLFileNodePtr& node, VWPoint3D& vector)
 {
 	// ----------------------------------------------------------------
@@ -922,10 +981,34 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 	return true;
 }
 
+/*static*/ TXString GdtfConverter::ConvertMatrix(const VWTransformMatrix& ma, bool fourLines)
+{
+	TXString value;
+	if(fourLines)
+	{
+		// For GDTF
+		value << "{" << ma.GetUVector().x  << "," << ma.GetUVector().y << "," << ma.GetUVector().z << "," << ma.GetOffset().x << "}";
+		value << "{" << ma.GetVVector().x  << "," << ma.GetVVector().y << "," << ma.GetVVector().z << "," << ma.GetOffset().y << "}";
+		value << "{" << ma.GetWVector().x  << "," << ma.GetWVector().y << "," << ma.GetWVector().z << "," << ma.GetOffset().z << "}";
+		value << "{" << "0"                << "," << "0"               << "," << "0"               << "," << "1"              << "}";
+
+	}
+	else
+	{
+		// For MVR
+		value << "{" << ma.GetUVector().x  << "," << ma.GetUVector().y << "," << ma.GetUVector().z << "}";
+		value << "{" << ma.GetVVector().x  << "," << ma.GetVVector().y << "," << ma.GetVVector().z << "}";
+		value << "{" << ma.GetWVector().x  << "," << ma.GetWVector().y << "," << ma.GetWVector().z << "}";
+		value << "{" << ma.GetOffset().x   << "," << ma.GetOffset().y  << "," << ma.GetOffset().z  << "}";
+	}
+	
+	return value;
+}
+
 /*static*/ bool GdtfConverter::ConvertMatrix(const TXString& value, const IXMLFileNodePtr& node,VWTransformMatrix& matrix)
 {
 	// ----------------------------------------------------------------
-	// If the String is empty, use the DefaultMaterix
+	// If the String is empty, use the DefaultMatrix
 	if (value.IsEmpty()) { matrix = VWTransformMatrix(); return true; }
 	
 	

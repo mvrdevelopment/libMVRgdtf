@@ -10741,6 +10741,99 @@ void SceneData::GdtfSoftwareVersionID::OnReadFromNode(const IXMLFileNodePtr & pN
     });
 }
 
+//------------------------------------------------------------------------------------
+// GdtfGamut
+GdtfGamut::GdtfGamut()
+{
+}
+
+GdtfGamut::GdtfGamut(const TXString& name, CCieColorPtr color)
+{
+	fUniqueName = name;
+
+	fGamutPoints.push_back(color);
+}
+
+GdtfGamut::~GdtfGamut()
+{
+	for(CCieColorPtr color : fGamutPoints) { delete color; }
+}
+
+const TXString&	GdtfGamut::GetName() const
+{
+	return fUniqueName;
+}
+
+const TCCieColorArray& GdtfGamut::GetGamutPoints() const
+{
+	return fGamutPoints;
+}
+
+void GdtfGamut::SetName(const TXString& name)
+{
+	fUniqueName = name;
+}
+
+void GdtfGamut::AddGamutPoint(CCieColorPtr newPoint)
+{
+	fGamutPoints.push_back(newPoint);
+}
+
+void GdtfGamut::OnPrintToFile(IXMLFileNodePtr pNode) 
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnPrintToFile(pNode);
+
+	pNode->SetNodeAttributeValue(XML_GDTF_GamutName, 	fUniqueName);
+	pNode->SetNodeAttributeValue(XML_GDTF_GamutPoints,	GdtfConverter::ConvertColorArray(fGamutPoints));
+}
+
+void GdtfGamut::OnReadFromNode(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnReadFromNode(pNode);
+
+							pNode->GetNodeAttributeValue(XML_GDTF_GamutName, fUniqueName);
+	TXString gamutPoints; 	pNode->GetNodeAttributeValue(XML_GDTF_GamutPoints, gamutPoints); GdtfConverter::ConvertColorArray(gamutPoints, pNode, fGamutPoints);
+}
+
+void GdtfGamut::OnErrorCheck(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnErrorCheck(pNode);
+
+	//------------------------------------------------------------------------------------
+	// Create needed and optional Attribute Arrays
+	TXStringArray needed;
+	TXStringArray optional;
+	needed.push_back(XML_GDTF_GamutName);
+	needed.push_back(XML_GDTF_GamutPoints);
+	//------------------------------------------------------------------------------------
+	// Check Attributes for node
+	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
+}
+
+EGdtfObjectType GdtfGamut::GetObjectType()
+{
+	return EGdtfObjectType::eGdtfGamut;
+}
+
+TXString GdtfGamut::GetNodeName()
+{
+	return XML_GDTF_GamutNodeName;
+}
+
+TXString GdtfGamut::GetNodeReference()
+{
+	return fUniqueName;
+}
+
+//------------------------------------------------------------------------------------
+// GdtfPhysicalDescriptions
+
 SceneData::GdtfPhysicalDescriptions::GdtfPhysicalDescriptions()
 {
 	fOperatingTemperatureLow 	= 0.0;
@@ -10752,6 +10845,7 @@ SceneData::GdtfPhysicalDescriptions::GdtfPhysicalDescriptions()
 SceneData::GdtfPhysicalDescriptions::~GdtfPhysicalDescriptions()
 {
     for (GdtfColorSpace* 		o : fAdditionalColorSpaces)	{ delete o; }
+    for (GdtfGamut* 			o : fGamuts)				{ delete o; }
     for (GdtfPhysicalEmitter* 	o : fEmitters)    			{ delete o; }
     for (GdtfFilter*          	o : fFilters)     			{ delete o; }
     for (GdtfDMXProfile*      	o : fDmxProfiles) 			{ delete o; }
@@ -10774,6 +10868,11 @@ GdtfColorSpace* SceneData::GdtfPhysicalDescriptions::GetColorSpace()
 const TGdtfColorSpaceArray& SceneData::GdtfPhysicalDescriptions::GetAdditionalColorSpaceArray()
 {
     return fAdditionalColorSpaces;
+}
+
+const TGdtfGamutArray& SceneData::GdtfPhysicalDescriptions::GetGamutArray()
+{
+    return fGamuts;
 }
 
 const TGdtfPhysicalEmitterArray& SceneData::GdtfPhysicalDescriptions::GetPhysicalEmitterArray()
@@ -10855,6 +10954,15 @@ GdtfColorSpacePtr SceneData::GdtfPhysicalDescriptions::AddAdditionalColorSpace(c
 	return gdtfColorSpace;
 }
 
+GdtfGamutPtr SceneData::GdtfPhysicalDescriptions::AddGamut(const TXString & name, CCieColorPtr color)
+{
+	GdtfGamutPtr gdtfGamut = new GdtfGamut(name, color);
+	
+	fGamuts.push_back(gdtfGamut);
+	
+	return gdtfGamut;
+}
+
 GdtfPhysicalEmitterPtr SceneData::GdtfPhysicalDescriptions::AddEmitter(const TXString & name, CCieColor color)
 {
 	GdtfPhysicalEmitterPtr emitter = new  GdtfPhysicalEmitter(name, color);
@@ -10928,6 +11036,16 @@ void SceneData::GdtfPhysicalDescriptions::OnPrintToFile(IXMLFileNodePtr pNode)
 		for (GdtfColorSpacePtr colorSpace : fAdditionalColorSpaces)
 		{
 			colorSpace->WriteToNode(additionalColorSpaceGroupNode);
+		}
+	}
+
+	// Print Gamuts (physicalDescription child)
+	IXMLFileNodePtr gamutsGroupNode;
+	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_GDTF_PhysicalDescriptionsGamutCollect, & gamutsGroupNode)))
+	{
+		for (GdtfGamutPtr gamut : fGamuts)
+		{
+			gamut->WriteToNode(gamutsGroupNode);
 		}
 	}
     
@@ -11036,6 +11154,20 @@ void SceneData::GdtfPhysicalDescriptions::OnReadFromNode(const IXMLFileNodePtr &
 										 
 										// Add to list
 										fAdditionalColorSpaces.push_back(colorSpace);
+										return;
+									});
+	
+	// Read Gamuts (PhysicalDescription Child)
+	GdtfConverter::TraverseNodes(pNode, XML_GDTF_PhysicalDescriptionsGamutCollect, XML_GDTF_GamutNodeName, [this] (IXMLFileNodePtr objNode) -> void
+									{
+										// Create the object
+										GdtfGamutPtr gamut = new GdtfGamut();
+										 
+										// Read from node
+										gamut->ReadFromNode(objNode);
+										 
+										// Add to list
+										fGamuts.push_back(gamut);
 										return;
 									});
 

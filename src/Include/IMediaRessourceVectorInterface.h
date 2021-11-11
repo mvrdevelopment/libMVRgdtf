@@ -444,7 +444,6 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     SetMainAttribute(IGdtfAttribute* mainAttrib) = 0;
         virtual VCOMError VCOM_CALLTYPE     SetPhysicalUnit(GdtfDefines::EGdtfPhysicalUnit unit) = 0;
         virtual VCOMError VCOM_CALLTYPE     SetColor(const CieColor & col) = 0;
-
 		
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
@@ -1219,6 +1218,21 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
     };
     typedef VCOMPtr<IGdtfColorSpace>	IGdtfColorSpacePtr;
 
+	class DYNAMIC_ATTRIBUTE IGdtfGamut : public IVWUnknown
+	{
+	public:
+		virtual MvrString VCOM_CALLTYPE     GetName() = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetName(MvrString name) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE 	GetPointCount(size_t& count) = 0;
+        virtual VCOMError VCOM_CALLTYPE 	GetPointAt(size_t at, CieColor& outColor) = 0;
+        virtual VCOMError VCOM_CALLTYPE 	CreatePoint(CieColor& color) = 0;
+		
+		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+	};
+	typedef VCOMPtr<IGdtfGamut>	IGdtfGamutPtr;
+
     class DYNAMIC_ATTRIBUTE IGdtfCRI : public IVWUnknown
     {
     public:
@@ -1478,10 +1492,16 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 
 		virtual VCOMError VCOM_CALLTYPE     GetSACN(IGdtfSACN** sACN) = 0;
 		virtual VCOMError VCOM_CALLTYPE     CreateSACN(IGdtfSACN** sACN) = 0;
-		virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetAdditionalColorSpaceCount(size_t& count) = 0;
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateAdditionalColorSpace(MvrString name, GdtfDefines::EGdtfColorSpace colorSpace, VectorworksMVR::IGdtfColorSpace** outVal) = 0;
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetAdditionalColorSpaceAt(size_t at, VectorworksMVR::IGdtfColorSpace** value) = 0;
-		virtual VCOMError VCOM_CALLTYPE		GetThumbnailOffsetX(size_t& offsetX) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE 	GetAdditionalColorSpaceCount(size_t& count) = 0;
+        virtual VCOMError VCOM_CALLTYPE 	CreateAdditionalColorSpace(MvrString name, GdtfDefines::EGdtfColorSpace colorSpace, VectorworksMVR::IGdtfColorSpace** outVal) = 0;
+        virtual VCOMError VCOM_CALLTYPE 	GetAdditionalColorSpaceAt(size_t at, VectorworksMVR::IGdtfColorSpace** value) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE  	GetGamutCount(size_t& count) = 0;
+        virtual VCOMError VCOM_CALLTYPE  	CreateGamut(MvrString name, CieColor color, VectorworksMVR::IGdtfGamut** outVal) = 0;
+        virtual VCOMError VCOM_CALLTYPE  	GetGamutAt(size_t at, VectorworksMVR::IGdtfGamut** value) = 0;
+
+		virtual VCOMError 					GetThumbnailOffsetX(size_t& offsetX) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetThumbnailOffsetX(size_t offsetX) = 0;	
 
 		virtual VCOMError VCOM_CALLTYPE		GetThumbnailOffsetY(size_t& offsetY) = 0;

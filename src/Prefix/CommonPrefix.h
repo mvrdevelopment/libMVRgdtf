@@ -631,6 +631,7 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_UserPresetNodeName						"FTPreset"
 
 #define XML_GDTF_PhysicalDescriptionsColorSpaceCollect	"AdditionalColorSpaces"
+#define XML_GDTF_PhysicalDescriptionsGamutCollect	    "Gamuts"
 #define XML_GDTF_PhysicalDescriptionsEmitterCollect	    "Emitters"
 #define XML_GDTF_EmitterNodeName						"Emitter"
 #define XML_GDTF_EmitterName							"Name"
@@ -641,6 +642,10 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_DMX_ProfileCollect                     "DMXProfiles"
 #define XML_GDTF_DMX_Profile                            "DMXProfile"
 #define XML_GDTF_DMX_ProfileName                        "Name"
+
+#define XML_GDTF_GamutNodeName                          "Gamut"
+#define XML_GDTF_GamutName                              "Name"
+#define XML_GDTF_GamutPoints                            "Points"
 
 #define XML_GDTF_Point                                  "Point"
 #define XML_GDTF_PointDMXPercentage                     "DMXPercentage"
