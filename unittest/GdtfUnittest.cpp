@@ -256,6 +256,15 @@ void GdtfUnittest::WriteFile()
 		__checkVCOM(gdtfWrite->CreateAdditionalColorSpace("My AdditionalColorSpace 1", EGdtfColorSpace::ProPhoto, &additionalColorSpace1));
 		__checkVCOM(gdtfWrite->CreateAdditionalColorSpace("My AdditionalColorSpace 2", EGdtfColorSpace::sRGB, &additionalColorSpace2));
 
+		//------------------------------------------------------------------------------------------------------------------
+		// Set Gamuts
+		IGdtfGamutPtr gamut;
+		CieColor gamutColor1; gamutColor1.fx = 0.1; gamutColor1.fy = 0.2; gamutColor1.f_Y = 0.3;
+		__checkVCOM(gdtfWrite->CreateGamut("My Gamut", gamutColor1, &gamut));
+		CieColor gamutColor2; gamutColor2.fx = 0.4; gamutColor2.fy = 0.5; gamutColor2.f_Y = 0.6;
+		__checkVCOM(gamut->CreatePoint(gamutColor2));
+
+
         //------------------------------------------------------------------------------------------------------------------
 		// Handle Models
 		IGdtfModelPtr gdtfModel;
@@ -924,6 +933,34 @@ void GdtfUnittest::ReadFile()
 		EGdtfColorSpace colorSpace2 = EGdtfColorSpace::ANSI;
 		__checkVCOM(additionalColorSpace2->GetColorSpace(colorSpace2));
 		checkifEqual("AdditionalColorSpace 2 ColorSpace ", (size_t)colorSpace2, (size_t)EGdtfColorSpace::sRGB);
+
+		//------------------------------------------------------------------------------------------------------------------
+		// Check Gamuts
+		size_t gamutCount = 0;
+		__checkVCOM(gdtfRead->GetGamutCount(gamutCount));
+		checkifEqual("Gamut Count ", gamutCount, (size_t)1);
+
+		IGdtfGamutPtr gamut;
+		__checkVCOM(gdtfRead->GetGamutAt(0, &gamut));
+
+		checkifEqual("Gamut Name ", gamut->GetName(), "My Gamut");
+
+		size_t gamutPointCount = 0;
+		__checkVCOM(gamut->GetPointCount(gamutPointCount));
+		checkifEqual("Gamut Point Count ", gamutPointCount, (size_t)2);
+
+		CieColor pointColor1;
+		__checkVCOM(gamut->GetPointAt(0, pointColor1));
+		checkifEqual("pointColor1 x ", pointColor1.fx, (double)0.1);
+		checkifEqual("pointColor1 y ", pointColor1.fy, (double)0.2);
+		checkifEqual("pointColor1 Y ", pointColor1.f_Y, (double)0.3);
+
+		CieColor pointColor2;
+		__checkVCOM(gamut->GetPointAt(1, pointColor2));
+		checkifEqual("pointColor2 x ", pointColor2.fx, (double)0.4);
+		checkifEqual("pointColor2 y ", pointColor2.fy, (double)0.5);
+		checkifEqual("pointColor2 Y ", pointColor2.f_Y, (double)0.6);
+
 
 		//------------------------------------------------------------------------------    
 		// Fill with DMX
