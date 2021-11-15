@@ -97,6 +97,7 @@ namespace VectorworksMVR
     class IGdtfDMXProfile;
     class IGdtfCRIGroup;
     class IGdtfColorSpace;
+    class IGdtfGamut;
     class IGdtfFilter;
     class IGdtfDmxMode;
 	class IGdtfMacroDMX;
@@ -866,6 +867,22 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE     SetRealAcceleration(double value) = 0;
 		virtual VCOMError VCOM_CALLTYPE     GetDefaultValue(GdtfDefines::DmxValue& defaultValue) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetDefaultValue(GdtfDefines::DmxValue defaultValue) = 0;
+
+		// GDTF 1.2
+		virtual VCOMError VCOM_CALLTYPE     GetColorSpace(IGdtfColorSpace** colorSpace) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetGamut(IGdtfGamut** gamut) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetDMXProfile(IGdtfDMXProfile** dmxProfile) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetMin(double& value) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetMax(double& value) = 0;
+		virtual MvrString VCOM_CALLTYPE     GetCustomName() = 0;
+
+		virtual VCOMError VCOM_CALLTYPE     SetColorSpace(IGdtfColorSpace* colorSpace) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetGamut(IGdtfGamut* gamut) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetDMXProfile(IGdtfDMXProfile* dmxProfile) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetMin(double value) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetMax(double value) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetCustomName(MvrString customName) = 0;
+
     };
 	typedef VCOMPtr<IGdtfDmxChannelFunction>	IGdtfDmxChannelFunctionPtr;
         

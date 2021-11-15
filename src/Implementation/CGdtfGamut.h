@@ -28,7 +28,8 @@ namespace VectorworksMVR
     private:
         SceneData::GdtfGamut* fGamut;
     public:
-        void SetPointer(SceneData::GdtfGamut* gamut);
+        void                    SetPointer(SceneData::GdtfGamut* gamut);
+        SceneData::GdtfGamut*   GetPointer();
     };
     const VWIID IID_GdtfGamut = { 0x13481bd5, 0x04cd, 0x4845, {0xab, 0xf4, 0x5c, 0xb8, 0xc2, 0x0d, 0xdb, 0xa7}};
 }

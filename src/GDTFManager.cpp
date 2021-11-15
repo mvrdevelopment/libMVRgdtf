@@ -5338,7 +5338,7 @@ GdtfDmxChannel* GdtfDmxLogicalChannel::GetParentDMXChannel() const
 }
 
 //------------------------------------------------------------------------------------
-// GdtfDmxChannelFuntion
+// GdtfDmxChannelFunction
 GdtfDmxChannelFunction::GdtfDmxChannelFunction(GdtfDmxLogicalChannel* parent)
 {
 	fDefaultValue			= 0;
@@ -5358,8 +5358,18 @@ GdtfDmxChannelFunction::GdtfDmxChannelFunction(GdtfDmxLogicalChannel* parent)
 	fDmxModeStart			= 0;
 	fDmxModeEnd				= 0;
 
-	fFilter                = nullptr;
-    fUnresolvedFilterRef = "";
+	fFilter                	= nullptr;
+	fColorSpace             = nullptr;
+	fGamut                	= nullptr;
+	fDMXProfile             = nullptr;
+
+	fMin 					= 0;
+	fMax 					= 1;
+
+    fUnresolvedFilterRef   		= "";
+    fUnresolvedColorSpaceRef	= "";
+    fUnresolvedGamutRef   		= "";
+    fUnresolvedDMXProfileRef 	= "";
 }
 
 GdtfDmxChannelFunction::GdtfDmxChannelFunction(const TXString& name, GdtfDmxLogicalChannel* parent)
@@ -5382,8 +5392,18 @@ GdtfDmxChannelFunction::GdtfDmxChannelFunction(const TXString& name, GdtfDmxLogi
 	fDmxModeStart			= 0;
 	fDmxModeEnd				= 0;
 
-    fFilter                = nullptr;
-    fUnresolvedFilterRef   = "";
+    fFilter                	= nullptr;
+	fColorSpace             = nullptr;
+	fGamut                	= nullptr;
+	fDMXProfile             = nullptr;
+
+	fMin 					= 0;
+	fMax 					= 1;
+
+    fUnresolvedFilterRef   		= "";
+    fUnresolvedColorSpaceRef	= "";
+    fUnresolvedGamutRef   		= "";
+    fUnresolvedDMXProfileRef 	= "";
 }
 
 GdtfDmxChannelFunction::~GdtfDmxChannelFunction()
@@ -5467,12 +5487,19 @@ void GdtfDmxChannelFunction::OnPrintToFile(IXMLFileNodePtr pNode)
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionPhysicalTo,			GdtfConverter::ConvertDouble(fPhysicalEnd));
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionRealFade,			GdtfConverter::ConvertDouble(fRealFade));
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionRealAcceleration,	GdtfConverter::ConvertDouble(fRealAcceleration));
+	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFunctionMin,				GdtfConverter::ConvertDouble(fMin));
+	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFunctionMax,				GdtfConverter::ConvertDouble(fMax));
+	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFunctionCustomName,			fCustomName);
 
 	
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionOriginalAttribute,								fOrignalAttribute);
-	if (fAttribute)		    { pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionAttribute,			    fAttribute->GetNodeReference());}
-	if (fOnWheel)			{ pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionWheelRef,				fOnWheel->GetNodeReference()); };
-	if (fEmitter)			{ pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelEmitter,						fEmitter->GetNodeReference() ); };
+	if (fAttribute)		    { pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionAttribute,			    fAttribute->GetNodeReference()); }
+	if (fOnWheel)			{ pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionWheelRef,				fOnWheel->GetNodeReference()); }
+	if (fEmitter)			{ pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelEmitter,						fEmitter->GetNodeReference() ); }
+	if (fFilter) 			{ pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionFilter, 				fFilter->GetNodeReference()); }
+	if (fColorSpace) 		{ pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFunctionColorSpace, 			fColorSpace->GetNodeReference()); }
+	if (fGamut) 			{ pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFunctionGamut, 				fGamut->GetNodeReference()); }
+	if (fDMXProfile) 		{ pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFunctionDMXProfile, 			fDMXProfile->GetNodeReference()); }
 	
 
 	if(fModeMaster_Channel)
@@ -5491,11 +5518,6 @@ void GdtfDmxChannelFunction::OnPrintToFile(IXMLFileNodePtr pNode)
 		pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeFrom,				GdtfConverter::ConvertDMXValue(fDmxModeStart, fModeMaster_Function->GetParentDMXChannel()->GetChannelBitResolution()));	
 		pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeTo,					GdtfConverter::ConvertDMXValue(fDmxModeEnd,   fModeMaster_Function->GetParentDMXChannel()->GetChannelBitResolution()));	
 	}
-
-    if (fFilter) 
-    {
-        pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionFilter, fFilter->GetNodeReference());
-    }
 
 	// ------------------------------------------------------------------------------------
 	// Prepare No Feature Channel Set
@@ -5586,18 +5608,24 @@ void GdtfDmxChannelFunction::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	TXString physTo;		pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionPhysicalTo,			physTo);			GdtfConverter::ConvertDouble(physTo, 			pNode,				fPhysicalEnd);
 	TXString realFade;		pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionRealFade,			realFade);			GdtfConverter::ConvertDouble(realFade, 			pNode,				fRealFade);
 	TXString realAcc;		pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionRealAcceleration,	realAcc);			GdtfConverter::ConvertDouble(realAcc, 			pNode,				fRealAcceleration);
-
+	TXString min;			pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFunctionMin,				min);				GdtfConverter::ConvertDouble(min, 				pNode,				fMin);
+	TXString max;			pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFunctionMax,				max);				GdtfConverter::ConvertDouble(max, 				pNode,				fMax);
+							pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionName,				fCustomName);
+	// Unresolved refs
 	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionAttribute, 	fUnresolvedAttrRef);	
 	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionWheelRef, 	fUnresolvedWheelRef);
 	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelEmitter, 			fUnresolvedEmitterRef);
+    pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionFilter,		fUnresolvedFilterRef);
+    pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFunctionColorSpace,	fUnresolvedColorSpaceRef);
+    pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFunctionGamut,		fUnresolvedGamutRef);
+    pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFunctionDMXProfile,	fUnresolvedDMXProfileRef);
 
 	// Read Mode Master
-	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeMaster,				fUnresolvedModeMaster);	
-	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeFrom,				fUnresolvedDmxModeStart);	
-	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeTo,					fUnresolvedDmxModeEnd);	
+	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeMaster,	fUnresolvedModeMaster);	
+	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeFrom,	fUnresolvedDmxModeStart);	
+	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionModeTo,		fUnresolvedDmxModeEnd);	
 
-    // Filter
-    pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionFilter,					fUnresolvedFilterRef);	
+    
 
 	// ------------------------------------------------------------------------------------
 	// GdtfDmxChannelSet
@@ -5659,6 +5687,12 @@ void GdtfDmxChannelFunction::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	optional.push_back(XML_GDTF_DMXChannelFuntionRealFade);
     optional.push_back(XML_GDTF_DMXChannelFuntionFilter);
 	optional.push_back(XML_GDTF_DMXChannelFuntionRealAcceleration);
+	optional.push_back(XML_GDTF_DMXChannelFunctionColorSpace);
+	optional.push_back(XML_GDTF_DMXChannelFunctionGamut);
+	optional.push_back(XML_GDTF_DMXChannelFunctionDMXProfile);
+	optional.push_back(XML_GDTF_DMXChannelFunctionMin);
+	optional.push_back(XML_GDTF_DMXChannelFunctionMax);
+	optional.push_back(XML_GDTF_DMXChannelFunctionCustomName);
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node
 	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
@@ -5788,9 +5822,39 @@ GdtfPhysicalEmitter * SceneData::GdtfDmxChannelFunction::GetEmitter() const
     return fEmitter;
 }
 
-GdtfFilterPtr SceneData::GdtfDmxChannelFunction::GetFilter()
+GdtfFilterPtr SceneData::GdtfDmxChannelFunction::GetFilter() const
 {
     return fFilter;
+}
+
+GdtfColorSpacePtr SceneData::GdtfDmxChannelFunction::GetColorSpace() const
+{
+    return fColorSpace;
+}
+
+GdtfGamutPtr SceneData::GdtfDmxChannelFunction::GetGamut() const
+{
+    return fGamut;
+}
+
+GdtfDMXProfilePtr SceneData::GdtfDmxChannelFunction::GetDMXProfile() const
+{
+    return fDMXProfile;
+}
+
+double GdtfDmxChannelFunction::GetMin() const
+{
+	return fMin;
+}
+
+double GdtfDmxChannelFunction::GetMax() const
+{
+	return fMax;
+}
+
+const TXString& GdtfDmxChannelFunction::GetCustomName() const
+{
+	return fCustomName;
 }
 
 void GdtfDmxChannelFunction::SetWheel(GdtfWheelPtr newWhl)
@@ -5866,6 +5930,36 @@ void SceneData::GdtfDmxChannelFunction::SetFilter(GdtfFilterPtr val)
     fFilter = val;
 }
 
+void SceneData::GdtfDmxChannelFunction::SetColorSpace(GdtfColorSpacePtr colorSpace)
+{
+    fColorSpace = colorSpace;
+}
+
+void SceneData::GdtfDmxChannelFunction::SetGamut(GdtfGamutPtr gamut)
+{
+    fGamut = gamut;
+}
+
+void SceneData::GdtfDmxChannelFunction::SetDMXProfile(GdtfDMXProfilePtr dmxProfile)
+{
+    fDMXProfile = dmxProfile;
+}
+
+void SceneData::GdtfDmxChannelFunction::SetMin(double min)
+{
+    fMin = min;
+}
+
+void SceneData::GdtfDmxChannelFunction::SetMax(double max)
+{
+    fMax = max;
+}
+
+void SceneData::GdtfDmxChannelFunction::SetCustomName(const TXString& customName)
+{
+    fCustomName = customName;
+}
+
 TXString GdtfDmxChannelFunction::getUnresolvedAttrRef() const
 {
 	return fUnresolvedAttrRef;
@@ -5889,6 +5983,21 @@ TXString GdtfDmxChannelFunction::getUnresolvedModeMasterRef() const
 const TXString & SceneData::GdtfDmxChannelFunction::getUnresolvedFilterRef()
 {
     return fUnresolvedFilterRef;
+}
+
+const TXString& SceneData::GdtfDmxChannelFunction::getUnresolvedColorSpaceRef() const
+{
+    return fUnresolvedColorSpaceRef;
+}
+
+const TXString& SceneData::GdtfDmxChannelFunction::getUnresolvedGamutRef() const
+{
+    return fUnresolvedGamutRef;
+}
+
+const TXString& SceneData::GdtfDmxChannelFunction::getUnresolvedDMXProfileRef() const
+{
+    return fUnresolvedDMXProfileRef;
 }
 
 GdtfDmxChannel * SceneData::GdtfDmxChannelFunction::GetParentDMXChannel() const
@@ -7182,6 +7291,42 @@ GdtfConnectorPtr GdtfFixture::getConnectorByRef(const TXString& ref)
 	return nullptr;
 }
 
+GdtfColorSpacePtr GdtfFixture::getColorSpaceByRef(const TXString& ref) 
+{
+    for (GdtfColorSpacePtr colorSpace : fPhysicalDesciptions.GetAdditionalColorSpaceArray())
+    {
+        if (colorSpace->GetNodeReference() == ref) { return colorSpace; }
+    }
+
+	// If this line is reached, nothing was found.
+	DSTOP ((kEveryone, "Failed to resolve GdtfColorSpace."));
+	return nullptr;
+}
+
+GdtfGamutPtr GdtfFixture::getGamutByRef(const TXString& ref) 
+{
+    for (GdtfGamutPtr gamut : fPhysicalDesciptions.GetGamutArray())
+    {
+        if (gamut->GetNodeReference() == ref) { return gamut; }
+    }
+
+	// If this line is reached, nothing was found.
+	DSTOP ((kEveryone, "Failed to resolve GdtfGamut."));
+	return nullptr;
+}
+
+GdtfDMXProfilePtr GdtfFixture::getDMXProfileByRef(const TXString& ref) 
+{
+    for (GdtfDMXProfilePtr dmxProfile : fPhysicalDesciptions.GetDmxProfileArray())
+    {
+        if (dmxProfile->GetNodeReference() == ref) { return dmxProfile; }
+    }
+
+	// If this line is reached, nothing was found.
+	DSTOP ((kEveryone, "Failed to resolve GdtfDMXProfile."));
+	return nullptr;
+}
+
 GdtfDmxChannelFunctionPtr GdtfFixture::getDmxFunctionByRef(const TXString& ref, GdtfDmxModePtr mode)
 {
 	for(GdtfDmxChannelPtr channel : mode->GetChannelArray())
@@ -7889,6 +8034,33 @@ void GdtfFixture::ResolveDmxChanelFunctionRefs(GdtfDmxLogicalChannelPtr dmxLogCh
 				chnlFunc->SetDefaultValue(oldDefault);
 			}
 		}
+
+		// ----------------------------------------------------------------------------------------		
+        // ColorSpace Refs
+        TXString unresolvedColorSpaceRef = chnlFunc->getUnresolvedColorSpaceRef();
+        if (!unresolvedColorSpaceRef.IsEmpty()) 
+        {
+            GdtfColorSpace* colorSpace = getColorSpaceByRef(unresolvedColorSpaceRef);
+            chnlFunc->SetColorSpace(colorSpace);
+        }
+
+		// ----------------------------------------------------------------------------------------		
+        // Gamut Refs
+        TXString unresolvedGamutRef = chnlFunc->getUnresolvedGamutRef();
+        if (!unresolvedGamutRef.IsEmpty()) 
+        {
+            GdtfGamut* gamut = getGamutByRef(unresolvedGamutRef);
+            chnlFunc->SetGamut(gamut);
+        }
+
+		// ----------------------------------------------------------------------------------------		
+        // DMXProfile Refs
+        TXString unresolvedDMXProfileRef = chnlFunc->getUnresolvedDMXProfileRef();
+        if (!unresolvedDMXProfileRef.IsEmpty()) 
+        {
+            GdtfDMXProfile* dmxProfile = getDMXProfileByRef(unresolvedDMXProfileRef);
+            chnlFunc->SetDMXProfile(dmxProfile);
+        }
 		
 
 	}

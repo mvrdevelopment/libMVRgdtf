@@ -75,6 +75,11 @@ void VectorworksMVR::CGdtfGamutImpl::SetPointer(SceneData::GdtfGamut* gamut)
     fGamut = gamut;
 }
 
+SceneData::GdtfGamut* VectorworksMVR::CGdtfGamutImpl::GetPointer()
+{
+    return fGamut;
+}
+
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfGamutImpl::BindToObject(void* objAddr)
 {
 	// Check if valid

@@ -1514,11 +1514,11 @@ namespace SceneData
 		GdtfAttribute*		    fAttribute;
 		TXString				fOrignalAttribute;
 		DmxValue				fDefaultValue;
-		DmxValue				fAdressStart;   
+		DmxValue				fAdressStart;
 		double					fPhysicalStart;
 		double					fPhysicalEnd;
 		double					fRealFade;
-		double					fRealAcceleration;				
+		double					fRealAcceleration;
 		GdtfWheelPtr			fOnWheel;
 		GdtfPhysicalEmitter*	fEmitter;
 
@@ -1527,7 +1527,14 @@ namespace SceneData
         DmxValue                fDmxModeStart;
         DmxValue                fDmxModeEnd;
         GdtfFilterPtr           fFilter;
-		//
+
+		GdtfColorSpacePtr		fColorSpace;
+		GdtfGamutPtr			fGamut;
+		GdtfDMXProfilePtr		fDMXProfile;
+		double					fMin;
+		double					fMax;
+		TXString				fCustomName;
+		// Children
 		TGdtfDmxChannelSetArray	fChannelSets;		
 		
 		// Unresolved Refs
@@ -1538,6 +1545,9 @@ namespace SceneData
         TXString                fUnresolvedDmxModeEnd;
         TXString                fUnresolvedModeMaster;
         TXString                fUnresolvedFilterRef;
+        TXString                fUnresolvedColorSpaceRef;
+        TXString                fUnresolvedGamutRef;
+        TXString                fUnresolvedDMXProfileRef;
 
 		// Parent Logical Channel
 		GdtfDmxLogicalChannel*	fParentLogicalChannel;
@@ -1559,7 +1569,13 @@ namespace SceneData
 		double							GetRealAcceleration() const;
         GdtfWheelPtr					GetOnWheel() const;
         GdtfPhysicalEmitter*            GetEmitter() const;
-        GdtfFilterPtr                   GetFilter();
+        GdtfFilterPtr                   GetFilter() const;
+		GdtfColorSpacePtr				GetColorSpace() const;
+		GdtfGamutPtr					GetGamut() const;
+		GdtfDMXProfilePtr				GetDMXProfile() const;
+		double							GetMin() const;
+		double							GetMax() const;
+		const TXString&					GetCustomName() const;
 
 
         GdtfDmxChannel*                 GetModeMaster_Channel() const;
@@ -1577,6 +1593,10 @@ namespace SceneData
 		TXString						getUnresolvedEmitterRef() const;
         TXString						getUnresolvedModeMasterRef() const;
         const TXString&                 getUnresolvedFilterRef();
+        const TXString&                 getUnresolvedColorSpaceRef() const;
+        const TXString&                 getUnresolvedGamutRef() const;
+        const TXString&                 getUnresolvedDMXProfileRef() const;
+
 		GdtfDmxChannel*					GetParentDMXChannel() const;
         GdtfDmxLogicalChannel*			GetParentLogicalChannel() const;
         void						    ResolveModeMasterDmx(EGdtfChannelBitResolution resolution);
@@ -1597,6 +1617,12 @@ namespace SceneData
 		void							SetRealAcceleration(double fade);
 		void							SetEmitter(GdtfPhysicalEmitter* newEmit);
         void                            SetFilter(GdtfFilterPtr val);
+        void                            SetColorSpace(GdtfColorSpacePtr colorSpace);
+        void                            SetGamut(GdtfGamutPtr gamut);
+        void                            SetDMXProfile(GdtfDMXProfilePtr dmxProfile);
+        void                            SetMin(double min);
+        void                            SetMax(double max);
+		void							SetCustomName(const TXString& customName);
 
 
         void                            SetModeMaster_Channel(GdtfDmxChannel* channel);
@@ -2920,6 +2946,9 @@ namespace SceneData
 		GdtfDmxChannelPtr           getDmxChannelByRef(const TXString& ref, GdtfDmxModePtr mode);
         GdtfFilterPtr               getFilterByRef(const TXString& ref);
 		GdtfConnectorPtr            getConnectorByRef(const TXString& ref);
+		GdtfColorSpacePtr           getColorSpaceByRef(const TXString& ref);
+		GdtfGamutPtr            	getGamutByRef(const TXString& ref);
+		GdtfDMXProfilePtr           getDMXProfileByRef(const TXString& ref);
 
 		//
 		void AutoGenerateNames(GdtfDmxModePtr dmxMode);

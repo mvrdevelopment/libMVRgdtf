@@ -539,12 +539,16 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_DMXChannelFuntionRealAcceleration		"RealAcceleration"
 #define XML_GDTF_DMXChannelFuntionWheelRef				"Wheel"
 #define XML_GDTF_DMXChannelEmitter						"Emitter"
-
 #define XML_GDTF_DMXChannelFuntionModeMaster			"ModeMaster"
 #define XML_GDTF_DMXChannelFuntionModeFrom				"ModeFrom"
 #define XML_GDTF_DMXChannelFuntionModeTo				"ModeTo"
-
 #define XML_GDTF_DMXChannelFuntionFilter                "Filter"
+#define XML_GDTF_DMXChannelFunctionColorSpace           "ColorSpace"
+#define XML_GDTF_DMXChannelFunctionGamut                "Gamut"
+#define XML_GDTF_DMXChannelFunctionDMXProfile           "DMXProfile"
+#define XML_GDTF_DMXChannelFunctionMin                  "Min"
+#define XML_GDTF_DMXChannelFunctionMax                  "Max"
+#define XML_GDTF_DMXChannelFunctionCustomName           "CustomName"
 
 #define XML_GDTF_DMXChannelDmxnvertEnum_Yes				"Yes"
 #define XML_GDTF_DMXChannelDmxInvertEnum_No				"No"
