@@ -473,6 +473,7 @@ namespace SceneData
         CCieColor       fWhitePoint;
     public:
         virtual EGdtfObjectType			GetObjectType();
+		virtual TXString				GetNodeReference();
 
     public:
         // Getter
@@ -499,6 +500,33 @@ namespace SceneData
 	typedef GdtfColorSpace*					GdtfColorSpacePtr;
     typedef std::vector<GdtfColorSpace*>	TGdtfColorSpaceArray; 
 
+	class GdtfGamut : public GdtfObject
+	{
+    public:
+        GdtfGamut();
+        GdtfGamut(const TXString& name, CCieColorPtr color);
+        ~GdtfGamut();
+    private:
+        TXString                        fUniqueName;
+        TCCieColorArray           		fGamutPoints;
+    public:
+        virtual EGdtfObjectType		    GetObjectType();
+        virtual TXString				GetNodeReference();
+    public:
+		// Getters
+        const TXString&		            GetName() const;
+        const TCCieColorArray&    		GetGamutPoints() const;
+        // Setters
+        void						    SetName(const TXString& name);
+        void                			AddGamutPoint(CCieColorPtr newPoint);
+    protected:
+        virtual	TXString				GetNodeName();
+        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode); 
+		virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);       
+    };
+	typedef GdtfGamut*					GdtfGamutPtr;
+	typedef std::vector<GdtfGamutPtr>	TGdtfGamutArray;
 
     class GdtfPhysicalDescriptions : public GdtfObject
     {
@@ -508,6 +536,7 @@ namespace SceneData
     private:        
         GdtfColorSpace                  fColorSpace;
 		TGdtfColorSpaceArray			fAdditionalColorSpaces;
+		TGdtfGamutArray					fGamuts;
         TGdtfPhysicalEmitterArray		fEmitters;
         TGdtfFilterArray                fFilters;
         TGdtfDMXProfileArray            fDmxProfiles;
@@ -529,6 +558,7 @@ namespace SceneData
         GdtfColorSpace*                  GetColorSpace();
 
         const TGdtfColorSpaceArray& 		GetAdditionalColorSpaceArray();
+        const TGdtfGamutArray& 				GetGamutArray();
         const TGdtfPhysicalEmitterArray& 	GetPhysicalEmitterArray();
         const TGdtfFilterArray&          	GetFilterArray();
         const TGdtfDMXProfileArray&      	GetDmxProfileArray();
@@ -544,8 +574,9 @@ namespace SceneData
 		void								SetOperatingTemperatureHigh(double value);
 		void								SetWeight(double value);
 		void								SetLegHeight(double value);
-
+        
 		GdtfColorSpacePtr				AddAdditionalColorSpace(const TXString& name, EGdtfColorSpace colorSpace);
+        GdtfGamutPtr	        		AddGamut(const TXString& name, CCieColorPtr color);
         GdtfPhysicalEmitterPtr	        AddEmitter(const TXString& name, CCieColor color);
         GdtfFilterPtr                   AddFilter(const TXString& name,  CCieColor color);
         GdtfDMXProfilePtr               AddDmxProfile();
@@ -558,7 +589,7 @@ namespace SceneData
         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
         virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
     };
-    typedef GdtfPhysicalDescriptions*	GdtfPhysicalDescriptionsPtr;	
+    typedef GdtfPhysicalDescriptions*	GdtfPhysicalDescriptionsPtr;
 
     class GdtfFilter : public GdtfObject
     {
@@ -1530,11 +1561,11 @@ namespace SceneData
 		GdtfAttribute*		    fAttribute;
 		TXString				fOrignalAttribute;
 		DmxValue				fDefaultValue;
-		DmxValue				fAdressStart;   
+		DmxValue				fAdressStart;
 		double					fPhysicalStart;
 		double					fPhysicalEnd;
 		double					fRealFade;
-		double					fRealAcceleration;				
+		double					fRealAcceleration;
 		GdtfWheelPtr			fOnWheel;
 		GdtfPhysicalEmitter*	fEmitter;
 
@@ -1543,7 +1574,14 @@ namespace SceneData
         DmxValue                fDmxModeStart;
         DmxValue                fDmxModeEnd;
         GdtfFilterPtr           fFilter;
-		//
+
+		GdtfColorSpacePtr		fColorSpace;
+		GdtfGamutPtr			fGamut;
+		GdtfDMXProfilePtr		fDMXProfile;
+		double					fMin;
+		double					fMax;
+		TXString				fCustomName;
+		// Children
 		TGdtfDmxChannelSetArray	fChannelSets;		
 		
 		// Unresolved Refs
@@ -1554,6 +1592,9 @@ namespace SceneData
         TXString                fUnresolvedDmxModeEnd;
         TXString                fUnresolvedModeMaster;
         TXString                fUnresolvedFilterRef;
+        TXString                fUnresolvedColorSpaceRef;
+        TXString                fUnresolvedGamutRef;
+        TXString                fUnresolvedDMXProfileRef;
 
 		// Parent Logical Channel
 		GdtfDmxLogicalChannel*	fParentLogicalChannel;
@@ -1575,7 +1616,13 @@ namespace SceneData
 		double							GetRealAcceleration() const;
         GdtfWheelPtr					GetOnWheel() const;
         GdtfPhysicalEmitter*            GetEmitter() const;
-        GdtfFilterPtr                   GetFilter();
+        GdtfFilterPtr                   GetFilter() const;
+		GdtfColorSpacePtr				GetColorSpace() const;
+		GdtfGamutPtr					GetGamut() const;
+		GdtfDMXProfilePtr				GetDMXProfile() const;
+		double							GetMin() const;
+		double							GetMax() const;
+		const TXString&					GetCustomName() const;
 
 
         GdtfDmxChannel*                 GetModeMaster_Channel() const;
@@ -1593,6 +1640,10 @@ namespace SceneData
 		TXString						getUnresolvedEmitterRef() const;
         TXString						getUnresolvedModeMasterRef() const;
         const TXString&                 getUnresolvedFilterRef();
+        const TXString&                 getUnresolvedColorSpaceRef() const;
+        const TXString&                 getUnresolvedGamutRef() const;
+        const TXString&                 getUnresolvedDMXProfileRef() const;
+
 		GdtfDmxChannel*					GetParentDMXChannel() const;
         GdtfDmxLogicalChannel*			GetParentLogicalChannel() const;
         void						    ResolveModeMasterDmx(EGdtfChannelBitResolution resolution);
@@ -1613,6 +1664,12 @@ namespace SceneData
 		void							SetRealAcceleration(double fade);
 		void							SetEmitter(GdtfPhysicalEmitter* newEmit);
         void                            SetFilter(GdtfFilterPtr val);
+        void                            SetColorSpace(GdtfColorSpacePtr colorSpace);
+        void                            SetGamut(GdtfGamutPtr gamut);
+        void                            SetDMXProfile(GdtfDMXProfilePtr dmxProfile);
+        void                            SetMin(double min);
+        void                            SetMax(double max);
+		void							SetCustomName(const TXString& customName);
 
 
         void                            SetModeMaster_Channel(GdtfDmxChannel* channel);
@@ -2664,6 +2721,7 @@ namespace SceneData
 		TGdtfPointArray fPoints;
 	public:
 		virtual EGdtfObjectType			GetObjectType();
+		virtual TXString				GetNodeReference();
 
 	public:
 		// Getters
@@ -2936,6 +2994,9 @@ namespace SceneData
 		GdtfDmxChannelPtr           getDmxChannelByRef(const TXString& ref, GdtfDmxModePtr mode);
         GdtfFilterPtr               getFilterByRef(const TXString& ref);
 		GdtfConnectorPtr            getConnectorByRef(const TXString& ref);
+		GdtfColorSpacePtr           getColorSpaceByRef(const TXString& ref);
+		GdtfGamutPtr            	getGamutByRef(const TXString& ref);
+		GdtfDMXProfilePtr           getDMXProfileByRef(const TXString& ref);
 
 		//
 		void AutoGenerateNames(GdtfDmxModePtr dmxMode);

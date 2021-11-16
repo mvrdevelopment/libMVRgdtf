@@ -103,25 +103,29 @@ namespace VectorworksMVR
         // PhysicalDescriptions
         virtual VCOMError                             GetColorSpace(VectorworksMVR::IGdtfColorSpace ** outColorSpace);
 
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetAdditionalColorSpaceCount(size_t& count);
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateAdditionalColorSpace(MvrString name, GdtfDefines::EGdtfColorSpace colorSpace, VectorworksMVR::IGdtfColorSpace** outVal);
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetAdditionalColorSpaceAt(size_t at, VectorworksMVR::IGdtfColorSpace** value);
+        virtual VCOMError VCOM_CALLTYPE  GetAdditionalColorSpaceCount(size_t& count);
+        virtual VCOMError VCOM_CALLTYPE  CreateAdditionalColorSpace(MvrString name, GdtfDefines::EGdtfColorSpace colorSpace, VectorworksMVR::IGdtfColorSpace** outVal);
+        virtual VCOMError VCOM_CALLTYPE  GetAdditionalColorSpaceAt(size_t at, VectorworksMVR::IGdtfColorSpace** value);
 
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetEmitterCount(size_t& count);
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateEmitter(MvrString name, CieColor color, VectorworksMVR::IGdtfPhysicalEmitter** outVal);
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetEmitterAt(size_t at, VectorworksMVR::IGdtfPhysicalEmitter** value);
+        virtual VCOMError VCOM_CALLTYPE  GetGamutCount(size_t& count);
+        virtual VCOMError VCOM_CALLTYPE  CreateGamut(MvrString name, CieColor color, VectorworksMVR::IGdtfGamut** outVal);
+        virtual VCOMError VCOM_CALLTYPE  GetGamutAt(size_t at, VectorworksMVR::IGdtfGamut** value);
 
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetFilterCount(size_t& count);
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateFilter(MvrString name, CieColor color, VectorworksMVR::IGdtfFilter** outVal);
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetFilterAt(size_t at, VectorworksMVR::IGdtfFilter** value);
+        virtual VCOMError VCOM_CALLTYPE  GetEmitterCount(size_t& count);
+        virtual VCOMError VCOM_CALLTYPE  CreateEmitter(MvrString name, CieColor color, VectorworksMVR::IGdtfPhysicalEmitter** outVal);
+        virtual VCOMError VCOM_CALLTYPE  GetEmitterAt(size_t at, VectorworksMVR::IGdtfPhysicalEmitter** value);
 
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetDMXProfileCount(size_t& count);
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateDMXProfile(VectorworksMVR::IGdtfDMXProfile** outVal);
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetDMXProfileAt(size_t at, VectorworksMVR::IGdtfDMXProfile** value);
+        virtual VCOMError VCOM_CALLTYPE  GetFilterCount(size_t& count);
+        virtual VCOMError VCOM_CALLTYPE  CreateFilter(MvrString name, CieColor color, VectorworksMVR::IGdtfFilter** outVal);
+        virtual VCOMError VCOM_CALLTYPE  GetFilterAt(size_t at, VectorworksMVR::IGdtfFilter** value);
 
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetCRIGroupCount(size_t& count);
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateCRIGroup(double colorTemp, VectorworksMVR::IGdtfCRIGroup** outVal);
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetCRIGroupAt(size_t at, VectorworksMVR::IGdtfCRIGroup** value);
+        virtual VCOMError VCOM_CALLTYPE  GetDMXProfileCount(size_t& count);
+        virtual VCOMError VCOM_CALLTYPE  CreateDMXProfile(VectorworksMVR::IGdtfDMXProfile** outVal);
+        virtual VCOMError VCOM_CALLTYPE  GetDMXProfileAt(size_t at, VectorworksMVR::IGdtfDMXProfile** value);
+
+        virtual VCOMError VCOM_CALLTYPE  GetCRIGroupCount(size_t& count);
+        virtual VCOMError VCOM_CALLTYPE  CreateCRIGroup(double colorTemp, VectorworksMVR::IGdtfCRIGroup** outVal);
+        virtual VCOMError VCOM_CALLTYPE  GetCRIGroupAt(size_t at, VectorworksMVR::IGdtfCRIGroup** value);
         //-----------------------------------------------------------------------------
 
 		// Parsing Errors
