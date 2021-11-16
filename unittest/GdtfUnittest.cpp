@@ -258,11 +258,11 @@ void GdtfUnittest::WriteFile()
 
 		//------------------------------------------------------------------------------------------------------------------
 		// Set Gamuts
-		IGdtfGamutPtr gamut;
+		IGdtfGamutPtr gdtfGamut;
 		CieColor gamutColor1; gamutColor1.fx = 0.1; gamutColor1.fy = 0.2; gamutColor1.f_Y = 0.3;
-		__checkVCOM(gdtfWrite->CreateGamut("My Gamut", gamutColor1, &gamut));
+		__checkVCOM(gdtfWrite->CreateGamut("My Gamut", gamutColor1, &gdtfGamut));
 		CieColor gamutColor2; gamutColor2.fx = 0.4; gamutColor2.fy = 0.5; gamutColor2.f_Y = 0.6;
-		__checkVCOM(gamut->CreatePoint(gamutColor2));
+		__checkVCOM(gdtfGamut->CreatePoint(gamutColor2));
 
 
         //------------------------------------------------------------------------------------------------------------------
@@ -367,6 +367,13 @@ void GdtfUnittest::WriteFile()
 
                         // Set the Linked Filter
                         __checkVCOM(gdftChannelFunction->SetFilter(gdtfFilter));
+
+                        __checkVCOM(gdftChannelFunction->SetColorSpace(additionalColorSpace2));
+                        __checkVCOM(gdftChannelFunction->SetGamut(gdtfGamut));
+                        __checkVCOM(gdftChannelFunction->SetDMXProfile(gdtfDMXProfile1));
+						__checkVCOM(gdftChannelFunction->SetMin(0.1));
+						__checkVCOM(gdftChannelFunction->SetMax(0.2));
+						__checkVCOM(gdftChannelFunction->SetCustomName("My CustomName"));
 
 						IGdtfDmxChannelSetPtr gdtfChannelSet;
 						if (__checkVCOM(gdftChannelFunction->CreateDmxChannelSet("My nameDmxChannelSet", 1, 2, &gdtfChannelSet)))
@@ -1168,6 +1175,35 @@ void GdtfUnittest::ReadFile()
                                 IGdtfFilterPtr filter;
                                 __checkVCOM(gdtfFunction->GetFilter(&filter) );
                                 this->checkifEqual("Filter Name", filter->GetName() ,"My Filter");
+
+								// ColorSpace
+                                IGdtfColorSpacePtr colorSpace;
+                                __checkVCOM(gdtfFunction->GetColorSpace(&colorSpace) );
+                                this->checkifEqual("ColorSpace Name", colorSpace->GetName() ,"My AdditionalColorSpace 2");
+
+								// Gamut
+                                IGdtfGamutPtr linkedGamut;
+                                __checkVCOM(gdtfFunction->GetGamut(&linkedGamut) );
+                                this->checkifEqual("Gamut Name", linkedGamut->GetName() ,"My Gamut");
+
+								// DMXProfile
+                                IGdtfDMXProfilePtr linkedDMXProfile;
+                                __checkVCOM(gdtfFunction->GetDMXProfile(&linkedDMXProfile) );
+                                this->checkifEqual("DMXProfile Name", linkedDMXProfile->GetName() ,"DMXProfile 1");
+
+								// Min
+								double min;
+								__checkVCOM(gdtfFunction->GetMin(min));
+								this->checkifEqual("Min", min, double(0.1));
+
+								// Max
+								double max;
+								__checkVCOM(gdtfFunction->GetMax(max));
+								this->checkifEqual("Max", max, double(0.2));
+
+								// CustomName
+								this->checkifEqual("CustomName", gdtfFunction->GetCustomName(), "My CustomName");
+
 								//------------------------------------------------------------------------------    
 								// Add the ChannelSets 
 								size_t countChannelSets = 0;
