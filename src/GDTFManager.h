@@ -250,6 +250,7 @@ namespace SceneData
         void                            SetPhysicalTo(double physicalTo);
 		
 		virtual EGdtfObjectType			GetObjectType();
+		virtual TXString				GetNodeReference();
 
 	protected:
 		virtual	TXString				GetNodeName();

@@ -513,6 +513,11 @@ EGdtfObjectType GdtfSubPhysicalUnit::GetObjectType()
 	return EGdtfObjectType::eGdtfSubPhysicalUnit;
 }
 
+TXString GdtfSubPhysicalUnit::GetNodeReference() 
+{
+	return GdtfConverter::ConvertSubPhysicalUnitTypeEnum(fType);
+}
+
 TXString GdtfSubPhysicalUnit::GetNodeName()
 {
 	return XML_GDTF_SubPhysicalUnitNodeName;
