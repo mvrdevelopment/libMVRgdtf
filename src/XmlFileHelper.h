@@ -58,6 +58,7 @@ namespace SceneData
 		static TXString	ConvertUUID(const VWFC::Tools::VWUUID& uuid);
 		static TXString	ConvertDate(const STime& date);
 		static TXString	ConvertColor(const CCieColor& color);
+		static TXString	ConvertColorArray(TCCieColorArray& colors);
 		static TXString	ConvertDouble(double value);
 		static TXString	ConvertDoubleArray(TDoubleArray& values, bool includeBrackets);
 		static TXString	ConvertInteger(Sint32 value);
@@ -103,6 +104,7 @@ namespace SceneData
         static bool		ConvertUUID(					const TXString& value, const IXMLFileNodePtr& node,	VWFC::Tools::VWUUID& uuid);        
 		static bool		ConvertDate(					const TXString& value, const IXMLFileNodePtr& node,	STime& date);
 		static bool		ConvertColor(					const TXString& value, const IXMLFileNodePtr& node,	CCieColor& color);
+		static bool		ConvertColorArray(				 	  TXString  values,const IXMLFileNodePtr& node,	TCCieColorArray& colorArray);
 		static bool		ConvertDouble(					const TXString& value, const IXMLFileNodePtr& node,	double& doubleValue);
 		static bool     ConvertDoubleArray(				  	  TXString  values,const IXMLFileNodePtr& node,	TDoubleArray& doubleArray);
 		static bool		ConvertVector3(					const TXString& value, const IXMLFileNodePtr& node,	VWPoint3D& vector);

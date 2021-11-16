@@ -58,6 +58,7 @@
 #include "Implementation/CUtility.h"
 #include "Implementation/CGdtfLaserProtocol.h"
 #include "Implementation/CGdtfPinPatch.h"
+#include "Implementation/CGdtfGamut.h"
 
 
 // XML
@@ -186,6 +187,8 @@ extern "C" VectorworksMVR::VCOMError VWQueryInterface(const VectorworksMVR::VWII
         resultInterface = new CGdtfPointImpl();
     else if (iid == VectorworksMVR::IID_GdtfColorSpace)
         resultInterface = new CGdtfColorSpaceImpl();
+    else if (iid == VectorworksMVR::IID_GdtfGamut)
+		resultInterface = new CGdtfGamutImpl();
     else if (iid == VectorworksMVR::IID_GdtfConnector)
         resultInterface = new CGdtfConnectorImpl();
     else if (iid == VectorworksMVR::IID_GdtfPowerConsumption)

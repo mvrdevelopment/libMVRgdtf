@@ -27,6 +27,7 @@
 #include "CGdtfColorSpace.h"
 #include "CGdtfConnector.h"
 #include "CGdtfPowerConsumption.h"
+#include "CGdtfGamut.h"
 
 using namespace VectorworksMVR::Filing;
 
@@ -1658,7 +1659,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetColorSpace(Vector
     }
 
     //---------------------------------------------------------------------------
-    // Check Incomming Object
+    // Check Incoming Object
     if (*outColorSpace)
     {
         (*outColorSpace)->Release();
@@ -1672,7 +1673,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetColorSpace(Vector
     return kVCOMError_NoError;
 }
 
-
+// Additional Color Spaces
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetAdditionalColorSpaceCount(size_t &count)
 {
     if (!fFixtureObject) { return kVCOMError_NotInitialized; }
@@ -1715,7 +1716,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetAdditionalColorSp
     }
 
     //---------------------------------------------------------------------------
-    // Check Incomming Object
+    // Check Incoming Object
     if (*value)
     {
         (*value)->Release();
@@ -1759,7 +1760,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateAdditionalColo
     }
 
     //---------------------------------------------------------------------------
-    // Check Incomming Object
+    // Check Incoming Object
     if (*outVal)
     {
         (*outVal)->Release();
@@ -1772,6 +1773,109 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateAdditionalColo
 
     return kVCOMError_NoError;
 }
+
+// Gamut
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetGamutCount(size_t &count)
+{
+    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
+
+    count = fFixtureObject->GetPhysicalDesciptionsContainer().GetGamutArray().size();
+
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetGamutAt(size_t at, VectorworksMVR::IGdtfGamut** value)
+{
+    // Check if Set
+    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
+
+    // Check if no Overflow
+    if (at >= fFixtureObject->GetPhysicalDesciptionsContainer().GetGamutArray().size()) { return kVCOMError_OutOfBounds; }
+
+    SceneData::GdtfGamut* gdtfGamut = fFixtureObject->GetPhysicalDesciptionsContainer().GetGamutArray()[at];
+    
+    //---------------------------------------------------------------------------
+    // Initialize Object
+    CGdtfGamutImpl* pGamutObj = nullptr;
+
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfGamut, (IVWUnknown**)& pGamutObj)))
+    {
+        // Check Casting
+        CGdtfGamutImpl* pResultInterface = static_cast<CGdtfGamutImpl*>(pGamutObj);
+        if (pResultInterface)
+        {
+            pResultInterface->SetPointer(gdtfGamut);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+
+    //---------------------------------------------------------------------------
+    // Check Incoming Object
+    if (*value)
+    {
+        (*value)->Release();
+        *value = NULL;
+    }
+
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *value = pGamutObj;
+
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateGamut(MvrString name, CieColor color, VectorworksMVR::IGdtfGamut** outVal)
+{
+    // Check if Set
+    if (!fFixtureObject) { return kVCOMError_NotInitialized; }
+
+    CCieColorPtr colorPtr = new CCieColor(color.fx, color.fy, color.f_Y);
+    SceneData::GdtfGamut* gdtfGamut = fFixtureObject->GetPhysicalDesciptionsContainer().AddGamut(name, colorPtr);
+
+    //---------------------------------------------------------------------------
+    // Initialize Object
+    CGdtfGamutImpl* pGamutObj = nullptr;
+
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfGamut, (IVWUnknown**)& pGamutObj)))
+    {
+        // Check Casting
+        CGdtfGamutImpl* pResultInterface = static_cast<CGdtfGamutImpl*>(pGamutObj);
+        if (pResultInterface)
+        {
+            pResultInterface->SetPointer(gdtfGamut);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+
+    //---------------------------------------------------------------------------
+    // Check Incoming Object
+    if (*outVal)
+    {
+        (*outVal)->Release();
+        *outVal = NULL;
+    }
+
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *outVal = pGamutObj;
+
+    return kVCOMError_NoError;
+}
+
+// Emitter
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetEmitterCount(size_t &count)
 {

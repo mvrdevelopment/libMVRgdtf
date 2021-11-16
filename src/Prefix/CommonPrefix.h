@@ -545,12 +545,16 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_DMXChannelFuntionRealAcceleration		"RealAcceleration"
 #define XML_GDTF_DMXChannelFuntionWheelRef				"Wheel"
 #define XML_GDTF_DMXChannelEmitter						"Emitter"
-
 #define XML_GDTF_DMXChannelFuntionModeMaster			"ModeMaster"
 #define XML_GDTF_DMXChannelFuntionModeFrom				"ModeFrom"
 #define XML_GDTF_DMXChannelFuntionModeTo				"ModeTo"
-
 #define XML_GDTF_DMXChannelFuntionFilter                "Filter"
+#define XML_GDTF_DMXChannelFunctionColorSpace           "ColorSpace"
+#define XML_GDTF_DMXChannelFunctionGamut                "Gamut"
+#define XML_GDTF_DMXChannelFunctionDMXProfile           "DMXProfile"
+#define XML_GDTF_DMXChannelFunctionMin                  "Min"
+#define XML_GDTF_DMXChannelFunctionMax                  "Max"
+#define XML_GDTF_DMXChannelFunctionCustomName           "CustomName"
 
 #define XML_GDTF_DMXChannelDmxnvertEnum_Yes				"Yes"
 #define XML_GDTF_DMXChannelDmxInvertEnum_No				"No"
@@ -637,6 +641,7 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_UserPresetNodeName						"FTPreset"
 
 #define XML_GDTF_PhysicalDescriptionsColorSpaceCollect	"AdditionalColorSpaces"
+#define XML_GDTF_PhysicalDescriptionsGamutCollect	    "Gamuts"
 #define XML_GDTF_PhysicalDescriptionsEmitterCollect	    "Emitters"
 #define XML_GDTF_EmitterNodeName						"Emitter"
 #define XML_GDTF_EmitterName							"Name"
@@ -647,6 +652,10 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_DMX_ProfileCollect                     "DMXProfiles"
 #define XML_GDTF_DMX_Profile                            "DMXProfile"
 #define XML_GDTF_DMX_ProfileName                        "Name"
+
+#define XML_GDTF_GamutNodeName                          "Gamut"
+#define XML_GDTF_GamutName                              "Name"
+#define XML_GDTF_GamutPoints                            "Points"
 
 #define XML_GDTF_Point                                  "Point"
 #define XML_GDTF_PointDMXPercentage                     "DMXPercentage"
