@@ -5610,7 +5610,7 @@ void GdtfDmxChannelFunction::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	TXString realAcc;		pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionRealAcceleration,	realAcc);			GdtfConverter::ConvertDouble(realAcc, 			pNode,				fRealAcceleration);
 	TXString min;			pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFunctionMin,				min);				GdtfConverter::ConvertDouble(min, 				pNode,				fMin);
 	TXString max;			pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFunctionMax,				max);				GdtfConverter::ConvertDouble(max, 				pNode,				fMax);
-							pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionName,				fCustomName);
+							pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFunctionCustomName,			fCustomName);
 	// Unresolved refs
 	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionAttribute, 	fUnresolvedAttrRef);	
 	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionWheelRef, 	fUnresolvedWheelRef);
@@ -9252,6 +9252,11 @@ EGdtfObjectType SceneData::GdtfDMXProfile::GetObjectType()
     return EGdtfObjectType::eGdtfDMXProfile;
 }
 
+TXString SceneData::GdtfDMXProfile::GetNodeReference()
+{
+	return fUniqueName;
+}
+
 const TXString&	SceneData::GdtfDMXProfile::GetName() const
 {
 	return fUniqueName;
@@ -11481,6 +11486,11 @@ SceneData::GdtfColorSpace::~GdtfColorSpace()
 EGdtfObjectType SceneData::GdtfColorSpace::GetObjectType()
 {
     return EGdtfObjectType::eGdtfColorSpace;
+}
+
+TXString SceneData::GdtfColorSpace::GetNodeReference()
+{
+	return fUniqueName;
 }
 
 const TXString& SceneData::GdtfColorSpace::GetName() const

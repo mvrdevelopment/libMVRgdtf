@@ -427,6 +427,7 @@ namespace SceneData
         CCieColor       fWhitePoint;
     public:
         virtual EGdtfObjectType			GetObjectType();
+		virtual TXString				GetNodeReference();
 
     public:
         // Getter
@@ -2674,6 +2675,7 @@ namespace SceneData
 		TGdtfPointArray fPoints;
 	public:
 		virtual EGdtfObjectType			GetObjectType();
+		virtual TXString				GetNodeReference();
 
 	public:
 		// Getters
