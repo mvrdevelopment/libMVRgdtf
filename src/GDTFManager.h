@@ -1550,6 +1550,53 @@ namespace SceneData
 	};
 	typedef GdtfDmxChannelSet*				GdtfDmxChannelSetPtr;
 	typedef std::vector<GdtfDmxChannelSet*>	TGdtfDmxChannelSetArray;
+
+	class GdtfDmxSubChannelSet : public GdtfObject
+	{
+	public:
+		GdtfDmxSubChannelSet(GdtfSubPhysicalUnitPtr subPhysicalUnit);
+		GdtfDmxSubChannelSet(GdtfSubPhysicalUnitPtr subPhysicalUnit, const TXString& name);
+		~GdtfDmxSubChannelSet();
+		
+	private:
+		TXString				fUniqueName;
+		double					fPhysicalFrom;
+		double					fPhysicalTo;
+		GdtfSubPhysicalUnitPtr 	fSubPhysicalUnit;
+		GdtfDMXProfilePtr		fDMXProfile;
+
+		TXString				fUnresolvedSubPhysicalUnitRef;
+		TXString				fUnresolvedDMXProfileRef;
+
+	public:
+		virtual EGdtfObjectType			GetObjectType();
+		
+		// Getters
+        const TXString&                 GetName() const;
+        double                          GetPhysicalFrom() const;
+        double                          GetPhysicalTo() const;
+		GdtfSubPhysicalUnitPtr			GetSubPhysicalUnit() const;
+		GdtfDMXProfilePtr				GetDMXProfile() const;
+		//
+		const TXString&                 GetUnresolvedSubPhysicalUnitRef() const;
+		const TXString&                 GetUnresolvedDMXProfileRef() const;
+		
+		// Setter
+		void							SetName(const TXString& name);
+		void							SetPhysicalFrom(double from);
+		void							SetPhysicalTo(double to);
+		void							SetSubPhysicalUnit(GdtfSubPhysicalUnitPtr subPhysicalUnit);
+		void							SetDMXProfile(GdtfDMXProfilePtr dmxProfile);
+				
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+
+	};
+	typedef GdtfDmxSubChannelSet*				GdtfDmxSubChannelSetPtr;
+	typedef std::vector<GdtfDmxSubChannelSet*>	TGdtfDmxSubChannelSetArray;
 	
 	class GdtfDmxChannelFunction : public GdtfObject
 	{

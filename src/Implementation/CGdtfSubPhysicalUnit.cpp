@@ -79,6 +79,11 @@ void VectorworksMVR::CGdtfSubPhysicalUnitImpl::SetPointer(SceneData::GdtfSubPhys
     fSubPhysicalUnit = subPhysicalUnit;
 }
 
+SceneData::GdtfSubPhysicalUnit* VectorworksMVR::CGdtfSubPhysicalUnitImpl::GetPointer()
+{
+    return fSubPhysicalUnit;
+}
+
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfSubPhysicalUnitImpl::BindToObject(void* objAddr)
 {
 	// Check if valid

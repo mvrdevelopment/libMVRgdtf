@@ -37,6 +37,7 @@
 #include "Implementation/CGdtfDmxLogicalChannel.h"
 #include "Implementation/CGdtfDmxChannelFunction.h"
 #include "Implementation/CGdtfDmxChannelSet.h"
+#include "Implementation/CGdtfDmxSubChannelSet.h"
 #include "Implementation/CGdtfBreak.h"
 #include "Implementation/CGdtfWheelSlotPrismFacet.h"
 #include "Implementation/CGdtfWheelSlotAnimationSystem.h"
@@ -158,6 +159,8 @@ extern "C" VectorworksMVR::VCOMError VWQueryInterface(const VectorworksMVR::VWII
         resultInterface = new VectorworksMVR::CGdtfDmxChannelFunctionImpl();
     else if (iid == VectorworksMVR::IID_GdtfDmxChannelSet)
         resultInterface = new VectorworksMVR::CGdtfDmxChannelSetImpl();
+    else if (iid == VectorworksMVR::IID_GdtfDmxSubChannelSet)
+        resultInterface = new VectorworksMVR::CGdtfDmxSubChannelSetImpl();
     else if (iid == VectorworksMVR::IID_GdtfBreak)
         resultInterface = new VectorworksMVR::CGdtfBreakImpl();
     else if (iid == VectorworksMVR::IID_GdtfWheelSlotPrismFacet)

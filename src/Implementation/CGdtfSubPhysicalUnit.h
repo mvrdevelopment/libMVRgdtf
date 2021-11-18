@@ -29,7 +29,8 @@ namespace VectorworksMVR
     private:
         SceneData::GdtfSubPhysicalUnit* fSubPhysicalUnit;
     public:
-        void SetPointer(SceneData::GdtfSubPhysicalUnit* subPhysicalUnit);
+        void                            SetPointer(SceneData::GdtfSubPhysicalUnit* subPhysicalUnit);
+        SceneData::GdtfSubPhysicalUnit* GetPointer();  
     };
     const VWIID IID_GdtfSubPhysicalUnit = { 0x1705fb6d, 0xe589, 0x40c0, {0xa9, 0xee, 0x8d, 0x7b, 0xf5, 0x3a, 0x54, 0xc8}};
 }
