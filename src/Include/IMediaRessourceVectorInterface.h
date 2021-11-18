@@ -924,6 +924,9 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE     SetMax(double value) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetCustomName(MvrString customName) = 0;
 
+		virtual VCOMError VCOM_CALLTYPE     GetDmxSubChannelSetCount(size_t& count) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetDmxSubChannelSetAt(size_t at, IGdtfDmxSubChannelSet** subChannelSet) = 0;
+		virtual VCOMError VCOM_CALLTYPE     CreateDmxSubChannelSet(MvrString name, IGdtfSubPhysicalUnit* subPhysicalUnit, IGdtfDmxSubChannelSet** subChannelSet) = 0;
     };
 	typedef VCOMPtr<IGdtfDmxChannelFunction>	IGdtfDmxChannelFunctionPtr;
         

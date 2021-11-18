@@ -6,6 +6,7 @@
 #include "CGdtfAttribute.h"
 #include "CGdtfWheel.h"
 #include "CGdtfDmxChannelSet.h"
+#include "CGdtfDmxSubChannelSet.h"
 #include "CGdtfPhysicalEmitter.h"
 #include "CGdtfDmxChannel.h"
 #include "CGdtfDmxLogicalChannel.h"
@@ -13,6 +14,7 @@
 #include "CGdtfColorSpace.h"
 #include "CGdtfGamut.h"
 #include "CGdtfDmxProfile.h"
+#include "CGdtfSubPhysicalUnit.h"
 
 using namespace VectorworksMVR::Filing;
 
@@ -778,6 +780,107 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::CreateDmx
 	*set	= pChannelSetObj;
 	
 	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetDmxSubChannelSetCount(size_t &count)
+{
+	// Check Pointer
+	if ( ! fFunction) { return kVCOMError_NotInitialized; }
+	
+    count = fFunction->GetSubChannelSets().size();
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetDmxSubChannelSetAt(size_t at, VectorworksMVR::IGdtfDmxSubChannelSet** subChannelSet)
+{
+	// Check Pointer
+	if ( ! fFunction) { return kVCOMError_NotInitialized; }
+	
+	// Check bounds
+	if ( at >= fFunction->GetSubChannelSets().size()) { return kVCOMError_OutOfBounds; }
+    
+    //---------------------------------------------------------------------------
+    // Initialize Object
+	SceneData::GdtfDmxSubChannelSet*	gdtfSubChannelSet = fFunction->GetSubChannelSets()[at];
+    CGdtfDmxSubChannelSetImpl*			pSubChannelSetObj = nullptr;
+    
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDmxSubChannelSet, (IVWUnknown**) & pSubChannelSetObj)))
+    {
+        // Check Casting
+        CGdtfDmxSubChannelSetImpl* pResultInterface = static_cast<CGdtfDmxSubChannelSetImpl* >(pSubChannelSetObj);
+        if (pResultInterface)
+        {
+            pResultInterface->SetPointer(gdtfSubChannelSet);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+    
+    //---------------------------------------------------------------------------
+    // Check Incoming Object
+    if (*subChannelSet)
+    {
+        (*subChannelSet)->Release();
+        *subChannelSet = NULL;
+    }
+    
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *subChannelSet = pSubChannelSetObj;
+    
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::CreateDmxSubChannelSet(MvrString name, IGdtfSubPhysicalUnit* subPhysicalUnit, IGdtfDmxSubChannelSet** subChannelSet)
+{
+	// Check Pointer
+	if ( ! fFunction) { return kVCOMError_NotInitialized; }
+	
+	CGdtfSubPhysicalUnitImpl* pSubPhysicalUnitObj = static_cast<CGdtfSubPhysicalUnitImpl*>(subPhysicalUnit);
+	if(!pSubPhysicalUnitObj) { return kVCOMError_InvalidArg; }
+
+    //---------------------------------------------------------------------------
+    // Initialize Object
+    SceneData::GdtfSubPhysicalUnit* gdtfSubPhysicalUnit = pSubPhysicalUnitObj->GetPointer();
+	SceneData::GdtfDmxSubChannelSet* gdtfSubChannelSet  = fFunction->AddSubChannelSet(gdtfSubPhysicalUnit, name);
+    
+    CGdtfDmxSubChannelSetImpl* pSubChannelSetObj = nullptr;
+    
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDmxSubChannelSet, (IVWUnknown**) & pSubChannelSetObj)))
+    {
+        // Check Casting
+        CGdtfDmxSubChannelSetImpl* pResultInterface = static_cast<CGdtfDmxSubChannelSetImpl* >(pSubChannelSetObj);
+        if (pResultInterface)
+        {
+            pResultInterface->SetPointer(gdtfSubChannelSet);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+    
+    //---------------------------------------------------------------------------
+    // Check Incoming Object
+    if (*subChannelSet)
+    {
+        (*subChannelSet)->Release();
+        *subChannelSet = NULL;
+    }
+    
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *subChannelSet = pSubChannelSetObj;
+    
+    return kVCOMError_NoError;
 }
 
 void VectorworksMVR::CGdtfDmxChannelFunctionImpl::setPointer(SceneData::GdtfDmxChannelFunction *function)

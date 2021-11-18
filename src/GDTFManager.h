@@ -1554,7 +1554,7 @@ namespace SceneData
 	class GdtfDmxSubChannelSet : public GdtfObject
 	{
 	public:
-		GdtfDmxSubChannelSet(GdtfSubPhysicalUnitPtr subPhysicalUnit);
+		GdtfDmxSubChannelSet();
 		GdtfDmxSubChannelSet(GdtfSubPhysicalUnitPtr subPhysicalUnit, const TXString& name);
 		~GdtfDmxSubChannelSet();
 		
@@ -1630,7 +1630,8 @@ namespace SceneData
 		double					fMax;
 		TXString				fCustomName;
 		// Children
-		TGdtfDmxChannelSetArray	fChannelSets;		
+		TGdtfDmxChannelSetArray		fChannelSets;
+		TGdtfDmxSubChannelSetArray	fSubChannelSets;
 		
 		// Unresolved Refs
 		TXString				fUnresolvedAttrRef;
@@ -1681,7 +1682,8 @@ namespace SceneData
         size_t					        GetNumberInParent() const;
         
         //
-		const TGdtfDmxChannelSetArray	GetChannelSets();		
+		const TGdtfDmxChannelSetArray&		GetChannelSets() const;		
+		const TGdtfDmxSubChannelSetArray&	GetSubChannelSets() const;		
 		//
 		TXString						getUnresolvedAttrRef() const;
 		TXString						getUnresolvedWheelRef() const;
@@ -1727,6 +1729,7 @@ namespace SceneData
 
 		//
 		GdtfDmxChannelSet*				AddChannelSet(const TXString& name);
+		GdtfDmxSubChannelSet*			AddSubChannelSet(GdtfSubPhysicalUnit* subPhysicalUnit, const TXString& name);
 	protected:
 		virtual	TXString				GetNodeName();
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
@@ -3045,6 +3048,7 @@ namespace SceneData
 		GdtfColorSpacePtr           getColorSpaceByRef(const TXString& ref);
 		GdtfGamutPtr            	getGamutByRef(const TXString& ref);
 		GdtfDMXProfilePtr           getDMXProfileByRef(const TXString& ref);
+		GdtfSubPhysicalUnitPtr 		getSubPhysicalUnitByRef(const TXString& ref);
 
 		//
 		void AutoGenerateNames(GdtfDmxModePtr dmxMode);
@@ -3067,6 +3071,7 @@ namespace SceneData
 
 		void ResolveDmxLogicalChanRefs(GdtfDmxChannelPtr dmxChnl);
 		void ResolveDmxChanelFunctionRefs(GdtfDmxLogicalChannelPtr dmxLogChnl);
+		void ResolveDmxSubChannelSetRefs(GdtfDmxChannelFunctionPtr channelFunction);
 		void ResolveMacroRefs(GdtfDmxModePtr dmxMode);
 	
 	private:
