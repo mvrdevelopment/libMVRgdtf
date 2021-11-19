@@ -360,6 +360,12 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_ModelHeight			"Height"
 #define XML_GDTF_ModelPrimitiveType		"PrimitiveType"
 #define XML_GDTF_ModelFile				"File"
+#define XML_GDTF_ModelSVGOffsetX		"SVGOffsetX"
+#define XML_GDTF_ModelSVGOffsetY		"SVGOffsetY"
+#define XML_GDTF_ModelSVGSideOffsetX	"SVGSideOffsetX"
+#define XML_GDTF_ModelSVGSideOffsetY	"SVGSideOffsetY"
+#define XML_GDTF_ModelSVGFrontOffsetX	"SVGFrontOffsetX"
+#define XML_GDTF_ModelSVGFrontOffsetY	"SVGFrontOffsetY"
 
 #define XML_GDTF_PrimitiveTypeEnum_Undefined	    "Undefined"
 #define XML_GDTF_PrimitiveTypeEnum_Cube			    "Cube"

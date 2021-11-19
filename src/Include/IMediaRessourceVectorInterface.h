@@ -583,6 +583,21 @@ namespace VectorworksMVR
 		
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+
+		// GDTF 1.2
+		virtual VCOMError VCOM_CALLTYPE     GetSVGOffsetX(double& svgOffsetX) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetSVGOffsetY(double& svgOffsetY) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetSVGSideOffsetX(double& svgSideOffsetX) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetSVGSideOffsetY(double& svgSideOffsetY) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetSVGFrontOffsetX(double& svgFrontOffsetX) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetSVGFrontOffsetY(double& svgFrontOffsetY) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE     SetSVGOffsetX(double svgOffsetX) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetSVGOffsetY(double svgOffsetY) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetSVGSideOffsetX(double svgSideOffsetX) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetSVGSideOffsetY(double svgSideOffsetY) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetSVGFrontOffsetX(double svgFrontOffsetX) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetSVGFrontOffsetY(double svgFrontOffsetY) = 0;
 	};
 	typedef VCOMPtr<IGdtfModel>	IGdtfModelPtr;
 	
