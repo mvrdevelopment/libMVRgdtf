@@ -409,6 +409,116 @@ const TGdtfFeatureArray GdtfFeatureGroup::GetFeatureArray()
 }
 
 //------------------------------------------------------------------------------------
+// GdtfSubPhysicalUnit
+GdtfSubPhysicalUnit::GdtfSubPhysicalUnit()
+{
+}
+
+GdtfSubPhysicalUnit::GdtfSubPhysicalUnit(EGdtfSubPhysicalUnitType type)
+{
+	fType 			= type;
+	fPhysicalUnit 	= GdtfConverter::GetUnitFromSubPhysical(type);
+}
+
+GdtfSubPhysicalUnit::~GdtfSubPhysicalUnit()
+{
+}
+
+EGdtfSubPhysicalUnitType GdtfSubPhysicalUnit::GetType() const
+{
+	return fType;
+}
+
+EGdtfPhysicalUnit GdtfSubPhysicalUnit::GetPhysicalUnit() const
+{
+	return fPhysicalUnit;
+}
+
+double GdtfSubPhysicalUnit::GetPhysicalFrom() const
+{
+	return fPhysicalFrom;
+}
+
+double GdtfSubPhysicalUnit::GetPhysicalTo() const
+{
+	return fPhysicalTo;
+}
+
+void GdtfSubPhysicalUnit::SetType(const EGdtfSubPhysicalUnitType& type)
+{
+	fType 			= type;
+	fPhysicalUnit 	= GdtfConverter::GetUnitFromSubPhysical(type);
+}
+
+void GdtfSubPhysicalUnit::SetPhysicalUnit(const EGdtfPhysicalUnit& physicalUnit)
+{
+	fPhysicalUnit = physicalUnit;
+}
+
+void GdtfSubPhysicalUnit::SetPhysicalFrom(double physicalFrom)
+{
+	fPhysicalFrom = physicalFrom;
+}
+
+void GdtfSubPhysicalUnit::SetPhysicalTo(double physicalTo)
+{
+	fPhysicalTo = physicalTo;
+}
+
+void GdtfSubPhysicalUnit::OnPrintToFile(IXMLFileNodePtr pNode) 
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnPrintToFile(pNode);
+
+	pNode->SetNodeAttributeValue(XML_GDTF_SubPhysicalUnitType,			GdtfConverter::ConvertSubPhysicalUnitTypeEnum(fType));
+	pNode->SetNodeAttributeValue(XML_GDTF_SubPhysicalUnitPhysicalUnit,	GdtfConverter::ConvertPhysicalUnitEnum(fPhysicalUnit));
+	pNode->SetNodeAttributeValue(XML_GDTF_SubPhysicalUnitPhysicalFrom,	GdtfConverter::ConvertDouble(fPhysicalFrom));
+	pNode->SetNodeAttributeValue(XML_GDTF_SubPhysicalUnitPhysicalTo,	GdtfConverter::ConvertDouble(fPhysicalTo));
+}
+
+void GdtfSubPhysicalUnit::OnReadFromNode(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnReadFromNode(pNode);
+
+	TXString type;			pNode->GetNodeAttributeValue(XML_GDTF_SubPhysicalUnitType,	type);					GdtfConverter::ConvertSubPhysicalUnitTypeEnum(type, 	pNode,	fType);
+	TXString physicalUnit;	pNode->GetNodeAttributeValue(XML_GDTF_SubPhysicalUnitPhysicalUnit,	physicalUnit);	GdtfConverter::ConvertPhysicalUnitEnum(physicalUnit, 	pNode,	fPhysicalUnit);
+	TXString physicalFrom;	pNode->GetNodeAttributeValue(XML_GDTF_SubPhysicalUnitPhysicalFrom,	physicalFrom);	GdtfConverter::ConvertDouble(physicalFrom, 	pNode,	fPhysicalFrom);
+	TXString physicalTo;	pNode->GetNodeAttributeValue(XML_GDTF_SubPhysicalUnitPhysicalTo,	physicalTo);	GdtfConverter::ConvertDouble(physicalTo, 	pNode,	fPhysicalTo);
+}
+
+void GdtfSubPhysicalUnit::OnErrorCheck(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnErrorCheck(pNode);
+
+	//------------------------------------------------------------------------------------
+	// Create needed and optional Attribute Arrays
+	TXStringArray needed;
+	TXStringArray optional;
+	needed.push_back(XML_GDTF_SubPhysicalUnitType);
+	needed.push_back(XML_GDTF_SubPhysicalUnitPhysicalUnit);
+	optional.push_back(XML_GDTF_SubPhysicalUnitPhysicalFrom);
+	optional.push_back(XML_GDTF_SubPhysicalUnitPhysicalTo);
+	//------------------------------------------------------------------------------------
+	// Check Attributes for node
+	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
+}
+
+EGdtfObjectType GdtfSubPhysicalUnit::GetObjectType() 
+{
+	return EGdtfObjectType::eGdtfSubPhysicalUnit;
+}
+
+TXString GdtfSubPhysicalUnit::GetNodeName()
+{
+	return XML_GDTF_SubPhysicalUnitNodeName;
+}
+
+//------------------------------------------------------------------------------------
 // Attributes
 GdtfAttribute::GdtfAttribute()
 {
@@ -433,6 +543,7 @@ GdtfAttribute::GdtfAttribute(const TXString& name, const TXString& prettyName)
 
 GdtfAttribute::~GdtfAttribute()
 {
+	for(GdtfSubPhysicalUnitPtr subPhysicalUnit : fSubPhysicalUnits) { delete subPhysicalUnit; }
 }
 
 void GdtfAttribute::SetName(const TXString &name)
@@ -470,6 +581,13 @@ void SceneData::GdtfAttribute::SetColor(const CCieColor & col)
     fColor = col;
 }
 
+GdtfSubPhysicalUnitPtr GdtfAttribute::CreateSubPhysicalUnit(EGdtfSubPhysicalUnitType type)
+{
+	GdtfSubPhysicalUnitPtr subPhysicalUnit = new GdtfSubPhysicalUnit(type);
+    fSubPhysicalUnits.push_back(subPhysicalUnit);
+	return subPhysicalUnit;
+}
+
 void GdtfAttribute::OnPrintToFile(IXMLFileNodePtr pNode)
 {
 	//------------------------------------------------------------------------------------
@@ -488,6 +606,11 @@ void GdtfAttribute::OnPrintToFile(IXMLFileNodePtr pNode)
 	if(fHasColor) 			{ pNode->SetNodeAttributeValue(XML_GDTF_AttributeColor, GdtfConverter::ConvertColor(fColor)); }
 
     pNode->SetNodeAttributeValue(XML_GDTF_AttributePhysicalUnit, GdtfConverter::ConvertPhysicalUnitEnum(fPhysicalUnit));
+
+	for(GdtfSubPhysicalUnitPtr subPhysicalUnit : fSubPhysicalUnits)
+	{
+		subPhysicalUnit->WriteToNode(pNode);
+	}
 	
 }
 
@@ -513,7 +636,20 @@ void GdtfAttribute::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	{
 		GdtfConverter::ConvertColor(colorStr, pNode, fColor);
 		fHasColor = true;
-	}	
+	}
+
+	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_SubPhysicalUnitNodeName, [this] (IXMLFileNodePtr objNode) -> void
+								 {
+									 // Create the object
+									 GdtfSubPhysicalUnitPtr subPhysicalUnit = new GdtfSubPhysicalUnit();
+									 
+									 // Read from node
+									 subPhysicalUnit->ReadFromNode(objNode);
+									 
+									 // Add to list
+									 fSubPhysicalUnits.push_back(subPhysicalUnit);
+									 return;
+								 });
 }
 
 void GdtfAttribute::OnErrorCheck(const IXMLFileNodePtr& pNode)
@@ -572,6 +708,11 @@ bool GdtfAttribute::HasColor() const
 {
 	return fHasColor;
 }
+
+TGdtfSubPhysicalUnitArray GdtfAttribute::GetSubPhysicalUnitArray() const
+{
+	return fSubPhysicalUnits;
+}		
 
 void GdtfAttribute::SetFeature(GdtfFeaturePtr newFeat)
 {
@@ -3070,7 +3211,7 @@ void GdtfGeometryWiringObject::SetSignalLayer(size_t signalLayer)
 	fSignalLayer = signalLayer;
 }
 
-void GdtfGeometryWiringObject::SetOrientation(EGdtfOrientation orientation)
+void GdtfGeometryWiringObject::SetOrientation(const EGdtfOrientation& orientation)
 {
 	fOrientation = orientation;
 }

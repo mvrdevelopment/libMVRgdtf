@@ -131,6 +131,18 @@
 #define XML_Val_SupportTypeRope                 "Rope"
 #define XML_Val_SupportTypeGroundSupport        "GroundSupport"
 
+#define XML_Val_SubPhysicalUnitTypePlacementOffset  "PlacementOffset"
+#define XML_Val_SubPhysicalUnitTypeAmplitude        "Amplitude"
+#define XML_Val_SubPhysicalUnitTypeAmplitudeMin     "AmplitudeMin"
+#define XML_Val_SubPhysicalUnitTypeAmplitudeMax     "AmplitudeMax"
+#define XML_Val_SubPhysicalUnitTypeDuration         "Duration"
+#define XML_Val_SubPhysicalUnitTypeDutyCycle        "DutyCycle"
+#define XML_Val_SubPhysicalUnitTypeTimeOffset       "TimeOffset"
+#define XML_Val_SubPhysicalUnitTypeMinimumOpening   "MinimumOpening"
+#define XML_Val_SubPhysicalUnitTypeValue            "Value"
+#define XML_Val_SubPhysicalUnitTypeRatioHorizontal  "RatioHorizontal"
+#define XML_Val_SubPhysicalUnitTypeRatioVertical    "RatioVertical"
+
 #define XML_Val_MappingNodeName	        "Mapping"
 #define XML_Val_MappingLinkedDefUuid	"linkedDef"
 #define XML_Val_MappingUx	            "ux"
@@ -223,6 +235,12 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_FixtureChildNodeActivationGroupDef	"ActivationGroups"
 #define XML_GDTF_FixtureChildNodeFeatureGroupDef	"FeatureGroups"
 #define XML_GDTF_FixtureChildNodeAttributesDef		"Attributes"
+
+#define XML_GDTF_SubPhysicalUnitNodeName		    "SubPhysicalUnit"
+#define XML_GDTF_SubPhysicalUnitType		        "Type"
+#define XML_GDTF_SubPhysicalUnitPhysicalUnit		"PhysicalUnit"
+#define XML_GDTF_SubPhysicalUnitPhysicalFrom		"PhysicalFrom"
+#define XML_GDTF_SubPhysicalUnitPhysicalTo		    "PhysicalTo"
 
 #define XML_GDTF_AttributeNode					"Attribute"
 #define XML_GDTF_AttributeName					"Name"

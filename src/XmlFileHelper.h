@@ -97,6 +97,7 @@ namespace SceneData
 		static TXString	ConvertStructureTypeEnum(GdtfDefines::EGdtfStructureType value);
 		static TXString	ConvertCrossSectionTypeEnum(GdtfDefines::EGdtfCrossSectionType value);
 		static TXString	ConvertSupportTypeEnum(GdtfDefines::EGdtfSupportType value);
+		static TXString	ConvertSubPhysicalUnitTypeEnum(GdtfDefines::EGdtfSubPhysicalUnitType value);
 		
 
         //-----------------------------------------------------------------------------
@@ -145,6 +146,7 @@ namespace SceneData
 		static bool     ConvertStructureTypeEnum(		const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfStructureType& outVal);
 		static bool     ConvertCrossSectionTypeEnum(	const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfCrossSectionType& outVal);
 		static bool     ConvertSupportTypeEnum(			const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfSupportType& outVal);
+		static bool     ConvertSubPhysicalUnitTypeEnum(	const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfSubPhysicalUnitType& outVal);
 		
 
         static bool 	ConvertDmxOffset(const TXString& inVal, const IXMLFileNodePtr& node, DMXAddress& coarse, DMXAddress& fine, DMXAddress& ultra, DMXAddress& uber);
@@ -159,6 +161,8 @@ namespace SceneData
 		
 		typedef		std::function<void(IXMLFileNodePtr objNode,const TXString& childNodeName)>	TProcessMultiNodeCall;
 		static void		TraverseMultiNodes(IXMLFileNodePtr root, const TXString& childContainerNodeName, TProcessMultiNodeCall processNodeFunction);
+
+		static GdtfDefines::EGdtfPhysicalUnit GetUnitFromSubPhysical(GdtfDefines::EGdtfSubPhysicalUnitType type);
 		
 	private:
 		static bool		Deserialize(const TXString& value, const IXMLFileNodePtr& node, std::vector<double>& doubleArr);

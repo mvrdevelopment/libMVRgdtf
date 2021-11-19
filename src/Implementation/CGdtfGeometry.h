@@ -71,7 +71,6 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetCountLinkedDmxChannel(size_t& count, IGdtfDmxMode * forMode);
         virtual VCOMError VCOM_CALLTYPE     GetLinkedDmxChannelAt(size_t at, IGdtfDmxChannel** outChannel, IGdtfDmxMode * forMode);
 
-        // GDTF 1.2
         // Laser
         virtual VCOMError VCOM_CALLTYPE		GetColorType(GdtfDefines::EGdtfLaserColorType& colorType);
         virtual VCOMError VCOM_CALLTYPE		GetLaserColor(double& waveLength);

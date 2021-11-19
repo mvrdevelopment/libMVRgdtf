@@ -428,6 +428,22 @@ namespace VectorworksMVR
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
     };
 	typedef VCOMPtr<IGdtfFeatureGroup>	IGdtfFeatureGroupPtr;
+
+	class DYNAMIC_ATTRIBUTE IGdtfSubPhysicalUnit : public IVWUnknown
+    {
+		public:
+		virtual VCOMError VCOM_CALLTYPE     GetType(GdtfDefines::EGdtfSubPhysicalUnitType& type) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetPhysicalFrom(double& physicalFrom) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetPhysicalTo(double& physicalTo) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE     SetType(GdtfDefines::EGdtfSubPhysicalUnitType type) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetPhysicalFrom(double physicalFrom) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetPhysicalTo(double physicalTo) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+    };
+	typedef VCOMPtr<IGdtfSubPhysicalUnit>	IGdtfSubPhysicalUnitPtr;
 	
     class DYNAMIC_ATTRIBUTE IGdtfAttribute : public IVWUnknown
     {
@@ -448,6 +464,11 @@ namespace VectorworksMVR
 		
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+
+		// GDTF 1.2
+		virtual VCOMError VCOM_CALLTYPE 	GetSubPhysicalUnitCount(size_t& count) = 0;
+        virtual VCOMError VCOM_CALLTYPE 	GetSubPhysicalUnitAt(size_t at, VectorworksMVR::IGdtfSubPhysicalUnit** outSubPhysicalUnit) = 0;
+        virtual VCOMError VCOM_CALLTYPE 	CreateSubPhysicalUnit(GdtfDefines::EGdtfSubPhysicalUnitType type, VectorworksMVR::IGdtfSubPhysicalUnit** outSubPhysicalUnit) = 0;
     };
 	typedef VCOMPtr<IGdtfAttribute>	IGdtfAttributePtr;
     

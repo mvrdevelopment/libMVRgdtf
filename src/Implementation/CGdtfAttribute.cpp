@@ -6,6 +6,7 @@
 #include "CGdtfActivationGroup.h"
 #include "CGdtfFeatureGroup.h"
 #include "CGdtfFeature.h"
+#include "CGdtfSubPhysicalUnit.h"
 
 using namespace VectorworksMVR::Filing;
 
@@ -274,6 +275,104 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfAttributeImpl::SetColor(const Cie
 	fAttribute->SetColor(cieCol);
 	
     return kVCOMError_NoError; 
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfAttributeImpl::GetSubPhysicalUnitCount(size_t& count)
+{
+    // Check Pointer
+	if( ! fAttribute) return kVCOMError_NotInitialized;
+	
+	count = fAttribute->GetSubPhysicalUnitArray().size();
+
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfAttributeImpl::GetSubPhysicalUnitAt(size_t at, VectorworksMVR::IGdtfSubPhysicalUnit** subPhysicalUnit)
+{
+    // Check Pointer
+	if ( ! fAttribute) { return kVCOMError_NotInitialized; }
+	
+	// check overflow
+	if (fAttribute->GetSubPhysicalUnitArray().size() < at) { return kVCOMError_OutOfBounds; }
+	
+	
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CGdtfSubPhysicalUnitImpl*		pSubPhysicalUnitObj = nullptr;
+	SceneData::GdtfSubPhysicalUnit* gdtfSubPhysicalUnit = fAttribute->GetSubPhysicalUnitArray()[at];
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfSubPhysicalUnit, (IVWUnknown**) & pSubPhysicalUnitObj)))
+	{
+		// Check Casting
+		CGdtfSubPhysicalUnitImpl* pResultInterface = static_cast<CGdtfSubPhysicalUnitImpl* >(pSubPhysicalUnitObj);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(gdtfSubPhysicalUnit);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incoming Object
+	if (*subPhysicalUnit)
+	{
+		(*subPhysicalUnit)->Release();
+		*subPhysicalUnit = NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*subPhysicalUnit = pSubPhysicalUnitObj;
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfAttributeImpl::CreateSubPhysicalUnit(GdtfDefines::EGdtfSubPhysicalUnitType type, VectorworksMVR::IGdtfSubPhysicalUnit** subPhysicalUnit)
+{
+    // Check Pointer
+	if ( ! fAttribute) { return kVCOMError_NotInitialized; }
+	
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CGdtfSubPhysicalUnitImpl*		pSubPhysicalUnitObj = nullptr;
+	SceneData::GdtfSubPhysicalUnit* gdtfSubPhysicalUnit = fAttribute->CreateSubPhysicalUnit(type);
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfSubPhysicalUnit, (IVWUnknown**) & pSubPhysicalUnitObj)))
+	{
+		// Check Casting
+		CGdtfSubPhysicalUnitImpl* pResultInterface = static_cast<CGdtfSubPhysicalUnitImpl* >(pSubPhysicalUnitObj);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(gdtfSubPhysicalUnit);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incoming Object
+	if (*subPhysicalUnit)
+	{
+		(*subPhysicalUnit)->Release();
+		*subPhysicalUnit = NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*subPhysicalUnit = pSubPhysicalUnitObj;
+	
+	return kVCOMError_NoError;
 }
 
 void VectorworksMVR::CGdtfAttributeImpl::SetPointer(SceneData::GdtfAttribute *attribute)

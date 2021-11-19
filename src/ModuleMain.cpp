@@ -58,6 +58,7 @@
 #include "Implementation/CUtility.h"
 #include "Implementation/CGdtfLaserProtocol.h"
 #include "Implementation/CGdtfPinPatch.h"
+#include "Implementation/CGdtfSubPhysicalUnit.h"
 #include "Implementation/CGdtfGamut.h"
 
 
@@ -211,6 +212,8 @@ extern "C" VectorworksMVR::VCOMError VWQueryInterface(const VectorworksMVR::VWII
 		resultInterface = new CGdtfLaserProtocolImpl();
     else if (iid == VectorworksMVR::IID_GdtfPinPatch)
 		resultInterface = new CGdtfPinPatchImpl();
+    else if (iid == VectorworksMVR::IID_GdtfSubPhysicalUnit)
+		resultInterface = new CGdtfSubPhysicalUnitImpl();
 	
 	// determine the result values
 	VCOMError result = kVCOMError_Failed;
