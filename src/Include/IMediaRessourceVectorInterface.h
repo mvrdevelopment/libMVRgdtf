@@ -1377,30 +1377,6 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
     };
     typedef VCOMPtr<IGdtfConnector>	IGdtfConnectorPtr;
-
-	class DYNAMIC_ATTRIBUTE IGdtfPowerConsumption : public IVWUnknown
-    {
-		public:
-        virtual VCOMError VCOM_CALLTYPE     GetValue(double& outValue) = 0;
-        virtual VCOMError VCOM_CALLTYPE     GetPowerFactor(double& outPowerFactor) = 0;
-        virtual VCOMError VCOM_CALLTYPE     GetConnector(IGdtfConnector** outConnector) = 0;
-        virtual VCOMError VCOM_CALLTYPE     GetVoltageLow(double& outVoltageLow) = 0;
-        virtual VCOMError VCOM_CALLTYPE     GetVoltageHigh(double& outVoltageHigh) = 0;
-        virtual VCOMError VCOM_CALLTYPE     GetFrequencyLow(double& outFrequencyLow) = 0;
-        virtual VCOMError VCOM_CALLTYPE     GetFrequencyHigh(double& outFrequencyHigh) = 0;
-
-        virtual VCOMError VCOM_CALLTYPE     SetValue(double value) = 0;
-        virtual VCOMError VCOM_CALLTYPE     SetPowerFactor(double powerFactor) = 0;
-        virtual VCOMError VCOM_CALLTYPE     SetConnector(IGdtfConnector* connector) = 0;
-        virtual VCOMError VCOM_CALLTYPE     SetVoltageLow(double voltageLow) = 0;
-        virtual VCOMError VCOM_CALLTYPE     SetVoltageHigh(double voltageHigh) = 0;
-        virtual VCOMError VCOM_CALLTYPE     SetFrequencyLow(double frequencyLow) = 0;
-        virtual VCOMError VCOM_CALLTYPE     SetFrequencyHigh(double frequencyHigh) = 0;
-
-		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
-		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
-    };
-    typedef VCOMPtr<IGdtfPowerConsumption>	IGdtfPowerConsumptionPtr;
 	
     class DYNAMIC_ATTRIBUTE IGdtfFixture : public IVWUnknown
     {
@@ -1521,10 +1497,6 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetConnectorCount(size_t& count)=0;
         virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateConnector(MvrString name, MvrString type, VectorworksMVR::IGdtfConnector** outVal)=0;
         virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetConnectorAt(size_t at, VectorworksMVR::IGdtfConnector** value)=0;
-
-		virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetPowerConsumptionCount(size_t& count)=0;
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreatePowerConsumption(VectorworksMVR::IGdtfConnector* connector, VectorworksMVR::IGdtfPowerConsumption** outVal)=0;
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetPowerConsumptionAt(size_t at, VectorworksMVR::IGdtfPowerConsumption** value)=0;
 
 		virtual VCOMError VCOM_CALLTYPE		GetOperatingTemperatureLow(double& value) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetOperatingTemperatureLow(double value) = 0;
