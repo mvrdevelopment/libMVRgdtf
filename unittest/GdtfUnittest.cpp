@@ -286,6 +286,12 @@ void GdtfUnittest::WriteFile()
 			__checkVCOM(gdtfModel->SetWidth(20));
 			__checkVCOM(gdtfModel->SetLength(30));
 			__checkVCOM(gdtfModel->SetPrimitiveType(EGdtfModel_PrimitiveType::eGdtfModel_PrimitiveType_Sphere));
+			__checkVCOM(gdtfModel->SetSVGOffsetX(1.1));
+			__checkVCOM(gdtfModel->SetSVGOffsetY(1.2));
+			__checkVCOM(gdtfModel->SetSVGSideOffsetX(1.3));
+			__checkVCOM(gdtfModel->SetSVGSideOffsetY(1.4));
+			__checkVCOM(gdtfModel->SetSVGFrontOffsetX(1.5));
+			__checkVCOM(gdtfModel->SetSVGFrontOffsetY(1.6));
 		}
 
 
@@ -1507,6 +1513,31 @@ void GdtfUnittest::ReadFile()
 				EGdtfModel_PrimitiveType primitiveType = EGdtfModel_PrimitiveType::eGdtfModel_PrimitiveType_Undefined;
 				__checkVCOM(gdtfModel->GetPrimitiveType(primitiveType));
 				this->checkifEqual("gdtfModelGetPrimitiveType ", primitiveType, EGdtfModel_PrimitiveType::eGdtfModel_PrimitiveType_Sphere);
+
+				// SVG Offsets
+				double svgOffsetX = 0.0;
+				__checkVCOM(gdtfModel->GetSVGOffsetX(svgOffsetX));
+				this->checkifEqual("svgOffsetX ", svgOffsetX, double(1.1));
+
+				double svgOffsetY = 0.0;
+				__checkVCOM(gdtfModel->GetSVGOffsetY(svgOffsetY));
+				this->checkifEqual("svgOffsetY ", svgOffsetY, double(1.2));
+
+				double svgSideOffsetX = 0.0;
+				__checkVCOM(gdtfModel->GetSVGSideOffsetX(svgSideOffsetX));
+				this->checkifEqual("svgSideOffsetX ", svgSideOffsetX, double(1.3));
+
+				double svgSideOffsetY = 0.0;
+				__checkVCOM(gdtfModel->GetSVGSideOffsetY(svgSideOffsetY));
+				this->checkifEqual("svgSideOffsetY ", svgSideOffsetY, double(1.4));
+
+				double svgFrontOffsetX = 0.0;
+				__checkVCOM(gdtfModel->GetSVGFrontOffsetX(svgFrontOffsetX));
+				this->checkifEqual("svgFrontOffsetX ", svgFrontOffsetX, double(1.5));
+
+				double svgFrontOffsetY = 0.0;
+				__checkVCOM(gdtfModel->GetSVGFrontOffsetY(svgFrontOffsetY));
+				this->checkifEqual("svgFrontOffsetY ", svgFrontOffsetY, double(1.6));
 			}
 		} // Models loop
 

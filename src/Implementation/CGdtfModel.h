@@ -29,6 +29,13 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetBuffer3DS(void* bufferToCopy, size_t& length);
         virtual VCOMError VCOM_CALLTYPE     GetBufferSVG(void* bufferToCopy, size_t& length);
         virtual VCOMError VCOM_CALLTYPE     GetBufferGLTF(void* bufferToCopy, size_t& length);
+
+        virtual VCOMError VCOM_CALLTYPE     GetSVGOffsetX(double& svgOffsetX);
+        virtual VCOMError VCOM_CALLTYPE     GetSVGOffsetY(double& svgOffsetY);
+        virtual VCOMError VCOM_CALLTYPE     GetSVGSideOffsetX(double& svgSideOffsetX);
+        virtual VCOMError VCOM_CALLTYPE     GetSVGSideOffsetY(double& svgSideOffsetY);
+        virtual VCOMError VCOM_CALLTYPE     GetSVGFrontOffsetX(double& svgFrontOffsetX);
+        virtual VCOMError VCOM_CALLTYPE     GetSVGFrontOffsetY(double& svgFrontOffsetY);
         
         virtual VCOMError VCOM_CALLTYPE     SetName(MvrString name);
 		virtual VCOMError VCOM_CALLTYPE     SetLength(double length);
@@ -40,6 +47,13 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     SetBuffer3DS(void* bufferToCopy, size_t length);
         virtual VCOMError VCOM_CALLTYPE     SetBufferSVG(void* bufferToCopy, size_t length);
         virtual VCOMError VCOM_CALLTYPE     SetBufferGLTF(void* bufferToCopy, size_t length);
+
+        virtual VCOMError VCOM_CALLTYPE     SetSVGOffsetX(double svgOffsetX);
+        virtual VCOMError VCOM_CALLTYPE     SetSVGOffsetY(double svgOffsetY);
+        virtual VCOMError VCOM_CALLTYPE     SetSVGSideOffsetX(double svgSideOffsetX);
+        virtual VCOMError VCOM_CALLTYPE     SetSVGSideOffsetY(double svgSideOffsetY);
+        virtual VCOMError VCOM_CALLTYPE     SetSVGFrontOffsetX(double svgFrontOffsetX);
+        virtual VCOMError VCOM_CALLTYPE     SetSVGFrontOffsetY(double svgFrontOffsetY);
 		
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr);
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject();
