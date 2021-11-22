@@ -81,6 +81,22 @@ MvrString VectorworksMVR::CGdtfModelImpl::GetGeometryFile_3DS_FullPath()
 	return fModel->GetGeometryFile_3DS_FullPath().GetCharPtr();
 }
 
+MvrString VectorworksMVR::CGdtfModelImpl::GetGeometryFile_3DSLow_FullPath()
+{
+	// Check Pointer
+	if ( ! fModel) return "";
+	
+	return fModel->GetGeometryFile_3DSLow_FullPath().GetCharPtr();
+}
+
+MvrString VectorworksMVR::CGdtfModelImpl::GetGeometryFile_3DSHigh_FullPath()
+{
+	// Check Pointer
+	if ( ! fModel) return "";
+	
+	return fModel->GetGeometryFile_3DSHigh_FullPath().GetCharPtr();
+}
+
 MvrString VectorworksMVR::CGdtfModelImpl::GetGeometryFile_SVG_FullPath()
 {
 	// Check Pointer
@@ -95,6 +111,22 @@ MvrString VectorworksMVR::CGdtfModelImpl::GetGeometryFile_GLTF_FullPath()
 	if ( ! fModel) return "";
 	
 	return fModel->GetGeometryFile_GLTF_FullPath().GetCharPtr();
+}
+
+MvrString VectorworksMVR::CGdtfModelImpl::GetGeometryFile_GLTFLow_FullPath()
+{
+	// Check Pointer
+	if ( ! fModel) return "";
+	
+	return fModel->GetGeometryFile_GLTFLow_FullPath().GetCharPtr();
+}
+
+MvrString VectorworksMVR::CGdtfModelImpl::GetGeometryFile_GLTFHigh_FullPath()
+{
+	// Check Pointer
+	if ( ! fModel) return "";
+	
+	return fModel->GetGeometryFile_GLTFHigh_FullPath().GetCharPtr();
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfModelImpl::GetBuffer3DS(void* bufferToCopy, size_t& length)

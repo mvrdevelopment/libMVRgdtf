@@ -1649,6 +1649,50 @@ const TXString& GdtfModel::GetGeometryFile_3DS_FullPath()
 	return fFullPath3DS;
 }
 
+const TXString& GdtfModel::GetGeometryFile_3DSLow_FullPath()
+{
+	fFullPath3DS = "";
+	// Set to store
+	IFolderIdentifierPtr folder (IID_FolderIdentifier);
+	fParentFixture->GetWorkingFolder(folder);
+
+	IFolderIdentifierPtr model3DsFolder (IID_FolderIdentifier);
+	model3DsFolder->Set(folder, "models3ds_low");
+
+	IFileIdentifierPtr file (IID_FileIdentifier);
+	file->Set(model3DsFolder, fGeometryFile + ".3ds");
+
+	bool fileExists = false;
+	if(VCOM_SUCCEEDED(file->ExistsOnDisk(fileExists)) && fileExists)
+	{
+		file->GetFileFullPath(fFullPath3DS);
+	}
+	
+	return fFullPath3DS;
+}
+
+const TXString& GdtfModel::GetGeometryFile_3DSHigh_FullPath()
+{
+	fFullPath3DS = "";
+	// Set to store
+	IFolderIdentifierPtr folder (IID_FolderIdentifier);
+	fParentFixture->GetWorkingFolder(folder);
+
+	IFolderIdentifierPtr model3DsFolder (IID_FolderIdentifier);
+	model3DsFolder->Set(folder, "models3ds_high");
+
+	IFileIdentifierPtr file (IID_FileIdentifier);
+	file->Set(model3DsFolder, fGeometryFile + ".3ds");
+
+	bool fileExists = false;
+	if(VCOM_SUCCEEDED(file->ExistsOnDisk(fileExists)) && fileExists)
+	{
+		file->GetFileFullPath(fFullPath3DS);
+	}
+	
+	return fFullPath3DS;
+}
+
 const TXString & SceneData::GdtfModel::GetGeometryFile_SVG_FullPath()
 {
 	// Set to store
@@ -1703,6 +1747,71 @@ const TXString & SceneData::GdtfModel::GetGeometryFile_GLTF_FullPath()
 		}
 	}
 	
+	return fFullPathGLTF;
+}
+
+const TXString & SceneData::GdtfModel::GetGeometryFile_GLTFLow_FullPath()
+{
+	// Set to store
+	fFullPathGLTF = "";
+	// Set to store
+	IFolderIdentifierPtr folder (IID_FolderIdentifier);
+	fParentFixture->GetWorkingFolder(folder);
+
+	IFolderIdentifierPtr gltfModelsFolder (IID_FolderIdentifier);
+	gltfModelsFolder->Set(folder, "modelsgltf_low");
+
+	IFileIdentifierPtr file (IID_FileIdentifier);
+	file->Set(gltfModelsFolder, fGeometryFile + ".glb");
+
+	bool fileExists = false;
+	if(VCOM_SUCCEEDED(file->ExistsOnDisk(fileExists)) && fileExists)
+	{
+		file->GetFileFullPath(fFullPathGLTF);
+	}
+	else
+	{
+		//There are two glTF file format: binary (.glb) or JSON-like (.gltf)
+		//If we don't find a .glb file, we try with .gltf
+		file->Set(gltfModelsFolder, fGeometryFile + ".gltf");
+		if(VCOM_SUCCEEDED(file->ExistsOnDisk(fileExists)) && fileExists)
+		{
+			file->GetFileFullPath(fFullPathGLTF);
+		}
+	}
+	
+	return fFullPathGLTF;
+}
+
+const TXString & SceneData::GdtfModel::GetGeometryFile_GLTFHigh_FullPath()
+{
+	// Set to store
+	fFullPathGLTF = "";
+	// Set to store
+	IFolderIdentifierPtr folder (IID_FolderIdentifier);
+	fParentFixture->GetWorkingFolder(folder);
+
+	IFolderIdentifierPtr gltfModelsFolder (IID_FolderIdentifier);
+	gltfModelsFolder->Set(folder, "modelsgltf_high");
+
+	IFileIdentifierPtr file (IID_FileIdentifier);
+	file->Set(gltfModelsFolder, fGeometryFile + ".glb");
+
+	bool fileExists = false;
+	if(VCOM_SUCCEEDED(file->ExistsOnDisk(fileExists)) && fileExists)
+	{
+		file->GetFileFullPath(fFullPathGLTF);
+	}
+	else
+	{
+		//There are two glTF file format: binary (.glb) or JSON-like (.gltf)
+		//If we don't find a .glb file, we try with .gltf
+		file->Set(gltfModelsFolder, fGeometryFile + ".gltf");
+		if(VCOM_SUCCEEDED(file->ExistsOnDisk(fileExists)) && fileExists)
+		{
+			file->GetFileFullPath(fFullPathGLTF);
+		}
+	}
 	
 	return fFullPathGLTF;
 }

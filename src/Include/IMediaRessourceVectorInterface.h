@@ -598,6 +598,12 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     SetSVGSideOffsetY(double svgSideOffsetY) = 0;
         virtual VCOMError VCOM_CALLTYPE     SetSVGFrontOffsetX(double svgFrontOffsetX) = 0;
         virtual VCOMError VCOM_CALLTYPE     SetSVGFrontOffsetY(double svgFrontOffsetY) = 0;
+
+		virtual MvrString VCOM_CALLTYPE     GetGeometryFile_3DSLow_FullPath() 	= 0;
+		virtual MvrString VCOM_CALLTYPE     GetGeometryFile_3DSHigh_FullPath() 	= 0;
+
+		virtual MvrString VCOM_CALLTYPE     GetGeometryFile_GLTFLow_FullPath() 	= 0;
+		virtual MvrString VCOM_CALLTYPE     GetGeometryFile_GLTFHigh_FullPath() = 0;
 	};
 	typedef VCOMPtr<IGdtfModel>	IGdtfModelPtr;
 	

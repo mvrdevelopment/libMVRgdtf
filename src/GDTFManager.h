@@ -708,8 +708,12 @@ namespace SceneData
         //
 		const TXString&					GetGeometryFileName() const;
 		const TXString&					GetGeometryFile_3DS_FullPath();
+		const TXString&					GetGeometryFile_3DSLow_FullPath();
+		const TXString&					GetGeometryFile_3DSHigh_FullPath();
         const TXString&				    GetGeometryFile_SVG_FullPath();
 		const TXString&					GetGeometryFile_GLTF_FullPath();
+		const TXString&					GetGeometryFile_GLTFLow_FullPath();
+		const TXString&					GetGeometryFile_GLTFHigh_FullPath();
 
 		void						    GetBuffer3DS(void* bufferToCopy, size_t& length);
 		void						    GetBufferSVG(void* bufferToCopy, size_t& length);
