@@ -6548,11 +6548,11 @@ void GdtfDmxSubChannelSet::OnPrintToFile(IXMLFileNodePtr pNode)
 
 	// ------------------------------------------------------------------------------------
 	// Print node attributes
-	pNode->SetNodeAttributeValue(XML_GDTF_DMXSubChannelSetName,				fUniqueName);
-	pNode->SetNodeAttributeValue(XML_GDTF_DMXSubChannelSetPhysicalFrom,		GdtfConverter::ConvertDouble(fPhysicalFrom));
-	pNode->SetNodeAttributeValue(XML_GDTF_DMXSubChannelSetPhysicalTo,		GdtfConverter::ConvertDouble(fPhysicalTo));
-	pNode->SetNodeAttributeValue(XML_GDTF_DMXSubChannelSetSubPhysicalUnit, 	fSubPhysicalUnit->GetNodeReference());
-	pNode->SetNodeAttributeValue(XML_GDTF_DMXSubChannelSetDMXProfile,		fDMXProfile->GetNodeReference());
+								pNode->SetNodeAttributeValue(XML_GDTF_DMXSubChannelSetName,				fUniqueName);
+								pNode->SetNodeAttributeValue(XML_GDTF_DMXSubChannelSetPhysicalFrom,		GdtfConverter::ConvertDouble(fPhysicalFrom));
+								pNode->SetNodeAttributeValue(XML_GDTF_DMXSubChannelSetPhysicalTo,		GdtfConverter::ConvertDouble(fPhysicalTo));
+	if(fSubPhysicalUnit) 	{	pNode->SetNodeAttributeValue(XML_GDTF_DMXSubChannelSetSubPhysicalUnit, 	fSubPhysicalUnit->GetNodeReference()); }
+	if(fDMXProfile) 		{	pNode->SetNodeAttributeValue(XML_GDTF_DMXSubChannelSetDMXProfile,		fDMXProfile->GetNodeReference()); }
 
 }
 
