@@ -2274,7 +2274,6 @@ void GdtfConverter::TraverseNodes(IXMLFileNodePtr root, const TXString& childCon
 			{
 				TXString nodeName;
 				objNode->GetNodeName(nodeName);
-				ASSERTN(kEveryone, nodeName == childNodeName);
 				if (nodeName == childNodeName)
 				{
 					processNodeFunction(objNode);
