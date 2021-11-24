@@ -853,6 +853,26 @@ namespace VectorworksMVR
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
 	};
 	typedef VCOMPtr<IGdtfDmxChannelSet>	IGdtfDmxChannelSetPtr;
+
+	class DYNAMIC_ATTRIBUTE IGdtfDmxSubChannelSet : public IVWUnknown
+    {
+	public:
+        virtual MvrString VCOM_CALLTYPE     GetName() = 0;		
+        virtual VCOMError VCOM_CALLTYPE     GetPhysicalFrom(double& from) = 0;        
+        virtual VCOMError VCOM_CALLTYPE     GetPhysicalTo(double& to) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetSubPhysicalUnit(IGdtfSubPhysicalUnit** subPhysicalUnit) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetDMXProfile(IGdtfDMXProfile** dmxProfile) = 0;
+		
+		virtual VCOMError VCOM_CALLTYPE     SetName(MvrString name) = 0;		
+        virtual VCOMError VCOM_CALLTYPE     SetPhysicalFrom(double from) = 0;        
+        virtual VCOMError VCOM_CALLTYPE     SetPhysicalTo(double to) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetSubPhysicalUnit(IGdtfSubPhysicalUnit* subPhysicalUnit) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetDMXProfile(IGdtfDMXProfile* dmxProfile) = 0;
+		
+		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+	};
+	typedef VCOMPtr<IGdtfDmxSubChannelSet>	IGdtfDmxSubChannelSetPtr;
     
     class DYNAMIC_ATTRIBUTE IGdtfDmxChannelFunction : public IVWUnknown
     {
@@ -919,6 +939,9 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE     SetMax(double value) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetCustomName(MvrString customName) = 0;
 
+		virtual VCOMError VCOM_CALLTYPE     GetDmxSubChannelSetCount(size_t& count) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetDmxSubChannelSetAt(size_t at, IGdtfDmxSubChannelSet** subChannelSet) = 0;
+		virtual VCOMError VCOM_CALLTYPE     CreateDmxSubChannelSet(MvrString name, IGdtfSubPhysicalUnit* subPhysicalUnit, IGdtfDmxSubChannelSet** subChannelSet) = 0;
     };
 	typedef VCOMPtr<IGdtfDmxChannelFunction>	IGdtfDmxChannelFunctionPtr;
         

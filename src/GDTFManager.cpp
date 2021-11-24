@@ -513,6 +513,11 @@ EGdtfObjectType GdtfSubPhysicalUnit::GetObjectType()
 	return EGdtfObjectType::eGdtfSubPhysicalUnit;
 }
 
+TXString GdtfSubPhysicalUnit::GetNodeReference() 
+{
+	return GdtfConverter::ConvertSubPhysicalUnitTypeEnum(fType);
+}
+
 TXString GdtfSubPhysicalUnit::GetNodeName()
 {
 	return XML_GDTF_SubPhysicalUnitNodeName;
@@ -5627,7 +5632,8 @@ GdtfDmxChannelFunction::GdtfDmxChannelFunction(const TXString& name, GdtfDmxLogi
 
 GdtfDmxChannelFunction::~GdtfDmxChannelFunction()
 {
-	for (GdtfDmxChannelSetPtr ptr : fChannelSets) { delete ptr; }
+	for (GdtfDmxChannelSetPtr ptr 		: fChannelSets) 	{ delete ptr; }
+	for (GdtfDmxSubChannelSetPtr ptr 	: fSubChannelSets) 	{ delete ptr; }
 }
 
 void GdtfDmxChannelFunction::SetNextFunction(GdtfDmxChannelFunction* next)
@@ -5686,6 +5692,13 @@ GdtfDmxChannelSet* GdtfDmxChannelFunction::AddChannelSet(const TXString &name)
 	GdtfDmxChannelSet* channelSet = new GdtfDmxChannelSet(name, this);
 	fChannelSets.push_back(channelSet);
 	return channelSet;
+}
+
+GdtfDmxSubChannelSet* GdtfDmxChannelFunction::AddSubChannelSet(GdtfSubPhysicalUnit* subPhysicalUnit, const TXString& name)
+{
+	GdtfDmxSubChannelSet* subChannelSet = new GdtfDmxSubChannelSet(subPhysicalUnit, name);
+	fSubChannelSets.push_back(subChannelSet);
+	return subChannelSet;
 }
 
 void GdtfDmxChannelFunction::OnPrintToFile(IXMLFileNodePtr pNode)
@@ -5805,8 +5818,14 @@ void GdtfDmxChannelFunction::OnPrintToFile(IXMLFileNodePtr pNode)
 	{
 		channelObj->WriteToNode(pNode);
 	}
-	
 	fChannelSets = tempArr;
+
+	// ------------------------------------------------------------------------------------
+	// SubChannelSets
+	for(GdtfDmxSubChannelSet* subChannelSet : fSubChannelSets)
+	{
+		subChannelSet->WriteToNode(pNode);
+	}
 }
 
 void GdtfDmxChannelFunction::OnReadFromNode(const IXMLFileNodePtr& pNode)
@@ -5879,6 +5898,21 @@ void GdtfDmxChannelFunction::OnReadFromNode(const IXMLFileNodePtr& pNode)
 		
 		first->SetDmxEnd(second->GetDmxStart() - 1);
 	}
+
+	// ------------------------------------------------------------------------------------
+	// GdtfDmxSubChannelSet
+	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_DMXSubChannelSetNodeName, [this] (IXMLFileNodePtr objNode) -> void
+	{
+		// Create the object
+		GdtfDmxSubChannelSetPtr subChannelSet = new GdtfDmxSubChannelSet();
+		
+		// Read from node
+		subChannelSet->ReadFromNode(objNode);
+
+		// Add to list
+		fSubChannelSets.push_back(subChannelSet);
+		return;
+	});
 }
 
 void GdtfDmxChannelFunction::OnErrorCheck(const IXMLFileNodePtr& pNode)
@@ -6081,9 +6115,14 @@ void GdtfDmxChannelFunction::SetWheel(GdtfWheelPtr newWhl)
 	fOnWheel = newWhl;
 }
 
-const TGdtfDmxChannelSetArray GdtfDmxChannelFunction::GetChannelSets()
+const TGdtfDmxChannelSetArray& GdtfDmxChannelFunction::GetChannelSets() const
 {
 	return fChannelSets;
+}
+
+const TGdtfDmxSubChannelSetArray& GdtfDmxChannelFunction::GetSubChannelSets() const
+{
+	return fSubChannelSets;
 }
 
 GdtfDmxChannel* GdtfDmxChannelFunction::GetModeMaster_Channel() const
@@ -6445,6 +6484,157 @@ Sint32 GdtfDmxChannelSet::GetWheelSlot()
 GdtfDmxChannel * SceneData::GdtfDmxChannelSet::GetParentDMXChannel() const
 {
 	return fParentChnlFunction->GetParentDMXChannel();
+}
+
+//------------------------------------------------------------------------------------
+// GdtfDmxSubChannelSet
+GdtfDmxSubChannelSet::GdtfDmxSubChannelSet()
+{
+	fUniqueName 		= "";
+	fPhysicalFrom		= 0.0;
+	fPhysicalTo			= 1.0;
+	fSubPhysicalUnit 	= nullptr;
+	fDMXProfile 		= nullptr;
+}
+
+GdtfDmxSubChannelSet::GdtfDmxSubChannelSet(GdtfSubPhysicalUnitPtr subPhysicalUnit, const TXString& name)
+{
+	fUniqueName 		= name;
+	fPhysicalFrom		= 0.0;
+	fPhysicalTo			= 1.0;
+	fSubPhysicalUnit 	= subPhysicalUnit;
+	fDMXProfile 		= nullptr;
+	if(subPhysicalUnit)
+	{
+		fPhysicalFrom 	= subPhysicalUnit->GetPhysicalFrom();
+		fPhysicalTo		= subPhysicalUnit->GetPhysicalTo();
+	}
+}
+
+GdtfDmxSubChannelSet::~GdtfDmxSubChannelSet()
+{
+}
+
+void GdtfDmxSubChannelSet::SetName(const TXString& name)
+{
+	fUniqueName = name;
+}
+
+void GdtfDmxSubChannelSet::SetPhysicalFrom(double from)
+{
+	fPhysicalFrom = from;
+}
+
+void GdtfDmxSubChannelSet::SetPhysicalTo(double to)
+{
+	fPhysicalTo = to;
+}
+
+void GdtfDmxSubChannelSet::SetSubPhysicalUnit(GdtfSubPhysicalUnitPtr subPhysicalUnit)
+{
+	fSubPhysicalUnit = subPhysicalUnit;
+}
+
+void GdtfDmxSubChannelSet::SetDMXProfile(GdtfDMXProfilePtr dmxProfile)
+{
+	fDMXProfile = dmxProfile;
+}
+
+void GdtfDmxSubChannelSet::OnPrintToFile(IXMLFileNodePtr pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnPrintToFile(pNode);
+
+	// ------------------------------------------------------------------------------------
+	// Print node attributes
+								pNode->SetNodeAttributeValue(XML_GDTF_DMXSubChannelSetName,				fUniqueName);
+								pNode->SetNodeAttributeValue(XML_GDTF_DMXSubChannelSetPhysicalFrom,		GdtfConverter::ConvertDouble(fPhysicalFrom));
+								pNode->SetNodeAttributeValue(XML_GDTF_DMXSubChannelSetPhysicalTo,		GdtfConverter::ConvertDouble(fPhysicalTo));
+	if(fSubPhysicalUnit) 	{	pNode->SetNodeAttributeValue(XML_GDTF_DMXSubChannelSetSubPhysicalUnit, 	fSubPhysicalUnit->GetNodeReference()); }
+	if(fDMXProfile) 		{	pNode->SetNodeAttributeValue(XML_GDTF_DMXSubChannelSetDMXProfile,		fDMXProfile->GetNodeReference()); }
+
+}
+
+void GdtfDmxSubChannelSet::OnReadFromNode(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnReadFromNode(pNode);
+	
+	// ------------------------------------------------------------------------------------
+	// Read node attributes
+							pNode->GetNodeAttributeValue(XML_GDTF_DMXSubChannelSetName,				fUniqueName);	
+	TXString physicalFrom; 	pNode->GetNodeAttributeValue(XML_GDTF_DMXSubChannelSetPhysicalFrom,		physicalFrom); 	GdtfConverter::ConvertDouble(physicalFrom, pNode, fPhysicalFrom);
+	TXString physicalTo;   	pNode->GetNodeAttributeValue(XML_GDTF_DMXSubChannelSetPhysicalTo,		physicalTo); 	GdtfConverter::ConvertDouble(physicalTo, pNode, fPhysicalTo);
+							pNode->GetNodeAttributeValue(XML_GDTF_DMXSubChannelSetSubPhysicalUnit,	fUnresolvedSubPhysicalUnitRef);	
+							pNode->GetNodeAttributeValue(XML_GDTF_DMXSubChannelSetDMXProfile,		fUnresolvedDMXProfileRef);	
+}
+
+void GdtfDmxSubChannelSet::OnErrorCheck(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnErrorCheck(pNode);
+
+	//------------------------------------------------------------------------------------
+	// Create needed and optional Attribute Arrays
+	TXStringArray needed;
+	TXStringArray optional;
+	optional.push_back(XML_GDTF_DMXSubChannelSetName);
+	optional.push_back(XML_GDTF_DMXSubChannelSetPhysicalFrom);
+	optional.push_back(XML_GDTF_DMXSubChannelSetPhysicalTo);
+	optional.push_back(XML_GDTF_DMXSubChannelSetDMXProfile);
+	needed.push_back(XML_GDTF_DMXSubChannelSetSubPhysicalUnit);
+	
+	//------------------------------------------------------------------------------------
+	// Check Attributes for node
+	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
+}
+
+EGdtfObjectType GdtfDmxSubChannelSet::GetObjectType()
+{
+	return EGdtfObjectType::eGdtfDmxSubChannelSet;
+}
+
+TXString GdtfDmxSubChannelSet::GetNodeName()
+{
+	return XML_GDTF_DMXSubChannelSetNodeName;
+}
+
+const TXString& GdtfDmxSubChannelSet::GetName() const
+{
+	return fUniqueName;
+}
+
+double GdtfDmxSubChannelSet::GetPhysicalFrom() const
+{
+	return fPhysicalFrom;
+}
+
+double GdtfDmxSubChannelSet::GetPhysicalTo() const
+{
+	return fPhysicalTo;
+}
+
+GdtfSubPhysicalUnitPtr GdtfDmxSubChannelSet::GetSubPhysicalUnit() const
+{
+	return fSubPhysicalUnit;
+}
+
+GdtfDMXProfilePtr GdtfDmxSubChannelSet::GetDMXProfile() const
+{
+	return fDMXProfile;
+}
+
+const TXString& GdtfDmxSubChannelSet::GetUnresolvedSubPhysicalUnitRef() const
+{
+	return fUnresolvedSubPhysicalUnitRef;
+}
+
+const TXString& GdtfDmxSubChannelSet::GetUnresolvedDMXProfileRef() const
+{
+	return fUnresolvedDMXProfileRef;
 }
 
 //------------------------------------------------------------------------------------
@@ -7510,7 +7700,7 @@ GdtfConnectorPtr GdtfFixture::getConnectorByRef(const TXString& ref)
 	return nullptr;
 }
 
-GdtfColorSpacePtr GdtfFixture::getColorSpaceByRef(const TXString& ref) 
+GdtfColorSpacePtr GdtfFixture::getColorSpaceByRef(const TXString& ref)
 {
     for (GdtfColorSpacePtr colorSpace : fPhysicalDesciptions.GetAdditionalColorSpaceArray())
     {
@@ -7522,7 +7712,7 @@ GdtfColorSpacePtr GdtfFixture::getColorSpaceByRef(const TXString& ref)
 	return nullptr;
 }
 
-GdtfGamutPtr GdtfFixture::getGamutByRef(const TXString& ref) 
+GdtfGamutPtr GdtfFixture::getGamutByRef(const TXString& ref)
 {
     for (GdtfGamutPtr gamut : fPhysicalDesciptions.GetGamutArray())
     {
@@ -7534,7 +7724,7 @@ GdtfGamutPtr GdtfFixture::getGamutByRef(const TXString& ref)
 	return nullptr;
 }
 
-GdtfDMXProfilePtr GdtfFixture::getDMXProfileByRef(const TXString& ref) 
+GdtfDMXProfilePtr GdtfFixture::getDMXProfileByRef(const TXString& ref)
 {
     for (GdtfDMXProfilePtr dmxProfile : fPhysicalDesciptions.GetDmxProfileArray())
     {
@@ -7543,6 +7733,21 @@ GdtfDMXProfilePtr GdtfFixture::getDMXProfileByRef(const TXString& ref)
 
 	// If this line is reached, nothing was found.
 	DSTOP ((kEveryone, "Failed to resolve GdtfDMXProfile."));
+	return nullptr;
+}
+
+GdtfSubPhysicalUnitPtr GdtfFixture::getSubPhysicalUnitByRef(const TXString& ref)
+{
+    for (GdtfAttributePtr attr : fAttributes)
+	{
+		for (GdtfSubPhysicalUnitPtr subPhysicalUnit : attr->GetSubPhysicalUnitArray())
+		{
+			if(subPhysicalUnit->GetNodeReference() == ref) { return subPhysicalUnit; }
+		}
+	}
+
+	// If this line is reached, nothing was found.
+	DSTOP ((kEveryone, "Failed to resolve GdtfSubPhysicalUnit."));
 	return nullptr;
 }
 
@@ -8267,7 +8472,31 @@ void GdtfFixture::ResolveDmxChanelFunctionRefs(GdtfDmxLogicalChannelPtr dmxLogCh
             chnlFunc->SetDMXProfile(dmxProfile);
         }
 		
+		ResolveDmxSubChannelSetRefs(chnlFunc);
+	}
+}
 
+void GdtfFixture::ResolveDmxSubChannelSetRefs(GdtfDmxChannelFunctionPtr channelFunction)
+{
+	for (GdtfDmxSubChannelSetPtr subChannelSet : channelFunction->GetSubChannelSets())
+	{
+		// ----------------------------------------------------------------------------------------		
+        // SubPhysicalUnit Refs
+        TXString unresolvedSubPhysicalUnitRef = subChannelSet->GetUnresolvedSubPhysicalUnitRef();
+        if (!unresolvedSubPhysicalUnitRef.IsEmpty()) 
+        {
+            GdtfSubPhysicalUnit* subPhysicalUnit = getSubPhysicalUnitByRef(unresolvedSubPhysicalUnitRef);
+            subChannelSet->SetSubPhysicalUnit(subPhysicalUnit);
+        }
+
+		// ----------------------------------------------------------------------------------------		
+        // DMXProfile Refs
+        TXString unresolvedDMXProfileRef = subChannelSet->GetUnresolvedDMXProfileRef();
+        if (!unresolvedDMXProfileRef.IsEmpty()) 
+        {
+            GdtfDMXProfile* dmxProfile = getDMXProfileByRef(unresolvedDMXProfileRef);
+            subChannelSet->SetDMXProfile(dmxProfile);
+        }
 	}
 }
 

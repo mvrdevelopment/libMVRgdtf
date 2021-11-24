@@ -118,6 +118,7 @@ namespace VectorworksMVR
             eGdtfMap                        = 89,
             eGdtfSubPhysicalUnit            = 90,
             eGdtfGamut                      = 91,
+            eGdtfDmxSubChannelSet           = 92,
 		};
 
         enum class EGdtfParsingError : Sint32

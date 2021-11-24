@@ -140,6 +140,27 @@ void GdtfDmxUnittest::WriteFile()
 		IGdtfDmxChannelSetPtr bit8ChannelSet3;
 		bit8Function1->CreateDmxChannelSet("My Name3", 91, 92, &bit8ChannelSet3);
 
+			//SubChannelSets
+		IGdtfSubPhysicalUnitPtr subPhysicalUnit1;
+		__checkVCOM(attribute1->CreateSubPhysicalUnit(EGdtfSubPhysicalUnitType::Duration, &subPhysicalUnit1));
+		IGdtfSubPhysicalUnitPtr subPhysicalUnit2;
+		__checkVCOM(attribute1->CreateSubPhysicalUnit(EGdtfSubPhysicalUnitType::Amplitude, &subPhysicalUnit2));
+
+		IGdtfDMXProfilePtr gdtfDMXProfile1;
+		__checkVCOM(gdtfWrite->CreateDMXProfile(&gdtfDMXProfile1));
+		__checkVCOM(gdtfDMXProfile1->SetName("DMXProfile 1"));
+
+		IGdtfDmxSubChannelSetPtr subChannelSet1;
+		bit8Function1->CreateDmxSubChannelSet("My SubChannelSet Name 1", subPhysicalUnit1, &subChannelSet1);
+		__checkVCOM(subChannelSet1->SetPhysicalFrom(1.1));
+		__checkVCOM(subChannelSet1->SetPhysicalTo(1.2));
+		__checkVCOM(subChannelSet1->SetDMXProfile(gdtfDMXProfile1));
+		IGdtfDmxSubChannelSetPtr subChannelSet2;
+		bit8Function1->CreateDmxSubChannelSet("My SubChannelSet Name 2", subPhysicalUnit1, &subChannelSet2);
+		__checkVCOM(subChannelSet2->SetPhysicalFrom(2.1));
+		__checkVCOM(subChannelSet2->SetPhysicalTo(2.2));
+		__checkVCOM(subChannelSet2->SetSubPhysicalUnit(subPhysicalUnit2));
+
 		// Second Channel Function
 		IGdtfDmxChannelFunctionPtr bit8Function2;
 		bit8LogicalChannel1->CreateDmxFunction("Function2", &bit8Function2);
@@ -640,6 +661,50 @@ void GdtfDmxUnittest::Check8bitChannel(VectorworksMVR::IGdtfDmxChannelPtr& dmxCh
 	IGdtfDmxChannelSetPtr bit8ChannelSet5;
 	__checkVCOM(bit8Function1->GetDmxChannelSetAt(4, &bit8ChannelSet5));
 	this->CheckChannelSet(bit8ChannelSet5, "",93,99);
+
+	// ---------------------------------------------------------------------------
+	// Check Sub Channel Set Count bit8Function1
+	__checkVCOM(bit8Function1->GetDmxSubChannelSetCount(count));
+	this->checkifEqual("bit8Function1 Count Sub Channel Set", count, size_t(2));
+
+	IGdtfDmxSubChannelSetPtr subChannelSet1;
+	__checkVCOM(bit8Function1->GetDmxSubChannelSetAt(0, &subChannelSet1));
+
+	double physicalFrom = 0.0;
+	__checkVCOM(subChannelSet1->GetPhysicalFrom(physicalFrom));
+	this->checkifEqual("subChannelSet1 physicalFrom", physicalFrom, double(1.1));
+
+	double physicalTo = 0.0;
+	__checkVCOM(subChannelSet1->GetPhysicalTo(physicalTo));
+	this->checkifEqual("subChannelSet1 physicalTo", physicalTo, double(1.2));
+
+	IGdtfSubPhysicalUnitPtr subPhysicalUnit1;
+	__checkVCOM(subChannelSet1->GetSubPhysicalUnit(&subPhysicalUnit1));
+
+	EGdtfSubPhysicalUnitType subPhysicalUnit1unitType = EGdtfSubPhysicalUnitType::PlacementOffset;
+	__checkVCOM(subPhysicalUnit1->GetType(subPhysicalUnit1unitType));
+	this->checkifEqual("subChannelSet1 subPhysicalUnit1 Type", (size_t)subPhysicalUnit1unitType, size_t(EGdtfSubPhysicalUnitType::Duration));
+
+	IGdtfDMXProfilePtr dmxProfile;
+	__checkVCOM(subChannelSet1->GetDMXProfile(&dmxProfile));
+	this->checkifEqual("subChannelSet1 dmxProfile", dmxProfile->GetName(), "DMXProfile 1");
+
+	IGdtfDmxSubChannelSetPtr subChannelSet2;
+	__checkVCOM(bit8Function1->GetDmxSubChannelSetAt(1, &subChannelSet2));
+
+	__checkVCOM(subChannelSet2->GetPhysicalFrom(physicalFrom));
+	this->checkifEqual("subChannelSet2 physicalFrom", physicalFrom, double(2.1));
+
+	__checkVCOM(subChannelSet2->GetPhysicalTo(physicalTo));
+	this->checkifEqual("subChannelSet2 physicalTo", physicalTo, double(2.2));
+
+	IGdtfSubPhysicalUnitPtr subPhysicalUnit2;
+	__checkVCOM(subChannelSet2->GetSubPhysicalUnit(&subPhysicalUnit2));
+
+	EGdtfSubPhysicalUnitType subPhysicalUnit2unitType = EGdtfSubPhysicalUnitType::PlacementOffset;
+	__checkVCOM(subPhysicalUnit2->GetType(subPhysicalUnit2unitType));
+	this->checkifEqual("subChannelSet2 subPhysicalUnit2 Type", (size_t)subPhysicalUnit2unitType, size_t(EGdtfSubPhysicalUnitType::Amplitude));
+
 
 	// ---------------------------------------------------------------------------
 	// Check Channel Set Count bit8Function2

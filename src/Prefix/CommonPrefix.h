@@ -589,6 +589,13 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_DMXChannelSetPhysicalFrom				"PhysicalFrom"
 #define XML_GDTF_DMXChannelSetPhysicalTo				"PhysicalTo"
 #define XML_GDTF_DMXChannelSetWheelSlotIndexRef			"WheelSlotIndex"
+
+#define XML_GDTF_DMXSubChannelSetNodeName				"SubChannelSet"
+#define XML_GDTF_DMXSubChannelSetName					"Name"
+#define XML_GDTF_DMXSubChannelSetPhysicalFrom			"PhysicalFrom"
+#define XML_GDTF_DMXSubChannelSetPhysicalTo				"PhysicalTo"
+#define XML_GDTF_DMXSubChannelSetSubPhysicalUnit		"SubPhysicalUnit"
+#define XML_GDTF_DMXSubChannelSetDMXProfile		        "DMXProfile"
 // Macros
 #define XML_GDTF_MacroNodeName							"FTMacro"
 #define XML_GDTF_MacroName                              "Name"
