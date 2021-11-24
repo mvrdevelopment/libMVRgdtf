@@ -62,10 +62,6 @@ namespace SceneData
     typedef GdtfConnector*	GdtfConnectorPtr;
     typedef std::vector<GdtfConnector*>	TGdtfConnectorArray;
 
-	class GdtfPowerConsumption; 
-    typedef GdtfPowerConsumption*	GdtfPowerConsumptionPtr;
-    typedef std::vector<GdtfPowerConsumption*>	TGdtfPowerConsumptionArray;
-
 	class GdtfGeometryWiringObject;
 	typedef GdtfGeometryWiringObject* GdtfGeometryWiringObjectPtr;
 
@@ -544,7 +540,6 @@ namespace SceneData
 		TGdtfConnectorArray				fConnectors;
 
 		//Properties Collect
-		TGdtfPowerConsumptionArray		fPowerConsumptions;
 		double							fOperatingTemperatureLow;
 		double							fOperatingTemperatureHigh;
 		double							fWeight;
@@ -564,7 +559,6 @@ namespace SceneData
         const TGdtfDMXProfileArray&      	GetDmxProfileArray();
         const TGdtf_CRIGroupArray&       	GetCRIGroupArray();
 		const TGdtfConnectorArray&       	GetConnectorArray();
-		const TGdtfPowerConsumptionArray&   GetPowerConsumptionArray();
 		double								GetOperatingTemperatureLow();
 		double								GetOperatingTemperatureHigh();
 		double								GetWeight();
@@ -582,7 +576,6 @@ namespace SceneData
         GdtfDMXProfilePtr               AddDmxProfile();
         GdtfCRIGroupPtr                 AddCRIGroup(double colorTsemp);
 		GdtfConnectorPtr                AddConnector(const TXString& name,  const TXString& type);
-		GdtfPowerConsumptionPtr			AddPowerConsumption(GdtfConnectorPtr connector);
 
     protected:
         virtual	TXString				GetNodeName();
@@ -2796,53 +2789,6 @@ namespace SceneData
         virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
 
 	};
-
-	class GdtfPowerConsumption : public GdtfObject
-	{
-	public:
-		GdtfPowerConsumption();
-		GdtfPowerConsumption(GdtfConnector* connector);
-		~GdtfPowerConsumption();
-		
-	private:
-        double			fValue;
-		double			fPowerFactor;
-		GdtfConnector*	fConnector;
-		TXString		fUnresolvedConnector;
-		double			fVoltageLow;
-		double			fVoltageHigh;
-		double			fFrequencyLow;
-		double			fFrequencyHigh;
-		
-	public:
-        // Getters
-		virtual EGdtfObjectType	GetObjectType();
-
-		double			GetValue();
-		double			GetPowerFactor();
-		GdtfConnector*	GetConnector();
-		const TXString& GetUnresolvedConnector();
-		double			GetVoltageLow();
-		double			GetVoltageHigh();
-		double			GetFrequencyLow();
-		double			GetFrequencyHigh();
-        
-		// Setters
-		void	SetValue(double value);
-        void	SetPowerFactor(double powerFactor);
-        void	SetConnector(GdtfConnector* connector);
-        void	SetVoltageLow(double voltageLow);
-        void	SetVoltageHigh(double voltageHigh);
-        void	SetFrequencyLow(double frequencyLow);
-        void	SetFrequencyHigh(double frequencyHigh);
-
-	protected:
-		virtual	TXString				GetNodeName();
-		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
-		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
-        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
-
-	};
 	
 	//------------------------------------------------------------------------------------
 	// GdtfFixture Definition
@@ -3028,7 +2974,6 @@ namespace SceneData
 		
 		void            ResolveAttribRefs();		
 		void            ResolveWheelSlots();
-		void            ResolvePowerConsumptions();
 		void            ResolveDmxModeRefs();
         void            ResolveDMXModeMasters();       
         void            ResolveDMXPersonalityRefs();

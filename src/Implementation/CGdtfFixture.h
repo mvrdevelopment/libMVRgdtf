@@ -159,10 +159,6 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateConnector(MvrString name, MvrString type, VectorworksMVR::IGdtfConnector** outVal);
         virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetConnectorAt(size_t at, VectorworksMVR::IGdtfConnector** value);
 
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetPowerConsumptionCount(size_t& count);
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreatePowerConsumption(VectorworksMVR::IGdtfConnector* connector, VectorworksMVR::IGdtfPowerConsumption** outVal);
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetPowerConsumptionAt(size_t at, VectorworksMVR::IGdtfPowerConsumption** value);
-
         virtual VCOMError VCOM_CALLTYPE		GetOperatingTemperatureLow(double& value);
 		virtual VCOMError VCOM_CALLTYPE		SetOperatingTemperatureLow(double value);
 

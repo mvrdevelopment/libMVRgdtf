@@ -54,7 +54,6 @@
 #include "Implementation/CGdtfPoint.h"
 #include "Implementation/CGdtfColorSpace.h"
 #include "Implementation/CGdtfConnector.h"
-#include "Implementation/CGdtfPowerConsumption.h"
 #include "Implementation/CUtility.h"
 #include "Implementation/CGdtfLaserProtocol.h"
 #include "Implementation/CGdtfPinPatch.h"
@@ -192,8 +191,6 @@ extern "C" VectorworksMVR::VCOMError VWQueryInterface(const VectorworksMVR::VWII
 		resultInterface = new CGdtfGamutImpl();
     else if (iid == VectorworksMVR::IID_GdtfConnector)
         resultInterface = new CGdtfConnectorImpl();
-    else if (iid == VectorworksMVR::IID_GdtfPowerConsumption)
-        resultInterface = new CGdtfPowerConsumptionImpl();
 	else if (iid == VectorworksMVR::Filing::IID_FileIdentifier)
 		resultInterface = new CFileIdentifier();
 	else if (iid == VectorworksMVR::Filing::IID_FolderIdentifier )
