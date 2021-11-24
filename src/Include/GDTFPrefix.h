@@ -23,6 +23,10 @@ namespace VectorworksMVR
             ImageWheel,
             RessoureFixture,
             ModelGLTF,
+            Model3DSLow,
+            Model3DSHigh,
+            ModelGLTFLow,
+            ModelGLTFHigh,
         };
 		
 		enum EGdtfObjectType

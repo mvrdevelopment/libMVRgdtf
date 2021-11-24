@@ -2120,19 +2120,24 @@ TXString SceneData::SceneDataZip::GetResourceSubFolder(ERessourceType resType)
     {
     case ERessourceType::ImageWheel:
         return "wheels" + TXString(kSeperator);
-        break;
     case ERessourceType::Model3DS:
         return "models" + TXString(kSeperator) + "3ds" + TXString(kSeperator);
-        break;
+	case ERessourceType::Model3DSLow:
+        return "models" + TXString(kSeperator) + "3ds_low" + TXString(kSeperator);
+	case ERessourceType::Model3DSHigh:
+        return "models" + TXString(kSeperator) + "3ds_high" + TXString(kSeperator);
     case ERessourceType::ModelSVG:
         return "models" + TXString(kSeperator) + "svg" + TXString(kSeperator);
-        break;
 	case ERessourceType::ModelGLTF:
         return "models" + TXString(kSeperator) + "gltf" + TXString(kSeperator);
-        break;
+	case ERessourceType::ModelGLTFLow:
+        return "models" + TXString(kSeperator) + "gltf_low" + TXString(kSeperator);
+	case ERessourceType::ModelGLTFHigh:
+        return "models" + TXString(kSeperator) + "gltf_high" + TXString(kSeperator);
     case ERessourceType::RessoureFixture:
         return  "";
-        break;
+	default:
+		break;
     }    
 
     DSTOP((kEveryone, "Unexpected Enum for GetResourceSubFolder(ERessourceType resType)"));
@@ -2269,7 +2274,6 @@ void GdtfConverter::TraverseNodes(IXMLFileNodePtr root, const TXString& childCon
 			{
 				TXString nodeName;
 				objNode->GetNodeName(nodeName);
-				ASSERTN(kEveryone, nodeName == childNodeName);
 				if (nodeName == childNodeName)
 				{
 					processNodeFunction(objNode);

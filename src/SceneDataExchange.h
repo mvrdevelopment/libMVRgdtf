@@ -770,8 +770,12 @@ namespace SceneData
 		bool								fUndoStarted;
 		//
         TFileIdentifierPtrArray				f3DS_FilesToAdd;
+        TFileIdentifierPtrArray				f3DSLow_FilesToAdd;
+        TFileIdentifierPtrArray				f3DSHigh_FilesToAdd;
         TFileIdentifierPtrArray				fSVG_FilesToAdd;
 		TFileIdentifierPtrArray				fGLTF_FilesToAdd;
+		TFileIdentifierPtrArray				fGLTFLow_FilesToAdd;
+		TFileIdentifierPtrArray				fGLTFHigh_FilesToAdd;
         TFileIdentifierPtrArray				fWheel_Image_FilesToAdd;
         TFileIdentifierPtrArray				fFixtureResources_FilesToAdd;
 		
