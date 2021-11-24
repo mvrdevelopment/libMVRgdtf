@@ -65,13 +65,17 @@ void GdtfUnittest::WriteFile()
 
         //------------------------------------------------------------------------------    
         // Add Test Resources
-        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestPNG_ThumbNail().c_str(), 	ERessourceType::RessoureFixture) );
-        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestSVG_ThumbNail().c_str(), 	ERessourceType::RessoureFixture) );
-        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestWheel_PNG().c_str(),     	ERessourceType::ImageWheel) );
-        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTest3DS_Model().c_str(),     	ERessourceType::Model3DS) );
-        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestSVG_Model().c_str(),     	ERessourceType::ModelSVG) );
-		__checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestGLTF_Model_glb().c_str(),	ERessourceType::ModelGLTF) );
-		__checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestGLTF_Model().c_str(),    	ERessourceType::ModelGLTF) );
+        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestPNG_ThumbNail().c_str(), 		ERessourceType::RessoureFixture) );
+        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestSVG_ThumbNail().c_str(), 		ERessourceType::RessoureFixture) );
+        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestWheel_PNG().c_str(),     		ERessourceType::ImageWheel) );
+        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTest3DS_Model().c_str(),     		ERessourceType::Model3DS) );
+        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTest3DSLow_Model().c_str(),   	ERessourceType::Model3DSLow) );
+        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTest3DSHigh_Model().c_str(),  	ERessourceType::Model3DSHigh) );
+        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestSVG_Model().c_str(),     		ERessourceType::ModelSVG) );
+		__checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestGLTF_Model_glb().c_str(),		ERessourceType::ModelGLTF) );
+		__checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestGLTFLow_Model_glb().c_str(),	ERessourceType::ModelGLTFLow) );
+		__checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestGLTFHigh_Model_glb().c_str(),	ERessourceType::ModelGLTFHigh) );
+		__checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestGLTF_Model().c_str(),    		ERessourceType::ModelGLTF) );
         
 		//------------------------------------------------------------------------------    
 		// Set Attributes
@@ -512,15 +516,19 @@ void GdtfUnittest::ReadFile()
 		// Check the file content
 		size_t ressourceFiles = 0;
 		__checkVCOM(gdtfRead->GetImageRessourcesCount(ressourceFiles));
-		this->checkifEqual("GetImageRessourcesCount", ressourceFiles, size_t(7));
+		this->checkifEqual("GetImageRessourcesCount", ressourceFiles, size_t(11));
 
 		CheckAttachedFiles(gdtfRead, 0, this->GetTestPNG_ThumbNail(true));
 		CheckAttachedFiles(gdtfRead, 1, this->GetTestSVG_ThumbNail(true));
 		CheckAttachedFiles(gdtfRead, 2, this->GetTestWheel_PNG(true));
 		CheckAttachedFiles(gdtfRead, 3, this->GetTest3DS_Model(true));
-		CheckAttachedFiles(gdtfRead, 4, this->GetTestSVG_Model(true));
-		CheckAttachedFiles(gdtfRead, 5, this->GetTestGLTF_Model_glb(true));
-		CheckAttachedFiles(gdtfRead, 6, this->GetTestGLTF_Model(true));
+		CheckAttachedFiles(gdtfRead, 4, this->GetTest3DSLow_Model(true));
+		CheckAttachedFiles(gdtfRead, 5, this->GetTest3DSHigh_Model(true));
+		CheckAttachedFiles(gdtfRead, 6, this->GetTestSVG_Model(true));
+		CheckAttachedFiles(gdtfRead, 7, this->GetTestGLTF_Model_glb(true));
+		CheckAttachedFiles(gdtfRead, 8, this->GetTestGLTFLow_Model_glb(true));
+		CheckAttachedFiles(gdtfRead, 9, this->GetTestGLTFHigh_Model_glb(true));
+		CheckAttachedFiles(gdtfRead, 10, this->GetTestGLTF_Model(true));
 
 
 		
@@ -1792,6 +1800,26 @@ std::string GdtfUnittest::GetTest3DS_Model(bool readLocation)
     return path;
 }
 
+std::string GdtfUnittest::GetTest3DSLow_Model(bool readLocation)
+{
+	std::string path;
+	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator+ "models3ds_low" + kSeparator; }
+	else 				{ path = fTestResourcesFolder + kSeparator; }
+	
+    path += "MyModelLow.3ds";
+    return path;
+}
+
+std::string GdtfUnittest::GetTest3DSHigh_Model(bool readLocation)
+{
+	std::string path;
+	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator+ "models3ds_high" + kSeparator; }
+	else 				{ path = fTestResourcesFolder + kSeparator; }
+	
+    path += "MyModelHigh.3ds";
+    return path;
+}
+
 std::string GdtfUnittest::GetTestGLTF_Model_glb(bool readLocation)
 {
 	std::string path;
@@ -1799,6 +1827,26 @@ std::string GdtfUnittest::GetTestGLTF_Model_glb(bool readLocation)
 	else 				{ path = fTestResourcesFolder + kSeparator; }
 	
     path += "MyModel.glb";
+    return path;
+}
+
+std::string GdtfUnittest::GetTestGLTFLow_Model_glb(bool readLocation)
+{
+	std::string path;
+	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator+ "modelsgltf_low" + kSeparator; }
+	else 				{ path = fTestResourcesFolder + kSeparator; }
+	
+    path += "MyModelLow.glb";
+    return path;
+}
+
+std::string GdtfUnittest::GetTestGLTFHigh_Model_glb(bool readLocation)
+{
+	std::string path;
+	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator+ "modelsgltf_high" + kSeparator; }
+	else 				{ path = fTestResourcesFolder + kSeparator; }
+	
+    path += "MyModelHigh.glb";
     return path;
 }
 
