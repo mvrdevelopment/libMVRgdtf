@@ -106,7 +106,7 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetSignalLayer(size_t& signalLayer);
         virtual VCOMError VCOM_CALLTYPE		GetOrientation(GdtfDefines::EGdtfOrientation& orientation);
         virtual MvrString VCOM_CALLTYPE     GetWireGroup();
-        virtual VCOMError VCOM_CALLTYPE		GetElectricalPayload(double& electricalPayload);
+        virtual VCOMError VCOM_CALLTYPE		GetElectricalPayLoad(double& electricalPayLoad);
         virtual VCOMError VCOM_CALLTYPE		GetVoltageRangeMin(double& voltageRangeMin);
         virtual VCOMError VCOM_CALLTYPE		GetVoltageRangeMax(double& voltageRangeMax);
         virtual VCOMError VCOM_CALLTYPE		GetFrequencyRangeMin(double& frequencyRangeMin);
@@ -124,7 +124,7 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     SetSignalLayer(size_t signalLayer);
         virtual VCOMError VCOM_CALLTYPE		SetOrientation(GdtfDefines::EGdtfOrientation orientation);
         virtual VCOMError VCOM_CALLTYPE     SetWireGroup(MvrString wireGroup);
-        virtual VCOMError VCOM_CALLTYPE		SetElectricalPayload(double electricalPayload);
+        virtual VCOMError VCOM_CALLTYPE		SetElectricalPayLoad(double electricalPayLoad);
         virtual VCOMError VCOM_CALLTYPE		SetVoltageRangeMin(double voltageRangeMin);
         virtual VCOMError VCOM_CALLTYPE		SetVoltageRangeMax(double voltageRangeMax);
         virtual VCOMError VCOM_CALLTYPE		SetFrequencyRangeMin(double frequencyRangeMin);

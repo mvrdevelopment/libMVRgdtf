@@ -3323,9 +3323,9 @@ const TXString& GdtfGeometryWiringObject::GetWireGroup() const
 	return fWireGroup;
 }
 
-double GdtfGeometryWiringObject::GetElectricalPayload() const
+double GdtfGeometryWiringObject::GetElectricalPayLoad() const
 {
-	return fElectricalPayload;
+	return fElectricalPayLoad;
 }
 
 double GdtfGeometryWiringObject::GetVoltageRangeMin() const
@@ -3413,9 +3413,9 @@ void GdtfGeometryWiringObject::SetWireGroup(const TXString& wireGroup)
 	fWireGroup = wireGroup;
 }
 
-void GdtfGeometryWiringObject::SetElectricalPayload(double electricalPayload)
+void GdtfGeometryWiringObject::SetElectricalPayLoad(double electricalPayLoad)
 {
-	fElectricalPayload = electricalPayload;
+	fElectricalPayLoad = electricalPayLoad;
 }
 
 void GdtfGeometryWiringObject::SetVoltageRangeMin(double voltageRangeMin)
@@ -3483,7 +3483,7 @@ void GdtfGeometryWiringObject::OnPrintToFile(IXMLFileNodePtr pNode)
 	pNode->SetNodeAttributeValue(XML_GDTF_WiringObjectSignalLayer,			GdtfConverter::ConvertInteger(fSignalLayer));
 	pNode->SetNodeAttributeValue(XML_GDTF_WiringObjectOrientation, 			GdtfConverter::ConvertOrientationEnum(fOrientation));
 	pNode->SetNodeAttributeValue(XML_GDTF_WiringObjectWireGroup, 			fWireGroup);
-	pNode->SetNodeAttributeValue(XML_GDTF_WiringObjectElectricalPayload,	GdtfConverter::ConvertDouble(fElectricalPayload));
+	pNode->SetNodeAttributeValue(XML_GDTF_WiringObjectElectricalPayLoad,	GdtfConverter::ConvertDouble(fElectricalPayLoad));
 	pNode->SetNodeAttributeValue(XML_GDTF_WiringObjectVoltageRangeMin,		GdtfConverter::ConvertDouble(fVoltageRangeMin));
 	pNode->SetNodeAttributeValue(XML_GDTF_WiringObjectVoltageRangeMax,		GdtfConverter::ConvertDouble(fVoltageRangeMax));
 	pNode->SetNodeAttributeValue(XML_GDTF_WiringObjectFrequencyRangeMin,	GdtfConverter::ConvertDouble(fFrequencyRangeMin));
@@ -3514,7 +3514,7 @@ void GdtfGeometryWiringObject::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	TXString signalLayer;		pNode->GetNodeAttributeValue(XML_GDTF_WiringObjectSignalLayer, signalLayer); 				GdtfConverter::ConvertInteger(signalLayer, pNode, fSignalLayer);
 	TXString orientation;		pNode->GetNodeAttributeValue(XML_GDTF_WiringObjectOrientation, orientation); 				GdtfConverter::ConvertOrientationEnum(orientation, pNode, fOrientation);
 								pNode->GetNodeAttributeValue(XML_GDTF_WiringObjectWireGroup, fWireGroup);
-	TXString electricalPayload;	pNode->GetNodeAttributeValue(XML_GDTF_WiringObjectElectricalPayload, electricalPayload); 	GdtfConverter::ConvertDouble(electricalPayload, pNode, fElectricalPayload);
+	TXString electricalPayLoad;	pNode->GetNodeAttributeValue(XML_GDTF_WiringObjectElectricalPayLoad, electricalPayLoad); 	GdtfConverter::ConvertDouble(electricalPayLoad, pNode, fElectricalPayLoad);
 	TXString voltageRangeMin;	pNode->GetNodeAttributeValue(XML_GDTF_WiringObjectVoltageRangeMin, voltageRangeMin); 		GdtfConverter::ConvertDouble(voltageRangeMin, pNode, fVoltageRangeMin);
 	TXString voltageRangeMax;	pNode->GetNodeAttributeValue(XML_GDTF_WiringObjectVoltageRangeMax, voltageRangeMax); 		GdtfConverter::ConvertDouble(voltageRangeMax, pNode, fVoltageRangeMax);
 	TXString frequencyRangeMin;	pNode->GetNodeAttributeValue(XML_GDTF_WiringObjectFrequencyRangeMin, frequencyRangeMin); 	GdtfConverter::ConvertDouble(frequencyRangeMin, pNode, fFrequencyRangeMin);
@@ -3560,7 +3560,7 @@ void GdtfGeometryWiringObject::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	needed.push_back(XML_GDTF_WiringObjectWireGroup);
 	if(fComponentType == EGdtfComponentType::Consumer)
 	{
-		needed.push_back(XML_GDTF_WiringObjectElectricalPayload);
+		needed.push_back(XML_GDTF_WiringObjectElectricalPayLoad);
 		needed.push_back(XML_GDTF_WiringObjectVoltageRangeMin);
 		needed.push_back(XML_GDTF_WiringObjectVoltageRangeMax);
 		needed.push_back(XML_GDTF_WiringObjectFrequencyRangeMin);
@@ -3569,7 +3569,7 @@ void GdtfGeometryWiringObject::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	}
 	else
 	{
-		optional.push_back(XML_GDTF_WiringObjectElectricalPayload);
+		optional.push_back(XML_GDTF_WiringObjectElectricalPayLoad);
 		optional.push_back(XML_GDTF_WiringObjectVoltageRangeMin);
 		optional.push_back(XML_GDTF_WiringObjectVoltageRangeMax);
 		optional.push_back(XML_GDTF_WiringObjectFrequencyRangeMin);

@@ -433,7 +433,7 @@ const Sint32 kMVR_MinorVersion = 4;
 #define XML_GDTF_WiringObjectSignalLayer        "SignalLayer"
 #define XML_GDTF_WiringObjectOrientation        "Orientation"
 #define XML_GDTF_WiringObjectWireGroup          "WireGroup"
-#define XML_GDTF_WiringObjectElectricalPayload  "ElectricalPayload"
+#define XML_GDTF_WiringObjectElectricalPayLoad  "ElectricalPayLoad"
 #define XML_GDTF_WiringObjectVoltageRangeMin    "VoltageRangeMin"
 #define XML_GDTF_WiringObjectVoltageRangeMax    "VoltageRangeMax"
 #define XML_GDTF_WiringObjectFrequencyRangeMin  "FrequencyRangeMin"

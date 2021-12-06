@@ -1611,7 +1611,7 @@ MvrString VectorworksMVR::CGdtfGeometryImpl::GetWireGroup()
 	return wiringObject->GetWireGroup().GetCharPtr();
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetElectricalPayload(double& electricalPayload)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetElectricalPayLoad(double& electricalPayLoad)
 {
 	// Check Pointer
 	if( ! fGeometry) return kVCOMError_NotInitialized;
@@ -1622,7 +1622,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetElectricalPayloa
 	SceneData::GdtfGeometryWiringObjectPtr wiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(fGeometry);
 	if ( ! wiringObject) { return kVCOMError_Failed; }
 	
-	electricalPayload = wiringObject->GetElectricalPayload();
+	electricalPayLoad = wiringObject->GetElectricalPayLoad();
 	return kVCOMError_NoError;
 }
 
@@ -1866,7 +1866,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetWireGroup(MvrStr
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetElectricalPayload(double electricalPayload)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetElectricalPayLoad(double electricalPayLoad)
 {
 	// Check Pointer
 	if (!fGeometry) return kVCOMError_NotInitialized;
@@ -1877,7 +1877,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetElectricalPayloa
 	SceneData::GdtfGeometryWiringObjectPtr wiringObject = static_cast<SceneData::GdtfGeometryWiringObjectPtr>(fGeometry);
 	if(!wiringObject) return kVCOMError_Failed;
 
-	wiringObject->SetElectricalPayload(electricalPayload);
+	wiringObject->SetElectricalPayLoad(electricalPayLoad);
 	return kVCOMError_NoError;
 }
 
