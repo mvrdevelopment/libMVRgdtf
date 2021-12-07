@@ -12551,3 +12551,4 @@ Sint32 GdtfConnector::GetGender()
 double GdtfConnector::GetLength()
 {
     return fLength;
+}
