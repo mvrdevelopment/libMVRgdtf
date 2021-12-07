@@ -1153,7 +1153,7 @@ namespace SceneData
 		size_t 				fSignalLayer;
 		EGdtfOrientation 	fOrientation;
 		TXString 			fWireGroup;
-		double 				fElectricalPayload; //Consumer
+		double 				fElectricalPayLoad; //Consumer
 		double 				fVoltageRangeMin; 	//Consumer
 		double 				fVoltageRangeMax; 	//Consumer
 		double 				fFrequencyRangeMin; //Consumer
@@ -1178,7 +1178,7 @@ namespace SceneData
 		size_t                  	GetSignalLayer() const;
 		EGdtfOrientation        	GetOrientation() const;
 		const TXString&         	GetWireGroup() const;
-		double                  	GetElectricalPayload() const;
+		double                  	GetElectricalPayLoad() const;
 		double                  	GetVoltageRangeMin() const;
 		double                 		GetVoltageRangeMax() const;
 		double                  	GetFrequencyRangeMin() const;
@@ -1198,7 +1198,7 @@ namespace SceneData
 		void                  		SetSignalLayer(size_t signalLayer);
 		void        				SetOrientation(const EGdtfOrientation& orientation);
 		void         				SetWireGroup(const TXString& wireGroup);
-		void                  		SetElectricalPayload(double electricalPayload);
+		void                  		SetElectricalPayLoad(double electricalPayLoad);
 		void                  		SetVoltageRangeMin(double voltageRangeMin);
 		void                  		SetVoltageRangeMax(double voltageRangeMax);
 		void                  		SetFrequencyRangeMin(double frequencyRangeMin);

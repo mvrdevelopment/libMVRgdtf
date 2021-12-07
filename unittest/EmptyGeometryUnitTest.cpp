@@ -91,7 +91,7 @@ void GdtfEmptyModelTest::WriteFile(VectorworksMVR::IGdtfFixturePtr& fixture)
         __checkVCOM(geometry7->SetSignalLayer(1));
         __checkVCOM(geometry7->SetOrientation(EGdtfOrientation::Top));
         __checkVCOM(geometry7->SetWireGroup("My WireGroup"));
-        __checkVCOM(geometry7->SetElectricalPayload(1.1));
+        __checkVCOM(geometry7->SetElectricalPayLoad(1.1));
         __checkVCOM(geometry7->SetVoltageRangeMin(1.2));
         __checkVCOM(geometry7->SetVoltageRangeMax(1.3));
         __checkVCOM(geometry7->SetFrequencyRangeMin(1.4));
@@ -288,9 +288,9 @@ void GdtfEmptyModelTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
 
         checkifEqual("WiringObject WireGroup", geoWiringObject->GetWireGroup(), "My WireGroup");
 
-        double electricalPayload = 0.0;
-        __checkVCOM(geoWiringObject->GetElectricalPayload(electricalPayload));
-        checkifEqual("WiringObject ElectricalPayload", electricalPayload, 1.1);
+        double electricalPayLoad = 0.0;
+        __checkVCOM(geoWiringObject->GetElectricalPayLoad(electricalPayLoad));
+        checkifEqual("WiringObject ElectricalPayLoad", electricalPayLoad, 1.1);
 
         double voltageRangeMin = 0.0;
         __checkVCOM(geoWiringObject->GetVoltageRangeMin(voltageRangeMin));
