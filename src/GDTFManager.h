@@ -709,9 +709,9 @@ namespace SceneData
 		const TXString&					GetGeometryFile_GLTFLow_FullPath();
 		const TXString&					GetGeometryFile_GLTFHigh_FullPath();
 
-		void						    GetBuffer3DS(void* bufferToCopy, size_t& length);
-		void						    GetBufferSVG(void* bufferToCopy, size_t& length);
-		void						    GetBufferGLTF(void* bufferToCopy, size_t& length);
+		void						    GetBuffer3DS(void** bufferToCopy, size_t& length);
+		void						    GetBufferSVG(void** bufferToCopy, size_t& length);
+		void						    GetBufferGLTF(void** bufferToCopy, size_t& length);
 
 		double                          GetSVGOffsetX() const;
 		double                          GetSVGOffsetY() const;

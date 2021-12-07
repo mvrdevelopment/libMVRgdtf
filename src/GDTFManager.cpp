@@ -1846,43 +1846,52 @@ EGdtfModel_PrimitiveType GdtfModel::GetPrimitiveType() const
 	return fPrimitiveType;
 }
 
-void GdtfModel::GetBuffer3DS(void* bufferToCopy, size_t& length)
+void GdtfModel::GetBuffer3DS(void** bufferToCopy, size_t& length)
 {
 	if(fBuffer3DS)
 	{
-		delete[] fBuffer3DS;
-		fBuffer3DS = nullptr;
+		return;
+	}
+	if (*bufferToCopy)
+	{
+		return;
 	}
 
-	bufferToCopy = new char[fBufferSize3DS];
+	*bufferToCopy = new char[fBufferSize3DS];
 	length = fBufferSize3DS;
-	memcpy(bufferToCopy, fBuffer3DS, fBufferSize3DS);
+	memcpy(*bufferToCopy, fBuffer3DS, fBufferSize3DS);
 }
 
-void GdtfModel::GetBufferSVG(void* bufferToCopy, size_t& length)
+void GdtfModel::GetBufferSVG(void** bufferToCopy, size_t& length)
 {
 	if(fBufferSVG)
 	{
-		delete[] fBufferSVG;
-		fBufferSVG = nullptr;
+		return;
+	}
+	if (*bufferToCopy)
+	{
+		return;
 	}
 
-	bufferToCopy = new char[fBufferSizeSVG];
+	*bufferToCopy = new char[fBufferSizeSVG];
 	length = fBufferSizeSVG;
-	memcpy(bufferToCopy, fBufferSVG, fBufferSizeSVG);
+	memcpy(*bufferToCopy, fBufferSVG, fBufferSizeSVG);
 }
 
-void GdtfModel::GetBufferGLTF(void* bufferToCopy, size_t& length)
+void GdtfModel::GetBufferGLTF(void** bufferToCopy, size_t& length)
 {
-	if(fBufferGLTF)
+	if(!fBufferGLTF)
 	{
-		delete[] fBufferGLTF;
-		fBufferGLTF = nullptr;
+		return;
+	}
+	if (*bufferToCopy)
+	{
+		return;
 	}
 
-	bufferToCopy = new char[fBufferSizeGLTF];
+	*bufferToCopy = new char[fBufferSizeGLTF];
 	length = fBufferSizeGLTF;
-	memcpy(bufferToCopy, fBufferGLTF, fBufferSizeGLTF);
+	memcpy(*bufferToCopy, fBufferGLTF, fBufferSizeGLTF);
 }
 
 double GdtfModel::GetSVGOffsetX() const
@@ -12542,4 +12551,3 @@ Sint32 GdtfConnector::GetGender()
 double GdtfConnector::GetLength()
 {
     return fLength;
-}
