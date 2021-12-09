@@ -30,9 +30,9 @@ namespace VectorworksMVR
 		virtual MvrString VCOM_CALLTYPE     GetGeometryFile_GLTFLow_FullPath();
 		virtual MvrString VCOM_CALLTYPE     GetGeometryFile_GLTFHigh_FullPath();
         
-        virtual VCOMError VCOM_CALLTYPE     GetBuffer3DS(void* bufferToCopy, size_t& length);
-        virtual VCOMError VCOM_CALLTYPE     GetBufferSVG(void* bufferToCopy, size_t& length);
-        virtual VCOMError VCOM_CALLTYPE     GetBufferGLTF(void* bufferToCopy, size_t& length);
+        virtual VCOMError VCOM_CALLTYPE     GetBuffer3DS(void** bufferToCopy, size_t& length);
+        virtual VCOMError VCOM_CALLTYPE     GetBufferSVG(void** bufferToCopy, size_t& length);
+        virtual VCOMError VCOM_CALLTYPE     GetBufferGLTF(void** bufferToCopy, size_t& length);
 
         virtual VCOMError VCOM_CALLTYPE     GetSVGOffsetX(double& svgOffsetX);
         virtual VCOMError VCOM_CALLTYPE     GetSVGOffsetY(double& svgOffsetY);

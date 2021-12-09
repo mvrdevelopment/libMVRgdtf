@@ -566,9 +566,9 @@ namespace VectorworksMVR
         virtual MvrString VCOM_CALLTYPE     GetGeometryFile_SVG_FullPath() = 0;
 		virtual MvrString VCOM_CALLTYPE     GetGeometryFile_GLTF_FullPath() = 0;
 		
-		virtual VCOMError VCOM_CALLTYPE     GetBuffer3DS(void* bufferToCopy, size_t& length) = 0;
-		virtual VCOMError VCOM_CALLTYPE     GetBufferSVG(void* bufferToCopy, size_t& length) = 0;
-        virtual VCOMError VCOM_CALLTYPE     GetBufferGLTF(void* bufferToCopy, size_t& length) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetBuffer3DS(void** bufferToCopy, size_t& length) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetBufferSVG(void** bufferToCopy, size_t& length) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetBufferGLTF(void** bufferToCopy, size_t& length) = 0;
                 
         virtual VCOMError VCOM_CALLTYPE     SetName(MvrString name) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetLength(double length) = 0;

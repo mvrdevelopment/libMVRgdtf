@@ -129,32 +129,41 @@ MvrString VectorworksMVR::CGdtfModelImpl::GetGeometryFile_GLTFHigh_FullPath()
 	return fModel->GetGeometryFile_GLTFHigh_FullPath().GetCharPtr();
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfModelImpl::GetBuffer3DS(void* bufferToCopy, size_t& length)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfModelImpl::GetBuffer3DS(void** bufferToCopy, size_t& length)
 {
 	// Check Pointer
 	if ( ! fModel) return kVCOMError_NotInitialized;
+	if (*bufferToCopy != nullptr) return kVCOMError_InvalidArg;
 
 	fModel->GetBuffer3DS(bufferToCopy, length);
 	
-	return kVCOMError_NoError;
-}
-
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfModelImpl::GetBufferSVG(void* bufferToCopy, size_t& length)
-{
-	// Check Pointer
-	if ( ! fModel) return kVCOMError_NotInitialized;
-
-	fModel->GetBufferSVG(bufferToCopy, length);
+	if (*bufferToCopy == nullptr) return kVCOMError_NotSet;
 	
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfModelImpl::GetBufferGLTF(void* bufferToCopy, size_t& length)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfModelImpl::GetBufferSVG(void** bufferToCopy, size_t& length)
 {
 	// Check Pointer
 	if ( ! fModel) return kVCOMError_NotInitialized;
+	if (*bufferToCopy != nullptr) return kVCOMError_InvalidArg;
+
+	fModel->GetBufferSVG(bufferToCopy, length);
+
+	if (*bufferToCopy == nullptr) return kVCOMError_NotSet;
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfModelImpl::GetBufferGLTF(void** bufferToCopy, size_t& length)
+{
+	// Check Pointer
+	if ( ! fModel) return kVCOMError_NotInitialized;
+	if (*bufferToCopy != nullptr) return kVCOMError_InvalidArg;
 
 	fModel->GetBufferGLTF(bufferToCopy, length);
+
+	if (*bufferToCopy == nullptr) return kVCOMError_NotSet;
 	
 	return kVCOMError_NoError;
 }

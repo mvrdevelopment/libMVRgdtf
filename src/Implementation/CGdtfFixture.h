@@ -6,6 +6,7 @@
 #include "Include/IMediaRessourceVectorInterface.h"
 #include "GDTFManager.h"
 #include "../Wrapper/ZIPFileImpl.h"
+#include <utility>
 
 
 namespace VectorworksMVR
@@ -174,7 +175,7 @@ namespace VectorworksMVR
 	private:
         SceneData::GdtfFixture*             fFixtureObject;
 		IZIPFilePtr				            fZipFile;
-        std::vector<CZIPFileIOBufferImpl*>  fBuffersAdded;
+        std::vector<std::pair<TXString, CZIPFileIOBufferImpl*>>  fBuffersAdded;
 
         char*                   fBuffer;
         size_t                  fBufferLength;

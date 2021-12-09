@@ -39,7 +39,8 @@ VectorworksMVR::CGdtfFixtureImpl::CGdtfFixtureImpl()
 
 VectorworksMVR::CGdtfFixtureImpl::~CGdtfFixtureImpl()
 {
-    for(auto b : fBuffersAdded) {delete b;}
+    for(auto b : fBuffersAdded) {delete b.second;}
+    fBuffersAdded.clear();
     if (fFixtureObject) { delete fFixtureObject;}
     FreeBuffer();
 }
@@ -69,7 +70,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::OpenForWrite(MvrStri
 	
 	// If there is an existing fixture loaded, delete the old one and start from scratch
 	if (fFixtureObject) { delete fFixtureObject; }
-    for(auto b : fBuffersAdded) {delete b;} fBuffersAdded.clear();
+    for(auto b : fBuffersAdded) {delete b.second;} fBuffersAdded.clear();
 	
 	// Create the newFixture
 	fFixtureObject = new SceneData::GdtfFixture();
@@ -104,7 +105,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::OpenForWrite(MvrStri
 	
 	// If there is an existing fixture loaded, delete the old one and start from scratch
 	if (fFixtureObject) { delete fFixtureObject; }
-    for(auto b : fBuffersAdded) {delete b;} fBuffersAdded.clear();
+    for(auto b : fBuffersAdded) {delete b.second;} fBuffersAdded.clear();
 	
 	// Create the newFixture
 	fFixtureObject = new SceneData::GdtfFixture();
@@ -161,15 +162,13 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::AddBufferToGdtfFile(
 	if(!fFixtureObject) { return kVCOMError_Failed; }
 	if(!fZipFile)		{ return kVCOMError_Failed; }
 	TXString strFileName ( filename );
-	
-	
+    
     // Append the SubFoldername for resources.
     strFileName = SceneData::SceneDataZip::GetResourceSubFolder(resType) + strFileName;
 
     CZIPFileIOBufferImpl* buffer = new CZIPFileIOBufferImpl();
     buffer->SetData((void*)inBuffer, length);
-    fBuffersAdded.push_back(buffer);
-
+    fBuffersAdded.push_back({strFileName, buffer});
 
 	fZipFile->AddFile(strFileName, buffer);	
 	
@@ -2399,7 +2398,7 @@ VCOMError VectorworksMVR::CGdtfFixtureImpl::FromBufferInternal(const char* buffe
 
 	// Check there is already a object in here
 	if (fFixtureObject) { delete fFixtureObject; }
-    for(auto b : fBuffersAdded) {delete b;} fBuffersAdded.clear();
+    for(auto b : fBuffersAdded) {delete b.second;} fBuffersAdded.clear();
 	
 	// Create the new Object
 	fFixtureObject = new SceneData::GdtfFixture();
@@ -2430,6 +2429,13 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::RefreshBuffer()
 	fZipFile->OpenNewWrite(file, false);
 
     fFixtureObject->ExportToFile(fZipFile);
+    
+    for(const auto& e: fBuffersAdded)
+    {
+        fZipFile->AddFile(e.first, e.second);
+    }
+    
+    
 	
 	fZipFile->Close();
 
