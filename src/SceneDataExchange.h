@@ -826,6 +826,7 @@ namespace SceneData
 		
 		SceneDataLayerObjPtr		CreateLayerObject(	const SceneDataGUID& guid,									const TXString& name);
 		SceneDataGroupObjPtr		CreateGroupObject(	const SceneDataGUID& guid, const VWTransformMatrix& offset,							SceneDataGroupObjPtr addToContainer);
+		SceneDataGroupObjPtr		CreateGroupObject(	const SceneDataGUID& guid, const VWTransformMatrix& offset,	const TXString& name,	SceneDataGroupObjPtr addToContainer);
 		SceneDataFixtureObjPtr		CreateFixture(		const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
 		SceneDataSceneryObjPtr		CreateSceneryObject(const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
 		SceneDataFocusPointObjPtr	CreateFocusPoint(	const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);

@@ -429,6 +429,74 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateGroup
 	return kVCOMError_NoError;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateGroupObject(	const MvrUUID& guid, const STransformMatrix& offset, MvrString name, ISceneObj* addToContainer,	ISceneObj**	outGroupObj)
+{
+	//---------------------------------------------------------------------------
+	// Read Container
+	CSceneObjImpl* pContainer = static_cast<CSceneObjImpl* >(addToContainer);
+	
+	ASSERTN(kEveryone, pContainer != nullptr);
+	if ( ! pContainer) { return kVCOMError_NoValidContainerObj; }
+	
+	
+	SceneData::SceneDataObjWithMatrixPtr	obj		= nullptr;
+	ESceneObjType							type	= ESceneObjType::Layer;
+	pContainer->GetPointer(obj, type);
+	
+	
+	ASSERTN(kEveryone, type == ESceneObjType::Layer || type ==  ESceneObjType::Group);
+	if ( ! (type == ESceneObjType::Layer || type ==  ESceneObjType::Group) ) { return kVCOMError_NoValidContainerObj; }
+	
+	SceneData::SceneDataGroupObjPtr group = static_cast<SceneData::SceneDataGroupObjPtr>(obj);
+	
+	ASSERTN(kEveryone, group != nullptr);
+	if ( ! group) { return kVCOMError_NoValidContainerObj; }
+	
+	//---------------------------------------------------------------------------
+	// Create the obj
+	VWFC::Tools::VWUUID	uuid	(guid.a,guid.b,guid.c,guid.d);
+	
+	VWTransformMatrix ma;
+	GdtfUtil::ConvertMatrix(offset, ma);
+	
+	SceneData::SceneDataGroupObjPtr ptr = fExchangeObj.CreateGroupObject(uuid, ma, name, group);
+	
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CSceneObjImpl* pGroupObj = nullptr;
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_SceneObject, (IVWUnknown**) & pGroupObj)))
+	{
+		// Check Casting
+		CSceneObjImpl* pResultInterface = static_cast<CSceneObjImpl* >(pGroupObj);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(ptr, GetExchangeObj());
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incomming Object
+	if (*outGroupObj)
+	{
+		(*outGroupObj)->Release();
+		*outGroupObj		= NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*outGroupObj		= pGroupObj;
+	
+	return kVCOMError_NoError;
+}
+
 VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateFixture(const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outFixture)
 {
 	

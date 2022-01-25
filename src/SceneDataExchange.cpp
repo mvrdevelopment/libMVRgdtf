@@ -2428,6 +2428,14 @@ SceneDataGroupObjPtr SceneDataExchange::CreateGroupObject(const SceneDataGUID& g
 	return newGroup;
 }
 
+SceneDataGroupObjPtr SceneDataExchange::CreateGroupObject(const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name, SceneDataGroupObjPtr addToContainer)
+{
+	SceneDataGroupObjPtr newGroup = new SceneDataGroupObj(guid);
+	addToContainer->AddObject(newGroup);
+	newGroup->setName(name);
+	return newGroup;
+}
+
 SceneDataGroupObjPtr SceneDataExchange::ReadGroupObject(const SceneDataGUID& guid, const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer)
 {
 
