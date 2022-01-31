@@ -214,6 +214,11 @@ void MvrUnittest::WriteFile()
 		ISceneObjPtr fixture4 = nullptr;
 		__checkVCOM(mvrWrite->CreateFixture(MvrUUID(1136161871, 1699151080, 751939975, 1748783014), STransformMatrix(), "My Fixture4 Name", layer1, &fixture4));
 
+		// Group
+		MvrUUID groupUUID(1808353427, 683171502, 518343034, 0000000005);
+		ISceneObjPtr group = nullptr;
+        __checkVCOM(mvrWrite->CreateGroupObject(groupUUID, STransformMatrix(), "My Group Name", layer1, &group));
+
 		// Create second Layer
 		ISceneObjPtr layer2 = nullptr;
 		__checkVCOM(mvrWrite->CreateLayerObject(MvrUUID(465143117, 742747285, 1361655924, 1172316525), "My Layer 2", &layer2));
@@ -313,6 +318,7 @@ void MvrUnittest::ReadFile()
 		MvrUUID mappingDefinition1UUID(1808353427, 683171502, 518343034, 0000000002);
 		MvrUUID mappingDefinition2UUID(1808353427, 683171502, 518343034, 0000000003);
 		MvrUUID projectorUUID	(1808353427, 683171502, 518343034, 0000000004);
+		MvrUUID groupUUID		(1808353427, 683171502, 518343034, 0000000005);
 		MvrUUID resultUUID		(0,0,0,0);
 
         size_t count = 0;
@@ -642,6 +648,11 @@ void MvrUnittest::ReadFile()
 					bool duplicatedUuids = false;
 					__checkVCOM(mvrRead->GetDuplicatedUuids(duplicatedUuids));
 					checkifEqual("Duplicated Uuids", duplicatedUuids, true);
+				}
+
+				if (i==0 && j==4)
+				{
+					checkifEqual("Group name ", sceneObj->GetName(), "My Group Name");
 				}
 				
 				// ------------------------------------------------------------------------------
