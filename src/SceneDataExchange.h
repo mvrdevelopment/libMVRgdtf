@@ -770,8 +770,12 @@ namespace SceneData
 		bool								fUndoStarted;
 		//
         TFileIdentifierPtrArray				f3DS_FilesToAdd;
+        TFileIdentifierPtrArray				f3DSLow_FilesToAdd;
+        TFileIdentifierPtrArray				f3DSHigh_FilesToAdd;
         TFileIdentifierPtrArray				fSVG_FilesToAdd;
 		TFileIdentifierPtrArray				fGLTF_FilesToAdd;
+		TFileIdentifierPtrArray				fGLTFLow_FilesToAdd;
+		TFileIdentifierPtrArray				fGLTFHigh_FilesToAdd;
         TFileIdentifierPtrArray				fWheel_Image_FilesToAdd;
         TFileIdentifierPtrArray				fFixtureResources_FilesToAdd;
 		
@@ -822,6 +826,7 @@ namespace SceneData
 		
 		SceneDataLayerObjPtr		CreateLayerObject(	const SceneDataGUID& guid,									const TXString& name);
 		SceneDataGroupObjPtr		CreateGroupObject(	const SceneDataGUID& guid, const VWTransformMatrix& offset,							SceneDataGroupObjPtr addToContainer);
+		SceneDataGroupObjPtr		CreateGroupObject(	const SceneDataGUID& guid, const VWTransformMatrix& offset,	const TXString& name,	SceneDataGroupObjPtr addToContainer);
 		SceneDataFixtureObjPtr		CreateFixture(		const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
 		SceneDataSceneryObjPtr		CreateSceneryObject(const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
 		SceneDataFocusPointObjPtr	CreateFocusPoint(	const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);

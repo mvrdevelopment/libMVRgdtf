@@ -6,10 +6,15 @@
 #include "CGdtfAttribute.h"
 #include "CGdtfWheel.h"
 #include "CGdtfDmxChannelSet.h"
+#include "CGdtfDmxSubChannelSet.h"
 #include "CGdtfPhysicalEmitter.h"
 #include "CGdtfDmxChannel.h"
 #include "CGdtfDmxLogicalChannel.h"
 #include "CGdtfFilter.h"
+#include "CGdtfColorSpace.h"
+#include "CGdtfGamut.h"
+#include "CGdtfDmxProfile.h"
+#include "CGdtfSubPhysicalUnit.h"
 
 using namespace VectorworksMVR::Filing;
 
@@ -86,6 +91,16 @@ MvrString VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetOriginalAttribute()
 
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetDefaultValue(DmxValue &defaultValue)
+{
+	// Check Pointer
+	if ( ! fFunction) { return kVCOMError_NotInitialized; }
+	
+    defaultValue = fFunction->GetDefaultValue();
+    
+    return kVCOMError_NoError;
+}
+
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetStartAddress(DmxValue& address)
 {
 	// Check Pointer
@@ -130,6 +145,15 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetRealFa
 	if ( ! fFunction) { return kVCOMError_NotInitialized; }
 	
     fade = fFunction->GetRealFade();
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetRealAcceleration(double& value)
+{
+	// Check Pointer
+	if ( ! fFunction) { return kVCOMError_NotInitialized; }
+	
+    value = fFunction->GetRealAcceleration();
     return kVCOMError_NoError;
 }
 
@@ -249,7 +273,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetFilter
     }
 
     //---------------------------------------------------------------------------
-    // Check Incomming Object
+    // Check Incoming Object
     if (*outVal)
     {
         (*outVal)->Release();
@@ -271,6 +295,166 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetResolu
 	resolution = fFunction->GetParentDMXChannel()->GetChannelBitResolution();
 	
 	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetColorSpace(IGdtfColorSpace** colorSpace) 
+{
+    // Check Pointer
+    if (!fFunction) { return kVCOMError_NotInitialized; }
+
+    //---------------------------------------------------------------------------
+    // Initialize Object
+    SceneData::GdtfColorSpace* gdtfColorSpace = fFunction->GetColorSpace();
+    if (!gdtfColorSpace) { return kVCOMError_NotSet; }
+
+    CGdtfColorSpaceImpl* pColorSpaceObj = nullptr;
+
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfColorSpace, (IVWUnknown**)& pColorSpaceObj)))
+    {
+        // Check Casting
+        CGdtfColorSpaceImpl* pResultInterface = static_cast<CGdtfColorSpaceImpl*>(pColorSpaceObj);
+        if (pResultInterface)
+        {
+            pResultInterface->SetPointer(gdtfColorSpace);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+
+    //---------------------------------------------------------------------------
+    // Check Incoming Object
+    if (*colorSpace)
+    {
+        (*colorSpace)->Release();
+        *colorSpace = NULL;
+    }
+
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *colorSpace = pColorSpaceObj;
+
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetGamut(IGdtfGamut** gamut) 
+{
+    // Check Pointer
+    if (!fFunction) { return kVCOMError_NotInitialized; }
+
+    //---------------------------------------------------------------------------
+    // Initialize Object
+    SceneData::GdtfGamut* gdtfGamut = fFunction->GetGamut();
+    if (!gdtfGamut) { return kVCOMError_NotSet; }
+
+    CGdtfGamutImpl* pGamutObj = nullptr;
+
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfGamut, (IVWUnknown**)& pGamutObj)))
+    {
+        // Check Casting
+        CGdtfGamutImpl* pResultInterface = static_cast<CGdtfGamutImpl*>(pGamutObj);
+        if (pResultInterface)
+        {
+            pResultInterface->SetPointer(gdtfGamut);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+
+    //---------------------------------------------------------------------------
+    // Check Incoming Object
+    if (*gamut)
+    {
+        (*gamut)->Release();
+        *gamut = NULL;
+    }
+
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *gamut = pGamutObj;
+
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetDMXProfile(IGdtfDMXProfile** dmxProfile) 
+{
+    // Check Pointer
+    if (!fFunction) { return kVCOMError_NotInitialized; }
+
+    //---------------------------------------------------------------------------
+    // Initialize Object
+    SceneData::GdtfDMXProfile* gdtfDMXProfile = fFunction->GetDMXProfile();
+    if (!gdtfDMXProfile) { return kVCOMError_NotSet; }
+
+    CGdtfDMXProfileImpl* pDMXProfileObj = nullptr;
+
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDMXProfile, (IVWUnknown**)& pDMXProfileObj)))
+    {
+        // Check Casting
+        CGdtfDMXProfileImpl* pResultInterface = static_cast<CGdtfDMXProfileImpl*>(pDMXProfileObj);
+        if (pResultInterface)
+        {
+            pResultInterface->SetPointer(gdtfDMXProfile);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+
+    //---------------------------------------------------------------------------
+    // Check Incoming Object
+    if (*dmxProfile)
+    {
+        (*dmxProfile)->Release();
+        *dmxProfile = NULL;
+    }
+
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *dmxProfile = pDMXProfileObj;
+
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetMin(double& min)
+{
+	// Check Pointer
+	if ( ! fFunction) { return kVCOMError_NotInitialized; }
+	
+	min = fFunction->GetMin();
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetMax(double& max)
+{
+	// Check Pointer
+	if ( ! fFunction) { return kVCOMError_NotInitialized; }
+	
+	max = fFunction->GetMax();
+	
+	return kVCOMError_NoError;
+}
+
+MvrString VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetCustomName()
+{
+	// Check Pointer
+	if ( ! fFunction) { return ""; }
+	
+    return fFunction->GetCustomName().GetCharPtr();
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetAttribute(IGdtfAttribute* attribute)
@@ -304,6 +488,16 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetOrigin
 	
 	return kVCOMError_NoError;
 	
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetDefaultValue(DmxValue defaultValue)
+{
+	// Check Pointer
+	if ( ! fFunction) { return kVCOMError_NotInitialized; }
+	
+	fFunction->SetDefaultValue(defaultValue);
+	
+	return kVCOMError_NoError;
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetStartAddress(DmxValue address)
@@ -341,6 +535,15 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetRealFa
 	
 	fFunction->SetRealFade(fade);
 	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetRealAcceleration(double value)
+{
+	// Check Pointer
+	if ( ! fFunction) { return kVCOMError_NotInitialized; }
+	
+    fFunction->SetRealAcceleration(value);
+    return kVCOMError_NoError;
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetOnWheel(IGdtfWheel* wheel)
@@ -391,6 +594,88 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetFilter
     if (!gdtfFilter) { return kVCOMError_Failed; }
 
     fFunction->SetFilter (gdtfFilter);
+
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetColorSpace(IGdtfColorSpace* colorSpace)
+{
+    if (!fFunction) { return kVCOMError_NotInitialized; }
+    if (!colorSpace) { return kVCOMError_InvalidArg; }
+
+    // Cast
+    CGdtfColorSpaceImpl* colorSpaceImpl = static_cast<CGdtfColorSpaceImpl*>(colorSpace);
+    if (!colorSpaceImpl) { return kVCOMError_Failed; }
+
+    // Set Object
+    SceneData::GdtfColorSpace* gdtfColorSpace = colorSpaceImpl->GetPointer();
+    if (!gdtfColorSpace) { return kVCOMError_Failed; }
+
+    fFunction->SetColorSpace(gdtfColorSpace);
+
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetGamut(IGdtfGamut* gamut)
+{
+    if (!fFunction) { return kVCOMError_NotInitialized; }
+    if (!gamut) { return kVCOMError_InvalidArg; }
+
+    // Cast
+    CGdtfGamutImpl* gamutImpl = static_cast<CGdtfGamutImpl*>(gamut);
+    if (!gamutImpl) { return kVCOMError_Failed; }
+
+    // Set Object
+    SceneData::GdtfGamut* gdtfGamut = gamutImpl->GetPointer();
+    if (!gdtfGamut) { return kVCOMError_Failed; }
+
+    fFunction->SetGamut(gdtfGamut);
+
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetDMXProfile(IGdtfDMXProfile* dmxProfile)
+{
+    if (!fFunction) { return kVCOMError_NotInitialized; }
+    if (!dmxProfile) { return kVCOMError_InvalidArg; }
+
+    // Cast
+    CGdtfDMXProfileImpl* dmxProfileImpl = static_cast<CGdtfDMXProfileImpl*>(dmxProfile);
+    if (!dmxProfileImpl) { return kVCOMError_Failed; }
+
+    // Set Object
+    SceneData::GdtfDMXProfile* gdtfDMXProfile = dmxProfileImpl->GetPointer();
+    if (!gdtfDMXProfile) { return kVCOMError_Failed; }
+
+    fFunction->SetDMXProfile(gdtfDMXProfile);
+
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetMin(double min)
+{
+	// Check Pointer
+	if ( ! fFunction) { return kVCOMError_NotInitialized; }
+	
+	fFunction->SetMin(min);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetMax(double max)
+{
+	// Check Pointer
+	if ( ! fFunction) { return kVCOMError_NotInitialized; }
+	
+	fFunction->SetMax(max);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetCustomName(MvrString name)
+{
+  	// Check if valid
+	if( ! fFunction) return kVCOMError_NotInitialized;
+
+    fFunction->SetCustomName(name);
 
     return kVCOMError_NoError;
 }
@@ -495,6 +780,107 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::CreateDmx
 	*set	= pChannelSetObj;
 	
 	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetDmxSubChannelSetCount(size_t &count)
+{
+	// Check Pointer
+	if ( ! fFunction) { return kVCOMError_NotInitialized; }
+	
+    count = fFunction->GetSubChannelSets().size();
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetDmxSubChannelSetAt(size_t at, VectorworksMVR::IGdtfDmxSubChannelSet** subChannelSet)
+{
+	// Check Pointer
+	if ( ! fFunction) { return kVCOMError_NotInitialized; }
+	
+	// Check bounds
+	if ( at >= fFunction->GetSubChannelSets().size()) { return kVCOMError_OutOfBounds; }
+    
+    //---------------------------------------------------------------------------
+    // Initialize Object
+	SceneData::GdtfDmxSubChannelSet*	gdtfSubChannelSet = fFunction->GetSubChannelSets()[at];
+    CGdtfDmxSubChannelSetImpl*			pSubChannelSetObj = nullptr;
+    
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDmxSubChannelSet, (IVWUnknown**) & pSubChannelSetObj)))
+    {
+        // Check Casting
+        CGdtfDmxSubChannelSetImpl* pResultInterface = static_cast<CGdtfDmxSubChannelSetImpl* >(pSubChannelSetObj);
+        if (pResultInterface)
+        {
+            pResultInterface->SetPointer(gdtfSubChannelSet);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+    
+    //---------------------------------------------------------------------------
+    // Check Incoming Object
+    if (*subChannelSet)
+    {
+        (*subChannelSet)->Release();
+        *subChannelSet = NULL;
+    }
+    
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *subChannelSet = pSubChannelSetObj;
+    
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::CreateDmxSubChannelSet(MvrString name, IGdtfSubPhysicalUnit* subPhysicalUnit, IGdtfDmxSubChannelSet** subChannelSet)
+{
+	// Check Pointer
+	if ( ! fFunction) { return kVCOMError_NotInitialized; }
+	
+	CGdtfSubPhysicalUnitImpl* pSubPhysicalUnitObj = static_cast<CGdtfSubPhysicalUnitImpl*>(subPhysicalUnit);
+	if(!pSubPhysicalUnitObj) { return kVCOMError_InvalidArg; }
+
+    //---------------------------------------------------------------------------
+    // Initialize Object
+    SceneData::GdtfSubPhysicalUnit* gdtfSubPhysicalUnit = pSubPhysicalUnitObj->GetPointer();
+	SceneData::GdtfDmxSubChannelSet* gdtfSubChannelSet  = fFunction->AddSubChannelSet(gdtfSubPhysicalUnit, name);
+    
+    CGdtfDmxSubChannelSetImpl* pSubChannelSetObj = nullptr;
+    
+    // Query Interface
+    if (VCOM_SUCCEEDED(VWQueryInterface(IID_GdtfDmxSubChannelSet, (IVWUnknown**) & pSubChannelSetObj)))
+    {
+        // Check Casting
+        CGdtfDmxSubChannelSetImpl* pResultInterface = static_cast<CGdtfDmxSubChannelSetImpl* >(pSubChannelSetObj);
+        if (pResultInterface)
+        {
+            pResultInterface->SetPointer(gdtfSubChannelSet);
+        }
+        else
+        {
+            pResultInterface->Release();
+            pResultInterface = nullptr;
+            return kVCOMError_NoInterface;
+        }
+    }
+    
+    //---------------------------------------------------------------------------
+    // Check Incoming Object
+    if (*subChannelSet)
+    {
+        (*subChannelSet)->Release();
+        *subChannelSet = NULL;
+    }
+    
+    //---------------------------------------------------------------------------
+    // Set Out Value
+    *subChannelSet = pSubChannelSetObj;
+    
+    return kVCOMError_NoError;
 }
 
 void VectorworksMVR::CGdtfDmxChannelFunctionImpl::setPointer(SceneData::GdtfDmxChannelFunction *function)
@@ -702,43 +1088,4 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetParent
     *parent	= pLogicalChannel;
     
     return kVCOMError_NoError;
-}
-
-// GDTF 1.1
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetRealAcceleration(double& value)
-{
-	// Check Pointer
-	if ( ! fFunction) { return kVCOMError_NotInitialized; }
-	
-    value = fFunction->GetRealAcceleration();
-    return kVCOMError_NoError;
-}
-
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetRealAcceleration(double value)
-{
-	// Check Pointer
-	if ( ! fFunction) { return kVCOMError_NotInitialized; }
-	
-    fFunction->SetRealAcceleration(value);
-    return kVCOMError_NoError;
-}
-
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetDefaultValue(DmxValue &defaultValue)
-{
-	// Check Pointer
-	if ( ! fFunction) { return kVCOMError_NotInitialized; }
-	
-    defaultValue = fFunction->GetDefaultValue();
-    
-    return kVCOMError_NoError;
-}
-
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetDefaultValue(DmxValue defaultValue)
-{
-	// Check Pointer
-	if ( ! fFunction) { return kVCOMError_NotInitialized; }
-	
-	fFunction->SetDefaultValue(defaultValue);
-	
-	return kVCOMError_NoError;
 }

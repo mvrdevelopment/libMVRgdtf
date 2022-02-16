@@ -20,7 +20,7 @@ namespace SceneData
 	// Forward declarations
 	class GdtfPhysicalEmitter; 
     typedef GdtfPhysicalEmitter*				GdtfPhysicalEmitterPtr;
-    typedef std::vector<GdtfPhysicalEmitter*>	TGdtfPhysicalEmitterArray;    	
+    typedef std::vector<GdtfPhysicalEmitter*>	TGdtfPhysicalEmitterArray;
 
 	class GdtfFeatureGroup;
 	class GdtfAttribute;
@@ -62,9 +62,8 @@ namespace SceneData
     typedef GdtfConnector*	GdtfConnectorPtr;
     typedef std::vector<GdtfConnector*>	TGdtfConnectorArray;
 
-	class GdtfPowerConsumption; 
-    typedef GdtfPowerConsumption*	GdtfPowerConsumptionPtr;
-    typedef std::vector<GdtfPowerConsumption*>	TGdtfPowerConsumptionArray;
+	class GdtfGeometryWiringObject;
+	typedef GdtfGeometryWiringObject* GdtfGeometryWiringObjectPtr;
 
 
 	const Sint32 kDmxBreakOverwriteValue = 0;
@@ -219,6 +218,46 @@ namespace SceneData
 	typedef GdtfFeatureGroup*				GdtfFeatureGroupPtr;
 	typedef std::vector<GdtfFeatureGroupPtr>TGdtfFeatureGroupArray;
 
+	class GdtfSubPhysicalUnit : public GdtfObject
+	{
+	public:
+		GdtfSubPhysicalUnit();
+		GdtfSubPhysicalUnit(EGdtfSubPhysicalUnitType type);
+		~GdtfSubPhysicalUnit();
+		
+	private:
+		EGdtfSubPhysicalUnitType 	fType;
+        EGdtfPhysicalUnit       	fPhysicalUnit;
+		double						fPhysicalFrom;
+		double						fPhysicalTo;
+		
+	private:
+		
+	public:
+        // Getter
+        EGdtfSubPhysicalUnitType        GetType() const;
+        EGdtfPhysicalUnit               GetPhysicalUnit() const;
+		double							GetPhysicalFrom() const;
+        double							GetPhysicalTo() const;
+        // Setter
+        void                            SetType(const EGdtfSubPhysicalUnitType& type);
+        void                            SetPhysicalUnit(const EGdtfPhysicalUnit& physicalUnit);
+        void                            SetPhysicalFrom(double physicalFrom);
+        void                            SetPhysicalTo(double physicalTo);
+		
+		virtual EGdtfObjectType			GetObjectType();
+		virtual TXString				GetNodeReference();
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+
+	};
+	typedef GdtfSubPhysicalUnit*				GdtfSubPhysicalUnitPtr;
+	typedef std::vector<GdtfSubPhysicalUnit*> 	TGdtfSubPhysicalUnitArray;
+
 	
 	class GdtfAttribute : public GdtfObject
 	{
@@ -228,15 +267,19 @@ namespace SceneData
 		~GdtfAttribute();
 		
 	private:
-		TXString				fName;
-		TXString				fPrettyName;
-		GdtfActivationGroupPtr	fActivationGroup;
-		GdtfFeaturePtr          fFeature;
-        GdtfAttribute*          fMainAttribute;
-        EGdtfPhysicalUnit       fPhysicalUnit;
-        CCieColor               fColor;
-		bool					fHasColor;
-		//		
+		// Attributes
+		TXString					fName;
+		TXString					fPrettyName;
+		GdtfActivationGroupPtr		fActivationGroup;
+		GdtfFeaturePtr          	fFeature;
+        GdtfAttribute*          	fMainAttribute;
+        EGdtfPhysicalUnit       	fPhysicalUnit;
+        CCieColor               	fColor;
+		bool						fHasColor;
+		// Children
+		TGdtfSubPhysicalUnitArray	fSubPhysicalUnits;
+
+		
 		
 	private:
 		// Unresolved Ptrs
@@ -253,8 +296,10 @@ namespace SceneData
         GdtfAttribute*                  GetMainAttribute();
         EGdtfPhysicalUnit               GetPhysicalUnit();
         CCieColor                       GetColor();		
-		bool                       		HasColor() const;	
-        // Setter
+		bool                       		HasColor() const;
+		TGdtfSubPhysicalUnitArray		GetSubPhysicalUnitArray() const;
+
+		// Setters
 		void							SetName(const TXString& name);
 		void							SetPrettyName(const TXString& name);
 		void							SetFeature(GdtfFeaturePtr newFeat);
@@ -262,6 +307,7 @@ namespace SceneData
         void                            SetMainAttribute(GdtfAttribute* attr);
         void                            SetPhysicalUnit(EGdtfPhysicalUnit unit);
         void                            SetColor(const CCieColor & col);
+		GdtfSubPhysicalUnitPtr			CreateSubPhysicalUnit(EGdtfSubPhysicalUnitType type);
 		
 		virtual EGdtfObjectType			GetObjectType();
 		virtual TXString				GetNodeReference();
@@ -412,25 +458,30 @@ namespace SceneData
     {
     public:
         GdtfColorSpace();
+		GdtfColorSpace(const TXString& name, EGdtfColorSpace colorSpace);
         ~GdtfColorSpace();
     private:
         EGdtfColorSpace  fColorSpace;
 
-        CCieColor        fRed;
-        CCieColor        fGreen;
-        CCieColor        fBlue;
-        CCieColor        fWhitePoint;
+		TXString		fUniqueName;
+        CCieColor       fRed;
+        CCieColor       fGreen;
+        CCieColor       fBlue;
+        CCieColor       fWhitePoint;
     public:
         virtual EGdtfObjectType			GetObjectType();
+		virtual TXString				GetNodeReference();
 
     public:
-        // Getter        
+        // Getter
+		const TXString&       GetName() const;
         EGdtfColorSpace		  GetColorSpace();
         CCieColor		      GetRed();
         CCieColor             GetGreen();
         CCieColor		      GetBlue();
 		CCieColor             GetWhite();
         // Setter       
+		void							SetName(const TXString& name);
         void        		            SetColorSpace(EGdtfColorSpace val);
         void                            SetRed(CCieColor val);
         void                            SetGreen(CCieColor val);
@@ -443,7 +494,36 @@ namespace SceneData
 		virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
 
     };
+	typedef GdtfColorSpace*					GdtfColorSpacePtr;
+    typedef std::vector<GdtfColorSpace*>	TGdtfColorSpaceArray; 
 
+	class GdtfGamut : public GdtfObject
+	{
+    public:
+        GdtfGamut();
+        GdtfGamut(const TXString& name, CCieColorPtr color);
+        ~GdtfGamut();
+    private:
+        TXString                        fUniqueName;
+        TCCieColorArray           		fGamutPoints;
+    public:
+        virtual EGdtfObjectType		    GetObjectType();
+        virtual TXString				GetNodeReference();
+    public:
+		// Getters
+        const TXString&		            GetName() const;
+        const TCCieColorArray&    		GetGamutPoints() const;
+        // Setters
+        void						    SetName(const TXString& name);
+        void                			AddGamutPoint(CCieColorPtr newPoint);
+    protected:
+        virtual	TXString				GetNodeName();
+        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode); 
+		virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);       
+    };
+	typedef GdtfGamut*					GdtfGamutPtr;
+	typedef std::vector<GdtfGamutPtr>	TGdtfGamutArray;
 
     class GdtfPhysicalDescriptions : public GdtfObject
     {
@@ -452,6 +532,8 @@ namespace SceneData
         ~GdtfPhysicalDescriptions();
     private:        
         GdtfColorSpace                  fColorSpace;
+		TGdtfColorSpaceArray			fAdditionalColorSpaces;
+		TGdtfGamutArray					fGamuts;
         TGdtfPhysicalEmitterArray		fEmitters;
         TGdtfFilterArray                fFilters;
         TGdtfDMXProfileArray            fDmxProfiles;
@@ -459,7 +541,6 @@ namespace SceneData
 		TGdtfConnectorArray				fConnectors;
 
 		//Properties Collect
-		TGdtfPowerConsumptionArray		fPowerConsumptions;
 		double							fOperatingTemperatureLow;
 		double							fOperatingTemperatureHigh;
 		double							fWeight;
@@ -472,12 +553,13 @@ namespace SceneData
         // Getter        
         GdtfColorSpace*                  GetColorSpace();
 
+        const TGdtfColorSpaceArray& 		GetAdditionalColorSpaceArray();
+        const TGdtfGamutArray& 				GetGamutArray();
         const TGdtfPhysicalEmitterArray& 	GetPhysicalEmitterArray();
         const TGdtfFilterArray&          	GetFilterArray();
         const TGdtfDMXProfileArray&      	GetDmxProfileArray();
         const TGdtf_CRIGroupArray&       	GetCRIGroupArray();
 		const TGdtfConnectorArray&       	GetConnectorArray();
-		const TGdtfPowerConsumptionArray&   GetPowerConsumptionArray();
 		double								GetOperatingTemperatureLow();
 		double								GetOperatingTemperatureHigh();
 		double								GetWeight();
@@ -488,19 +570,20 @@ namespace SceneData
 		void								SetWeight(double value);
 		void								SetLegHeight(double value);
         
+		GdtfColorSpacePtr				AddAdditionalColorSpace(const TXString& name, EGdtfColorSpace colorSpace);
+        GdtfGamutPtr	        		AddGamut(const TXString& name, CCieColorPtr color);
         GdtfPhysicalEmitterPtr	        AddEmitter(const TXString& name, CCieColor color);
         GdtfFilterPtr                   AddFilter(const TXString& name,  CCieColor color);
         GdtfDMXProfilePtr               AddDmxProfile();
         GdtfCRIGroupPtr                 AddCRIGroup(double colorTsemp);
 		GdtfConnectorPtr                AddConnector(const TXString& name,  const TXString& type);
-		GdtfPowerConsumptionPtr			AddPowerConsumption(GdtfConnectorPtr connector);
 
     protected:
         virtual	TXString				GetNodeName();
         virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
         virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
     };
-    typedef GdtfPhysicalDescriptions*	GdtfPhysicalDescriptionsPtr;	
+    typedef GdtfPhysicalDescriptions*	GdtfPhysicalDescriptionsPtr;
 
     class GdtfFilter : public GdtfObject
     {
@@ -591,6 +674,21 @@ namespace SceneData
 		TXString					fFullPath3DS;
         TXString					fFullPathSVG;
 		TXString					fFullPathGLTF;
+
+		char*						fBuffer3DS;
+		char*						fBufferSVG;
+		char*						fBufferGLTF;
+
+		size_t						fBufferSize3DS;
+		size_t						fBufferSizeSVG;
+		size_t						fBufferSizeGLTF;
+
+		double						fSVGOffsetX;
+		double						fSVGOffsetY;
+		double						fSVGSideOffsetX;
+		double						fSVGSideOffsetY;
+		double						fSVGFrontOffsetX;
+		double						fSVGFrontOffsetY;
 		//
 		GdtfFixture*				fParentFixture;
 		
@@ -604,8 +702,24 @@ namespace SceneData
         //
 		const TXString&					GetGeometryFileName() const;
 		const TXString&					GetGeometryFile_3DS_FullPath();
+		const TXString&					GetGeometryFile_3DSLow_FullPath();
+		const TXString&					GetGeometryFile_3DSHigh_FullPath();
         const TXString&				    GetGeometryFile_SVG_FullPath();
 		const TXString&					GetGeometryFile_GLTF_FullPath();
+		const TXString&					GetGeometryFile_GLTFLow_FullPath();
+		const TXString&					GetGeometryFile_GLTFHigh_FullPath();
+
+		void						    GetBuffer3DS(void** bufferToCopy, size_t& length);
+		void						    GetBufferSVG(void** bufferToCopy, size_t& length);
+		void						    GetBufferGLTF(void** bufferToCopy, size_t& length);
+
+		double                          GetSVGOffsetX() const;
+		double                          GetSVGOffsetY() const;
+		double                          GetSVGSideOffsetX() const;
+		double                          GetSVGSideOffsetY() const;
+		double                          GetSVGFrontOffsetX() const;
+		double                          GetSVGFrontOffsetY() const;
+
 		// Setter
 		void						    SetName(const TXString& name);
 		void					    	SetLength(const double& length);
@@ -613,6 +727,18 @@ namespace SceneData
 		void						    SetHeight(const double& height);
 		void						    SetPrimitiveType(const EGdtfModel_PrimitiveType& type);        
 		void						    SetGeometryFile(const TXString& file);
+
+		void						    SetBuffer3DS(void* bufferToCopy, size_t length);
+		void						    SetBufferSVG(void* bufferToCopy, size_t length);
+		void						    SetBufferGLTF(void* bufferToCopy, size_t length);
+
+		void							SetSVGOffsetX(double svgOffsetX);
+		void							SetSVGOffsetY(double svgOffsetY);
+		void							SetSVGSideOffsetX(double svgSideOffsetX);
+		void							SetSVGSideOffsetY(double svgSideOffsetY);
+		void							SetSVGFrontOffsetX(double svgFrontOffsetX);
+		void							SetSVGFrontOffsetY(double svgFrontOffsetY);
+
 	public:
 		virtual EGdtfObjectType			GetObjectType();
 		virtual TXString				GetNodeReference();
@@ -680,6 +806,12 @@ namespace SceneData
 		GdtfGeometry*						AddGeometryWithAxis(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
 		GdtfGeometry*						AddGeometryWithLamp(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
 		GdtfGeometry*						AddGeometryDisplay(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
+		GdtfGeometry*						AddGeometryLaser(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
+		GdtfGeometry*						AddGeometryWiringObject(		const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
+		GdtfGeometry*						AddGeometryInventory(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
+		GdtfGeometry*						AddGeometryStructure(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
+		GdtfGeometry*						AddGeometrySupport(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
+		GdtfGeometry*						AddGeometryMagnet(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 
 	protected:
 		virtual	TXString				GetNodeName();
@@ -870,6 +1002,388 @@ namespace SceneData
         virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
 	};
 	typedef GdtfGeometryDisplay* GdtfGeometryDisplayPtr;
+
+	class GdtfLaserProtocol : public GdtfObject
+	{
+	public:
+		GdtfLaserProtocol();
+		GdtfLaserProtocol(const TXString& name);
+
+		~GdtfLaserProtocol();
+	
+	private:
+		TXString fName;
+
+	public:
+		virtual EGdtfObjectType			GetObjectType();
+
+		// Getters
+		const TXString&	GetName() const;
+
+		// Setters
+		void			SetName(const TXString& name);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+	};
+	typedef GdtfLaserProtocol*					GdtfLaserProtocolPtr;
+	typedef std::vector<GdtfLaserProtocolPtr> 	TGdtfLaserProtocolArray;
+
+	class GdtfGeometryLaser : public GdtfGeometry
+	{
+	public:
+		GdtfGeometryLaser(GdtfGeometry* parent);
+		GdtfGeometryLaser(const TXString& name, GdtfModelPtr refToModel,const VWTransformMatrix& ma, GdtfGeometry* parent);
+
+		~GdtfGeometryLaser();
+	
+	private:
+		EGdtfLaserColorType 	fColorType;
+		double					fColor; //Wavelength
+		double					fOutputStrength;
+		GdtfPhysicalEmitter*	fEmitter;
+		double 					fBeamDiameter;
+		double					fBeamDivergenceMin;
+		double					fBeamDivergenceMax;
+		double					fScanAnglePan;
+		double					fScanAngleTilt;
+		double					fScanSpeed;
+
+		TXString 				fUnresolvedEmitter;
+
+		TGdtfLaserProtocolArray	fLaserProtocols;
+
+	public:
+		virtual EGdtfObjectType			GetObjectType();
+
+		// Getters
+        EGdtfLaserColorType				GetColorType() const;
+		double                  		GetColor() const;
+		double                  		GetOutputStrength() const;
+		GdtfPhysicalEmitter*    		GetEmitter() const;
+		double                  		GetBeamDiameter() const;
+		double                  		GetBeamDivergenceMin() const;
+		double                 			GetBeamDivergenceMax() const;
+		double                  		GetScanAnglePan() const;
+		double                  		GetScanAngleTilt() const;
+		double                  		GetScanSpeed() const;
+
+		const TXString&					GetUnresolvedEmitter() const;
+
+		const TGdtfLaserProtocolArray&	GetLaserProtocolArray() const;
+
+		// Setters
+		void							SetColorType(const EGdtfLaserColorType& colorType);
+		void							SetColor(double waveLength);
+		void							SetOutputStrength(double outputStrength);
+		void		    				SetEmitter(GdtfPhysicalEmitter* emitter);
+		void							SetBeamDiameter(double beamDiameter);
+		void							SetBeamDivergenceMin(double beamDivergenceMin);
+		void							SetBeamDivergenceMax(double beamDivergenceMax);
+		void							SetScanAnglePan(double scanAnglePan);
+		void							SetScanAngleTilt(double scanAngleTilt);
+		void							SetScanSpeed(double scanSpeed);
+
+		GdtfLaserProtocolPtr         	CreateLaserProtocol(const TXString& name);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+	};
+	typedef GdtfGeometryLaser* GdtfGeometryLaserPtr;
+
+	class GdtfPinPatch : public GdtfObject
+	{
+	public:
+		GdtfPinPatch();
+		GdtfPinPatch(GdtfGeometryWiringObjectPtr toWiringObject, size_t fromPin, size_t toPin);
+
+		~GdtfPinPatch();
+	
+	private:
+		GdtfGeometryWiringObjectPtr	fToWiringObject;
+		size_t						fFromPin;
+		size_t						fToPin;
+
+		TXString					fUnresolvedWiringObject;
+
+	public:
+		virtual EGdtfObjectType			GetObjectType();
+
+		// Getters
+		GdtfGeometryWiringObjectPtr 	GetToWiringObject() const;
+		size_t							GetFromPin() const;
+		size_t							GetToPin() const;
+
+		const TXString&					GetUnresolvedWiringObject() const;
+
+		// Setters
+		void	SetToWiringObject(GdtfGeometryWiringObjectPtr toWiringObject);
+		void	SetFromPin(size_t fromPin);
+		void	SetToPin(size_t toPin);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+	};
+	typedef GdtfPinPatch* 					GdtfPinPatchPtr;
+	typedef std::vector<GdtfPinPatchPtr> 	TGdtfPinPatchArray;
+
+	class GdtfGeometryWiringObject : public GdtfGeometry
+	{
+	public:
+		GdtfGeometryWiringObject(GdtfGeometry* parent);
+		GdtfGeometryWiringObject(const TXString& name, GdtfModelPtr refToModel,const VWTransformMatrix& ma, GdtfGeometry* parent);
+
+		~GdtfGeometryWiringObject();
+	
+	private:
+		// Attributes
+		TXString 			fConnectorType;
+		EGdtfComponentType 	fComponentType;
+		TXString 			fSignalType;
+		size_t 				fPinCount;
+		size_t 				fSignalLayer;
+		EGdtfOrientation 	fOrientation;
+		TXString 			fWireGroup;
+		double 				fElectricalPayLoad; //Consumer
+		double 				fVoltageRangeMin; 	//Consumer
+		double 				fVoltageRangeMax; 	//Consumer
+		double 				fFrequencyRangeMin; //Consumer
+		double 				fFrequencyRangeMax; //Consumer
+		double 				fCosPhi; 			//Consumer
+		double 				fMaxPayLoad; 		//PowerSource
+		double 				fVoltage; 			//PowerSource
+		double 				fFuseCurrent; 		//Fuse
+		EGdtfFuseRating 	fFuseRating; 		//Fuse
+
+		// Children
+		TGdtfPinPatchArray 	fPinPatches;
+
+	public:
+		virtual EGdtfObjectType		GetObjectType();
+
+		// Getters
+        const TXString&				GetConnectorType() const;
+		EGdtfComponentType      	GetComponentType() const;
+		const TXString&         	GetSignalType() const;
+		size_t    					GetPinCount() const;
+		size_t                  	GetSignalLayer() const;
+		EGdtfOrientation        	GetOrientation() const;
+		const TXString&         	GetWireGroup() const;
+		double                  	GetElectricalPayLoad() const;
+		double                  	GetVoltageRangeMin() const;
+		double                 		GetVoltageRangeMax() const;
+		double                  	GetFrequencyRangeMin() const;
+		double                  	GetFrequencyRangeMax() const;
+		double                  	GetCosPhi() const;
+		double                  	GetMaxPayLoad() const;
+		double                  	GetVoltage() const;
+		double                  	GetFuseCurrent() const;
+		EGdtfFuseRating         	GetFuseRating() const;
+		const TGdtfPinPatchArray&	GetPinPatchArray() const;
+
+		// Setters
+		void						SetConnectorType(const TXString& connectorType);
+		void      					SetComponentType(const EGdtfComponentType& componentType);
+		void         				SetSignalType(const TXString& signalType);
+		void    					SetPinCount(size_t pinCount);
+		void                  		SetSignalLayer(size_t signalLayer);
+		void        				SetOrientation(const EGdtfOrientation& orientation);
+		void         				SetWireGroup(const TXString& wireGroup);
+		void                  		SetElectricalPayLoad(double electricalPayLoad);
+		void                  		SetVoltageRangeMin(double voltageRangeMin);
+		void                  		SetVoltageRangeMax(double voltageRangeMax);
+		void                  		SetFrequencyRangeMin(double frequencyRangeMin);
+		void                  		SetFrequencyRangeMax(double frequencyRangeMax);
+		void                  		SetCosPhi(double cosPhi);
+		void                  		SetMaxPayLoad(double maxPayload);
+		void                 		SetVoltage(double voltage);
+		void                  		SetFuseCurrent(double fuseCurrent);
+		void         				SetFuseRating(const EGdtfFuseRating& fuseRating);
+		GdtfPinPatchPtr         	CreatePinPatch(GdtfGeometryWiringObject* toWiringObject, size_t fromPin, size_t toPin);
+
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+	};
+
+	class GdtfGeometryInventory : public GdtfGeometry
+	{
+	public:
+		GdtfGeometryInventory(GdtfGeometry* parent);
+		GdtfGeometryInventory(const TXString& name, GdtfModelPtr refToModel,const VWTransformMatrix& ma, GdtfGeometry* parent);
+
+		~GdtfGeometryInventory();
+	
+	private:
+		size_t fCount;
+
+	public:
+		virtual EGdtfObjectType			GetObjectType();
+
+		// Getters
+		size_t    						GetCount() const;
+
+		// Setters
+		void    						SetCount(size_t count);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+	};
+	typedef GdtfGeometryInventory* GdtfGeometryInventoryPtr;
+
+	class GdtfGeometryStructure : public GdtfGeometry
+	{
+	public:
+		GdtfGeometryStructure(GdtfGeometry* parent);
+		GdtfGeometryStructure(const TXString& name, GdtfModelPtr refToModel,const VWTransformMatrix& ma, GdtfGeometry* parent);
+
+		~GdtfGeometryStructure();
+	
+	private:
+		GdtfGeometry*   		fLinkedGeometry;
+		EGdtfStructureType 		fStructureType;
+		EGdtfCrossSectionType 	fCrossSectionType;
+		double					fCrossSectionHeight; //Tube
+		double					fCrossSectionWallThickness; //Tube
+		TXString				fTrussCrossSection; //TrussFramework
+
+		TXString 				fUnresolvedLinkedGeometry;
+
+	public:
+		virtual EGdtfObjectType			GetObjectType();
+
+		// Getters
+        GdtfGeometry*					GetLinkedGeometry() const;
+		EGdtfStructureType				GetStructureType() const;
+		EGdtfCrossSectionType			GetCrossSectionType() const;
+		double							GetCrossSectionHeight() const;
+		double							GetCrossSectionWallThickness() const;
+		const TXString&					GetTrussCrossSection() const;
+
+		const TXString&					GetUnresolvedLinkedGeometry() const;
+
+		// Setters
+        void							SetLinkedGeometry(GdtfGeometry* linkedGeometry);
+		void							SetStructureType(const EGdtfStructureType& structureType);
+		void							SetCrossSectionType(const EGdtfCrossSectionType& crossSectionType);
+		void							SetCrossSectionHeight(double crossSectionHeight);
+		void							SetCrossSectionWallThickness(double crossSectionWallThickness);
+		void							SetTrussCrossSection(const TXString& trussCrossSection);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+	};
+	typedef GdtfGeometryStructure* GdtfGeometryStructurePtr;
+
+	class GdtfGeometrySupport : public GdtfGeometry
+	{
+	public:
+		GdtfGeometrySupport(GdtfGeometry* parent);
+		GdtfGeometrySupport(const TXString& name, GdtfModelPtr refToModel,const VWTransformMatrix& ma, GdtfGeometry* parent);
+
+		~GdtfGeometrySupport();
+	
+	private:
+		EGdtfSupportType		fSupportType;
+		double 					fCapacityX;
+		double 					fCapacityY;
+		double 					fCapacityZ;
+		double 					fCapacityXX;
+		double 					fCapacityYY;
+		double 					fCapacityZZ;
+		TXString 				fRopeCrossSection; 	//Rope
+		VWPoint3D 				fRopeOffset; 		//Rope
+		double 					fResistanceX;		//GroundSupport
+		double 					fResistanceY;		//GroundSupport
+		double 					fResistanceZ;		//GroundSupport
+		double 					fResistanceXX;		//GroundSupport
+		double 					fResistanceYY;		//GroundSupport
+		double 					fResistanceZZ;		//GroundSupport
+
+	public:
+		virtual EGdtfObjectType			GetObjectType();
+
+		// Getters
+		EGdtfSupportType				GetSupportType() const;
+		double							GetCapacityX() const;
+		double							GetCapacityY() const;
+		double							GetCapacityZ() const;
+		double							GetCapacityXX() const;
+		double							GetCapacityYY() const;
+		double							GetCapacityZZ() const;
+		const TXString&					GetRopeCrossSection() const;
+		VWPoint3D						GetRopeOffset();
+		double							GetResistanceX() const;
+		double							GetResistanceY() const;
+		double							GetResistanceZ() const;
+		double							GetResistanceXX() const;
+		double							GetResistanceYY() const;
+		double							GetResistanceZZ() const;
+
+
+		// Setters
+		void							SetSupportType(const EGdtfSupportType& supportType);
+		void							SetCapacityX(double capacityX);
+		void							SetCapacityY(double capacityY);
+		void							SetCapacityZ(double capacityZ);
+		void							SetCapacityXX(double capacityXX);
+		void							SetCapacityYY(double capacityYY);
+		void							SetCapacityZZ(double capacityZZ);
+		void							SetRopeCrossSection(const TXString& ropeCrossSection);
+		void							SetRopeOffset(double x, double y, double z);
+		void							SetResistanceX(double resistanceX);
+		void							SetResistanceY(double resistanceY);
+		void							SetResistanceZ(double resistanceZ);
+		void							SetResistanceXX(double resistanceXX);
+		void							SetResistanceYY(double resistanceYY);
+		void							SetResistanceZZ(double resistanceZZ);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+	};
+	typedef GdtfGeometrySupport* GdtfGeometrySupportPtr;
+
+	class GdtfGeometryMagnet : public GdtfGeometry
+	{
+	public:
+		GdtfGeometryMagnet(GdtfGeometry* parent);
+		GdtfGeometryMagnet(const TXString& name, GdtfModelPtr refToModel,const VWTransformMatrix& ma, GdtfGeometry* parent);
+
+		~GdtfGeometryMagnet();
+	
+	private:
+
+	public:
+		virtual EGdtfObjectType			GetObjectType();
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+	};
+	typedef GdtfGeometryMagnet* GdtfGeometryMagnetPtr;
 	
 	class GdtfGeometryLamp : public GdtfGeometry
 	{
@@ -880,17 +1394,20 @@ namespace SceneData
 		~GdtfGeometryLamp();
 		
 	private:
-		EGdtfLampType	fLampType;
-		double			fPowerConsuption;	// Unit ?? -> W cos phi???
-		double			fLuminousIntensity;
-		double			fColorTemperature;
-		double			fBeamAngle;			// Unit ?? -> Degree
-        double          fFieldAngle;
-		double			fBeamRadius;		// Unit Meter
-		double			fThrowRatio;
-		double			fRectangleRatio;
-		EGdtfBeamType	fBeamType;			// Unit Meter
-		Sint32			fColorIndex;
+		EGdtfLampType			fLampType;
+		double					fPowerConsuption;	// Unit ?? -> W cos phi???
+		double					fLuminousIntensity;
+		double					fColorTemperature;
+		double					fBeamAngle;			// Unit ?? -> Degree
+        double          		fFieldAngle;
+		double					fBeamRadius;		// Unit Meter
+		double					fThrowRatio;
+		double					fRectangleRatio;
+		EGdtfBeamType			fBeamType;			// Unit Meter
+		Sint32					fColorIndex;
+		GdtfPhysicalEmitter*	fEmitterSpectrum;
+
+		TXString 				fUnresolvedEmitterRef;
 		
 	public:
 		// Getter
@@ -906,6 +1423,9 @@ namespace SceneData
         double                          GetRectangleRatio();
         EGdtfBeamType                   GetBeamType();
         Sint32                          GetColorIndex();
+		GdtfPhysicalEmitter*            GetEmitterSpectrum();
+
+		TXString						GetUnresolvedEmitterRef() const;
 
 		// Setter
 		void							SetLampType(EGdtfLampType type);
@@ -919,6 +1439,7 @@ namespace SceneData
         void                            SetRectangleRatio(double ratio);
         void                            SetBeamType(EGdtfBeamType type);
         void                            SetColorIndex(Sint32 idx);
+		void							SetEmitterSpectrum(GdtfPhysicalEmitter* emitterSpectrum);
 		
 	protected:
         void                            InitializeMembersWithDefaultsVals();
@@ -927,6 +1448,7 @@ namespace SceneData
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
         virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
 	};
+	typedef GdtfGeometryLamp*			GdtfGeometryLampePtr;
 	
 	class GdtfBreak : public GdtfObject
 	{
@@ -1045,6 +1567,53 @@ namespace SceneData
 	};
 	typedef GdtfDmxChannelSet*				GdtfDmxChannelSetPtr;
 	typedef std::vector<GdtfDmxChannelSet*>	TGdtfDmxChannelSetArray;
+
+	class GdtfDmxSubChannelSet : public GdtfObject
+	{
+	public:
+		GdtfDmxSubChannelSet();
+		GdtfDmxSubChannelSet(GdtfSubPhysicalUnitPtr subPhysicalUnit, const TXString& name);
+		~GdtfDmxSubChannelSet();
+		
+	private:
+		TXString				fUniqueName;
+		double					fPhysicalFrom;
+		double					fPhysicalTo;
+		GdtfSubPhysicalUnitPtr 	fSubPhysicalUnit;
+		GdtfDMXProfilePtr		fDMXProfile;
+
+		TXString				fUnresolvedSubPhysicalUnitRef;
+		TXString				fUnresolvedDMXProfileRef;
+
+	public:
+		virtual EGdtfObjectType			GetObjectType();
+		
+		// Getters
+        const TXString&                 GetName() const;
+        double                          GetPhysicalFrom() const;
+        double                          GetPhysicalTo() const;
+		GdtfSubPhysicalUnitPtr			GetSubPhysicalUnit() const;
+		GdtfDMXProfilePtr				GetDMXProfile() const;
+		//
+		const TXString&                 GetUnresolvedSubPhysicalUnitRef() const;
+		const TXString&                 GetUnresolvedDMXProfileRef() const;
+		
+		// Setter
+		void							SetName(const TXString& name);
+		void							SetPhysicalFrom(double from);
+		void							SetPhysicalTo(double to);
+		void							SetSubPhysicalUnit(GdtfSubPhysicalUnitPtr subPhysicalUnit);
+		void							SetDMXProfile(GdtfDMXProfilePtr dmxProfile);
+				
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+
+	};
+	typedef GdtfDmxSubChannelSet*				GdtfDmxSubChannelSetPtr;
+	typedef std::vector<GdtfDmxSubChannelSet*>	TGdtfDmxSubChannelSetArray;
 	
 	class GdtfDmxChannelFunction : public GdtfObject
 	{
@@ -1057,11 +1626,11 @@ namespace SceneData
 		GdtfAttribute*		    fAttribute;
 		TXString				fOrignalAttribute;
 		DmxValue				fDefaultValue;
-		DmxValue				fAdressStart;   
+		DmxValue				fAdressStart;
 		double					fPhysicalStart;
 		double					fPhysicalEnd;
 		double					fRealFade;
-		double					fRealAcceleration;				
+		double					fRealAcceleration;
 		GdtfWheelPtr			fOnWheel;
 		GdtfPhysicalEmitter*	fEmitter;
 
@@ -1070,8 +1639,16 @@ namespace SceneData
         DmxValue                fDmxModeStart;
         DmxValue                fDmxModeEnd;
         GdtfFilterPtr           fFilter;
-		//
-		TGdtfDmxChannelSetArray	fChannelSets;		
+
+		GdtfColorSpacePtr		fColorSpace;
+		GdtfGamutPtr			fGamut;
+		GdtfDMXProfilePtr		fDMXProfile;
+		double					fMin;
+		double					fMax;
+		TXString				fCustomName;
+		// Children
+		TGdtfDmxChannelSetArray		fChannelSets;
+		TGdtfDmxSubChannelSetArray	fSubChannelSets;
 		
 		// Unresolved Refs
 		TXString				fUnresolvedAttrRef;
@@ -1081,6 +1658,9 @@ namespace SceneData
         TXString                fUnresolvedDmxModeEnd;
         TXString                fUnresolvedModeMaster;
         TXString                fUnresolvedFilterRef;
+        TXString                fUnresolvedColorSpaceRef;
+        TXString                fUnresolvedGamutRef;
+        TXString                fUnresolvedDMXProfileRef;
 
 		// Parent Logical Channel
 		GdtfDmxLogicalChannel*	fParentLogicalChannel;
@@ -1101,8 +1681,14 @@ namespace SceneData
         double							GetRealFade() const;
 		double							GetRealAcceleration() const;
         GdtfWheelPtr					GetOnWheel() const;
-        GdtfPhysicalEmitter*            GetEmitter() const;   
-        GdtfFilterPtr                   GetFilter();
+        GdtfPhysicalEmitter*            GetEmitter() const;
+        GdtfFilterPtr                   GetFilter() const;
+		GdtfColorSpacePtr				GetColorSpace() const;
+		GdtfGamutPtr					GetGamut() const;
+		GdtfDMXProfilePtr				GetDMXProfile() const;
+		double							GetMin() const;
+		double							GetMax() const;
+		const TXString&					GetCustomName() const;
 
 
         GdtfDmxChannel*                 GetModeMaster_Channel() const;
@@ -1113,13 +1699,18 @@ namespace SceneData
         size_t					        GetNumberInParent() const;
         
         //
-		const TGdtfDmxChannelSetArray	GetChannelSets();		
+		const TGdtfDmxChannelSetArray&		GetChannelSets() const;		
+		const TGdtfDmxSubChannelSetArray&	GetSubChannelSets() const;		
 		//
 		TXString						getUnresolvedAttrRef() const;
 		TXString						getUnresolvedWheelRef() const;
 		TXString						getUnresolvedEmitterRef() const;
         TXString						getUnresolvedModeMasterRef() const;
         const TXString&                 getUnresolvedFilterRef();
+        const TXString&                 getUnresolvedColorSpaceRef() const;
+        const TXString&                 getUnresolvedGamutRef() const;
+        const TXString&                 getUnresolvedDMXProfileRef() const;
+
 		GdtfDmxChannel*					GetParentDMXChannel() const;
         GdtfDmxLogicalChannel*			GetParentLogicalChannel() const;
         void						    ResolveModeMasterDmx(EGdtfChannelBitResolution resolution);
@@ -1140,6 +1731,12 @@ namespace SceneData
 		void							SetRealAcceleration(double fade);
 		void							SetEmitter(GdtfPhysicalEmitter* newEmit);
         void                            SetFilter(GdtfFilterPtr val);
+        void                            SetColorSpace(GdtfColorSpacePtr colorSpace);
+        void                            SetGamut(GdtfGamutPtr gamut);
+        void                            SetDMXProfile(GdtfDMXProfilePtr dmxProfile);
+        void                            SetMin(double min);
+        void                            SetMax(double max);
+		void							SetCustomName(const TXString& customName);
 
 
         void                            SetModeMaster_Channel(GdtfDmxChannel* channel);
@@ -1149,6 +1746,7 @@ namespace SceneData
 
 		//
 		GdtfDmxChannelSet*				AddChannelSet(const TXString& name);
+		GdtfDmxSubChannelSet*			AddSubChannelSet(GdtfSubPhysicalUnit* subPhysicalUnit, const TXString& name);
 	protected:
 		virtual	TXString				GetNodeName();
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
@@ -1343,19 +1941,25 @@ namespace SceneData
 		~GdtfMacro();
 
 	private:
-		TXString fName;
-		// Childs
+		TXString 				fName;
+		GdtfDmxChannelFunction* fChannelFunction;
+
+		TXString				fUnresolvedChannelFunction;
+		// Children
 		GdtfMacroDMX*    fMacroDMX;
 		GdtfMacroVisual* fMacroVisual;
 	public:
 		virtual EGdtfObjectType			GetObjectType();
 	public:
 		// Getter
-		const TXString&  GetName() const;
-		GdtfMacroDMX*    GetMacroDMX() const;
-		GdtfMacroVisual* GetMacroVisual() const;
+		const TXString&  		GetName() const;
+		GdtfDmxChannelFunction* GetChannelFunction() const;
+		const TXString&  		GetUnresolvedChannelFunction() const;
+		GdtfMacroDMX*    		GetMacroDMX() const;
+		GdtfMacroVisual* 		GetMacroVisual() const;
 		// Setter
 		void SetName(const TXString & name);
+		void SetChannelFunction(GdtfDmxChannelFunction* channelFunction);
 		void SetMacroDMX(GdtfMacroDMX* val);
 		void SetMacroVisual(GdtfMacroVisual* val);
 	protected:
@@ -1549,7 +2153,8 @@ namespace SceneData
 		~GdtfDmxMode();
 		
 	private:
-		TXString				fName;			
+		TXString				fName;
+		TXString				fDescription;			
 		GdtfGeometryPtr			fGeomRef;
 		GdtfFixture*			fFixture;
 		TXString				fUnresolvedGeomRef;
@@ -1561,6 +2166,7 @@ namespace SceneData
 
 	public:		
 		const TXString&				GetModeName() const;
+		const TXString&				GetDescription() const;
 		const TGdtfDmxChannelArray	GetChannelArray() const;		
 		GdtfDmxChannelPtr			GetMasterByRef(const TXString& ref) const;
 		GdtfDmxChannelFunctionPtr	GetSlaveByRef(const TXString& ref) const;
@@ -1576,6 +2182,7 @@ namespace SceneData
 
 		
 		void						SetName(const TXString& name);
+		void						SetDescription(const TXString& description);
 		GdtfDmxChannelPtr			AddChannel();
 		void						SetGeomRef(GdtfGeometryPtr ptr);
 		void						SetModel(GdtfGeometryPtr ptr);
@@ -1608,6 +2215,7 @@ namespace SceneData
 		TXString	fText;
 		STime       fDateS;
 		size_t		fUserId;
+		TXString	fModifiedBy;
 		
 	public:
 		virtual EGdtfObjectType			GetObjectType();
@@ -1617,10 +2225,12 @@ namespace SceneData
 		const STime&    GetDate() const;
 		const TXString&	GetText() const;
 		size_t			GetUserId() const;
+		const TXString&	GetModifiedBy() const;
         // Setter        
 		void			SetText(const TXString& text);
         void            SetDate(const STime& date);
 		void 			SetUserId(size_t userId);
+		void			SetModifiedBy(const TXString& text);
 		
 	protected:
 		virtual	TXString				GetNodeName();
@@ -1656,15 +2266,15 @@ namespace SceneData
         // Getter        
         GdtfFTRDM*                  GetRDM();              
         GdtfArtNet*                 GetArtNet();            
-        GdtfsAcn*                   Get_sACN();              
+        GdtfsAcn*                   GetSACN();              
         GdtfKiNET*                  GetKiNET();             
         GdtfPosiStageNet*           GetPosiStageNet();      
         GdtfOpenSoundControl*       GetOpenSoundControl();  
         GdtfCITP*                   GetCITP();              
         // Setter    
         GdtfFTRDM*                  CreateRDM();
-        void                        SetArtNet(GdtfArtNet* val);
-        void                        Set_sACN(GdtfsAcn* val);
+        GdtfArtNet*                 CreateArtNet();
+        GdtfsAcn*                   CreateSACN();
         void                        SetKiNET(GdtfKiNET* val);
         void                        SetPosiStageNet(GdtfPosiStageNet* val);
         void                        SetOpenSoundControl(GdtfOpenSoundControl* val);
@@ -1768,6 +2378,36 @@ namespace SceneData
     typedef GdtfSoftwareVersionID*	GdtfSoftwareVersionIDPtr;
     typedef std::vector<GdtfSoftwareVersionID*>	TGdtfSoftwareVersionIDArray;
 
+	class GdtfMap : public GdtfObject
+    {
+    public:
+        GdtfMap();
+		GdtfMap(Uint32 key, Uint32 value);
+        ~GdtfMap();
+    private:
+        Uint32 fKey;
+		Uint32 fValue;
+
+    public:
+        virtual EGdtfObjectType			GetObjectType();
+
+    public:
+        // Getters
+		Uint32 							GetKey() const;
+		Uint32 							GetValue() const;
+
+        // Setters
+		void 							SetKey(Uint32 key);
+		void 							SetValue(Uint32 value);
+
+    protected:
+        virtual	TXString				GetNodeName();
+        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+		virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+    };
+    typedef GdtfMap* GdtfMapPtr;
+    typedef std::vector<GdtfMapPtr>	TGdtfMapArray;
 
     class GdtfArtNet : public GdtfObject
     {
@@ -1775,20 +2415,21 @@ namespace SceneData
         GdtfArtNet();
         ~GdtfArtNet();
     private:
-        // Atributes
-        // TODO: This TYPE not defined in the docu to this day(26.09.18). Implement later.
+        TGdtfMapArray					fMaps;
     public:
         virtual EGdtfObjectType			GetObjectType();
 
     public:
-        // Getter        
-        //...
-        // Setter       
-        // ...
+		// Getters
+		const TGdtfMapArray&  			GetMapArray();
+
+		// Setters
+		GdtfMapPtr  					CreateMap(Uint32 key, Uint32 value);
+        
     protected:
-        virtual	TXString				    GetNodeName();
-        // virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
-        // virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	TXString				GetNodeName();
+        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
     };
     typedef GdtfArtNet*	GdtfArtNetPtr;
     
@@ -1798,20 +2439,21 @@ namespace SceneData
         GdtfsAcn();
         ~GdtfsAcn();
     private:
-        // Atributes
-        // TODO: This TYPE not defined in the docu to this day(26.09.18). Implement later.
+        TGdtfMapArray					fMaps;
     public:
         virtual EGdtfObjectType			GetObjectType();
 
     public:
-        // Getter        
-        // ...
-        // Setter       
-        // ...
+		// Getters
+		const TGdtfMapArray&  			GetMapArray();
+
+		// Setters
+		GdtfMapPtr  					CreateMap(Uint32 key, Uint32 value);
+
     protected:
         virtual	TXString				GetNodeName();
-        // virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
-        // virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+        virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+        virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
     };
     typedef GdtfsAcn*	GdtfsAcnPtr;    
 
@@ -2094,6 +2736,46 @@ namespace SceneData
         virtual void                    OnErrorCheck(const IXMLFileNodePtr& pNode);
     };
 
+	class GdtfPoint : public GdtfObject
+	{
+	public:
+		GdtfPoint();
+		GdtfPoint(double DMXPercentage, double CFC3, double CFC2, double CFC1, double CFC0);
+		~GdtfPoint();
+	private:
+		// Attributes
+		double	fDMXPercentage;
+		double	fCFC3;
+		double	fCFC2;
+		double	fCFC1;
+		double	fCFC0;
+	public:
+		virtual EGdtfObjectType			GetObjectType();
+
+	public:
+		// Getters
+		double         GetDMXPercentage() const;
+		double         GetCFC3() const;
+		double         GetCFC2() const;
+		double         GetCFC1() const;
+		double         GetCFC0() const;
+        
+        // Setters
+        void           SetDMXPercentage(double dmxPercentage);
+        void           SetCFC3(double CFC3);
+        void           SetCFC2(double CFC2);
+        void           SetCFC1(double CFC1);
+        void           SetCFC0(double CFC0);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+		virtual	void 					OnErrorCheck(const IXMLFileNodePtr& pNode);
+	};
+	typedef GdtfPoint*	GdtfPointPtr;
+    typedef std::vector<GdtfPoint*>	TGdtfPointArray;
+
 	class GdtfDMXProfile : public GdtfObject
 	{
 	public:
@@ -2101,18 +2783,26 @@ namespace SceneData
 		~GdtfDMXProfile();
 	private:
 		// Attributes
+		TXString 		fUniqueName;
+
+		// Children
+		TGdtfPointArray fPoints;
 	public:
 		virtual EGdtfObjectType			GetObjectType();
+		virtual TXString				GetNodeReference();
 
 	public:
-		// Getter        
-		//
-		// Setter       
-		//
+		// Getters
+		const TXString&	GetName() const;
+		TGdtfPointArray GetPointArray() const;
+		// Setters
+		void 			SetName(const TXString& name);
+		GdtfPointPtr	AddPoint(double DMXPercentage, double CFC3, double CFC2, double CFC1, double CFC0);
 	protected:
 		virtual	TXString				GetNodeName();
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+		virtual	void 					OnErrorCheck(const IXMLFileNodePtr& pNode);
 	};
 
 	class GdtfConnector : public GdtfObject
@@ -2154,53 +2844,6 @@ namespace SceneData
         virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
 
 	};
-
-	class GdtfPowerConsumption : public GdtfObject
-	{
-	public:
-		GdtfPowerConsumption();
-		GdtfPowerConsumption(GdtfConnector* connector);
-		~GdtfPowerConsumption();
-		
-	private:
-        double			fValue;
-		double			fPowerFactor;
-		GdtfConnector*	fConnector;
-		TXString		fUnresolvedConnector;
-		double			fVoltageLow;
-		double			fVoltageHigh;
-		double			fFrequencyLow;
-		double			fFrequencyHigh;
-		
-	public:
-        // Getters
-		virtual EGdtfObjectType	GetObjectType();
-
-		double			GetValue();
-		double			GetPowerFactor();
-		GdtfConnector*	GetConnector();
-		const TXString& GetUnresolvedConnector();
-		double			GetVoltageLow();
-		double			GetVoltageHigh();
-		double			GetFrequencyLow();
-		double			GetFrequencyHigh();
-        
-		// Setters
-		void	SetValue(double value);
-        void	SetPowerFactor(double powerFactor);
-        void	SetConnector(GdtfConnector* connector);
-        void	SetVoltageLow(double voltageLow);
-        void	SetVoltageHigh(double voltageHigh);
-        void	SetFrequencyLow(double frequencyLow);
-        void	SetFrequencyHigh(double frequencyHigh);
-
-	protected:
-		virtual	TXString				GetNodeName();
-		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
-		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
-        virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
-
-	};
 	
 	//------------------------------------------------------------------------------------
 	// GdtfFixture Definition
@@ -2220,6 +2863,8 @@ namespace SceneData
 		TXString		            fFixtureTypeDescription;
 		GdtfFixtureGUID	            fGuid;
 		TXString		            fTumbnailName;
+		size_t						fThumbnailOffsetX;
+		size_t						fThumbnailOffsetY;
 		bool						fCanHaveChildren;
 		TXString		            fTumbnailFullPath_PNG;
         TXString		            fTumbnailFullPath_SVG;
@@ -2256,6 +2901,8 @@ namespace SceneData
 		// 
 		GdtfAttributePtr 				fNoFeature;
 
+		std::map<TXString, std::pair<char*, size_t> > fFileBuffers;
+
 	public:
         static void                     AddError(const GdtfParsingError& error);
         static TGdtfParsingErrorArray*  __ERROR_CONTAINER_POINTER;
@@ -2280,13 +2927,13 @@ namespace SceneData
 		GdtfFixtureGUID		        GetLinkedGuid() const;
 		bool				        HasLinkedGuid() const;
         const TXString&             GetThumbnailName() const;
+		size_t						GetThumbnailOffsetX() const;
+		size_t						GetThumbnailOffsetY() const;
 		bool						GetCanHaveChildren() const;
 		const GdtfPNGFile&          GetPNGThumnailFullPath();
         const TXString&             GetSVGThumnailFullPath();
         GdtfProtocols&				GetProtocollContainer();
         GdtfPhysicalDescriptions&   GetPhysicalDesciptionsContainer();
-
-		;
         
         // Setter
 		void				SetName(const TXString& name);
@@ -2297,6 +2944,8 @@ namespace SceneData
 		void				SetGuid(const VWFC::Tools::VWUUID& uuid);
 		void				SetLinkedGuid(const VWFC::Tools::VWUUID& uuid);
 		void				SetThumbnailName(const TXString& fileName);
+		void				SetThumbnailOffsetX(size_t thumbnailOffsetX);
+		void				SetThumbnailOffsetY(size_t thumbnailOffsetY);
 		void				SetCanHaveChildren(bool canHaveChildren);
 
 
@@ -2319,6 +2968,12 @@ namespace SceneData
 		GdtfGeometryPtr			AddGeometryWithAxis(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
 		GdtfGeometryPtr			AddGeometryWithLamp(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
 		GdtfGeometryPtr			AddGeometryDisplay(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
+		GdtfGeometryPtr			AddGeometryLaser(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
+		GdtfGeometryPtr			AddGeometryWiringObject(		const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
+		GdtfGeometryPtr			AddGeometryInventory(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
+		GdtfGeometryPtr			AddGeometryStructure(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
+		GdtfGeometryPtr			AddGeometrySupport(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
+		GdtfGeometryPtr			AddGeometryMagnet(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 
 		GdtfWheelPtr			AddWheel(TXString name);
 		GdtfDmxModePtr			AddDmxMode(const TXString& name);
@@ -2340,6 +2995,8 @@ namespace SceneData
         const TGdtfRevisionArray&               GetRevisionArray();
         const TGdtfUserPresetArray&             GetPresetArray();
         const TGdtfMacroArray&                  GetMacroArray();
+
+		const std::map<TXString, std::pair<char*, size_t> >& GetFileBuffers();
         
 	public:
 		virtual EGdtfObjectType			GetObjectType();
@@ -2358,6 +3015,10 @@ namespace SceneData
 		GdtfDmxChannelPtr           getDmxChannelByRef(const TXString& ref, GdtfDmxModePtr mode);
         GdtfFilterPtr               getFilterByRef(const TXString& ref);
 		GdtfConnectorPtr            getConnectorByRef(const TXString& ref);
+		GdtfColorSpacePtr           getColorSpaceByRef(const TXString& ref);
+		GdtfGamutPtr            	getGamutByRef(const TXString& ref);
+		GdtfDMXProfilePtr           getDMXProfileByRef(const TXString& ref);
+		GdtfSubPhysicalUnitPtr 		getSubPhysicalUnitByRef(const TXString& ref);
 
 		//
 		void AutoGenerateNames(GdtfDmxModePtr dmxMode);
@@ -2369,7 +3030,6 @@ namespace SceneData
 		
 		void            ResolveAttribRefs();		
 		void            ResolveWheelSlots();
-		void            ResolvePowerConsumptions();
 		void            ResolveDmxModeRefs();
         void            ResolveDMXModeMasters();       
         void            ResolveDMXPersonalityRefs();
@@ -2380,6 +3040,7 @@ namespace SceneData
 
 		void ResolveDmxLogicalChanRefs(GdtfDmxChannelPtr dmxChnl);
 		void ResolveDmxChanelFunctionRefs(GdtfDmxLogicalChannelPtr dmxLogChnl);
+		void ResolveDmxSubChannelSetRefs(GdtfDmxChannelFunctionPtr channelFunction);
 		void ResolveMacroRefs(GdtfDmxModePtr dmxMode);
 	
 	private:

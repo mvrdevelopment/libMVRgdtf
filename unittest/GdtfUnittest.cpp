@@ -59,18 +59,23 @@ void GdtfUnittest::WriteFile()
 		__checkVCOM(gdtfWrite->SetLongName("My Long Long Name"));
 		__checkVCOM(gdtfWrite->SetFixtureThumbnail("MyThumbnail"));
 		__checkVCOM(gdtfWrite->SetLinkedFixtureGUID(linkedUuid));
-
+		__checkVCOM(gdtfWrite->SetThumbnailOffsetX(1));
+		__checkVCOM(gdtfWrite->SetThumbnailOffsetY(2));
 		__checkVCOM(gdtfWrite->SetCanHaveChildren(false));
 
         //------------------------------------------------------------------------------    
         // Add Test Resources
-        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestPNG_ThumbNail().c_str(), 	ERessourceType::RessoureFixture) );
-        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestSVG_ThumbNail().c_str(), 	ERessourceType::RessoureFixture) );
-        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestWheel_PNG().c_str(),     	ERessourceType::ImageWheel) );
-        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTest3DS_Model().c_str(),     	ERessourceType::Model3DS) );
-        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestSVG_Model().c_str(),     	ERessourceType::ModelSVG) );
-		__checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestGLTF_Model_glb().c_str(),	ERessourceType::ModelGLTF) );
-		__checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestGLTF_Model().c_str(),    	ERessourceType::ModelGLTF) );
+        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestPNG_ThumbNail().c_str(), 		ERessourceType::RessoureFixture) );
+        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestSVG_ThumbNail().c_str(), 		ERessourceType::RessoureFixture) );
+        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestWheel_PNG().c_str(),     		ERessourceType::ImageWheel) );
+        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTest3DS_Model().c_str(),     		ERessourceType::Model3DS) );
+        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTest3DSLow_Model().c_str(),   	ERessourceType::Model3DSLow) );
+        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTest3DSHigh_Model().c_str(),  	ERessourceType::Model3DSHigh) );
+        __checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestSVG_Model().c_str(),     		ERessourceType::ModelSVG) );
+		__checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestGLTF_Model_glb().c_str(),		ERessourceType::ModelGLTF) );
+		__checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestGLTFLow_Model_glb().c_str(),	ERessourceType::ModelGLTFLow) );
+		__checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestGLTFHigh_Model_glb().c_str(),	ERessourceType::ModelGLTFHigh) );
+		__checkVCOM( gdtfWrite->AddFileToGdtfFile( GetTestGLTF_Model().c_str(),    		ERessourceType::ModelGLTF) );
         
 		//------------------------------------------------------------------------------    
 		// Set Attributes
@@ -96,6 +101,17 @@ void GdtfUnittest::WriteFile()
 			cieCol.fy	= 0.2;
 			cieCol.f_Y	= 0.3;
 			__checkVCOM(gdtfMainAttribute->SetColor(cieCol));
+
+			IGdtfSubPhysicalUnitPtr subPhysicalUnit1;
+			__checkVCOM(gdtfMainAttribute->CreateSubPhysicalUnit(EGdtfSubPhysicalUnitType::Duration, &subPhysicalUnit1));
+			__checkVCOM(subPhysicalUnit1->SetPhysicalFrom(1.1));
+			__checkVCOM(subPhysicalUnit1->SetPhysicalTo(1.2));
+
+			IGdtfSubPhysicalUnitPtr subPhysicalUnit2;
+			__checkVCOM(gdtfMainAttribute->CreateSubPhysicalUnit(EGdtfSubPhysicalUnitType::DutyCycle, &subPhysicalUnit2));
+			__checkVCOM(subPhysicalUnit2->SetType(EGdtfSubPhysicalUnitType::PlacementOffset));
+			__checkVCOM(subPhysicalUnit2->SetPhysicalFrom(2.1));
+			__checkVCOM(subPhysicalUnit2->SetPhysicalTo(2.2));
 		}
 		
 		IGdtfAttributePtr		gdtfAttribute;
@@ -127,6 +143,15 @@ void GdtfUnittest::WriteFile()
         IGdtfMeasurementPtr gdtfMeasureB;  __checkVCOM(gdtfFilter->CreateMeasurement(&gdtfMeasureB) );
         IGdtfMeasurementPtr gdtfMeasureC;  __checkVCOM(gdtfFilter->CreateMeasurement(&gdtfMeasureC) );
 
+		//------------------------------------------------------------------------------------------------------------------
+		// DMXProfiles
+		IGdtfDMXProfilePtr gdtfDMXProfile1; __checkVCOM(gdtfWrite->CreateDMXProfile(&gdtfDMXProfile1));
+		__checkVCOM(gdtfDMXProfile1->SetName("DMXProfile 1"));
+		
+		IGdtfPointPtr gdtfPoint1; __checkVCOM(gdtfDMXProfile1->CreatePoint(0, 0, 4, -4, 1, &gdtfPoint1));
+		IGdtfPointPtr gdtfPoint2; __checkVCOM(gdtfDMXProfile1->CreatePoint(0.75, 64, 0, 0, 0, &gdtfPoint2));
+
+		IGdtfDMXProfilePtr gdtfDMXProfile2; __checkVCOM(gdtfWrite->CreateDMXProfile(&gdtfDMXProfile2));
 
 		//------------------------------------------------------------------------------    
 		// Set Wheels
@@ -214,18 +239,6 @@ void GdtfUnittest::WriteFile()
 		//------------------------------------------------------------------------------    
 		// Set Properties
 
-			//Set Power Consumptions
-		IGdtfPowerConsumptionPtr gdtfPowerConsumption;
-		if (__checkVCOM(gdtfWrite->CreatePowerConsumption(gdtfConnector, &gdtfPowerConsumption)))
-		{
-            gdtfPowerConsumption->SetValue(42);
-            gdtfPowerConsumption->SetPowerFactor(0.9);
-			gdtfPowerConsumption->SetVoltageLow(12.3);
-			gdtfPowerConsumption->SetVoltageHigh(9000.1);
-			gdtfPowerConsumption->SetFrequencyLow(48.0);
-			//Frequency High is not set so we can check that the default value (60 Hz) is set.
-		}
-
 			//Set OperatingTemperature
 		gdtfWrite->SetOperatingTemperatureLow(-273.15);
 			//Set Weight
@@ -240,6 +253,21 @@ void GdtfUnittest::WriteFile()
 		__checkVCOM(gdtfWrite->GetColorSpace( & colorSpace));
 		__checkVCOM(colorSpace->SetColorSpace(EGdtfColorSpace::ANSI));
 
+		//------------------------------------------------------------------------------------------------------------------
+		// Set AdditionalColorSpace
+		IGdtfColorSpacePtr additionalColorSpace1, additionalColorSpace2;
+		__checkVCOM(gdtfWrite->CreateAdditionalColorSpace("My AdditionalColorSpace 1", EGdtfColorSpace::ProPhoto, &additionalColorSpace1));
+		__checkVCOM(gdtfWrite->CreateAdditionalColorSpace("My AdditionalColorSpace 2", EGdtfColorSpace::sRGB, &additionalColorSpace2));
+
+		//------------------------------------------------------------------------------------------------------------------
+		// Set Gamuts
+		IGdtfGamutPtr gdtfGamut;
+		CieColor gamutColor1; gamutColor1.fx = 0.1; gamutColor1.fy = 0.2; gamutColor1.f_Y = 0.3;
+		__checkVCOM(gdtfWrite->CreateGamut("My Gamut", gamutColor1, &gdtfGamut));
+		CieColor gamutColor2; gamutColor2.fx = 0.4; gamutColor2.fy = 0.5; gamutColor2.f_Y = 0.6;
+		__checkVCOM(gdtfGamut->CreatePoint(gamutColor2));
+
+
         //------------------------------------------------------------------------------------------------------------------
 		// Handle Models
 		IGdtfModelPtr gdtfModel;
@@ -250,6 +278,12 @@ void GdtfUnittest::WriteFile()
 			__checkVCOM(gdtfModel->SetWidth(20));
 			__checkVCOM(gdtfModel->SetLength(30));
 			__checkVCOM(gdtfModel->SetPrimitiveType(EGdtfModel_PrimitiveType::eGdtfModel_PrimitiveType_Sphere));
+			__checkVCOM(gdtfModel->SetSVGOffsetX(1.1));
+			__checkVCOM(gdtfModel->SetSVGOffsetY(1.2));
+			__checkVCOM(gdtfModel->SetSVGSideOffsetX(1.3));
+			__checkVCOM(gdtfModel->SetSVGSideOffsetY(1.4));
+			__checkVCOM(gdtfModel->SetSVGFrontOffsetX(1.5));
+			__checkVCOM(gdtfModel->SetSVGFrontOffsetY(1.6));
 		}
 
 
@@ -283,6 +317,7 @@ void GdtfUnittest::WriteFile()
         IGdtfGeometryPtr beamGeo;        
         __checkVCOM(gdtfWrite->CreateGeometry(EGdtfObjectType::eGdtfGeometryLamp, "My Lamp Geometry", gdtfModel, ma, &beamGeo));
         beamGeo->SetLuminousIntensity(5);
+		beamGeo->SetEmitterSpectrum(gdtfEmitter);
 
 		//Media server Camera
 		IGdtfGeometryPtr msCameraGeo;        
@@ -342,6 +377,13 @@ void GdtfUnittest::WriteFile()
                         // Set the Linked Filter
                         __checkVCOM(gdftChannelFunction->SetFilter(gdtfFilter));
 
+                        __checkVCOM(gdftChannelFunction->SetColorSpace(additionalColorSpace2));
+                        __checkVCOM(gdftChannelFunction->SetGamut(gdtfGamut));
+                        __checkVCOM(gdftChannelFunction->SetDMXProfile(gdtfDMXProfile1));
+						__checkVCOM(gdftChannelFunction->SetMin(0.1));
+						__checkVCOM(gdftChannelFunction->SetMax(0.2));
+						__checkVCOM(gdftChannelFunction->SetCustomName("My CustomName"));
+
 						IGdtfDmxChannelSetPtr gdtfChannelSet;
 						if (__checkVCOM(gdftChannelFunction->CreateDmxChannelSet("My nameDmxChannelSet", 1, 2, &gdtfChannelSet)))
 						{
@@ -369,6 +411,7 @@ void GdtfUnittest::WriteFile()
 		timestamp.fHour = 22; timestamp.fMinute = 33; timestamp.fSecond = 44;
 		__checkVCOM(gdtfWrite->CreateRevision("Revision TestText", timestamp, &rev));
 		__checkVCOM(rev->SetUserId(254));
+		__checkVCOM(rev->SetModifiedBy("unit test"));
 
         //------------------------------------------------------------------------------    
         // Add RDM 
@@ -380,7 +423,29 @@ void GdtfUnittest::WriteFile()
         //------------------------------------------------------------------------------    
         // Add SoftwareVersionID
         IGdtfSoftwareVersionIDPtr softID;
-        __checkVCOM (rdm->CreateSoftwareVersionID( 22, &softID));        
+        __checkVCOM (rdm->CreateSoftwareVersionID( 22, &softID));
+
+		//------------------------------------------------------------------------------    
+        // Add ArtNet
+        IGdtfArtNetPtr artNet;
+        __checkVCOM(gdtfWrite->CreateArtNet(&artNet));
+		IGdtfMapPtr artNetMap1;
+        __checkVCOM(artNet->CreateMap(1, 2, &artNetMap1));
+		IGdtfMapPtr artNetMap2;
+        __checkVCOM(artNet->CreateMap(1, 2, &artNetMap2));
+        __checkVCOM(artNetMap2->SetKey(3));
+        __checkVCOM(artNetMap2->SetValue(4));
+
+		//------------------------------------------------------------------------------    
+        // Add sACN
+        IGdtfSACNPtr sACN;
+        __checkVCOM(gdtfWrite->CreateSACN(&sACN));
+		IGdtfMapPtr sACNMap1;
+        __checkVCOM(sACN->CreateMap(5, 6, &sACNMap1));
+		IGdtfMapPtr sACNMap2;
+        __checkVCOM(sACN->CreateMap(5, 6, &sACNMap2));
+        __checkVCOM(sACNMap2->SetKey(7));
+        __checkVCOM(sACNMap2->SetValue(8));
 
         //------------------------------------------------------------------------------    
         // Add DMXPersonality
@@ -423,6 +488,14 @@ void GdtfUnittest::ReadFile()
 		__checkVCOM(gdtfRead->GetFixtureGUID(resultUUID));
 		this->checkifEqual("GetFixtureGUID fixtureUUID ", fixtureUUID, resultUUID);
 
+		size_t thumbnailOffsetX;
+		__checkVCOM(gdtfRead->GetThumbnailOffsetX(thumbnailOffsetX));
+		this->checkifEqual("GetThumbnailOffsetX ", thumbnailOffsetX, (size_t)1);
+
+		size_t thumbnailOffsetY;
+		__checkVCOM(gdtfRead->GetThumbnailOffsetY(thumbnailOffsetY));
+		this->checkifEqual("GetThumbnailOffsetY ", thumbnailOffsetY, (size_t)2);
+
 		bool canHaveChildren;
 		__checkVCOM(gdtfRead->GetCanHaveChildren(canHaveChildren));
 		this->checkifEqual("GetCanHaveChildren ", canHaveChildren, false);
@@ -431,15 +504,19 @@ void GdtfUnittest::ReadFile()
 		// Check the file content
 		size_t ressourceFiles = 0;
 		__checkVCOM(gdtfRead->GetImageRessourcesCount(ressourceFiles));
-		this->checkifEqual("GetImageRessourcesCount", ressourceFiles, size_t(7));
+		this->checkifEqual("GetImageRessourcesCount", ressourceFiles, size_t(11));
 
 		CheckAttachedFiles(gdtfRead, 0, this->GetTestPNG_ThumbNail(true));
 		CheckAttachedFiles(gdtfRead, 1, this->GetTestSVG_ThumbNail(true));
 		CheckAttachedFiles(gdtfRead, 2, this->GetTestWheel_PNG(true));
 		CheckAttachedFiles(gdtfRead, 3, this->GetTest3DS_Model(true));
-		CheckAttachedFiles(gdtfRead, 4, this->GetTestSVG_Model(true));
-		CheckAttachedFiles(gdtfRead, 5, this->GetTestGLTF_Model_glb(true));
-		CheckAttachedFiles(gdtfRead, 6, this->GetTestGLTF_Model(true));
+		CheckAttachedFiles(gdtfRead, 4, this->GetTest3DSLow_Model(true));
+		CheckAttachedFiles(gdtfRead, 5, this->GetTest3DSHigh_Model(true));
+		CheckAttachedFiles(gdtfRead, 6, this->GetTestSVG_Model(true));
+		CheckAttachedFiles(gdtfRead, 7, this->GetTestGLTF_Model_glb(true));
+		CheckAttachedFiles(gdtfRead, 8, this->GetTestGLTFLow_Model_glb(true));
+		CheckAttachedFiles(gdtfRead, 9, this->GetTestGLTFHigh_Model_glb(true));
+		CheckAttachedFiles(gdtfRead, 10, this->GetTestGLTF_Model(true));
 
 
 		
@@ -686,9 +763,45 @@ void GdtfUnittest::ReadFile()
 
 
         // Filter.Measurements
-        // (The Meaurement attributes are check in the Emitter test.)
+        // (The Measurement attributes are checked in the Emitter test.)
         size_t measruementCount; __checkVCOM(gdtfFilter->GetMeasurementCount(measruementCount));
         this->checkifEqual(" Filter.Measurements Count", measruementCount, size_t(3) );
+
+		//------------------------------------------------------------------------------------------------------------------
+		// DMXProfiles
+		size_t dmxProfileCount; __checkVCOM(gdtfRead->GetDMXProfileCount(dmxProfileCount));
+		this->checkifEqual("DMXProfile Count", dmxProfileCount, size_t(2));
+
+		IGdtfDMXProfilePtr gdtfDMXProfile1; __checkVCOM(gdtfRead->GetDMXProfileAt(0, &gdtfDMXProfile1));
+
+		size_t pointCount; __checkVCOM(gdtfDMXProfile1->GetPointCount(pointCount));
+		this->checkifEqual("DMXProfile Count", pointCount, size_t(2));
+
+		IGdtfPointPtr gdtfPoint1; __checkVCOM(gdtfDMXProfile1->GetPointAt(0, &gdtfPoint1));
+		double dmxPercentage; __checkVCOM(gdtfPoint1->GetDMXPercentage(dmxPercentage));
+		double cfc3; __checkVCOM(gdtfPoint1->GetCFC3(cfc3));
+		double cfc2; __checkVCOM(gdtfPoint1->GetCFC2(cfc2));
+		double cfc1; __checkVCOM(gdtfPoint1->GetCFC1(cfc1));
+		double cfc0; __checkVCOM(gdtfPoint1->GetCFC0(cfc0));
+
+		this->checkifEqual("Point 1 DMXPercentage", dmxPercentage, (double)0);
+		this->checkifEqual("Point 1 CFC3", cfc3, (double)0);
+		this->checkifEqual("Point 1 CFC2", cfc2, (double)4);
+		this->checkifEqual("Point 1 CFC1", cfc1, (double)-4);
+		this->checkifEqual("Point 1 CFC0", cfc0, (double)1);
+
+		IGdtfPointPtr gdtfPoint2; __checkVCOM(gdtfDMXProfile1->GetPointAt(1, &gdtfPoint2));
+		__checkVCOM(gdtfPoint2->GetDMXPercentage(dmxPercentage));
+		__checkVCOM(gdtfPoint2->GetCFC3(cfc3));
+		__checkVCOM(gdtfPoint2->GetCFC2(cfc2));
+		__checkVCOM(gdtfPoint2->GetCFC1(cfc1));
+		__checkVCOM(gdtfPoint2->GetCFC0(cfc0));
+
+		this->checkifEqual("Point 2 DMXPercentage", dmxPercentage, (double)0.75);
+		this->checkifEqual("Point 2 CFC3", cfc3, (double)64);
+		this->checkifEqual("Point 2 CFC2", cfc2, (double)0);
+		this->checkifEqual("Point 2 CFC1", cfc1, (double)0);
+		this->checkifEqual("Point 2 CFC0", cfc0, (double)0);
 
 
         //------------------------------------------------------------------------------------------------------------------
@@ -723,48 +836,7 @@ void GdtfUnittest::ReadFile()
 		//------------------------------------------------------------------------------------------------------------------
         // Properties
 
-			//PowerConsumption        
-        size_t powerConsumptionCount; __checkVCOM(gdtfRead->GetPowerConsumptionCount(powerConsumptionCount));
-        
-        this->checkifEqual("PowerConsumption Count", powerConsumptionCount, size_t(1));
-
-        IGdtfPowerConsumptionPtr gdtfPowerConsumption;
-		
-		if(__checkVCOM(gdtfRead->GetPowerConsumptionAt(0, &gdtfPowerConsumption)))
-		{
-			double value;
-			__checkVCOM(gdtfPowerConsumption->GetValue(value));
-			this->checkifEqual("PowerConsumption Value", value, 42.0);
-
-			double powerFactor;
-			__checkVCOM(gdtfPowerConsumption->GetPowerFactor(powerFactor));
-			this->checkifEqual("PowerConsumption PowerFactor", powerFactor, 0.9);
-
-			IGdtfConnectorPtr myConnector;
-			if(__checkVCOM(gdtfPowerConsumption->GetConnector(&myConnector)))
-			{
-				MvrString connectorName = myConnector->GetName();
-				this->checkifEqual("PowerConsumption Connector Name", connectorName, "My connectorName");
-			}
-
-			double voltageLow;
-			__checkVCOM(gdtfPowerConsumption->GetVoltageLow(voltageLow));
-			this->checkifEqual("PowerConsumption VoltageLow", voltageLow, 12.3);
-
-			double voltageHigh;
-			__checkVCOM(gdtfPowerConsumption->GetVoltageHigh(voltageHigh));
-			this->checkifEqual("PowerConsumption VoltageHigh", voltageHigh, 9000.1);
-
-			double frequencyLow;
-			__checkVCOM(gdtfPowerConsumption->GetFrequencyLow(frequencyLow));
-			this->checkifEqual("PowerConsumption FrequencyLow", frequencyLow, 48.0);
-
-			double frequencyHigh;
-			__checkVCOM(gdtfPowerConsumption->GetFrequencyHigh(frequencyHigh));
-			this->checkifEqual("PowerConsumption FrequencyHigh", frequencyHigh, 60.0);
-		}
-
-			//OperatingTemperature 
+			// OperatingTemperature 
 		double operatingTemperatureLow;
 		__checkVCOM(gdtfRead->GetOperatingTemperatureLow(operatingTemperatureLow));
 		this->checkifEqual("operatingTemperatureLow", operatingTemperatureLow, -273.15);
@@ -773,12 +845,12 @@ void GdtfUnittest::ReadFile()
 		__checkVCOM(gdtfRead->GetOperatingTemperatureHigh(operatingTemperatureHigh));
 		this->checkifEqual("operatingTemperatureHigh", operatingTemperatureHigh, 40.0);
 
-			//Weight 
+			// Weight 
 		double weight;
 		__checkVCOM(gdtfRead->GetWeight(weight));
 		this->checkifEqual("weight", weight, 42.0);
 
-			//OperatingTemperature 
+			// LegHeight 
 		double legHeight;
 		__checkVCOM(gdtfRead->GetLegHeight(legHeight));
 		this->checkifEqual("legHeight", legHeight, 0.6);
@@ -814,7 +886,60 @@ void GdtfUnittest::ReadFile()
 		checkifEqual("ANSI Color Green", 	ansiColor_Green, 	gdtfColor_Green);
 		checkifEqual("ANSI Color Blue", 	ansiColor_Blue, 	gdtfColor_Blue);
 		checkifEqual("ANSI Color White", 	ansiColor_White,	gdtfColor_White);
-		
+
+		//------------------------------------------------------------------------------------------------------------------
+		// Check AdditionalColorSpace
+		size_t additionalColorSpaceCount = 0;
+		__checkVCOM(gdtfRead->GetAdditionalColorSpaceCount(additionalColorSpaceCount));
+		checkifEqual("AdditionalColorSpace Count ", additionalColorSpaceCount, (size_t)2);
+
+		// 1
+		IGdtfColorSpacePtr additionalColorSpace1;
+		__checkVCOM(gdtfRead->GetAdditionalColorSpaceAt(0, &additionalColorSpace1));
+
+		checkifEqual("AdditionalColorSpace 1 Name ", additionalColorSpace1->GetName(), "My AdditionalColorSpace 1");
+
+		EGdtfColorSpace colorSpace1 = EGdtfColorSpace::ANSI;
+		__checkVCOM(additionalColorSpace1->GetColorSpace(colorSpace1));
+		checkifEqual("AdditionalColorSpace 1 ColorSpace ", (size_t)colorSpace1, (size_t)EGdtfColorSpace::ProPhoto);
+
+		// 2
+		IGdtfColorSpacePtr additionalColorSpace2;
+		__checkVCOM(gdtfRead->GetAdditionalColorSpaceAt(1, &additionalColorSpace2));
+
+		checkifEqual("AdditionalColorSpace 2 Name ", additionalColorSpace2->GetName(), "My AdditionalColorSpace 2");
+
+		EGdtfColorSpace colorSpace2 = EGdtfColorSpace::ANSI;
+		__checkVCOM(additionalColorSpace2->GetColorSpace(colorSpace2));
+		checkifEqual("AdditionalColorSpace 2 ColorSpace ", (size_t)colorSpace2, (size_t)EGdtfColorSpace::sRGB);
+
+		//------------------------------------------------------------------------------------------------------------------
+		// Check Gamuts
+		size_t gamutCount = 0;
+		__checkVCOM(gdtfRead->GetGamutCount(gamutCount));
+		checkifEqual("Gamut Count ", gamutCount, (size_t)1);
+
+		IGdtfGamutPtr gamut;
+		__checkVCOM(gdtfRead->GetGamutAt(0, &gamut));
+
+		checkifEqual("Gamut Name ", gamut->GetName(), "My Gamut");
+
+		size_t gamutPointCount = 0;
+		__checkVCOM(gamut->GetPointCount(gamutPointCount));
+		checkifEqual("Gamut Point Count ", gamutPointCount, (size_t)2);
+
+		CieColor pointColor1;
+		__checkVCOM(gamut->GetPointAt(0, pointColor1));
+		checkifEqual("pointColor1 x ", pointColor1.fx, (double)0.1);
+		checkifEqual("pointColor1 y ", pointColor1.fy, (double)0.2);
+		checkifEqual("pointColor1 Y ", pointColor1.f_Y, (double)0.3);
+
+		CieColor pointColor2;
+		__checkVCOM(gamut->GetPointAt(1, pointColor2));
+		checkifEqual("pointColor2 x ", pointColor2.fx, (double)0.4);
+		checkifEqual("pointColor2 y ", pointColor2.fy, (double)0.5);
+		checkifEqual("pointColor2 Y ", pointColor2.f_Y, (double)0.6);
+
 
 		//------------------------------------------------------------------------------    
 		// Fill with DMX
@@ -1022,6 +1147,35 @@ void GdtfUnittest::ReadFile()
                                 IGdtfFilterPtr filter;
                                 __checkVCOM(gdtfFunction->GetFilter(&filter) );
                                 this->checkifEqual("Filter Name", filter->GetName() ,"My Filter");
+
+								// ColorSpace
+                                IGdtfColorSpacePtr colorSpace;
+                                __checkVCOM(gdtfFunction->GetColorSpace(&colorSpace) );
+                                this->checkifEqual("ColorSpace Name", colorSpace->GetName() ,"My AdditionalColorSpace 2");
+
+								// Gamut
+                                IGdtfGamutPtr linkedGamut;
+                                __checkVCOM(gdtfFunction->GetGamut(&linkedGamut) );
+                                this->checkifEqual("Gamut Name", linkedGamut->GetName() ,"My Gamut");
+
+								// DMXProfile
+                                IGdtfDMXProfilePtr linkedDMXProfile;
+                                __checkVCOM(gdtfFunction->GetDMXProfile(&linkedDMXProfile) );
+                                this->checkifEqual("DMXProfile Name", linkedDMXProfile->GetName() ,"DMXProfile 1");
+
+								// Min
+								double min;
+								__checkVCOM(gdtfFunction->GetMin(min));
+								this->checkifEqual("Min", min, double(0.1));
+
+								// Max
+								double max;
+								__checkVCOM(gdtfFunction->GetMax(max));
+								this->checkifEqual("Max", max, double(0.2));
+
+								// CustomName
+								this->checkifEqual("CustomName", gdtfFunction->GetCustomName(), "My CustomName");
+
 								//------------------------------------------------------------------------------    
 								// Add the ChannelSets 
 								size_t countChannelSets = 0;
@@ -1218,7 +1372,7 @@ void GdtfUnittest::ReadFile()
 
 		for(size_t i = 0; i < countAttributes; i++)
 		{
-			if (countAttributes == 0)
+			if (i == 0)
 			{
 				IGdtfAttributePtr attribute;
 				__checkVCOM(gdtfRead->GetAttributeAt(i, &attribute));
@@ -1227,9 +1381,43 @@ void GdtfUnittest::ReadFile()
 				__checkVCOM(attribute->GetPhysicalUnit(unit));
 				this->checkifEqual("Check Physical Unit ", (Sint32)unit, (Sint32)EGdtfPhysicalUnit::Acceleration);
 				this->checkifEqual("Check Attribute Name ", "My MainAttributeName", attribute->GetName());
+
+				// SubPhysicalUnits
+				size_t subPhysicalUnitCount = 0;
+				__checkVCOM(attribute->GetSubPhysicalUnitCount(subPhysicalUnitCount));
+
+				IGdtfSubPhysicalUnitPtr subPhysicalUnit1;
+				__checkVCOM(attribute->GetSubPhysicalUnitAt(0, &subPhysicalUnit1));
+
+				EGdtfSubPhysicalUnitType type1;
+				__checkVCOM(subPhysicalUnit1->GetType(type1));
+				this->checkifEqual("Check SubPhysicalUnit 1 Type ", (Sint32)type1, (Sint32)EGdtfSubPhysicalUnitType::Duration);
+
+				double physicalFrom1 = 0.0;
+				__checkVCOM(subPhysicalUnit1->GetPhysicalFrom(physicalFrom1));
+				this->checkifEqual("Check SubPhysicalUnit 1 PhysicalFrom ", physicalFrom1, (double)1.1);
+
+				double physicalTo1 = 0.0;
+				__checkVCOM(subPhysicalUnit1->GetPhysicalTo(physicalTo1));
+				this->checkifEqual("Check SubPhysicalUnit 1 PhysicalTo ", physicalTo1, (double)1.2);
+
+				IGdtfSubPhysicalUnitPtr subPhysicalUnit2;
+				__checkVCOM(attribute->GetSubPhysicalUnitAt(1, &subPhysicalUnit2));
+
+				EGdtfSubPhysicalUnitType type2;
+				__checkVCOM(subPhysicalUnit2->GetType(type2));
+				this->checkifEqual("Check SubPhysicalUnit 2 Type ", (Sint32)type2, (Sint32)EGdtfSubPhysicalUnitType::PlacementOffset);
+
+				double physicalFrom2 = 0.0;
+				__checkVCOM(subPhysicalUnit2->GetPhysicalFrom(physicalFrom2));
+				this->checkifEqual("Check SubPhysicalUnit 2 PhysicalFrom ", physicalFrom2, (double)2.1);
+
+				double physicalTo2 = 0.0;
+				__checkVCOM(subPhysicalUnit2->GetPhysicalTo(physicalTo2));
+				this->checkifEqual("Check SubPhysicalUnit 2 PhysicalTo ", physicalTo2, (double)2.2);
 			}
 
-			if (countAttributes == 1)
+			if (i == 1)
 			{
 				IGdtfAttributePtr attribute;
 				__checkVCOM(gdtfRead->GetAttributeAt(i, &attribute));
@@ -1280,6 +1468,31 @@ void GdtfUnittest::ReadFile()
 				EGdtfModel_PrimitiveType primitiveType = EGdtfModel_PrimitiveType::eGdtfModel_PrimitiveType_Undefined;
 				__checkVCOM(gdtfModel->GetPrimitiveType(primitiveType));
 				this->checkifEqual("gdtfModelGetPrimitiveType ", primitiveType, EGdtfModel_PrimitiveType::eGdtfModel_PrimitiveType_Sphere);
+
+				// SVG Offsets
+				double svgOffsetX = 0.0;
+				__checkVCOM(gdtfModel->GetSVGOffsetX(svgOffsetX));
+				this->checkifEqual("svgOffsetX ", svgOffsetX, double(1.1));
+
+				double svgOffsetY = 0.0;
+				__checkVCOM(gdtfModel->GetSVGOffsetY(svgOffsetY));
+				this->checkifEqual("svgOffsetY ", svgOffsetY, double(1.2));
+
+				double svgSideOffsetX = 0.0;
+				__checkVCOM(gdtfModel->GetSVGSideOffsetX(svgSideOffsetX));
+				this->checkifEqual("svgSideOffsetX ", svgSideOffsetX, double(1.3));
+
+				double svgSideOffsetY = 0.0;
+				__checkVCOM(gdtfModel->GetSVGSideOffsetY(svgSideOffsetY));
+				this->checkifEqual("svgSideOffsetY ", svgSideOffsetY, double(1.4));
+
+				double svgFrontOffsetX = 0.0;
+				__checkVCOM(gdtfModel->GetSVGFrontOffsetX(svgFrontOffsetX));
+				this->checkifEqual("svgFrontOffsetX ", svgFrontOffsetX, double(1.5));
+
+				double svgFrontOffsetY = 0.0;
+				__checkVCOM(gdtfModel->GetSVGFrontOffsetY(svgFrontOffsetY));
+				this->checkifEqual("svgFrontOffsetY ", svgFrontOffsetY, double(1.6));
 			}
 		} // Models loop
 
@@ -1298,6 +1511,9 @@ void GdtfUnittest::ReadFile()
 
 		IGdtfGeometryPtr geo3;
 		__checkVCOM(gdtfRead->GetGeometryAt(2, &geo3));
+
+		IGdtfGeometryPtr geo4;
+		__checkVCOM(gdtfRead->GetGeometryAt(3, &geo4));
 
 		//----------------------------------------------
 		//Media server geos
@@ -1348,6 +1564,18 @@ void GdtfUnittest::ReadFile()
 			this->checkifEqual("Check Adress", (Sint32)3,breakId);
 		}
 
+		if(geo4)
+		{
+			//Lamp
+			IGdtfPhysicalEmitterPtr gdtfEmitter;
+			if (__checkVCOM(geo4->GetEmitterSpectrum(&gdtfEmitter)))
+			{
+				MvrString emitterName = gdtfEmitter->GetName();
+				this->checkifEqual("GetEmitterSpectrum ", emitterName, "My emitterName");
+			}
+			
+		}
+
 		//--------------------------------------------------------------------------------
 		// Read Revision
 		size_t countRevs = 0;
@@ -1371,9 +1599,8 @@ void GdtfUnittest::ReadFile()
 		this->checkifEqual("Check RevDatefMinute",	expTimestamp.fMinute,	Uint16(33));
 		this->checkifEqual("Check RevDatefSecond",	expTimestamp.fSecond, 	Uint16(44));
 		this->checkifEqual("Check UserId",			userId, 				size_t(254));
+		this->checkifEqual("Check ModifiedBy", rev->GetModifiedBy(), "unit test");
 
-
-		
 
         //------------------------------------------------------------------------------    
         // Read RDM         
@@ -1400,6 +1627,68 @@ void GdtfUnittest::ReadFile()
         size_t softIDVal;
         __checkVCOM (softID->GetValue(softIDVal));
         this->checkifEqual("SoftwareVersionID Value", Sint32(softIDVal), Sint32(22));
+
+		//------------------------------------------------------------------------------    
+        // Read ArtNet
+        IGdtfArtNetPtr artNet;
+        __checkVCOM(gdtfRead->GetArtNet(&artNet));
+        
+        size_t artNetMapCount = 0;
+        __checkVCOM(artNet->GetMapCount(artNetMapCount));
+        checkifEqual("Check ArtNet Map Count", artNetMapCount, size_t(2));
+
+		IGdtfMapPtr artNetMap1;
+		__checkVCOM(artNet->GetMapAt(0, &artNetMap1));
+
+		Uint32 artNetMap1Key = 0;
+		__checkVCOM(artNetMap1->GetKey(artNetMap1Key));
+		checkifEqual("Check ArtNet Map 1 Key", artNetMap1Key, (Uint32)1);
+
+		Uint32 artNetMap1Value = 0;
+		__checkVCOM(artNetMap1->GetValue(artNetMap1Value));
+		checkifEqual("Check ArtNet Map 1 Value", artNetMap1Value, (Uint32)2);
+
+		IGdtfMapPtr artNetMap2;
+		__checkVCOM(artNet->GetMapAt(1, &artNetMap2));
+
+		Uint32 artNetMap2Key = 0;
+		__checkVCOM(artNetMap2->GetKey(artNetMap2Key));
+		checkifEqual("Check ArtNet Map 2 Key", artNetMap2Key, (Uint32)3);
+
+		Uint32 artNetMap2Value = 0;
+		__checkVCOM(artNetMap2->GetValue(artNetMap2Value));
+		checkifEqual("Check ArtNet Map 2 Value", artNetMap2Value, (Uint32)4);
+
+		//------------------------------------------------------------------------------    
+        // Read sACN
+        IGdtfSACNPtr sACN;
+        __checkVCOM(gdtfRead->GetSACN(&sACN));
+        
+        size_t sACNMapCount = 0;
+        __checkVCOM(sACN->GetMapCount(sACNMapCount));
+        checkifEqual("Check SACN Map Count", sACNMapCount, size_t(2));
+
+		IGdtfMapPtr sACNMap1;
+		__checkVCOM(sACN->GetMapAt(0, &sACNMap1));
+
+		Uint32 sACNMap1Key = 0;
+		__checkVCOM(sACNMap1->GetKey(sACNMap1Key));
+		checkifEqual("Check SACN Map 1 Key", sACNMap1Key, (Uint32)5);
+
+		Uint32 sACNMap1Value = 0;
+		__checkVCOM(sACNMap1->GetValue(sACNMap1Value));
+		checkifEqual("Check SACN Map 1 Value", sACNMap1Value, (Uint32)6);
+
+		IGdtfMapPtr sACNMap2;
+		__checkVCOM(sACN->GetMapAt(1, &sACNMap2));
+
+		Uint32 sACNMap2Key = 0;
+		__checkVCOM(sACNMap2->GetKey(sACNMap2Key));
+		checkifEqual("Check SACN Map 2 Key", sACNMap2Key, (Uint32)7);
+
+		Uint32 sACNMap2Value = 0;
+		__checkVCOM(sACNMap2->GetValue(sACNMap2Value));
+		checkifEqual("Check SACN Map 2 Value", sACNMap2Value, (Uint32)8);
 
         //------------------------------------------------------------------------------    
         // Read DMXPersonality
@@ -1458,6 +1747,26 @@ std::string GdtfUnittest::GetTest3DS_Model(bool readLocation)
     return path;
 }
 
+std::string GdtfUnittest::GetTest3DSLow_Model(bool readLocation)
+{
+	std::string path;
+	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator+ "models3ds_low" + kSeparator; }
+	else 				{ path = fTestResourcesFolder + kSeparator; }
+	
+    path += "MyModelLow.3ds";
+    return path;
+}
+
+std::string GdtfUnittest::GetTest3DSHigh_Model(bool readLocation)
+{
+	std::string path;
+	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator+ "models3ds_high" + kSeparator; }
+	else 				{ path = fTestResourcesFolder + kSeparator; }
+	
+    path += "MyModelHigh.3ds";
+    return path;
+}
+
 std::string GdtfUnittest::GetTestGLTF_Model_glb(bool readLocation)
 {
 	std::string path;
@@ -1465,6 +1774,26 @@ std::string GdtfUnittest::GetTestGLTF_Model_glb(bool readLocation)
 	else 				{ path = fTestResourcesFolder + kSeparator; }
 	
     path += "MyModel.glb";
+    return path;
+}
+
+std::string GdtfUnittest::GetTestGLTFLow_Model_glb(bool readLocation)
+{
+	std::string path;
+	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator+ "modelsgltf_low" + kSeparator; }
+	else 				{ path = fTestResourcesFolder + kSeparator; }
+	
+    path += "MyModelLow.glb";
+    return path;
+}
+
+std::string GdtfUnittest::GetTestGLTFHigh_Model_glb(bool readLocation)
+{
+	std::string path;
+	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator+ "modelsgltf_high" + kSeparator; }
+	else 				{ path = fTestResourcesFolder + kSeparator; }
+	
+    path += "MyModelHigh.glb";
     return path;
 }
 

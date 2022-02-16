@@ -196,8 +196,7 @@ using namespace SceneData;
 	// Prepare Array
 	std::vector<double> d_arr;
 	
-	Deserialize(strVal,node,  d_arr);
-	
+	Deserialize(strVal, node,  d_arr);
 	
 	// ------------------------------------------------------------
 	// Check if you have three valies
@@ -213,6 +212,93 @@ using namespace SceneData;
 	// Set Out Color and return true
 	color = CCieColor(d_arr[0],d_arr[1],d_arr[2]);
 	
+	return true;
+}
+
+TXString SceneData::GdtfConverter::ConvertColorArray(TCCieColorArray & colors)
+/* Takes an CCieColor-Array and returns it as string in the format: "{x,y,Y}{x,y,Y}...{x,y,Y}" */
+{   
+    TXString arrayStr;
+    
+    // Add the Values
+    for (size_t idx = 0; idx < colors.size(); idx++)
+    {
+		CCieColorPtr color = colors.at(idx);
+        arrayStr << "{" << color->Get_x() << "," << color->Get_y() << "," << color->Get_Y_luminance() << "}";       
+    }
+
+    return arrayStr;
+}
+
+bool SceneData::GdtfConverter::ConvertColorArray(TXString values, const IXMLFileNodePtr& node, TCCieColorArray& colorArray)
+/* Takes string in the format: "{x,y,Y}{x,y,Y}...{x,y,Y}" and fills the values into the colorArray. */
+{
+    // ----------------------------------------------------------------
+	// If the String is empty, use the DefaultMatrix
+	if (values.IsEmpty()) { return true; }
+
+	TXString strVal = values;
+	// ----------------------------------------------------------------
+	// Delete first element
+	ASSERTN(kEveryone, strVal.GetAt(0) == '{');
+	if (strVal.GetAt(0) == '{') { strVal.Delete(0,1); }
+    else
+    {
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_ColorArrayWrongFormat, node);
+        SceneData::GdtfFixture::AddError(error); 
+    }
+	
+	// Delete last element
+	ASSERTN(kEveryone, strVal.GetLast() == '}');
+	if (strVal.GetLast() == '}') { strVal.DeleteLast(); }
+    else
+    {
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_ColorArrayWrongFormat, node);
+        SceneData::GdtfFixture::AddError(error);
+    }
+	
+	// ----------------------------------------------------------------
+	// Split into parts
+	std::vector<TXString> lines;
+	ptrdiff_t pos = strVal.Find("}{");
+    while (pos > 0 )
+	{
+		// Copy string
+		TXString strValInner;
+		for (ptrdiff_t i = 0; i < pos; i++)	{ strValInner += strVal.GetAt(i); }
+		
+		// Try to cast
+		lines.push_back(strValInner);
+		
+		// Delete and find next
+		strVal.Delete(0, pos + 2);
+		pos = strVal.Find("}{");
+	}
+
+	// Append the rest
+	lines.push_back(strVal);
+	
+	// ----------------------------------------------------------------
+	// Do the conversion
+	for (size_t i = 0; i < lines.size(); i++)
+	{
+		std::vector<double> arr;
+		Deserialize(lines.at(i), node, arr);
+		
+		// Use this for 4x4 matrix and 4x3 matrix
+		if (arr.size() == 3)
+		{
+			CCieColorPtr color = new CCieColor(arr[0], arr[1], arr[2]);
+			colorArray.push_back(color);
+		}
+		else
+		{
+			DSTOP((kEveryone, "Unexpected Format of ColorArray"));
+            GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_ColorArrayWrongFormat, node);
+            SceneData::GdtfFixture::AddError(error);
+		}
+	}
+
 	return true;
 }
 
@@ -801,11 +887,14 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 }
 /*static*/ bool GdtfConverter::ConvertBeamType(const TXString& value, const IXMLFileNodePtr& node,EGdtfBeamType& unit)
 {
-	if		(value == XML_GDTF_BeamTypeEnum_Wash)			{ unit = EGdtfBeamType::eGdtfBeamType_Wash;		 }
-	else if (value == XML_GDTF_BeamTypeEnum_Spot)			{ unit = EGdtfBeamType::eGdtfBeamType_Spot;		 }
-	else if (value == XML_GDTF_BeamTypeEnum_None)			{ unit = EGdtfBeamType::eGdtfBeamType_None;		 }
-	else if (value == XML_GDTF_BeamTypeEnum_Rectangle)		{ unit = EGdtfBeamType::eGdtfBeamType_Rectangle; }
-	else if (value == "")									{ unit = EGdtfBeamType::eGdtfBeamType_Wash;		 }
+	if		(value == XML_GDTF_BeamTypeEnum_Wash)			{ unit = EGdtfBeamType::eGdtfBeamType_Wash;		 	}
+	else if (value == XML_GDTF_BeamTypeEnum_Spot)			{ unit = EGdtfBeamType::eGdtfBeamType_Spot;		 	}
+	else if (value == XML_GDTF_BeamTypeEnum_None)			{ unit = EGdtfBeamType::eGdtfBeamType_None;		 	}
+	else if (value == XML_GDTF_BeamTypeEnum_Rectangle)		{ unit = EGdtfBeamType::eGdtfBeamType_Rectangle; 	}
+	else if (value == XML_GDTF_BeamTypeEnum_PC)				{ unit = EGdtfBeamType::eGdtfBeamType_PC;			}
+	else if (value == XML_GDTF_BeamTypeEnum_Fresnel)		{ unit = EGdtfBeamType::eGdtfBeamType_Fresnel; 		}
+	else if (value == XML_GDTF_BeamTypeEnum_Glow)			{ unit = EGdtfBeamType::eGdtfBeamType_Glow; 		}
+	else if (value == "")									{ unit = EGdtfBeamType::eGdtfBeamType_Wash;		 	}
 	else													
     {
         unit = EGdtfBeamType::eGdtfBeamType_Wash; DSTOP((kEveryone, "Unexpected Input for EGdtfBeamType Enum"));
@@ -825,6 +914,9 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 		case eGdtfBeamType_None: 		return XML_GDTF_BeamTypeEnum_None;
 		case eGdtfBeamType_Spot: 		return XML_GDTF_BeamTypeEnum_Spot;
 		case eGdtfBeamType_Wash: 		return XML_GDTF_BeamTypeEnum_Wash;
+		case eGdtfBeamType_PC: 			return XML_GDTF_BeamTypeEnum_PC;
+		case eGdtfBeamType_Fresnel: 	return XML_GDTF_BeamTypeEnum_Fresnel;
+		case eGdtfBeamType_Glow: 		return XML_GDTF_BeamTypeEnum_Glow;
 			
 		default: DSTOP((kEveryone,"This enum for EGdtfBeamType was not implemented!")); break;
 	}
@@ -833,6 +925,61 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 	return XML_GDTF_BeamTypeEnum_Wash;
 }
 
+/*static*/ TXString GdtfConverter::ConvertVector3(const VWPoint3D& value)
+{
+	TXString vectorString;
+	vectorString << "{" << value.x << "," << value.y << "," << value.z << "}";
+	return vectorString;
+}
+
+/*static*/ bool GdtfConverter::ConvertVector3(const TXString& value, const IXMLFileNodePtr& node, VWPoint3D& vector)
+{
+	// ----------------------------------------------------------------
+	// If the String is empty, use the DefaultMaterix
+	if (value.IsEmpty()) { vector = VWPoint3D(); return true; }
+	
+	
+	// ----------------------------------------------------------------
+	// Split string
+	TXString strVal = value;
+	
+	
+	// ----------------------------------------------------------------
+	// Delete first element
+	ASSERTN(kEveryone, strVal.GetAt(0) == '{');
+	if (strVal.GetAt(0) == '{') { strVal.Delete(0,1); }
+    else
+    {
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_MatrixFormatMissingFirstBracket, node);
+        SceneData::GdtfFixture::AddError(error); 
+    }
+	
+	// Delete last element
+	ASSERTN(kEveryone, strVal.GetLast() == '}');
+	if (strVal.GetLast() == '}') { strVal.DeleteLast(); }
+    else
+    {
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_MatrixFormatMissingLastBracket, node);
+        SceneData::GdtfFixture::AddError(error);
+    }
+
+	std::vector<double> vectorAsArray;
+	Deserialize(strVal, node, vectorAsArray);
+
+	if (vectorAsArray.size() != 3)
+	{
+		DSTOP((kEveryone, "Unexpected Format of Vector"));
+		GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_MatrixFormatTooMuchOrTooLessEntries, node);
+		SceneData::GdtfFixture::AddError(error);
+		return false;
+	}
+	else
+	{
+		vector.SetPoint(vectorAsArray[0], vectorAsArray[1], vectorAsArray[2]);
+	}
+
+	return true;
+}
 
 /*static*/ TXString GdtfConverter::ConvertMatrix(const VWTransformMatrix& ma, bool fourLines)
 {
@@ -855,15 +1002,13 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 		value << "{" << ma.GetOffset().x   << "," << ma.GetOffset().y  << "," << ma.GetOffset().z  << "}";
 	}
 	
-
-	
 	return value;
 }
 
 /*static*/ bool GdtfConverter::ConvertMatrix(const TXString& value, const IXMLFileNodePtr& node,VWTransformMatrix& matrix)
 {
 	// ----------------------------------------------------------------
-	// If the String is empty, use the DefaultMaterix
+	// If the String is empty, use the DefaultMatrix
 	if (value.IsEmpty()) { matrix = VWTransformMatrix(); return true; }
 	
 	
@@ -909,7 +1054,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 		pos = strVal.Find("}{");
 	}
 
-	// Apped the rest
+	// Append the rest
 	lines.push_back(strVal);
 
 	if (lines.size() != 4)
@@ -1658,6 +1803,275 @@ CieColor SceneData::GdtfConverter::ConvertCColor(const CCieColor & color)
     return true;
 }
 
+
+/*static*/ TXString GdtfConverter::ConvertLaserColorTypeEnum(GdtfDefines::EGdtfLaserColorType value)
+{
+    switch (value)
+    {
+		case EGdtfLaserColorType::RGB:							return XML_Val_LaserColorTypeRGB;
+		case EGdtfLaserColorType::SingleWaveLength:				return XML_Val_LaserColorTypeSingleWaveLength;
+    }
+
+	DSTOP((kEveryone, "Unknown Enum for EGdtfLaserColorType"));
+
+    return XML_Val_LaserColorTypeRGB;
+}
+
+/*static*/ bool GdtfConverter::ConvertLaserColorTypeEnum(const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfLaserColorType& outVal)
+{
+	if        (inVal == XML_Val_LaserColorTypeRGB)				{ outVal = EGdtfLaserColorType::RGB; }     
+	else if   (inVal == XML_Val_LaserColorTypeSingleWaveLength) { outVal = EGdtfLaserColorType::SingleWaveLength; }
+	else if   (inVal.IsEmpty())    								{ outVal = EGdtfLaserColorType::RGB; } 
+	else 
+	{
+		DSTOP((kEveryone, "Unknown Value for EGdtfLaserColorType"));
+		outVal = EGdtfLaserColorType::RGB;
+	}
+       
+    return true;
+}
+
+
+/*static*/ TXString GdtfConverter::ConvertComponentTypeEnum(GdtfDefines::EGdtfComponentType value)
+{
+    switch (value)
+    {
+		case EGdtfComponentType::Input:				return XML_Val_ComponentTypeInput;
+		case EGdtfComponentType::Output:			return XML_Val_ComponentTypeOutput;
+		case EGdtfComponentType::PowerSource:		return XML_Val_ComponentTypePowerSource;
+		case EGdtfComponentType::Consumer:			return XML_Val_ComponentTypeConsumer;
+		case EGdtfComponentType::Fuse:				return XML_Val_ComponentTypeFuse;
+		case EGdtfComponentType::NetworkProvider:	return XML_Val_ComponentTypeNetworkProvider;
+		case EGdtfComponentType::NetworkInput:		return XML_Val_ComponentTypeNetworkInput;
+		case EGdtfComponentType::NetworkOutput:		return XML_Val_ComponentTypeNetworkOutput;
+		case EGdtfComponentType::NetworkInOut:		return XML_Val_ComponentTypeNetworkInOut;
+    }
+
+	DSTOP((kEveryone, "Unknown Enum for EGdtfComponentType"));
+
+    return XML_Val_ComponentTypeInput;
+}
+
+/*static*/ bool GdtfConverter::ConvertComponentTypeEnum(const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfComponentType& outVal)
+{
+	if        (inVal == XML_Val_ComponentTypeInput)				{ outVal = EGdtfComponentType::Input; }     
+	else if   (inVal == XML_Val_ComponentTypeOutput) 			{ outVal = EGdtfComponentType::Output; }
+	else if   (inVal == XML_Val_ComponentTypePowerSource) 		{ outVal = EGdtfComponentType::PowerSource; }
+	else if   (inVal == XML_Val_ComponentTypeConsumer) 			{ outVal = EGdtfComponentType::Consumer; }
+	else if   (inVal == XML_Val_ComponentTypeFuse) 				{ outVal = EGdtfComponentType::Fuse; }
+	else if   (inVal == XML_Val_ComponentTypeNetworkProvider) 	{ outVal = EGdtfComponentType::NetworkProvider; }
+	else if   (inVal == XML_Val_ComponentTypeNetworkInput) 		{ outVal = EGdtfComponentType::NetworkInput; }
+	else if   (inVal == XML_Val_ComponentTypeNetworkOutput) 	{ outVal = EGdtfComponentType::NetworkOutput; }
+	else if   (inVal == XML_Val_ComponentTypeNetworkInOut) 		{ outVal = EGdtfComponentType::NetworkInOut; }
+	else if   (inVal.IsEmpty())    								{ outVal = EGdtfComponentType::Input; } 
+	else 
+	{
+		DSTOP((kEveryone, "Unknown Value for EGdtfComponentType"));
+		outVal = EGdtfComponentType::Input;
+	}
+       
+    return true;
+}
+
+
+/*static*/ TXString GdtfConverter::ConvertOrientationEnum(GdtfDefines::EGdtfOrientation value)
+{
+    switch (value)
+    {
+		case EGdtfOrientation::Left:	return XML_Val_OrientationLeft;
+		case EGdtfOrientation::Right:	return XML_Val_OrientationRight;
+		case EGdtfOrientation::Top:		return XML_Val_OrientationTop;
+		case EGdtfOrientation::Bottom:	return XML_Val_OrientationBottom;
+    }
+
+	DSTOP((kEveryone, "Unknown Enum for EGdtfOrientation"));
+
+    return XML_Val_OrientationLeft;
+}
+
+/*static*/ bool GdtfConverter::ConvertOrientationEnum(const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfOrientation& outVal)
+{
+	if      (inVal == XML_Val_OrientationLeft)		{ outVal = EGdtfOrientation::Left; }
+	else if	(inVal == XML_Val_OrientationRight)		{ outVal = EGdtfOrientation::Right; }
+	else if (inVal == XML_Val_OrientationTop)		{ outVal = EGdtfOrientation::Top; }
+	else if (inVal == XML_Val_OrientationBottom)	{ outVal = EGdtfOrientation::Bottom; }
+
+	else if (inVal.IsEmpty())    					{ outVal = EGdtfOrientation::Left; } 
+	else 
+	{
+		DSTOP((kEveryone, "Unknown Value for EGdtfOrientation"));
+		outVal = EGdtfOrientation::Left;
+	}
+       
+    return true;
+}
+
+
+/*static*/ TXString GdtfConverter::ConvertFuseRatingEnum(GdtfDefines::EGdtfFuseRating value)
+{
+    switch (value)
+    {
+		case EGdtfFuseRating::B:	return XML_Val_FuseRatingB;
+		case EGdtfFuseRating::C:	return XML_Val_FuseRatingC;
+		case EGdtfFuseRating::D:	return XML_Val_FuseRatingD;
+		case EGdtfFuseRating::K:	return XML_Val_FuseRatingK;
+		case EGdtfFuseRating::Z:	return XML_Val_FuseRatingZ;
+    }
+
+	DSTOP((kEveryone, "Unknown Enum for EGdtfFuseRating"));
+
+    return XML_Val_FuseRatingB;
+}
+
+/*static*/ bool GdtfConverter::ConvertFuseRatingEnum(const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfFuseRating& outVal)
+{
+	if		(inVal == XML_Val_FuseRatingB)	{ outVal = EGdtfFuseRating::B; }
+	else if (inVal == XML_Val_FuseRatingC)	{ outVal = EGdtfFuseRating::C; }
+	else if (inVal == XML_Val_FuseRatingD)	{ outVal = EGdtfFuseRating::D; }
+	else if (inVal == XML_Val_FuseRatingK)	{ outVal = EGdtfFuseRating::K; }
+	else if (inVal == XML_Val_FuseRatingZ)	{ outVal = EGdtfFuseRating::Z; }
+
+	else if	(inVal.IsEmpty())    			{ outVal = EGdtfFuseRating::B; } 
+	else 
+	{
+		DSTOP((kEveryone, "Unknown Value for EGdtfFuseRating"));
+		outVal = EGdtfFuseRating::B;
+	}
+       
+    return true;
+}
+
+/*static*/ TXString GdtfConverter::ConvertStructureTypeEnum(GdtfDefines::EGdtfStructureType value)
+{
+    switch (value)
+    {
+		case EGdtfStructureType::CenterLineBased:	return XML_Val_StructureTypeCenterLineBased;
+		case EGdtfStructureType::Detail:			return XML_Val_StructureTypeDetail;
+    }
+
+	DSTOP((kEveryone, "Unknown Enum for EGdtfStructureType"));
+
+    return XML_Val_StructureTypeCenterLineBased;
+}
+
+/*static*/ bool GdtfConverter::ConvertStructureTypeEnum(const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfStructureType& outVal)
+{
+	if		(inVal == XML_Val_StructureTypeCenterLineBased)	{ outVal = EGdtfStructureType::CenterLineBased; }
+	else if (inVal == XML_Val_StructureTypeDetail)			{ outVal = EGdtfStructureType::Detail; }
+	else if	(inVal.IsEmpty())    							{ outVal = EGdtfStructureType::CenterLineBased; }
+
+	else 
+	{
+		DSTOP((kEveryone, "Unknown Value for EGdtfStructureType"));
+		outVal = EGdtfStructureType::CenterLineBased;
+	}
+       
+    return true;
+}
+
+/*static*/ TXString GdtfConverter::ConvertCrossSectionTypeEnum(GdtfDefines::EGdtfCrossSectionType value)
+{
+    switch (value)
+    {
+		case EGdtfCrossSectionType::TrussFramework:	return XML_Val_CrossSectionTypeTrussFramework;
+		case EGdtfCrossSectionType::Tube:			return XML_Val_CrossSectionTypeTube;
+    }
+
+	DSTOP((kEveryone, "Unknown Enum for EGdtfCrossSectionType"));
+
+    return XML_Val_CrossSectionTypeTrussFramework;
+}
+
+/*static*/ bool GdtfConverter::ConvertCrossSectionTypeEnum(const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfCrossSectionType& outVal)
+{
+	if		(inVal == XML_Val_CrossSectionTypeTrussFramework)	{ outVal = EGdtfCrossSectionType::TrussFramework; }
+	else if (inVal == XML_Val_CrossSectionTypeTube)				{ outVal = EGdtfCrossSectionType::Tube; }
+	else if	(inVal.IsEmpty())    								{ outVal = EGdtfCrossSectionType::TrussFramework; }
+
+	else 
+	{
+		DSTOP((kEveryone, "Unknown Value for EGdtfCrossSectionType"));
+		outVal = EGdtfCrossSectionType::TrussFramework;
+	}
+       
+    return true;
+}
+
+/*static*/ TXString GdtfConverter::ConvertSupportTypeEnum(GdtfDefines::EGdtfSupportType value)
+{
+    switch (value)
+    {
+		case EGdtfSupportType::Rope:			return XML_Val_SupportTypeRope;
+		case EGdtfSupportType::GroundSupport:	return XML_Val_SupportTypeGroundSupport;
+    }
+
+	DSTOP((kEveryone, "Unknown Enum for EGdtfSupportType"));
+
+    return XML_Val_SupportTypeRope;
+}
+
+/*static*/ bool GdtfConverter::ConvertSupportTypeEnum(const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfSupportType& outVal)
+{
+	if		(inVal == XML_Val_SupportTypeRope)			{ outVal = EGdtfSupportType::Rope; }
+	else if (inVal == XML_Val_SupportTypeGroundSupport)	{ outVal = EGdtfSupportType::GroundSupport; }
+	else if	(inVal.IsEmpty())    						{ outVal = EGdtfSupportType::Rope; }
+
+	else 
+	{
+		DSTOP((kEveryone, "Unknown Value for EGdtfSupportType"));
+		outVal = EGdtfSupportType::Rope;
+	}
+       
+    return true;
+}
+
+/*static*/ TXString GdtfConverter::ConvertSubPhysicalUnitTypeEnum(GdtfDefines::EGdtfSubPhysicalUnitType value)
+{
+    switch (value)
+    {
+		case EGdtfSubPhysicalUnitType::PlacementOffset:	return XML_Val_SubPhysicalUnitTypePlacementOffset;
+		case EGdtfSubPhysicalUnitType::Amplitude:		return XML_Val_SubPhysicalUnitTypeAmplitude;
+		case EGdtfSubPhysicalUnitType::AmplitudeMin:	return XML_Val_SubPhysicalUnitTypeAmplitudeMin;
+		case EGdtfSubPhysicalUnitType::AmplitudeMax:	return XML_Val_SubPhysicalUnitTypeAmplitudeMax;
+		case EGdtfSubPhysicalUnitType::Duration:		return XML_Val_SubPhysicalUnitTypeDuration;
+		case EGdtfSubPhysicalUnitType::DutyCycle:		return XML_Val_SubPhysicalUnitTypeDutyCycle;
+		case EGdtfSubPhysicalUnitType::TimeOffset:		return XML_Val_SubPhysicalUnitTypeTimeOffset;
+		case EGdtfSubPhysicalUnitType::MinimumOpening:	return XML_Val_SubPhysicalUnitTypeMinimumOpening;
+		case EGdtfSubPhysicalUnitType::Value:			return XML_Val_SubPhysicalUnitTypeValue;
+		case EGdtfSubPhysicalUnitType::RatioHorizontal:	return XML_Val_SubPhysicalUnitTypeRatioHorizontal;
+		case EGdtfSubPhysicalUnitType::RatioVertical:	return XML_Val_SubPhysicalUnitTypeRatioVertical;
+    }
+
+	DSTOP((kEveryone, "Unknown Enum for EGdtfSubPhysicalUnitType"));
+
+    return XML_Val_SubPhysicalUnitTypePlacementOffset;
+}
+
+/*static*/ bool GdtfConverter::ConvertSubPhysicalUnitTypeEnum(	const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::EGdtfSubPhysicalUnitType& outVal)
+{
+	if		(inVal == XML_Val_SubPhysicalUnitTypePlacementOffset)	{ outVal = EGdtfSubPhysicalUnitType::PlacementOffset; }
+	else if (inVal == XML_Val_SubPhysicalUnitTypeAmplitude)			{ outVal = EGdtfSubPhysicalUnitType::Amplitude; }
+	else if (inVal == XML_Val_SubPhysicalUnitTypeAmplitudeMin)		{ outVal = EGdtfSubPhysicalUnitType::AmplitudeMin; }
+	else if (inVal == XML_Val_SubPhysicalUnitTypeAmplitudeMax)		{ outVal = EGdtfSubPhysicalUnitType::AmplitudeMax; }
+	else if (inVal == XML_Val_SubPhysicalUnitTypeDuration)			{ outVal = EGdtfSubPhysicalUnitType::Duration; }
+	else if (inVal == XML_Val_SubPhysicalUnitTypeDutyCycle)			{ outVal = EGdtfSubPhysicalUnitType::DutyCycle; }
+	else if (inVal == XML_Val_SubPhysicalUnitTypeTimeOffset)		{ outVal = EGdtfSubPhysicalUnitType::TimeOffset; }
+	else if (inVal == XML_Val_SubPhysicalUnitTypeMinimumOpening)	{ outVal = EGdtfSubPhysicalUnitType::MinimumOpening; }
+	else if (inVal == XML_Val_SubPhysicalUnitTypeValue)				{ outVal = EGdtfSubPhysicalUnitType::Value; }
+	else if (inVal == XML_Val_SubPhysicalUnitTypeRatioHorizontal)	{ outVal = EGdtfSubPhysicalUnitType::RatioHorizontal; }
+	else if (inVal == XML_Val_SubPhysicalUnitTypeRatioVertical)		{ outVal = EGdtfSubPhysicalUnitType::RatioVertical; }
+	else if	(inVal.IsEmpty())    									{ outVal = EGdtfSubPhysicalUnitType::PlacementOffset; }
+
+	else 
+	{
+		DSTOP((kEveryone, "Unknown Value for EGdtfSubPhysicalUnitType"));
+		outVal = EGdtfSubPhysicalUnitType::PlacementOffset;
+	}
+       
+    return true;
+}
+
+
 bool SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, const IFileIdentifierPtr& file, ERessourceType resType, bool deleteFile, bool mustExist)
 {
 	//-------------------------------------------------------------------------------------------------
@@ -1706,19 +2120,24 @@ TXString SceneData::SceneDataZip::GetResourceSubFolder(ERessourceType resType)
     {
     case ERessourceType::ImageWheel:
         return "wheels" + TXString(kSeperator);
-        break;
     case ERessourceType::Model3DS:
         return "models" + TXString(kSeperator) + "3ds" + TXString(kSeperator);
-        break;
+	case ERessourceType::Model3DSLow:
+        return "models" + TXString(kSeperator) + "3ds_low" + TXString(kSeperator);
+	case ERessourceType::Model3DSHigh:
+        return "models" + TXString(kSeperator) + "3ds_high" + TXString(kSeperator);
     case ERessourceType::ModelSVG:
         return "models" + TXString(kSeperator) + "svg" + TXString(kSeperator);
-        break;
 	case ERessourceType::ModelGLTF:
         return "models" + TXString(kSeperator) + "gltf" + TXString(kSeperator);
-        break;
+	case ERessourceType::ModelGLTFLow:
+        return "models" + TXString(kSeperator) + "gltf_low" + TXString(kSeperator);
+	case ERessourceType::ModelGLTFHigh:
+        return "models" + TXString(kSeperator) + "gltf_high" + TXString(kSeperator);
     case ERessourceType::RessoureFixture:
         return  "";
-        break;
+	default:
+		break;
     }    
 
     DSTOP((kEveryone, "Unexpected Enum for GetResourceSubFolder(ERessourceType resType)"));
@@ -1855,7 +2274,6 @@ void GdtfConverter::TraverseNodes(IXMLFileNodePtr root, const TXString& childCon
 			{
 				TXString nodeName;
 				objNode->GetNodeName(nodeName);
-				ASSERTN(kEveryone, nodeName == childNodeName);
 				if (nodeName == childNodeName)
 				{
 					processNodeFunction(objNode);
@@ -1900,6 +2318,25 @@ void GdtfConverter::TraverseMultiNodes(IXMLFileNodePtr root, const TXString& chi
 		
 		
 		
+	}
+}
+
+GdtfDefines::EGdtfPhysicalUnit GdtfConverter::GetUnitFromSubPhysical(GdtfDefines::EGdtfSubPhysicalUnitType subPhysicalUnit)
+{
+	switch(subPhysicalUnit)
+	{
+		case EGdtfSubPhysicalUnitType::PlacementOffset: return EGdtfPhysicalUnit::Angle;
+		case EGdtfSubPhysicalUnitType::Amplitude: 		return EGdtfPhysicalUnit::Percent;
+		case EGdtfSubPhysicalUnitType::AmplitudeMin: 	return EGdtfPhysicalUnit::Percent;
+		case EGdtfSubPhysicalUnitType::AmplitudeMax: 	return EGdtfPhysicalUnit::Percent;
+		case EGdtfSubPhysicalUnitType::Duration: 		return EGdtfPhysicalUnit::Time;
+		case EGdtfSubPhysicalUnitType::DutyCycle: 		return EGdtfPhysicalUnit::Percent;
+		case EGdtfSubPhysicalUnitType::TimeOffset: 		return EGdtfPhysicalUnit::Percent;
+		case EGdtfSubPhysicalUnitType::MinimumOpening: 	return EGdtfPhysicalUnit::Percent;
+		case EGdtfSubPhysicalUnitType::Value: 			return EGdtfPhysicalUnit::Percent;
+		case EGdtfSubPhysicalUnitType::RatioHorizontal: return EGdtfPhysicalUnit::Percent;
+		case EGdtfSubPhysicalUnitType::RatioVertical:	return EGdtfPhysicalUnit::Percent;
+		default: 										return EGdtfPhysicalUnit::Percent;
 	}
 }
 

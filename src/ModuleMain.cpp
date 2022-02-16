@@ -37,6 +37,7 @@
 #include "Implementation/CGdtfDmxLogicalChannel.h"
 #include "Implementation/CGdtfDmxChannelFunction.h"
 #include "Implementation/CGdtfDmxChannelSet.h"
+#include "Implementation/CGdtfDmxSubChannelSet.h"
 #include "Implementation/CGdtfBreak.h"
 #include "Implementation/CGdtfWheelSlotPrismFacet.h"
 #include "Implementation/CGdtfWheelSlotAnimationSystem.h"
@@ -45,12 +46,20 @@
 #include "Implementation/CGdtfDMXPersonality.h"
 #include "Implementation/CGdtfSoftwareVersionID.h"
 #include "Implementation/CGdtfFTRDM.h"
+#include "Implementation/CGdtfMap.h"
+#include "Implementation/CGdtfArtNet.h"
+#include "Implementation/CGdtfSACN.h"
 #include "Implementation/CGdtfMeasurement.h"
 #include "Implementation/CGdtfFilter.h"
+#include "Implementation/CGdtfDmxProfile.h"
+#include "Implementation/CGdtfPoint.h"
 #include "Implementation/CGdtfColorSpace.h"
 #include "Implementation/CGdtfConnector.h"
-#include "Implementation/CGdtfPowerConsumption.h"
 #include "Implementation/CUtility.h"
+#include "Implementation/CGdtfLaserProtocol.h"
+#include "Implementation/CGdtfPinPatch.h"
+#include "Implementation/CGdtfSubPhysicalUnit.h"
+#include "Implementation/CGdtfGamut.h"
 
 
 // XML
@@ -149,6 +158,8 @@ extern "C" VectorworksMVR::VCOMError VWQueryInterface(const VectorworksMVR::VWII
         resultInterface = new VectorworksMVR::CGdtfDmxChannelFunctionImpl();
     else if (iid == VectorworksMVR::IID_GdtfDmxChannelSet)
         resultInterface = new VectorworksMVR::CGdtfDmxChannelSetImpl();
+    else if (iid == VectorworksMVR::IID_GdtfDmxSubChannelSet)
+        resultInterface = new VectorworksMVR::CGdtfDmxSubChannelSetImpl();
     else if (iid == VectorworksMVR::IID_GdtfBreak)
         resultInterface = new VectorworksMVR::CGdtfBreakImpl();
     else if (iid == VectorworksMVR::IID_GdtfWheelSlotPrismFacet)
@@ -159,6 +170,12 @@ extern "C" VectorworksMVR::VCOMError VWQueryInterface(const VectorworksMVR::VWII
         resultInterface = new CGdtfXmlParsingErrorImpl();
     else if (iid == VectorworksMVR::IID_GdtfTRDM)
         resultInterface = new CGdtf_FTRDMImpl();
+    else if (iid == VectorworksMVR::IID_GdtfMap)
+        resultInterface = new CGdtfMapImpl();
+    else if (iid == VectorworksMVR::IID_GdtfArtNet)
+        resultInterface = new CGdtfArtNetImpl();
+    else if (iid == VectorworksMVR::IID_GdtfSACN)
+        resultInterface = new CGdtfSACNImpl();
     else if (iid == VectorworksMVR::IID_GdtfDMXPersonality)
         resultInterface = new CGdtfDMXPersonalityImpl();
     else if (iid == VectorworksMVR::IID_GdtfSoftwareVersionID)
@@ -167,12 +184,16 @@ extern "C" VectorworksMVR::VCOMError VWQueryInterface(const VectorworksMVR::VWII
         resultInterface = new CGdtfMeasurementImpl();
     else if (iid == VectorworksMVR::IID_GdtfFilter)
         resultInterface = new CGdtfFilterImpl();
+    else if (iid == VectorworksMVR::IID_GdtfDMXProfile)
+        resultInterface = new CGdtfDMXProfileImpl();
+    else if (iid == VectorworksMVR::IID_GdtfPoint)
+        resultInterface = new CGdtfPointImpl();
     else if (iid == VectorworksMVR::IID_GdtfColorSpace)
         resultInterface = new CGdtfColorSpaceImpl();
+    else if (iid == VectorworksMVR::IID_GdtfGamut)
+		resultInterface = new CGdtfGamutImpl();
     else if (iid == VectorworksMVR::IID_GdtfConnector)
         resultInterface = new CGdtfConnectorImpl();
-    else if (iid == VectorworksMVR::IID_GdtfPowerConsumption)
-        resultInterface = new CGdtfPowerConsumptionImpl();
 	else if (iid == VectorworksMVR::Filing::IID_FileIdentifier)
 		resultInterface = new CFileIdentifier();
 	else if (iid == VectorworksMVR::Filing::IID_FolderIdentifier )
@@ -187,6 +208,12 @@ extern "C" VectorworksMVR::VCOMError VWQueryInterface(const VectorworksMVR::VWII
 		resultInterface = new XML::CXMLFileNodeImpl();
     else if (iid == VectorworksMVR::IID_IUtility)
 		resultInterface = new CUtilityImpl();
+    else if (iid == VectorworksMVR::IID_GdtfLaserProtocol)
+		resultInterface = new CGdtfLaserProtocolImpl();
+    else if (iid == VectorworksMVR::IID_GdtfPinPatch)
+		resultInterface = new CGdtfPinPatchImpl();
+    else if (iid == VectorworksMVR::IID_GdtfSubPhysicalUnit)
+		resultInterface = new CGdtfSubPhysicalUnitImpl();
 	
 	// determine the result values
 	VCOMError result = kVCOMError_Failed;

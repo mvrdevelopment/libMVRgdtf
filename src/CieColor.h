@@ -33,4 +33,6 @@ namespace VectorworksMVR
 		
 		void	GetRGBColor(CRGBColor& rgb) const;
 	};
+	typedef CCieColor*				CCieColorPtr;
+    typedef std::vector<CCieColor*>	TCCieColorArray;
 };

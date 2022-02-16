@@ -2428,6 +2428,14 @@ SceneDataGroupObjPtr SceneDataExchange::CreateGroupObject(const SceneDataGUID& g
 	return newGroup;
 }
 
+SceneDataGroupObjPtr SceneDataExchange::CreateGroupObject(const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name, SceneDataGroupObjPtr addToContainer)
+{
+	SceneDataGroupObjPtr newGroup = new SceneDataGroupObj(guid);
+	addToContainer->AddObject(newGroup);
+	newGroup->setName(name);
+	return newGroup;
+}
+
 SceneDataGroupObjPtr SceneDataExchange::ReadGroupObject(const SceneDataGUID& guid, const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer)
 {
 
@@ -2694,6 +2702,16 @@ bool SceneDataExchange::WriteToFile(const IFileIdentifierPtr& file)
 		SceneDataZip::AddFileToZip(zipfile, f3DS_FilesToAdd.at(i),  ERessourceType::Model3DS, false/*Delete*/);
 	}
 
+	for (size_t i = 0; i < f3DSLow_FilesToAdd.size(); i++)
+	{        
+		SceneDataZip::AddFileToZip(zipfile, f3DSLow_FilesToAdd.at(i),  ERessourceType::Model3DSLow, false/*Delete*/);
+	}
+
+	for (size_t i = 0; i < f3DSHigh_FilesToAdd.size(); i++)
+	{        
+		SceneDataZip::AddFileToZip(zipfile, f3DSHigh_FilesToAdd.at(i),  ERessourceType::Model3DSHigh, false/*Delete*/);
+	}
+
 	for (size_t i = 0; i < fSVG_FilesToAdd.size(); i++)
 	{        
 		SceneDataZip::AddFileToZip(zipfile, fSVG_FilesToAdd.at(i), ERessourceType::ModelSVG, false/*Delete*/);
@@ -2702,6 +2720,16 @@ bool SceneDataExchange::WriteToFile(const IFileIdentifierPtr& file)
 	for (size_t i = 0; i < fGLTF_FilesToAdd.size(); i++)
 	{        
 		SceneDataZip::AddFileToZip(zipfile, fGLTF_FilesToAdd.at(i),  ERessourceType::ModelGLTF, false/*Delete*/);
+	}
+
+	for (size_t i = 0; i < fGLTFLow_FilesToAdd.size(); i++)
+	{        
+		SceneDataZip::AddFileToZip(zipfile, fGLTFLow_FilesToAdd.at(i),  ERessourceType::ModelGLTFLow, false/*Delete*/);
+	}
+
+	for (size_t i = 0; i < fGLTFHigh_FilesToAdd.size(); i++)
+	{        
+		SceneDataZip::AddFileToZip(zipfile, fGLTFHigh_FilesToAdd.at(i),  ERessourceType::ModelGLTFHigh, false/*Delete*/);
 	}
 
 	for (size_t i = 0; i < fWheel_Image_FilesToAdd.size(); i++)
@@ -3277,8 +3305,12 @@ void SceneDataExchange::AddFileToZip(const IFileIdentifierPtr& file, ERessourceT
     {
 		case ERessourceType::ImageWheel: 		fWheel_Image_FilesToAdd.push_back(file); return;
 		case ERessourceType::Model3DS: 			f3DS_FilesToAdd.push_back(file); return;
+		case ERessourceType::Model3DSLow: 		f3DSLow_FilesToAdd.push_back(file); return;
+		case ERessourceType::Model3DSHigh: 		f3DSHigh_FilesToAdd.push_back(file); return;
 		case ERessourceType::ModelSVG: 			fSVG_FilesToAdd.push_back(file); return;
 		case ERessourceType::ModelGLTF: 		fGLTF_FilesToAdd.push_back(file); return;
+		case ERessourceType::ModelGLTFLow: 		fGLTFLow_FilesToAdd.push_back(file); return;
+		case ERessourceType::ModelGLTFHigh: 	fGLTFHigh_FilesToAdd.push_back(file); return;
 		case ERessourceType::RessoureFixture: 	fFixtureResources_FilesToAdd.push_back(file);return;
     }        
 

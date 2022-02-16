@@ -27,6 +27,11 @@ namespace VectorworksMVR
 		double ox,oy,oz;
 	};
 
+	struct SVector3
+	{
+		double x, y, z;
+	};
+
     struct STime
 	{
 		Uint16	fYear;
@@ -75,12 +80,15 @@ namespace VectorworksMVR
 	class IMediaRessourceVectorInterface;
 	class IGdtfFixture;
 	class IGdtfAttribute;
+	class IGdtfGeometry;
     class IGdtfPhysicalEmitter;
     class IGdtfMacroDMXStep;
     class IGdtfMacroDMXValue;
     class IGdtfMacroVisualStep;
     class IGdtfMacroVisualValue;
     class IGdtf_FTRDM;
+    class IGdtfArtNet;
+    class IGdtfSACN;
 	class IGdtfFeatureGroup;
 	class IGdtfDmxChannel;
     class IGdtfDmxLogicalChannel;
@@ -89,6 +97,7 @@ namespace VectorworksMVR
     class IGdtfDMXProfile;
     class IGdtfCRIGroup;
     class IGdtfColorSpace;
+    class IGdtfGamut;
     class IGdtfFilter;
     class IGdtfDmxMode;
 	class IGdtfMacroDMX;
@@ -313,6 +322,7 @@ namespace VectorworksMVR
 		// Then you can generate all other objects
 		virtual VCOMError VCOM_CALLTYPE		CreateLayerObject(	const MvrUUID& guid,								 MvrString name,								ISceneObj**	outLayerObj) = 0;
 		virtual VCOMError VCOM_CALLTYPE		CreateGroupObject(	const MvrUUID& guid, const STransformMatrix& offset,					ISceneObj* addToContainer,	ISceneObj**	outGroupObj) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateGroupObject(	const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outGroupObj) = 0;
 		virtual VCOMError VCOM_CALLTYPE		CreateFixture(		const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outFixture) = 0;
 		virtual VCOMError VCOM_CALLTYPE		CreateSceneObject(	const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outSceneObj) = 0;
 		virtual VCOMError VCOM_CALLTYPE		CreateFocusPoint(	const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj** outFocusPoint) = 0;
@@ -419,6 +429,22 @@ namespace VectorworksMVR
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
     };
 	typedef VCOMPtr<IGdtfFeatureGroup>	IGdtfFeatureGroupPtr;
+
+	class DYNAMIC_ATTRIBUTE IGdtfSubPhysicalUnit : public IVWUnknown
+    {
+		public:
+		virtual VCOMError VCOM_CALLTYPE     GetType(GdtfDefines::EGdtfSubPhysicalUnitType& type) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetPhysicalFrom(double& physicalFrom) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetPhysicalTo(double& physicalTo) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE     SetType(GdtfDefines::EGdtfSubPhysicalUnitType type) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetPhysicalFrom(double physicalFrom) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetPhysicalTo(double physicalTo) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+    };
+	typedef VCOMPtr<IGdtfSubPhysicalUnit>	IGdtfSubPhysicalUnitPtr;
 	
     class DYNAMIC_ATTRIBUTE IGdtfAttribute : public IVWUnknown
     {
@@ -436,10 +462,14 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     SetMainAttribute(IGdtfAttribute* mainAttrib) = 0;
         virtual VCOMError VCOM_CALLTYPE     SetPhysicalUnit(GdtfDefines::EGdtfPhysicalUnit unit) = 0;
         virtual VCOMError VCOM_CALLTYPE     SetColor(const CieColor & col) = 0;
-
 		
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+
+		// GDTF 1.2
+		virtual VCOMError VCOM_CALLTYPE 	GetSubPhysicalUnitCount(size_t& count) = 0;
+        virtual VCOMError VCOM_CALLTYPE 	GetSubPhysicalUnitAt(size_t at, VectorworksMVR::IGdtfSubPhysicalUnit** outSubPhysicalUnit) = 0;
+        virtual VCOMError VCOM_CALLTYPE 	CreateSubPhysicalUnit(GdtfDefines::EGdtfSubPhysicalUnitType type, VectorworksMVR::IGdtfSubPhysicalUnit** outSubPhysicalUnit) = 0;
     };
 	typedef VCOMPtr<IGdtfAttribute>	IGdtfAttributePtr;
     
@@ -513,7 +543,7 @@ namespace VectorworksMVR
     class DYNAMIC_ATTRIBUTE IGdtfWheel : public IVWUnknown
     {
 		public:
-        virtual MvrString VCOM_CALLTYPE     GetName() = 0;        
+        virtual MvrString VCOM_CALLTYPE     GetName() = 0;
         
         virtual VCOMError VCOM_CALLTYPE     GetWheelSlotCount(size_t& outCount) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetWheelSlotAt(size_t at, IGdtfWheelSlot** outPosition) = 0;
@@ -536,7 +566,10 @@ namespace VectorworksMVR
 		virtual MvrString VCOM_CALLTYPE     GetGeometryFile_3DS_FullPath() = 0;
         virtual MvrString VCOM_CALLTYPE     GetGeometryFile_SVG_FullPath() = 0;
 		virtual MvrString VCOM_CALLTYPE     GetGeometryFile_GLTF_FullPath() = 0;
-
+		
+		virtual VCOMError VCOM_CALLTYPE     GetBuffer3DS(void** bufferToCopy, size_t& length) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetBufferSVG(void** bufferToCopy, size_t& length) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetBufferGLTF(void** bufferToCopy, size_t& length) = 0;
                 
         virtual VCOMError VCOM_CALLTYPE     SetName(MvrString name) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetLength(double length) = 0;
@@ -544,9 +577,34 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE     SetHeight(double height) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetPrimitiveType(GdtfDefines::EGdtfModel_PrimitiveType type) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetGeometryFile(MvrString path) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE     SetBuffer3DS(void* bufferToCopy, size_t length) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetBufferSVG(void* bufferToCopy, size_t length) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetBufferGLTF(void* bufferToCopy, size_t length) = 0;
 		
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+
+		// GDTF 1.2
+		virtual VCOMError VCOM_CALLTYPE     GetSVGOffsetX(double& svgOffsetX) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetSVGOffsetY(double& svgOffsetY) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetSVGSideOffsetX(double& svgSideOffsetX) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetSVGSideOffsetY(double& svgSideOffsetY) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetSVGFrontOffsetX(double& svgFrontOffsetX) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetSVGFrontOffsetY(double& svgFrontOffsetY) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE     SetSVGOffsetX(double svgOffsetX) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetSVGOffsetY(double svgOffsetY) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetSVGSideOffsetX(double svgSideOffsetX) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetSVGSideOffsetY(double svgSideOffsetY) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetSVGFrontOffsetX(double svgFrontOffsetX) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetSVGFrontOffsetY(double svgFrontOffsetY) = 0;
+
+		virtual MvrString VCOM_CALLTYPE     GetGeometryFile_3DSLow_FullPath() 	= 0;
+		virtual MvrString VCOM_CALLTYPE     GetGeometryFile_3DSHigh_FullPath() 	= 0;
+
+		virtual MvrString VCOM_CALLTYPE     GetGeometryFile_GLTFLow_FullPath() 	= 0;
+		virtual MvrString VCOM_CALLTYPE     GetGeometryFile_GLTFHigh_FullPath() = 0;
 	};
 	typedef VCOMPtr<IGdtfModel>	IGdtfModelPtr;
 	
@@ -563,6 +621,33 @@ namespace VectorworksMVR
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
 	};
 	typedef VCOMPtr<IGdtfBreak>	IGdtfBreakPtr;
+
+	class DYNAMIC_ATTRIBUTE IGdtfLaserProtocol : public IVWUnknown
+	{
+	public:
+		virtual MvrString VCOM_CALLTYPE     GetName() = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetName(MvrString name) = 0;
+		
+		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+	};
+	typedef VCOMPtr<IGdtfLaserProtocol>	IGdtfLaserProtocolPtr;
+
+	class DYNAMIC_ATTRIBUTE IGdtfPinPatch : public IVWUnknown
+	{
+	public:
+		virtual VCOMError VCOM_CALLTYPE     GetLinkedWiringObject(IGdtfGeometry** toWiringObject) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetFromPin(size_t& fromPin) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetToPin(size_t& toPin) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE     SetLinkedWiringObject(IGdtfGeometry* toWiringObject) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetFromPin(size_t fromPin) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetToPin(size_t toPin) = 0;
+		
+		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+	};
+	typedef VCOMPtr<IGdtfPinPatch>	IGdtfPinPatchPtr;
 	
     class DYNAMIC_ATTRIBUTE IGdtfGeometry : public IVWUnknown
     {
@@ -627,6 +712,131 @@ namespace VectorworksMVR
 		// Display
 		virtual MvrString VCOM_CALLTYPE		GetTexture() = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetTexture(MvrString texture) = 0;
+
+		// GDTF 1.2
+		// Lamp
+		virtual VCOMError VCOM_CALLTYPE     GetEmitterSpectrum(IGdtfPhysicalEmitter** outEmitter) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetEmitterSpectrum(IGdtfPhysicalEmitter* newEmitter) = 0;
+
+        // Laser
+        virtual VCOMError VCOM_CALLTYPE		GetColorType(GdtfDefines::EGdtfLaserColorType& colorType) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetLaserColor(double& waveLength) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetOutputStrength(double& outputStrength) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetEmitter(IGdtfPhysicalEmitter** emitter) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetBeamDiameter(double& beamDiameter) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetBeamDivergenceMin(double& beamDivergenceMin) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetBeamDivergenceMax(double& beamDivergenceMax) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetScanAnglePan(double& scanAnglePan) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetScanAngleTilt(double& scanAngleTilt) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetScanSpeed(double& scanSpeed) = 0;
+
+        virtual VCOMError VCOM_CALLTYPE		SetColorType(GdtfDefines::EGdtfLaserColorType colorType) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetLaserColor(double waveLength) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetOutputStrength(double outputStrength) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetEmitter(IGdtfPhysicalEmitter* emitter) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetBeamDiameter(double beamDiameter) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetBeamDivergenceMin(double beamDivergenceMin) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetBeamDivergenceMax(double beamDivergenceMax) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetScanAnglePan(double scanAnglePan) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetScanAngleTilt(double scanAngleTilt) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetScanSpeed(double scanSpeed) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE 	GetLaserProtocolCount(size_t& count) = 0;
+        virtual VCOMError VCOM_CALLTYPE 	GetLaserProtocolAt(size_t at, VectorworksMVR::IGdtfLaserProtocol** outLaserProtocol) = 0;
+        virtual VCOMError VCOM_CALLTYPE 	CreateLaserProtocol(MvrString name, VectorworksMVR::IGdtfLaserProtocol** outLaserProtocol) = 0;
+
+		// WiringObject
+		virtual MvrString VCOM_CALLTYPE     GetConnectorType() = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetComponentType(GdtfDefines::EGdtfComponentType& componentType) = 0;
+        virtual MvrString VCOM_CALLTYPE     GetSignalType() = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetPinCount(size_t& pinCount) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetSignalLayer(size_t& signalLayer) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetOrientation(GdtfDefines::EGdtfOrientation& orientation) = 0;
+        virtual MvrString VCOM_CALLTYPE     GetWireGroup() = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetElectricalPayLoad(double& electricalPayLoad) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetVoltageRangeMin(double& voltageRangeMin) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetVoltageRangeMax(double& voltageRangeMax) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetFrequencyRangeMin(double& frequencyRangeMin) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetFrequencyRangeMax(double& frequencyRangeMax) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCosPhi(double& cosPhi) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetMaxPayLoad(double& maxPayload) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetVoltage(double& voltage) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetFuseCurrent(double& fuseCurrent) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetFuseRating(GdtfDefines::EGdtfFuseRating& fuseRating) = 0;
+
+        virtual VCOMError VCOM_CALLTYPE     SetConnectorType(MvrString connectorType) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetComponentType(GdtfDefines::EGdtfComponentType componentType) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetSignalType(MvrString signalType) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetPinCount(size_t pinCount) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetSignalLayer(size_t signalLayer) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetOrientation(GdtfDefines::EGdtfOrientation orientation) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetWireGroup(MvrString wireGroup) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetElectricalPayLoad(double electricalPayLoad) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetVoltageRangeMin(double voltageRangeMin) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetVoltageRangeMax(double voltageRangeMax) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetFrequencyRangeMin(double frequencyRangeMin) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetFrequencyRangeMax(double frequencyRangeMax) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetCosPhi(double cosPhi) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetMaxPayLoad(double maxPayload) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetVoltage(double voltage) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetFuseCurrent(double fuseCurrent) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetFuseRating(GdtfDefines::EGdtfFuseRating fuseRating) = 0;
+
+        virtual VCOMError VCOM_CALLTYPE 	GetPinPatchCount(size_t& count) = 0;
+        virtual VCOMError VCOM_CALLTYPE 	GetPinPatchAt(size_t at, VectorworksMVR::IGdtfPinPatch** outPinPatch) = 0;
+        virtual VCOMError VCOM_CALLTYPE 	CreatePinPatch(VectorworksMVR::IGdtfGeometry* toWiringObject, size_t fromPin, size_t toPin, VectorworksMVR::IGdtfPinPatch** outPinPatch) = 0;
+
+		// Inventory
+		virtual VCOMError VCOM_CALLTYPE     GetInventoryCount(size_t& count) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetInventoryCount(size_t count) = 0;
+
+		// Structure
+        virtual VCOMError VCOM_CALLTYPE		GetStructureLinkedGeometry(IGdtfGeometry** linkedGeometry) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetStructureType(GdtfDefines::EGdtfStructureType& structureType) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCrossSectionType(GdtfDefines::EGdtfCrossSectionType& crossSectionType) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCrossSectionHeight(double& crossSectionHeight) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCrossSectionWallThickness(double& crossSectionWallThickness) = 0;
+        virtual MvrString VCOM_CALLTYPE		GetTrussCrossSection() = 0;
+
+        virtual VCOMError VCOM_CALLTYPE	    SetStructureLinkedGeometry(IGdtfGeometry* linkedGeometry) = 0;
+		virtual VCOMError VCOM_CALLTYPE	    SetStructureType(GdtfDefines::EGdtfStructureType structureType) = 0;
+		virtual VCOMError VCOM_CALLTYPE	    SetCrossSectionType(GdtfDefines::EGdtfCrossSectionType crossSectionType) = 0;
+		virtual VCOMError VCOM_CALLTYPE	    SetCrossSectionHeight(double crossSectionHeight) = 0;
+		virtual VCOMError VCOM_CALLTYPE	    SetCrossSectionWallThickness(double crossSectionWallThickness) = 0;
+		virtual VCOMError VCOM_CALLTYPE	    SetTrussCrossSection(MvrString trussCrossSection) = 0;
+
+		// Support
+		virtual VCOMError VCOM_CALLTYPE     GetSupportType(GdtfDefines::EGdtfSupportType& supportType) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCapacityX(double& capacityX) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCapacityY(double& capacityY) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCapacityZ(double& capacityZ) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCapacityXX(double& capacityXX) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCapacityYY(double& capacityYY) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCapacityZZ(double& capacityZZ) = 0;
+		virtual MvrString VCOM_CALLTYPE     GetRopeCrossSection() = 0;
+		virtual VCOMError VCOM_CALLTYPE	    GetRopeOffset(SVector3& ropeOffset) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetResistanceX(double& resistanceX) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetResistanceY(double& resistanceY) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetResistanceZ(double& resistanceZ) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetResistanceXX(double& resistanceXX) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetResistanceYY(double& resistanceYY) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetResistanceZZ(double& resistanceZZ) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE     SetSupportType(GdtfDefines::EGdtfSupportType supportType) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetCapacityX(double capacityX) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetCapacityY(double capacityY) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetCapacityZ(double capacityZ) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetCapacityXX(double capacityXX) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetCapacityYY(double capacityYY) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetCapacityZZ(double capacityZZ) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetRopeCrossSection(MvrString ropeCrossSection) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetRopeOffset(double x, double y, double z) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetResistanceX(double resistanceX) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetResistanceY(double resistanceY) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetResistanceZ(double resistanceZ) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetResistanceXX(double resistanceXX) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetResistanceYY(double resistanceYY) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetResistanceZZ(double resistanceZZ) = 0;
 	};
 	typedef VCOMPtr<IGdtfGeometry>	IGdtfGeometryPtr;
     
@@ -650,6 +860,26 @@ namespace VectorworksMVR
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
 	};
 	typedef VCOMPtr<IGdtfDmxChannelSet>	IGdtfDmxChannelSetPtr;
+
+	class DYNAMIC_ATTRIBUTE IGdtfDmxSubChannelSet : public IVWUnknown
+    {
+	public:
+        virtual MvrString VCOM_CALLTYPE     GetName() = 0;		
+        virtual VCOMError VCOM_CALLTYPE     GetPhysicalFrom(double& from) = 0;        
+        virtual VCOMError VCOM_CALLTYPE     GetPhysicalTo(double& to) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetSubPhysicalUnit(IGdtfSubPhysicalUnit** subPhysicalUnit) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetDMXProfile(IGdtfDMXProfile** dmxProfile) = 0;
+		
+		virtual VCOMError VCOM_CALLTYPE     SetName(MvrString name) = 0;		
+        virtual VCOMError VCOM_CALLTYPE     SetPhysicalFrom(double from) = 0;        
+        virtual VCOMError VCOM_CALLTYPE     SetPhysicalTo(double to) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetSubPhysicalUnit(IGdtfSubPhysicalUnit* subPhysicalUnit) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetDMXProfile(IGdtfDMXProfile* dmxProfile) = 0;
+		
+		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+	};
+	typedef VCOMPtr<IGdtfDmxSubChannelSet>	IGdtfDmxSubChannelSetPtr;
     
     class DYNAMIC_ATTRIBUTE IGdtfDmxChannelFunction : public IVWUnknown
     {
@@ -700,6 +930,25 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE     SetRealAcceleration(double value) = 0;
 		virtual VCOMError VCOM_CALLTYPE     GetDefaultValue(GdtfDefines::DmxValue& defaultValue) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetDefaultValue(GdtfDefines::DmxValue defaultValue) = 0;
+
+		// GDTF 1.2
+		virtual VCOMError VCOM_CALLTYPE     GetColorSpace(IGdtfColorSpace** colorSpace) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetGamut(IGdtfGamut** gamut) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetDMXProfile(IGdtfDMXProfile** dmxProfile) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetMin(double& value) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetMax(double& value) = 0;
+		virtual MvrString VCOM_CALLTYPE     GetCustomName() = 0;
+
+		virtual VCOMError VCOM_CALLTYPE     SetColorSpace(IGdtfColorSpace* colorSpace) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetGamut(IGdtfGamut* gamut) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetDMXProfile(IGdtfDMXProfile* dmxProfile) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetMin(double value) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetMax(double value) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetCustomName(MvrString customName) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE     GetDmxSubChannelSetCount(size_t& count) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetDmxSubChannelSetAt(size_t at, IGdtfDmxSubChannelSet** subChannelSet) = 0;
+		virtual VCOMError VCOM_CALLTYPE     CreateDmxSubChannelSet(MvrString name, IGdtfSubPhysicalUnit* subPhysicalUnit, IGdtfDmxSubChannelSet** subChannelSet) = 0;
     };
 	typedef VCOMPtr<IGdtfDmxChannelFunction>	IGdtfDmxChannelFunctionPtr;
         
@@ -793,6 +1042,10 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		
 		virtual VCOMError VCOM_CALLTYPE		GetMacroVisual(IGdtfMacroVisual** outMacroVisual) = 0;
 		virtual VCOMError VCOM_CALLTYPE		CreateMacroVisual(IGdtfMacroVisual** outMacroVisual) = 0;
+
+		// GDTF 1.2
+		virtual VCOMError VCOM_CALLTYPE     GetChannelFunction(IGdtfDmxChannelFunction** outChannelFunction) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetChannelFunction(IGdtfDmxChannelFunction* newChannelFunction) = 0;
 	};
 	typedef VCOMPtr<IGdtfMacro>	IGdtfMacroPtr;
 
@@ -912,6 +1165,10 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
         virtual VCOMError VCOM_CALLTYPE     GetBreakCount(size_t& count) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetFootprintForBreak(size_t inBreak, size_t& footprint) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetBreakAt(size_t at, size_t &breakId) = 0;
+
+		// GDTF 1.2
+		virtual MvrString VCOM_CALLTYPE		GetDescription() = 0;
+		virtual VCOMError VCOM_CALLTYPE 	SetDescription(MvrString description) = 0;
     };
 	typedef VCOMPtr<IGdtfDmxMode>	IGdtfDmxModePtr;
     
@@ -921,12 +1178,16 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
         virtual MvrString VCOM_CALLTYPE     GetText() = 0;
         virtual VCOMError VCOM_CALLTYPE     GetDate(STime& date) = 0;
 
-        virtual VCOMError VCOM_CALLTYPE     SetText(MvrString txt)  = 0;
-        virtual VCOMError VCOM_CALLTYPE     SetDate(STime date)  = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetText(MvrString txt) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetDate(STime date) = 0;
 
 		// GDTF 1.0
 		virtual VCOMError VCOM_CALLTYPE     GetUserId(size_t& userId) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetUserId(size_t userId) = 0;
+
+		// GDTF 1.2
+		virtual MvrString VCOM_CALLTYPE     GetModifiedBy() = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetModifiedBy(MvrString modifiedBy) = 0;
     };
 	typedef VCOMPtr<IGdtfRevision>	IGdtfRevisionPtr;
     
@@ -1031,10 +1292,29 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
         virtual VCOMError VCOM_CALLTYPE	SetWhite(CieColor outVal) = 0;
 
 
-        virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
-        virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+        virtual VCOMError VCOM_CALLTYPE BindToObject(void* objAddr) = 0;
+        virtual void*	  VCOM_CALLTYPE GetBoundObject() = 0;
+
+		// GDTF 1.2
+		virtual MvrString VCOM_CALLTYPE GetName() = 0;
+		virtual VCOMError VCOM_CALLTYPE SetName(MvrString name) = 0;
     };
     typedef VCOMPtr<IGdtfColorSpace>	IGdtfColorSpacePtr;
+
+	class DYNAMIC_ATTRIBUTE IGdtfGamut : public IVWUnknown
+	{
+	public:
+		virtual MvrString VCOM_CALLTYPE     GetName() = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetName(MvrString name) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE 	GetPointCount(size_t& count) = 0;
+        virtual VCOMError VCOM_CALLTYPE 	GetPointAt(size_t at, CieColor& outColor) = 0;
+        virtual VCOMError VCOM_CALLTYPE 	CreatePoint(CieColor& color) = 0;
+		
+		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+	};
+	typedef VCOMPtr<IGdtfGamut>	IGdtfGamutPtr;
 
     class DYNAMIC_ATTRIBUTE IGdtfCRI : public IVWUnknown
     {
@@ -1068,15 +1348,43 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
 	};
     typedef VCOMPtr<IGdtfCRIGroup>	IGdtfCRIGroupPtr;
+
+	class DYNAMIC_ATTRIBUTE IGdtfPoint : public IVWUnknown
+	{
+	public:
+		virtual VCOMError VCOM_CALLTYPE		GetDMXPercentage(double& dmxPercentage) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCFC3(double& cfc3) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCFC2(double& cfc2) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCFC1(double& cfc1) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetCFC0(double& cfc0) = 0;
+
+
+        virtual VCOMError VCOM_CALLTYPE		SetDMXPercentage(double dmxPercentage) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetCFC3(double cfc3) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetCFC2(double cfc2) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetCFC1(double cfc1) = 0;
+        virtual VCOMError VCOM_CALLTYPE		SetCFC0(double cfc0) = 0;
+
+		
+		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+	};
+	typedef VCOMPtr<IGdtfPoint>	IGdtfPointPtr;
 	
 	class DYNAMIC_ATTRIBUTE IGdtfDMXProfile : public IVWUnknown
 	{
 	public:
 		virtual MvrString VCOM_CALLTYPE     GetName() = 0;
 		
-		
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+
+		// GDTF 1.2
+		virtual VCOMError VCOM_CALLTYPE		SetName(MvrString name) = 0;
+
+        virtual VCOMError VCOM_CALLTYPE		GetPointCount(size_t& count) = 0;
+        virtual VCOMError VCOM_CALLTYPE		GetPointAt(size_t at, IGdtfPoint** point) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreatePoint(double DMXPercentage, double CFC3, double CFC2, double CFC1, double CFC0, IGdtfPoint** point) = 0;
 	};
 	typedef VCOMPtr<IGdtfDMXProfile>	IGdtfDMXProfilePtr;
 
@@ -1099,30 +1407,6 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
     };
     typedef VCOMPtr<IGdtfConnector>	IGdtfConnectorPtr;
-
-	class DYNAMIC_ATTRIBUTE IGdtfPowerConsumption : public IVWUnknown
-    {
-		public:
-        virtual VCOMError VCOM_CALLTYPE     GetValue(double& outValue) = 0;
-        virtual VCOMError VCOM_CALLTYPE     GetPowerFactor(double& outPowerFactor) = 0;
-        virtual VCOMError VCOM_CALLTYPE     GetConnector(IGdtfConnector** outConnector) = 0;
-        virtual VCOMError VCOM_CALLTYPE     GetVoltageLow(double& outVoltageLow) = 0;
-        virtual VCOMError VCOM_CALLTYPE     GetVoltageHigh(double& outVoltageHigh) = 0;
-        virtual VCOMError VCOM_CALLTYPE     GetFrequencyLow(double& outFrequencyLow) = 0;
-        virtual VCOMError VCOM_CALLTYPE     GetFrequencyHigh(double& outFrequencyHigh) = 0;
-
-        virtual VCOMError VCOM_CALLTYPE     SetValue(double value) = 0;
-        virtual VCOMError VCOM_CALLTYPE     SetPowerFactor(double powerFactor) = 0;
-        virtual VCOMError VCOM_CALLTYPE     SetConnector(IGdtfConnector* connector) = 0;
-        virtual VCOMError VCOM_CALLTYPE     SetVoltageLow(double voltageLow) = 0;
-        virtual VCOMError VCOM_CALLTYPE     SetVoltageHigh(double voltageHigh) = 0;
-        virtual VCOMError VCOM_CALLTYPE     SetFrequencyLow(double frequencyLow) = 0;
-        virtual VCOMError VCOM_CALLTYPE     SetFrequencyHigh(double frequencyHigh) = 0;
-
-		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
-		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
-    };
-    typedef VCOMPtr<IGdtfPowerConsumption>	IGdtfPowerConsumptionPtr;
 	
     class DYNAMIC_ATTRIBUTE IGdtfFixture : public IVWUnknown
     {
@@ -1244,10 +1528,6 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
         virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreateConnector(MvrString name, MvrString type, VectorworksMVR::IGdtfConnector** outVal)=0;
         virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetConnectorAt(size_t at, VectorworksMVR::IGdtfConnector** value)=0;
 
-		virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetPowerConsumptionCount(size_t& count)=0;
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE CreatePowerConsumption(VectorworksMVR::IGdtfConnector* connector, VectorworksMVR::IGdtfPowerConsumption** outVal)=0;
-        virtual VCOMError VCOM_CALLTYPE VCOM_CALLTYPE GetPowerConsumptionAt(size_t at, VectorworksMVR::IGdtfPowerConsumption** value)=0;
-
 		virtual VCOMError VCOM_CALLTYPE		GetOperatingTemperatureLow(double& value) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetOperatingTemperatureLow(double value) = 0;
 
@@ -1259,6 +1539,28 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 
 		virtual VCOMError VCOM_CALLTYPE		GetLegHeight(double& value) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetLegHeight(double value) = 0;
+
+		//-----------------------------------------------------------------------------
+		// GDTF 1.2
+		virtual VCOMError VCOM_CALLTYPE     GetArtNet(IGdtfArtNet** artNet) = 0;
+		virtual VCOMError VCOM_CALLTYPE     CreateArtNet(IGdtfArtNet** artNet) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE     GetSACN(IGdtfSACN** sACN) = 0;
+		virtual VCOMError VCOM_CALLTYPE     CreateSACN(IGdtfSACN** sACN) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE 	GetAdditionalColorSpaceCount(size_t& count) = 0;
+        virtual VCOMError VCOM_CALLTYPE 	CreateAdditionalColorSpace(MvrString name, GdtfDefines::EGdtfColorSpace colorSpace, VectorworksMVR::IGdtfColorSpace** outVal) = 0;
+        virtual VCOMError VCOM_CALLTYPE 	GetAdditionalColorSpaceAt(size_t at, VectorworksMVR::IGdtfColorSpace** value) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE  	GetGamutCount(size_t& count) = 0;
+        virtual VCOMError VCOM_CALLTYPE  	CreateGamut(MvrString name, CieColor color, VectorworksMVR::IGdtfGamut** outVal) = 0;
+        virtual VCOMError VCOM_CALLTYPE  	GetGamutAt(size_t at, VectorworksMVR::IGdtfGamut** value) = 0;
+
+		virtual VCOMError 					GetThumbnailOffsetX(size_t& offsetX) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetThumbnailOffsetX(size_t offsetX) = 0;	
+
+		virtual VCOMError VCOM_CALLTYPE		GetThumbnailOffsetY(size_t& offsetY) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetThumbnailOffsetY(size_t offsetY) = 0;
 
 	};
     typedef VCOMPtr<IGdtfFixture>	IGdtfFixturePtr;
@@ -1282,6 +1584,44 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
         virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
     };
     typedef VCOMPtr<IGdtf_FTRDM>	IGdtfTRDMPtr;
+
+	class DYNAMIC_ATTRIBUTE IGdtfMap : public IVWUnknown
+	{
+	public:
+		virtual VCOMError VCOM_CALLTYPE     GetKey(Uint32& key) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetValue(Uint32& value) = 0;
+
+        virtual VCOMError VCOM_CALLTYPE     SetKey(Uint32 key) = 0;
+        virtual VCOMError VCOM_CALLTYPE     SetValue(Uint32 value) = 0;
+		
+		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+		virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+	};
+	typedef VCOMPtr<IGdtfMap>	IGdtfMapPtr;
+
+	class DYNAMIC_ATTRIBUTE IGdtfArtNet : public IVWUnknown
+    {
+    public:
+        virtual VCOMError VCOM_CALLTYPE  	GetMapCount(size_t& count) = 0;
+        virtual VCOMError VCOM_CALLTYPE  	GetMapAt(size_t at, IGdtfMap** map) = 0;
+        virtual VCOMError VCOM_CALLTYPE  	CreateMap(Uint32 key, Uint32 value, IGdtfMap** map) = 0;
+        
+        virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+        virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+    };
+    typedef VCOMPtr<IGdtfArtNet>	IGdtfArtNetPtr;
+
+	class DYNAMIC_ATTRIBUTE IGdtfSACN : public IVWUnknown
+    {
+    public:
+        virtual VCOMError VCOM_CALLTYPE  	GetMapCount(size_t& count) = 0;
+        virtual VCOMError VCOM_CALLTYPE  	GetMapAt(size_t at, IGdtfMap** map) = 0;
+        virtual VCOMError VCOM_CALLTYPE  	CreateMap(Uint32 key, Uint32 value, IGdtfMap** map) = 0;
+        
+        virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr) = 0;
+        virtual void*	  VCOM_CALLTYPE     GetBoundObject() = 0;
+    };
+    typedef VCOMPtr<IGdtfSACN>	IGdtfSACNPtr;
     
     
     class DYNAMIC_ATTRIBUTE IGdtfDMXPersonality : public IVWUnknown
