@@ -8663,7 +8663,7 @@ void GdtfFixture::CheckForMissingModeMasters()
                                     //If there is one, we have to check if they're the same.
                                     GdtfDmxChannel* 		currentFunctionMMChannel 	= currentFunction->GetModeMaster_Channel();
                                     GdtfDmxChannelFunction* currentFunctionMMFunction	= currentFunction->GetModeMaster_Function();
-                                    if(functionMMChannel == currentFunctionMMChannel || functionMMFunction == currentFunctionMMFunction)
+                                    if((functionMMChannel && functionMMChannel == currentFunctionMMChannel) || (functionMMFunction && functionMMFunction == currentFunctionMMFunction))
                                     {
                                         //If they're the same we have to check that their ranges don't overlap.
                                         DmxValue functionMMStart 		= function->GetModeMasterDmxStart();
