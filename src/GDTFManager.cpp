@@ -1652,7 +1652,6 @@ const TXString& GdtfModel::GetGeometryFile_3DS_FullPath()
 	}
 
 	file->Set(model3DsFolder, fGeometryFile + ".3DS");
-	file->GetFileFullPath(fFullPath3DS);
 	if(VCOM_SUCCEEDED(file->ExistsOnDisk(fileExists)) && fileExists)
 	{
 		file->GetFileFullPath(fFullPath3DS);
