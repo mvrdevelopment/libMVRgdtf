@@ -7508,8 +7508,8 @@ bool GdtfFixture::ImportFromZip(IZIPFilePtr& zipfile)
 		
 	//-------------------------------------------------------------------------------------------------
 	// Decompress the files
-	TXString fileName				= "";
-	TXString inPath					= "";
+	std::string fileName				= "";
+	std::string inPath					= "";
 	while (VCOM_SUCCEEDED( zipfile->GetNextFile(inPath, fileName)))
 	{
 		// This is the current file that we are reading

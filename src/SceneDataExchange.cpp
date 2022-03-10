@@ -2910,8 +2910,8 @@ bool SceneDataExchange::ReadFromFile(const IFileIdentifierPtr& file)
 	
 	//-------------------------------------------------------------------------------------------------
 	// Decompress the files
-	TXString outPath	= "";
-	TXString inPath		= "";
+	std::string outPath	= "";
+	std::string inPath	= "";
 	while (VCOM_SUCCEEDED( zipfile->GetNextFile(inPath, outPath)))
 	{
 		// This is the current file that we are reading
