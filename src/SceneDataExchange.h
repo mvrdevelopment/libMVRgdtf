@@ -24,7 +24,7 @@ namespace SceneData
 	typedef std::vector<SceneDataGeoInstanceObjPtr>	    SceneDataGeometryObjArray;
 	typedef std::vector<IFileIdentifierPtr>			    TFileIdentifierPtrArray;
 	typedef std::vector<IFolderIdentifierPtr>		    TFolderIdentifierArray;
-    typedef std::map<TXString, SceneDataSymDefObj*>     TSymDefMap;
+    typedef std::map<std::string, SceneDataSymDefObj*>  TSymDefMap;
 	
 	enum ESceneDataGUIDType : short
 	{
