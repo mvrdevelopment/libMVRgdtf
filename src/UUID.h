@@ -60,7 +60,7 @@ namespace VectorworksMVR
 				{
 					Uint8		fData[16];
 					Uint64		fData64[2];
-				}
+				};
 				
 			};
 		}

@@ -285,20 +285,17 @@ VCOMError CZIPFileImpl::GetNextFile(const std::string& path, std::string& outPat
 		currentReadPosition += ( 6 * kShortLength ) + ( 3 * kLongLength ); // the file name length will be found here
 		this->ReadShort( fileNameLength, currentReadPosition );
 		currentReadPosition += ( 4 * kShortLength ) + ( 2 * kLongLength ); // the file name will be found here
-		char* readFileName = new char[ fileNameLength ];
 		Uint64 inOutReadSize = (Uint64)fileNameLength;
-		this->ReadFromFile( currentReadPosition, inOutReadSize, (void*) readFileName );
-		if ( ( (size_t)inOutReadSize == fileNameLength ) && ( TXString(readFileName, (size_t)inOutReadSize) != "" ) )
+		this->ReadFromFile( currentReadPosition, inOutReadSize, (void*) fReadFileName );
+		if ( ( (size_t)inOutReadSize == fileNameLength ) &&  0 == memcmp(fReadFileName, path.c_str(), fileNameLength)  )
 		{
-			outPath  = TXString( readFileName, fileNameLength );
+			outPath  = std::string( fReadFileName, fileNameLength );
 		}
 		else 
 		{
 			err = kVCOMError_Failed;
 		}
 
-		if ( readFileName )
-			delete [] readFileName;
 	}
 
 	return err;
@@ -692,7 +689,7 @@ VCOMError CZIPFileImpl::RemoveFile(const TXString& path)
 
 	if ( err == kVCOMError_NoError )
 	{
-		this->GetFileLocalHeaderPosition( path, localFileHeaderPosition );
+		this->GetFileLocalHeaderPosition( path.GetStdString(), localFileHeaderPosition );
 	
 	
 		Uint32 compressedSize = 0;
@@ -1012,7 +1009,8 @@ void CZIPFileImpl::ReadLong( Uint32& outRead, Uint32& currentReadPosition )
 		}
 		else
 		{
-			fpOpenedFile->Read( currentReadPosition, sizeof(Uint32), (void*)&outRead );
+			Uint64 size = sizeof(Uint32);
+			fpOpenedFile->Read( currentReadPosition, size, (void*)&outRead );
 			currentReadPosition +=sizeof(Uint32);
 		}
 	}
@@ -1031,7 +1029,8 @@ void CZIPFileImpl::ReadShort( Uint16& outRead, Uint32& currentReadPosition )
 		}
 		else
 		{
-			fpOpenedFile->Read( currentReadPosition, sizeof(Uint16), (void*)&outRead );
+			Uint64 size = sizeof(Uint16);
+			fpOpenedFile->Read( currentReadPosition, size, (void*)&outRead );
 			currentReadPosition +=sizeof(Uint16);
 		}
 	}
@@ -1181,7 +1180,7 @@ void CZIPFileImpl::GetEndOfCentralDirPosition( Uint32& outPosition )
 	}
 }
 
-void CZIPFileImpl::GetFileLocalHeaderPosition( const TXString& path, Uint32& outPosition )
+void CZIPFileImpl::GetFileLocalHeaderPosition( const std::string& path, Uint32& outPosition )
 {
 	if ( !fpOpenedFile )
 		return;
@@ -1214,9 +1213,8 @@ void CZIPFileImpl::GetFileLocalHeaderPosition( const TXString& path, Uint32& out
 		currentReadPosition += ( 2 * kLongLength );							// start of variable data
 	
 		this->ReadLong( localHeaderOffset, currentReadPosition );
-		char* readFileName = new char[ fileNameLength ];
 		Uint64 inOutReadSize = (Uint64)fileNameLength;
-		this->ReadFromFile( currentReadPosition, inOutReadSize, readFileName );
+		this->ReadFromFile( currentReadPosition, inOutReadSize, fReadFileName );
 
 		if ( inOutReadSize != fileNameLength )
 		{
@@ -1224,16 +1222,14 @@ void CZIPFileImpl::GetFileLocalHeaderPosition( const TXString& path, Uint32& out
 			return;
 		}
 
-		TXString currentFileName( readFileName, fileNameLength );
-		if ( currentFileName == path )
+		if ( ( (size_t)path.size() == fileNameLength ) &&  0 == memcmp(fReadFileName, path.c_str(), fileNameLength)  )
 		{
 			outPosition = localHeaderOffset;
 			bFound = true;
 		}
 		currentReadPosition += extraFieldLength + fileCommentLength;
 
-		if ( readFileName )
-			delete [] readFileName;
+
 	}
 }
 

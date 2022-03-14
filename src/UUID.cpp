@@ -79,8 +79,8 @@ VWFC::Tools::VWUUID::VWUUID(const VWIID& iid)
 
 VWFC::Tools::VWUUID::VWUUID(const VWFC::Tools::VWUUID& src)
 {
-	for(Sint32 i=0; i<16; i++)
-		fData[i] = src.fData[i];
+	for(Sint32 i=0; i<2; i++)
+		fData64[i] = src.fData64[i];
 }
 
 VWFC::Tools::VWUUID::~VWUUID()
@@ -89,15 +89,15 @@ VWFC::Tools::VWUUID::~VWUUID()
 
 VWFC::Tools::VWUUID& VWFC::Tools::VWUUID::operator=(const VWFC::Tools::VWUUID& src)
 {
-	for(Sint32 i=0; i<16; i++)
-		fData[i] = src.fData[i];
+	for(Sint32 i=0; i<2; i++)
+		fData64[i] = src.fData64[i];
 	return *this;
 }
 
 bool VWFC::Tools::VWUUID::operator==(const VWFC::Tools::VWUUID& id) const
 {
-	for(Sint32 i=0; i<16; i++) {
-		if ( fData[i] != id.fData[i] )
+	for(Sint32 i=0; i<2; i++) {
+		if ( fData64[i] != id.fData64[i] )
 			return false;
 	}
 	return true;

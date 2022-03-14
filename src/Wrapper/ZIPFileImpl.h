@@ -116,7 +116,7 @@ namespace VectorworksMVR
 			void	GetCentralDirPosition( Uint32& outPosition );
 			void	GetEndOfCentralDirPosition( Uint32& outPosition );
 			void	GetFileCentralHeaderPosition( const std::string& path, Uint32& outPosition );
-			void	GetFileLocalHeaderPosition( const TXString& path, Uint32& outPosition );
+			void	GetFileLocalHeaderPosition( const std::string& path, Uint32& outPosition );
 			
 			void	GetZipArchiveInfo( SZIPArchiveInfo* zipArchiveInfo );
 			void	GetDosDateAndTime( Uint16& dosDate, Uint16& dosTime);
@@ -131,7 +131,7 @@ namespace VectorworksMVR
 
 			TXString						fOpenedFileFullPath;
 			TXString						fFolderPath;
-
+			char							fReadFileName[1024];
 		private:
 			static VCOMError				fLastError;
 
