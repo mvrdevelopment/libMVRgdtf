@@ -43,6 +43,7 @@ namespace VectorworksMVR
 				//	for example:
 				//	{09E95D97-364C-43d5-8ADF-FF4CE0EC41A7}
 				//	'975DE909' 'd5434C36' '4CFFDF8A' 'A741ECE0'
+				void		New();
 				void		GetUUID(Uint32& out1, Uint32& out2, Uint32& out3, Uint32& out4) const;
 				// copy the byes one by one as they are
 				void		GetUUID(Uint8* pArray, size_t size) const;
@@ -55,7 +56,12 @@ namespace VectorworksMVR
 
 			protected:
 				// {09E95D97-364C-43d5-8ADF-FF4CE0EC41A7}
-				Uint8		fData[16];
+				union
+				{
+					Uint8		fData[16];
+					Uint64		fData64[2];
+				}
+				
 			};
 		}
 	}

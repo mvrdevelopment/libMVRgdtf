@@ -265,6 +265,12 @@ VWFC::Tools::VWUUID::VWUUID(const TXString& str)
 
 VWFC::Tools::VWUUID::VWUUID()
 {
+	fData64[0] = 0;
+	fData64[1] = 0;
+}
+
+void VWFC::Tools::VWUUID::New()
+{
 #ifdef _WINDOWS
 	GUID	guid;
 	using namespace windows;
