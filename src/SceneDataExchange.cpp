@@ -2230,7 +2230,7 @@ SceneDataSymDefObjPtr SceneDataExchange::ReadSymDefObject(const IXMLFileNodePtr&
 	newSymDef->ReadFromNode(node, this);
 	
 	fAuxDataObjs.push_back(newSymDef);
-	fSymDefMap[uuid.GetStdString()] = newSymDef;
+	fSymDefMap[uuid] = newSymDef;
 
 	return newSymDef;
 }
@@ -3167,7 +3167,7 @@ void SceneDataExchange::ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xml
                 if (geoObj->IsSymDef())
                 {
 				    SceneDataSymbolObjPtr symObj = static_cast<SceneDataSymbolObjPtr>(geoObj);
-				    SceneDataSymDefObjPtr ptr    = fSymDefMap[symObj->GetUnresolvedSymDef().GetStdString()];
+				    SceneDataSymDefObjPtr ptr    = fSymDefMap[symObj->GetUnresolvedSymDef()];
 				
 				    ASSERTN(kEveryone, ptr);
 				    if(ptr) { symObj->SetSymDef(ptr); }
@@ -3182,7 +3182,7 @@ void SceneDataExchange::ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xml
 			if(geoObj->IsSymDef())
 			{
 				SceneDataSymbolObjPtr symObj = static_cast<SceneDataSymbolObjPtr>(geoObj);
-				SceneDataSymDefObjPtr ptr    = fSymDefMap[symObj->GetUnresolvedSymDef().GetStdString()];
+				SceneDataSymDefObjPtr ptr    = fSymDefMap[symObj->GetUnresolvedSymDef()];
 				
 				ASSERTN(kEveryone, ptr);
 				if(ptr) { symObj->SetSymDef(ptr); }
