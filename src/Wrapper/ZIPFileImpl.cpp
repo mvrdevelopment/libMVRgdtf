@@ -357,7 +357,7 @@ VCOMError CZIPFileImpl::GetFileInfo(const std::string& path, SZIPFileInfo& outIn
 	if ( signature != kCentralDirSignature )
 		return kVCOMError_False;
 
-	if ( err == kVCOMError_NoError )
+	if ( err == kVCOMError_NoError ) 
 	{
 		this->ReadShort( (Uint16&)outInfo.dwVersion, currentReadPosition );
 		this->ReadShort( (Uint16&)outInfo.dwVersion, currentReadPosition );
@@ -1012,24 +1012,8 @@ void CZIPFileImpl::ReadLong( Uint32& outRead, Uint32& currentReadPosition )
 		}
 		else
 		{
-			outRead = 0;
-			Uint64 readSize = 1;
-			Uint8* bufToRead = new Uint8[1];
-			fpOpenedFile->Read( currentReadPosition, readSize, (void*)bufToRead );
-			outRead += (Uint8)(*bufToRead);
-			currentReadPosition += (Uint32)readSize;
-			fpOpenedFile->Read( currentReadPosition, readSize, (void*)bufToRead );
-			outRead += ( (Uint8)(*bufToRead) ) << 8;
-			currentReadPosition += (Uint32)readSize;
-			fpOpenedFile->Read( currentReadPosition, readSize, (void*)bufToRead );
-			outRead += ( (Uint8)(*bufToRead) ) << 16;
-			currentReadPosition += (Uint32)readSize;
-			fpOpenedFile->Read( currentReadPosition, readSize, (void*)bufToRead );
-			outRead += ( (Uint8)(*bufToRead) ) << 24;
-			currentReadPosition += (Uint32)readSize;
-
-			if ( bufToRead )
-				delete [] bufToRead;
+			fpOpenedFile->Read( currentReadPosition, sizeof(Uint32), (void*)&outRead );
+			currentReadPosition +=sizeof(Uint32);
 		}
 	}
 }
@@ -1047,18 +1031,9 @@ void CZIPFileImpl::ReadShort( Uint16& outRead, Uint32& currentReadPosition )
 		}
 		else
 		{
-			outRead = 0;
-			Uint64 readSize = 1;
-			Uint8 bufToRead = 0;
-			fpOpenedFile->Read( currentReadPosition, readSize, (void*)&bufToRead );
-			outRead += (Uint8)(bufToRead);
-			currentReadPosition += (Uint32)readSize;
-			fpOpenedFile->Read( currentReadPosition, readSize, (void*)&bufToRead );
-			outRead += ( (Uint8)(bufToRead)  << 8);
-			currentReadPosition += (Uint32)readSize;
+			fpOpenedFile->Read( currentReadPosition, sizeof(Uint16), (void*)&outRead );
+			currentReadPosition +=sizeof(Uint16);
 		}
-
-
 	}
 }
 
