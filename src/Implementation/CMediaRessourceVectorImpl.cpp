@@ -184,7 +184,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateSymDe
 	VWFC::Tools::VWUUID	uuid	(guid.a,guid.b,guid.c,guid.d);
 
 	// If the UUID is empty, create a new one
-	if(guid.a == 0 && guid.b == 0 &&  guid.c == 0 && guid.d == 0){ uuid = VWFC::Tools::VWUUID(); }
+	if(guid.a == 0 && guid.b == 0 &&  guid.c == 0 && guid.d == 0){ uuid.New(); }
 
 	TXString	nameStr ( name );
 	
