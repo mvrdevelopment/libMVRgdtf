@@ -287,7 +287,8 @@ VCOMError CZIPFileImpl::GetNextFile(const std::string& path, std::string& outPat
 		currentReadPosition += ( 4 * kShortLength ) + ( 2 * kLongLength ); // the file name will be found here
 		Uint64 inOutReadSize = (Uint64)fileNameLength;
 		this->ReadFromFile( currentReadPosition, inOutReadSize, (void*) fReadFileName );
-		if ( ( (size_t)inOutReadSize == fileNameLength ) &&  0 == memcmp(fReadFileName, path.c_str(), fileNameLength)  )
+
+		if ( ( (size_t)inOutReadSize == fileNameLength ) &&  0 != strcmp(fReadFileName, ""))
 		{
 			outPath  = std::string( fReadFileName, fileNameLength );
 		}
@@ -295,7 +296,6 @@ VCOMError CZIPFileImpl::GetNextFile(const std::string& path, std::string& outPat
 		{
 			err = kVCOMError_Failed;
 		}
-
 	}
 
 	return err;
@@ -1227,9 +1227,8 @@ void CZIPFileImpl::GetFileLocalHeaderPosition( const std::string& path, Uint32& 
 			outPosition = localHeaderOffset;
 			bFound = true;
 		}
+
 		currentReadPosition += extraFieldLength + fileCommentLength;
-
-
 	}
 }
 
