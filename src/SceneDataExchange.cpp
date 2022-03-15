@@ -3272,8 +3272,7 @@ void SceneDataExchange::ProcessGroup(const IXMLFileNodePtr& node, SceneDataGroup
 						SceneDataGUID guid = SceneDataGUID(groupUuid);
 						for(SceneDataObjWithMatrixPtr sceneObject : fSceneObjects)
 						{
-							SceneDataGUID currentGuid = sceneObject->getGuid();
-							if(currentGuid == guid)
+							if(sceneObject->getGuid() == guid)
 							{
 								fDuplicatedUuids = true;
 								DSTOP((kEveryone, "Some scene object's UUID is duplicated"));
