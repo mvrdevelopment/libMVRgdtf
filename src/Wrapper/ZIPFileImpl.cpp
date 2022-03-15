@@ -1222,7 +1222,7 @@ void CZIPFileImpl::GetFileLocalHeaderPosition( const std::string& path, Uint32& 
 			return;
 		}
 
-		if ( ( (size_t)path.size() == fileNameLength ) &&  0 == memcmp(fReadFileName, path.c_str(), fileNameLength)  )
+		if (((size_t)path.size() == fileNameLength ) &&  0 == memcmp(fReadFileName, path.c_str(), fileNameLength))
 		{
 			outPosition = localHeaderOffset;
 			bFound = true;
@@ -1267,26 +1267,21 @@ void CZIPFileImpl::GetFileCentralHeaderPosition( const std::string& path, Uint32
 		// start of variable data
 
 		this->ReadLong( localHeaderOffset, currentReadPosition );
-		char* readFileName = new char[ fileNameLength ];
 		Uint64 inOutReadSize = (Uint64)fileNameLength;
-		this->ReadFromFile( currentReadPosition, inOutReadSize, readFileName );
+		this->ReadFromFile( currentReadPosition, inOutReadSize, fReadFileName );
 		
 		if ( inOutReadSize != fileNameLength )
 		{
 			bError = true;
 		}
 
-		std::string currentFileName( readFileName, fileNameLength );
-		if ( currentFileName == path )
+		if (((size_t)path.size() == fileNameLength ) &&  0 == memcmp(fReadFileName, path.c_str(), fileNameLength))
 		{
 			bFound = true;
 			outPosition = startOffset;
 		}
 
 		currentReadPosition += extraFieldLength + fileCommentLength;
-
-		if ( readFileName )
-			delete [] readFileName;
 	}
 }
 
