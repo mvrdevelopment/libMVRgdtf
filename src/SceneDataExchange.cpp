@@ -613,10 +613,14 @@ ESceneDataObjectType SceneDataSourceObj::GetObjectType()
 SceneDataMappingDefinitionObj::SceneDataMappingDefinitionObj(const SceneDataGUID& guid) : SceneDataAuxObj(guid)
 {
 	fSource = nullptr;
+	fScaleHandling = EScaleHandlingType::ScaleKeepRatio;
+	fSizeX = 0;
+	fSizeY = 0;
 }
 
 SceneDataMappingDefinitionObj::SceneDataMappingDefinitionObj(const SceneDataGUID& guid, Uint32 sizeX, Uint32 sizeY, SceneDataSourceObjPtr source) : SceneDataAuxObj(guid)
 {
+	fScaleHandling = EScaleHandlingType::ScaleKeepRatio;
 	fSizeX 	= sizeX;
 	fSizeY 	= sizeY;
 	fSource = source;
