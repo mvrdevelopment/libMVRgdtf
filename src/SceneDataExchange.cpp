@@ -613,10 +613,14 @@ ESceneDataObjectType SceneDataSourceObj::GetObjectType()
 SceneDataMappingDefinitionObj::SceneDataMappingDefinitionObj(const SceneDataGUID& guid) : SceneDataAuxObj(guid)
 {
 	fSource = nullptr;
+	fScaleHandling = EScaleHandlingType::ScaleKeepRatio;
+	fSizeX = 0;
+	fSizeY = 0;
 }
 
 SceneDataMappingDefinitionObj::SceneDataMappingDefinitionObj(const SceneDataGUID& guid, Uint32 sizeX, Uint32 sizeY, SceneDataSourceObjPtr source) : SceneDataAuxObj(guid)
 {
+	fScaleHandling = EScaleHandlingType::ScaleKeepRatio;
 	fSizeX 	= sizeX;
 	fSizeY 	= sizeY;
 	fSource = source;
@@ -2910,8 +2914,8 @@ bool SceneDataExchange::ReadFromFile(const IFileIdentifierPtr& file)
 	
 	//-------------------------------------------------------------------------------------------------
 	// Decompress the files
-	TXString outPath	= "";
-	TXString inPath		= "";
+	std::string outPath	= "";
+	std::string inPath	= "";
 	while (VCOM_SUCCEEDED( zipfile->GetNextFile(inPath, outPath)))
 	{
 		// This is the current file that we are reading
@@ -3160,7 +3164,6 @@ void SceneDataExchange::ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xml
         TSymDefMap::iterator it = fSymDefMap.begin();
         while(it != fSymDefMap.end())
         {
-            TXString symNam 			 = it->first;
             SceneDataSymDefObjPtr symDef = it->second;
 
             for (SceneDataGeoInstanceObjPtr geoObj : symDef->getGeometryArray()) 
@@ -3172,13 +3175,13 @@ void SceneDataExchange::ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xml
 				
 				    ASSERTN(kEveryone, ptr);
 				    if(ptr) { symObj->SetSymDef(ptr); }
-                }            
+                }
             }
 
             it++;
         }
 
-		for(SceneDataGeoInstanceObjPtr geoObj : scObj->GetGeometryArr())  
+		for(SceneDataGeoInstanceObjPtr geoObj : scObj->GetGeometryArr())
 		{
 			if(geoObj->IsSymDef())
 			{
@@ -3273,8 +3276,7 @@ void SceneDataExchange::ProcessGroup(const IXMLFileNodePtr& node, SceneDataGroup
 						SceneDataGUID guid = SceneDataGUID(groupUuid);
 						for(SceneDataObjWithMatrixPtr sceneObject : fSceneObjects)
 						{
-							SceneDataGUID currentGuid = sceneObject->getGuid();
-							if(currentGuid == guid)
+							if(sceneObject->getGuid() == guid)
 							{
 								fDuplicatedUuids = true;
 								DSTOP((kEveryone, "Some scene object's UUID is duplicated"));

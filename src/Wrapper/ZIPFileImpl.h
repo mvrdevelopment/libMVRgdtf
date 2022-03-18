@@ -79,13 +79,13 @@ namespace VectorworksMVR
 			// 'path' uses '/' delimited string to identify a file or folder within the zip file
 			// empty 'path' denotes the root folder of the zip file
 
-			virtual VCOMError VCOM_CALLTYPE	GetNextFile(const TXString& path, TXString& outPath);
-			virtual VCOMError VCOM_CALLTYPE	GetNextFile(const TXString& path, const TXString& extension, TXString& outPath);
+			virtual VCOMError VCOM_CALLTYPE	GetNextFile(const std::string& path, std::string& outPath);
+			virtual VCOMError VCOM_CALLTYPE	GetNextFile(const std::string& path, const std::string& extension, std::string& outPath);
 
-			virtual VCOMError VCOM_CALLTYPE	GetFileInfo(const TXString& path, SZIPFileInfo& outInfo);
+			virtual VCOMError VCOM_CALLTYPE	GetFileInfo(const std::string& path, SZIPFileInfo& outInfo);
 
-			virtual VCOMError VCOM_CALLTYPE	GetFile(const TXString& path, IZIPFileIOBuffer* outputBuffer);
-			virtual VCOMError VCOM_CALLTYPE	GetFile(const TXString& path, IFileIdentifier* outputFile);
+			virtual VCOMError VCOM_CALLTYPE	GetFile(const std::string& path, IZIPFileIOBuffer* outputBuffer);
+			virtual VCOMError VCOM_CALLTYPE	GetFile(const std::string& path, IFileIdentifier* outputFile);
 
 			virtual VCOMError VCOM_CALLTYPE	AddFile(const TXString& path, IZIPFileIOBuffer* inputBuffer);
 			virtual VCOMError VCOM_CALLTYPE	AddFile(const TXString& path, IFileIdentifier* inputFile);
@@ -115,8 +115,8 @@ namespace VectorworksMVR
 
 			void	GetCentralDirPosition( Uint32& outPosition );
 			void	GetEndOfCentralDirPosition( Uint32& outPosition );
-			void	GetFileCentralHeaderPosition( const TXString& path, Uint32& outPosition );
-			void	GetFileLocalHeaderPosition( const TXString& path, Uint32& outPosition );
+			void	GetFileCentralHeaderPosition( const std::string& path, Uint32& outPosition );
+			void	GetFileLocalHeaderPosition( const std::string& path, Uint32& outPosition );
 			
 			void	GetZipArchiveInfo( SZIPArchiveInfo* zipArchiveInfo );
 			void	GetDosDateAndTime( Uint16& dosDate, Uint16& dosTime);
@@ -131,7 +131,7 @@ namespace VectorworksMVR
 
 			TXString						fOpenedFileFullPath;
 			TXString						fFolderPath;
-
+			char							fReadFileName[1024];
 		private:
 			static VCOMError				fLastError;
 
