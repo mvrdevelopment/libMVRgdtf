@@ -8719,7 +8719,7 @@ GdtfFixture::~GdtfFixture()
 	//Delete buffers
 	for (auto it = fFileBuffers.begin(); it != fFileBuffers.end(); it++)
 	{
-		delete it->second.first;
+		free(it->second.first);
 	}
 }
 
