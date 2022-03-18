@@ -6,6 +6,8 @@
 using namespace VectorworksMVR::Filing;
 using namespace VectorworksMVR::VWFC;
 
+#include <unordered_map>
+
 #include "CieColor.h"
 #include "XmlFileHelper.h"
 
@@ -24,7 +26,7 @@ namespace SceneData
 	typedef std::vector<SceneDataGeoInstanceObjPtr>	    SceneDataGeometryObjArray;
 	typedef std::vector<IFileIdentifierPtr>			    TFileIdentifierPtrArray;
 	typedef std::vector<IFolderIdentifierPtr>		    TFolderIdentifierArray;
-    typedef std::map<TXString, SceneDataSymDefObj*>     TSymDefMap;
+    typedef std::unordered_map<TXString, SceneDataSymDefObj*>  TSymDefMap;
 	
 	enum ESceneDataGUIDType : short
 	{
@@ -779,7 +781,7 @@ namespace SceneData
         TFileIdentifierPtrArray				fWheel_Image_FilesToAdd;
         TFileIdentifierPtrArray				fFixtureResources_FilesToAdd;
 		
-		std::vector<std::pair<TXString, ISceneDataZipBuffer*>> fBuffersToAdd;
+		std::vector<std::pair<TXString, ISceneDataZipBuffer*> > fBuffersToAdd;
         //
 		TFileIdentifierPtrArray				fFilesInZip;
 		TXStringArray						fRequiredGdtfFiles;

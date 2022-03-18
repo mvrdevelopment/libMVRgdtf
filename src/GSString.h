@@ -519,6 +519,9 @@ public:
 	// Swap function
 	void swap(TXString& rhs);
 
+	// Hash function
+	size_t hash() const { return std::hash<StdUStr>{}(this->stdUStr); }
+
 	//***********************************************************************************
 	// Private members
 	//***********************************************************************************
@@ -571,4 +574,15 @@ TXString operator+(const TXChar* lhs, const TXString& rhs);
 void swap(TXString& lhs, TXString& rhs);
 
 #endif  // _GSSTRINGX_
+}
+
+namespace std {
+template <>
+struct hash<VectorworksMVR::TXString>
+{
+    std::size_t operator()(const VectorworksMVR::TXString& s) const
+    {
+        return s.hash();
+    }
+};
 }

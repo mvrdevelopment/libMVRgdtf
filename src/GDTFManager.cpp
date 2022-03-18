@@ -7508,8 +7508,8 @@ bool GdtfFixture::ImportFromZip(IZIPFilePtr& zipfile)
 		
 	//-------------------------------------------------------------------------------------------------
 	// Decompress the files
-	TXString fileName				= "";
-	TXString inPath					= "";
+	std::string fileName				= "";
+	std::string inPath					= "";
 	while (VCOM_SUCCEEDED( zipfile->GetNextFile(inPath, fileName)))
 	{
 		// This is the current file that we are reading
@@ -8663,7 +8663,7 @@ void GdtfFixture::CheckForMissingModeMasters()
                                     //If there is one, we have to check if they're the same.
                                     GdtfDmxChannel* 		currentFunctionMMChannel 	= currentFunction->GetModeMaster_Channel();
                                     GdtfDmxChannelFunction* currentFunctionMMFunction	= currentFunction->GetModeMaster_Function();
-                                    if(functionMMChannel == currentFunctionMMChannel || functionMMFunction == currentFunctionMMFunction)
+                                    if((functionMMChannel && functionMMChannel == currentFunctionMMChannel) || (functionMMFunction && functionMMFunction == currentFunctionMMFunction))
                                     {
                                         //If they're the same we have to check that their ranges don't overlap.
                                         DmxValue functionMMStart 		= function->GetModeMasterDmxStart();
@@ -8719,7 +8719,7 @@ GdtfFixture::~GdtfFixture()
 	//Delete buffers
 	for (auto it = fFileBuffers.begin(); it != fFileBuffers.end(); it++)
 	{
-		delete it->second.first;
+		free(it->second.first);
 	}
 }
 
