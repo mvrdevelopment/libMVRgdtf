@@ -9187,11 +9187,11 @@ bool GdtfFixture::ExportToFile(IZIPFilePtr& zipfile)
 
 		if(!strFileName.IsEmpty())
 		{
-			CZIPFileIOBufferImpl* buffer = new CZIPFileIOBufferImpl();
-			buffer->SetData((void*)it->second.first, it->second.second);
-			zipfile->AddFile(strFileName, buffer);
+			CZIPFileIOBufferImpl* bufferzip = new CZIPFileIOBufferImpl();
+			bufferzip->SetData((void*)it->second.first, it->second.second);
+			zipfile->AddFile(strFileName, bufferzip);
 
-			delete buffer;
+			delete bufferzip;
 		}
 	}
 	
