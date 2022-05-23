@@ -605,6 +605,9 @@ namespace VectorworksMVR
 
 		virtual MvrString VCOM_CALLTYPE     GetGeometryFile_GLTFLow_FullPath() 	= 0;
 		virtual MvrString VCOM_CALLTYPE     GetGeometryFile_GLTFHigh_FullPath() = 0;
+
+		virtual MvrString VCOM_CALLTYPE     GetGeometryFile_SVGSide_FullPath() 	= 0;
+		virtual MvrString VCOM_CALLTYPE     GetGeometryFile_SVGFront_FullPath() = 0;
 	};
 	typedef VCOMPtr<IGdtfModel>	IGdtfModelPtr;
 	

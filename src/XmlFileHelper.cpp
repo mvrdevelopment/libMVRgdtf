@@ -2134,6 +2134,10 @@ TXString SceneData::SceneDataZip::GetResourceSubFolder(ERessourceType resType)
         return "models" + TXString(kSeperator) + "gltf_low" + TXString(kSeperator);
 	case ERessourceType::ModelGLTFHigh:
         return "models" + TXString(kSeperator) + "gltf_high" + TXString(kSeperator);
+	case ERessourceType::ModelSVGSide:
+        return "models" + TXString(kSeperator) + "svg_side" + TXString(kSeperator);
+	case ERessourceType::ModelSVGFront:
+        return "models" + TXString(kSeperator) + "svg_front" + TXString(kSeperator);
     case ERessourceType::RessoureFixture:
         return  "";
 	default:

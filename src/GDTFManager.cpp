@@ -1722,6 +1722,54 @@ const TXString & SceneData::GdtfModel::GetGeometryFile_SVG_FullPath()
 	return fFullPathSVG;
 }
 
+const TXString & SceneData::GdtfModel::GetGeometryFile_SVGSide_FullPath()
+{
+	// Set to store
+	fFullPathSVG = "";
+	// Set to store
+	IFolderIdentifierPtr folder (IID_FolderIdentifier);
+	fParentFixture->GetWorkingFolder(folder);
+
+	IFolderIdentifierPtr svgModelsFolder (IID_FolderIdentifier);
+	svgModelsFolder->Set(folder, "modelssvg_side");
+
+	IFileIdentifierPtr file (IID_FileIdentifier);
+	file->Set(svgModelsFolder, fGeometryFile + ".svg");
+
+
+	bool fileExists = false;
+	if(VCOM_SUCCEEDED(file->ExistsOnDisk(fileExists)) && fileExists)
+	{
+		file->GetFileFullPath(fFullPathSVG);
+	}
+	
+	return fFullPathSVG;
+}
+
+const TXString & SceneData::GdtfModel::GetGeometryFile_SVGFront_FullPath()
+{
+	// Set to store
+	fFullPathSVG = "";
+	// Set to store
+	IFolderIdentifierPtr folder (IID_FolderIdentifier);
+	fParentFixture->GetWorkingFolder(folder);
+
+	IFolderIdentifierPtr svgModelsFolder (IID_FolderIdentifier);
+	svgModelsFolder->Set(folder, "modelssvg_front");
+
+	IFileIdentifierPtr file (IID_FileIdentifier);
+	file->Set(svgModelsFolder, fGeometryFile + ".svg");
+
+
+	bool fileExists = false;
+	if(VCOM_SUCCEEDED(file->ExistsOnDisk(fileExists)) && fileExists)
+	{
+		file->GetFileFullPath(fFullPathSVG);
+	}
+	
+	return fFullPathSVG;
+}
+
 const TXString & SceneData::GdtfModel::GetGeometryFile_GLTF_FullPath()
 {
 	// Set to store
@@ -7587,7 +7635,7 @@ bool GdtfFixture::ImportFromZip(IZIPFilePtr& zipfile)
 	if ( ! fReaded)
 	{
 		GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureNoGdtfFileInXmlBuffer);
-		SceneData::GdtfFixture::AddError(error); 
+		SceneData::GdtfFixture::AddError(error);
 		fReaded = false;
 	}
 	else
