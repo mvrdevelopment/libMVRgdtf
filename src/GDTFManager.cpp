@@ -7542,7 +7542,7 @@ bool GdtfFixture::ImportFromZip(IZIPFilePtr& zipfile)
 				
 				// flatten the folder structure
 				subFolder = subFolder.Replace(TXString(kSeperator), "");
-				subFolder = kSeperator + subFolder;
+				subFolder = TXString(kSeperator) + subFolder;
 
 				// write the data into the filebuffer map.
 				size_t	size = 0;							buffer.GetDataSize(size);
