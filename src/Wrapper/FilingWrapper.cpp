@@ -131,10 +131,12 @@ bool TFolderIdentifier::DeleteOnDisk()
 	const char * ptr = fcsPath.GetCharPtr();
 	remove(ptr);
 	result = true;
-#else
+#elif __APPLE__
 	const char * ptr = fcsPath.GetCharPtr();
 	rmdir(ptr);
 	result = true;
+#else
+	// TODO
 #endif
 	return result;
 }
