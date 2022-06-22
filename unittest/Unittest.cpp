@@ -114,6 +114,7 @@ void Unittest::checkifEqual(const std::string& check, const double val1, const d
 	fFailedTests.push_back(test);
 };
 
+#ifdef IS64BIT
 void Unittest::checkifEqual(const std::string& check, const size_t val1, const size_t val2)
 {
 	if (val1 == val2) return;
@@ -130,6 +131,7 @@ void Unittest::checkifEqual(const std::string& check, const size_t val1, const s
 
 	fFailedTests.push_back(test);
 };
+#endif
 
 #ifdef GS_MAC
 	// Under Win and Linux there is a problem with double declaration of DMXValue (Uint64 type) and size_t (also Uint64 type)
