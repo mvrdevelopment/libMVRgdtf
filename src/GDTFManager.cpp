@@ -8692,6 +8692,8 @@ void GdtfFixture::CheckForMissingModeMasters()
 
 GdtfFixture::GdtfFixture()
 {
+	fThumbnailOffsetX 		= 0;
+	fThumbnailOffsetY 		= 0;
 	fReaded					= false;
 	fHasLinkedGuid			= false;     
 	fNoFeature				= nullptr;   
