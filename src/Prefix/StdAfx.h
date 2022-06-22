@@ -43,11 +43,21 @@ using namespace VectorworksMVR;
 
 #define GS_API
 
-#if ((ULONG_MAX) == (UINT_MAX))
+// Check windows
+#if _WIN32 || _WIN64
+#if _WIN64
+#define IS64BIT
+#else
+#define IS32BIT
+#endif
+#else
+#if (INTPTR_MAX == INT32_MAX)
 # define IS32BIT
 #else
 # define IS64BIT
 #endif
+#endif
+
 
 
 //---------------------------------------------------------------------------------
