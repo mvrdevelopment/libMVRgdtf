@@ -9539,12 +9539,12 @@ const TXString& GdtfFixture::GetThumbnailName() const
     return fTumbnailName;
 }
 
-size_t GdtfFixture::GetThumbnailOffsetX() const
+Sint32 GdtfFixture::GetThumbnailOffsetX() const
 {
     return fThumbnailOffsetX;
 }
 
-size_t GdtfFixture::GetThumbnailOffsetY() const
+Sint32 GdtfFixture::GetThumbnailOffsetY() const
 {
     return fThumbnailOffsetY;
 }
@@ -9635,12 +9635,12 @@ void GdtfFixture::SetThumbnailName(const TXString& fileName)
 	fTumbnailName = fileName;
 }
 
-void GdtfFixture::SetThumbnailOffsetX(size_t thumbnailOffsetX)
+void GdtfFixture::SetThumbnailOffsetX(Sint32 thumbnailOffsetX)
 {
 	fThumbnailOffsetX = thumbnailOffsetX;
 }
 
-void GdtfFixture::SetThumbnailOffsetY(size_t thumbnailOffsetY)
+void GdtfFixture::SetThumbnailOffsetY(Sint32 thumbnailOffsetY)
 {
 	fThumbnailOffsetY = thumbnailOffsetY;
 }
