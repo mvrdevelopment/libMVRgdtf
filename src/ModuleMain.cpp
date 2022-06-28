@@ -66,8 +66,8 @@
 #include "XMLLib/XMLFileNodeImpl.h"
 #include "XMLLib/XMLFileImpl.h"
 
-#ifdef __DONT_USE_XERCES_AS_XMLLIB
-#include __DONT_USE_XERCES_AS_XMLLIB
+#ifdef DONT_USE_XERCES_AS_XMLLIB
+#include "rapidxmlsupport/mvr_xml_impl.h"
 #endif
 
 // Wrapper
