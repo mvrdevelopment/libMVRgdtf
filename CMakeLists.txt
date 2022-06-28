@@ -11,13 +11,14 @@ set(DONT_USE_XERCES_AS_XMLLIB FALSE CACHE BOOL "Set whether or we use Xerces or 
 set(XERCES_ROOT_PATH ${CMAKE_SOURCE_DIR}/../xerces-c CACHE STRING "Set the build path where you called cmake.")
 set(XERCES_INCLUDE_PATH ${XERCES_ROOT_PATH}/src ${XERCES_ROOT_PATH}/build/src CACHE STRING "Set the include path")
 
-if (DONT_USE_XERCES_AS_XMLLIB)
+if (${DONT_USE_XERCES_AS_XMLLIB} OR DEFINED ENV{DONT_USE_XERCES_AS_XMLLIB})
+else()
     if (WIN32)
-        set(XERCES_LIB_PATH ${CMAKE_SOURCE_DIR}/../xerces-c/build/src/Release/xerces-c_3.lib CACHE STRING "Set the xerces libary path")
+    set(XERCES_LIB_PATH ${CMAKE_SOURCE_DIR}/../xerces-c/build/src/Release/xerces-c_3.lib CACHE STRING "Set the xerces libary path")
     else()
-        set(XERCES_LIB_PATH ${CMAKE_SOURCE_DIR}/../xerces-c/build/src/libxerces-c-3.2.a CACHE STRING "Set the xerces libary path")
+    set(XERCES_LIB_PATH ${CMAKE_SOURCE_DIR}/../xerces-c/build/src/libxerces-c-3.2.a CACHE STRING "Set the xerces libary path")
     endif(WIN32)
-endif(DONT_USE_XERCES_AS_XMLLIB)
+endif()
 
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
