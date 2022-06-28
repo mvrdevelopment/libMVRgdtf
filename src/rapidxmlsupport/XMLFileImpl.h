@@ -3,6 +3,7 @@
 //-----------------------------------------------------------------------------
 #pragma once
 #include "Prefix/StdAfx.h"
+#include "tinyxml2.h"
 
 namespace VectorworksMVR
 {

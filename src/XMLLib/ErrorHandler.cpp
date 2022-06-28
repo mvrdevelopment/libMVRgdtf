@@ -1,4 +1,4 @@
-#ifndef __DONT_USE_XERCES_AS_XMLLIB
+#ifndef DONT_USE_XERCES_AS_XMLLIB
 // ErrorHandler.cpp
 //
 // Error handling code for the XML parser.

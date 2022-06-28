@@ -1,7 +1,7 @@
 #pragma once
 #include "Include/VectorworksMVR.h"
 #include "Prefix/StdAfx.h"
-
+#include "tinyxml2.h"
 namespace VectorworksMVR
 {
 	namespace XML
@@ -55,11 +55,11 @@ namespace VectorworksMVR
 			virtual uint32_t	VCOM_CALLTYPE	Release();
 		private:
 			uint32_t 				fRefCnt;
-			LightRight::XMLElement 	fElement;
+			tinyxml2::XMLElement* 	fElement;
 			
 		public:
-			void 				SetElement(LightRight::XMLElement element);
-			static VCOMError 	GetInterface(LightRight::XMLElement element, IXMLFileNode** ppOutNode);
+			void 				SetElement(tinyxml2::XMLElement* element);
+			static VCOMError 	GetInterface(tinyxml2::XMLElement* element, IXMLFileNode** ppOutNode);
 			
 			
 

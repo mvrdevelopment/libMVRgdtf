@@ -7,7 +7,6 @@
 
 using namespace VectorworksMVR::Filing;
 using namespace VectorworksMVR::XML;
-using namespace LightRight;
 
 // ----------------------------------------------------------------------------------------------------
 CXMLFileImpl::CXMLFileImpl()

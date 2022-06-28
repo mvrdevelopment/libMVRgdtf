@@ -8,7 +8,6 @@
 using namespace VectorworksMVR::Filing;
 using namespace VectorworksMVR::XML;
 using namespace VectorworksMVR::VWFC::Tools;
-using namespace LightRight;
 
 // ----------------------------------------------------------------------------------------------------
 CXMLFileNodeImpl::CXMLFileNodeImpl()
@@ -147,7 +146,7 @@ VCOMError CXMLFileNodeImpl::GetChildNode(const TXString& name, IXMLFileNode** pp
 {
 	if(fElement)
 	{
-		XMLElement child = fElement->FirstChildElement();
+		tinyxml2::XMLElement* child = fElement->FirstChildElement();
 		while (child)
 		{
 			if(child->Name() == name)
@@ -269,12 +268,12 @@ VCOMError CXMLFileNodeImpl::AddCopyOfExistingNodeBeforeIndex(const IXMLFileNode*
 	return kVCOMError_NotInitialized;
 }
 
-void CXMLFileNodeImpl::SetElement(LightRight::XMLElement element)
+void CXMLFileNodeImpl::SetElement(tinyxml2::XMLElement* element)
 {
 	fElement = element;
 }
 
-VCOMError CXMLFileNodeImpl::GetInterface(LightRight::XMLElement element, IXMLFileNode** ppOutNode)
+VCOMError CXMLFileNodeImpl::GetInterface(tinyxml2::XMLElement* element, IXMLFileNode** ppOutNode)
 {
 	//---------------------------------------------------------------------------
 	// Initialize Object
