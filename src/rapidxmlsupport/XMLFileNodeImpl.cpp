@@ -87,8 +87,13 @@ VCOMError CXMLFileNodeImpl::GetNodeAttributeValue(const TXString& attrName, TXSt
 {
 	if(fElement)
 	{
-		outValue = fElement->Attribute(attrName);
-		return kVCOMError_NoError;
+        const char* attr = fElement->Attribute(attrName);
+        if(attr)
+        {
+            outValue = attr;
+            return kVCOMError_NoError;
+        }
+		
 	}
 	return kVCOMError_NotInitialized;
 }
@@ -146,15 +151,12 @@ VCOMError CXMLFileNodeImpl::GetChildNode(const TXString& name, IXMLFileNode** pp
 {
 	if(fElement)
 	{
-		tinyxml2::XMLElement* child = fElement->FirstChildElement();
-		while (child)
-		{
-			if(child->Name() == name)
-			{
-				return GetInterface(child, ppOutNode);
-			}
-			child = child->NextSiblingElement();
-		}
+		tinyxml2::XMLElement* child = fElement->FirstChildElement(name);
+        if(child)
+        {
+            return GetInterface(child, ppOutNode);
+        }
+
 		return kVCOMError_Failed;
 	}
 	return kVCOMError_NotInitialized;
