@@ -19,7 +19,9 @@ CXMLFileImpl::~CXMLFileImpl()
 
 VCOMError CXMLFileImpl::CreateNew(const TXString& rootName)
 {
-	fDoc.NewElement(rootName);
+	auto element =  fDoc.NewElement(rootName);
+    fDoc.InsertFirstChild(element);
+    
 	return kVCOMError_NoError;
 }
 
