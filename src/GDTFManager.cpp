@@ -3789,7 +3789,10 @@ void GdtfGeometryStructure::OnPrintToFile(IXMLFileNodePtr pNode)
 	// Call the parent
 	GdtfGeometry::OnPrintToFile(pNode);
 
-	pNode->SetNodeAttributeValue(XML_GDTF_StructureLinkedGeometry,				fLinkedGeometry->GetNodeReference());
+	TXString linkedGeometry = "";
+	if(fLinkedGeometry) { linkedGeometry = fLinkedGeometry->GetNodeReference(); }
+
+	pNode->SetNodeAttributeValue(XML_GDTF_StructureLinkedGeometry,				linkedGeometry);
 	pNode->SetNodeAttributeValue(XML_GDTF_StructureStructureType,				GdtfConverter::ConvertStructureTypeEnum(fStructureType));
 	pNode->SetNodeAttributeValue(XML_GDTF_StructureCrossSectionType,			GdtfConverter::ConvertCrossSectionTypeEnum(fCrossSectionType));
 	pNode->SetNodeAttributeValue(XML_GDTF_StructureCrossSectionHeight,			GdtfConverter::ConvertDouble(fCrossSectionHeight));
@@ -3823,9 +3826,9 @@ void GdtfGeometryStructure::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	needed.push_back(XML_GDTF_GeometryName);
 	optional.push_back(XML_GDTF_GeometryModelRef);
 	needed.push_back(XML_GDTF_GeometryMatrix);
-	needed.push_back(XML_GDTF_StructureLinkedGeometry);
+	optional.push_back(XML_GDTF_StructureLinkedGeometry);
 	needed.push_back(XML_GDTF_StructureStructureType);
-	needed.push_back(XML_GDTF_StructureCrossSectionType);
+	optional.push_back(XML_GDTF_StructureCrossSectionType);
 	if(fCrossSectionType == EGdtfCrossSectionType::Tube)
 	{
 		needed.push_back(XML_GDTF_StructureCrossSectionHeight);
