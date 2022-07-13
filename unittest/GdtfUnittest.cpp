@@ -490,13 +490,13 @@ void GdtfUnittest::ReadFile()
 		__checkVCOM(gdtfRead->GetFixtureGUID(resultUUID));
 		this->checkifEqual("GetFixtureGUID fixtureUUID ", fixtureUUID, resultUUID);
 
-		size_t thumbnailOffsetX;
+		Sint32 thumbnailOffsetX;
 		__checkVCOM(gdtfRead->GetThumbnailOffsetX(thumbnailOffsetX));
-		this->checkifEqual("GetThumbnailOffsetX ", thumbnailOffsetX, (size_t)1);
+		this->checkifEqual("GetThumbnailOffsetX ", thumbnailOffsetX, (Sint32)1);
 
-		size_t thumbnailOffsetY;
+		Sint32 thumbnailOffsetY;
 		__checkVCOM(gdtfRead->GetThumbnailOffsetY(thumbnailOffsetY));
-		this->checkifEqual("GetThumbnailOffsetY ", thumbnailOffsetY, (size_t)2);
+		this->checkifEqual("GetThumbnailOffsetY ", thumbnailOffsetY, (Sint32)2);
 
 		bool canHaveChildren;
 		__checkVCOM(gdtfRead->GetCanHaveChildren(canHaveChildren));

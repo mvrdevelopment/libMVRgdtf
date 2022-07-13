@@ -43,6 +43,23 @@ using namespace VectorworksMVR;
 
 #define GS_API
 
+// Check windows
+#if _WIN32 || _WIN64
+#if _WIN64
+#define IS64BIT
+#else
+#define IS32BIT
+#endif
+#else
+#if (INTPTR_MAX == INT32_MAX)
+# define IS32BIT
+#else
+# define IS64BIT
+#endif
+#endif
+
+
+
 //---------------------------------------------------------------------------------
 // Add includes from VWSDK
 #include "MCCoordTypes.h"

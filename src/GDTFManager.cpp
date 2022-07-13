@@ -7590,7 +7590,7 @@ bool GdtfFixture::ImportFromZip(IZIPFilePtr& zipfile)
 				
 				// flatten the folder structure
 				subFolder = subFolder.Replace(TXString(kSeperator), "");
-				subFolder = kSeperator + subFolder;
+				subFolder = TXString(kSeperator) + subFolder;
 
 				// write the data into the filebuffer map.
 				size_t	size = 0;							buffer.GetDataSize(size);
@@ -8740,6 +8740,8 @@ void GdtfFixture::CheckForMissingModeMasters()
 
 GdtfFixture::GdtfFixture()
 {
+	fThumbnailOffsetX 		= 0;
+	fThumbnailOffsetY 		= 0;
 	fReaded					= false;
 	fHasLinkedGuid			= false;     
 	fNoFeature				= nullptr;   
@@ -9235,11 +9237,11 @@ bool GdtfFixture::ExportToFile(IZIPFilePtr& zipfile)
 
 		if(!strFileName.IsEmpty())
 		{
-			CZIPFileIOBufferImpl* buffer = new CZIPFileIOBufferImpl();
-			buffer->SetData((void*)it->second.first, it->second.second);
-			zipfile->AddFile(strFileName, buffer);
+			CZIPFileIOBufferImpl* bufferzip = new CZIPFileIOBufferImpl();
+			bufferzip->SetData((void*)it->second.first, it->second.second);
+			zipfile->AddFile(strFileName, bufferzip);
 
-			delete buffer;
+			delete bufferzip;
 		}
 	}
 	
@@ -9585,12 +9587,12 @@ const TXString& GdtfFixture::GetThumbnailName() const
     return fTumbnailName;
 }
 
-size_t GdtfFixture::GetThumbnailOffsetX() const
+Sint32 GdtfFixture::GetThumbnailOffsetX() const
 {
     return fThumbnailOffsetX;
 }
 
-size_t GdtfFixture::GetThumbnailOffsetY() const
+Sint32 GdtfFixture::GetThumbnailOffsetY() const
 {
     return fThumbnailOffsetY;
 }
@@ -9681,12 +9683,12 @@ void GdtfFixture::SetThumbnailName(const TXString& fileName)
 	fTumbnailName = fileName;
 }
 
-void GdtfFixture::SetThumbnailOffsetX(size_t thumbnailOffsetX)
+void GdtfFixture::SetThumbnailOffsetX(Sint32 thumbnailOffsetX)
 {
 	fThumbnailOffsetX = thumbnailOffsetX;
 }
 
-void GdtfFixture::SetThumbnailOffsetY(size_t thumbnailOffsetY)
+void GdtfFixture::SetThumbnailOffsetY(Sint32 thumbnailOffsetY)
 {
 	fThumbnailOffsetY = thumbnailOffsetY;
 }
