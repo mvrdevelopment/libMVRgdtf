@@ -218,6 +218,21 @@ namespace VectorworksMVR
 		
 	};
 	typedef VCOMPtr<IMapping>	IMappingPtr;
+
+	//-------------------------------------------------------------------------------------------------------------
+	class DYNAMIC_ATTRIBUTE ICustomCommand : public IVWUnknown
+	{
+	public:
+		virtual MvrString VCOM_CALLTYPE		GetChannelFunction() = 0;
+		virtual VCOMError VCOM_CALLTYPE		IsPercentage(bool& isPercentage) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetValue(double& outValue) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE		SetChannelFunction(const MvrString& channelFunction) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetIsPercentage(bool isPercentage) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetValue(double value) = 0;
+		
+	};
+	typedef VCOMPtr<ICustomCommand>	ICustomCommandPtr;
 	
 	//-------------------------------------------------------------------------------------------------------------
 	enum class ESceneObjType
@@ -296,6 +311,11 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetProjectorSource(ISource** outSource) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetScaleHandling(GdtfDefines::EScaleHandlingType scaleHandling) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetScaleHandling(GdtfDefines::EScaleHandlingType& outScaleHandling) = 0;
+
+		// MVR 1.5
+		virtual VCOMError VCOM_CALLTYPE		GetCustomCommandCount(size_t& outCount) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetCustomCommandAt(size_t at, ICustomCommand** outCustomCommand) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateCustomCommand(MvrString channelFunction, bool isPercentage, double physicalValue, ICustomCommand** outCustomCommand) = 0;
 	};
 	typedef VCOMPtr<ISceneObj>	ISceneObjPtr;
 	

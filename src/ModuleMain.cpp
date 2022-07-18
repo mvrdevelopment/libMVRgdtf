@@ -10,6 +10,8 @@
 #include "Include/IMediaRessourceVectorInterface.h"
 #include "Implementation/CMediaRessourceVectorImpl.h"
 
+#include "Implementation/CCustomCommandImpl.h"
+
 // GDTF stuff
 #include "Implementation/CGdtfFixture.h"
 #include "Implementation/CGdtfWheel.h"
@@ -104,6 +106,8 @@ extern "C" VectorworksMVR::VCOMError VWQueryInterface(const VectorworksMVR::VWII
         resultInterface = new VectorworksMVR::CMappingDefinitionImpl();
     else if (iid == VectorworksMVR::IID_MappingObj)
         resultInterface = new VectorworksMVR::CMappingImpl();
+    else if (iid == VectorworksMVR::IID_CustomCommand)
+        resultInterface = new VectorworksMVR::CCustomCommandImpl();
     else if (iid == VectorworksMVR::IID_GeometryReference)
         resultInterface = new VectorworksMVR::CGeometryReferenceImpl();
     else if (iid == VectorworksMVR::IID_IGdtfFixture)
