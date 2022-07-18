@@ -54,6 +54,8 @@ namespace SceneData
 		eSourceObject				= -6,
 		eMappingDefinitionObject	= -7,
 		eMappingObject				= -8,
+
+		eConnectionObject = -10,
 	};
 	
 	enum class ESearchUuidIn
@@ -367,6 +369,44 @@ namespace SceneData
 	};
 	typedef SceneDataMappingObj*				SceneDataMappingObjPtr;
 	typedef std::vector<SceneDataMappingObjPtr>	SceneDataMappingObjArray;
+	
+	// ----------------------------------------------------------------------------------------------------------------------------------
+	// SceneDataConnectionObj
+	class SceneDataConnectionObj : public SceneDataObj
+	{
+
+	public:
+		SceneDataConnectionObj();
+		SceneDataConnectionObj(const TXString& own, const TXString& other, const TXString& toObject);
+		virtual ~SceneDataConnectionObj();
+		
+	private:
+
+		TXString 		fown;
+		TXString 		fother;
+		SceneDataGUID	ftoObject;		
+
+	public:
+		virtual SceneDataGUID&	GetToObject();
+		virtual TXString&		GetOwn();
+		virtual TXString&		GetOther();
+
+		
+		virtual void 			SetToObject(SceneDataGUID uuid);
+		virtual void			SetOwn(TXString& own);
+		virtual void			SetOther(TXString& other);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual ESceneDataObjectType	GetObjectType();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange);
+
+	};
+	typedef SceneDataConnectionObj*				SceneDataConnectionObjPtr;
+	typedef std::vector<SceneDataConnectionObjPtr>	SceneDataConnectionObjArray;
+	
+	
 	
 	
 	// ----------------------------------------------------------------------------------------------------------------------------------

@@ -942,6 +942,83 @@ ESceneDataObjectType SceneDataMappingObj::GetObjectType()
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------------
+// SceneDataConnectionObj
+	
+SceneDataConnectionObj::SceneDataConnectionObj() : SceneDataObj(SceneDataGUID(eNoGuid,"")), ftoObject(SceneDataGUID(eNoGuid,"")){
+}
+
+SceneDataConnectionObj::SceneDataConnectionObj(const TXString& own, const TXString& other, const TXString& toObject) : SceneDataObj(SceneDataGUID(eNoGuid,"")), fown(own), fother(other), ftoObject(toObject){
+
+}
+
+SceneDataConnectionObj::~SceneDataConnectionObj()
+{
+	
+}
+
+SceneDataGUID& SceneDataConnectionObj::GetToObject(){
+	return ftoObject;
+}
+
+
+void SceneDataConnectionObj::SetToObject(SceneDataGUID uuid){
+	ftoObject = uuid;
+}
+
+TXString& SceneDataConnectionObj::GetOwn(){
+	return fown;
+}
+
+
+void SceneDataConnectionObj::SetOwn(TXString& own){
+	fown = own;
+}
+
+TXString& SceneDataConnectionObj::GetOther(){
+	return fother;
+}
+
+
+void SceneDataConnectionObj::SetOther(TXString& other){
+	fother = other;
+}
+
+
+void SceneDataConnectionObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
+{
+	// Call parent
+	SceneDataObj::OnPrintToFile(pNode, exchange);
+
+	// Set attributes
+	pNode->SetNodeAttributeValue(XML_Val_ConnectionOwn, fown);
+	pNode->SetNodeAttributeValue(XML_Val_ConnectionOther, fother);
+	pNode->SetNodeAttributeValue(XML_Val_ConnectionToObject, ftoObject.GetUUIDString());
+}
+
+void SceneDataConnectionObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
+{
+	// Call parent
+	SceneDataObj::OnReadFromNode(pNode, exchange);
+
+	TXString uuidStr;
+	pNode->GetNodeAttributeValue(XML_Val_ConnectionOwn, fown);
+	pNode->GetNodeAttributeValue(XML_Val_ConnectionOther, fother);
+	TXString nUUID;
+	pNode->GetNodeAttributeValue(XML_Val_ConnectionToObject, nUUID);
+	ftoObject = SceneDataGUID(nUUID);
+}
+
+TXString SceneDataConnectionObj::GetNodeName()
+{
+	return TXString(XML_Val_ConnectionNodeName);
+}
+
+ESceneDataObjectType SceneDataConnectionObj::GetObjectType()
+{
+	return ESceneDataObjectType::eConnectionObject;
+}
+
+// ----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataObjWithMatrix
 SceneDataObjWithMatrix::SceneDataObjWithMatrix(const SceneDataGUID& guid) : SceneDataObj(guid)
 {

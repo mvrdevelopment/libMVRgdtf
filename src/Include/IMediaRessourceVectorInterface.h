@@ -218,6 +218,21 @@ namespace VectorworksMVR
 		
 	};
 	typedef VCOMPtr<IMapping>	IMappingPtr;
+
+	//-------------------------------------------------------------------------------------------------------------
+	class DYNAMIC_ATTRIBUTE IConnection : public IVWUnknown
+	{
+	public:
+		virtual VCOMError VCOM_CALLTYPE		GetToObject(MvrUUID& objUUID) = 0;
+		virtual MvrString VCOM_CALLTYPE		GetOwn() = 0;
+		virtual MvrString VCOM_CALLTYPE		GetOther() = 0;
+
+		virtual VCOMError VCOM_CALLTYPE		SetToObject(MvrUUID objUUID) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetOwn(MvrString value) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetOther(MvrString value) = 0;
+		
+	};
+	typedef VCOMPtr<IConnection>	IConnectionPtr;
 	
 	//-------------------------------------------------------------------------------------------------------------
 	enum class ESceneObjType
@@ -272,6 +287,8 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetMappingCount(size_t& outMappings) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetMappingAt(size_t at, IMapping** outMapping) = 0;
 		
+
+
 		virtual VCOMError VCOM_CALLTYPE		SetGdtfName(MvrString gdtfName) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetGdtfMode(MvrString gdtfMode) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetFocusPoint(ISceneObj* focusPoint) = 0;
