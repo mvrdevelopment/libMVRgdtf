@@ -2721,6 +2721,16 @@ bool SceneDataExchange::WriteToFile(const IFileIdentifierPtr& file)
 		SceneDataZip::AddFileToZip(zipfile, fSVG_FilesToAdd.at(i), ERessourceType::ModelSVG, false/*Delete*/);
 	}
 
+	for (size_t i = 0; i < fSVGSide_FilesToAdd.size(); i++)
+	{        
+		SceneDataZip::AddFileToZip(zipfile, fSVGSide_FilesToAdd.at(i), ERessourceType::ModelSVGSide, false/*Delete*/);
+	}
+
+	for (size_t i = 0; i < fSVGFront_FilesToAdd.size(); i++)
+	{        
+		SceneDataZip::AddFileToZip(zipfile, fSVGFront_FilesToAdd.at(i), ERessourceType::ModelSVGFront, false/*Delete*/);
+	}
+
 	for (size_t i = 0; i < fGLTF_FilesToAdd.size(); i++)
 	{        
 		SceneDataZip::AddFileToZip(zipfile, fGLTF_FilesToAdd.at(i),  ERessourceType::ModelGLTF, false/*Delete*/);
@@ -3310,6 +3320,8 @@ void SceneDataExchange::AddFileToZip(const IFileIdentifierPtr& file, ERessourceT
 		case ERessourceType::Model3DSLow: 		f3DSLow_FilesToAdd.push_back(file); return;
 		case ERessourceType::Model3DSHigh: 		f3DSHigh_FilesToAdd.push_back(file); return;
 		case ERessourceType::ModelSVG: 			fSVG_FilesToAdd.push_back(file); return;
+		case ERessourceType::ModelSVGSide: 		fSVGSide_FilesToAdd.push_back(file); return;
+		case ERessourceType::ModelSVGFront: 	fSVGFront_FilesToAdd.push_back(file); return;
 		case ERessourceType::ModelGLTF: 		fGLTF_FilesToAdd.push_back(file); return;
 		case ERessourceType::ModelGLTFLow: 		fGLTFLow_FilesToAdd.push_back(file); return;
 		case ERessourceType::ModelGLTFHigh: 	fGLTFHigh_FilesToAdd.push_back(file); return;
