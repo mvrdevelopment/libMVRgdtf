@@ -1050,6 +1050,8 @@ SceneDataObjWithMatrix::SceneDataObjWithMatrix(const SceneDataGUID& guid) : Scen
 	fInContainer			= nullptr;
 	fNextObj				= nullptr;
 	fClass					= nullptr;
+
+	fCustomCommands.clear();
 }
 
 SceneDataObjWithMatrix::~SceneDataObjWithMatrix()
@@ -1097,7 +1099,6 @@ void SceneDataObjWithMatrix::AddGeometryObj(SceneDataGeoInstanceObjPtr object)
 SceneDataCustomCommandPtr SceneDataObjWithMatrix::AddCustomCommand(const TXString& channelFunction, bool isPercentage, double value)
 {
 	SceneDataCustomCommandPtr customCommand = new SceneDataCustomCommand(channelFunction, isPercentage, value);
-	if (customCommand) { fCustomCommands.push_back(customCommand); }
 	fCustomCommands.push_back(customCommand);
 	return customCommand;
 }
