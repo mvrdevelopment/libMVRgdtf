@@ -951,6 +951,10 @@ SceneDataConnectionObj::SceneDataConnectionObj(const TXString& own, const TXStri
 
 }
 
+SceneDataConnectionObj::SceneDataConnectionObj(const TXString& own, const TXString& other, const SceneDataGUID& toObject) : SceneDataObj(SceneDataGUID(eNoGuid,"")), fOwn(own), fOther(other), fToObject(toObject){
+
+}
+
 SceneDataConnectionObj::~SceneDataConnectionObj()
 {
 	
@@ -1068,6 +1072,19 @@ void SceneDataObjWithMatrix::AddGeometryObj(SceneDataGeoInstanceObjPtr object)
 	if (object) { fGeometries.push_back(object); }
 }
 
+const SceneDataConnectionObjArray& SceneDataObjWithMatrix::GetConnectionArr() const
+{
+	return fConnections;
+}
+
+SceneDataConnectionObjPtr SceneDataObjWithMatrix::AddConnectionObj(const TXString& own, const TXString& other, const SceneDataGUID toObject)
+{
+	SceneDataConnectionObjPtr out = new SceneDataConnectionObj(own, other, toObject);
+	if (out) { fConnections.push_back(out); }
+	return out;
+}
+
+
 SceneDataGroupObjPtr SceneDataObjWithMatrix::GetContainer() const
 {
 	return fInContainer;
@@ -1124,7 +1141,16 @@ void SceneDataObjWithMatrix::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExcha
 		}
 	}
 	
-
+		// Print the custom commands
+	if (fConnections.size() > 0)
+	{
+		IXMLFileNodePtr pConnectionsNode;
+		if(VCOM_SUCCEEDED( pNode->CreateChildNode(XML_Val_ConnectionNodeName, &pConnectionsNode)))
+		{
+			for(const auto& connection : fConnections) { connection->PrintToFile(pConnectionsNode, exchange); }
+		}
+		
+	}
 	
 }
 
@@ -1200,6 +1226,15 @@ void SceneDataObjWithMatrix::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneD
 			}
 			
 		}
+
+		GdtfConverter::TraverseNodes(pNode, XML_Val_ConnectionNodeName, XML_Val_ConnectionNodeName, [this, exchange] (IXMLFileNodePtr pNode) -> void
+							{
+								SceneDataConnectionObjPtr connection = new SceneDataConnectionObj();
+								connection->ReadFromNode(pNode, exchange);
+								fConnections.push_back(connection);
+							}
+							);
+
 	}
 	
 	//------------------------------------------------------------------------------------------------------

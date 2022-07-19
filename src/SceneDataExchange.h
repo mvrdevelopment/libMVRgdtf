@@ -378,6 +378,8 @@ namespace SceneData
 	public:
 		SceneDataConnectionObj();
 		SceneDataConnectionObj(const TXString& own, const TXString& other, const TXString& toObject);
+		SceneDataConnectionObj(const TXString& own, const TXString& other, const SceneDataGUID& toObject);
+		
 		virtual ~SceneDataConnectionObj();
 		
 	private:
@@ -432,6 +434,7 @@ namespace SceneData
 		// Geometry stuff
 		SceneDataGeometryObjArray	fGeometries;
 		
+		SceneDataConnectionObjArray fConnections;
 		
 	public:
 		void						GetTransformMatric(VWTransformMatrix& matrix) const;
@@ -447,6 +450,10 @@ namespace SceneData
 		void								AddGeometryObj(SceneDataGeoInstanceObjPtr object);
 		const SceneDataGeometryObjArray&	GetGeometryArr() const;
 		
+		SceneDataConnectionObjPtr			AddConnectionObj(const TXString& own, const TXString& other, const SceneDataGUID toObject);
+		const SceneDataConnectionObjArray&	GetConnectionArr() const;
+		
+
 	protected:
 		void						ReadMatrixNodeValue(const IXMLFileNodePtr& pNode, VWPoint3D& inOutPoint);
 		virtual	void				OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);

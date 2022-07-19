@@ -4,6 +4,7 @@
 #include "Prefix/StdAfx.h"
 #include "CMediaRessourceVectorImpl.h"
 #include "CGeometryReferenceImpl.h"
+#include "CConnectionImpl.h"
 
 #include "CGdtfFixture.h"
 #include "Utility.h"
@@ -836,6 +837,121 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetMappingAt(size_t at,
 	// Set Out Value
 	*outMapping	= pMapping;
 	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetConnectionCount(size_t& outConnections)
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+	
+	// Check the type is right
+	ASSERTN(kEveryone,fType == ESceneObjType::Fixture);
+	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
+	
+	// Try to cast
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	if( ! fixture) return kVCOMError_NoFixtureObj;
+	
+	outConnections = fixture->GetConnectionArr().size();
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetConnectionAt(size_t at, IConnection** outConnection)
+{
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+	
+	ASSERTN(kEveryone,fType == ESceneObjType::Fixture);
+	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
+
+	// Try to cast
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	if( ! fixture) return kVCOMError_NoFixtureObj;
+	
+	size_t count = fixture->GetConnectionArr().size();
+	
+	
+	ASSERTN(kEveryone, at < count);
+	if (count < at) { return kVCOMError_InvalidArg; }
+	
+	SceneData::SceneDataConnectionObjPtr pScConnection = fixture->GetConnectionArr().at(at);
+	
+	CConnectionImpl* pConnection = nullptr;
+	
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_ConnectionObj, (IVWUnknown**) & pConnection)))
+	{
+		CConnectionImpl* pResultInterface = static_cast<CConnectionImpl* >(pConnection);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(pScConnection);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	if (*outConnection)
+	{
+		(*outConnection)->Release();
+		*outConnection		= NULL;
+	}
+	*outConnection	= pConnection;
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::CreateConnection(MvrString own, MvrString other, MvrUUID ToObject, IConnection** addedObj)
+{
+	ASSERTN(kEveryone,fType == ESceneObjType::Fixture);
+	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
+
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	
+	ASSERTN(kEveryone, fixture != nullptr);
+	if ( ! fixture) { return kVCOMError_Failed; }
+	
+	const auto nObj = fixture->AddConnectionObj(own, other, VWUUID(ToObject.a, ToObject.b, ToObject.c, ToObject.d));
+	
+		//---------------------------------------------------------------------------
+	// Initialize Object
+	CConnectionImpl* pConnectionImpl = nullptr;
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_ConnectionObj, (IVWUnknown**) & pConnectionImpl)))
+	{
+		// Check Casting
+		CConnectionImpl* pResultInterface = static_cast<CConnectionImpl*>(pConnectionImpl);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(nObj);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incoming Object
+	if (*addedObj)
+	{
+		(*addedObj)->Release();
+		*addedObj		= NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*addedObj = pConnectionImpl;
+	return kVCOMError_NoError;
+
 	return kVCOMError_NoError;
 }
 
