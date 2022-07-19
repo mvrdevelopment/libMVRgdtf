@@ -313,6 +313,7 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetProjectorSource(ISource** outSource) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetScaleHandling(GdtfDefines::EScaleHandlingType scaleHandling) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetScaleHandling(GdtfDefines::EScaleHandlingType& outScaleHandling) = 0;
+	
 	};
 	typedef VCOMPtr<ISceneObj>	ISceneObjPtr;
 	

@@ -944,10 +944,10 @@ ESceneDataObjectType SceneDataMappingObj::GetObjectType()
 // ----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataConnectionObj
 	
-SceneDataConnectionObj::SceneDataConnectionObj() : SceneDataObj(SceneDataGUID(eNoGuid,"")), ftoObject(SceneDataGUID(eNoGuid,"")){
+SceneDataConnectionObj::SceneDataConnectionObj() : SceneDataObj(SceneDataGUID(eNoGuid,"")), fToObject(SceneDataGUID(eNoGuid,"")){
 }
 
-SceneDataConnectionObj::SceneDataConnectionObj(const TXString& own, const TXString& other, const TXString& toObject) : SceneDataObj(SceneDataGUID(eNoGuid,"")), fown(own), fother(other), ftoObject(toObject){
+SceneDataConnectionObj::SceneDataConnectionObj(const TXString& own, const TXString& other, const TXString& toObject) : SceneDataObj(SceneDataGUID(eNoGuid,"")), fOwn(own), fOther(other), fToObject(toObject){
 
 }
 
@@ -957,30 +957,30 @@ SceneDataConnectionObj::~SceneDataConnectionObj()
 }
 
 SceneDataGUID& SceneDataConnectionObj::GetToObject(){
-	return ftoObject;
+	return fToObject;
 }
 
 
 void SceneDataConnectionObj::SetToObject(SceneDataGUID uuid){
-	ftoObject = uuid;
+	fToObject = uuid;
 }
 
 TXString& SceneDataConnectionObj::GetOwn(){
-	return fown;
+	return fOwn;
 }
 
 
 void SceneDataConnectionObj::SetOwn(TXString& own){
-	fown = own;
+	fOwn = own;
 }
 
 TXString& SceneDataConnectionObj::GetOther(){
-	return fother;
+	return fOther;
 }
 
 
 void SceneDataConnectionObj::SetOther(TXString& other){
-	fother = other;
+	fOther = other;
 }
 
 
@@ -990,9 +990,9 @@ void SceneDataConnectionObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExcha
 	SceneDataObj::OnPrintToFile(pNode, exchange);
 
 	// Set attributes
-	pNode->SetNodeAttributeValue(XML_Val_ConnectionOwn, fown);
-	pNode->SetNodeAttributeValue(XML_Val_ConnectionOther, fother);
-	pNode->SetNodeAttributeValue(XML_Val_ConnectionToObject, ftoObject.GetUUIDString());
+	pNode->SetNodeAttributeValue(XML_Val_ConnectionOwn, fOwn);
+	pNode->SetNodeAttributeValue(XML_Val_ConnectionOther, fOther);
+	pNode->SetNodeAttributeValue(XML_Val_ConnectionToObject, fToObject.GetUUIDString());
 }
 
 void SceneDataConnectionObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
@@ -1001,11 +1001,11 @@ void SceneDataConnectionObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneD
 	SceneDataObj::OnReadFromNode(pNode, exchange);
 
 	TXString uuidStr;
-	pNode->GetNodeAttributeValue(XML_Val_ConnectionOwn, fown);
-	pNode->GetNodeAttributeValue(XML_Val_ConnectionOther, fother);
+	pNode->GetNodeAttributeValue(XML_Val_ConnectionOwn, fOwn);
+	pNode->GetNodeAttributeValue(XML_Val_ConnectionOther, fOther);
 	TXString nUUID;
 	pNode->GetNodeAttributeValue(XML_Val_ConnectionToObject, nUUID);
-	ftoObject = SceneDataGUID(nUUID);
+	fToObject = SceneDataGUID(nUUID);
 }
 
 TXString SceneDataConnectionObj::GetNodeName()

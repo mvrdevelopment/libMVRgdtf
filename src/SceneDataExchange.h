@@ -382,9 +382,9 @@ namespace SceneData
 		
 	private:
 
-		TXString 		fown;
-		TXString 		fother;
-		SceneDataGUID	ftoObject;		
+		TXString 		fOwn;
+		TXString 		fOther;
+		SceneDataGUID	fToObject;		
 
 	public:
 		virtual SceneDataGUID&	GetToObject();
