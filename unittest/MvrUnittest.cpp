@@ -176,8 +176,8 @@ void MvrUnittest::WriteFile()
 			}
 			//CustomCommands
 			ICustomCommandPtr customCommand1, customCommand2;
-			__checkVCOM(fixture1->CreateCustomCommand("My channelFunction 1", false, -1.2, &customCommand1));
-			__checkVCOM(fixture1->CreateCustomCommand("My channelFunction 2", true, -3.4, &customCommand1));
+			__checkVCOM(fixture1->CreateCustomCommand("My ChannelFunction 1", false, -1.2, &customCommand1));
+			__checkVCOM(fixture1->CreateCustomCommand("My ChannelFunction 2", true, -3.4, &customCommand1));
 		}
 
 		// And another fixture
@@ -532,7 +532,7 @@ void MvrUnittest::ReadFile()
 					//CustomCommands
 					size_t customCommandCount;
 					__checkVCOM(sceneObj->GetCustomCommandCount(customCommandCount));
-					checkifEqual("GetCustomCommandCount", customCommandCount, (size_t)42);
+					checkifEqual("GetCustomCommandCount", customCommandCount, (size_t)2);
 
 					ICustomCommandPtr customCommand1, customCommand2;
 					if(__checkVCOM(sceneObj->GetCustomCommandAt(0, &customCommand1)))
