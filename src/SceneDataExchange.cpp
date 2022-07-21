@@ -963,7 +963,7 @@ SceneDataCustomCommand::~SceneDataCustomCommand()
 	
 }
 
-TXString SceneDataCustomCommand::GetChannelFunction()
+const TXString& SceneDataCustomCommand::GetChannelFunction()
 {
 	return fChannelFunction;
 }
@@ -1029,7 +1029,7 @@ void SceneDataCustomCommand::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneD
 	}
 
 	ptrdiff_t spaceP = customCommandString.TrimRight().ReverseFind(" ");
-	TXString valueString = customCommandString.Right(customCommandString.GetLength() - spaceP + 1);
+	TXString valueString = customCommandString.Right(customCommandString.GetLength() - spaceP - 1);
 	fValue = valueString.atof();
 }
 

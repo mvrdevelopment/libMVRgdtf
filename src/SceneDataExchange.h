@@ -387,13 +387,13 @@ namespace SceneData
 		double		fValue;
 		
 	public:
-		virtual TXString	GetChannelFunction();
-		virtual bool 		IsPercentage();
-		virtual double 		GetValue();
+		virtual const TXString&	GetChannelFunction();
+		virtual bool 			IsPercentage();
+		virtual double 			GetValue();
 
-		virtual void 		SetChannelFunction(const TXString& channelFunction);
-		virtual void		SetIsPercentage(bool isPercentage);
-		virtual void 		SetValue(double value);
+		virtual void 			SetChannelFunction(const TXString& channelFunction);
+		virtual void			SetIsPercentage(bool isPercentage);
+		virtual void 			SetValue(double value);
 
 	protected:
 		virtual	TXString				GetNodeName();
