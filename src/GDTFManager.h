@@ -2863,6 +2863,7 @@ namespace SceneData
 		TXString		            fLongName;
 		TXString		            fManufacturer;
 		TXString		            fFixtureTypeDescription;
+		TXString		            fFunction;
 		GdtfFixtureGUID	            fGuid;
 		TXString		            fTumbnailName;
 		Sint32						fThumbnailOffsetX;

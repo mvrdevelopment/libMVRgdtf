@@ -1381,6 +1381,41 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetScaleHandling(GdtfDe
 	return kVCOMError_NoError;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetFunction(MvrString function){
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) {return kVCOMError_NotInitialized;}
+	
+	// Check the type is right
+	ASSERTN(kEveryone,fType == ESceneObjType::Fixture);
+	if( fType != ESceneObjType::Fixture) {return kVCOMError_NoFixtureObj;}
+	
+	// Try to cast
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	if( ! fixture) {return kVCOMError_NoFixtureObj;}
+	
+	TXString funStr (function);
+	fixture->SetFunction(funStr);
+	
+	return kVCOMError_NoError;
+}
+
+MvrString VectorworksMVR::CSceneObjImpl::GetFunction(){
+		// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) return "";
+	
+	// Check the type is right
+	ASSERTN(kEveryone,fType == ESceneObjType::Fixture);
+	if( fType != ESceneObjType::Fixture) return "";
+	
+	// Try to cast
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	if( ! fixture) return "";
+	
+	return fixture->GetFunction().GetCharPtr();
+}
+	
 
 //------------------------------------------------------------------------------------------------------------------------------------------
 // Implementation

@@ -174,6 +174,8 @@ void MvrUnittest::WriteFile()
 				__checkVCOM(mapping1->SetOy(4));
 				__checkVCOM(mapping1->SetRz(5.6));
 			}
+
+			fixture1->SetFunction("TestFunction");
 		}
 
 		// And another fixture
@@ -449,6 +451,7 @@ void MvrUnittest::ReadFile()
 					this->checkifEqual("GetFixtureGuid fixtureUUID1 ", resultUUID, fixtureUUID1);
 					checkifEqual("GetGdtfName", 	 	sceneObj->GetGdtfName(), "testGdtf.gdtf");
 					checkifEqual("GetGdtfMode", 	 	sceneObj->GetGdtfMode(), "My DmxModeName");
+					checkifEqual("GetFunction", 	 	sceneObj->GetFunction(), "TestFunction");
 
 					ISceneObjPtr focus;
 					if(__checkVCOM(sceneObj->GetFocusPoint( & focus)))

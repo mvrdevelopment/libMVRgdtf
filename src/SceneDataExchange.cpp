@@ -1320,6 +1320,16 @@ const TXString& SceneDataFixtureObj::GetFixtureId()
 	return fFixtureId;
 }
 
+void SceneDataFixtureObj::SetFunction(const TXString& function)
+{
+	fFunction = function;
+}
+
+const TXString& SceneDataFixtureObj::GetFunction()
+{
+	return fFunction;
+}
+
 Sint32 SceneDataFixtureObj::GetUnitNumber()
 {
 	return fUnitNumber;
@@ -1595,6 +1605,15 @@ void SceneDataFixtureObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange
 	}
 
 	//--------------------------------------------------------------------------------------------
+	// Print Fixture
+	IXMLFileNodePtr pFixtureNode;
+	if ( (! fFunction.IsEmpty()) && VCOM_SUCCEEDED( pNode->CreateChildNode( XML_Val_FixtureFunction, & pFixtureNode ) ) )
+	{
+		pFixtureNode->SetNodeValue(fFunction);
+	}
+
+
+	//--------------------------------------------------------------------------------------------
 	// Print the CastShadow
 	IXMLFileNodePtr pCastShadowNode;
 	if ( VCOM_SUCCEEDED( pNode->CreateChildNode( XML_Val_FixtureCastShadow, & pCastShadowNode ) ) )
@@ -1708,6 +1727,15 @@ void SceneDataFixtureObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneData
 
 		GdtfConverter::ConvertDouble(rotationStr, pGoboNode, fGoboRotation);
 	}
+
+	//--------------------------------------------------------------------------------------------
+	// Read Gobo
+	IXMLFileNodePtr pFunctionNode;
+	if ( VCOM_SUCCEEDED( pNode->GetChildNode( XML_Val_FixtureFunction, & pFunctionNode ) ) )
+	{
+		pFunctionNode->GetNodeValue(fFunction);
+	}
+
 
 	//--------------------------------------------------------------------------------------------
 	// Read the CastShadow
