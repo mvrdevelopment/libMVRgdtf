@@ -39,11 +39,11 @@ VCOMError CXMLFileImpl::ReadBuffer(IXMLFileIOBuffer* pInputBuffer, EXMLEncoding 
 {
 	size_t length = 0;
 	pInputBuffer->GetDataSize(length);
-	char* buffer = new char(length + 1);
+	char* buffer = new char[length + 1];
 	pInputBuffer->CopyDataInto(buffer, length);
 	buffer[length] = 0;
 	fDoc.Parse(buffer);
-	delete buffer;
+    delete[] buffer;
 	return kVCOMError_NoError;
 }
 

@@ -177,7 +177,7 @@ namespace VectorworksMVR
 		IZIPFilePtr				            fZipFile;
         std::vector<std::pair<TXString, CZIPFileIOBufferImpl*>>  fBuffersAdded;
 
-        char*                   fBuffer;
+        char*                   fBuffer = nullptr;
         size_t                  fBufferLength;
         
 	};
