@@ -791,6 +791,8 @@ void MvrUnittest::ReadFile()
 		ISymDefPtr symDef = nullptr;
 		__checkVCOM(mvrRead->GetSymDefAt(0, & symDef));
 		
+        if(symDef){
+            
 		checkifEqual("GetSymDef name", symDef->GetName(), "Symbol Definition for the FocusPoint");
 
 		size_t geoCount = 0;
@@ -861,6 +863,7 @@ void MvrUnittest::ReadFile()
 			checkifEqual("Sym Def Link", linkedSymDef->GetName(), symDef->GetName());
 
 		}
+        }
 
 
 		size_t countClasses = 0;
