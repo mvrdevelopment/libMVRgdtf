@@ -941,15 +941,17 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::CreateConnection(MvrStr
 	
 	//---------------------------------------------------------------------------
 	// Check Incoming Object
-	if (*addedObj)
-	{
-		(*addedObj)->Release();
-		*addedObj		= NULL;
+	if(addedObj){
+		if (*addedObj)
+		{
+			(*addedObj)->Release();
+			*addedObj		= NULL;
+		}
+		
+		//---------------------------------------------------------------------------
+		// Set Out Value
+		*addedObj = pConnectionImpl;
 	}
-	
-	//---------------------------------------------------------------------------
-	// Set Out Value
-	*addedObj = pConnectionImpl;
 	return kVCOMError_NoError;
 
 	return kVCOMError_NoError;

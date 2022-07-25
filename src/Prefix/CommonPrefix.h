@@ -152,6 +152,7 @@
 #define XML_Val_MappingRz	            "rz"
 
 #define XML_Val_ConnectionNodeName      "Connection"
+#define XML_Val_ConnectionsNodeName     "Connections"
 #define XML_Val_ConnectionOwn           "own"
 #define XML_Val_ConnectionOther         "other"
 #define XML_Val_ConnectionToObject      "toObject"

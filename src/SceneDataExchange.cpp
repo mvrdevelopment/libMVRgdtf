@@ -1145,11 +1145,10 @@ void SceneDataObjWithMatrix::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExcha
 	if (fConnections.size() > 0)
 	{
 		IXMLFileNodePtr pConnectionsNode;
-		if(VCOM_SUCCEEDED( pNode->CreateChildNode(XML_Val_ConnectionNodeName, &pConnectionsNode)))
+		if(VCOM_SUCCEEDED( pNode->CreateChildNode(XML_Val_ConnectionsNodeName, &pConnectionsNode)))
 		{
 			for(const auto& connection : fConnections) { connection->PrintToFile(pConnectionsNode, exchange); }
 		}
-		
 	}
 	
 }
@@ -1227,16 +1226,18 @@ void SceneDataObjWithMatrix::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneD
 			
 		}
 
-		GdtfConverter::TraverseNodes(pNode, XML_Val_ConnectionNodeName, XML_Val_ConnectionNodeName, [this, exchange] (IXMLFileNodePtr pNode) -> void
-							{
-								SceneDataConnectionObjPtr connection = new SceneDataConnectionObj();
-								connection->ReadFromNode(pNode, exchange);
-								fConnections.push_back(connection);
-							}
-							);
 
 	}
 	
+
+	GdtfConverter::TraverseNodes(pNode, XML_Val_ConnectionsNodeName, XML_Val_ConnectionNodeName, [this, exchange] (IXMLFileNodePtr pNode) -> void
+						{
+							SceneDataConnectionObjPtr connection = new SceneDataConnectionObj();
+							connection->ReadFromNode(pNode, exchange);
+							fConnections.push_back(connection);
+						}
+						);
+
 	//------------------------------------------------------------------------------------------------------
 	// Get Class
 	IXMLFileNodePtr pClassNode;
