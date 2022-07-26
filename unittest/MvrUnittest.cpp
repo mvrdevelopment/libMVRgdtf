@@ -254,7 +254,12 @@ void MvrUnittest::WriteFile()
 		{
 			__checkVCOM(projector->SetProjectorSource("myValueP", "myLinkedGeometryP", ESourceType::File));
 			__checkVCOM(projector->SetScaleHandling(EScaleHandlingType::ScaleIgnoreRatio));
+
 		}
+
+		// Support
+		ISceneObjPtr supportObject = nullptr;
+		__checkVCOM(mvrWrite->CreateSupport(MvrUUID(1808353427, 683171502, 518343034, 0000000007), STransformMatrix(), "MySupportName", layer2, &supportObject));
 
 
 
@@ -344,7 +349,7 @@ void MvrUnittest::ReadFile()
 		// Check Object
 		size_t count_Objects = 0;
 		__checkVCOM(mvrRead->GetSceneObjectCount(count_Objects));
-		this->checkifEqual("Check Global Object Count", count_Objects, size_t(7));
+		this->checkifEqual("Check Global Object Count", count_Objects, size_t(9));
 
 		//------------------------------------------------------------------------------------------------
 		// Check File Getters
@@ -406,8 +411,6 @@ void MvrUnittest::ReadFile()
 			{
 				ESceneObjType type;
 				__checkVCOM(sceneObj->GetType(type));
-				
-
 				// ------------------------------------------------------------------------------
 				// Get Focus Point1
 				if(i==0 && j==0)
@@ -748,7 +751,6 @@ void MvrUnittest::ReadFile()
 				if (i==1 && j==3)
 				{
 					checkifEqual("ESceneObjType Type ", (Sint32)type ,(Sint32)ESceneObjType::Projector);
-
 					ISourcePtr source1;
 					if(__checkVCOM(sceneObj->GetProjectorSource(&source1)))
 					{
@@ -763,6 +765,11 @@ void MvrUnittest::ReadFile()
 					EScaleHandlingType scaleHandlingType;
 					__checkVCOM(sceneObj->GetScaleHandling(scaleHandlingType));
 					checkifEqual("Check Projector ScaleHandling", (size_t)scaleHandlingType, (size_t)EScaleHandlingType::ScaleIgnoreRatio);
+				}
+
+				if (i==1 && j==4)
+				{
+					checkifEqual("ESceneObjType Type ", (Sint32)type ,(Sint32)ESceneObjType::Support);
 				}
 							
 				//------------------------------------------------------------------------
