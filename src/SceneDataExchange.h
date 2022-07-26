@@ -601,6 +601,7 @@ namespace SceneData
 		
 		
 	private:
+		TXString						fFunction;
 		TXString						fGdtfFile;
 		TXString						fGdtfDmxMode;
 		TXString 						fGobo;
@@ -630,6 +631,7 @@ namespace SceneData
 		
 	public:
 		
+		const TXString&					GetFunction();
 		const TXString&					GetGdtfFile();
 		const TXString&					GetGdtfDmxMode();
 		SceneDataFocusPointObjPtr		GetFocusPoint();
@@ -645,6 +647,7 @@ namespace SceneData
 		bool							GetCastShadow();
 		SceneDataMappingObjArray		GetMappingsArray();
 		
+		void							SetFunction(const TXString& str);
 		void							SetPosition(SceneDataPositionObjPtr ptr);
 		void							SetFocusPoint(SceneDataFocusPointObjPtr ptr);
 		void							SetGDTFFile(const TXString& path);

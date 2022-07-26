@@ -268,6 +268,9 @@ namespace VectorworksMVR
 		
 		
 		// Fixture
+		virtual MvrString VCOM_CALLTYPE		GetFunction() = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetFunction(MvrString function) = 0;
+
 		virtual MvrString VCOM_CALLTYPE		GetGdtfName() = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetGdtfFixture(IGdtfFixture** outFixture) = 0;
 		virtual MvrString VCOM_CALLTYPE		GetGdtfMode() = 0;
