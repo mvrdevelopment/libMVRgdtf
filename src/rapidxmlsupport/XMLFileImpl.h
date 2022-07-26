@@ -16,6 +16,7 @@ namespace VectorworksMVR
 		// ----------------------------------------------------------------------------------------------------
 		class CXMLFileImpl : public IXMLFile
 		{
+			/*static*/ void Tokenize(const TXString& string, TXStringArray& outArray, const char* szTokens, size_t tokensLen, bool doStopTokenizeForSpecialCh /*= false*/, char stopStartCh /*= '\''*/);
 		public:
 			CXMLFileImpl();
 			virtual			~CXMLFileImpl();

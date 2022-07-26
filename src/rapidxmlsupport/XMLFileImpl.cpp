@@ -17,6 +17,49 @@ CXMLFileImpl::~CXMLFileImpl()
 {
 }
 
+/*static*/ void CXMLFileImpl::Tokenize(const TXString& string, TXStringArray& outArray, const char* szTokens, size_t tokensLen, bool doStopTokenizeForSpecialCh /*= false*/, char stopStartCh /*= '\''*/)
+{
+	outArray.clear();
+
+	TXString	currToken;
+	bool		isTokenizeStopped = false;
+
+	size_t	strLen	= string.GetEncodingLength(ETXEncoding::eUTF8);
+	for(size_t i=0; i<strLen; i++) {
+		UCChar	ch		= string.GetAt( i );
+
+		if ( doStopTokenizeForSpecialCh && ch == stopStartCh )
+		{
+			isTokenizeStopped = !isTokenizeStopped;
+		}
+
+		bool	isToken	= false;
+		if ( !isTokenizeStopped )
+		{
+			for(size_t j=0; j<tokensLen; j++) {
+				if ( szTokens[j] == ch ) {
+					isToken		= true;
+					break;
+				}
+			}
+		}
+
+		if ( isToken ) {
+			outArray.push_back( currToken );
+			currToken.Clear();
+		}
+		else {
+			currToken		+= ch;
+		}
+	}
+
+	// put the last item if any
+	if ( ! currToken.IsEmpty() ) {
+		outArray.push_back( currToken );
+		currToken.Clear();
+	}
+}
+
 VCOMError CXMLFileImpl::CreateNew(const TXString& rootName)
 {
 	auto element =  fDoc.NewElement(rootName);
@@ -80,12 +123,26 @@ VCOMError CXMLFileImpl::SetFeature(EXMLFileFeature feature, bool bValue)
 
 VCOMError CXMLFileImpl::GetSimpleNode(const TXString& nodePath, IXMLFileNode** ppOutNode)
 {
-	return kVCOMError_NoError;
+	TXStringArray	arrNodeNames;
+	this->Tokenize( nodePath, arrNodeNames, "/", 1, true, '\'' );
+	if(arrNodeNames.size() != 1){
+		return kVCOMError_InvalidArg;
+	}
+
+	return CXMLFileNodeImpl::GetInterface(fDoc.RootElement()->FirstChildElement(arrNodeNames[0].GetCharPtr()), ppOutNode);
 }
 
 VCOMError CXMLFileImpl::GetSimpleNode(IXMLFileNode* pRefNode, const TXString& nodePath, IXMLFileNode** ppOutNode)
 {
-	return kVCOMError_NoError;
+	std::cout << nodePath.GetCharPtr() << std::endl;
+	TXStringArray	arrNodeNames;
+	this->Tokenize( nodePath, arrNodeNames, "/", 1, true, '\'' );
+	if(arrNodeNames.size() != 1){
+		return kVCOMError_InvalidArg;
+	}
+	CXMLFileImpl* imp = dynamic_cast<CXMLFileImpl*>(pRefNode);
+	
+	return CXMLFileNodeImpl::GetInterface(imp->fDoc.FirstChildElement(arrNodeNames[0].GetCharPtr()), ppOutNode);
 }
 
 VCOMError CXMLFileImpl::GetSimpleValue(const TXString& nodePath, TXString& outValue)

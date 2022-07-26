@@ -51,7 +51,7 @@ VCOMError CXMLFileNodeImpl::GetNodeName(TXString& outName)
 {
 	if(fElement)
 	{
-		outName = fElement->Name();
+		outName = fElement->Value();
 		return kVCOMError_NoError;
 	}
 	return kVCOMError_NotInitialized;
@@ -61,7 +61,7 @@ VCOMError CXMLFileNodeImpl::GetNodeValue(TXString& outValue)
 {
 	if(fElement)
 	{
-		outValue = fElement->Value();
+		outValue = fElement->GetText();
 		return kVCOMError_NoError;
 	}
 	return kVCOMError_NotInitialized;
@@ -71,7 +71,7 @@ VCOMError CXMLFileNodeImpl::SetNodeValue(const TXString& value)
 {
 	if(fElement)
 	{
-		fElement->SetValue(value);
+		fElement->SetText(value.GetCharPtr());
 		return kVCOMError_NoError;
 	}
 	return kVCOMError_NotInitialized;
@@ -219,6 +219,9 @@ VCOMError CXMLFileNodeImpl::GetPrevSiblingNode(IXMLFileNode** ppOutNode)
 
 VCOMError CXMLFileNodeImpl::FindChildNode(const TXString& nodeName, IXMLFileNode** ppOutNode)
 {
+	if(fElement){
+		return GetInterface(fElement->FirstChildElement(nodeName.GetCharPtr()), ppOutNode);
+	}
 	return kVCOMError_NotInitialized;
 }
 
@@ -277,6 +280,9 @@ void CXMLFileNodeImpl::SetElement(tinyxml2::XMLElement* element)
 
 VCOMError CXMLFileNodeImpl::GetInterface(tinyxml2::XMLElement* element, IXMLFileNode** ppOutNode)
 {
+    if(!element){
+        return kVCOMError_NoObj;
+    }
 	//---------------------------------------------------------------------------
 	// Initialize Object
 	CXMLFileNodeImpl* pDmxVal = nullptr;
