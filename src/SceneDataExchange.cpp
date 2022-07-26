@@ -942,17 +942,122 @@ ESceneDataObjectType SceneDataMappingObj::GetObjectType()
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------------
+// SceneDataCustomCommand
+SceneDataCustomCommand::SceneDataCustomCommand() : SceneDataObj(SceneDataGUID(eNoGuid,""))
+{
+	fChannelFunction	= "";
+	fIsPercentage 		= false;
+	fValue				= 0.0;
+	
+}
+
+SceneDataCustomCommand::SceneDataCustomCommand(const TXString& channelFunction, bool isPercentage, double value) : SceneDataObj(SceneDataGUID(eNoGuid,""))
+{
+	fChannelFunction	= channelFunction;
+	fIsPercentage 		= isPercentage;
+	fValue				= value;	
+}
+
+SceneDataCustomCommand::~SceneDataCustomCommand()
+{
+	
+}
+
+const TXString& SceneDataCustomCommand::GetChannelFunction()
+{
+	return fChannelFunction;
+}
+
+bool SceneDataCustomCommand::IsPercentage()
+{
+	return fIsPercentage;
+}
+
+double SceneDataCustomCommand::GetValue()
+{
+	return fValue;
+}
+
+void SceneDataCustomCommand::SetChannelFunction(const TXString& channelFunction)
+{
+	fChannelFunction = channelFunction;
+}
+
+void SceneDataCustomCommand::SetIsPercentage(bool isPercentage)
+{
+	fIsPercentage = isPercentage;
+}
+
+void SceneDataCustomCommand::SetValue(double value)
+{
+	fValue = value;
+}
+
+void SceneDataCustomCommand::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
+{
+	// Call parent
+	SceneDataObj::OnPrintToFile(pNode, exchange);
+
+	// Set value SetNodeValue	
+	TXString customCommandString = fChannelFunction;
+	customCommandString += fIsPercentage ? "/percent,f " : ",f ";
+	customCommandString += std::to_string(fValue);
+
+	pNode->SetNodeValue(customCommandString);
+}
+
+void SceneDataCustomCommand::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
+{
+	// Call parent
+	SceneDataObj::OnReadFromNode(pNode, exchange);
+
+	TXString customCommandString;
+	pNode->GetNodeValue(customCommandString);
+
+	// Parse the string
+	ptrdiff_t percentP = customCommandString.Find("/percent");
+	
+	fIsPercentage = percentP != -1;
+	if(fIsPercentage)
+	{
+		fChannelFunction = customCommandString.Left(percentP);
+	}
+	else
+	{
+		ptrdiff_t commaP = customCommandString.Find(",");
+		fChannelFunction = customCommandString.Left(commaP);
+	}
+
+	ptrdiff_t spaceP = customCommandString.TrimRight().ReverseFind(" ");
+	TXString valueString = customCommandString.Right(customCommandString.GetLength() - spaceP - 1);
+	fValue = valueString.atof();
+}
+
+TXString SceneDataCustomCommand::GetNodeName()
+{
+	return TXString(XML_Val_CustomCommandNodeName);
+}
+
+ESceneDataObjectType SceneDataCustomCommand::GetObjectType()
+{
+	return ESceneDataObjectType::eCustomCommand;
+}
+
+// ----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataObjWithMatrix
 SceneDataObjWithMatrix::SceneDataObjWithMatrix(const SceneDataGUID& guid) : SceneDataObj(guid)
 {
 	fInContainer			= nullptr;
 	fNextObj				= nullptr;
 	fClass					= nullptr;
+
+	fCustomCommands.clear();
 }
 
 SceneDataObjWithMatrix::~SceneDataObjWithMatrix()
 {
 	for (SceneDataGeoInstanceObjPtr geoObj : fGeometries) { delete geoObj; }
+	for (SceneDataCustomCommandPtr customCommand : fCustomCommands) { delete customCommand; }
 }
 
 void SceneDataObjWithMatrix::GetTransformMatric(VWTransformMatrix& matrix) const
@@ -989,6 +1094,18 @@ void SceneDataObjWithMatrix::AddGeometryObj(SceneDataGeoInstanceObjPtr object)
 {
 	ASSERTN(kEveryone, object != nullptr);
 	if (object) { fGeometries.push_back(object); }
+}
+
+SceneDataCustomCommandPtr SceneDataObjWithMatrix::AddCustomCommand(const TXString& channelFunction, bool isPercentage, double value)
+{
+	SceneDataCustomCommandPtr customCommand = new SceneDataCustomCommand(channelFunction, isPercentage, value);
+	fCustomCommands.push_back(customCommand);
+	return customCommand;
+}
+
+const SceneDataCustomCommandArray& SceneDataObjWithMatrix::GetCustomCommandArray() const
+{
+	return fCustomCommands;
 }
 
 SceneDataGroupObjPtr SceneDataObjWithMatrix::GetContainer() const
@@ -1030,6 +1147,18 @@ void SceneDataObjWithMatrix::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExcha
 		if ( VCOM_SUCCEEDED( pNode->CreateChildNode( XML_Val_GeometriesNodeName, & pGeometriesNode )))
 		{
 			for(SceneDataGeoInstanceObjPtr geoObj : fGeometries) { geoObj->PrintToFile(pGeometriesNode, exchange); }
+		}
+		
+	}
+
+	// ------------------------------------------------------------------------------------------------------------
+	// Print the custom commands
+	if (fCustomCommands.size() > 0)
+	{
+		IXMLFileNodePtr pCustomCommandsNode;
+		if(VCOM_SUCCEEDED( pNode->CreateChildNode(XML_Val_CustomCommandsNodeName, &pCustomCommandsNode)))
+		{
+			for(SceneDataCustomCommandPtr customCommand : fCustomCommands) { customCommand->PrintToFile(pCustomCommandsNode, exchange); }
 		}
 		
 	}
@@ -1124,6 +1253,16 @@ void SceneDataObjWithMatrix::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneD
 			
 		}
 	}
+
+	//--------------------------------------------------------------------------------------------
+	// Read CustomCommands
+	GdtfConverter::TraverseNodes(pNode, XML_Val_CustomCommandsNodeName, XML_Val_CustomCommandNodeName, [this, exchange] (IXMLFileNodePtr pNode) -> void
+								{
+									SceneDataCustomCommandPtr customCommand = new SceneDataCustomCommand();
+									customCommand->ReadFromNode(pNode, exchange);
+									fCustomCommands.push_back(customCommand);
+								}
+								);
 	
 	//------------------------------------------------------------------------------------------------------
 	// Get Class

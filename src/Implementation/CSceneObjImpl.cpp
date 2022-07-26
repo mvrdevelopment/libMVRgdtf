@@ -4,6 +4,7 @@
 #include "Prefix/StdAfx.h"
 #include "CMediaRessourceVectorImpl.h"
 #include "CGeometryReferenceImpl.h"
+#include "CCustomCommandImpl.h"
 
 #include "CGdtfFixture.h"
 #include "Utility.h"
@@ -76,7 +77,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetGeometryCount(size_t
 	ASSERTN(kEveryone,fPtr);
 	if( ! fPtr) return kVCOMError_NotInitialized;
 	
-	// Otherise return data
+	// Otherwise return data
 	outCount = fPtr->GetGeometryArr().size();
 	return kVCOMError_NoError;
 }
@@ -124,7 +125,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetGeometryAt(size_t at
 	}
 	
 	//---------------------------------------------------------------------------
-	// Check Incomming Object
+	// Check Incoming Object
 	if (*outGeometryRef)
 	{
 		(*outGeometryRef)->Release();
@@ -303,6 +304,114 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetClass(IClass* clas)
 	return kVCOMError_NoError;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetCustomCommandCount(size_t& outCount)
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone, fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+	
+	// Otherwise return data
+	outCount = fPtr->GetCustomCommandArray().size();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetCustomCommandAt(size_t at, ICustomCommand** outCustomCommand)
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+	
+	//------------------------------------------------------------------------------------------
+	// Check the position in the array
+	size_t count = fPtr->GetCustomCommandArray().size();
+	
+	
+	ASSERTN(kEveryone, at < count);
+	if (count < at) { return kVCOMError_InvalidArg; }
+	
+	SceneData::SceneDataCustomCommandPtr pScCustomCommand = fPtr->GetCustomCommandArray().at(at);
+	
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CCustomCommandImpl* pCustomCommand = nullptr;
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_CustomCommand, (IVWUnknown**) & pCustomCommand)))
+	{
+		// Check Casting
+		CCustomCommandImpl* pResultInterface = static_cast<CCustomCommandImpl*>(pCustomCommand);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(pScCustomCommand);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incoming Object
+	if (*outCustomCommand)
+	{
+		(*outCustomCommand)->Release();
+		*outCustomCommand		= NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*outCustomCommand = pCustomCommand;
+	
+	return kVCOMError_NoError;
+
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::CreateCustomCommand(MvrString channelFunction, bool isPercentage, double physicalValue, ICustomCommand** outCustomCommand)
+{	
+	ASSERTN(kEveryone, fPtr != nullptr);
+	if ( ! fPtr) { return kVCOMError_Failed; }
+	
+	// ------------------------------------------------------------------------------------------
+	// Add
+
+	SceneData::SceneDataCustomCommandPtr pScCustomCommand = fPtr->AddCustomCommand(channelFunction, isPercentage, physicalValue);
+
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CCustomCommandImpl* pCustomCommand = nullptr;
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_CustomCommand, (IVWUnknown**) & pCustomCommand)))
+	{
+		// Check Casting
+		CCustomCommandImpl* pResultInterface = static_cast<CCustomCommandImpl*>(pCustomCommand);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(pScCustomCommand);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incoming Object
+	if (*outCustomCommand)
+	{
+		(*outCustomCommand)->Release();
+		*outCustomCommand		= NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*outCustomCommand = pCustomCommand;
+	return kVCOMError_NoError;
+}
 
 //------------------------------------------------------------------------------------------------------------------------------------------
 // Fixture

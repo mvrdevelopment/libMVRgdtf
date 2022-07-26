@@ -174,6 +174,10 @@ void MvrUnittest::WriteFile()
 				__checkVCOM(mapping1->SetOy(4));
 				__checkVCOM(mapping1->SetRz(5.6));
 			}
+			//CustomCommands
+			ICustomCommandPtr customCommand1, customCommand2;
+			__checkVCOM(fixture1->CreateCustomCommand("My ChannelFunction 1", false, -1.2, &customCommand1));
+			__checkVCOM(fixture1->CreateCustomCommand("My ChannelFunction 2", true, -3.4, &customCommand1));
 		}
 
 		// And another fixture
@@ -523,6 +527,35 @@ void MvrUnittest::ReadFile()
 						checkifEqual("Check GetOx ", (size_t)ox, 	(size_t)3);
 						checkifEqual("Check GetOy ", (size_t)oy, 	(size_t)4);
 						checkifEqual("Check GetRz ", 		 rz, 			5.6);
+					}
+
+					//CustomCommands
+					size_t customCommandCount;
+					__checkVCOM(sceneObj->GetCustomCommandCount(customCommandCount));
+					checkifEqual("GetCustomCommandCount", customCommandCount, (size_t)2);
+
+					ICustomCommandPtr customCommand1, customCommand2;
+					if(__checkVCOM(sceneObj->GetCustomCommandAt(0, &customCommand1)))
+					{
+						bool isPercentage = false;
+						double value = 0.0;
+						__checkVCOM(customCommand1->IsPercentage(isPercentage));
+						__checkVCOM(customCommand1->GetValue(value));
+
+						checkifEqual("Check GetChannelFunction ", customCommand1->GetChannelFunction(), "My ChannelFunction 1");
+						checkifEqual("Check IsPercentage ", isPercentage, false);
+						checkifEqual("Check GetValue ", value, -1.2);
+					}
+					if(__checkVCOM(sceneObj->GetCustomCommandAt(1, &customCommand2)))
+					{
+						bool isPercentage = false;
+						double value = 0.0;
+						__checkVCOM(customCommand2->IsPercentage(isPercentage));
+						__checkVCOM(customCommand2->GetValue(value));
+
+						checkifEqual("Check GetChannelFunction ", customCommand2->GetChannelFunction(), "My ChannelFunction 2");
+						checkifEqual("Check IsPercentage ", isPercentage, true);
+						checkifEqual("Check GetValue ", value, -3.4);
 					}
 
 					//Linked Fixture

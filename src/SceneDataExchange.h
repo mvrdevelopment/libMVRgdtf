@@ -54,6 +54,8 @@ namespace SceneData
 		eSourceObject				= -6,
 		eMappingDefinitionObject	= -7,
 		eMappingObject				= -8,
+		eCustomCommand				= -9,
+
 	};
 	
 	enum class ESearchUuidIn
@@ -367,6 +369,41 @@ namespace SceneData
 	};
 	typedef SceneDataMappingObj*				SceneDataMappingObjPtr;
 	typedef std::vector<SceneDataMappingObjPtr>	SceneDataMappingObjArray;
+
+	// ----------------------------------------------------------------------------------------------------------------------------------
+	// SceneDataCustomCommand
+	class SceneDataCustomCommand : public SceneDataObj
+	{
+
+	public:
+		SceneDataCustomCommand();
+		SceneDataCustomCommand(const TXString& channelFunction, bool isPercentage, double value);
+		virtual ~SceneDataCustomCommand();
+		
+	private:
+
+		TXString	fChannelFunction;
+		bool		fIsPercentage;
+		double		fValue;
+		
+	public:
+		virtual const TXString&	GetChannelFunction();
+		virtual bool 			IsPercentage();
+		virtual double 			GetValue();
+
+		virtual void 			SetChannelFunction(const TXString& channelFunction);
+		virtual void			SetIsPercentage(bool isPercentage);
+		virtual void 			SetValue(double value);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual ESceneDataObjectType	GetObjectType();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange);
+
+	};
+	typedef SceneDataCustomCommand*				    SceneDataCustomCommandPtr;
+	typedef std::vector<SceneDataCustomCommandPtr>	SceneDataCustomCommandArray;
 	
 	
 	// ----------------------------------------------------------------------------------------------------------------------------------
@@ -391,6 +428,8 @@ namespace SceneData
 		
 		// Geometry stuff
 		SceneDataGeometryObjArray	fGeometries;
+
+		SceneDataCustomCommandArray fCustomCommands;
 		
 		
 	public:
@@ -406,6 +445,9 @@ namespace SceneData
 		
 		void								AddGeometryObj(SceneDataGeoInstanceObjPtr object);
 		const SceneDataGeometryObjArray&	GetGeometryArr() const;
+
+		SceneDataCustomCommandPtr			AddCustomCommand(const TXString& channelFunction, bool isPercentage, double value);
+		const SceneDataCustomCommandArray&	GetCustomCommandArray() const;
 		
 	protected:
 		void						ReadMatrixNodeValue(const IXMLFileNodePtr& pNode, VWPoint3D& inOutPoint);
