@@ -151,6 +151,9 @@
 #define XML_Val_MappingOy	            "oy"
 #define XML_Val_MappingRz	            "rz"
 
+#define XML_Val_CustomCommandsNodeName	"CustomCommands"
+#define XML_Val_CustomCommandNodeName	"CustomCommand"
+
 #define XML_Val_LayerObjectNodeName	"Layer"
 #define XML_Val_FixtureNodeName		"Fixture"
 #define XML_Val_GroupNodeName		"GroupObject"

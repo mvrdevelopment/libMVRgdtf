@@ -31,6 +31,10 @@ namespace VectorworksMVR
 		
 		virtual VCOMError VCOM_CALLTYPE		GetClass(IClass** outClass) ;
 		virtual VCOMError VCOM_CALLTYPE		SetClass(IClass* clas);
+
+		virtual VCOMError VCOM_CALLTYPE		GetCustomCommandCount(size_t& outCount);
+		virtual VCOMError VCOM_CALLTYPE		GetCustomCommandAt(size_t at, ICustomCommand** outCustomCommand);
+		virtual VCOMError VCOM_CALLTYPE		CreateCustomCommand(MvrString channelFunction, bool isPercentage, double physicalValue, ICustomCommand** outCustomCommand);
 		
 		
 		// Fixture
