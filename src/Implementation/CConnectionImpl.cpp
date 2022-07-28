@@ -15,7 +15,6 @@ VectorworksMVR::CConnectionImpl::CConnectionImpl()
 
 VectorworksMVR::CConnectionImpl::~CConnectionImpl()
 {
-	fPtr = nullptr;
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CConnectionImpl::GetToObject(MvrUUID& objUUID)

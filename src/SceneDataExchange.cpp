@@ -944,23 +944,24 @@ ESceneDataObjectType SceneDataMappingObj::GetObjectType()
 // ----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataConnectionObj
 	
-SceneDataConnectionObj::SceneDataConnectionObj() : SceneDataObj(SceneDataGUID(eNoGuid,"")), fToObject(SceneDataGUID(eNoGuid,"")){
+SceneDataConnectionObj::SceneDataConnectionObj() : SceneDataObj(SceneDataGUID(eNoGuid,"")), fToObject(SceneDataGUID(eNoGuid,""))
+{
 }
 
-SceneDataConnectionObj::SceneDataConnectionObj(const TXString& own, const TXString& other, const TXString& toObject) : SceneDataObj(SceneDataGUID(eNoGuid,"")), fOwn(own), fOther(other), fToObject(toObject){
-
+SceneDataConnectionObj::SceneDataConnectionObj(const TXString& own, const TXString& other, const TXString& toObject) : SceneDataObj(SceneDataGUID(eNoGuid,"")), fOwn(own), fOther(other), fToObject(toObject)
+{
 }
 
-SceneDataConnectionObj::SceneDataConnectionObj(const TXString& own, const TXString& other, const SceneDataGUID& toObject) : SceneDataObj(SceneDataGUID(eNoGuid,"")), fOwn(own), fOther(other), fToObject(toObject){
-
+SceneDataConnectionObj::SceneDataConnectionObj(const TXString& own, const TXString& other, const SceneDataGUID& toObject) : SceneDataObj(SceneDataGUID(eNoGuid,"")), fOwn(own), fOther(other), fToObject(toObject)
+{
 }
 
 SceneDataConnectionObj::~SceneDataConnectionObj()
-{
-	
+{	
 }
 
-SceneDataGUID& SceneDataConnectionObj::GetToObject(){
+SceneDataGUID& SceneDataConnectionObj::GetToObject()
+{
 	return fToObject;
 }
 
