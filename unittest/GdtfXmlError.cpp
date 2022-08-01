@@ -43,16 +43,23 @@ void GdtfXmlErrorTest::ReadDamagedFile()
 
 	size_t countErrors = 0;
 	__checkVCOM(gdtfRead->GetParsingErrorCount(countErrors));
+#ifdef DONT_USE_XERCES_AS_XMLLIB
 	checkifEqual("Count Errors", countErrors, (size_t)2);
-
+#else
+	checkifEqual("Count Errors", countErrors, (size_t)1);
+#endif
 	for(size_t i = 0; i < countErrors; i++)
 	{
 		IGdtfXmlParsingErrorPtr error;
 		__checkVCOM(gdtfRead->GetParsingErrorAt(i, & error));
 
-		if(i == 0) { ReadError(error, 27, 7, GdtfDefines::EGdtfParsingError::eXmlParsingError); }
+#ifdef DONT_USE_XERCES_AS_XMLLIB
+		if(i == 0) { ReadError(error, 26, 0, GdtfDefines::EGdtfParsingError::eXmlParsingError); }
 		if(i == 1) { ReadError(error, 4, 268, GdtfDefines::EGdtfParsingError::eNodeMissingMandatoryAttribute); }
-
+#else
+		if(i == 0) { ReadError(error, 27, 7, GdtfDefines::EGdtfParsingError::eXmlParsingError); }
+		//tinyxml does not open the file, if an error occured
+#endif
 	}
 	
 }

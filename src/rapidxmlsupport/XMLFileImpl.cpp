@@ -4,9 +4,13 @@
 #include "Prefix/StdAfx.h"
 #include "XMLFileImpl.h"
 #include "XMLFileNodeImpl.h"
+#include "GdtfError.h"
+#include "../GDTFManager.h"
 
 using namespace VectorworksMVR::Filing;
 using namespace VectorworksMVR::XML;
+using namespace VectorworksMVR::VWFC::Tools;
+
 
 // ----------------------------------------------------------------------------------------------------
 CXMLFileImpl::CXMLFileImpl()
@@ -87,6 +91,11 @@ VCOMError CXMLFileImpl::ReadBuffer(IXMLFileIOBuffer* pInputBuffer, EXMLEncoding 
 	buffer[length] = 0;
 	fDoc.Parse(buffer);
     delete[] buffer;
+	if(fDoc.Error()){
+		GdtfParsingError error (EGdtfParsingError::eXmlParsingError, fDoc.ErrorLineNum(), 0);
+		SceneData::GdtfFixture::AddError(error);
+		return kVCOMError_XMLFile_Parser;
+	}
 	return kVCOMError_NoError;
 }
 

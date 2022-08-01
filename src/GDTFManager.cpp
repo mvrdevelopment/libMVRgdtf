@@ -7602,7 +7602,7 @@ bool GdtfFixture::ImportFromZip(IZIPFilePtr& zipfile)
 		xmlBuffer.SetData(data, size);
 		
 		// Housekeeping
-		//std::free(data);
+		std::free(data);
 		
 		if (VCOM_SUCCEEDED(xmlFile->ReadBuffer( &xmlBuffer, EXMLEncoding::eXMLEncoding_UTF8)))
 		{
