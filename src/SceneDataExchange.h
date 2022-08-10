@@ -55,6 +55,7 @@ namespace SceneData
 		eMappingDefinitionObject	= -7,
 		eMappingObject				= -8,
 		eCustomCommand				= -9,
+		eAlignment					= -11,
 
 	};
 	
@@ -404,6 +405,41 @@ namespace SceneData
 	};
 	typedef SceneDataCustomCommand*				    SceneDataCustomCommandPtr;
 	typedef std::vector<SceneDataCustomCommandPtr>	SceneDataCustomCommandArray;
+
+	// ----------------------------------------------------------------------------------------------------------------------------------
+	// SceneDataAlignment
+	class SceneDataAlignment : public SceneDataObj
+	{
+
+	public:
+		SceneDataAlignment();
+		SceneDataAlignment(const TXString& beamGeometry, const VWPoint3D& upVector, const VWPoint3D& direction);
+		virtual ~SceneDataAlignment();
+		
+	private:
+
+		TXString	fBeamGeometry;
+		VWPoint3D	fUpVector;
+		VWPoint3D	fDirection;
+		
+	public:
+		virtual const TXString&		GetBeamGeometry();
+		virtual const VWPoint3D&	GetUpVector();
+		virtual const VWPoint3D&	GetDirection();
+
+		virtual void 			SetBeamGeometry(const TXString& beamGeometry);
+		virtual void			SetUpVector(double x, double y, double z);
+		virtual void 			SetDirection(double x, double y, double z);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual ESceneDataObjectType	GetObjectType();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange);
+
+	};
+	typedef SceneDataAlignment*				    SceneDataAlignmentPtr;
+	typedef std::vector<SceneDataAlignmentPtr>	SceneDataAlignmentArray;
 	
 	
 	// ----------------------------------------------------------------------------------------------------------------------------------

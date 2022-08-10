@@ -998,7 +998,7 @@ void SceneDataCustomCommand::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExcha
 	// Call parent
 	SceneDataObj::OnPrintToFile(pNode, exchange);
 
-	// Set value SetNodeValue	
+	// Set value	
 	TXString customCommandString = fChannelFunction;
 	customCommandString += fIsPercentage ? "/percent,f " : ",f ";
 	customCommandString += std::to_string(fValue);
@@ -1041,6 +1041,89 @@ TXString SceneDataCustomCommand::GetNodeName()
 ESceneDataObjectType SceneDataCustomCommand::GetObjectType()
 {
 	return ESceneDataObjectType::eCustomCommand;
+}
+
+// ----------------------------------------------------------------------------------------------------------------------------------
+// SceneDataAlignment
+SceneDataAlignment::SceneDataAlignment() : SceneDataObj(SceneDataGUID(eNoGuid,""))
+{
+	fBeamGeometry	= "";
+	fUpVector 		= VWPoint3D();
+	fDirection		= VWPoint3D();
+	
+}
+
+SceneDataAlignment::SceneDataAlignment(const TXString& beamGeometry, const VWPoint3D& upVector, const VWPoint3D& direction) : SceneDataObj(SceneDataGUID(eNoGuid,""))
+{
+	fBeamGeometry	= beamGeometry;
+	fUpVector 		= upVector;
+	fDirection		= direction;	
+}
+
+SceneDataAlignment::~SceneDataAlignment()
+{
+	
+}
+
+const TXString& SceneDataAlignment::GetBeamGeometry()
+{
+	return fBeamGeometry;
+}
+
+const VWPoint3D& SceneDataAlignment::GetUpVector()
+{
+	return fUpVector;
+}
+
+const VWPoint3D& SceneDataAlignment::GetDirection()
+{
+	return fDirection;
+}
+
+void SceneDataAlignment::SetBeamGeometry(const TXString& beamGeometry)
+{
+	fBeamGeometry = beamGeometry;
+}
+
+void SceneDataAlignment::SetUpVector(double x, double y, double z)
+{
+	fUpVector.SetPoint(x, y, z);
+}
+
+void SceneDataAlignment::SetDirection(double x, double y, double z)
+{
+	fDirection.SetPoint(x, y, z);
+}
+
+void SceneDataAlignment::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
+{
+	// Call parent
+	SceneDataObj::OnPrintToFile(pNode, exchange);
+
+	// Set value
+	pNode->SetNodeAttributeValue(XML_Val_AlignmentBeamGeometry,	fBeamGeometry);
+	pNode->SetNodeAttributeValue(XML_Val_AlignmentUpVector,		GdtfConverter::ConvertVector3(fUpVector));
+	pNode->SetNodeAttributeValue(XML_Val_AlignmentDirection,	GdtfConverter::ConvertVector3(fDirection));
+}
+
+void SceneDataAlignment::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
+{
+	// Call parent
+	SceneDataObj::OnReadFromNode(pNode, exchange);
+
+						pNode->GetNodeAttributeValue(XML_Val_AlignmentBeamGeometry, fBeamGeometry);
+	TXString upVector;	pNode->GetNodeAttributeValue(XML_Val_AlignmentUpVector, upVector);		GdtfConverter::ConvertVector3(upVector, pNode, fUpVector);
+	TXString direction;	pNode->GetNodeAttributeValue(XML_Val_AlignmentDirection, direction);	GdtfConverter::ConvertVector3(direction, pNode, fDirection);
+}
+
+TXString SceneDataAlignment::GetNodeName()
+{
+	return TXString(XML_Val_AlignmentNodeName);
+}
+
+ESceneDataObjectType SceneDataAlignment::GetObjectType()
+{
+	return ESceneDataObjectType::eAlignment;
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------------

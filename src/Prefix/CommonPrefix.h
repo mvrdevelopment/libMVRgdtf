@@ -154,6 +154,12 @@
 #define XML_Val_CustomCommandsNodeName	"CustomCommands"
 #define XML_Val_CustomCommandNodeName	"CustomCommand"
 
+#define XML_Val_AlignmentsNodeName	    "Alignments"
+#define XML_Val_AlignmentNodeName	    "Alignment"
+#define XML_Val_AlignmentBeamGeometry   "geometry"
+#define XML_Val_AlignmentUpVector       "up"
+#define XML_Val_AlignmentDirection      "direction"
+
 #define XML_Val_LayerObjectNodeName	"Layer"
 #define XML_Val_FixtureNodeName		"Fixture"
 #define XML_Val_GroupNodeName		"GroupObject"
