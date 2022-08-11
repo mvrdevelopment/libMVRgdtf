@@ -5,6 +5,7 @@
 #include "CMediaRessourceVectorImpl.h"
 #include "CGeometryReferenceImpl.h"
 #include "CCustomCommandImpl.h"
+#include "CAlignmentImpl.h"
 
 #include "CGdtfFixture.h"
 #include "Utility.h"
@@ -411,6 +412,119 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::CreateCustomCommand(Mvr
 	// Set Out Value
 	*outCustomCommand = pCustomCommand;
 	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetAlignmentCount(size_t& outCount)
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone, fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+	
+	// Otherwise return data
+	outCount = fPtr->GetAlignmentArray().size();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetAlignmentAt(size_t at, IAlignment** outAlignment)
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone, fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+	
+	//------------------------------------------------------------------------------------------
+	// Check the position in the array
+	size_t count = fPtr->GetAlignmentArray().size();
+	
+	
+	ASSERTN(kEveryone, at < count);
+	if (count < at) { return kVCOMError_InvalidArg; }
+	
+	SceneData::SceneDataAlignmentPtr pScAlignment = fPtr->GetAlignmentArray().at(at);
+	
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CAlignmentImpl* pAlignment = nullptr;
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_Alignment, (IVWUnknown**) & pAlignment)))
+	{
+		// Check Casting
+		CAlignmentImpl* pResultInterface = static_cast<CAlignmentImpl*>(pAlignment);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(pScAlignment);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incoming Object
+	if (*outAlignment)
+	{
+		(*outAlignment)->Release();
+		*outAlignment		= NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*outAlignment = pAlignment;
+	
+	return kVCOMError_NoError;
+
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::CreateAlignment(MvrString beamGeometry, const SVector3& upVector, const SVector3& direction, IAlignment** outAlignment)
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone, fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+	
+	//------------------------------------------------------------------------------------------
+	// Add
+	VWPoint3D upV = VWPoint3D(upVector.x, upVector.y, upVector.z);
+	VWPoint3D directionV = VWPoint3D(direction.x, direction.y, direction.z);
+	SceneData::SceneDataAlignmentPtr pScAlignment = fPtr->AddAlignment(beamGeometry, upV, directionV);
+	
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CAlignmentImpl* pAlignment = nullptr;
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_Alignment, (IVWUnknown**) & pAlignment)))
+	{
+		// Check Casting
+		CAlignmentImpl* pResultInterface = static_cast<CAlignmentImpl*>(pAlignment);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(pScAlignment);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incoming Object
+	if (*outAlignment)
+	{
+		(*outAlignment)->Release();
+		*outAlignment		= NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*outAlignment = pAlignment;
+	
+	return kVCOMError_NoError;
+
 }
 
 //------------------------------------------------------------------------------------------------------------------------------------------

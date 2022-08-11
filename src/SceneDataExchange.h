@@ -466,6 +466,7 @@ namespace SceneData
 		SceneDataGeometryObjArray	fGeometries;
 
 		SceneDataCustomCommandArray fCustomCommands;
+		SceneDataAlignmentArray 	fAlignments;
 		
 		
 	public:
@@ -484,6 +485,9 @@ namespace SceneData
 
 		SceneDataCustomCommandPtr			AddCustomCommand(const TXString& channelFunction, bool isPercentage, double value);
 		const SceneDataCustomCommandArray&	GetCustomCommandArray() const;
+
+		SceneDataAlignmentPtr			AddAlignment(const TXString& beamGeometry, const VWPoint3D& upVector, const VWPoint3D& direction);
+		const SceneDataAlignmentArray&	GetAlignmentArray() const;
 		
 	protected:
 		void						ReadMatrixNodeValue(const IXMLFileNodePtr& pNode, VWPoint3D& inOutPoint);

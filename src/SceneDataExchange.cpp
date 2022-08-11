@@ -1135,12 +1135,14 @@ SceneDataObjWithMatrix::SceneDataObjWithMatrix(const SceneDataGUID& guid) : Scen
 	fClass					= nullptr;
 
 	fCustomCommands.clear();
+	fAlignments.clear();
 }
 
 SceneDataObjWithMatrix::~SceneDataObjWithMatrix()
 {
 	for (SceneDataGeoInstanceObjPtr geoObj : fGeometries) { delete geoObj; }
 	for (SceneDataCustomCommandPtr customCommand : fCustomCommands) { delete customCommand; }
+	for (SceneDataAlignmentPtr alignment : fAlignments) { delete alignment; }
 }
 
 void SceneDataObjWithMatrix::GetTransformMatric(VWTransformMatrix& matrix) const
@@ -1189,6 +1191,18 @@ SceneDataCustomCommandPtr SceneDataObjWithMatrix::AddCustomCommand(const TXStrin
 const SceneDataCustomCommandArray& SceneDataObjWithMatrix::GetCustomCommandArray() const
 {
 	return fCustomCommands;
+}
+
+SceneDataAlignmentPtr SceneDataObjWithMatrix::AddAlignment(const TXString& beamGeometry, const VWPoint3D& upVector, const VWPoint3D& direction)
+{
+	SceneDataAlignmentPtr alignment = new SceneDataAlignment(beamGeometry, upVector, direction);
+	fAlignments.push_back(alignment);
+	return alignment;
+}
+
+const SceneDataAlignmentArray& SceneDataObjWithMatrix::GetAlignmentArray() const
+{
+	return fAlignments;
 }
 
 SceneDataGroupObjPtr SceneDataObjWithMatrix::GetContainer() const
@@ -1242,6 +1256,18 @@ void SceneDataObjWithMatrix::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExcha
 		if(VCOM_SUCCEEDED( pNode->CreateChildNode(XML_Val_CustomCommandsNodeName, &pCustomCommandsNode)))
 		{
 			for(SceneDataCustomCommandPtr customCommand : fCustomCommands) { customCommand->PrintToFile(pCustomCommandsNode, exchange); }
+		}
+		
+	}
+
+	// ------------------------------------------------------------------------------------------------------------
+	// Print the alignments
+	if (fAlignments.size() > 0)
+	{
+		IXMLFileNodePtr pAlignmentsNode;
+		if(VCOM_SUCCEEDED( pNode->CreateChildNode(XML_Val_AlignmentsNodeName, &pAlignmentsNode)))
+		{
+			for(SceneDataAlignmentPtr alignment : fAlignments) { alignment->PrintToFile(pAlignmentsNode, exchange); }
 		}
 		
 	}
@@ -1344,6 +1370,16 @@ void SceneDataObjWithMatrix::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneD
 									SceneDataCustomCommandPtr customCommand = new SceneDataCustomCommand();
 									customCommand->ReadFromNode(pNode, exchange);
 									fCustomCommands.push_back(customCommand);
+								}
+								);
+
+	//--------------------------------------------------------------------------------------------
+	// Read Alignments
+	GdtfConverter::TraverseNodes(pNode, XML_Val_AlignmentsNodeName, XML_Val_AlignmentNodeName, [this, exchange] (IXMLFileNodePtr pNode) -> void
+								{
+									SceneDataAlignmentPtr alignment = new SceneDataAlignment();
+									alignment->ReadFromNode(pNode, exchange);
+									fAlignments.push_back(alignment);
 								}
 								);
 	

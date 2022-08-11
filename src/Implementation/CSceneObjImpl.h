@@ -35,6 +35,10 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetCustomCommandCount(size_t& outCount);
 		virtual VCOMError VCOM_CALLTYPE		GetCustomCommandAt(size_t at, ICustomCommand** outCustomCommand);
 		virtual VCOMError VCOM_CALLTYPE		CreateCustomCommand(MvrString channelFunction, bool isPercentage, double physicalValue, ICustomCommand** outCustomCommand);
+
+		virtual VCOMError VCOM_CALLTYPE		GetAlignmentCount(size_t& outCount);
+		virtual VCOMError VCOM_CALLTYPE		GetAlignmentAt(size_t at, IAlignment** outAlignment);
+		virtual VCOMError VCOM_CALLTYPE		CreateAlignment(MvrString beamGeometry, const SVector3& upVector, const SVector3& direction, IAlignment** outAlignment);
 		
 		
 		// Fixture
