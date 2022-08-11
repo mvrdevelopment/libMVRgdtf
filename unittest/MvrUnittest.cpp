@@ -176,10 +176,17 @@ void MvrUnittest::WriteFile()
 			}
 
 			fixture1->SetFunction("TestFunction");
+			
 			//CustomCommands
 			ICustomCommandPtr customCommand1, customCommand2;
 			__checkVCOM(fixture1->CreateCustomCommand("My ChannelFunction 1", false, -1.2, &customCommand1));
-			__checkVCOM(fixture1->CreateCustomCommand("My ChannelFunction 2", true, -3.4, &customCommand1));
+			__checkVCOM(fixture1->CreateCustomCommand("My ChannelFunction 1", false, -1.2, &customCommand2));
+
+			__checkVCOM(customCommand2->SetChannelFunction("My ChannelFunction 2"));
+			__checkVCOM(customCommand2->SetIsPercentage(true));
+			__checkVCOM(customCommand2->SetValue(-3.4));
+			
+
 		}
 
 		// And another fixture
