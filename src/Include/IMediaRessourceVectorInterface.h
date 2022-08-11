@@ -233,6 +233,21 @@ namespace VectorworksMVR
 		
 	};
 	typedef VCOMPtr<ICustomCommand>	ICustomCommandPtr;
+
+	//-------------------------------------------------------------------------------------------------------------
+	class DYNAMIC_ATTRIBUTE IAlignment : public IVWUnknown
+	{
+	public:
+		virtual MvrString VCOM_CALLTYPE		GetBeamGeometry() = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetUpVector(SVector3& upVector) = 0;
+		virtual VCOMError VCOM_CALLTYPE	    GetDirection(SVector3& direction) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE		SetBeamGeometry(const MvrString& beamGeometry) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetUpVector(double x, double y, double z) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetDirection(double x, double y, double z) = 0;
+		
+	};
+	typedef VCOMPtr<IAlignment>	IAlignmentPtr;
 	
 	//-------------------------------------------------------------------------------------------------------------
 	enum class ESceneObjType
