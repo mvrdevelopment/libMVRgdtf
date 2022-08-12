@@ -157,6 +157,9 @@
 #define XML_Val_ConnectionOther         "other"
 #define XML_Val_ConnectionToObject      "toObject"
 
+#define XML_Val_CustomCommandsNodeName	"CustomCommands"
+#define XML_Val_CustomCommandNodeName	"CustomCommand"
+
 #define XML_Val_LayerObjectNodeName	"Layer"
 #define XML_Val_FixtureNodeName		"Fixture"
 #define XML_Val_GroupNodeName		"GroupObject"
@@ -188,6 +191,7 @@
 #define XML_Val_FixtureTypeId		"FixtureTypeId"
 #define XML_Val_FixtureCustomid		"CustomId"
 #define XML_Val_FixtureGobo		    "Gobo"
+#define XML_Val_FixtureFunction	    "Function"
 #define XML_Val_FixtureGoboRotation "rotation"
 #define XML_Val_FixtureCastShadow   "CastShadow"
 #define XML_Val_FixtureMappings     "Mappings"

@@ -1013,14 +1013,105 @@ void SceneDataConnectionObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneD
 	fToObject = SceneDataGUID(nUUID);
 }
 
-TXString SceneDataConnectionObj::GetNodeName()
+// SceneDataCustomCommand
+SceneDataCustomCommand::SceneDataCustomCommand() : SceneDataObj(SceneDataGUID(eNoGuid,""))
 {
-	return TXString(XML_Val_ConnectionNodeName);
+	fChannelFunction	= "";
+	fIsPercentage 		= false;
+	fValue				= 0.0;
+	
 }
 
-ESceneDataObjectType SceneDataConnectionObj::GetObjectType()
+SceneDataCustomCommand::SceneDataCustomCommand(const TXString& channelFunction, bool isPercentage, double value) : SceneDataObj(SceneDataGUID(eNoGuid,""))
 {
-	return ESceneDataObjectType::eConnectionObject;
+	fChannelFunction	= channelFunction;
+	fIsPercentage 		= isPercentage;
+	fValue				= value;	
+}
+
+SceneDataCustomCommand::~SceneDataCustomCommand()
+{
+	
+}
+
+const TXString& SceneDataCustomCommand::GetChannelFunction()
+{
+	return fChannelFunction;
+}
+
+bool SceneDataCustomCommand::IsPercentage()
+{
+	return fIsPercentage;
+}
+
+double SceneDataCustomCommand::GetValue()
+{
+	return fValue;
+}
+
+void SceneDataCustomCommand::SetChannelFunction(const TXString& channelFunction)
+{
+	fChannelFunction = channelFunction;
+}
+
+void SceneDataCustomCommand::SetIsPercentage(bool isPercentage)
+{
+	fIsPercentage = isPercentage;
+}
+
+void SceneDataCustomCommand::SetValue(double value)
+{
+	fValue = value;
+}
+
+void SceneDataCustomCommand::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
+{
+	// Call parent
+	SceneDataObj::OnPrintToFile(pNode, exchange);
+
+	// Set value SetNodeValue	
+	TXString customCommandString = fChannelFunction;
+	customCommandString += fIsPercentage ? "/percent,f " : ",f ";
+	customCommandString += std::to_string(fValue);
+
+	pNode->SetNodeValue(customCommandString);
+}
+
+void SceneDataCustomCommand::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
+{
+	// Call parent
+	SceneDataObj::OnReadFromNode(pNode, exchange);
+
+	TXString customCommandString;
+	pNode->GetNodeValue(customCommandString);
+
+	// Parse the string
+	ptrdiff_t percentP = customCommandString.Find("/percent");
+	
+	fIsPercentage = percentP != -1;
+	if(fIsPercentage)
+	{
+		fChannelFunction = customCommandString.Left(percentP);
+	}
+	else
+	{
+		ptrdiff_t commaP = customCommandString.Find(",");
+		fChannelFunction = customCommandString.Left(commaP);
+	}
+
+	ptrdiff_t spaceP = customCommandString.TrimRight().ReverseFind(" ");
+	TXString valueString = customCommandString.Right(customCommandString.GetLength() - spaceP - 1);
+	fValue = valueString.atof();
+}
+
+TXString SceneDataCustomCommand::GetNodeName()
+{
+	return TXString(XML_Val_CustomCommandNodeName);
+}
+
+ESceneDataObjectType SceneDataCustomCommand::GetObjectType()
+{
+	return ESceneDataObjectType::eCustomCommand;
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------------
@@ -1030,11 +1121,14 @@ SceneDataObjWithMatrix::SceneDataObjWithMatrix(const SceneDataGUID& guid) : Scen
 	fInContainer			= nullptr;
 	fNextObj				= nullptr;
 	fClass					= nullptr;
+
+	fCustomCommands.clear();
 }
 
 SceneDataObjWithMatrix::~SceneDataObjWithMatrix()
 {
 	for (SceneDataGeoInstanceObjPtr geoObj : fGeometries) { delete geoObj; }
+	for (SceneDataCustomCommandPtr customCommand : fCustomCommands) { delete customCommand; }
 }
 
 void SceneDataObjWithMatrix::GetTransformMatric(VWTransformMatrix& matrix) const
@@ -1086,6 +1180,18 @@ SceneDataConnectionObjPtr SceneDataObjWithMatrix::AddConnectionObj(const TXStrin
 }
 
 
+SceneDataCustomCommandPtr SceneDataObjWithMatrix::AddCustomCommand(const TXString& channelFunction, bool isPercentage, double value)
+{
+	SceneDataCustomCommandPtr customCommand = new SceneDataCustomCommand(channelFunction, isPercentage, value);
+	fCustomCommands.push_back(customCommand);
+	return customCommand;
+}
+
+const SceneDataCustomCommandArray& SceneDataObjWithMatrix::GetCustomCommandArray() const
+{
+	return fCustomCommands;
+}
+
 SceneDataGroupObjPtr SceneDataObjWithMatrix::GetContainer() const
 {
 	return fInContainer;
@@ -1125,6 +1231,18 @@ void SceneDataObjWithMatrix::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExcha
 		if ( VCOM_SUCCEEDED( pNode->CreateChildNode( XML_Val_GeometriesNodeName, & pGeometriesNode )))
 		{
 			for(SceneDataGeoInstanceObjPtr geoObj : fGeometries) { geoObj->PrintToFile(pGeometriesNode, exchange); }
+		}
+		
+	}
+
+	// ------------------------------------------------------------------------------------------------------------
+	// Print the custom commands
+	if (fCustomCommands.size() > 0)
+	{
+		IXMLFileNodePtr pCustomCommandsNode;
+		if(VCOM_SUCCEEDED( pNode->CreateChildNode(XML_Val_CustomCommandsNodeName, &pCustomCommandsNode)))
+		{
+			for(SceneDataCustomCommandPtr customCommand : fCustomCommands) { customCommand->PrintToFile(pCustomCommandsNode, exchange); }
 		}
 		
 	}
@@ -1229,6 +1347,16 @@ void SceneDataObjWithMatrix::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneD
 
 
 	}
+
+	//--------------------------------------------------------------------------------------------
+	// Read CustomCommands
+	GdtfConverter::TraverseNodes(pNode, XML_Val_CustomCommandsNodeName, XML_Val_CustomCommandNodeName, [this, exchange] (IXMLFileNodePtr pNode) -> void
+								{
+									SceneDataCustomCommandPtr customCommand = new SceneDataCustomCommand();
+									customCommand->ReadFromNode(pNode, exchange);
+									fCustomCommands.push_back(customCommand);
+								}
+								);
 	
 
 	GdtfConverter::TraverseNodes(pNode, XML_Val_ConnectionsNodeName, XML_Val_ConnectionNodeName, [this, exchange] (IXMLFileNodePtr pNode) -> void
@@ -1432,6 +1560,16 @@ SceneDataPositionObjPtr SceneDataFixtureObj::GetPosition()
 const TXString& SceneDataFixtureObj::GetFixtureId()
 {
 	return fFixtureId;
+}
+
+void SceneDataFixtureObj::SetFunction(const TXString& function)
+{
+	fFunction = function;
+}
+
+const TXString& SceneDataFixtureObj::GetFunction()
+{
+	return fFunction;
 }
 
 Sint32 SceneDataFixtureObj::GetUnitNumber()
@@ -1709,6 +1847,15 @@ void SceneDataFixtureObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange
 	}
 
 	//--------------------------------------------------------------------------------------------
+	// Print Fixture
+	IXMLFileNodePtr pFixtureNode;
+	if ( (! fFunction.IsEmpty()) && VCOM_SUCCEEDED( pNode->CreateChildNode( XML_Val_FixtureFunction, & pFixtureNode ) ) )
+	{
+		pFixtureNode->SetNodeValue(fFunction);
+	}
+
+
+	//--------------------------------------------------------------------------------------------
 	// Print the CastShadow
 	IXMLFileNodePtr pCastShadowNode;
 	if ( VCOM_SUCCEEDED( pNode->CreateChildNode( XML_Val_FixtureCastShadow, & pCastShadowNode ) ) )
@@ -1822,6 +1969,15 @@ void SceneDataFixtureObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneData
 
 		GdtfConverter::ConvertDouble(rotationStr, pGoboNode, fGoboRotation);
 	}
+
+	//--------------------------------------------------------------------------------------------
+	// Read Gobo
+	IXMLFileNodePtr pFunctionNode;
+	if ( VCOM_SUCCEEDED( pNode->GetChildNode( XML_Val_FixtureFunction, & pFunctionNode ) ) )
+	{
+		pFunctionNode->GetNodeValue(fFunction);
+	}
+
 
 	//--------------------------------------------------------------------------------------------
 	// Read the CastShadow
@@ -2835,6 +2991,16 @@ bool SceneDataExchange::WriteToFile(const IFileIdentifierPtr& file)
 		SceneDataZip::AddFileToZip(zipfile, fSVG_FilesToAdd.at(i), ERessourceType::ModelSVG, false/*Delete*/);
 	}
 
+	for (size_t i = 0; i < fSVGSide_FilesToAdd.size(); i++)
+	{        
+		SceneDataZip::AddFileToZip(zipfile, fSVGSide_FilesToAdd.at(i), ERessourceType::ModelSVGSide, false/*Delete*/);
+	}
+
+	for (size_t i = 0; i < fSVGFront_FilesToAdd.size(); i++)
+	{        
+		SceneDataZip::AddFileToZip(zipfile, fSVGFront_FilesToAdd.at(i), ERessourceType::ModelSVGFront, false/*Delete*/);
+	}
+
 	for (size_t i = 0; i < fGLTF_FilesToAdd.size(); i++)
 	{        
 		SceneDataZip::AddFileToZip(zipfile, fGLTF_FilesToAdd.at(i),  ERessourceType::ModelGLTF, false/*Delete*/);
@@ -3424,6 +3590,8 @@ void SceneDataExchange::AddFileToZip(const IFileIdentifierPtr& file, ERessourceT
 		case ERessourceType::Model3DSLow: 		f3DSLow_FilesToAdd.push_back(file); return;
 		case ERessourceType::Model3DSHigh: 		f3DSHigh_FilesToAdd.push_back(file); return;
 		case ERessourceType::ModelSVG: 			fSVG_FilesToAdd.push_back(file); return;
+		case ERessourceType::ModelSVGSide: 		fSVGSide_FilesToAdd.push_back(file); return;
+		case ERessourceType::ModelSVGFront: 	fSVGFront_FilesToAdd.push_back(file); return;
 		case ERessourceType::ModelGLTF: 		fGLTF_FilesToAdd.push_back(file); return;
 		case ERessourceType::ModelGLTFLow: 		fGLTFLow_FilesToAdd.push_back(file); return;
 		case ERessourceType::ModelGLTFHigh: 	fGLTFHigh_FilesToAdd.push_back(file); return;

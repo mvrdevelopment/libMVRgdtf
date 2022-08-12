@@ -1722,6 +1722,54 @@ const TXString & SceneData::GdtfModel::GetGeometryFile_SVG_FullPath()
 	return fFullPathSVG;
 }
 
+const TXString & SceneData::GdtfModel::GetGeometryFile_SVGSide_FullPath()
+{
+	// Set to store
+	fFullPathSVG = "";
+	// Set to store
+	IFolderIdentifierPtr folder (IID_FolderIdentifier);
+	fParentFixture->GetWorkingFolder(folder);
+
+	IFolderIdentifierPtr svgModelsFolder (IID_FolderIdentifier);
+	svgModelsFolder->Set(folder, "modelssvg_side");
+
+	IFileIdentifierPtr file (IID_FileIdentifier);
+	file->Set(svgModelsFolder, fGeometryFile + ".svg");
+
+
+	bool fileExists = false;
+	if(VCOM_SUCCEEDED(file->ExistsOnDisk(fileExists)) && fileExists)
+	{
+		file->GetFileFullPath(fFullPathSVG);
+	}
+	
+	return fFullPathSVG;
+}
+
+const TXString & SceneData::GdtfModel::GetGeometryFile_SVGFront_FullPath()
+{
+	// Set to store
+	fFullPathSVG = "";
+	// Set to store
+	IFolderIdentifierPtr folder (IID_FolderIdentifier);
+	fParentFixture->GetWorkingFolder(folder);
+
+	IFolderIdentifierPtr svgModelsFolder (IID_FolderIdentifier);
+	svgModelsFolder->Set(folder, "modelssvg_front");
+
+	IFileIdentifierPtr file (IID_FileIdentifier);
+	file->Set(svgModelsFolder, fGeometryFile + ".svg");
+
+
+	bool fileExists = false;
+	if(VCOM_SUCCEEDED(file->ExistsOnDisk(fileExists)) && fileExists)
+	{
+		file->GetFileFullPath(fFullPathSVG);
+	}
+	
+	return fFullPathSVG;
+}
+
 const TXString & SceneData::GdtfModel::GetGeometryFile_GLTF_FullPath()
 {
 	// Set to store
@@ -3789,7 +3837,10 @@ void GdtfGeometryStructure::OnPrintToFile(IXMLFileNodePtr pNode)
 	// Call the parent
 	GdtfGeometry::OnPrintToFile(pNode);
 
-	pNode->SetNodeAttributeValue(XML_GDTF_StructureLinkedGeometry,				fLinkedGeometry->GetNodeReference());
+	TXString linkedGeometry = "";
+	if(fLinkedGeometry) { linkedGeometry = fLinkedGeometry->GetNodeReference(); }
+
+	pNode->SetNodeAttributeValue(XML_GDTF_StructureLinkedGeometry,				linkedGeometry);
 	pNode->SetNodeAttributeValue(XML_GDTF_StructureStructureType,				GdtfConverter::ConvertStructureTypeEnum(fStructureType));
 	pNode->SetNodeAttributeValue(XML_GDTF_StructureCrossSectionType,			GdtfConverter::ConvertCrossSectionTypeEnum(fCrossSectionType));
 	pNode->SetNodeAttributeValue(XML_GDTF_StructureCrossSectionHeight,			GdtfConverter::ConvertDouble(fCrossSectionHeight));
@@ -3823,9 +3874,9 @@ void GdtfGeometryStructure::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	needed.push_back(XML_GDTF_GeometryName);
 	optional.push_back(XML_GDTF_GeometryModelRef);
 	needed.push_back(XML_GDTF_GeometryMatrix);
-	needed.push_back(XML_GDTF_StructureLinkedGeometry);
+	optional.push_back(XML_GDTF_StructureLinkedGeometry);
 	needed.push_back(XML_GDTF_StructureStructureType);
-	needed.push_back(XML_GDTF_StructureCrossSectionType);
+	optional.push_back(XML_GDTF_StructureCrossSectionType);
 	if(fCrossSectionType == EGdtfCrossSectionType::Tube)
 	{
 		needed.push_back(XML_GDTF_StructureCrossSectionHeight);
@@ -7587,7 +7638,7 @@ bool GdtfFixture::ImportFromZip(IZIPFilePtr& zipfile)
 	if ( ! fReaded)
 	{
 		GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureNoGdtfFileInXmlBuffer);
-		SceneData::GdtfFixture::AddError(error); 
+		SceneData::GdtfFixture::AddError(error);
 		fReaded = false;
 	}
 	else

@@ -705,6 +705,8 @@ namespace SceneData
 		const TXString&					GetGeometryFile_3DSLow_FullPath();
 		const TXString&					GetGeometryFile_3DSHigh_FullPath();
         const TXString&				    GetGeometryFile_SVG_FullPath();
+        const TXString&				    GetGeometryFile_SVGSide_FullPath();
+        const TXString&				    GetGeometryFile_SVGFront_FullPath();
 		const TXString&					GetGeometryFile_GLTF_FullPath();
 		const TXString&					GetGeometryFile_GLTFLow_FullPath();
 		const TXString&					GetGeometryFile_GLTFHigh_FullPath();
@@ -2861,6 +2863,7 @@ namespace SceneData
 		TXString		            fLongName;
 		TXString		            fManufacturer;
 		TXString		            fFixtureTypeDescription;
+		TXString		            fFunction;
 		GdtfFixtureGUID	            fGuid;
 		TXString		            fTumbnailName;
 		Sint32						fThumbnailOffsetX;

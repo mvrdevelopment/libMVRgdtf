@@ -54,7 +54,7 @@ namespace SceneData
 		eSourceObject				= -6,
 		eMappingDefinitionObject	= -7,
 		eMappingObject				= -8,
-
+		eCustomCommand				= -9,
 		eConnectionObject = -10,
 	};
 	
@@ -369,6 +369,41 @@ namespace SceneData
 	};
 	typedef SceneDataMappingObj*				SceneDataMappingObjPtr;
 	typedef std::vector<SceneDataMappingObjPtr>	SceneDataMappingObjArray;
+
+	// ----------------------------------------------------------------------------------------------------------------------------------
+	// SceneDataCustomCommand
+	class SceneDataCustomCommand : public SceneDataObj
+	{
+
+	public:
+		SceneDataCustomCommand();
+		SceneDataCustomCommand(const TXString& channelFunction, bool isPercentage, double value);
+		virtual ~SceneDataCustomCommand();
+		
+	private:
+
+		TXString	fChannelFunction;
+		bool		fIsPercentage;
+		double		fValue;
+		
+	public:
+		virtual const TXString&	GetChannelFunction();
+		virtual bool 			IsPercentage();
+		virtual double 			GetValue();
+
+		virtual void 			SetChannelFunction(const TXString& channelFunction);
+		virtual void			SetIsPercentage(bool isPercentage);
+		virtual void 			SetValue(double value);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual ESceneDataObjectType	GetObjectType();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange);
+
+	};
+	typedef SceneDataCustomCommand*				    SceneDataCustomCommandPtr;
+	typedef std::vector<SceneDataCustomCommandPtr>	SceneDataCustomCommandArray;
 	
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataConnectionObj
@@ -433,6 +468,8 @@ namespace SceneData
 		
 		// Geometry stuff
 		SceneDataGeometryObjArray	fGeometries;
+
+		SceneDataCustomCommandArray fCustomCommands;
 		
 		SceneDataConnectionObjArray fConnections;
 		
@@ -449,6 +486,9 @@ namespace SceneData
 		
 		void								AddGeometryObj(SceneDataGeoInstanceObjPtr object);
 		const SceneDataGeometryObjArray&	GetGeometryArr() const;
+
+		SceneDataCustomCommandPtr			AddCustomCommand(const TXString& channelFunction, bool isPercentage, double value);
+		const SceneDataCustomCommandArray&	GetCustomCommandArray() const;
 		
 		SceneDataConnectionObjPtr			AddConnectionObj(const TXString& own, const TXString& other, const SceneDataGUID toObject);
 		const SceneDataConnectionObjArray&	GetConnectionArr() const;
@@ -606,6 +646,7 @@ namespace SceneData
 		
 		
 	private:
+		TXString						fFunction;
 		TXString						fGdtfFile;
 		TXString						fGdtfDmxMode;
 		TXString 						fGobo;
@@ -635,6 +676,7 @@ namespace SceneData
 		
 	public:
 		
+		const TXString&					GetFunction();
 		const TXString&					GetGdtfFile();
 		const TXString&					GetGdtfDmxMode();
 		SceneDataFocusPointObjPtr		GetFocusPoint();
@@ -650,6 +692,7 @@ namespace SceneData
 		bool							GetCastShadow();
 		SceneDataMappingObjArray		GetMappingsArray();
 		
+		void							SetFunction(const TXString& str);
 		void							SetPosition(SceneDataPositionObjPtr ptr);
 		void							SetFocusPoint(SceneDataFocusPointObjPtr ptr);
 		void							SetGDTFFile(const TXString& path);
@@ -822,6 +865,8 @@ namespace SceneData
         TFileIdentifierPtrArray				f3DSLow_FilesToAdd;
         TFileIdentifierPtrArray				f3DSHigh_FilesToAdd;
         TFileIdentifierPtrArray				fSVG_FilesToAdd;
+        TFileIdentifierPtrArray				fSVGSide_FilesToAdd;
+        TFileIdentifierPtrArray				fSVGFront_FilesToAdd;
 		TFileIdentifierPtrArray				fGLTF_FilesToAdd;
 		TFileIdentifierPtrArray				fGLTFLow_FilesToAdd;
 		TFileIdentifierPtrArray				fGLTFHigh_FilesToAdd;
