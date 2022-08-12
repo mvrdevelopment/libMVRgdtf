@@ -988,6 +988,13 @@ void SceneDataConnectionObj::SetOther(TXString& other){
 	fOther = other;
 }
 
+TXString				SceneDataConnectionObj::GetNodeName(){
+	return XML_Val_ConnectionNodeName;
+}
+
+ESceneDataObjectType	SceneDataConnectionObj::GetObjectType(){
+	return eConnectionObject;
+}
 
 void SceneDataConnectionObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
 {
