@@ -56,6 +56,7 @@ namespace SceneData
 		eMappingObject				= -8,
 		eCustomCommand				= -9,
 		eAlignment					= -11,
+		eOverwrite					= -12,
 
 	};
 	
@@ -440,6 +441,38 @@ namespace SceneData
 	};
 	typedef SceneDataAlignment*				    SceneDataAlignmentPtr;
 	typedef std::vector<SceneDataAlignmentPtr>	SceneDataAlignmentArray;
+
+	// ----------------------------------------------------------------------------------------------------------------------------------
+	// SceneDataOverwrite
+	class SceneDataOverwrite : public SceneDataObj
+	{
+
+	public:
+		SceneDataOverwrite();
+		SceneDataOverwrite(const TXString& universal, const TXString& target);
+		virtual ~SceneDataOverwrite();
+		
+	private:
+
+		TXString	fUniversal;
+		TXString	fTarget;
+		
+	public:
+		virtual const TXString&	GetUniversal();
+		virtual const TXString&	GetTarget();
+
+		virtual void SetUniversal(const TXString& universal);
+		virtual void SetTarget(const TXString& target);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual ESceneDataObjectType	GetObjectType();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange);
+
+	};
+	typedef SceneDataOverwrite*				    SceneDataOverwritePtr;
+	typedef std::vector<SceneDataOverwritePtr>	SceneDataOverwriteArray;
 	
 	
 	// ----------------------------------------------------------------------------------------------------------------------------------

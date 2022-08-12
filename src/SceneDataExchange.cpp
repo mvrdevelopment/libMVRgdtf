@@ -1127,6 +1127,74 @@ ESceneDataObjectType SceneDataAlignment::GetObjectType()
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------------
+// SceneDataOverwrite
+SceneDataOverwrite::SceneDataOverwrite() : SceneDataObj(SceneDataGUID(eNoGuid,""))
+{
+	fUniversal	= "";
+	fTarget		= "";
+}
+
+SceneDataOverwrite::SceneDataOverwrite(const TXString& universal, const TXString& target) : SceneDataObj(SceneDataGUID(eNoGuid,""))
+{
+	fUniversal	= universal;
+	fTarget		= target;	
+}
+
+SceneDataOverwrite::~SceneDataOverwrite()
+{
+	
+}
+
+const TXString& SceneDataOverwrite::GetUniversal()
+{
+	return fUniversal;
+}
+
+const TXString& SceneDataOverwrite::GetTarget()
+{
+	return fTarget;
+}
+
+void SceneDataOverwrite::SetUniversal(const TXString& universal)
+{
+	fUniversal = universal;
+}
+
+void SceneDataOverwrite::SetTarget(const TXString& target)
+{
+	fTarget = target;
+}
+
+void SceneDataOverwrite::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
+{
+	// Call parent
+	SceneDataObj::OnPrintToFile(pNode, exchange);
+
+	// Set value
+	pNode->SetNodeAttributeValue(XML_Val_OverwriteUniversal,	fUniversal);
+	pNode->SetNodeAttributeValue(XML_Val_OverwriteTarget,		fTarget);
+}
+
+void SceneDataOverwrite::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
+{
+	// Call parent
+	SceneDataObj::OnReadFromNode(pNode, exchange);
+
+	pNode->GetNodeAttributeValue(XML_Val_OverwriteUniversal, 	fUniversal);
+	pNode->GetNodeAttributeValue(XML_Val_OverwriteTarget, 		fTarget);
+}
+
+TXString SceneDataOverwrite::GetNodeName()
+{
+	return TXString(XML_Val_OverwriteNodeName);
+}
+
+ESceneDataObjectType SceneDataOverwrite::GetObjectType()
+{
+	return ESceneDataObjectType::eOverwrite;
+}
+
+// ----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataObjWithMatrix
 SceneDataObjWithMatrix::SceneDataObjWithMatrix(const SceneDataGUID& guid) : SceneDataObj(guid)
 {
