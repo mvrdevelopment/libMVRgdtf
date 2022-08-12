@@ -1204,6 +1204,7 @@ SceneDataObjWithMatrix::SceneDataObjWithMatrix(const SceneDataGUID& guid) : Scen
 
 	fCustomCommands.clear();
 	fAlignments.clear();
+	fOverwrites.clear();
 }
 
 SceneDataObjWithMatrix::~SceneDataObjWithMatrix()
@@ -1211,6 +1212,7 @@ SceneDataObjWithMatrix::~SceneDataObjWithMatrix()
 	for (SceneDataGeoInstanceObjPtr geoObj : fGeometries) { delete geoObj; }
 	for (SceneDataCustomCommandPtr customCommand : fCustomCommands) { delete customCommand; }
 	for (SceneDataAlignmentPtr alignment : fAlignments) { delete alignment; }
+	for (SceneDataOverwritePtr overwrite : fOverwrites) { delete overwrite; }
 }
 
 void SceneDataObjWithMatrix::GetTransformMatric(VWTransformMatrix& matrix) const
@@ -1271,6 +1273,18 @@ SceneDataAlignmentPtr SceneDataObjWithMatrix::AddAlignment(const TXString& beamG
 const SceneDataAlignmentArray& SceneDataObjWithMatrix::GetAlignmentArray() const
 {
 	return fAlignments;
+}
+
+SceneDataOverwritePtr SceneDataObjWithMatrix::AddOverwrite(const TXString& universal, const TXString& target)
+{
+	SceneDataOverwritePtr overwrite = new SceneDataOverwrite(universal, target);
+	fOverwrites.push_back(overwrite);
+	return overwrite;
+}
+
+const SceneDataOverwriteArray& SceneDataObjWithMatrix::GetOverwriteArray() const
+{
+	return fOverwrites;
 }
 
 SceneDataGroupObjPtr SceneDataObjWithMatrix::GetContainer() const
@@ -1336,6 +1350,18 @@ void SceneDataObjWithMatrix::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExcha
 		if(VCOM_SUCCEEDED( pNode->CreateChildNode(XML_Val_AlignmentsNodeName, &pAlignmentsNode)))
 		{
 			for(SceneDataAlignmentPtr alignment : fAlignments) { alignment->PrintToFile(pAlignmentsNode, exchange); }
+		}
+		
+	}
+
+	// ------------------------------------------------------------------------------------------------------------
+	// Print the overwrites
+	if (fOverwrites.size() > 0)
+	{
+		IXMLFileNodePtr pOverwritesNode;
+		if(VCOM_SUCCEEDED( pNode->CreateChildNode(XML_Val_OverwritesNodeName, &pOverwritesNode)))
+		{
+			for(SceneDataOverwritePtr overwrite : fOverwrites) { overwrite->PrintToFile(pOverwritesNode, exchange); }
 		}
 		
 	}
@@ -1448,6 +1474,16 @@ void SceneDataObjWithMatrix::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneD
 									SceneDataAlignmentPtr alignment = new SceneDataAlignment();
 									alignment->ReadFromNode(pNode, exchange);
 									fAlignments.push_back(alignment);
+								}
+								);
+
+	//--------------------------------------------------------------------------------------------
+	// Read Overwrites
+	GdtfConverter::TraverseNodes(pNode, XML_Val_OverwritesNodeName, XML_Val_OverwriteNodeName, [this, exchange] (IXMLFileNodePtr pNode) -> void
+								{
+									SceneDataOverwritePtr overwrite = new SceneDataOverwrite();
+									overwrite->ReadFromNode(pNode, exchange);
+									fOverwrites.push_back(overwrite);
 								}
 								);
 	

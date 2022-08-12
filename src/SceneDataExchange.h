@@ -500,6 +500,7 @@ namespace SceneData
 
 		SceneDataCustomCommandArray fCustomCommands;
 		SceneDataAlignmentArray 	fAlignments;
+		SceneDataOverwriteArray 	fOverwrites;
 		
 		
 	public:
@@ -521,6 +522,9 @@ namespace SceneData
 
 		SceneDataAlignmentPtr			AddAlignment(const TXString& beamGeometry, const VWPoint3D& upVector, const VWPoint3D& direction);
 		const SceneDataAlignmentArray&	GetAlignmentArray() const;
+
+		SceneDataOverwritePtr			AddOverwrite(const TXString& universal, const TXString& target);
+		const SceneDataOverwriteArray&	GetOverwriteArray() const;
 		
 	protected:
 		void						ReadMatrixNodeValue(const IXMLFileNodePtr& pNode, VWPoint3D& inOutPoint);

@@ -39,6 +39,10 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetAlignmentCount(size_t& outCount);
 		virtual VCOMError VCOM_CALLTYPE		GetAlignmentAt(size_t at, IAlignment** outAlignment);
 		virtual VCOMError VCOM_CALLTYPE		CreateAlignment(MvrString beamGeometry, const SVector3& upVector, const SVector3& direction, IAlignment** outAlignment);
+
+		virtual VCOMError VCOM_CALLTYPE		GetOverwriteCount(size_t& outCount);
+		virtual VCOMError VCOM_CALLTYPE		GetOverwriteAt(size_t at, IOverwrite** outOverwrite);
+		virtual VCOMError VCOM_CALLTYPE		CreateOverwrite(MvrString universal, MvrString target, IOverwrite** outOverwrite);
 		
 		
 		// Fixture

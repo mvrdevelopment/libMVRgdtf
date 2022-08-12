@@ -6,6 +6,7 @@
 #include "CGeometryReferenceImpl.h"
 #include "CCustomCommandImpl.h"
 #include "CAlignmentImpl.h"
+#include "COverwriteImpl.h"
 
 #include "CGdtfFixture.h"
 #include "Utility.h"
@@ -522,6 +523,117 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::CreateAlignment(MvrStri
 	//---------------------------------------------------------------------------
 	// Set Out Value
 	*outAlignment = pAlignment;
+	
+	return kVCOMError_NoError;
+
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetOverwriteCount(size_t& outCount)
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone, fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+	
+	// Otherwise return data
+	outCount = fPtr->GetOverwriteArray().size();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetOverwriteAt(size_t at, IOverwrite** outOverwrite)
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone, fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+	
+	//------------------------------------------------------------------------------------------
+	// Check the position in the array
+	size_t count = fPtr->GetOverwriteArray().size();
+	
+	
+	ASSERTN(kEveryone, at < count);
+	if (count < at) { return kVCOMError_InvalidArg; }
+	
+	SceneData::SceneDataOverwritePtr pScOverwrite = fPtr->GetOverwriteArray().at(at);
+	
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	COverwriteImpl* pOverwrite = nullptr;
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_Overwrite, (IVWUnknown**) & pOverwrite)))
+	{
+		// Check Casting
+		COverwriteImpl* pResultInterface = static_cast<COverwriteImpl*>(pOverwrite);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(pScOverwrite);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incoming Object
+	if (*outOverwrite)
+	{
+		(*outOverwrite)->Release();
+		*outOverwrite		= NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*outOverwrite = pOverwrite;
+	
+	return kVCOMError_NoError;
+
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::CreateOverwrite(MvrString universal, MvrString target, IOverwrite** outOverwrite)
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone, fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+	
+	//------------------------------------------------------------------------------------------
+	// Add
+	SceneData::SceneDataOverwritePtr pScOverwrite = fPtr->AddOverwrite(universal, target);
+	
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	COverwriteImpl* pOverwrite = nullptr;
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_Overwrite, (IVWUnknown**) & pOverwrite)))
+	{
+		// Check Casting
+		COverwriteImpl* pResultInterface = static_cast<COverwriteImpl*>(pOverwrite);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(pScOverwrite);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incoming Object
+	if (*outOverwrite)
+	{
+		(*outOverwrite)->Release();
+		*outOverwrite		= NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*outOverwrite = pOverwrite;
 	
 	return kVCOMError_NoError;
 
