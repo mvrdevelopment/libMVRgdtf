@@ -248,6 +248,19 @@ namespace VectorworksMVR
 		
 	};
 	typedef VCOMPtr<IAlignment>	IAlignmentPtr;
+
+	//-------------------------------------------------------------------------------------------------------------
+	class DYNAMIC_ATTRIBUTE IOverwrite : public IVWUnknown
+	{
+	public:
+		virtual MvrString VCOM_CALLTYPE		GetUniversal() = 0;
+		virtual MvrString VCOM_CALLTYPE		GetTarget() = 0;
+
+		virtual VCOMError VCOM_CALLTYPE		SetUniversal(const MvrString& universal) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetTarget(const MvrString& target) = 0;
+		
+	};
+	typedef VCOMPtr<IOverwrite>	IOverwritePtr;
 	
 	//-------------------------------------------------------------------------------------------------------------
 	enum class ESceneObjType
