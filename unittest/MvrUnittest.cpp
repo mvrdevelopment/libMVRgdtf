@@ -197,6 +197,14 @@ void MvrUnittest::WriteFile()
 			__checkVCOM(alignment2->SetBeamGeometry("My beamGeometry 2"));
 			__checkVCOM(alignment2->SetUpVector(0, -2, 0));
 			__checkVCOM(alignment2->SetDirection(-6.7, 8.9, 10.11));
+
+			//Overwrites
+			IOverwritePtr overwrite1, overwrite2;
+			__checkVCOM(fixture1->CreateOverwrite("My universal 1", "My target 1", &overwrite1));
+			__checkVCOM(fixture1->CreateOverwrite("My universal 1", "My target 1", &overwrite2));
+
+			__checkVCOM(overwrite2->SetUniversal("My universal 2"));
+			__checkVCOM(overwrite2->SetTarget("My target 2"));
 		}
 
 		// And another fixture
@@ -611,6 +619,23 @@ void MvrUnittest::ReadFile()
 						checkifEqual("Check GetDirection X", direction2.x, -6.7);
 						checkifEqual("Check GetDirection Y", direction2.y, 8.9);
 						checkifEqual("Check GetDirection Z", direction2.z, 10.11);
+					}
+
+					//Overwrites
+					size_t overwriteCount;
+					__checkVCOM(sceneObj->GetOverwriteCount(overwriteCount));
+					checkifEqual("GetOverwriteCount", overwriteCount, (size_t)2);
+
+					IOverwritePtr overwrite1, overwrite2;
+					if(__checkVCOM(sceneObj->GetOverwriteAt(0, &overwrite1)))
+					{
+						checkifEqual("Check GetUniversal ", overwrite1->GetUniversal(), "My universal 1");
+						checkifEqual("Check GetTarget ", overwrite1->GetTarget(), "My target 1");
+					}
+					if(__checkVCOM(sceneObj->GetOverwriteAt(1, &overwrite2)))
+					{
+						checkifEqual("Check GetUniversal ", overwrite2->GetUniversal(), "My universal 2");
+						checkifEqual("Check GetTarget ", overwrite2->GetTarget(), "My target 2");
 					}
 
 					//Linked Fixture
