@@ -50,7 +50,7 @@ public:
 #if defined GS_MAC
 	void checkifEqual(const std::string& check, const size_t val1, const size_t val2);
 #endif
-#ifdef defined GS_MAC || ! defined IS64BIT 
+#if defined(GS_MAC) || ! defined(IS64BIT) 
     // Under Win and Linux 64 bit there is a problem with double declaration of DMXValue (Uint64 type) and size_t (also Uint64 type)
      // OSX needs that extra declaration	void checkifEqual(const std::string& check, const VectorworksMVR::GdtfDefines::DmxValue val1, const VectorworksMVR::GdtfDefines::DmxValue val2);
      // But under win32 we need this declaration to prevent ambiguity!

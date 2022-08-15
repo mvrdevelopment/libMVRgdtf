@@ -114,7 +114,7 @@ void Unittest::checkifEqual(const std::string& check, const double val1, const d
 	fFailedTests.push_back(test);
 };
 
-#ifdef GS_MAC
+#ifndef GS_Win
 void Unittest::checkifEqual(const std::string& check, const size_t val1, const size_t val2)
 {
 	if (val1 == val2) return;
@@ -133,7 +133,7 @@ void Unittest::checkifEqual(const std::string& check, const size_t val1, const s
 };
 #endif
 
-#if defined GS_MAC || ! defined IS64BIT 
+#if defined(GS_MAC) || ! defined(IS64BIT) 
  // Read comment at declaration!
 	void Unittest::checkifEqual(const std::string& check, const VectorworksMVR::GdtfDefines::DmxValue val1, const VectorworksMVR::GdtfDefines::DmxValue val2)
 {
