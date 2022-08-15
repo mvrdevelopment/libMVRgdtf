@@ -42,7 +42,7 @@ void Unittest::checkifTrue (const std::string& check, const bool b)
 {
     checkifEqual(check, b, true);
 }
-
+#ifdef IS64BIT
 void Unittest::checkifEqual(const std::string& check, const Uint32 val1, const Uint32 val2)
 {
 	if (val1 == val2) return;
@@ -59,7 +59,7 @@ void Unittest::checkifEqual(const std::string& check, const Uint32 val1, const U
 
 	fFailedTests.push_back(test);
 };
-
+#endif
 void Unittest::checkifEqual(const std::string& check, const Sint32 val1, const Sint32 val2)
 {
 	if (val1 == val2) return;

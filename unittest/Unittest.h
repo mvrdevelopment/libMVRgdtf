@@ -43,14 +43,16 @@ protected:
 
 
 public:
+#ifdef IS64BIT
     void checkifEqual(const std::string& check, const Uint32 val1, const Uint32 val2);
+#endif
 	void checkifEqual(const std::string& check, const Sint32 val1, const Sint32 val2);
 	void checkifEqual(const std::string& check, const Uint8	 val1, const Uint8  val2);
 	void checkifEqual(const std::string& check, const double val1, const double val2);
 #ifndef GS_WIN
 	void checkifEqual(const std::string& check, const size_t val1, const size_t val2);
 #endif
-#if defined(GS_MAC) || ! defined(IS64BIT) 
+#if !defined(GS_Win) || ! defined(IS64BIT) 
     // Under Win and Linux 64 bit there is a problem with double declaration of DMXValue (Uint64 type) and size_t (also Uint64 type)
      // OSX needs that extra declaration	void checkifEqual(const std::string& check, const VectorworksMVR::GdtfDefines::DmxValue val1, const VectorworksMVR::GdtfDefines::DmxValue val2);
      // But under win32 we need this declaration to prevent ambiguity!
