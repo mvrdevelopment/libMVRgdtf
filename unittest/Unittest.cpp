@@ -114,7 +114,7 @@ void Unittest::checkifEqual(const std::string& check, const double val1, const d
 	fFailedTests.push_back(test);
 };
 
-#ifdef IS64BIT
+#ifdef GS_MAC
 void Unittest::checkifEqual(const std::string& check, const size_t val1, const size_t val2)
 {
 	if (val1 == val2) return;
