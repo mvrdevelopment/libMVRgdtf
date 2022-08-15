@@ -42,7 +42,6 @@ void Unittest::checkifTrue (const std::string& check, const bool b)
 {
     checkifEqual(check, b, true);
 }
-#ifdef IS64BIT
 void Unittest::checkifEqual(const std::string& check, const Uint32 val1, const Uint32 val2)
 {
 	if (val1 == val2) return;
@@ -59,7 +58,7 @@ void Unittest::checkifEqual(const std::string& check, const Uint32 val1, const U
 
 	fFailedTests.push_back(test);
 };
-#endif
+
 void Unittest::checkifEqual(const std::string& check, const Sint32 val1, const Sint32 val2)
 {
 	if (val1 == val2) return;
@@ -114,7 +113,8 @@ void Unittest::checkifEqual(const std::string& check, const double val1, const d
 	fFailedTests.push_back(test);
 };
 
-#ifndef GS_Win
+#ifdef IS64BIT
+
 void Unittest::checkifEqual(const std::string& check, const size_t val1, const size_t val2)
 {
 	if (val1 == val2) return;
@@ -133,9 +133,8 @@ void Unittest::checkifEqual(const std::string& check, const size_t val1, const s
 };
 #endif
 
-#if defined(GS_MAC) || ! defined(IS64BIT) 
  // Read comment at declaration!
-	void Unittest::checkifEqual(const std::string& check, const VectorworksMVR::GdtfDefines::DmxValue val1, const VectorworksMVR::GdtfDefines::DmxValue val2)
+void Unittest::checkifEqual(const std::string& check, const VectorworksMVR::GdtfDefines::DmxValue val1, const VectorworksMVR::GdtfDefines::DmxValue val2)
 {
 	if (val1 == val2) return;
 
@@ -151,7 +150,7 @@ void Unittest::checkifEqual(const std::string& check, const size_t val1, const s
 
 	fFailedTests.push_back(test);
 };
-#endif
+
 void Unittest::checkifEqual(const std::string& check, const VectorworksMVR::GdtfDefines::DMXAddress val1, const VectorworksMVR::GdtfDefines::DMXAddress val2)
 {
 	if (val1 == val2) return;
