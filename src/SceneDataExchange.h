@@ -425,6 +425,9 @@ namespace SceneData
 		
 		SceneDataClassObjPtr		fClass;
 		TXString					fUnresolvedClass;
+
+		TXString					fGdtfFile;
+		TXString					fGdtfDmxMode;
 		
 		// Geometry stuff
 		SceneDataGeometryObjArray	fGeometries;
@@ -442,6 +445,12 @@ namespace SceneData
 		
 		SceneDataGroupObj*			GetContainer() const;
 		SceneDataObjWithMatrix*		GetNextObject() const;
+
+		const TXString&				GetGdtfFile() const;
+		void						SetGDTFFile(const TXString& path);
+		
+		const TXString&				GetGdtfDmxMode() const;
+		void						SetGdtfDmxMode(const TXString& path);
 		
 		void								AddGeometryObj(SceneDataGeoInstanceObjPtr object);
 		const SceneDataGeometryObjArray&	GetGeometryArr() const;
@@ -602,8 +611,6 @@ namespace SceneData
 		
 	private:
 		TXString						fFunction;
-		TXString						fGdtfFile;
-		TXString						fGdtfDmxMode;
 		TXString 						fGobo;
 		double							fGoboRotation;
 		SceneDataFocusPointObjPtr		fFocusPoint;
@@ -632,8 +639,6 @@ namespace SceneData
 	public:
 		
 		const TXString&					GetFunction();
-		const TXString&					GetGdtfFile();
-		const TXString&					GetGdtfDmxMode();
 		SceneDataFocusPointObjPtr		GetFocusPoint();
 		SceneDataPositionObjPtr			GetPosition();
 		const TXString&					GetFixtureId();
@@ -650,8 +655,6 @@ namespace SceneData
 		void							SetFunction(const TXString& str);
 		void							SetPosition(SceneDataPositionObjPtr ptr);
 		void							SetFocusPoint(SceneDataFocusPointObjPtr ptr);
-		void							SetGDTFFile(const TXString& path);
-		void							SetGdtfDmxMode(const TXString& path);
 		void							AddAdress(const SceneDataDmxAdress& adress);
 		void							SetColor(const CCieColor& color);
 		void							SetFixtureTypeId(const Sint8& value);

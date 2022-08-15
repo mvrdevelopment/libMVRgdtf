@@ -266,14 +266,17 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetClass(IClass** outClass) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetClass(IClass* clas) = 0;
 		
+		virtual MvrString VCOM_CALLTYPE		GetGdtfName() = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetGdtfFixture(IGdtfFixture** outFixture) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetGdtfName(MvrString gdtfName) = 0;
 		
+		virtual MvrString VCOM_CALLTYPE		GetGdtfMode() = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetGdtfMode(MvrString gdtfMode) = 0;
+
 		// Fixture
 		virtual MvrString VCOM_CALLTYPE		GetFunction() = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetFunction(MvrString function) = 0;
 
-		virtual MvrString VCOM_CALLTYPE		GetGdtfName() = 0;
-		virtual VCOMError VCOM_CALLTYPE		GetGdtfFixture(IGdtfFixture** outFixture) = 0;
-		virtual MvrString VCOM_CALLTYPE		GetGdtfMode() = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetFocusPoint(ISceneObj** outFocusPoint) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetPosition(IPosition** outPosition) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetAdressCount(size_t& outAdresses) = 0;
@@ -290,8 +293,6 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetMappingCount(size_t& outMappings) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetMappingAt(size_t at, IMapping** outMapping) = 0;
 		
-		virtual VCOMError VCOM_CALLTYPE		SetGdtfName(MvrString gdtfName) = 0;
-		virtual VCOMError VCOM_CALLTYPE		SetGdtfMode(MvrString gdtfMode) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetFocusPoint(ISceneObj* focusPoint) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetPosition(IPosition* position) = 0;
 		virtual VCOMError VCOM_CALLTYPE		AddAdress(const size_t& adresses, const size_t& breakId) = 0;
