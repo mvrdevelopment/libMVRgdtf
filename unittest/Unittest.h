@@ -47,7 +47,7 @@ public:
 	void checkifEqual(const std::string& check, const Sint32 val1, const Sint32 val2);
 	void checkifEqual(const std::string& check, const Uint8	 val1, const Uint8  val2);
 	void checkifEqual(const std::string& check, const double val1, const double val2);
-#if defined GS_MAC
+#ifndef GS_WIN
 	void checkifEqual(const std::string& check, const size_t val1, const size_t val2);
 #endif
 #if defined(GS_MAC) || ! defined(IS64BIT) 
