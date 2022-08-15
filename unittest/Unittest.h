@@ -47,10 +47,10 @@ public:
 	void checkifEqual(const std::string& check, const Sint32 val1, const Sint32 val2);
 	void checkifEqual(const std::string& check, const Uint8	 val1, const Uint8  val2);
 	void checkifEqual(const std::string& check, const double val1, const double val2);
-#ifdef IS64BIT
+#if defined GS_MAC 
 	void checkifEqual(const std::string& check, const size_t val1, const size_t val2);
 #endif
-#ifdef GS_MAC
+#ifdef defined GS_MAC || ! defined IS64BIT 
 	// Under Win and Linux there is a problem with double declaration of DMXValue (Uint64 type) and size_t (also Uint64 type)
 	// OSX needs that extra declaration
 	void checkifEqual(const std::string& check, const VectorworksMVR::GdtfDefines::DmxValue val1, const VectorworksMVR::GdtfDefines::DmxValue val2);
