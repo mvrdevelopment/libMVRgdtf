@@ -24,7 +24,6 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 if (WIN32)
 #set(CMAKE_GENERATOR_PLATFORM x64)
 message("MSVC Runtime lib: " ${WIN_RUNTIME_LIB})
-set(CMAKE_CXX_FLAGS_RELEASE ${WIN_RUNTIME_LIB})
 elseif(APPLE)
     if($ENV{OSX_VERSION})
     message("Setting osx version: " $ENV{OSX_VERSION})
@@ -136,6 +135,14 @@ target_link_libraries(MvrGdtf ${EXTRA_LIBS})
 if(${UNITTEST})
 target_compile_definitions(MvrGdtfUnitTest ${PREPROCESSORS})
 target_link_libraries(MvrGdtfUnitTest ${EXTRA_LIBS})
+
+#Append Runtime
+if (WIN32)
+    get_target_property(OUTPUT_NAME_OLD MvrGdtfUnitTest OUTPUT_NAME)
+    set(OUTPUT_NAME_OLD "${OUTPUT_NAME_OLD}${WIN_RUNTIME_LIB}")
+    set_target_properties(MvrGdtfUnitTest PROPERTIES OUTPUT_NAME ${OUTPUT_NAME_OLD})
+endif(WIN32)
+
 endif(${UNITTEST})
 #################################################
 
