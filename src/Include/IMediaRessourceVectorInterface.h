@@ -220,6 +220,22 @@ namespace VectorworksMVR
 	typedef VCOMPtr<IMapping>	IMappingPtr;
 
 	//-------------------------------------------------------------------------------------------------------------
+	class DYNAMIC_ATTRIBUTE IConnection : public IVWUnknown
+	{
+	public:
+		virtual VCOMError VCOM_CALLTYPE		GetToObject(MvrUUID& objUUID) = 0;
+		virtual MvrString VCOM_CALLTYPE		GetOwn() = 0;
+		virtual MvrString VCOM_CALLTYPE		GetOther() = 0;
+
+		virtual VCOMError VCOM_CALLTYPE		SetToObject(MvrUUID objUUID) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetOwn(MvrString value) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetOther(MvrString value) = 0;
+		
+	};
+	typedef VCOMPtr<IConnection>	IConnectionPtr;
+
+	//-------------------------------------------------------------------------------------------------------------
+
 	class DYNAMIC_ATTRIBUTE ICustomCommand : public IVWUnknown
 	{
 	public:
@@ -233,6 +249,7 @@ namespace VectorworksMVR
 		
 	};
 	typedef VCOMPtr<ICustomCommand>	ICustomCommandPtr;
+
 	
 	//-------------------------------------------------------------------------------------------------------------
 	enum class ESceneObjType
@@ -293,6 +310,8 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetMappingCount(size_t& outMappings) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetMappingAt(size_t at, IMapping** outMapping) = 0;
 		
+		virtual VCOMError VCOM_CALLTYPE		SetGdtfName(MvrString gdtfName) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetGdtfMode(MvrString gdtfMode) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetFocusPoint(ISceneObj* focusPoint) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetPosition(IPosition* position) = 0;
 		virtual VCOMError VCOM_CALLTYPE		AddAdress(const size_t& adresses, const size_t& breakId) = 0;
@@ -314,12 +333,15 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		SetProjectorSource(MvrString value, MvrString linkedGeometry, GdtfDefines::ESourceType) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetProjectorSource(ISource** outSource) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetScaleHandling(GdtfDefines::EScaleHandlingType scaleHandling) = 0;
-		virtual VCOMError VCOM_CALLTYPE		GetScaleHandling(GdtfDefines::EScaleHandlingType& outScaleHandling) = 0;
-
+		virtual VCOMError VCOM_CALLTYPE		GetScaleHandling(GdtfDefines::EScaleHandlingType& outScaleHandling) = 0;	
+		virtual VCOMError VCOM_CALLTYPE		GetConnectionCount(size_t& outConnections) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetConnectionAt(size_t at, IConnection** outConnection) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateConnection(MvrString own, MvrString other, MvrUUID ToObject, IConnection** addedObj) = 0;
 		// MVR 1.5
 		virtual VCOMError VCOM_CALLTYPE		GetCustomCommandCount(size_t& outCount) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetCustomCommandAt(size_t at, ICustomCommand** outCustomCommand) = 0;
 		virtual VCOMError VCOM_CALLTYPE		CreateCustomCommand(MvrString channelFunction, bool isPercentage, double physicalValue, ICustomCommand** outCustomCommand) = 0;
+
 	};
 	typedef VCOMPtr<ISceneObj>	ISceneObjPtr;
 	

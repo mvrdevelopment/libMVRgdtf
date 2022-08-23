@@ -55,7 +55,7 @@ namespace SceneData
 		eMappingDefinitionObject	= -7,
 		eMappingObject				= -8,
 		eCustomCommand				= -9,
-
+		eConnectionObject = -10,
 	};
 	
 	enum class ESearchUuidIn
@@ -405,6 +405,46 @@ namespace SceneData
 	typedef SceneDataCustomCommand*				    SceneDataCustomCommandPtr;
 	typedef std::vector<SceneDataCustomCommandPtr>	SceneDataCustomCommandArray;
 	
+	// ----------------------------------------------------------------------------------------------------------------------------------
+	// SceneDataConnectionObj
+	class SceneDataConnectionObj : public SceneDataObj
+	{
+
+	public:
+		SceneDataConnectionObj();
+		SceneDataConnectionObj(const TXString& own, const TXString& other, const TXString& toObject);
+		SceneDataConnectionObj(const TXString& own, const TXString& other, const SceneDataGUID& toObject);
+		
+		virtual ~SceneDataConnectionObj();
+		
+	private:
+
+		TXString 		fOwn;
+		TXString 		fOther;
+		SceneDataGUID	fToObject;		
+
+	public:
+		virtual SceneDataGUID&	GetToObject();
+		virtual TXString&		GetOwn();
+		virtual TXString&		GetOther();
+
+		
+		virtual void 			SetToObject(SceneDataGUID uuid);
+		virtual void			SetOwn(TXString& own);
+		virtual void			SetOther(TXString& other);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual ESceneDataObjectType	GetObjectType();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange);
+
+	};
+	typedef SceneDataConnectionObj*				SceneDataConnectionObjPtr;
+	typedef std::vector<SceneDataConnectionObjPtr>	SceneDataConnectionObjArray;
+	
+	
+	
 	
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataObjWithMatrix
@@ -434,6 +474,7 @@ namespace SceneData
 
 		SceneDataCustomCommandArray fCustomCommands;
 		
+		SceneDataConnectionObjArray fConnections;
 		
 	public:
 		void						GetTransformMatric(VWTransformMatrix& matrix) const;
@@ -458,6 +499,10 @@ namespace SceneData
 		SceneDataCustomCommandPtr			AddCustomCommand(const TXString& channelFunction, bool isPercentage, double value);
 		const SceneDataCustomCommandArray&	GetCustomCommandArray() const;
 		
+		SceneDataConnectionObjPtr			AddConnectionObj(const TXString& own, const TXString& other, const SceneDataGUID toObject);
+		const SceneDataConnectionObjArray&	GetConnectionArr() const;
+		
+
 	protected:
 		void						ReadMatrixNodeValue(const IXMLFileNodePtr& pNode, VWPoint3D& inOutPoint);
 		virtual	void				OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);

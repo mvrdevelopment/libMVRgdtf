@@ -175,6 +175,8 @@ void MvrUnittest::WriteFile()
 				__checkVCOM(mapping1->SetRz(5.6));
 			}
 
+			__checkVCOM(fixture1->CreateConnection("ConnectionFrom", "ConnectionTo", MvrUUID(1136161871, 1699151080, 751939975, 1748783014) /* fixture2*/, nullptr)); 
+		
 			fixture1->SetFunction("TestFunction");
 			//CustomCommands
 			ICustomCommandPtr customCommand1, customCommand2;
@@ -571,6 +573,22 @@ void MvrUnittest::ReadFile()
 					char* buffer = new char[bufferLength + 1];
 					__checkVCOM(gdtfLinkedFixture->ToBuffer(buffer));
 					delete[] buffer;
+
+					//Connections
+					
+					size_t connCount;
+					sceneObj->GetConnectionCount(connCount);
+					checkifEqual("GetConnectionCount", connCount, (size_t)1);
+					if(connCount == 1){
+						IConnectionPtr conn;
+						sceneObj->GetConnectionAt(0, &conn);
+						checkifEqual("Connection->GetOwn()", conn->GetOwn(), "ConnectionFrom");
+						checkifEqual("Connection->GetOther()", conn->GetOther(), "ConnectionTo");
+						MvrUUID ToObj(0, 0, 0, 0);
+						conn->GetToObject(ToObj);
+						checkifEqual("Connection->GetToObject()", ToObj, MvrUUID(1136161871, 1699151080, 751939975, 1748783014));
+					}
+
 				}
 				
 				// ------------------------------------------------------------------------------
