@@ -942,6 +942,84 @@ ESceneDataObjectType SceneDataMappingObj::GetObjectType()
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------------
+// SceneDataConnectionObj
+	
+SceneDataConnectionObj::SceneDataConnectionObj() : SceneDataObj(SceneDataGUID(eNoGuid,"")), fToObject(SceneDataGUID(eNoGuid,""))
+{
+}
+
+SceneDataConnectionObj::SceneDataConnectionObj(const TXString& own, const TXString& other, const TXString& toObject) : SceneDataObj(SceneDataGUID(eNoGuid,"")), fOwn(own), fOther(other), fToObject(toObject)
+{
+}
+
+SceneDataConnectionObj::SceneDataConnectionObj(const TXString& own, const TXString& other, const SceneDataGUID& toObject) : SceneDataObj(SceneDataGUID(eNoGuid,"")), fOwn(own), fOther(other), fToObject(toObject)
+{
+}
+
+SceneDataConnectionObj::~SceneDataConnectionObj()
+{	
+}
+
+SceneDataGUID& SceneDataConnectionObj::GetToObject()
+{
+	return fToObject;
+}
+
+
+void SceneDataConnectionObj::SetToObject(SceneDataGUID uuid){
+	fToObject = uuid;
+}
+
+TXString& SceneDataConnectionObj::GetOwn(){
+	return fOwn;
+}
+
+
+void SceneDataConnectionObj::SetOwn(TXString& own){
+	fOwn = own;
+}
+
+TXString& SceneDataConnectionObj::GetOther(){
+	return fOther;
+}
+
+
+void SceneDataConnectionObj::SetOther(TXString& other){
+	fOther = other;
+}
+
+TXString				SceneDataConnectionObj::GetNodeName(){
+	return XML_Val_ConnectionNodeName;
+}
+
+ESceneDataObjectType	SceneDataConnectionObj::GetObjectType(){
+	return eConnectionObject;
+}
+
+void SceneDataConnectionObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
+{
+	// Call parent
+	SceneDataObj::OnPrintToFile(pNode, exchange);
+
+	// Set attributes
+	pNode->SetNodeAttributeValue(XML_Val_ConnectionOwn, fOwn);
+	pNode->SetNodeAttributeValue(XML_Val_ConnectionOther, fOther);
+	pNode->SetNodeAttributeValue(XML_Val_ConnectionToObject, fToObject.GetUUIDString());
+}
+
+void SceneDataConnectionObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
+{
+	// Call parent
+	SceneDataObj::OnReadFromNode(pNode, exchange);
+
+	TXString uuidStr;
+	pNode->GetNodeAttributeValue(XML_Val_ConnectionOwn, fOwn);
+	pNode->GetNodeAttributeValue(XML_Val_ConnectionOther, fOther);
+	TXString nUUID;
+	pNode->GetNodeAttributeValue(XML_Val_ConnectionToObject, nUUID);
+	fToObject = SceneDataGUID(nUUID);
+}
+
 // SceneDataCustomCommand
 SceneDataCustomCommand::SceneDataCustomCommand() : SceneDataObj(SceneDataGUID(eNoGuid,""))
 {
@@ -1251,6 +1329,19 @@ void SceneDataObjWithMatrix::AddGeometryObj(SceneDataGeoInstanceObjPtr object)
 	if (object) { fGeometries.push_back(object); }
 }
 
+const SceneDataConnectionObjArray& SceneDataObjWithMatrix::GetConnectionArr() const
+{
+	return fConnections;
+}
+
+SceneDataConnectionObjPtr SceneDataObjWithMatrix::AddConnectionObj(const TXString& own, const TXString& other, const SceneDataGUID toObject)
+{
+	SceneDataConnectionObjPtr out = new SceneDataConnectionObj(own, other, toObject);
+	if (out) { fConnections.push_back(out); }
+	return out;
+}
+
+
 SceneDataCustomCommandPtr SceneDataObjWithMatrix::AddCustomCommand(const TXString& channelFunction, bool isPercentage, double value)
 {
 	SceneDataCustomCommandPtr customCommand = new SceneDataCustomCommand(channelFunction, isPercentage, value);
@@ -1297,6 +1388,26 @@ SceneDataObjWithMatrixPtr SceneDataObjWithMatrix::GetNextObject() const
 	return fNextObj;
 }
 
+const TXString& SceneDataObjWithMatrix::GetGdtfFile() const
+{
+	return fGdtfFile;
+}
+
+void SceneDataObjWithMatrix::SetGDTFFile(const TXString& path)
+{
+	fGdtfFile = path;
+}
+
+const TXString& SceneDataObjWithMatrix::GetGdtfDmxMode() const
+{
+	return fGdtfDmxMode;
+}
+
+void SceneDataObjWithMatrix::SetGdtfDmxMode(const TXString& path)
+{
+	fGdtfDmxMode = path;
+}
+
 void SceneDataObjWithMatrix::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
 {
 	SceneDataObj::OnPrintToFile(pNode, exchange);
@@ -1316,6 +1427,23 @@ void SceneDataObjWithMatrix::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExcha
 			pMatrixNode->SetNodeValue(GdtfConverter::ConvertMatrix(fMatrix, false));
 
 		}
+	}
+
+	//--------------------------------------------------------------------------------------------
+	// Print the GDTF File
+	IXMLFileNodePtr pGDTFNode;
+	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_Val_FixtureGDTFSpec, & pGDTFNode)))
+	{
+		pGDTFNode->SetNodeValue(fGdtfFile);
+		exchange->AddNeededGdtfFile(fGdtfFile);
+	}
+	
+	//--------------------------------------------------------------------------------------------
+	// Print the DmxMode
+	IXMLFileNodePtr pDmxModeNode;
+	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_Val_FixtureDMXMode, & pDmxModeNode)))
+	{
+		pDmxModeNode->SetNodeValue(fGdtfDmxMode);
 	}
 	
 	// ------------------------------------------------------------------------------------------------------------
@@ -1379,7 +1507,15 @@ void SceneDataObjWithMatrix::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExcha
 		}
 	}
 	
-
+		// Print the custom commands
+	if (fConnections.size() > 0)
+	{
+		IXMLFileNodePtr pConnectionsNode;
+		if(VCOM_SUCCEEDED( pNode->CreateChildNode(XML_Val_ConnectionsNodeName, &pConnectionsNode)))
+		{
+			for(const auto& connection : fConnections) { connection->PrintToFile(pConnectionsNode, exchange); }
+		}
+	}
 	
 }
 
@@ -1412,6 +1548,16 @@ void SceneDataObjWithMatrix::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneD
 	{
 		fMatrix = VWTransformMatrix();
 	}
+
+	//--------------------------------------------------------------------------------------------
+	// Read the GDTF File name
+	IXMLFileNodePtr pGDTFNode;
+	if(VCOM_SUCCEEDED(pNode->GetChildNode(XML_Val_FixtureGDTFSpec, & pGDTFNode))) { pGDTFNode->GetNodeValue(fGdtfFile); }
+	
+	//--------------------------------------------------------------------------------------------
+	// Read the GDTF DMX Mode
+	IXMLFileNodePtr pDmxMode;
+	if(VCOM_SUCCEEDED(pNode->GetChildNode(XML_Val_FixtureDMXMode, & pDmxMode)))	{ pDmxMode->GetNodeValue(fGdtfDmxMode); }
 	
 	//------------------------------------------------------------------------------------------------------
 	// Get Geometry
@@ -1455,6 +1601,8 @@ void SceneDataObjWithMatrix::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneD
 			}
 			
 		}
+
+
 	}
 
 	//--------------------------------------------------------------------------------------------
@@ -1487,6 +1635,15 @@ void SceneDataObjWithMatrix::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneD
 								}
 								);
 	
+
+	GdtfConverter::TraverseNodes(pNode, XML_Val_ConnectionsNodeName, XML_Val_ConnectionNodeName, [this, exchange] (IXMLFileNodePtr pNode) -> void
+						{
+							SceneDataConnectionObjPtr connection = new SceneDataConnectionObj();
+							connection->ReadFromNode(pNode, exchange);
+							fConnections.push_back(connection);
+						}
+						);
+
 	//------------------------------------------------------------------------------------------------------
 	// Get Class
 	IXMLFileNodePtr pClassNode;
@@ -1657,16 +1814,6 @@ TXString SceneDataFixtureObj::GetUnresolvedPositionUUID()
 	return fUnresolvedPosition;
 }
 
-const TXString& SceneDataFixtureObj::GetGdtfFile()
-{
-	return fGdtfFile;
-}
-
-const TXString& SceneDataFixtureObj::GetGdtfDmxMode()
-{
-	return fGdtfDmxMode;
-}
-
 SceneDataFocusPointObjPtr SceneDataFixtureObj::GetFocusPoint()
 {
 	return fFocusPoint;
@@ -1792,16 +1939,6 @@ void SceneDataFixtureObj::AddAdress(const SceneDataDmxAdress& adress)
 	fAdresses.push_back(adress);
 }
 
-void SceneDataFixtureObj::SetGDTFFile(const TXString& path)
-{
-	fGdtfFile = path;
-}
-
-void SceneDataFixtureObj::SetGdtfDmxMode(const TXString& path)
-{
-	fGdtfDmxMode = path;
-}
-
 void SceneDataFixtureObj::SetColor(const CCieColor& color)
 {
 	fColor = color;
@@ -1850,25 +1987,6 @@ void SceneDataFixtureObj::AddMapping(SceneDataGUID mappingDefinitionUuid)
 void SceneDataFixtureObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
 {
 	SceneDataObjWithMatrix::OnPrintToFile(pNode, exchange);
-	
-	//--------------------------------------------------------------------------------------------
-	// Print the GDTF File
-	IXMLFileNodePtr pGDTFNode;
-	if ( VCOM_SUCCEEDED( pNode->CreateChildNode( XML_Val_FixtureGDTFSpec, & pGDTFNode ) ) )
-	{
-		pGDTFNode->SetNodeValue(GetGdtfFile());
-		exchange->AddNeededGdtfFile(GetGdtfFile());
-
-	}
-	
-	//--------------------------------------------------------------------------------------------
-	// Print the DmxMode
-	IXMLFileNodePtr pDmxModeNode;
-	if ( VCOM_SUCCEEDED( pNode->CreateChildNode( XML_Val_FixtureDMXMode, & pDmxModeNode ) ) )
-	{
-		pDmxModeNode->SetNodeValue(GetGdtfDmxMode());
-		
-	}
 	
 	//--------------------------------------------------------------------------------------------
 	// Print the Focus
@@ -1998,16 +2116,6 @@ void SceneDataFixtureObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange
 void SceneDataFixtureObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
 {
 	SceneDataObjWithMatrix::OnReadFromNode(pNode, exchange);
-	
-	//--------------------------------------------------------------------------------------------
-	// Read the adress
-	IXMLFileNodePtr pGDTFNode;
-	if ( VCOM_SUCCEEDED( pNode->GetChildNode( XML_Val_FixtureGDTFSpec, & pGDTFNode ) ) )			{  pGDTFNode->GetNodeValue(fGdtfFile); }
-	
-	//--------------------------------------------------------------------------------------------
-	// Read the adress
-	IXMLFileNodePtr pDmxMode;
-	if ( VCOM_SUCCEEDED( pNode->GetChildNode( XML_Val_FixtureDMXMode, & pDmxMode ) ) )				{  pDmxMode->GetNodeValue(fGdtfDmxMode); }
 	
 	//--------------------------------------------------------------------------------------------
 	// Read the Focus

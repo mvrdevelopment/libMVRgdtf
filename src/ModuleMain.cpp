@@ -9,6 +9,7 @@
 #include "Include/VectorworksMVR.h"
 #include "Include/IMediaRessourceVectorInterface.h"
 #include "Implementation/CMediaRessourceVectorImpl.h"
+#include "Implementation/CConnectionImpl.h"
 
 #include "Implementation/CCustomCommandImpl.h"
 #include "Implementation/CAlignmentImpl.h"
@@ -108,6 +109,8 @@ extern "C" VectorworksMVR::VCOMError VWQueryInterface(const VectorworksMVR::VWII
         resultInterface = new VectorworksMVR::CMappingDefinitionImpl();
     else if (iid == VectorworksMVR::IID_MappingObj)
         resultInterface = new VectorworksMVR::CMappingImpl();
+    else if (iid == VectorworksMVR::IID_ConnectionObj)
+        resultInterface = new VectorworksMVR::CConnectionImpl();
     else if (iid == VectorworksMVR::IID_CustomCommand)
         resultInterface = new VectorworksMVR::CCustomCommandImpl();
     else if (iid == VectorworksMVR::IID_Alignment)

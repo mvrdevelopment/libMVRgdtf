@@ -14,7 +14,6 @@
 
 #include "CSourceImpl.h"
 #include "CMappingImpl.h"
-
 namespace VectorworksMVR
 {
 	class CMediaRessourceVectorImpl : public VCOMImpl<IMediaRessourceVectorInterface>

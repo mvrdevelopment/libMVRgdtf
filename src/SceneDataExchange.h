@@ -55,9 +55,9 @@ namespace SceneData
 		eMappingDefinitionObject	= -7,
 		eMappingObject				= -8,
 		eCustomCommand				= -9,
+		eConnectionObject 			= -10,
 		eAlignment					= -11,
 		eOverwrite					= -12,
-
 	};
 	
 	enum class ESearchUuidIn
@@ -474,6 +474,46 @@ namespace SceneData
 	typedef SceneDataOverwrite*				    SceneDataOverwritePtr;
 	typedef std::vector<SceneDataOverwritePtr>	SceneDataOverwriteArray;
 	
+	// ----------------------------------------------------------------------------------------------------------------------------------
+	// SceneDataConnectionObj
+	class SceneDataConnectionObj : public SceneDataObj
+	{
+
+	public:
+		SceneDataConnectionObj();
+		SceneDataConnectionObj(const TXString& own, const TXString& other, const TXString& toObject);
+		SceneDataConnectionObj(const TXString& own, const TXString& other, const SceneDataGUID& toObject);
+		
+		virtual ~SceneDataConnectionObj();
+		
+	private:
+
+		TXString 		fOwn;
+		TXString 		fOther;
+		SceneDataGUID	fToObject;		
+
+	public:
+		virtual SceneDataGUID&	GetToObject();
+		virtual TXString&		GetOwn();
+		virtual TXString&		GetOther();
+
+		
+		virtual void 			SetToObject(SceneDataGUID uuid);
+		virtual void			SetOwn(TXString& own);
+		virtual void			SetOther(TXString& other);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual ESceneDataObjectType	GetObjectType();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange);
+
+	};
+	typedef SceneDataConnectionObj*				SceneDataConnectionObjPtr;
+	typedef std::vector<SceneDataConnectionObjPtr>	SceneDataConnectionObjArray;
+	
+	
+	
 	
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataObjWithMatrix
@@ -494,6 +534,9 @@ namespace SceneData
 		
 		SceneDataClassObjPtr		fClass;
 		TXString					fUnresolvedClass;
+
+		TXString					fGdtfFile;
+		TXString					fGdtfDmxMode;
 		
 		// Geometry stuff
 		SceneDataGeometryObjArray	fGeometries;
@@ -502,6 +545,7 @@ namespace SceneData
 		SceneDataAlignmentArray 	fAlignments;
 		SceneDataOverwriteArray 	fOverwrites;
 		
+		SceneDataConnectionObjArray fConnections;
 		
 	public:
 		void						GetTransformMatric(VWTransformMatrix& matrix) const;
@@ -513,6 +557,12 @@ namespace SceneData
 		
 		SceneDataGroupObj*			GetContainer() const;
 		SceneDataObjWithMatrix*		GetNextObject() const;
+
+		const TXString&				GetGdtfFile() const;
+		void						SetGDTFFile(const TXString& path);
+		
+		const TXString&				GetGdtfDmxMode() const;
+		void						SetGdtfDmxMode(const TXString& path);
 		
 		void								AddGeometryObj(SceneDataGeoInstanceObjPtr object);
 		const SceneDataGeometryObjArray&	GetGeometryArr() const;
@@ -526,6 +576,10 @@ namespace SceneData
 		SceneDataOverwritePtr			AddOverwrite(const TXString& universal, const TXString& target);
 		const SceneDataOverwriteArray&	GetOverwriteArray() const;
 		
+		SceneDataConnectionObjPtr			AddConnectionObj(const TXString& own, const TXString& other, const SceneDataGUID toObject);
+		const SceneDataConnectionObjArray&	GetConnectionArr() const;
+		
+
 	protected:
 		void						ReadMatrixNodeValue(const IXMLFileNodePtr& pNode, VWPoint3D& inOutPoint);
 		virtual	void				OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);
@@ -679,8 +733,6 @@ namespace SceneData
 		
 	private:
 		TXString						fFunction;
-		TXString						fGdtfFile;
-		TXString						fGdtfDmxMode;
 		TXString 						fGobo;
 		double							fGoboRotation;
 		SceneDataFocusPointObjPtr		fFocusPoint;
@@ -709,8 +761,6 @@ namespace SceneData
 	public:
 		
 		const TXString&					GetFunction();
-		const TXString&					GetGdtfFile();
-		const TXString&					GetGdtfDmxMode();
 		SceneDataFocusPointObjPtr		GetFocusPoint();
 		SceneDataPositionObjPtr			GetPosition();
 		const TXString&					GetFixtureId();
@@ -727,8 +777,6 @@ namespace SceneData
 		void							SetFunction(const TXString& str);
 		void							SetPosition(SceneDataPositionObjPtr ptr);
 		void							SetFocusPoint(SceneDataFocusPointObjPtr ptr);
-		void							SetGDTFFile(const TXString& path);
-		void							SetGdtfDmxMode(const TXString& path);
 		void							AddAdress(const SceneDataDmxAdress& adress);
 		void							SetColor(const CCieColor& color);
 		void							SetFixtureTypeId(const Sint8& value);
