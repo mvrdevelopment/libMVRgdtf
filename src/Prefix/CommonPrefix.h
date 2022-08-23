@@ -230,7 +230,7 @@
 #define XML_Val_GeometryObjectAttrFile		"fileName"
 
 const Sint32 kMVR_MajorVersion = 1;
-const Sint32 kMVR_MinorVersion = 4;
+const Sint32 kMVR_MinorVersion = 5;
 
 // ----------------------------------------------------------------------------------------------------------------------------------
 // GDTF XML Values
