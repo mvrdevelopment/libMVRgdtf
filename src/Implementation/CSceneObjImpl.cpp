@@ -1083,48 +1083,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::CreateConnection(MvrStr
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetGdtfName(MvrString gdtfName)
-{
-	// Check if this is initialized
-	ASSERTN(kEveryone,fPtr);
-	if( ! fPtr) return kVCOMError_NotInitialized;
-	
-	// Check the type is right
-	ASSERTN(kEveryone,fType == ESceneObjType::Fixture);
-	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
-	
-	// Try to cast
-	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
-	if( ! fixture) return kVCOMError_NoFixtureObj;
-	
-	//
-	TXString name (gdtfName);
-	fixture->SetGDTFFile(gdtfName);
-	
-	return kVCOMError_NoError;
-}
-
-VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetGdtfMode(MvrString gdtfMode)
-{
-	// Check if this is initialized
-	ASSERTN(kEveryone,fPtr);
-	if( ! fPtr) return kVCOMError_NotInitialized;
-	
-	// Check the type is right
-	ASSERTN(kEveryone,fType == ESceneObjType::Fixture);
-	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
-	
-	// Try to cast
-	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
-	if( ! fixture) return kVCOMError_NoFixtureObj;
-	
-	//
-	TXString name (gdtfMode);
-	fixture->SetGdtfDmxMode(name);
-	
-	return kVCOMError_NoError;
-}
-
 VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetFocusPoint(ISceneObj* focusPoint)
 {
 	// ------------------------------------------------------------------------------------------
