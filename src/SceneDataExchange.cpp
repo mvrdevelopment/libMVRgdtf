@@ -2363,6 +2363,27 @@ ESceneDataObjectType SceneDataTrussObj::GetObjectType()
 	return ESceneDataObjectType::eTruss;
 }
 
+SceneDataSupportObj::SceneDataSupportObj(const SceneDataGUID& guid) : SceneDataObjWithMatrix(guid)
+{
+	
+}
+
+SceneDataSupportObj::~SceneDataSupportObj()
+{
+	
+}
+
+TXString SceneDataSupportObj::GetNodeName()
+{
+	return TXString( XML_Val_SupportObjectNodeName );
+}
+
+ESceneDataObjectType SceneDataSupportObj::GetObjectType()
+{
+	return ESceneDataObjectType::eSupport;
+}
+
+
 // ----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataVideoScreenObj
 SceneDataVideoScreenObj::SceneDataVideoScreenObj(const SceneDataGUID& guid) : SceneDataObjWithMatrix(guid)
@@ -3102,6 +3123,31 @@ SceneDataTrussObjPtr SceneDataExchange::ReadTruss(const SceneDataGUID& guid,cons
 	return newTrussObj;
 }
 
+SceneDataSupportObjPtr SceneDataExchange::CreateSupport(const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name, SceneDataGroupObjPtr addToContainer)
+{
+	SceneDataSupportObjPtr newSupportObj = new SceneDataSupportObj(guid);
+	addToContainer->AddObject(newSupportObj);
+	
+	newSupportObj->setName(name);
+	newSupportObj->SetTransformMatrix(offset);
+	
+	return newSupportObj;
+}
+
+SceneDataSupportObjPtr SceneDataExchange::ReadSupport(const SceneDataGUID& guid,const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer)
+{
+	//----------------------------------------------------------------------------
+	// Create new Object
+	SceneDataSupportObjPtr newSupportObj = new SceneDataSupportObj(guid);
+	addToContainer->AddObject(newSupportObj);
+	
+	//----------------------------------------------------------------------------
+	//Read
+	newSupportObj->ReadFromNode(node, this);
+	
+	return newSupportObj;
+}
+
 SceneDataVideoScreenObjPtr SceneDataExchange::CreateVideoScreen(const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name, SceneDataGroupObjPtr addToContainer)
 {
 	SceneDataVideoScreenObjPtr newVSObj = new SceneDataVideoScreenObj(guid);
@@ -3773,6 +3819,8 @@ void SceneDataExchange::ProcessGroup(const IXMLFileNodePtr& node, SceneDataGroup
 					else if	( nodeName == XML_Val_FocusPointObjectNodeName)		{ obj = ReadFocusPoint(		SceneDataGUID(groupUuid),objNode, addToContainer); }
 					else if	( nodeName == XML_Val_TrussObjectNodeName)			{ obj = ReadTruss(			SceneDataGUID(groupUuid),objNode, addToContainer); }
 					else if	( nodeName == XML_Val_VideoScreenObjectNodeName)	{ obj = ReadVideoScreen(	SceneDataGUID(groupUuid),objNode, addToContainer); }
+					else if	( nodeName == XML_Val_SupportObjectNodeName)		{ obj = ReadSupport(		SceneDataGUID(groupUuid),objNode, addToContainer); }
+					else if	( nodeName == XML_Val_ProjectorObjectNodeName)		{ obj = ReadProjector(		SceneDataGUID(groupUuid),objNode, addToContainer); }
 					else if ( nodeName == XML_Val_GroupNodeName)				{ ProcessGroup(objNode, addToContainer, true); }
 					
 

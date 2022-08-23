@@ -1857,6 +1857,7 @@ void VectorworksMVR::CSceneObjImpl::SetPointer(SceneData::SceneDataObjWithMatrix
 		case SceneData::eLayer:			fType = ESceneObjType::Layer;		break;
 		case SceneData::eGroup:			fType = ESceneObjType::Group;		break;
 		case SceneData::eTruss:			fType = ESceneObjType::Truss;		break;
+		case SceneData::eSupport:		fType = ESceneObjType::Support;		break;
 		case SceneData::eFixture:		fType = ESceneObjType::Fixture;		break;
 		case SceneData::eFocusPoint:	fType = ESceneObjType::FocusPoint;	break;
 		case SceneData::eSceneObject:	fType = ESceneObjType::SceneObj;	break;

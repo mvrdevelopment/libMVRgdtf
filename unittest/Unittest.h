@@ -47,11 +47,10 @@ public:
 	void checkifEqual(const std::string& check, const Sint32 val1, const Sint32 val2);
 	void checkifEqual(const std::string& check, const Uint8	 val1, const Uint8  val2);
 	void checkifEqual(const std::string& check, const double val1, const double val2);
-
-	void checkifEqual(const std::string& check, const VectorworksMVR::GdtfDefines::DmxValue val1, const VectorworksMVR::GdtfDefines::DmxValue val2);
-#ifdef GS_MAC
+#if defined GS_MAC 
 	void checkifEqual(const std::string& check, const size_t val1, const size_t val2);
 #endif
+	void checkifEqual(const std::string& check, const VectorworksMVR::GdtfDefines::DmxValue val1, const VectorworksMVR::GdtfDefines::DmxValue val2);
 
     void checkifEqual(const std::string& check, const VectorworksMVR::GdtfDefines::DMXAddress val1, const VectorworksMVR::GdtfDefines::DMXAddress val2);
     void checkifEqualPtr(const std::string& check, void* val1, void* val2);

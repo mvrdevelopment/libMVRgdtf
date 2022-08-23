@@ -213,6 +213,8 @@
 
 #define XML_Val_TrussObjectNodeName			"Truss"
 
+#define XML_Val_SupportObjectNodeName		"Support"
+
 #define XML_Val_VideoScreenObjectNodeName	"VideoScreen"
 #define XML_Val_VideoScreenObjectSources    "Sources"
 

@@ -773,6 +773,77 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateTruss
 	return kVCOMError_NoError;
 }
 
+
+VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateSupport(		const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**		outSupport)
+{
+	//---------------------------------------------------------------------------
+	// Read Container
+	CSceneObjImpl* pContainer = static_cast<CSceneObjImpl* >(addToContainer);
+	
+	ASSERTN(kEveryone, pContainer != nullptr);
+	if ( ! pContainer) { return kVCOMError_NoValidContainerObj; }
+	
+	
+	SceneData::SceneDataObjWithMatrixPtr	obj		= nullptr;
+	ESceneObjType							type	= ESceneObjType::Layer;
+	pContainer->GetPointer(obj, type);
+	
+	
+	ASSERTN(kEveryone, type == ESceneObjType::Layer || type ==  ESceneObjType::Group);
+	if ( ! (type == ESceneObjType::Layer || type ==  ESceneObjType::Group) ) { return kVCOMError_NoValidContainerObj; }
+	
+	SceneData::SceneDataGroupObjPtr group = static_cast<SceneData::SceneDataGroupObjPtr>(obj);
+	
+	ASSERTN(kEveryone, group != nullptr);
+	if ( ! group) { return kVCOMError_NoValidContainerObj; }
+	
+	//---------------------------------------------------------------------------
+	// Create the obj
+	VWFC::Tools::VWUUID	uuid	(guid.a,guid.b,guid.c,guid.d);
+	TXString	nameStr	( name );
+	
+	VWTransformMatrix ma;
+	GdtfUtil::ConvertMatrix(offset, ma);
+	
+	SceneData::SceneDataSupportObjPtr ptr = fExchangeObj.CreateSupport(uuid, ma, nameStr, group);
+	
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CSceneObjImpl* pSupportObj = nullptr;
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_SceneObject, (IVWUnknown**) & pSupportObj)))
+	{
+		// Check Casting
+		CSceneObjImpl* pResultInterface = static_cast<CSceneObjImpl* >(pSupportObj);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(ptr, GetExchangeObj());
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incomming Object
+	if (*outSupport)
+	{
+		(*outSupport)->Release();
+		*outSupport		= NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*outSupport		= pSupportObj;
+	
+	return kVCOMError_NoError;
+}
+
+
 VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateVideoScreen(	const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj** outVideoScreen)
 {
 	//---------------------------------------------------------------------------
