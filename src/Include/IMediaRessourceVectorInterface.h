@@ -250,6 +250,33 @@ namespace VectorworksMVR
 	};
 	typedef VCOMPtr<ICustomCommand>	ICustomCommandPtr;
 
+	//-------------------------------------------------------------------------------------------------------------
+	class DYNAMIC_ATTRIBUTE IAlignment : public IVWUnknown
+	{
+	public:
+		virtual MvrString VCOM_CALLTYPE		GetBeamGeometry() = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetUpVector(SVector3& upVector) = 0;
+		virtual VCOMError VCOM_CALLTYPE	    GetDirection(SVector3& direction) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE		SetBeamGeometry(const MvrString& beamGeometry) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetUpVector(double x, double y, double z) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetDirection(double x, double y, double z) = 0;
+		
+	};
+	typedef VCOMPtr<IAlignment>	IAlignmentPtr;
+
+	//-------------------------------------------------------------------------------------------------------------
+	class DYNAMIC_ATTRIBUTE IOverwrite : public IVWUnknown
+	{
+	public:
+		virtual MvrString VCOM_CALLTYPE		GetUniversal() = 0;
+		virtual MvrString VCOM_CALLTYPE		GetTarget() = 0;
+
+		virtual VCOMError VCOM_CALLTYPE		SetUniversal(const MvrString& universal) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetTarget(const MvrString& target) = 0;
+		
+	};
+	typedef VCOMPtr<IOverwrite>	IOverwritePtr;
 	
 	//-------------------------------------------------------------------------------------------------------------
 	enum class ESceneObjType
@@ -339,6 +366,14 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetCustomCommandCount(size_t& outCount) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetCustomCommandAt(size_t at, ICustomCommand** outCustomCommand) = 0;
 		virtual VCOMError VCOM_CALLTYPE		CreateCustomCommand(MvrString channelFunction, bool isPercentage, double physicalValue, ICustomCommand** outCustomCommand) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE		GetAlignmentCount(size_t& outCount) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetAlignmentAt(size_t at, IAlignment** outAlignment) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateAlignment(MvrString beamGeometry, const SVector3& upVector, const SVector3& direction, IAlignment** outAlignment) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE		GetOverwriteCount(size_t& outCount) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetOverwriteAt(size_t at, IOverwrite** outOverwrite) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateOverwrite(MvrString universal, MvrString target, IOverwrite** outOverwrite) = 0;
 
 	};
 	typedef VCOMPtr<ISceneObj>	ISceneObjPtr;
