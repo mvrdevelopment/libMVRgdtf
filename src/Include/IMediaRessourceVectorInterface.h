@@ -218,6 +218,65 @@ namespace VectorworksMVR
 		
 	};
 	typedef VCOMPtr<IMapping>	IMappingPtr;
+
+	//-------------------------------------------------------------------------------------------------------------
+	class DYNAMIC_ATTRIBUTE IConnection : public IVWUnknown
+	{
+	public:
+		virtual VCOMError VCOM_CALLTYPE		GetToObject(MvrUUID& objUUID) = 0;
+		virtual MvrString VCOM_CALLTYPE		GetOwn() = 0;
+		virtual MvrString VCOM_CALLTYPE		GetOther() = 0;
+
+		virtual VCOMError VCOM_CALLTYPE		SetToObject(MvrUUID objUUID) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetOwn(MvrString value) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetOther(MvrString value) = 0;
+		
+	};
+	typedef VCOMPtr<IConnection>	IConnectionPtr;
+
+	//-------------------------------------------------------------------------------------------------------------
+
+	class DYNAMIC_ATTRIBUTE ICustomCommand : public IVWUnknown
+	{
+	public:
+		virtual MvrString VCOM_CALLTYPE		GetChannelFunction() = 0;
+		virtual VCOMError VCOM_CALLTYPE		IsPercentage(bool& isPercentage) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetValue(double& outValue) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE		SetChannelFunction(const MvrString& channelFunction) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetIsPercentage(bool isPercentage) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetValue(double value) = 0;
+		
+	};
+	typedef VCOMPtr<ICustomCommand>	ICustomCommandPtr;
+
+	//-------------------------------------------------------------------------------------------------------------
+	class DYNAMIC_ATTRIBUTE IAlignment : public IVWUnknown
+	{
+	public:
+		virtual MvrString VCOM_CALLTYPE		GetBeamGeometry() = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetUpVector(SVector3& upVector) = 0;
+		virtual VCOMError VCOM_CALLTYPE	    GetDirection(SVector3& direction) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE		SetBeamGeometry(const MvrString& beamGeometry) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetUpVector(double x, double y, double z) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetDirection(double x, double y, double z) = 0;
+		
+	};
+	typedef VCOMPtr<IAlignment>	IAlignmentPtr;
+
+	//-------------------------------------------------------------------------------------------------------------
+	class DYNAMIC_ATTRIBUTE IOverwrite : public IVWUnknown
+	{
+	public:
+		virtual MvrString VCOM_CALLTYPE		GetUniversal() = 0;
+		virtual MvrString VCOM_CALLTYPE		GetTarget() = 0;
+
+		virtual VCOMError VCOM_CALLTYPE		SetUniversal(const MvrString& universal) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetTarget(const MvrString& target) = 0;
+		
+	};
+	typedef VCOMPtr<IOverwrite>	IOverwritePtr;
 	
 	//-------------------------------------------------------------------------------------------------------------
 	enum class ESceneObjType
@@ -252,11 +311,17 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetClass(IClass** outClass) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetClass(IClass* clas) = 0;
 		
-		
-		// Fixture
 		virtual MvrString VCOM_CALLTYPE		GetGdtfName() = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetGdtfFixture(IGdtfFixture** outFixture) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetGdtfName(MvrString gdtfName) = 0;
+		
 		virtual MvrString VCOM_CALLTYPE		GetGdtfMode() = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetGdtfMode(MvrString gdtfMode) = 0;
+
+		// Fixture
+		virtual MvrString VCOM_CALLTYPE		GetFunction() = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetFunction(MvrString function) = 0;
+
 		virtual VCOMError VCOM_CALLTYPE		GetFocusPoint(ISceneObj** outFocusPoint) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetPosition(IPosition** outPosition) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetAdressCount(size_t& outAdresses) = 0;
@@ -273,8 +338,6 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetMappingCount(size_t& outMappings) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetMappingAt(size_t at, IMapping** outMapping) = 0;
 		
-		virtual VCOMError VCOM_CALLTYPE		SetGdtfName(MvrString gdtfName) = 0;
-		virtual VCOMError VCOM_CALLTYPE		SetGdtfMode(MvrString gdtfMode) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetFocusPoint(ISceneObj* focusPoint) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetPosition(IPosition* position) = 0;
 		virtual VCOMError VCOM_CALLTYPE		AddAdress(const size_t& adresses, const size_t& breakId) = 0;
@@ -296,7 +359,23 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		SetProjectorSource(MvrString value, MvrString linkedGeometry, GdtfDefines::ESourceType) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetProjectorSource(ISource** outSource) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetScaleHandling(GdtfDefines::EScaleHandlingType scaleHandling) = 0;
-		virtual VCOMError VCOM_CALLTYPE		GetScaleHandling(GdtfDefines::EScaleHandlingType& outScaleHandling) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetScaleHandling(GdtfDefines::EScaleHandlingType& outScaleHandling) = 0;	
+		virtual VCOMError VCOM_CALLTYPE		GetConnectionCount(size_t& outConnections) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetConnectionAt(size_t at, IConnection** outConnection) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateConnection(MvrString own, MvrString other, MvrUUID ToObject, IConnection** addedObj) = 0;
+		// MVR 1.5
+		virtual VCOMError VCOM_CALLTYPE		GetCustomCommandCount(size_t& outCount) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetCustomCommandAt(size_t at, ICustomCommand** outCustomCommand) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateCustomCommand(MvrString channelFunction, bool isPercentage, double physicalValue, ICustomCommand** outCustomCommand) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE		GetAlignmentCount(size_t& outCount) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetAlignmentAt(size_t at, IAlignment** outAlignment) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateAlignment(MvrString beamGeometry, const SVector3& upVector, const SVector3& direction, IAlignment** outAlignment) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE		GetOverwriteCount(size_t& outCount) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetOverwriteAt(size_t at, IOverwrite** outOverwrite) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateOverwrite(MvrString universal, MvrString target, IOverwrite** outOverwrite) = 0;
+
 	};
 	typedef VCOMPtr<ISceneObj>	ISceneObjPtr;
 	

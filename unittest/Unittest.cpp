@@ -42,7 +42,6 @@ void Unittest::checkifTrue (const std::string& check, const bool b)
 {
     checkifEqual(check, b, true);
 }
-
 void Unittest::checkifEqual(const std::string& check, const Uint32 val1, const Uint32 val2)
 {
 	if (val1 == val2) return;
@@ -133,6 +132,7 @@ void Unittest::checkifEqual(const std::string& check, const size_t val1, const s
 };
 #endif
 
+ // Read comment at declaration!
 void Unittest::checkifEqual(const std::string& check, const VectorworksMVR::GdtfDefines::DmxValue val1, const VectorworksMVR::GdtfDefines::DmxValue val2)
 {
 	if (val1 == val2) return;

@@ -3,6 +3,7 @@
 //-----------------------------------------------------------------------------
 #include "Prefix/StdAfx.h"
 #include "CMediaRessourceVectorImpl.h"
+#include "CConnectionImpl.h"
 
 
 using namespace VectorworksMVR::Filing;

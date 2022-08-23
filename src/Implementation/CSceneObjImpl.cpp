@@ -4,6 +4,10 @@
 #include "Prefix/StdAfx.h"
 #include "CMediaRessourceVectorImpl.h"
 #include "CGeometryReferenceImpl.h"
+#include "CConnectionImpl.h"
+#include "CCustomCommandImpl.h"
+#include "CAlignmentImpl.h"
+#include "COverwriteImpl.h"
 
 #include "CGdtfFixture.h"
 #include "Utility.h"
@@ -76,7 +80,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetGeometryCount(size_t
 	ASSERTN(kEveryone,fPtr);
 	if( ! fPtr) return kVCOMError_NotInitialized;
 	
-	// Otherise return data
+	// Otherwise return data
 	outCount = fPtr->GetGeometryArr().size();
 	return kVCOMError_NoError;
 }
@@ -124,7 +128,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetGeometryAt(size_t at
 	}
 	
 	//---------------------------------------------------------------------------
-	// Check Incomming Object
+	// Check Incoming Object
 	if (*outGeometryRef)
 	{
 		(*outGeometryRef)->Release();
@@ -303,9 +307,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetClass(IClass* clas)
 	return kVCOMError_NoError;
 }
 
-
-//------------------------------------------------------------------------------------------------------------------------------------------
-// Fixture
 MvrString VectorworksMVR::CSceneObjImpl::GetGdtfName()
 {
 	// Check if this is initialized
@@ -313,14 +314,10 @@ MvrString VectorworksMVR::CSceneObjImpl::GetGdtfName()
 	if( ! fPtr) return "";
 	
 	// Check the type is right
-	ASSERTN(kEveryone,fType == ESceneObjType::Fixture);
-	if( fType != ESceneObjType::Fixture) return "";
+	ASSERTN(kEveryone,fType != ESceneObjType::Layer && fType != ESceneObjType::Group);
+	if( fType == ESceneObjType::Layer || fType == ESceneObjType::Group) return "";
 	
-	// Try to cast
-	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
-	if( ! fixture) return "";
-	
-	return fixture->GetGdtfFile().GetCharPtr();
+	return fPtr->GetGdtfFile().GetCharPtr();
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetGdtfFixture(IGdtfFixture** outFixture)
@@ -330,17 +327,12 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetGdtfFixture(IGdtfFix
 	if( ! fPtr) return kVCOMError_Failed;
 	
 	// Check the type is right
-	ASSERTN(kEveryone,fType == ESceneObjType::Fixture);
-	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
-	
-	// Try to cast
-	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
-	if( ! fixture) return kVCOMError_NoFixtureObj;
-	
+	ASSERTN(kEveryone,fType != ESceneObjType::Layer && fType != ESceneObjType::Group);
+	if( fType == ESceneObjType::Layer || fType == ESceneObjType::Group) return kVCOMError_NoValidContainerObj;	
 	
 	//---------------------------------------------------------------------------------------------------
 	// Now get the GDTF File
-	TXString gdtfName = fixture->GetGdtfFile();
+	TXString gdtfName = fPtr->GetGdtfFile();
 	
 	if (gdtfName.Find(".gdtf") == ptrdiff_t(-1)) { gdtfName += ".gdtf";}
 	
@@ -383,23 +375,37 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetGdtfFixture(IGdtfFix
 	}
 	
 	//---------------------------------------------------------------------------
-	// Check Incomming Object
+	// Check Incoming Object
 	if (*outFixture)
 	{
 		(*outFixture)->Release();
-		*outFixture		= NULL;
+		*outFixture	= NULL;
 	}
-	
 	
 	//---------------------------------------------------------------------------
 	// Set Out Value
-	*outFixture		= pGdtfFixture;
+	*outFixture	= pGdtfFixture;
 	
 	// If reading failed
 	if(!read) {return kVCOMError_Failed;}
 	
 	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetGdtfName(MvrString gdtfName)
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
 	
+	// Check the type is right
+	ASSERTN(kEveryone,fType != ESceneObjType::Layer && fType != ESceneObjType::Group);
+	if( fType == ESceneObjType::Layer || fType == ESceneObjType::Group) return kVCOMError_NoValidContainerObj;
+	
+	TXString name (gdtfName);
+	fPtr->SetGDTFFile(gdtfName);
+	
+	return kVCOMError_NoError;
 }
 
 MvrString VectorworksMVR::CSceneObjImpl::GetGdtfMode()
@@ -409,16 +415,363 @@ MvrString VectorworksMVR::CSceneObjImpl::GetGdtfMode()
 	if( ! fPtr) return "";
 	
 	// Check the type is right
-	ASSERTN(kEveryone,fType == ESceneObjType::Fixture);
-	if( fType != ESceneObjType::Fixture) return "";
+	ASSERTN(kEveryone,fType != ESceneObjType::Layer && fType != ESceneObjType::Group);
+	if( fType == ESceneObjType::Layer || fType == ESceneObjType::Group) return "";	
 	
-	// Try to cast
-	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
-	if( ! fixture) return "";
-	
-	
-	return fixture->GetGdtfDmxMode().GetCharPtr();
+	return fPtr->GetGdtfDmxMode().GetCharPtr();
 }
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetGdtfMode(MvrString gdtfMode)
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+	
+	// Check the type is right
+	ASSERTN(kEveryone,fType != ESceneObjType::Layer && fType != ESceneObjType::Group);
+	if( fType == ESceneObjType::Layer || fType == ESceneObjType::Group) return kVCOMError_NoValidContainerObj;
+
+	TXString name (gdtfMode);
+	fPtr->SetGdtfDmxMode(name);
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetCustomCommandCount(size_t& outCount)
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone, fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+	
+	// Otherwise return data
+	outCount = fPtr->GetCustomCommandArray().size();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetCustomCommandAt(size_t at, ICustomCommand** outCustomCommand)
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+	
+	//------------------------------------------------------------------------------------------
+	// Check the position in the array
+	size_t count = fPtr->GetCustomCommandArray().size();
+	
+	
+	ASSERTN(kEveryone, at < count);
+	if (count < at) { return kVCOMError_InvalidArg; }
+	
+	SceneData::SceneDataCustomCommandPtr pScCustomCommand = fPtr->GetCustomCommandArray().at(at);
+	
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CCustomCommandImpl* pCustomCommand = nullptr;
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_CustomCommand, (IVWUnknown**) & pCustomCommand)))
+	{
+		// Check Casting
+		CCustomCommandImpl* pResultInterface = static_cast<CCustomCommandImpl*>(pCustomCommand);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(pScCustomCommand);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incoming Object
+	if (*outCustomCommand)
+	{
+		(*outCustomCommand)->Release();
+		*outCustomCommand		= NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*outCustomCommand = pCustomCommand;
+	
+	return kVCOMError_NoError;
+
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::CreateCustomCommand(MvrString channelFunction, bool isPercentage, double physicalValue, ICustomCommand** outCustomCommand)
+{	
+	ASSERTN(kEveryone, fPtr != nullptr);
+	if ( ! fPtr) { return kVCOMError_Failed; }
+	
+	// ------------------------------------------------------------------------------------------
+	// Add
+
+	SceneData::SceneDataCustomCommandPtr pScCustomCommand = fPtr->AddCustomCommand(channelFunction, isPercentage, physicalValue);
+
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CCustomCommandImpl* pCustomCommand = nullptr;
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_CustomCommand, (IVWUnknown**) & pCustomCommand)))
+	{
+		// Check Casting
+		CCustomCommandImpl* pResultInterface = static_cast<CCustomCommandImpl*>(pCustomCommand);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(pScCustomCommand);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incoming Object
+	if (*outCustomCommand)
+	{
+		(*outCustomCommand)->Release();
+		*outCustomCommand		= NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*outCustomCommand = pCustomCommand;
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetAlignmentCount(size_t& outCount)
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone, fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+	
+	// Otherwise return data
+	outCount = fPtr->GetAlignmentArray().size();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetAlignmentAt(size_t at, IAlignment** outAlignment)
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone, fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+	
+	//------------------------------------------------------------------------------------------
+	// Check the position in the array
+	size_t count = fPtr->GetAlignmentArray().size();
+	
+	
+	ASSERTN(kEveryone, at < count);
+	if (count < at) { return kVCOMError_InvalidArg; }
+	
+	SceneData::SceneDataAlignmentPtr pScAlignment = fPtr->GetAlignmentArray().at(at);
+	
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CAlignmentImpl* pAlignment = nullptr;
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_Alignment, (IVWUnknown**) & pAlignment)))
+	{
+		// Check Casting
+		CAlignmentImpl* pResultInterface = static_cast<CAlignmentImpl*>(pAlignment);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(pScAlignment);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incoming Object
+	if (*outAlignment)
+	{
+		(*outAlignment)->Release();
+		*outAlignment		= NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*outAlignment = pAlignment;
+	
+	return kVCOMError_NoError;
+
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::CreateAlignment(MvrString beamGeometry, const SVector3& upVector, const SVector3& direction, IAlignment** outAlignment)
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone, fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+	
+	//------------------------------------------------------------------------------------------
+	// Add
+	VWPoint3D upV = VWPoint3D(upVector.x, upVector.y, upVector.z);
+	VWPoint3D directionV = VWPoint3D(direction.x, direction.y, direction.z);
+	SceneData::SceneDataAlignmentPtr pScAlignment = fPtr->AddAlignment(beamGeometry, upV, directionV);
+	
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CAlignmentImpl* pAlignment = nullptr;
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_Alignment, (IVWUnknown**) & pAlignment)))
+	{
+		// Check Casting
+		CAlignmentImpl* pResultInterface = static_cast<CAlignmentImpl*>(pAlignment);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(pScAlignment);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incoming Object
+	if (*outAlignment)
+	{
+		(*outAlignment)->Release();
+		*outAlignment		= NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*outAlignment = pAlignment;
+	
+	return kVCOMError_NoError;
+
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetOverwriteCount(size_t& outCount)
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone, fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+	
+	// Otherwise return data
+	outCount = fPtr->GetOverwriteArray().size();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetOverwriteAt(size_t at, IOverwrite** outOverwrite)
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone, fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+	
+	//------------------------------------------------------------------------------------------
+	// Check the position in the array
+	size_t count = fPtr->GetOverwriteArray().size();
+	
+	
+	ASSERTN(kEveryone, at < count);
+	if (count < at) { return kVCOMError_InvalidArg; }
+	
+	SceneData::SceneDataOverwritePtr pScOverwrite = fPtr->GetOverwriteArray().at(at);
+	
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	COverwriteImpl* pOverwrite = nullptr;
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_Overwrite, (IVWUnknown**) & pOverwrite)))
+	{
+		// Check Casting
+		COverwriteImpl* pResultInterface = static_cast<COverwriteImpl*>(pOverwrite);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(pScOverwrite);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incoming Object
+	if (*outOverwrite)
+	{
+		(*outOverwrite)->Release();
+		*outOverwrite		= NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*outOverwrite = pOverwrite;
+	
+	return kVCOMError_NoError;
+
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::CreateOverwrite(MvrString universal, MvrString target, IOverwrite** outOverwrite)
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone, fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+	
+	//------------------------------------------------------------------------------------------
+	// Add
+	SceneData::SceneDataOverwritePtr pScOverwrite = fPtr->AddOverwrite(universal, target);
+	
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	COverwriteImpl* pOverwrite = nullptr;
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_Overwrite, (IVWUnknown**) & pOverwrite)))
+	{
+		// Check Casting
+		COverwriteImpl* pResultInterface = static_cast<COverwriteImpl*>(pOverwrite);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(pScOverwrite);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incoming Object
+	if (*outOverwrite)
+	{
+		(*outOverwrite)->Release();
+		*outOverwrite		= NULL;
+	}
+	
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*outOverwrite = pOverwrite;
+	
+	return kVCOMError_NoError;
+
+}
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+// Fixture
 
 VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetFocusPoint(ISceneObj** outFocusPoint)
 {
@@ -839,7 +1192,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetMappingAt(size_t at,
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetGdtfName(MvrString gdtfName)
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetConnectionCount(size_t& outConnections)
 {
 	// Check if this is initialized
 	ASSERTN(kEveryone,fPtr);
@@ -853,31 +1206,106 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetGdtfName(MvrString g
 	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
 	if( ! fixture) return kVCOMError_NoFixtureObj;
 	
-	//
-	TXString name (gdtfName);
-	fixture->SetGDTFFile(gdtfName);
+	outConnections = fixture->GetConnectionArr().size();
 	
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetGdtfMode(MvrString gdtfMode)
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetConnectionAt(size_t at, IConnection** outConnection)
 {
-	// Check if this is initialized
 	ASSERTN(kEveryone,fPtr);
 	if( ! fPtr) return kVCOMError_NotInitialized;
 	
-	// Check the type is right
 	ASSERTN(kEveryone,fType == ESceneObjType::Fixture);
 	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
-	
+
 	// Try to cast
 	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
 	if( ! fixture) return kVCOMError_NoFixtureObj;
 	
-	//
-	TXString name (gdtfMode);
-	fixture->SetGdtfDmxMode(name);
+	size_t count = fixture->GetConnectionArr().size();
 	
+	
+	ASSERTN(kEveryone, at < count);
+	if (count < at) { return kVCOMError_InvalidArg; }
+	
+	SceneData::SceneDataConnectionObjPtr pScConnection = fixture->GetConnectionArr().at(at);
+	
+	CConnectionImpl* pConnection = nullptr;
+	
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_ConnectionObj, (IVWUnknown**) & pConnection)))
+	{
+		CConnectionImpl* pResultInterface = static_cast<CConnectionImpl* >(pConnection);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(pScConnection);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	if (*outConnection)
+	{
+		(*outConnection)->Release();
+		*outConnection		= NULL;
+	}
+	*outConnection	= pConnection;
+	
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::CreateConnection(MvrString own, MvrString other, MvrUUID ToObject, IConnection** addedObj)
+{
+	ASSERTN(kEveryone,fType == ESceneObjType::Fixture);
+	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
+
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	
+	ASSERTN(kEveryone, fixture != nullptr);
+	if ( ! fixture) { return kVCOMError_Failed; }
+	
+	const auto nObj = fixture->AddConnectionObj(own, other, VWUUID(ToObject.a, ToObject.b, ToObject.c, ToObject.d));
+	
+		//---------------------------------------------------------------------------
+	// Initialize Object
+	CConnectionImpl* pConnectionImpl = nullptr;
+	
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_ConnectionObj, (IVWUnknown**) & pConnectionImpl)))
+	{
+		// Check Casting
+		CConnectionImpl* pResultInterface = static_cast<CConnectionImpl*>(pConnectionImpl);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(nObj);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+	
+	//---------------------------------------------------------------------------
+	// Check Incoming Object
+	if(addedObj){
+		if (*addedObj)
+		{
+			(*addedObj)->Release();
+			*addedObj		= NULL;
+		}
+		
+		//---------------------------------------------------------------------------
+		// Set Out Value
+		*addedObj = pConnectionImpl;
+	}
+	return kVCOMError_NoError;
+
 	return kVCOMError_NoError;
 }
 
@@ -1381,6 +1809,41 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetScaleHandling(GdtfDe
 	return kVCOMError_NoError;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetFunction(MvrString function){
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) {return kVCOMError_NotInitialized;}
+	
+	// Check the type is right
+	ASSERTN(kEveryone,fType == ESceneObjType::Fixture);
+	if( fType != ESceneObjType::Fixture) {return kVCOMError_NoFixtureObj;}
+	
+	// Try to cast
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	if( ! fixture) {return kVCOMError_NoFixtureObj;}
+	
+	TXString funStr (function);
+	fixture->SetFunction(funStr);
+	
+	return kVCOMError_NoError;
+}
+
+MvrString VectorworksMVR::CSceneObjImpl::GetFunction(){
+		// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) return "";
+	
+	// Check the type is right
+	ASSERTN(kEveryone,fType == ESceneObjType::Fixture);
+	if( fType != ESceneObjType::Fixture) return "";
+	
+	// Try to cast
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	if( ! fixture) return "";
+	
+	return fixture->GetFunction().GetCharPtr();
+}
+	
 
 //------------------------------------------------------------------------------------------------------------------------------------------
 // Implementation

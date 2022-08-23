@@ -174,6 +174,39 @@ void MvrUnittest::WriteFile()
 				__checkVCOM(mapping1->SetOy(4));
 				__checkVCOM(mapping1->SetRz(5.6));
 			}
+
+			__checkVCOM(fixture1->CreateConnection("ConnectionFrom", "ConnectionTo", MvrUUID(1136161871, 1699151080, 751939975, 1748783014) /* fixture2*/, nullptr)); 
+		
+			fixture1->SetFunction("TestFunction");
+			
+			//CustomCommands
+			ICustomCommandPtr customCommand1, customCommand2;
+			__checkVCOM(fixture1->CreateCustomCommand("My ChannelFunction 1", false, -1.2, &customCommand1));
+			__checkVCOM(fixture1->CreateCustomCommand("My ChannelFunction 1", false, -1.2, &customCommand2));
+
+			__checkVCOM(customCommand2->SetChannelFunction("My ChannelFunction 2"));
+			__checkVCOM(customCommand2->SetIsPercentage(true));
+			__checkVCOM(customCommand2->SetValue(-3.4));
+			
+
+			//Alignments
+			IAlignmentPtr alignment1, alignment2;
+			SVector3 upVector1 = {0, 0, 1};
+			SVector3 direction1 = {0.1, 2.3, -4.5};
+			__checkVCOM(fixture1->CreateAlignment("My beamGeometry 1", upVector1, direction1, &alignment1));
+			__checkVCOM(fixture1->CreateAlignment("My beamGeometry 1", upVector1, direction1, &alignment2));
+
+			__checkVCOM(alignment2->SetBeamGeometry("My beamGeometry 2"));
+			__checkVCOM(alignment2->SetUpVector(0, -2, 0));
+			__checkVCOM(alignment2->SetDirection(-6.7, 8.9, 10.11));
+
+			//Overwrites
+			IOverwritePtr overwrite1, overwrite2;
+			__checkVCOM(fixture1->CreateOverwrite("My universal 1", "My target 1", &overwrite1));
+			__checkVCOM(fixture1->CreateOverwrite("My universal 1", "My target 1", &overwrite2));
+
+			__checkVCOM(overwrite2->SetUniversal("My universal 2"));
+			__checkVCOM(overwrite2->SetTarget("My target 2"));
 		}
 
 		// And another fixture
@@ -452,6 +485,7 @@ void MvrUnittest::ReadFile()
 					this->checkifEqual("GetFixtureGuid fixtureUUID1 ", resultUUID, fixtureUUID1);
 					checkifEqual("GetGdtfName", 	 	sceneObj->GetGdtfName(), "testGdtf.gdtf");
 					checkifEqual("GetGdtfMode", 	 	sceneObj->GetGdtfMode(), "My DmxModeName");
+					checkifEqual("GetFunction", 	 	sceneObj->GetFunction(), "TestFunction");
 
 					ISceneObjPtr focus;
 					if(__checkVCOM(sceneObj->GetFocusPoint( & focus)))
@@ -528,6 +562,87 @@ void MvrUnittest::ReadFile()
 						checkifEqual("Check GetRz ", 		 rz, 			5.6);
 					}
 
+					//CustomCommands
+					size_t customCommandCount;
+					__checkVCOM(sceneObj->GetCustomCommandCount(customCommandCount));
+					checkifEqual("GetCustomCommandCount", customCommandCount, (size_t)2);
+
+					ICustomCommandPtr customCommand1, customCommand2;
+					if(__checkVCOM(sceneObj->GetCustomCommandAt(0, &customCommand1)))
+					{
+						bool isPercentage = false;
+						double value = 0.0;
+						__checkVCOM(customCommand1->IsPercentage(isPercentage));
+						__checkVCOM(customCommand1->GetValue(value));
+
+						checkifEqual("Check GetChannelFunction ", customCommand1->GetChannelFunction(), "My ChannelFunction 1");
+						checkifEqual("Check IsPercentage ", isPercentage, false);
+						checkifEqual("Check GetValue ", value, -1.2);
+					}
+					if(__checkVCOM(sceneObj->GetCustomCommandAt(1, &customCommand2)))
+					{
+						bool isPercentage = false;
+						double value = 0.0;
+						__checkVCOM(customCommand2->IsPercentage(isPercentage));
+						__checkVCOM(customCommand2->GetValue(value));
+
+						checkifEqual("Check GetChannelFunction ", customCommand2->GetChannelFunction(), "My ChannelFunction 2");
+						checkifEqual("Check IsPercentage ", isPercentage, true);
+						checkifEqual("Check GetValue ", value, -3.4);
+					}
+
+					//Alignments
+					size_t alignmentCount;
+					__checkVCOM(sceneObj->GetAlignmentCount(alignmentCount));
+					checkifEqual("GetAlignmentCount", alignmentCount, (size_t)2);
+
+					IAlignmentPtr alignment1, alignment2;
+					if(__checkVCOM(sceneObj->GetAlignmentAt(0, &alignment1)))
+					{
+						SVector3 upVector1, direction1;
+						__checkVCOM(alignment1->GetUpVector(upVector1));
+						__checkVCOM(alignment1->GetDirection(direction1));
+
+						checkifEqual("Check GetBeamGeometry ", alignment1->GetBeamGeometry(), "My beamGeometry 1");
+						checkifEqual("Check GetUpVector X", upVector1.x, 0.0);
+						checkifEqual("Check GetUpVector Y", upVector1.y, 0.0);
+						checkifEqual("Check GetUpVector Z", upVector1.z, 1.0);
+						checkifEqual("Check GetDirection X", direction1.x, 0.1);
+						checkifEqual("Check GetDirection Y", direction1.y, 2.3);
+						checkifEqual("Check GetDirection Z", direction1.z, -4.5);
+					}
+					if(__checkVCOM(sceneObj->GetAlignmentAt(1, &alignment2)))
+					{
+						SVector3 upVector2, direction2;
+						__checkVCOM(alignment2->GetUpVector(upVector2));
+						__checkVCOM(alignment2->GetDirection(direction2));
+
+						checkifEqual("Check GetBeamGeometry ", alignment2->GetBeamGeometry(), "My beamGeometry 2");
+						checkifEqual("Check GetUpVector X", upVector2.x, 0.0);
+						checkifEqual("Check GetUpVector Y", upVector2.y, -2.0);
+						checkifEqual("Check GetUpVector Z", upVector2.z, 0.0);
+						checkifEqual("Check GetDirection X", direction2.x, -6.7);
+						checkifEqual("Check GetDirection Y", direction2.y, 8.9);
+						checkifEqual("Check GetDirection Z", direction2.z, 10.11);
+					}
+
+					//Overwrites
+					size_t overwriteCount;
+					__checkVCOM(sceneObj->GetOverwriteCount(overwriteCount));
+					checkifEqual("GetOverwriteCount", overwriteCount, (size_t)2);
+
+					IOverwritePtr overwrite1, overwrite2;
+					if(__checkVCOM(sceneObj->GetOverwriteAt(0, &overwrite1)))
+					{
+						checkifEqual("Check GetUniversal ", overwrite1->GetUniversal(), "My universal 1");
+						checkifEqual("Check GetTarget ", overwrite1->GetTarget(), "My target 1");
+					}
+					if(__checkVCOM(sceneObj->GetOverwriteAt(1, &overwrite2)))
+					{
+						checkifEqual("Check GetUniversal ", overwrite2->GetUniversal(), "My universal 2");
+						checkifEqual("Check GetTarget ", overwrite2->GetTarget(), "My target 2");
+					}
+
 					//Linked Fixture
 					IGdtfFixturePtr gdtfLinkedFixture;
 					__checkVCOM(sceneObj->GetGdtfFixture( & gdtfLinkedFixture));
@@ -538,6 +653,22 @@ void MvrUnittest::ReadFile()
 					char* buffer = new char[bufferLength + 1];
 					__checkVCOM(gdtfLinkedFixture->ToBuffer(buffer));
 					delete[] buffer;
+
+					//Connections
+					
+					size_t connCount;
+					sceneObj->GetConnectionCount(connCount);
+					checkifEqual("GetConnectionCount", connCount, (size_t)1);
+					if(connCount == 1){
+						IConnectionPtr conn;
+						sceneObj->GetConnectionAt(0, &conn);
+						checkifEqual("Connection->GetOwn()", conn->GetOwn(), "ConnectionFrom");
+						checkifEqual("Connection->GetOther()", conn->GetOther(), "ConnectionTo");
+						MvrUUID ToObj(0, 0, 0, 0);
+						conn->GetToObject(ToObj);
+						checkifEqual("Connection->GetToObject()", ToObj, MvrUUID(1136161871, 1699151080, 751939975, 1748783014));
+					}
+
 				}
 				
 				// ------------------------------------------------------------------------------

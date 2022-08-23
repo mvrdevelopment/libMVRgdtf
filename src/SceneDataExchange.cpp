@@ -942,17 +942,355 @@ ESceneDataObjectType SceneDataMappingObj::GetObjectType()
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------------
+// SceneDataConnectionObj
+	
+SceneDataConnectionObj::SceneDataConnectionObj() : SceneDataObj(SceneDataGUID(eNoGuid,"")), fToObject(SceneDataGUID(eNoGuid,""))
+{
+}
+
+SceneDataConnectionObj::SceneDataConnectionObj(const TXString& own, const TXString& other, const TXString& toObject) : SceneDataObj(SceneDataGUID(eNoGuid,"")), fOwn(own), fOther(other), fToObject(toObject)
+{
+}
+
+SceneDataConnectionObj::SceneDataConnectionObj(const TXString& own, const TXString& other, const SceneDataGUID& toObject) : SceneDataObj(SceneDataGUID(eNoGuid,"")), fOwn(own), fOther(other), fToObject(toObject)
+{
+}
+
+SceneDataConnectionObj::~SceneDataConnectionObj()
+{	
+}
+
+SceneDataGUID& SceneDataConnectionObj::GetToObject()
+{
+	return fToObject;
+}
+
+
+void SceneDataConnectionObj::SetToObject(SceneDataGUID uuid){
+	fToObject = uuid;
+}
+
+TXString& SceneDataConnectionObj::GetOwn(){
+	return fOwn;
+}
+
+
+void SceneDataConnectionObj::SetOwn(TXString& own){
+	fOwn = own;
+}
+
+TXString& SceneDataConnectionObj::GetOther(){
+	return fOther;
+}
+
+
+void SceneDataConnectionObj::SetOther(TXString& other){
+	fOther = other;
+}
+
+TXString				SceneDataConnectionObj::GetNodeName(){
+	return XML_Val_ConnectionNodeName;
+}
+
+ESceneDataObjectType	SceneDataConnectionObj::GetObjectType(){
+	return eConnectionObject;
+}
+
+void SceneDataConnectionObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
+{
+	// Call parent
+	SceneDataObj::OnPrintToFile(pNode, exchange);
+
+	// Set attributes
+	pNode->SetNodeAttributeValue(XML_Val_ConnectionOwn, fOwn);
+	pNode->SetNodeAttributeValue(XML_Val_ConnectionOther, fOther);
+	pNode->SetNodeAttributeValue(XML_Val_ConnectionToObject, fToObject.GetUUIDString());
+}
+
+void SceneDataConnectionObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
+{
+	// Call parent
+	SceneDataObj::OnReadFromNode(pNode, exchange);
+
+	TXString uuidStr;
+	pNode->GetNodeAttributeValue(XML_Val_ConnectionOwn, fOwn);
+	pNode->GetNodeAttributeValue(XML_Val_ConnectionOther, fOther);
+	TXString nUUID;
+	pNode->GetNodeAttributeValue(XML_Val_ConnectionToObject, nUUID);
+	fToObject = SceneDataGUID(nUUID);
+}
+
+// SceneDataCustomCommand
+SceneDataCustomCommand::SceneDataCustomCommand() : SceneDataObj(SceneDataGUID(eNoGuid,""))
+{
+	fChannelFunction	= "";
+	fIsPercentage 		= false;
+	fValue				= 0.0;
+	
+}
+
+SceneDataCustomCommand::SceneDataCustomCommand(const TXString& channelFunction, bool isPercentage, double value) : SceneDataObj(SceneDataGUID(eNoGuid,""))
+{
+	fChannelFunction	= channelFunction;
+	fIsPercentage 		= isPercentage;
+	fValue				= value;	
+}
+
+SceneDataCustomCommand::~SceneDataCustomCommand()
+{
+	
+}
+
+const TXString& SceneDataCustomCommand::GetChannelFunction()
+{
+	return fChannelFunction;
+}
+
+bool SceneDataCustomCommand::IsPercentage()
+{
+	return fIsPercentage;
+}
+
+double SceneDataCustomCommand::GetValue()
+{
+	return fValue;
+}
+
+void SceneDataCustomCommand::SetChannelFunction(const TXString& channelFunction)
+{
+	fChannelFunction = channelFunction;
+}
+
+void SceneDataCustomCommand::SetIsPercentage(bool isPercentage)
+{
+	fIsPercentage = isPercentage;
+}
+
+void SceneDataCustomCommand::SetValue(double value)
+{
+	fValue = value;
+}
+
+void SceneDataCustomCommand::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
+{
+	// Call parent
+	SceneDataObj::OnPrintToFile(pNode, exchange);
+
+	// Set value	
+	TXString customCommandString = fChannelFunction;
+	customCommandString += fIsPercentage ? "/percent,f " : ",f ";
+	customCommandString += std::to_string(fValue);
+
+	pNode->SetNodeValue(customCommandString);
+}
+
+void SceneDataCustomCommand::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
+{
+	// Call parent
+	SceneDataObj::OnReadFromNode(pNode, exchange);
+
+	TXString customCommandString;
+	pNode->GetNodeValue(customCommandString);
+
+	// Parse the string
+	ptrdiff_t percentP = customCommandString.Find("/percent");
+	
+	fIsPercentage = percentP != -1;
+	if(fIsPercentage)
+	{
+		fChannelFunction = customCommandString.Left(percentP);
+	}
+	else
+	{
+		ptrdiff_t commaP = customCommandString.Find(",");
+		fChannelFunction = customCommandString.Left(commaP);
+	}
+
+	ptrdiff_t spaceP = customCommandString.TrimRight().ReverseFind(" ");
+	TXString valueString = customCommandString.Right(customCommandString.GetLength() - spaceP - 1);
+	fValue = valueString.atof();
+}
+
+TXString SceneDataCustomCommand::GetNodeName()
+{
+	return TXString(XML_Val_CustomCommandNodeName);
+}
+
+ESceneDataObjectType SceneDataCustomCommand::GetObjectType()
+{
+	return ESceneDataObjectType::eCustomCommand;
+}
+
+// ----------------------------------------------------------------------------------------------------------------------------------
+// SceneDataAlignment
+SceneDataAlignment::SceneDataAlignment() : SceneDataObj(SceneDataGUID(eNoGuid,""))
+{
+	fBeamGeometry	= "";
+	fUpVector 		= VWPoint3D();
+	fDirection		= VWPoint3D();
+	
+}
+
+SceneDataAlignment::SceneDataAlignment(const TXString& beamGeometry, const VWPoint3D& upVector, const VWPoint3D& direction) : SceneDataObj(SceneDataGUID(eNoGuid,""))
+{
+	fBeamGeometry	= beamGeometry;
+	fUpVector 		= upVector;
+	fDirection		= direction;	
+}
+
+SceneDataAlignment::~SceneDataAlignment()
+{
+	
+}
+
+const TXString& SceneDataAlignment::GetBeamGeometry()
+{
+	return fBeamGeometry;
+}
+
+const VWPoint3D& SceneDataAlignment::GetUpVector()
+{
+	return fUpVector;
+}
+
+const VWPoint3D& SceneDataAlignment::GetDirection()
+{
+	return fDirection;
+}
+
+void SceneDataAlignment::SetBeamGeometry(const TXString& beamGeometry)
+{
+	fBeamGeometry = beamGeometry;
+}
+
+void SceneDataAlignment::SetUpVector(double x, double y, double z)
+{
+	fUpVector.SetPoint(x, y, z);
+}
+
+void SceneDataAlignment::SetDirection(double x, double y, double z)
+{
+	fDirection.SetPoint(x, y, z);
+}
+
+void SceneDataAlignment::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
+{
+	// Call parent
+	SceneDataObj::OnPrintToFile(pNode, exchange);
+
+	// Set value
+	pNode->SetNodeAttributeValue(XML_Val_AlignmentBeamGeometry,	fBeamGeometry);
+	pNode->SetNodeAttributeValue(XML_Val_AlignmentUpVector,		GdtfConverter::ConvertVector3(fUpVector));
+	pNode->SetNodeAttributeValue(XML_Val_AlignmentDirection,	GdtfConverter::ConvertVector3(fDirection));
+}
+
+void SceneDataAlignment::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
+{
+	// Call parent
+	SceneDataObj::OnReadFromNode(pNode, exchange);
+
+						pNode->GetNodeAttributeValue(XML_Val_AlignmentBeamGeometry, fBeamGeometry);
+	TXString upVector;	pNode->GetNodeAttributeValue(XML_Val_AlignmentUpVector, upVector);		GdtfConverter::ConvertVector3(upVector, pNode, fUpVector);
+	TXString direction;	pNode->GetNodeAttributeValue(XML_Val_AlignmentDirection, direction);	GdtfConverter::ConvertVector3(direction, pNode, fDirection);
+}
+
+TXString SceneDataAlignment::GetNodeName()
+{
+	return TXString(XML_Val_AlignmentNodeName);
+}
+
+ESceneDataObjectType SceneDataAlignment::GetObjectType()
+{
+	return ESceneDataObjectType::eAlignment;
+}
+
+// ----------------------------------------------------------------------------------------------------------------------------------
+// SceneDataOverwrite
+SceneDataOverwrite::SceneDataOverwrite() : SceneDataObj(SceneDataGUID(eNoGuid,""))
+{
+	fUniversal	= "";
+	fTarget		= "";
+}
+
+SceneDataOverwrite::SceneDataOverwrite(const TXString& universal, const TXString& target) : SceneDataObj(SceneDataGUID(eNoGuid,""))
+{
+	fUniversal	= universal;
+	fTarget		= target;	
+}
+
+SceneDataOverwrite::~SceneDataOverwrite()
+{
+	
+}
+
+const TXString& SceneDataOverwrite::GetUniversal()
+{
+	return fUniversal;
+}
+
+const TXString& SceneDataOverwrite::GetTarget()
+{
+	return fTarget;
+}
+
+void SceneDataOverwrite::SetUniversal(const TXString& universal)
+{
+	fUniversal = universal;
+}
+
+void SceneDataOverwrite::SetTarget(const TXString& target)
+{
+	fTarget = target;
+}
+
+void SceneDataOverwrite::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
+{
+	// Call parent
+	SceneDataObj::OnPrintToFile(pNode, exchange);
+
+	// Set value
+	pNode->SetNodeAttributeValue(XML_Val_OverwriteUniversal,	fUniversal);
+	pNode->SetNodeAttributeValue(XML_Val_OverwriteTarget,		fTarget);
+}
+
+void SceneDataOverwrite::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
+{
+	// Call parent
+	SceneDataObj::OnReadFromNode(pNode, exchange);
+
+	pNode->GetNodeAttributeValue(XML_Val_OverwriteUniversal, 	fUniversal);
+	pNode->GetNodeAttributeValue(XML_Val_OverwriteTarget, 		fTarget);
+}
+
+TXString SceneDataOverwrite::GetNodeName()
+{
+	return TXString(XML_Val_OverwriteNodeName);
+}
+
+ESceneDataObjectType SceneDataOverwrite::GetObjectType()
+{
+	return ESceneDataObjectType::eOverwrite;
+}
+
+// ----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataObjWithMatrix
 SceneDataObjWithMatrix::SceneDataObjWithMatrix(const SceneDataGUID& guid) : SceneDataObj(guid)
 {
 	fInContainer			= nullptr;
 	fNextObj				= nullptr;
 	fClass					= nullptr;
+
+	fCustomCommands.clear();
+	fAlignments.clear();
+	fOverwrites.clear();
 }
 
 SceneDataObjWithMatrix::~SceneDataObjWithMatrix()
 {
 	for (SceneDataGeoInstanceObjPtr geoObj : fGeometries) { delete geoObj; }
+	for (SceneDataCustomCommandPtr customCommand : fCustomCommands) { delete customCommand; }
+	for (SceneDataAlignmentPtr alignment : fAlignments) { delete alignment; }
+	for (SceneDataOverwritePtr overwrite : fOverwrites) { delete overwrite; }
 }
 
 void SceneDataObjWithMatrix::GetTransformMatric(VWTransformMatrix& matrix) const
@@ -991,6 +1329,55 @@ void SceneDataObjWithMatrix::AddGeometryObj(SceneDataGeoInstanceObjPtr object)
 	if (object) { fGeometries.push_back(object); }
 }
 
+const SceneDataConnectionObjArray& SceneDataObjWithMatrix::GetConnectionArr() const
+{
+	return fConnections;
+}
+
+SceneDataConnectionObjPtr SceneDataObjWithMatrix::AddConnectionObj(const TXString& own, const TXString& other, const SceneDataGUID toObject)
+{
+	SceneDataConnectionObjPtr out = new SceneDataConnectionObj(own, other, toObject);
+	if (out) { fConnections.push_back(out); }
+	return out;
+}
+
+
+SceneDataCustomCommandPtr SceneDataObjWithMatrix::AddCustomCommand(const TXString& channelFunction, bool isPercentage, double value)
+{
+	SceneDataCustomCommandPtr customCommand = new SceneDataCustomCommand(channelFunction, isPercentage, value);
+	fCustomCommands.push_back(customCommand);
+	return customCommand;
+}
+
+const SceneDataCustomCommandArray& SceneDataObjWithMatrix::GetCustomCommandArray() const
+{
+	return fCustomCommands;
+}
+
+SceneDataAlignmentPtr SceneDataObjWithMatrix::AddAlignment(const TXString& beamGeometry, const VWPoint3D& upVector, const VWPoint3D& direction)
+{
+	SceneDataAlignmentPtr alignment = new SceneDataAlignment(beamGeometry, upVector, direction);
+	fAlignments.push_back(alignment);
+	return alignment;
+}
+
+const SceneDataAlignmentArray& SceneDataObjWithMatrix::GetAlignmentArray() const
+{
+	return fAlignments;
+}
+
+SceneDataOverwritePtr SceneDataObjWithMatrix::AddOverwrite(const TXString& universal, const TXString& target)
+{
+	SceneDataOverwritePtr overwrite = new SceneDataOverwrite(universal, target);
+	fOverwrites.push_back(overwrite);
+	return overwrite;
+}
+
+const SceneDataOverwriteArray& SceneDataObjWithMatrix::GetOverwriteArray() const
+{
+	return fOverwrites;
+}
+
 SceneDataGroupObjPtr SceneDataObjWithMatrix::GetContainer() const
 {
 	return fInContainer;
@@ -999,6 +1386,26 @@ SceneDataGroupObjPtr SceneDataObjWithMatrix::GetContainer() const
 SceneDataObjWithMatrixPtr SceneDataObjWithMatrix::GetNextObject() const
 {
 	return fNextObj;
+}
+
+const TXString& SceneDataObjWithMatrix::GetGdtfFile() const
+{
+	return fGdtfFile;
+}
+
+void SceneDataObjWithMatrix::SetGDTFFile(const TXString& path)
+{
+	fGdtfFile = path;
+}
+
+const TXString& SceneDataObjWithMatrix::GetGdtfDmxMode() const
+{
+	return fGdtfDmxMode;
+}
+
+void SceneDataObjWithMatrix::SetGdtfDmxMode(const TXString& path)
+{
+	fGdtfDmxMode = path;
 }
 
 void SceneDataObjWithMatrix::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
@@ -1021,6 +1428,23 @@ void SceneDataObjWithMatrix::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExcha
 
 		}
 	}
+
+	//--------------------------------------------------------------------------------------------
+	// Print the GDTF File
+	IXMLFileNodePtr pGDTFNode;
+	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_Val_FixtureGDTFSpec, & pGDTFNode)))
+	{
+		pGDTFNode->SetNodeValue(fGdtfFile);
+		exchange->AddNeededGdtfFile(fGdtfFile);
+	}
+	
+	//--------------------------------------------------------------------------------------------
+	// Print the DmxMode
+	IXMLFileNodePtr pDmxModeNode;
+	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_Val_FixtureDMXMode, & pDmxModeNode)))
+	{
+		pDmxModeNode->SetNodeValue(fGdtfDmxMode);
+	}
 	
 	// ------------------------------------------------------------------------------------------------------------
 	// Print the geometry
@@ -1030,6 +1454,42 @@ void SceneDataObjWithMatrix::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExcha
 		if ( VCOM_SUCCEEDED( pNode->CreateChildNode( XML_Val_GeometriesNodeName, & pGeometriesNode )))
 		{
 			for(SceneDataGeoInstanceObjPtr geoObj : fGeometries) { geoObj->PrintToFile(pGeometriesNode, exchange); }
+		}
+		
+	}
+
+	// ------------------------------------------------------------------------------------------------------------
+	// Print the custom commands
+	if (fCustomCommands.size() > 0)
+	{
+		IXMLFileNodePtr pCustomCommandsNode;
+		if(VCOM_SUCCEEDED( pNode->CreateChildNode(XML_Val_CustomCommandsNodeName, &pCustomCommandsNode)))
+		{
+			for(SceneDataCustomCommandPtr customCommand : fCustomCommands) { customCommand->PrintToFile(pCustomCommandsNode, exchange); }
+		}
+		
+	}
+
+	// ------------------------------------------------------------------------------------------------------------
+	// Print the alignments
+	if (fAlignments.size() > 0)
+	{
+		IXMLFileNodePtr pAlignmentsNode;
+		if(VCOM_SUCCEEDED( pNode->CreateChildNode(XML_Val_AlignmentsNodeName, &pAlignmentsNode)))
+		{
+			for(SceneDataAlignmentPtr alignment : fAlignments) { alignment->PrintToFile(pAlignmentsNode, exchange); }
+		}
+		
+	}
+
+	// ------------------------------------------------------------------------------------------------------------
+	// Print the overwrites
+	if (fOverwrites.size() > 0)
+	{
+		IXMLFileNodePtr pOverwritesNode;
+		if(VCOM_SUCCEEDED( pNode->CreateChildNode(XML_Val_OverwritesNodeName, &pOverwritesNode)))
+		{
+			for(SceneDataOverwritePtr overwrite : fOverwrites) { overwrite->PrintToFile(pOverwritesNode, exchange); }
 		}
 		
 	}
@@ -1047,7 +1507,15 @@ void SceneDataObjWithMatrix::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExcha
 		}
 	}
 	
-
+		// Print the custom commands
+	if (fConnections.size() > 0)
+	{
+		IXMLFileNodePtr pConnectionsNode;
+		if(VCOM_SUCCEEDED( pNode->CreateChildNode(XML_Val_ConnectionsNodeName, &pConnectionsNode)))
+		{
+			for(const auto& connection : fConnections) { connection->PrintToFile(pConnectionsNode, exchange); }
+		}
+	}
 	
 }
 
@@ -1080,6 +1548,16 @@ void SceneDataObjWithMatrix::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneD
 	{
 		fMatrix = VWTransformMatrix();
 	}
+
+	//--------------------------------------------------------------------------------------------
+	// Read the GDTF File name
+	IXMLFileNodePtr pGDTFNode;
+	if(VCOM_SUCCEEDED(pNode->GetChildNode(XML_Val_FixtureGDTFSpec, & pGDTFNode))) { pGDTFNode->GetNodeValue(fGdtfFile); }
+	
+	//--------------------------------------------------------------------------------------------
+	// Read the GDTF DMX Mode
+	IXMLFileNodePtr pDmxMode;
+	if(VCOM_SUCCEEDED(pNode->GetChildNode(XML_Val_FixtureDMXMode, & pDmxMode)))	{ pDmxMode->GetNodeValue(fGdtfDmxMode); }
 	
 	//------------------------------------------------------------------------------------------------------
 	// Get Geometry
@@ -1123,8 +1601,49 @@ void SceneDataObjWithMatrix::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneD
 			}
 			
 		}
+
+
 	}
+
+	//--------------------------------------------------------------------------------------------
+	// Read CustomCommands
+	GdtfConverter::TraverseNodes(pNode, XML_Val_CustomCommandsNodeName, XML_Val_CustomCommandNodeName, [this, exchange] (IXMLFileNodePtr pNode) -> void
+								{
+									SceneDataCustomCommandPtr customCommand = new SceneDataCustomCommand();
+									customCommand->ReadFromNode(pNode, exchange);
+									fCustomCommands.push_back(customCommand);
+								}
+								);
+
+	//--------------------------------------------------------------------------------------------
+	// Read Alignments
+	GdtfConverter::TraverseNodes(pNode, XML_Val_AlignmentsNodeName, XML_Val_AlignmentNodeName, [this, exchange] (IXMLFileNodePtr pNode) -> void
+								{
+									SceneDataAlignmentPtr alignment = new SceneDataAlignment();
+									alignment->ReadFromNode(pNode, exchange);
+									fAlignments.push_back(alignment);
+								}
+								);
+
+	//--------------------------------------------------------------------------------------------
+	// Read Overwrites
+	GdtfConverter::TraverseNodes(pNode, XML_Val_OverwritesNodeName, XML_Val_OverwriteNodeName, [this, exchange] (IXMLFileNodePtr pNode) -> void
+								{
+									SceneDataOverwritePtr overwrite = new SceneDataOverwrite();
+									overwrite->ReadFromNode(pNode, exchange);
+									fOverwrites.push_back(overwrite);
+								}
+								);
 	
+
+	GdtfConverter::TraverseNodes(pNode, XML_Val_ConnectionsNodeName, XML_Val_ConnectionNodeName, [this, exchange] (IXMLFileNodePtr pNode) -> void
+						{
+							SceneDataConnectionObjPtr connection = new SceneDataConnectionObj();
+							connection->ReadFromNode(pNode, exchange);
+							fConnections.push_back(connection);
+						}
+						);
+
 	//------------------------------------------------------------------------------------------------------
 	// Get Class
 	IXMLFileNodePtr pClassNode;
@@ -1295,16 +1814,6 @@ TXString SceneDataFixtureObj::GetUnresolvedPositionUUID()
 	return fUnresolvedPosition;
 }
 
-const TXString& SceneDataFixtureObj::GetGdtfFile()
-{
-	return fGdtfFile;
-}
-
-const TXString& SceneDataFixtureObj::GetGdtfDmxMode()
-{
-	return fGdtfDmxMode;
-}
-
 SceneDataFocusPointObjPtr SceneDataFixtureObj::GetFocusPoint()
 {
 	return fFocusPoint;
@@ -1318,6 +1827,16 @@ SceneDataPositionObjPtr SceneDataFixtureObj::GetPosition()
 const TXString& SceneDataFixtureObj::GetFixtureId()
 {
 	return fFixtureId;
+}
+
+void SceneDataFixtureObj::SetFunction(const TXString& function)
+{
+	fFunction = function;
+}
+
+const TXString& SceneDataFixtureObj::GetFunction()
+{
+	return fFunction;
 }
 
 Sint32 SceneDataFixtureObj::GetUnitNumber()
@@ -1420,16 +1939,6 @@ void SceneDataFixtureObj::AddAdress(const SceneDataDmxAdress& adress)
 	fAdresses.push_back(adress);
 }
 
-void SceneDataFixtureObj::SetGDTFFile(const TXString& path)
-{
-	fGdtfFile = path;
-}
-
-void SceneDataFixtureObj::SetGdtfDmxMode(const TXString& path)
-{
-	fGdtfDmxMode = path;
-}
-
 void SceneDataFixtureObj::SetColor(const CCieColor& color)
 {
 	fColor = color;
@@ -1478,25 +1987,6 @@ void SceneDataFixtureObj::AddMapping(SceneDataGUID mappingDefinitionUuid)
 void SceneDataFixtureObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
 {
 	SceneDataObjWithMatrix::OnPrintToFile(pNode, exchange);
-	
-	//--------------------------------------------------------------------------------------------
-	// Print the GDTF File
-	IXMLFileNodePtr pGDTFNode;
-	if ( VCOM_SUCCEEDED( pNode->CreateChildNode( XML_Val_FixtureGDTFSpec, & pGDTFNode ) ) )
-	{
-		pGDTFNode->SetNodeValue(GetGdtfFile());
-		exchange->AddNeededGdtfFile(GetGdtfFile());
-
-	}
-	
-	//--------------------------------------------------------------------------------------------
-	// Print the DmxMode
-	IXMLFileNodePtr pDmxModeNode;
-	if ( VCOM_SUCCEEDED( pNode->CreateChildNode( XML_Val_FixtureDMXMode, & pDmxModeNode ) ) )
-	{
-		pDmxModeNode->SetNodeValue(GetGdtfDmxMode());
-		
-	}
 	
 	//--------------------------------------------------------------------------------------------
 	// Print the Focus
@@ -1595,6 +2085,15 @@ void SceneDataFixtureObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange
 	}
 
 	//--------------------------------------------------------------------------------------------
+	// Print Fixture
+	IXMLFileNodePtr pFixtureNode;
+	if ( (! fFunction.IsEmpty()) && VCOM_SUCCEEDED( pNode->CreateChildNode( XML_Val_FixtureFunction, & pFixtureNode ) ) )
+	{
+		pFixtureNode->SetNodeValue(fFunction);
+	}
+
+
+	//--------------------------------------------------------------------------------------------
 	// Print the CastShadow
 	IXMLFileNodePtr pCastShadowNode;
 	if ( VCOM_SUCCEEDED( pNode->CreateChildNode( XML_Val_FixtureCastShadow, & pCastShadowNode ) ) )
@@ -1617,16 +2116,6 @@ void SceneDataFixtureObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange
 void SceneDataFixtureObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
 {
 	SceneDataObjWithMatrix::OnReadFromNode(pNode, exchange);
-	
-	//--------------------------------------------------------------------------------------------
-	// Read the adress
-	IXMLFileNodePtr pGDTFNode;
-	if ( VCOM_SUCCEEDED( pNode->GetChildNode( XML_Val_FixtureGDTFSpec, & pGDTFNode ) ) )			{  pGDTFNode->GetNodeValue(fGdtfFile); }
-	
-	//--------------------------------------------------------------------------------------------
-	// Read the adress
-	IXMLFileNodePtr pDmxMode;
-	if ( VCOM_SUCCEEDED( pNode->GetChildNode( XML_Val_FixtureDMXMode, & pDmxMode ) ) )				{  pDmxMode->GetNodeValue(fGdtfDmxMode); }
 	
 	//--------------------------------------------------------------------------------------------
 	// Read the Focus
@@ -1708,6 +2197,15 @@ void SceneDataFixtureObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneData
 
 		GdtfConverter::ConvertDouble(rotationStr, pGoboNode, fGoboRotation);
 	}
+
+	//--------------------------------------------------------------------------------------------
+	// Read Gobo
+	IXMLFileNodePtr pFunctionNode;
+	if ( VCOM_SUCCEEDED( pNode->GetChildNode( XML_Val_FixtureFunction, & pFunctionNode ) ) )
+	{
+		pFunctionNode->GetNodeValue(fFunction);
+	}
+
 
 	//--------------------------------------------------------------------------------------------
 	// Read the CastShadow
