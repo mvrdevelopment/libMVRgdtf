@@ -1,20 +1,21 @@
 :: This script expects the following arguments: 
 :: %1 : Type "Release" or "Debug" 
 :: %2 : Runtime Lib: "MD" or "MT"
+:: %3 : Use Mini Zip: "MZ" ot "NoMZ"
 
-@echo off
-echo Provided arguments: %1 %2
+echo Provided arguments: %1 %2 %3
 
 if %1.==. goto ERROR
 if %2.==. goto ERROR
+if %3.==. goto ERROR
 
-@echo on
+if %3==MZ (set noMZ=false) else (set noMZ=true)
 
 if exist build ( rd /S /Q build)
 
 mkdir build && cd build
 
-cmake -G "Visual Studio 15 2017 Win64" -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_INSTALL_PREFIX:PATH=libs -DCMAKE_CONFIGURATION_TYPES=%2 -Dxmlch-type=wchar_t -DCMAKE_CXX_FLAGS_RELEASE:STRING="%1 -O2 -Ob2 -DNDEBUG" ..
+cmake -G "Visual Studio 15 2017 Win64" -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_INSTALL_PREFIX:PATH=libs -DCMAKE_CONFIGURATION_TYPES=%2 -Dxmlch-type=wchar_t -DCMAKE_CXX_FLAGS_RELEASE:STRING="%1 -O2 -Ob2 -DNDEBUG" -DDO_NOT_INCLUDE_MINI_ZIP=%noMZ% ..
 
 cd ..
 
