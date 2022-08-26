@@ -22,7 +22,6 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 #################################################
 # System setup
 if (WIN32)
-#set(CMAKE_GENERATOR_PLATFORM x64)
 message("MSVC Runtime lib: " ${WIN_RUNTIME_LIB})
 set(CMAKE_CXX_FLAGS_RELEASE ${WIN_RUNTIME_LIB})
 elseif(APPLE)
