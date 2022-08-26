@@ -31,4 +31,3 @@ Color 04
 echo Not all parameters are provided for this script!
 
 :END
-pause
