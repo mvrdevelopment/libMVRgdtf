@@ -5,11 +5,15 @@
 
 echo Provided arguments: %1 %2 %3
 
+@echo off
+
 if %1.==. goto ERROR
 if %2.==. goto ERROR
 if %3.==. goto ERROR
 
 if %3==MZ (set noMZ=false) else (set noMZ=true)
+
+@echo on
 
 if exist build ( rd /S /Q build)
 
