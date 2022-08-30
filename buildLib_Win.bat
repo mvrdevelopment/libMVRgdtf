@@ -11,7 +11,11 @@ if %1.==. goto ERROR
 if %2.==. goto ERROR
 if %3.==. goto ERROR
 
-if %3==MZ (set noMZ=false) else (set noMZ=true)
+if %1 == Debug (set DCMAKE_CXX_FLAGS=-DCMAKE_CXX_FLAGS_DEBUG) else (set DCMAKE_CXX_FLAGS=-DCMAKE_CXX_FLAGS_RELEASE)
+if %1 == Debug (set RunTimeLib=%2d) else (set RunTimeLib=%2)
+if %3 == MZ    (set noMZ=false) else (set noMZ=true)
+
+
 
 @echo on
 
@@ -20,7 +24,7 @@ if exist build ( rd /S /Q build)
 mkdir build && cd build
 
 
-cmake -G "Visual Studio 15 2017 Win64" -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_INSTALL_PREFIX:PATH=libs -DCMAKE_CONFIGURATION_TYPES="%1" -Dxmlch-type=wchar_t -DCMAKE_CXX_FLAGS_RELEASE:STRING="-%2 -O2 -Ob2 -DNDEBUG" -DDO_NOT_INCLUDE_MINI_ZIP=%noMZ% -DWIN_RUNTIME_LIB="-%2" ..
+cmake -G "Visual Studio 15 2017 Win64" -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_INSTALL_PREFIX:PATH=libs -DCMAKE_CONFIGURATION_TYPES="%1" -Dxmlch-type=wchar_t %DCMAKE_CXX_FLAGS%:STRING="-%RunTimeLib% -O2 -Ob2 -DNDEBUG" -DDO_NOT_INCLUDE_MINI_ZIP=%noMZ% -DWIN_RUNTIME_LIB="-%RunTimeLib%" ..
 
 cd ..
 
