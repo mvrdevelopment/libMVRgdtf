@@ -8405,7 +8405,7 @@ void GdtfFixture::ResolveDmxChannelRefs(GdtfDmxModePtr dmxMode)
 			for (GdtfGeometryPtr geom : fGeometries)
 			{
 				if (geom->GetNodeReference() == unresolvedGeoRef) { geomPtr = geom; break;}
-				
+
 				geomPtr = ResolveGeometryRef(unresolvedGeoRef, geom->GetInternalGeometries());
 				if (geomPtr != nullptr) { break; }
 			}
@@ -8507,8 +8507,16 @@ void GdtfFixture::ResolveDmxLogicalChanRefs(GdtfDmxChannelPtr dmxChnl)
 		if (attrPtr != nullptr)
 		{
 			//Check for logical channels with the same geometry/attribute combination
-			TXString attributeName 	= attrPtr->GetName();
-			TXString geometryName 	= dmxChnl->GetGeomRef()->GetName();
+			TXString attributeName = attrPtr->GetName();
+
+			GdtfGeometryPtr geoRef = dmxChnl->GetGeomRef();
+			TXString geometryName;
+			if(geoRef)
+			{
+				// If this doesn't exist, EGdtfParsingError::eFixtureDMXChannelMissingGeometryLink has been raised in the ResolveDmxChannelRefs() function
+				geometryName = geoRef->GetName();
+			}
+
 
 			bool alreadyExists = false;
 			GdtfDmxModePtr mode = dmxChnl->GetParentMode();
