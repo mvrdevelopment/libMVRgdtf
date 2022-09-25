@@ -30,7 +30,6 @@ void GdtfObject::WriteToNode(IXMLFileNodePtr pContainerNode)
 	if ( VCOM_SUCCEEDED( pContainerNode->CreateChildNode( this->GetNodeName(), & pNode ) ) )
 	{
 		// Store Node
-		ASSERTN(kEveryone, fNode == nullptr);
 		fNode = pNode;
 		//-------------------------------------------------------------------------------------
 		// Now Print Everything
