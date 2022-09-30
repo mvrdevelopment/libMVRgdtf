@@ -4131,16 +4131,17 @@ void GdtfGeometrySupport::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	optional.push_back(XML_GDTF_GeometryModelRef);
 	needed.push_back(XML_GDTF_GeometryMatrix);
 	needed.push_back(XML_GDTF_SupportSupportType);
-	needed.push_back(XML_GDTF_SupportCapacityX);
-	needed.push_back(XML_GDTF_SupportCapacityY);
-	needed.push_back(XML_GDTF_SupportCapacityZ);
-	needed.push_back(XML_GDTF_SupportCapacityXX);
-	needed.push_back(XML_GDTF_SupportCapacityYY);
-	needed.push_back(XML_GDTF_SupportCapacityZZ);
+	
 	if(fSupportType == EGdtfSupportType::Rope)
 	{
 		needed.push_back(XML_GDTF_SupportRopeCrossSection);
 		needed.push_back(XML_GDTF_SupportRopeOffset);
+		optional.push_back(XML_GDTF_SupportCapacityX);
+		optional.push_back(XML_GDTF_SupportCapacityY);
+		optional.push_back(XML_GDTF_SupportCapacityZ);
+		optional.push_back(XML_GDTF_SupportCapacityXX);
+		optional.push_back(XML_GDTF_SupportCapacityYY);
+		optional.push_back(XML_GDTF_SupportCapacityZZ);
 		optional.push_back(XML_GDTF_SupportResistanceX);
 		optional.push_back(XML_GDTF_SupportResistanceY);
 		optional.push_back(XML_GDTF_SupportResistanceZ);
@@ -4152,6 +4153,12 @@ void GdtfGeometrySupport::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	{
 		optional.push_back(XML_GDTF_SupportRopeCrossSection);
 		optional.push_back(XML_GDTF_SupportRopeOffset);
+		needed.push_back(XML_GDTF_SupportCapacityX);
+		needed.push_back(XML_GDTF_SupportCapacityY);
+		needed.push_back(XML_GDTF_SupportCapacityZ);
+		needed.push_back(XML_GDTF_SupportCapacityXX);
+		needed.push_back(XML_GDTF_SupportCapacityYY);
+		needed.push_back(XML_GDTF_SupportCapacityZZ);
 		needed.push_back(XML_GDTF_SupportResistanceX);
 		needed.push_back(XML_GDTF_SupportResistanceY);
 		needed.push_back(XML_GDTF_SupportResistanceZ);
