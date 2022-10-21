@@ -26,14 +26,16 @@ private:
 	TXString					   fNodeName;
 	size_t						   fLineNumber;
 	size_t						   fColumn;
+	TXString					   fObjectName;
 	
 public:
 	GdtfDefines::EGdtfParsingError	GetError() const;
 	const TXString&					GetErrorMessage() const;
 	const TXString&					GetNodeName() const;
-
 	size_t							GetLineNumber() const;
 	size_t							GetColumnNumber() const;
+	const TXString& 				GetObjectName() const;
+
 public:
 	static void	CheckNodeAttributes(IXMLFileNodePtr pNode, const TXStringArray& needed, const TXStringArray& optional);
 };
