@@ -50,8 +50,8 @@ void GdtfXmlErrorTest::ReadDamagedFile()
 		IGdtfXmlParsingErrorPtr error;
 		__checkVCOM(gdtfRead->GetParsingErrorAt(i, & error));
 
-		if(i == 0) { ReadError(error, 27, 7, GdtfDefines::EGdtfParsingError::eXmlParsingError); }
-		if(i == 1) { ReadError(error, 4, 268, GdtfDefines::EGdtfParsingError::eNodeMissingMandatoryAttribute); }
+		if(i == 0) { ReadError(error, 27, 7, GdtfDefines::EGdtfParsingError::eXmlParsingError, "", ""); }
+		if(i == 1) { ReadError(error, 4, 268, GdtfDefines::EGdtfParsingError::eNodeMissingMandatoryAttribute, "FixtureType", "My FixtureName"); }
 
 	}
 	
@@ -66,7 +66,7 @@ void GdtfXmlErrorTest::ReadNonExistingFile()
 	
 }
 
-void GdtfXmlErrorTest::ReadError(IGdtfXmlParsingErrorPtr& error, size_t lineNumber, size_t colNumber, GdtfDefines::EGdtfParsingError errorType)
+void GdtfXmlErrorTest::ReadError(IGdtfXmlParsingErrorPtr& error, size_t lineNumber, size_t colNumber, GdtfDefines::EGdtfParsingError errorType, const std::string& nodeName, const std::string& objectName)
 {
 	size_t thisLineNumber  = 0;
 	size_t thisColNumber   = 0;
@@ -78,4 +78,10 @@ void GdtfXmlErrorTest::ReadError(IGdtfXmlParsingErrorPtr& error, size_t lineNumb
 
 	GdtfDefines::EGdtfParsingError thisErrorType;
 	if(__checkVCOM(error->GetErrorType(thisErrorType))) { this->checkifEqual("errorType ", (Sint32)thisErrorType, (Sint32)errorType); }
+	
+	std::string thisNodeName = error->GetNodeName();
+    this->checkifEqual("thisNodeName ", thisNodeName, nodeName);
+
+	std::string thisObjectName = error->GetObjectName();
+    this->checkifEqual("thisObjectName ", thisObjectName, objectName);
 }
