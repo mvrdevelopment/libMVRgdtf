@@ -20,6 +20,7 @@ namespace VectorworksMVR
 		virtual MvrString VCOM_CALLTYPE     GetErrorMessage();
 		virtual MvrString VCOM_CALLTYPE     GetNodeName();
 		virtual VCOMError VCOM_CALLTYPE     GetLineAndColumnNumber(size_t& line, size_t& column);
+		virtual MvrString VCOM_CALLTYPE     GetObjectName();
 
 
 		

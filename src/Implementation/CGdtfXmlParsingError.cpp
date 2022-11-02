@@ -47,7 +47,6 @@ MvrString VectorworksMVR::CGdtfXmlParsingErrorImpl::GetNodeName()
 	if( ! fPtr) return "";
 	
 	return fPtr->GetNodeName().GetCharPtr();
-
 }
 
 VCOMError VectorworksMVR::CGdtfXmlParsingErrorImpl::GetLineAndColumnNumber(size_t& line, size_t& column)
@@ -60,6 +59,15 @@ VCOMError VectorworksMVR::CGdtfXmlParsingErrorImpl::GetLineAndColumnNumber(size_
 	column =  fPtr->GetColumnNumber();
 
 	return kVCOMError_NoError;
+}
+
+MvrString VectorworksMVR::CGdtfXmlParsingErrorImpl::GetObjectName()
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone, fPtr);
+	if( ! fPtr) return "";
+	
+	return fPtr->GetObjectName().GetCharPtr();
 }
 
 void VectorworksMVR::CGdtfXmlParsingErrorImpl::SetPointer(GdtfParsingError* pointer)
