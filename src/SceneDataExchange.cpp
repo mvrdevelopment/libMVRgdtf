@@ -2278,6 +2278,11 @@ ESceneDataObjectType SceneDataGroupObj::GetObjectType()
 
 void SceneDataGroupObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
 {
+    if ( ! fChildObjs.size()) // Don't print empty groups
+    {
+        return;
+    }
+
 	// Call base class
 	SceneDataObjWithMatrix::OnPrintToFile(pNode, exchange);
 
