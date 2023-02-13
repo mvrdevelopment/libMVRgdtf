@@ -591,6 +591,7 @@ VCOMError CZIPFileImpl::AddFile(const TXString& inPath, IZIPFileIOBuffer* inputB
 			size_t uncompressedSize = 0;
 			inputBuffer->GetDataSize( uncompressedSize );
 			Uint8* deflateBuffer = new Uint8[ uncompressedSize ];
+			memset(deflateBuffer, 0, uncompressedSize);
 			inputBuffer->CopyDataInto( (void*)deflateBuffer, uncompressedSize );
 
 			Uint16 compressionMethod = 0;
