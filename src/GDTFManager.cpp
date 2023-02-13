@@ -411,12 +411,18 @@ const TGdtfFeatureArray GdtfFeatureGroup::GetFeatureArray()
 // GdtfSubPhysicalUnit
 GdtfSubPhysicalUnit::GdtfSubPhysicalUnit()
 {
+	fType = EGdtfSubPhysicalUnitType::PlacementOffset;
+	fPhysicalUnit = EGdtfPhysicalUnit::None;
+	fPhysicalFrom = 0.0;
+	fPhysicalTo = 0.0;
 }
 
 GdtfSubPhysicalUnit::GdtfSubPhysicalUnit(EGdtfSubPhysicalUnitType type)
 {
 	fType 			= type;
 	fPhysicalUnit 	= GdtfConverter::GetUnitFromSubPhysical(type);
+	fPhysicalFrom = 0.0;
+	fPhysicalTo = 0.0;
 }
 
 GdtfSubPhysicalUnit::~GdtfSubPhysicalUnit()
@@ -1363,6 +1369,13 @@ GdtfModel::GdtfModel(GdtfFixture* fixture)
 	fBufferSize3DS	= 0;
 	fBufferSizeSVG	= 0;
 	fBufferSizeGLTF	= 0;
+	
+	fSVGOffsetX			= 0;
+	fSVGOffsetY			= 0;
+	fSVGSideOffsetX		= 0;
+	fSVGSideOffsetY		= 0;
+	fSVGFrontOffsetX	= 0;
+	fSVGFrontOffsetY	= 0;
 }
 
 GdtfModel::GdtfModel(const TXString& name, GdtfFixture* fixture)
@@ -1380,6 +1393,13 @@ GdtfModel::GdtfModel(const TXString& name, GdtfFixture* fixture)
 	fBufferSize3DS	= 0;
 	fBufferSizeSVG	= 0;
 	fBufferSizeGLTF	= 0;
+
+	fSVGOffsetX			= 0;
+	fSVGOffsetY			= 0;
+	fSVGSideOffsetX		= 0;
+	fSVGSideOffsetY		= 0;
+	fSVGFrontOffsetX	= 0;
+	fSVGFrontOffsetY	= 0;
 }
 
 GdtfModel::~GdtfModel()
@@ -3329,6 +3349,17 @@ GdtfGeometryWiringObject::GdtfGeometryWiringObject(GdtfGeometry* parent)
 	fComponentType 	= EGdtfComponentType::Input;
 	fOrientation 	= EGdtfOrientation::Left;
 	fFuseRating 	= EGdtfFuseRating::B;
+	fPinCount			= 0;
+	fSignalLayer		= 0;
+	fElectricalPayLoad	= 0; 
+	fVoltageRangeMin	= 0; 	
+	fVoltageRangeMax	= 0; 	
+	fFrequencyRangeMin	= 0; 
+	fFrequencyRangeMax	= 0; 
+	fCosPhi				= 0; 			
+	fMaxPayLoad			= 0;
+	fVoltage			= 0; 			
+	fFuseCurrent		= 0; 		
 }
 
 GdtfGeometryWiringObject::GdtfGeometryWiringObject(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma, GdtfGeometry* parent) 
@@ -3337,6 +3368,17 @@ GdtfGeometryWiringObject::GdtfGeometryWiringObject(const TXString& name, GdtfMod
 	fComponentType 	= EGdtfComponentType::Input;
 	fOrientation 	= EGdtfOrientation::Left;
 	fFuseRating 	= EGdtfFuseRating::B;
+	fPinCount			= 0;
+	fSignalLayer		= 0;
+	fElectricalPayLoad	= 0; 
+	fVoltageRangeMin	= 0; 	
+	fVoltageRangeMax	= 0; 	
+	fFrequencyRangeMin	= 0; 
+	fFrequencyRangeMax	= 0; 
+	fCosPhi				= 0; 			
+	fMaxPayLoad			= 0;
+	fVoltage			= 0; 			
+	fFuseCurrent		= 0; 	
 }
 
 GdtfGeometryWiringObject::~GdtfGeometryWiringObject()
@@ -8762,6 +8804,8 @@ GdtfFixture::GdtfFixture()
 	fReaded					= false;
 	fHasLinkedGuid			= false;     
 	fNoFeature				= nullptr;   
+	fCanHaveChildren 		= false;
+	fHasLinkedGuid 			= false;
 }
 
 GdtfFixture::~GdtfFixture()
