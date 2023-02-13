@@ -364,6 +364,7 @@ SceneDataSymDefObj::SceneDataSymDefObj(const SceneDataGUID& guid) : SceneDataAux
 
 SceneDataSymDefObj::~SceneDataSymDefObj()
 {
+	for (const auto& i : fGeometries){ delete i; }
 }
 
 void SceneDataSymDefObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
@@ -1291,6 +1292,8 @@ SceneDataObjWithMatrix::~SceneDataObjWithMatrix()
 	for (SceneDataCustomCommandPtr customCommand : fCustomCommands) { delete customCommand; }
 	for (SceneDataAlignmentPtr alignment : fAlignments) { delete alignment; }
 	for (SceneDataOverwritePtr overwrite : fOverwrites) { delete overwrite; }
+	for (SceneDataConnectionObjPtr connection : fConnections) { delete connection; }
+	
 }
 
 void SceneDataObjWithMatrix::GetTransformMatric(VWTransformMatrix& matrix) const
