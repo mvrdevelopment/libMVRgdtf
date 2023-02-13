@@ -2439,7 +2439,7 @@ void TXString::PrepareCharBuffer(ETXEncoding encoding) const
 // terminating character.
 void TXString::SetStdUStrFromCharBuffer(const char* src, size_t srcLenToUse, ETXEncoding encoding)
 {
-	if (src == nullptr || *src == '\0' || srcLenToUse == 0) {
+	if (srcLenToUse == 0 || src == nullptr || *src == '\0') {
 		stdUStr.clear();
 		return;
 	}
