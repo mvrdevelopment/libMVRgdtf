@@ -36,17 +36,12 @@ void CheckDmxValue(const char* string, DmxValue result, EGdtfChannelBitResolutio
 #endif
 };
 
-void CheckDmxAddress(const char* string, DMXAddress result, bool invert, XmlConversionTest* ref)
+void CheckDmxAddress(const char* string, DMXAddress result, XmlConversionTest* ref)
 {
 #ifndef _WINDOWS
 	DMXAddress value = 0;
-	if(invert){
-		ref->checkifTrue("DMX Address Conversion succeded, even though it should have failed", !GdtfConverter::ConvertDMXAdress(string, nullptr, value) );
-		ref->checkifUnEqual("DmxAddress", value, result);
-	}else{
-		ref->checkifTrue("DMX Address Conversion failed", GdtfConverter::ConvertDMXAdress(string, nullptr, value) );
-		ref->checkifEqual("DmxAddress", value, result);
-	}
+	ref->checkifTrue("DMX Address Conversion failed", GdtfConverter::ConvertDMXAdress(string, nullptr, value) );
+	ref->checkifEqual("DmxAddress", value, result);
 #endif
 };
 
@@ -114,8 +109,8 @@ void XmlConversionTest::RunTests()
 	CheckDmxValue("1/1s", 16777216, EGdtfChannelBitResolution::eGdtfChannelBitResolution_32, this); // 00000001 00000000 00000000 00000000
 
 
-	CheckDmxAddress("15", 15, false, this);
-	CheckDmxAddress("2.128", 640, false, this);
-	CheckDmxAddress("5.17", 2065, false, this);
-	CheckDmxAddress("1035", 1035, false, this);
+	CheckDmxAddress("15", 15, this);
+	CheckDmxAddress("2.128", 640, this);
+	CheckDmxAddress("5.17", 2065, this);
+	CheckDmxAddress("1035", 1035, this);
 }
