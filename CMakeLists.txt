@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.9.4)
 # pre setup for some vars
 set(UNITTEST FALSE CACHE BOOL "If enabled the tests wont be build!")
 set(WIN_RUNTIME_LIB "-MD" CACHE STRING "Set '-MD' or '-MT' for windows build")
-set(DO_NOT_INCLUDE_MINI_ZIP FALSE CACHE BOOL "Set whether or not we include the minzip lib")
+set(DO_NOT_INCLUDE_MINI_ZIP FALSE CACHE BOOL "Set wheather or not we include the minzip lib")
 
 
 set(XERCES_ROOT_PATH ${CMAKE_SOURCE_DIR}/../xerces-c CACHE STRING "Set the build path where you called cmake.")
@@ -22,7 +22,6 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 #################################################
 # System setup
 if (WIN32)
-#set(CMAKE_GENERATOR_PLATFORM x64)
 message("MSVC Runtime lib: " ${WIN_RUNTIME_LIB})
 set(CMAKE_CXX_FLAGS_RELEASE ${WIN_RUNTIME_LIB})
 elseif(APPLE)
