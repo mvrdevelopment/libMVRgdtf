@@ -1705,7 +1705,7 @@ void SceneDataObjWithMatrix::ReadMatrixNodeValue(const IXMLFileNodePtr& pNode, V
 
 // ----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataAuxObj
-SceneDataGeoInstanceObj::SceneDataGeoInstanceObj(const SceneDataGUID& guid, bool isSymbol) : SceneDataObjWithMatrix(guid)
+SceneDataGeoInstanceObj::SceneDataGeoInstanceObj(const SceneDataGUID& guid, bool isSymbol) : SceneDataGroupObj (guid)
 {
 	fIsSymbol = isSymbol;
 }
@@ -1784,7 +1784,7 @@ size_t SceneDataDmxAdress::GetUniverse() const
 	return universe;
 }
 
-SceneDataFixtureObj::SceneDataFixtureObj(const SceneDataGUID& guid) : SceneDataObjWithMatrix(guid)
+SceneDataFixtureObj::SceneDataFixtureObj(const SceneDataGUID& guid) : SceneDataGroupObj(guid)
 {
 	fFocusPoint		= nullptr;
 	fPosition		= nullptr;
@@ -2299,7 +2299,7 @@ void SceneDataGroupObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* 
 
 // ----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataGroupObj
-SceneDataSceneryObj::SceneDataSceneryObj(const SceneDataGUID& guid) : SceneDataObjWithMatrix(guid)
+SceneDataSceneryObj::SceneDataSceneryObj(const SceneDataGUID& guid) : SceneDataGroupObj(guid)
 {
 	
 }
@@ -2321,7 +2321,7 @@ ESceneDataObjectType SceneDataSceneryObj::GetObjectType()
 
 // ----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataFocusPointObj
-SceneDataFocusPointObj::SceneDataFocusPointObj(const SceneDataGUID& guid) : SceneDataObjWithMatrix(guid)
+SceneDataFocusPointObj::SceneDataFocusPointObj(const SceneDataGUID& guid) : SceneDataGroupObj(guid)
 {
 	
 }
@@ -2343,7 +2343,7 @@ ESceneDataObjectType SceneDataFocusPointObj::GetObjectType()
 
 // ----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataTrussObj
-SceneDataTrussObj::SceneDataTrussObj(const SceneDataGUID& guid) : SceneDataObjWithMatrix(guid)
+SceneDataTrussObj::SceneDataTrussObj(const SceneDataGUID& guid) : SceneDataGroupObj(guid)
 {
 	
 }
@@ -2363,7 +2363,7 @@ ESceneDataObjectType SceneDataTrussObj::GetObjectType()
 	return ESceneDataObjectType::eTruss;
 }
 
-SceneDataSupportObj::SceneDataSupportObj(const SceneDataGUID& guid) : SceneDataObjWithMatrix(guid)
+SceneDataSupportObj::SceneDataSupportObj(const SceneDataGUID& guid) : SceneDataGroupObj(guid)
 {
 	
 }
@@ -2386,7 +2386,7 @@ ESceneDataObjectType SceneDataSupportObj::GetObjectType()
 
 // ----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataVideoScreenObj
-SceneDataVideoScreenObj::SceneDataVideoScreenObj(const SceneDataGUID& guid) : SceneDataObjWithMatrix(guid)
+SceneDataVideoScreenObj::SceneDataVideoScreenObj(const SceneDataGUID& guid) : SceneDataGroupObj(guid)
 {
 	fSource = nullptr;
 }
@@ -2463,7 +2463,7 @@ void SceneDataVideoScreenObj::OnReadFromNode(const IXMLFileNodePtr& pNode, Scene
 
 // ----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataProjectorObj
-SceneDataProjectorObj::SceneDataProjectorObj(const SceneDataGUID& guid) : SceneDataObjWithMatrix(guid)
+SceneDataProjectorObj::SceneDataProjectorObj(const SceneDataGUID& guid) : SceneDataGroupObj(guid)
 {
 	fSource = nullptr;
 }
@@ -3899,3 +3899,5 @@ bool SceneDataExchange::GetDuplicatedUuids() const
 {
 	return fDuplicatedUuids;
 }
+
+

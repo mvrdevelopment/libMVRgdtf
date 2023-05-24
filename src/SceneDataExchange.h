@@ -590,9 +590,37 @@ namespace SceneData
 	typedef SceneDataObjWithMatrix*					SceneDataObjWithMatrixPtr;
 	typedef std::vector<SceneDataObjWithMatrixPtr>	SceneDataObjWithMatrixArray;
 	
+    // ----------------------------------------------------------------------------------------------------------------------------------
+	// SceneDataGroupObj
+	class SceneDataGroupObj : public SceneDataObjWithMatrix
+	{
+		
+	public:
+		SceneDataGroupObj(const SceneDataGUID& guid);
+		virtual ~SceneDataGroupObj();
+		
+		
+		
+	private:
+		SceneDataObjWithMatrixArray	fChildObjs; // XXX Switch type to SceneDataGroupObj here?
+		
+	public:
+		const SceneDataObjWithMatrixArray&	GetChildArray() const;
+		bool								AddObject(SceneDataObjWithMatrixPtr obj);
+		
+		virtual ESceneDataObjectType	GetObjectType();
+		
+	protected:
+		virtual	TXString				GetNodeName();
+		
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);
+		
+	};
+	typedef SceneDataGroupObj* SceneDataGroupObjPtr;	
+
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataObjWithMatrix
-	class SceneDataGeoInstanceObj : public SceneDataObjWithMatrix
+	class SceneDataGeoInstanceObj : public SceneDataGroupObj
 	{
 	public:
 		SceneDataGeoInstanceObj(const SceneDataGUID& guid, bool isSymbol);
@@ -640,37 +668,6 @@ namespace SceneData
 	};
 	typedef SceneDataGeometryObj*					SceneDataGeometryObjPtr;
 	
-	
-	// ----------------------------------------------------------------------------------------------------------------------------------
-	// SceneDataGroupObj
-	class SceneDataGroupObj : public SceneDataObjWithMatrix
-	{
-		
-	public:
-		SceneDataGroupObj(const SceneDataGUID& guid);
-		virtual ~SceneDataGroupObj();
-		
-		
-		
-	private:
-		SceneDataObjWithMatrixArray	fChildObjs;
-		
-	public:
-		const SceneDataObjWithMatrixArray&	GetChildArray() const;
-		bool								AddObject(SceneDataObjWithMatrixPtr obj);
-		
-		virtual ESceneDataObjectType	GetObjectType();
-		
-	protected:
-		virtual	TXString				GetNodeName();
-		
-		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);
-		
-	};
-	typedef SceneDataGroupObj* SceneDataGroupObjPtr;
-	
-	
-	
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataLayerObj
 	class SceneDataLayerObj : public SceneDataGroupObj
@@ -692,7 +689,7 @@ namespace SceneData
 	
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataFocusPointObj
-	class SceneDataFocusPointObj : public SceneDataObjWithMatrix
+	class SceneDataFocusPointObj : public SceneDataGroupObj
 	{
 		
 	public:
@@ -723,7 +720,7 @@ namespace SceneData
 	typedef std::vector<SceneDataDmxAdress>	SceneDataAdressArray;
 	
 	
-	class SceneDataFixtureObj : public SceneDataObjWithMatrix
+	class SceneDataFixtureObj : public SceneDataGroupObj
 	{
 		
 	public:
@@ -801,7 +798,7 @@ namespace SceneData
 	
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataSceneryObj
-	class SceneDataSceneryObj : public SceneDataObjWithMatrix
+	class SceneDataSceneryObj : public SceneDataGroupObj
 	{
 		
 	public:
@@ -816,7 +813,7 @@ namespace SceneData
 	
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataObjWithMatrix
-	class SceneDataTrussObj : public SceneDataObjWithMatrix
+	class SceneDataTrussObj : public SceneDataGroupObj
 	{
 		
 	public:
@@ -831,7 +828,7 @@ namespace SceneData
 	typedef SceneDataTrussObj* SceneDataTrussObjPtr;
 	
 	
-	class SceneDataSupportObj : public SceneDataObjWithMatrix
+	class SceneDataSupportObj : public SceneDataGroupObj
 	{
 		
 	public:
@@ -848,7 +845,7 @@ namespace SceneData
 
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataVideoScreenObj
-	class SceneDataVideoScreenObj : public SceneDataObjWithMatrix
+	class SceneDataVideoScreenObj : public SceneDataGroupObj
 	{
 		
 	public:
@@ -873,7 +870,7 @@ namespace SceneData
 
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataProjectorObj
-	class SceneDataProjectorObj : public SceneDataObjWithMatrix
+	class SceneDataProjectorObj : public SceneDataGroupObj
 	{
 		
 	public:
