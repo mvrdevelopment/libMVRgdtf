@@ -294,7 +294,7 @@ void MvrUnittest::WriteFile()
 		ISceneObjPtr supportObject = nullptr;
 		__checkVCOM(mvrWrite->CreateSupport(MvrUUID(1808353427, 683171502, 518343034, 0000000007), STransformMatrix(), "MySupportName", layer2, &supportObject));
 
-
+        Write_TrussWithChildsTest( mvrWrite, layer1);
 
 		// Check Next Object behavoir
 		ISceneObjPtr firstLayerWritten;
@@ -1098,4 +1098,20 @@ std::string MvrUnittest::GetTestWheel_PNG(bool readLocation)
 	else 				{ path = UnitTestUtil::GetTestResourceFolder() + kSeparator; }
     path += "MWheel_Img1.png";
     return path;
+}
+
+void MvrUnittest::Write_TrussWithChildsTest(IMediaRessourceVectorInterfacePtr intfc, ISceneObjPtr parent)
+{    
+    MvrUUID trussUUID(1808353898, 683171502, 518343034, 0000000005);        
+    ISceneObjPtr trussObject = nullptr;
+	__checkVCOM(intfc->CreateTruss( trussUUID, STransformMatrix(), "MyTrussName", parent, &trussObject));
+
+    MvrUUID fixtUUID(1808353111, 683171502, 518343035, 0000000005);
+    ISceneObjPtr fixtObject = nullptr;
+    __checkVCOM(intfc->CreateFixture( fixtUUID, STransformMatrix(), "Fixture Inside a Truss", trussObject, &fixtObject));
+}
+
+void MvrUnittest::Read_TrussWithChildsTest()
+{
+    // XXX Unclear. Do group objects apply the their offset to the childs?
 }

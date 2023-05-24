@@ -16,6 +16,8 @@ private:
     void        WriteFile();
     void        ReadFile();
     std::string GetTestWheel_PNG(bool readLocation);
+    void Write_TrussWithChildsTest(VectorworksMVR::IMediaRessourceVectorInterfacePtr, VectorworksMVR::ISceneObjPtr parent);
+    void Read_TrussWithChildsTest();
 
     std::string fPath;
 	std::string gdtfPath;
