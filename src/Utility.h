@@ -19,6 +19,12 @@ namespace VectorworksMVR
 		static void ConvertVector3(const VWPoint3D & vector, VectorworksMVR::SVector3 & svector);
 	};
 
+    class MvrUtil
+    {
+    public:
+        static bool isContainerType(ESceneObjType typ);
+    };
+
 	class SystemUtil
 	{
 	public:
