@@ -1421,18 +1421,14 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetFirstChi
 	
 	pContainer->GetPointer(layer, objType);
 	
-	// Check Pointer
-	if ( ! layer)							{ return kVCOMError_NoValidContainerObj; }
+	if ( ! layer)							{ return kVCOMError_NoValidContainerObj; }	
 	
-	// Just to be sure
-	ASSERTN(kEveryone,	layer->GetObjectType() == SceneData::ESceneDataObjectType::eLayer ||
-						layer->GetObjectType() == SceneData::ESceneDataObjectType::eGroup);
-	
-	// Check Object
-	bool isLayer = objType == ESceneObjType::Layer;
-	bool isGroup = objType == ESceneObjType::Group;
-	if ( (isLayer || isGroup) == false)	{ return kVCOMError_NoValidContainerObj; }
-	
+	ASSERTN(kEveryone,	VectorworksMVR::MvrUtil::isContainerType(objType));						
+
+	if ( ! VectorworksMVR::MvrUtil::isContainerType(objType))	
+    {
+        return kVCOMError_NoValidContainerObj; 
+    }	
 	
 	// Do the last casting
 	SceneData::SceneDataGroupObjPtr scGroupObj = static_cast<SceneData::SceneDataGroupObjPtr >(layer);
