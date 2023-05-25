@@ -6,7 +6,7 @@
 
 @echo off
 
-echo Provided arguments: %1 %2 %3
+echo Provided arguments: %1 %2 %3 %4
 
 if %1.==. goto ERROR
 if %2.==. goto ERROR
