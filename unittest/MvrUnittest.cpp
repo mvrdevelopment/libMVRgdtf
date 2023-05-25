@@ -251,6 +251,10 @@ void MvrUnittest::WriteFile()
 		MvrUUID groupUUID(1808353427, 683171502, 518343034, 0000000005);
 		ISceneObjPtr group = nullptr;
         __checkVCOM(mvrWrite->CreateGroupObject(groupUUID, STransformMatrix(), "My Group Name", layer1, &group));
+               
+        ISceneObjPtr firstChild = nullptr;
+        __checkVCOM(mvrWrite->GetFirstChild( group, &firstChild));
+        
 
 		// Create second Layer
 		ISceneObjPtr layer2 = nullptr;
@@ -294,7 +298,7 @@ void MvrUnittest::WriteFile()
 		ISceneObjPtr supportObject = nullptr;
 		__checkVCOM(mvrWrite->CreateSupport(MvrUUID(1808353427, 683171502, 518343034, 0000000007), STransformMatrix(), "MySupportName", layer2, &supportObject));
 
-        Write_TrussWithChildsTest( mvrWrite, layer1);
+        Write_NestedObjects( mvrWrite, layer1);
 
 		// Check Next Object behavoir
 		ISceneObjPtr firstLayerWritten;
@@ -382,7 +386,7 @@ void MvrUnittest::ReadFile()
 		// Check Object
 		size_t count_Objects = 0;
 		__checkVCOM(mvrRead->GetSceneObjectCount(count_Objects));
-		this->checkifEqual("Check Global Object Count", count_Objects, size_t(9));
+		this->checkifEqual("Check Global Object Count", count_Objects, size_t(10));
 
 		//------------------------------------------------------------------------------------------------
 		// Check File Getters
@@ -444,6 +448,12 @@ void MvrUnittest::ReadFile()
 			{
 				ESceneObjType type;
 				__checkVCOM(sceneObj->GetType(type));
+
+                if (i==0)
+                {
+                    Read_NestedObjects(mvrRead, readLayer);
+                }
+
 				// ------------------------------------------------------------------------------
 				// Get Focus Point1
 				if(i==0 && j==0)
@@ -1085,9 +1095,6 @@ void MvrUnittest::ReadFile()
 				checkifEqual("Check mapDef2Source type", (size_t)type, (size_t)ESourceType::CaptureDevice);
 			}
 		}
-
-		
-
     }
 }
 
@@ -1100,18 +1107,113 @@ std::string MvrUnittest::GetTestWheel_PNG(bool readLocation)
     return path;
 }
 
-void MvrUnittest::Write_TrussWithChildsTest(IMediaRessourceVectorInterfacePtr intfc, ISceneObjPtr parent)
+void MvrUnittest::Write_NestedObjects(IMediaRessourceVectorInterfacePtr intfc, ISceneObjPtr layer)
 {    
     MvrUUID trussUUID(1808353898, 683171502, 518343034, 0000000005);        
     ISceneObjPtr trussObject = nullptr;
-	__checkVCOM(intfc->CreateTruss( trussUUID, STransformMatrix(), "MyTrussName", parent, &trussObject));
+	__checkVCOM(intfc->CreateTruss( trussUUID, STransformMatrix(), "Truss with childs", layer, &trussObject));
 
     MvrUUID fixtUUID(1808353111, 683171502, 518343035, 0000000005);
     ISceneObjPtr fixtObject = nullptr;
     __checkVCOM(intfc->CreateFixture( fixtUUID, STransformMatrix(), "Fixture Inside a Truss", trussObject, &fixtObject));
+
+    MvrUUID focuesPtUUID(1808353111, 683171502, 527343035, 0000000005);
+    ISceneObjPtr focuesPtObject = nullptr;
+    __checkVCOM(intfc->CreateFocusPoint( focuesPtUUID, STransformMatrix(), "FocusPt in Fixture", fixtObject, &focuesPtObject));
+
+    MvrUUID projUUID(1808353111, 683171502, 515243035, 0000000005);
+    ISceneObjPtr projObject = nullptr;
+    __checkVCOM(intfc->CreateProjector( projUUID, STransformMatrix(), "Projector in FocuesPt", focuesPtObject, &projObject));
+
+    MvrUUID videoScreenUUID(1808353111, 683171502, 533343035, 0000000005);
+    ISceneObjPtr videoScreenObject = nullptr;
+    __checkVCOM(intfc->CreateVideoScreen( videoScreenUUID, STransformMatrix(), "VideoScreen in Projector", projObject, &videoScreenObject));
+
+    MvrUUID supportUUID(1808353111, 683171502, 518344435, 0000000005);
+    ISceneObjPtr supportObject = nullptr;
+    __checkVCOM(intfc->CreateSupport( supportUUID, STransformMatrix(), "Support in VideoScreen", videoScreenObject, &supportObject));
+    
+    MvrUUID sceneObjUUID(1808353111, 683171502, 544443035, 0000000005);
+    ISceneObjPtr sceneObject = nullptr;
+    __checkVCOM(intfc->CreateSceneObject( sceneObjUUID, STransformMatrix(), "SceneObj in SupportObj", supportObject, &sceneObject));
+    
+    //MvrUUID UUID(1808353111, 683171502, 888343035, 0000000005);
+    //ISceneObjPtr Object = nullptr;
+    //__checkVCOM(intfc->Create( UUID, STransformMatrix(), "", , &));
+
+    // XXX Check all!
+    // ESceneObjType::Group
+    // ESceneObjType::Layer
+    // ESceneObjType::FocusPoint  - SceneDataFocusPointObj
+    // ESceneObjType::Projector   - SceneDataProjectorObj 
+    // ESceneObjType::Truss       - SceneDataTrussObj
+    // ESceneObjType::VideoScreen - SceneDataVideoScreenObj
+    // ESceneObjType::Support     - SceneDataSupportObj
+    // ESceneObjType::Fixture     - SceneDataFixtureObj
+    // ESceneObjType::SceneObj    - SceneDataSceneryObj    
+    // SceneDataGeoInstanceObj    //  ???    
 }
 
-void MvrUnittest::Read_TrussWithChildsTest()
+void MvrUnittest::Read_NestedObjects(IMediaRessourceVectorInterfacePtr interf, ISceneObjPtr layer)
+{   
+    ISceneObjPtr child;
+    interf->GetFirstChild( layer, &child);
+
+    bool success = false;
+
+    while (child)
+    {
+        if (child->GetName() == "Truss with childs")
+        {
+            success = Read_NestedObjectsInTruss(interf, child);
+        }
+
+        interf->GetNextObject(child, &child);
+    }
+
+    checkifTrue( "Read_NestedObjects", success);
+}
+
+bool MvrUnittest::checkChildType( IMediaRessourceVectorInterfacePtr interf, ISceneObjPtr obj, ESceneObjType ecptectedTyp)
+{    
+    bool success = false;
+
+    if (obj)
+    {    
+        ISceneObjPtr chld;
+        interf->GetFirstChild( obj, &chld);
+    
+        ESceneObjType child_typ;
+        chld->GetType(child_typ);
+
+        success = ecptectedTyp == child_typ;        
+    }   
+
+    return success;
+}
+
+bool MvrUnittest::Read_NestedObjectsInTruss(IMediaRessourceVectorInterfacePtr interf, ISceneObjPtr truss)
 {
-    // XXX Unclear. Do group objects apply the their offset to the childs?
+    bool success = true; // Must be inited with true to make the & operations work properly below.
+
+    success &= checkChildType( interf, truss, ESceneObjType::Fixture);
+    ISceneObjPtr chld;
+    interf->GetFirstChild( truss, &chld);
+    
+    success &= checkChildType( interf, chld, ESceneObjType::FocusPoint);    
+    interf->GetFirstChild( chld, &chld);
+    
+    success &= checkChildType( interf, chld, ESceneObjType::Projector);    
+    interf->GetFirstChild( chld, &chld);
+    
+    success &= checkChildType( interf, chld, ESceneObjType::VideoScreen);    
+    interf->GetFirstChild( chld, &chld);
+
+    success &= checkChildType( interf, chld, ESceneObjType::Support);    
+    interf->GetFirstChild( chld, &chld);
+
+    success &= checkChildType( interf, chld, ESceneObjType::SceneObj);    
+    interf->GetFirstChild( chld, &chld);
+
+    return success;
 }

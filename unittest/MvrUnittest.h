@@ -4,6 +4,9 @@
 #pragma once
 #include "Unittest.h"
 
+using VectorworksMVR::IMediaRessourceVectorInterfacePtr;
+using VectorworksMVR::ISceneObjPtr;
+
 class MvrUnittest : public Unittest
 {
 public:
@@ -16,8 +19,10 @@ private:
     void        WriteFile();
     void        ReadFile();
     std::string GetTestWheel_PNG(bool readLocation);
-    void Write_TrussWithChildsTest(VectorworksMVR::IMediaRessourceVectorInterfacePtr, VectorworksMVR::ISceneObjPtr parent);
-    void Read_TrussWithChildsTest();
+    void Write_NestedObjects(IMediaRessourceVectorInterfacePtr, ISceneObjPtr layer);    
+    void Read_NestedObjects(IMediaRessourceVectorInterfacePtr interf, ISceneObjPtr layer);
+    bool checkChildType(IMediaRessourceVectorInterfacePtr interf, ISceneObjPtr obj, VectorworksMVR::ESceneObjType typ);
+    bool Read_NestedObjectsInTruss(IMediaRessourceVectorInterfacePtr interf, ISceneObjPtr truss);
 
     std::string fPath;
 	std::string gdtfPath;
