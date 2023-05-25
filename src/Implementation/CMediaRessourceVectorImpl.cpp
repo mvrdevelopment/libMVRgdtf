@@ -508,7 +508,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateFixtu
 	ESceneObjType							type	= ESceneObjType::Layer;
 	pContainer->GetPointer(obj, type);
 	
-	// XXX why do we need 2 checks here the static cast should be enough!
     if( ! VectorworksMVR::MvrUtil::isContainerType(type)) { return kVCOMError_NoValidContainerObj; }
 	
 	SceneData::SceneDataGroupObjPtr group = static_cast<SceneData::SceneDataGroupObjPtr>(obj);
