@@ -20,7 +20,8 @@ bool MvrUtil::isContainerType(ESceneObjType typ)
     || typ == ESceneObjType::Projector
     || typ == ESceneObjType::SceneObj
     || typ == ESceneObjType::Truss
-    || typ == ESceneObjType::VideoScreen);
+    || typ == ESceneObjType::VideoScreen
+    || typ == ESceneObjType::Support);
 
     ASSERTN(kEveryone, res);
 
