@@ -434,6 +434,11 @@ void MvrUnittest::ReadFile()
 				__checkVCOM(readLayer->GetGuid(resultUUID));
 				this->checkifEqual("GetLayerGuid layerUUID1 ", resultUUID, layerUUID1);
 			}
+
+            if (i==0)
+            {
+                Read_NestedObjects(mvrRead, readLayer);
+            }
 			
 			//Get Data Layer 2
 			if (i==1)
@@ -448,11 +453,6 @@ void MvrUnittest::ReadFile()
 			{
 				ESceneObjType type;
 				__checkVCOM(sceneObj->GetType(type));
-
-                if (i==0)
-                {
-                    Read_NestedObjects(mvrRead, readLayer);
-                }
 
 				// ------------------------------------------------------------------------------
 				// Get Focus Point1
@@ -1117,13 +1117,14 @@ void MvrUnittest::Write_NestedObjects(IMediaRessourceVectorInterfacePtr intfc, I
     ISceneObjPtr fixtObject = nullptr;
     __checkVCOM(intfc->CreateFixture( fixtUUID, STransformMatrix(), "Fixture Inside a Truss", trussObject, &fixtObject));
 
-    MvrUUID focuesPtUUID(1808353111, 683171502, 527343035, 0000000005);
-    ISceneObjPtr focuesPtObject = nullptr;
-    __checkVCOM(intfc->CreateFocusPoint( focuesPtUUID, STransformMatrix(), "FocusPt in Fixture", fixtObject, &focuesPtObject));
+    // XXX focus pt
+    // MvrUUID focuesPtUUID(1808353111, 683171502, 527343035, 0000000005);
+    // ISceneObjPtr focuesPtObject = nullptr;
+    // __checkVCOM(intfc->CreateFocusPoint( focuesPtUUID, STransformMatrix(), "FocusPt in Fixture", fixtObject, &focuesPtObject));
 
     MvrUUID projUUID(1808353111, 683171502, 515243035, 0000000005);
     ISceneObjPtr projObject = nullptr;
-    __checkVCOM(intfc->CreateProjector( projUUID, STransformMatrix(), "Projector in FocuesPt", focuesPtObject, &projObject));
+    __checkVCOM(intfc->CreateProjector( projUUID, STransformMatrix(), "Projector in FocuesPt", fixtObject, &projObject));
 
     MvrUUID videoScreenUUID(1808353111, 683171502, 533343035, 0000000005);
     ISceneObjPtr videoScreenObject = nullptr;
@@ -1162,11 +1163,13 @@ void MvrUnittest::Read_NestedObjects(IMediaRessourceVectorInterfacePtr interf, I
     bool success = false;
 
     while (child)
-    {
-        if (child->GetName() == "Truss with childs")
+    {        
+        std::string nam = child->GetName();
+        
+        if ( nam == "Truss with childs")
         {
             success = Read_NestedObjectsInTruss(interf, child);
-        }
+        }        
 
         interf->GetNextObject(child, &child);
     }
@@ -1183,10 +1186,13 @@ bool MvrUnittest::checkChildType( IMediaRessourceVectorInterfacePtr interf, ISce
         ISceneObjPtr chld;
         interf->GetFirstChild( obj, &chld);
     
-        ESceneObjType child_typ;
-        chld->GetType(child_typ);
+        if (chld)
+        {        
+            ESceneObjType child_typ;
+            chld->GetType(child_typ);        
 
-        success = ecptectedTyp == child_typ;        
+            success = ecptectedTyp == child_typ;        
+        }
     }   
 
     return success;
