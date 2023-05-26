@@ -620,7 +620,7 @@ namespace SceneData
 
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataObjWithMatrix
-	class SceneDataGeoInstanceObj : public SceneDataGroupObj
+	class SceneDataGeoInstanceObj : public SceneDataGroupObj // XXX not sure about this!
 	{
 	public:
 		SceneDataGeoInstanceObj(const SceneDataGUID& guid, bool isSymbol);
