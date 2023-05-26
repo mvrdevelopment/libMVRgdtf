@@ -2278,27 +2278,21 @@ ESceneDataObjectType SceneDataGroupObj::GetObjectType()
 
 void SceneDataGroupObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
 {
-    if ( ! fChildObjs.size()) // Don't print empty groups
-    {
-        return;
-    }
-
-	// Call base class
+    // Call base class
 	SceneDataObjWithMatrix::OnPrintToFile(pNode, exchange);
-
-	
-	// Create the child node
-	IXMLFileNodePtr pChildNode;
-	if ( VCOM_SUCCEEDED( pNode->CreateChildNode( XML_Val_ChildObsNodeName, & pChildNode ) ) )
-	{
-		// Dump the object in the array
-		for (SceneDataObjWithMatrixPtr objects : fChildObjs)
-		{
-			
-			objects->PrintToFile(pChildNode, exchange);
-		}
+     
+    if ( fChildObjs.size())
+    {	
+	    IXMLFileNodePtr pChildNode;
+	    if ( VCOM_SUCCEEDED( pNode->CreateChildNode( XML_Val_ChildObsNodeName, & pChildNode ) ) )
+	    {
+		    // Dump the object in the array
+		    for (SceneDataObjWithMatrixPtr objects : fChildObjs)
+		    {	                
+			    objects->PrintToFile(pChildNode, exchange);
+		    }
+	    }
 	}
-	
 
 }
 
