@@ -2,8 +2,6 @@
 //----- Copyright deersoft 2015 - 2017 www.deersoft.de
 //-----------------------------------------------------------------------------
 #pragma once
-
-#include "SceneDataExchange.h"
 #include "Include/IMediaRessourceVectorInterface.h"
 
 namespace VectorworksMVR
