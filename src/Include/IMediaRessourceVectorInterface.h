@@ -1829,7 +1829,7 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 			MVRxchangeMessageType Type;
 		};
 
-		typedef void (*MVRxchangeMessageHandler)(const MVRxchangeMessage& args);
+		typedef MVRxchangeMessage (*MVRxchangeMessageHandler)(const MVRxchangeMessage& args);
 		struct OnMessageArgs
 		{
 			MVRxchangeMessageHandler* Callback;
@@ -1841,6 +1841,14 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		 * @return VCOMError 
 		 */
 		virtual VCOMError VCOM_CALLTYPE     OnMessage(MVRxchangeMessageHandler& messageHandler) = 0;
+		
+		
+		struct SendMessageArgs
+		{
+			MVRxchangeMessage Message;
+			MVRxchangeMessage ReturnValue;
+		};
+		virtual VCOMError VCOM_CALLTYPE     SendMessage(const SendMessageArgs& messageHandler) = 0;
 
 
 
