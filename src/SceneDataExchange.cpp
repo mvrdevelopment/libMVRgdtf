@@ -159,7 +159,7 @@ void SceneDataObj::setName(const TXString& value)
 
 void SceneDataObj::PrintToFile(IXMLFileNodePtr pContainerNode, SceneDataExchange* exchange)
 {
-	// Create the new node
+    // Create the new node
 	IXMLFileNodePtr pNode;
 	if ( VCOM_SUCCEEDED( pContainerNode->CreateChildNode( this->GetNodeName(), & pNode ) ) )
 	{
@@ -3763,40 +3763,19 @@ void SceneDataExchange::ProcessLayer(const IXMLFileNodePtr& node)
 	TXString			uuid = "";
 	
 	if (VCOM_SUCCEEDED(node->GetNodeAttributeValue(XML_Val_GuidAttrName, uuid)))
-	{
-		// Create the new Layer
+	{		
 		SceneDataLayerObjPtr layerObj = ReadLayerObject(SceneDataGUID(uuid),node);
 		
-		
-		// Now it can be handeled as a group
 		ASSERTN(kEveryone, layerObj != nullptr);
 		if (layerObj)
-		{
-			ProcessGroup(node, layerObj, false);
+		{			
+            this->ReadChildObjs(node, layerObj);
 		}
 	}
 }
 
-void SceneDataExchange::ProcessGroup(const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer, bool createNewContainer)
+void SceneDataExchange::ReadChildObjs(const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer)
 {
-	//--------------------------------------------------------------------------------------------
-	// If this was called not by layer object, you need to add a new group object to the tree
-	if (createNewContainer)
-	{
-		// Read the group
-		TXString			groupUuid = "";
-		if (VCOM_SUCCEEDED(node->GetNodeAttributeValue(XML_Val_GuidAttrName, groupUuid)))
-		{
-			SceneDataGroupObjPtr group = ReadGroupObject(SceneDataGUID(groupUuid),node, addToContainer);
-			addToContainer = group;
-		}
-		else
-		{
-			return;
-		}
-
-	}
-	
 	//--------------------------------------------------------------------------------------------
 	// Now read the child nodes
 	IXMLFileNodePtr childObjsNode = nullptr;
@@ -3828,8 +3807,13 @@ void SceneDataExchange::ProcessGroup(const IXMLFileNodePtr& node, SceneDataGroup
 					else if	( nodeName == XML_Val_VideoScreenObjectNodeName)	{ obj = ReadVideoScreen(	SceneDataGUID(groupUuid),objNode, addToContainer); }
 					else if	( nodeName == XML_Val_SupportObjectNodeName)		{ obj = ReadSupport(		SceneDataGUID(groupUuid),objNode, addToContainer); }
 					else if	( nodeName == XML_Val_ProjectorObjectNodeName)		{ obj = ReadProjector(		SceneDataGUID(groupUuid),objNode, addToContainer); }
-					else if ( nodeName == XML_Val_GroupNodeName)				{ ProcessGroup(objNode, addToContainer, true); }
-					
+					else if ( nodeName == XML_Val_GroupNodeName)				{ ProcessGroup(objNode, addToContainer); }
+					     
+                    auto grp = dynamic_cast<SceneDataGroupObjPtr>(obj); // XXX check
+                    if (grp)
+                    {
+                        this->ReadChildObjs(objNode, grp);
+                    }
 
 					// ---------------------------------------------------------------------------
 					// Add the object to list if it is a scene object
@@ -3849,9 +3833,7 @@ void SceneDataExchange::ProcessGroup(const IXMLFileNodePtr& node, SceneDataGroup
 						fSceneObjects.push_back(obj);
 					}
 				}
-				
-				
-				
+
 				// ---------------------------------------------------------------------------
 				// Step to the next node
 				IXMLFileNodePtr nextNode = nullptr;
@@ -3861,7 +3843,16 @@ void SceneDataExchange::ProcessGroup(const IXMLFileNodePtr& node, SceneDataGroup
 			
 		}
 	}
-	
+}
+
+void SceneDataExchange::ProcessGroup(const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer)
+{	
+	TXString			groupUuid = "";
+	if (VCOM_SUCCEEDED(node->GetNodeAttributeValue(XML_Val_GuidAttrName, groupUuid)))
+	{
+		SceneDataGroupObjPtr group = ReadGroupObject(SceneDataGUID(groupUuid),node, addToContainer);
+		addToContainer = group;
+	}    
 }
 
 void SceneDataExchange::AddFileToZip(const IFileIdentifierPtr& file, ERessourceType resType)
