@@ -4,6 +4,9 @@
 #pragma once
 #include "Include/IMediaRessourceVectorInterface.h"
 
+#include "../../../mdns_cpp/mdns.hpp"
+
+
 namespace VectorworksMVR
 {
 	//----------------------------------------------------------------------------------------
@@ -24,6 +27,13 @@ namespace VectorworksMVR
 
 		virtual VCOMError VCOM_CALLTYPE     OnMessage(MVRxchangeMessageHandler& messageHandler);
 		virtual VCOMError VCOM_CALLTYPE     SendMessage(const SendMessageArgs& messageHandler);
+
+
+	private:
+		mdns_cpp::mDNS fmdns;
+
+
+	private:
 
 
 	};

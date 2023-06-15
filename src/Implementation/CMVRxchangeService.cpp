@@ -15,11 +15,17 @@ VectorworksMVR::CMVRxchangeServiceImpl::~CMVRxchangeServiceImpl()
 
 VCOMError VectorworksMVR::CAlignmentImpl::ConnectToLocalService(const ConnectToLocalServiceArgs& services)
 {
+  fmdns.setServiceHostname("AirForce1");
+  fmdns.setServicePort("AirForce1");
+  fmdns.setServiceName("AirForce1");
+  fmdns.startService();
+
 }
 
 
 VCOMError VectorworksMVR::CAlignmentImpl::LeaveLocalService()
 {
+	fmdns.leaveService();
 }
 
 
