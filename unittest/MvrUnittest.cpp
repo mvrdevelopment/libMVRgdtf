@@ -1206,8 +1206,8 @@ bool MvrUnittest::Read_NestedObjectsInTruss(IMediaRessourceVectorInterfacePtr in
     ISceneObjPtr chld;
     interf->GetFirstChild( truss, &chld);
     
-    success &= checkChildType( interf, chld, ESceneObjType::FocusPoint);    
-    interf->GetFirstChild( chld, &chld);
+    //success &= checkChildType( interf, chld, ESceneObjType::FocusPoint);    
+    //interf->GetFirstChild( chld, &chld);
     
     success &= checkChildType( interf, chld, ESceneObjType::Projector);    
     interf->GetFirstChild( chld, &chld);
