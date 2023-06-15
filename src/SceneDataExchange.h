@@ -599,7 +599,7 @@ namespace SceneData
 		SceneDataGroupObj(const SceneDataGUID& guid);
 		virtual ~SceneDataGroupObj();		
 	private:
-		SceneDataObjWithMatrixArray	fChildObjs; // XXX Switch type to SceneDataGroupObj here?
+		SceneDataObjWithMatrixArray	fChildObjs;
 		
 	public:
 		const SceneDataObjWithMatrixArray&	GetChildArray() const;
