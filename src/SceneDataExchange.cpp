@@ -2271,6 +2271,16 @@ TXString SceneDataGroupObj::GetNodeName()
 	return TXString( XML_Val_GroupNodeName );
 }
 
+void SceneDataGroupObj::PrintToFile(IXMLFileNodePtr pContainerNode, SceneDataExchange * exchange)
+{
+    if (this->GetNodeName() == XML_Val_GroupNodeName && (fChildObjs.size() == 0))
+    {
+        return; // Do not print empty groups at all.
+    }
+
+    SceneDataObjWithMatrix::PrintToFile(pContainerNode, exchange);
+}
+
 ESceneDataObjectType SceneDataGroupObj::GetObjectType()
 {
 	return ESceneDataObjectType::eGroup;
@@ -2278,11 +2288,6 @@ ESceneDataObjectType SceneDataGroupObj::GetObjectType()
 
 void SceneDataGroupObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
 {
-    if (this->GetNodeName() == XML_Val_GroupNodeName && (fChildObjs.size() == 0))
-    {
-        return; // Do not print empty groups at all.
-    }
-
     // Call base class
 	SceneDataObjWithMatrix::OnPrintToFile(pNode, exchange);
      
@@ -2298,7 +2303,6 @@ void SceneDataGroupObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* 
 		    }
 	    }
 	}
-
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------------

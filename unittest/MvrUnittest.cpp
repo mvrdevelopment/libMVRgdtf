@@ -250,11 +250,17 @@ void MvrUnittest::WriteFile()
 		// Group
 		MvrUUID groupUUID(1808353427, 683171502, 518343034, 0000000005);
 		ISceneObjPtr group = nullptr;
-        __checkVCOM(mvrWrite->CreateGroupObject(groupUUID, STransformMatrix(), "My Group Name", layer1, &group));
-               
-        ISceneObjPtr firstChild = nullptr;
-        __checkVCOM(mvrWrite->GetFirstChild( group, &firstChild));
+        __checkVCOM(mvrWrite->CreateGroupObject(groupUUID, STransformMatrix(), "My Group Name", layer1, &group));              
         
+        ISceneObjPtr truss = nullptr;
+        mvrWrite->CreateTruss(MvrUUID(1126151872, 1699151080, 751939975, 1748783014), STransformMatrix(), "Truss in Group", group, &truss);
+
+		MvrUUID empty_groupUUID(1808353427, 683171502, 518343012, 0000000002);
+		ISceneObjPtr empty_group = nullptr;
+        __checkVCOM(mvrWrite->CreateGroupObject(empty_groupUUID, STransformMatrix(), "EmptyGroup", layer1, &empty_group));
+
+        ISceneObjPtr firstChild = nullptr;
+        __checkVCOM(mvrWrite->GetFirstChild( group, &firstChild));        
 
 		// Create second Layer
 		ISceneObjPtr layer2 = nullptr;

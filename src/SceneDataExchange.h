@@ -116,7 +116,7 @@ namespace SceneData
 		void			setName(const TXString& value);
 		
 		// Write
-		void			PrintToFile(IXMLFileNodePtr pContainerNode, SceneDataExchange* exchange);
+		virtual void	PrintToFile(IXMLFileNodePtr pContainerNode, SceneDataExchange* exchange);
 		void			ReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange);
 		
 	public:
@@ -606,10 +606,9 @@ namespace SceneData
 		bool								AddObject(SceneDataObjWithMatrixPtr obj);
 		
 		virtual ESceneDataObjectType	GetObjectType();
-		
+		virtual void	                PrintToFile(IXMLFileNodePtr pContainerNode, SceneDataExchange* exchange);
 	protected:
-		virtual	TXString				GetNodeName();
-		
+		virtual	TXString				GetNodeName();		
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);
 		
 	};
@@ -1071,7 +1070,8 @@ namespace SceneData
 	private:
 		void ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xmlFile);
 		void ProcessLayer(const IXMLFileNodePtr& node);
-		void ProcessGroup(const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer, bool createNewContainer);
+        void ReadChildObjs(const IXMLFileNodePtr & node, SceneDataGroupObjPtr addToContainer);
+		void ProcessGroup(const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
 		
 		
 		
