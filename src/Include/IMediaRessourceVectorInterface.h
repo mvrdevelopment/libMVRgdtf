@@ -1761,4 +1761,93 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
     const   VWIID IID_IUtility = { 0x706cb180, 0xcd45, 0x4a9a, {0xab, 0xdc, 0x62, 0xab, 0x5f, 0xfe, 0x37, 0x6b}};
 
 
+
+	typedef char MVRxchangeString[1024];
+	class DYNAMIC_ATTRIBUTE IMVRxchangeService : public IVWUnknown
+    {
+		public:
+		struct ConnectToLocalServiceArgs
+		{
+			MVRxchangeString Service;
+		};
+		/**
+		 * @brief Connects to a given Local Network Mode MVR-xchange system
+		 * 
+		 * @param service 
+		 * @return VCOMError 
+		 */
+        virtual VCOMError VCOM_CALLTYPE     ConnectToLocalService(const ConnectToLocalServiceArgs& service) = 0;
+		/**
+		 * @brief Leaves the Local Network Mode MVR-xchange system when connected
+		 * 
+		 * @param service 
+		 * @return VCOMError 
+		 */
+        virtual VCOMError VCOM_CALLTYPE     LeaveLocalService() = 0;
+
+		struct GetLocalServicesArgs
+		{
+			ConnectToLocalServiceArgs* 	Service;
+			size_t 						CountServices;
+		};
+		/**
+		 * @brief Get the local services that are currently available
+		 * 
+		 * @param service 
+		 * @return VCOMError 
+		 */
+        virtual VCOMError VCOM_CALLTYPE     GetLocalServices(GetLocalServicesArgs& arg) = 0;
+        
+		struct ConnectToRemoteServiceArgs
+		{
+			MVRxchangeString Url;
+		};
+		/**
+		 * @brief Connects to a given Socket Mode Mode MVR-xchange system
+		 * 
+		 * @param service 
+		 * @return VCOMError 
+		 */
+		virtual VCOMError VCOM_CALLTYPE     ConnectToRemoteService(const ConnectToRemoteServiceArgs& service) = 0;
+		/**
+		 * @brief Leaves the WebSocket Mode MVR-xchange system when connected
+		 * 
+		 * @param service 
+		 * @return VCOMError 
+		 */
+		virtual VCOMError VCOM_CALLTYPE     LeaveRemoteService() = 0;
+		
+		enum class MVRxchangeMessageType
+		{
+			MVR_JOIN,
+			MVR_LEAVE,
+			MVR_COMMIT,
+			MVR_REQUEST,
+		};
+		struct MVRxchangeMessage
+		{
+			MVRxchangeMessageType Type;
+		};
+
+		typedef void (*MVRxchangeMessageHandler)(const MVRxchangeMessage& args);
+		struct OnMessageArgs
+		{
+			MVRxchangeMessageHandler* Callback;
+		};
+		/**
+		 * @brief Registers the message handlers
+		 * 
+		 * @param service 
+		 * @return VCOMError 
+		 */
+		virtual VCOMError VCOM_CALLTYPE     OnMessage(MVRxchangeMessageHandler& messageHandler) = 0;
+
+
+
+
+    };
+    typedef VCOMPtr<IUtility>	IIUtilityPtr;
+    const   VWIID IID_IUtility = { 0x706cb180, 0xcd45, 0x4a9a, {0xab, 0xdc, 0x62, 0xab, 0x5f, 0xfe, 0x37, 0x6b}};
+
+
 }
