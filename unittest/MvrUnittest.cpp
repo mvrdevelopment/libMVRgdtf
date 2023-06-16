@@ -395,7 +395,7 @@ void MvrUnittest::ReadFile()
 		size_t count_Objects = 0;
 		__checkVCOM(mvrRead->GetSceneObjectCount(count_Objects));
 
-        this->checkifEqual("Check Global Object Count", count_Objects, size_t(16));
+        this->checkifEqual("Check Global Object Count", count_Objects, size_t(17));
 
 		//------------------------------------------------------------------------------------------------
 		// Check File Getters
@@ -1119,12 +1119,12 @@ std::string MvrUnittest::GetTestWheel_PNG(bool readLocation)
 void MvrUnittest::Write_NestedObjects(IMediaRessourceVectorInterfacePtr intfc, ISceneObjPtr layer)
 {    
     MvrUUID trussUUID(1808353898, 683171502, 518343034, 0000000005);        
-    ISceneObjPtr trussObject = nullptr;
-	__checkVCOM(intfc->CreateTruss( trussUUID, STransformMatrix(), "Truss with childs", layer, &trussObject));
+    ISceneObjPtr trussObj1 = nullptr;
+	__checkVCOM(intfc->CreateTruss( trussUUID, STransformMatrix(), "Truss with childs", layer, &trussObj1));
 
     MvrUUID fixtUUID(1808353111, 683171502, 518343035, 0000000005);
     ISceneObjPtr fixtObject = nullptr;
-    __checkVCOM(intfc->CreateFixture( fixtUUID, STransformMatrix(), "Fixture Inside a Truss", trussObject, &fixtObject));
+    __checkVCOM(intfc->CreateFixture( fixtUUID, STransformMatrix(), "Fixture Inside a Truss", trussObj1, &fixtObject));
         
     MvrUUID focuesPtUUID(1808353111, 683171502, 527343035, 0000000005);
     ISceneObjPtr focuesPtObject = nullptr;
@@ -1146,21 +1146,9 @@ void MvrUnittest::Write_NestedObjects(IMediaRessourceVectorInterfacePtr intfc, I
     ISceneObjPtr sceneObject = nullptr;
     __checkVCOM(intfc->CreateSceneObject( sceneObjUUID, STransformMatrix(), "SceneObj in SupportObj", supportObject, &sceneObject));
     
-    //MvrUUID UUID(1808353111, 683171502, 888343035, 0000000005);
-    //ISceneObjPtr Object = nullptr;
-    //__checkVCOM(intfc->Create( UUID, STransformMatrix(), "", , &));
-
-    // XXX Check all!
-    // ESceneObjType::Group
-    // ESceneObjType::Layer
-    // ESceneObjType::FocusPoint  - SceneDataFocusPointObj
-    // ESceneObjType::Projector   - SceneDataProjectorObj 
-    // ESceneObjType::Truss       - SceneDataTrussObj
-    // ESceneObjType::VideoScreen - SceneDataVideoScreenObj
-    // ESceneObjType::Support     - SceneDataSupportObj
-    // ESceneObjType::Fixture     - SceneDataFixtureObj
-    // ESceneObjType::SceneObj    - SceneDataSceneryObj    
-    // SceneDataGeoInstanceObj    //  ???    
+    MvrUUID truss2_UUID(1808353112, 683171402, 888343025, 0000000001);
+    ISceneObjPtr trussObj2 = nullptr;
+    __checkVCOM(intfc->CreateTruss( truss2_UUID, STransformMatrix(), "Truss in SceneObj", sceneObject, &trussObj2));
 }
 
 void MvrUnittest::Read_NestedObjects(IMediaRessourceVectorInterfacePtr interf, ISceneObjPtr layer)
@@ -1228,6 +1216,8 @@ bool MvrUnittest::Read_NestedObjectsInTruss(IMediaRessourceVectorInterfacePtr in
 
     success &= verifyFirstChildType( interf, chld, ESceneObjType::SceneObj);    
     interf->GetFirstChild( chld, &chld);
+
+    success &= verifyFirstChildType( interf, chld, ESceneObjType::Truss);
 
     return success;
 }
