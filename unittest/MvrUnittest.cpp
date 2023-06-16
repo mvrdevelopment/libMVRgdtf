@@ -1185,7 +1185,7 @@ void MvrUnittest::Read_NestedObjects(IMediaRessourceVectorInterfacePtr interf, I
     checkifTrue( "Read_NestedObjects", success);
 }
 
-bool MvrUnittest::checkChildType( IMediaRessourceVectorInterfacePtr interf, ISceneObjPtr obj, ESceneObjType ecptectedTyp)
+bool MvrUnittest::verifyFirstChildType( IMediaRessourceVectorInterfacePtr interf, ISceneObjPtr obj, ESceneObjType exptectedTyp)
 {    
     bool success = false;
 
@@ -1199,7 +1199,7 @@ bool MvrUnittest::checkChildType( IMediaRessourceVectorInterfacePtr interf, ISce
             ESceneObjType child_typ;
             chld->GetType(child_typ);        
 
-            success = ecptectedTyp == child_typ;        
+            success = exptectedTyp == child_typ;        
         }
     }   
 
@@ -1210,23 +1210,23 @@ bool MvrUnittest::Read_NestedObjectsInTruss(IMediaRessourceVectorInterfacePtr in
 {
     bool success = true; // Must be inited with true to make the & operations work properly below.
 
-    success &= checkChildType( interf, truss, ESceneObjType::Fixture);
+    success &= verifyFirstChildType( interf, truss, ESceneObjType::Fixture);
     ISceneObjPtr chld;
     interf->GetFirstChild( truss, &chld);
     
     //success &= checkChildType( interf, chld, ESceneObjType::FocusPoint);    
     //interf->GetFirstChild( chld, &chld);
     
-    success &= checkChildType( interf, chld, ESceneObjType::Projector);    
+    success &= verifyFirstChildType( interf, chld, ESceneObjType::Projector);    
     interf->GetFirstChild( chld, &chld);
     
-    success &= checkChildType( interf, chld, ESceneObjType::VideoScreen);    
+    success &= verifyFirstChildType( interf, chld, ESceneObjType::VideoScreen);    
     interf->GetFirstChild( chld, &chld);
 
-    success &= checkChildType( interf, chld, ESceneObjType::Support);    
+    success &= verifyFirstChildType( interf, chld, ESceneObjType::Support);    
     interf->GetFirstChild( chld, &chld);
 
-    success &= checkChildType( interf, chld, ESceneObjType::SceneObj);    
+    success &= verifyFirstChildType( interf, chld, ESceneObjType::SceneObj);    
     interf->GetFirstChild( chld, &chld);
 
     return success;
