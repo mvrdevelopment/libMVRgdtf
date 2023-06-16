@@ -3809,12 +3809,11 @@ void SceneDataExchange::ReadChildObjs(const IXMLFileNodePtr& node, SceneDataGrou
 					else if	( nodeName == XML_Val_ProjectorObjectNodeName)		{ obj = ReadProjector(		SceneDataGUID(groupUuid),objNode, addToContainer); }
 					else if ( nodeName == XML_Val_GroupNodeName)				{ ProcessGroup(objNode, addToContainer); }
 					     
-                    auto grp = dynamic_cast<SceneDataGroupObjPtr>(obj); // XXX check
+                    auto grp = dynamic_cast<SceneDataGroupObjPtr>(obj);
                     if (grp)
                     {
                         this->ReadChildObjs(objNode, grp);
                     }
-
 					// ---------------------------------------------------------------------------
 					// Add the object to list if it is a scene object
 					if(obj)
