@@ -37,8 +37,6 @@ bool MvrUnittest::ExecuteTest()
 	std::cout << "=                                        MvrUnittest                                       =" << std::endl;
     WriteFile();
     ReadFile();    
-    
-    std::cout << this->getFailedTestCount() << "Tests have failed."; 
 
     return true;
 }
