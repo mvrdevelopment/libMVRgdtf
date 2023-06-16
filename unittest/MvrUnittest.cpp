@@ -394,7 +394,8 @@ void MvrUnittest::ReadFile()
 		// Check Object
 		size_t count_Objects = 0;
 		__checkVCOM(mvrRead->GetSceneObjectCount(count_Objects));
-		this->checkifEqual("Check Global Object Count", count_Objects, size_t(10));
+
+        this->checkifEqual("Check Global Object Count", count_Objects, size_t(15));
 
 		//------------------------------------------------------------------------------------------------
 		// Check File Getters
