@@ -1705,7 +1705,7 @@ void SceneDataObjWithMatrix::ReadMatrixNodeValue(const IXMLFileNodePtr& pNode, V
 
 // ----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataAuxObj
-SceneDataGeoInstanceObj::SceneDataGeoInstanceObj(const SceneDataGUID& guid, bool isSymbol) : SceneDataGroupObj (guid)
+SceneDataGeoInstanceObj::SceneDataGeoInstanceObj(const SceneDataGUID& guid, bool isSymbol) : SceneDataObjWithMatrix (guid)
 {
 	fIsSymbol = isSymbol;
 }

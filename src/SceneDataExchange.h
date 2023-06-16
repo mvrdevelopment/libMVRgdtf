@@ -613,9 +613,7 @@ namespace SceneData
 		
 	};
 	typedef SceneDataGroupObj* SceneDataGroupObjPtr;	
-
-	// ----------------------------------------------------------------------------------------------------------------------------------
-	// SceneDataObjWithMatrix
+    
 	class SceneDataGeoInstanceObj : public SceneDataObjWithMatrix
 	{
 	public:
