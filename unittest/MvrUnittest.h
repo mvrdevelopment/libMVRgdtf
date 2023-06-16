@@ -21,7 +21,7 @@ private:
     std::string GetTestWheel_PNG(bool readLocation);
     void Write_NestedObjects(IMediaRessourceVectorInterfacePtr, ISceneObjPtr layer);    
     void Read_NestedObjects(IMediaRessourceVectorInterfacePtr interf, ISceneObjPtr layer);
-    bool checkChildType(IMediaRessourceVectorInterfacePtr interf, ISceneObjPtr obj, VectorworksMVR::ESceneObjType exptectedTyp);
+    bool verifyFirstChildType(IMediaRessourceVectorInterfacePtr interf, ISceneObjPtr obj, VectorworksMVR::ESceneObjType exptectedTyp);
     bool Read_NestedObjectsInTruss(IMediaRessourceVectorInterfacePtr interf, ISceneObjPtr truss);
 
     std::string fPath;

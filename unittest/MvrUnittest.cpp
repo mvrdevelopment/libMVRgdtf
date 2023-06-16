@@ -395,7 +395,7 @@ void MvrUnittest::ReadFile()
 		size_t count_Objects = 0;
 		__checkVCOM(mvrRead->GetSceneObjectCount(count_Objects));
 
-        this->checkifEqual("Check Global Object Count", count_Objects, size_t(15));
+        this->checkifEqual("Check Global Object Count", count_Objects, size_t(16));
 
 		//------------------------------------------------------------------------------------------------
 		// Check File Getters
@@ -1125,15 +1125,14 @@ void MvrUnittest::Write_NestedObjects(IMediaRessourceVectorInterfacePtr intfc, I
     MvrUUID fixtUUID(1808353111, 683171502, 518343035, 0000000005);
     ISceneObjPtr fixtObject = nullptr;
     __checkVCOM(intfc->CreateFixture( fixtUUID, STransformMatrix(), "Fixture Inside a Truss", trussObject, &fixtObject));
-
-    // XXX focus pt
-    // MvrUUID focuesPtUUID(1808353111, 683171502, 527343035, 0000000005);
-    // ISceneObjPtr focuesPtObject = nullptr;
-    // __checkVCOM(intfc->CreateFocusPoint( focuesPtUUID, STransformMatrix(), "FocusPt in Fixture", fixtObject, &focuesPtObject));
+        
+    MvrUUID focuesPtUUID(1808353111, 683171502, 527343035, 0000000005);
+    ISceneObjPtr focuesPtObject = nullptr;
+    __checkVCOM(intfc->CreateFocusPoint( focuesPtUUID, STransformMatrix(), "FocusPt in Fixture", fixtObject, &focuesPtObject));
 
     MvrUUID projUUID(1808353111, 683171502, 515243035, 0000000005);
     ISceneObjPtr projObject = nullptr;
-    __checkVCOM(intfc->CreateProjector( projUUID, STransformMatrix(), "Projector in FocuesPt", fixtObject, &projObject));
+    __checkVCOM(intfc->CreateProjector( projUUID, STransformMatrix(), "Projector in FocuesPt", focuesPtObject, &projObject));
 
     MvrUUID videoScreenUUID(1808353111, 683171502, 533343035, 0000000005);
     ISceneObjPtr videoScreenObject = nullptr;
@@ -1215,8 +1214,8 @@ bool MvrUnittest::Read_NestedObjectsInTruss(IMediaRessourceVectorInterfacePtr in
     ISceneObjPtr chld;
     interf->GetFirstChild( truss, &chld);
     
-    //success &= checkChildType( interf, chld, ESceneObjType::FocusPoint);    
-    //interf->GetFirstChild( chld, &chld);
+    success &= verifyFirstChildType( interf, chld, ESceneObjType::FocusPoint);    
+    interf->GetFirstChild( chld, &chld);
     
     success &= verifyFirstChildType( interf, chld, ESceneObjType::Projector);    
     interf->GetFirstChild( chld, &chld);
