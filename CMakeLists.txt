@@ -54,7 +54,8 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/libs/)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/libs/)
 
 include_directories(${CMAKE_SOURCE_DIR}/src
-                    ${CMAKE_SOURCE_DIR}/../mdns_cpp/include/
+                    ${CMAKE_SOURCE_DIR}/../boost/
+                    ${CMAKE_SOURCE_DIR}/mdns_cpp/include/
                     ${XERCES_INCLUDE_PATH})
 
 # default values
