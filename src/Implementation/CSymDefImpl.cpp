@@ -134,7 +134,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSymDefImpl::AddGeometry(const STransf
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CSymDefImpl::AddSymbol(MvrUUID& guid, const STransformMatrix& geometry, ISymDef* symDef)
+VectorworksMVR::VCOMError VectorworksMVR::CSymDefImpl::AddSymbol(const MvrUUID& guid, const STransformMatrix& geometry, ISymDef* symDef)
 {
 	//------------------------------------------------------------------------------------------
 	// Check if this is initialized
