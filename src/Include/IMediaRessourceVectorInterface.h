@@ -306,7 +306,7 @@ namespace VectorworksMVR
 		
 		
 		virtual VCOMError VCOM_CALLTYPE		AddGeometry(const STransformMatrix& geometry, MvrString fileName) = 0;
-		virtual VCOMError VCOM_CALLTYPE		AddSymbol(const STransformMatrix& geometry, ISymDef* symDef) = 0;
+		virtual VCOMError VCOM_CALLTYPE		AddSymbol(const MvrUUID& guid, const STransformMatrix& geometry, ISymDef* symDef) = 0;
 		
 		virtual VCOMError VCOM_CALLTYPE		GetClass(IClass** outClass) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetClass(IClass* clas) = 0;
