@@ -1854,8 +1854,8 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 
 
     };
-    typedef VCOMPtr<IUtility>	IIUtilityPtr;
-    const   VWIID IID_IUtility = { 0x706cb180, 0xcd45, 0x4a9a, {0xab, 0xdc, 0x62, 0xab, 0x5f, 0xfe, 0x37, 0x6b}};
+    typedef VCOMPtr<IMVRxchangeService>	IMVRxchangeServicePtr;
+    const   VWIID IID_IMVRxchangeService = { 0x706cb180, 0xcd45, 0x4a9a, {0xac, 0xfc, 0x62, 0xab, 0x5f, 0xfe, 0x37, 0x6b}};
 
 
 }
