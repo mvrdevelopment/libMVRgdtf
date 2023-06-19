@@ -108,7 +108,8 @@ void MvrUnittest::WriteFile()
         if(__checkVCOM(mvrWrite->CreateSymDefObject(MvrUUID(0, 0, 0, 0), "Symbol Definition for the UUID Creation Check", & symDef2)))
         {
 			STransformMatrix mx;
-			symDef2->AddSymbol(mx, symDef1);
+            MvrUUID symUID(121062618, 11752014, 669377348, 947530087);
+			symDef2->AddSymbol( symUID, mx, symDef1);
         }
         
         IClassPtr clas1 = nullptr;
