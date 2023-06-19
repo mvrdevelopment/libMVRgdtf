@@ -148,7 +148,8 @@ void MvrUnittest::WriteFile()
 		ISceneObjPtr focusPoint = nullptr;
 		if (__checkVCOM(mvrWrite->CreateFocusPoint(MvrUUID(1998334672, 457193269, 1786021763, 1463564339), STransformMatrix(), "My FocusPoint", layer1, &focusPoint)))
 		{
-			__checkVCOM(focusPoint->AddSymbol(STransformMatrix(), symDef1));
+            MvrUUID symUID2(121062618, 11752014, 669377348, 837520086);
+			__checkVCOM(focusPoint->AddSymbol( symUID2, STransformMatrix(), symDef1)); 
 			__checkVCOM(focusPoint->SetClass(clas1));
 		}
 			
