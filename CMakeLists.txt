@@ -19,6 +19,9 @@ endif(WIN32)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
+add_subdirectory(mdns_cpp)
+
+
 #################################################
 # System setup
 if (WIN32)
@@ -51,6 +54,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/libs/)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/libs/)
 
 include_directories(${CMAKE_SOURCE_DIR}/src
+                    ${CMAKE_SOURCE_DIR}/../mdns_cpp/include/
                     ${XERCES_INCLUDE_PATH})
 
 # default values
@@ -69,6 +73,7 @@ file(GLOB_RECURSE libSourceFiles ${SRCDIR}/*.cpp)
 add_library(MvrGdtf STATIC ${libSourceFiles})
 
 target_link_libraries(MvrGdtf ${XERCES_LIB_PATH})
+target_link_libraries(MvrGdtf lib/libmdns_cpp.a)
 #################################################
 
 

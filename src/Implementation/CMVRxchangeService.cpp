@@ -13,35 +13,41 @@ VectorworksMVR::CMVRxchangeServiceImpl::~CMVRxchangeServiceImpl()
 {
 }
 
-VCOMError VectorworksMVR::CAlignmentImpl::ConnectToLocalService(const ConnectToLocalServiceArgs& services)
+VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const ConnectToLocalServiceArgs& services)
 {
   fmdns.setServiceHostname("AirForce1");
-  fmdns.setServicePort("AirForce1");
+  fmdns.setServicePort(5000);
   fmdns.setServiceName("AirForce1");
   fmdns.startService();
 
+  return kVCOMError_NoError;
 }
 
 
-VCOMError VectorworksMVR::CAlignmentImpl::LeaveLocalService()
+VCOMError VectorworksMVR::CMVRxchangeServiceImpl::LeaveLocalService()
 {
-	fmdns.leaveService();
+	fmdns.stopService();
+  return kVCOMError_NoError;
 }
 
 
-VCOMError VectorworksMVR::CAlignmentImpl::ConnectToRemoteService(const ConnectToRemoteServiceArgs& service)
+VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToRemoteService(const ConnectToRemoteServiceArgs& service)
 {
+  return kVCOMError_NoError;
 }
 
 
-VCOMError VectorworksMVR::CAlignmentImpl::LeaveRemoteService()
+VCOMError VectorworksMVR::CMVRxchangeServiceImpl::LeaveRemoteService()
 {
+  return kVCOMError_NoError;
 }
 
-VCOMError VectorworksMVR::CAlignmentImpl::OnMessage(MVRxchangeMessageHandler& messageHandler)
+VCOMError VectorworksMVR::CMVRxchangeServiceImpl::OnMessage(MVRxchangeMessageHandler& messageHandler)
 {
+  return kVCOMError_NoError;
 }
 
-VCOMError VectorworksMVR::CAlignmentImpl::SendMessage(const SendMessageArgs& messageHandler)
+VCOMError VectorworksMVR::CMVRxchangeServiceImpl::SendMessage(const SendMessageArgs& messageHandler)
 {
+  return kVCOMError_NoError;
 }

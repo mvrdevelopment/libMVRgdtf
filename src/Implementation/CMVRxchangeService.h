@@ -3,8 +3,7 @@
 //-----------------------------------------------------------------------------
 #pragma once
 #include "Include/IMediaRessourceVectorInterface.h"
-
-#include "../../../mdns_cpp/mdns.hpp"
+#include "mdns_cpp/mdns.hpp"
 
 
 namespace VectorworksMVR

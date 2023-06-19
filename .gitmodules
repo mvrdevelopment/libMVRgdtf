@@ -1,0 +1,3 @@
+[submodule "mdns_cpp"]
+	path = mdns_cpp
+	url = https://github.com/gocarlos/mdns_cpp
