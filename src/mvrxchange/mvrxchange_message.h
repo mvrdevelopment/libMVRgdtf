@@ -37,5 +37,5 @@ namespace MVRxchangeNetwork
             char*               fdata;
             size_t              fBodyLength;
     };
-    typedef std::deque<MVRxchangeMessage>     LRNetMessageQueue;
+    typedef std::deque<MVRxchangeMessage>     MVRxchangeMessageDeque;
 }
