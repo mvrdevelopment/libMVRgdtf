@@ -1787,8 +1787,8 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 
 		struct GetLocalServicesArgs
 		{
-			ConnectToLocalServiceArgs* 	Service;
-			size_t 						CountServices;
+			ConnectToLocalServiceArgs** 	Service;
+			size_t 							CountServices;
 		};
 		/**
 		 * @brief Get the local services that are currently available
