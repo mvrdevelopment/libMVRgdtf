@@ -40,12 +40,12 @@ MVRxchangeMessage::~MVRxchangeMessage()
 
 const char* MVRxchangeMessage::GetData() const
 {
-    return fData;
+    return fData->GetData();
 }
 
 char* MVRxchangeMessage::GetData()
 {
-    return fData;
+    return fData->GetData();
 }
 
 size_t MVRxchangeMessage::GetLength() const
