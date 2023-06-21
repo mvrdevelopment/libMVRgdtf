@@ -1,14 +1,17 @@
 //-----------------------------------------------------------------------------
 //----- Copyright MVR Group 
 //-----------------------------------------------------------------------------
+#pragma once
 #include <boost/asio.hpp>
-#include "mvrxchange_message.h"
+#include <deque>
 
-//-----------------------------------------------------------------------------
-//----- Copyright deersoft 2015 - 2019 www.deersoft.de
-//-----------------------------------------------------------------------------
-#include "prefix.h"
+using boost::asio::ip::tcp;
+
 
 constexpr uint32_t kMVR_Package_Flag =  778682;
 
-#include "light_right_network_prefix.h"
+#include "mvrxchange_dynamic_buffer.h"
+#include "mvrxchange_message.h"
+#include "mvrxchange_client.h"
+#include "mvrxchange_server.h"
+#include "mvrxchange_session.h"

@@ -1,9 +1,7 @@
 //-----------------------------------------------------------------------------
 //----- Copyright deersoft 2015 - 2019 www.deersoft.de
 //-----------------------------------------------------------------------------
-#include "prefix.h"
-
-
+#include "mvrxchange_prefix.h"
 using namespace MVRxchangeNetwork;
  
 const size_t k_5_MegaByte = 5 * 1024;
@@ -85,7 +83,7 @@ void MVRxchangeDynamicBuffer::FromBuffer(const char* data, size_t length)
     fAllocatedMemory  = fBufferSize;
 }
 
-void MVRxchangeDynamicBuffer::Append(Uint64 size, const void* pBuffer)
+void MVRxchangeDynamicBuffer::Append(size_t size, const void* pBuffer)
 {
     if(size == 0) { return; }
     // Check how much memory we need
@@ -123,7 +121,7 @@ void MVRxchangeDynamicBuffer::Append(Uint64 size, const void* pBuffer)
 }
 
 
-void MVRxchangeDynamicBuffer::GrowTo(Uint64 size)
+void MVRxchangeDynamicBuffer::GrowTo(size_t size)
 {
     // Check how much memory we need
 	size_t needToAllocate = size + 1;
@@ -152,7 +150,7 @@ void MVRxchangeDynamicBuffer::GrowTo(Uint64 size)
 
 }
 
-void MVRxchangeDynamicBuffer::Reserve(Uint64 size)
+void MVRxchangeDynamicBuffer::Reserve(size_t size)
 {
     // Check how much memory we need
     size_t needToAllocate = size + 1;
@@ -181,7 +179,7 @@ void MVRxchangeDynamicBuffer::Reserve(Uint64 size)
 
 }
 
-const Uint64& MVRxchangeDynamicBuffer::Length() const
+const size_t& MVRxchangeDynamicBuffer::Length() const
 {
     return fBufferSize;
 }

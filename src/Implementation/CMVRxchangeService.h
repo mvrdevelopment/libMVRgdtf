@@ -4,6 +4,7 @@
 #pragma once
 #include "Include/IMediaRessourceVectorInterface.h"
 #include "mdns_cpp/mdns.hpp"
+#include "../mvrxchange/mvrxchange_prefix.h"
 
 
 namespace VectorworksMVR
@@ -29,7 +30,22 @@ namespace VectorworksMVR
 
 
 	private:
-		mdns_cpp::mDNS fmdns;
+		mdns_cpp::mDNS 			fmdns;
+
+		//---------------------------------------------------------------------------
+		// TCP Server - Local Network mode
+		boost::asio::io_context 					fServer_IO_Context;
+		MVRxchangeNetwork::MVRxchangeServer*	    fServer;
+		std::thread									fServer_Thread;
+		std::atomic<bool>							fServer_Running;
+
+		void TCP_Start();
+		void TCP_Stop();
+
+		void TCP_ServerNetworksThread();
+
+
+
 
 
 	private:

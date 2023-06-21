@@ -42,7 +42,7 @@ namespace MVRxchangeNetwork
             uint32_t            fType;
             uint64_t            fBodyLength;
 
-            MVRxchangeDynamicBuffer*               fData;
+            MVRxchangeNetwork::MVRxchangeDynamicBuffer*               fData;
 
             
     };

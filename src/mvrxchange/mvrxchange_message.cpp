@@ -2,7 +2,6 @@
 //----- Copyright MVR Group 
 //-----------------------------------------------------------------------------namespace LightRightNetwork
 #include "mvrxchange_prefix.h"
-
 using namespace MVRxchangeNetwork;
 
 

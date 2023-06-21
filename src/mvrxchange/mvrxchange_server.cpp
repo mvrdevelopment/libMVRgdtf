@@ -1,7 +1,8 @@
 //-----------------------------------------------------------------------------
 //----- Copyright MVR Group 
 //-----------------------------------------------------------------------------
-
+#include "mvrxchange_prefix.h"
+using namespace MVRxchangeNetwork;
 
 MVRxchangeServer::MVRxchangeServer(boost::asio::io_context& io_context, const tcp::endpoint& endpoint) 
     : fAcceptor(io_context, endpoint)

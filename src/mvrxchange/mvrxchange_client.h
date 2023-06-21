@@ -21,7 +21,7 @@ namespace MVRxchangeNetwork
     private:
     boost::asio::io_context&  fIo_context;
     tcp::socket               fSocket;
-    LRNetMessage              fRead_msg;
-    LRNetMessageQueue         fWrite_msgs;
+    MVRxchangeMessage         fRead_msg;
+    MVRxchangeMessageDeque    fWrite_msgs;
     };
 }

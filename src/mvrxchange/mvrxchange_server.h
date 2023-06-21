@@ -19,5 +19,5 @@ namespace MVRxchangeNetwork
             tcp::acceptor       fAcceptor;
             short               fPort;
 
-    }
+    };
 }

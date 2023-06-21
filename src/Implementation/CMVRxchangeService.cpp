@@ -7,6 +7,8 @@
 
 VectorworksMVR::CMVRxchangeServiceImpl::CMVRxchangeServiceImpl()
 {
+  fServer_Running = false;
+  fServer         = nullptr;
 }
 
 VectorworksMVR::CMVRxchangeServiceImpl::~CMVRxchangeServiceImpl()
@@ -15,6 +17,14 @@ VectorworksMVR::CMVRxchangeServiceImpl::~CMVRxchangeServiceImpl()
 
 VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const ConnectToLocalServiceArgs& services)
 {
+  //---------------------------------------------------------------------------------------------
+  // Start TCP
+  this->TCP_Start();
+
+
+
+  //---------------------------------------------------------------------------------------------
+  // Start mDNS Service
   fmdns.setServiceHostname("AirForce1");
   fmdns.setServicePort(5000);
   fmdns.setServiceName("AirForce1");
@@ -26,6 +36,13 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 
 VCOMError VectorworksMVR::CMVRxchangeServiceImpl::LeaveLocalService()
 {
+  //---------------------------------------------------------------------------------------------
+  // End TCP
+  this->TCP_Stop();
+
+
+  //---------------------------------------------------------------------------------------------
+  // Stop mDNS Service
 	fmdns.stopService();
   return kVCOMError_NoError;
 }
@@ -50,4 +67,37 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::OnMessage(MVRxchangeMessageHan
 VCOMError VectorworksMVR::CMVRxchangeServiceImpl::SendMessage(const SendMessageArgs& messageHandler)
 {
   return kVCOMError_NoError;
+}
+
+//---------------------------------------------------------------------------
+// TCP Server - Local Network mode
+
+void CMVRxchangeServiceImpl::TCP_Start()
+{
+  if(fServer_Running)
+  {
+    TCP_Stop();
+  }
+  
+  fServer_Running = true;
+  fServer_Thread = std::thread(&CMVRxchangeServiceImpl::TCP_ServerNetworksThread, this);
+
+}
+
+
+void CMVRxchangeServiceImpl::TCP_Stop()
+{
+  if(fServer_Thread.joinable())
+  {
+      fServer_IO_Context.stop();
+      fServer_Thread.join();
+  }
+  fServer_Running = false;
+}
+
+void CMVRxchangeServiceImpl::TCP_ServerNetworksThread()
+{
+  tcp::endpoint endpoint(tcp::v4(), 0);
+  fServer = new MVRxchangeNetwork::MVRxchangeServer(fServer_IO_Context, endpoint);
+  fServer_IO_Context.run();
 }

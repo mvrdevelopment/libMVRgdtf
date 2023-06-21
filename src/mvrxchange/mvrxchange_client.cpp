@@ -1,8 +1,8 @@
 //-----------------------------------------------------------------------------
 //----- Copyright MVR Group 
 //-----------------------------------------------------------------------------
-
-
+#include "mvrxchange_prefix.h"
+using namespace MVRxchangeNetwork;
 
 MVRxchangeClient::MVRxchangeClient(boost::asio::io_context& io_context, const tcp::resolver::results_type& endpoints)
     : fIo_context(io_context),
@@ -11,7 +11,7 @@ MVRxchangeClient::MVRxchangeClient(boost::asio::io_context& io_context, const tc
     DoConnect(endpoints);
 }
 
-void MVRxchangeClient::Deliver(const LRNetMessage& msg)
+void MVRxchangeClient::Deliver(const MVRxchangeMessage& msg)
 {
     boost::asio::post(fIo_context, [this, msg]()
     {
