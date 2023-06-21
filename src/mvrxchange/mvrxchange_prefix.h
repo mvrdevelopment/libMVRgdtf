@@ -2,6 +2,7 @@
 //----- Copyright MVR Group 
 //-----------------------------------------------------------------------------
 #pragma once
+#include "../Prefix/StdAfx.h"
 #include <boost/asio.hpp>
 #include <deque>
 

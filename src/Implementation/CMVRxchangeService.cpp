@@ -75,6 +75,7 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::SendMessage(const SendMessageA
   // Start mDNS Service
   {
     MVRxchangeNetwork::MVRxchangeMessage msg;
+    msg.FromExternalMessage(messageHandler.Message);
     for(const auto& e : fMVRGroup)
     {
       SendMessageToLocalNetworks(e.IP, e.Name, msg);

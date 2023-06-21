@@ -100,3 +100,11 @@ void MVRxchangeMessage::EncodeHeader()
     memcpy(fdata + header_flag + header_version + header_number + header_count,                 &fType,                 header_type);
     memcpy(fdata + header_flag + header_version + header_number + header_count + header_type,   &fBodyLength,           header_payload_length);
 }
+
+void MVRxchangeMessage::FromExternalMessage(const VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage& in)
+{
+}
+
+void MVRxchangeMessage::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage& in)
+{
+}

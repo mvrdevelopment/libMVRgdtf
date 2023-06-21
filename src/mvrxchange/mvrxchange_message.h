@@ -32,6 +32,10 @@ namespace MVRxchangeNetwork
             bool            DecodeHeader();
             void            EncodeHeader();
 
+
+            void            FromExternalMessage(const VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage&);
+            void            ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage&);
+
         private:
             size_t*		        fReferenceCount;
 
