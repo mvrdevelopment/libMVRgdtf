@@ -114,6 +114,7 @@ void MVRxchangeMessage::FromExternalMessage(const VectorworksMVR::IMVRxchangeSer
     switch (in.Type)
     {
     case VectorworksMVR::IMVRxchangeService:::MVRxchangeMessageType::MVR_JOIN:
+        payload["type"]         = "MVR_JOIN";
         payload["provider"]     = in.JOIN.Provider;
         payload["stationName"]  = in.JOIN.StationName;
         payload["verMajor"]     = in.JOIN.VersionMajor;
@@ -139,4 +140,20 @@ void MVRxchangeMessage::FromExternalMessage(const VectorworksMVR::IMVRxchangeSer
 
 void MVRxchangeMessage::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage& in)
 {
+    if(fType == kMVR_Package_JSON_TYPE)
+    {
+        nlohmann::json payload = nlohmann::json::parse(fData->Data(), nullptr, false);
+
+        if(payload.type() == nlohmann::json::type::object)
+        {
+            if(payload["type"] == "MVR_JOIN")
+            {
+                in.Type = VectorworksMVR::IMVRxchangeService:::MVRxchangeMessageType::MVR_JOIN;
+                in.JOIN.Provider    = payload["provider"];
+                in.JOIN.StationName = payload["stationName"];
+                in.JOIN.VersionMajor= payload["verMajor"];
+                in.JOIN.VersionMinor= payload["verMinor"];
+            }
+        }
+    }
 }
