@@ -4,7 +4,7 @@
 #include "prefix.h"
 
 
-using namespace LightRight;
+using namespace MVRxchangeNetwork;
  
 const size_t k_5_MegaByte = 5 * 1024;
 
