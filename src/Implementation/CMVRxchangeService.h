@@ -14,7 +14,7 @@ namespace VectorworksMVR
 		TXString IP;
 		TXString Port;
 		TXString Name;
-	}
+	};
 	//----------------------------------------------------------------------------------------
 	class CMVRxchangeServiceImpl : public VCOMImpl<IMVRxchangeService>
 	{
@@ -57,7 +57,9 @@ namespace VectorworksMVR
 		void SendMessageToLocalNetworks(const TXString& ip, const TXString& port, const MVRxchangeMessage& msg);
 
 
-
+		//---------------------------------------------------------------------------
+		// mDNS Functions
+		std::vector<MVRxchangeGoupMember> GetMembersOfService(const ConnectToLocalServiceArgs& services);
 
 
 	private:

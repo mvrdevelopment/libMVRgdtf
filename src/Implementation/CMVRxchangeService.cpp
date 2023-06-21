@@ -21,12 +21,17 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
   // Start TCP
   this->TCP_Start();
 
+  fMVRGroup = GetMembersOfService(services);
+
+  SendMessageArgs joinMessage;
+  joinMessage.Message.Type = MVRxchangeMessageType::MVR_JOIN;
+  this->SendMessage(joinMessage);
 
 
   //---------------------------------------------------------------------------------------------
   // Start mDNS Service
-  fmdns.setServiceHostname("AirForce1");
-  fmdns.setServicePort(5000);
+  fmdns.setServiceHostname(services.Service);
+  fmdns.setServicePort(fServer->GetPort());
   fmdns.setServiceName("AirForce1");
   fmdns.startService();
 
