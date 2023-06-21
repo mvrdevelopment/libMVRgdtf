@@ -11,10 +11,13 @@ namespace MVRxchangeNetwork
 
         public:
             virtual void Deliver(const MVRxchangeMessage& msg);
+            short GetPort() const;
+
         private:
             void DoAccept();
 
             tcp::acceptor       fAcceptor;
+            short               fPort;
 
     }
 }
