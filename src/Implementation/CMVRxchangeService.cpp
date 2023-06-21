@@ -66,6 +66,20 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::OnMessage(MVRxchangeMessageHan
 
 VCOMError VectorworksMVR::CMVRxchangeServiceImpl::SendMessage(const SendMessageArgs& messageHandler)
 {
+  //---------------------------------------------------------------------------------------------
+  // Start mDNS Service
+  {
+    MVRxchangeMessage msg;
+    for(const auto& e : fMVRGroup)
+    {
+      SendMessageToLocalNetworks(e.IP, e.Name, msg);
+    }
+  }
+  
+
+
+
+
   return kVCOMError_NoError;
 }
 

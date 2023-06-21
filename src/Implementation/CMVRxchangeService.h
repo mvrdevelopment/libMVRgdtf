@@ -9,6 +9,12 @@
 
 namespace VectorworksMVR
 {
+	struct MVRxchangeGoupMember
+	{
+		TXString IP;
+		TXString Port;
+		TXString Name;
+	}
 	//----------------------------------------------------------------------------------------
 	class CMVRxchangeServiceImpl : public VCOMImpl<IMVRxchangeService>
 	{
@@ -42,6 +48,8 @@ namespace VectorworksMVR
 		void TCP_Start();
 		void TCP_Stop();
 		void TCP_ServerNetworksThread();
+
+		std::vector<MVRxchangeGoupMember>			fMVRGroup;
 
 		//---------------------------------------------------------------------------
 		// TCP Client - Local Network mode
