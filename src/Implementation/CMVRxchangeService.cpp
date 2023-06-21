@@ -101,3 +101,21 @@ void CMVRxchangeServiceImpl::TCP_ServerNetworksThread()
   fServer = new MVRxchangeNetwork::MVRxchangeServer(fServer_IO_Context, endpoint);
   fServer_IO_Context.run();
 }
+
+
+
+void CMVRxchangeServiceImpl::SendMessageToLocalNetworks(const TXString& ip, const TXString& port, const MVRxchangeMessage& msg)
+{
+  boost::asio::io_context io_context;
+
+  tcp::resolver resolver(io_context);
+  auto endpoints = resolver.resolve(ip.GetCharPtr(), port.GetCharPtr());
+
+  MVRxchangeNetwork::MVRxchangeClient c (io_context, endpoints);
+  std::thread t = std::thread([&io_context](){ io_context.run(); });
+
+  //c.Deliver(msg);
+  c.Close();
+  t.join();
+
+}
