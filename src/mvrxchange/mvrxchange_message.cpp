@@ -2,13 +2,19 @@
 //----- Copyright MVR Group 
 //-----------------------------------------------------------------------------namespace LightRightNetwork
 #include "mvrxchange_prefix.h"
+#include "json.h"
 using namespace MVRxchangeNetwork;
 
 
 MVRxchangeMessage::MVRxchangeMessage()
 {
-    fReferenceCount = new size_t(1);
+    fFlag       = kMVR_Package_Flag;
+    fNumber     = 0;
+    fCount      = 0;
+    fType       = 0;
     fBodyLength = 0;
+
+    fReferenceCount = new size_t(1);
 }
 
 MVRxchangeMessage::MVRxchangeMessage(const MVRxchangeMessage& ref)
@@ -103,6 +109,32 @@ void MVRxchangeMessage::EncodeHeader()
 
 void MVRxchangeMessage::FromExternalMessage(const VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage& in)
 {
+    nlohmann::json payload = nlohmann::json::object();
+
+    switch (in.Type)
+    {
+    case VectorworksMVR::IMVRxchangeService:::MVRxchangeMessageType::MVR_JOIN:
+        payload["provider"]     = in.JOIN.Provider;
+        payload["stationName"]  = in.JOIN.StationName;
+        payload["verMajor"]     = in.JOIN.VersionMajor;
+        payload["verMinor"]     = in.JOIN.VersionMinor;
+        break;
+    
+    default:
+        break;
+    }
+
+    std::string s = payload.dump();
+
+    fFlag       = kMVR_Package_Flag;
+    fNumber     = 1;
+    fCount      = 1;
+    fType       = kMVR_Package_JSON_TYPE;
+    fBodyLength = s.size();
+
+    fData->GrowTo(fBodyLength);
+    fData->FromBuffer(s.data(), s.size());
+
 }
 
 void MVRxchangeMessage::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage& in)
