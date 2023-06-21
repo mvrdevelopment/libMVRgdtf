@@ -34,8 +34,17 @@ namespace MVRxchangeNetwork
 
         private:
             size_t*		        fReferenceCount;
-            char*               fdata;
-            size_t              fBodyLength;
+
+            uint32_t            fFlag;
+            uint32_t            fVersion;
+            uint32_t            fNumber;
+            uint32_t            fCount;
+            uint32_t            fType;
+            uint64_t            fBodyLength;
+
+            char*               fData;
+
+            
     };
     typedef std::deque<MVRxchangeMessage>     MVRxchangeMessageDeque;
 }
