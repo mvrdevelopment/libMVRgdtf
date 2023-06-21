@@ -74,7 +74,7 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::SendMessage(const SendMessageA
   //---------------------------------------------------------------------------------------------
   // Start mDNS Service
   {
-    MVRxchangeMessage msg;
+    MVRxchangeNetwork::MVRxchangeMessage msg;
     for(const auto& e : fMVRGroup)
     {
       SendMessageToLocalNetworks(e.IP, e.Name, msg);
@@ -123,7 +123,7 @@ void CMVRxchangeServiceImpl::TCP_ServerNetworksThread()
 
 
 
-void CMVRxchangeServiceImpl::SendMessageToLocalNetworks(const TXString& ip, const TXString& port, const MVRxchangeMessage& msg)
+void CMVRxchangeServiceImpl::SendMessageToLocalNetworks(const TXString& ip, const TXString& port, const MVRxchangeNetwork::MVRxchangeMessage& msg)
 {
   boost::asio::io_context io_context;
 
@@ -133,7 +133,7 @@ void CMVRxchangeServiceImpl::SendMessageToLocalNetworks(const TXString& ip, cons
   MVRxchangeNetwork::MVRxchangeClient c (io_context, endpoints);
   std::thread t = std::thread([&io_context](){ io_context.run(); });
 
-  //c.Deliver(msg);
+  c.Deliver(msg);
   c.Close();
   t.join();
 

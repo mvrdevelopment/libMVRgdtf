@@ -62,6 +62,10 @@ namespace VectorworksMVR
 	
 	struct MvrUUID
 	{
+		MvrUUID()
+		{
+			a = b = c =d = 0;
+		}
 		MvrUUID(Uint32 a,Uint32 b,Uint32 c,Uint32 d) { this->a = a; this->b = b; this->c = c; this->d = d;}
 		Uint32 a, b, c, d;
 
@@ -1824,12 +1828,37 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 			MVR_COMMIT,
 			MVR_REQUEST,
 		};
-		struct MVRxchangeMessage
+
+		struct MVR_COMMIT_MESSAGE
 		{
-			MVRxchangeMessageType Type;
+			MVRxchangeString 				Comment;
+			uint32_t 						VersionMajor;
+			uint32_t 						VersionMinor;
+			uint64_t 						FileSize;
+			MvrUUID							FileUUID;
+			MvrUUID							StationUUID;
+			std::vector<MvrUUID>			ForStations;
 		};
 
-		typedef MVRxchangeMessage (*MVRxchangeMessageHandler)(const MVRxchangeMessage& args);
+		struct MVR_JOIN_MESSAGE
+		{
+			MVRxchangeString 				Provider;
+			MVRxchangeString 				StationName;
+			MvrUUID							StationUUID;
+			uint32_t 						VersionMajor;
+			uint32_t 						VersionMinor;
+			std::vector<MVR_COMMIT_MESSAGE> Files;
+		};
+		
+
+		struct IMVRxchangeMessage
+		{
+			MVRxchangeMessageType 	Type;
+			MVR_JOIN_MESSAGE 		JOIN;
+			MVR_COMMIT_MESSAGE 		COMMIT;
+		};
+
+		typedef IMVRxchangeMessage (*MVRxchangeMessageHandler)(const IMVRxchangeMessage& args);
 		struct OnMessageArgs
 		{
 			MVRxchangeMessageHandler* Callback;
@@ -1845,8 +1874,8 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		
 		struct SendMessageArgs
 		{
-			MVRxchangeMessage Message;
-			MVRxchangeMessage ReturnValue;
+			IMVRxchangeMessage Message;
+			IMVRxchangeMessage ReturnValue;
 		};
 		virtual VCOMError VCOM_CALLTYPE     SendMessage(const SendMessageArgs& messageHandler) = 0;
 
