@@ -34,7 +34,6 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE     OnMessage(MVRxchangeMessageHandler& messageHandler);
 		virtual VCOMError VCOM_CALLTYPE     SendMessage(const SendMessageArgs& messageHandler);
 
-
 	private:
 		mdns_cpp::mDNS 			fmdns;
 
@@ -60,10 +59,5 @@ namespace VectorworksMVR
 		//---------------------------------------------------------------------------
 		// mDNS Functions
 		std::vector<MVRxchangeGoupMember> GetMembersOfService(const ConnectToLocalServiceArgs& services);
-
-
-	private:
-
-
 	};
 }
