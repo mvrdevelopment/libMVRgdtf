@@ -20,8 +20,8 @@ MVRxchangeMessage::MVRxchangeMessage()
 MVRxchangeMessage::MVRxchangeMessage(const MVRxchangeMessage& ref)
 {
     fBodyLength = ref.fBodyLength;
-    fdata       = ref.fdata;
-
+    fData       = ref.fData;
+    
     fReferenceCount = ref.fReferenceCount;
 	
 	// Increase reference Count by one
@@ -76,35 +76,35 @@ size_t MVRxchangeMessage::GetBodyLength() const
 void MVRxchangeMessage::SetBody(, size_t length, char* buffer)
 {
     fBodyLength = length;
-    fdata->GrowTo(total_header_length + length);
+    fData->GrowTo(total_header_length + length);
     memcpy(GetBody(), buffer, length);
 }
 
 bool MVRxchangeMessage::DecodeHeader()
 {
-    memcpy(&fFlag, fdata, header_flag);
+    memcpy(&fFlag, fData, header_flag);
     if (fFlag != kMVR_Package_Flag) { return false; }
 
-    memcpy(&fVersion,    fdata + header_flag, header_version);
-    memcpy(&fNumber,     fdata + header_flag + header_version, header_number);
-    memcpy(&fCount,      fdata + header_flag + header_version + header_number, header_count);
-    memcpy(&fType,       fdata + header_flag + header_version + header_number + header_count, header_type);
-    memcpy(&fBodyLength, fdata + header_flag + header_version + header_number + header_type, header_payload_length);
+    memcpy(&fVersion,    fData + header_flag, header_version);
+    memcpy(&fNumber,     fData + header_flag + header_version, header_number);
+    memcpy(&fCount,      fData + header_flag + header_version + header_number, header_count);
+    memcpy(&fType,       fData + header_flag + header_version + header_number + header_count, header_type);
+    memcpy(&fBodyLength, fData + header_flag + header_version + header_number + header_type, header_payload_length);
 
     // Prepare Buffer
-    fdata->GrowTo(fBodyLength);
+    fData->GrowTo(fBodyLength);
 
     return true;
 }
 
 void MVRxchangeMessage::EncodeHeader()
 {
-    memcpy(fdata,                                                                               &fFlag,                 header_flag);
-    memcpy(fdata + header_flag,                                                                 &fVersion,              header_version);
-    memcpy(fdata + header_flag + header_version,                                                &fNumber,               header_number);
-    memcpy(fdata + header_flag + header_version + header_number,                                &fCount,                header_count);
-    memcpy(fdata + header_flag + header_version + header_number + header_count,                 &fType,                 header_type);
-    memcpy(fdata + header_flag + header_version + header_number + header_count + header_type,   &fBodyLength,           header_payload_length);
+    memcpy(fData,                                                                               &fFlag,                 header_flag);
+    memcpy(fData + header_flag,                                                                 &fVersion,              header_version);
+    memcpy(fData + header_flag + header_version,                                                &fNumber,               header_number);
+    memcpy(fData + header_flag + header_version + header_number,                                &fCount,                header_count);
+    memcpy(fData + header_flag + header_version + header_number + header_count,                 &fType,                 header_type);
+    memcpy(fData + header_flag + header_version + header_number + header_count + header_type,   &fBodyLength,           header_payload_length);
 }
 
 void MVRxchangeMessage::FromExternalMessage(const VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage& in)
