@@ -52,6 +52,11 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::LeaveLocalService()
   return kVCOMError_NoError;
 }
 
+VCOMError VCOM_CALLTYPE VectorworksMVR::CMVRxchangeServiceImpl::GetLocalServices(GetLocalServicesArgs& arg)
+{
+    return kVCOMError_Failed; // XXX Implement
+}
+
 
 VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToRemoteService(const ConnectToRemoteServiceArgs& service)
 {
@@ -81,10 +86,6 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::SendMessage(const SendMessageA
       SendMessageToLocalNetworks(e.IP, e.Name, msg);
     }
   }
-  
-
-
-
 
   return kVCOMError_NoError;
 }
@@ -138,4 +139,9 @@ void CMVRxchangeServiceImpl::SendMessageToLocalNetworks(const TXString& ip, cons
   c.Close();
   t.join();
 
+}
+
+std::vector<MVRxchangeGoupMember> VectorworksMVR::CMVRxchangeServiceImpl::GetMembersOfService(const ConnectToLocalServiceArgs& services)
+{
+    return std::vector<MVRxchangeGoupMember>(); // XXX implement
 }
