@@ -17,21 +17,30 @@ jobs:
     steps:
     - uses: actions/checkout@v3
       with:
+        repository: DeerSoftDevelopment/xerces-c
+        ref: v3.2.2-1
+        path: xerces-c
+        submodules: true
+        
+    - uses: actions/checkout@v3
+      with:
         token: ${{ secrets.ACTION_TOKEN }}
+        path: libMVRgdtf
 
     - name: Preparation
+      working-directory: libMVRgdtf
       run: |
         rm -rf build
         mkdir build
     
     - name: Setup Project
-      working-directory: build
+      working-directory: libMVRgdtf/build
       run: cmake .. -DUNITTEST=TRUE
 
     - name: Compile
-      working-directory: build
+      working-directory: libMVRgdtf/build
       run: make -j$(nproc)
 
     - name: Unittest
-      working-directory: build
+      working-directory: libMVRgdtf/build
       run: ./MvrGdtfUnitTest
