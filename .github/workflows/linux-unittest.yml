@@ -1,0 +1,37 @@
+name: Linux Unittest CI
+
+on: [push]
+
+jobs:
+  run_unittest:
+    runs-on: [ self-hosted, Linux ]
+    
+    strategy:
+      matrix:
+        arch: [x64]
+
+    concurrency: 
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+      
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.ACCESS_TOKEN }}
+
+    - name: Preparation
+      run: |
+        rm -rf build
+        mkdir build
+    
+    - name: Setup Project
+      working-directory: build
+      run: cmake .. -DUNITTEST=TRUE
+
+    - name: Compile
+      working-directory: build
+      run: make -j$(nproc)
+
+    - name: Unittest
+      working-directory: build
+      run: ./MvrGdtfUnitTest
