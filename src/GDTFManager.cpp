@@ -411,12 +411,18 @@ const TGdtfFeatureArray GdtfFeatureGroup::GetFeatureArray()
 // GdtfSubPhysicalUnit
 GdtfSubPhysicalUnit::GdtfSubPhysicalUnit()
 {
+	fType = EGdtfSubPhysicalUnitType::PlacementOffset;
+	fPhysicalUnit = EGdtfPhysicalUnit::None;
+	fPhysicalFrom = 0.0;
+	fPhysicalTo = 0.0;
 }
 
 GdtfSubPhysicalUnit::GdtfSubPhysicalUnit(EGdtfSubPhysicalUnitType type)
 {
 	fType 			= type;
 	fPhysicalUnit 	= GdtfConverter::GetUnitFromSubPhysical(type);
+	fPhysicalFrom = 0.0;
+	fPhysicalTo = 0.0;
 }
 
 GdtfSubPhysicalUnit::~GdtfSubPhysicalUnit()
@@ -1133,6 +1139,9 @@ GdtfWheelSlot::GdtfWheelSlot(const TXString& name, GdtfWheel* parent)
 GdtfWheelSlot::~GdtfWheelSlot()
 {
 	for(GdtfWheelSlotPrismFacet* facet : fPrismFacts) { delete facet; };
+	if(fAnimationSystem){
+		delete fAnimationSystem;
+	}
 }
 
 void GdtfWheelSlot::SetName(const TXString &name)
@@ -1164,6 +1173,9 @@ GdtfWheelSlotPrismFacet* GdtfWheelSlot::AddPrismFacet()
 
 GdtfWheelSlotAnimationSystem* GdtfWheelSlot::AddAnimationSystem()
 {
+	if(fAnimationSystem){
+		delete fAnimationSystem;
+	}
 	GdtfWheelSlotAnimationSystem* animationSystem = new GdtfWheelSlotAnimationSystem();
 	fAnimationSystem = animationSystem;
 	return animationSystem;
@@ -1292,6 +1304,9 @@ void GdtfWheelSlot::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	pNode->GetChildNode(XML_GDTF_AnimationSystemNodeName, &animationSystemNode);
 	if(animationSystemNode != nullptr)
 	{
+		if(fAnimationSystem){
+			delete fAnimationSystem;
+		}
 		GdtfWheelSlotAnimationSystemPtr animationSystem = new GdtfWheelSlotAnimationSystem();
 		animationSystem->ReadFromNode(animationSystemNode);
 		fAnimationSystem = animationSystem;
@@ -1363,6 +1378,13 @@ GdtfModel::GdtfModel(GdtfFixture* fixture)
 	fBufferSize3DS	= 0;
 	fBufferSizeSVG	= 0;
 	fBufferSizeGLTF	= 0;
+
+	fSVGOffsetX			= 0;
+	fSVGOffsetY			= 0;
+	fSVGSideOffsetX		= 0;
+	fSVGSideOffsetY		= 0;
+	fSVGFrontOffsetX	= 0;
+	fSVGFrontOffsetY	= 0;
 }
 
 GdtfModel::GdtfModel(const TXString& name, GdtfFixture* fixture)
@@ -1380,6 +1402,13 @@ GdtfModel::GdtfModel(const TXString& name, GdtfFixture* fixture)
 	fBufferSize3DS	= 0;
 	fBufferSizeSVG	= 0;
 	fBufferSizeGLTF	= 0;
+
+	fSVGOffsetX			= 0;
+	fSVGOffsetY			= 0;
+	fSVGSideOffsetX		= 0;
+	fSVGSideOffsetY		= 0;
+	fSVGFrontOffsetX	= 0;
+	fSVGFrontOffsetY	= 0;
 }
 
 GdtfModel::~GdtfModel()
@@ -3329,6 +3358,17 @@ GdtfGeometryWiringObject::GdtfGeometryWiringObject(GdtfGeometry* parent)
 	fComponentType 	= EGdtfComponentType::Input;
 	fOrientation 	= EGdtfOrientation::Left;
 	fFuseRating 	= EGdtfFuseRating::B;
+	fPinCount			= 0;
+	fSignalLayer		= 0;
+	fElectricalPayLoad	= 0; 
+	fVoltageRangeMin	= 0; 	
+	fVoltageRangeMax	= 0; 	
+	fFrequencyRangeMin	= 0; 
+	fFrequencyRangeMax	= 0; 
+	fCosPhi				= 0; 			
+	fMaxPayLoad			= 0;
+	fVoltage			= 0; 			
+	fFuseCurrent		= 0; 		
 }
 
 GdtfGeometryWiringObject::GdtfGeometryWiringObject(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma, GdtfGeometry* parent) 
@@ -3337,6 +3377,17 @@ GdtfGeometryWiringObject::GdtfGeometryWiringObject(const TXString& name, GdtfMod
 	fComponentType 	= EGdtfComponentType::Input;
 	fOrientation 	= EGdtfOrientation::Left;
 	fFuseRating 	= EGdtfFuseRating::B;
+	fPinCount			= 0;
+	fSignalLayer		= 0;
+	fElectricalPayLoad	= 0; 
+	fVoltageRangeMin	= 0; 	
+	fVoltageRangeMax	= 0; 	
+	fFrequencyRangeMin	= 0; 
+	fFrequencyRangeMax	= 0; 
+	fCosPhi				= 0; 			
+	fMaxPayLoad			= 0;
+	fVoltage			= 0; 			
+	fFuseCurrent		= 0; 	
 }
 
 GdtfGeometryWiringObject::~GdtfGeometryWiringObject()
@@ -8762,6 +8813,8 @@ GdtfFixture::GdtfFixture()
 	fReaded					= false;
 	fHasLinkedGuid			= false;     
 	fNoFeature				= nullptr;   
+	fCanHaveChildren 		= false;
+	fHasLinkedGuid 			= false;
 }
 
 GdtfFixture::~GdtfFixture()
@@ -11148,6 +11201,7 @@ SceneData::GdtfMacroVisual::GdtfMacroVisual()
 
 SceneData::GdtfMacroVisual::~GdtfMacroVisual()
 {
+
 }
 
 EGdtfObjectType SceneData::GdtfMacroVisual::GetObjectType()
@@ -11220,6 +11274,7 @@ SceneData::GdtfMacroVisualStep::GdtfMacroVisualStep()
 
 SceneData::GdtfMacroVisualStep::~GdtfMacroVisualStep()
 {
+	for(const auto& i: fVisualValues){ delete i; }
 }
 
 TGdtfMacroVisualValueArray SceneData::GdtfMacroVisualStep::GetVisualValueArray()

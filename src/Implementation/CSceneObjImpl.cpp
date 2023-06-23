@@ -1305,8 +1305,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::CreateConnection(MvrStr
 		*addedObj = pConnectionImpl;
 	}
 	return kVCOMError_NoError;
-
-	return kVCOMError_NoError;
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetFocusPoint(ISceneObj* focusPoint)
