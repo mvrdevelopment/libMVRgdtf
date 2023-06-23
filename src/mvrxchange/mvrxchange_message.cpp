@@ -113,7 +113,7 @@ void MVRxchangeMessage::FromExternalMessage(const VectorworksMVR::IMVRxchangeSer
 
     switch (in.Type)
     {
-    case VectorworksMVR::IMVRxchangeService:::MVRxchangeMessageType::MVR_JOIN:
+    case IMVRxchangeService::MVRxchangeMessageType::MVR_JOIN:
         payload["type"]         = "MVR_JOIN";
         payload["provider"]     = in.JOIN.Provider;
         payload["stationName"]  = in.JOIN.StationName;
