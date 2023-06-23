@@ -73,7 +73,7 @@ size_t MVRxchangeMessage::GetBodyLength() const
     return fBodyLength;
 }
 
-void MVRxchangeMessage::SetBody(, size_t length, char* buffer)
+void MVRxchangeMessage::SetBody(size_t length, char* buffer)
 {
     fBodyLength = length;
     fData->GrowTo(total_header_length + length);
