@@ -70,7 +70,7 @@ void MVRxchangeDynamicBuffer::DisposeBuffer()
 
 void MVRxchangeDynamicBuffer::FromBuffer(const MVRxchangeDynamicBuffer& buffer)
 {
-    FromBuffer(buffer.Data(), buffer.Length());
+    FromBuffer(buffer.GetData(), buffer.Length());
 }
 
 void MVRxchangeDynamicBuffer::FromBuffer(const char* data, size_t length)
@@ -184,7 +184,7 @@ const size_t& MVRxchangeDynamicBuffer::Length() const
     return fBufferSize;
 }
 
-char* MVRxchangeDynamicBuffer::Data() const
+char* MVRxchangeDynamicBuffer::GetData() const
 {
     return fBuffer;
 }

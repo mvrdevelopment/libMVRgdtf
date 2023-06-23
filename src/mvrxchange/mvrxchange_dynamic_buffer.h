@@ -21,7 +21,7 @@ namespace MVRxchangeNetwork
         void                    Append(size_t size, const void* pBuffer);
         void                    DisposeBuffer();
         const size_t&           Length() const;
-        char*                   Data() const;
+        char*                   GetData() const;
 
         private:
         char*           fBuffer;
