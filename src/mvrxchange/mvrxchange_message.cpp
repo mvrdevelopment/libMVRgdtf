@@ -60,12 +60,12 @@ size_t MVRxchangeMessage::GetLength() const
 
 const char* MVRxchangeMessage::GetBody() const
 {
-    return fData + total_header_length;
+    return fData->GetData() + total_header_length; // XXX MS verify 
 }
 
 char* MVRxchangeMessage::GetBody()
 {
-    return fData + total_header_length;
+    return fData->GetData() + total_header_length; // XXX MS verify 
 }
 
 size_t MVRxchangeMessage::GetBodyLength() const
@@ -142,7 +142,7 @@ void MVRxchangeMessage::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IM
 {
     if(fType == kMVR_Package_JSON_TYPE)
     {
-        nlohmann::json payload = nlohmann::json::parse(fData->Data(), nullptr, false);
+        nlohmann::json payload = nlohmann::json::parse(fData->GetData(), nullptr, false);
 
         if(payload.type() == nlohmann::json::type::object)
         {
