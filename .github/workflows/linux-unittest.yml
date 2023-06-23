@@ -2,6 +2,9 @@ name: Linux Unittest CI
 
 on: [push]
 
+env:
+  XERCES_CONFIGURE_ENCODER: "gnuiconv"
+
 jobs:
   run_unittest:
     runs-on: [ self-hosted, Linux ]
@@ -27,13 +30,25 @@ jobs:
         token: ${{ secrets.ACTION_TOKEN }}
         path: libMVRgdtf
 
-    - name: Preparation
+    - name: Setup xerces-c
+      working-directory: xerces-c
+      run: |
+        rm -rf build
+        mkdir build
+      
+    - name: Build xerces-c
+      working-directory: xerces-c/build
+      run: |
+        cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DBUILD_SHARED_LIBS=OFF -Dxmlch-type=uint16_t -Dnetwork=OFF -Dtranscoder=${{env.XERCES_CONFIGURE_ENCODER}} ..
+        cmake --build . --config Release --parallel
+
+    - name: Setup libMVRgdtf
       working-directory: libMVRgdtf
       run: |
         rm -rf build
         mkdir build
     
-    - name: Setup Project
+    - name: Setup Cmake
       working-directory: libMVRgdtf/build
       run: cmake .. -DUNITTEST=TRUE
 
