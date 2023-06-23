@@ -405,13 +405,10 @@ bool Unittest::Equalish(double val1, double val2, double epislon)
 	return (std::abs(val1 - val2) <= epislon);
 }
 
-std::pair<bool, std::string> Unittest::getFailedTests()
+
+size_t Unittest::getFailedTestCount()
 {
-	if(fFailedTests.size() == 1)
-	{
-		return std::make_pair(true, fFailedTests.at(0).fMessage);
-	}
-	return std::make_pair(false, "THIS SHOULD NOT BE REACHED!");
+    return fFailedTests.size();
 }
 
 void Unittest::resetFailedTestState()

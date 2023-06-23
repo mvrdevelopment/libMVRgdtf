@@ -116,7 +116,7 @@ namespace SceneData
 		void			setName(const TXString& value);
 		
 		// Write
-		void			PrintToFile(IXMLFileNodePtr pContainerNode, SceneDataExchange* exchange);
+		virtual void	PrintToFile(IXMLFileNodePtr pContainerNode, SceneDataExchange* exchange);
 		void			ReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange);
 		
 	public:
@@ -590,8 +590,30 @@ namespace SceneData
 	typedef SceneDataObjWithMatrix*					SceneDataObjWithMatrixPtr;
 	typedef std::vector<SceneDataObjWithMatrixPtr>	SceneDataObjWithMatrixArray;
 	
-	// ----------------------------------------------------------------------------------------------------------------------------------
-	// SceneDataObjWithMatrix
+    // ----------------------------------------------------------------------------------------------------------------------------------
+	// SceneDataGroupObj
+	class SceneDataGroupObj : public SceneDataObjWithMatrix
+	{
+		
+	public:
+		SceneDataGroupObj(const SceneDataGUID& guid);
+		virtual ~SceneDataGroupObj();		
+	private:
+		SceneDataObjWithMatrixArray	fChildObjs;
+		
+	public:
+		const SceneDataObjWithMatrixArray&	GetChildArray() const;
+		bool								AddObject(SceneDataObjWithMatrixPtr obj);
+		
+		virtual ESceneDataObjectType	GetObjectType();
+		virtual void	                PrintToFile(IXMLFileNodePtr pContainerNode, SceneDataExchange* exchange);
+	protected:
+		virtual	TXString				GetNodeName();		
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);
+		
+	};
+	typedef SceneDataGroupObj* SceneDataGroupObjPtr;	
+    
 	class SceneDataGeoInstanceObj : public SceneDataObjWithMatrix
 	{
 	public:
@@ -640,37 +662,6 @@ namespace SceneData
 	};
 	typedef SceneDataGeometryObj*					SceneDataGeometryObjPtr;
 	
-	
-	// ----------------------------------------------------------------------------------------------------------------------------------
-	// SceneDataGroupObj
-	class SceneDataGroupObj : public SceneDataObjWithMatrix
-	{
-		
-	public:
-		SceneDataGroupObj(const SceneDataGUID& guid);
-		virtual ~SceneDataGroupObj();
-		
-		
-		
-	private:
-		SceneDataObjWithMatrixArray	fChildObjs;
-		
-	public:
-		const SceneDataObjWithMatrixArray&	GetChildArray() const;
-		bool								AddObject(SceneDataObjWithMatrixPtr obj);
-		
-		virtual ESceneDataObjectType	GetObjectType();
-		
-	protected:
-		virtual	TXString				GetNodeName();
-		
-		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);
-		
-	};
-	typedef SceneDataGroupObj* SceneDataGroupObjPtr;
-	
-	
-	
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataLayerObj
 	class SceneDataLayerObj : public SceneDataGroupObj
@@ -692,7 +683,7 @@ namespace SceneData
 	
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataFocusPointObj
-	class SceneDataFocusPointObj : public SceneDataObjWithMatrix
+	class SceneDataFocusPointObj : public SceneDataGroupObj
 	{
 		
 	public:
@@ -723,7 +714,7 @@ namespace SceneData
 	typedef std::vector<SceneDataDmxAdress>	SceneDataAdressArray;
 	
 	
-	class SceneDataFixtureObj : public SceneDataObjWithMatrix
+	class SceneDataFixtureObj : public SceneDataGroupObj
 	{
 		
 	public:
@@ -801,7 +792,7 @@ namespace SceneData
 	
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataSceneryObj
-	class SceneDataSceneryObj : public SceneDataObjWithMatrix
+	class SceneDataSceneryObj : public SceneDataGroupObj
 	{
 		
 	public:
@@ -816,7 +807,7 @@ namespace SceneData
 	
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataObjWithMatrix
-	class SceneDataTrussObj : public SceneDataObjWithMatrix
+	class SceneDataTrussObj : public SceneDataGroupObj
 	{
 		
 	public:
@@ -831,7 +822,7 @@ namespace SceneData
 	typedef SceneDataTrussObj* SceneDataTrussObjPtr;
 	
 	
-	class SceneDataSupportObj : public SceneDataObjWithMatrix
+	class SceneDataSupportObj : public SceneDataGroupObj
 	{
 		
 	public:
@@ -848,7 +839,7 @@ namespace SceneData
 
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataVideoScreenObj
-	class SceneDataVideoScreenObj : public SceneDataObjWithMatrix
+	class SceneDataVideoScreenObj : public SceneDataGroupObj
 	{
 		
 	public:
@@ -873,7 +864,7 @@ namespace SceneData
 
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataProjectorObj
-	class SceneDataProjectorObj : public SceneDataObjWithMatrix
+	class SceneDataProjectorObj : public SceneDataGroupObj
 	{
 		
 	public:
@@ -1077,7 +1068,8 @@ namespace SceneData
 	private:
 		void ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xmlFile);
 		void ProcessLayer(const IXMLFileNodePtr& node);
-		void ProcessGroup(const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer, bool createNewContainer);
+        void ReadChildObjs(const IXMLFileNodePtr & node, SceneDataGroupObjPtr addToContainer);
+		void ProcessGroup(const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
 		
 		
 		
