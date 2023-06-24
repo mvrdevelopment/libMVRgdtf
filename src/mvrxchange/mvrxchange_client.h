@@ -3,7 +3,9 @@
 //-----------------------------------------------------------------------------
 
 #pragma once
+
 #include "mvrxchange_prefix.h"
+#include "mvrxchange_message.h"
 
 namespace MVRxchangeNetwork
 {
