@@ -26,14 +26,14 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 
   SendMessageArgs joinMessage;
   joinMessage.Message.Type = MVRxchangeMessageType::MVR_JOIN;
-  this->SendMessage(joinMessage);
+  this->SendMessageX(joinMessage);
 
 
   //---------------------------------------------------------------------------------------------
   // Start mDNS Service
   fmdns.setServiceHostname(services.Service);
   fmdns.setServicePort(fServer->GetPort());
-  fmdns.setServiceName("AirForce1");
+  fmdns.setServiceName("AirForce1"); // XXX TODO: ServiceNam
   fmdns.startService();
 
   return kVCOMError_NoError;
@@ -42,14 +42,9 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 
 VCOMError VectorworksMVR::CMVRxchangeServiceImpl::LeaveLocalService()
 {
-  //---------------------------------------------------------------------------------------------
-  // End TCP
   this->TCP_Stop();
 
 
-  //---------------------------------------------------------------------------------------------
-  // Stop mDNS Service
-	fmdns.stopService();
   return kVCOMError_NoError;
 }
 
@@ -142,7 +137,7 @@ void CMVRxchangeServiceImpl::SendMessageToLocalNetworks(const TXString& ip, cons
 
 }
 
-std::vector<MVRxchangeGoupMember> VectorworksMVR::CMVRxchangeServiceImpl::GetMembersOfService(const ConnectToLocalServiceArgs& services)
+std::vector<MVRxchangeGoupMember> CMVRxchangeServiceImpl::GetMembersOfService(const ConnectToLocalServiceArgs& services)
 {
     return std::vector<MVRxchangeGoupMember>(); // XXX implement
 }
