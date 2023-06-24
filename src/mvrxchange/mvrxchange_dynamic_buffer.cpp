@@ -2,6 +2,8 @@
 //----- Copyright deersoft 2015 - 2019 www.deersoft.de
 //-----------------------------------------------------------------------------
 #include "mvrxchange_prefix.h"
+#include "mvrxchange_dynamic_buffer.h"
+
 using namespace MVRxchangeNetwork;
  
 const size_t k_5_MegaByte = 5 * 1024;
