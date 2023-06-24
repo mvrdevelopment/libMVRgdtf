@@ -3,6 +3,8 @@
 //-----------------------------------------------------------------------------namespace LightRightNetwork
 #include "mvrxchange_prefix.h"
 #include "json.h"
+#include "mvrxchange_message.h"
+
 using namespace MVRxchangeNetwork;
 
 
