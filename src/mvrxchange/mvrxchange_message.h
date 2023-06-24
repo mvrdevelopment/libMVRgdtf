@@ -49,9 +49,7 @@ namespace MVRxchangeNetwork
             uint32_t            fType;
             uint64_t            fBodyLength;
 
-            MVRxchangeNetwork::MVRxchangeDynamicBuffer*               fData;
-
-            
+            MVRxchangeNetwork::MVRxchangeDynamicBuffer*  fData;
     };
     
     using MVRxchangeMessageDeque = std::deque<MVRxchangeMessage>;    
