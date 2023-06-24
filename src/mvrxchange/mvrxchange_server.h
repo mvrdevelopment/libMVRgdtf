@@ -14,15 +14,15 @@ namespace MVRxchangeNetwork
     public:
         MVRxchangeServer(boost::asio::io_context& io_context, const tcp::endpoint& endpoint);
 
-        public:
-            virtual void Deliver(const MVRxchangeMessage& msg);
-            short GetPort() const;
+    public:            
+        virtual void Deliver(const MVRxchangeMessage& msg);
+        short GetPort() const;
 
-        private:
-            void DoAccept();
+    private:
+        void DoAccept();
 
-            tcp::acceptor       fAcceptor;
-            short               fPort;
+        tcp::acceptor       fAcceptor;
+        short               fPort;
 
     };
 }
