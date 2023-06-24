@@ -1,7 +1,10 @@
 //-----------------------------------------------------------------------------
 //----- Copyright MVR Group 
 //-----------------------------------------------------------------------------
-#include "mvrxchange_prefix.h"
+
+#include "mvrxchange_server.h"
+#include "mvrxchange_session.h"
+
 using namespace MVRxchangeNetwork;
 
 MVRxchangeServer::MVRxchangeServer(boost::asio::io_context& io_context, const tcp::endpoint& endpoint) 
@@ -30,12 +33,13 @@ void MVRxchangeServer::DoAccept()
     
 }
 
+
 short MVRxchangeServer::GetPort() const
 {
     return fPort;
 }
 
-void MVRxchangeNetwork::MVRxchangeServer::Deliver(const MVRxchangeMessage& msg)
+void MVRxchangeServer::Deliver(const MVRxchangeNetwork::MVRxchangeMessage& msg)
 {
     // XXX TODO
 }
