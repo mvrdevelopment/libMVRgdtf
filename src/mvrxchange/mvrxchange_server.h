@@ -1,7 +1,11 @@
 //-----------------------------------------------------------------------------
 //----- Copyright MVR Group 
 //-----------------------------------------------------------------------------
+
+#pragma once
+
 #include "mvrxchange_prefix.h"
+
 namespace MVRxchangeNetwork
 {
     class MVRxchangeServer

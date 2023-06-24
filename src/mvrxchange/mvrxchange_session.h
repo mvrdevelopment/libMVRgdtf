@@ -1,7 +1,10 @@
 //-----------------------------------------------------------------------------
 //----- Copyright MVR Group 
 //-----------------------------------------------------------------------------
+#pragma once
+
 #include "mvrxchange_prefix.h"
+
 namespace MVRxchangeNetwork
 {
     class MVRxchangeSession : public std::enable_shared_from_this<MVRxchangeSession>

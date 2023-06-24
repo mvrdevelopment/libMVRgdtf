@@ -1,6 +1,7 @@
 //-----------------------------------------------------------------------------
 //----- Copyright deersoft 2015 - 2019 www.deersoft.de
 //-----------------------------------------------------------------------------
+#pragma once
 
 namespace MVRxchangeNetwork
 {
@@ -28,9 +29,6 @@ namespace MVRxchangeNetwork
         size_t          fBufferSize;
         size_t          fAllocatedMemory;
         size_t*	        fReferenceCount;
-
-
-
     };
 
 }

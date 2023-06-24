@@ -1,7 +1,10 @@
 //-----------------------------------------------------------------------------
 //----- Copyright MVR Group 
-//-----------------------------------------------------------------------------namespace LightRightNetwork
+//-----------------------------------------------------------------------------
+#pragma once
+
 #include "mvrxchange_prefix.h"
+
 namespace MVRxchangeNetwork
 {
     class MVRxchangeMessage
