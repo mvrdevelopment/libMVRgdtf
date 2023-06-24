@@ -2,9 +2,11 @@
 //----- Copyright deersoft 2015 - 2017 www.deersoft.de
 //-----------------------------------------------------------------------------
 #pragma once
+
 #include "Include/IMediaRessourceVectorInterface.h"
 #include "mdns_cpp/mdns.hpp"
 #include "../mvrxchange/mvrxchange_prefix.h"
+#include "../mvrxchange/mvrxchange_server.h"
 
 
 namespace VectorworksMVR
