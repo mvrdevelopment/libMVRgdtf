@@ -19,7 +19,8 @@ void MVRxchangeServer::DoAccept()
     {
         if (!ec)
         {
-            std::make_shared<LRNetSession>(std::move(socket))->Start();
+            // XXX whats the point of making a shared pointer that directly leaves scop. Then just intstiate an object.
+            std::make_shared<MVRxchangeSession>(std::move(socket))->Start();
         }
 
         DoAccept();
