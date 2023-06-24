@@ -1877,7 +1877,7 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 			IMVRxchangeMessage Message;
 			IMVRxchangeMessage ReturnValue;
 		};
-		virtual VCOMError VCOM_CALLTYPE     SendMessage(const SendMessageArgs& messageHandler) = 0;
+		virtual VCOMError VCOM_CALLTYPE     Send_message(const SendMessageArgs& messageHandler) = 0;
 
 
 
