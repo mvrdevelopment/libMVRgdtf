@@ -1,7 +1,11 @@
 //-----------------------------------------------------------------------------
 //----- Copyright MVR Group 
 //-----------------------------------------------------------------------------
+
 #include "mvrxchange_prefix.h"
+#include "mvrxchange_client.h"
+
+
 using namespace MVRxchangeNetwork;
 
 MVRxchangeClient::MVRxchangeClient(boost::asio::io_context& io_context, const tcp::resolver::results_type& endpoints)

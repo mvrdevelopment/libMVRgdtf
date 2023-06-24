@@ -3,6 +3,7 @@
 //-----------------------------------------------------------------------------
 #include "Prefix/StdAfx.h"
 #include "CMVRxchangeService.h"
+#include "../mvrxchange/mvrxchange_client.h"
 
 
 VectorworksMVR::CMVRxchangeServiceImpl::CMVRxchangeServiceImpl()
