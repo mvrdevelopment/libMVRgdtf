@@ -1,7 +1,10 @@
 //-----------------------------------------------------------------------------
 //----- Copyright MVR Group 
 //-----------------------------------------------------------------------------
+
 #include "mvrxchange_prefix.h"
+#include "mvrxchange_session.h"
+
 using namespace MVRxchangeNetwork;
 
 MVRxchangeSession::MVRxchangeSession(tcp::socket socket)
