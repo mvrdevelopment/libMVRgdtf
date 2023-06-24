@@ -34,7 +34,7 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE     LeaveRemoteService();
 
 		virtual VCOMError VCOM_CALLTYPE     OnMessage(MVRxchangeMessageHandler& messageHandler);
-		virtual VCOMError VCOM_CALLTYPE     SendMessage(const SendMessageArgs& messageHandler);
+		virtual VCOMError VCOM_CALLTYPE     Send_message(const SendMessageArgs& messageHandler);
 
 	private:
 		mdns_cpp::mDNS 			fmdns;

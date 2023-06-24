@@ -26,7 +26,7 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 
   SendMessageArgs joinMessage;
   joinMessage.Message.Type = MVRxchangeMessageType::MVR_JOIN;
-  this->SendMessageX(joinMessage);
+  this->Send_message(joinMessage);
 
 
   //---------------------------------------------------------------------------------------------
@@ -70,7 +70,7 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::OnMessage(MVRxchangeMessageHan
   return kVCOMError_NoError;
 }
 
-VCOMError VectorworksMVR::CMVRxchangeServiceImpl::SendMessage(const SendMessageArgs& messageHandler)
+VCOMError VectorworksMVR::CMVRxchangeServiceImpl::Send_message(const SendMessageArgs& messageHandler)
 {
   //---------------------------------------------------------------------------------------------
   // Start mDNS Service
