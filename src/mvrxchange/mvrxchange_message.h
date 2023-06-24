@@ -4,6 +4,7 @@
 #pragma once
 
 #include "mvrxchange_prefix.h"
+#include "mvrxchange_dynamic_buffer.h"
 
 namespace MVRxchangeNetwork
 {
