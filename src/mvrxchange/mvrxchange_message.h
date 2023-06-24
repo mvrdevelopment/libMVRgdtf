@@ -53,5 +53,6 @@ namespace MVRxchangeNetwork
 
             
     };
-    typedef std::deque<MVRxchangeMessage>     MVRxchangeMessageDeque;
+    
+    using MVRxchangeMessageDeque = std::deque<MVRxchangeMessage>;    
 }
