@@ -36,5 +36,5 @@ short MVRxchangeServer::GetPort() const
 
 void MVRxchangeNetwork::MVRxchangeServer::Deliver(const MVRxchangeMessage& msg)
 {
-    // TODO
+    // XXX TODO
 }
