@@ -161,7 +161,7 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetGeometryAt(size_t at, IGeometryReference** outGeometryRef) = 0;
 		
 		virtual VCOMError VCOM_CALLTYPE		AddGeometry(const STransformMatrix& geometry, MvrString fileName) = 0;
-		virtual VCOMError VCOM_CALLTYPE		AddSymbol(const STransformMatrix& geometry, ISymDef* symDef) = 0;
+		virtual VCOMError VCOM_CALLTYPE		AddSymbol(const MvrUUID& guid, const STransformMatrix& geometry, ISymDef* symDef) = 0;
 		
 	};
 	typedef VCOMPtr<ISymDef>	ISymDefPtr;
@@ -310,7 +310,7 @@ namespace VectorworksMVR
 		
 		
 		virtual VCOMError VCOM_CALLTYPE		AddGeometry(const STransformMatrix& geometry, MvrString fileName) = 0;
-		virtual VCOMError VCOM_CALLTYPE		AddSymbol(const STransformMatrix& geometry, ISymDef* symDef) = 0;
+		virtual VCOMError VCOM_CALLTYPE		AddSymbol(const MvrUUID& guid, const STransformMatrix& geometry, ISymDef* symDef) = 0;
 		
 		virtual VCOMError VCOM_CALLTYPE		GetClass(IClass** outClass) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetClass(IClass* clas) = 0;

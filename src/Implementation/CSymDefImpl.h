@@ -21,7 +21,7 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetGeometryAt(size_t at, IGeometryReference** outGeometryRef) ;
 		
 		virtual VCOMError VCOM_CALLTYPE		AddGeometry(const STransformMatrix& geometry, MvrString fileName);
-		virtual VCOMError VCOM_CALLTYPE		AddSymbol(const STransformMatrix& geometry, ISymDef* symDef);
+		virtual VCOMError VCOM_CALLTYPE		AddSymbol(const MvrUUID& guid, const STransformMatrix& geometry, ISymDef* symDef);
 		
 		// Implementation
 	public:

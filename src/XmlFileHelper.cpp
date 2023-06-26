@@ -532,27 +532,42 @@ TXString SceneData::GdtfConverter::ConvertDMXAdress(DMXAddress value)
 	return ConvertInteger(value, node, intValue);;
 }
 
-bool SceneData::GdtfConverter::ConvertDMXAdress(const TXString& value, const IXMLFileNodePtr& node,DMXAddress & intValue)
+bool SceneData::GdtfConverter::ConvertDMXAdress(const TXString& value, const IXMLFileNodePtr& node, DMXAddress & intValue)
 /* Convert String to DMXAdress*/
 {
     if(value.IsEmpty()) {intValue = 1; return false;}
 
-	intValue = value.atoi();
+	ptrdiff_t dotPos = value.Find('.');
 
-    ASSERTN(kEveryone, intValue > 0);
-    ASSERTN(kEveryone, intValue < 513);
-	if (intValue <= 0)	
-    {
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_DmxAdressHasWrongValue, node);
+	bool error = false;
+
+	if(dotPos > 0){
+		Uint16 universe = value.Left(dotPos).atoi();
+		Uint16 address  = value.Right(value.GetLength() - dotPos - 1).atoi();
+
+		if (universe <= 0 || address <= 0 || address > 512)	
+		{
+	    	ASSERTN(kEveryone, false);
+			error = true;
+		}
+
+		intValue = (universe - 1) * 512 + address;
+
+	}else{
+		intValue = value.atoi();
+    	ASSERTN(kEveryone, intValue > 0);
+
+		if (intValue <= 0)	
+		{
+			error = true;
+		}
+	}
+
+	if(error){
+		GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_DmxAdressHasWrongValue, node);
         SceneData::GdtfFixture::AddError(error); 
         return false; 
-    }
-	if (intValue > 512)	
-    {
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_DmxAdressHasWrongValue, node);
-        SceneData::GdtfFixture::AddError(error); 
-        return false; 
-    }
+	}
 
     return true;
 }

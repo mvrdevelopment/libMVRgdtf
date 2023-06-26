@@ -159,7 +159,7 @@ void SceneDataObj::setName(const TXString& value)
 
 void SceneDataObj::PrintToFile(IXMLFileNodePtr pContainerNode, SceneDataExchange* exchange)
 {
-	// Create the new node
+    // Create the new node
 	IXMLFileNodePtr pNode;
 	if ( VCOM_SUCCEEDED( pContainerNode->CreateChildNode( this->GetNodeName(), & pNode ) ) )
 	{
@@ -364,6 +364,7 @@ SceneDataSymDefObj::SceneDataSymDefObj(const SceneDataGUID& guid) : SceneDataAux
 
 SceneDataSymDefObj::~SceneDataSymDefObj()
 {
+	for (const auto& i : fGeometries){ delete i; }
 }
 
 void SceneDataSymDefObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
@@ -1291,6 +1292,8 @@ SceneDataObjWithMatrix::~SceneDataObjWithMatrix()
 	for (SceneDataCustomCommandPtr customCommand : fCustomCommands) { delete customCommand; }
 	for (SceneDataAlignmentPtr alignment : fAlignments) { delete alignment; }
 	for (SceneDataOverwritePtr overwrite : fOverwrites) { delete overwrite; }
+	for (SceneDataConnectionObjPtr connection : fConnections) { delete connection; }
+	
 }
 
 void SceneDataObjWithMatrix::GetTransformMatric(VWTransformMatrix& matrix) const
@@ -1705,7 +1708,7 @@ void SceneDataObjWithMatrix::ReadMatrixNodeValue(const IXMLFileNodePtr& pNode, V
 
 // ----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataAuxObj
-SceneDataGeoInstanceObj::SceneDataGeoInstanceObj(const SceneDataGUID& guid, bool isSymbol) : SceneDataObjWithMatrix(guid)
+SceneDataGeoInstanceObj::SceneDataGeoInstanceObj(const SceneDataGUID& guid, bool isSymbol) : SceneDataObjWithMatrix (guid)
 {
 	fIsSymbol = isSymbol;
 }
@@ -1784,7 +1787,7 @@ size_t SceneDataDmxAdress::GetUniverse() const
 	return universe;
 }
 
-SceneDataFixtureObj::SceneDataFixtureObj(const SceneDataGUID& guid) : SceneDataObjWithMatrix(guid)
+SceneDataFixtureObj::SceneDataFixtureObj(const SceneDataGUID& guid) : SceneDataGroupObj(guid)
 {
 	fFocusPoint		= nullptr;
 	fPosition		= nullptr;
@@ -1986,7 +1989,7 @@ void SceneDataFixtureObj::AddMapping(SceneDataGUID mappingDefinitionUuid)
 
 void SceneDataFixtureObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
 {
-	SceneDataObjWithMatrix::OnPrintToFile(pNode, exchange);
+	SceneDataGroupObj::OnPrintToFile(pNode, exchange);
 	
 	//--------------------------------------------------------------------------------------------
 	// Print the Focus
@@ -2115,7 +2118,7 @@ void SceneDataFixtureObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange
 
 void SceneDataFixtureObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
 {
-	SceneDataObjWithMatrix::OnReadFromNode(pNode, exchange);
+	SceneDataGroupObj::OnReadFromNode(pNode, exchange);
 	
 	//--------------------------------------------------------------------------------------------
 	// Read the Focus
@@ -2271,6 +2274,16 @@ TXString SceneDataGroupObj::GetNodeName()
 	return TXString( XML_Val_GroupNodeName );
 }
 
+void SceneDataGroupObj::PrintToFile(IXMLFileNodePtr pContainerNode, SceneDataExchange * exchange)
+{
+    if (this->GetNodeName() == XML_Val_GroupNodeName && (fChildObjs.size() == 0))
+    {
+        return; // Do not print empty groups at all.
+    }
+
+    SceneDataObjWithMatrix::PrintToFile(pContainerNode, exchange);
+}
+
 ESceneDataObjectType SceneDataGroupObj::GetObjectType()
 {
 	return ESceneDataObjectType::eGroup;
@@ -2278,28 +2291,26 @@ ESceneDataObjectType SceneDataGroupObj::GetObjectType()
 
 void SceneDataGroupObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
 {
-	// Call base class
+    // Call base class
 	SceneDataObjWithMatrix::OnPrintToFile(pNode, exchange);
-
-	
-	// Create the child node
-	IXMLFileNodePtr pChildNode;
-	if ( VCOM_SUCCEEDED( pNode->CreateChildNode( XML_Val_ChildObsNodeName, & pChildNode ) ) )
-	{
-		// Dump the object in the array
-		for (SceneDataObjWithMatrixPtr objects : fChildObjs)
-		{
-			
-			objects->PrintToFile(pChildNode, exchange);
-		}
+     
+    if ( fChildObjs.size())
+    {	
+	    IXMLFileNodePtr pChildNode;
+	    if ( VCOM_SUCCEEDED( pNode->CreateChildNode( XML_Val_ChildObsNodeName, & pChildNode ) ) )
+	    {
+		    // Dump the object in the array
+		    for (SceneDataObjWithMatrixPtr objects : fChildObjs)
+		    {	                
+			    objects->PrintToFile(pChildNode, exchange);
+		    }
+	    }
 	}
-	
-
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataGroupObj
-SceneDataSceneryObj::SceneDataSceneryObj(const SceneDataGUID& guid) : SceneDataObjWithMatrix(guid)
+SceneDataSceneryObj::SceneDataSceneryObj(const SceneDataGUID& guid) : SceneDataGroupObj(guid)
 {
 	
 }
@@ -2321,7 +2332,7 @@ ESceneDataObjectType SceneDataSceneryObj::GetObjectType()
 
 // ----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataFocusPointObj
-SceneDataFocusPointObj::SceneDataFocusPointObj(const SceneDataGUID& guid) : SceneDataObjWithMatrix(guid)
+SceneDataFocusPointObj::SceneDataFocusPointObj(const SceneDataGUID& guid) : SceneDataGroupObj(guid)
 {
 	
 }
@@ -2343,7 +2354,7 @@ ESceneDataObjectType SceneDataFocusPointObj::GetObjectType()
 
 // ----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataTrussObj
-SceneDataTrussObj::SceneDataTrussObj(const SceneDataGUID& guid) : SceneDataObjWithMatrix(guid)
+SceneDataTrussObj::SceneDataTrussObj(const SceneDataGUID& guid) : SceneDataGroupObj(guid)
 {
 	
 }
@@ -2363,7 +2374,7 @@ ESceneDataObjectType SceneDataTrussObj::GetObjectType()
 	return ESceneDataObjectType::eTruss;
 }
 
-SceneDataSupportObj::SceneDataSupportObj(const SceneDataGUID& guid) : SceneDataObjWithMatrix(guid)
+SceneDataSupportObj::SceneDataSupportObj(const SceneDataGUID& guid) : SceneDataGroupObj(guid)
 {
 	
 }
@@ -2386,7 +2397,7 @@ ESceneDataObjectType SceneDataSupportObj::GetObjectType()
 
 // ----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataVideoScreenObj
-SceneDataVideoScreenObj::SceneDataVideoScreenObj(const SceneDataGUID& guid) : SceneDataObjWithMatrix(guid)
+SceneDataVideoScreenObj::SceneDataVideoScreenObj(const SceneDataGUID& guid) : SceneDataGroupObj(guid)
 {
 	fSource = nullptr;
 }
@@ -2429,7 +2440,7 @@ ESceneDataObjectType SceneDataVideoScreenObj::GetObjectType()
 void SceneDataVideoScreenObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
 {
 	// Call Parent
-	SceneDataObjWithMatrix::OnPrintToFile(pNode, exchange);
+	SceneDataGroupObj::OnPrintToFile(pNode, exchange);
 
 	IXMLFileNodePtr pSourcesNode;
 	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_Val_VideoScreenObjectSources, &pSourcesNode)))
@@ -2440,7 +2451,7 @@ void SceneDataVideoScreenObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExch
 
 void SceneDataVideoScreenObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
 {
-	SceneDataObjWithMatrix::OnReadFromNode(pNode, exchange);
+	SceneDataGroupObj::OnReadFromNode(pNode, exchange);
 
 	IXMLFileNodePtr pSourcesNode;	
 	pNode->GetChildNode(XML_Val_VideoScreenObjectSources, &pSourcesNode);
@@ -2463,7 +2474,7 @@ void SceneDataVideoScreenObj::OnReadFromNode(const IXMLFileNodePtr& pNode, Scene
 
 // ----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataProjectorObj
-SceneDataProjectorObj::SceneDataProjectorObj(const SceneDataGUID& guid) : SceneDataObjWithMatrix(guid)
+SceneDataProjectorObj::SceneDataProjectorObj(const SceneDataGUID& guid) : SceneDataGroupObj(guid)
 {
 	fSource = nullptr;
 }
@@ -2514,8 +2525,7 @@ ESceneDataObjectType SceneDataProjectorObj::GetObjectType()
 
 void SceneDataProjectorObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
 {
-	// Call Parent
-	SceneDataObjWithMatrix::OnPrintToFile(pNode, exchange);
+	SceneDataGroupObj::OnPrintToFile(pNode, exchange);
 
 	IXMLFileNodePtr pProjectionsNode;
 	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_Val_ProjectorObjectProjections, &pProjectionsNode)))
@@ -2536,7 +2546,7 @@ void SceneDataProjectorObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchan
 
 void SceneDataProjectorObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
 {
-	SceneDataObjWithMatrix::OnReadFromNode(pNode, exchange);
+	SceneDataGroupObj::OnReadFromNode(pNode, exchange);
 
 	IXMLFileNodePtr pProjectionsNode;	
 	pNode->GetChildNode(XML_Val_ProjectorObjectProjections, &pProjectionsNode);
@@ -3756,40 +3766,19 @@ void SceneDataExchange::ProcessLayer(const IXMLFileNodePtr& node)
 	TXString			uuid = "";
 	
 	if (VCOM_SUCCEEDED(node->GetNodeAttributeValue(XML_Val_GuidAttrName, uuid)))
-	{
-		// Create the new Layer
+	{		
 		SceneDataLayerObjPtr layerObj = ReadLayerObject(SceneDataGUID(uuid),node);
 		
-		
-		// Now it can be handeled as a group
 		ASSERTN(kEveryone, layerObj != nullptr);
 		if (layerObj)
-		{
-			ProcessGroup(node, layerObj, false);
+		{			
+            this->ReadChildObjs(node, layerObj);
 		}
 	}
 }
 
-void SceneDataExchange::ProcessGroup(const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer, bool createNewContainer)
+void SceneDataExchange::ReadChildObjs(const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer)
 {
-	//--------------------------------------------------------------------------------------------
-	// If this was called not by layer object, you need to add a new group object to the tree
-	if (createNewContainer)
-	{
-		// Read the group
-		TXString			groupUuid = "";
-		if (VCOM_SUCCEEDED(node->GetNodeAttributeValue(XML_Val_GuidAttrName, groupUuid)))
-		{
-			SceneDataGroupObjPtr group = ReadGroupObject(SceneDataGUID(groupUuid),node, addToContainer);
-			addToContainer = group;
-		}
-		else
-		{
-			return;
-		}
-
-	}
-	
 	//--------------------------------------------------------------------------------------------
 	// Now read the child nodes
 	IXMLFileNodePtr childObjsNode = nullptr;
@@ -3821,9 +3810,13 @@ void SceneDataExchange::ProcessGroup(const IXMLFileNodePtr& node, SceneDataGroup
 					else if	( nodeName == XML_Val_VideoScreenObjectNodeName)	{ obj = ReadVideoScreen(	SceneDataGUID(groupUuid),objNode, addToContainer); }
 					else if	( nodeName == XML_Val_SupportObjectNodeName)		{ obj = ReadSupport(		SceneDataGUID(groupUuid),objNode, addToContainer); }
 					else if	( nodeName == XML_Val_ProjectorObjectNodeName)		{ obj = ReadProjector(		SceneDataGUID(groupUuid),objNode, addToContainer); }
-					else if ( nodeName == XML_Val_GroupNodeName)				{ ProcessGroup(objNode, addToContainer, true); }
-					
-
+					else if ( nodeName == XML_Val_GroupNodeName)				{ ProcessGroup(objNode, addToContainer); }
+					     
+                    auto grp = dynamic_cast<SceneDataGroupObjPtr>(obj);
+                    if (grp)
+                    {
+                        this->ReadChildObjs(objNode, grp);
+                    }
 					// ---------------------------------------------------------------------------
 					// Add the object to list if it is a scene object
 					if(obj)
@@ -3842,9 +3835,7 @@ void SceneDataExchange::ProcessGroup(const IXMLFileNodePtr& node, SceneDataGroup
 						fSceneObjects.push_back(obj);
 					}
 				}
-				
-				
-				
+
 				// ---------------------------------------------------------------------------
 				// Step to the next node
 				IXMLFileNodePtr nextNode = nullptr;
@@ -3854,7 +3845,16 @@ void SceneDataExchange::ProcessGroup(const IXMLFileNodePtr& node, SceneDataGroup
 			
 		}
 	}
-	
+}
+
+void SceneDataExchange::ProcessGroup(const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer)
+{	
+	TXString			groupUuid = "";
+	if (VCOM_SUCCEEDED(node->GetNodeAttributeValue(XML_Val_GuidAttrName, groupUuid)))
+	{
+		SceneDataGroupObjPtr group = ReadGroupObject(SceneDataGUID(groupUuid),node, addToContainer);
+		addToContainer = group;
+	}    
 }
 
 void SceneDataExchange::AddFileToZip(const IFileIdentifierPtr& file, ERessourceType resType)
@@ -3899,3 +3899,5 @@ bool SceneDataExchange::GetDuplicatedUuids() const
 {
 	return fDuplicatedUuids;
 }
+
+

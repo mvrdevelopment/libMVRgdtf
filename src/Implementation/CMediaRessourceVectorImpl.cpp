@@ -375,9 +375,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateGroup
 	ESceneObjType							type	= ESceneObjType::Layer;
 	pContainer->GetPointer(obj, type);
 	
-	
-	ASSERTN(kEveryone, type == ESceneObjType::Layer || type ==  ESceneObjType::Group);
-	if ( ! (type == ESceneObjType::Layer || type ==  ESceneObjType::Group) ) { return kVCOMError_NoValidContainerObj; }
+    if( ! VectorworksMVR::MvrUtil::isContainerType(type)) { return kVCOMError_NoValidContainerObj; }	
 	
 	SceneData::SceneDataGroupObjPtr group = static_cast<SceneData::SceneDataGroupObjPtr>(obj);
 	
@@ -443,9 +441,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateGroup
 	ESceneObjType							type	= ESceneObjType::Layer;
 	pContainer->GetPointer(obj, type);
 	
-	
-	ASSERTN(kEveryone, type == ESceneObjType::Layer || type ==  ESceneObjType::Group);
-	if ( ! (type == ESceneObjType::Layer || type ==  ESceneObjType::Group) ) { return kVCOMError_NoValidContainerObj; }
+    if( ! VectorworksMVR::MvrUtil::isContainerType(type)) { return kVCOMError_NoValidContainerObj; }	
 	
 	SceneData::SceneDataGroupObjPtr group = static_cast<SceneData::SceneDataGroupObjPtr>(obj);
 	
@@ -512,9 +508,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateFixtu
 	ESceneObjType							type	= ESceneObjType::Layer;
 	pContainer->GetPointer(obj, type);
 	
-	
-	ASSERTN(kEveryone, type == ESceneObjType::Layer || type ==  ESceneObjType::Group);
-	if ( ! (type == ESceneObjType::Layer || type ==  ESceneObjType::Group) ) { return kVCOMError_NoValidContainerObj; }
+    if( ! VectorworksMVR::MvrUtil::isContainerType(type)) { return kVCOMError_NoValidContainerObj; }
 	
 	SceneData::SceneDataGroupObjPtr group = static_cast<SceneData::SceneDataGroupObjPtr>(obj);
 	
@@ -581,9 +575,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateScene
 	ESceneObjType							type	= ESceneObjType::Layer;
 	pContainer->GetPointer(obj, type);
 	
-	
-	ASSERTN(kEveryone, type == ESceneObjType::Layer || type ==  ESceneObjType::Group);
-	if ( ! (type == ESceneObjType::Layer || type ==  ESceneObjType::Group) ) { return kVCOMError_NoValidContainerObj; }
+    if( ! VectorworksMVR::MvrUtil::isContainerType(type)) { return kVCOMError_NoValidContainerObj; }	
 	
 	SceneData::SceneDataGroupObjPtr group = static_cast<SceneData::SceneDataGroupObjPtr>(obj);
 	
@@ -649,9 +641,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateFocus
 	ESceneObjType							type	= ESceneObjType::Layer;
 	pContainer->GetPointer(obj, type);
 	
-	
-	ASSERTN(kEveryone, type == ESceneObjType::Layer || type ==  ESceneObjType::Group);
-	if ( ! (type == ESceneObjType::Layer || type ==  ESceneObjType::Group) ) { return kVCOMError_NoValidContainerObj; }
+    if( ! VectorworksMVR::MvrUtil::isContainerType(type)) { return kVCOMError_NoValidContainerObj; }	
 	
 	SceneData::SceneDataGroupObjPtr group = static_cast<SceneData::SceneDataGroupObjPtr>(obj);
 	
@@ -704,7 +694,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateFocus
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateTruss(		const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**		outTruss)
+VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateTruss( const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**		outTruss)
 {
 	//---------------------------------------------------------------------------
 	// Read Container
@@ -719,9 +709,8 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateTruss
 	pContainer->GetPointer(obj, type);
 	
 	
-	ASSERTN(kEveryone, type == ESceneObjType::Layer || type ==  ESceneObjType::Group);
-	if ( ! (type == ESceneObjType::Layer || type ==  ESceneObjType::Group) ) { return kVCOMError_NoValidContainerObj; }
-	
+    if( ! VectorworksMVR::MvrUtil::isContainerType(type)) { return kVCOMError_NoValidContainerObj; }	
+
 	SceneData::SceneDataGroupObjPtr group = static_cast<SceneData::SceneDataGroupObjPtr>(obj);
 	
 	ASSERTN(kEveryone, group != nullptr);
@@ -789,9 +778,8 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateSuppo
 	pContainer->GetPointer(obj, type);
 	
 	
-	ASSERTN(kEveryone, type == ESceneObjType::Layer || type ==  ESceneObjType::Group);
-	if ( ! (type == ESceneObjType::Layer || type ==  ESceneObjType::Group) ) { return kVCOMError_NoValidContainerObj; }
-	
+    if( ! VectorworksMVR::MvrUtil::isContainerType(type)) { return kVCOMError_NoValidContainerObj; }	
+
 	SceneData::SceneDataGroupObjPtr group = static_cast<SceneData::SceneDataGroupObjPtr>(obj);
 	
 	ASSERTN(kEveryone, group != nullptr);
@@ -859,8 +847,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateVideo
 	pContainer->GetPointer(obj, type);
 	
 	
-	ASSERTN(kEveryone, type == ESceneObjType::Layer || type ==  ESceneObjType::Group);
-	if ( ! (type == ESceneObjType::Layer || type ==  ESceneObjType::Group) ) { return kVCOMError_NoValidContainerObj; }
+	if( ! VectorworksMVR::MvrUtil::isContainerType(type)) { return kVCOMError_NoValidContainerObj; }	
 	
 	SceneData::SceneDataGroupObjPtr group = static_cast<SceneData::SceneDataGroupObjPtr>(obj);
 	
@@ -927,9 +914,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateProje
 	ESceneObjType							type	= ESceneObjType::Layer;
 	pContainer->GetPointer(obj, type);
 	
-	
-	ASSERTN(kEveryone, type == ESceneObjType::Layer || type ==  ESceneObjType::Group);
-	if ( ! (type == ESceneObjType::Layer || type ==  ESceneObjType::Group) ) { return kVCOMError_NoValidContainerObj; }
+    if( ! VectorworksMVR::MvrUtil::isContainerType(type)) { return kVCOMError_NoValidContainerObj; }	
 	
 	SceneData::SceneDataGroupObjPtr group = static_cast<SceneData::SceneDataGroupObjPtr>(obj);
 	
@@ -1436,18 +1421,14 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetFirstChi
 	
 	pContainer->GetPointer(layer, objType);
 	
-	// Check Pointer
-	if ( ! layer)							{ return kVCOMError_NoValidContainerObj; }
+	if ( ! layer)							{ return kVCOMError_NoValidContainerObj; }	
 	
-	// Just to be sure
-	ASSERTN(kEveryone,	layer->GetObjectType() == SceneData::ESceneDataObjectType::eLayer ||
-						layer->GetObjectType() == SceneData::ESceneDataObjectType::eGroup);
-	
-	// Check Object
-	bool isLayer = objType == ESceneObjType::Layer;
-	bool isGroup = objType == ESceneObjType::Group;
-	if ( (isLayer || isGroup) == false)	{ return kVCOMError_NoValidContainerObj; }
-	
+	ASSERTN(kEveryone,	VectorworksMVR::MvrUtil::isContainerType(objType));						
+
+	if ( ! VectorworksMVR::MvrUtil::isContainerType(objType))	
+    {
+        return kVCOMError_NoValidContainerObj; 
+    }	
 	
 	// Do the last casting
 	SceneData::SceneDataGroupObjPtr scGroupObj = static_cast<SceneData::SceneDataGroupObjPtr >(layer);

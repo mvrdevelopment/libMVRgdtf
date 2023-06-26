@@ -10,6 +10,24 @@ using VectorworksMVR::Filing::IID_FolderIdentifier;
 
 using namespace VectorworksMVR;
 
+bool MvrUtil::isContainerType(ESceneObjType typ)
+{
+    bool res = (
+       typ == ESceneObjType::Fixture
+    || typ == ESceneObjType::FocusPoint
+    || typ == ESceneObjType::Group
+    || typ == ESceneObjType::Layer
+    || typ == ESceneObjType::Projector
+    || typ == ESceneObjType::SceneObj
+    || typ == ESceneObjType::Truss
+    || typ == ESceneObjType::VideoScreen
+    || typ == ESceneObjType::Support);
+
+    ASSERTN(kEveryone, res);
+
+    return res;
+}
+
 /*static*/ void GdtfUtil::ConvertMatrix(const VectorworksMVR::STransformMatrix & smatrix, VWTransformMatrix & vwmatrix)
 /* 
 Converts a STransformMatrix to a VWTransformMatrix.

@@ -163,7 +163,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::AddGeometry(const STran
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::AddSymbol(const STransformMatrix& geometry, ISymDef* symDef)
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::AddSymbol(const MvrUUID& guid, const STransformMatrix& geometry, ISymDef* symDef)
 {
 	//------------------------------------------------------------------------------------------
 	// Check if this is initialized
@@ -186,10 +186,10 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::AddSymbol(const STransf
 	ASSERTN(kEveryone, pScSymDef != nullptr);
 	if ( ! pScSymDef) { return kVCOMError_NotInitialized; }
 	
-	
+	VWFC::Tools::VWUUID	uuid	(guid.a,guid.b,guid.c,guid.d);
 	//------------------------------------------------------------------------------------------
 	// Create new geometry obj
-	SceneData::SceneDataSymbolObjPtr newSymbolObj = new SceneData::SceneDataSymbolObj(SceneData::SceneDataGUID(VWFC::Tools::VWUUID()));
+	SceneData::SceneDataSymbolObjPtr newSymbolObj = new SceneData::SceneDataSymbolObj(SceneData::SceneDataGUID(uuid));
 	
 	// Set Transfrom Matrix
 	VWTransformMatrix ma;
@@ -1304,8 +1304,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::CreateConnection(MvrStr
 		// Set Out Value
 		*addedObj = pConnectionImpl;
 	}
-	return kVCOMError_NoError;
-
 	return kVCOMError_NoError;
 }
 

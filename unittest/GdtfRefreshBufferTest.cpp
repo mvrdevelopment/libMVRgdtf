@@ -68,6 +68,8 @@ void GdtfRefreshBufferTest::WriteFile()
 		checkifEqual("Name Fixture Type", "Alpha Spot QWO 800",  gdtfWrite->GetName());
 	}
 
+	delete[] buffer;
+
 	AddMode(gdtfWrite);
 
 	size_t bufferLength = 0;
