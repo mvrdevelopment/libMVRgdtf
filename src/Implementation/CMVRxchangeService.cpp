@@ -50,6 +50,7 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::LeaveLocalService()
 
 VCOMError VCOM_CALLTYPE VectorworksMVR::CMVRxchangeServiceImpl::GetLocalServices(GetLocalServicesArgs& arg)
 {
+  arg.CountServices = 0;
     return kVCOMError_Failed; // XXX Implement
 }
 
