@@ -1,0 +1,61 @@
+name: Linux Unittest CI
+
+on: [push]
+
+env:
+  XERCES_CONFIGURE_ENCODER: "gnuiconv"
+
+jobs:
+  run_unittest:
+    runs-on: [ self-hosted, Linux ]
+    
+    strategy:
+      matrix:
+        arch: [x64]
+
+    concurrency: 
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+      
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        repository: DeerSoftDevelopment/xerces-c
+        ref: v3.2.2-1
+        path: xerces-c
+        submodules: true
+        
+    - uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.ACTION_TOKEN }}
+        path: libMVRgdtf
+
+    - name: Setup xerces-c
+      working-directory: xerces-c
+      run: |
+        rm -rf build
+        mkdir build
+      
+    - name: Build xerces-c
+      working-directory: xerces-c/build
+      run: |
+        cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DBUILD_SHARED_LIBS=OFF -Dxmlch-type=uint16_t -Dnetwork=OFF -Dtranscoder=${{env.XERCES_CONFIGURE_ENCODER}} ..
+        cmake --build . --config Release --parallel
+
+    - name: Setup libMVRgdtf
+      working-directory: libMVRgdtf
+      run: |
+        rm -rf build
+        mkdir build
+    
+    - name: Setup Cmake
+      working-directory: libMVRgdtf/build
+      run: cmake .. -DUNITTEST=TRUE
+
+    - name: Compile
+      working-directory: libMVRgdtf/build
+      run: make -j$(nproc)
+
+    - name: Unittest
+      working-directory: libMVRgdtf/build
+      run: ./MvrGdtfUnitTest
