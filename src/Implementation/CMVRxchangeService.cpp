@@ -71,7 +71,7 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::LeaveRemoteService()
 VCOMError VectorworksMVR::CMVRxchangeServiceImpl::OnMessage(OnMessageArgs& messageHandler)
 {
   fCallBacks[(void*)messageHandler.Callback] = messageHandler;
-  
+
   return kVCOMError_NoError;
 }
 
@@ -102,7 +102,7 @@ void CMVRxchangeServiceImpl::TCP_Start()
   }
 
   tcp::endpoint endpoint(tcp::v4(), 0);
-  fServer = new MVRxchangeNetwork::MVRxchangeServer(fServer_IO_Context, endpoint);
+  fServer = new MVRxchangeNetwork::MVRxchangeServer(fServer_IO_Context, endpoint, this);
   fServer_Running = true;
   fServer_Thread = std::thread(&CMVRxchangeServiceImpl::TCP_ServerNetworksThread, this);
 

@@ -7,8 +7,9 @@
 
 using namespace MVRxchangeNetwork;
 
-MVRxchangeSession::MVRxchangeSession(tcp::socket socket)
-    : fSocket(std::move(socket))
+MVRxchangeSession::MVRxchangeSession(tcp::socket socket, CMVRxchangeServiceImpl* impl)
+    : fSocket(std::move(socket)),
+      fImpl(impl)
 {
     
 }

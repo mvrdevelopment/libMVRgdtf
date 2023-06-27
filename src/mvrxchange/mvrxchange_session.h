@@ -12,7 +12,7 @@ namespace MVRxchangeNetwork
     class MVRxchangeSession : public std::enable_shared_from_this<MVRxchangeSession>
     {
     public:
-        MVRxchangeSession(tcp::socket socket);
+        MVRxchangeSession(tcp::socket socket, CMVRxchangeServiceImpl* impl);
     
     public:
         void            Start();
@@ -24,7 +24,7 @@ namespace MVRxchangeNetwork
         void DoReadBody();
         void DoWrite();
 
-
+        CMVRxchangeServiceImpl*         fImpl;
         tcp::socket                     fSocket;
         MVRxchangeMessage               freadmsg;
         MVRxchangeMessageDeque          fwrite_msgs;
