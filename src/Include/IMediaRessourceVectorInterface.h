@@ -1858,10 +1858,11 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 			MVR_COMMIT_MESSAGE 		COMMIT;
 		};
 
-		typedef IMVRxchangeMessage (*MVRxchangeMessageHandler)(const IMVRxchangeMessage& args);
+		typedef IMVRxchangeMessage (*MVRxchangeMessageHandler)(const IMVRxchangeMessage& args, void* context);
 		struct OnMessageArgs
 		{
-			MVRxchangeMessageHandler* Callback;
+			MVRxchangeMessageHandler Callback;
+			void*					 Context;
 		};
 		/**
 		 * @brief Registers the message handlers
@@ -1869,7 +1870,7 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		 * @param service 
 		 * @return VCOMError 
 		 */
-		virtual VCOMError VCOM_CALLTYPE     OnMessage(MVRxchangeMessageHandler& messageHandler) = 0;
+		virtual VCOMError VCOM_CALLTYPE     OnMessage(OnMessageArgs& messageHandler) = 0;
 		
 		
 		struct SendMessageArgs

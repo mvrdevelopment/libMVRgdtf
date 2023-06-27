@@ -28,12 +28,14 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
   joinMessage.Message.Type = MVRxchangeMessageType::MVR_JOIN;
   this->Send_message(joinMessage);
 
+  std::cout << "Port: " << fServer->GetPort();
+
 
   //---------------------------------------------------------------------------------------------
   // Start mDNS Service
   fmdns.setServiceHostname(services.Service);
   fmdns.setServicePort(fServer->GetPort());
-  fmdns.setServiceName("AirForce1"); // XXX TODO: ServiceNam
+  fmdns.setServiceName("_mvrxchange._tcp.local."); // XXX TODO: ServiceNam
   fmdns.startService();
 
   return kVCOMError_NoError;
@@ -66,7 +68,7 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::LeaveRemoteService()
   return kVCOMError_NoError;
 }
 
-VCOMError VectorworksMVR::CMVRxchangeServiceImpl::OnMessage(MVRxchangeMessageHandler& messageHandler)
+VCOMError VectorworksMVR::CMVRxchangeServiceImpl::OnMessage(OnMessageArgs& messageHandler)
 {
   return kVCOMError_NoError;
 }
@@ -96,7 +98,9 @@ void CMVRxchangeServiceImpl::TCP_Start()
   {
     TCP_Stop();
   }
-  
+
+  tcp::endpoint endpoint(tcp::v4(), 0);
+  fServer = new MVRxchangeNetwork::MVRxchangeServer(fServer_IO_Context, endpoint);
   fServer_Running = true;
   fServer_Thread = std::thread(&CMVRxchangeServiceImpl::TCP_ServerNetworksThread, this);
 
@@ -115,8 +119,7 @@ void CMVRxchangeServiceImpl::TCP_Stop()
 
 void CMVRxchangeServiceImpl::TCP_ServerNetworksThread()
 {
-  tcp::endpoint endpoint(tcp::v4(), 0);
-  fServer = new MVRxchangeNetwork::MVRxchangeServer(fServer_IO_Context, endpoint);
+  
   fServer_IO_Context.run();
 }
 
@@ -140,5 +143,13 @@ void CMVRxchangeServiceImpl::SendMessageToLocalNetworks(const TXString& ip, cons
 
 std::vector<MVRxchangeGoupMember> CMVRxchangeServiceImpl::GetMembersOfService(const ConnectToLocalServiceArgs& services)
 {
-    return std::vector<MVRxchangeGoupMember>(); // XXX implement
+  std::vector<MVRxchangeGoupMember> list;
+
+  MVRxchangeGoupMember member;
+  member.IP   = "172.16.0.98";
+  member.Port = "16166";
+
+  list.push_back(member);
+
+  return list; // XXX implement
 }
