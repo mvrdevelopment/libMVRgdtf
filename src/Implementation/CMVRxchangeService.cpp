@@ -70,6 +70,8 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::LeaveRemoteService()
 
 VCOMError VectorworksMVR::CMVRxchangeServiceImpl::OnMessage(OnMessageArgs& messageHandler)
 {
+  fCallBacks[(void*)messageHandler.Callback] = messageHandler;
+  
   return kVCOMError_NoError;
 }
 
