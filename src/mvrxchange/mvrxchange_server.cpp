@@ -37,7 +37,7 @@ void MVRxchangeServer::DoAccept()
 }
 
 
-short MVRxchangeServer::GetPort() const
+uint16_t MVRxchangeServer::GetPort() const
 {
     return fPort;
 }
