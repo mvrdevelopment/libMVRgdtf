@@ -9,8 +9,8 @@
 
 VectorworksMVR::CMVRxchangeServiceImpl::CMVRxchangeServiceImpl()
 {
-  fServer_Running = false;
-  fServer         = nullptr;
+	fServer_Running = false;
+	fServer = nullptr;
 }
 
 VectorworksMVR::CMVRxchangeServiceImpl::~CMVRxchangeServiceImpl()
@@ -19,77 +19,81 @@ VectorworksMVR::CMVRxchangeServiceImpl::~CMVRxchangeServiceImpl()
 
 VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const ConnectToLocalServiceArgs& services)
 {
-  //---------------------------------------------------------------------------------------------
-  // Start TCP
-  this->TCP_Start();
+	//---------------------------------------------------------------------------------------------
+	// Start TCP
+	this->TCP_Start();
 
-  fMVRGroup = GetMembersOfService(services);
+	fMVRGroup = GetMembersOfService(services);
 
-  SendMessageArgs joinMessage;
-  joinMessage.Message.Type = MVRxchangeMessageType::MVR_JOIN;
-  this->Send_message(joinMessage);
+	SendMessageArgs joinMessage;
+	joinMessage.Message.Type = MVRxchangeMessageType::MVR_JOIN;
+	this->Send_message(joinMessage);
 
-  std::cout << "Port: " << fServer->GetPort() << std::endl;
+	std::cout << "Port: " << fServer->GetPort() << std::endl;
 
 
-  //---------------------------------------------------------------------------------------------
-  // Start mDNS Service
-  fmdns.setServiceHostname(services.Service);
-  fmdns.setServicePort(fServer->GetPort());
-  fmdns.setServiceName("_mvrxchange._tcp.local."); // XXX TODO: ServiceNam
-  fmdns.startService();
+	//---------------------------------------------------------------------------------------------
+	// Start mDNS Service
+	fmdns.setServiceHostname(services.Service);
+	fmdns.setServicePort(fServer->GetPort());
+	fmdns.setServiceName("_mvrxchange._tcp.local."); // XXX TODO: ServiceNam
+	fmdns.startService();
 
-  return kVCOMError_NoError;
+	return kVCOMError_NoError;
 }
 
 
 VCOMError VectorworksMVR::CMVRxchangeServiceImpl::LeaveLocalService()
 {
-  this->TCP_Stop();
+	this->TCP_Stop();
 
 
-  return kVCOMError_NoError;
+	return kVCOMError_NoError;
 }
 
 VCOMError VCOM_CALLTYPE VectorworksMVR::CMVRxchangeServiceImpl::GetLocalServices(GetLocalServicesArgs& arg)
 {
-  arg.CountServices = 0;
-    return kVCOMError_Failed; // XXX Implement
+	arg.CountServices = 0;
+
+
+
+
+	return kVCOMError_Failed; // XXX Implement
 }
 
 
 VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToRemoteService(const ConnectToRemoteServiceArgs& service)
 {
-  return kVCOMError_NoError;
+	return kVCOMError_NoError;
 }
 
 
 VCOMError VectorworksMVR::CMVRxchangeServiceImpl::LeaveRemoteService()
 {
-  return kVCOMError_NoError;
+	return kVCOMError_NoError;
 }
 
 VCOMError VectorworksMVR::CMVRxchangeServiceImpl::OnMessage(OnMessageArgs& messageHandler)
 {
-  fCallBack = messageHandler;
+	fCallBack = messageHandler;
 
-  return kVCOMError_NoError;
+	return kVCOMError_NoError;
 }
 
 VCOMError VectorworksMVR::CMVRxchangeServiceImpl::Send_message(const SendMessageArgs& messageHandler)
 {
-  //---------------------------------------------------------------------------------------------
-  // Start mDNS Service
-  {
-    MVRxchangeNetwork::MVRxchangePacket msg;
-    msg.FromExternalMessage(messageHandler.Message);
-    for(const auto& e : fMVRGroup)
-    {
-      SendMessageToLocalNetworks(e.IP, e.Name, msg);
-    }
-  }
+	//---------------------------------------------------------------------------------------------
+	// Start mDNS Service
+	{
+		MVRxchangeNetwork::MVRxchangePacket msg;
+		msg.FromExternalMessage(messageHandler.Message);
+		for (const auto& e : fMVRGroup)
+		{
+			SendMessageToLocalNetworks(e.IP, e.Name, msg);
+		}
+	}
 
-  return kVCOMError_NoError;
+	return kVCOMError_NoError;
 }
 
 //---------------------------------------------------------------------------
@@ -97,73 +101,73 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::Send_message(const SendMessage
 
 void CMVRxchangeServiceImpl::TCP_Start()
 {
-  if(fServer_Running)
-  {
-    TCP_Stop();
-  }
+	if (fServer_Running)
+	{
+		TCP_Stop();
+	}
 
-  tcp::endpoint endpoint(tcp::v4(), 0);
-  fServer = new MVRxchangeNetwork::MVRxchangeServer(fServer_IO_Context, endpoint, this);
-  fServer_Running = true;
-  fServer_Thread = std::thread(&CMVRxchangeServiceImpl::TCP_ServerNetworksThread, this);
+	tcp::endpoint endpoint(tcp::v4(), 0);
+	fServer = new MVRxchangeNetwork::MVRxchangeServer(fServer_IO_Context, endpoint, this);
+	fServer_Running = true;
+	fServer_Thread = std::thread(&CMVRxchangeServiceImpl::TCP_ServerNetworksThread, this);
 
 }
 
 
 void CMVRxchangeServiceImpl::TCP_Stop()
 {
-  if(fServer_Thread.joinable())
-  {
-      fServer_IO_Context.stop();
-      fServer_Thread.join();
-  }
-  fServer_Running = false;
+	if (fServer_Thread.joinable())
+	{
+		fServer_IO_Context.stop();
+		fServer_Thread.join();
+	}
+	fServer_Running = false;
 }
 
 void CMVRxchangeServiceImpl::TCP_ServerNetworksThread()
 {
-  
-  fServer_IO_Context.run();
+
+	fServer_IO_Context.run();
 }
 
-IMVRxchangeService::IMVRxchangeMessage CMVRxchangeServiceImpl::TCP_OnIncommingMessage(const IMVRxchangeService::IMVRxchangeMessage& in )
+IMVRxchangeService::IMVRxchangeMessage CMVRxchangeServiceImpl::TCP_OnIncommingMessage(const IMVRxchangeService::IMVRxchangeMessage& in)
 {
-  IMVRxchangeService::IMVRxchangeMessage empty;
+	IMVRxchangeService::IMVRxchangeMessage empty;
 
-  if(fCallBack.Callback)
-  {
-    empty = (*fCallBack.Callback)(in, fCallBack.Context);
-  }
+	if (fCallBack.Callback)
+	{
+		empty = (*fCallBack.Callback)(in, fCallBack.Context);
+	}
 
-  return empty;
+	return empty;
 }
 
 
 void CMVRxchangeServiceImpl::SendMessageToLocalNetworks(const TXString& ip, const TXString& port, const MVRxchangeNetwork::MVRxchangePacket& msg)
 {
-  boost::asio::io_context io_context;
+	boost::asio::io_context io_context;
 
-  tcp::resolver resolver(io_context);
-  auto endpoints = resolver.resolve(ip.GetCharPtr(), port.GetCharPtr());
+	tcp::resolver resolver(io_context);
+	auto endpoints = resolver.resolve(ip.GetCharPtr(), port.GetCharPtr());
 
-  MVRxchangeNetwork::MVRxchangeClient c (io_context, endpoints);
-  std::thread t = std::thread([&io_context](){ io_context.run(); });
+	MVRxchangeNetwork::MVRxchangeClient c(io_context, endpoints);
+	std::thread t = std::thread([&io_context]() { io_context.run(); });
 
-  c.Deliver(msg);
-  c.Close();
-  t.join();
+	c.Deliver(msg);
+	c.Close();
+	t.join();
 
 }
 
 std::vector<MVRxchangeGoupMember> CMVRxchangeServiceImpl::GetMembersOfService(const ConnectToLocalServiceArgs& services)
 {
-  std::vector<MVRxchangeGoupMember> list;
+	std::vector<MVRxchangeGoupMember> list;
 
-  MVRxchangeGoupMember member;
-  member.IP   = "172.16.0.98";
-  member.Port = "96";
+	MVRxchangeGoupMember member;
+	member.IP = "172.16.0.98";
+	member.Port = "96";
 
-  list.push_back(member);
+	list.push_back(member);
 
-  return list; // XXX implement
+	return list; // XXX implement
 }
