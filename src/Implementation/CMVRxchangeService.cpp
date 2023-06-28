@@ -110,9 +110,7 @@ void CMVRxchangeServiceImpl::TCP_Start()
 	fServer = new MVRxchangeNetwork::MVRxchangeServer(fServer_IO_Context, endpoint, this);
 	fServer_Running = true;
 	fServer_Thread = std::thread(&CMVRxchangeServiceImpl::TCP_ServerNetworksThread, this);
-
 }
-
 
 void CMVRxchangeServiceImpl::TCP_Stop()
 {
@@ -156,7 +154,6 @@ void CMVRxchangeServiceImpl::SendMessageToLocalNetworks(const TXString& ip, cons
 	c.Deliver(msg);
 	c.Close();
 	t.join();
-
 }
 
 std::vector<MVRxchangeGoupMember> CMVRxchangeServiceImpl::GetMembersOfService(const ConnectToLocalServiceArgs& services)
