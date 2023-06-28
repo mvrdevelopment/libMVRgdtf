@@ -4,13 +4,15 @@
 
 #include "mvrxchange_prefix.h"
 #include "mvrxchange_client.h"
+#include "Implementation/CMVRxchangeService.h"
 
 
 using namespace MVRxchangeNetwork;
 
-MVRxchangeClient::MVRxchangeClient(boost::asio::io_context& io_context, const tcp::resolver::results_type& endpoints)
+MVRxchangeClient::MVRxchangeClient(boost::asio::io_context& io_context, const tcp::resolver::results_type& endpoints, CMVRxchangeServiceImpl* impl)
     : fIo_context(io_context),
-      fSocket(io_context)
+      fSocket(io_context),
+      fImpl(impl)
 {
     DoConnect(endpoints);
 }
@@ -30,7 +32,11 @@ void MVRxchangeClient::Deliver(const MVRxchangePacket& msg)
 
 void MVRxchangeClient::Close()
 {
-    boost::asio::post(fIo_context, [this]() { fSocket.close(); });
+    boost::asio::post(fIo_context, [this]()
+                      {
+        fSocket.close();
+        
+    });
 }
 
 void MVRxchangeClient::DoConnect(const tcp::resolver::results_type& endpoints)
@@ -56,6 +62,16 @@ void MVRxchangeClient::DoReadHeader()
             if(fRead_msg.DecodeHeader())
             {
                 DoReadBody();
+                
+                IMVRxchangeService::IMVRxchangeMessage out;
+                fRead_msg.ToExternalMessage(out);
+
+                IMVRxchangeService::IMVRxchangeMessage in = fImpl->TCP_OnIncommingMessage(out);
+
+                MVRxchangePacket in_msg;
+                in_msg.FromExternalMessage(in);
+                Deliver(in_msg);
+
             }
         }
         else

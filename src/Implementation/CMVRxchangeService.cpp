@@ -148,7 +148,7 @@ void CMVRxchangeServiceImpl::SendMessageToLocalNetworks(const TXString& ip, cons
 	tcp::resolver resolver(io_context);
 	auto endpoints = resolver.resolve(ip.GetCharPtr(), port.GetCharPtr());
 
-	MVRxchangeNetwork::MVRxchangeClient c(io_context, endpoints);
+	MVRxchangeNetwork::MVRxchangeClient c(io_context, endpoints, this);
 	std::thread t = std::thread([&io_context]() { io_context.run(); });
 
 	c.Deliver(msg);
