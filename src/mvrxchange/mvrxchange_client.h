@@ -12,7 +12,7 @@ namespace MVRxchangeNetwork
     class MVRxchangeClient
     {
     public:
-    MVRxchangeClient(boost::asio::io_context& io_context, const tcp::resolver::results_type& endpoints);
+    MVRxchangeClient(boost::asio::io_context& io_context, const tcp::resolver::results_type& endpoints, CMVRxchangeServiceImpl* impl);
 
     virtual void Deliver(const MVRxchangePacket& msg);
     void         Close();
@@ -24,6 +24,7 @@ namespace MVRxchangeNetwork
     void DoWrite();
 
     private:
+    CMVRxchangeServiceImpl*   fImpl;
     boost::asio::io_context&  fIo_context;
     tcp::socket               fSocket;
     MVRxchangePacket          fRead_msg;
