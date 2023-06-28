@@ -13,6 +13,8 @@ MVRxchangeServer::MVRxchangeServer(boost::asio::io_context& io_context, const tc
 {
     DoAccept();
 
+    std::cout << "Port: " << fAcceptor.local_endpoint().port() << std::endl;
+
     fPort = fAcceptor.local_endpoint().port();
 }
 

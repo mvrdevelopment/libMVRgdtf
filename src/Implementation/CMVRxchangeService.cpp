@@ -29,7 +29,7 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
   joinMessage.Message.Type = MVRxchangeMessageType::MVR_JOIN;
   this->Send_message(joinMessage);
 
-  std::cout << "Port: " << fServer->GetPort();
+  std::cout << "Port: " << fServer->GetPort() << std::endl;
 
 
   //---------------------------------------------------------------------------------------------
@@ -161,7 +161,7 @@ std::vector<MVRxchangeGoupMember> CMVRxchangeServiceImpl::GetMembersOfService(co
 
   MVRxchangeGoupMember member;
   member.IP   = "172.16.0.98";
-  member.Port = "16166";
+  member.Port = "96";
 
   list.push_back(member);
 
