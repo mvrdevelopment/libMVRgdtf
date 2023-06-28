@@ -1789,18 +1789,19 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		 */
         virtual VCOMError VCOM_CALLTYPE     LeaveLocalService() = 0;
 
-		struct GetLocalServicesArgs
-		{
-			ConnectToLocalServiceArgs** 	Service;
-			size_t 							CountServices;
-		};
+		//struct GetLocalServicesArgs
+		//{
+		//	ConnectToLocalServiceArgs** 	Service;
+		//	size_t 							CountServices;
+		//};
 		/**
 		 * @brief Get the local services that are currently available
 		 * 
 		 * @param service 
 		 * @return VCOMError 
 		 */
-        virtual VCOMError VCOM_CALLTYPE     GetLocalServices(GetLocalServicesArgs& arg) = 0;
+		virtual VCOMError VCOM_CALLTYPE     QueryLocalServices(size_t& out_Count) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetLocalServiceAt(size_t index, MvrString& outLocalService) = 0;
         
 		struct ConnectToRemoteServiceArgs
 		{

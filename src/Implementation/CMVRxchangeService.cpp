@@ -51,14 +51,43 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::LeaveLocalService()
 	return kVCOMError_NoError;
 }
 
-VCOMError VCOM_CALLTYPE VectorworksMVR::CMVRxchangeServiceImpl::GetLocalServices(GetLocalServicesArgs& arg)
+
+VCOMError VCOM_CALLTYPE  CMVRxchangeServiceImpl::QueryLocalServices(size_t& out_Count)
 {
-	arg.CountServices = 0;
+	fQueryLocalServucesResult.clear();
+
+	mdns_cpp::mDNS mdns;
+
+	auto query_res = mdns.executeQuery2(MVRXChange_Service);
+
+	if (query_res.size())
+	{
+		return kVCOMError_Failed;
+	}
+
+	for (auto& r : query_res) {
+		ConnectToLocalServiceArgs localServ;
+		localServ.Service = r.hostNam;
+
+		fQueryLocalServucesResult.push_back(localServ);
+	}
+
+	out_Count = fQueryLocalServucesResult.size();
+
+	return kVCOMError_NoError;
+}
 
 
+VCOMError VCOM_CALLTYPE VectorworksMVR::CMVRxchangeServiceImpl::GetLocalServiceAt(size_t index, MvrString& outLocalService)
+{
+	if ( ! fQueryLocalServucesResult.size())
+	{
+		return kVCOMError_Failed;
+	}
 
+	outLocalService = fQueryLocalServucesResult[index].Service.c_str();
 
-	return kVCOMError_Failed; // XXX Implement
+	return kVCOMError_NoError;
 }
 
 
