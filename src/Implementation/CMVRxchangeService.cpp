@@ -3,6 +3,7 @@
 //-----------------------------------------------------------------------------
 #include "Prefix/StdAfx.h"
 #include "CMVRxchangeService.h"
+#include "../mvrxchange/mvrxchange_prefix.h"
 #include "../mvrxchange/mvrxchange_client.h"
 
 
@@ -70,7 +71,7 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::LeaveRemoteService()
 
 VCOMError VectorworksMVR::CMVRxchangeServiceImpl::OnMessage(OnMessageArgs& messageHandler)
 {
-  fCallBacks[(void*)messageHandler.Callback] = messageHandler;
+  fCallBack = messageHandler;
 
   return kVCOMError_NoError;
 }
@@ -80,7 +81,7 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::Send_message(const SendMessage
   //---------------------------------------------------------------------------------------------
   // Start mDNS Service
   {
-    MVRxchangeNetwork::MVRxchangeMessage msg;
+    MVRxchangeNetwork::MVRxchangePacket msg;
     msg.FromExternalMessage(messageHandler.Message);
     for(const auto& e : fMVRGroup)
     {
@@ -125,9 +126,20 @@ void CMVRxchangeServiceImpl::TCP_ServerNetworksThread()
   fServer_IO_Context.run();
 }
 
+IMVRxchangeService::IMVRxchangeMessage CMVRxchangeServiceImpl::TCP_OnIncommingMessage(const IMVRxchangeService::IMVRxchangeMessage& in )
+{
+  IMVRxchangeService::IMVRxchangeMessage empty;
+
+  if(fCallBack.Callback)
+  {
+    empty = (*fCallBack.Callback)(in, fCallBack.Context);
+  }
+
+  return empty;
+}
 
 
-void CMVRxchangeServiceImpl::SendMessageToLocalNetworks(const TXString& ip, const TXString& port, const MVRxchangeNetwork::MVRxchangeMessage& msg)
+void CMVRxchangeServiceImpl::SendMessageToLocalNetworks(const TXString& ip, const TXString& port, const MVRxchangeNetwork::MVRxchangePacket& msg)
 {
   boost::asio::io_context io_context;
 

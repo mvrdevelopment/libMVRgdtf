@@ -40,7 +40,7 @@ short MVRxchangeServer::GetPort() const
     return fPort;
 }
 
-void MVRxchangeServer::Deliver(const MVRxchangeNetwork::MVRxchangeMessage& msg)
+void MVRxchangeServer::Deliver(const MVRxchangePacket& msg)
 {
     // XXX TODO
 }

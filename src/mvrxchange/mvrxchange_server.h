@@ -15,7 +15,7 @@ namespace MVRxchangeNetwork
         MVRxchangeServer(boost::asio::io_context& io_context, const tcp::endpoint& endpoint, CMVRxchangeServiceImpl* impl);
 
     public:            
-        virtual void Deliver(const MVRxchangeMessage& msg);
+        virtual void Deliver(const MVRxchangePacket& msg);
         short GetPort() const;
 
     private:

@@ -8,7 +8,7 @@
 using namespace MVRxchangeNetwork;
 
 
-MVRxchangeMessage::MVRxchangeMessage()
+MVRxchangePacket::MVRxchangePacket()
 {
     fFlag       = kMVR_Package_Flag;
     fNumber     = 0;
@@ -20,7 +20,7 @@ MVRxchangeMessage::MVRxchangeMessage()
     fReferenceCount = new size_t(1);
 }
 
-MVRxchangeMessage::MVRxchangeMessage(const MVRxchangeMessage& ref)
+MVRxchangePacket::MVRxchangePacket(const MVRxchangePacket& ref)
 {
     fBodyLength = ref.fBodyLength;
     fData       = ref.fData;
@@ -32,7 +32,7 @@ MVRxchangeMessage::MVRxchangeMessage(const MVRxchangeMessage& ref)
 }
 
 
-MVRxchangeMessage::~MVRxchangeMessage()
+MVRxchangePacket::~MVRxchangePacket()
 {
     (*fReferenceCount)--;
     if (*fReferenceCount == 0)
@@ -46,44 +46,44 @@ MVRxchangeMessage::~MVRxchangeMessage()
    
 }
 
-const char* MVRxchangeMessage::GetData() const
+const char* MVRxchangePacket::GetData() const
 {
     return fData->GetData();
 }
 
-char* MVRxchangeMessage::GetData()
+char* MVRxchangePacket::GetData()
 {
     return fData->GetData();
 }
 
-size_t MVRxchangeMessage::GetLength() const
+size_t MVRxchangePacket::GetLength() const
 {
     return total_header_length + fBodyLength;
 }
 
-const char* MVRxchangeMessage::GetBody() const
+const char* MVRxchangePacket::GetBody() const
 {
     return fData->GetData() + total_header_length; // XXX MS verify 
 }
 
-char* MVRxchangeMessage::GetBody()
+char* MVRxchangePacket::GetBody()
 {
     return fData->GetData() + total_header_length; // XXX MS verify 
 }
 
-size_t MVRxchangeMessage::GetBodyLength() const
+size_t MVRxchangePacket::GetBodyLength() const
 {
     return fBodyLength;
 }
 
-void MVRxchangeMessage::SetBody(size_t length, char* buffer)
+void MVRxchangePacket::SetBody(size_t length, char* buffer)
 {
     fBodyLength = length;
     fData->GrowTo(total_header_length + length);
     memcpy(GetBody(), buffer, length);
 }
 
-bool MVRxchangeMessage::DecodeHeader()
+bool MVRxchangePacket::DecodeHeader()
 {
     memcpy(&fFlag, fData, header_flag);
     if (fFlag != kMVR_Package_Flag) { return false; }
@@ -100,7 +100,7 @@ bool MVRxchangeMessage::DecodeHeader()
     return true;
 }
 
-void MVRxchangeMessage::EncodeHeader()
+void MVRxchangePacket::EncodeHeader()
 {
     memcpy(fData,                                                                               &fFlag,                 header_flag);
     memcpy(fData + header_flag,                                                                 &fVersion,              header_version);
@@ -110,7 +110,7 @@ void MVRxchangeMessage::EncodeHeader()
     memcpy(fData + header_flag + header_version + header_number + header_count + header_type,   &fBodyLength,           header_payload_length);
 }
 
-void MVRxchangeMessage::FromExternalMessage(const VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage& in)
+void MVRxchangePacket::FromExternalMessage(const VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage& in)
 {
     nlohmann::json payload = nlohmann::json::object();
 
@@ -141,7 +141,7 @@ void MVRxchangeMessage::FromExternalMessage(const VectorworksMVR::IMVRxchangeSer
 
 }
 
-void MVRxchangeMessage::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage& in)
+void MVRxchangePacket::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage& in)
 {
     if(fType == kMVR_Package_JSON_TYPE)
     {

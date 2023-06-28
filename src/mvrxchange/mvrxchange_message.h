@@ -8,7 +8,7 @@
 
 namespace MVRxchangeNetwork
 {
-    class MVRxchangeMessage
+    class MVRxchangePacket
     {
         private:
             enum { header_flag            = sizeof(uint32_t) };
@@ -21,10 +21,10 @@ namespace MVRxchangeNetwork
             enum { total_header_length      = header_flag + header_version + header_number + header_count + header_type + header_payload_length };
 
         public:
-            MVRxchangeMessage();
-            MVRxchangeMessage(const MVRxchangeMessage& ref );
-            MVRxchangeMessage(const MVRxchangeMessage* ref ) = delete;
-            ~MVRxchangeMessage();
+            MVRxchangePacket();
+            MVRxchangePacket(const MVRxchangePacket& ref );
+            MVRxchangePacket(const MVRxchangePacket* ref ) = delete;
+            ~MVRxchangePacket();
 
             const char*     GetData() const;
             char*           GetData();
@@ -53,5 +53,5 @@ namespace MVRxchangeNetwork
             MVRxchangeNetwork::MVRxchangeDynamicBuffer*  fData;
     };
     
-    using MVRxchangeMessageDeque = std::deque<MVRxchangeMessage>;    
+    using MVRxchangePacketDeque = std::deque<MVRxchangePacket>;    
 }

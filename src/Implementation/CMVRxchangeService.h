@@ -7,7 +7,6 @@
 #include "mdns_cpp/mdns.hpp"
 #include "../mvrxchange/mvrxchange_prefix.h"
 #include "../mvrxchange/mvrxchange_server.h"
-#include <unordered_map>
 
 
 namespace VectorworksMVR
@@ -50,15 +49,21 @@ namespace VectorworksMVR
 		void TCP_Start();
 		void TCP_Stop();
 		void TCP_ServerNetworksThread();
+	public:
+		IMVRxchangeMessage TCP_OnIncommingMessage(const IMVRxchangeMessage& );
 
+	private:
 		std::vector<MVRxchangeGoupMember>			fMVRGroup;
 
 
-		std::unordered_map<void*, OnMessageArgs>   fCallBacks;
+		
+
+
+		OnMessageArgs  fCallBack;
 		//---------------------------------------------------------------------------
 		// TCP Client - Local Network mode
 
-		void SendMessageToLocalNetworks(const TXString& ip, const TXString& port, const MVRxchangeNetwork::MVRxchangeMessage& msg);
+		void SendMessageToLocalNetworks(const TXString& ip, const TXString& port, const MVRxchangeNetwork::MVRxchangePacket& msg);
 
 
 		//---------------------------------------------------------------------------

@@ -4,6 +4,8 @@
 
 #include "mvrxchange_prefix.h"
 #include "mvrxchange_session.h"
+#include "Implementation/CMVRxchangeService.h"
+
 
 using namespace MVRxchangeNetwork;
 
@@ -19,7 +21,7 @@ void MVRxchangeSession::Start()
     DoReadHeader();
 }
 
-void MVRxchangeSession::Deliver(const MVRxchangeMessage& msg)
+void MVRxchangeSession::Deliver(const MVRxchangePacket& msg)
 {
     bool write_in_progress = !fwrite_msgs.empty();
     fwrite_msgs.push_back(msg);
@@ -32,12 +34,21 @@ void MVRxchangeSession::Deliver(const MVRxchangeMessage& msg)
 void MVRxchangeSession::DoReadHeader()
 {
     auto self(shared_from_this());
-    boost::asio::async_read(fSocket,boost::asio::buffer(freadmsg.GetData(), MVRxchangeMessage::total_header_length),
+    boost::asio::async_read(fSocket,boost::asio::buffer(freadmsg.GetData(), MVRxchangePacket::total_header_length),
     [this, self](boost::system::error_code ec, std::size_t length)
     {
         if (!ec && freadmsg.DecodeHeader())
         {
             DoReadBody();
+
+            IMVRxchangeService::IMVRxchangeMessage out;
+
+            IMVRxchangeService::IMVRxchangeMessage in = fImpl->TCP_OnIncommingMessage(out);
+
+            MVRxchangePacket in_msg;
+            in_msg.FromExternalMessage(in);
+            Deliver(in_msg);
+
         }
         else
         {
@@ -67,7 +78,7 @@ void MVRxchangeSession::DoWrite()
 {
     auto self(shared_from_this());
 
-    MVRxchangeMessage& msg = fwrite_msgs.front();
+    MVRxchangePacket& msg = fwrite_msgs.front();
 
 
     boost::asio::async_write(fSocket, boost::asio::buffer(msg.GetData(), msg.GetLength()),

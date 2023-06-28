@@ -15,7 +15,7 @@ MVRxchangeClient::MVRxchangeClient(boost::asio::io_context& io_context, const tc
     DoConnect(endpoints);
 }
 
-void MVRxchangeClient::Deliver(const MVRxchangeMessage& msg)
+void MVRxchangeClient::Deliver(const MVRxchangePacket& msg)
 {
     boost::asio::post(fIo_context, [this, msg]()
     {
@@ -48,7 +48,7 @@ void MVRxchangeClient::DoConnect(const tcp::resolver::results_type& endpoints)
 void MVRxchangeClient::DoReadHeader()
 {
     boost::asio::async_read(fSocket,
-    boost::asio::buffer(fRead_msg.GetData(), MVRxchangeMessage::total_header_length),
+    boost::asio::buffer(fRead_msg.GetData(), MVRxchangePacket::total_header_length),
     [this](boost::system::error_code ec, std::size_t /*length*/)
     {
         if (!ec)

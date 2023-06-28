@@ -12,6 +12,8 @@ namespace VectorworksMVR
     class CMVRxchangeServiceImpl;
 }
 
+using namespace VectorworksMVR;
+
 using namespace boost::asio;
 using ip::tcp;
 
