@@ -12,7 +12,7 @@ namespace MVRxchangeNetwork
     class MVRxchangeServer
     {
     public:
-        MVRxchangeServer(boost::asio::io_context& io_context, const tcp::endpoint& endpoint);
+        MVRxchangeServer(boost::asio::io_context& io_context, const tcp::endpoint& endpoint, CMVRxchangeServiceImpl* impl);
 
     public:            
         virtual void Deliver(const MVRxchangeMessage& msg);
@@ -21,8 +21,9 @@ namespace MVRxchangeNetwork
     private:
         void DoAccept();
 
-        tcp::acceptor       fAcceptor;
-        short               fPort;
+        CMVRxchangeServiceImpl*         fImpl;
+        tcp::acceptor                   fAcceptor;
+        short                           fPort;
 
     };
 }

@@ -7,6 +7,7 @@
 #include "mdns_cpp/mdns.hpp"
 #include "../mvrxchange/mvrxchange_prefix.h"
 #include "../mvrxchange/mvrxchange_server.h"
+#include <unordered_map>
 
 
 namespace VectorworksMVR
@@ -33,7 +34,7 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE     ConnectToRemoteService(const ConnectToRemoteServiceArgs& service);
 		virtual VCOMError VCOM_CALLTYPE     LeaveRemoteService();
 
-		virtual VCOMError VCOM_CALLTYPE     OnMessage(MVRxchangeMessageHandler& messageHandler);
+		virtual VCOMError VCOM_CALLTYPE     OnMessage(OnMessageArgs& messageHandler);
 		virtual VCOMError VCOM_CALLTYPE     Send_message(const SendMessageArgs& messageHandler);
 
 	private:
@@ -52,6 +53,8 @@ namespace VectorworksMVR
 
 		std::vector<MVRxchangeGoupMember>			fMVRGroup;
 
+
+		std::unordered_map<void*, OnMessageArgs>   fCallBacks;
 		//---------------------------------------------------------------------------
 		// TCP Client - Local Network mode
 

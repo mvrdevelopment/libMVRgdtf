@@ -7,8 +7,9 @@
 
 using namespace MVRxchangeNetwork;
 
-MVRxchangeServer::MVRxchangeServer(boost::asio::io_context& io_context, const tcp::endpoint& endpoint) 
-    : fAcceptor(io_context, endpoint)
+MVRxchangeServer::MVRxchangeServer(boost::asio::io_context& io_context, const tcp::endpoint& endpoint, CMVRxchangeServiceImpl* impl) 
+    : fAcceptor(io_context, endpoint),
+      fImpl(impl)
 {
     DoAccept();
 
@@ -23,7 +24,7 @@ void MVRxchangeServer::DoAccept()
         if (!ec)
         {
             // XXX whats the point of making a shared pointer that directly leaves scop. Then just intstiate an object.
-            std::make_shared<MVRxchangeSession>(std::move(socket))->Start();
+            std::make_shared<MVRxchangeSession>(std::move(socket), fImpl)->Start();
         }
 
         DoAccept();

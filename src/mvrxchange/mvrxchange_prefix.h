@@ -7,6 +7,11 @@
 #include <boost/asio.hpp>
 #include <deque>
 
+namespace VectorworksMVR
+{
+    class CMVRxchangeServiceImpl;
+}
+
 using namespace boost::asio;
 using ip::tcp;
 
