@@ -1773,6 +1773,9 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		struct ConnectToLocalServiceArgs
 		{
 			MVRxchangeString Service;
+			MVRxchangeString IPv4;
+			MVRxchangeString IPv6;
+			uint16_t         port;
 		};
 		/**
 		 * @brief Connects to a given Local Network Mode MVR-xchange system
@@ -1801,7 +1804,7 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		 * @return VCOMError 
 		 */
 		virtual VCOMError VCOM_CALLTYPE     QueryLocalServices(size_t& out_Count) = 0;
-        virtual VCOMError VCOM_CALLTYPE     GetLocalServiceAt(size_t index, MvrString& outLocalService) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetLocalServiceAt(size_t index, ConnectToLocalServiceArgs& outLocalService) = 0;
         
 		struct ConnectToRemoteServiceArgs
 		{

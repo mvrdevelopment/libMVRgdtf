@@ -30,7 +30,7 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     LeaveLocalService();
 		
 		virtual VCOMError VCOM_CALLTYPE		QueryLocalServices(size_t& out_Count);        
-		virtual VCOMError VCOM_CALLTYPE     GetLocalServiceAt(size_t index, MvrString& outLocalService);
+		virtual VCOMError VCOM_CALLTYPE     GetLocalServiceAt(size_t index, ConnectToLocalServiceArgs& outLocalService);
 
 		virtual VCOMError VCOM_CALLTYPE     ConnectToRemoteService(const ConnectToRemoteServiceArgs& service);
 		virtual VCOMError VCOM_CALLTYPE     LeaveRemoteService();
@@ -40,7 +40,7 @@ namespace VectorworksMVR
 
 	private:
 		mdns_cpp::mDNS 			fmdns;
-		std::vector<ConnectToLocalServiceArgs> fQueryLocalServucesResult;
+		std::vector<ConnectToLocalServiceArgs> fQueryLocalServicesResult;
 
 		//---------------------------------------------------------------------------
 		// TCP Server - Local Network mode
@@ -57,10 +57,6 @@ namespace VectorworksMVR
 
 	private:
 		std::vector<MVRxchangeGoupMember>			fMVRGroup;
-
-
-		
-
 
 		OnMessageArgs  fCallBack;
 		//---------------------------------------------------------------------------

@@ -54,7 +54,7 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::LeaveLocalService()
 
 VCOMError VCOM_CALLTYPE  CMVRxchangeServiceImpl::QueryLocalServices(size_t& out_Count)
 {
-	fQueryLocalServucesResult.clear();
+	fQueryLocalServicesResult.clear();
 
 	mdns_cpp::mDNS mdns;
 
@@ -68,24 +68,27 @@ VCOMError VCOM_CALLTYPE  CMVRxchangeServiceImpl::QueryLocalServices(size_t& out_
 	for (auto& r : query_res) {
 		ConnectToLocalServiceArgs localServ;
 		localServ.Service = r.hostNam;
+		localServ.IPv4 = r.ipV4_adress;
+		localServ.IPv6 = r.ipV6_adress;
+		localServ.port = r.port;
 
-		fQueryLocalServucesResult.push_back(localServ);
+		fQueryLocalServicesResult.push_back(localServ);
 	}
 
-	out_Count = fQueryLocalServucesResult.size();
+	out_Count = fQueryLocalServicesResult.size();
 
 	return kVCOMError_NoError;
 }
 
 
-VCOMError VCOM_CALLTYPE VectorworksMVR::CMVRxchangeServiceImpl::GetLocalServiceAt(size_t index, MvrString& outLocalService)
+VCOMError VCOM_CALLTYPE VectorworksMVR::CMVRxchangeServiceImpl::GetLocalServiceAt(size_t index, ConnectToLocalServiceArgs& outLocalService)
 {
-	if ( ! fQueryLocalServucesResult.size())
+	if ( ! fQueryLocalServicesResult.size())
 	{
 		return kVCOMError_Failed;
 	}
 
-	outLocalService = fQueryLocalServucesResult[index].Service.c_str();
+	outLocalService = fQueryLocalServicesResult[index];
 
 	return kVCOMError_NoError;
 }
