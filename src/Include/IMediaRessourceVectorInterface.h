@@ -1773,6 +1773,8 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		struct ConnectToLocalServiceArgs
 		{
 			MVRxchangeString Service;
+			MVRxchangeString IP;
+			MVRxchangeString Port;
 		};
 		/**
 		 * @brief Connects to a given Local Network Mode MVR-xchange system

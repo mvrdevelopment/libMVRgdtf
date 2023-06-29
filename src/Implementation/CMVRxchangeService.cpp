@@ -60,7 +60,7 @@ VCOMError VCOM_CALLTYPE  CMVRxchangeServiceImpl::QueryLocalServices(size_t& out_
 
 	auto query_res = mdns.executeQuery2(MVRXChange_Service);
 
-	if (query_res.size())
+	if (query_res.size() == 0)
 	{
 		return kVCOMError_Failed;
 	}
@@ -182,11 +182,15 @@ std::vector<MVRxchangeGoupMember> CMVRxchangeServiceImpl::GetMembersOfService(co
 {
 	std::vector<MVRxchangeGoupMember> list;
 
-	MVRxchangeGoupMember member;
-	member.IP = "172.16.0.98";
-	member.Port = "96";
+	for(const auto& e : fQueryLocalServucesResult)
+	{
+		MVRxchangeGoupMember member;
+		member.IP   = e.IP;
+		member.Port = e.Port;
+		list.push_back(member);
+	}
 
-	list.push_back(member);
 
-	return list; // XXX implement
+
+	return list;
 }
