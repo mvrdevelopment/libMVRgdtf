@@ -9,113 +9,123 @@
 
 using namespace MVRxchangeNetwork;
 
-MVRxchangeClient::MVRxchangeClient(boost::asio::io_context& io_context, const tcp::resolver::results_type& endpoints, CMVRxchangeServiceImpl* impl)
-    : fIo_context(io_context),
-      fSocket(io_context),
-      fImpl(impl)
+MVRxchangeClient::MVRxchangeClient(CMVRxchangeServiceImpl* impl, const MVRxchangePacket& packet) : fImpl(impl), fMsg_send(packet)
 {
-    DoConnect(endpoints);
+
 }
 
-void MVRxchangeClient::Deliver(const MVRxchangePacket& msg)
+bool MVRxchangeClient::ReadMessage(std::chrono::steady_clock::duration timeout)
 {
-    boost::asio::post(fIo_context, [this, msg]()
+    boost::system::error_code error;
+    std::size_t n = 0;
+    boost::asio::async_read(fSocket,
+    boost::asio::buffer(fMsg_ret.GetData(), MVRxchangePacket::total_header_length),
+    [&](const boost::system::error_code& result_error,
+        std::size_t result_n)
     {
-        bool write_in_progress = !fWrite_msgs.empty();
-        fWrite_msgs.push_back(msg);
-        if (!write_in_progress)
-        {
-            DoWrite();
-        }
+        error = result_error;
+        n = result_n;
     });
-}
 
-void MVRxchangeClient::Close()
+    // Run the operation until it completes, or until the timeout.
+    Run(timeout);
+
+    boost::asio::async_read(fSocket,
+    boost::asio::buffer(fMsg_ret.GetBody(), fMsg_ret.GetBodyLength()),
+    [&](const boost::system::error_code& result_error,
+        std::size_t result_n)
+    {
+        error = result_error;
+        n = result_n;
+    });
+
+    Run(timeout);
+
+    IMVRxchangeService::IMVRxchangeMessage out;
+    fMsg_ret.ToExternalMessage(out);
+    fImpl->TCP_OnIncommingMessage(out);
+    
+
+    // Determine whether the read completed successfully.
+    if (error)
+      throw std::system_error(error);
+
+    return n > 0;
+  }
+
+void MVRxchangeClient::WriteMessage(std::chrono::steady_clock::duration timeout)
+  {
+
+    // Start the asynchronous operation itself. The lambda that is used as a
+    // callback will update the error variable when the operation completes.
+    // The blocking_udp_client.cpp example shows how you can use std::bind
+    // rather than a lambda.
+    boost::system::error_code error;
+    boost::asio::async_write(fSocket, 
+    boost::asio::buffer(fMsg_send.GetData(), fMsg_send.GetLength()),
+    [&](const boost::system::error_code& result_error,
+        std::size_t /*result_n*/)
+    {
+        error = result_error;
+    });
+
+    // Run the operation until it completes, or until the timeout.
+    Run(timeout);
+
+
+    ReadMessage(timeout);
+
+    // Determine whether the read completed successfully.
+    if (error)
+      throw std::system_error(error);
+  }
+
+void MVRxchangeClient::Run(std::chrono::steady_clock::duration timeout)
 {
-    boost::asio::post(fIo_context, [this]()
-                      {
+    // Restart the io_context, as it may have been left in the "stopped" state
+    // by a previous operation.
+    fio_context.restart();
+
+    // Block until the asynchronous operation has completed, or timed out. If
+    // the pending asynchronous operation is a composed operation, the deadline
+    // applies to the entire operation, rather than individual operations on
+    // the socket.
+    fio_context.run_for(timeout);
+
+    // If the asynchronous operation completed successfully then the io_context
+    // would have been stopped due to Running out of work. If it was not
+    // stopped, then the io_context::Run_for call must have timed out.
+    if (!fio_context.stopped())
+    {
+        // Close the socket to cancel the outstanding asynchronous operation.
         fSocket.close();
-        
-    });
+
+        // Run the io_context again until the operation completes.
+        fio_context.run();
+    }
 }
 
-void MVRxchangeClient::DoConnect(const tcp::resolver::results_type& endpoints)
+void MVRxchangeClient::Connect(const std::string& host, const std::string& service, std::chrono::steady_clock::duration timeout)
 {
+    // Resolve the host name and service to a list of endpoints.
+    auto endpoints = tcp::resolver(fio_context).resolve(host, service);
+
+    // Start the asynchronous operation itself. The lambda that is used as a
+    // callback will update the error variable when the operation completes.
+    // The blocking_udp_client.cpp example shows how you can use std::bind
+    // rather than a lambda.
+    boost::system::error_code error;
     boost::asio::async_connect(fSocket, endpoints,
-    [this](boost::system::error_code ec, tcp::endpoint)
-    {
-        if (!ec)
+        [&](const boost::system::error_code& result_error,
+            const tcp::endpoint& /*result_endpoint*/)
         {
-            DoReadHeader();
-        }
-    });
-}
+            error = result_error;
+        });
 
-void MVRxchangeClient::DoReadHeader()
-{
-    boost::asio::async_read(fSocket,
-    boost::asio::buffer(fRead_msg.GetData(), MVRxchangePacket::total_header_length),
-    [this](boost::system::error_code ec, std::size_t /*length*/)
-    {
-        if (!ec)
-        {
-            if(fRead_msg.DecodeHeader())
-            {
-                DoReadBody();
-                
-                IMVRxchangeService::IMVRxchangeMessage out;
-                fRead_msg.ToExternalMessage(out);
+    // Run the operation until it completes, or until the timeout.
+    Run(timeout);
 
-                IMVRxchangeService::IMVRxchangeMessage in = fImpl->TCP_OnIncommingMessage(out);
-
-                MVRxchangePacket in_msg;
-                in_msg.FromExternalMessage(in);
-                Deliver(in_msg);
-
-            }
-        }
-        else
-        {
-            fSocket.close();
-        }
-    });
-}
-
-void MVRxchangeClient::DoReadBody()
-{
-    boost::asio::async_read(fSocket,
-    boost::asio::buffer(fRead_msg.GetBody(), fRead_msg.GetBodyLength()),
-    [this](boost::system::error_code ec, std::size_t /*length*/)
-    {
-        if (!ec)
-        {   
-            // TODO
-            DoReadHeader();
-        }
-        else
-        {
-            fSocket.close();
-        }
-    });
-}
-
-void MVRxchangeClient::DoWrite()
-{
-    boost::asio::async_write(fSocket,
-    boost::asio::buffer(fWrite_msgs.front().GetData(), fWrite_msgs.front().GetLength()),
-    [this](boost::system::error_code ec, std::size_t /*length*/)
-    {
-        if (!ec)
-        {
-            fWrite_msgs.pop_front();
-            if (!fWrite_msgs.empty())
-            {
-                DoWrite();
-            }
-        }
-        else
-        {
-            fSocket.close();
-        }
-    });
+// Determine whether a connection was successfully established.
+if (error)
+    throw std::system_error(error);
 }

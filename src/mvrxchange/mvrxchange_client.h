@@ -12,22 +12,20 @@ namespace MVRxchangeNetwork
     class MVRxchangeClient
     {
     public:
-    MVRxchangeClient(boost::asio::io_context& io_context, const tcp::resolver::results_type& endpoints, CMVRxchangeServiceImpl* impl);
+    MVRxchangeClient(CMVRxchangeServiceImpl* impl, const MVRxchangePacket& packet);
+    ~MVRxchangeClient();
 
-    virtual void Deliver(const MVRxchangePacket& msg);
-    void         Close();
-
-    private:
-    void DoConnect(const tcp::resolver::results_type& endpoints);
-    void DoReadHeader();
-    void DoReadBody();
-    void DoWrite();
+    void            Connect(const std::string& host, const std::string& service, std::chrono::steady_clock::duration timeout);
+    bool            ReadMessage(std::chrono::steady_clock::duration timeout);
+    void            WriteMessage(std::chrono::steady_clock::duration timeout);
 
     private:
+    void Run(std::chrono::steady_clock::duration timeout);
+
+    boost::asio::io_context   fio_context;
+    tcp::socket               fSocket{fio_context};
+    const MVRxchangePacket&   fMsg_send;
+    MVRxchangePacket          fMsg_ret;
     CMVRxchangeServiceImpl*   fImpl;
-    boost::asio::io_context&  fIo_context;
-    tcp::socket               fSocket;
-    MVRxchangePacket          fRead_msg;
-    MVRxchangePacketDeque     fWrite_msgs;
-    };
+};
 }

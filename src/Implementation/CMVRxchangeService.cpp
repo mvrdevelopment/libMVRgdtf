@@ -60,7 +60,7 @@ VCOMError VCOM_CALLTYPE  CMVRxchangeServiceImpl::QueryLocalServices(size_t& out_
 
 	auto query_res = mdns.executeQuery2(MVRXChange_Service);
 
-	if (query_res.size())
+	if (query_res.size() == 0)
 	{
 		return kVCOMError_Failed;
 	}
@@ -175,28 +175,25 @@ IMVRxchangeService::IMVRxchangeMessage CMVRxchangeServiceImpl::TCP_OnIncommingMe
 
 void CMVRxchangeServiceImpl::SendMessageToLocalNetworks(const TXString& ip, const TXString& port, const MVRxchangeNetwork::MVRxchangePacket& msg)
 {
-	boost::asio::io_context io_context;
+	MVRxchangeNetwork::MVRxchangeClient c (this, msg);
 
-	tcp::resolver resolver(io_context);
-	auto endpoints = resolver.resolve(ip.GetCharPtr(), port.GetCharPtr());
-
-	MVRxchangeNetwork::MVRxchangeClient c(io_context, endpoints, this);
-	std::thread t = std::thread([&io_context]() { io_context.run(); });
-
-	c.Deliver(msg);
-	c.Close();
-	t.join();
+	c.Connect(ip.GetStdString(), port.GetStdString(), std::chrono::seconds(10));
+	c.WriteMessage(std::chrono::seconds(10));
 }
 
 std::vector<MVRxchangeGoupMember> CMVRxchangeServiceImpl::GetMembersOfService(const ConnectToLocalServiceArgs& services)
 {
 	std::vector<MVRxchangeGoupMember> list;
 
-	MVRxchangeGoupMember member;
-	member.IP = "172.16.0.98";
-	member.Port = "96";
+	for(const auto& e : fQueryLocalServucesResult)
+	{
+		MVRxchangeGoupMember member;
+		member.IP   = e.IP;
+		member.Port = e.Port;
+		list.push_back(member);
+	}
 
-	list.push_back(member);
 
-	return list; // XXX implement
+
+	return list;
 }
