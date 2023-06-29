@@ -67,9 +67,10 @@ VCOMError VCOM_CALLTYPE  CMVRxchangeServiceImpl::QueryLocalServices(size_t& out_
 
 	for (auto& r : query_res) {
 		ConnectToLocalServiceArgs localServ;
-		localServ.Service = r.hostNam;
-		localServ.IPv4 = r.ipV4_adress;
-		localServ.IPv6 = r.ipV6_adress;
+
+		strcpy(localServ.Service, r.hostNam.c_str());		 
+		strcpy(localServ.IPv4, r.ipV4_adress.c_str());
+		strcpy(localServ.IPv6, r.ipV6_adress.c_str());
 		localServ.port = r.port;
 
 		fQueryLocalServicesResult.push_back(localServ);
