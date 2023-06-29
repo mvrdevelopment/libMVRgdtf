@@ -189,12 +189,10 @@ std::vector<MVRxchangeGoupMember> CMVRxchangeServiceImpl::GetMembersOfService(co
 	for(const auto& e : fQueryLocalServicesResult)
 	{
 		MVRxchangeGoupMember member;
-		member.IP   = e.IP;
-		member.Port = e.Port;
+		member.IP   = e.IPv4;
+		member.Port = e.port;
 		list.push_back(member);
 	}
-
-
 
 	return list;
 }
