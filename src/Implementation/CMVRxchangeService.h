@@ -14,7 +14,7 @@ namespace VectorworksMVR
 	struct MVRxchangeGoupMember
 	{
 		TXString IP;
-		TXString Port;
+		uint16_t Port;
 		TXString Name;
 	};
 	//----------------------------------------------------------------------------------------
