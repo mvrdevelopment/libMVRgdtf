@@ -186,7 +186,7 @@ std::vector<MVRxchangeGoupMember> CMVRxchangeServiceImpl::GetMembersOfService(co
 {
 	std::vector<MVRxchangeGoupMember> list;
 
-	for(const auto& e : fQueryLocalServucesResult)
+	for(const auto& e : fQueryLocalServicesResult)
 	{
 		MVRxchangeGoupMember member;
 		member.IP   = e.IP;
