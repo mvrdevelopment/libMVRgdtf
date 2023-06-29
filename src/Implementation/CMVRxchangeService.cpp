@@ -172,17 +172,10 @@ IMVRxchangeService::IMVRxchangeMessage CMVRxchangeServiceImpl::TCP_OnIncommingMe
 
 void CMVRxchangeServiceImpl::SendMessageToLocalNetworks(const TXString& ip, const TXString& port, const MVRxchangeNetwork::MVRxchangePacket& msg)
 {
-	boost::asio::io_context io_context;
+	MVRxchangeNetwork::MVRxchangeClient c (this, msg);
 
-	tcp::resolver resolver(io_context);
-	auto endpoints = resolver.resolve(ip.GetCharPtr(), port.GetCharPtr());
-
-	MVRxchangeNetwork::MVRxchangeClient c(io_context, endpoints, this);
-	std::thread t = std::thread([&io_context]() { io_context.run(); });
-
-	c.Deliver(msg);
-	c.Close();
-	t.join();
+	c.Connect(ip.GetStdString(), port.GetStdString(), std::chrono::seconds(10));
+	c.WriteMessage(std::chrono::seconds(10));
 }
 
 std::vector<MVRxchangeGoupMember> CMVRxchangeServiceImpl::GetMembersOfService(const ConnectToLocalServiceArgs& services)
