@@ -3,6 +3,7 @@
 #include <iostream>
 #include <memory>
 #include <thread>
+#include <vector>
 
 #include "mdns.h"
 #include "mdns_cpp/logger.hpp"

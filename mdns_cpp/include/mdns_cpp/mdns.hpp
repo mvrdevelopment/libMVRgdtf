@@ -3,6 +3,7 @@
 #include <functional>
 #include <string>
 #include <thread>
+#include <vector>
 #include <unordered_map>
 
 #include "mdns_cpp/defs.hpp"

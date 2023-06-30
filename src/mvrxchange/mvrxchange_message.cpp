@@ -152,10 +152,10 @@ void MVRxchangePacket::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMV
             if(payload["type"] == "MVR_JOIN")
             {
                 in.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_JOIN;
-                in.JOIN.Provider    = payload["provider"];
-                in.JOIN.StationName = payload["stationName"];
                 in.JOIN.VersionMajor= payload["verMajor"];
                 in.JOIN.VersionMinor= payload["verMinor"];
+                strcpy(in.JOIN.Provider, payload["provider"].get<std::string>().c_str());
+                strcpy(in.JOIN.StationName, payload["stationName"].get<std::string>().c_str());
             }
         }
     }
