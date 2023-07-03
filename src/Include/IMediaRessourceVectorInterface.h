@@ -1772,10 +1772,21 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		public:
 		struct ConnectToLocalServiceArgs
 		{
-			MVRxchangeString Service;
+			MVRxchangeString 	Service;
+
+			MvrUUID 			StationUUID;
+			MVRxchangeString 	StationName;
+			MVRxchangeString 	Provider;
+
+			uint32_t     		Major;
+			uint32_t         	Minor;
+
+			// TODO Files
+
+			// Internal
 			MVRxchangeString IPv4;
 			MVRxchangeString IPv6;
-			uint16_t         port;
+			uint16_t         Port;
 		};
 		/**
 		 * @brief Connects to a given Local Network Mode MVR-xchange system

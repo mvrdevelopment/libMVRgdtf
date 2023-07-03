@@ -27,18 +27,19 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 
 	SendMessageArgs joinMessage;
 	joinMessage.Message.Type = MVRxchangeMessageType::MVR_JOIN;
-	strcpy(joinMessage.Message.JOIN.StationName, "Test");		
-	strcpy(joinMessage.Message.JOIN.Provider, "Test2");		
+	strcpy(joinMessage.Message.JOIN.StationName, services.StationName);		
+	strcpy(joinMessage.Message.JOIN.Provider, services.Provider);		
+	joinMessage.Message.JOIN.VersionMajor = services.Major;
+	joinMessage.Message.JOIN.VersionMinor = services.Minor;
+	joinMessage.Message.JOIN.StationUUID  = services.StationUUID;
 	this->Send_message(joinMessage);
-
-	std::cout << "Port: " << fServer->GetPort() << std::endl;
 
 
 	//---------------------------------------------------------------------------------------------
 	// Start mDNS Service
 	fmdns.setServiceHostname(services.Service);
 	fmdns.setServicePort(fServer->GetPort());
-	fmdns.setServiceName("_mvrxchange._tcp.local."); // XXX TODO: ServiceNam
+	fmdns.setServiceName("_mvrxchange._tcp.local.");
 	fmdns.startService();
 
 	return kVCOMError_NoError;
@@ -73,7 +74,7 @@ VCOMError VCOM_CALLTYPE  CMVRxchangeServiceImpl::QueryLocalServices(size_t& out_
 		strcpy(localServ.Service, r.hostNam.c_str());		 
 		strcpy(localServ.IPv4, r.ipV4_adress.c_str());
 		strcpy(localServ.IPv6, r.ipV6_adress.c_str());
-		localServ.port = r.port;
+		localServ.Port = r.port;
 
 		fQueryLocalServicesResult.push_back(localServ);
 	}
@@ -196,7 +197,7 @@ std::vector<MVRxchangeGoupMember> CMVRxchangeServiceImpl::GetMembersOfService(co
 	{
 		MVRxchangeGoupMember member;
 		member.IP   = e.IPv4;
-		member.Port = e.port;
+		member.Port = e.Port;
 		list.push_back(member);
 	}
 
