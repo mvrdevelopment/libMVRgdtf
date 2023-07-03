@@ -16,6 +16,7 @@ MVRxchangePacket::MVRxchangePacket()
     fType       = 0;
     fBodyLength = 0;
     fData       = new MVRxchangeDynamicBuffer();
+    fData->GrowTo(30 * 1024 * 1024);
 
     fReferenceCount = new size_t(1);
 }
