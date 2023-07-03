@@ -1873,7 +1873,7 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 			MVR_COMMIT_MESSAGE 		COMMIT;
 		};
 
-		typedef IMVRxchangeMessage (*MVRxchangeMessageHandler)(const IMVRxchangeMessage& args, void* context);
+		typedef IMVRxchangeMessage (*MVRxchangeMessageHandler)(const IMVRxchangeMessage& args, void* context, bool isReturnValue);
 		struct OnMessageArgs
 		{
 			MVRxchangeMessageHandler Callback;

@@ -53,7 +53,7 @@ namespace VectorworksMVR
 		void TCP_Stop();
 		void TCP_ServerNetworksThread();
 	public:
-		IMVRxchangeMessage TCP_OnIncommingMessage(const IMVRxchangeMessage& );
+		IMVRxchangeMessage TCP_OnIncommingMessage(const IMVRxchangeMessage& , bool returnValue);
 
 	private:
 		std::vector<MVRxchangeGoupMember>			fMVRGroup;

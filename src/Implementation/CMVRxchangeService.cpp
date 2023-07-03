@@ -164,13 +164,13 @@ void CMVRxchangeServiceImpl::TCP_ServerNetworksThread()
 	fServer_IO_Context.run();
 }
 
-IMVRxchangeService::IMVRxchangeMessage CMVRxchangeServiceImpl::TCP_OnIncommingMessage(const IMVRxchangeService::IMVRxchangeMessage& in)
+IMVRxchangeService::IMVRxchangeMessage CMVRxchangeServiceImpl::TCP_OnIncommingMessage(const IMVRxchangeService::IMVRxchangeMessage& in, bool returnValue)
 {
 	IMVRxchangeService::IMVRxchangeMessage empty;
 
 	if (fCallBack.Callback)
 	{
-		empty = (*fCallBack.Callback)(in, fCallBack.Context);
+		empty = (*fCallBack.Callback)(in, fCallBack.Context, returnValue);
 	}
 
 	return empty;
