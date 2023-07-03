@@ -27,6 +27,8 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 
 	SendMessageArgs joinMessage;
 	joinMessage.Message.Type = MVRxchangeMessageType::MVR_JOIN;
+	strcpy(joinMessage.Message.JOIN.StationName, "Test");		
+	strcpy(joinMessage.Message.JOIN.Provider, "Test2");		
 	this->Send_message(joinMessage);
 
 	std::cout << "Port: " << fServer->GetPort() << std::endl;
@@ -122,7 +124,7 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::Send_message(const SendMessage
 		msg.FromExternalMessage(messageHandler.Message);
 		for (const auto& e : fMVRGroup)
 		{
-			SendMessageToLocalNetworks(e.IP, e.Name, msg);
+			SendMessageToLocalNetworks(e.IP, e.Port, msg);
 		}
 	}
 
@@ -174,11 +176,15 @@ IMVRxchangeService::IMVRxchangeMessage CMVRxchangeServiceImpl::TCP_OnIncommingMe
 }
 
 
-void CMVRxchangeServiceImpl::SendMessageToLocalNetworks(const TXString& ip, const TXString& port, const MVRxchangeNetwork::MVRxchangePacket& msg)
+void CMVRxchangeServiceImpl::SendMessageToLocalNetworks(const TXString& ip, uint16_t p, const MVRxchangeNetwork::MVRxchangePacket& msg)
 {
 	MVRxchangeNetwork::MVRxchangeClient c (this, msg);
+	
+	char str[80];
+	sprintf(str, "%u", p);
+	std::string port =str;
 
-	c.Connect(ip.GetStdString(), port.GetStdString(), std::chrono::seconds(10));
+	c.Connect(ip.GetStdString(), port, std::chrono::seconds(10));
 	c.WriteMessage(std::chrono::seconds(10));
 }
 

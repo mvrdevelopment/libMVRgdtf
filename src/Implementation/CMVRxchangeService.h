@@ -62,7 +62,7 @@ namespace VectorworksMVR
 		//---------------------------------------------------------------------------
 		// TCP Client - Local Network mode
 
-		void SendMessageToLocalNetworks(const TXString& ip, const TXString& port, const MVRxchangeNetwork::MVRxchangePacket& msg);
+		void SendMessageToLocalNetworks(const TXString& ip, uint16_t p, const MVRxchangeNetwork::MVRxchangePacket& msg);
 
 
 		//---------------------------------------------------------------------------
