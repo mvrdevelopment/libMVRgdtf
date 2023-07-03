@@ -64,12 +64,12 @@ size_t MVRxchangePacket::GetLength() const
 
 const char* MVRxchangePacket::GetBody() const
 {
-    return fData->GetData() + total_header_length; // XXX MS verify 
+    return fData->GetData() + total_header_length;
 }
 
 char* MVRxchangePacket::GetBody()
 {
-    return fData->GetData() + total_header_length; // XXX MS verify 
+    return fData->GetData() + total_header_length;
 }
 
 size_t MVRxchangePacket::GetBodyLength() const
@@ -86,14 +86,14 @@ void MVRxchangePacket::SetBody(size_t length, char* buffer)
 
 bool MVRxchangePacket::DecodeHeader()
 {
-    memcpy(&fFlag, fData, header_flag);
+    memcpy(&fFlag, fData->GetData(), header_flag);
     if (fFlag != kMVR_Package_Flag) { return false; }
 
-    memcpy(&fVersion,    fData + header_flag, header_version);
-    memcpy(&fNumber,     fData + header_flag + header_version, header_number);
-    memcpy(&fCount,      fData + header_flag + header_version + header_number, header_count);
-    memcpy(&fType,       fData + header_flag + header_version + header_number + header_count, header_type);
-    memcpy(&fBodyLength, fData + header_flag + header_version + header_number + header_type, header_payload_length);
+    memcpy(&fVersion,    GetData() + header_flag, header_version);
+    memcpy(&fNumber,     GetData() + header_flag + header_version, header_number);
+    memcpy(&fCount,      GetData() + header_flag + header_version + header_number, header_count);
+    memcpy(&fType,       GetData() + header_flag + header_version + header_number + header_count, header_type);
+    memcpy(&fBodyLength, GetData() + header_flag + header_version + header_number + header_type, header_payload_length);
 
     // Prepare Buffer
     fData->GrowTo(fBodyLength);
@@ -103,12 +103,12 @@ bool MVRxchangePacket::DecodeHeader()
 
 void MVRxchangePacket::EncodeHeader()
 {
-    memcpy(fData,                                                                               &fFlag,                 header_flag);
-    memcpy(fData + header_flag,                                                                 &fVersion,              header_version);
-    memcpy(fData + header_flag + header_version,                                                &fNumber,               header_number);
-    memcpy(fData + header_flag + header_version + header_number,                                &fCount,                header_count);
-    memcpy(fData + header_flag + header_version + header_number + header_count,                 &fType,                 header_type);
-    memcpy(fData + header_flag + header_version + header_number + header_count + header_type,   &fBodyLength,           header_payload_length);
+    memcpy(GetData(),                                                                               &fFlag,                 header_flag);
+    memcpy(GetData() + header_flag,                                                                 &fVersion,              header_version);
+    memcpy(GetData() + header_flag + header_version,                                                &fNumber,               header_number);
+    memcpy(GetData() + header_flag + header_version + header_number,                                &fCount,                header_count);
+    memcpy(GetData() + header_flag + header_version + header_number + header_count,                 &fType,                 header_type);
+    memcpy(GetData() + header_flag + header_version + header_number + header_count + header_type,   &fBodyLength,           header_payload_length);
 }
 
 void MVRxchangePacket::FromExternalMessage(const VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage& in)
@@ -137,8 +137,10 @@ void MVRxchangePacket::FromExternalMessage(const VectorworksMVR::IMVRxchangeServ
     fType       = kMVR_Package_JSON_TYPE;
     fBodyLength = s.size();
 
-    fData->GrowTo(fBodyLength);
-    fData->FromBuffer(s.data(), s.size());
+    fData->GrowTo(fBodyLength + total_header_length);
+    memcpy(GetBody(), s.data(), fBodyLength);
+
+    EncodeHeader();
 
 }
 
@@ -146,7 +148,7 @@ void MVRxchangePacket::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMV
 {
     if(fType == kMVR_Package_JSON_TYPE && fBodyLength > 0)
     {
-        nlohmann::json payload = nlohmann::json::parse(fData->GetData(), nullptr, false);
+        nlohmann::json payload = nlohmann::json::parse(this->GetBody(), nullptr, false);
         
         if(payload.type() ==  nlohmann::json::value_t::object)
         {
