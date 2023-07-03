@@ -14,6 +14,11 @@ MVRxchangeClient::MVRxchangeClient(CMVRxchangeServiceImpl* impl, const MVRxchang
 
 }
 
+MVRxchangeClient::~MVRxchangeClient()
+{
+
+}
+
 bool MVRxchangeClient::ReadMessage(std::chrono::steady_clock::duration timeout)
 {
     boost::system::error_code error;

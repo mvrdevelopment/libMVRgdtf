@@ -143,11 +143,11 @@ void MVRxchangePacket::FromExternalMessage(const VectorworksMVR::IMVRxchangeServ
 
 void MVRxchangePacket::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage& in)
 {
-    if(fType == kMVR_Package_JSON_TYPE)
+    if(fType == kMVR_Package_JSON_TYPE && fBodyLength > 0)
     {
         nlohmann::json payload = nlohmann::json::parse(fData->GetData(), nullptr, false);
         
-        if(payload.type() ==  nlohmann::json::value_t::object) // XXX @MS here was an error change needs to be tested. 
+        if(payload.type() ==  nlohmann::json::value_t::object)
         {
             if(payload["type"] == "MVR_JOIN")
             {
