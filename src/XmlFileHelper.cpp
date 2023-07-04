@@ -106,6 +106,78 @@ using namespace SceneData;
 	
 }
 
+
+/*static*/ bool GdtfConverter::ConvertUUID(const TXString& inValue, MvrUUID& inUuid)
+{
+	VWFC::Tools::VWUUID uuid;
+	// First check if theinValuelength is as aspected
+    TXString uuidForRead;
+	if (inValue.GetLength() == 47)	
+    {
+        // Remove white space
+        TXString value = inValue;
+	    value.Replace(" ", "");
+	
+        uuidForRead.SetLength(38);
+        uuidForRead[0] = '{';
+        uuidForRead[1] = value[0];
+        uuidForRead[2] = value[1];
+        uuidForRead[3] = value[2];
+        uuidForRead[4] = value[3];
+        uuidForRead[5] = value[4];
+        uuidForRead[6] = value[5];
+        uuidForRead[7] = value[6];
+        uuidForRead[8] = value[7];
+        uuidForRead[9] = '-';
+        uuidForRead[10] = value[8];
+        uuidForRead[11] = value[9];
+        uuidForRead[12] = value[10];
+        uuidForRead[13] = value[11];
+        uuidForRead[14] = '-';
+        uuidForRead[15] = value[12];
+        uuidForRead[16] = value[13];
+        uuidForRead[17] = value[14];
+        uuidForRead[18] = value[15];
+        uuidForRead[19] = '-';
+        uuidForRead[20] = value[16];
+        uuidForRead[21] = value[17];
+        uuidForRead[22] = value[18];
+        uuidForRead[23] = value[19];
+        uuidForRead[24] = '-';
+        uuidForRead[25] = value[20];
+        uuidForRead[26] = value[21];
+        uuidForRead[27] = value[22];
+        uuidForRead[28] = value[23];
+        uuidForRead[29] = value[24];
+        uuidForRead[30] = value[25];
+        uuidForRead[31] = value[26];
+        uuidForRead[32] = value[27];
+        uuidForRead[33] = value[28];
+        uuidForRead[34] = value[29];
+        uuidForRead[35] = value[30];
+        uuidForRead[36] = value[31];
+        uuidForRead[37] = '}';
+
+    }
+    else if(inValue.GetLength() == 36)
+    {
+        uuidForRead += '{';
+        uuidForRead += inValue;
+        uuidForRead += '}';
+    }
+    else if(inValue.GetLength() == 0)
+    {
+        return false;
+    }
+    
+	uuid = VWUUID(uuidForRead);
+
+	uuid.GetUUID(inUuid.a, inUuid.b, inUuid.c, inUuid.d);
+	
+	return true;
+	
+}
+
 /*static*/ TXString GdtfConverter::IntToString2Digits(Sint64 value) 
 /* Converts the int to an string with 2 digits. If the int has only one digit the string will get a leading "0".*/ 
 {

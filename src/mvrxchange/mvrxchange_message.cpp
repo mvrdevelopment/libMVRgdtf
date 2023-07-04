@@ -175,6 +175,18 @@ void MVRxchangePacket::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMV
                 strcpy(in.JOIN.Provider, payload["provider"].get<std::string>().c_str());
                 strcpy(in.JOIN.StationName, payload["stationName"].get<std::string>().c_str());
             }
+            if(payload["type"] == "MVR_COMMIT")
+            {
+                in.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_COMMIT;
+                strcpy(in.COMMIT.Comment, payload["Comment"].get<std::string>().c_str());
+                in.COMMIT.VersionMajor= payload["verMajor"];
+                in.COMMIT.VersionMinor= payload["verMinor"];
+                in.COMMIT.FileSize= payload["FileSize"];
+
+                SceneData::GdtfConverter::ConvertUUID(payload["FileUUID"].get<std::string>(), in.COMMIT.FileUUID);
+                SceneData::GdtfConverter::ConvertUUID(payload["StationUUID"].get<std::string>(), in.COMMIT.StationUUID);
+                // TODO ForStationsUUID
+            }
         }
     }
 }
