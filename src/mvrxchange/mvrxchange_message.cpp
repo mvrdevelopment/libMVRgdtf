@@ -180,7 +180,7 @@ void MVRxchangePacket::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMV
 {
     if(fType == kMVR_Package_JSON_TYPE && fBodyLength > 0)
     {
-        nlohmann::json payload = nlohmann::json::parse(this->GetBody(), nullptr, false);
+        nlohmann::json payload = nlohmann::json::parse(this->GetBody(),this->GetBody() + fBodyLength,  nullptr, false, true);
         
         if(payload.type() ==  nlohmann::json::value_t::object)
         {
