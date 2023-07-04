@@ -1904,6 +1904,7 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 			MVR_COMMIT_MESSAGE 		COMMIT;
 			MVR_REQUEST_MESSAGE 	REQUEST;
 
+			MVRxchangeString 				PathToFile;
 			bool 							RetIsOK;
 			MVRxchangeString 				RetError;
 		};

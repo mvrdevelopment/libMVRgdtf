@@ -162,27 +162,45 @@ void MVRxchangePacket::FromExternalMessage(const VectorworksMVR::IMVRxchangeServ
             payload["FromStationUUID"].push_back(SceneData::GdtfConverter::ConvertUUID(VWUUID(e.a, e.b, e.c, e.d)).GetStdString());
         }
         break;
-    
+    case IMVRxchangeService::MVRxchangeMessageType::MVR_REQUEST_RET:
+        payload["Type"]             = "MVR_REQUEST_RET";
+        payload["OK"]               = in.RetIsOK;
+        payload["Message"]          = in.RetError;
+
+        break;
     default:
         break;
     }
 
 
-
-
-    std::string s = payload.dump();
-
-    fFlag       = kMVR_Package_Flag;
+        fFlag       = kMVR_Package_Flag;
     fNumber     = 1;
     fCount      = 1;
-    fType       = kMVR_Package_JSON_TYPE;
-    fBodyLength = s.size();
 
-    fData->GrowTo(fBodyLength + total_header_length);
-    memcpy(GetBody(), s.data(), fBodyLength);
+    if(in.Type == IMVRxchangeService::MVRxchangeMessageType::MVR_REQUEST_RET && in.RetIsOK)
+    {
+        IFileIdentifierPtr file (IID_FileIdentifier);
+        file->Set(in.PathToFile.fBuffer);
+
+        Uint64 size = 0;
+        IRawOSFilePtr rawFile (IID_RawOSFile);
+        rawFile->Open(file, true, false,true, false);
+        rawFile->GetFileSize(fBodyLength);
+        rawFile->Read(0, fBodyLength, GetBody());
+        fData->GrowTo(fBodyLength + total_header_length);
+        rawFile->Close();
+    }
+    else
+    {
+        std::string s = payload.dump();
+        fBodyLength = s.size();
+        fType       = kMVR_Package_JSON_TYPE;
+
+        fData->GrowTo(fBodyLength + total_header_length);
+        memcpy(GetBody(), s.data(), fBodyLength);
+    }
 
     EncodeHeader();
-
 }
 
 void MVRxchangePacket::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage& in)
