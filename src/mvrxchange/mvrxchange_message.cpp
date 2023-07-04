@@ -94,7 +94,7 @@ bool MVRxchangePacket::DecodeHeader()
     memcpy(&fNumber,     GetData() + header_flag + header_version, header_number);
     memcpy(&fCount,      GetData() + header_flag + header_version + header_number, header_count);
     memcpy(&fType,       GetData() + header_flag + header_version + header_number + header_count, header_type);
-    memcpy(&fBodyLength, GetData() + header_flag + header_version + header_number + header_type, header_payload_length);
+    memcpy(&fBodyLength, GetData() + header_flag + header_version + header_number + header_count + header_type, header_payload_length);
 
     // Prepare Buffer
     fData->GrowTo(fBodyLength);
@@ -122,6 +122,11 @@ void MVRxchangePacket::FromExternalMessage(const VectorworksMVR::IMVRxchangeServ
         payload["OK"]           = in.RetIsOK;
         payload["Message"]      = in.RetError;
         payload["Type"]         = "MVR_JOIN_RET";
+        payload["provider"]     = in.JOIN.Provider;
+        payload["stationName"]  = in.JOIN.StationName;
+        payload["verMajor"]     = in.JOIN.VersionMajor;
+        payload["verMinor"]     = in.JOIN.VersionMinor;
+        break;
     case IMVRxchangeService::MVRxchangeMessageType::MVR_JOIN:
         payload["Type"]         = "MVR_JOIN";
         payload["provider"]     = in.JOIN.Provider;
