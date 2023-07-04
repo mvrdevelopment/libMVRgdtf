@@ -123,7 +123,7 @@ void MVRxchangePacket::FromExternalMessage(const VectorworksMVR::IMVRxchangeServ
         payload["Message"]      = in.RetError;
         payload["Type"]         = "MVR_JOIN_RET";
     case IMVRxchangeService::MVRxchangeMessageType::MVR_JOIN:
-        payload["type"]         = "MVR_JOIN";
+        payload["Type"]         = "MVR_JOIN";
         payload["provider"]     = in.JOIN.Provider;
         payload["stationName"]  = in.JOIN.StationName;
         payload["verMajor"]     = in.JOIN.VersionMajor;
