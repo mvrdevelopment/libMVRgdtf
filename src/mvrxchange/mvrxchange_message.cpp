@@ -4,6 +4,7 @@
 #include "mvrxchange_prefix.h"
 #include "json.h"
 #include "mvrxchange_message.h"
+#include "XmlFileHelper.h"
 
 using namespace MVRxchangeNetwork;
 
@@ -123,6 +124,20 @@ void MVRxchangePacket::FromExternalMessage(const VectorworksMVR::IMVRxchangeServ
         payload["stationName"]  = in.JOIN.StationName;
         payload["verMajor"]     = in.JOIN.VersionMajor;
         payload["verMinor"]     = in.JOIN.VersionMinor;
+        break;
+    case IMVRxchangeService::MVRxchangeMessageType::MVR_COMMIT:
+        payload["type"]             = "MVR_COMMIT";
+        payload["FileSize"]         = in.COMMIT.FileSize;
+        payload["Comment"]          = in.COMMIT.Comment;
+        payload["FileUUID"]         = SceneData::GdtfConverter::ConvertUUID(VWUUID(in.COMMIT.FileUUID.a, in.COMMIT.FileUUID.b, in.COMMIT.FileUUID.c, in.COMMIT.FileUUID.d)).GetStdString();
+        payload["StationUUID"]      = SceneData::GdtfConverter::ConvertUUID(VWUUID(in.COMMIT.StationUUID.a, in.COMMIT.StationUUID.b, in.COMMIT.StationUUID.c, in.COMMIT.StationUUID.d)).GetStdString();
+        payload["verMinor"]         = in.COMMIT.VersionMinor;
+        payload["verMajor"]         = in.COMMIT.VersionMajor;
+        payload["ForStationsUUID"]  = nlohmann::json::array();
+        for(const auto& e : in.COMMIT.ForStations)
+        {
+            payload["ForStationsUUID"].push_back(SceneData::GdtfConverter::ConvertUUID(VWUUID(e.a, e.b, e.c, e.d)).GetStdString());
+        }
         break;
     
     default:
