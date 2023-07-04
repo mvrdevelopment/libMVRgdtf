@@ -44,7 +44,7 @@ void MVRxchangeSession::DoReadHeader()
             IMVRxchangeService::IMVRxchangeMessage out;
             freadmsg.ToExternalMessage(out);
 
-            IMVRxchangeService::IMVRxchangeMessage in = fImpl->TCP_OnIncommingMessage(out, false);
+            IMVRxchangeService::IMVRxchangeMessage in = fImpl->TCP_OnIncommingMessage(out);
 
             MVRxchangePacket in_msg;
             in_msg.FromExternalMessage(in);

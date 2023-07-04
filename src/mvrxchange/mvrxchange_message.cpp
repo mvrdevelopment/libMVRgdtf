@@ -119,6 +119,9 @@ void MVRxchangePacket::FromExternalMessage(const VectorworksMVR::IMVRxchangeServ
     switch (in.Type)
     {
     case IMVRxchangeService::MVRxchangeMessageType::MVR_JOIN_RET:
+        payload["OK"]           = in.RetIsOK;
+        payload["Message"]      = in.RetError;
+        payload["Type"]         = "MVR_JOIN_RET";
     case IMVRxchangeService::MVRxchangeMessageType::MVR_JOIN:
         payload["type"]         = "MVR_JOIN";
         payload["provider"]     = in.JOIN.Provider;
@@ -126,8 +129,13 @@ void MVRxchangePacket::FromExternalMessage(const VectorworksMVR::IMVRxchangeServ
         payload["verMajor"]     = in.JOIN.VersionMajor;
         payload["verMinor"]     = in.JOIN.VersionMinor;
         break;
+    case IMVRxchangeService::MVRxchangeMessageType::MVR_COMMIT_RET:
+        payload["OK"]               = in.RetIsOK;
+        payload["Message"]          = in.RetError;
+        payload["Type"]             = "MVR_COMMIT_RET";
+        break;
     case IMVRxchangeService::MVRxchangeMessageType::MVR_COMMIT:
-        payload["type"]             = "MVR_COMMIT";
+        payload["Type"]             = "MVR_COMMIT";
         payload["FileSize"]         = in.COMMIT.FileSize;
         payload["Comment"]          = in.COMMIT.Comment;
         payload["FileUUID"]         = SceneData::GdtfConverter::ConvertUUID(VWUUID(in.COMMIT.FileUUID.a, in.COMMIT.FileUUID.b, in.COMMIT.FileUUID.c, in.COMMIT.FileUUID.d)).GetStdString();
@@ -144,6 +152,9 @@ void MVRxchangePacket::FromExternalMessage(const VectorworksMVR::IMVRxchangeServ
     default:
         break;
     }
+
+
+
 
     std::string s = payload.dump();
 
@@ -168,7 +179,7 @@ void MVRxchangePacket::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMV
         
         if(payload.type() ==  nlohmann::json::value_t::object)
         {
-            if(payload["type"] == "MVR_JOIN")
+            if(payload["Type"] == "MVR_JOIN")
             {
                 in.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_JOIN;
                 in.JOIN.VersionMajor= payload["verMajor"];
@@ -176,7 +187,19 @@ void MVRxchangePacket::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMV
                 strcpy(in.JOIN.Provider, payload["provider"].get<std::string>().c_str());
                 strcpy(in.JOIN.StationName, payload["stationName"].get<std::string>().c_str());
             }
-            if(payload["type"] == "MVR_COMMIT")
+            else if(payload["Type"] == "MVR_JOIN_RET")
+            {
+                in.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_JOIN;
+                in.JOIN.VersionMajor= payload["verMajor"];
+                in.JOIN.VersionMinor= payload["verMinor"];
+                strcpy(in.JOIN.Provider, payload["provider"].get<std::string>().c_str());
+                strcpy(in.JOIN.StationName, payload["stationName"].get<std::string>().c_str());
+
+                in.RetIsOK = payload["OK"].get<bool>();
+                strcpy(in.RetError, payload["Message"].get<std::string>().c_str());
+
+            }
+            else if(payload["Type"] == "MVR_COMMIT")
             {
                 in.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_COMMIT;
                 strcpy(in.COMMIT.Comment, payload["Comment"].get<std::string>().c_str());
@@ -187,6 +210,11 @@ void MVRxchangePacket::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMV
                 SceneData::GdtfConverter::ConvertUUID(payload["FileUUID"].get<std::string>(), in.COMMIT.FileUUID);
                 SceneData::GdtfConverter::ConvertUUID(payload["StationUUID"].get<std::string>(), in.COMMIT.StationUUID);
                 // TODO ForStationsUUID
+            }
+            else if(payload["Type"] == "MVR_COMMIT_RET")
+            {
+                in.RetIsOK = payload["OK"].get<bool>();
+                strcpy(in.RetError, payload["Message"].get<std::string>().c_str());
             }
         }
     }

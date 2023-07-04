@@ -1901,7 +1901,7 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 			MVRxchangeString 				RetError;
 		};
 
-		typedef IMVRxchangeMessage (*MVRxchangeMessageHandler)(const IMVRxchangeMessage& args, void* context, bool isReturnValue);
+		typedef IMVRxchangeMessage (*MVRxchangeMessageHandler)(const IMVRxchangeMessage& args, void* context);
 		struct OnMessageArgs
 		{
 			MVRxchangeMessageHandler Callback;
