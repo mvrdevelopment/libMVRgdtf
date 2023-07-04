@@ -1778,8 +1778,8 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 			MVRxchangeString 	StationName;
 			MVRxchangeString 	Provider;
 
-			uint32_t     		Major;
-			uint32_t         	Minor;
+			uint32_t     		VersionMajor;
+			uint32_t         	VersionMinor;
 
 			// TODO Files
 
@@ -1891,7 +1891,6 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		struct SendMessageArgs
 		{
 			IMVRxchangeMessage Message;
-			IMVRxchangeMessage ReturnValue;
 		};
 		virtual VCOMError VCOM_CALLTYPE     Send_message(const SendMessageArgs& messageHandler) = 0;
 

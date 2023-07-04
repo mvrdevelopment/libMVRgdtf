@@ -29,8 +29,8 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 	joinMessage.Message.Type = MVRxchangeMessageType::MVR_JOIN;
 	strcpy(joinMessage.Message.JOIN.StationName, services.StationName);		
 	strcpy(joinMessage.Message.JOIN.Provider, services.Provider);		
-	joinMessage.Message.JOIN.VersionMajor = services.Major;
-	joinMessage.Message.JOIN.VersionMinor = services.Minor;
+	joinMessage.Message.JOIN.VersionMajor = services.VersionMajor;
+	joinMessage.Message.JOIN.VersionMinor = services.VersionMinor;
 	joinMessage.Message.JOIN.StationUUID  = services.StationUUID;
 	this->Send_message(joinMessage);
 
