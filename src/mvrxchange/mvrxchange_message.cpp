@@ -173,7 +173,7 @@ void MVRxchangePacket::FromExternalMessage(const VectorworksMVR::IMVRxchangeServ
     }
 
 
-        fFlag       = kMVR_Package_Flag;
+    fFlag       = kMVR_Package_Flag;
     fNumber     = 1;
     fCount      = 1;
 
@@ -189,6 +189,8 @@ void MVRxchangePacket::FromExternalMessage(const VectorworksMVR::IMVRxchangeServ
         rawFile->Read(0, fBodyLength, GetBody());
         fData->GrowTo(fBodyLength + total_header_length);
         rawFile->Close();
+
+        fType       = kMVR_Package_BUFFER_TYPE;
     }
     else
     {
@@ -257,5 +259,10 @@ void MVRxchangePacket::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMV
                 // TODO ForStationsUUID
             }
         }
+    }
+    else if(fType == kMVR_Package_BUFFER_TYPE && fBodyLength > 0)
+    {
+        // Nothing to do
+
     }
 }
