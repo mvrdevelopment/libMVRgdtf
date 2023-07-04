@@ -1765,7 +1765,20 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
     const   VWIID IID_IUtility = { 0x706cb180, 0xcd45, 0x4a9a, {0xab, 0xdc, 0x62, 0xab, 0x5f, 0xfe, 0x37, 0x6b}};
 
 	
-	using MVRxchangeString = char [1024];
+	class MVRxchangeString
+	{
+		public:
+		MVRxchangeString()
+		{
+			memset(fBuffer,0,1024);
+		}
+		mutable char fBuffer[1024];
+
+		operator char*  () const
+		{
+			return fBuffer;
+		}
+	};
 
 	class DYNAMIC_ATTRIBUTE IMVRxchangeService : public IVWUnknown
     {
@@ -1838,10 +1851,17 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		
 		enum class MVRxchangeMessageType
 		{
+			MVR_UNDEFINED,
+
 			MVR_JOIN,
 			MVR_LEAVE,
 			MVR_COMMIT,
 			MVR_REQUEST,
+
+			MVR_JOIN_RET,
+			MVR_LEAVE_RET,
+			MVR_COMMIT_RET,
+			MVR_REQUEST_RET,
 		};
 
 		struct MVR_COMMIT_MESSAGE
@@ -1868,9 +1888,17 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 
 		struct IMVRxchangeMessage
 		{
+			IMVRxchangeMessage()
+			{
+				Type = MVRxchangeMessageType::MVR_UNDEFINED;
+				RetIsOK = true;
+			}
 			MVRxchangeMessageType 	Type;
 			MVR_JOIN_MESSAGE 		JOIN;
 			MVR_COMMIT_MESSAGE 		COMMIT;
+
+			bool 							RetIsOK;
+			MVRxchangeString 				RetError;
 		};
 
 		typedef IMVRxchangeMessage (*MVRxchangeMessageHandler)(const IMVRxchangeMessage& args, void* context, bool isReturnValue);

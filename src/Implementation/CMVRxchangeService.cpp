@@ -37,7 +37,7 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 
 	//---------------------------------------------------------------------------------------------
 	// Start mDNS Service
-	fmdns.setServiceHostname(services.Service);
+	fmdns.setServiceHostname(std::string(services.Service.fBuffer));
 	fmdns.setServicePort(fServer->GetPort());
 	fmdns.setServiceName("_mvrxchange._tcp.local.");
 	fmdns.startService();
