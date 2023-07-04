@@ -189,7 +189,7 @@ void MVRxchangePacket::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMV
             }
             else if(payload["Type"] == "MVR_JOIN_RET")
             {
-                in.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_JOIN;
+                in.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_JOIN_RET;
                 in.JOIN.VersionMajor= payload["verMajor"];
                 in.JOIN.VersionMinor= payload["verMinor"];
                 strcpy(in.JOIN.Provider, payload["provider"].get<std::string>().c_str());
@@ -213,6 +213,7 @@ void MVRxchangePacket::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMV
             }
             else if(payload["Type"] == "MVR_COMMIT_RET")
             {
+                in.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_COMMIT_RET;
                 in.RetIsOK = payload["OK"].get<bool>();
                 strcpy(in.RetError, payload["Message"].get<std::string>().c_str());
             }
