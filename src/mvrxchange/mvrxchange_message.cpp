@@ -152,6 +152,15 @@ void MVRxchangePacket::FromExternalMessage(const VectorworksMVR::IMVRxchangeServ
         {
             payload["ForStationsUUID"].push_back(SceneData::GdtfConverter::ConvertUUID(VWUUID(e.a, e.b, e.c, e.d)).GetStdString());
         }
+        break;    
+    case IMVRxchangeService::MVRxchangeMessageType::MVR_REQUEST:
+        payload["Type"]             = "MVR_REQUEST";
+        payload["FileUUID"]         = SceneData::GdtfConverter::ConvertUUID(VWUUID(in.REQUEST.FileUUID.a, in.REQUEST.FileUUID.b, in.REQUEST.FileUUID.c, in.REQUEST.FileUUID.d)).GetStdString();
+        payload["FromStationUUID"]  = nlohmann::json::array();
+        for(const auto& e : in.REQUEST.FromStationUUID)
+        {
+            payload["FromStationUUID"].push_back(SceneData::GdtfConverter::ConvertUUID(VWUUID(e.a, e.b, e.c, e.d)).GetStdString());
+        }
         break;
     
     default:
@@ -221,6 +230,13 @@ void MVRxchangePacket::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMV
                 in.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_COMMIT_RET;
                 in.RetIsOK = payload["OK"].get<bool>();
                 strcpy(in.RetError, payload["Message"].get<std::string>().c_str());
+            }
+            else if(payload["Type"] == "MVR_REQUEST")
+            {
+                in.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_REQUEST;
+                SceneData::GdtfConverter::ConvertUUID(payload["FileUUID"].get<std::string>(), in.REQUEST.FileUUID);
+
+                // TODO ForStationsUUID
             }
         }
     }

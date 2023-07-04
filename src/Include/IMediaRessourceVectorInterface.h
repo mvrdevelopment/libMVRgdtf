@@ -1884,6 +1884,12 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 			uint32_t 						VersionMinor;
 			std::vector<MVR_COMMIT_MESSAGE> Files;
 		};
+
+		struct MVR_REQUEST_MESSAGE
+		{
+			MvrUUID							FileUUID;
+			std::vector<MvrUUID>			FromStationUUID;
+		};
 		
 
 		struct IMVRxchangeMessage
@@ -1896,6 +1902,7 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 			MVRxchangeMessageType 	Type;
 			MVR_JOIN_MESSAGE 		JOIN;
 			MVR_COMMIT_MESSAGE 		COMMIT;
+			MVR_REQUEST_MESSAGE 	REQUEST;
 
 			bool 							RetIsOK;
 			MVRxchangeString 				RetError;
