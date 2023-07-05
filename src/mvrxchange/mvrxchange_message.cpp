@@ -262,7 +262,9 @@ void MVRxchangePacket::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMV
     }
     else if(fType == kMVR_Package_BUFFER_TYPE && fBodyLength > 0)
     {
-        // Nothing to do
+        in.BufferToFileLength = fBodyLength;
+        in.BufferToFile = new char[fBodyLength]; // TODO: How do we free this
+        memcpy(in.BufferToFile, GetBody(), fBodyLength);
 
     }
 }

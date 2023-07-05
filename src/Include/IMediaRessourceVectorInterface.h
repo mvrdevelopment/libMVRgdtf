@@ -1898,6 +1898,8 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 			{
 				Type = MVRxchangeMessageType::MVR_UNDEFINED;
 				RetIsOK = true;
+				BufferToFile = nullptr;
+				BufferToFileLength = 0;
 			}
 			MVRxchangeMessageType 	Type;
 			MVR_JOIN_MESSAGE 		JOIN;
@@ -1905,6 +1907,8 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 			MVR_REQUEST_MESSAGE 	REQUEST;
 
 			MVRxchangeString 				PathToFile;
+			char*							BufferToFile;
+			size_t							BufferToFileLength;
 			bool 							RetIsOK;
 			MVRxchangeString 				RetError;
 		};
