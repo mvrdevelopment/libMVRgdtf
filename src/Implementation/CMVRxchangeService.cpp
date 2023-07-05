@@ -207,10 +207,14 @@ std::vector<MVRxchangeGoupMember> CMVRxchangeServiceImpl::GetMembersOfService(co
 
 	for(const auto& e : fQueryLocalServicesResult)
 	{
-		MVRxchangeGoupMember member;
-		member.IP   = e.IPv4;
-		member.Port = e.Port;
-		list.push_back(member);
+		if(std::string(e.Service.fBuffer) != (std::string(fCurrentService.Service.fBuffer) + std::string(MVRXChange_Service)))
+		{
+			MVRxchangeGoupMember member;
+			member.IP   = e.IPv4;
+			member.Port = e.Port;
+			list.push_back(member);
+		}
+
 	}
 
 	return list;
