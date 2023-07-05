@@ -48,6 +48,7 @@ namespace VectorworksMVR
 		MVRxchangeNetwork::MVRxchangeServer*	    fServer;
 		std::thread									fServer_Thread;
 		std::atomic<bool>							fServer_Running;
+		ConnectToLocalServiceArgs					fCurrentService;
 
 		void TCP_Start();
 		void TCP_Stop();

@@ -17,30 +17,35 @@ VectorworksMVR::CMVRxchangeServiceImpl::~CMVRxchangeServiceImpl()
 {
 }
 
-VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const ConnectToLocalServiceArgs& services)
+VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const ConnectToLocalServiceArgs& service)
 {
 	//---------------------------------------------------------------------------------------------
 	// Start TCP
+	fCurrentService = service;
 	this->TCP_Start();
-
-	fMVRGroup = GetMembersOfService(services);
-
-	SendMessageArgs joinMessage;
-	joinMessage.Message.Type = MVRxchangeMessageType::MVR_JOIN;
-	strcpy(joinMessage.Message.JOIN.StationName, services.StationName);		
-	strcpy(joinMessage.Message.JOIN.Provider, services.Provider);		
-	joinMessage.Message.JOIN.VersionMajor = services.VersionMajor;
-	joinMessage.Message.JOIN.VersionMinor = services.VersionMinor;
-	joinMessage.Message.JOIN.StationUUID  = services.StationUUID;
-	this->Send_message(joinMessage);
-
 
 	//---------------------------------------------------------------------------------------------
 	// Start mDNS Service
-	fmdns.setServiceHostname(std::string(services.Service.fBuffer));
+	fmdns.setServiceHostname(std::string(fCurrentService.Service.fBuffer));
 	fmdns.setServicePort(fServer->GetPort());
-	fmdns.setServiceName("_mvrxchange._tcp.local.");
+	fmdns.setServiceName(MVRXChange_Service);
 	fmdns.startService();
+
+	fMVRGroup = GetMembersOfService(fCurrentService);
+	
+	//---------------------------------------------------------------------------------------------
+	// Start mDNS Service
+	SendMessageArgs joinMessage;
+	joinMessage.Message.Type = MVRxchangeMessageType::MVR_JOIN;
+	strcpy(joinMessage.Message.JOIN.StationName, fCurrentService.StationName);		
+	strcpy(joinMessage.Message.JOIN.Provider, fCurrentService.Provider);		
+	joinMessage.Message.JOIN.VersionMajor = fCurrentService.VersionMajor;
+	joinMessage.Message.JOIN.VersionMinor = fCurrentService.VersionMinor;
+	joinMessage.Message.JOIN.StationUUID  = fCurrentService.StationUUID;
+	this->Send_message(joinMessage);
+
+
+
 
 	return kVCOMError_NoError;
 }
@@ -167,6 +172,13 @@ void CMVRxchangeServiceImpl::TCP_ServerNetworksThread()
 IMVRxchangeService::IMVRxchangeMessage CMVRxchangeServiceImpl::TCP_OnIncommingMessage(const IMVRxchangeService::IMVRxchangeMessage& in)
 {
 	IMVRxchangeService::IMVRxchangeMessage empty;
+    
+    if(in.Type == MVRxchangeMessageType::MVR_JOIN)
+    {
+        size_t count = 0;
+        QueryLocalServices(count);
+        fMVRGroup = GetMembersOfService(fCurrentService);
+    }
 
 	if (fCallBack.Callback)
 	{
