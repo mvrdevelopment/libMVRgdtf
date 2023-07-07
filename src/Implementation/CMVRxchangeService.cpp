@@ -69,8 +69,9 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::LeaveLocalService()
 }
 
 
-VCOMError VCOM_CALLTYPE  CMVRxchangeServiceImpl::QueryLocalServices(size_t& out_Count)
+VCOMError VCOM_CALLTYPE  CMVRxchangeServiceImpl::QueryLocalServices()
 {
+	std::vector<ConnectToLocalServiceArgs> result;
 	fQueryLocalServicesResult.clear();
 
 	mdns_cpp::mDNS mdns;
@@ -93,7 +94,6 @@ VCOMError VCOM_CALLTYPE  CMVRxchangeServiceImpl::QueryLocalServices(size_t& out_
 		fQueryLocalServicesResult.push_back(localServ);
 	}
 
-	out_Count = fQueryLocalServicesResult.size();
 
 	return kVCOMError_NoError;
 }
@@ -227,4 +227,16 @@ std::vector<MVRxchangeGoupMember> CMVRxchangeServiceImpl::GetMembersOfService(co
 	}
 
 	return list;
+}
+
+void CMVRxchangeServiceImpl::mDNS_Client_Start()
+{
+}
+
+void CMVRxchangeServiceImpl::mDNS_Client_End()
+{
+}
+
+void CMVRxchangeServiceImpl::mDNS_Client_Task()
+{
 }

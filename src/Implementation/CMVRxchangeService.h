@@ -39,8 +39,14 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE     Send_message(const SendMessageArgs& messageHandler);
 
 	private:
-		mdns_cpp::mDNS 			fmdns;
-		std::vector<ConnectToLocalServiceArgs> fQueryLocalServicesResult;
+		mdns_cpp::mDNS 							fmdns;
+		std::mutex 								fQueryLocalServicesResult_mtx;
+		std::vector<ConnectToLocalServiceArgs> 	fQueryLocalServicesResult;
+
+		void mDNS_Client_Start();
+		void mDNS_Client_Stop();
+		void mDNS_Client_Task();
+
 
 		//---------------------------------------------------------------------------
 		// TCP Server - Local Network mode
