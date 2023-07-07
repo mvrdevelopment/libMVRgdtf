@@ -5,6 +5,7 @@
 #include "CMVRxchangeService.h"
 #include "../mvrxchange/mvrxchange_prefix.h"
 #include "../mvrxchange/mvrxchange_client.h"
+#include "XmlFileHelper.h"
 
 
 VectorworksMVR::CMVRxchangeServiceImpl::CMVRxchangeServiceImpl()
@@ -26,9 +27,17 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 
 	//---------------------------------------------------------------------------------------------
 	// Start mDNS Service
+	std::string txt;
+	txt += "StationName=";
+	txt += fCurrentService.StationName.fBuffer;
+	txt += ";";
+	txt += "StationUUID=";
+	txt += SceneData::GdtfConverter::ConvertUUID(VWUUID(fCurrentService.StationUUID.a, fCurrentService.StationUUID.b, fCurrentService.StationUUID.c, fCurrentService.StationUUID.d)).GetStdString();
+	
 	fmdns.setServiceHostname(std::string(fCurrentService.Service.fBuffer));
 	fmdns.setServicePort(fServer->GetPort());
 	fmdns.setServiceName(MVRXChange_Service);
+	fmdns.setServiceTxtRecord(txt);
 	fmdns.startService();
 
 	fMVRGroup = GetMembersOfService(fCurrentService);
