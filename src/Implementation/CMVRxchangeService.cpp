@@ -29,6 +29,8 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 	fCurrentService = service;
 	this->TCP_Start();
 
+	this->mDNS_Client_Task();
+
 	//---------------------------------------------------------------------------------------------
 	// Start mDNS Service
 	std::string txt;
@@ -169,7 +171,7 @@ IMVRxchangeService::IMVRxchangeMessage CMVRxchangeServiceImpl::TCP_OnIncommingMe
     if(in.Type == MVRxchangeMessageType::MVR_JOIN)
     {
         size_t count = 0;
-        QueryLocalServices(count);
+        this->mDNS_Client_Task();
         fMVRGroup = GetMembersOfService(fCurrentService);
     }
 
@@ -216,6 +218,7 @@ std::vector<MVRxchangeGoupMember> CMVRxchangeServiceImpl::GetMembersOfService(co
 
 void Func(const boost::system::error_code& /*e*/, boost::asio::deadline_timer* t, CMVRxchangeServiceImpl* imp)
 {
+	std::cout << std::endl<< << std::endl<< << std::endl << " mDNS_Client_Task " << std::endl<< std::endl<< std::endl;
 	imp->mDNS_Client_Task();
 
 	t->async_wait(boost::bind(Func, boost::asio::placeholders::error, t, imp));
@@ -223,7 +226,7 @@ void Func(const boost::system::error_code& /*e*/, boost::asio::deadline_timer* t
 
 void CMVRxchangeServiceImpl::mDNS_Client_Start()
 {
-	boost::asio::deadline_timer t(fmdns_IO_Context, boost::posix_time::seconds(5));
+	boost::asio::deadline_timer t(fmdns_IO_Context, boost::posix_time::seconds(120));
 	t.async_wait(boost::bind(Func, boost::asio::placeholders::error, &t, this));
 
 	fmdns_IO_Context.run();
