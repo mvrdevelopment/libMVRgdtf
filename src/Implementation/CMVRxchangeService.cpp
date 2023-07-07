@@ -226,8 +226,9 @@ void Func(const boost::system::error_code& /*e*/, boost::asio::deadline_timer* t
 
 void CMVRxchangeServiceImpl::mDNS_Client_Start()
 {
-	boost::asio::deadline_timer t(fmdns_IO_Context, boost::posix_time::seconds(120));
-	t.async_wait(boost::bind(Func, boost::asio::placeholders::error, &t, this));
+	boost::asio::deadline_timer t_short(fmdns_IO_Context, boost::posix_time::seconds(1));
+	boost::asio::deadline_timer t_long (fmdns_IO_Context, boost::posix_time::seconds(120));
+	t_short.async_wait(boost::bind(Func, boost::asio::placeholders::error, &t_long, this));
 
 	fmdns_IO_Context.run();
 }
