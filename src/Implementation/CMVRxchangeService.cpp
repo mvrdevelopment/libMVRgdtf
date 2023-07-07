@@ -218,7 +218,7 @@ std::vector<MVRxchangeGoupMember> CMVRxchangeServiceImpl::GetMembersOfService(co
 
 void Func(const boost::system::error_code& /*e*/, boost::asio::deadline_timer* t, CMVRxchangeServiceImpl* imp)
 {
-	std::cout << std::endl<< << std::endl<< << std::endl << " mDNS_Client_Task " << std::endl<< std::endl<< std::endl;
+	std::cout << std::endl<< std::endl << std::endl << " mDNS_Client_Task " << std::endl<< std::endl<< std::endl;
 	imp->mDNS_Client_Task();
 
 	t->async_wait(boost::bind(Func, boost::asio::placeholders::error, t, imp));
