@@ -20,7 +20,8 @@ struct Query_result {
   
   std::string   hostNam;
   std::string   canonical_hostname;
-  uint16_t		port;
+  std::string   txt;
+  uint16_t		  port;
   std::string   ipV4_adress;
   std::string   ipV6_adress;  
 };

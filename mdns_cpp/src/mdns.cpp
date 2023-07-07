@@ -51,6 +51,18 @@ void SetQueryResultIP(std::string canonical_hostname, std::string ip, bool isIPv
     }
 } 
 
+void SetQueryResultTXT(std::string canonical_hostname, std::string txt) {  
+    for (size_t i = 0; i < globalQueryResult.size(); i++)
+   {
+      if (globalQueryResult[i].canonical_hostname == canonical_hostname) 
+      {
+          globalQueryResult[i].txt = txt;
+
+        break;
+      }      
+    }
+} 
+
 int mDNS::openServiceSockets(int *sockets, int max_sockets) {
   // When receiving, each socket can receive data from all network interfaces
   // Thus we only need to open one socket for each address family
@@ -342,6 +354,8 @@ static int query_callback(int sock, const struct sockaddr *from, size_t addrlen,
         snprintf(str_buffer, str_capacity, "%s : %s %.*s TXT %.*s\n", fromaddrstr.data(), entrytype,
                  MDNS_STRING_FORMAT(entrystr), MDNS_STRING_FORMAT(txtbuffer[itxt].key));
       }
+
+      SetQueryResultTXT(entrystr.str, str_buffer);
     }
   } else {
     snprintf(str_buffer, str_capacity, "%s : %s %.*s type %u rclass 0x%x ttl %u length %d\n", fromaddrstr.data(),
