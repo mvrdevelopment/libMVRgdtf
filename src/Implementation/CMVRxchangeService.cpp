@@ -6,16 +6,20 @@
 #include "../mvrxchange/mvrxchange_prefix.h"
 #include "../mvrxchange/mvrxchange_client.h"
 #include "XmlFileHelper.h"
+#include <boost/bind.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 
 VectorworksMVR::CMVRxchangeServiceImpl::CMVRxchangeServiceImpl()
 {
 	fServer_Running = false;
 	fServer = nullptr;
+	fmdns_Thread = std::thread(&CMVRxchangeServiceImpl::mDNS_Client_Start, this);
 }
 
 VectorworksMVR::CMVRxchangeServiceImpl::~CMVRxchangeServiceImpl()
 {
+	this->mDNS_Client_Stop();
 }
 
 VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const ConnectToLocalServiceArgs& service)
@@ -210,12 +214,28 @@ std::vector<MVRxchangeGoupMember> CMVRxchangeServiceImpl::GetMembersOfService(co
 	return list;
 }
 
+void Func(const boost::system::error_code& /*e*/, boost::asio::deadline_timer* t, CMVRxchangeServiceImpl* imp)
+{
+	imp->mDNS_Client_Task();
+
+	t->async_wait(boost::bind(Func, boost::asio::placeholders::error, t, imp));
+}
+
 void CMVRxchangeServiceImpl::mDNS_Client_Start()
 {
+	boost::asio::deadline_timer t(fmdns_IO_Context, boost::posix_time::seconds(5));
+	t.async_wait(boost::bind(Func, boost::asio::placeholders::error, &t, this));
+
+	fmdns_IO_Context.run();
 }
 
 void CMVRxchangeServiceImpl::mDNS_Client_Stop()
 {
+	if (fmdns_Thread.joinable())
+	{
+		fmdns_IO_Context.stop();
+		fmdns_Thread.join();
+	}
 }
 
 void CMVRxchangeServiceImpl::mDNS_Client_Task()

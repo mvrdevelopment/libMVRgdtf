@@ -40,12 +40,17 @@ namespace VectorworksMVR
 
 	private:
 		mdns_cpp::mDNS 							fmdns;
+		std::thread 							fmdns_Thread;
+		boost::asio::io_context 				fmdns_IO_Context;
+
 		std::mutex 								fQueryLocalServicesResult_mtx;
 		std::vector<ConnectToLocalServiceArgs> 	fQueryLocalServicesResult;
 
 		void mDNS_Client_Start();
 		void mDNS_Client_Stop();
+	public:
 		void mDNS_Client_Task();
+	private:
 
 
 		//---------------------------------------------------------------------------
