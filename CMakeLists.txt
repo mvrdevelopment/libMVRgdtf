@@ -4,17 +4,21 @@ cmake_minimum_required(VERSION 3.9.4)
 # pre setup for some vars
 set(UNITTEST FALSE CACHE BOOL "If enabled the tests wont be build!")
 set(WIN_RUNTIME_LIB "-MD" CACHE STRING "Set '-MD' or '-MT' for windows build")
-set(DO_NOT_INCLUDE_MINI_ZIP FALSE CACHE BOOL "Set wheather or not we include the minzip lib")
+set(DO_NOT_INCLUDE_MINI_ZIP FALSE CACHE BOOL "Set whether or not we include the minzip lib")
+set(DONT_USE_XERCES_AS_XMLLIB FALSE CACHE BOOL "Set whether or we use Xerces or tinyXML as xml lib")
 
 
 set(XERCES_ROOT_PATH ${CMAKE_SOURCE_DIR}/../xerces-c CACHE STRING "Set the build path where you called cmake.")
 set(XERCES_INCLUDE_PATH ${XERCES_ROOT_PATH}/src ${XERCES_ROOT_PATH}/build/src CACHE STRING "Set the include path")
 
-if (WIN32)
-    set(XERCES_LIB_PATH ${CMAKE_SOURCE_DIR}/../xerces-c/build/src/Release/xerces-c_3.lib CACHE STRING "Set the xerces libary path")
+if (${DONT_USE_XERCES_AS_XMLLIB} OR DEFINED ENV{DONT_USE_XERCES_AS_XMLLIB})
 else()
+    if (WIN32)
+    set(XERCES_LIB_PATH ${CMAKE_SOURCE_DIR}/../xerces-c/build/src/Release/xerces-c_3.lib CACHE STRING "Set the xerces libary path")
+    else()
     set(XERCES_LIB_PATH ${CMAKE_SOURCE_DIR}/../xerces-c/build/src/libxerces-c-3.2.a CACHE STRING "Set the xerces libary path")
-endif(WIN32)
+    endif(WIN32)
+endif()
 
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -158,6 +162,10 @@ if(${DO_NOT_INCLUDE_MINI_ZIP} OR DEFINED ENV{DO_NOT_INCLUDE_MINI_ZIP})
     set(OUTPUT_NAME_OLD "${OUTPUT_NAME_OLD}_NO_MZ")
 
     set_target_properties(MvrGdtf PROPERTIES OUTPUT_NAME ${OUTPUT_NAME_OLD})
+endif()
+
+if(${DONT_USE_XERCES_AS_XMLLIB} OR DEFINED ENV{DONT_USE_XERCES_AS_XMLLIB})
+    target_compile_definitions(MvrGdtf PUBLIC DONT_USE_XERCES_AS_XMLLIB)
 endif()
 
 #Append Runtime

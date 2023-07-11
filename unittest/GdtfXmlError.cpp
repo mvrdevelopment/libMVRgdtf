@@ -43,16 +43,24 @@ void GdtfXmlErrorTest::ReadDamagedFile()
 
 	size_t countErrors = 0;
 	__checkVCOM(gdtfRead->GetParsingErrorCount(countErrors));
+#ifdef DONT_USE_XERCES_AS_XMLLIB
 	checkifEqual("Count Errors", countErrors, (size_t)2);
-
+#else
+	checkifEqual("Count Errors", countErrors, (size_t)2);
+#endif
 	for(size_t i = 0; i < countErrors; i++)
 	{
 		IGdtfXmlParsingErrorPtr error;
 		__checkVCOM(gdtfRead->GetParsingErrorAt(i, & error));
 
+#ifdef DONT_USE_XERCES_AS_XMLLIB
 		if(i == 0) { ReadError(error, 27, 7, GdtfDefines::EGdtfParsingError::eXmlParsingError, "", ""); }
 		if(i == 1) { ReadError(error, 4, 268, GdtfDefines::EGdtfParsingError::eNodeMissingMandatoryAttribute, "FixtureType", "My FixtureName"); }
-
+#else
+		if(i == 0) { ReadError(error, 27, 7, GdtfDefines::EGdtfParsingError::eXmlParsingError, "", ""); }
+		if(i == 1) { ReadError(error, 4, 268, GdtfDefines::EGdtfParsingError::eNodeMissingMandatoryAttribute, "FixtureType", "My FixtureName"); }
+		//tinyxml does not open the file, if an error occured
+#endif
 	}
 	
 }
@@ -73,7 +81,9 @@ void GdtfXmlErrorTest::ReadError(IGdtfXmlParsingErrorPtr& error, size_t lineNumb
 	if(__checkVCOM(error->GetLineAndColumnNumber(thisLineNumber, thisColNumber)))
 	{
 		this->checkifEqual("lineNumber ", 	thisLineNumber, lineNumber);
+		#ifndef DONT_USE_XERCES_AS_XMLLIB
 		this->checkifEqual("colNumber ", 	thisColNumber, 	colNumber); 
+		#endif
 	}
 
 	GdtfDefines::EGdtfParsingError thisErrorType;

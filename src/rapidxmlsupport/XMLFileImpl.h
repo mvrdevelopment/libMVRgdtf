@@ -1,8 +1,9 @@
-#ifndef DONT_USE_XERCES_AS_XMLLIB
+//-----------------------------------------------------------------------------
+//----- Copyright deersoft 2015 - 2019 www.deersoft.de
+//-----------------------------------------------------------------------------
 #pragma once
-#include "XercesSupport.h"
-
-
+#include "Prefix/StdAfx.h"
+#include "tinyxml2.h"
 
 namespace VectorworksMVR
 {
@@ -13,8 +14,9 @@ namespace VectorworksMVR
 
 
 		// ----------------------------------------------------------------------------------------------------
-		class CXMLFileImpl : public VCOMImpl<IXMLFile>, DOMErrorHandler
+		class CXMLFileImpl : public IXMLFile
 		{
+			/*static*/ void Tokenize(const TXString& string, TXStringArray& outArray, const char* szTokens, size_t tokensLen, bool doStopTokenizeForSpecialCh /*= false*/, char stopStartCh /*= '\''*/);
 		public:
 			CXMLFileImpl();
 			virtual			~CXMLFileImpl();
@@ -41,42 +43,13 @@ namespace VectorworksMVR
 			virtual bool		VCOM_CALLTYPE	GetSimpleExist(const TXString& nodePath);							// check to see if exist -- for organizing loops more efficiently
 			virtual bool		VCOM_CALLTYPE	GetSimpleExist(IXMLFileNode* pRefNode, const TXString& nodePath);	// check to see if exist
 
-			// DOMErrorHandler
-		public:
-			bool							handleError(const DOMError& domError);
-			void							resetErrors();
+			
+			virtual uint32_t	VCOM_CALLTYPE	AddRef();
+			virtual uint32_t	VCOM_CALLTYPE	Release();
+			private:
+			uint32_t 				fRefCnt;
+			tinyxml2::XMLDocument 	fDoc;
 
-		public:
-			static	char					GetPathDelimiter();
-			static	char					GetArrayStartDelimiter();
-			static	void					ConvertXMLError(XMLExcepts::Codes error);
-			static	void					ConvertXMLError(DOMException::ExceptionCode error);
-			static	VCOMError				GetLastError();
-			static	void					SetLastError(VCOMError error);
-			static	bool					IsNameXMLValid(const XMLCh* szString, size_t len);
-			static	EXMLFileError			GetLastEXMLFileError();
-		static void						Tokenize(const TXString& string, TXStringArray& outArray, const char* szTokens, size_t tokensLen, bool doStopTokenizeForSpecialCh = false, char stopStartCh = '\'');
-
-		private:
-			typedef EXMLFileError (*TWriteCallback)(void* pData, size_t dataSize, void* pEnv);
-			void							WriteXML(TWriteCallback pCallback, EXMLEncoding encoding, void* pEnv);
-			virtual VCOMError				DoSimpleNode(IXMLFileNode* pRefNode, const TXString& nodePath, IXMLFileNode** ppOutNode, TXString& outValue, bool doWrite);
-
-		private:
-			DOMImplementationPtr	fpImpl;
-
-			XercesDOMParserPtr		fpXercesDOMParser;		// Pointer to Xerces DOM parser structure
-
-			DOMDocumentPtr			fpDomDocument;
-			DOMElementPtr			fpDocRoot;
-
-			// features
-			bool					fbDoFormatPrettyPrint;
-			XMLCh					fTheNewLine[5];
-
-		private:
-			static VCOMError		fLastError;
 		};
 	}
 }
-#endif

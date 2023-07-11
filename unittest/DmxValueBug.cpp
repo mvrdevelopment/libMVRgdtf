@@ -82,7 +82,9 @@ void GdtfValueBug::ReadError(IGdtfXmlParsingErrorPtr& error, size_t lineNumber, 
 	if(__checkVCOM(error->GetLineAndColumnNumber(thisLineNumber, thisColNumber)))
 	{
 		this->checkifEqual("lineNumber ", 	thisLineNumber, lineNumber);
+        #ifndef DONT_USE_XERCES_AS_XMLLIB
 		this->checkifEqual("colNumber ", 	thisColNumber, 	colNumber); 
+        #endif
 	}
 
 	GdtfDefines::EGdtfParsingError thisErrorType;

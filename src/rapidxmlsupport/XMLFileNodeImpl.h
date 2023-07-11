@@ -1,9 +1,7 @@
-#ifndef DONT_USE_XERCES_AS_XMLLIB
 #pragma once
 #include "Include/VectorworksMVR.h"
-
-#include "XercesSupport.h"
-
+#include "Prefix/StdAfx.h"
+#include "tinyxml2.h"
 namespace VectorworksMVR
 {
 	namespace XML
@@ -14,16 +12,12 @@ namespace VectorworksMVR
 		// {D9B3E5F2-3799-11DB-9C35-00508D5E9851}
 		static const VWIID IID_XMLFileNode = { 0xD9B3E5F2, 0x3799, 0x11DB, { 0x9C, 0x35, 0x00, 0x50, 0x8D, 0x5E, 0x98, 0x51 } };
 
-		class CXMLFileNodeImpl : public VCOMImpl<IXMLFileNode>
+		class CXMLFileNodeImpl : public IXMLFileNode
 		{
 		public:
 			CXMLFileNodeImpl();
 			virtual			~CXMLFileNodeImpl();
 
-			void			SetData(DOMDocumentPtr pDomDocument, DOMNodePtr pNode);
-			DOMNodePtr		GetNode() const;
-
-			// IXMLFileNode
 		public:
 			virtual VCOMError	VCOM_CALLTYPE	IsEmpty(bool& outValue);
 			virtual VCOMError	VCOM_CALLTYPE	GetNodeName(TXString& outName);
@@ -55,14 +49,20 @@ namespace VectorworksMVR
 			virtual VCOMError   VCOM_CALLTYPE   AddCopyOfExistingNodeBeforeIndex(const IXMLFileNode* existingNode, size_t index, IXMLFileNode** ppOutNode);
 			virtual VCOMError   VCOM_CALLTYPE   GetLineNumber(size_t& line, size_t& column);
 
+			// IVWUnknown
+		public:
+			virtual uint32_t	VCOM_CALLTYPE	AddRef();
+			virtual uint32_t	VCOM_CALLTYPE	Release();
 		private:
-			VCOMError						FindAttribute(const TXString& attrName, DOMAttrPtr& outFoundAttr);
+			uint32_t 				fRefCnt;
+			tinyxml2::XMLElement* 	fElement;
+			
+		public:
+			void 				SetElement(tinyxml2::XMLElement* element);
+			static VCOMError 	GetInterface(tinyxml2::XMLElement* element, IXMLFileNode** ppOutNode);
+			
+			
 
-		private:
-			DOMDocumentPtr		fpDomDocument;
-			DOMNodePtr			fpNode;
 		};
 	}
 }
-
-#endif
