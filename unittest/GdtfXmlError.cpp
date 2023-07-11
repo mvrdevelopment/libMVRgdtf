@@ -57,7 +57,7 @@ void GdtfXmlErrorTest::ReadDamagedFile()
 		if(i == 0) { ReadError(error, 27, 7, GdtfDefines::EGdtfParsingError::eXmlParsingError, "", ""); }
 		if(i == 1) { ReadError(error, 4, 268, GdtfDefines::EGdtfParsingError::eNodeMissingMandatoryAttribute, "FixtureType", "My FixtureName"); }
 #else
-		if(i == 0) { ReadError(error, 27, 7, GdtfDefines::EGdtfParsingError::eXmlParsingError); }
+		if(i == 0) { ReadError(error, 27, 7, GdtfDefines::EGdtfParsingError::eXmlParsingError, "", ""); }
 		//tinyxml does not open the file, if an error occured
 #endif
 	}
