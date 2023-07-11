@@ -4,6 +4,22 @@
 #pragma once
 #include "Include/VectorworksMVR.h"
 
+// Check windows
+#if _WIN32 || _WIN64
+#if _WIN64
+#define IS64BIT
+#else
+#define IS32BIT
+#endif
+#else
+#if (INTPTR_MAX == INT32_MAX)
+# define IS32BIT
+#else
+# define IS64BIT
+#endif
+#endif
+
+
 struct UnittestFailObject
 {
     std::string fMessage;
@@ -31,12 +47,11 @@ public:
 	void checkifEqual(const std::string& check, const Sint32 val1, const Sint32 val2);
 	void checkifEqual(const std::string& check, const Uint8	 val1, const Uint8  val2);
 	void checkifEqual(const std::string& check, const double val1, const double val2);
+#if defined GS_MAC 
 	void checkifEqual(const std::string& check, const size_t val1, const size_t val2);
-#ifdef GS_MAC
-	// Under Win and Linux there is a problem with double declaration of DMXValue (Uint64 type) and size_t (also Uint64 type)
-	// OSX needs that extra declaration
-	void checkifEqual(const std::string& check, const VectorworksMVR::GdtfDefines::DmxValue val1, const VectorworksMVR::GdtfDefines::DmxValue val2);
 #endif
+	void checkifEqual(const std::string& check, const VectorworksMVR::GdtfDefines::DmxValue val1, const VectorworksMVR::GdtfDefines::DmxValue val2);
+
     void checkifEqual(const std::string& check, const VectorworksMVR::GdtfDefines::DMXAddress val1, const VectorworksMVR::GdtfDefines::DMXAddress val2);
     void checkifEqualPtr(const std::string& check, void* val1, void* val2);
 	void checkifEqual(const std::string& check, const VectorworksMVR::GdtfDefines::EGdtfModel_PrimitiveType val1, const VectorworksMVR::GdtfDefines::EGdtfModel_PrimitiveType val2);
@@ -75,9 +90,8 @@ public:
     bool Equalish(double val1, double val2, double epislon);
 
 	// For clearing false state if false error was forced
-	std::pair<bool, std::string>	getFailedTests();
+	size_t                      	getFailedTestCount();
 	void							resetFailedTestState();
-
 private:
     bool                fFailed;
     TUnittestFailArray  fFailedTests;

@@ -27,6 +27,8 @@ namespace VectorworksMVR
             Model3DSHigh,
             ModelGLTFLow,
             ModelGLTFHigh,
+            ModelSVGSide,
+            ModelSVGFront,
         };
 		
 		enum EGdtfObjectType

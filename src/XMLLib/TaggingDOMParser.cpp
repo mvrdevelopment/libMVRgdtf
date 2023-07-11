@@ -1,4 +1,4 @@
-#ifndef __DONT_USE_XERCES_AS_XMLLIB
+#ifndef DONT_USE_XERCES_AS_XMLLIB
 #include "Prefix/StdAfx.h"
 #include "TaggingDOMParser.h"
 
@@ -55,7 +55,6 @@ TaggingDOMParser::TaggingDOMParser() : dataHandler(new TagDataHandler())
 
 TaggingDOMParser::~TaggingDOMParser()
 {
-    
 }
 
 Tag* TaggingDOMParser::createTag()

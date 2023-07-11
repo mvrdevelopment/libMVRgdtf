@@ -705,6 +705,8 @@ namespace SceneData
 		const TXString&					GetGeometryFile_3DSLow_FullPath();
 		const TXString&					GetGeometryFile_3DSHigh_FullPath();
         const TXString&				    GetGeometryFile_SVG_FullPath();
+        const TXString&				    GetGeometryFile_SVGSide_FullPath();
+        const TXString&				    GetGeometryFile_SVGFront_FullPath();
 		const TXString&					GetGeometryFile_GLTF_FullPath();
 		const TXString&					GetGeometryFile_GLTFLow_FullPath();
 		const TXString&					GetGeometryFile_GLTFHigh_FullPath();
@@ -2861,10 +2863,11 @@ namespace SceneData
 		TXString		            fLongName;
 		TXString		            fManufacturer;
 		TXString		            fFixtureTypeDescription;
+		TXString		            fFunction;
 		GdtfFixtureGUID	            fGuid;
 		TXString		            fTumbnailName;
-		size_t						fThumbnailOffsetX;
-		size_t						fThumbnailOffsetY;
+		Sint32						fThumbnailOffsetX;
+		Sint32						fThumbnailOffsetY;
 		bool						fCanHaveChildren;
 		TXString		            fTumbnailFullPath_PNG;
         TXString		            fTumbnailFullPath_SVG;
@@ -2927,8 +2930,8 @@ namespace SceneData
 		GdtfFixtureGUID		        GetLinkedGuid() const;
 		bool				        HasLinkedGuid() const;
         const TXString&             GetThumbnailName() const;
-		size_t						GetThumbnailOffsetX() const;
-		size_t						GetThumbnailOffsetY() const;
+		Sint32						GetThumbnailOffsetX() const;
+		Sint32						GetThumbnailOffsetY() const;
 		bool						GetCanHaveChildren() const;
 		const GdtfPNGFile&          GetPNGThumnailFullPath();
         const TXString&             GetSVGThumnailFullPath();
@@ -2944,8 +2947,8 @@ namespace SceneData
 		void				SetGuid(const VWFC::Tools::VWUUID& uuid);
 		void				SetLinkedGuid(const VWFC::Tools::VWUUID& uuid);
 		void				SetThumbnailName(const TXString& fileName);
-		void				SetThumbnailOffsetX(size_t thumbnailOffsetX);
-		void				SetThumbnailOffsetY(size_t thumbnailOffsetY);
+		void				SetThumbnailOffsetX(Sint32 thumbnailOffsetX);
+		void				SetThumbnailOffsetY(Sint32 thumbnailOffsetY);
 		void				SetCanHaveChildren(bool canHaveChildren);
 
 

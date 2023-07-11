@@ -105,6 +105,22 @@ MvrString VectorworksMVR::CGdtfModelImpl::GetGeometryFile_SVG_FullPath()
 	return fModel->GetGeometryFile_SVG_FullPath().GetCharPtr();
 }
 
+MvrString VectorworksMVR::CGdtfModelImpl::GetGeometryFile_SVGSide_FullPath()
+{
+	// Check Pointer
+	if ( ! fModel) return "";
+	
+	return fModel->GetGeometryFile_SVGSide_FullPath().GetCharPtr();
+}
+
+MvrString VectorworksMVR::CGdtfModelImpl::GetGeometryFile_SVGFront_FullPath()
+{
+	// Check Pointer
+	if ( ! fModel) return "";
+	
+	return fModel->GetGeometryFile_SVGFront_FullPath().GetCharPtr();
+}
+
 MvrString VectorworksMVR::CGdtfModelImpl::GetGeometryFile_GLTF_FullPath()
 {
 	// Check Pointer

@@ -46,6 +46,7 @@ namespace SceneData
 		eTruss						= 6,
 		eVideoScreen				= 7,
 		eProjector					= 8,
+		eSupport					= 9,
 		eSymDef						= -1,
 		eProviderObj				= -2,
 		ePosition					= -3,
@@ -54,6 +55,10 @@ namespace SceneData
 		eSourceObject				= -6,
 		eMappingDefinitionObject	= -7,
 		eMappingObject				= -8,
+		eCustomCommand				= -9,
+		eConnectionObject 			= -10,
+		eAlignment					= -11,
+		eOverwrite					= -12,
 	};
 	
 	enum class ESearchUuidIn
@@ -111,7 +116,7 @@ namespace SceneData
 		void			setName(const TXString& value);
 		
 		// Write
-		void			PrintToFile(IXMLFileNodePtr pContainerNode, SceneDataExchange* exchange);
+		virtual void	PrintToFile(IXMLFileNodePtr pContainerNode, SceneDataExchange* exchange);
 		void			ReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange);
 		
 	public:
@@ -367,6 +372,148 @@ namespace SceneData
 	};
 	typedef SceneDataMappingObj*				SceneDataMappingObjPtr;
 	typedef std::vector<SceneDataMappingObjPtr>	SceneDataMappingObjArray;
+
+	// ----------------------------------------------------------------------------------------------------------------------------------
+	// SceneDataCustomCommand
+	class SceneDataCustomCommand : public SceneDataObj
+	{
+
+	public:
+		SceneDataCustomCommand();
+		SceneDataCustomCommand(const TXString& channelFunction, bool isPercentage, double value);
+		virtual ~SceneDataCustomCommand();
+		
+	private:
+
+		TXString	fChannelFunction;
+		bool		fIsPercentage;
+		double		fValue;
+		
+	public:
+		virtual const TXString&	GetChannelFunction();
+		virtual bool 			IsPercentage();
+		virtual double 			GetValue();
+
+		virtual void 			SetChannelFunction(const TXString& channelFunction);
+		virtual void			SetIsPercentage(bool isPercentage);
+		virtual void 			SetValue(double value);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual ESceneDataObjectType	GetObjectType();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange);
+
+	};
+	typedef SceneDataCustomCommand*				    SceneDataCustomCommandPtr;
+	typedef std::vector<SceneDataCustomCommandPtr>	SceneDataCustomCommandArray;
+
+	// ----------------------------------------------------------------------------------------------------------------------------------
+	// SceneDataAlignment
+	class SceneDataAlignment : public SceneDataObj
+	{
+
+	public:
+		SceneDataAlignment();
+		SceneDataAlignment(const TXString& beamGeometry, const VWPoint3D& upVector, const VWPoint3D& direction);
+		virtual ~SceneDataAlignment();
+		
+	private:
+
+		TXString	fBeamGeometry;
+		VWPoint3D	fUpVector;
+		VWPoint3D	fDirection;
+		
+	public:
+		virtual const TXString&		GetBeamGeometry();
+		virtual const VWPoint3D&	GetUpVector();
+		virtual const VWPoint3D&	GetDirection();
+
+		virtual void 			SetBeamGeometry(const TXString& beamGeometry);
+		virtual void			SetUpVector(double x, double y, double z);
+		virtual void 			SetDirection(double x, double y, double z);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual ESceneDataObjectType	GetObjectType();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange);
+
+	};
+	typedef SceneDataAlignment*				    SceneDataAlignmentPtr;
+	typedef std::vector<SceneDataAlignmentPtr>	SceneDataAlignmentArray;
+
+	// ----------------------------------------------------------------------------------------------------------------------------------
+	// SceneDataOverwrite
+	class SceneDataOverwrite : public SceneDataObj
+	{
+
+	public:
+		SceneDataOverwrite();
+		SceneDataOverwrite(const TXString& universal, const TXString& target);
+		virtual ~SceneDataOverwrite();
+		
+	private:
+
+		TXString	fUniversal;
+		TXString	fTarget;
+		
+	public:
+		virtual const TXString&	GetUniversal();
+		virtual const TXString&	GetTarget();
+
+		virtual void SetUniversal(const TXString& universal);
+		virtual void SetTarget(const TXString& target);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual ESceneDataObjectType	GetObjectType();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange);
+
+	};
+	typedef SceneDataOverwrite*				    SceneDataOverwritePtr;
+	typedef std::vector<SceneDataOverwritePtr>	SceneDataOverwriteArray;
+	
+	// ----------------------------------------------------------------------------------------------------------------------------------
+	// SceneDataConnectionObj
+	class SceneDataConnectionObj : public SceneDataObj
+	{
+
+	public:
+		SceneDataConnectionObj();
+		SceneDataConnectionObj(const TXString& own, const TXString& other, const TXString& toObject);
+		SceneDataConnectionObj(const TXString& own, const TXString& other, const SceneDataGUID& toObject);
+		
+		virtual ~SceneDataConnectionObj();
+		
+	private:
+
+		TXString 		fOwn;
+		TXString 		fOther;
+		SceneDataGUID	fToObject;		
+
+	public:
+		virtual SceneDataGUID&	GetToObject();
+		virtual TXString&		GetOwn();
+		virtual TXString&		GetOther();
+
+		
+		virtual void 			SetToObject(SceneDataGUID uuid);
+		virtual void			SetOwn(TXString& own);
+		virtual void			SetOther(TXString& other);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual ESceneDataObjectType	GetObjectType();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange);
+
+	};
+	typedef SceneDataConnectionObj*				SceneDataConnectionObjPtr;
+	typedef std::vector<SceneDataConnectionObjPtr>	SceneDataConnectionObjArray;
+	
+	
 	
 	
 	// ----------------------------------------------------------------------------------------------------------------------------------
@@ -388,10 +535,18 @@ namespace SceneData
 		
 		SceneDataClassObjPtr		fClass;
 		TXString					fUnresolvedClass;
+
+		TXString					fGdtfFile;
+		TXString					fGdtfDmxMode;
 		
 		// Geometry stuff
 		SceneDataGeometryObjArray	fGeometries;
+
+		SceneDataCustomCommandArray fCustomCommands;
+		SceneDataAlignmentArray 	fAlignments;
+		SceneDataOverwriteArray 	fOverwrites;
 		
+		SceneDataConnectionObjArray fConnections;
 		
 	public:
 		void						GetTransformMatric(VWTransformMatrix& matrix) const;
@@ -403,10 +558,29 @@ namespace SceneData
 		
 		SceneDataGroupObj*			GetContainer() const;
 		SceneDataObjWithMatrix*		GetNextObject() const;
+
+		const TXString&				GetGdtfFile() const;
+		void						SetGDTFFile(const TXString& path);
+		
+		const TXString&				GetGdtfDmxMode() const;
+		void						SetGdtfDmxMode(const TXString& path);
 		
 		void								AddGeometryObj(SceneDataGeoInstanceObjPtr object);
 		const SceneDataGeometryObjArray&	GetGeometryArr() const;
+
+		SceneDataCustomCommandPtr			AddCustomCommand(const TXString& channelFunction, bool isPercentage, double value);
+		const SceneDataCustomCommandArray&	GetCustomCommandArray() const;
+
+		SceneDataAlignmentPtr			AddAlignment(const TXString& beamGeometry, const VWPoint3D& upVector, const VWPoint3D& direction);
+		const SceneDataAlignmentArray&	GetAlignmentArray() const;
+
+		SceneDataOverwritePtr			AddOverwrite(const TXString& universal, const TXString& target);
+		const SceneDataOverwriteArray&	GetOverwriteArray() const;
 		
+		SceneDataConnectionObjPtr			AddConnectionObj(const TXString& own, const TXString& other, const SceneDataGUID toObject);
+		const SceneDataConnectionObjArray&	GetConnectionArr() const;
+		
+
 	protected:
 		void						ReadMatrixNodeValue(const IXMLFileNodePtr& pNode, VWPoint3D& inOutPoint);
 		virtual	void				OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);
@@ -416,8 +590,30 @@ namespace SceneData
 	typedef SceneDataObjWithMatrix*					SceneDataObjWithMatrixPtr;
 	typedef std::vector<SceneDataObjWithMatrixPtr>	SceneDataObjWithMatrixArray;
 	
-	// ----------------------------------------------------------------------------------------------------------------------------------
-	// SceneDataObjWithMatrix
+    // ----------------------------------------------------------------------------------------------------------------------------------
+	// SceneDataGroupObj
+	class SceneDataGroupObj : public SceneDataObjWithMatrix
+	{
+		
+	public:
+		SceneDataGroupObj(const SceneDataGUID& guid);
+		virtual ~SceneDataGroupObj();		
+	private:
+		SceneDataObjWithMatrixArray	fChildObjs;
+		
+	public:
+		const SceneDataObjWithMatrixArray&	GetChildArray() const;
+		bool								AddObject(SceneDataObjWithMatrixPtr obj);
+		
+		virtual ESceneDataObjectType	GetObjectType();
+		virtual void	                PrintToFile(IXMLFileNodePtr pContainerNode, SceneDataExchange* exchange);
+	protected:
+		virtual	TXString				GetNodeName();		
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);
+		
+	};
+	typedef SceneDataGroupObj* SceneDataGroupObjPtr;	
+    
 	class SceneDataGeoInstanceObj : public SceneDataObjWithMatrix
 	{
 	public:
@@ -466,37 +662,6 @@ namespace SceneData
 	};
 	typedef SceneDataGeometryObj*					SceneDataGeometryObjPtr;
 	
-	
-	// ----------------------------------------------------------------------------------------------------------------------------------
-	// SceneDataGroupObj
-	class SceneDataGroupObj : public SceneDataObjWithMatrix
-	{
-		
-	public:
-		SceneDataGroupObj(const SceneDataGUID& guid);
-		virtual ~SceneDataGroupObj();
-		
-		
-		
-	private:
-		SceneDataObjWithMatrixArray	fChildObjs;
-		
-	public:
-		const SceneDataObjWithMatrixArray&	GetChildArray() const;
-		bool								AddObject(SceneDataObjWithMatrixPtr obj);
-		
-		virtual ESceneDataObjectType	GetObjectType();
-		
-	protected:
-		virtual	TXString				GetNodeName();
-		
-		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);
-		
-	};
-	typedef SceneDataGroupObj* SceneDataGroupObjPtr;
-	
-	
-	
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataLayerObj
 	class SceneDataLayerObj : public SceneDataGroupObj
@@ -518,7 +683,7 @@ namespace SceneData
 	
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataFocusPointObj
-	class SceneDataFocusPointObj : public SceneDataObjWithMatrix
+	class SceneDataFocusPointObj : public SceneDataGroupObj
 	{
 		
 	public:
@@ -549,7 +714,7 @@ namespace SceneData
 	typedef std::vector<SceneDataDmxAdress>	SceneDataAdressArray;
 	
 	
-	class SceneDataFixtureObj : public SceneDataObjWithMatrix
+	class SceneDataFixtureObj : public SceneDataGroupObj
 	{
 		
 	public:
@@ -559,8 +724,7 @@ namespace SceneData
 		
 		
 	private:
-		TXString						fGdtfFile;
-		TXString						fGdtfDmxMode;
+		TXString						fFunction;
 		TXString 						fGobo;
 		double							fGoboRotation;
 		SceneDataFocusPointObjPtr		fFocusPoint;
@@ -588,8 +752,7 @@ namespace SceneData
 		
 	public:
 		
-		const TXString&					GetGdtfFile();
-		const TXString&					GetGdtfDmxMode();
+		const TXString&					GetFunction();
 		SceneDataFocusPointObjPtr		GetFocusPoint();
 		SceneDataPositionObjPtr			GetPosition();
 		const TXString&					GetFixtureId();
@@ -603,10 +766,9 @@ namespace SceneData
 		bool							GetCastShadow();
 		SceneDataMappingObjArray		GetMappingsArray();
 		
+		void							SetFunction(const TXString& str);
 		void							SetPosition(SceneDataPositionObjPtr ptr);
 		void							SetFocusPoint(SceneDataFocusPointObjPtr ptr);
-		void							SetGDTFFile(const TXString& path);
-		void							SetGdtfDmxMode(const TXString& path);
 		void							AddAdress(const SceneDataDmxAdress& adress);
 		void							SetColor(const CCieColor& color);
 		void							SetFixtureTypeId(const Sint8& value);
@@ -630,7 +792,7 @@ namespace SceneData
 	
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataSceneryObj
-	class SceneDataSceneryObj : public SceneDataObjWithMatrix
+	class SceneDataSceneryObj : public SceneDataGroupObj
 	{
 		
 	public:
@@ -645,7 +807,7 @@ namespace SceneData
 	
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataObjWithMatrix
-	class SceneDataTrussObj : public SceneDataObjWithMatrix
+	class SceneDataTrussObj : public SceneDataGroupObj
 	{
 		
 	public:
@@ -660,9 +822,24 @@ namespace SceneData
 	typedef SceneDataTrussObj* SceneDataTrussObjPtr;
 	
 	
+	class SceneDataSupportObj : public SceneDataGroupObj
+	{
+		
+	public:
+		SceneDataSupportObj(const SceneDataGUID& guid);
+		virtual ~SceneDataSupportObj();
+		
+	private:
+		virtual	TXString				GetNodeName();
+		virtual ESceneDataObjectType	GetObjectType();
+		
+	};
+	typedef SceneDataSupportObj* SceneDataSupportObjPtr;
+	
+
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataVideoScreenObj
-	class SceneDataVideoScreenObj : public SceneDataObjWithMatrix
+	class SceneDataVideoScreenObj : public SceneDataGroupObj
 	{
 		
 	public:
@@ -687,7 +864,7 @@ namespace SceneData
 
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataProjectorObj
-	class SceneDataProjectorObj : public SceneDataObjWithMatrix
+	class SceneDataProjectorObj : public SceneDataGroupObj
 	{
 		
 	public:
@@ -775,6 +952,8 @@ namespace SceneData
         TFileIdentifierPtrArray				f3DSLow_FilesToAdd;
         TFileIdentifierPtrArray				f3DSHigh_FilesToAdd;
         TFileIdentifierPtrArray				fSVG_FilesToAdd;
+        TFileIdentifierPtrArray				fSVGSide_FilesToAdd;
+        TFileIdentifierPtrArray				fSVGFront_FilesToAdd;
 		TFileIdentifierPtrArray				fGLTF_FilesToAdd;
 		TFileIdentifierPtrArray				fGLTFLow_FilesToAdd;
 		TFileIdentifierPtrArray				fGLTFHigh_FilesToAdd;
@@ -833,6 +1012,7 @@ namespace SceneData
 		SceneDataSceneryObjPtr		CreateSceneryObject(const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
 		SceneDataFocusPointObjPtr	CreateFocusPoint(	const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
 		SceneDataTrussObjPtr		CreateTruss(		const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
+		SceneDataSupportObjPtr		CreateSupport(		const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
 		SceneDataVideoScreenObjPtr	CreateVideoScreen(	const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
 		SceneDataProjectorObjPtr	CreateProjector(	const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
 		
@@ -853,6 +1033,7 @@ namespace SceneData
 		SceneDataSceneryObjPtr		ReadSceneryObject(		const SceneDataGUID& guid,const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
 		SceneDataFocusPointObjPtr	ReadFocusPoint(			const SceneDataGUID& guid,const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
 		SceneDataTrussObjPtr		ReadTruss(				const SceneDataGUID& guid,const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
+		SceneDataSupportObjPtr		ReadSupport(			const SceneDataGUID& guid,const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
 		SceneDataVideoScreenObjPtr	ReadVideoScreen(		const SceneDataGUID& guid,const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
 		SceneDataProjectorObjPtr	ReadProjector(			const SceneDataGUID& guid,const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
 		
@@ -887,7 +1068,8 @@ namespace SceneData
 	private:
 		void ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xmlFile);
 		void ProcessLayer(const IXMLFileNodePtr& node);
-		void ProcessGroup(const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer, bool createNewContainer);
+        void ReadChildObjs(const IXMLFileNodePtr & node, SceneDataGroupObjPtr addToContainer);
+		void ProcessGroup(const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
 		
 		
 		

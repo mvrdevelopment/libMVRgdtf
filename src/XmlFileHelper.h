@@ -62,7 +62,9 @@ namespace SceneData
 		static TXString	ConvertDouble(double value);
 		static TXString	ConvertDoubleArray(TDoubleArray& values, bool includeBrackets);
 		static TXString	ConvertInteger(Sint32 value);
+#ifdef IS64BIT
 		static TXString	ConvertInteger(Uint32 value);
+#endif
         static TXString	ConvertDmxBreak(Sint32 value);
 		static TXString	ConvertInteger(size_t value);
 		static TXString	ConvertInteger(Sint32 value, bool noneValue);
@@ -114,7 +116,9 @@ namespace SceneData
 		static bool		ConvertPrimitiveType(			const TXString& value, const IXMLFileNodePtr& node,	EGdtfModel_PrimitiveType& type);
 		static bool		ConvertLampeType(				const TXString& value, const IXMLFileNodePtr& node,	EGdtfLampType& lampType);
 		static bool		ConvertInteger(					const TXString& value, const IXMLFileNodePtr& node,	Sint32&	intValue);
+#ifdef IS64BIT
 		static bool		ConvertInteger(					const TXString& value, const IXMLFileNodePtr& node,	Uint32&	intValue);
+#endif
         static bool		ConvertDmxBreak(				const TXString& value, const IXMLFileNodePtr& node,	Sint32&	intValue);
 		static bool		ConvertInteger(					const TXString& value, const IXMLFileNodePtr& node,	Sint8& intValue);
 		static bool		ConvertInteger(					const TXString& value, const IXMLFileNodePtr& node,	Uint8& intValue);

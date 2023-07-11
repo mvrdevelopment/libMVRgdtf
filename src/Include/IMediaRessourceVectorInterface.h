@@ -157,7 +157,7 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetGeometryAt(size_t at, IGeometryReference** outGeometryRef) = 0;
 		
 		virtual VCOMError VCOM_CALLTYPE		AddGeometry(const STransformMatrix& geometry, MvrString fileName) = 0;
-		virtual VCOMError VCOM_CALLTYPE		AddSymbol(const STransformMatrix& geometry, ISymDef* symDef) = 0;
+		virtual VCOMError VCOM_CALLTYPE		AddSymbol(const MvrUUID& guid, const STransformMatrix& geometry, ISymDef* symDef) = 0;
 		
 	};
 	typedef VCOMPtr<ISymDef>	ISymDefPtr;
@@ -218,6 +218,65 @@ namespace VectorworksMVR
 		
 	};
 	typedef VCOMPtr<IMapping>	IMappingPtr;
+
+	//-------------------------------------------------------------------------------------------------------------
+	class DYNAMIC_ATTRIBUTE IConnection : public IVWUnknown
+	{
+	public:
+		virtual VCOMError VCOM_CALLTYPE		GetToObject(MvrUUID& objUUID) = 0;
+		virtual MvrString VCOM_CALLTYPE		GetOwn() = 0;
+		virtual MvrString VCOM_CALLTYPE		GetOther() = 0;
+
+		virtual VCOMError VCOM_CALLTYPE		SetToObject(MvrUUID objUUID) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetOwn(MvrString value) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetOther(MvrString value) = 0;
+		
+	};
+	typedef VCOMPtr<IConnection>	IConnectionPtr;
+
+	//-------------------------------------------------------------------------------------------------------------
+
+	class DYNAMIC_ATTRIBUTE ICustomCommand : public IVWUnknown
+	{
+	public:
+		virtual MvrString VCOM_CALLTYPE		GetChannelFunction() = 0;
+		virtual VCOMError VCOM_CALLTYPE		IsPercentage(bool& isPercentage) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetValue(double& outValue) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE		SetChannelFunction(const MvrString& channelFunction) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetIsPercentage(bool isPercentage) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetValue(double value) = 0;
+		
+	};
+	typedef VCOMPtr<ICustomCommand>	ICustomCommandPtr;
+
+	//-------------------------------------------------------------------------------------------------------------
+	class DYNAMIC_ATTRIBUTE IAlignment : public IVWUnknown
+	{
+	public:
+		virtual MvrString VCOM_CALLTYPE		GetBeamGeometry() = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetUpVector(SVector3& upVector) = 0;
+		virtual VCOMError VCOM_CALLTYPE	    GetDirection(SVector3& direction) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE		SetBeamGeometry(const MvrString& beamGeometry) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetUpVector(double x, double y, double z) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetDirection(double x, double y, double z) = 0;
+		
+	};
+	typedef VCOMPtr<IAlignment>	IAlignmentPtr;
+
+	//-------------------------------------------------------------------------------------------------------------
+	class DYNAMIC_ATTRIBUTE IOverwrite : public IVWUnknown
+	{
+	public:
+		virtual MvrString VCOM_CALLTYPE		GetUniversal() = 0;
+		virtual MvrString VCOM_CALLTYPE		GetTarget() = 0;
+
+		virtual VCOMError VCOM_CALLTYPE		SetUniversal(const MvrString& universal) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetTarget(const MvrString& target) = 0;
+		
+	};
+	typedef VCOMPtr<IOverwrite>	IOverwritePtr;
 	
 	//-------------------------------------------------------------------------------------------------------------
 	enum class ESceneObjType
@@ -230,6 +289,7 @@ namespace VectorworksMVR
 		VideoScreen,
 		Fixture,
 		Projector,
+		Support,
 	};
 	
 	class DYNAMIC_ATTRIBUTE ISceneObj : public IVWUnknown
@@ -246,16 +306,22 @@ namespace VectorworksMVR
 		
 		
 		virtual VCOMError VCOM_CALLTYPE		AddGeometry(const STransformMatrix& geometry, MvrString fileName) = 0;
-		virtual VCOMError VCOM_CALLTYPE		AddSymbol(const STransformMatrix& geometry, ISymDef* symDef) = 0;
+		virtual VCOMError VCOM_CALLTYPE		AddSymbol(const MvrUUID& guid, const STransformMatrix& geometry, ISymDef* symDef) = 0;
 		
 		virtual VCOMError VCOM_CALLTYPE		GetClass(IClass** outClass) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetClass(IClass* clas) = 0;
 		
-		
-		// Fixture
 		virtual MvrString VCOM_CALLTYPE		GetGdtfName() = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetGdtfFixture(IGdtfFixture** outFixture) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetGdtfName(MvrString gdtfName) = 0;
+		
 		virtual MvrString VCOM_CALLTYPE		GetGdtfMode() = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetGdtfMode(MvrString gdtfMode) = 0;
+
+		// Fixture
+		virtual MvrString VCOM_CALLTYPE		GetFunction() = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetFunction(MvrString function) = 0;
+
 		virtual VCOMError VCOM_CALLTYPE		GetFocusPoint(ISceneObj** outFocusPoint) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetPosition(IPosition** outPosition) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetAdressCount(size_t& outAdresses) = 0;
@@ -272,8 +338,6 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetMappingCount(size_t& outMappings) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetMappingAt(size_t at, IMapping** outMapping) = 0;
 		
-		virtual VCOMError VCOM_CALLTYPE		SetGdtfName(MvrString gdtfName) = 0;
-		virtual VCOMError VCOM_CALLTYPE		SetGdtfMode(MvrString gdtfMode) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetFocusPoint(ISceneObj* focusPoint) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetPosition(IPosition* position) = 0;
 		virtual VCOMError VCOM_CALLTYPE		AddAdress(const size_t& adresses, const size_t& breakId) = 0;
@@ -295,7 +359,23 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		SetProjectorSource(MvrString value, MvrString linkedGeometry, GdtfDefines::ESourceType) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetProjectorSource(ISource** outSource) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetScaleHandling(GdtfDefines::EScaleHandlingType scaleHandling) = 0;
-		virtual VCOMError VCOM_CALLTYPE		GetScaleHandling(GdtfDefines::EScaleHandlingType& outScaleHandling) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetScaleHandling(GdtfDefines::EScaleHandlingType& outScaleHandling) = 0;	
+		virtual VCOMError VCOM_CALLTYPE		GetConnectionCount(size_t& outConnections) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetConnectionAt(size_t at, IConnection** outConnection) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateConnection(MvrString own, MvrString other, MvrUUID ToObject, IConnection** addedObj) = 0;
+		// MVR 1.5
+		virtual VCOMError VCOM_CALLTYPE		GetCustomCommandCount(size_t& outCount) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetCustomCommandAt(size_t at, ICustomCommand** outCustomCommand) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateCustomCommand(MvrString channelFunction, bool isPercentage, double physicalValue, ICustomCommand** outCustomCommand) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE		GetAlignmentCount(size_t& outCount) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetAlignmentAt(size_t at, IAlignment** outAlignment) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateAlignment(MvrString beamGeometry, const SVector3& upVector, const SVector3& direction, IAlignment** outAlignment) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE		GetOverwriteCount(size_t& outCount) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetOverwriteAt(size_t at, IOverwrite** outOverwrite) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateOverwrite(MvrString universal, MvrString target, IOverwrite** outOverwrite) = 0;
+
 	};
 	typedef VCOMPtr<ISceneObj>	ISceneObjPtr;
 	
@@ -328,6 +408,7 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		CreateFocusPoint(	const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj** outFocusPoint) = 0;
 		virtual VCOMError VCOM_CALLTYPE		CreateVideoScreen(	const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj** outVideoScreen) = 0;
 		virtual VCOMError VCOM_CALLTYPE		CreateTruss(		const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outTruss) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateSupport(		const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outSupport) = 0;
 		virtual VCOMError VCOM_CALLTYPE		CreateProjector(	const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outProjector) = 0;
 
 		// Add the end call to write the file to disk
@@ -605,6 +686,9 @@ namespace VectorworksMVR
 
 		virtual MvrString VCOM_CALLTYPE     GetGeometryFile_GLTFLow_FullPath() 	= 0;
 		virtual MvrString VCOM_CALLTYPE     GetGeometryFile_GLTFHigh_FullPath() = 0;
+
+		virtual MvrString VCOM_CALLTYPE     GetGeometryFile_SVGSide_FullPath() 	= 0;
+		virtual MvrString VCOM_CALLTYPE     GetGeometryFile_SVGFront_FullPath() = 0;
 	};
 	typedef VCOMPtr<IGdtfModel>	IGdtfModelPtr;
 	
@@ -1556,11 +1640,11 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
         virtual VCOMError VCOM_CALLTYPE  	CreateGamut(MvrString name, CieColor color, VectorworksMVR::IGdtfGamut** outVal) = 0;
         virtual VCOMError VCOM_CALLTYPE  	GetGamutAt(size_t at, VectorworksMVR::IGdtfGamut** value) = 0;
 
-		virtual VCOMError 					GetThumbnailOffsetX(size_t& offsetX) = 0;
-		virtual VCOMError VCOM_CALLTYPE		SetThumbnailOffsetX(size_t offsetX) = 0;	
+		virtual VCOMError VCOM_CALLTYPE 	GetThumbnailOffsetX(Sint32& offsetX) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetThumbnailOffsetX(Sint32 offsetX) = 0;	
 
-		virtual VCOMError VCOM_CALLTYPE		GetThumbnailOffsetY(size_t& offsetY) = 0;
-		virtual VCOMError VCOM_CALLTYPE		SetThumbnailOffsetY(size_t offsetY) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetThumbnailOffsetY(Sint32& offsetY) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetThumbnailOffsetY(Sint32 offsetY) = 0;
 
 	};
     typedef VCOMPtr<IGdtfFixture>	IGdtfFixturePtr;
@@ -1663,6 +1747,7 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
         virtual MvrString VCOM_CALLTYPE     GetErrorMessage() = 0;
         virtual MvrString VCOM_CALLTYPE     GetNodeName() = 0;
         virtual VCOMError VCOM_CALLTYPE     GetLineAndColumnNumber(size_t& line, size_t& column) = 0;
+        virtual MvrString VCOM_CALLTYPE     GetObjectName() = 0;
     };
     typedef VCOMPtr<IGdtfXmlParsingError>	IGdtfXmlParsingErrorPtr;
 
