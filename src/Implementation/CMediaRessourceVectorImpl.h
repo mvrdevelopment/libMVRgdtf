@@ -14,7 +14,6 @@
 
 #include "CSourceImpl.h"
 #include "CMappingImpl.h"
-
 namespace VectorworksMVR
 {
 	class CMediaRessourceVectorImpl : public VCOMImpl<IMediaRessourceVectorInterface>
@@ -61,6 +60,7 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		CreateSceneObject(	const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outSceneObj);
 		virtual VCOMError VCOM_CALLTYPE		CreateFocusPoint(	const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj** outFocusPoint);
 		virtual VCOMError VCOM_CALLTYPE		CreateTruss(		const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outTruss);
+		virtual VCOMError VCOM_CALLTYPE		CreateSupport(		const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outSupport);
 		virtual VCOMError VCOM_CALLTYPE		CreateVideoScreen(	const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj** outVideoScreen);
 		virtual VCOMError VCOM_CALLTYPE		CreateProjector(	const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outProjector);
 		

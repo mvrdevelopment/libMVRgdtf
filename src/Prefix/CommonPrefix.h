@@ -151,6 +151,26 @@
 #define XML_Val_MappingOy	            "oy"
 #define XML_Val_MappingRz	            "rz"
 
+#define XML_Val_ConnectionNodeName      "Connection"
+#define XML_Val_ConnectionsNodeName     "Connections"
+#define XML_Val_ConnectionOwn           "own"
+#define XML_Val_ConnectionOther         "other"
+#define XML_Val_ConnectionToObject      "toObject"
+
+#define XML_Val_CustomCommandsNodeName	"CustomCommands"
+#define XML_Val_CustomCommandNodeName	"CustomCommand"
+
+#define XML_Val_AlignmentsNodeName	    "Alignments"
+#define XML_Val_AlignmentNodeName	    "Alignment"
+#define XML_Val_AlignmentBeamGeometry   "geometry"
+#define XML_Val_AlignmentUpVector       "up"
+#define XML_Val_AlignmentDirection      "direction"
+
+#define XML_Val_OverwritesNodeName	    "Overwrites"
+#define XML_Val_OverwriteNodeName	    "Overwrite"
+#define XML_Val_OverwriteUniversal      "universal"
+#define XML_Val_OverwriteTarget         "target"
+
 #define XML_Val_LayerObjectNodeName	"Layer"
 #define XML_Val_FixtureNodeName		"Fixture"
 #define XML_Val_GroupNodeName		"GroupObject"
@@ -182,6 +202,7 @@
 #define XML_Val_FixtureTypeId		"FixtureTypeId"
 #define XML_Val_FixtureCustomid		"CustomId"
 #define XML_Val_FixtureGobo		    "Gobo"
+#define XML_Val_FixtureFunction	    "Function"
 #define XML_Val_FixtureGoboRotation "rotation"
 #define XML_Val_FixtureCastShadow   "CastShadow"
 #define XML_Val_FixtureMappings     "Mappings"
@@ -191,6 +212,8 @@
 #define XML_Val_FocusPointObjectNodeName	"FocusPoint"
 
 #define XML_Val_TrussObjectNodeName			"Truss"
+
+#define XML_Val_SupportObjectNodeName		"Support"
 
 #define XML_Val_VideoScreenObjectNodeName	"VideoScreen"
 #define XML_Val_VideoScreenObjectSources    "Sources"
@@ -207,7 +230,7 @@
 #define XML_Val_GeometryObjectAttrFile		"fileName"
 
 const Sint32 kMVR_MajorVersion = 1;
-const Sint32 kMVR_MinorVersion = 4;
+const Sint32 kMVR_MinorVersion = 5;
 
 // ----------------------------------------------------------------------------------------------------------------------------------
 // GDTF XML Values

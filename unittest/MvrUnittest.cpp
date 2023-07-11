@@ -36,7 +36,7 @@ bool MvrUnittest::ExecuteTest()
 {
 	std::cout << "=                                        MvrUnittest                                       =" << std::endl;
     WriteFile();
-    ReadFile();
+    ReadFile();    
 
     return true;
 }
@@ -108,7 +108,8 @@ void MvrUnittest::WriteFile()
         if(__checkVCOM(mvrWrite->CreateSymDefObject(MvrUUID(0, 0, 0, 0), "Symbol Definition for the UUID Creation Check", & symDef2)))
         {
 			STransformMatrix mx;
-			symDef2->AddSymbol(mx, symDef1);
+            MvrUUID symUID(121062618, 11752014, 669377348, 947530087);
+			symDef2->AddSymbol( symUID, mx, symDef1);
         }
         
         IClassPtr clas1 = nullptr;
@@ -147,7 +148,8 @@ void MvrUnittest::WriteFile()
 		ISceneObjPtr focusPoint = nullptr;
 		if (__checkVCOM(mvrWrite->CreateFocusPoint(MvrUUID(1998334672, 457193269, 1786021763, 1463564339), STransformMatrix(), "My FocusPoint", layer1, &focusPoint)))
 		{
-			__checkVCOM(focusPoint->AddSymbol(STransformMatrix(), symDef1));
+            MvrUUID symUID2(121062618, 11752014, 669377348, 837520086);
+			__checkVCOM(focusPoint->AddSymbol( symUID2, STransformMatrix(), symDef1)); 
 			__checkVCOM(focusPoint->SetClass(clas1));
 		}
 			
@@ -174,6 +176,39 @@ void MvrUnittest::WriteFile()
 				__checkVCOM(mapping1->SetOy(4));
 				__checkVCOM(mapping1->SetRz(5.6));
 			}
+
+			__checkVCOM(fixture1->CreateConnection("ConnectionFrom", "ConnectionTo", MvrUUID(1136161871, 1699151080, 751939975, 1748783014) /* fixture2*/, nullptr)); 
+		
+			fixture1->SetFunction("TestFunction");
+			
+			//CustomCommands
+			ICustomCommandPtr customCommand1, customCommand2;
+			__checkVCOM(fixture1->CreateCustomCommand("My ChannelFunction 1", false, -1.2, &customCommand1));
+			__checkVCOM(fixture1->CreateCustomCommand("My ChannelFunction 1", false, -1.2, &customCommand2));
+
+			__checkVCOM(customCommand2->SetChannelFunction("My ChannelFunction 2"));
+			__checkVCOM(customCommand2->SetIsPercentage(true));
+			__checkVCOM(customCommand2->SetValue(-3.4));
+			
+
+			//Alignments
+			IAlignmentPtr alignment1, alignment2;
+			SVector3 upVector1 = {0, 0, 1};
+			SVector3 direction1 = {0.1, 2.3, -4.5};
+			__checkVCOM(fixture1->CreateAlignment("My beamGeometry 1", upVector1, direction1, &alignment1));
+			__checkVCOM(fixture1->CreateAlignment("My beamGeometry 1", upVector1, direction1, &alignment2));
+
+			__checkVCOM(alignment2->SetBeamGeometry("My beamGeometry 2"));
+			__checkVCOM(alignment2->SetUpVector(0, -2, 0));
+			__checkVCOM(alignment2->SetDirection(-6.7, 8.9, 10.11));
+
+			//Overwrites
+			IOverwritePtr overwrite1, overwrite2;
+			__checkVCOM(fixture1->CreateOverwrite("My universal 1", "My target 1", &overwrite1));
+			__checkVCOM(fixture1->CreateOverwrite("My universal 1", "My target 1", &overwrite2));
+
+			__checkVCOM(overwrite2->SetUniversal("My universal 2"));
+			__checkVCOM(overwrite2->SetTarget("My target 2"));
 		}
 
 		// And another fixture
@@ -217,7 +252,17 @@ void MvrUnittest::WriteFile()
 		// Group
 		MvrUUID groupUUID(1808353427, 683171502, 518343034, 0000000005);
 		ISceneObjPtr group = nullptr;
-        __checkVCOM(mvrWrite->CreateGroupObject(groupUUID, STransformMatrix(), "My Group Name", layer1, &group));
+        __checkVCOM(mvrWrite->CreateGroupObject(groupUUID, STransformMatrix(), "My Group Name", layer1, &group));              
+        
+        ISceneObjPtr truss = nullptr;
+        mvrWrite->CreateTruss(MvrUUID(1126151872, 1699151080, 751939975, 1748783014), STransformMatrix(), "Truss in Group", group, &truss);
+
+		MvrUUID empty_groupUUID(1808353427, 683171502, 518343012, 0000000002);
+		ISceneObjPtr empty_group = nullptr;
+        __checkVCOM(mvrWrite->CreateGroupObject(empty_groupUUID, STransformMatrix(), "EmptyGroup", layer1, &empty_group));
+
+        ISceneObjPtr firstChild = nullptr;
+        __checkVCOM(mvrWrite->GetFirstChild( group, &firstChild));        
 
 		// Create second Layer
 		ISceneObjPtr layer2 = nullptr;
@@ -254,9 +299,14 @@ void MvrUnittest::WriteFile()
 		{
 			__checkVCOM(projector->SetProjectorSource("myValueP", "myLinkedGeometryP", ESourceType::File));
 			__checkVCOM(projector->SetScaleHandling(EScaleHandlingType::ScaleIgnoreRatio));
+
 		}
 
+		// Support
+		ISceneObjPtr supportObject = nullptr;
+		__checkVCOM(mvrWrite->CreateSupport(MvrUUID(1808353427, 683171502, 518343034, 0000000007), STransformMatrix(), "MySupportName", layer2, &supportObject));
 
+        Write_NestedObjects( mvrWrite, layer1);
 
 		// Check Next Object behavoir
 		ISceneObjPtr firstLayerWritten;
@@ -344,7 +394,8 @@ void MvrUnittest::ReadFile()
 		// Check Object
 		size_t count_Objects = 0;
 		__checkVCOM(mvrRead->GetSceneObjectCount(count_Objects));
-		this->checkifEqual("Check Global Object Count", count_Objects, size_t(7));
+
+        this->checkifEqual("Check Global Object Count", count_Objects, size_t(17));
 
 		//------------------------------------------------------------------------------------------------
 		// Check File Getters
@@ -392,6 +443,11 @@ void MvrUnittest::ReadFile()
 				__checkVCOM(readLayer->GetGuid(resultUUID));
 				this->checkifEqual("GetLayerGuid layerUUID1 ", resultUUID, layerUUID1);
 			}
+
+            if (i==0)
+            {
+                Read_NestedObjects(mvrRead, readLayer);
+            }
 			
 			//Get Data Layer 2
 			if (i==1)
@@ -406,7 +462,6 @@ void MvrUnittest::ReadFile()
 			{
 				ESceneObjType type;
 				__checkVCOM(sceneObj->GetType(type));
-				
 
 				// ------------------------------------------------------------------------------
 				// Get Focus Point1
@@ -449,6 +504,7 @@ void MvrUnittest::ReadFile()
 					this->checkifEqual("GetFixtureGuid fixtureUUID1 ", resultUUID, fixtureUUID1);
 					checkifEqual("GetGdtfName", 	 	sceneObj->GetGdtfName(), "testGdtf.gdtf");
 					checkifEqual("GetGdtfMode", 	 	sceneObj->GetGdtfMode(), "My DmxModeName");
+					checkifEqual("GetFunction", 	 	sceneObj->GetFunction(), "TestFunction");
 
 					ISceneObjPtr focus;
 					if(__checkVCOM(sceneObj->GetFocusPoint( & focus)))
@@ -525,6 +581,87 @@ void MvrUnittest::ReadFile()
 						checkifEqual("Check GetRz ", 		 rz, 			5.6);
 					}
 
+					//CustomCommands
+					size_t customCommandCount;
+					__checkVCOM(sceneObj->GetCustomCommandCount(customCommandCount));
+					checkifEqual("GetCustomCommandCount", customCommandCount, (size_t)2);
+
+					ICustomCommandPtr customCommand1, customCommand2;
+					if(__checkVCOM(sceneObj->GetCustomCommandAt(0, &customCommand1)))
+					{
+						bool isPercentage = false;
+						double value = 0.0;
+						__checkVCOM(customCommand1->IsPercentage(isPercentage));
+						__checkVCOM(customCommand1->GetValue(value));
+
+						checkifEqual("Check GetChannelFunction ", customCommand1->GetChannelFunction(), "My ChannelFunction 1");
+						checkifEqual("Check IsPercentage ", isPercentage, false);
+						checkifEqual("Check GetValue ", value, -1.2);
+					}
+					if(__checkVCOM(sceneObj->GetCustomCommandAt(1, &customCommand2)))
+					{
+						bool isPercentage = false;
+						double value = 0.0;
+						__checkVCOM(customCommand2->IsPercentage(isPercentage));
+						__checkVCOM(customCommand2->GetValue(value));
+
+						checkifEqual("Check GetChannelFunction ", customCommand2->GetChannelFunction(), "My ChannelFunction 2");
+						checkifEqual("Check IsPercentage ", isPercentage, true);
+						checkifEqual("Check GetValue ", value, -3.4);
+					}
+
+					//Alignments
+					size_t alignmentCount;
+					__checkVCOM(sceneObj->GetAlignmentCount(alignmentCount));
+					checkifEqual("GetAlignmentCount", alignmentCount, (size_t)2);
+
+					IAlignmentPtr alignment1, alignment2;
+					if(__checkVCOM(sceneObj->GetAlignmentAt(0, &alignment1)))
+					{
+						SVector3 upVector1, direction1;
+						__checkVCOM(alignment1->GetUpVector(upVector1));
+						__checkVCOM(alignment1->GetDirection(direction1));
+
+						checkifEqual("Check GetBeamGeometry ", alignment1->GetBeamGeometry(), "My beamGeometry 1");
+						checkifEqual("Check GetUpVector X", upVector1.x, 0.0);
+						checkifEqual("Check GetUpVector Y", upVector1.y, 0.0);
+						checkifEqual("Check GetUpVector Z", upVector1.z, 1.0);
+						checkifEqual("Check GetDirection X", direction1.x, 0.1);
+						checkifEqual("Check GetDirection Y", direction1.y, 2.3);
+						checkifEqual("Check GetDirection Z", direction1.z, -4.5);
+					}
+					if(__checkVCOM(sceneObj->GetAlignmentAt(1, &alignment2)))
+					{
+						SVector3 upVector2, direction2;
+						__checkVCOM(alignment2->GetUpVector(upVector2));
+						__checkVCOM(alignment2->GetDirection(direction2));
+
+						checkifEqual("Check GetBeamGeometry ", alignment2->GetBeamGeometry(), "My beamGeometry 2");
+						checkifEqual("Check GetUpVector X", upVector2.x, 0.0);
+						checkifEqual("Check GetUpVector Y", upVector2.y, -2.0);
+						checkifEqual("Check GetUpVector Z", upVector2.z, 0.0);
+						checkifEqual("Check GetDirection X", direction2.x, -6.7);
+						checkifEqual("Check GetDirection Y", direction2.y, 8.9);
+						checkifEqual("Check GetDirection Z", direction2.z, 10.11);
+					}
+
+					//Overwrites
+					size_t overwriteCount;
+					__checkVCOM(sceneObj->GetOverwriteCount(overwriteCount));
+					checkifEqual("GetOverwriteCount", overwriteCount, (size_t)2);
+
+					IOverwritePtr overwrite1, overwrite2;
+					if(__checkVCOM(sceneObj->GetOverwriteAt(0, &overwrite1)))
+					{
+						checkifEqual("Check GetUniversal ", overwrite1->GetUniversal(), "My universal 1");
+						checkifEqual("Check GetTarget ", overwrite1->GetTarget(), "My target 1");
+					}
+					if(__checkVCOM(sceneObj->GetOverwriteAt(1, &overwrite2)))
+					{
+						checkifEqual("Check GetUniversal ", overwrite2->GetUniversal(), "My universal 2");
+						checkifEqual("Check GetTarget ", overwrite2->GetTarget(), "My target 2");
+					}
+
 					//Linked Fixture
 					IGdtfFixturePtr gdtfLinkedFixture;
 					__checkVCOM(sceneObj->GetGdtfFixture( & gdtfLinkedFixture));
@@ -535,6 +672,22 @@ void MvrUnittest::ReadFile()
 					char* buffer = new char[bufferLength + 1];
 					__checkVCOM(gdtfLinkedFixture->ToBuffer(buffer));
 					delete[] buffer;
+
+					//Connections
+					
+					size_t connCount;
+					sceneObj->GetConnectionCount(connCount);
+					checkifEqual("GetConnectionCount", connCount, (size_t)1);
+					if(connCount == 1){
+						IConnectionPtr conn;
+						sceneObj->GetConnectionAt(0, &conn);
+						checkifEqual("Connection->GetOwn()", conn->GetOwn(), "ConnectionFrom");
+						checkifEqual("Connection->GetOther()", conn->GetOther(), "ConnectionTo");
+						MvrUUID ToObj(0, 0, 0, 0);
+						conn->GetToObject(ToObj);
+						checkifEqual("Connection->GetToObject()", ToObj, MvrUUID(1136161871, 1699151080, 751939975, 1748783014));
+					}
+
 				}
 				
 				// ------------------------------------------------------------------------------
@@ -748,7 +901,6 @@ void MvrUnittest::ReadFile()
 				if (i==1 && j==3)
 				{
 					checkifEqual("ESceneObjType Type ", (Sint32)type ,(Sint32)ESceneObjType::Projector);
-
 					ISourcePtr source1;
 					if(__checkVCOM(sceneObj->GetProjectorSource(&source1)))
 					{
@@ -763,6 +915,11 @@ void MvrUnittest::ReadFile()
 					EScaleHandlingType scaleHandlingType;
 					__checkVCOM(sceneObj->GetScaleHandling(scaleHandlingType));
 					checkifEqual("Check Projector ScaleHandling", (size_t)scaleHandlingType, (size_t)EScaleHandlingType::ScaleIgnoreRatio);
+				}
+
+				if (i==1 && j==4)
+				{
+					checkifEqual("ESceneObjType Type ", (Sint32)type ,(Sint32)ESceneObjType::Support);
 				}
 							
 				//------------------------------------------------------------------------
@@ -950,9 +1107,6 @@ void MvrUnittest::ReadFile()
 				checkifEqual("Check mapDef2Source type", (size_t)type, (size_t)ESourceType::CaptureDevice);
 			}
 		}
-
-		
-
     }
 }
 
@@ -963,4 +1117,110 @@ std::string MvrUnittest::GetTestWheel_PNG(bool readLocation)
 	else 				{ path = UnitTestUtil::GetTestResourceFolder() + kSeparator; }
     path += "MWheel_Img1.png";
     return path;
+}
+
+void MvrUnittest::Write_NestedObjects(IMediaRessourceVectorInterfacePtr intfc, ISceneObjPtr layer)
+{    
+    MvrUUID trussUUID(1808353898, 683171502, 518343034, 0000000005);        
+    ISceneObjPtr trussObj1 = nullptr;
+	__checkVCOM(intfc->CreateTruss( trussUUID, STransformMatrix(), "Truss with childs", layer, &trussObj1));
+
+    MvrUUID fixtUUID(1808353111, 683171502, 518343035, 0000000005);
+    ISceneObjPtr fixtObject = nullptr;
+    __checkVCOM(intfc->CreateFixture( fixtUUID, STransformMatrix(), "Fixture Inside a Truss", trussObj1, &fixtObject));
+        
+    MvrUUID focuesPtUUID(1808353111, 683171502, 527343035, 0000000005);
+    ISceneObjPtr focuesPtObject = nullptr;
+    __checkVCOM(intfc->CreateFocusPoint( focuesPtUUID, STransformMatrix(), "FocusPt in Fixture", fixtObject, &focuesPtObject));
+
+    MvrUUID projUUID(1808353111, 683171502, 515243035, 0000000005);
+    ISceneObjPtr projObject = nullptr;
+    __checkVCOM(intfc->CreateProjector( projUUID, STransformMatrix(), "Projector in FocuesPt", focuesPtObject, &projObject));
+
+    MvrUUID videoScreenUUID(1808353111, 683171502, 533343035, 0000000005);
+    ISceneObjPtr videoScreenObject = nullptr;
+    __checkVCOM(intfc->CreateVideoScreen( videoScreenUUID, STransformMatrix(), "VideoScreen in Projector", projObject, &videoScreenObject));
+
+    MvrUUID supportUUID(1808353111, 683171502, 518344435, 0000000005);
+    ISceneObjPtr supportObject = nullptr;
+    __checkVCOM(intfc->CreateSupport( supportUUID, STransformMatrix(), "Support in VideoScreen", videoScreenObject, &supportObject));
+    
+    MvrUUID sceneObjUUID(1808353111, 683171502, 544443035, 0000000005);
+    ISceneObjPtr sceneObject = nullptr;
+    __checkVCOM(intfc->CreateSceneObject( sceneObjUUID, STransformMatrix(), "SceneObj in SupportObj", supportObject, &sceneObject));
+    
+    MvrUUID truss2_UUID(1808353112, 683171402, 888343025, 0000000001);
+    ISceneObjPtr trussObj2 = nullptr;
+    __checkVCOM(intfc->CreateTruss( truss2_UUID, STransformMatrix(), "Truss in SceneObj", sceneObject, &trussObj2));
+}
+
+void MvrUnittest::Read_NestedObjects(IMediaRessourceVectorInterfacePtr interf, ISceneObjPtr layer)
+{   
+    ISceneObjPtr child;
+    interf->GetFirstChild( layer, &child);
+
+    bool success = false;
+
+    while (child)
+    {        
+        std::string nam = child->GetName();
+        
+        if ( nam == "Truss with childs")
+        {
+            success = Read_NestedObjectsInTruss(interf, child);
+        }        
+
+        interf->GetNextObject(child, &child);
+    }
+
+    checkifTrue( "Read_NestedObjects", success);
+}
+
+bool MvrUnittest::verifyFirstChildType( IMediaRessourceVectorInterfacePtr interf, ISceneObjPtr obj, ESceneObjType exptectedTyp)
+{    
+    bool success = false;
+
+    if (obj)
+    {    
+        ISceneObjPtr chld;
+        interf->GetFirstChild( obj, &chld);
+    
+        if (chld)
+        {        
+            ESceneObjType child_typ;
+            chld->GetType(child_typ);        
+
+            success = exptectedTyp == child_typ;        
+        }
+    }   
+
+    return success;
+}
+
+bool MvrUnittest::Read_NestedObjectsInTruss(IMediaRessourceVectorInterfacePtr interf, ISceneObjPtr truss)
+{
+    bool success = true; // Must be inited with true to make the & operations work properly below.
+
+    success &= verifyFirstChildType( interf, truss, ESceneObjType::Fixture);
+    ISceneObjPtr chld;
+    interf->GetFirstChild( truss, &chld);
+    
+    success &= verifyFirstChildType( interf, chld, ESceneObjType::FocusPoint);    
+    interf->GetFirstChild( chld, &chld);
+    
+    success &= verifyFirstChildType( interf, chld, ESceneObjType::Projector);    
+    interf->GetFirstChild( chld, &chld);
+    
+    success &= verifyFirstChildType( interf, chld, ESceneObjType::VideoScreen);    
+    interf->GetFirstChild( chld, &chld);
+
+    success &= verifyFirstChildType( interf, chld, ESceneObjType::Support);    
+    interf->GetFirstChild( chld, &chld);
+
+    success &= verifyFirstChildType( interf, chld, ESceneObjType::SceneObj);    
+    interf->GetFirstChild( chld, &chld);
+
+    success &= verifyFirstChildType( interf, chld, ESceneObjType::Truss);
+
+    return success;
 }

@@ -24,6 +24,8 @@ private:
     std::string GetTestPNG_ThumbNail(bool readLocation = false);
     std::string GetTestSVG_ThumbNail(bool readLocation = false);
     std::string GetTestSVG_Model(bool readLocation = false);
+    std::string GetTestSVGSide_Model(bool readLocation = false);
+    std::string GetTestSVGFront_Model(bool readLocation = false);
     std::string GetTest3DS_Model(bool readLocation = false);
     std::string GetTest3DSLow_Model(bool readLocation = false);
     std::string GetTest3DSHigh_Model(bool readLocation = false);

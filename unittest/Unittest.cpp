@@ -42,7 +42,6 @@ void Unittest::checkifTrue (const std::string& check, const bool b)
 {
     checkifEqual(check, b, true);
 }
-
 void Unittest::checkifEqual(const std::string& check, const Uint32 val1, const Uint32 val2)
 {
 	if (val1 == val2) return;
@@ -114,7 +113,7 @@ void Unittest::checkifEqual(const std::string& check, const double val1, const d
 	fFailedTests.push_back(test);
 };
 
-#ifdef IS64BIT
+#ifdef GS_MAC
 void Unittest::checkifEqual(const std::string& check, const size_t val1, const size_t val2)
 {
 	if (val1 == val2) return;
@@ -133,10 +132,8 @@ void Unittest::checkifEqual(const std::string& check, const size_t val1, const s
 };
 #endif
 
-#if GS_MAC
-	// Under Win and Linux there is a problem with double declaration of DMXValue (Uint64 type) and size_t (also Uint64 type)
-	// OSX needs that extra declaration
-	void Unittest::checkifEqual(const std::string& check, const VectorworksMVR::GdtfDefines::DmxValue val1, const VectorworksMVR::GdtfDefines::DmxValue val2)
+ // Read comment at declaration!
+void Unittest::checkifEqual(const std::string& check, const VectorworksMVR::GdtfDefines::DmxValue val1, const VectorworksMVR::GdtfDefines::DmxValue val2)
 {
 	if (val1 == val2) return;
 
@@ -152,7 +149,6 @@ void Unittest::checkifEqual(const std::string& check, const size_t val1, const s
 
 	fFailedTests.push_back(test);
 };
-#endif
 
 void Unittest::checkifEqual(const std::string& check, const VectorworksMVR::GdtfDefines::DMXAddress val1, const VectorworksMVR::GdtfDefines::DMXAddress val2)
 {
@@ -409,13 +405,10 @@ bool Unittest::Equalish(double val1, double val2, double epislon)
 	return (std::abs(val1 - val2) <= epislon);
 }
 
-std::pair<bool, std::string> Unittest::getFailedTests()
+
+size_t Unittest::getFailedTestCount()
 {
-	if(fFailedTests.size() == 1)
-	{
-		return std::make_pair(true, fFailedTests.at(0).fMessage);
-	}
-	return std::make_pair(false, "THIS SHOULD NOT BE REACHED!");
+    return fFailedTests.size();
 }
 
 void Unittest::resetFailedTestState()

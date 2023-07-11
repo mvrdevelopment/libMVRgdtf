@@ -28,6 +28,9 @@ GdtfParsingError::GdtfParsingError(GdtfDefines::EGdtfParsingError type, const IX
     fErrorType          = type;
     pNode->GetLineNumber(fLineNumber, fColumn);
     pNode->GetNodeName(fNodeName);
+
+    // Fill the Object's name when it exists, is empty otherwise
+    pNode->GetNodeAttributeValue("Name", fObjectName);
 }
 
 
@@ -58,6 +61,11 @@ size_t GdtfParsingError::GetLineNumber() const
 size_t GdtfParsingError::GetColumnNumber() const
 {
     return fColumn;
+}
+
+const TXString& GdtfParsingError::GetObjectName() const
+{
+    return fObjectName;
 }
 
 /*static*/ void GdtfParsingError::CheckNodeAttributes(IXMLFileNodePtr pNode, const TXStringArray& needed, const TXStringArray& optional) 

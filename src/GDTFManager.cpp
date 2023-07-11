@@ -30,7 +30,6 @@ void GdtfObject::WriteToNode(IXMLFileNodePtr pContainerNode)
 	if ( VCOM_SUCCEEDED( pContainerNode->CreateChildNode( this->GetNodeName(), & pNode ) ) )
 	{
 		// Store Node
-		ASSERTN(kEveryone, fNode == nullptr);
 		fNode = pNode;
 		//-------------------------------------------------------------------------------------
 		// Now Print Everything
@@ -412,12 +411,18 @@ const TGdtfFeatureArray GdtfFeatureGroup::GetFeatureArray()
 // GdtfSubPhysicalUnit
 GdtfSubPhysicalUnit::GdtfSubPhysicalUnit()
 {
+	fType = EGdtfSubPhysicalUnitType::PlacementOffset;
+	fPhysicalUnit = EGdtfPhysicalUnit::None;
+	fPhysicalFrom = 0.0;
+	fPhysicalTo = 0.0;
 }
 
 GdtfSubPhysicalUnit::GdtfSubPhysicalUnit(EGdtfSubPhysicalUnitType type)
 {
 	fType 			= type;
 	fPhysicalUnit 	= GdtfConverter::GetUnitFromSubPhysical(type);
+	fPhysicalFrom = 0.0;
+	fPhysicalTo = 0.0;
 }
 
 GdtfSubPhysicalUnit::~GdtfSubPhysicalUnit()
@@ -1134,6 +1139,9 @@ GdtfWheelSlot::GdtfWheelSlot(const TXString& name, GdtfWheel* parent)
 GdtfWheelSlot::~GdtfWheelSlot()
 {
 	for(GdtfWheelSlotPrismFacet* facet : fPrismFacts) { delete facet; };
+	if(fAnimationSystem){
+		delete fAnimationSystem;
+	}
 }
 
 void GdtfWheelSlot::SetName(const TXString &name)
@@ -1165,6 +1173,9 @@ GdtfWheelSlotPrismFacet* GdtfWheelSlot::AddPrismFacet()
 
 GdtfWheelSlotAnimationSystem* GdtfWheelSlot::AddAnimationSystem()
 {
+	if(fAnimationSystem){
+		delete fAnimationSystem;
+	}
 	GdtfWheelSlotAnimationSystem* animationSystem = new GdtfWheelSlotAnimationSystem();
 	fAnimationSystem = animationSystem;
 	return animationSystem;
@@ -1293,6 +1304,9 @@ void GdtfWheelSlot::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	pNode->GetChildNode(XML_GDTF_AnimationSystemNodeName, &animationSystemNode);
 	if(animationSystemNode != nullptr)
 	{
+		if(fAnimationSystem){
+			delete fAnimationSystem;
+		}
 		GdtfWheelSlotAnimationSystemPtr animationSystem = new GdtfWheelSlotAnimationSystem();
 		animationSystem->ReadFromNode(animationSystemNode);
 		fAnimationSystem = animationSystem;
@@ -1364,6 +1378,13 @@ GdtfModel::GdtfModel(GdtfFixture* fixture)
 	fBufferSize3DS	= 0;
 	fBufferSizeSVG	= 0;
 	fBufferSizeGLTF	= 0;
+
+	fSVGOffsetX			= 0;
+	fSVGOffsetY			= 0;
+	fSVGSideOffsetX		= 0;
+	fSVGSideOffsetY		= 0;
+	fSVGFrontOffsetX	= 0;
+	fSVGFrontOffsetY	= 0;
 }
 
 GdtfModel::GdtfModel(const TXString& name, GdtfFixture* fixture)
@@ -1381,6 +1402,13 @@ GdtfModel::GdtfModel(const TXString& name, GdtfFixture* fixture)
 	fBufferSize3DS	= 0;
 	fBufferSizeSVG	= 0;
 	fBufferSizeGLTF	= 0;
+
+	fSVGOffsetX			= 0;
+	fSVGOffsetY			= 0;
+	fSVGSideOffsetX		= 0;
+	fSVGSideOffsetY		= 0;
+	fSVGFrontOffsetX	= 0;
+	fSVGFrontOffsetY	= 0;
 }
 
 GdtfModel::~GdtfModel()
@@ -1708,6 +1736,54 @@ const TXString & SceneData::GdtfModel::GetGeometryFile_SVG_FullPath()
 
 	IFolderIdentifierPtr svgModelsFolder (IID_FolderIdentifier);
 	svgModelsFolder->Set(folder, "modelssvg");
+
+	IFileIdentifierPtr file (IID_FileIdentifier);
+	file->Set(svgModelsFolder, fGeometryFile + ".svg");
+
+
+	bool fileExists = false;
+	if(VCOM_SUCCEEDED(file->ExistsOnDisk(fileExists)) && fileExists)
+	{
+		file->GetFileFullPath(fFullPathSVG);
+	}
+	
+	return fFullPathSVG;
+}
+
+const TXString & SceneData::GdtfModel::GetGeometryFile_SVGSide_FullPath()
+{
+	// Set to store
+	fFullPathSVG = "";
+	// Set to store
+	IFolderIdentifierPtr folder (IID_FolderIdentifier);
+	fParentFixture->GetWorkingFolder(folder);
+
+	IFolderIdentifierPtr svgModelsFolder (IID_FolderIdentifier);
+	svgModelsFolder->Set(folder, "modelssvg_side");
+
+	IFileIdentifierPtr file (IID_FileIdentifier);
+	file->Set(svgModelsFolder, fGeometryFile + ".svg");
+
+
+	bool fileExists = false;
+	if(VCOM_SUCCEEDED(file->ExistsOnDisk(fileExists)) && fileExists)
+	{
+		file->GetFileFullPath(fFullPathSVG);
+	}
+	
+	return fFullPathSVG;
+}
+
+const TXString & SceneData::GdtfModel::GetGeometryFile_SVGFront_FullPath()
+{
+	// Set to store
+	fFullPathSVG = "";
+	// Set to store
+	IFolderIdentifierPtr folder (IID_FolderIdentifier);
+	fParentFixture->GetWorkingFolder(folder);
+
+	IFolderIdentifierPtr svgModelsFolder (IID_FolderIdentifier);
+	svgModelsFolder->Set(folder, "modelssvg_front");
 
 	IFileIdentifierPtr file (IID_FileIdentifier);
 	file->Set(svgModelsFolder, fGeometryFile + ".svg");
@@ -3282,6 +3358,17 @@ GdtfGeometryWiringObject::GdtfGeometryWiringObject(GdtfGeometry* parent)
 	fComponentType 	= EGdtfComponentType::Input;
 	fOrientation 	= EGdtfOrientation::Left;
 	fFuseRating 	= EGdtfFuseRating::B;
+	fPinCount			= 0;
+	fSignalLayer		= 0;
+	fElectricalPayLoad	= 0; 
+	fVoltageRangeMin	= 0; 	
+	fVoltageRangeMax	= 0; 	
+	fFrequencyRangeMin	= 0; 
+	fFrequencyRangeMax	= 0; 
+	fCosPhi				= 0; 			
+	fMaxPayLoad			= 0;
+	fVoltage			= 0; 			
+	fFuseCurrent		= 0; 		
 }
 
 GdtfGeometryWiringObject::GdtfGeometryWiringObject(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma, GdtfGeometry* parent) 
@@ -3290,6 +3377,17 @@ GdtfGeometryWiringObject::GdtfGeometryWiringObject(const TXString& name, GdtfMod
 	fComponentType 	= EGdtfComponentType::Input;
 	fOrientation 	= EGdtfOrientation::Left;
 	fFuseRating 	= EGdtfFuseRating::B;
+	fPinCount			= 0;
+	fSignalLayer		= 0;
+	fElectricalPayLoad	= 0; 
+	fVoltageRangeMin	= 0; 	
+	fVoltageRangeMax	= 0; 	
+	fFrequencyRangeMin	= 0; 
+	fFrequencyRangeMax	= 0; 
+	fCosPhi				= 0; 			
+	fMaxPayLoad			= 0;
+	fVoltage			= 0; 			
+	fFuseCurrent		= 0; 	
 }
 
 GdtfGeometryWiringObject::~GdtfGeometryWiringObject()
@@ -3789,7 +3887,10 @@ void GdtfGeometryStructure::OnPrintToFile(IXMLFileNodePtr pNode)
 	// Call the parent
 	GdtfGeometry::OnPrintToFile(pNode);
 
-	pNode->SetNodeAttributeValue(XML_GDTF_StructureLinkedGeometry,				fLinkedGeometry->GetNodeReference());
+	TXString linkedGeometry = "";
+	if(fLinkedGeometry) { linkedGeometry = fLinkedGeometry->GetNodeReference(); }
+
+	pNode->SetNodeAttributeValue(XML_GDTF_StructureLinkedGeometry,				linkedGeometry);
 	pNode->SetNodeAttributeValue(XML_GDTF_StructureStructureType,				GdtfConverter::ConvertStructureTypeEnum(fStructureType));
 	pNode->SetNodeAttributeValue(XML_GDTF_StructureCrossSectionType,			GdtfConverter::ConvertCrossSectionTypeEnum(fCrossSectionType));
 	pNode->SetNodeAttributeValue(XML_GDTF_StructureCrossSectionHeight,			GdtfConverter::ConvertDouble(fCrossSectionHeight));
@@ -3823,9 +3924,9 @@ void GdtfGeometryStructure::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	needed.push_back(XML_GDTF_GeometryName);
 	optional.push_back(XML_GDTF_GeometryModelRef);
 	needed.push_back(XML_GDTF_GeometryMatrix);
-	needed.push_back(XML_GDTF_StructureLinkedGeometry);
+	optional.push_back(XML_GDTF_StructureLinkedGeometry);
 	needed.push_back(XML_GDTF_StructureStructureType);
-	needed.push_back(XML_GDTF_StructureCrossSectionType);
+	optional.push_back(XML_GDTF_StructureCrossSectionType);
 	if(fCrossSectionType == EGdtfCrossSectionType::Tube)
 	{
 		needed.push_back(XML_GDTF_StructureCrossSectionHeight);
@@ -4081,16 +4182,17 @@ void GdtfGeometrySupport::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	optional.push_back(XML_GDTF_GeometryModelRef);
 	needed.push_back(XML_GDTF_GeometryMatrix);
 	needed.push_back(XML_GDTF_SupportSupportType);
-	needed.push_back(XML_GDTF_SupportCapacityX);
-	needed.push_back(XML_GDTF_SupportCapacityY);
-	needed.push_back(XML_GDTF_SupportCapacityZ);
-	needed.push_back(XML_GDTF_SupportCapacityXX);
-	needed.push_back(XML_GDTF_SupportCapacityYY);
-	needed.push_back(XML_GDTF_SupportCapacityZZ);
+	
 	if(fSupportType == EGdtfSupportType::Rope)
 	{
 		needed.push_back(XML_GDTF_SupportRopeCrossSection);
 		needed.push_back(XML_GDTF_SupportRopeOffset);
+		optional.push_back(XML_GDTF_SupportCapacityX);
+		optional.push_back(XML_GDTF_SupportCapacityY);
+		optional.push_back(XML_GDTF_SupportCapacityZ);
+		optional.push_back(XML_GDTF_SupportCapacityXX);
+		optional.push_back(XML_GDTF_SupportCapacityYY);
+		optional.push_back(XML_GDTF_SupportCapacityZZ);
 		optional.push_back(XML_GDTF_SupportResistanceX);
 		optional.push_back(XML_GDTF_SupportResistanceY);
 		optional.push_back(XML_GDTF_SupportResistanceZ);
@@ -4102,6 +4204,12 @@ void GdtfGeometrySupport::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	{
 		optional.push_back(XML_GDTF_SupportRopeCrossSection);
 		optional.push_back(XML_GDTF_SupportRopeOffset);
+		needed.push_back(XML_GDTF_SupportCapacityX);
+		needed.push_back(XML_GDTF_SupportCapacityY);
+		needed.push_back(XML_GDTF_SupportCapacityZ);
+		needed.push_back(XML_GDTF_SupportCapacityXX);
+		needed.push_back(XML_GDTF_SupportCapacityYY);
+		needed.push_back(XML_GDTF_SupportCapacityZZ);
 		needed.push_back(XML_GDTF_SupportResistanceX);
 		needed.push_back(XML_GDTF_SupportResistanceY);
 		needed.push_back(XML_GDTF_SupportResistanceZ);
@@ -7587,7 +7695,7 @@ bool GdtfFixture::ImportFromZip(IZIPFilePtr& zipfile)
 	if ( ! fReaded)
 	{
 		GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureNoGdtfFileInXmlBuffer);
-		SceneData::GdtfFixture::AddError(error); 
+		SceneData::GdtfFixture::AddError(error);
 		fReaded = false;
 	}
 	else
@@ -8354,7 +8462,7 @@ void GdtfFixture::ResolveDmxChannelRefs(GdtfDmxModePtr dmxMode)
 			for (GdtfGeometryPtr geom : fGeometries)
 			{
 				if (geom->GetNodeReference() == unresolvedGeoRef) { geomPtr = geom; break;}
-				
+
 				geomPtr = ResolveGeometryRef(unresolvedGeoRef, geom->GetInternalGeometries());
 				if (geomPtr != nullptr) { break; }
 			}
@@ -8456,8 +8564,16 @@ void GdtfFixture::ResolveDmxLogicalChanRefs(GdtfDmxChannelPtr dmxChnl)
 		if (attrPtr != nullptr)
 		{
 			//Check for logical channels with the same geometry/attribute combination
-			TXString attributeName 	= attrPtr->GetName();
-			TXString geometryName 	= dmxChnl->GetGeomRef()->GetName();
+			TXString attributeName = attrPtr->GetName();
+
+			GdtfGeometryPtr geoRef = dmxChnl->GetGeomRef();
+			TXString geometryName;
+			if(geoRef)
+			{
+				// If this doesn't exist, EGdtfParsingError::eFixtureDMXChannelMissingGeometryLink has been raised in the ResolveDmxChannelRefs() function
+				geometryName = geoRef->GetName();
+			}
+
 
 			bool alreadyExists = false;
 			GdtfDmxModePtr mode = dmxChnl->GetParentMode();
@@ -8697,6 +8813,8 @@ GdtfFixture::GdtfFixture()
 	fReaded					= false;
 	fHasLinkedGuid			= false;     
 	fNoFeature				= nullptr;   
+	fCanHaveChildren 		= false;
+	fHasLinkedGuid 			= false;
 }
 
 GdtfFixture::~GdtfFixture()
@@ -11083,6 +11201,7 @@ SceneData::GdtfMacroVisual::GdtfMacroVisual()
 
 SceneData::GdtfMacroVisual::~GdtfMacroVisual()
 {
+
 }
 
 EGdtfObjectType SceneData::GdtfMacroVisual::GetObjectType()
@@ -11155,6 +11274,7 @@ SceneData::GdtfMacroVisualStep::GdtfMacroVisualStep()
 
 SceneData::GdtfMacroVisualStep::~GdtfMacroVisualStep()
 {
+	for(const auto& i: fVisualValues){ delete i; }
 }
 
 TGdtfMacroVisualValueArray SceneData::GdtfMacroVisualStep::GetVisualValueArray()

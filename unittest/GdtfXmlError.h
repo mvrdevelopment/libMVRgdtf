@@ -16,7 +16,7 @@ protected:
 private:
     void ReadDamagedFile();
     void ReadNonExistingFile();
-    void ReadError(VectorworksMVR::IGdtfXmlParsingErrorPtr& error, size_t lineNumber, size_t colNumber, VectorworksMVR::GdtfDefines::EGdtfParsingError errorType);
+    void ReadError(VectorworksMVR::IGdtfXmlParsingErrorPtr& error, size_t lineNumber, size_t colNumber, VectorworksMVR::GdtfDefines::EGdtfParsingError errorType, const std::string& nodeName, const std::string& objectName);
 
     std::string fErrorGdtf_Path;
 };

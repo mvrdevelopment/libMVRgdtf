@@ -55,7 +55,6 @@ TaggingDOMParser::TaggingDOMParser() : dataHandler(new TagDataHandler())
 
 TaggingDOMParser::~TaggingDOMParser()
 {
-    
 }
 
 Tag* TaggingDOMParser::createTag()
