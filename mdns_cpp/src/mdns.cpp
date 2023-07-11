@@ -151,7 +151,7 @@ int mDNS::openClientSockets(int *sockets, int max_sockets, int port) {
             (saddr->sin_addr.S_un.S_un_b.s_b3 != 0) || (saddr->sin_addr.S_un.S_un_b.s_b4 != 1)) {
           int log_addr = 0;
           if (first_ipv4) {
-            service_address_ipv4_ = saddr->sin_addr.S_un.S_addr;
+            //service_address_ipv4_ = saddr->sin_addr.S_un.S_addr;
             first_ipv4 = 0;
             log_addr = 1;
           }
@@ -228,7 +228,7 @@ int mDNS::openClientSockets(int *sockets, int max_sockets, int port) {
       if (saddr->sin_addr.s_addr != htonl(INADDR_LOOPBACK)) {
         int log_addr = 0;
         if (first_ipv4) {
-          service_address_ipv4_ = saddr->sin_addr.s_addr;
+          //service_address_ipv4_ = saddr->sin_addr.s_addr;
           first_ipv4 = 0;
           log_addr = 1;
         }
@@ -455,6 +455,9 @@ bool mDNS::isServiceRunning() { return running_; }
 void mDNS::setServiceHostname(const std::string &hostname) { hostname_ = hostname; }
 
 void mDNS::setServicePort(std::uint16_t port) { port_ = port; }
+
+
+void mDNS::setServiceIP(std::uint32_t port) { service_address_ipv4_ = port; }
 
 void mDNS::setServiceName(const std::string &name) { name_ = name; }
 

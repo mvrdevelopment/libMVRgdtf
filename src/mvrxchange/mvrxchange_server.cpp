@@ -16,6 +16,7 @@ MVRxchangeServer::MVRxchangeServer(boost::asio::io_context& io_context, const tc
     std::cout << "Port: " << fAcceptor.local_endpoint().port() << std::endl;
 
     fPort = fAcceptor.local_endpoint().port();
+    fIp   = fAcceptor.local_endpoint().address().to_v4().to_ulong();
 }
 
 void MVRxchangeServer::DoAccept()
@@ -41,6 +42,11 @@ void MVRxchangeServer::DoAccept()
 uint16_t MVRxchangeServer::GetPort() const
 {
     return fPort;
+}
+
+uint32_t MVRxchangeServer::GetIP() const
+{
+    return fIp;
 }
 
 void MVRxchangeServer::Deliver(const MVRxchangePacket& msg)

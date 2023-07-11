@@ -17,6 +17,7 @@ namespace MVRxchangeNetwork
     public:            
         virtual void    Deliver(const MVRxchangePacket& msg);
         uint16_t        GetPort() const;
+        uint32_t        GetIP() const;
 
     private:
         void DoAccept();
@@ -24,6 +25,7 @@ namespace MVRxchangeNetwork
         CMVRxchangeServiceImpl*         fImpl;
         tcp::acceptor                   fAcceptor;
         uint16_t                        fPort;
+        uint32_t                        fIp;
 
     };
 }
