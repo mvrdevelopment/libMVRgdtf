@@ -59,7 +59,7 @@ bool MVRxchangeClient::ReadMessage(std::chrono::steady_clock::duration timeout)
     return ! error;;
   }
 
-void MVRxchangeClient::WriteMessage(std::chrono::steady_clock::duration timeout)
+bool MVRxchangeClient::WriteMessage(std::chrono::steady_clock::duration timeout)
   {
 
     // Start the asynchronous operation itself. The lambda that is used as a
@@ -78,11 +78,14 @@ void MVRxchangeClient::WriteMessage(std::chrono::steady_clock::duration timeout)
     // Run the operation until it completes, or until the timeout.
     Run(timeout);
 
-
-    ReadMessage(timeout);
+    bool ok = false;
+    if(!error)
+    {   
+        ok = ReadMessage(timeout);   
+    }   
 
     // Determine whether the read completed successfully.
-    return ! error;
+    return ok;
   }
 
 void MVRxchangeClient::Run(std::chrono::steady_clock::duration timeout)
@@ -110,7 +113,7 @@ void MVRxchangeClient::Run(std::chrono::steady_clock::duration timeout)
     }
 }
 
-book MVRxchangeClient::Connect(const std::string& host, const std::string& service, std::chrono::steady_clock::duration timeout)
+bool MVRxchangeClient::Connect(const std::string& host, const std::string& service, std::chrono::steady_clock::duration timeout)
 {
     // Resolve the host name and service to a list of endpoints.
     auto endpoints = tcp::resolver(fio_context).resolve(host, service);

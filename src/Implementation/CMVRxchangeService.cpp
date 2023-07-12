@@ -191,7 +191,7 @@ IMVRxchangeService::IMVRxchangeMessage CMVRxchangeServiceImpl::TCP_OnIncommingMe
 }
 
 
-void CMVRxchangeServiceImpl::SendMessageToLocalNetworks(const TXString& ip, uint16_t p, const MVRxchangeNetwork::MVRxchangePacket& msg)
+bool CMVRxchangeServiceImpl::SendMessageToLocalNetworks(const TXString& ip, uint16_t p, const MVRxchangeNetwork::MVRxchangePacket& msg)
 {
 	MVRxchangeNetwork::MVRxchangeClient c (this, msg);
 	
@@ -199,8 +199,13 @@ void CMVRxchangeServiceImpl::SendMessageToLocalNetworks(const TXString& ip, uint
 	sprintf(str, "%u", p);
 	std::string port =str;
 
-	c.Connect(ip.GetStdString(), port, std::chrono::seconds(10));
-	c.WriteMessage(std::chrono::seconds(10));
+	bool ok = false;
+	if(c.Connect(ip.GetStdString(), port, std::chrono::seconds(10)))
+	{
+		ok = c.WriteMessage(std::chrono::seconds(10));
+	}
+
+	return ok;
 }
 
 std::vector<MVRxchangeGoupMember> CMVRxchangeServiceImpl::GetMembersOfService(const ConnectToLocalServiceArgs& services)
