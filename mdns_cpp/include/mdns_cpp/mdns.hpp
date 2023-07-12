@@ -62,6 +62,7 @@ class mDNS {
   bool has_ipv6_{false};
 
   uint32_t service_address_ipv4_{0};
+  std::vector<std::pair<std::string, uint32_t>> fInterfaces;
   uint8_t service_address_ipv6_[16]{0};
 
   std::thread worker_thread_;
