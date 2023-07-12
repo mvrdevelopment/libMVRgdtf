@@ -6,16 +6,20 @@
 #include "../mvrxchange/mvrxchange_prefix.h"
 #include "../mvrxchange/mvrxchange_client.h"
 #include "XmlFileHelper.h"
+#include <boost/bind.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 
 VectorworksMVR::CMVRxchangeServiceImpl::CMVRxchangeServiceImpl()
 {
 	fServer_Running = false;
 	fServer = nullptr;
+	fmdns_Thread = std::thread(&CMVRxchangeServiceImpl::mDNS_Client_Start, this);
 }
 
 VectorworksMVR::CMVRxchangeServiceImpl::~CMVRxchangeServiceImpl()
 {
+	this->mDNS_Client_Stop();
 }
 
 VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const ConnectToLocalServiceArgs& service)
@@ -24,6 +28,8 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 	// Start TCP
 	fCurrentService = service;
 	this->TCP_Start();
+
+	this->mDNS_Client_Task();
 
 	//---------------------------------------------------------------------------------------------
 	// Start mDNS Service
@@ -34,11 +40,18 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 	txt += "StationUUID=";
 	txt += SceneData::GdtfConverter::ConvertUUID(VWUUID(fCurrentService.StationUUID.a, fCurrentService.StationUUID.b, fCurrentService.StationUUID.c, fCurrentService.StationUUID.d)).GetStdString();
 	
-	fmdns.setServiceHostname(std::string(fCurrentService.Service.fBuffer));
-	fmdns.setServicePort(fServer->GetPort());
-	fmdns.setServiceName(MVRXChange_Service);
-	fmdns.setServiceTxtRecord(txt);
-	fmdns.startService();
+	mdns_cpp::mDNS q;
+	for(std::pair<std::string, uint32_t> e : q.getInterfaces())
+	{
+		mdns_cpp::mDNS* s = new mdns_cpp::mDNS();
+		s->setServiceHostname(std::string(fCurrentService.Service.fBuffer) + e.first);
+		s->setServicePort(fServer->GetPort());
+		s->setServiceIP(e.second);
+		s->setServiceName(MVRXChange_Service);
+		s->setServiceTxtRecord(txt);
+		s->startService();
+		fmdns.push_back(s);
+	}
 
 	fMVRGroup = GetMembersOfService(fCurrentService);
 	
@@ -71,28 +84,7 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::LeaveLocalService()
 
 VCOMError VCOM_CALLTYPE  CMVRxchangeServiceImpl::QueryLocalServices(size_t& out_Count)
 {
-	fQueryLocalServicesResult.clear();
-
-	mdns_cpp::mDNS mdns;
-
-	auto query_res = mdns.executeQuery2(MVRXChange_Service);
-
-	if (query_res.size() == 0)
-	{
-		return kVCOMError_Failed;
-	}
-
-	for (auto& r : query_res) {
-		ConnectToLocalServiceArgs localServ;
-
-		strcpy(localServ.Service, r.hostNam.c_str());		 
-		strcpy(localServ.IPv4, r.ipV4_adress.c_str());
-		strcpy(localServ.IPv6, r.ipV6_adress.c_str());
-		localServ.Port = r.port;
-
-		fQueryLocalServicesResult.push_back(localServ);
-	}
-
+	std::lock_guard<std::mutex> lock (fQueryLocalServicesResult_mtx);
 	out_Count = fQueryLocalServicesResult.size();
 
 	return kVCOMError_NoError;
@@ -101,7 +93,8 @@ VCOMError VCOM_CALLTYPE  CMVRxchangeServiceImpl::QueryLocalServices(size_t& out_
 
 VCOMError VCOM_CALLTYPE VectorworksMVR::CMVRxchangeServiceImpl::GetLocalServiceAt(size_t index, ConnectToLocalServiceArgs& outLocalService)
 {
-	if ( ! fQueryLocalServicesResult.size())
+	std::lock_guard<std::mutex> lock (fQueryLocalServicesResult_mtx);
+	if ( fQueryLocalServicesResult.size() < index)
 	{
 		return kVCOMError_Failed;
 	}
@@ -185,7 +178,7 @@ IMVRxchangeService::IMVRxchangeMessage CMVRxchangeServiceImpl::TCP_OnIncommingMe
     if(in.Type == MVRxchangeMessageType::MVR_JOIN)
     {
         size_t count = 0;
-        QueryLocalServices(count);
+        this->mDNS_Client_Task();
         fMVRGroup = GetMembersOfService(fCurrentService);
     }
 
@@ -198,7 +191,7 @@ IMVRxchangeService::IMVRxchangeMessage CMVRxchangeServiceImpl::TCP_OnIncommingMe
 }
 
 
-void CMVRxchangeServiceImpl::SendMessageToLocalNetworks(const TXString& ip, uint16_t p, const MVRxchangeNetwork::MVRxchangePacket& msg)
+bool CMVRxchangeServiceImpl::SendMessageToLocalNetworks(const TXString& ip, uint16_t p, const MVRxchangeNetwork::MVRxchangePacket& msg)
 {
 	MVRxchangeNetwork::MVRxchangeClient c (this, msg);
 	
@@ -206,14 +199,20 @@ void CMVRxchangeServiceImpl::SendMessageToLocalNetworks(const TXString& ip, uint
 	sprintf(str, "%u", p);
 	std::string port =str;
 
-	c.Connect(ip.GetStdString(), port, std::chrono::seconds(10));
-	c.WriteMessage(std::chrono::seconds(10));
+	bool ok = false;
+	if(c.Connect(ip.GetStdString(), port, std::chrono::seconds(10)))
+	{
+		ok = c.WriteMessage(std::chrono::seconds(10));
+	}
+
+	return ok;
 }
 
 std::vector<MVRxchangeGoupMember> CMVRxchangeServiceImpl::GetMembersOfService(const ConnectToLocalServiceArgs& services)
 {
 	std::vector<MVRxchangeGoupMember> list;
-
+	
+	std::lock_guard<std::mutex> lock (fQueryLocalServicesResult_mtx);
 	for(const auto& e : fQueryLocalServicesResult)
 	{
 		if(std::string(e.Service.fBuffer) != (std::string(fCurrentService.Service.fBuffer) + "."  + std::string(MVRXChange_Service)))
@@ -227,4 +226,55 @@ std::vector<MVRxchangeGoupMember> CMVRxchangeServiceImpl::GetMembersOfService(co
 	}
 
 	return list;
+}
+
+void Func(const boost::system::error_code& /*e*/, boost::asio::deadline_timer* t, CMVRxchangeServiceImpl* imp)
+{
+	std::cout << std::endl<< std::endl << std::endl << " mDNS_Client_Task " << std::endl<< std::endl<< std::endl;
+	imp->mDNS_Client_Task();
+
+	t->async_wait(boost::bind(Func, boost::asio::placeholders::error, t, imp));
+}
+
+void CMVRxchangeServiceImpl::mDNS_Client_Start()
+{
+	boost::asio::deadline_timer t_short(fmdns_IO_Context, boost::posix_time::seconds(1));
+	boost::asio::deadline_timer t_long (fmdns_IO_Context, boost::posix_time::seconds(120));
+	t_short.async_wait(boost::bind(Func, boost::asio::placeholders::error, &t_long, this));
+
+	fmdns_IO_Context.run();
+}
+
+void CMVRxchangeServiceImpl::mDNS_Client_Stop()
+{
+	if (fmdns_Thread.joinable())
+	{
+		fmdns_IO_Context.stop();
+		fmdns_Thread.join();
+	}
+}
+
+void CMVRxchangeServiceImpl::mDNS_Client_Task()
+{
+	mdns_cpp::mDNS mdns;
+	auto query_res = mdns.executeQuery2(MVRXChange_Service);
+
+	std::vector<ConnectToLocalServiceArgs> result;
+	for (auto& r : query_res) 
+	{
+		ConnectToLocalServiceArgs localServ;
+
+		strcpy(localServ.Service, r.hostNam.c_str());		 
+		strcpy(localServ.IPv4, r.ipV4_adress.c_str());
+		strcpy(localServ.IPv6, r.ipV6_adress.c_str());
+		localServ.Port = r.port;
+
+		result.push_back(localServ);
+	}
+
+	{
+		std::lock_guard<std::mutex> lock (fQueryLocalServicesResult_mtx);
+		fQueryLocalServicesResult = result;
+	}
+
 }

@@ -134,7 +134,6 @@ int mDNS::openClientSockets(int *sockets, int max_sockets, int port) {
     return num_sockets;
   }
 
-  int first_ipv4 = 1;
   int first_ipv6 = 1;
   for (PIP_ADAPTER_ADDRESSES adapter = adapter_address; adapter; adapter = adapter->Next) {
     if (adapter->TunnelType == TUNNEL_TYPE_TEREDO) {
@@ -149,12 +148,10 @@ int mDNS::openClientSockets(int *sockets, int max_sockets, int port) {
         struct sockaddr_in *saddr = (struct sockaddr_in *)unicast->Address.lpSockaddr;
         if ((saddr->sin_addr.S_un.S_un_b.s_b1 != 127) || (saddr->sin_addr.S_un.S_un_b.s_b2 != 0) ||
             (saddr->sin_addr.S_un.S_un_b.s_b3 != 0) || (saddr->sin_addr.S_un.S_un_b.s_b4 != 1)) {
-          int log_addr = 0;
-          if (first_ipv4) {
-            service_address_ipv4_ = saddr->sin_addr.S_un.S_addr;
-            first_ipv4 = 0;
-            log_addr = 1;
-          }
+          int log_addr = 1;
+            fInterfaces.push_back(std::make_pair(ipv4AddressToString(buffer, sizeof(buffer), saddr, sizeof(struct sockaddr_in));, saddr->sin_addr.s_addr));
+          
+
           has_ipv4_ = 1;
           if (num_sockets < max_sockets) {
             saddr->sin_port = htons((unsigned short)port);
@@ -216,7 +213,6 @@ int mDNS::openClientSockets(int *sockets, int max_sockets, int port) {
     MDNS_LOG << "Unable to get interface addresses\n";
   }
 
-  int first_ipv4 = 1;
   int first_ipv6 = 1;
   for (ifa = ifaddr; ifa; ifa = ifa->ifa_next) {
     if (!ifa->ifa_addr) {
@@ -225,14 +221,11 @@ int mDNS::openClientSockets(int *sockets, int max_sockets, int port) {
 
     if (ifa->ifa_addr->sa_family == AF_INET) {
       struct sockaddr_in *saddr = (struct sockaddr_in *)ifa->ifa_addr;
-      if (saddr->sin_addr.s_addr != htonl(INADDR_LOOPBACK)) {
+      if (saddr->sin_addr.s_addr != htonl(INADDR_LOOPBACK)) 
+      {
         int log_addr = 0;
-        if (first_ipv4) {
-          service_address_ipv4_ = saddr->sin_addr.s_addr;
-          first_ipv4 = 0;
-          log_addr = 1;
-        }
-        has_ipv4_ = 1;
+        fInterfaces.push_back(std::make_pair(ifa->ifa_name, saddr->sin_addr.s_addr));
+        
         if (num_sockets < max_sockets) {
           saddr->sin_port = htons(port);
           int sock = mdns_socket_open_ipv4(saddr);
@@ -242,11 +235,6 @@ int mDNS::openClientSockets(int *sockets, int max_sockets, int port) {
           } else {
             log_addr = 0;
           }
-        }
-        if (log_addr) {
-          char buffer[128];
-          const auto addr = ipv4AddressToString(buffer, sizeof(buffer), saddr, sizeof(struct sockaddr_in));
-          MDNS_LOG << "Local IPv4 address: " << addr << "\n";
         }
       }
     } else if (ifa->ifa_addr->sa_family == AF_INET6) {
@@ -456,9 +444,21 @@ void mDNS::setServiceHostname(const std::string &hostname) { hostname_ = hostnam
 
 void mDNS::setServicePort(std::uint16_t port) { port_ = port; }
 
+
+void mDNS::setServiceIP(std::uint32_t port) { service_address_ipv4_ = port; has_ipv4_ = true; }
+
 void mDNS::setServiceName(const std::string &name) { name_ = name; }
 
 void mDNS::setServiceTxtRecord(const std::string &txt_record) { txt_record_ = txt_record; }
+
+std::vector<std::pair<std::string, uint32_t>> mDNS::getInterfaces() 
+{
+  // Call the client socket function to enumerate and get local addresses,
+  // but not open the actual sockets
+  openClientSockets(0, 0, 0);
+
+  return fInterfaces;
+}
 
 void mDNS::runMainLoop() {
   constexpr size_t number_of_sockets = 32;

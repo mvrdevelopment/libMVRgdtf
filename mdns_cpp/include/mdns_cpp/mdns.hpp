@@ -36,8 +36,10 @@ class mDNS {
 
   void setServiceHostname(const std::string &hostname);
   void setServicePort(std::uint16_t port);
+  void setServiceIP(std::uint32_t port);
   void setServiceName(const std::string &name);
   void setServiceTxtRecord(const std::string &text_record);
+  std::vector<std::pair<std::string, uint32_t>> getInterfaces();
 
   std::vector<Query_result> executeQuery2(const std::string &service);
 
@@ -61,6 +63,7 @@ class mDNS {
   bool has_ipv6_{false};
 
   uint32_t service_address_ipv4_{0};
+  std::vector<std::pair<std::string, uint32_t>> fInterfaces;
   uint8_t service_address_ipv6_[16]{0};
 
   std::thread worker_thread_;
