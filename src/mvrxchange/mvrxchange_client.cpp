@@ -48,16 +48,15 @@ bool MVRxchangeClient::ReadMessage(std::chrono::steady_clock::duration timeout)
 
     Run(timeout);
 
-    IMVRxchangeService::IMVRxchangeMessage out;
-    fMsg_ret.ToExternalMessage(out);
-    fImpl->TCP_OnIncommingMessage(out);
-    
+    if(! error)
+    {
+        IMVRxchangeService::IMVRxchangeMessage out;
+        fMsg_ret.ToExternalMessage(out);
+        fImpl->TCP_OnIncommingMessage(out);
+    }
 
-    // Determine whether the read completed successfully.
-    if (error)
-      throw std::system_error(error);
-
-    return n > 0;
+    // Determine whether the read completed successfully
+    return ! error;;
   }
 
 void MVRxchangeClient::WriteMessage(std::chrono::steady_clock::duration timeout)
@@ -83,8 +82,7 @@ void MVRxchangeClient::WriteMessage(std::chrono::steady_clock::duration timeout)
     ReadMessage(timeout);
 
     // Determine whether the read completed successfully.
-    if (error)
-      throw std::system_error(error);
+    return ! error;
   }
 
 void MVRxchangeClient::Run(std::chrono::steady_clock::duration timeout)
@@ -112,7 +110,7 @@ void MVRxchangeClient::Run(std::chrono::steady_clock::duration timeout)
     }
 }
 
-void MVRxchangeClient::Connect(const std::string& host, const std::string& service, std::chrono::steady_clock::duration timeout)
+book MVRxchangeClient::Connect(const std::string& host, const std::string& service, std::chrono::steady_clock::duration timeout)
 {
     // Resolve the host name and service to a list of endpoints.
     auto endpoints = tcp::resolver(fio_context).resolve(host, service);
@@ -132,7 +130,7 @@ void MVRxchangeClient::Connect(const std::string& host, const std::string& servi
     // Run the operation until it completes, or until the timeout.
     Run(timeout);
 
-// Determine whether a connection was successfully established.
-if (error)
-    throw std::system_error(error);
+    // Determine whether a connection was successfully established.
+
+    return ! error;
 }
