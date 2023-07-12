@@ -445,7 +445,7 @@ void mDNS::setServiceHostname(const std::string &hostname) { hostname_ = hostnam
 void mDNS::setServicePort(std::uint16_t port) { port_ = port; }
 
 
-void mDNS::setServiceIP(std::uint32_t port) { service_address_ipv4_ = port; }
+void mDNS::setServiceIP(std::uint32_t port) { service_address_ipv4_ = port; has_ipv4_ = true; }
 
 void mDNS::setServiceName(const std::string &name) { name_ = name; }
 
