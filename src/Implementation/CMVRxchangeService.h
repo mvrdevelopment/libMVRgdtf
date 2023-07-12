@@ -39,7 +39,7 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE     Send_message(const SendMessageArgs& messageHandler);
 
 	private:
-		mdns_cpp::mDNS 							fmdns;
+		std::vector<mdns_cpp::mDNS*> 			fmdns;
 		std::thread 							fmdns_Thread;
 		boost::asio::io_context 				fmdns_IO_Context;
 

@@ -39,6 +39,7 @@ class mDNS {
   void setServiceIP(std::uint32_t port);
   void setServiceName(const std::string &name);
   void setServiceTxtRecord(const std::string &text_record);
+  std::vector<std::pair<std::string, uint32_t>> getInterfaces();
 
   std::vector<Query_result> executeQuery2(const std::string &service);
 

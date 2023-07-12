@@ -40,12 +40,18 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 	txt += "StationUUID=";
 	txt += SceneData::GdtfConverter::ConvertUUID(VWUUID(fCurrentService.StationUUID.a, fCurrentService.StationUUID.b, fCurrentService.StationUUID.c, fCurrentService.StationUUID.d)).GetStdString();
 	
-	fmdns.setServiceHostname(std::string(fCurrentService.Service.fBuffer));
-	fmdns.setServicePort(fServer->GetPort());
-	fmdns.setServiceIP(fServer->GetIP());
-	fmdns.setServiceName(MVRXChange_Service);
-	fmdns.setServiceTxtRecord(txt);
-	fmdns.startService();
+	mdns_cpp::mDNS q;
+	for(std::pair<std::string, uint32_t> e : q.getInterfaces())
+	{
+		mdns_cpp::mDNS* s = new mdns_cpp::mDNS();
+		s->setServiceHostname(std::string(fCurrentService.Service.fBuffer));
+		s->setServicePort(fServer->GetPort());
+		s->setServiceIP(e.second);
+		s->setServiceName(MVRXChange_Service);
+		s->setServiceTxtRecord(txt);
+		s->startService();
+		fmdns.push_back(s);
+	}
 
 	fMVRGroup = GetMembersOfService(fCurrentService);
 	

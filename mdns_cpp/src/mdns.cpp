@@ -451,6 +451,15 @@ void mDNS::setServiceName(const std::string &name) { name_ = name; }
 
 void mDNS::setServiceTxtRecord(const std::string &txt_record) { txt_record_ = txt_record; }
 
+std::vector<std::pair<std::string, uint32_t>> mDNS::getInterfaces() 
+{
+  // Call the client socket function to enumerate and get local addresses,
+  // but not open the actual sockets
+  openClientSockets(0, 0, 0);
+
+  return fInterfaces;
+}
+
 void mDNS::runMainLoop() {
   constexpr size_t number_of_sockets = 32;
   int sockets[number_of_sockets];
