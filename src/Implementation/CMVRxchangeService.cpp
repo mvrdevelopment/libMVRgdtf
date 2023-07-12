@@ -269,6 +269,27 @@ void CMVRxchangeServiceImpl::mDNS_Client_Task()
 		strcpy(localServ.IPv6, r.ipV6_adress.c_str());
 		localServ.Port = r.port;
 
+		// StationName=sdfsd;StationUUID=XXXXX-
+		TXString txt  = r.txt;
+		TXString uuid;
+		TXString name;
+
+		ptrdiff_t pos_name = txt.Find("StationName=");
+		if(pos_name != size_t(-1))
+		{
+			name = txt.Mid(pos_name, txt.Find(';', pos_name));
+
+		}
+		ptrdiff_t pos_uuid = txt.Find("StationUUID=");
+		if(pos_uuid != size_t(-1))
+		{
+			uuid = txt.Mid(pos_uuid, txt.Find(';', pos_name));
+		}
+
+		SceneData::GdtfConverter::ConvertUUID(uuid, localServ.StationUUID);
+		strcpy(localServ.StationName, name.GetCharPtr());
+
+
 		result.push_back(localServ);
 	}
 
