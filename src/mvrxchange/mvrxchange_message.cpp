@@ -122,15 +122,15 @@ void MVRxchangePacket::FromExternalMessage(const VectorworksMVR::IMVRxchangeServ
         payload["OK"]           = in.RetIsOK;
         payload["Message"]      = in.RetError;
         payload["Type"]         = "MVR_JOIN_RET";
-        payload["provider"]     = in.JOIN.Provider;
-        payload["stationName"]  = in.JOIN.StationName;
+        payload["Provider"]     = in.JOIN.Provider;
+        payload["StationName"]  = in.JOIN.StationName;
         payload["verMajor"]     = in.JOIN.VersionMajor;
         payload["verMinor"]     = in.JOIN.VersionMinor;
         break;
     case IMVRxchangeService::MVRxchangeMessageType::MVR_JOIN:
         payload["Type"]         = "MVR_JOIN";
-        payload["provider"]     = in.JOIN.Provider;
-        payload["stationName"]  = in.JOIN.StationName;
+        payload["Provider"]     = in.JOIN.Provider;
+        payload["StationName"]  = in.JOIN.StationName;
         payload["verMajor"]     = in.JOIN.VersionMajor;
         payload["verMinor"]     = in.JOIN.VersionMinor;
         break;
@@ -174,7 +174,7 @@ void MVRxchangePacket::FromExternalMessage(const VectorworksMVR::IMVRxchangeServ
 
 
     fFlag       = kMVR_Package_Flag;
-    fNumber     = 1;
+    fNumber     = 0;
     fCount      = 1;
 
     if(in.Type == IMVRxchangeService::MVRxchangeMessageType::MVR_REQUEST_RET && in.RetIsOK)
