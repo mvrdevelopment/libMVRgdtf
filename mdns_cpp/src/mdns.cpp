@@ -311,7 +311,7 @@ static int query_callback(int sock, const struct sockaddr *from, size_t addrlen,
     snprintf(str_buffer, str_capacity, "%s : %s %.*s SRV %.*s priority %d weight %d port %d\n", fromaddrstr.data(),
              entrytype, MDNS_STRING_FORMAT(entrystr), MDNS_STRING_FORMAT(srv.name), srv.priority, srv.weight, srv.port);
     
-    HandleQuerySRV(entrystr.str, srv.name.str, srv.port);
+    HandleQuerySRV(MDNS_STRING_FORMAT_STD(entrystr), MDNS_STRING_FORMAT_STD(srv.name), srv.port);
 
   } else if (rtype == MDNS_RECORDTYPE_A) {
     struct sockaddr_in addr;
@@ -320,7 +320,7 @@ static int query_callback(int sock, const struct sockaddr *from, size_t addrlen,
     snprintf(str_buffer, str_capacity, "%s : %s %.*s A %s\n", fromaddrstr.data(), entrytype,
              MDNS_STRING_FORMAT(entrystr), addrstr.data());
     
-    SetQueryResultIP(entrystr.str, addrstr, false);
+    SetQueryResultIP(MDNS_STRING_FORMAT_STD(entrystr), addrstr, false);
 
   } else if (rtype == MDNS_RECORDTYPE_AAAA) {
     struct sockaddr_in6 addr;
@@ -329,7 +329,7 @@ static int query_callback(int sock, const struct sockaddr *from, size_t addrlen,
     snprintf(str_buffer, str_capacity, "%s : %s %.*s AAAA %s\n", fromaddrstr.data(), entrytype,
              MDNS_STRING_FORMAT(entrystr), addrstr.data());
     
-    SetQueryResultIP(entrystr.str, addrstr, true);
+    SetQueryResultIP(MDNS_STRING_FORMAT_STD(entrystr), addrstr, true);
   } else if (rtype == MDNS_RECORDTYPE_TXT) {
     size_t parsed = mdns_record_parse_txt(data, size, record_offset, record_length, txtbuffer,
                                           sizeof(txtbuffer) / sizeof(mdns_record_txt_t));
@@ -343,7 +343,7 @@ static int query_callback(int sock, const struct sockaddr *from, size_t addrlen,
                  MDNS_STRING_FORMAT(entrystr), MDNS_STRING_FORMAT(txtbuffer[itxt].key));
       }
 
-      SetQueryResultTXT(entrystr.str, str_buffer);
+      SetQueryResultTXT(MDNS_STRING_FORMAT_STD(entrystr), str_buffer);
     }
   } else {
     snprintf(str_buffer, str_capacity, "%s : %s %.*s type %u rclass 0x%x ttl %u length %d\n", fromaddrstr.data(),
