@@ -218,16 +218,16 @@ void MVRxchangePacket::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMV
                 in.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_JOIN;
                 in.JOIN.VersionMajor= payload["verMajor"];
                 in.JOIN.VersionMinor= payload["verMinor"];
-                strcpy(in.JOIN.Provider, payload["provider"].get<std::string>().c_str());
-                strcpy(in.JOIN.StationName, payload["stationName"].get<std::string>().c_str());
+                strcpy(in.JOIN.Provider, payload["Provider"].get<std::string>().c_str());
+                strcpy(in.JOIN.StationName, payload["StationName"].get<std::string>().c_str());
             }
             else if(payload["Type"] == "MVR_JOIN_RET")
             {
                 in.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_JOIN_RET;
                 in.JOIN.VersionMajor= payload["verMajor"];
                 in.JOIN.VersionMinor= payload["verMinor"];
-                strcpy(in.JOIN.Provider, payload["provider"].get<std::string>().c_str());
-                strcpy(in.JOIN.StationName, payload["stationName"].get<std::string>().c_str());
+                strcpy(in.JOIN.Provider, payload["Provider"].get<std::string>().c_str());
+                strcpy(in.JOIN.StationName, payload["StationName"].get<std::string>().c_str());
 
                 in.RetIsOK = payload["OK"].get<bool>();
                 strcpy(in.RetError, payload["Message"].get<std::string>().c_str());
