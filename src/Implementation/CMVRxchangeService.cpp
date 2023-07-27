@@ -68,7 +68,6 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 
 
 
-
 	return kVCOMError_NoError;
 }
 
@@ -76,6 +75,12 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 VCOMError VectorworksMVR::CMVRxchangeServiceImpl::LeaveLocalService()
 {
 	this->TCP_Stop();
+    
+    for(auto s : fmdns)
+    {
+        s->stopService();
+        delete s;
+    }
 
 
 	return kVCOMError_NoError;
