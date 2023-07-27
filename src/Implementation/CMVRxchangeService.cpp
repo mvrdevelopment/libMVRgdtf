@@ -84,8 +84,13 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::LeaveLocalService()
 
 VCOMError VCOM_CALLTYPE  CMVRxchangeServiceImpl::QueryLocalServices(size_t& out_Count)
 {
-	std::lock_guard<std::mutex> lock (fQueryLocalServicesResult_mtx);
-	out_Count = fQueryLocalServicesResult.size();
+    this->mDNS_Client_Task();
+    
+    {
+        std::lock_guard<std::mutex> lock (fQueryLocalServicesResult_mtx);
+        out_Count = fQueryLocalServicesResult.size();
+    }
+	
 
 	return kVCOMError_NoError;
 }
