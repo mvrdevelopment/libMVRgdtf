@@ -1,4 +1,4 @@
-#ifndef __DONT_USE_XERCES_AS_XMLLIB
+#ifndef DONT_USE_XERCES_AS_XMLLIB
 #include "XercesSupport.h"
 
 namespace VectorworksMVR

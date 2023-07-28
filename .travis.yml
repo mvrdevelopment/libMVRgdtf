@@ -8,16 +8,32 @@ matrix:
     - env: XERCES_CONFIGURE_ENCODER="gnuiconv"
       dist: xenial
       sudo: required
+      install:
+        - cmake .. -DBUILD_SHARED_LIBS=OFF -Dxmlch-type=uint16_t -Dnetwork=OFF -Dtranscoder=$XERCES_CONFIGURE_ENCODER 
+        - cmake --build . --config Release
     - env: XERCES_CONFIGURE_ENCODER="gnuiconv"
       sudo: required
       dist: xenial
       compiler: clang
       sudo: required
+      install:
+        - cmake .. -DBUILD_SHARED_LIBS=OFF -Dxmlch-type=uint16_t -Dnetwork=OFF -Dtranscoder=$XERCES_CONFIGURE_ENCODER 
+        - cmake --build . --config Release
     - env: XERCES_CONFIGURE_ENCODER="icu" ADDIONAL_LD=" -licuuc"
       dist: xenial
       compiler: clang
       sudo: required
+      install:
+        - cmake .. -DBUILD_SHARED_LIBS=OFF -Dxmlch-type=uint16_t -Dnetwork=OFF -Dtranscoder=$XERCES_CONFIGURE_ENCODER 
+        - cmake --build . --config Release
     - env: XERCES_CONFIGURE_ENCODER="gnuiconv"
+      dist: bionic
+      compiler: gcc
+      sudo: required
+      install:
+        - cmake .. -DBUILD_SHARED_LIBS=OFF -Dxmlch-type=uint16_t -Dnetwork=OFF -Dtranscoder=$XERCES_CONFIGURE_ENCODER 
+        - cmake --build . --config Release
+    - env: DONT_USE_XERCES_AS_XMLLIB=TRUE
       dist: bionic
       compiler: gcc
       sudo: required
@@ -25,11 +41,23 @@ matrix:
     - env: OSX_VERSION=10.10 XERCES_CONFIGURE_ENCODER="macosunicodeconverter"
       osx_image: xcode8.3
       os: osx
+      install:
+        - cmake .. -DBUILD_SHARED_LIBS=OFF -Dxmlch-type=uint16_t -Dnetwork=OFF -Dtranscoder=$XERCES_CONFIGURE_ENCODER 
+        - cmake --build . --config Release
       # Xcode 9.4 Clang
     - env: OSX_VERSION=10.14 XERCES_CONFIGURE_ENCODER="macosunicodeconverter"
       osx_image: xcode10.1
       os: osx
+      install:
+        - cmake .. -DBUILD_SHARED_LIBS=OFF -Dxmlch-type=uint16_t -Dnetwork=OFF -Dtranscoder=$XERCES_CONFIGURE_ENCODER 
+        - cmake --build . --config Release
     - env: OSX_VERSION=10.14 XERCES_CONFIGURE_ENCODER="macosunicodeconverter"
+      osx_image: xcode11.3
+      os: osx
+      install:
+        - cmake .. -DBUILD_SHARED_LIBS=OFF -Dxmlch-type=uint16_t -Dnetwork=OFF -Dtranscoder=$XERCES_CONFIGURE_ENCODER 
+        - cmake --build . --config Release
+    - env: OSX_VERSION=10.14 DONT_USE_XERCES_AS_XMLLIB=TRUE
       osx_image: xcode11.3
       os: osx
     # Windows 2016 Server
@@ -37,6 +65,7 @@ matrix:
       os: windows
       install:
         - cmake -G "Visual Studio 15 2017 Win64" -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_INSTALL_PREFIX:PATH=libs -DCMAKE_CONFIGURATION_TYPES="Release" -Dxmlch-type=wchar_t -DCMAKE_CXX_FLAGS_RELEASE:STRING="$CXX_FLAG -O2 -Ob2 -DNDEBUG" ..
+        - cmake --build . --config Release
       script:
         - cd ..
         - CMD //C runMSBuild_lib.bat "Release"
@@ -45,10 +74,21 @@ matrix:
       os: windows
       install:
         - cmake -G "Visual Studio 15 2017 Win64" -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_INSTALL_PREFIX:PATH=libs -DCMAKE_CONFIGURATION_TYPES="Release" -Dxmlch-type=wchar_t -DCMAKE_CXX_FLAGS_RELEASE:STRING="$CXX_FLAG -O2 -Ob2 -DNDEBUG" ..
+        - cmake --build . --config Release
       script:
         - cd ..
         - CMD //C runMSBuild_lib.bat "Release"
         - CMD //C runMSUnitTest.bat
+    - env: CXX_FLAG="-MT" DONT_USE_XERCES_AS_XMLLIB=TRUE
+      os: windows
+      script:
+        - cd ..
+        - CMD //C runMSBuild_lib.bat "Release"
+    - env: CXX_FLAG="-MD" DONT_USE_XERCES_AS_XMLLIB=TRUE
+      os: windows
+      script:
+        - cd ..
+        - CMD //C runMSBuild_lib.bat "Release"
 
 before_install:
 - cd ..
@@ -57,11 +97,7 @@ before_install:
 - mkdir build
 - cd build
 
-install:
-- cmake .. -DBUILD_SHARED_LIBS=OFF -Dxmlch-type=uint16_t -Dnetwork=OFF -Dtranscoder=$XERCES_CONFIGURE_ENCODER 
-
 before_script:
-- cmake --build . --config Release
 - cd ..
 - cd ..
 - cd libMVRgdtf

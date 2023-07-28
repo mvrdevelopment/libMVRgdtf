@@ -85,6 +85,10 @@ using namespace VWFC::Tools;
 #include "Interface/IStdFile.h"
 #include "Interface/IXMLFile.h"
 
+#ifdef DONT_USE_XERCES_AS_XMLLIB
+#include "rapidxmlsupport/mvr_xml_impl.h"
+#endif
+
 // Needed typedefs
 typedef std::vector<double>     TDoubleArray;
 typedef std::vector<Sint32>     TSint32Array;
