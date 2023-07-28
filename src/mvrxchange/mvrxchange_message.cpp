@@ -107,19 +107,23 @@ void MVRxchangePacket::SetBody(size_t length, char* buffer)
 bool MVRxchangePacket::DecodeHeader()
 {
     memcpy(&fFlag, fData->GetData(), header_flag);
+    fFlag = swap_endian(fFlag);
+    
     if (fFlag != kMVR_Package_Flag) { return false; }
 
-    auto Version = swap_endian(fVersion);
-    auto Number = swap_endian(fNumber);
-    auto Count = swap_endian(fCount);
-    auto Type = swap_endian(fType);
-    auto BodyLength = swap_endian(fBodyLength);
 
-    memcpy(&Version,    GetData() + header_flag, header_version);
-    memcpy(&Number,     GetData() + header_flag + header_version, header_number);
-    memcpy(&Count,      GetData() + header_flag + header_version + header_number, header_count);
-    memcpy(&Type,       GetData() + header_flag + header_version + header_number + header_count, header_type);
-    memcpy(&BodyLength, GetData() + header_flag + header_version + header_number + header_count + header_type, header_payload_length);
+
+    memcpy(&fVersion,    GetData() + header_flag, header_version);
+    memcpy(&fNumber,     GetData() + header_flag + header_version, header_number);
+    memcpy(&fCount,      GetData() + header_flag + header_version + header_number, header_count);
+    memcpy(&fType,       GetData() + header_flag + header_version + header_number + header_count, header_type);
+    memcpy(&fBodyLength, GetData() + header_flag + header_version + header_number + header_count + header_type, header_payload_length);
+    
+    fVersion = swap_endian(fVersion);
+    fNumber = swap_endian(fNumber);
+    fCount = swap_endian(fCount);
+    fType= swap_endian(fType);
+    fBodyLength = swap_endian(fBodyLength);
 
     // Prepare Buffer
     fData->GrowTo(fBodyLength);
@@ -129,6 +133,13 @@ bool MVRxchangePacket::DecodeHeader()
 
 void MVRxchangePacket::EncodeHeader()
 {
+    fFlag = swap_endian(fFlag);
+    fVersion = swap_endian(fVersion);
+    fNumber = swap_endian(fNumber);
+    fCount = swap_endian(fCount);
+    fType = swap_endian(fType);
+    fBodyLength = swap_endian(fBodyLength);
+    
     memcpy(GetData(),                                                                               &fFlag,                 header_flag);
     memcpy(GetData() + header_flag,                                                                 &fVersion,              header_version);
     memcpy(GetData() + header_flag + header_version,                                                &fNumber,               header_number);
