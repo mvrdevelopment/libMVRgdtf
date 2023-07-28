@@ -8,6 +8,25 @@
 
 using namespace MVRxchangeNetwork;
 
+template <typename T>
+T swap_endian(T u)
+{
+    static_assert (CHAR_BIT == 8, "CHAR_BIT != 8");
+
+    union
+    {
+        T u;
+        unsigned char u8[sizeof(T)];
+    } source, dest;
+
+    source.u = u;
+
+    for (size_t k = 0; k < sizeof(T); k++)
+        dest.u8[k] = source.u8[sizeof(T) - k - 1];
+
+    return dest.u;
+}
+
 
 MVRxchangePacket::MVRxchangePacket()
 {
@@ -90,11 +109,17 @@ bool MVRxchangePacket::DecodeHeader()
     memcpy(&fFlag, fData->GetData(), header_flag);
     if (fFlag != kMVR_Package_Flag) { return false; }
 
-    memcpy(&fVersion,    GetData() + header_flag, header_version);
-    memcpy(&fNumber,     GetData() + header_flag + header_version, header_number);
-    memcpy(&fCount,      GetData() + header_flag + header_version + header_number, header_count);
-    memcpy(&fType,       GetData() + header_flag + header_version + header_number + header_count, header_type);
-    memcpy(&fBodyLength, GetData() + header_flag + header_version + header_number + header_count + header_type, header_payload_length);
+    auto Version = swap_endian(fVersion);
+    auto Number = swap_endian(fNumber);
+    auto Count = swap_endian(fCount);
+    auto Type = swap_endian(fType);
+    auto BodyLength = swap_endian(fBodyLength);
+
+    memcpy(&Version,    GetData() + header_flag, header_version);
+    memcpy(&Number,     GetData() + header_flag + header_version, header_number);
+    memcpy(&Count,      GetData() + header_flag + header_version + header_number, header_count);
+    memcpy(&Type,       GetData() + header_flag + header_version + header_number + header_count, header_type);
+    memcpy(&BodyLength, GetData() + header_flag + header_version + header_number + header_count + header_type, header_payload_length);
 
     // Prepare Buffer
     fData->GrowTo(fBodyLength);
@@ -110,6 +135,14 @@ void MVRxchangePacket::EncodeHeader()
     memcpy(GetData() + header_flag + header_version + header_number,                                &fCount,                header_count);
     memcpy(GetData() + header_flag + header_version + header_number + header_count,                 &fType,                 header_type);
     memcpy(GetData() + header_flag + header_version + header_number + header_count + header_type,   &fBodyLength,           header_payload_length);
+
+
+    fFlag = swap_endian(fFlag);
+    fVersion = swap_endian(fVersion);
+    fNumber = swap_endian(fNumber);
+    fCount = swap_endian(fCount);
+    fType = swap_endian(fType);
+    fBodyLength = swap_endian(fBodyLength);
 }
 
 void MVRxchangePacket::FromExternalMessage(const VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage& in)
