@@ -81,6 +81,7 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::LeaveLocalService()
         s->stopService();
         delete s;
     }
+    fmdns.clear();
 
 
 	return kVCOMError_NoError;
@@ -210,7 +211,7 @@ bool CMVRxchangeServiceImpl::SendMessageToLocalNetworks(const TXString& ip, uint
 	std::string port =str;
 
 	bool ok = false;
-	if(c.Connect(ip.GetStdString(), port, std::chrono::seconds(10)))
+	if(c.Connect(ip.GetStdString(), port, std::chrono::seconds(1)))
 	{
 		ok = c.WriteMessage(std::chrono::seconds(10));
 	}
