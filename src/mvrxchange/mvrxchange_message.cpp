@@ -168,6 +168,7 @@ void MVRxchangePacket::FromExternalMessage(const VectorworksMVR::IMVRxchangeServ
         payload["Type"]         = "MVR_JOIN_RET";
         payload["Provider"]     = in.JOIN.Provider;
         payload["StationName"]  = in.JOIN.StationName;
+        payload["StationUUID"]  = SceneData::GdtfConverter::ConvertUUID(VWUUID(in.JOIN.StationUUID.a, in.JOIN.StationUUID.b, in.JOIN.StationUUID.c, in.JOIN.StationUUID.d)).GetStdString();
         payload["verMajor"]     = in.JOIN.VersionMajor;
         payload["verMinor"]     = in.JOIN.VersionMinor;
         break;
@@ -175,6 +176,7 @@ void MVRxchangePacket::FromExternalMessage(const VectorworksMVR::IMVRxchangeServ
         payload["Type"]         = "MVR_JOIN";
         payload["Provider"]     = in.JOIN.Provider;
         payload["StationName"]  = in.JOIN.StationName;
+        payload["StationUUID"]  = SceneData::GdtfConverter::ConvertUUID(VWUUID(in.JOIN.StationUUID.a, in.JOIN.StationUUID.b, in.JOIN.StationUUID.c, in.JOIN.StationUUID.d)).GetStdString();
         payload["verMajor"]     = in.JOIN.VersionMajor;
         payload["verMinor"]     = in.JOIN.VersionMinor;
         break;

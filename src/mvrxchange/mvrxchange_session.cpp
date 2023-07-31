@@ -9,9 +9,10 @@
 
 using namespace MVRxchangeNetwork;
 
-MVRxchangeSession::MVRxchangeSession(tcp::socket socket, CMVRxchangeServiceImpl* impl)
+MVRxchangeSession::MVRxchangeSession(tcp::socket socket, CMVRxchangeServiceImpl* impl, MVRxchangeServer* s)
     : fSocket(std::move(socket)),
-      fImpl(impl)
+      fImpl(impl),
+      fServer(s)
 {
     
 }
@@ -53,7 +54,7 @@ void MVRxchangeSession::DoReadHeader()
         }
         else
         {
-            // Leave TODO
+            fServer->CloseSession(self);
         }
     });
 }
@@ -70,7 +71,7 @@ void MVRxchangeSession::DoReadBody()
         }
         else
         {
-            // LEAVE TODO
+            fServer->CloseSession(self);
         }
     });
 }
@@ -95,7 +96,7 @@ void MVRxchangeSession::DoWrite()
         }
         else
         {
-            // TODO Leave
+            fServer->CloseSession(self);
         }
     });
 }

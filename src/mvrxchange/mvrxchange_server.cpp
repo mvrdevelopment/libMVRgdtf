@@ -28,7 +28,11 @@ void MVRxchangeServer::DoAccept()
         {
             std::cout << "Start Session" << std::endl;
             // XXX whats the point of making a shared pointer that directly leaves scop. Then just intstiate an object.
-            std::make_shared<MVRxchangeSession>(std::move(socket), fImpl)->Start();
+            auto session = std::make_shared<MVRxchangeSession>(std::move(socket), fImpl, this);
+
+            AddSession(session);
+
+            session->Start();
         }
 
         DoAccept();
@@ -38,6 +42,16 @@ void MVRxchangeServer::DoAccept()
     
 }
 
+
+void MVRxchangeServer::AddSession(std::shared_ptr<MVRxchangeSession> p) 
+{
+    fSession.insert(p);
+}
+
+void MVRxchangeServer::CloseSession(std::shared_ptr<MVRxchangeSession> p) 
+{
+    fSession.erase(p);
+}
 
 uint16_t MVRxchangeServer::GetPort() const
 {

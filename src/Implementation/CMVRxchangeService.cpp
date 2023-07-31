@@ -196,9 +196,9 @@ IMVRxchangeService::IMVRxchangeMessage CMVRxchangeServiceImpl::TCP_OnIncommingMe
     
     if(in.Type == MVRxchangeMessageType::MVR_JOIN)
     {
-        size_t count = 0;
-        this->mDNS_Client_Task();
-        fMVRGroup = GetMembersOfService(fCurrentService);
+        //size_t count = 0;
+        //this->mDNS_Client_Task();
+        //fMVRGroup = GetMembersOfService(fCurrentService);
     }
 
 	if (fCallBack.Callback)

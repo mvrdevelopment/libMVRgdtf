@@ -10,7 +10,7 @@ void Logger::LogIt(const std::string &s) {
   if (logger_registered) {
     logging_callback_function(s);
   } else {
-    std::cout << s << "\n";
+    //std::cout << s << "\n";
   }
 }
 

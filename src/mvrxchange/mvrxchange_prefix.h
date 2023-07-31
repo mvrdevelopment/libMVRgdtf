@@ -6,6 +6,7 @@
 #include "../Prefix/StdAfx.h"
 #include <boost/asio.hpp>
 #include <deque>
+#include <set>
 
 namespace VectorworksMVR
 {

@@ -9,6 +9,7 @@
 
 namespace MVRxchangeNetwork
 {
+    class MVRxchangeSession;
     class MVRxchangeServer
     {
     public:
@@ -19,10 +20,15 @@ namespace MVRxchangeNetwork
         uint16_t        GetPort() const;
         uint32_t        GetIP() const;
 
+
+        void AddSession(std::shared_ptr<MVRxchangeSession>);
+        void CloseSession(std::shared_ptr<MVRxchangeSession>);
+
     private:
         void DoAccept();
 
         CMVRxchangeServiceImpl*         fImpl;
+        std::set<std::shared_ptr<MVRxchangeSession>> fSession;
         tcp::acceptor                   fAcceptor;
         uint16_t                        fPort;
         uint32_t                        fIp;
