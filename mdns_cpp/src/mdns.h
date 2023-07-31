@@ -1141,9 +1141,9 @@ mdns_query_answer(int sock, const void* address, size_t address_size, void* buff
 		*udata++ = htons(rclass);
 		*(uint32_t*)udata = htonl(ttl);
 		udata += 2;
-		*udata++ = htons((unsigned short)(txt_length + 1));  // length
+		*udata++ = htons((unsigned short)(txt_length));  // length
 		char* txt_record = (char*)udata;
-		*txt_record++ = (char)txt_length;
+		//*txt_record++ = (char)txt_length;
 		memcpy(txt_record, txt, txt_length);  // txt record
 		data = MDNS_POINTER_OFFSET(txt_record, txt_length);
 		// Unused until multiple txt records are supported

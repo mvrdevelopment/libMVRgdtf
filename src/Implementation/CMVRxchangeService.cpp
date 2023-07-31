@@ -29,17 +29,22 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 	fCurrentService = service;
 	this->TCP_Start();
 
-	this->mDNS_Client_Task();
 
 	//---------------------------------------------------------------------------------------------
 	// Start mDNS Service
-	std::string txt;
-	txt += "StationName=";
-	txt += fCurrentService.StationName.fBuffer;
-	txt += ";";
-	txt += "StationUUID=";
-	txt += SceneData::GdtfConverter::ConvertUUID(VWUUID(fCurrentService.StationUUID.a, fCurrentService.StationUUID.b, fCurrentService.StationUUID.c, fCurrentService.StationUUID.d)).GetStdString();
+	std::string txt1;
+	txt1 += "StationName=";
+	txt1 += fCurrentService.StationName.fBuffer;
+	std::string txt2;
+	txt2 += "StationUUID=";
+	txt2 += SceneData::GdtfConverter::ConvertUUID(VWUUID(fCurrentService.StationUUID.a, fCurrentService.StationUUID.b, fCurrentService.StationUUID.c, fCurrentService.StationUUID.d)).GetStdString();
 	
+	std::string txt;
+	txt += (uint8_t)txt1.size();
+	txt += txt1;
+	txt += (uint8_t)txt2.size();
+	txt += txt2;
+
 	mdns_cpp::mDNS q;
 	for(std::pair<std::string, uint32_t> e : q.getInterfaces())
 	{
@@ -52,6 +57,9 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 		s->startService();
 		fmdns.push_back(s);
 	}
+
+
+	this->mDNS_Client_Task();
 
 	fMVRGroup = GetMembersOfService(fCurrentService);
 	
@@ -226,7 +234,7 @@ std::vector<MVRxchangeGoupMember> CMVRxchangeServiceImpl::GetMembersOfService(co
 	std::lock_guard<std::mutex> lock (fQueryLocalServicesResult_mtx);
 	for(const auto& e : fQueryLocalServicesResult)
 	{
-		if(std::string(e.Service.fBuffer) != (std::string(fCurrentService.Service.fBuffer) + "."  + std::string(MVRXChange_Service)))
+        if(e.Service.fBuffer[0] != '{')
 		{
 			MVRxchangeGoupMember member;
 			member.IP   = e.IPv4;

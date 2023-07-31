@@ -377,7 +377,7 @@ int service_callback(int sock, const struct sockaddr *from, size_t addrlen, mdns
     const char dns_sd[] = "_services._dns-sd._udp.local.";
     const ServiceRecord *service_record = (const ServiceRecord *)user_data;
     const size_t service_length = strlen(service_record->service);
-    char sendbuffer[256] = {0};
+    char sendbuffer[512] = {0};
 
     if ((service.length == (sizeof(dns_sd) - 1)) && (strncmp(service.str, dns_sd, sizeof(dns_sd) - 1) == 0)) {
       MDNS_LOG << "  --> answer " << service_record->service << " \n";
@@ -393,7 +393,8 @@ int service_callback(int sock, const struct sockaddr *from, size_t addrlen, mdns
       mdns_query_answer(sock, from, addrlen, sendbuffer, sizeof(sendbuffer), query_id, service_record->service,
                         service_length, service_record->hostname, strlen(service_record->hostname),
                         service_record->address_ipv4, service_record->address_ipv6, (uint16_t)service_record->port,
-                        txt_record, sizeof(txt_record));
+                        //txt_record, sizeof(txt_record));
+                        service_record->txt, service_record->txtlenght);
     }
   } else if (rtype == static_cast<uint16_t>(mdns_record_type::MDNS_RECORDTYPE_SRV)) {
     mdns_record_srv_t service =
@@ -483,6 +484,8 @@ void mDNS::runMainLoop() {
   service_record.address_ipv4 = has_ipv4_ ? service_address_ipv4_ : 0;
   service_record.address_ipv6 = has_ipv6_ ? service_address_ipv6_ : 0;
   service_record.port = port_;
+  service_record.txt = txt_record_.data();
+  service_record.txtlenght = txt_record_.size();
 
   // This is a crude implementation that checks for incoming queries
   while (running_) {
