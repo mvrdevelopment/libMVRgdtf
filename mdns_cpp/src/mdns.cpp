@@ -25,42 +25,55 @@ namespace mdns_cpp {
 static mdns_record_txt_t txtbuffer[128];
 
 void HandleQuerySRV(QueryResList* queryRes, std::string service_nam, std::string canonical_hostname, uint16_t port) {
-  for (size_t i = 0; i < queryRes->size(); i++) {
-    if ((*queryRes)[i].canonical_hostname == canonical_hostname) {
-      return; // Already exists
+    if (queryRes == nullptr) {
+        return;
     }
-  }
-  
-  Query_result qr(service_nam, canonical_hostname);
-  qr.port = port;
-  
-  queryRes->push_back(qr);
+
+    for (size_t i = 0; i < queryRes->size(); i++) {
+        if ((*queryRes)[i].canonical_hostname == canonical_hostname) {
+            return; // Already exists
+        }
+    }
+
+    Query_result qr(service_nam, canonical_hostname);
+    qr.port = port;
+
+    queryRes->push_back(qr);
 }
 
 void SetQueryResultIP(QueryResList* queryRes, std::string canonical_hostname, std::string ip, bool isIPv6) {  
+    if (queryRes == nullptr) {
+        return;
+    }
+
     for (size_t i = 0; i < queryRes->size(); i++) {
-      if ((*queryRes)[i].canonical_hostname == canonical_hostname) {
-        if (isIPv6) {
-          (*queryRes)[i].ipV6_adress = ip;
-        } else {
-          (*queryRes)[i].ipV4_adress = ip;
-        }    
-        break;
-      }      
+        if ((*queryRes)[i].canonical_hostname == canonical_hostname) {
+            if (isIPv6) {
+                (*queryRes)[i].ipV6_adress = ip;
+            }
+            else {
+                (*queryRes)[i].ipV4_adress = ip;
+            }
+            break;
+        }
     }
-} 
+}
 
-void SetQueryResultTXT(QueryResList* queryRes, std::string canonical_hostname, std::string txt) {  
+void SetQueryResultTXT(QueryResList* queryRes, std::string canonical_hostname, std::string txt) { 
+    if (queryRes == nullptr) {
+        return;
+    }
+
     for (size_t i = 0; i < queryRes->size(); i++)
-   {
-      if ((*queryRes)[i].canonical_hostname == canonical_hostname) 
-      {
-          (*queryRes)[i].txt = txt;
+    {
+        if ((*queryRes)[i].canonical_hostname == canonical_hostname)
+        {
+            (*queryRes)[i].txt = txt;
 
-        break;
-      }      
+            break;
+        }
     }
-} 
+}
 
 int mDNS::openServiceSockets(int *sockets, int max_sockets) {
   // When receiving, each socket can receive data from all network interfaces
@@ -289,7 +302,11 @@ static int query_callback(int sock, const struct sockaddr *from, size_t addrlen,
   static char namebuffer[256]{};
   static char entrybuffer[256]{};
 
-  QueryResList* queryRes = static_cast<QueryResList*>(user_data);
+  QueryResList* queryRes = nullptr;
+  
+  if (user_data != nullptr)  {
+      queryRes = static_cast<QueryResList*>(user_data);
+  }
 
   const auto fromaddrstr = ipAddressToString(addrbuffer, sizeof(addrbuffer), from, addrlen);
   bool isIPv6 = from->sa_family == AF_INET6;
