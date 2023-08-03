@@ -149,7 +149,8 @@ int mDNS::openClientSockets(int *sockets, int max_sockets, int port) {
         if ((saddr->sin_addr.S_un.S_un_b.s_b1 != 127) || (saddr->sin_addr.S_un.S_un_b.s_b2 != 0) ||
             (saddr->sin_addr.S_un.S_un_b.s_b3 != 0) || (saddr->sin_addr.S_un.S_un_b.s_b4 != 1)) {
           int log_addr = 1;
-            fInterfaces.push_back(std::make_pair(ipv4AddressToString(buffer, sizeof(buffer), saddr, sizeof(struct sockaddr_in));, saddr->sin_addr.s_addr));
+            char buffer[128];
+            fInterfaces.push_back(std::make_pair(ipv4AddressToString(buffer, sizeof(buffer), saddr, sizeof(struct sockaddr_in)), saddr->sin_addr.s_addr));
           
 
           has_ipv4_ = 1;
