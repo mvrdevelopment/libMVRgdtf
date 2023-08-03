@@ -21,10 +21,12 @@ struct Query_result {
   std::string   hostNam;
   std::string   canonical_hostname;
   std::string   txt;
-  uint16_t		  port;
+  uint16_t		port;
   std::string   ipV4_adress;
   std::string   ipV6_adress;  
 };
+
+using  QueryResList = std::vector<Query_result>;
 
 class mDNS { 
  public:
@@ -41,7 +43,7 @@ class mDNS {
   void setServiceTxtRecord(const std::string &text_record);
   std::vector<std::pair<std::string, uint32_t>> getInterfaces();
 
-  std::vector<Query_result> executeQuery2(const std::string &service);
+  QueryResList executeQuery2(const std::string &service);
 
   void executeQuery(const std::string &service);
   void executeDiscovery();
