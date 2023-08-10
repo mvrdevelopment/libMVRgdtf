@@ -1,6 +1,8 @@
 //-----------------------------------------------------------------------------
 //----- Copyright deersoft 2015 - 2019 www.deersoft.de
 //-----------------------------------------------------------------------------
+#ifdef DONT_USE_XERCES_AS_XMLLIB
+
 #pragma once
 #include "Prefix/StdAfx.h"
 #include "tinyxml2.h"
@@ -53,3 +55,4 @@ namespace VectorworksMVR
 		};
 	}
 }
+#endif
