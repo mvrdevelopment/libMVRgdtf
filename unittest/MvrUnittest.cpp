@@ -395,7 +395,7 @@ void MvrUnittest::ReadFile()
 		size_t count_Objects = 0;
 		__checkVCOM(mvrRead->GetSceneObjectCount(count_Objects));
 
-        this->checkifEqual("Check Global Object Count", count_Objects, size_t(17));
+        this->checkifEqual("Check Global Object Count", count_Objects, size_t(18));
 
 		//------------------------------------------------------------------------------------------------
 		// Check File Getters
@@ -447,6 +447,7 @@ void MvrUnittest::ReadFile()
             if (layer_index==0)
             {
                 Read_NestedObjects(mvrRead, readLayer);
+                Read_TestGroup(mvrRead, readLayer);
             }
 			
 			//Get Data Layer 2
@@ -802,13 +803,6 @@ void MvrUnittest::ReadFile()
 					__checkVCOM(mvrRead->GetDuplicatedUuids(duplicatedUuids));
 					checkifEqual("Duplicated Uuids", duplicatedUuids, true);
 				}
-
-                mvrRead->GetSceneObjectCount();
-
-				if (layer_index==0 && obj_index==4)
-				{
-					checkifEqual("Group name ", sceneObj->GetName(), "My Group Name");
-				}
 				
 				// ------------------------------------------------------------------------------
 				// Get Fixture3
@@ -932,7 +926,8 @@ void MvrUnittest::ReadFile()
 				sceneObj = next;
 			}
 			
-			layer_index++;
+            layer_index++;
+
 			ISceneObjPtr nextLayer = nullptr;
 			mvrRead->GetNextObject(readLayer, &nextLayer);
 			readLayer = nextLayer;
@@ -1156,25 +1151,62 @@ void MvrUnittest::Write_NestedObjects(IMediaRessourceVectorInterfacePtr intfc, I
     __checkVCOM(intfc->CreateTruss( truss2_UUID, STransformMatrix(), "Truss in SceneObj", sceneObject, &trussObj2));
 }
 
-void MvrUnittest::Read_NestedObjects(IMediaRessourceVectorInterfacePtr interf, ISceneObjPtr layer)
-{   
-    ISceneObjPtr child;
-    interf->GetFirstChild( layer, &child);
-
-    bool success = false;
+bool FindObjByName(IMediaRessourceVectorInterfacePtr interf, ISceneObjPtr container, MvrString objNam, ISceneObj** outObj)
+{
+    ISceneObj* child = nullptr;
+    interf->GetFirstChild( container, &child);
 
     while (child)
     {        
         std::string nam = child->GetName();
         
-        if ( nam == "Truss with childs")
+        if ( nam == objNam)
         {
-            success = Read_NestedObjectsInTruss(interf, child);
+            *outObj = child;
+            
+            return true;
         }        
 
         interf->GetNextObject(child, &child);
+    }   
+
+    return false;
+}
+
+void MvrUnittest::Read_TestGroup(IMediaRessourceVectorInterfacePtr interf, ISceneObjPtr layer)
+{
+    bool succes = false;
+    
+    ISceneObjPtr grp;    
+    bool found = FindObjByName(interf, layer, "My Group Name", &grp);
+    
+    if (found)
+    {
+        ISceneObjPtr firstChld;
+        interf->GetFirstChild(grp, &firstChld);
+
+        if (firstChld)
+        {
+            std::string nam = firstChld->GetName();
+            succes = (nam == "Truss in Group");
+        }
     }
 
+    checkifTrue( "Read_TestGroup", succes);
+}
+
+void MvrUnittest::Read_NestedObjects(IMediaRessourceVectorInterfacePtr interf, ISceneObjPtr layer)
+{   
+    bool success = false;
+
+    ISceneObjPtr truss;    
+    bool found = FindObjByName(interf, layer, "Truss with childs", &truss);
+    
+    if (found)
+    {        
+        success = Read_NestedObjectsInTruss(interf, truss);
+    }
+    
     checkifTrue( "Read_NestedObjects", success);
 }
 
