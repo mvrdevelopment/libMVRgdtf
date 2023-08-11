@@ -1,3 +1,4 @@
+#ifdef DONT_USE_XERCES_AS_XMLLIB
 //-----------------------------------------------------------------------------
 //----- Copyright deersoft 2015 - 2019 www.deersoft.de
 //-----------------------------------------------------------------------------
@@ -215,3 +216,4 @@ uint32_t CXMLFileImpl::Release()
 	}
 	return fRefCnt;
 }
+#endif
