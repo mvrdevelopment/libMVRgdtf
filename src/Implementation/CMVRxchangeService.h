@@ -11,7 +11,7 @@
 
 namespace VectorworksMVR
 {
-	struct MVRxchangeGoupMember
+	struct MVRxchangeGroupMember
 	{
 		TXString IP;
 		uint16_t Port;
@@ -68,7 +68,7 @@ namespace VectorworksMVR
 		IMVRxchangeMessage TCP_OnIncommingMessage(const IMVRxchangeMessage&);
 
 	private:
-		std::vector<MVRxchangeGoupMember>			fMVRGroup;
+		std::vector<MVRxchangeGroupMember>			fMVRGroup;
 
 		OnMessageArgs  fCallBack;
 		//---------------------------------------------------------------------------
@@ -79,6 +79,7 @@ namespace VectorworksMVR
 
 		//---------------------------------------------------------------------------
 		// mDNS Functions
-		std::vector<MVRxchangeGoupMember> GetMembersOfService(const ConnectToLocalServiceArgs& services);
+		std::vector<MVRxchangeGroupMember> 	GetMembersOfService(const ConnectToLocalServiceArgs& services);
+		VCOMError 							GetSingleMemberOfService(const MvrUUID& stationUUID, MVRxchangeGroupMember& out);
 	};
 }
