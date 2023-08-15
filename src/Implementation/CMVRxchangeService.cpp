@@ -196,32 +196,10 @@ IMVRxchangeService::IMVRxchangeMessage CMVRxchangeServiceImpl::TCP_OnIncommingMe
     
     if(in.Type == MVRxchangeMessageType::MVR_JOIN)
     {
-        this->mDNS_Client_Task(); // Run, in case client was faster than task
-
-		MVRxchangeGroupMember newItem;
-		if(GetSingleMemberOfService(in.JOIN.StationUUID, newItem) == kVCOMError_NoError)
-		{
-			// In case Station sent message twice (e.g. to change their name)
-			std::remove_if(fMVRGroup.begin(), fMVRGroup.end(), [&newItem](const MVRxchangeGroupMember& it){
-				return it.IP == newItem.IP && it.Port == newItem.Port;
-			});
-			fMVRGroup.push_back(newItem);
-		}
-		else
-		{
-			// could not locate station
-		}
+        //size_t count = 0;
+        //this->mDNS_Client_Task();
+        //fMVRGroup = GetMembersOfService(fCurrentService);
     }
-	else if(in.Type == MVRxchangeMessageType::MVR_LEAVE)
-	{
-		MVRxchangeGroupMember newItem;
-		if(GetSingleMemberOfService(in.JOIN.StationUUID, newItem) == kVCOMError_NoError)
-		{
-			std::remove_if(fMVRGroup.begin(), fMVRGroup.end(), [&newItem](const MVRxchangeGroupMember& it){
-				return it.IP == newItem.IP && it.Port == newItem.Port;
-			});
-		}
-	}
 
 	if (fCallBack.Callback)
 	{
@@ -249,19 +227,18 @@ bool CMVRxchangeServiceImpl::SendMessageToLocalNetworks(const TXString& ip, uint
 	return ok;
 }
 
-std::vector<MVRxchangeGroupMember> CMVRxchangeServiceImpl::GetMembersOfService(const ConnectToLocalServiceArgs& services)
+std::vector<MVRxchangeGoupMember> CMVRxchangeServiceImpl::GetMembersOfService(const ConnectToLocalServiceArgs& services)
 {
-	std::vector<MVRxchangeGroupMember> list;
+	std::vector<MVRxchangeGoupMember> list;
 	
 	std::lock_guard<std::mutex> lock (fQueryLocalServicesResult_mtx);
 	for(const auto& e : fQueryLocalServicesResult)
 	{
         if(e.Service.fBuffer[0] != '{')
 		{
-			MVRxchangeGroupMember member;
+			MVRxchangeGoupMember member;
 			member.IP   = e.IPv4;
 			member.Port = e.Port;
-			member.Name = e.StationName;
 			list.push_back(member);
 		}
 
@@ -269,26 +246,6 @@ std::vector<MVRxchangeGroupMember> CMVRxchangeServiceImpl::GetMembersOfService(c
 
 	return list;
 }
-
-VCOMError CMVRxchangeServiceImpl::GetSingleMemberOfService(const MvrUUID& stationUUID, MVRxchangeGroupMember& out){
-	std::lock_guard<std::mutex> lock (fQueryLocalServicesResult_mtx);
-	for(const auto& e : fQueryLocalServicesResult)
-	{
-        if(e.Service.fBuffer[0] != '{' && e.StationUUID == stationUUID)
-		{
-			MVRxchangeGroupMember member;
-			member.IP   = e.IPv4;
-			member.Port = e.Port;
-			member.Name = e.StationName;
-			out = member;
-			return kVCOMError_NoError;
-		}
-
-	}
-
-	return kVCOMError_Failed;
-}
-
 
 void Func(const boost::system::error_code& /*e*/, boost::asio::deadline_timer* t, CMVRxchangeServiceImpl* imp)
 {
