@@ -1890,6 +1890,11 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 			MvrUUID							FileUUID;
 			std::vector<MvrUUID>			FromStationUUID;
 		};
+
+		struct MVR_LEAVE_MESSAGE
+		{
+			MvrUUID							FromStationUUID;
+		};
 		
 
 		struct IMVRxchangeMessage
@@ -1905,6 +1910,7 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 			MVR_JOIN_MESSAGE 		JOIN;
 			MVR_COMMIT_MESSAGE 		COMMIT;
 			MVR_REQUEST_MESSAGE 	REQUEST;
+			MVR_LEAVE_MESSAGE 		LEAVE;
 
 			MVRxchangeString 				PathToFile;
 			char*							BufferToFile;

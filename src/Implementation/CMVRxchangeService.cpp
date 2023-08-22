@@ -46,16 +46,28 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 	txt += txt2;
 
 	mdns_cpp::mDNS q;
+	fmdns.clear();
+	for(auto& s : fmdns)
+    {
+        s->stopService();
+    }
 	for(std::pair<std::string, uint32_t> e : q.getInterfaces())
 	{
+		// Bitmasking IP Address to check if it is 127.x.x.x, which is a loopback adress
+		/*
+		if(e.second & 4278190080 == 2130706432) {
+			continue;
+		}
+		*/
+	
 		mdns_cpp::mDNS* s = new mdns_cpp::mDNS();
-		s->setServiceHostname(std::string(fCurrentService.Service.fBuffer) + e.first);
+		s->setServiceHostname(std::string(fCurrentService.Service.fBuffer));
 		s->setServicePort(fServer->GetPort());
 		s->setServiceIP(e.second);
 		s->setServiceName(MVRXChange_Service);
 		s->setServiceTxtRecord(txt);
 		s->startService();
-		fmdns.push_back(s);
+		fmdns.emplace_back(s);	// Pointer is now managed by the unique ptr and deleted upon fmdns going out of scope
 	}
 
 
@@ -84,10 +96,14 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::LeaveLocalService()
 {
 	this->TCP_Stop();
     
-    for(auto s : fmdns)
+	SendMessageArgs leaveMessage;
+	leaveMessage.Message.Type = MVRxchangeMessageType::MVR_LEAVE;
+	leaveMessage.Message.LEAVE.FromStationUUID = fCurrentService.StationUUID;
+	this->Send_message(leaveMessage);
+
+    for(auto& s : fmdns)
     {
         s->stopService();
-        delete s;
     }
     fmdns.clear();
 
@@ -126,6 +142,7 @@ VCOMError VCOM_CALLTYPE VectorworksMVR::CMVRxchangeServiceImpl::GetLocalServiceA
 
 VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToRemoteService(const ConnectToRemoteServiceArgs& service)
 {
+
 	return kVCOMError_NoError;
 }
 
@@ -196,10 +213,39 @@ IMVRxchangeService::IMVRxchangeMessage CMVRxchangeServiceImpl::TCP_OnIncommingMe
     
     if(in.Type == MVRxchangeMessageType::MVR_JOIN)
     {
-        //size_t count = 0;
-        //this->mDNS_Client_Task();
-        //fMVRGroup = GetMembersOfService(fCurrentService);
+        this->mDNS_Client_Task(); // Run, in case client was faster than task
+
+		MVRxchangeGroupMember newItem;
+		if(GetSingleMemberOfService(in.JOIN.StationUUID, newItem) == kVCOMError_NoError)
+		{
+			// In case Station sent message twice (e.g. to change their name)
+			auto it = std::find_if(fMVRGroup.begin(), fMVRGroup.end(), [&newItem](const MVRxchangeGroupMember& it){
+				return it.IP == newItem.IP && it.Port == newItem.Port;
+			});
+			
+			if(it != fMVRGroup.end())
+			{
+				*it = newItem; // changed name
+			}else
+			{
+				fMVRGroup.push_back(newItem);
+			}
+		}
+		else
+		{
+			// could not locate station
+		}
     }
+	else if(in.Type == MVRxchangeMessageType::MVR_LEAVE)
+	{
+		MVRxchangeGroupMember newItem;
+		if(GetSingleMemberOfService(in.LEAVE.FromStationUUID, newItem) == kVCOMError_NoError)
+		{
+			std::remove_if(fMVRGroup.begin(), fMVRGroup.end(), [&newItem](const MVRxchangeGroupMember& it){
+				return it.IP == newItem.IP && it.Port == newItem.Port;
+			});
+		}
+	}
 
 	if (fCallBack.Callback)
 	{
@@ -227,18 +273,27 @@ bool CMVRxchangeServiceImpl::SendMessageToLocalNetworks(const TXString& ip, uint
 	return ok;
 }
 
-std::vector<MVRxchangeGoupMember> CMVRxchangeServiceImpl::GetMembersOfService(const ConnectToLocalServiceArgs& services)
+std::vector<MVRxchangeGroupMember>& CMVRxchangeServiceImpl::GetRegisteredMembers()
 {
-	std::vector<MVRxchangeGoupMember> list;
+	return fMVRGroup;
+}
+
+
+std::vector<MVRxchangeGroupMember> CMVRxchangeServiceImpl::GetMembersOfService(const ConnectToLocalServiceArgs& services)
+{
+	std::vector<MVRxchangeGroupMember> list;
 	
 	std::lock_guard<std::mutex> lock (fQueryLocalServicesResult_mtx);
 	for(const auto& e : fQueryLocalServicesResult)
 	{
-        if(e.Service.fBuffer[0] != '{')
+		std::string service(e.Service.fBuffer);
+
+        if(service == std::string(services.Service))
 		{
-			MVRxchangeGoupMember member;
+			MVRxchangeGroupMember member;
 			member.IP   = e.IPv4;
 			member.Port = e.Port;
+			member.Name = e.StationName;
 			list.push_back(member);
 		}
 
@@ -246,6 +301,28 @@ std::vector<MVRxchangeGoupMember> CMVRxchangeServiceImpl::GetMembersOfService(co
 
 	return list;
 }
+
+VCOMError CMVRxchangeServiceImpl::GetSingleMemberOfService(const MvrUUID& stationUUID, MVRxchangeGroupMember& out){
+	std::lock_guard<std::mutex> lock (fQueryLocalServicesResult_mtx);
+
+
+	for(const auto& e : fQueryLocalServicesResult)
+	{
+        if(e.StationUUID == stationUUID)
+		{
+			MVRxchangeGroupMember member;
+			member.IP   = e.IPv4;
+			member.Port = e.Port;
+			member.Name = e.StationName;
+			out = member;
+			return kVCOMError_NoError;
+		}
+
+	}
+
+	return kVCOMError_Failed;
+}
+
 
 void Func(const boost::system::error_code& /*e*/, boost::asio::deadline_timer* t, CMVRxchangeServiceImpl* imp)
 {
@@ -277,10 +354,19 @@ void CMVRxchangeServiceImpl::mDNS_Client_Task()
 {
 	mdns_cpp::mDNS mdns;
 	auto query_res = mdns.executeQuery2(MVRXChange_Service);
-
+	std::string serviceAsString(MVRXChange_Service);
 	std::vector<ConnectToLocalServiceArgs> result;
+	
 	for (auto& r : query_res) 
 	{
+		if(
+			r.hostNam.size() < strlen(MVRXChange_Service) ||
+			!std::equal(serviceAsString.rbegin(), serviceAsString.rend(), r.hostNam.rbegin())
+		) {
+			// mdns not only retuns query results of the selected service, but also services that broadcasted during query, so filter them out here
+			continue;
+		}
+
 		ConnectToLocalServiceArgs localServ;
 
 		strcpy(localServ.Service, r.hostNam.c_str());		 

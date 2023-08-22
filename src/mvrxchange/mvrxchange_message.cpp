@@ -180,6 +180,15 @@ void MVRxchangePacket::FromExternalMessage(const VectorworksMVR::IMVRxchangeServ
         payload["verMajor"]     = in.JOIN.VersionMajor;
         payload["verMinor"]     = in.JOIN.VersionMinor;
         break;
+    case IMVRxchangeService::MVRxchangeMessageType::MVR_LEAVE:
+        payload["Type"]         = "MVR_LEAVE";
+        payload["FromStationUUID"]  = SceneData::GdtfConverter::ConvertUUID(VWUUID(in.LEAVE.FromStationUUID.a, in.LEAVE.FromStationUUID.b, in.LEAVE.FromStationUUID.c, in.LEAVE.FromStationUUID.d)).GetStdString();
+        break;
+    case IMVRxchangeService::MVRxchangeMessageType::MVR_LEAVE_RET:
+        payload["Type"]         = "MVR_LEAVE_RET";
+        payload["OK"]           = in.RetIsOK;
+        payload["Message"]      = in.RetError;
+        break;
     case IMVRxchangeService::MVRxchangeMessageType::MVR_COMMIT_RET:
         payload["OK"]               = in.RetIsOK;
         payload["Message"]          = in.RetError;
@@ -303,6 +312,15 @@ void MVRxchangePacket::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMV
                 SceneData::GdtfConverter::ConvertUUID(payload["FileUUID"].get<std::string>(), in.REQUEST.FileUUID);
 
                 // TODO ForStationsUUID
+            }
+            else if(payload["Type"] == "MVR_LEAVE")
+            {
+                in.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_LEAVE;
+                SceneData::GdtfConverter::ConvertUUID(payload["FromStationUUID"].get<std::string>(), in.LEAVE.FromStationUUID);
+            }
+            else if(payload["Type"] == "MVR_LEAVE_RET")
+            {
+                in.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_LEAVE_RET;
             }
         }
     }

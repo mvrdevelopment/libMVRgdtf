@@ -11,7 +11,7 @@
 
 namespace VectorworksMVR
 {
-	struct MVRxchangeGoupMember
+	struct MVRxchangeGroupMember
 	{
 		TXString IP;
 		uint16_t Port;
@@ -39,9 +39,9 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE     Send_message(const SendMessageArgs& messageHandler);
 
 	private:
-		std::vector<mdns_cpp::mDNS*> 			fmdns;
-		std::thread 							fmdns_Thread;
-		boost::asio::io_context 				fmdns_IO_Context;
+		std::vector<std::unique_ptr<mdns_cpp::mDNS>>	fmdns;
+		std::thread 									fmdns_Thread;
+		boost::asio::io_context 						fmdns_IO_Context;
 
 		std::mutex 								fQueryLocalServicesResult_mtx;
 		std::vector<ConnectToLocalServiceArgs> 	fQueryLocalServicesResult;
@@ -66,9 +66,9 @@ namespace VectorworksMVR
 		void TCP_ServerNetworksThread();
 	public:
 		IMVRxchangeMessage TCP_OnIncommingMessage(const IMVRxchangeMessage&);
-
+		std::vector<MVRxchangeGroupMember>& GetRegisteredMembers();
 	private:
-		std::vector<MVRxchangeGoupMember>			fMVRGroup;
+		std::vector<MVRxchangeGroupMember>			fMVRGroup;
 
 		OnMessageArgs  fCallBack;
 		//---------------------------------------------------------------------------
@@ -79,6 +79,7 @@ namespace VectorworksMVR
 
 		//---------------------------------------------------------------------------
 		// mDNS Functions
-		std::vector<MVRxchangeGoupMember> GetMembersOfService(const ConnectToLocalServiceArgs& services);
+		std::vector<MVRxchangeGroupMember> 	GetMembersOfService(const ConnectToLocalServiceArgs& services);
+		VCOMError 							GetSingleMemberOfService(const MvrUUID& stationUUID, MVRxchangeGroupMember& out);
 	};
 }
