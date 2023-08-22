@@ -46,8 +46,20 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 	txt += txt2;
 
 	mdns_cpp::mDNS q;
+	fmdns.clear();
+	for(auto& s : fmdns)
+    {
+        s->stopService();
+    }
 	for(std::pair<std::string, uint32_t> e : q.getInterfaces())
 	{
+		// Bitmasking IP Address to check if it is 127.x.x.x, which is a loopback adress
+		/*
+		if(e.second & 4278190080 == 2130706432) {
+			continue;
+		}
+		*/
+	
 		mdns_cpp::mDNS* s = new mdns_cpp::mDNS();
 		s->setServiceHostname(std::string(fCurrentService.Service.fBuffer) + e.first);
 		s->setServicePort(fServer->GetPort());
@@ -55,7 +67,7 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 		s->setServiceName(MVRXChange_Service);
 		s->setServiceTxtRecord(txt);
 		s->startService();
-		fmdns.push_back(s);
+		fmdns.emplace_back(s);	// Pointer is now managed by the unique ptr and deleted upon fmdns going out of scope
 	}
 
 
@@ -84,10 +96,9 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::LeaveLocalService()
 {
 	this->TCP_Stop();
     
-    for(auto s : fmdns)
+    for(auto& s : fmdns)
     {
         s->stopService();
-        delete s;
     }
     fmdns.clear();
 
@@ -320,10 +331,19 @@ void CMVRxchangeServiceImpl::mDNS_Client_Task()
 {
 	mdns_cpp::mDNS mdns;
 	auto query_res = mdns.executeQuery2(MVRXChange_Service);
-
+	std::string serviceAsString(MVRXChange_Service);
 	std::vector<ConnectToLocalServiceArgs> result;
+	
 	for (auto& r : query_res) 
 	{
+		if(
+			r.hostNam.size() < strlen(MVRXChange_Service) ||
+			!std::equal(serviceAsString.rbegin(), serviceAsString.rend(), r.hostNam.rbegin())
+		) {
+			// mdns not only retuns query results of the selected service, but also services that broadcasted during query, so filter them out here
+			continue;
+		}
+
 		ConnectToLocalServiceArgs localServ;
 
 		strcpy(localServ.Service, r.hostNam.c_str());		 
