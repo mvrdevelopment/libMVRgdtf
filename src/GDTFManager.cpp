@@ -1566,13 +1566,13 @@ void GdtfModel::OnReadFromNode(const IXMLFileNodePtr& pNode)
 
 	if(!fGeometryFile.IsEmpty())
 	{
-		TXString filename3DS = fGeometryFile + ".3ds";
-		TXString filenameSVG = fGeometryFile + ".svg";
+		TXString filename3DS  = fGeometryFile + ".3ds";
+		TXString filenameSVG  = fGeometryFile + ".svg";
 		TXString filenameGLTF = fGeometryFile + ".glb";
 
 		std::map<TXString, std::pair<char*, size_t> > fileBuffers = fParentFixture->GetFileBuffers();
 
-		auto buffer = fileBuffers.find(filename3DS);
+		auto buffer = fileBuffers.find(filename3DS.MakeLower());
 		if(buffer != fileBuffers.end())
 		{
 			fBufferSize3DS	= buffer->second.second;
@@ -1674,6 +1674,12 @@ const TXString& GdtfModel::GetGeometryFile_3DS_FullPath()
 	file->Set(model3DsFolder, fGeometryFile + ".3ds");
 
 	bool fileExists = false;
+	if(VCOM_SUCCEEDED(file->ExistsOnDisk(fileExists)) && fileExists)
+	{
+		file->GetFileFullPath(fFullPath3DS);
+	}
+
+	file->Set(model3DsFolder, fGeometryFile + ".3DS");
 	if(VCOM_SUCCEEDED(file->ExistsOnDisk(fileExists)) && fileExists)
 	{
 		file->GetFileFullPath(fFullPath3DS);
@@ -1924,7 +1930,7 @@ EGdtfModel_PrimitiveType GdtfModel::GetPrimitiveType() const
 
 void GdtfModel::GetBuffer3DS(void** bufferToCopy, size_t& length)
 {
-	if(fBuffer3DS)
+	if(!fBuffer3DS)
 	{
 		return;
 	}
@@ -1940,7 +1946,7 @@ void GdtfModel::GetBuffer3DS(void** bufferToCopy, size_t& length)
 
 void GdtfModel::GetBufferSVG(void** bufferToCopy, size_t& length)
 {
-	if(fBufferSVG)
+	if(!fBufferSVG)
 	{
 		return;
 	}
@@ -7656,7 +7662,7 @@ bool GdtfFixture::ImportFromZip(IZIPFilePtr& zipfile)
 				size_t	size = 0;							buffer.GetDataSize(size);
 				void*	data = malloc(size * sizeof(char));	buffer.CopyDataInto(data, size); //data is deleted in the GdtfFixture destructor.
 				std::pair<char*, size_t> bufferPair = std::make_pair((char*)data, size);
-				fFileBuffers[fileNameWithoutFolder] = bufferPair;
+				fFileBuffers[fileNameWithoutFolder.MakeLower()] = bufferPair;
 
 				//-----------------------------------------------------------------------------
 				IFolderIdentifierPtr targetFolder (IID_FolderIdentifier);
