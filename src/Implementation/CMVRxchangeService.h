@@ -66,9 +66,8 @@ namespace VectorworksMVR
 		void TCP_ServerNetworksThread();
 	public:
 		IMVRxchangeMessage TCP_OnIncommingMessage(const IMVRxchangeMessage&);
-		std::vector<MVRxchangeGroupMember>& GetRegisteredMembers();
-	private:
 		std::vector<MVRxchangeGroupMember>			fMVRGroup;
+	private:
 
 		OnMessageArgs  fCallBack;
 		//---------------------------------------------------------------------------

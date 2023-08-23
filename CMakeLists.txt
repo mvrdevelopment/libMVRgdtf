@@ -78,7 +78,7 @@ file(GLOB_RECURSE libSourceFiles ${SRCDIR}/*.cpp)
 add_library(MvrGdtf STATIC ${libSourceFiles})
 
 target_link_libraries(MvrGdtf ${XERCES_LIB_PATH})
-target_link_libraries(MvrGdtf lib/libmdns_cpp.a)
+target_link_libraries(MvrGdtf ${CMAKE_SOURCE_DIR}/libs/libmdns_cpp.a)
 #################################################
 
 
@@ -96,7 +96,9 @@ target_link_libraries(MvrGdtfUnitTest MvrGdtf)
 endif (UNITTEST)
 #################################################
 
-
+file(GLOB_RECURSE share_files gdtf_share_test/*.cpp)
+add_executable(shareTest ${share_files})
+target_link_libraries(shareTest MvrGdtf)
 
 #################################################
 # setup the platform macros
@@ -141,6 +143,9 @@ endif(WIN32)
 # Link extra libs
 target_compile_definitions(MvrGdtf ${PREPROCESSORS})
 target_link_libraries(MvrGdtf ${EXTRA_LIBS})
+
+target_compile_definitions(shareTest ${PREPROCESSORS})
+target_link_libraries(shareTest ${EXTRA_LIBS})
 
 if(${UNITTEST})
 target_compile_definitions(MvrGdtfUnitTest ${PREPROCESSORS})

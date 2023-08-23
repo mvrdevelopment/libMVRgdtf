@@ -24,6 +24,7 @@ VectorworksMVR::CMVRxchangeServiceImpl::~CMVRxchangeServiceImpl()
 
 VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const ConnectToLocalServiceArgs& service)
 {
+	this->LeaveLocalService();
 	//---------------------------------------------------------------------------------------------
 	// Start TCP
 	fCurrentService = service;
@@ -85,8 +86,6 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 	joinMessage.Message.JOIN.VersionMinor = fCurrentService.VersionMinor;
 	joinMessage.Message.JOIN.StationUUID  = fCurrentService.StationUUID;
 	this->Send_message(joinMessage);
-
-
 
 	return kVCOMError_NoError;
 }
@@ -272,12 +271,6 @@ bool CMVRxchangeServiceImpl::SendMessageToLocalNetworks(const TXString& ip, uint
 
 	return ok;
 }
-
-std::vector<MVRxchangeGroupMember>& CMVRxchangeServiceImpl::GetRegisteredMembers()
-{
-	return fMVRGroup;
-}
-
 
 std::vector<MVRxchangeGroupMember> CMVRxchangeServiceImpl::GetMembersOfService(const ConnectToLocalServiceArgs& services)
 {
