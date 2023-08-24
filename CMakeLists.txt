@@ -23,9 +23,6 @@ endif()
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-add_subdirectory(mdns_cpp)
-
-
 #################################################
 # System setup
 if (WIN32)
@@ -50,8 +47,7 @@ ADD_DEFINITIONS(-D_UNICODE)
 project(MvrGdtf)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-
-
+set(CMAKE_BUILD_TYPE Debug)
 
 # Set output dir
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/libs/)
@@ -78,7 +74,7 @@ file(GLOB_RECURSE libSourceFiles ${SRCDIR}/*.cpp)
 add_library(MvrGdtf STATIC ${libSourceFiles})
 
 target_link_libraries(MvrGdtf ${XERCES_LIB_PATH})
-target_link_libraries(MvrGdtf ${CMAKE_SOURCE_DIR}/libs/libmdns_cpp.a)
+target_link_libraries(MvrGdtf ${CMAKE_SOURCE_DIR}/mdns_cpp/build/lib/libmdns_cpp.a)
 #################################################
 
 

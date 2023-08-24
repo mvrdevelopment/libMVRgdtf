@@ -54,12 +54,10 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
     }
 	for(std::pair<std::string, uint32_t> e : q.getInterfaces())
 	{
-		// Bitmasking IP Address to check if it is 127.x.x.x, which is a loopback adress
-		/*
+		// Bitmasking IP Address to check if it is 127.x.x.x, which is a loopback address
 		if(e.second & 4278190080 == 2130706432) {
 			continue;
 		}
-		*/
 	
 		mdns_cpp::mDNS* s = new mdns_cpp::mDNS();
 		s->setServiceHostname(std::string(fCurrentService.Service.fBuffer));
@@ -264,7 +262,7 @@ bool CMVRxchangeServiceImpl::SendMessageToLocalNetworks(const TXString& ip, uint
 	std::string port =str;
 
 	bool ok = false;
-	if(c.Connect(ip.GetStdString(), port, std::chrono::seconds(1)))
+	if(c.Connect(ip.GetStdString(), port, std::chrono::seconds(10)))
 	{
 		ok = c.WriteMessage(std::chrono::seconds(10));
 	}
@@ -275,13 +273,16 @@ bool CMVRxchangeServiceImpl::SendMessageToLocalNetworks(const TXString& ip, uint
 std::vector<MVRxchangeGroupMember> CMVRxchangeServiceImpl::GetMembersOfService(const ConnectToLocalServiceArgs& services)
 {
 	std::vector<MVRxchangeGroupMember> list;
-	
+	std::string serviceAsString(MVRXChange_Service);
+
 	std::lock_guard<std::mutex> lock (fQueryLocalServicesResult_mtx);
 	for(const auto& e : fQueryLocalServicesResult)
 	{
 		std::string service(e.Service.fBuffer);
 
-        if(service == std::string(services.Service))
+        std::cout << e.IPv4 << ":" << e.Port << std::endl;
+
+        if(service == (std::string(services.Service) + '.' + serviceAsString))
 		{
 			MVRxchangeGroupMember member;
 			member.IP   = e.IPv4;
@@ -360,7 +361,8 @@ void CMVRxchangeServiceImpl::mDNS_Client_Task()
 			continue;
 		}
 
-		ConnectToLocalServiceArgs localServ;
+		result.emplace_back();
+		ConnectToLocalServiceArgs& localServ = result.back();
 
 		strcpy(localServ.Service, r.hostNam.c_str());		 
 		strcpy(localServ.IPv4, r.ipV4_adress.c_str());
@@ -386,9 +388,6 @@ void CMVRxchangeServiceImpl::mDNS_Client_Task()
 
 		SceneData::GdtfConverter::ConvertUUID(uuid, localServ.StationUUID);
 		strcpy(localServ.StationName, name.GetCharPtr());
-
-
-		result.push_back(localServ);
 	}
 
 	{

@@ -419,7 +419,7 @@ int service_callback(int sock, const struct sockaddr *from, size_t addrlen, mdns
     mdns_record_srv_t service =
         mdns_record_parse_srv(data, size, record_offset, record_length, namebuffer, sizeof(namebuffer));
     MDNS_LOG << fromaddrstr << " : question SRV  " << std::string(service.name.str, service.name.length) << "\n";
-#if 0
+
 		if ((service.length == service_length) &&
 		    (strncmp(service.str, service_record->service, service_length) == 0)) {
 			uint16_t unicast = (rclass & MDNS_UNICAST_RESPONSE);
@@ -435,7 +435,7 @@ int service_callback(int sock, const struct sockaddr *from, size_t addrlen, mdns
 			                  service_record->address_ipv6, (uint16_t)service_record->port,
 			                  txt_record, sizeof(txt_record));
 		}
-#endif
+
   }
   return 0;
 }
