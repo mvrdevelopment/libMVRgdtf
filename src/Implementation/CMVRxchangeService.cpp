@@ -55,7 +55,9 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
     }
 	for(std::pair<std::string, uint32_t> e : q.getInterfaces())
 	{
-		// Bitmasking IP Address to check if it is 127.x.x.x, which is a loopback address
+		// Bitmasking IP Address to check if it is 127.x.x.x
+		// We dont want to start the mDNS Server on loopback addresses
+		// If two programs on the same device want to connect, they can use one of the other interfaces as well
 		if(e.second & 4278190080 == 2130706432) {
 			continue;
 		}
@@ -405,7 +407,6 @@ void CMVRxchangeServiceImpl::mDNS_Client_Task()
 
 	for (auto& r : query_res) 
 	{
-
 		result.emplace_back();
 		ConnectToLocalServiceArgs& localServ = result.back();
 
@@ -414,21 +415,19 @@ void CMVRxchangeServiceImpl::mDNS_Client_Task()
 		strcpy(localServ.IPv6, r.ipV6_adress.c_str());
 		localServ.Port = r.port;
 
-		// StationName=sdfsd;StationUUID=XXXXX-
 		TXString txt  = r.txt;
-		TXString uuid;
-		TXString name;
 
-		ptrdiff_t pos_name = txt.Find("StationName=");
-		if(pos_name != size_t(-1))
-		{
-			name = txt.Mid(pos_name, txt.Find(';', pos_name));
-		}
-		ptrdiff_t pos_uuid = txt.Find("StationUUID=");
-		if(pos_uuid != size_t(-1))
-		{
-			uuid = txt.Mid(pos_uuid, txt.Find(';', pos_name));
-		}
+
+		// StationName=sdfsd;StationUUID=XXXXX-;
+		TXStringArray txtSep = txt.Split(';');
+
+		if(txtSep.size() < 2) {continue;}
+
+		TXString name = txtSep[0];
+		TXString uuid = txtSep[1];
+
+		name = name.Mid(name.Find('=') + 1);
+		uuid = uuid.Mid(uuid.Find('=') + 1);
 
 		SceneData::GdtfConverter::ConvertUUID(uuid, localServ.StationUUID);
 		strcpy(localServ.StationName, name.GetCharPtr());
@@ -440,5 +439,3 @@ void CMVRxchangeServiceImpl::mDNS_Client_Task()
 	}
 
 }
-
-//37367
