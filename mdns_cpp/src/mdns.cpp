@@ -24,54 +24,60 @@ namespace mdns_cpp {
 
 static mdns_record_txt_t txtbuffer[128];
 
-void HandleQuerySRV(QueryResList* queryRes, std::string service_nam, std::string canonical_hostname, uint16_t port) {
-    if (queryRes == nullptr) {
-        return;
-    }
+void HandleQuerySRV(QueryResList *queryRes, std::string service_name, std::string canonical_hostname, uint16_t port, std::string fromAddr)
+{
+  if (queryRes == nullptr)
+  {
+    return;
+  }
 
-    for (size_t i = 0; i < queryRes->size(); i++) {
-        if ((*queryRes)[i].canonical_hostname == canonical_hostname) {
-            return; // Already exists
-        }
-    }
-
-    Query_result qr(service_nam, canonical_hostname);
-    qr.port = port;
-
-    queryRes->push_back(qr);
-}
-
-void SetQueryResultIP(QueryResList* queryRes, std::string canonical_hostname, std::string ip, bool isIPv6) {  
-    if (queryRes == nullptr) {
-        return;
-    }
-
-    for (size_t i = 0; i < queryRes->size(); i++) {
-        if ((*queryRes)[i].canonical_hostname == canonical_hostname) {
-            if (isIPv6) {
-                (*queryRes)[i].ipV6_adress = ip;
-            }
-            else {
-                (*queryRes)[i].ipV4_adress = ip;
-            }
-            break;
-        }
-    }
-}
-
-void SetQueryResultTXT(QueryResList* queryRes, std::string canonical_hostname, std::string txt) { 
-    if (queryRes == nullptr) {
-        return;
-    }
-
-    for (size_t i = 0; i < queryRes->size(); i++)
+  for (auto &it : *queryRes)
+  {
+    if (it.service_name == service_name && it.mdnsAddress == fromAddr)
     {
-        if ((*queryRes)[i].canonical_hostname == canonical_hostname)
-        {
-            (*queryRes)[i].txt = txt;
+      return;
+    }
+  }
 
-            break;
+  queryRes->emplace_back(service_name, canonical_hostname, fromAddr, port);
+}
+
+void SetQueryResultIP(QueryResList *queryRes, std::string canonical_hostname, std::string ip, bool isIPv6, std::string fromAddr)
+{
+    if (queryRes == nullptr)
+    {
+      return;
+    }
+
+    for (auto &it : *queryRes)
+    {
+      if (it.canonical_hostname == canonical_hostname && it.mdnsAddress == fromAddr)
+      {
+        if (isIPv6)
+        {
+          it.ipV6_adress = ip;
         }
+        else
+        {
+          it.ipV4_adress = ip;
+        }
+        break;
+      }
+    }
+}
+
+void SetQueryResultTXT(QueryResList* queryRes, std::string canonical_hostname, std::string txt, std::string fromAddr) { 
+    if (queryRes == nullptr) {
+        return;
+    }
+
+    for (auto &it : *queryRes)
+    {
+      if (it.canonical_hostname == canonical_hostname && it.mdnsAddress == fromAddr)
+      {
+        it.txt = txt;
+        break;
+      }
     }
 }
 
@@ -330,7 +336,7 @@ static int query_callback(int sock, const struct sockaddr *from, size_t addrlen,
     snprintf(str_buffer, str_capacity, "%s : %s %.*s SRV %.*s priority %d weight %d port %d\n", fromaddrstr.data(),
              entrytype, MDNS_STRING_FORMAT(entrystr), MDNS_STRING_FORMAT(srv.name), srv.priority, srv.weight, srv.port);
     
-    HandleQuerySRV( queryRes,MDNS_STRING_FORMAT_STD(entrystr), MDNS_STRING_FORMAT_STD(srv.name), srv.port);
+    HandleQuerySRV( queryRes,MDNS_STRING_FORMAT_STD(entrystr), MDNS_STRING_FORMAT_STD(srv.name), srv.port, fromaddrstr);
 
   } else if (rtype == MDNS_RECORDTYPE_A) {
     struct sockaddr_in addr;
@@ -339,7 +345,7 @@ static int query_callback(int sock, const struct sockaddr *from, size_t addrlen,
     snprintf(str_buffer, str_capacity, "%s : %s %.*s A %s\n", fromaddrstr.data(), entrytype,
              MDNS_STRING_FORMAT(entrystr), addrstr.data());
     
-    SetQueryResultIP( queryRes, MDNS_STRING_FORMAT_STD(entrystr), addrstr, false);
+    SetQueryResultIP( queryRes, MDNS_STRING_FORMAT_STD(entrystr), addrstr, false, fromaddrstr);
 
   } else if (rtype == MDNS_RECORDTYPE_AAAA) {
     struct sockaddr_in6 addr;
@@ -348,7 +354,7 @@ static int query_callback(int sock, const struct sockaddr *from, size_t addrlen,
     snprintf(str_buffer, str_capacity, "%s : %s %.*s AAAA %s\n", fromaddrstr.data(), entrytype,
              MDNS_STRING_FORMAT(entrystr), addrstr.data());
     
-    SetQueryResultIP( queryRes, MDNS_STRING_FORMAT_STD(entrystr), addrstr, true);
+    SetQueryResultIP( queryRes, MDNS_STRING_FORMAT_STD(entrystr), addrstr, true, fromaddrstr);
   } else if (rtype == MDNS_RECORDTYPE_TXT) {
     size_t parsed = mdns_record_parse_txt(data, size, record_offset, record_length, txtbuffer,
                                           sizeof(txtbuffer) / sizeof(mdns_record_txt_t));
@@ -362,7 +368,7 @@ static int query_callback(int sock, const struct sockaddr *from, size_t addrlen,
                  MDNS_STRING_FORMAT(entrystr), MDNS_STRING_FORMAT(txtbuffer[itxt].key));
       }
 
-      SetQueryResultTXT( queryRes, MDNS_STRING_FORMAT_STD(entrystr), str_buffer);
+      SetQueryResultTXT( queryRes, MDNS_STRING_FORMAT_STD(entrystr), str_buffer, fromaddrstr);
     }
   } else {
     snprintf(str_buffer, str_capacity, "%s : %s %.*s type %u rclass 0x%x ttl %u length %d\n", fromaddrstr.data(),
@@ -419,7 +425,7 @@ int service_callback(int sock, const struct sockaddr *from, size_t addrlen, mdns
     mdns_record_srv_t service =
         mdns_record_parse_srv(data, size, record_offset, record_length, namebuffer, sizeof(namebuffer));
     MDNS_LOG << fromaddrstr << " : question SRV  " << std::string(service.name.str, service.name.length) << "\n";
-
+#if 0
 		if ((service.length == service_length) &&
 		    (strncmp(service.str, service_record->service, service_length) == 0)) {
 			uint16_t unicast = (rclass & MDNS_UNICAST_RESPONSE);
@@ -435,7 +441,7 @@ int service_callback(int sock, const struct sockaddr *from, size_t addrlen, mdns
 			                  service_record->address_ipv6, (uint16_t)service_record->port,
 			                  txt_record, sizeof(txt_record));
 		}
-
+#endif
   }
   return 0;
 }

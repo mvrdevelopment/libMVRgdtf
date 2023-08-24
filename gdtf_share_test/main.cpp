@@ -2,13 +2,20 @@
 #include <thread>
 #include "Include/VectorworksMVR.h"
 
+VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage onMsg(const VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage& args, void* context)
+{
+    VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage out;
+    return out;
+}
+
 void a()
 {
     VectorworksMVR::IMVRxchangeServicePtr service(VectorworksMVR::IID_IMVRxchangeService);
-    VectorworksMVR::IMVRxchangeService::OnMessageArgs onMessage;
+    VectorworksMVR::IMVRxchangeService::OnMessageArgs a;
+    a.Callback = &onMsg;
+    a.Context = nullptr;
 
-    service->OnMessage(onMessage);
-
+    service->OnMessage(a);
     VectorworksMVR::IMVRxchangeService::ConnectToLocalServiceArgs args;
 
     std::string pa ("Production Assist - "); 
@@ -26,15 +33,7 @@ void a()
     args.StationUUID = uuid;
 
     service->ConnectToLocalService(args); 
-    VectorworksMVR::IMVRxchangeService::OnMessageArgs a{
-        [](const VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage& args, void* context){
-            VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage out;
-            return out;
-        },
-        nullptr
-    };
 
-    service->OnMessage(a);
 
     while(true){
         std::this_thread::sleep_for(std::chrono::seconds(1));

@@ -354,8 +354,8 @@ void CMVRxchangeServiceImpl::mDNS_Client_Task()
 	for (auto& r : query_res) 
 	{
 		if(
-			r.hostNam.size() < strlen(MVRXChange_Service) ||
-			!std::equal(serviceAsString.rbegin(), serviceAsString.rend(), r.hostNam.rbegin())
+			r.service_name.size() < strlen(MVRXChange_Service) ||
+			!std::equal(serviceAsString.rbegin(), serviceAsString.rend(), r.service_name.rbegin())
 		) {
 			// mdns not only retuns query results of the selected service, but also services that broadcasted during query, so filter them out here
 			continue;
@@ -364,7 +364,7 @@ void CMVRxchangeServiceImpl::mDNS_Client_Task()
 		result.emplace_back();
 		ConnectToLocalServiceArgs& localServ = result.back();
 
-		strcpy(localServ.Service, r.hostNam.c_str());		 
+		strcpy(localServ.Service, r.service_name.c_str());		 
 		strcpy(localServ.IPv4, r.ipV4_adress.c_str());
 		strcpy(localServ.IPv6, r.ipV6_adress.c_str());
 		localServ.Port = r.port;
