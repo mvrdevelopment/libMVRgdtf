@@ -20,6 +20,7 @@ VectorworksMVR::CMVRxchangeServiceImpl::CMVRxchangeServiceImpl()
 VectorworksMVR::CMVRxchangeServiceImpl::~CMVRxchangeServiceImpl()
 {
 	this->mDNS_Client_Stop();
+	this->TCP_Stop();
 }
 
 VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const ConnectToLocalServiceArgs& service)
@@ -39,12 +40,12 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 	std::string txt2;
 	txt2 += "StationUUID=";
 	txt2 += SceneData::GdtfConverter::ConvertUUID(VWUUID(fCurrentService.StationUUID.a, fCurrentService.StationUUID.b, fCurrentService.StationUUID.c, fCurrentService.StationUUID.d)).GetStdString();
-	
+
 	std::string txt;
-	txt += (uint8_t)txt1.size();
 	txt += txt1;
-	txt += (uint8_t)txt2.size();
+	txt += (char)';';
 	txt += txt2;
+	txt += (char)';';
 
 	mdns_cpp::mDNS q;
 	fmdns.clear();
@@ -422,7 +423,6 @@ void CMVRxchangeServiceImpl::mDNS_Client_Task()
 		if(pos_name != size_t(-1))
 		{
 			name = txt.Mid(pos_name, txt.Find(';', pos_name));
-
 		}
 		ptrdiff_t pos_uuid = txt.Find("StationUUID=");
 		if(pos_uuid != size_t(-1))

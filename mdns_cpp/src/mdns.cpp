@@ -362,20 +362,8 @@ static int query_callback(int sock, const struct sockaddr *from, size_t addrlen,
     
     SetQueryResultIP( queryRes, MDNS_STRING_FORMAT_STD(entrystr), addrstr, true, fromaddrstr);
   } else if (rtype == MDNS_RECORDTYPE_TXT) {
-    size_t parsed = mdns_record_parse_txt(data, size, record_offset, record_length, txtbuffer,
-                                          sizeof(txtbuffer) / sizeof(mdns_record_txt_t));
-    for (size_t itxt = 0; itxt < parsed; ++itxt) {
-      if (txtbuffer[itxt].value.length) {
-        snprintf(str_buffer, str_capacity, "%s : %s %.*s TXT %.*s = %.*s\n", fromaddrstr.data(), entrytype,
-                 MDNS_STRING_FORMAT(entrystr), MDNS_STRING_FORMAT(txtbuffer[itxt].key),
-                 MDNS_STRING_FORMAT(txtbuffer[itxt].value));
-      } else {
-        snprintf(str_buffer, str_capacity, "%s : %s %.*s TXT %.*s\n", fromaddrstr.data(), entrytype,
-                 MDNS_STRING_FORMAT(entrystr), MDNS_STRING_FORMAT(txtbuffer[itxt].key));
-      }
-
-      SetQueryResultTXT( queryRes, MDNS_STRING_FORMAT_STD(entrystr), str_buffer, fromaddrstr);
-    }
+      std::string txtString((const char*)data + record_offset, record_length);
+      SetQueryResultTXT( queryRes, MDNS_STRING_FORMAT_STD(entrystr), txtString, fromaddrstr);
   } else {
     snprintf(str_buffer, str_capacity, "%s : %s %.*s type %u rclass 0x%x ttl %u length %d\n", fromaddrstr.data(),
              entrytype, MDNS_STRING_FORMAT(entrystr), rtype, rclass, ttl, (int)record_length);
