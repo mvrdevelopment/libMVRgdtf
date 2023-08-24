@@ -2,6 +2,8 @@
 #include <thread>
 #include "Include/VectorworksMVR.h"
 
+VectorworksMVR::IMVRxchangeServicePtr service(VectorworksMVR::IID_IMVRxchangeService);
+
 VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage onMsg(const VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage& args, void* context)
 {
     VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage out;
@@ -10,7 +12,6 @@ VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage onMsg(const VectorworksMV
 
 void a()
 {
-    VectorworksMVR::IMVRxchangeServicePtr service(VectorworksMVR::IID_IMVRxchangeService);
     VectorworksMVR::IMVRxchangeService::OnMessageArgs a;
     a.Callback = &onMsg;
     a.Context = nullptr;

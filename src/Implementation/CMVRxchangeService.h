@@ -80,5 +80,6 @@ namespace VectorworksMVR
 		// mDNS Functions
 		std::vector<MVRxchangeGroupMember> 	GetMembersOfService(const ConnectToLocalServiceArgs& services);
 		VCOMError 							GetSingleMemberOfService(const MvrUUID& stationUUID, MVRxchangeGroupMember& out);
+		mdns_cpp::QueryResList 				mDNS_Filter_Queries(mdns_cpp::QueryResList& input);
 	};
 }

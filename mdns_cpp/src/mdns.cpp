@@ -469,9 +469,22 @@ bool mDNS::isServiceRunning() { return running_; }
 void mDNS::setServiceHostname(const std::string &hostname) { hostname_ = hostname; }
 
 void mDNS::setServicePort(std::uint16_t port) { port_ = port; }
+std::uint16_t mDNS::getServicePort() { return port_; }
 
+void mDNS::setServiceIP(std::uint32_t ip) { service_address_ipv4_ = ip; has_ipv4_ = true; }
+std::uint32_t mDNS::getServiceIP() { return service_address_ipv4_; }
 
-void mDNS::setServiceIP(std::uint32_t port) { service_address_ipv4_ = port; has_ipv4_ = true; }
+std::string mDNS::getServiceIPPort()
+{
+  	char buffer[64];
+		sockaddr_in i;
+		i.sin_port = this->getServicePort();
+		i.sin_addr.s_addr = this->getServiceIP();
+		mdns_cpp::ipv4AddressToString(buffer, sizeof(buffer), &i, sizeof(i));
+
+		return std::string(buffer, sizeof(buffer));
+}
+
 
 void mDNS::setServiceName(const std::string &name) { name_ = name; }
 

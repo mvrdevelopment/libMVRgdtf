@@ -40,8 +40,15 @@ class mDNS {
   bool isServiceRunning();
 
   void setServiceHostname(const std::string &hostname);
-  void setServicePort(std::uint16_t port);
-  void setServiceIP(std::uint32_t port);
+
+  void          setServicePort(std::uint16_t port);
+  std::uint16_t getServicePort();
+
+  void          setServiceIP(std::uint32_t ip);
+  std::uint32_t getServiceIP();
+
+  std::string   getServiceIPPort(); // IP:Port
+
   void setServiceName(const std::string &name);
   void setServiceTxtRecord(const std::string &text_record);
   std::vector<std::pair<std::string, uint32_t>> getInterfaces();

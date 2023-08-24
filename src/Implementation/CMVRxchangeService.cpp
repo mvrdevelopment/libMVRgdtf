@@ -344,13 +344,47 @@ void CMVRxchangeServiceImpl::mDNS_Client_Stop()
 	}
 }
 
+mdns_cpp::QueryResList CMVRxchangeServiceImpl::mDNS_Filter_Queries(mdns_cpp::QueryResList& input)
+{
+  mdns_cpp::QueryResList out;
+  for(auto& i : input){
+    auto it = std::find_if(out.begin(), out.end(), [&i](mdns_cpp::Query_result& result){
+      return i.ipV4_adress == result.ipV4_adress && i.ipV6_adress == result.ipV6_adress && i.port && result.port;
+    });
+
+	if(it != out.end()){continue;}
+	if(!i.ipV4_adress.size()) {continue;}
+	if(!i.ipV6_adress.size()) {continue;}
+
+	bool found = false;
+	std::string ipPort = i.ipV4_adress + ':' + std::to_string(i.port);
+	
+	for(auto& socket : fmdns){
+		if(ipPort == socket->getServiceIPPort())
+		{
+			found = true;
+		}
+	}
+
+	if(found) {continue;}
+
+	out.push_back(std::move(i));
+  }
+
+  return out;
+}
+
 void CMVRxchangeServiceImpl::mDNS_Client_Task()
 {
+
+	
 	mdns_cpp::mDNS mdns;
 	auto query_res = mdns.executeQuery2(MVRXChange_Service);
 	std::string serviceAsString(MVRXChange_Service);
 	std::vector<ConnectToLocalServiceArgs> result;
 	
+	query_res = this->mDNS_Filter_Queries(query_res);
+
 	for (auto& r : query_res) 
 	{
 		if(

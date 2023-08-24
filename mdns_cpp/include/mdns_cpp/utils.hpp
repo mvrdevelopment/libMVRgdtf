@@ -15,5 +15,4 @@ std::string ipv4AddressToString(char *buffer, size_t capacity, const struct sock
 std::string ipv6AddressToString(char *buffer, size_t capacity, const struct sockaddr_in6 *addr, size_t addrlen);
 
 std::string ipAddressToString(char *buffer, size_t capacity, const struct sockaddr *addr, size_t addrlen);
-
 }  // namespace mdns_cpp
