@@ -73,7 +73,13 @@ void SetQueryResultTXT(QueryResList* queryRes, std::string canonical_hostname, s
 
     for (auto &it : *queryRes)
     {
-      if (it.canonical_hostname == canonical_hostname && it.mdnsAddress == fromAddr)
+      // hostname is longer for txt record, so only check start
+      if (
+        (
+          canonical_hostname.starts_with(it.canonical_hostname) ||
+          canonical_hostname.starts_with(it.service_name)
+        )
+        && it.mdnsAddress == fromAddr)
       {
         it.txt = txt;
         break;
@@ -478,11 +484,10 @@ std::string mDNS::getServiceIPPort()
 {
   	char buffer[64];
 		sockaddr_in i;
-		i.sin_port = this->getServicePort();
+		i.sin_port = 0;
 		i.sin_addr.s_addr = this->getServiceIP();
-		mdns_cpp::ipv4AddressToString(buffer, sizeof(buffer), &i, sizeof(i));
-
-		return std::string(buffer, sizeof(buffer));
+    i.sin_family = 2;
+		return mdns_cpp::ipv4AddressToString(buffer, sizeof(buffer), &i, sizeof(i)) + ':' + std::to_string(this->getServicePort());
 }
 
 

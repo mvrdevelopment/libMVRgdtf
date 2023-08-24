@@ -27,7 +27,7 @@
                     "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "CMake: build"
+            "preLaunchTask": "build"
         },
     ]
 }

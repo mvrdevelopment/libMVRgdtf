@@ -344,34 +344,52 @@ void CMVRxchangeServiceImpl::mDNS_Client_Stop()
 	}
 }
 
-mdns_cpp::QueryResList CMVRxchangeServiceImpl::mDNS_Filter_Queries(mdns_cpp::QueryResList& input)
+mdns_cpp::QueryResList CMVRxchangeServiceImpl::mDNS_Filter_Queries(mdns_cpp::QueryResList &input)
 {
-  mdns_cpp::QueryResList out;
-  for(auto& i : input){
-    auto it = std::find_if(out.begin(), out.end(), [&i](mdns_cpp::Query_result& result){
-      return i.ipV4_adress == result.ipV4_adress && i.ipV6_adress == result.ipV6_adress && i.port && result.port;
-    });
+	mdns_cpp::QueryResList out;
 
-	if(it != out.end()){continue;}
-	if(!i.ipV4_adress.size()) {continue;}
-	if(!i.ipV6_adress.size()) {continue;}
+	std::string serviceAsString(MVRXChange_Service);
 
-	bool found = false;
-	std::string ipPort = i.ipV4_adress + ':' + std::to_string(i.port);
-	
-	for(auto& socket : fmdns){
-		if(ipPort == socket->getServiceIPPort())
+	for (auto &i : input)
+	{
+		auto it = std::find_if(out.begin(), out.end(), [&i](mdns_cpp::Query_result &result)
+							   { return i.ipV4_adress == result.ipV4_adress && i.ipV6_adress == result.ipV6_adress && i.port && result.port; });
+
+		if (it != out.end())		{continue;}	// filter multiple
+		if (!i.ipV4_adress.size())	{continue;}	// filter empty
+		if (!i.ipV6_adress.size())	{continue;} // filter empty
+
+		bool found = false;
+		std::string ipPort = i.ipV4_adress + ':' + std::to_string(i.port);
+
+		for (auto &socket : fmdns)
 		{
-			found = true;
+			std::string o = socket->getServiceIPPort();
+			if (ipPort == o)
+			{
+				found = true;
+			}
 		}
+
+		if (found)
+		{
+			// filter own ips
+			continue;
+		}
+
+		if (
+			i.service_name.size() < serviceAsString.size() ||
+			!std::equal(serviceAsString.rbegin(), serviceAsString.rend(), i.service_name.rbegin()))
+		{
+			// mdns not only retuns query results of the selected service, but also services that broadcasted during query, so filter them out here
+			// as an alternative, filtering could be done directly in the mdns lib, so that the timeout is only resetted when the selected service answered
+			continue;
+		}
+
+		out.push_back(std::move(i));
 	}
 
-	if(found) {continue;}
-
-	out.push_back(std::move(i));
-  }
-
-  return out;
+	return out;
 }
 
 void CMVRxchangeServiceImpl::mDNS_Client_Task()
@@ -380,20 +398,12 @@ void CMVRxchangeServiceImpl::mDNS_Client_Task()
 	
 	mdns_cpp::mDNS mdns;
 	auto query_res = mdns.executeQuery2(MVRXChange_Service);
-	std::string serviceAsString(MVRXChange_Service);
 	std::vector<ConnectToLocalServiceArgs> result;
 	
 	query_res = this->mDNS_Filter_Queries(query_res);
 
 	for (auto& r : query_res) 
 	{
-		if(
-			r.service_name.size() < strlen(MVRXChange_Service) ||
-			!std::equal(serviceAsString.rbegin(), serviceAsString.rend(), r.service_name.rbegin())
-		) {
-			// mdns not only retuns query results of the selected service, but also services that broadcasted during query, so filter them out here
-			continue;
-		}
 
 		result.emplace_back();
 		ConnectToLocalServiceArgs& localServ = result.back();
@@ -430,3 +440,5 @@ void CMVRxchangeServiceImpl::mDNS_Client_Task()
 	}
 
 }
+
+//37367
