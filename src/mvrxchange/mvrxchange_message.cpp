@@ -178,7 +178,6 @@ void MVR_COMMIT_ToJson(const IMVRxchangeService::MVR_COMMIT_MESSAGE& msg, nlohma
 
 void MVR_COMMIT_FromJson(const nlohmann::json& payload, IMVRxchangeService::MVR_COMMIT_MESSAGE& in)
 {
-    IMVRxchangeService::MVR_COMMIT_MESSAGE in;
     strcpy(in.Comment, payload["Comment"].get<std::string>().c_str());
     in.VersionMajor= payload["verMajor"];
     in.VersionMinor= payload["verMinor"];

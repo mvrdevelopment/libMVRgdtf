@@ -92,10 +92,6 @@ target_link_libraries(MvrGdtfUnitTest MvrGdtf)
 endif (UNITTEST)
 #################################################
 
-file(GLOB_RECURSE share_files gdtf_share_test/*.cpp)
-add_executable(shareTest ${share_files})
-target_link_libraries(shareTest MvrGdtf)
-
 #################################################
 # setup the platform macros
 if (WIN32)
@@ -140,9 +136,6 @@ endif(WIN32)
 target_compile_definitions(MvrGdtf ${PREPROCESSORS})
 target_link_libraries(MvrGdtf ${EXTRA_LIBS})
 
-target_compile_definitions(shareTest ${PREPROCESSORS})
-target_link_libraries(shareTest ${EXTRA_LIBS})
-
 if(${UNITTEST})
 target_compile_definitions(MvrGdtfUnitTest ${PREPROCESSORS})
 target_link_libraries(MvrGdtfUnitTest ${EXTRA_LIBS})
@@ -169,6 +162,12 @@ if(${DO_NOT_INCLUDE_MINI_ZIP} OR DEFINED ENV{DO_NOT_INCLUDE_MINI_ZIP})
     set(OUTPUT_NAME_OLD "${OUTPUT_NAME_OLD}_NO_MZ")
 
     set_target_properties(MvrGdtf PROPERTIES OUTPUT_NAME ${OUTPUT_NAME_OLD})
+else()
+file(GLOB_RECURSE share_files gdtf_share_test/*.cpp)
+add_executable(shareTest ${share_files})
+target_link_libraries(shareTest MvrGdtf)
+target_compile_definitions(shareTest ${PREPROCESSORS})
+target_link_libraries(shareTest ${EXTRA_LIBS})
 endif()
 
 if(${DONT_USE_XERCES_AS_XMLLIB} OR DEFINED ENV{DONT_USE_XERCES_AS_XMLLIB})
