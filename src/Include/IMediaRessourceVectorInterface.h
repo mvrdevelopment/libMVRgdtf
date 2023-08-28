@@ -1874,7 +1874,7 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 			uint64_t 						FileSize;
 			MvrUUID							FileUUID;
 			MvrUUID							StationUUID;
-			std::vector<MvrUUID>			ForStations;
+			std::vector<MvrUUID>			ForStationsUUID;
 		};
 
 		struct MVR_JOIN_MESSAGE

@@ -2,9 +2,9 @@
 //----- Copyright MVR Group 
 //-----------------------------------------------------------------------------namespace LightRightNetwork
 #include "mvrxchange_prefix.h"
-#include "json.h"
 #include "mvrxchange_message.h"
 #include "XmlFileHelper.h"
+#include "json.h"
 
 using namespace MVRxchangeNetwork;
 
@@ -156,6 +156,49 @@ void MVRxchangePacket::EncodeHeader()
     fBodyLength = swap_endian(fBodyLength);
 }
 
+// ----- MVR_COMMIT (de)serialization ------
+// Serialization here is split out, as the Commit Message Type is reused for File Arrays
+
+void MVR_COMMIT_ToJson(const IMVRxchangeService::MVR_COMMIT_MESSAGE& msg, nlohmann::json& payload)
+{
+    payload["Type"]             = "MVR_COMMIT";
+    payload["Comment"]          = msg.Comment;
+    payload["FileSize"]         = msg.FileSize;
+    payload["FileUUID"]         = SceneData::GdtfConverter::ConvertUUID(VWUUID(msg.FileUUID.a, msg.FileUUID.b, msg.FileUUID.c, msg.FileUUID.d)).GetStdString();
+    payload["StationUUID"]      = SceneData::GdtfConverter::ConvertUUID(VWUUID(msg.StationUUID.a, msg.StationUUID.b, msg.StationUUID.c, msg.StationUUID.d)).GetStdString();
+    payload["verMinor"]         = msg.VersionMinor;
+    payload["verMajor"]         = msg.VersionMajor;
+    payload["ForStationsUUID"]  = nlohmann::json::array();
+    for(const auto& e : msg.ForStationsUUID)
+    {
+        payload["ForStationsUUID"].push_back(SceneData::GdtfConverter::ConvertUUID(VWUUID(e.a, e.b, e.c, e.d)).GetStdString());
+    }
+
+}
+
+void MVR_COMMIT_FromJson(const nlohmann::json& payload, IMVRxchangeService::MVR_COMMIT_MESSAGE& in)
+{
+    IMVRxchangeService::MVR_COMMIT_MESSAGE in;
+    strcpy(in.Comment, payload["Comment"].get<std::string>().c_str());
+    in.VersionMajor= payload["verMajor"];
+    in.VersionMinor= payload["verMinor"];
+    in.FileSize= payload["FileSize"];
+
+    SceneData::GdtfConverter::ConvertUUID(payload["FileUUID"].get<std::string>(), in.FileUUID);
+    SceneData::GdtfConverter::ConvertUUID(payload["StationUUID"].get<std::string>(), in.StationUUID);
+
+    in.ForStationsUUID.clear();
+    for(const auto& e : payload["ForStationsUUID"])
+    {
+        in.ForStationsUUID.emplace_back();
+        if(!SceneData::GdtfConverter::ConvertUUID(e.get<std::string>(), in.ForStationsUUID.back())){
+            in.ForStationsUUID.pop_back();
+        }
+    }
+}
+
+// -----------------------------------------
+
 void MVRxchangePacket::FromExternalMessage(const VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage& in)
 {
     nlohmann::json payload = nlohmann::json::object();
@@ -170,7 +213,14 @@ void MVRxchangePacket::FromExternalMessage(const VectorworksMVR::IMVRxchangeServ
         payload["verMajor"]     = in.JOIN.VersionMajor;
         payload["verMinor"]     = in.JOIN.VersionMinor;
 
-        // TODO Files
+        payload["Files"] = nlohmann::json::array();
+        for(auto& it : in.JOIN.Files)
+        {
+            nlohmann::json obj = nlohmann::json::object();
+            MVR_COMMIT_ToJson(it, obj);
+            payload.push_back(obj);
+        }
+
         break;
     case IMVRxchangeService::MVRxchangeMessageType::MVR_JOIN_RET:
         payload["OK"]           = in.RetIsOK;
@@ -182,7 +232,14 @@ void MVRxchangePacket::FromExternalMessage(const VectorworksMVR::IMVRxchangeServ
         payload["verMajor"]     = in.JOIN.VersionMajor;
         payload["verMinor"]     = in.JOIN.VersionMinor;
 
-        // TODO Files
+        payload["Files"] = nlohmann::json::array();
+        for(auto& it : in.JOIN.Files)
+        {
+            nlohmann::json obj = nlohmann::json::object();
+            MVR_COMMIT_ToJson(it, obj);
+            payload.push_back(obj);
+        }
+
         break;
     case IMVRxchangeService::MVRxchangeMessageType::MVR_LEAVE:
         payload["Type"]         = "MVR_LEAVE";
@@ -194,18 +251,7 @@ void MVRxchangePacket::FromExternalMessage(const VectorworksMVR::IMVRxchangeServ
         payload["Message"]      = in.RetError;
         break;
     case IMVRxchangeService::MVRxchangeMessageType::MVR_COMMIT:
-        payload["Type"]             = "MVR_COMMIT";
-        payload["FileSize"]         = in.COMMIT.FileSize;
-        payload["Comment"]          = in.COMMIT.Comment;
-        payload["FileUUID"]         = SceneData::GdtfConverter::ConvertUUID(VWUUID(in.COMMIT.FileUUID.a, in.COMMIT.FileUUID.b, in.COMMIT.FileUUID.c, in.COMMIT.FileUUID.d)).GetStdString();
-        payload["StationUUID"]      = SceneData::GdtfConverter::ConvertUUID(VWUUID(in.COMMIT.StationUUID.a, in.COMMIT.StationUUID.b, in.COMMIT.StationUUID.c, in.COMMIT.StationUUID.d)).GetStdString();
-        payload["verMinor"]         = in.COMMIT.VersionMinor;
-        payload["verMajor"]         = in.COMMIT.VersionMajor;
-        payload["ForStationsUUID"]  = nlohmann::json::array();
-        for(const auto& e : in.COMMIT.ForStations)
-        {
-            payload["ForStationsUUID"].push_back(SceneData::GdtfConverter::ConvertUUID(VWUUID(e.a, e.b, e.c, e.d)).GetStdString());
-        }
+        MVR_COMMIT_ToJson(in.COMMIT, payload);
         break;
     case IMVRxchangeService::MVRxchangeMessageType::MVR_COMMIT_RET:
         payload["OK"]               = in.RetIsOK;
@@ -281,7 +327,12 @@ void MVRxchangePacket::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMV
                 strcpy(in.JOIN.StationName, payload["StationName"].get<std::string>().c_str());
                 SceneData::GdtfConverter::ConvertUUID(payload["StationUUID"].get<std::string>(), in.JOIN.StationUUID);
 
-                // TODO: Files
+                in.JOIN.Files.clear();
+                for(auto& it : payload["Files"])
+                {
+                    in.JOIN.Files.emplace_back();
+                    MVR_COMMIT_FromJson(it, in.JOIN.Files.back());
+                }
             }
             else if(payload["Type"] == "MVR_JOIN_RET")
             {
@@ -295,19 +346,17 @@ void MVRxchangePacket::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMV
                 in.RetIsOK = payload["OK"].get<bool>();
                 strcpy(in.RetError, payload["Message"].get<std::string>().c_str());
 
-                // TODO: Files
+                in.JOIN.Files.clear();
+                for(auto& it : payload["Files"])
+                {
+                    in.JOIN.Files.emplace_back();
+                    MVR_COMMIT_FromJson(it, in.JOIN.Files.back());
+                }
             }
             else if(payload["Type"] == "MVR_COMMIT")
             {
                 in.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_COMMIT;
-                strcpy(in.COMMIT.Comment, payload["Comment"].get<std::string>().c_str());
-                in.COMMIT.VersionMajor= payload["verMajor"];
-                in.COMMIT.VersionMinor= payload["verMinor"];
-                in.COMMIT.FileSize= payload["FileSize"];
-
-                SceneData::GdtfConverter::ConvertUUID(payload["FileUUID"].get<std::string>(), in.COMMIT.FileUUID);
-                SceneData::GdtfConverter::ConvertUUID(payload["StationUUID"].get<std::string>(), in.COMMIT.StationUUID);
-                // TODO ForStationsUUID
+                MVR_COMMIT_FromJson(payload, in.COMMIT);
             }
             else if(payload["Type"] == "MVR_COMMIT_RET")
             {
@@ -320,7 +369,14 @@ void MVRxchangePacket::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMV
                 in.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_REQUEST;
                 SceneData::GdtfConverter::ConvertUUID(payload["FileUUID"].get<std::string>(), in.REQUEST.FileUUID);
 
-                // TODO FromStationsUUID
+                in.REQUEST.FromStationUUID.clear();
+                for(const auto& e : payload["FromStationsUUID"])
+                {
+                    in.COMMIT.ForStationsUUID.emplace_back();
+                    if(!SceneData::GdtfConverter::ConvertUUID(e.get<std::string>(), in.COMMIT.ForStationsUUID.back())){
+                        in.COMMIT.ForStationsUUID.pop_back();
+                    }
+                }
             }
             else if(payload["Type"] == "MVR_REQUEST_RET")
             {

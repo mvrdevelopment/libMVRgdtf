@@ -95,7 +95,7 @@ using namespace SceneData;
     }
     else
     {
-        DSTOP((kEveryone, "Invalid UUID Formar"));
+        DSTOP((kEveryone, "Invalid UUID Format"));
         GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_UuidHasWrongFormat, node);
         SceneData::GdtfFixture::AddError(error); 
     }
