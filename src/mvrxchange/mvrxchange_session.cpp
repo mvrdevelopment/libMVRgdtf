@@ -19,83 +19,93 @@ MVRxchangeSession::MVRxchangeSession(tcp::socket socket, CMVRxchangeServiceImpl*
 
 void MVRxchangeSession::Start()
 {
-    DoReadHeader();
+    DoRead();
 }
+
+void MVRxchangeSession::DoRead()
+{
+    auto self(shared_from_this());
+
+    boost::asio::async_read(fSocket, boost::asio::buffer(freadmsg.GetData(), MVRxchangePacket::total_header_length),
+    [this, self](boost::system::error_code ec, std::size_t length)
+    {
+        if (!ec && freadmsg.DecodeHeader())
+        {
+            boost::asio::async_read(fSocket, boost::asio::buffer(freadmsg.GetBody(), freadmsg.GetBodyLength()),
+            [this, self](boost::system::error_code ec, std::size_t length)
+            {
+                if (!ec)
+                {
+                    IMVRxchangeService::IMVRxchangeMessage out;
+                    freadmsg.ToExternalMessage(out);
+
+                    IMVRxchangeService::IMVRxchangeMessage in = fImpl->TCP_OnIncommingMessage(out);
+
+                    MVRxchangePacket in_msg;
+                    in_msg.FromExternalMessage(in);
+                    Deliver(in_msg);
+                }
+                else
+                {
+                    std::string msg = ec.message();
+                    std::string nam = ec.category().name();
+
+                    std::cout << msg << nam << std::endl;
+                    fServer->CloseSession(self);
+                }
+            });
+        }
+        else
+        {
+            std::string msg = ec.message();
+            std::string nam = ec.category().name();
+
+            std::cout << msg << nam << std::endl;
+            fServer->CloseSession(self);
+        }
+    });
+}
+
 
 void MVRxchangeSession::Deliver(const MVRxchangePacket& msg)
 {
-    bool write_in_progress = !fwrite_msgs.empty();
-    fwrite_msgs.push_back(msg);
+    bool write_in_progress;
+    {
+        std::lock_guard<std::mutex> l(fwrite_msgs_mutex);
+        write_in_progress = !fwrite_msgs.empty();
+        fwrite_msgs.push_back(msg);
+    }
     if (!write_in_progress)
     {
         DoWrite();
     }
 }
 
-void MVRxchangeSession::DoReadHeader()
-{
-    auto self(shared_from_this());
-    boost::asio::async_read(fSocket,boost::asio::buffer(freadmsg.GetData(), MVRxchangePacket::total_header_length),
-    [this, self](boost::system::error_code ec, std::size_t length)
-    {
-        if (!ec && freadmsg.DecodeHeader())
-        {
-            DoReadBody();
-
-            IMVRxchangeService::IMVRxchangeMessage out;
-            freadmsg.ToExternalMessage(out);
-
-            IMVRxchangeService::IMVRxchangeMessage in = fImpl->TCP_OnIncommingMessage(out);
-
-            MVRxchangePacket in_msg;
-            in_msg.FromExternalMessage(in);
-            Deliver(in_msg);
-
-        }
-        else
-        {
-            fServer->CloseSession(self);
-        }
-    });
-}
-
-void MVRxchangeSession::DoReadBody()
-{
-    auto self(shared_from_this());
-    boost::asio::async_read(fSocket, boost::asio::buffer(freadmsg.GetBody(), freadmsg.GetBodyLength()),
-    [this, self](boost::system::error_code ec, std::size_t length)
-    {
-        if (!ec)
-        {
-            DoReadHeader();
-        }
-        else
-        {
-            fServer->CloseSession(self);
-        }
-    });
-}
-
 void MVRxchangeSession::DoWrite()
 {
     auto self(shared_from_this());
 
-    MVRxchangePacket& msg = fwrite_msgs.front();
+    std::lock_guard<std::mutex> l(fwrite_msgs_mutex);
+    if(!fwrite_msgs.size()){
+        return;
+    }
 
+    MVRxchangePacket msg = std::move(fwrite_msgs.front());
+    fwrite_msgs.pop_front();
 
     boost::asio::async_write(fSocket, boost::asio::buffer(msg.GetData(), msg.GetLength()),
     [this, self](boost::system::error_code ec, std::size_t /*length*/)
     {
         if (!ec)
         {
-            fwrite_msgs.pop_front();
-            if ( ! fwrite_msgs.empty())
-            {
-                DoWrite();
-            }
+            DoWrite();
         }
         else
         {
+            std::string msg = ec.message();
+            std::string nam = ec.category().name();
+
+            std::cout << msg << nam << std::endl;
             fServer->CloseSession(self);
         }
     });

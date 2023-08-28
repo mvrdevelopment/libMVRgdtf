@@ -7,6 +7,10 @@ VectorworksMVR::IMVRxchangeServicePtr service(VectorworksMVR::IID_IMVRxchangeSer
 VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage onMsg(const VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage& args, void* context)
 {
     VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage out;
+    std::cout << (int)args.Type << std::endl;
+
+    out.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_JOIN_RET;
+
     return out;
 }
 
@@ -34,7 +38,6 @@ void a()
     args.StationUUID = uuid;
 
     service->ConnectToLocalService(args); 
-
 
     while(true){
         std::this_thread::sleep_for(std::chrono::seconds(1));

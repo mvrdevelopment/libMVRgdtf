@@ -21,8 +21,7 @@ namespace MVRxchangeNetwork
 
 
     private:
-        void DoReadHeader();
-        void DoReadBody();
+        void DoRead();
         void DoWrite();
 
         CMVRxchangeServiceImpl*         fImpl;
