@@ -139,7 +139,7 @@ bool MVRxchangeClient::Connect(const std::string& host, const std::string& servi
     std::string msg = error.message();
     std::string nam = error.category().name();
 
-    std::cout << msg << nam << std::endl;
+    std::cout << "!" << msg << nam << std::endl;
 
     return ! error;
 }

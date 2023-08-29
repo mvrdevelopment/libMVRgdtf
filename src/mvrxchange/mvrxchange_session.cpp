@@ -51,7 +51,7 @@ void MVRxchangeSession::DoRead()
                     std::string msg = ec.message();
                     std::string nam = ec.category().name();
 
-                    std::cout << msg << nam << std::endl;
+                    std::cout << "!!" << msg << nam << std::endl;
                     fServer->CloseSession(self);
                 }
             });
@@ -61,7 +61,7 @@ void MVRxchangeSession::DoRead()
             std::string msg = ec.message();
             std::string nam = ec.category().name();
 
-            std::cout << msg << nam << std::endl;
+            std::cout << "!!!" << msg << nam << std::endl;
             fServer->CloseSession(self);
         }
     });
@@ -106,7 +106,7 @@ void MVRxchangeSession::DoWrite()
             std::string msg = ec.message();
             std::string nam = ec.category().name();
 
-            std::cout << msg << nam << std::endl;
+            std::cout << "!!!!" << msg << nam << std::endl;
             fServer->CloseSession(self);
         }
     });
