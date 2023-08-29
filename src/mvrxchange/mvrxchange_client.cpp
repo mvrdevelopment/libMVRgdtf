@@ -53,6 +53,7 @@ bool MVRxchangeClient::ReadMessage(std::chrono::steady_clock::duration timeout)
         IMVRxchangeService::IMVRxchangeMessage out;
         fMsg_ret.ToExternalMessage(out);
         fImpl->TCP_OnIncommingMessage(out);
+        delete[] out.BufferToFile;
     }
 
     // Determine whether the read completed successfully

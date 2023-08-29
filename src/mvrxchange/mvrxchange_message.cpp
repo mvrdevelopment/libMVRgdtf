@@ -169,6 +169,7 @@ void MVR_COMMIT_ToJson(const IMVRxchangeService::MVR_COMMIT_MESSAGE& msg, nlohma
     payload["verMinor"]         = msg.VersionMinor;
     payload["verMajor"]         = msg.VersionMajor;
     payload["ForStationsUUID"]  = nlohmann::json::array();
+    // TODO
     for(const auto& e : msg.ForStationsUUID)
     {
         payload["ForStationsUUID"].push_back(SceneData::GdtfConverter::ConvertUUID(VWUUID(e.a, e.b, e.c, e.d)).GetStdString());
@@ -187,6 +188,7 @@ void MVR_COMMIT_FromJson(const nlohmann::json& payload, IMVRxchangeService::MVR_
     SceneData::GdtfConverter::ConvertUUID(payload["StationUUID"].get<std::string>(), in.StationUUID);
 
     in.ForStationsUUID.clear();
+    // TODO
     for(const auto& e : payload["ForStationsUUID"])
     {
         in.ForStationsUUID.emplace_back();
@@ -369,11 +371,12 @@ void MVRxchangePacket::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMV
                 SceneData::GdtfConverter::ConvertUUID(payload["FileUUID"].get<std::string>(), in.REQUEST.FileUUID);
 
                 in.REQUEST.FromStationUUID.clear();
+                // TODO
                 for(const auto& e : payload["FromStationsUUID"])
                 {
-                    in.COMMIT.ForStationsUUID.emplace_back();
-                    if(!SceneData::GdtfConverter::ConvertUUID(e.get<std::string>(), in.COMMIT.ForStationsUUID.back())){
-                        in.COMMIT.ForStationsUUID.pop_back();
+                    in.REQUEST.FromStationUUID.emplace_back();
+                    if(!SceneData::GdtfConverter::ConvertUUID(e.get<std::string>(), in.REQUEST.FromStationUUID.back())){
+                        in.REQUEST.FromStationUUID.pop_back();
                     }
                 }
             }
@@ -400,8 +403,7 @@ void MVRxchangePacket::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMV
     {
         in.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_REQUEST_RET;
         in.BufferToFileLength = fBodyLength;
-        in.BufferToFile = new char[fBodyLength]; // TODO: How do we free this
+        in.BufferToFile = new char[fBodyLength];
         memcpy(in.BufferToFile, GetBody(), fBodyLength);
-
     }
 }

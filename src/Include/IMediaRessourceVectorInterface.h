@@ -1915,7 +1915,7 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 			MVR_LEAVE_MESSAGE 		LEAVE;
 
 			MVRxchangeString 				PathToFile;
-			char*							BufferToFile;
+			char*							BufferToFile = nullptr;
 			size_t							BufferToFileLength;
 			bool 							RetIsOK;
 			MVRxchangeString 				RetError;
