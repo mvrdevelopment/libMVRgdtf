@@ -219,7 +219,7 @@ void MVRxchangePacket::FromExternalMessage(const VectorworksMVR::IMVRxchangeServ
         {
             nlohmann::json obj = nlohmann::json::object();
             MVR_COMMIT_ToJson(it, obj);
-            payload.push_back(obj);
+            payload["Files"].push_back(obj);
         }
 
         break;
@@ -238,7 +238,7 @@ void MVRxchangePacket::FromExternalMessage(const VectorworksMVR::IMVRxchangeServ
         {
             nlohmann::json obj = nlohmann::json::object();
             MVR_COMMIT_ToJson(it, obj);
-            payload.push_back(obj);
+            payload["Files"].push_back(obj);
         }
 
         break;
