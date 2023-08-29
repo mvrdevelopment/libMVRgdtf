@@ -56,6 +56,12 @@ bool MVRxchangeClient::ReadMessage(std::chrono::steady_clock::duration timeout)
         delete[] out.BufferToFile;
     }
 
+    std::string msg = error.message();
+    std::string nam = error.category().name();
+
+    std::cout << "??" << msg << nam << std::endl;
+
+
     // Determine whether the read completed successfully
     return ! error;;
   }
@@ -84,6 +90,11 @@ bool MVRxchangeClient::WriteMessage(std::chrono::steady_clock::duration timeout)
     {   
         ok = ReadMessage(timeout);   
     }   
+
+    std::string msg = error.message();
+    std::string nam = error.category().name();
+
+    std::cout << "?" << msg << nam << std::endl;
 
     // Determine whether the read completed successfully.
     return ok;
