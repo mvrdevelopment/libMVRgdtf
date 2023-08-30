@@ -41,8 +41,6 @@ namespace MVRxchangeNetwork
             void            ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage&);
 
         private:
-            size_t*		        fReferenceCount;
-
             uint32_t            fFlag;
             uint32_t            fVersion;
             uint32_t            fNumber;
@@ -50,7 +48,7 @@ namespace MVRxchangeNetwork
             uint32_t            fType;
             uint64_t            fBodyLength;
 
-            MVRxchangeNetwork::MVRxchangeDynamicBuffer*  fData;
+            std::shared_ptr<MVRxchangeNetwork::MVRxchangeDynamicBuffer>  fData;
     };
     
     using MVRxchangePacketDeque = std::deque<MVRxchangePacket>;    

@@ -35,36 +35,24 @@ MVRxchangePacket::MVRxchangePacket()
     fCount      = 0;
     fType       = 0;
     fBodyLength = 0;
-    fData       = new MVRxchangeDynamicBuffer();
+    fData       = std::make_shared<MVRxchangeDynamicBuffer>();
     fData->GrowTo(30 * 1024 * 1024);
-
-    fReferenceCount = new size_t(1);
 }
 
 MVRxchangePacket::MVRxchangePacket(const MVRxchangePacket& ref)
 {
     fBodyLength = ref.fBodyLength;
     fData       = ref.fData;
-    
-    fReferenceCount = ref.fReferenceCount;
-	
-	// Increase reference Count by one
-	(*fReferenceCount)++;
+    fFlag       = ref.fFlag; 
+    fVersion    = ref.fVersion;
+    fNumber     = ref.fNumber;
+    fCount      = ref.fCount;
+    fType       = ref.fType;
 }
 
 
 MVRxchangePacket::~MVRxchangePacket()
 {
-    (*fReferenceCount)--;
-    if (*fReferenceCount == 0)
-	{
-		// Release pointer
-		delete fData;
-		
-		// Release reference pointer
-		delete fReferenceCount;
-	}
-   
 }
 
 const char* MVRxchangePacket::GetData() const
