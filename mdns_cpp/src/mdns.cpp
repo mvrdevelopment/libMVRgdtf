@@ -564,7 +564,6 @@ QueryResList mDNS::executeQuery2(const std::string &service) {
   size_t capacity = 2048;
   void *buffer = malloc(capacity);
   void *user_data = &queryRes;
-  size_t records;
 
   MDNS_LOG << "Sending mDNS query: " << service << "\n";
   for (int isock = 0; isock < num_sockets; ++isock) {
@@ -628,7 +627,6 @@ void mDNS::executeQuery(const std::string &service) {
   size_t capacity = 2048;
   void *buffer = malloc(capacity);
   void *user_data = 0;
-  size_t records;
 
   MDNS_LOG << "Sending mDNS query: " << service << "\n";
   for (int isock = 0; isock < num_sockets; ++isock) {
@@ -656,12 +654,11 @@ void mDNS::executeQuery(const std::string &service) {
       FD_SET(sockets[isock], &readfs);
     }
 
-    records = 0;
     res = select(nfds, &readfs, 0, 0, &timeout);
     if (res > 0) {
       for (int isock = 0; isock < num_sockets; ++isock) {
         if (FD_ISSET(sockets[isock], &readfs)) {
-          records += mdns_query_recv(sockets[isock], buffer, capacity, query_callback, user_data, query_id[isock]);
+          mdns_query_recv(sockets[isock], buffer, capacity, query_callback, user_data, query_id[isock]);
         }
         FD_SET(sockets[isock], &readfs);
       }
@@ -696,7 +693,6 @@ void mDNS::executeDiscovery() {
   size_t capacity = 2048;
   void *buffer = malloc(capacity);
   void *user_data = 0;
-  size_t records;
 
   // This is a simple implementation that loops for 5 seconds or as long as we
   // get replies
@@ -715,12 +711,11 @@ void mDNS::executeDiscovery() {
       FD_SET(sockets[isock], &readfs);
     }
 
-    records = 0;
     res = select(nfds, &readfs, 0, 0, &timeout);
     if (res > 0) {
       for (int isock = 0; isock < num_sockets; ++isock) {
         if (FD_ISSET(sockets[isock], &readfs)) {
-          records += mdns_discovery_recv(sockets[isock], buffer, capacity, query_callback, user_data);
+          mdns_discovery_recv(sockets[isock], buffer, capacity, query_callback, user_data);
         }
       }
     }

@@ -40,13 +40,13 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 	txt += (char)';';
 
 
-	mdns_cpp::mDNS q;
-	fmdns.clear();
 	for(auto& s : fmdns)
     {
         s->stopService();
     }
-	for(std::pair<std::string, uint32_t> e : q.getInterfaces())
+	fmdns.clear();
+
+	for(std::pair<std::string, uint32_t> e : mdns_cpp::mDNS().getInterfaces())
 	{
 		// Bitmasking IP Address to check if it is 127.x.x.x
 		// We dont want to start the mDNS Server on loopback addresses
@@ -379,7 +379,9 @@ mdns_cpp::QueryResList CMVRxchangeServiceImpl::mDNS_Filter_Queries(mdns_cpp::Que
 
 		if (it != out.end())		{continue;}	// filter multiple
 		if (!i.ipV4_adress.size())	{continue;}	// filter empty
-		if (!i.ipV6_adress.size())	{continue;} // filter empty
+
+		// IPv6 is currently not supported
+		//if (!i.ipV6_adress.size())	{continue;} // filter empty
 
 		bool found = false;
 		std::string ipPort = i.ipV4_adress + ':' + std::to_string(i.port);

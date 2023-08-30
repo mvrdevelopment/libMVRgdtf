@@ -1956,7 +1956,7 @@ TXString TXString::Right(size_t len) const
 
 //=======================================================================================
 // Splits string on every occasion of ch and stores result in an array
-// Result does not contain ch
+// Results do not contain ch
 std::vector<TXString> TXString::Split(char ch) const
 {
 	std::vector<TXString> result;
@@ -1982,18 +1982,26 @@ std::vector<TXString> TXString::Split(char ch) const
 
 //=======================================================================================
 // Splits string on every occasion of ch and stores result in an array
-// Result does not contain ch
+// Results do not contain ch
 std::vector<TXString> TXString::Split(TXString ch) const
 {
+	
 	std::vector<TXString> result;
 
 	size_t lastOccurrence = 0;
 
 	while(lastOccurrence < size_t(-1))
 	{
-		size_t pos = Find(ch, lastOccurrence);
-		result.push_back(Mid(lastOccurrence, pos));
-		lastOccurrence = pos;
+		size_t pos = Find(ch, lastOccurrence + 1);
+		if(pos != 0)
+		{
+			result.push_back(Mid(lastOccurrence, pos - lastOccurrence));
+		}
+		lastOccurrence = pos + 1;
+		if(pos + 1 == GetLength())
+		{
+			break;
+		}
 	}
 
 	return result;
