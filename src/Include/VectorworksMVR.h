@@ -4,7 +4,7 @@
 #include <vector>
 #include <stdint.h>
 #include <cstring>
-#include <memory>
+#include <GSString.h>
 
 // ---------------------------------------------------------------------------------------------------
 // Support

@@ -1764,32 +1764,16 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
     typedef VCOMPtr<IUtility>	IIUtilityPtr;
     const   VWIID IID_IUtility = { 0x706cb180, 0xcd45, 0x4a9a, {0xab, 0xdc, 0x62, 0xab, 0x5f, 0xfe, 0x37, 0x6b}};
 
-	
-	class MVRxchangeString
-	{
-		public:
-		MVRxchangeString()
-		{
-			memset(fBuffer,0,1024);
-		}
-		mutable char fBuffer[1024];
-
-		operator char*  () const
-		{
-			return fBuffer;
-		}
-	};
-
 	class DYNAMIC_ATTRIBUTE IMVRxchangeService : public IVWUnknown
     {
 		public:
 		struct ConnectToLocalServiceArgs
 		{
-			MVRxchangeString 	Service;
+			TXString 			Service;
 
 			MvrUUID 			StationUUID;
-			MVRxchangeString 	StationName;
-			MVRxchangeString 	Provider;
+			TXString 			StationName;
+			TXString 			Provider;
 
 			uint32_t     		VersionMajor;
 			uint32_t         	VersionMinor;
@@ -1797,9 +1781,9 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 			// TODO Files
 
 			// Internal
-			MVRxchangeString IPv4;
-			MVRxchangeString IPv6;
-			uint16_t         Port;
+			TXString 		IPv4;
+			TXString 		IPv6;
+			uint16_t        Port;
 		};
 		/**
 		 * @brief Connects to a given Local Network Mode MVR-xchange system
@@ -1832,7 +1816,8 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
         
 		struct ConnectToRemoteServiceArgs
 		{
-			MVRxchangeString Url;
+			TXString Url;
+			
 		};
 		/**
 		 * @brief Connects to a given Socket Mode Mode MVR-xchange system
@@ -1868,7 +1853,7 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 
 		struct MVR_COMMIT_MESSAGE
 		{
-			MVRxchangeString 				Comment;
+			TXString 						Comment;
 			uint32_t 						VersionMajor;
 			uint32_t 						VersionMinor;
 			uint64_t 						FileSize;
@@ -1879,8 +1864,8 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 
 		struct MVR_JOIN_MESSAGE
 		{
-			MVRxchangeString 				Provider;
-			MVRxchangeString 				StationName;
+			TXString 						Provider;
+			TXString 						StationName;
 			MvrUUID							StationUUID;
 			uint32_t 						VersionMajor;
 			uint32_t 						VersionMinor;
@@ -1915,12 +1900,12 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 
 			// Sending files is possible with both, a buffer (and buffer length) or a file path
 			// If both are set, buffer is used first
-			MVRxchangeString 				PathToFile;
+			TXString 						PathToFile;
 			std::shared_ptr<char>			BufferToFile;
 			size_t							BufferToFileLength;
 			
 			bool 							RetIsOK;
-			MVRxchangeString 				RetError;
+			TXString 						RetError;
 		};
 
 		typedef IMVRxchangeMessage (*MVRxchangeMessageHandler)(const IMVRxchangeMessage& args, void* context);
