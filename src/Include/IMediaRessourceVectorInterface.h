@@ -1914,9 +1914,12 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 			MVR_REQUEST_MESSAGE 	REQUEST;
 			MVR_LEAVE_MESSAGE 		LEAVE;
 
+			// Sending files is possible with both, a buffer (and buffer length) or a file path
+			// If both are set, buffer is used first
 			MVRxchangeString 				PathToFile;
 			char*							BufferToFile = nullptr;
 			size_t							BufferToFileLength;
+			
 			bool 							RetIsOK;
 			MVRxchangeString 				RetError;
 		};

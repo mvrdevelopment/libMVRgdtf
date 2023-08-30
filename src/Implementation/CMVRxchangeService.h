@@ -16,6 +16,7 @@ namespace VectorworksMVR
 		TXString IP;
 		uint16_t Port;
 		TXString Name;
+		MvrUUID  stationUUID;
 	};
 	//----------------------------------------------------------------------------------------
 	class CMVRxchangeServiceImpl : public VCOMImpl<IMVRxchangeService>

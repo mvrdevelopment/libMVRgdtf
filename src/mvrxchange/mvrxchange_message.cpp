@@ -285,16 +285,25 @@ void MVRxchangePacket::FromExternalMessage(const VectorworksMVR::IMVRxchangeServ
 
     if(in.Type == IMVRxchangeService::MVRxchangeMessageType::MVR_REQUEST_RET && in.RetIsOK)
     {
-        IFileIdentifierPtr file (IID_FileIdentifier);
-        file->Set(in.PathToFile.fBuffer);
+        if(in.BufferToFile == nullptr)
+        {
+            IFileIdentifierPtr file (IID_FileIdentifier);
+            file->Set(in.PathToFile.fBuffer);
 
-        Uint64 size = 0;
-        IRawOSFilePtr rawFile (IID_RawOSFile);
-        rawFile->Open(file, true, false,true, false);
-        rawFile->GetFileSize(fBodyLength);
-        rawFile->Read(0, fBodyLength, GetBody());
-        fData->GrowTo(fBodyLength + total_header_length);
-        rawFile->Close();
+            Uint64 size = 0;
+            IRawOSFilePtr rawFile (IID_RawOSFile);
+            rawFile->Open(file, true, false,true, false);
+            rawFile->GetFileSize(fBodyLength);
+            fData->GrowTo(fBodyLength + total_header_length);
+            rawFile->Read(0, fBodyLength, GetBody());
+            rawFile->Close();
+        }
+        else
+        {
+            fBodyLength = in.BufferToFileLength;
+            fData->GrowTo(fBodyLength + total_header_length);
+            memcpy(GetBody(), in.BufferToFile, fBodyLength);
+        }
 
         fType       = kMVR_Package_BUFFER_TYPE;
     }

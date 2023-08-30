@@ -161,6 +161,28 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::OnMessage(OnMessageArgs& messa
 
 VCOMError VectorworksMVR::CMVRxchangeServiceImpl::Send_message(const SendMessageArgs& messageHandler)
 {
+	std::vector<MvrUUID> recipientFilter;
+
+	{
+		using ServiceType = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType;
+		if(messageHandler.Message.Type == ServiceType::MVR_COMMIT)
+		{
+			recipientFilter.insert(
+				recipientFilter.end(), 
+				messageHandler.Message.COMMIT.ForStationsUUID.begin(),
+				messageHandler.Message.COMMIT.ForStationsUUID.end()
+			);
+		}
+		else if(messageHandler.Message.Type == ServiceType::MVR_REQUEST)
+		{
+			recipientFilter.insert(
+				recipientFilter.end(), 
+				messageHandler.Message.REQUEST.FromStationUUID.begin(),
+				messageHandler.Message.REQUEST.FromStationUUID.end()
+			);
+		}
+	}
+
 	//---------------------------------------------------------------------------------------------
 	// Start mDNS Service
 	{
@@ -168,6 +190,9 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::Send_message(const SendMessage
 		msg.FromExternalMessage(messageHandler.Message);
 		for (const auto& e : fMVRGroup)
 		{
+			if(recipientFilter.size() != 0 && std::find(recipientFilter.begin(), recipientFilter.end(), e.stationUUID) == recipientFilter.end()){
+				continue;
+			}
 			SendMessageToLocalNetworks(e.IP, e.Port, msg);
 		}
 	}
@@ -267,7 +292,7 @@ bool CMVRxchangeServiceImpl::SendMessageToLocalNetworks(const TXString& ip, uint
 	bool ok = false;
 	if(c.Connect(ip.GetStdString(), port, std::chrono::seconds(10)))
 	{
-		ok = c.WriteMessage(std::chrono::seconds(30));
+		ok = c.WriteMessage(std::chrono::seconds(30)); // Write + Read = 60sec
 	}
 
 	return ok;
@@ -291,6 +316,7 @@ std::vector<MVRxchangeGroupMember> CMVRxchangeServiceImpl::GetMembersOfService(c
 			member.IP   = e.IPv4;
 			member.Port = e.Port;
 			member.Name = e.StationName;
+			member.stationUUID = e.StationUUID;
 			list.push_back(member);
 		}
 
