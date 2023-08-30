@@ -273,7 +273,13 @@ void MVRxchangePacket::FromExternalMessage(const VectorworksMVR::IMVRxchangeServ
 
     if(in.Type == IMVRxchangeService::MVRxchangeMessageType::MVR_REQUEST_RET && in.RetIsOK)
     {
-        if(in.BufferToFile == nullptr)
+        if(in.BufferToFile)
+        {
+            fBodyLength = in.BufferToFileLength;
+            fData->GrowTo(fBodyLength + total_header_length);
+            memcpy(GetBody(), in.BufferToFile.get(), fBodyLength);
+        }
+        else
         {
             IFileIdentifierPtr file (IID_FileIdentifier);
             file->Set(in.PathToFile.fBuffer);
@@ -285,12 +291,6 @@ void MVRxchangePacket::FromExternalMessage(const VectorworksMVR::IMVRxchangeServ
             fData->GrowTo(fBodyLength + total_header_length);
             rawFile->Read(0, fBodyLength, GetBody());
             rawFile->Close();
-        }
-        else
-        {
-            fBodyLength = in.BufferToFileLength;
-            fData->GrowTo(fBodyLength + total_header_length);
-            memcpy(GetBody(), in.BufferToFile, fBodyLength);
         }
 
         fType       = kMVR_Package_BUFFER_TYPE;
@@ -400,7 +400,7 @@ void MVRxchangePacket::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMV
     {
         in.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_REQUEST_RET;
         in.BufferToFileLength = fBodyLength;
-        in.BufferToFile = new char[fBodyLength];
-        memcpy(in.BufferToFile, GetBody(), fBodyLength);
+        in.BufferToFile.reset(new char[fBodyLength]);
+        memcpy(in.BufferToFile.get(), GetBody(), fBodyLength);
     }
 }

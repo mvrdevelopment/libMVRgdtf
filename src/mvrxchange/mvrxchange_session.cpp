@@ -40,7 +40,6 @@ void MVRxchangeSession::DoRead()
                     freadmsg.ToExternalMessage(out);
 
                     IMVRxchangeService::IMVRxchangeMessage in = fImpl->TCP_OnIncommingMessage(out);
-                    delete out.BufferToFile;
                     
                     MVRxchangePacket in_msg;
                     in_msg.FromExternalMessage(in);
@@ -48,20 +47,12 @@ void MVRxchangeSession::DoRead()
                 }
                 else
                 {
-                    std::string msg = ec.message();
-                    std::string nam = ec.category().name();
-
-                    std::cout << "!!" << msg << nam << std::endl;
                     fServer->CloseSession(self);
                 }
             });
         }
         else
         {
-            std::string msg = ec.message();
-            std::string nam = ec.category().name();
-
-            std::cout << "!!!" << msg << nam << std::endl;
             fServer->CloseSession(self);
         }
     });
@@ -105,10 +96,6 @@ void MVRxchangeSession::DoWrite()
         }
         else
         {
-            std::string msg = ec.message();
-            std::string nam = ec.category().name();
-
-            std::cout << "!!!!" << msg << nam << std::endl;
             fServer->CloseSession(self);
         }
     });

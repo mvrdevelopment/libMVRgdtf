@@ -20,6 +20,7 @@ else()
     endif(WIN32)
 endif()
 
+add_subdirectory(mdns_cpp)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
@@ -74,7 +75,7 @@ file(GLOB_RECURSE libSourceFiles ${SRCDIR}/*.cpp)
 add_library(MvrGdtf STATIC ${libSourceFiles})
 
 target_link_libraries(MvrGdtf ${XERCES_LIB_PATH})
-target_link_libraries(MvrGdtf ${CMAKE_SOURCE_DIR}/mdns_cpp/build/lib/libmdns_cpp.a)
+target_link_libraries(MvrGdtf mdns_cpp)
 #################################################
 
 

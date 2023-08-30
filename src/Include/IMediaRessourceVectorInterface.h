@@ -1905,7 +1905,6 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 			{
 				Type = MVRxchangeMessageType::MVR_UNDEFINED;
 				RetIsOK = true;
-				BufferToFile = nullptr;
 				BufferToFileLength = 0;
 			}
 			MVRxchangeMessageType 	Type;
@@ -1917,7 +1916,7 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 			// Sending files is possible with both, a buffer (and buffer length) or a file path
 			// If both are set, buffer is used first
 			MVRxchangeString 				PathToFile;
-			char*							BufferToFile = nullptr;
+			std::unique_ptr<char>			BufferToFile;
 			size_t							BufferToFileLength;
 			
 			bool 							RetIsOK;

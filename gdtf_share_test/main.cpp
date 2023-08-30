@@ -9,6 +9,19 @@ VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage onMsg(const VectorworksMV
     VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage out;
     std::cout << (int)args.Type << std::endl;
 
+    if(args.Type == VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_JOIN_RET)
+    {
+        VectorworksMVR::IMVRxchangeService::SendMessageArgs msg;
+        msg.Message.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_REQUEST;
+        msg.Message.REQUEST.FileUUID = VectorworksMVR::MvrUUID(5,6,7,8);
+        service->Send_message(msg);
+    }
+
+    if(args.Type == VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_REQUEST_RET)
+    {
+        std::cout << "!!" << std::endl;
+    }
+
     out.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_JOIN_RET;
 
     return out;

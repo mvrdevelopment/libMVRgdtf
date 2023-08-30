@@ -55,14 +55,7 @@ bool MVRxchangeClient::ReadMessage(std::chrono::steady_clock::duration timeout)
         IMVRxchangeService::IMVRxchangeMessage out;
         fMsg_ret.ToExternalMessage(out);
         fImpl->TCP_OnIncommingMessage(out);
-        delete[] out.BufferToFile;
     }
-
-    std::string msg = error.message();
-    std::string nam = error.category().name();
-
-    std::cout << "??" << msg << nam << std::endl;
-
 
     // Determine whether the read completed successfully
     return ! error;;
@@ -93,12 +86,6 @@ bool MVRxchangeClient::WriteMessage(std::chrono::steady_clock::duration timeout)
         ok = ReadMessage(timeout);   
     }   
 
-    std::string msg = error.message();
-    std::string nam = error.category().name();
-
-    std::cout << "?" << msg << nam << std::endl;
-
-    // Determine whether the read completed successfully.
     return ok;
   }
 
@@ -147,12 +134,6 @@ bool MVRxchangeClient::Connect(const std::string& host, const std::string& servi
 
     // Run the operation until it completes, or until the timeout.
     Run(timeout);
-
-    // Determine whether a connection was successfully established.
-    std::string msg = error.message();
-    std::string nam = error.category().name();
-
-    std::cout << "!" << msg << nam << std::endl;
 
     return ! error;
 }
