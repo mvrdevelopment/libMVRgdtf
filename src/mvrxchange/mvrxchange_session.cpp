@@ -94,8 +94,9 @@ void MVRxchangeSession::DoWrite()
     MVRxchangePacket msg = std::move(fwrite_msgs.front());
     fwrite_msgs.pop_front();
 
+    // msg is passed, so its liftime is extended until the operation is completed
     boost::asio::async_write(fSocket, boost::asio::buffer(msg.GetData(), msg.GetLength()),
-    [this, self](boost::system::error_code ec, std::size_t /*length*/)
+    [this, self, msg](boost::system::error_code ec, std::size_t /*length*/)
     {
         if (!ec)
         {
