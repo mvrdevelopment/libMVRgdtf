@@ -70,6 +70,7 @@ void MVRxchangeSession::DoRead()
 
 void MVRxchangeSession::Deliver(const MVRxchangePacket& msg)
 {
+    // asio::async_write does not gurantee a sequential sending order, so reverting to a queue
     bool write_in_progress;
     {
         std::lock_guard<std::mutex> l(fwrite_msgs_mutex);
