@@ -42,9 +42,9 @@ void a()
     std::string Service        = "Unittest_1";
     VectorworksMVR::MvrUUID uuid(1,2,3,4);
 
-    args.Service = Service;
-    args.StationName = StationName;
-    args.Provider = Provider;
+    strcpy(args.Service, Service.c_str());
+    strcpy(args.StationName, StationName.c_str());
+    strcpy(args.Provider, Provider.c_str());
 
     args.VersionMajor = 1;
     args.VersionMinor = 1;
@@ -72,9 +72,9 @@ void b()
     std::string Service        = "Unittest_1";
     VectorworksMVR::MvrUUID uuid(1,2,3,4);
 
-    args.Service = Service;
-    args.StationName = StationName;
-    args.Provider = Provider;
+    strcpy(args.Service, Service.c_str());
+    strcpy(args.StationName, StationName.c_str());
+    strcpy(args.Provider, Provider.c_str());
 
     args.VersionMajor = 1;
     args.VersionMinor = 1;
@@ -87,7 +87,7 @@ void b()
         VectorworksMVR::IMVRxchangeService::ConnectToLocalServiceArgs args;
         service->GetLocalServiceAt(i, args);
         
-        std::cout << args.IPv4.GetStdString() << ":" << args.Port << std::endl;
+        std::cout << args.IPv4 << ":" << args.Port << std::endl;
     }
 }
 
