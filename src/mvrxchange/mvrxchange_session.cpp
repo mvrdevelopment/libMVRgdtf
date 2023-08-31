@@ -61,42 +61,14 @@ void MVRxchangeSession::DoRead()
 
 void MVRxchangeSession::Deliver(const MVRxchangePacket& msg)
 {
-    // asio::async_write does not gurantee a sequential sending order, so reverting to a queue
-    bool write_in_progress;
-    {
-        std::lock_guard<std::mutex> l(fwrite_msgs_mutex);
-        write_in_progress = !fwrite_msgs.empty();
-        fwrite_msgs.push_back(msg);
-    }
-    if (!write_in_progress)
-    {
-        DoWrite();
-    }
-}
-
-void MVRxchangeSession::DoWrite()
-{
     auto self(shared_from_this());
 
-    std::lock_guard<std::mutex> l(fwrite_msgs_mutex);
-    if(!fwrite_msgs.size()){
-        return;
-    }
-
-    MVRxchangePacket msg = std::move(fwrite_msgs.front());
-    fwrite_msgs.pop_front();
-
-    // msg is passed, so its liftime is extended until the operation is completed
+    // msg is passed, so its lifetime is extended until the operation is completed
     boost::asio::async_write(fSocket, boost::asio::buffer(msg.GetData(), msg.GetLength()),
     [this, self, msg](boost::system::error_code ec, std::size_t /*length*/)
     {
-        if (!ec)
-        {
-            DoWrite();
-        }
-        else
-        {
-            fServer->CloseSession(self);
-        }
+        // Reply sent, close connection
+        fServer->CloseSession(self);
     });
 }
+

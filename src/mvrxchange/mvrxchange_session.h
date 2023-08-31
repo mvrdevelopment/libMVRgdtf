@@ -17,19 +17,16 @@ namespace MVRxchangeNetwork
     
     public:
         void            Start();
-        virtual void    Deliver(const MVRxchangePacket& msg);
 
 
     private:
         void DoRead();
-        void DoWrite();
+        void Deliver(const MVRxchangePacket& msg);
 
         CMVRxchangeServiceImpl*         fImpl;
         MVRxchangeServer*               fServer;
         tcp::socket                     fSocket;
         MVRxchangePacket                freadmsg;
-        MVRxchangePacketDeque           fwrite_msgs;
-        std::mutex                      fwrite_msgs_mutex;
     };
 
 }

@@ -16,7 +16,6 @@ namespace MVRxchangeNetwork
         MVRxchangeServer(boost::asio::io_context& io_context, const tcp::endpoint& endpoint, CMVRxchangeServiceImpl* impl);
 
     public:            
-        virtual void    Deliver(const MVRxchangePacket& msg);
         uint16_t        GetPort() const;
         uint32_t        GetIP() const;
 
@@ -28,6 +27,7 @@ namespace MVRxchangeNetwork
         void DoAccept();
 
         CMVRxchangeServiceImpl*         fImpl;
+        std::mutex                                   mSession;
         std::set<std::shared_ptr<MVRxchangeSession>> fSession;
         tcp::acceptor                   fAcceptor;
         uint16_t                        fPort;
