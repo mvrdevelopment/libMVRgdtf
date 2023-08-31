@@ -17,6 +17,10 @@ if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_EXTENSIONS OFF)
 endif()
 
+if(APPLE)
+  set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
+endif()
+
 # ##############################################################################
 # library
 # ##############################################################################
