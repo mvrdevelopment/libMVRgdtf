@@ -143,6 +143,7 @@ VCOMError CXMLFileImpl::GetSimpleNode(const TXString& nodePath, IXMLFileNode** p
 
 VCOMError CXMLFileImpl::GetSimpleNode(IXMLFileNode* pRefNode, const TXString& nodePath, IXMLFileNode** ppOutNode)
 {
+	std::cout << nodePath.GetCharPtr() << std::endl;
 	TXStringArray	arrNodeNames;
 	this->Tokenize( nodePath, arrNodeNames, "/", 1, true, '\'' );
 	if(arrNodeNames.size() != 1){

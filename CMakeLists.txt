@@ -48,7 +48,8 @@ ADD_DEFINITIONS(-D_UNICODE)
 project(MvrGdtf)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(CMAKE_BUILD_TYPE Debug)
+
+
 
 # Set output dir
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/libs/)
@@ -92,6 +93,8 @@ target_link_libraries(MvrGdtfUnitTest MvrGdtf)
 
 endif (UNITTEST)
 #################################################
+
+
 
 #################################################
 # setup the platform macros
@@ -163,12 +166,6 @@ if(${DO_NOT_INCLUDE_MINI_ZIP} OR DEFINED ENV{DO_NOT_INCLUDE_MINI_ZIP})
     set(OUTPUT_NAME_OLD "${OUTPUT_NAME_OLD}_NO_MZ")
 
     set_target_properties(MvrGdtf PROPERTIES OUTPUT_NAME ${OUTPUT_NAME_OLD})
-else()
-file(GLOB_RECURSE share_files gdtf_share_test/*.cpp)
-add_executable(shareTest ${share_files})
-target_link_libraries(shareTest MvrGdtf)
-target_compile_definitions(shareTest ${PREPROCESSORS})
-target_link_libraries(shareTest ${EXTRA_LIBS})
 endif()
 
 if(${DONT_USE_XERCES_AS_XMLLIB} OR DEFINED ENV{DONT_USE_XERCES_AS_XMLLIB})
