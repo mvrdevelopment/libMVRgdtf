@@ -395,7 +395,7 @@ void MvrUnittest::ReadFile()
 		size_t count_Objects = 0;
 		__checkVCOM(mvrRead->GetSceneObjectCount(count_Objects));
 
-        this->checkifEqual("Check Global Object Count", count_Objects, size_t(17));
+        this->checkifEqual("Check Global Object Count", count_Objects, size_t(18));
 
 		//------------------------------------------------------------------------------------------------
 		// Check File Getters
@@ -430,34 +430,35 @@ void MvrUnittest::ReadFile()
 		ISceneObjPtr readLayer = nullptr;
 		__checkVCOM(mvrRead->GetFirstLayer(&readLayer));
 
-		int i(0);
+		int layer_index(0);
 		while (readLayer)
 		{
 			ISceneObjPtr sceneObj = nullptr;
 			__checkVCOM(mvrRead->GetFirstChild(readLayer, &sceneObj));
 			
 			//Get Data Layer 1
-			if (i==0)
+			if (layer_index==0)
 			{
 				checkifEqual("Layer name", readLayer->GetName(), "My Layer 1");
 				__checkVCOM(readLayer->GetGuid(resultUUID));
 				this->checkifEqual("GetLayerGuid layerUUID1 ", resultUUID, layerUUID1);
 			}
 
-            if (i==0)
+            if (layer_index==0)
             {
                 Read_NestedObjects(mvrRead, readLayer);
+                Read_TestGroup(mvrRead, readLayer);
             }
 			
 			//Get Data Layer 2
-			if (i==1)
+			if (layer_index==1)
 			{
 				checkifEqual("Layer name", readLayer->GetName(), "My Layer 2");
 				__checkVCOM(readLayer->GetGuid(resultUUID));
 				this->checkifEqual("GetLayerGuid uuid ", resultUUID, layerUUID2);
 			}
 			
-			int j(0);
+			int obj_index(0);
 			while (sceneObj)
 			{
 				ESceneObjType type;
@@ -465,7 +466,7 @@ void MvrUnittest::ReadFile()
 
 				// ------------------------------------------------------------------------------
 				// Get Focus Point1
-				if(i==0 && j==0)
+				if(layer_index==0 && obj_index==0)
 				{	
 					
 					checkifEqual("ESceneObjType Type ", (Sint32)type ,(Sint32)ESceneObjType::FocusPoint);
@@ -496,7 +497,7 @@ void MvrUnittest::ReadFile()
 
 				// ------------------------------------------------------------------------------
 				// Get Fixture1
-				if (i==0 && j==1)
+				if (layer_index==0 && obj_index==1)
 				{	
 					checkifEqual("ESceneObjType Type ", (Sint32)type ,(Sint32)ESceneObjType::Fixture);
 					checkifEqual("Fixture1 name ",		sceneObj->GetName(), 	 "My Fixture1 Name");
@@ -692,7 +693,7 @@ void MvrUnittest::ReadFile()
 				
 				// ------------------------------------------------------------------------------
 				// Get Fixture2
-				if (i==0 && j==2)
+				if (layer_index==0 && obj_index==2)
 				{
 					checkifEqual("ESceneObjType Type ", (Sint32)type ,(Sint32)ESceneObjType::Fixture);
 					checkifEqual("Fixture2 name ",		sceneObj->GetName(), 	 "My Fixture2 Name");
@@ -794,7 +795,7 @@ void MvrUnittest::ReadFile()
 				}
 				// ------------------------------------------------------------------------------
 				// Get Fixture4
-				if (i==0 && j==3)
+				if (layer_index==0 && obj_index==3)
 				{
 					checkifEqual("Fixture4 name ", 		sceneObj->GetName(), 	 "My Fixture4 Name");
 
@@ -802,15 +803,10 @@ void MvrUnittest::ReadFile()
 					__checkVCOM(mvrRead->GetDuplicatedUuids(duplicatedUuids));
 					checkifEqual("Duplicated Uuids", duplicatedUuids, true);
 				}
-
-				if (i==0 && j==4)
-				{
-					checkifEqual("Group name ", sceneObj->GetName(), "My Group Name");
-				}
 				
 				// ------------------------------------------------------------------------------
 				// Get Fixture3
-				if (i==1 && j==0)
+				if (layer_index==1 && obj_index==0)
 				{
 					checkifEqual("ESceneObjType Type ", (Sint32)type ,(Sint32)ESceneObjType::Fixture);
 					checkifEqual("Fixture3 name ", 		sceneObj->GetName(), 	 "My Fixture3 Name");
@@ -877,12 +873,12 @@ void MvrUnittest::ReadFile()
 					}
 				}
 
-				if (i==1 && j==1)
+				if (layer_index==1 && obj_index==1)
 				{
 					checkifEqual("ESceneObjType Type ", (Sint32)type ,(Sint32)ESceneObjType::Truss);
 				}
 
-				if (i==1 && j==2)
+				if (layer_index==1 && obj_index==2)
 				{
 					checkifEqual("ESceneObjType Type ", (Sint32)type ,(Sint32)ESceneObjType::VideoScreen);
 
@@ -898,7 +894,7 @@ void MvrUnittest::ReadFile()
 					}
 				}
 
-				if (i==1 && j==3)
+				if (layer_index==1 && obj_index==3)
 				{
 					checkifEqual("ESceneObjType Type ", (Sint32)type ,(Sint32)ESceneObjType::Projector);
 					ISourcePtr source1;
@@ -917,20 +913,21 @@ void MvrUnittest::ReadFile()
 					checkifEqual("Check Projector ScaleHandling", (size_t)scaleHandlingType, (size_t)EScaleHandlingType::ScaleIgnoreRatio);
 				}
 
-				if (i==1 && j==4)
+				if (layer_index==1 && obj_index==4)
 				{
 					checkifEqual("ESceneObjType Type ", (Sint32)type ,(Sint32)ESceneObjType::Support);
 				}
 							
 				//------------------------------------------------------------------------
 				// Step to next Obj
-				j++;
+				obj_index++;
 				ISceneObjPtr next = nullptr;
 				mvrRead->GetNextObject(sceneObj, &next);
 				sceneObj = next;
 			}
 			
-			i++;
+            layer_index++;
+
 			ISceneObjPtr nextLayer = nullptr;
 			mvrRead->GetNextObject(readLayer, &nextLayer);
 			readLayer = nextLayer;
@@ -1154,25 +1151,62 @@ void MvrUnittest::Write_NestedObjects(IMediaRessourceVectorInterfacePtr intfc, I
     __checkVCOM(intfc->CreateTruss( truss2_UUID, STransformMatrix(), "Truss in SceneObj", sceneObject, &trussObj2));
 }
 
-void MvrUnittest::Read_NestedObjects(IMediaRessourceVectorInterfacePtr interf, ISceneObjPtr layer)
-{   
-    ISceneObjPtr child;
-    interf->GetFirstChild( layer, &child);
-
-    bool success = false;
+bool FindObjByName(IMediaRessourceVectorInterfacePtr interf, ISceneObjPtr container, MvrString objNam, ISceneObj** outObj)
+{
+    ISceneObj* child = nullptr;
+    interf->GetFirstChild( container, &child);
 
     while (child)
     {        
         std::string nam = child->GetName();
         
-        if ( nam == "Truss with childs")
+        if ( nam == objNam)
         {
-            success = Read_NestedObjectsInTruss(interf, child);
+            *outObj = child;
+            
+            return true;
         }        
 
         interf->GetNextObject(child, &child);
+    }   
+
+    return false;
+}
+
+void MvrUnittest::Read_TestGroup(IMediaRessourceVectorInterfacePtr interf, ISceneObjPtr layer)
+{
+    bool succes = false;
+    
+    ISceneObjPtr grp;    
+    bool found = FindObjByName(interf, layer, "My Group Name", &grp);
+    
+    if (found)
+    {
+        ISceneObjPtr firstChld;
+        interf->GetFirstChild(grp, &firstChld);
+
+        if (firstChld)
+        {
+            std::string nam = firstChld->GetName();
+            succes = (nam == "Truss in Group");
+        }
     }
 
+    checkifTrue( "Read_TestGroup", succes);
+}
+
+void MvrUnittest::Read_NestedObjects(IMediaRessourceVectorInterfacePtr interf, ISceneObjPtr layer)
+{   
+    bool success = false;
+
+    ISceneObjPtr truss;    
+    bool found = FindObjByName(interf, layer, "Truss with childs", &truss);
+    
+    if (found)
+    {        
+        success = Read_NestedObjectsInTruss(interf, truss);
+    }
+    
     checkifTrue( "Read_NestedObjects", success);
 }
 

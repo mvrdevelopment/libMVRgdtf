@@ -1,3 +1,5 @@
+#ifdef DONT_USE_XERCES_AS_XMLLIB
+
 #pragma once
 #include "Include/VectorworksMVR.h"
 #include "Prefix/StdAfx.h"
@@ -66,3 +68,4 @@ namespace VectorworksMVR
 		};
 	}
 }
+#endif
