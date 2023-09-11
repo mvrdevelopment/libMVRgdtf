@@ -8791,7 +8791,7 @@ void GdtfFixture::CheckForMissingModeMasters()
                                         if(functionMMStart <= currentFunctionMMEnd && currentFunctionMMStart <= functionMMEnd)
                                         {
                                             //If they do, we throw an error.
-                                            GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureChannelFunctionMissingModeMaster);
+                                            GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureChannelFunctionModeMasterOverlap);
                                             SceneData::GdtfFixture::AddError(error);
                                         }
                                     }
