@@ -444,19 +444,11 @@ void CMVRxchangeServiceImpl::mDNS_Client_Task()
 		strcpy(localServ.IPv6, r.ipV6_adress.c_str());
 		localServ.Port = r.port;
 
-		TXString txt  = r.txt;
+		const char* length1  = r.txt.data();
+		const char* length2  = r.txt.data() + *length1 + 1 ;
 
-
-		// StationName=sdfsd;StationUUID=XXXXX-;
-		TXStringArray txtSep = txt.Split(';');
-
-		if(txtSep.size() < 2) {continue;}
-
-		TXString name = txtSep[0];
-		TXString uuid = txtSep[1];
-
-		name = name.Mid(name.Find('=') + 1);
-		uuid = uuid.Mid(uuid.Find('=') + 1);
+		TXString name (length1+1, *length1);
+		TXString uuid (length2+1, *length2);
 
 		SceneData::GdtfConverter::ConvertUUID(uuid, localServ.StationUUID);
 		strcpy(localServ.StationName, name.GetCharPtr());
