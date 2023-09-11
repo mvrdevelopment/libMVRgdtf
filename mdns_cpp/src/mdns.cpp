@@ -24,54 +24,66 @@ namespace mdns_cpp {
 
 static mdns_record_txt_t txtbuffer[128];
 
-void HandleQuerySRV(QueryResList* queryRes, std::string service_nam, std::string canonical_hostname, uint16_t port) {
-    if (queryRes == nullptr) {
-        return;
-    }
+void HandleQuerySRV(QueryResList *queryRes, std::string service_name, std::string canonical_hostname, uint16_t port, std::string fromAddr)
+{
+  if (queryRes == nullptr)
+  {
+    return;
+  }
 
-    for (size_t i = 0; i < queryRes->size(); i++) {
-        if ((*queryRes)[i].canonical_hostname == canonical_hostname) {
-            return; // Already exists
-        }
-    }
-
-    Query_result qr(service_nam, canonical_hostname);
-    qr.port = port;
-
-    queryRes->push_back(qr);
-}
-
-void SetQueryResultIP(QueryResList* queryRes, std::string canonical_hostname, std::string ip, bool isIPv6) {  
-    if (queryRes == nullptr) {
-        return;
-    }
-
-    for (size_t i = 0; i < queryRes->size(); i++) {
-        if ((*queryRes)[i].canonical_hostname == canonical_hostname) {
-            if (isIPv6) {
-                (*queryRes)[i].ipV6_adress = ip;
-            }
-            else {
-                (*queryRes)[i].ipV4_adress = ip;
-            }
-            break;
-        }
-    }
-}
-
-void SetQueryResultTXT(QueryResList* queryRes, std::string canonical_hostname, std::string txt) { 
-    if (queryRes == nullptr) {
-        return;
-    }
-
-    for (size_t i = 0; i < queryRes->size(); i++)
+  for (auto &it : *queryRes)
+  {
+    if (it.service_name == service_name && it.mdnsAddress == fromAddr)
     {
-        if ((*queryRes)[i].canonical_hostname == canonical_hostname)
-        {
-            (*queryRes)[i].txt = txt;
+      return;
+    }
+  }
 
-            break;
+  queryRes->emplace_back(service_name, canonical_hostname, fromAddr, port);
+}
+
+void SetQueryResultIP(QueryResList *queryRes, std::string canonical_hostname, std::string ip, bool isIPv6, std::string fromAddr)
+{
+    if (queryRes == nullptr)
+    {
+      return;
+    }
+
+    for (auto &it : *queryRes)
+    {
+      if (it.canonical_hostname == canonical_hostname && it.mdnsAddress == fromAddr)
+      {
+        if (isIPv6)
+        {
+          it.ipV6_adress = ip;
         }
+        else
+        {
+          it.ipV4_adress = ip;
+        }
+        break;
+      }
+    }
+}
+
+void SetQueryResultTXT(QueryResList* queryRes, std::string canonical_hostname, std::string txt, std::string fromAddr) { 
+    if (queryRes == nullptr) {
+        return;
+    }
+
+    for (auto &it : *queryRes)
+    {
+      // hostname is longer for txt record, so only check start
+      if (
+        (
+          canonical_hostname.starts_with(it.canonical_hostname) ||
+          canonical_hostname.starts_with(it.service_name)
+        )
+        && it.mdnsAddress == fromAddr)
+      {
+        it.txt = txt;
+        break;
+      }
     }
 }
 
@@ -330,7 +342,7 @@ static int query_callback(int sock, const struct sockaddr *from, size_t addrlen,
     snprintf(str_buffer, str_capacity, "%s : %s %.*s SRV %.*s priority %d weight %d port %d\n", fromaddrstr.data(),
              entrytype, MDNS_STRING_FORMAT(entrystr), MDNS_STRING_FORMAT(srv.name), srv.priority, srv.weight, srv.port);
     
-    HandleQuerySRV( queryRes,MDNS_STRING_FORMAT_STD(entrystr), MDNS_STRING_FORMAT_STD(srv.name), srv.port);
+    HandleQuerySRV( queryRes,MDNS_STRING_FORMAT_STD(entrystr), MDNS_STRING_FORMAT_STD(srv.name), srv.port, fromaddrstr);
 
   } else if (rtype == MDNS_RECORDTYPE_A) {
     struct sockaddr_in addr;
@@ -339,7 +351,7 @@ static int query_callback(int sock, const struct sockaddr *from, size_t addrlen,
     snprintf(str_buffer, str_capacity, "%s : %s %.*s A %s\n", fromaddrstr.data(), entrytype,
              MDNS_STRING_FORMAT(entrystr), addrstr.data());
     
-    SetQueryResultIP( queryRes, MDNS_STRING_FORMAT_STD(entrystr), addrstr, false);
+    SetQueryResultIP( queryRes, MDNS_STRING_FORMAT_STD(entrystr), addrstr, false, fromaddrstr);
 
   } else if (rtype == MDNS_RECORDTYPE_AAAA) {
     struct sockaddr_in6 addr;
@@ -348,22 +360,10 @@ static int query_callback(int sock, const struct sockaddr *from, size_t addrlen,
     snprintf(str_buffer, str_capacity, "%s : %s %.*s AAAA %s\n", fromaddrstr.data(), entrytype,
              MDNS_STRING_FORMAT(entrystr), addrstr.data());
     
-    SetQueryResultIP( queryRes, MDNS_STRING_FORMAT_STD(entrystr), addrstr, true);
+    SetQueryResultIP( queryRes, MDNS_STRING_FORMAT_STD(entrystr), addrstr, true, fromaddrstr);
   } else if (rtype == MDNS_RECORDTYPE_TXT) {
-    size_t parsed = mdns_record_parse_txt(data, size, record_offset, record_length, txtbuffer,
-                                          sizeof(txtbuffer) / sizeof(mdns_record_txt_t));
-    for (size_t itxt = 0; itxt < parsed; ++itxt) {
-      if (txtbuffer[itxt].value.length) {
-        snprintf(str_buffer, str_capacity, "%s : %s %.*s TXT %.*s = %.*s\n", fromaddrstr.data(), entrytype,
-                 MDNS_STRING_FORMAT(entrystr), MDNS_STRING_FORMAT(txtbuffer[itxt].key),
-                 MDNS_STRING_FORMAT(txtbuffer[itxt].value));
-      } else {
-        snprintf(str_buffer, str_capacity, "%s : %s %.*s TXT %.*s\n", fromaddrstr.data(), entrytype,
-                 MDNS_STRING_FORMAT(entrystr), MDNS_STRING_FORMAT(txtbuffer[itxt].key));
-      }
-
-      SetQueryResultTXT( queryRes, MDNS_STRING_FORMAT_STD(entrystr), str_buffer);
-    }
+      std::string txtString((const char*)data + record_offset, record_length);
+      SetQueryResultTXT( queryRes, MDNS_STRING_FORMAT_STD(entrystr), txtString, fromaddrstr);
   } else {
     snprintf(str_buffer, str_capacity, "%s : %s %.*s type %u rclass 0x%x ttl %u length %d\n", fromaddrstr.data(),
              entrytype, MDNS_STRING_FORMAT(entrystr), rtype, rclass, ttl, (int)record_length);
@@ -408,7 +408,7 @@ int service_callback(int sock, const struct sockaddr *from, size_t addrlen, mdns
       MDNS_LOG << "  --> answer " << service_record->hostname << "." << service_record->service << " port "
                << service_record->port << " (" << (unicast ? "unicast" : "multicast") << ")\n";
       if (!unicast) addrlen = 0;
-      char txt_record[] = "asdf=1";
+      //char txt_record[] = "asdf=1";
       mdns_query_answer(sock, from, addrlen, sendbuffer, sizeof(sendbuffer), query_id, service_record->service,
                         service_length, service_record->hostname, strlen(service_record->hostname),
                         service_record->address_ipv4, service_record->address_ipv6, (uint16_t)service_record->port,
@@ -463,9 +463,21 @@ bool mDNS::isServiceRunning() { return running_; }
 void mDNS::setServiceHostname(const std::string &hostname) { hostname_ = hostname; }
 
 void mDNS::setServicePort(std::uint16_t port) { port_ = port; }
+std::uint16_t mDNS::getServicePort() { return port_; }
 
+void mDNS::setServiceIP(std::uint32_t ip) { service_address_ipv4_ = ip; has_ipv4_ = true; }
+std::uint32_t mDNS::getServiceIP() { return service_address_ipv4_; }
 
-void mDNS::setServiceIP(std::uint32_t port) { service_address_ipv4_ = port; has_ipv4_ = true; }
+std::string mDNS::getServiceIPPort()
+{
+  	char buffer[64];
+		sockaddr_in i;
+		i.sin_port = 0;
+		i.sin_addr.s_addr = this->getServiceIP();
+    i.sin_family = 2;
+		return mdns_cpp::ipv4AddressToString(buffer, sizeof(buffer), &i, sizeof(i)) + ':' + std::to_string(this->getServicePort());
+}
+
 
 void mDNS::setServiceName(const std::string &name) { name_ = name; }
 
@@ -552,7 +564,6 @@ QueryResList mDNS::executeQuery2(const std::string &service) {
   size_t capacity = 2048;
   void *buffer = malloc(capacity);
   void *user_data = &queryRes;
-  size_t records;
 
   MDNS_LOG << "Sending mDNS query: " << service << "\n";
   for (int isock = 0; isock < num_sockets; ++isock) {
@@ -565,7 +576,7 @@ QueryResList mDNS::executeQuery2(const std::string &service) {
 
   // This is a simple implementation that loops for 5 seconds or as long as we
   // get replies
-  int res{};
+  int res = 0;
   MDNS_LOG << "Reading mDNS query replies\n";
   do {
     struct timeval timeout;
@@ -580,12 +591,11 @@ QueryResList mDNS::executeQuery2(const std::string &service) {
       FD_SET(sockets[isock], &readfs);
     }
 
-    records = 0;
     res = select(nfds, &readfs, 0, 0, &timeout);
     if (res > 0) {
       for (int isock = 0; isock < num_sockets; ++isock) {
         if (FD_ISSET(sockets[isock], &readfs)) {
-          records += mdns_query_recv(sockets[isock], buffer, capacity, query_callback, user_data, query_id[isock]);
+          mdns_query_recv(sockets[isock], buffer, capacity, query_callback, user_data, query_id[isock]);
         }
         FD_SET(sockets[isock], &readfs);
       }
@@ -617,7 +627,6 @@ void mDNS::executeQuery(const std::string &service) {
   size_t capacity = 2048;
   void *buffer = malloc(capacity);
   void *user_data = 0;
-  size_t records;
 
   MDNS_LOG << "Sending mDNS query: " << service << "\n";
   for (int isock = 0; isock < num_sockets; ++isock) {
@@ -645,12 +654,11 @@ void mDNS::executeQuery(const std::string &service) {
       FD_SET(sockets[isock], &readfs);
     }
 
-    records = 0;
     res = select(nfds, &readfs, 0, 0, &timeout);
     if (res > 0) {
       for (int isock = 0; isock < num_sockets; ++isock) {
         if (FD_ISSET(sockets[isock], &readfs)) {
-          records += mdns_query_recv(sockets[isock], buffer, capacity, query_callback, user_data, query_id[isock]);
+          mdns_query_recv(sockets[isock], buffer, capacity, query_callback, user_data, query_id[isock]);
         }
         FD_SET(sockets[isock], &readfs);
       }
@@ -685,7 +693,6 @@ void mDNS::executeDiscovery() {
   size_t capacity = 2048;
   void *buffer = malloc(capacity);
   void *user_data = 0;
-  size_t records;
 
   // This is a simple implementation that loops for 5 seconds or as long as we
   // get replies
@@ -704,12 +711,11 @@ void mDNS::executeDiscovery() {
       FD_SET(sockets[isock], &readfs);
     }
 
-    records = 0;
     res = select(nfds, &readfs, 0, 0, &timeout);
     if (res > 0) {
       for (int isock = 0; isock < num_sockets; ++isock) {
         if (FD_ISSET(sockets[isock], &readfs)) {
-          records += mdns_discovery_recv(sockets[isock], buffer, capacity, query_callback, user_data);
+          mdns_discovery_recv(sockets[isock], buffer, capacity, query_callback, user_data);
         }
       }
     }

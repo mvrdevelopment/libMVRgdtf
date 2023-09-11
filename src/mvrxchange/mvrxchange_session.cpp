@@ -19,80 +19,37 @@ MVRxchangeSession::MVRxchangeSession(tcp::socket socket, CMVRxchangeServiceImpl*
 
 void MVRxchangeSession::Start()
 {
-    DoReadHeader();
+    DoRead();
 }
 
-void MVRxchangeSession::Deliver(const MVRxchangePacket& msg)
-{
-    bool write_in_progress = !fwrite_msgs.empty();
-    fwrite_msgs.push_back(msg);
-    if (!write_in_progress)
-    {
-        DoWrite();
-    }
-}
-
-void MVRxchangeSession::DoReadHeader()
+void MVRxchangeSession::DoRead()
 {
     auto self(shared_from_this());
-    boost::asio::async_read(fSocket,boost::asio::buffer(freadmsg.GetData(), MVRxchangePacket::total_header_length),
+
+    boost::asio::async_read(fSocket, boost::asio::buffer(freadmsg.GetData(), MVRxchangePacket::total_header_length),
     [this, self](boost::system::error_code ec, std::size_t length)
     {
         if (!ec && freadmsg.DecodeHeader())
         {
-            DoReadBody();
-
-            IMVRxchangeService::IMVRxchangeMessage out;
-            freadmsg.ToExternalMessage(out);
-
-            IMVRxchangeService::IMVRxchangeMessage in = fImpl->TCP_OnIncommingMessage(out);
-
-            MVRxchangePacket in_msg;
-            in_msg.FromExternalMessage(in);
-            Deliver(in_msg);
-
-        }
-        else
-        {
-            fServer->CloseSession(self);
-        }
-    });
-}
-
-void MVRxchangeSession::DoReadBody()
-{
-    auto self(shared_from_this());
-    boost::asio::async_read(fSocket, boost::asio::buffer(freadmsg.GetBody(), freadmsg.GetBodyLength()),
-    [this, self](boost::system::error_code ec, std::size_t length)
-    {
-        if (!ec)
-        {
-            DoReadHeader();
-        }
-        else
-        {
-            fServer->CloseSession(self);
-        }
-    });
-}
-
-void MVRxchangeSession::DoWrite()
-{
-    auto self(shared_from_this());
-
-    MVRxchangePacket& msg = fwrite_msgs.front();
-
-
-    boost::asio::async_write(fSocket, boost::asio::buffer(msg.GetData(), msg.GetLength()),
-    [this, self](boost::system::error_code ec, std::size_t /*length*/)
-    {
-        if (!ec)
-        {
-            fwrite_msgs.pop_front();
-            if ( ! fwrite_msgs.empty())
+            boost::asio::async_read(fSocket, boost::asio::buffer(freadmsg.GetBody(), freadmsg.GetBodyLength()),
+            [this, self](boost::system::error_code ec, std::size_t length)
             {
-                DoWrite();
-            }
+                if (!ec)
+                {
+                    IMVRxchangeService::IMVRxchangeMessage out;
+                    freadmsg.ToExternalMessage(out);
+
+                    IMVRxchangeService::IMVRxchangeMessage in = fImpl->TCP_OnIncommingMessage(out);
+                    
+                    MVRxchangePacket in_msg;
+                    in_msg.FromExternalMessage(in);
+                    Deliver(in_msg);
+                }
+                else
+                {
+                    fServer->CloseSession(self);
+                }
+            });
         }
         else
         {
@@ -100,3 +57,18 @@ void MVRxchangeSession::DoWrite()
         }
     });
 }
+
+
+void MVRxchangeSession::Deliver(const MVRxchangePacket& msg)
+{
+    auto self(shared_from_this());
+
+    // msg is passed, so its lifetime is extended until the operation is completed
+    boost::asio::async_write(fSocket, boost::asio::buffer(msg.GetData(), msg.GetLength()),
+    [this, self, msg](boost::system::error_code ec, std::size_t /*length*/)
+    {
+        // Reply sent, close connection
+        fServer->CloseSession(self);
+    });
+}
+

@@ -1862,6 +1862,8 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 			MVR_LEAVE_RET,
 			MVR_COMMIT_RET,
 			MVR_REQUEST_RET,
+
+			MVR_NEW_SESSION_HOST
 		};
 
 		struct MVR_COMMIT_MESSAGE
@@ -1872,7 +1874,7 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 			uint64_t 						FileSize;
 			MvrUUID							FileUUID;
 			MvrUUID							StationUUID;
-			std::vector<MvrUUID>			ForStations;
+			std::vector<MvrUUID>			ForStationsUUID;
 		};
 
 		struct MVR_JOIN_MESSAGE
@@ -1890,6 +1892,11 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 			MvrUUID							FileUUID;
 			std::vector<MvrUUID>			FromStationUUID;
 		};
+
+		struct MVR_LEAVE_MESSAGE
+		{
+			MvrUUID							FromStationUUID;
+		};
 		
 
 		struct IMVRxchangeMessage
@@ -1898,17 +1905,20 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 			{
 				Type = MVRxchangeMessageType::MVR_UNDEFINED;
 				RetIsOK = true;
-				BufferToFile = nullptr;
 				BufferToFileLength = 0;
 			}
 			MVRxchangeMessageType 	Type;
 			MVR_JOIN_MESSAGE 		JOIN;
 			MVR_COMMIT_MESSAGE 		COMMIT;
 			MVR_REQUEST_MESSAGE 	REQUEST;
+			MVR_LEAVE_MESSAGE 		LEAVE;
 
+			// Sending files is possible with both, a buffer (and buffer length) or a file path
+			// If both are set, buffer is used first
 			MVRxchangeString 				PathToFile;
-			char*							BufferToFile;
+			std::shared_ptr<char>			BufferToFile;
 			size_t							BufferToFileLength;
+			
 			bool 							RetIsOK;
 			MVRxchangeString 				RetError;
 		};

@@ -405,6 +405,9 @@ public:
 	TXString Left(size_t len) const;
 	TXString Right(size_t len) const;
 
+	// Splits string on every occasion of ch, result does not contain ch
+	std::vector<TXString> Split(char ch) const;
+	std::vector<TXString> Split(TXString ch) const;
 
 	//***********************************************************************************
 	// Conversion to and from numerics

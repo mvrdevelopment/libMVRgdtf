@@ -10,9 +10,15 @@ option(MDNS_CPP_BUILD_EXAMPLE "Build example executables" ON)
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
 
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 20)
   set(CMAKE_CXX_EXTENSIONS OFF)
+endif()
+
+if(APPLE)
+  set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
 endif()
 
 # ##############################################################################

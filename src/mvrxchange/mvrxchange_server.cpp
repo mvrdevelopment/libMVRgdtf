@@ -38,18 +38,18 @@ void MVRxchangeServer::DoAccept()
         DoAccept();
     });
 
-    
-    
 }
 
 
 void MVRxchangeServer::AddSession(std::shared_ptr<MVRxchangeSession> p) 
 {
+    std::unique_lock<std::mutex> mSession;
     fSession.insert(p);
 }
 
 void MVRxchangeServer::CloseSession(std::shared_ptr<MVRxchangeSession> p) 
 {
+    std::unique_lock<std::mutex> mSession;
     fSession.erase(p);
 }
 
@@ -61,9 +61,4 @@ uint16_t MVRxchangeServer::GetPort() const
 uint32_t MVRxchangeServer::GetIP() const
 {
     return fIp;
-}
-
-void MVRxchangeServer::Deliver(const MVRxchangePacket& msg)
-{
-    // XXX TODO
 }

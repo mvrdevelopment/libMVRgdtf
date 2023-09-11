@@ -35,18 +35,20 @@ bool MVRxchangeClient::ReadMessage(std::chrono::steady_clock::duration timeout)
     // Run the operation until it completes, or until the timeout.
     Run(timeout);
     
-    fMsg_ret.DecodeHeader();
-
-    boost::asio::async_read(fSocket,
-    boost::asio::buffer(fMsg_ret.GetBody(), fMsg_ret.GetBodyLength()),
-    [&](const boost::system::error_code& result_error,
-        std::size_t result_n)
+    if(!error)
     {
-        error = result_error;
-        n = result_n;
-    });
+        fMsg_ret.DecodeHeader();
 
-    Run(timeout);
+        boost::asio::async_read(fSocket,
+        boost::asio::buffer(fMsg_ret.GetBody(), fMsg_ret.GetBodyLength()),
+        [&](const boost::system::error_code& result_error,
+            std::size_t result_n)
+        {
+            error = result_error;
+            n = result_n;
+        });
+        Run(timeout);
+    }
 
     if(! error)
     {
@@ -84,7 +86,6 @@ bool MVRxchangeClient::WriteMessage(std::chrono::steady_clock::duration timeout)
         ok = ReadMessage(timeout);   
     }   
 
-    // Determine whether the read completed successfully.
     return ok;
   }
 
@@ -130,10 +131,9 @@ bool MVRxchangeClient::Connect(const std::string& host, const std::string& servi
             error = result_error;
         });
 
+
     // Run the operation until it completes, or until the timeout.
     Run(timeout);
-
-    // Determine whether a connection was successfully established.
 
     return ! error;
 }

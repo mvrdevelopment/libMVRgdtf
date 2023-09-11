@@ -13,20 +13,23 @@ struct sockaddr;
 namespace mdns_cpp {
 
 struct Query_result {
-  Query_result(std::string service_nam, std::string canonical_hostname) {	  
-	  this->hostNam = service_nam;
-      this->canonical_hostname = canonical_hostname;
+  Query_result(std::string& service_name, std::string canonical_hostname, std::string& mdnsAddress, uint16_t port) {	  
+	  this->service_name = service_name;
+    this->mdnsAddress = mdnsAddress;
+    this->port = port;
+    this->canonical_hostname = canonical_hostname;
   } 
-  
-  std::string   hostNam;
+
+  std::string   service_name;
   std::string   canonical_hostname;
+  std::string   mdnsAddress;  // normally x.x.x.x:5353
   std::string   txt;
-  uint16_t		port;
+  uint16_t		  port;
   std::string   ipV4_adress;
   std::string   ipV6_adress;  
 };
 
-using  QueryResList = std::vector<Query_result>;
+using QueryResList = std::vector<Query_result>;
 
 class mDNS { 
  public:
@@ -37,8 +40,15 @@ class mDNS {
   bool isServiceRunning();
 
   void setServiceHostname(const std::string &hostname);
-  void setServicePort(std::uint16_t port);
-  void setServiceIP(std::uint32_t port);
+
+  void          setServicePort(std::uint16_t port);
+  std::uint16_t getServicePort();
+
+  void          setServiceIP(std::uint32_t ip);
+  std::uint32_t getServiceIP();
+
+  std::string   getServiceIPPort(); // IP:Port
+
   void setServiceName(const std::string &name);
   void setServiceTxtRecord(const std::string &text_record);
   std::vector<std::pair<std::string, uint32_t>> getInterfaces();
