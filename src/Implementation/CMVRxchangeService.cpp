@@ -290,9 +290,9 @@ bool CMVRxchangeServiceImpl::SendMessageToLocalNetworks(const TXString& ip, uint
 	std::string port =str;
 
 	bool ok = false;
-	if(c.Connect(ip.GetStdString(), port, std::chrono::seconds(10)))
+	if(c.Connect(ip.GetStdString(), port, std::chrono::seconds(1)))
 	{
-		ok = c.WriteMessage(std::chrono::seconds(120)); // Write & Read each
+		ok = c.WriteMessage(std::chrono::seconds(10)); // Write & Read each
 	}
 
 	return ok;
