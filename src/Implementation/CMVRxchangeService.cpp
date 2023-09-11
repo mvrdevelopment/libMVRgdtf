@@ -43,9 +43,8 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 
 	std::string txt;
 	txt += txt1;
-	txt += (char)';';
+	txt += (uint8_t)txt1.size();
 	txt += txt2;
-	txt += (char)';';
 
 
 	for(auto& s : fmdns)
