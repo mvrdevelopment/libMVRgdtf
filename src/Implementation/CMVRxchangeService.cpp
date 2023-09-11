@@ -42,8 +42,9 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 	txt2 += SceneData::GdtfConverter::ConvertUUID(VWUUID(fCurrentService.StationUUID.a, fCurrentService.StationUUID.b, fCurrentService.StationUUID.c, fCurrentService.StationUUID.d)).GetStdString();
 
 	std::string txt;
-	txt += txt1;
 	txt += (uint8_t)txt1.size();
+	txt += txt1;
+	txt += (uint8_t)txt2.size();
 	txt += txt2;
 
 
