@@ -76,8 +76,8 @@ void SetQueryResultTXT(QueryResList* queryRes, std::string canonical_hostname, s
       // hostname is longer for txt record, so only check start
       if (
         (
-          canonical_hostname.starts_with(it.canonical_hostname) ||
-          canonical_hostname.starts_with(it.service_name)
+          canonical_hostname.rfind(it.canonical_hostname,0) == 0 ||
+          canonical_hostname.rfind(it.service_name,0) == 0
         )
         && it.mdnsAddress == fromAddr)
       {
