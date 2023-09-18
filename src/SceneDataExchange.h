@@ -1069,7 +1069,7 @@ namespace SceneData
 		void ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xmlFile);
 		void ProcessLayer(const IXMLFileNodePtr& node);
         void ReadChildObjs(const IXMLFileNodePtr & node, SceneDataGroupObjPtr addToContainer);
-		void ProcessGroup(const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
+		SceneDataGroupObjPtr ProcessGroup(const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
 		
 		
 		

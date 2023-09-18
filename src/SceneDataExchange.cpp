@@ -3799,8 +3799,6 @@ void SceneDataExchange::ReadChildObjs(const IXMLFileNodePtr& node, SceneDataGrou
 				TXString	groupUuid;
 				if (VCOM_SUCCEEDED((objNode->GetNodeAttributeValue(XML_Val_GuidAttrName, groupUuid))))
 				{
-					// ---------------------------------------------------------------------------
-					// Do stuff with Obj
 					SceneDataObjWithMatrixPtr obj = nullptr;
 					
 					if		( nodeName == XML_Val_FixtureNodeName)				{ obj = ReadFixture(		SceneDataGUID(groupUuid),objNode, addToContainer); }
@@ -3810,7 +3808,7 @@ void SceneDataExchange::ReadChildObjs(const IXMLFileNodePtr& node, SceneDataGrou
 					else if	( nodeName == XML_Val_VideoScreenObjectNodeName)	{ obj = ReadVideoScreen(	SceneDataGUID(groupUuid),objNode, addToContainer); }
 					else if	( nodeName == XML_Val_SupportObjectNodeName)		{ obj = ReadSupport(		SceneDataGUID(groupUuid),objNode, addToContainer); }
 					else if	( nodeName == XML_Val_ProjectorObjectNodeName)		{ obj = ReadProjector(		SceneDataGUID(groupUuid),objNode, addToContainer); }
-					else if ( nodeName == XML_Val_GroupNodeName)				{ ProcessGroup(objNode, addToContainer); }
+					else if ( nodeName == XML_Val_GroupNodeName)				{ obj = ProcessGroup(objNode, addToContainer); }
 					     
                     auto grp = dynamic_cast<SceneDataGroupObjPtr>(obj);
                     if (grp)
@@ -3819,7 +3817,7 @@ void SceneDataExchange::ReadChildObjs(const IXMLFileNodePtr& node, SceneDataGrou
                     }
 					// ---------------------------------------------------------------------------
 					// Add the object to list if it is a scene object
-					if(obj)
+					if(obj && (nodeName != XML_Val_GroupNodeName))
 					{
 						// Check if the uuid isn't duplicated
 						SceneDataGUID guid = SceneDataGUID(groupUuid);
@@ -3847,14 +3845,18 @@ void SceneDataExchange::ReadChildObjs(const IXMLFileNodePtr& node, SceneDataGrou
 	}
 }
 
-void SceneDataExchange::ProcessGroup(const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer)
+SceneDataGroupObjPtr SceneDataExchange::ProcessGroup(const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer)
 {	
+	SceneDataGroupObjPtr group = nullptr;
+
 	TXString			groupUuid = "";
 	if (VCOM_SUCCEEDED(node->GetNodeAttributeValue(XML_Val_GuidAttrName, groupUuid)))
 	{
-		SceneDataGroupObjPtr group = ReadGroupObject(SceneDataGUID(groupUuid),node, addToContainer);
+		group = ReadGroupObject(SceneDataGUID(groupUuid),node, addToContainer);
 		addToContainer = group;
 	}    
+
+	return group;
 }
 
 void SceneDataExchange::AddFileToZip(const IFileIdentifierPtr& file, ERessourceType resType)

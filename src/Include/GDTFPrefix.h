@@ -188,6 +188,7 @@ namespace VectorworksMVR
             eFixtureDMXChannelUnresolvedChannelFunction = 69, //A DMX channel has an unresolved initial function
             eFixtureLogicalChannelNoUniqueGeometryAttribute = 70, //Two logical channels have the same attribute/geometry combination
             eValueError_ColorArrayWrongFormat               = 71,
+            eFixtureChannelFunctionModeMasterOverlap    = 72, //If 2 channel functions use the same DMX range, Mode masters should be defined
 
         };
 		
