@@ -59,6 +59,7 @@ namespace SceneData
 		eConnectionObject 			= -10,
 		eAlignment					= -11,
 		eOverwrite					= -12,
+		eSceneDataMVRSpecObj		= -13
 	};
 	
 	enum class ESearchUuidIn
@@ -536,9 +537,6 @@ namespace SceneData
 		SceneDataClassObjPtr		fClass;
 		TXString					fUnresolvedClass;
 
-		TXString					fGdtfFile;
-		TXString					fGdtfDmxMode;
-		
 		// Geometry stuff
 		SceneDataGeometryObjArray	fGeometries;
 
@@ -559,12 +557,6 @@ namespace SceneData
 		SceneDataGroupObj*			GetContainer() const;
 		SceneDataObjWithMatrix*		GetNextObject() const;
 
-		const TXString&				GetGdtfFile() const;
-		void						SetGDTFFile(const TXString& path);
-		
-		const TXString&				GetGdtfDmxMode() const;
-		void						SetGdtfDmxMode(const TXString& path);
-		
 		void								AddGeometryObj(SceneDataGeoInstanceObjPtr object);
 		const SceneDataGeometryObjArray&	GetGeometryArr() const;
 
@@ -630,6 +622,30 @@ namespace SceneData
 		
 	};
 	
+
+    // ----------------------------------------------------------------------------------------------------------------------------------
+	// SceneDataMVRSpecObj
+	class SceneDataMVRSpecObj : public SceneDataGroupObj
+	{
+	public:
+		SceneDataMVRSpecObj(const SceneDataGUID& guid);
+		~SceneDataMVRSpecObj();
+		virtual ESceneDataObjectType	GetObjectType();
+
+		
+		const TXString&				GetGdtfFile() const;
+		void						SetGDTFFile(const TXString& path);
+		
+		const TXString&				GetGdtfDmxMode() const;
+		void						SetGdtfDmxMode(const TXString& path);
+		
+	protected:
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);
+	private:
+		TXString					fGdtfFile;
+		TXString					fGdtfDmxMode;
+	};
+
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataGeometryObj
 	class SceneDataGeometryObj : public SceneDataGeoInstanceObj
@@ -714,7 +730,7 @@ namespace SceneData
 	typedef std::vector<SceneDataDmxAdress>	SceneDataAdressArray;
 	
 	
-	class SceneDataFixtureObj : public SceneDataGroupObj
+	class SceneDataFixtureObj : public SceneDataMVRSpecObj
 	{
 		
 	public:
@@ -792,7 +808,7 @@ namespace SceneData
 	
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataSceneryObj
-	class SceneDataSceneryObj : public SceneDataGroupObj
+	class SceneDataSceneryObj : public SceneDataMVRSpecObj
 	{
 		
 	public:
@@ -822,7 +838,7 @@ namespace SceneData
 	typedef SceneDataTrussObj* SceneDataTrussObjPtr;
 	
 	
-	class SceneDataSupportObj : public SceneDataGroupObj
+	class SceneDataSupportObj : public SceneDataMVRSpecObj
 	{
 		
 	public:
@@ -839,7 +855,7 @@ namespace SceneData
 
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataVideoScreenObj
-	class SceneDataVideoScreenObj : public SceneDataGroupObj
+	class SceneDataVideoScreenObj : public SceneDataMVRSpecObj
 	{
 		
 	public:
@@ -864,7 +880,7 @@ namespace SceneData
 
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataProjectorObj
-	class SceneDataProjectorObj : public SceneDataGroupObj
+	class SceneDataProjectorObj : public SceneDataMVRSpecObj
 	{
 		
 	public:

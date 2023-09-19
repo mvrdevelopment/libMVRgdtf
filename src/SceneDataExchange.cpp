@@ -73,6 +73,67 @@ bool SceneDataGUID::operator ==(const SceneDataGUID& a)
 
 
 // ----------------------------------------------------------------------------------------------------------------------------------
+// SceneDataMVRSpecObj
+
+SceneDataMVRSpecObj::SceneDataMVRSpecObj(const SceneDataGUID& guid):
+SceneDataGroupObj(guid)
+{
+
+}
+
+SceneDataMVRSpecObj::~SceneDataMVRSpecObj()
+{
+
+}
+
+void SceneDataMVRSpecObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
+{
+	SceneDataGroupObj::OnPrintToFile(pNode, exchange);
+
+	//--------------------------------------------------------------------------------------------
+	// Print the GDTF File
+	IXMLFileNodePtr pGDTFNode;
+	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_Val_FixtureGDTFSpec, & pGDTFNode)))
+	{
+		pGDTFNode->SetNodeValue(GetGdtfFile());
+		exchange->AddNeededGdtfFile(GetGdtfFile());
+	}
+	
+	//--------------------------------------------------------------------------------------------
+	// Print the DmxMode
+	IXMLFileNodePtr pDmxModeNode;
+	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_Val_FixtureDMXMode, & pDmxModeNode)))
+	{
+		pDmxModeNode->SetNodeValue(GetGdtfDmxMode());
+	}
+}
+
+ESceneDataObjectType SceneDataMVRSpecObj::GetObjectType(){
+	return ESceneDataObjectType::eSceneDataMVRSpecObj;
+}
+
+
+const TXString& SceneDataMVRSpecObj::GetGdtfFile() const
+{
+	return fGdtfFile;
+}
+
+void SceneDataMVRSpecObj::SetGDTFFile(const TXString& path)
+{
+	fGdtfFile = path;
+}
+
+const TXString& SceneDataMVRSpecObj::GetGdtfDmxMode() const
+{
+	return fGdtfDmxMode;
+}
+
+void SceneDataMVRSpecObj::SetGdtfDmxMode(const TXString& path)
+{
+	fGdtfDmxMode = path;
+}
+
+// ----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataGUID
 SceneDataGeometryObj::SceneDataGeometryObj() : SceneDataGeoInstanceObj(SceneDataGUID(eNoGuid, ""), false /* Is No Symbol */)
 {
@@ -1391,26 +1452,6 @@ SceneDataObjWithMatrixPtr SceneDataObjWithMatrix::GetNextObject() const
 	return fNextObj;
 }
 
-const TXString& SceneDataObjWithMatrix::GetGdtfFile() const
-{
-	return fGdtfFile;
-}
-
-void SceneDataObjWithMatrix::SetGDTFFile(const TXString& path)
-{
-	fGdtfFile = path;
-}
-
-const TXString& SceneDataObjWithMatrix::GetGdtfDmxMode() const
-{
-	return fGdtfDmxMode;
-}
-
-void SceneDataObjWithMatrix::SetGdtfDmxMode(const TXString& path)
-{
-	fGdtfDmxMode = path;
-}
-
 void SceneDataObjWithMatrix::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
 {
 	SceneDataObj::OnPrintToFile(pNode, exchange);
@@ -1432,23 +1473,6 @@ void SceneDataObjWithMatrix::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExcha
 		}
 	}
 
-	//--------------------------------------------------------------------------------------------
-	// Print the GDTF File
-	IXMLFileNodePtr pGDTFNode;
-	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_Val_FixtureGDTFSpec, & pGDTFNode)))
-	{
-		pGDTFNode->SetNodeValue(fGdtfFile);
-		exchange->AddNeededGdtfFile(fGdtfFile);
-	}
-	
-	//--------------------------------------------------------------------------------------------
-	// Print the DmxMode
-	IXMLFileNodePtr pDmxModeNode;
-	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_Val_FixtureDMXMode, & pDmxModeNode)))
-	{
-		pDmxModeNode->SetNodeValue(fGdtfDmxMode);
-	}
-	
 	// ------------------------------------------------------------------------------------------------------------
 	// Print the geometry
 	if (fGeometries.size() > 0)
@@ -1787,7 +1811,7 @@ size_t SceneDataDmxAdress::GetUniverse() const
 	return universe;
 }
 
-SceneDataFixtureObj::SceneDataFixtureObj(const SceneDataGUID& guid) : SceneDataGroupObj(guid)
+SceneDataFixtureObj::SceneDataFixtureObj(const SceneDataGUID& guid) : SceneDataMVRSpecObj(guid)
 {
 	fFocusPoint		= nullptr;
 	fPosition		= nullptr;
@@ -2310,7 +2334,7 @@ void SceneDataGroupObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* 
 
 // ----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataGroupObj
-SceneDataSceneryObj::SceneDataSceneryObj(const SceneDataGUID& guid) : SceneDataGroupObj(guid)
+SceneDataSceneryObj::SceneDataSceneryObj(const SceneDataGUID& guid) : SceneDataMVRSpecObj(guid)
 {
 	
 }
@@ -2374,7 +2398,7 @@ ESceneDataObjectType SceneDataTrussObj::GetObjectType()
 	return ESceneDataObjectType::eTruss;
 }
 
-SceneDataSupportObj::SceneDataSupportObj(const SceneDataGUID& guid) : SceneDataGroupObj(guid)
+SceneDataSupportObj::SceneDataSupportObj(const SceneDataGUID& guid) : SceneDataMVRSpecObj(guid)
 {
 	
 }
@@ -2397,7 +2421,7 @@ ESceneDataObjectType SceneDataSupportObj::GetObjectType()
 
 // ----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataVideoScreenObj
-SceneDataVideoScreenObj::SceneDataVideoScreenObj(const SceneDataGUID& guid) : SceneDataGroupObj(guid)
+SceneDataVideoScreenObj::SceneDataVideoScreenObj(const SceneDataGUID& guid) : SceneDataMVRSpecObj(guid)
 {
 	fSource = nullptr;
 }
@@ -2474,7 +2498,7 @@ void SceneDataVideoScreenObj::OnReadFromNode(const IXMLFileNodePtr& pNode, Scene
 
 // ----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataProjectorObj
-SceneDataProjectorObj::SceneDataProjectorObj(const SceneDataGUID& guid) : SceneDataGroupObj(guid)
+SceneDataProjectorObj::SceneDataProjectorObj(const SceneDataGUID& guid) : SceneDataMVRSpecObj(guid)
 {
 	fSource = nullptr;
 }
