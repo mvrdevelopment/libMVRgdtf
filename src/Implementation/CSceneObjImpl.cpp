@@ -329,7 +329,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetGdtfFixture(IGdtfFix
 	if( ! fPtr) return kVCOMError_Failed;
 	
 	// Check the type is right
-	ASSERTN(kEveryone,fType == ESceneObjType::Fixture || fType == ESceneObjType::SceneObj ||  fType == ESceneObjType::Support || fType == ESceneObjType::VideoScreen || fType == ESceneObjType::Projector);
+	ASSERTN(kEveryone,fType != ESceneObjType::Layer && fType != ESceneObjType::Group);
 	if( fType == ESceneObjType::Layer || fType == ESceneObjType::Group) return kVCOMError_NoValidContainerObj;	
 	SceneData::SceneDataMVRSpecObjPtr gdtfSpecObj = static_cast<SceneData::SceneDataMVRSpecObjPtr>(fPtr);
 	
