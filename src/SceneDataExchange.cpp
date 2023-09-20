@@ -110,7 +110,7 @@ void SceneDataMVRSpecObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange
 
 void SceneDataMVRSpecObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
 {
-	SceneDataGroupObj::OnPrintToFile(pNode, exchange);
+	SceneDataGroupObj::OnReadFromNode(pNode, exchange);
 
 	//--------------------------------------------------------------------------------------------
 	// Read the GDTF File name
@@ -2019,7 +2019,7 @@ void SceneDataFixtureObj::AddMapping(SceneDataGUID mappingDefinitionUuid)
 
 void SceneDataFixtureObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
 {
-	SceneDataGroupObj::OnPrintToFile(pNode, exchange);
+	SceneDataMVRSpecObj::OnPrintToFile(pNode, exchange);
 	
 	//--------------------------------------------------------------------------------------------
 	// Print the Focus
@@ -2148,7 +2148,7 @@ void SceneDataFixtureObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange
 
 void SceneDataFixtureObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
 {
-	SceneDataGroupObj::OnReadFromNode(pNode, exchange);
+	SceneDataMVRSpecObj::OnReadFromNode(pNode, exchange);
 	
 	//--------------------------------------------------------------------------------------------
 	// Read the Focus
@@ -2470,7 +2470,7 @@ ESceneDataObjectType SceneDataVideoScreenObj::GetObjectType()
 void SceneDataVideoScreenObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
 {
 	// Call Parent
-	SceneDataGroupObj::OnPrintToFile(pNode, exchange);
+	SceneDataMVRSpecObj::OnPrintToFile(pNode, exchange);
 
 	IXMLFileNodePtr pSourcesNode;
 	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_Val_VideoScreenObjectSources, &pSourcesNode)))
@@ -2481,7 +2481,7 @@ void SceneDataVideoScreenObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExch
 
 void SceneDataVideoScreenObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
 {
-	SceneDataGroupObj::OnReadFromNode(pNode, exchange);
+	SceneDataMVRSpecObj::OnReadFromNode(pNode, exchange);
 
 	IXMLFileNodePtr pSourcesNode;	
 	pNode->GetChildNode(XML_Val_VideoScreenObjectSources, &pSourcesNode);
@@ -2555,7 +2555,7 @@ ESceneDataObjectType SceneDataProjectorObj::GetObjectType()
 
 void SceneDataProjectorObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
 {
-	SceneDataGroupObj::OnPrintToFile(pNode, exchange);
+	SceneDataMVRSpecObj::OnPrintToFile(pNode, exchange);
 
 	IXMLFileNodePtr pProjectionsNode;
 	if (VCOM_SUCCEEDED(pNode->CreateChildNode(XML_Val_ProjectorObjectProjections, &pProjectionsNode)))
@@ -2576,7 +2576,7 @@ void SceneDataProjectorObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchan
 
 void SceneDataProjectorObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
 {
-	SceneDataGroupObj::OnReadFromNode(pNode, exchange);
+	SceneDataMVRSpecObj::OnReadFromNode(pNode, exchange);
 
 	IXMLFileNodePtr pProjectionsNode;	
 	pNode->GetChildNode(XML_Val_ProjectorObjectProjections, &pProjectionsNode);

@@ -102,7 +102,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetGeometryAt(size_t at
 	
 	
 	ASSERTN(kEveryone, at < count);
-	if (count < at) { return kVCOMError_InvalidArg; }
+	if (count <= at) { return kVCOMError_InvalidArg; }
 	
 	SceneData::SceneDataGeoInstanceObjPtr pScGeoObjInst = fPtr->GetGeometryArr().at(at);
 	
@@ -466,7 +466,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetCustomCommandAt(size
 	
 	
 	ASSERTN(kEveryone, at < count);
-	if (count < at) { return kVCOMError_InvalidArg; }
+	if (count <= at) { return kVCOMError_InvalidArg; }
 	
 	SceneData::SceneDataCustomCommandPtr pScCustomCommand = fPtr->GetCustomCommandArray().at(at);
 	
@@ -575,7 +575,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetAlignmentAt(size_t a
 	
 	
 	ASSERTN(kEveryone, at < count);
-	if (count < at) { return kVCOMError_InvalidArg; }
+	if (count <= at) { return kVCOMError_InvalidArg; }
 	
 	SceneData::SceneDataAlignmentPtr pScAlignment = fPtr->GetAlignmentArray().at(at);
 	
@@ -688,7 +688,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetOverwriteAt(size_t a
 	
 	
 	ASSERTN(kEveryone, at < count);
-	if (count < at) { return kVCOMError_InvalidArg; }
+	if (count <= at) { return kVCOMError_InvalidArg; }
 	
 	SceneData::SceneDataOverwritePtr pScOverwrite = fPtr->GetOverwriteArray().at(at);
 	
@@ -1158,7 +1158,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetMappingAt(size_t at,
 	
 	
 	ASSERTN(kEveryone, at < count);
-	if (count < at) { return kVCOMError_InvalidArg; }
+	if (count <= at) { return kVCOMError_InvalidArg; }
 	
 	SceneData::SceneDataMappingObjPtr pScMapping = fixture->GetMappingsArray().at(at);
 	
@@ -1233,7 +1233,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetConnectionAt(size_t 
 	
 	
 	ASSERTN(kEveryone, at < count);
-	if (count < at) { return kVCOMError_InvalidArg; }
+	if (count <= at) { return kVCOMError_InvalidArg; }
 	
 	SceneData::SceneDataConnectionObjPtr pScConnection = fixture->GetConnectionArr().at(at);
 	
