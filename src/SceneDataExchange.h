@@ -641,10 +641,14 @@ namespace SceneData
 		
 	protected:
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange);
+
 	private:
 		TXString					fGdtfFile;
 		TXString					fGdtfDmxMode;
 	};
+
+	typedef SceneDataMVRSpecObj*					SceneDataMVRSpecObjPtr;
 
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataGeometryObj

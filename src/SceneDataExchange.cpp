@@ -108,6 +108,22 @@ void SceneDataMVRSpecObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange
 	}
 }
 
+void SceneDataMVRSpecObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
+{
+	SceneDataGroupObj::OnPrintToFile(pNode, exchange);
+
+	//--------------------------------------------------------------------------------------------
+	// Read the GDTF File name
+	IXMLFileNodePtr pGDTFNode;
+	if(VCOM_SUCCEEDED(pNode->GetChildNode(XML_Val_FixtureGDTFSpec, & pGDTFNode))) { pGDTFNode->GetNodeValue(fGdtfFile); }
+	
+	//--------------------------------------------------------------------------------------------
+	// Read the GDTF DMX Mode
+	IXMLFileNodePtr pDmxMode;
+	if(VCOM_SUCCEEDED(pNode->GetChildNode(XML_Val_FixtureDMXMode, & pDmxMode)))	{ pDmxMode->GetNodeValue(fGdtfDmxMode); }
+	
+}
+
 ESceneDataObjectType SceneDataMVRSpecObj::GetObjectType(){
 	return ESceneDataObjectType::eSceneDataMVRSpecObj;
 }
@@ -1576,16 +1592,6 @@ void SceneDataObjWithMatrix::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneD
 		fMatrix = VWTransformMatrix();
 	}
 
-	//--------------------------------------------------------------------------------------------
-	// Read the GDTF File name
-	IXMLFileNodePtr pGDTFNode;
-	if(VCOM_SUCCEEDED(pNode->GetChildNode(XML_Val_FixtureGDTFSpec, & pGDTFNode))) { pGDTFNode->GetNodeValue(fGdtfFile); }
-	
-	//--------------------------------------------------------------------------------------------
-	// Read the GDTF DMX Mode
-	IXMLFileNodePtr pDmxMode;
-	if(VCOM_SUCCEEDED(pNode->GetChildNode(XML_Val_FixtureDMXMode, & pDmxMode)))	{ pDmxMode->GetNodeValue(fGdtfDmxMode); }
-	
 	//------------------------------------------------------------------------------------------------------
 	// Get Geometry
 	IXMLFileNodePtr pGeometrisNode;
