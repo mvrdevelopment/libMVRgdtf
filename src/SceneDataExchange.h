@@ -624,12 +624,12 @@ namespace SceneData
 	
 
     // ----------------------------------------------------------------------------------------------------------------------------------
-	// SceneDataMVRSpecObj
-	class SceneDataMVRSpecObj : public SceneDataGroupObj
+	// SceneDataGDTFSpecObj
+	class SceneDataGDTFSpecObj : public SceneDataGroupObj
 	{
 	public:
-		SceneDataMVRSpecObj(const SceneDataGUID& guid);
-		~SceneDataMVRSpecObj();
+		SceneDataGDTFSpecObj(const SceneDataGUID& guid);
+		~SceneDataGDTFSpecObj();
 		virtual ESceneDataObjectType	GetObjectType();
 
 		
@@ -648,7 +648,7 @@ namespace SceneData
 		TXString					fGdtfDmxMode;
 	};
 
-	typedef SceneDataMVRSpecObj*					SceneDataMVRSpecObjPtr;
+	typedef SceneDataGDTFSpecObj*					SceneDataMVRSpecObjPtr;
 
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataGeometryObj
@@ -734,7 +734,7 @@ namespace SceneData
 	typedef std::vector<SceneDataDmxAdress>	SceneDataAdressArray;
 	
 	
-	class SceneDataFixtureObj : public SceneDataMVRSpecObj
+	class SceneDataFixtureObj : public SceneDataGDTFSpecObj
 	{
 		
 	public:
@@ -812,7 +812,7 @@ namespace SceneData
 	
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataSceneryObj
-	class SceneDataSceneryObj : public SceneDataMVRSpecObj
+	class SceneDataSceneryObj : public SceneDataGDTFSpecObj
 	{
 		
 	public:
@@ -842,7 +842,7 @@ namespace SceneData
 	typedef SceneDataTrussObj* SceneDataTrussObjPtr;
 	
 	
-	class SceneDataSupportObj : public SceneDataMVRSpecObj
+	class SceneDataSupportObj : public SceneDataGDTFSpecObj
 	{
 		
 	public:
@@ -859,7 +859,7 @@ namespace SceneData
 
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataVideoScreenObj
-	class SceneDataVideoScreenObj : public SceneDataMVRSpecObj
+	class SceneDataVideoScreenObj : public SceneDataGDTFSpecObj
 	{
 		
 	public:
@@ -884,7 +884,7 @@ namespace SceneData
 
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataProjectorObj
-	class SceneDataProjectorObj : public SceneDataMVRSpecObj
+	class SceneDataProjectorObj : public SceneDataGDTFSpecObj
 	{
 		
 	public:
