@@ -648,7 +648,7 @@ namespace SceneData
 		TXString					fGdtfDmxMode;
 	};
 
-	typedef SceneDataGDTFSpecObj*					SceneDataMVRSpecObjPtr;
+	typedef SceneDataGDTFSpecObj*					SceneDataGDTFSpecObjPtr;
 
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataGeometryObj

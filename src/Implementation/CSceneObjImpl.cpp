@@ -317,7 +317,7 @@ MvrString VectorworksMVR::CSceneObjImpl::GetGdtfName()
 	ASSERTN(kEveryone,fType != ESceneObjType::Layer && fType != ESceneObjType::Group);
 	if( fType == ESceneObjType::Layer || fType == ESceneObjType::Group) return "";
 	
-	SceneData::SceneDataMVRSpecObjPtr gdtfSpecObj = static_cast<SceneData::SceneDataMVRSpecObjPtr >(fPtr);
+	SceneData::SceneDataGDTFSpecObjPtr gdtfSpecObj = static_cast<SceneData::SceneDataGDTFSpecObjPtr >(fPtr);
 
 	return gdtfSpecObj->GetGdtfFile().GetCharPtr();
 }
@@ -331,7 +331,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetGdtfFixture(IGdtfFix
 	// Check the type is right
 	ASSERTN(kEveryone,fType != ESceneObjType::Layer && fType != ESceneObjType::Group);
 	if( fType == ESceneObjType::Layer || fType == ESceneObjType::Group) return kVCOMError_NoValidContainerObj;	
-	SceneData::SceneDataMVRSpecObjPtr gdtfSpecObj = static_cast<SceneData::SceneDataMVRSpecObjPtr>(fPtr);
+	SceneData::SceneDataGDTFSpecObjPtr gdtfSpecObj = static_cast<SceneData::SceneDataGDTFSpecObjPtr>(fPtr);
 	
 	//---------------------------------------------------------------------------------------------------
 	// Now get the GDTF File
@@ -404,7 +404,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetGdtfName(MvrString g
 	// Check the type is right
 	ASSERTN(kEveryone,fType != ESceneObjType::Layer && fType != ESceneObjType::Group);
 	if( fType == ESceneObjType::Layer || fType == ESceneObjType::Group) return kVCOMError_NoValidContainerObj;
-	SceneData::SceneDataMVRSpecObjPtr gdtfSpecObj = static_cast<SceneData::SceneDataMVRSpecObjPtr>(fPtr);
+	SceneData::SceneDataGDTFSpecObjPtr gdtfSpecObj = static_cast<SceneData::SceneDataGDTFSpecObjPtr>(fPtr);
 	
 	TXString name (gdtfName);
 	gdtfSpecObj->SetGDTFFile(gdtfName);
@@ -421,7 +421,7 @@ MvrString VectorworksMVR::CSceneObjImpl::GetGdtfMode()
 	// Check the type is right
 	ASSERTN(kEveryone,fType != ESceneObjType::Layer && fType != ESceneObjType::Group);
 	if( fType == ESceneObjType::Layer || fType == ESceneObjType::Group) return "";	
-	SceneData::SceneDataMVRSpecObjPtr gdtfSpecObj = static_cast<SceneData::SceneDataMVRSpecObjPtr>(fPtr);
+	SceneData::SceneDataGDTFSpecObjPtr gdtfSpecObj = static_cast<SceneData::SceneDataGDTFSpecObjPtr>(fPtr);
 	
 	return gdtfSpecObj->GetGdtfDmxMode().GetCharPtr();
 }
@@ -435,7 +435,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetGdtfMode(MvrString g
 	// Check the type is right
 	ASSERTN(kEveryone,fType != ESceneObjType::Layer && fType != ESceneObjType::Group);
 	if( fType == ESceneObjType::Layer || fType == ESceneObjType::Group) return kVCOMError_NoValidContainerObj;
-	SceneData::SceneDataMVRSpecObjPtr gdtfSpecObj = static_cast<SceneData::SceneDataMVRSpecObjPtr>(fPtr);
+	SceneData::SceneDataGDTFSpecObjPtr gdtfSpecObj = static_cast<SceneData::SceneDataGDTFSpecObjPtr>(fPtr);
 
 	TXString name (gdtfMode);
 	gdtfSpecObj->SetGdtfDmxMode(name);
