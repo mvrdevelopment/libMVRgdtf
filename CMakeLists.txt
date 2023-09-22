@@ -20,7 +20,6 @@ else()
     endif(WIN32)
 endif()
 
-add_subdirectory(mdns_cpp)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
@@ -42,6 +41,7 @@ ADD_DEFINITIONS(-D_UNICODE)
 
 #################################################
 
+add_subdirectory(mdns_cpp)
 
 #################################################
 # create the project
