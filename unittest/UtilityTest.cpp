@@ -44,7 +44,10 @@ bool UtilityTest::ExecuteTest()
 
 	uuidB.FromString("{9e372dfb-c990-4178-b03a-f3cfcba63d2b}", true);
 
-	this->checkifEqual(uuidA, uuidB);
+	MvrUUID uuidC("{9e372dfb-c990-4178-b03a-f3cfcba63d2b}");
+
+	this->checkifEqual(uuidA, uuidA);
+	this->checkifEqual(uuidA, uuidC);
 
     return true;
 }
