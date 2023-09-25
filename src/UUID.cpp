@@ -31,31 +31,6 @@ namespace windows {
 using namespace VectorworksMVR::VWFC;
 
 
-static Uint8 GetDigitForChar(char ch)
-{
-	if ( ch >= '0' && ch <= '9' )
-		return ch - '0';
-	if ( ch >= 'A' && ch <= 'F' )
-		return 0x0A + (ch - 'A');
-	if ( ch >= 'a' && ch <= 'f' )
-		return 0x0A + (ch - 'a');
-
-	THROW_VWFC_EXCEPTION( kEveryone, 0, "Bad UUID string : bad char" );
-	return 0;
-}
-
-static Uint8 GetDigitForPiece(const char* pString)
-{
-	Uint8		a		= ::GetDigitForChar( * (pString + 0) );
-	Uint8		b		= ::GetDigitForChar( * (pString + 1) );
-
-	VWFC_ASSERT( a <= 0x0F );
-	VWFC_ASSERT( b <= 0x0F );
-
-	Uint8		res		= a << 4 | (b & 0x0F);
-	return res;
-}
-
 VWFC::Tools::VWUUID::VWUUID(Uint32 a, Uint32 b, Uint32 c, Uint32 d)
 {
 	fData[0]			= (Uint8) (a & 0xFF);
@@ -161,11 +136,37 @@ static TXString	GetPieceAsText(Uint8 piece)
 	return str;
 }
 
+static Uint8 GetDigitForChar(char ch)
+{
+	if ( ch >= '0' && ch <= '9' )
+		return ch - '0';
+	if ( ch >= 'A' && ch <= 'F' )
+		return 0x0A + (ch - 'A');
+	if ( ch >= 'a' && ch <= 'f' )
+		return 0x0A + (ch - 'a');
+
+	THROW_VWFC_EXCEPTION( kEveryone, 0, "Bad UUID string : bad char" );
+	return 0;
+}
+
+static Uint8 GetDigitForPiece(const char* pString)
+{
+	Uint8		a		= ::GetDigitForChar( * (pString + 0) );
+	Uint8		b		= ::GetDigitForChar( * (pString + 1) );
+
+	VWFC_ASSERT( a <= 0x0F );
+	VWFC_ASSERT( b <= 0x0F );
+
+	Uint8		res		= a << 4 | (b & 0x0F);
+	return res;
+}
+
 // {09E95D97-364C-43d5-8ADF-FF4CE0EC41A7}
 VWFC::Tools::VWUUID::operator TXString() const
 {
 	return ToString(true);
 }
+
 
 TXString VWFC::Tools::VWUUID::ToString(bool includeBrackets) const
 {
@@ -263,8 +264,9 @@ bool VWFC::Tools::VWUUID::FromString(const TXString& str, bool includeBrackets)
 			fData[14]		= ::GetDigitForPiece( pString + 32 );
 			fData[15]		= ::GetDigitForPiece( pString + 34 );
 		}
-
 	}
+
+	return b;
 }
 
 VWFC::Tools::VWUUID::VWUUID(const TXString& str)
