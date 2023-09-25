@@ -107,6 +107,10 @@ if (WIN32)
     set_target_properties( MvrGdtf PROPERTIES RUNTIME_OUTPUT_DIRECTORY    ${CMAKE_SOURCE_DIR}/libs/ )
     set_target_properties( MvrGdtf PROPERTIES LIBRARY_OUTPUT_DIRECTORY   ${CMAKE_SOURCE_DIR}/libs/ )
     set_target_properties( MvrGdtf PROPERTIES ARCHIVE_OUTPUT_DIRECTORY  ${CMAKE_SOURCE_DIR}/libs/ )
+elseif(ANDROID)
+    set(PREPROCESSORS ${PREPROCESSORS} PUBLIC GS_LIN) # Use Linux imports for string related stuff
+    set(PREPROCESSORS ${PREPROCESSORS} PUBLIC _ANDROID)
+    set(EXTRA_LIBS ${EXTRA_LIBS} pthread)
 elseif(UNIX)
     if (APPLE)
         set(PREPROCESSORS ${PREPROCESSORS} PUBLIC GS_MAC)
@@ -119,15 +123,11 @@ elseif(UNIX)
     else()
         set(PREPROCESSORS ${PREPROCESSORS} PUBLIC GS_LIN)
         set(PREPROCESSORS ${PREPROCESSORS} PUBLIC _LINUX)
-
         set(EXTRA_LIBS ${EXTRA_LIBS} uuid)
-        #add_compile_definitions(GS_LIN)        
     endif(APPLE)
-
     set(EXTRA_LIBS ${EXTRA_LIBS} pthread)
 endif(WIN32)
 #################################################
-
 
 
 #################################################
