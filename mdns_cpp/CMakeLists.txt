@@ -4,7 +4,7 @@ project(
   VERSION 0.1.0
   LANGUAGES CXX)
 
-option(MDNS_CPP_BUILD_EXAMPLE "Build example executables" ON)
+option(MDNS_CPP_BUILD_EXAMPLE "Build example executables" OFF)
 
 # Set the output of the libraries and executables.
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
