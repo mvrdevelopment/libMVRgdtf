@@ -449,6 +449,9 @@ void CMVRxchangeServiceImpl::mDNS_Client_Task()
 
 		TXString name (length1+1, *length1);
 		TXString uuid (length2+1, *length2);
+        
+        name.Replace("StationName=", "");
+		uuid.Replace("StationUUID=", "");
 
 		SceneData::GdtfConverter::ConvertUUID(uuid, localServ.StationUUID);
 		strcpy(localServ.StationName, name.GetCharPtr());
