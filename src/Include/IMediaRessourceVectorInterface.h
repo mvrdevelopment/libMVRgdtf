@@ -1783,53 +1783,7 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 	class DYNAMIC_ATTRIBUTE IMVRxchangeService : public IVWUnknown
     {
 		public:
-		struct ConnectToLocalServiceArgs
-		{
-			MVRxchangeString 	Service;
 
-			MvrUUID 			StationUUID;
-			MVRxchangeString 	StationName;
-			MVRxchangeString 	Provider;
-
-			uint32_t     		VersionMajor;
-			uint32_t         	VersionMinor;
-
-			// TODO Files
-
-			// Internal
-			MVRxchangeString IPv4;
-			MVRxchangeString IPv6;
-			uint16_t         Port;
-		};
-		/**
-		 * @brief Connects to a given Local Network Mode MVR-xchange system
-		 * 
-		 * @param service 
-		 * @return VCOMError 
-		 */
-        virtual VCOMError VCOM_CALLTYPE     ConnectToLocalService(const ConnectToLocalServiceArgs& service) = 0;
-		/**
-		 * @brief Leaves the Local Network Mode MVR-xchange system when connected
-		 * 
-		 * @param service 
-		 * @return VCOMError 
-		 */
-        virtual VCOMError VCOM_CALLTYPE     LeaveLocalService() = 0;
-
-		//struct GetLocalServicesArgs
-		//{
-		//	ConnectToLocalServiceArgs** 	Service;
-		//	size_t 							CountServices;
-		//};
-		/**
-		 * @brief Get the local services that are currently available
-		 * 
-		 * @param service 
-		 * @return VCOMError 
-		 */
-		virtual VCOMError VCOM_CALLTYPE     QueryLocalServices(size_t& out_Count) = 0;
-        virtual VCOMError VCOM_CALLTYPE     GetLocalServiceAt(size_t index, ConnectToLocalServiceArgs& outLocalService) = 0;
-        
 		struct ConnectToRemoteServiceArgs
 		{
 			MVRxchangeString Url;
@@ -1924,6 +1878,58 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		};
 
 		typedef IMVRxchangeMessage (*MVRxchangeMessageHandler)(const IMVRxchangeMessage& args, void* context);
+
+		struct ConnectToLocalServiceArgs
+		{
+			MVRxchangeString 	Service;
+
+			MvrUUID 			StationUUID;
+			MVRxchangeString 	StationName;
+			MVRxchangeString 	Provider;
+
+			uint32_t     		VersionMajor;
+			uint32_t         	VersionMinor;
+
+			std::vector<MVR_COMMIT_MESSAGE> InitialFiles;
+
+			// Internal
+			MVRxchangeString IPv4;
+			MVRxchangeString IPv6;
+			uint16_t         Port;
+
+		};
+
+		
+		/**
+		 * @brief Connects to a given Local Network Mode MVR-xchange system
+		 * 
+		 * @param service 
+		 * @return VCOMError 
+		 */
+        virtual VCOMError VCOM_CALLTYPE     ConnectToLocalService(const ConnectToLocalServiceArgs& service) = 0;
+		/**
+		 * @brief Leaves the Local Network Mode MVR-xchange system when connected
+		 * 
+		 * @param service 
+		 * @return VCOMError 
+		 */
+        virtual VCOMError VCOM_CALLTYPE     LeaveLocalService() = 0;
+
+		//struct GetLocalServicesArgs
+		//{
+		//	ConnectToLocalServiceArgs** 	Service;
+		//	size_t 							CountServices;
+		//};
+		/**
+		 * @brief Get the local services that are currently available
+		 * 
+		 * @param service 
+		 * @return VCOMError 
+		 */
+		virtual VCOMError VCOM_CALLTYPE     QueryLocalServices(size_t& out_Count) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetLocalServiceAt(size_t index, ConnectToLocalServiceArgs& outLocalService) = 0;
+        
+
 		struct OnMessageArgs
 		{
 			MVRxchangeMessageHandler Callback;

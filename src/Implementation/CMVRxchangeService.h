@@ -18,6 +18,13 @@ namespace VectorworksMVR
 		TXString Name;
 		MvrUUID  stationUUID;
 	};
+
+	struct TCPMessageInfo
+	{
+		uint16_t port;
+		std::string ip;
+	};
+
 	//----------------------------------------------------------------------------------------
 	class CMVRxchangeServiceImpl : public VCOMImpl<IMVRxchangeService>
 	{
@@ -66,7 +73,7 @@ namespace VectorworksMVR
 		void TCP_Stop();
 		void TCP_ServerNetworksThread();
 	public:
-		IMVRxchangeMessage TCP_OnIncommingMessage(const IMVRxchangeMessage&);
+		IMVRxchangeMessage TCP_OnIncommingMessage(const IMVRxchangeMessage&, const TCPMessageInfo& data);
 		std::vector<MVRxchangeGroupMember>			fMVRGroup;
 	private:
 

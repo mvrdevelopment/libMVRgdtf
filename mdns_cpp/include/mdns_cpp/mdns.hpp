@@ -35,6 +35,9 @@ struct unsorted_query_part_t {
   std::string canonicalName;
   T data;
 
+  unsorted_query_part_t() = default;
+  unsorted_query_part_t(const std::string& addr, const std::string& canonicalName, const T& data): addr(addr), canonicalName(canonicalName), data(data) {};
+
   bool operator==(const unsorted_query_part_t<T>& o) const{return addr == o.addr && canonicalName == o.canonicalName && data == o.data;};
 };
 
