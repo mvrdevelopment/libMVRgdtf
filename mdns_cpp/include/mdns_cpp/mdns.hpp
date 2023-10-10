@@ -5,7 +5,6 @@
 #include <thread>
 #include <vector>
 #include <unordered_map>
-#include <map>
 
 #include "mdns_cpp/defs.hpp"
 
