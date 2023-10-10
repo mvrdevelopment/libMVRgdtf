@@ -13,20 +13,49 @@ struct sockaddr;
 namespace mdns_cpp {
 
 struct Query_result {
-  Query_result(std::string& service_name, std::string canonical_hostname, std::string& mdnsAddress, uint16_t port) {	  
-	  this->service_name = service_name;
-    this->mdnsAddress = mdnsAddress;
-    this->port = port;
+  Query_result(): port(0){}
+
+  Query_result(std::string canonical_hostname, std::string& mdnsAddress) {	  
     this->canonical_hostname = canonical_hostname;
+    this->mdnsAddress = mdnsAddress;
   } 
 
   std::string   service_name;
   std::string   canonical_hostname;
-  std::string   mdnsAddress;  // normally x.x.x.x:5353
+  std::string   mdnsAddress;
   std::string   txt;
   uint16_t		  port;
   std::string   ipV4_adress;
   std::string   ipV6_adress;  
+};
+
+template<typename T>
+struct unsorted_query_part_t {
+  std::string addr;
+  std::string canonicalName;
+  T data;
+
+  unsorted_query_part_t() = default;
+  unsorted_query_part_t(const std::string& addr, const std::string& canonicalName, const T& data): addr(addr), canonicalName(canonicalName), data(data) {};
+
+  bool operator==(const unsorted_query_part_t<T>& o) const{return addr == o.addr && canonicalName == o.canonicalName && data == o.data;};
+};
+
+struct srv_record_t
+{
+  srv_record_t(uint16_t port, std::string name) : port(port), name(name) {};
+  srv_record_t(){};
+
+	uint16_t port;
+	std::string name;
+  bool operator==(const srv_record_t& o) const {return port == o.port && name == o.name;};
+};
+struct unsorted_query_t {
+  std::vector<unsorted_query_part_t<srv_record_t>> srvRecords;
+  std::vector<unsorted_query_part_t<std::string>> txtRecords;
+  std::vector<unsorted_query_part_t<std::string>> aRecords;
+  std::vector<unsorted_query_part_t<std::string>> aaaaRecords;
+  std::vector<unsorted_query_part_t<std::string>> ptrRecords;
 };
 
 using QueryResList = std::vector<Query_result>;

@@ -39,7 +39,11 @@ void MVRxchangeSession::DoRead()
                     IMVRxchangeService::IMVRxchangeMessage out;
                     freadmsg.ToExternalMessage(out);
 
-                    IMVRxchangeService::IMVRxchangeMessage in = fImpl->TCP_OnIncommingMessage(out);
+                    TCPMessageInfo info {
+                        this->fSocket.remote_endpoint().port(),
+                        this->fSocket.remote_endpoint().address().to_string()
+                    };
+                    IMVRxchangeService::IMVRxchangeMessage in = fImpl->TCP_OnIncommingMessage(out, info);
                     
                     MVRxchangePacket in_msg;
                     in_msg.FromExternalMessage(in);
