@@ -240,11 +240,6 @@ static int query_callback(int sock, const struct sockaddr *from, size_t addrlen,
                           uint16_t query_id, uint16_t rtype, uint16_t rclass, uint32_t ttl, const void *data,
                           size_t size, size_t name_offset, size_t name_length, size_t record_offset,
                           size_t record_length, void *user_data) {
-  (void)sizeof(sock);
-  (void)sizeof(query_id);
-  (void)sizeof(name_length);
-  (void)sizeof(user_data);
-
   char addrbuffer[64]{};
   char namebuffer[256]{};
   char entrybuffer[256]{};
@@ -593,7 +588,7 @@ QueryResList mDNS::executeQuery2(const std::string &service) {
         break;
       }
     }
-
+  /*
     //found = false;
     for(auto& i : outList)
     {
@@ -610,8 +605,10 @@ QueryResList mDNS::executeQuery2(const std::string &service) {
 
     if(!found)
     {
-      outList.push_back(outItem);
     }
+  */
+    outList.push_back(outItem);
+
   }
 
 
