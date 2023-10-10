@@ -47,13 +47,6 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 	txt += (uint8_t)txt2.size();
 	txt += txt2;
 
-
-	for(auto& s : fmdns)
-    {
-        s->stopService();
-    }
-	fmdns.clear();
-
 	for(std::pair<std::string, uint32_t> e : mdns_cpp::mDNS().getInterfaces())
 	{
 		// Bitmasking IP Address to check if it is 127.x.x.x
@@ -84,9 +77,10 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 	joinMessage.Message.Type = MVRxchangeMessageType::MVR_JOIN;
 	strcpy(joinMessage.Message.JOIN.StationName, fCurrentService.StationName);		
 	strcpy(joinMessage.Message.JOIN.Provider, fCurrentService.Provider);		
-	joinMessage.Message.JOIN.VersionMajor = fCurrentService.VersionMajor;
-	joinMessage.Message.JOIN.VersionMinor = fCurrentService.VersionMinor;
-	joinMessage.Message.JOIN.StationUUID  = fCurrentService.StationUUID;
+	joinMessage.Message.JOIN.VersionMajor 	= fCurrentService.VersionMajor;
+	joinMessage.Message.JOIN.VersionMinor 	= fCurrentService.VersionMinor;
+	joinMessage.Message.JOIN.StationUUID  	= fCurrentService.StationUUID;
+	joinMessage.Message.JOIN.Files			= fCurrentService.InitialFiles;
 	this->Send_message(joinMessage);
 
 	return kVCOMError_NoError;
@@ -233,33 +227,29 @@ void CMVRxchangeServiceImpl::TCP_ServerNetworksThread()
 	fServer_IO_Context.run();
 }
 
-IMVRxchangeService::IMVRxchangeMessage CMVRxchangeServiceImpl::TCP_OnIncommingMessage(const IMVRxchangeService::IMVRxchangeMessage& in)
+IMVRxchangeService::IMVRxchangeMessage CMVRxchangeServiceImpl::TCP_OnIncommingMessage(const IMVRxchangeService::IMVRxchangeMessage& in, const TCPMessageInfo& data)
 {
 	IMVRxchangeService::IMVRxchangeMessage empty;
     
     if(in.Type == MVRxchangeMessageType::MVR_JOIN)
     {
-        this->mDNS_Client_Task(); // Run, in case client was faster than task
-
+        //this->mDNS_Client_Task(); // Run, in case client was faster than task
 		MVRxchangeGroupMember newItem;
-		if(GetSingleMemberOfService(in.JOIN.StationUUID, newItem) == kVCOMError_NoError)
+		newItem.IP = data.ip;
+		newItem.Port = data.port;
+		newItem.stationUUID = in.JOIN.StationUUID;
+		newItem.Name = in.JOIN.StationName;
+
+		auto it = std::find_if(fMVRGroup.begin(), fMVRGroup.end(), [&newItem](const MVRxchangeGroupMember& it){
+			return it.IP == newItem.IP && it.Port == newItem.Port;
+		});
+
+		if(it != fMVRGroup.end())
 		{
-			// In case Station sent message twice (e.g. to change their name)
-			auto it = std::find_if(fMVRGroup.begin(), fMVRGroup.end(), [&newItem](const MVRxchangeGroupMember& it){
-				return it.IP == newItem.IP && it.Port == newItem.Port;
-			});
-			
-			if(it != fMVRGroup.end())
-			{
-				*it = newItem; // changed name
-			}else
-			{
-				fMVRGroup.push_back(newItem);
-			}
-		}
-		else
+			*it = newItem; // changed name
+		}else
 		{
-			// could not locate station
+			fMVRGroup.push_back(newItem);
 		}
     }
 	else if(in.Type == MVRxchangeMessageType::MVR_LEAVE)
@@ -285,10 +275,8 @@ IMVRxchangeService::IMVRxchangeMessage CMVRxchangeServiceImpl::TCP_OnIncommingMe
 bool CMVRxchangeServiceImpl::SendMessageToLocalNetworks(const TXString& ip, uint16_t p, const MVRxchangeNetwork::MVRxchangePacket& msg)
 {
 	MVRxchangeNetwork::MVRxchangeClient c (this, msg);
-	
-	char str[80];
-	sprintf(str, "%u", p);
-	std::string port =str;
+
+	std::string port = std::to_string(p);
 
 	bool ok = false;
 	if(c.Connect(ip.GetStdString(), port, std::chrono::seconds(1)))
@@ -338,6 +326,7 @@ VCOMError CMVRxchangeServiceImpl::GetSingleMemberOfService(const MvrUUID& statio
 			member.IP   = e.IPv4;
 			member.Port = e.Port;
 			member.Name = e.StationName;
+			member.stationUUID = stationUUID;
 			out = member;
 			return kVCOMError_NoError;
 		}
@@ -439,7 +428,7 @@ void CMVRxchangeServiceImpl::mDNS_Client_Task()
 		result.emplace_back();
 		ConnectToLocalServiceArgs& localServ = result.back();
 
-		strcpy(localServ.Service, r.service_name.c_str());		 
+		strcpy(localServ.Service, r.canonical_hostname.c_str());		 
 		strcpy(localServ.IPv4, r.ipV4_adress.c_str());
 		strcpy(localServ.IPv6, r.ipV6_adress.c_str());
 		localServ.Port = r.port;
