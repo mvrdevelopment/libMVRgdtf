@@ -53,6 +53,7 @@ namespace VectorworksMVR
 
 		std::mutex 								fQueryLocalServicesResult_mtx;
 		std::vector<ConnectToLocalServiceArgs> 	fQueryLocalServicesResult;
+		bool									fIsInitialized = false;
 
 		void mDNS_Client_Start();
 		void mDNS_Client_Stop();
@@ -74,6 +75,8 @@ namespace VectorworksMVR
 		void TCP_ServerNetworksThread();
 	public:
 		IMVRxchangeMessage TCP_OnIncommingMessage(const IMVRxchangeMessage&, const TCPMessageInfo& data);
+
+		std::mutex fMvrGroupMutex;
 		std::vector<MVRxchangeGroupMember>			fMVRGroup;
 	private:
 

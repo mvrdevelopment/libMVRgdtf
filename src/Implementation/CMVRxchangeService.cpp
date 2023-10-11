@@ -14,7 +14,6 @@ VectorworksMVR::CMVRxchangeServiceImpl::CMVRxchangeServiceImpl()
 {
 	fServer_Running = false;
 	fServer = nullptr;
-	fmdns_Thread = std::thread(&CMVRxchangeServiceImpl::mDNS_Client_Start, this);
 }
 
 VectorworksMVR::CMVRxchangeServiceImpl::~CMVRxchangeServiceImpl()
@@ -52,7 +51,7 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 		// Bitmasking IP Address to check if it is 127.x.x.x
 		// We dont want to start the mDNS Server on loopback addresses
 		// If two programs on the same device want to connect, they can use one of the other interfaces as well
-		if(e.second & 4278190080 == 2130706432) {
+		if((e.second & 4278190080) == 2130706432) {
 			continue;
 		}
 	
@@ -66,10 +65,21 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 		fmdns.emplace_back(s);	// Pointer is now managed by the unique ptr and deleted upon fmdns going out of scope
 	}
 
+	bool doInit = false; // avoid deadlock with temp variable
+	{
+		std::lock_guard<std::mutex> lock(fQueryLocalServicesResult_mtx);
+		doInit = !fIsInitialized;
+	}
 
-	this->mDNS_Client_Task();
+	if(doInit)
+	{
+		this->mDNS_Client_Task();
+	}
 
-	fMVRGroup = GetMembersOfService(fCurrentService);
+	{
+		std::lock_guard<std::mutex> lock(fMvrGroupMutex);
+		fMVRGroup = GetMembersOfService(fCurrentService);
+	}
 	
 	//---------------------------------------------------------------------------------------------
 	// Start mDNS Service
@@ -82,6 +92,13 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 	joinMessage.Message.JOIN.StationUUID  	= fCurrentService.StationUUID;
 	joinMessage.Message.JOIN.Files			= fCurrentService.InitialFiles;
 	this->Send_message(joinMessage);
+
+	if (fmdns_Thread.joinable())
+	{
+		fmdns_IO_Context.stop();
+		fmdns_Thread.join();
+	}
+	fmdns_Thread = std::thread(&CMVRxchangeServiceImpl::mDNS_Client_Start, this);
 
 	return kVCOMError_NoError;
 }
@@ -183,6 +200,7 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::Send_message(const SendMessage
 	{
 		MVRxchangeNetwork::MVRxchangePacket msg;
 		msg.FromExternalMessage(messageHandler.Message);
+		std::lock_guard<std::mutex> lock(fMvrGroupMutex);
 		for (const auto& e : fMVRGroup)
 		{
 			if(recipientFilter.size() != 0 && std::find(recipientFilter.begin(), recipientFilter.end(), e.stationUUID) == recipientFilter.end()){
@@ -233,34 +251,51 @@ IMVRxchangeService::IMVRxchangeMessage CMVRxchangeServiceImpl::TCP_OnIncommingMe
     
     if(in.Type == MVRxchangeMessageType::MVR_JOIN)
     {
-        //this->mDNS_Client_Task(); // Run, in case client was faster than task
+
 		MVRxchangeGroupMember newItem;
-		newItem.IP = data.ip;
-		newItem.Port = data.port;
-		newItem.stationUUID = in.JOIN.StationUUID;
-		newItem.Name = in.JOIN.StationName;
-
-		auto it = std::find_if(fMVRGroup.begin(), fMVRGroup.end(), [&newItem](const MVRxchangeGroupMember& it){
-			return it.IP == newItem.IP && it.Port == newItem.Port;
-		});
-
-		if(it != fMVRGroup.end())
+		if(GetSingleMemberOfService(in.JOIN.StationUUID, newItem) == kVCOMError_NoError)
 		{
-			*it = newItem; // changed name
-		}else
+			std::lock_guard<std::mutex> lock(fMvrGroupMutex);
+			// In case Station sent message twice (e.g. to change their name)
+			auto it = std::find_if(fMVRGroup.begin(), fMVRGroup.end(), [&newItem](const MVRxchangeGroupMember& it){
+				return it.IP == newItem.IP && it.Port == newItem.Port;
+			});
+			
+			if(it != fMVRGroup.end())
+			{
+				*it = newItem; // changed name
+			}else
+			{
+				fMVRGroup.push_back(newItem);
+			}
+		}
+		else
 		{
-			fMVRGroup.push_back(newItem);
+			auto& uuid = in.JOIN.StationUUID;
+			boost::asio::post(fmdns_IO_Context, [this, uuid](){
+				this->mDNS_Client_Task(); // Run, in case client was faster than task
+				MVRxchangeGroupMember newItem;
+				if(GetSingleMemberOfService(uuid, newItem) == kVCOMError_NoError)
+				{
+					std::lock_guard<std::mutex> lock(fMvrGroupMutex);
+					fMVRGroup.push_back(newItem);
+				}
+
+			});
 		}
     }
 	else if(in.Type == MVRxchangeMessageType::MVR_LEAVE)
 	{
 		MVRxchangeGroupMember newItem;
-		if(GetSingleMemberOfService(in.LEAVE.FromStationUUID, newItem) == kVCOMError_NoError)
+		if(GetSingleMemberOfService(in.LEAVE.FromStationUUID, newItem) != kVCOMError_NoError)
 		{
-			std::remove_if(fMVRGroup.begin(), fMVRGroup.end(), [&newItem](const MVRxchangeGroupMember& it){
-				return it.IP == newItem.IP && it.Port == newItem.Port;
-			});
+			newItem.IP = data.ip;
+			newItem.Port = data.port;
 		}
+		std::lock_guard<std::mutex> lock(fMvrGroupMutex);
+		std::remove_if(fMVRGroup.begin(), fMVRGroup.end(), [&newItem](const MVRxchangeGroupMember& it){
+			return it.IP == newItem.IP && it.Port == newItem.Port;
+		});
 	}
 
 	if (fCallBack.Callback)
@@ -347,10 +382,11 @@ void Func(const boost::system::error_code& /*e*/, boost::asio::deadline_timer* t
 
 void CMVRxchangeServiceImpl::mDNS_Client_Start()
 {
-	boost::asio::deadline_timer t_short(fmdns_IO_Context, boost::posix_time::seconds(1));
-	boost::asio::deadline_timer t_long (fmdns_IO_Context, boost::posix_time::seconds(120));
-	t_short.async_wait(boost::bind(Func, boost::asio::placeholders::error, &t_long, this));
-
+	boost::asio::deadline_timer t_long (fmdns_IO_Context, boost::posix_time::seconds(45));
+	{
+		boost::asio::deadline_timer t_short(fmdns_IO_Context, boost::posix_time::seconds(1));
+		t_short.async_wait(boost::bind(Func, boost::asio::placeholders::error, &t_long, this));
+	}
 	fmdns_IO_Context.run();
 }
 
@@ -449,6 +485,7 @@ void CMVRxchangeServiceImpl::mDNS_Client_Task()
 	{
 		std::lock_guard<std::mutex> lock (fQueryLocalServicesResult_mtx);
 		fQueryLocalServicesResult = result;
+		fIsInitialized = true;
 	}
 
 }
