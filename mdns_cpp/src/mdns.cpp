@@ -535,10 +535,12 @@ QueryResList mDNS::executeQuery2(const std::string &service) {
     bool add = false;
     std::string service(in.canonicalName.begin(), in.canonicalName.begin() + in.canonicalName.find('.'));
 
+
+
     add = add || in.canonicalName == comp.canonicalName;
     add = add || in.canonicalName == comp.data.name;
-    add = add || comp.canonicalName.ends_with(in.canonicalName);
-    add = add || comp.canonicalName.starts_with(service);
+    add = add || (comp.canonicalName.length() >= in.canonicalName.length() && in.canonicalName == std::string(comp.canonicalName.end() - in.canonicalName.length(), comp.canonicalName.end()));
+    add = add || (comp.canonicalName.length() >= service.length() && service == std::string(comp.canonicalName.begin(), comp.canonicalName.begin() + service.length()));
 
     return add;
   };
@@ -588,27 +590,8 @@ QueryResList mDNS::executeQuery2(const std::string &service) {
         break;
       }
     }
-  /*
-    //found = false;
-    for(auto& i : outList)
-    {
-      if(
-        i.canonical_hostname == outItem.canonical_hostname && 
-        i.ipV4_adress == outItem.ipV4_adress &&
-        i.ipV6_adress == outItem.ipV6_adress &&
-        i.port == outItem.port
-        )
-        {
-          found = true;
-        }
-    }
 
-    if(!found)
-    {
-    }
-  */
     outList.push_back(outItem);
-
   }
 
 

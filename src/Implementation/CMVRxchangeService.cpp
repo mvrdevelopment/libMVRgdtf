@@ -14,7 +14,6 @@ VectorworksMVR::CMVRxchangeServiceImpl::CMVRxchangeServiceImpl()
 {
 	fServer_Running = false;
 	fServer = nullptr;
-	fmdns_Thread = std::thread(&CMVRxchangeServiceImpl::mDNS_Client_Start, this);
 }
 
 VectorworksMVR::CMVRxchangeServiceImpl::~CMVRxchangeServiceImpl()
@@ -67,8 +66,6 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 	}
 
 
-	this->mDNS_Client_Task();
-
 	fMVRGroup = GetMembersOfService(fCurrentService);
 	
 	//---------------------------------------------------------------------------------------------
@@ -82,6 +79,13 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 	joinMessage.Message.JOIN.StationUUID  	= fCurrentService.StationUUID;
 	joinMessage.Message.JOIN.Files			= fCurrentService.InitialFiles;
 	this->Send_message(joinMessage);
+
+	if (fmdns_Thread.joinable())
+	{
+		fmdns_IO_Context.stop();
+		fmdns_Thread.join();
+	}
+	fmdns_Thread = std::thread(&CMVRxchangeServiceImpl::mDNS_Client_Start, this);
 
 	return kVCOMError_NoError;
 }
