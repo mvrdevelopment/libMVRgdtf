@@ -247,6 +247,36 @@ IMVRxchangeService::IMVRxchangeMessage CMVRxchangeServiceImpl::TCP_OnIncommingMe
     
     if(in.Type == MVRxchangeMessageType::MVR_JOIN)
     {
+
+		MVRxchangeGroupMember newItem;
+		if(GetSingleMemberOfService(in.JOIN.StationUUID, newItem) == kVCOMError_NoError)
+		{
+			// In case Station sent message twice (e.g. to change their name)
+			auto it = std::find_if(fMVRGroup.begin(), fMVRGroup.end(), [&newItem](const MVRxchangeGroupMember& it){
+				return it.IP == newItem.IP && it.Port == newItem.Port;
+			});
+			
+			if(it != fMVRGroup.end())
+			{
+				*it = newItem; // changed name
+			}else
+			{
+				fMVRGroup.push_back(newItem);
+			}
+		}
+		else
+		{
+			boost::asio::post(fmdns_IO_Context, [this, uuid = in.JOIN.StationUUID](){
+				this->mDNS_Client_Task(); // Run, in case client was faster than task
+				MVRxchangeGroupMember newItem;
+				if(GetSingleMemberOfService(uuid, newItem) == kVCOMError_NoError)
+				{
+					fMVRGroup.push_back(newItem);
+				}
+
+			});
+		}
+
         //this->mDNS_Client_Task(); // Run, in case client was faster than task
 		MVRxchangeGroupMember newItem;
 		newItem.IP = data.ip;
@@ -263,6 +293,7 @@ IMVRxchangeService::IMVRxchangeMessage CMVRxchangeServiceImpl::TCP_OnIncommingMe
 			*it = newItem; // changed name
 		}else
 		{
+
 			fMVRGroup.push_back(newItem);
 		}
     }
@@ -364,10 +395,11 @@ void Func(const boost::system::error_code& /*e*/, boost::asio::deadline_timer* t
 
 void CMVRxchangeServiceImpl::mDNS_Client_Start()
 {
-	boost::asio::deadline_timer t_short(fmdns_IO_Context, boost::posix_time::seconds(1));
 	boost::asio::deadline_timer t_long (fmdns_IO_Context, boost::posix_time::seconds(120));
-	t_short.async_wait(boost::bind(Func, boost::asio::placeholders::error, &t_long, this));
-
+	{
+		boost::asio::deadline_timer t_short(fmdns_IO_Context, boost::posix_time::seconds(1));
+		t_short.async_wait(boost::bind(Func, boost::asio::placeholders::error, &t_long, this));
+	}
 	fmdns_IO_Context.run();
 }
 
