@@ -51,7 +51,7 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 		// Bitmasking IP Address to check if it is 127.x.x.x
 		// We dont want to start the mDNS Server on loopback addresses
 		// If two programs on the same device want to connect, they can use one of the other interfaces as well
-		if(e.second & 4278190080 == 2130706432) {
+		if((e.second & 4278190080) == 2130706432) {
 			continue;
 		}
 	
