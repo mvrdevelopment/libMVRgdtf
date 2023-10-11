@@ -266,7 +266,8 @@ IMVRxchangeService::IMVRxchangeMessage CMVRxchangeServiceImpl::TCP_OnIncommingMe
 		}
 		else
 		{
-			boost::asio::post(fmdns_IO_Context, [this, uuid = in.JOIN.StationUUID](){
+			auto& uuid = in.JOIN.StationUUID;
+			boost::asio::post(fmdns_IO_Context, [this, uuid](){
 				this->mDNS_Client_Task(); // Run, in case client was faster than task
 				MVRxchangeGroupMember newItem;
 				if(GetSingleMemberOfService(uuid, newItem) == kVCOMError_NoError)
