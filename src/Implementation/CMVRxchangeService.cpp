@@ -76,7 +76,10 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 		this->mDNS_Client_Task();
 	}
 
-	fMVRGroup = GetMembersOfService(fCurrentService);
+	{
+		std::lock_guard<std::mutex> lock(fMvrGroupMutex);
+		fMVRGroup = GetMembersOfService(fCurrentService);
+	}
 	
 	//---------------------------------------------------------------------------------------------
 	// Start mDNS Service
@@ -197,6 +200,7 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::Send_message(const SendMessage
 	{
 		MVRxchangeNetwork::MVRxchangePacket msg;
 		msg.FromExternalMessage(messageHandler.Message);
+		std::lock_guard<std::mutex> lock(fMvrGroupMutex);
 		for (const auto& e : fMVRGroup)
 		{
 			if(recipientFilter.size() != 0 && std::find(recipientFilter.begin(), recipientFilter.end(), e.stationUUID) == recipientFilter.end()){
@@ -251,6 +255,7 @@ IMVRxchangeService::IMVRxchangeMessage CMVRxchangeServiceImpl::TCP_OnIncommingMe
 		MVRxchangeGroupMember newItem;
 		if(GetSingleMemberOfService(in.JOIN.StationUUID, newItem) == kVCOMError_NoError)
 		{
+			std::lock_guard<std::mutex> lock(fMvrGroupMutex);
 			// In case Station sent message twice (e.g. to change their name)
 			auto it = std::find_if(fMVRGroup.begin(), fMVRGroup.end(), [&newItem](const MVRxchangeGroupMember& it){
 				return it.IP == newItem.IP && it.Port == newItem.Port;
@@ -272,6 +277,7 @@ IMVRxchangeService::IMVRxchangeMessage CMVRxchangeServiceImpl::TCP_OnIncommingMe
 				MVRxchangeGroupMember newItem;
 				if(GetSingleMemberOfService(uuid, newItem) == kVCOMError_NoError)
 				{
+					std::lock_guard<std::mutex> lock(fMvrGroupMutex);
 					fMVRGroup.push_back(newItem);
 				}
 
@@ -286,7 +292,7 @@ IMVRxchangeService::IMVRxchangeMessage CMVRxchangeServiceImpl::TCP_OnIncommingMe
 			newItem.IP = data.ip;
 			newItem.Port = data.port;
 		}
-
+		std::lock_guard<std::mutex> lock(fMvrGroupMutex);
 		std::remove_if(fMVRGroup.begin(), fMVRGroup.end(), [&newItem](const MVRxchangeGroupMember& it){
 			return it.IP == newItem.IP && it.Port == newItem.Port;
 		});

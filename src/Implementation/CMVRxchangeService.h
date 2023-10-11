@@ -75,6 +75,8 @@ namespace VectorworksMVR
 		void TCP_ServerNetworksThread();
 	public:
 		IMVRxchangeMessage TCP_OnIncommingMessage(const IMVRxchangeMessage&, const TCPMessageInfo& data);
+
+		std::mutex fMvrGroupMutex;
 		std::vector<MVRxchangeGroupMember>			fMVRGroup;
 	private:
 
