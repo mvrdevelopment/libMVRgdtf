@@ -65,6 +65,16 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 		fmdns.emplace_back(s);	// Pointer is now managed by the unique ptr and deleted upon fmdns going out of scope
 	}
 
+	bool doInit = false; // avoid deadlock with temp variable
+	{
+		std::lock_guard<std::mutex> lock(fQueryLocalServicesResult_mtx);
+		doInit = !fIsInitialized;
+	}
+
+	if(doInit)
+	{
+		this->mDNS_Client_Task();
+	}
 
 	fMVRGroup = GetMembersOfService(fCurrentService);
 	
@@ -259,12 +269,15 @@ IMVRxchangeService::IMVRxchangeMessage CMVRxchangeServiceImpl::TCP_OnIncommingMe
 	else if(in.Type == MVRxchangeMessageType::MVR_LEAVE)
 	{
 		MVRxchangeGroupMember newItem;
-		if(GetSingleMemberOfService(in.LEAVE.FromStationUUID, newItem) == kVCOMError_NoError)
+		if(GetSingleMemberOfService(in.LEAVE.FromStationUUID, newItem) != kVCOMError_NoError)
 		{
-			std::remove_if(fMVRGroup.begin(), fMVRGroup.end(), [&newItem](const MVRxchangeGroupMember& it){
-				return it.IP == newItem.IP && it.Port == newItem.Port;
-			});
+			newItem.IP = data.ip;
+			newItem.Port = data.port;
 		}
+
+		std::remove_if(fMVRGroup.begin(), fMVRGroup.end(), [&newItem](const MVRxchangeGroupMember& it){
+			return it.IP == newItem.IP && it.Port == newItem.Port;
+		});
 	}
 
 	if (fCallBack.Callback)
@@ -453,6 +466,7 @@ void CMVRxchangeServiceImpl::mDNS_Client_Task()
 	{
 		std::lock_guard<std::mutex> lock (fQueryLocalServicesResult_mtx);
 		fQueryLocalServicesResult = result;
+		fIsInitialized = true;
 	}
 
 }

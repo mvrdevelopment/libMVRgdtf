@@ -53,6 +53,7 @@ namespace VectorworksMVR
 
 		std::mutex 								fQueryLocalServicesResult_mtx;
 		std::vector<ConnectToLocalServiceArgs> 	fQueryLocalServicesResult;
+		bool									fIsInitialized = false;
 
 		void mDNS_Client_Start();
 		void mDNS_Client_Stop();
