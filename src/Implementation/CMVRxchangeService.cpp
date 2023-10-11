@@ -276,26 +276,6 @@ IMVRxchangeService::IMVRxchangeMessage CMVRxchangeServiceImpl::TCP_OnIncommingMe
 
 			});
 		}
-
-        //this->mDNS_Client_Task(); // Run, in case client was faster than task
-		MVRxchangeGroupMember newItem;
-		newItem.IP = data.ip;
-		newItem.Port = data.port;
-		newItem.stationUUID = in.JOIN.StationUUID;
-		newItem.Name = in.JOIN.StationName;
-
-		auto it = std::find_if(fMVRGroup.begin(), fMVRGroup.end(), [&newItem](const MVRxchangeGroupMember& it){
-			return it.IP == newItem.IP && it.Port == newItem.Port;
-		});
-
-		if(it != fMVRGroup.end())
-		{
-			*it = newItem; // changed name
-		}else
-		{
-
-			fMVRGroup.push_back(newItem);
-		}
     }
 	else if(in.Type == MVRxchangeMessageType::MVR_LEAVE)
 	{
