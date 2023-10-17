@@ -104,6 +104,7 @@ namespace SceneData
 
         //-----------------------------------------------------------------------------
         // Convert from String functions:
+        static bool		ConvertUUID(					const TXString& value,	MvrUUID& uuid);        
         static bool		ConvertUUID(					const TXString& value, const IXMLFileNodePtr& node,	VWFC::Tools::VWUUID& uuid);        
 		static bool		ConvertDate(					const TXString& value, const IXMLFileNodePtr& node,	STime& date);
 		static bool		ConvertColor(					const TXString& value, const IXMLFileNodePtr& node,	CCieColor& color);

@@ -12,6 +12,10 @@
 	#include <uuid/uuid.h>
 #endif
 
+#if _ANDROID
+	#include <memory>
+#endif
+
 // GUID stuff
 #ifdef _WINDOWS
 namespace windows {
@@ -25,6 +29,7 @@ namespace windows {
 #endif
 
 using namespace VectorworksMVR::VWFC;
+
 
 VWFC::Tools::VWUUID::VWUUID(Uint32 a, Uint32 b, Uint32 c, Uint32 d)
 {
@@ -131,35 +136,37 @@ static TXString	GetPieceAsText(Uint8 piece)
 	return str;
 }
 
+static Uint8 GetDigitForChar(char ch)
+{
+	if ( ch >= '0' && ch <= '9' )
+		return ch - '0';
+	if ( ch >= 'A' && ch <= 'F' )
+		return 0x0A + (ch - 'A');
+	if ( ch >= 'a' && ch <= 'f' )
+		return 0x0A + (ch - 'a');
+
+	THROW_VWFC_EXCEPTION( kEveryone, 0, "Bad UUID string : bad char" );
+	return 0;
+}
+
+static Uint8 GetDigitForPiece(const char* pString)
+{
+	Uint8		a		= ::GetDigitForChar( * (pString + 0) );
+	Uint8		b		= ::GetDigitForChar( * (pString + 1) );
+
+	VWFC_ASSERT( a <= 0x0F );
+	VWFC_ASSERT( b <= 0x0F );
+
+	Uint8		res		= a << 4 | (b & 0x0F);
+	return res;
+}
+
 // {09E95D97-364C-43d5-8ADF-FF4CE0EC41A7}
 VWFC::Tools::VWUUID::operator TXString() const
 {
-	TXString	str		= "{";
-	str					+= ::GetPieceAsText( fData[0] );
-	str					+= ::GetPieceAsText( fData[1] );
-	str					+= ::GetPieceAsText( fData[2] );
-	str					+= ::GetPieceAsText( fData[3] );
-	str					+= "-";
-	str					+= ::GetPieceAsText( fData[4] );
-	str					+= ::GetPieceAsText( fData[5] );
-	str					+= "-";
-	str					+= ::GetPieceAsText( fData[6] );
-	str					+= ::GetPieceAsText( fData[7] );
-	str					+= "-";
-	str					+= ::GetPieceAsText( fData[8] );
-	str					+= ::GetPieceAsText( fData[9] );
-	str					+= "-";
-	str					+= ::GetPieceAsText( fData[10] );
-	str					+= ::GetPieceAsText( fData[11] );
-	str					+= ::GetPieceAsText( fData[12] );
-	str					+= ::GetPieceAsText( fData[13] );
-	str					+= ::GetPieceAsText( fData[14] );
-	str					+= ::GetPieceAsText( fData[15] );
-	str					+= TXString("}");
-
-
-	return str;
+	return ToString(true);
 }
+
 
 TXString VWFC::Tools::VWUUID::ToString(bool includeBrackets) const
 {
@@ -192,75 +199,86 @@ TXString VWFC::Tools::VWUUID::ToString(bool includeBrackets) const
 	return str;
 }
 
-static Uint8 GetDigitForChar(char ch)
+bool VWFC::Tools::VWUUID::FromString(const TXString& str, bool includeBrackets)
 {
-	if ( ch >= '0' && ch <= '9' )
-		return ch - '0';
-	if ( ch >= 'A' && ch <= 'F' )
-		return 0x0A + (ch - 'A');
-	if ( ch >= 'a' && ch <= 'f' )
-		return 0x0A + (ch - 'a');
+	bool b = str.GetLength() == (includeBrackets ? 38 : 36);
 
-	THROW_VWFC_EXCEPTION( kEveryone, 0, "Bad UUID string : bad char" );
-	return 0;
-}
-
-static Uint8 GetDigitForPiece(const char* pString)
-{
-	Uint8		a		= ::GetDigitForChar( * (pString + 0) );
-	Uint8		b		= ::GetDigitForChar( * (pString + 1) );
-
-	VWFC_ASSERT( a <= 0x0F );
-	VWFC_ASSERT( b <= 0x0F );
-
-	Uint8		res		= a << 4 | (b & 0x0F);
-	return res;
-}
-
-VWFC::Tools::VWUUID::VWUUID(const TXString& str)
-{
-	// {09E95D97-364C-43d5-8ADF-FF4CE0EC41A7}
-	bool	b	= str.GetLength() == 38;
 	if ( b ) {
-		bool	b1	= str.GetAt( 0 ) == '{';
-		bool	b2	= str.GetAt( 9 ) == '-';
-		bool	b3	= str.GetAt( 14 ) == '-';
-		bool	b4	= str.GetAt( 19 ) == '-';
-		bool	b5	= str.GetAt( 24 ) == '-';
-		bool	b6	= str.GetAt( 37 ) == '}';
-
-		b			= b1 && b2 && b3 && b4 && b5 && b6;
-	}
-
-
-	if ( ! b )
-	{
-		// create new UUID if this is not a valid UUID
-		VWUUID newUUID;
-		*this = newUUID;
+		if(includeBrackets)
+		{
+			b = str.GetAt(0) == '{' &&
+				str.GetAt(9) == '-' &&
+				str.GetAt(14) == '-' &&
+				str.GetAt(19) == '-' &&
+				str.GetAt(24) == '-' &&
+				str.GetAt(37) == '}';
+		}
+		else
+		{
+			b = str.GetAt(8) == '-' &&
+				str.GetAt(13) == '-' &&
+				str.GetAt(18) == '-' &&
+				str.GetAt(23) == '-';
+		}
 	}
 
 	if ( b )
 	{
 		const char* pString		= (const char*) str;
 
-		fData[0]		= ::GetDigitForPiece( pString + 1 );
-		fData[1]		= ::GetDigitForPiece( pString + 3 );
-		fData[2]		= ::GetDigitForPiece( pString + 5 );
-		fData[3]		= ::GetDigitForPiece( pString + 7 );
-		fData[4]		= ::GetDigitForPiece( pString + 10 );
-		fData[5]		= ::GetDigitForPiece( pString + 12 );
-		fData[6]		= ::GetDigitForPiece( pString + 15 );
-		fData[7]		= ::GetDigitForPiece( pString + 17 );
-		fData[8]		= ::GetDigitForPiece( pString + 20 );
-		fData[9]		= ::GetDigitForPiece( pString + 22 );
-		fData[10]		= ::GetDigitForPiece( pString + 25 );
-		fData[11]		= ::GetDigitForPiece( pString + 27 );
-		fData[12]		= ::GetDigitForPiece( pString + 29 );
-		fData[13]		= ::GetDigitForPiece( pString + 31 );
-		fData[14]		= ::GetDigitForPiece( pString + 33 );
-		fData[15]		= ::GetDigitForPiece( pString + 35 );
+		if(includeBrackets)
+		{
+			fData[0]		= ::GetDigitForPiece( pString + 1 );
+			fData[1]		= ::GetDigitForPiece( pString + 3 );
+			fData[2]		= ::GetDigitForPiece( pString + 5 );
+			fData[3]		= ::GetDigitForPiece( pString + 7 );
+			fData[4]		= ::GetDigitForPiece( pString + 10 );
+			fData[5]		= ::GetDigitForPiece( pString + 12 );
+			fData[6]		= ::GetDigitForPiece( pString + 15 );
+			fData[7]		= ::GetDigitForPiece( pString + 17 );
+			fData[8]		= ::GetDigitForPiece( pString + 20 );
+			fData[9]		= ::GetDigitForPiece( pString + 22 );
+			fData[10]		= ::GetDigitForPiece( pString + 25 );
+			fData[11]		= ::GetDigitForPiece( pString + 27 );
+			fData[12]		= ::GetDigitForPiece( pString + 29 );
+			fData[13]		= ::GetDigitForPiece( pString + 31 );
+			fData[14]		= ::GetDigitForPiece( pString + 33 );
+			fData[15]		= ::GetDigitForPiece( pString + 35 );
+		}
+		else
+		{
+			fData[0]		= ::GetDigitForPiece( pString + 0 );
+			fData[1]		= ::GetDigitForPiece( pString + 2 );
+			fData[2]		= ::GetDigitForPiece( pString + 4 );
+			fData[3]		= ::GetDigitForPiece( pString + 6 );
+			fData[4]		= ::GetDigitForPiece( pString + 9 );
+			fData[5]		= ::GetDigitForPiece( pString + 11 );
+			fData[6]		= ::GetDigitForPiece( pString + 14 );
+			fData[7]		= ::GetDigitForPiece( pString + 16 );
+			fData[8]		= ::GetDigitForPiece( pString + 19 );
+			fData[9]		= ::GetDigitForPiece( pString + 21 );
+			fData[10]		= ::GetDigitForPiece( pString + 24 );
+			fData[11]		= ::GetDigitForPiece( pString + 26 );
+			fData[12]		= ::GetDigitForPiece( pString + 28 );
+			fData[13]		= ::GetDigitForPiece( pString + 30 );
+			fData[14]		= ::GetDigitForPiece( pString + 32 );
+			fData[15]		= ::GetDigitForPiece( pString + 34 );
+		}
 	}
+
+	return b;
+}
+
+VWFC::Tools::VWUUID::VWUUID(const TXString& str)
+{
+	// {09E95D97-364C-43d5-8ADF-FF4CE0EC41A7}
+	if ( !FromString(str))
+	{
+		// create new UUID if this is not a valid UUID
+		VWUUID newUUID;
+		*this = newUUID;
+	}
+
 }
 
 VWFC::Tools::VWUUID::VWUUID()
@@ -317,10 +335,32 @@ void VWFC::Tools::VWUUID::New()
 	fData[13] =	bytes.byte13;
 	fData[14] =	bytes.byte14;
 	fData[14] =	bytes.byte15;
-#else
 
+#elif _ANDROID
+
+	{
+		using namespace VectorworksMVR::Filing;
+
+		IFileIdentifierPtr file (IID_FileIdentifier);
+
+		// This is the only feasible way to get a new uuid on android. 
+		// Only alternative is accessing the jvm and using the java crypto class
+		// This requires active initialization from the calling java application though
+		file->Set("/proc/sys/kernel/random/uuid");
+
+		Uint64 size = 0;
+		IRawOSFilePtr rawFile (IID_RawOSFile);
+		rawFile->Open(file, true, false, true, false);
+		rawFile->GetFileSize(size);
+		std::unique_ptr<char> storage(new char[size]);
+		rawFile->Read(0, size, storage.get());
+		rawFile->Close();
+		TXString st(storage.get(), size);
+		FromString(st, false);
+	}
 
 #endif
+
 }
 
 void VWFC::Tools::VWUUID::GetUUID(Uint32& out1, Uint32& out2, Uint32& out3, Uint32& out4) const

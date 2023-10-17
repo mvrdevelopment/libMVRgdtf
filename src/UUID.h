@@ -51,6 +51,7 @@ namespace VectorworksMVR
 				void		GetUUID(VWIID& out) const;
 
 				TXString	ToString(bool includeBrackets) const;
+				bool	FromString(const TXString& str, bool includeBrackets = true);
 
 				TXString	Encode(const TXString& arrChars) const;
 
@@ -59,6 +60,7 @@ namespace VectorworksMVR
 				union
 				{
 					Uint8		fData[16];
+					Uint32		fData32[4];
 					Uint64		fData64[2];
 				};
 				
