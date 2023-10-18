@@ -59,6 +59,7 @@ namespace SceneData
 		eConnectionObject 			= -10,
 		eAlignment					= -11,
 		eOverwrite					= -12,
+		eSceneDataMVRSpecObj		= -13
 	};
 	
 	enum class ESearchUuidIn
@@ -536,9 +537,6 @@ namespace SceneData
 		SceneDataClassObjPtr		fClass;
 		TXString					fUnresolvedClass;
 
-		TXString					fGdtfFile;
-		TXString					fGdtfDmxMode;
-		
 		// Geometry stuff
 		SceneDataGeometryObjArray	fGeometries;
 
@@ -559,12 +557,6 @@ namespace SceneData
 		SceneDataGroupObj*			GetContainer() const;
 		SceneDataObjWithMatrix*		GetNextObject() const;
 
-		const TXString&				GetGdtfFile() const;
-		void						SetGDTFFile(const TXString& path);
-		
-		const TXString&				GetGdtfDmxMode() const;
-		void						SetGdtfDmxMode(const TXString& path);
-		
 		void								AddGeometryObj(SceneDataGeoInstanceObjPtr object);
 		const SceneDataGeometryObjArray&	GetGeometryArr() const;
 
@@ -630,6 +622,34 @@ namespace SceneData
 		
 	};
 	
+
+    // ----------------------------------------------------------------------------------------------------------------------------------
+	// SceneDataGDTFSpecObj
+	class SceneDataGDTFSpecObj : public SceneDataGroupObj
+	{
+	public:
+		SceneDataGDTFSpecObj(const SceneDataGUID& guid);
+		~SceneDataGDTFSpecObj();
+		virtual ESceneDataObjectType	GetObjectType();
+
+		
+		const TXString&				GetGdtfFile() const;
+		void						SetGDTFFile(const TXString& path);
+		
+		const TXString&				GetGdtfDmxMode() const;
+		void						SetGdtfDmxMode(const TXString& path);
+		
+	protected:
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange);
+
+	private:
+		TXString					fGdtfFile;
+		TXString					fGdtfDmxMode;
+	};
+
+	typedef SceneDataGDTFSpecObj*					SceneDataGDTFSpecObjPtr;
+
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataGeometryObj
 	class SceneDataGeometryObj : public SceneDataGeoInstanceObj
@@ -714,7 +734,7 @@ namespace SceneData
 	typedef std::vector<SceneDataDmxAdress>	SceneDataAdressArray;
 	
 	
-	class SceneDataFixtureObj : public SceneDataGroupObj
+	class SceneDataFixtureObj : public SceneDataGDTFSpecObj
 	{
 		
 	public:
@@ -792,7 +812,7 @@ namespace SceneData
 	
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataSceneryObj
-	class SceneDataSceneryObj : public SceneDataGroupObj
+	class SceneDataSceneryObj : public SceneDataGDTFSpecObj
 	{
 		
 	public:
@@ -822,7 +842,7 @@ namespace SceneData
 	typedef SceneDataTrussObj* SceneDataTrussObjPtr;
 	
 	
-	class SceneDataSupportObj : public SceneDataGroupObj
+	class SceneDataSupportObj : public SceneDataGDTFSpecObj
 	{
 		
 	public:
@@ -839,7 +859,7 @@ namespace SceneData
 
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataVideoScreenObj
-	class SceneDataVideoScreenObj : public SceneDataGroupObj
+	class SceneDataVideoScreenObj : public SceneDataGDTFSpecObj
 	{
 		
 	public:
@@ -864,7 +884,7 @@ namespace SceneData
 
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataProjectorObj
-	class SceneDataProjectorObj : public SceneDataGroupObj
+	class SceneDataProjectorObj : public SceneDataGDTFSpecObj
 	{
 		
 	public:

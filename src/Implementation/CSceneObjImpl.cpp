@@ -102,7 +102,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetGeometryAt(size_t at
 	
 	
 	ASSERTN(kEveryone, at < count);
-	if (count < at) { return kVCOMError_InvalidArg; }
+	if (count <= at) { return kVCOMError_InvalidArg; }
 	
 	SceneData::SceneDataGeoInstanceObjPtr pScGeoObjInst = fPtr->GetGeometryArr().at(at);
 	
@@ -317,7 +317,9 @@ MvrString VectorworksMVR::CSceneObjImpl::GetGdtfName()
 	ASSERTN(kEveryone,fType != ESceneObjType::Layer && fType != ESceneObjType::Group);
 	if( fType == ESceneObjType::Layer || fType == ESceneObjType::Group) return "";
 	
-	return fPtr->GetGdtfFile().GetCharPtr();
+	SceneData::SceneDataGDTFSpecObjPtr gdtfSpecObj = static_cast<SceneData::SceneDataGDTFSpecObjPtr >(fPtr);
+
+	return gdtfSpecObj->GetGdtfFile().GetCharPtr();
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetGdtfFixture(IGdtfFixture** outFixture)
@@ -329,10 +331,11 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetGdtfFixture(IGdtfFix
 	// Check the type is right
 	ASSERTN(kEveryone,fType != ESceneObjType::Layer && fType != ESceneObjType::Group);
 	if( fType == ESceneObjType::Layer || fType == ESceneObjType::Group) return kVCOMError_NoValidContainerObj;	
+	SceneData::SceneDataGDTFSpecObjPtr gdtfSpecObj = static_cast<SceneData::SceneDataGDTFSpecObjPtr>(fPtr);
 	
 	//---------------------------------------------------------------------------------------------------
 	// Now get the GDTF File
-	TXString gdtfName = fPtr->GetGdtfFile();
+	TXString gdtfName = gdtfSpecObj->GetGdtfFile();
 	
 	if (gdtfName.Find(".gdtf") == ptrdiff_t(-1)) { gdtfName += ".gdtf";}
 	
@@ -401,9 +404,10 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetGdtfName(MvrString g
 	// Check the type is right
 	ASSERTN(kEveryone,fType != ESceneObjType::Layer && fType != ESceneObjType::Group);
 	if( fType == ESceneObjType::Layer || fType == ESceneObjType::Group) return kVCOMError_NoValidContainerObj;
+	SceneData::SceneDataGDTFSpecObjPtr gdtfSpecObj = static_cast<SceneData::SceneDataGDTFSpecObjPtr>(fPtr);
 	
 	TXString name (gdtfName);
-	fPtr->SetGDTFFile(gdtfName);
+	gdtfSpecObj->SetGDTFFile(gdtfName);
 	
 	return kVCOMError_NoError;
 }
@@ -417,8 +421,9 @@ MvrString VectorworksMVR::CSceneObjImpl::GetGdtfMode()
 	// Check the type is right
 	ASSERTN(kEveryone,fType != ESceneObjType::Layer && fType != ESceneObjType::Group);
 	if( fType == ESceneObjType::Layer || fType == ESceneObjType::Group) return "";	
+	SceneData::SceneDataGDTFSpecObjPtr gdtfSpecObj = static_cast<SceneData::SceneDataGDTFSpecObjPtr>(fPtr);
 	
-	return fPtr->GetGdtfDmxMode().GetCharPtr();
+	return gdtfSpecObj->GetGdtfDmxMode().GetCharPtr();
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetGdtfMode(MvrString gdtfMode)
@@ -430,9 +435,10 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetGdtfMode(MvrString g
 	// Check the type is right
 	ASSERTN(kEveryone,fType != ESceneObjType::Layer && fType != ESceneObjType::Group);
 	if( fType == ESceneObjType::Layer || fType == ESceneObjType::Group) return kVCOMError_NoValidContainerObj;
+	SceneData::SceneDataGDTFSpecObjPtr gdtfSpecObj = static_cast<SceneData::SceneDataGDTFSpecObjPtr>(fPtr);
 
 	TXString name (gdtfMode);
-	fPtr->SetGdtfDmxMode(name);
+	gdtfSpecObj->SetGdtfDmxMode(name);
 	
 	return kVCOMError_NoError;
 }
@@ -460,7 +466,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetCustomCommandAt(size
 	
 	
 	ASSERTN(kEveryone, at < count);
-	if (count < at) { return kVCOMError_InvalidArg; }
+	if (count <= at) { return kVCOMError_InvalidArg; }
 	
 	SceneData::SceneDataCustomCommandPtr pScCustomCommand = fPtr->GetCustomCommandArray().at(at);
 	
@@ -569,7 +575,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetAlignmentAt(size_t a
 	
 	
 	ASSERTN(kEveryone, at < count);
-	if (count < at) { return kVCOMError_InvalidArg; }
+	if (count <= at) { return kVCOMError_InvalidArg; }
 	
 	SceneData::SceneDataAlignmentPtr pScAlignment = fPtr->GetAlignmentArray().at(at);
 	
@@ -682,7 +688,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetOverwriteAt(size_t a
 	
 	
 	ASSERTN(kEveryone, at < count);
-	if (count < at) { return kVCOMError_InvalidArg; }
+	if (count <= at) { return kVCOMError_InvalidArg; }
 	
 	SceneData::SceneDataOverwritePtr pScOverwrite = fPtr->GetOverwriteArray().at(at);
 	
@@ -1152,7 +1158,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetMappingAt(size_t at,
 	
 	
 	ASSERTN(kEveryone, at < count);
-	if (count < at) { return kVCOMError_InvalidArg; }
+	if (count <= at) { return kVCOMError_InvalidArg; }
 	
 	SceneData::SceneDataMappingObjPtr pScMapping = fixture->GetMappingsArray().at(at);
 	
@@ -1227,7 +1233,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetConnectionAt(size_t 
 	
 	
 	ASSERTN(kEveryone, at < count);
-	if (count < at) { return kVCOMError_InvalidArg; }
+	if (count <= at) { return kVCOMError_InvalidArg; }
 	
 	SceneData::SceneDataConnectionObjPtr pScConnection = fixture->GetConnectionArr().at(at);
 	
