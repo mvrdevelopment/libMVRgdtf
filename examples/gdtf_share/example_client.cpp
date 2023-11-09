@@ -52,16 +52,16 @@ VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage onMsg(const VectorworksMV
 
     switch (args.Type)
     {
-        case MsgType::MVR_UNDEFINED:        std::cout << "New Message: " << "MVR_UNDEFINED"         << std::endl;
-        case MsgType::MVR_JOIN:             std::cout << "New Message: " << "MVR_JOIN"              << std::endl;
-        case MsgType::MVR_LEAVE:            std::cout << "New Message: " << "MVR_LEAVE"             << std::endl;
-        case MsgType::MVR_COMMIT:           std::cout << "New Message: " << "MVR_COMMIT"            << std::endl;
-        case MsgType::MVR_REQUEST:          std::cout << "New Message: " << "MVR_REQUEST"           << std::endl;
-        case MsgType::MVR_JOIN_RET:         std::cout << "New Message: " << "MVR_JOIN_RET"          << std::endl;
-        case MsgType::MVR_LEAVE_RET:        std::cout << "New Message: " << "MVR_LEAVE_RET"         << std::endl;
-        case MsgType::MVR_COMMIT_RET:       std::cout << "New Message: " << "MVR_COMMIT_RET"        << std::endl;
-        case MsgType::MVR_REQUEST_RET:      std::cout << "New Message: " << "MVR_REQUEST_RET"       << std::endl;
-        case MsgType::MVR_NEW_SESSION_HOST: std::cout << "New Message: " << "MVR_NEW_SESSION_HOST"  << std::endl;
+        case MsgType::MVR_UNDEFINED:        std::cout << "New Message: " << "MVR_UNDEFINED"         << std::endl; break;
+        case MsgType::MVR_JOIN:             std::cout << "New Message: " << "MVR_JOIN"              << std::endl; break;
+        case MsgType::MVR_LEAVE:            std::cout << "New Message: " << "MVR_LEAVE"             << std::endl; break;
+        case MsgType::MVR_COMMIT:           std::cout << "New Message: " << "MVR_COMMIT"            << std::endl; break;
+        case MsgType::MVR_REQUEST:          std::cout << "New Message: " << "MVR_REQUEST"           << std::endl; break;
+        case MsgType::MVR_JOIN_RET:         std::cout << "New Message: " << "MVR_JOIN_RET"          << std::endl; break;
+        case MsgType::MVR_LEAVE_RET:        std::cout << "New Message: " << "MVR_LEAVE_RET"         << std::endl; break;
+        case MsgType::MVR_COMMIT_RET:       std::cout << "New Message: " << "MVR_COMMIT_RET"        << std::endl; break;
+        case MsgType::MVR_REQUEST_RET:      std::cout << "New Message: " << "MVR_REQUEST_RET"       << std::endl; break;
+        case MsgType::MVR_NEW_SESSION_HOST: std::cout << "New Message: " << "MVR_NEW_SESSION_HOST"  << std::endl; break;
     }
 
     // On join
@@ -158,6 +158,7 @@ int main()
     std::string StationName = "Linux2";
     std::string Service = "Test";
 
+    // Be aware that this implementation uses a fixed sized buffer for strings of 1024 bytes, so the max strlen is 1023 bytes
     strcpy(args.Service, Service.c_str());
     strcpy(args.StationName, StationName.c_str());
     strcpy(args.Provider, Provider.c_str());
