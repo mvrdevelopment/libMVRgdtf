@@ -5,8 +5,8 @@ cmake_minimum_required(VERSION 3.9.4)
 set(UNITTEST FALSE CACHE BOOL "If enabled the tests wont be build!")
 set(WIN_RUNTIME_LIB "-MD" CACHE STRING "Set '-MD' or '-MT' for windows build")
 set(DO_NOT_INCLUDE_MINI_ZIP FALSE CACHE BOOL "Set whether or not we include the minzip lib")
+set(BUILD_MVR_XCHANGE_EXAMPLE FALSE CACHE BOOL "Whether to or not to build the MVRXChange example. Mutually exclusive with DO_NOT_INCLUDE_MINI_ZIP")
 set(DONT_USE_XERCES_AS_XMLLIB FALSE CACHE BOOL "Set whether or we use Xerces or tinyXML as xml lib")
-
 
 set(XERCES_ROOT_PATH ${CMAKE_SOURCE_DIR}/../xerces-c CACHE STRING "Set the build path where you called cmake.")
 set(XERCES_INCLUDE_PATH ${XERCES_ROOT_PATH}/src ${XERCES_ROOT_PATH}/build/src CACHE STRING "Set the include path")
@@ -20,6 +20,9 @@ else()
     endif(WIN32)
 endif()
 
+if(${BUILD_MVR_XCHANGE_EXAMPLE} AND ${DO_NOT_INCLUDE_MINI_ZIP})
+  message( FATAL_ERROR "MVRXChange example must be linked against Mini Zip" )
+endif()
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
@@ -48,6 +51,7 @@ add_subdirectory(mdns_cpp)
 project(MvrGdtf)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_BUILD_TYPE Debug)
 
 
 
@@ -166,6 +170,14 @@ if(${DO_NOT_INCLUDE_MINI_ZIP} OR DEFINED ENV{DO_NOT_INCLUDE_MINI_ZIP})
     set(OUTPUT_NAME_OLD "${OUTPUT_NAME_OLD}_NO_MZ")
 
     set_target_properties(MvrGdtf PROPERTIES OUTPUT_NAME ${OUTPUT_NAME_OLD})
+endif()
+
+if(${BUILD_MVR_XCHANGE_EXAMPLE})
+    file(GLOB_RECURSE share_files examples/gdtf_share/*.cpp)
+    add_executable(shareTest ${share_files})
+    target_link_libraries(shareTest MvrGdtf)
+    target_compile_definitions(shareTest ${PREPROCESSORS})
+    target_link_libraries(shareTest ${EXTRA_LIBS})
 endif()
 
 if(${DONT_USE_XERCES_AS_XMLLIB} OR DEFINED ENV{DONT_USE_XERCES_AS_XMLLIB})
