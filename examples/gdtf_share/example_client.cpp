@@ -1,15 +1,7 @@
 #include <iostream>
 #include <thread>
 #include "Include/VectorworksMVR.h"
-#include <sys/stat.h>
 #include "Prefix/StdAfx.h"
-
-long GetFileSize(std::string filename)
-{
-    struct stat stat_buf;
-    int rc = stat(filename.c_str(), &stat_buf);
-    return rc == 0 ? stat_buf.st_size : -1;
-}
 
 using MSG_TYPE = VectorworksMVR::IMVRxchangeService::MVR_COMMIT_MESSAGE;
 
@@ -17,7 +9,7 @@ using MSG_TYPE = VectorworksMVR::IMVRxchangeService::MVR_COMMIT_MESSAGE;
 
 struct GlobalData
 {
-    MvrUUID thisStationUUID;
+    VectorworksMVR::IMVRxchangeService::ConnectToLocalServiceArgs  connArgs;
 };
 
 std::vector<MSG_TYPE> PseudoFiles(GlobalData &data)
@@ -30,11 +22,11 @@ std::vector<MSG_TYPE> PseudoFiles(GlobalData &data)
 
     MSG_TYPE t;
     strcpy(t.Comment, "Example File 1");
-    t.FileSize = 1024;
-    t.StationUUID = data.thisStationUUID;
-    t.FileUUID = VectorworksMVR::MvrUUID(1, 2, 3, 4); // Should be based on file in production environment
-    t.VersionMajor = 5;                               // MVR Version
-    t.VersionMinor = 1;                               // MVR Version
+    t.FileSize = 1024;                                  // Should have correct file size
+    t.StationUUID = data.connArgs.StationUUID;
+    t.FileUUID = VectorworksMVR::MvrUUID(1, 2, 3, 4);   // Should be based on file in production environment
+    t.VersionMajor = 5;                                 // MVR Version
+    t.VersionMinor = 1;                                 // MVR Version
 
     out.push_back(t);
 
@@ -69,6 +61,10 @@ VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage onMsg(const VectorworksMV
     {
         out.Type = MsgType::MVR_JOIN_RET;
         out.JOIN.Files = PseudoFiles(data); // Return available Files to new Client
+        strcpy(out.JOIN.StationName, data.connArgs.StationName);
+        strcpy(out.JOIN.StationUUID, data.connArgs.StationUUID);
+        out.JOIN.VersionMajor = data.connArgs.VersionMajor;
+        out.JOIN.VersionMinor = data.connArgs.VersionMinor;
 
         std::cout << "New Client: " << args.JOIN.Provider << " -> " << args.JOIN.StationName << std::endl;
     }
@@ -91,11 +87,12 @@ VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage onMsg(const VectorworksMV
     else if (args.Type == MsgType::MVR_REQUEST)
     {
         out.Type = MsgType::MVR_REQUEST_RET;
+        out.REQUEST.FromStationUUID = data.connArgs.StationUUID;
         if(args.REQUEST.FileUUID == VectorworksMVR::MvrUUID(1, 2, 3, 4))
         {
             // found file
-            strcpy(out.PathToFile, "/home/marka/Dokumente/DEV/libMVRgdtf/gdtf_share_test/Bigger Test.mvr");
-            out.REQUEST.FileUUID = VectorworksMVR::MvrUUID(5, 6, 7, 8);
+            strcpy(out.PathToFile, EXAMPLE_FILE_PATH);
+            out.REQUEST.FileUUID = VectorworksMVR::MvrUUID(1, 2, 3, 4);
             out.RetIsOK = true;
             std::cout << "Returned requested file" << std::endl;
         }
@@ -147,11 +144,6 @@ int main()
         mainData.thisStationUUID = uuid;
     }
 
-    VectorworksMVR::IMVRxchangeService::OnMessageArgs a;
-    a.Callback = &onMsg;
-    a.Context = &mainData; // This is obviously not copied, so make sure it stays in scope
-    service->OnMessage(a);
-
     VectorworksMVR::IMVRxchangeService::ConnectToLocalServiceArgs args; // Initial Data
     std::string pa("Production Assist - ");
     std::string Provider = "Unittest";
@@ -167,6 +159,13 @@ int main()
     args.VersionMinor = 1;
     args.StationUUID = mainData.thisStationUUID;
     args.InitialFiles = PseudoFiles(mainData);
+
+    mainData.connArgs = args;
+
+    VectorworksMVR::IMVRxchangeService::OnMessageArgs a;
+    a.Callback = &onMsg;
+    a.Context = &mainData; // This is obviously not copied, so make sure it stays in scope
+    service->OnMessage(a);
 
     // Start service and sub-thread
     service->ConnectToLocalService(args);
