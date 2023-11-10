@@ -36,6 +36,10 @@ VectorworksMVR::IMVRxchangeServicePtr service(VectorworksMVR::IID_IMVRxchangeSer
 using MsgType = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType;
 VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage onMsg(const VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage &args, void *context)
 {
+    // The connection is still open during this callback, so
+    // - you cannot use Send_message here
+    // - this function should conclude as fast as possible, otherwise there will be a timeout
+
     GlobalData &data = *((GlobalData *)context);
 
     VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage out;
@@ -60,6 +64,7 @@ VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage onMsg(const VectorworksMV
         out.Type = MsgType::MVR_JOIN_RET;
         out.JOIN.Files = PseudoFiles(data); // Return available Files to new Client
         strcpy(out.JOIN.StationName, data.connArgs.StationName);
+        strcpy(out.JOIN.Provider, data.connArgs.Provider);
         out.JOIN.StationUUID = data.connArgs.StationUUID;
         out.JOIN.VersionMajor = data.connArgs.VersionMajor;
         out.JOIN.VersionMinor = data.connArgs.VersionMinor;
@@ -70,20 +75,6 @@ VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage onMsg(const VectorworksMV
         {
             VectorworksMVR::VWFC::Tools::VWUUID uuid(it.FileUUID.a, it.FileUUID.b, it.FileUUID.c, it.FileUUID.d);
             std::cout << uuid.ToString(true).GetStdString() << "  " << it.Comment << std::endl;
-        }
-        if(args.JOIN.Files.size())
-        {
-            // Request example
-            VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage newMsg;
-            newMsg.Type = MsgType::MVR_REQUEST;
-            newMsg.REQUEST.FileUUID         = args.JOIN.Files[0].FileUUID;
-
-            // By default, requests are sent to all stations and every station will answer either with the requested file or with an error
-            // To filter, which stations should get the request "FromStationUUID" can be set in the REQUEST
-            //newMsg.REQUEST.FromStationUUID  = {...};
-
-            // this is thread safe
-            service->Send_message(VectorworksMVR::IMVRxchangeService::SendMessageArgs{newMsg});
         }
     }
     else if (args.Type == MsgType::MVR_JOIN_RET)
@@ -207,6 +198,27 @@ int main()
 
     // Start service and sub-thread
     service->ConnectToLocalService(mainData.connArgs);
+
+
+    /*
+
+    // Request example
+    // Be aware that this library is meant to be used with (asynchronous) user input, 
+    // so a request should only be done when required by such
+
+        VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage newMsg;
+        newMsg.Type = MsgType::MVR_REQUEST;
+        newMsg.REQUEST.FileUUID         = args.JOIN.Files[0].FileUUID;
+
+        // By default, requests are sent to all stations and every station will answer either with the requested file or with an error
+        // To filter, which stations should get the request "FromStationUUID" can be set in the REQUEST
+        //newMsg.REQUEST.FromStationUUID  = {...};
+
+        // this is thread safe
+        service->Send_message(VectorworksMVR::IMVRxchangeService::SendMessageArgs{newMsg});
+
+    */
+
 
     // MVR XChange is running in a new thread, so other stuff can be done here as well
     while (true)

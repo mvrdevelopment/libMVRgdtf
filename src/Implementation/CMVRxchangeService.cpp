@@ -332,8 +332,6 @@ std::vector<MVRxchangeGroupMember> CMVRxchangeServiceImpl::GetMembersOfService(c
 	{
 		std::string service(e.Service.fBuffer);
 
-        std::cout << e.IPv4 << ":" << e.Port << std::endl;
-
         if(service == (std::string(services.Service) + '.' + serviceAsString))
 		{
 			MVRxchangeGroupMember member;

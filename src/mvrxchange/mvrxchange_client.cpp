@@ -22,14 +22,12 @@ MVRxchangeClient::~MVRxchangeClient()
 bool MVRxchangeClient::ReadMessage(std::chrono::steady_clock::duration timeout)
 {
     boost::system::error_code error;
-    std::size_t n = 0;
     boost::asio::async_read(fSocket,
     boost::asio::buffer(fMsg_ret.GetData(), MVRxchangePacket::total_header_length),
     [&](const boost::system::error_code& result_error,
         std::size_t result_n)
     {
         error = result_error;
-        n = result_n;
     });
 
     // Run the operation until it completes, or until the timeout.
@@ -45,7 +43,6 @@ bool MVRxchangeClient::ReadMessage(std::chrono::steady_clock::duration timeout)
             std::size_t result_n)
         {
             error = result_error;
-            n = result_n;
         });
         Run(timeout);
     }
