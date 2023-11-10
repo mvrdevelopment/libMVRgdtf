@@ -5,8 +5,6 @@
 
 using MSG_TYPE = VectorworksMVR::IMVRxchangeService::MVR_COMMIT_MESSAGE;
 
-#define EXAMPLE_FILE_PATH "./example_file.mvr"
-
 struct GlobalData
 {
     VectorworksMVR::IMVRxchangeService::ConnectToLocalServiceArgs  connArgs;
@@ -62,11 +60,31 @@ VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage onMsg(const VectorworksMV
         out.Type = MsgType::MVR_JOIN_RET;
         out.JOIN.Files = PseudoFiles(data); // Return available Files to new Client
         strcpy(out.JOIN.StationName, data.connArgs.StationName);
-        strcpy(out.JOIN.StationUUID, data.connArgs.StationUUID);
+        out.JOIN.StationUUID = data.connArgs.StationUUID;
         out.JOIN.VersionMajor = data.connArgs.VersionMajor;
         out.JOIN.VersionMinor = data.connArgs.VersionMinor;
 
         std::cout << "New Client: " << args.JOIN.Provider << " -> " << args.JOIN.StationName << std::endl;
+        std::cout << "Available Files on station " << args.JOIN.Provider << " -> " << args.JOIN.StationName << ":" << std::endl;
+        for (auto &it : args.JOIN.Files)
+        {
+            VectorworksMVR::VWFC::Tools::VWUUID uuid(it.FileUUID.a, it.FileUUID.b, it.FileUUID.c, it.FileUUID.d);
+            std::cout << uuid.ToString(true).GetStdString() << "  " << it.Comment << std::endl;
+        }
+        if(args.JOIN.Files.size())
+        {
+            // Request example
+            VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage newMsg;
+            newMsg.Type = MsgType::MVR_REQUEST;
+            newMsg.REQUEST.FileUUID         = args.JOIN.Files[0].FileUUID;
+
+            // By default, requests are sent to all stations and every station will answer either with the requested file or with an error
+            // To filter, which stations should get the request "FromStationUUID" can be set in the REQUEST
+            //newMsg.REQUEST.FromStationUUID  = {...};
+
+            // this is thread safe
+            service->Send_message(VectorworksMVR::IMVRxchangeService::SendMessageArgs{newMsg});
+        }
     }
     else if (args.Type == MsgType::MVR_JOIN_RET)
     {
@@ -76,7 +94,7 @@ VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage onMsg(const VectorworksMV
             VectorworksMVR::VWFC::Tools::VWUUID uuid(it.FileUUID.a, it.FileUUID.b, it.FileUUID.c, it.FileUUID.d);
             std::cout << uuid.ToString(true).GetStdString() << "  " << it.Comment << std::endl;
         }
-        // Ret types are not handled in any other way, so no need to set any properties of "out" object;
+        // _RET types are not handled in any other way, so no need to set any properties of "out" object;
     }
     else if(args.Type == MsgType::MVR_LEAVE)
     {
@@ -87,13 +105,19 @@ VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage onMsg(const VectorworksMV
     else if (args.Type == MsgType::MVR_REQUEST)
     {
         out.Type = MsgType::MVR_REQUEST_RET;
-        out.REQUEST.FromStationUUID = data.connArgs.StationUUID;
+
         if(args.REQUEST.FileUUID == VectorworksMVR::MvrUUID(1, 2, 3, 4))
         {
             // found file
-            strcpy(out.PathToFile, EXAMPLE_FILE_PATH);
+            // Buffers as well as File Paths can be sent ussing either (.BufferToFile and .BufferToFileLength) or (.PathToFile)
             out.REQUEST.FileUUID = VectorworksMVR::MvrUUID(1, 2, 3, 4);
             out.RetIsOK = true;
+
+            // Random data -> NOT A VALID MVR FILE; Use you own Test File for testing
+            // C++17 Does not support std::make_shared for arrays yet
+            out.BufferToFile = std::shared_ptr<char[]>(new char[1024]); 
+            out.BufferToFileLength = 1024;
+
             std::cout << "Returned requested file" << std::endl;
         }
         else
@@ -101,6 +125,21 @@ VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage onMsg(const VectorworksMV
             out.RetIsOK = false;
             strcpy(out.RetError, "Unable to find requested file");
             std::cout << "Unable to find requested file" << std::endl;
+        }
+    }
+    else if (args.Type == MsgType::MVR_REQUEST_RET)
+    {
+        if(args.RetIsOK)
+        {
+            std::cout << "Other station could not find requested file";
+        }
+        else
+        {
+            // While files can be sent using the path or a buffer, received files can only be read using the .BufferToFile and .BufferToFileLength. 
+            // Data is not stored on disk in any way be the lib
+            std::cout << "Got file requested file with size " << args.BufferToFileLength << std::endl;
+            
+            // Discarding file for now
         }
     }
     else if(args.Type == MsgType::MVR_COMMIT)
@@ -136,13 +175,6 @@ int main()
     }
 
     GlobalData mainData;
-    {
-        VectorworksMVR::VWFC::Tools::VWUUID stationUUID; // Using VW UUID implementation, but others can be used as well
-        stationUUID.New();                               // Create new Station UUID, this UUID should be stable between restarts in production environments
-        MvrUUID uuid;
-        stationUUID.GetUUID(uuid.a, uuid.b, uuid.c, uuid.d);
-        mainData.thisStationUUID = uuid;
-    }
 
     VectorworksMVR::IMVRxchangeService::ConnectToLocalServiceArgs args; // Initial Data
     std::string pa("Production Assist - ");
@@ -157,8 +189,14 @@ int main()
 
     args.VersionMajor = 5;
     args.VersionMinor = 1;
-    args.StationUUID = mainData.thisStationUUID;
-    args.InitialFiles = PseudoFiles(mainData);
+    {
+        VectorworksMVR::VWFC::Tools::VWUUID stationUUID; // Using VW UUID implementation, but others can be used as well
+        stationUUID.New();                               // Create new Station UUID, this UUID should be stable between restarts in production environments
+        MvrUUID uuid;
+        stationUUID.GetUUID(uuid.a, uuid.b, uuid.c, uuid.d);
+        args.StationUUID = uuid;
+    }
+    args.InitialFiles = PseudoFiles(mainData);  // File list sent on initial JOIN command, done by the lib
 
     mainData.connArgs = args;
 
@@ -168,7 +206,7 @@ int main()
     service->OnMessage(a);
 
     // Start service and sub-thread
-    service->ConnectToLocalService(args);
+    service->ConnectToLocalService(mainData.connArgs);
 
     // MVR XChange is running in a new thread, so other stuff can be done here as well
     while (true)
