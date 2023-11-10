@@ -51,7 +51,6 @@ add_subdirectory(mdns_cpp)
 project(MvrGdtf)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(CMAKE_BUILD_TYPE Debug)
 
 
 
