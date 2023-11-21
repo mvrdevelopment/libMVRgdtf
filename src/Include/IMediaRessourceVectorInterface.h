@@ -1870,7 +1870,7 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 			// Sending files is possible with both, a buffer (and buffer length) or a file path
 			// If both are set, buffer is used first
 			MVRxchangeString 				PathToFile;
-			std::shared_ptr<char>			BufferToFile;
+			std::shared_ptr<char[]>			BufferToFile;
 			size_t							BufferToFileLength;
 			
 			bool 							RetIsOK;
