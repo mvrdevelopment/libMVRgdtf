@@ -105,8 +105,8 @@ VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage onMsg(const VectorworksMV
             out.RetIsOK = true;
 
             // Random data -> NOT A VALID MVR FILE; Use you own Test File for testing
-            // C++17 Does not support std::make_shared for arrays yet
-            out.BufferToFile = std::shared_ptr<char[]>(new char[1024]); 
+            // Housekeeping is done by the lib, so no need to call delete[] on BufferToFile
+            out.BufferToFile = new char[1024]; 
             out.BufferToFileLength = 1024;
 
             std::cout << "Returned requested file" << std::endl;
@@ -126,10 +126,15 @@ VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage onMsg(const VectorworksMV
         }
         else
         {
-            // While files can be sent using the path or a buffer, received files can only be read using the .BufferToFile and .BufferToFileLength. 
-            // Data is not stored on disk in any way be the lib
+            // While files can be sent using the path or a buffer, 
+            // received files can only be read using the .BufferToFile and .BufferToFileLength. 
+            // Data is not stored on disk in any way by the lib
             std::cout << "Got file requested file with size " << args.BufferToFileLength << std::endl;
             
+            // Memory of BufferToFile is available till the end of this callback, 
+            // so it must be copied out before that. e.g.
+            // memcpy(__dest__, args.BufferToFile, args.BufferToFileLength);
+
             // Discarding file for now
         }
     }
