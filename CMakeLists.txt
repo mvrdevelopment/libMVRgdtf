@@ -85,7 +85,7 @@ file(GLOB_RECURSE libSourceFiles ${SRCDIR}/*.cpp)
 message(PROJECT_SOURCE_DIR="${libSourceFiles}")
 add_library(MvrGdtf STATIC ${libSourceFiles})
 
-if (${DONT_USE_XERCES_AS_XMLLIB} OR DEFINED ENV{DONT_USE_XERCES_AS_XMLLIB})
+if (NOT ${DONT_USE_XERCES_AS_XMLLIB} AND NOT DEFINED ENV{DONT_USE_XERCES_AS_XMLLIB})
     target_link_libraries(MvrGdtf ${XERCES_LIB_PATH})
 endif()
 
