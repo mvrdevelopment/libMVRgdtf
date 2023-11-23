@@ -56,6 +56,7 @@ bool MVRxchangeClient::ReadMessage(std::chrono::steady_clock::duration timeout)
             this->fSocket.remote_endpoint().address().to_string()
         };
         fImpl->TCP_OnIncommingMessage(out, info);
+        delete[] out.BufferToFile;
     }
 
     // Determine whether the read completed successfully

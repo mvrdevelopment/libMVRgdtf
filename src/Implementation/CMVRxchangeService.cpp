@@ -210,6 +210,8 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::Send_message(const SendMessage
 		}
 	}
 
+	delete[] messageHandler.Message.BufferToFile;
+
 	return kVCOMError_NoError;
 }
 

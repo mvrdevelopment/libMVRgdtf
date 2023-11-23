@@ -44,6 +44,7 @@ void MVRxchangeSession::DoRead()
                         this->fSocket.remote_endpoint().address().to_string()
                     };
                     IMVRxchangeService::IMVRxchangeMessage in = fImpl->TCP_OnIncommingMessage(out, info);
+                    delete[] out.BufferToFile;
                     
                     MVRxchangePacket in_msg;
                     in_msg.FromExternalMessage(in);

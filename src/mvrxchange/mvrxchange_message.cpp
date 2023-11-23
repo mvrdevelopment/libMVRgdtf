@@ -277,7 +277,8 @@ void MVRxchangePacket::FromExternalMessage(const VectorworksMVR::IMVRxchangeServ
         {
             fBodyLength = in.BufferToFileLength;
             fData->GrowTo(fBodyLength + total_header_length);
-            memcpy(GetBody(), in.BufferToFile.get(), fBodyLength);
+            memcpy(GetBody(), in.BufferToFile, fBodyLength);
+            delete[] in.BufferToFile;
         }
         else
         {
@@ -286,7 +287,7 @@ void MVRxchangePacket::FromExternalMessage(const VectorworksMVR::IMVRxchangeServ
 
             Uint64 size = 0;
             IRawOSFilePtr rawFile (IID_RawOSFile);
-            rawFile->Open(file, true, false,true, false);
+            rawFile->Open(file, true, false, true, false);
             rawFile->GetFileSize(fBodyLength);
             fData->GrowTo(fBodyLength + total_header_length);
             rawFile->Read(0, fBodyLength, GetBody());
@@ -400,7 +401,7 @@ void MVRxchangePacket::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMV
     {
         in.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_REQUEST_RET;
         in.BufferToFileLength = fBodyLength;
-        in.BufferToFile.reset(new char[fBodyLength]);
-        memcpy(in.BufferToFile.get(), GetBody(), fBodyLength);
+        in.BufferToFile = new char[fBodyLength];
+        memcpy(in.BufferToFile, GetBody(), fBodyLength);
     }
 }
