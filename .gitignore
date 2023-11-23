@@ -67,3 +67,7 @@ x64/**
 libVectorworksMvrGdtf\.vcx/libs
 .DS_Store
 .vscode/c_cpp_properties.json
+
+build_v7a/
+
+build_v8a/
