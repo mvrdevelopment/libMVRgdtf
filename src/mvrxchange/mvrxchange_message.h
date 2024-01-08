@@ -5,6 +5,7 @@
 
 #include "mvrxchange_prefix.h"
 #include "mvrxchange_dynamic_buffer.h"
+#include "json.h"
 
 namespace MVRxchangeNetwork
 {
@@ -41,6 +42,9 @@ namespace MVRxchangeNetwork
             void            ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage&);
 
         private:
+            void            Internal_ToExternalMessage(const nlohmann::json& payload, VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage &in);
+
+
             uint32_t            fFlag;
             uint32_t            fVersion;
             uint32_t            fNumber;
