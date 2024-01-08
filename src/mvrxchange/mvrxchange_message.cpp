@@ -438,11 +438,13 @@ void MVRxchangePacket::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMV
 
         try
         {
+            // Reset type
+            in.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_UNDEFINED;
             Internal_ToExternalMessage(payload, in);
         }
         catch (const std::exception &e)
         {
-            in.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_UNDEFINED;
+            // Type is already set (either to undefined or to the appropriate type)
             in.RetIsOK = false;
             snprintf(in.RetError.fBuffer, 1023, "Parse Error: %s", e.what());
             return;

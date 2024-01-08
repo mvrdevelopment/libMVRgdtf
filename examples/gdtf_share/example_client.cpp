@@ -58,6 +58,16 @@ VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage onMsg(const VectorworksMV
         case MsgType::MVR_NEW_SESSION_HOST: std::cout << "New Message: " << "MVR_NEW_SESSION_HOST"  << std::endl; break;
     }
 
+    // Proper error handling needed
+    // If args.Type == MsgType::MVR_UNDEFINED && args.RetIsOK == false -> Could not parse json object at all
+    // If args.Type != MsgType::MVR_UNDEFINED && args.RetIsOK == false -> Partial json parsing succeeded
+    // args.RetError specifies the error in more detail
+    if(!args.RetIsOK)
+    {
+        std::cerr << args.RetError.fBuffer << std::endl;
+        return out;
+    }
+
     // On join
     if (args.Type == MsgType::MVR_JOIN)
     {
