@@ -492,35 +492,44 @@ QueryResList mDNS::executeQuery2(const std::string &service) {
     }
   }
 
-  // This is a simple implementation that loops for 5 seconds or as long as we
-  // get replies
-  int res = 0;
-  MDNS_LOG << "Reading mDNS query replies\n";
-  do {
-    struct timeval timeout;
-    timeout.tv_sec = 5;
-    timeout.tv_usec = 0;
+  {
 
-    int nfds = 0;
-    fd_set readfs;
-    FD_ZERO(&readfs);
-    for (int isock = 0; isock < num_sockets; ++isock) {
-      if (sockets[isock] >= nfds) nfds = sockets[isock] + 1;
-      FD_SET(sockets[isock], &readfs);
-    }
+    // This is a simple implementation that loops for ITER_SEARCH_TIME seconds or as long as we get replies
+#define ITER_SEARCH_TIME 2
+#define MAX_SEARCH_TIME ITER_SEARCH_TIME * 4
 
-    res = select(nfds, &readfs, 0, 0, &timeout);
-    if (res > 0) {
+    auto startPoint = std::chrono::steady_clock::now();
+    size_t millisecondsDone = 0;
+    int res;
+    MDNS_LOG << "Reading DNS-SD replies\n";
+    do {
+      struct timeval timeout;
+      timeout.tv_sec = ITER_SEARCH_TIME;
+      timeout.tv_usec = 0;
+
+      int nfds = 0;
+      fd_set readfs;
+      FD_ZERO(&readfs);
       for (int isock = 0; isock < num_sockets; ++isock) {
-        if (FD_ISSET(sockets[isock], &readfs)) {
-          mdns_query_recv(sockets[isock], buffer, capacity, query_callback, user_data, query_id[isock]);
-        }
+        if (sockets[isock] >= nfds) nfds = sockets[isock] + 1;
         FD_SET(sockets[isock], &readfs);
       }
-    }
-  } while (res > 0);
 
-  free(buffer);
+      res = select(nfds, &readfs, 0, 0, &timeout);
+      if (res > 0) {
+        for (int isock = 0; isock < num_sockets; ++isock) {
+          if (FD_ISSET(sockets[isock], &readfs)) {
+            mdns_query_recv(sockets[isock], buffer, capacity, query_callback, user_data, query_id[isock]);
+          }
+        }
+      }
+
+      millisecondsDone = std::chrono::duration_cast<std::chrono::milliseconds>((std::chrono::steady_clock::now() - startPoint)).count();
+    } while (res > 0 && millisecondsDone < ITER_SEARCH_TIME * 1000);
+
+    free(buffer);
+  }
+ 
 
   for (int isock = 0; isock < num_sockets; ++isock) {
     mdns_socket_close(sockets[isock]);
@@ -619,33 +628,40 @@ void mDNS::executeDiscovery() {
   void *buffer = malloc(capacity);
   void *user_data = 0;
 
-  // This is a simple implementation that loops for 5 seconds or as long as we
-  // get replies
-  int res;
-  MDNS_LOG << "Reading DNS-SD replies\n";
-  do {
-    struct timeval timeout;
-    timeout.tv_sec = 5;
-    timeout.tv_usec = 0;
+  // This is a simple implementation that loops for 5 seconds or as long as we get replies
+  // max reply duration is set to 20 (15 + 5) sec
 
-    int nfds = 0;
-    fd_set readfs;
-    FD_ZERO(&readfs);
-    for (int isock = 0; isock < num_sockets; ++isock) {
-      if (sockets[isock] >= nfds) nfds = sockets[isock] + 1;
-      FD_SET(sockets[isock], &readfs);
-    }
+  {
+    auto startPoint = std::chrono::steady_clock::now();
+    size_t millisecondsDone = 0;
+    int res;
+    MDNS_LOG << "Reading DNS-SD replies\n";
+    do {
+      struct timeval timeout;
+      timeout.tv_sec = 5;
+      timeout.tv_usec = 0;
 
-    res = select(nfds, &readfs, 0, 0, &timeout);
-    if (res > 0) {
+      int nfds = 0;
+      fd_set readfs;
+      FD_ZERO(&readfs);
       for (int isock = 0; isock < num_sockets; ++isock) {
-        if (FD_ISSET(sockets[isock], &readfs)) {
-          mdns_discovery_recv(sockets[isock], buffer, capacity, query_callback, user_data);
+        if (sockets[isock] >= nfds) nfds = sockets[isock] + 1;
+        FD_SET(sockets[isock], &readfs);
+      }
+
+      res = select(nfds, &readfs, 0, 0, &timeout);
+      if (res > 0) {
+        for (int isock = 0; isock < num_sockets; ++isock) {
+          if (FD_ISSET(sockets[isock], &readfs)) {
+            mdns_discovery_recv(sockets[isock], buffer, capacity, query_callback, user_data);
+          }
         }
       }
-    }
-  } while (res > 0);
 
+      millisecondsDone = std::chrono::duration_cast<std::chrono::milliseconds>((std::chrono::steady_clock::now() - startPoint)).count();
+    } while (res > 0 && millisecondsDone < 15000);
+
+  }
   free(buffer);
 
   for (int isock = 0; isock < num_sockets; ++isock) {
