@@ -95,7 +95,7 @@ using namespace SceneData;
     }
     else
     {
-        DSTOP((kEveryone, "Invalid UUID Formar"));
+        DSTOP((kEveryone, "Invalid UUID Format"));
         GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_UuidHasWrongFormat, node);
         SceneData::GdtfFixture::AddError(error); 
     }
@@ -170,12 +170,11 @@ using namespace SceneData;
         return false;
     }
     
-	uuid = VWUUID(uuidForRead);
-
+	VWUUID u;
+	bool result = uuid.FromString(uuidForRead);
 	uuid.GetUUID(inUuid.a, inUuid.b, inUuid.c, inUuid.d);
 	
-	return true;
-	
+	return result;
 }
 
 /*static*/ TXString GdtfConverter::IntToString2Digits(Sint64 value) 
