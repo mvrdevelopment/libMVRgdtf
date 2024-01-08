@@ -417,7 +417,7 @@ void mDNS::runMainLoop() {
   if (num_sockets <= 0) {
     const auto msg = "Error: Failed to open any client sockets";
     MDNS_LOG << msg << "\n";
-    throw std::runtime_error(msg);
+    return;
   }
 
   MDNS_LOG << "Opened " << std::to_string(num_sockets) << " socket" << (num_sockets ? "s" : "")
@@ -475,7 +475,7 @@ QueryResList mDNS::executeQuery2(const std::string &service) {
   if (num_sockets <= 0) {
     const auto msg = "Failed to open any client sockets";
     MDNS_LOG << msg << "\n";
-    throw std::runtime_error(msg);
+    return {};
   }
   MDNS_LOG << "Opened " << num_sockets << " socket" << (num_sockets ? "s" : "") << " for mDNS query\n";
 
@@ -598,74 +598,13 @@ QueryResList mDNS::executeQuery2(const std::string &service) {
   return outList;
 }
 
-void mDNS::executeQuery(const std::string &service) {
-  int sockets[32];
-  int query_id[32];
-  int num_sockets = openClientSockets(sockets, sizeof(sockets) / sizeof(sockets[0]), 0);
-
-  if (num_sockets <= 0) {
-    const auto msg = "Failed to open any client sockets";
-    MDNS_LOG << msg << "\n";
-    throw std::runtime_error(msg);
-  }
-  MDNS_LOG << "Opened " << num_sockets << " socket" << (num_sockets ? "s" : "") << " for mDNS query\n";
-
-  size_t capacity = 2048;
-  void *buffer = malloc(capacity);
-  void *user_data = 0;
-
-  MDNS_LOG << "Sending mDNS query: " << service << "\n";
-  for (int isock = 0; isock < num_sockets; ++isock) {
-    query_id[isock] = mdns_query_send(sockets[isock], MDNS_RECORDTYPE_PTR, service.data(), strlen(service.data()),
-                                      buffer, capacity, 0);
-    if (query_id[isock] < 0) {
-      MDNS_LOG << "Failed to send mDNS query: " << strerror(errno) << "\n";
-    }
-  }
-
-  // This is a simple implementation that loops for 5 seconds or as long as we
-  // get replies
-  int res{};
-  MDNS_LOG << "Reading mDNS query replies\n";
-  do {
-    struct timeval timeout;
-    timeout.tv_sec = 5;
-    timeout.tv_usec = 0;
-
-    int nfds = 0;
-    fd_set readfs;
-    FD_ZERO(&readfs);
-    for (int isock = 0; isock < num_sockets; ++isock) {
-      if (sockets[isock] >= nfds) nfds = sockets[isock] + 1;
-      FD_SET(sockets[isock], &readfs);
-    }
-
-    res = select(nfds, &readfs, 0, 0, &timeout);
-    if (res > 0) {
-      for (int isock = 0; isock < num_sockets; ++isock) {
-        if (FD_ISSET(sockets[isock], &readfs)) {
-          mdns_query_recv(sockets[isock], buffer, capacity, query_callback, user_data, query_id[isock]);
-        }
-        FD_SET(sockets[isock], &readfs);
-      }
-    }
-  } while (res > 0);
-
-  free(buffer);
-
-  for (int isock = 0; isock < num_sockets; ++isock) {
-    mdns_socket_close(sockets[isock]);
-  }
-  MDNS_LOG << "Closed socket" << (num_sockets ? "s" : "") << "\n";
-}
-
 void mDNS::executeDiscovery() {
   int sockets[32];
   int num_sockets = openClientSockets(sockets, sizeof(sockets) / sizeof(sockets[0]), 0);
   if (num_sockets <= 0) {
     const auto msg = "Failed to open any client sockets";
     MDNS_LOG << msg << "\n";
-    throw std::runtime_error(msg);
+    return;
   }
 
   MDNS_LOG << "Opened " << num_sockets << " socket" << (num_sockets ? "s" : "") << " for DNS-SD\n";
