@@ -9010,6 +9010,8 @@ void GdtfFixture::OnPrintToFile(IXMLFileNodePtr pNode)
 void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 {
 	pNode->GetNodeAttributeValue(XML_GDTF_FixtureName,						fName);
+    fName.Replace("/", "_");
+
 	pNode->GetNodeAttributeValue(XML_GDTF_FixtureShortName,					fShortName);
 	pNode->GetNodeAttributeValue(XML_GDTF_FixtureLongName,					fLongName);
 	pNode->GetNodeAttributeValue(XML_GDTF_FixtureManufacturer,				fManufacturer);
