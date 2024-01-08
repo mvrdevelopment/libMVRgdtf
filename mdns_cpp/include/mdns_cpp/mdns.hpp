@@ -84,7 +84,6 @@ class mDNS {
 
   QueryResList executeQuery2(const std::string &service);
 
-  void executeQuery(const std::string &service);
   void executeDiscovery();
   
 

@@ -82,7 +82,6 @@ set(SRC_TESTDIR ${CMAKE_CURRENT_SOURCE_DIR}/unittest)
 #################################################
 # Add libMvrGdtf lib
 file(GLOB_RECURSE libSourceFiles ${SRCDIR}/*.cpp)
-message(PROJECT_SOURCE_DIR="${libSourceFiles}")
 add_library(MvrGdtf STATIC ${libSourceFiles})
 
 if (NOT ${DONT_USE_XERCES_AS_XMLLIB} AND NOT DEFINED ENV{DONT_USE_XERCES_AS_XMLLIB})
