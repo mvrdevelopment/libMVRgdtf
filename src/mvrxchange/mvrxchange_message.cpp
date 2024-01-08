@@ -201,12 +201,12 @@ void MVRxchangePacket::FromExternalMessage(const VectorworksMVR::IMVRxchangeServ
         payload["verMajor"]     = in.JOIN.VersionMajor;
         payload["verMinor"]     = in.JOIN.VersionMinor;
 
-        payload["Files"] = nlohmann::json::array();
-        for(auto& it : in.JOIN.Files)
+        payload["Commits"] = nlohmann::json::array();
+        for(auto& it : in.JOIN.Commits)
         {
             nlohmann::json obj = nlohmann::json::object();
             MVR_COMMIT_ToJson(it, obj);
-            payload["Files"].push_back(obj);
+            payload["Commits"].push_back(obj);
         }
 
         break;
@@ -220,12 +220,12 @@ void MVRxchangePacket::FromExternalMessage(const VectorworksMVR::IMVRxchangeServ
         payload["verMajor"]     = in.JOIN.VersionMajor;
         payload["verMinor"]     = in.JOIN.VersionMinor;
 
-        payload["Files"] = nlohmann::json::array();
-        for(auto& it : in.JOIN.Files)
+        payload["Commits"] = nlohmann::json::array();
+        for(auto& it : in.JOIN.Commits)
         {
             nlohmann::json obj = nlohmann::json::object();
             MVR_COMMIT_ToJson(it, obj);
-            payload["Files"].push_back(obj);
+            payload["Commits"].push_back(obj);
         }
 
         break;
@@ -331,11 +331,11 @@ void MVRxchangePacket::Internal_ToExternalMessage(const nlohmann::json& payload,
         strcpy(in.JOIN.StationName, payload["StationName"].get<std::string>().c_str());
         noUUIDError = SceneData::GdtfConverter::ConvertUUID(payload["StationUUID"].get<std::string>(), in.JOIN.StationUUID);
 
-        in.JOIN.Files.clear();
-        for (auto &it : payload["Files"])
+        in.JOIN.Commits.clear();
+        for (auto &it : payload["Commits"])
         {
-            in.JOIN.Files.emplace_back();
-            MVR_COMMIT_FromJson(it, in.JOIN.Files.back());
+            in.JOIN.Commits.emplace_back();
+            MVR_COMMIT_FromJson(it, in.JOIN.Commits.back());
         }
     }
     else if (payload["Type"] == "MVR_JOIN_RET")
@@ -350,11 +350,11 @@ void MVRxchangePacket::Internal_ToExternalMessage(const nlohmann::json& payload,
         in.RetIsOK = payload["OK"].get<bool>();
         strcpy(in.RetError, payload["Message"].get<std::string>().c_str());
 
-        in.JOIN.Files.clear();
-        for (auto &it : payload["Files"])
+        in.JOIN.Commits.clear();
+        for (auto &it : payload["Commits"])
         {
-            in.JOIN.Files.emplace_back();
-            MVR_COMMIT_FromJson(it, in.JOIN.Files.back());
+            in.JOIN.Commits.emplace_back();
+            MVR_COMMIT_FromJson(it, in.JOIN.Commits.back());
         }
     }
     else if (payload["Type"] == "MVR_COMMIT")

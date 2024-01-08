@@ -1838,7 +1838,7 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 			MvrUUID							StationUUID;
 			uint32_t 						VersionMajor;
 			uint32_t 						VersionMinor;
-			std::vector<MVR_COMMIT_MESSAGE> Files;
+			std::vector<MVR_COMMIT_MESSAGE> Commits;
 		};
 
 		struct MVR_REQUEST_MESSAGE
