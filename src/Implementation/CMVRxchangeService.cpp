@@ -8,7 +8,7 @@
 #include "XmlFileHelper.h"
 #include <boost/bind.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
-
+#include <unordered_map>
 
 VectorworksMVR::CMVRxchangeServiceImpl::CMVRxchangeServiceImpl()
 {
@@ -469,14 +469,31 @@ void CMVRxchangeServiceImpl::mDNS_Client_Task()
 		strcpy(localServ.IPv6, r.ipV6_adress.c_str());
 		localServ.Port = r.port;
 
-		const char* length1  = r.txt.data();
-		const char* length2  = r.txt.data() + *length1 + 1 ;
+		TXString name;
+		TXString uuid;
 
-		TXString name (length1+1, *length1);
-		TXString uuid (length2+1, *length2);
-        
-        name.Replace("StationName=", "");
-		uuid.Replace("StationUUID=", "");
+		size_t ptr = 0;
+		do{
+			uint8_t len = r.txt[ptr];
+
+			std::string t = r.txt.substr(ptr + 1, len);
+			size_t eqIdx = t.find('=');
+			if(eqIdx == std::string::npos)
+			{
+				continue;
+			}
+
+			if(t.rfind("StationName=") == 0)
+			{
+				name = t.substr(eqIdx + 1);
+			}
+			else if(t.rfind("StationUUID=") == 0)
+			{
+				uuid = t.substr(eqIdx + 1);
+			}
+
+			ptr += len + 1;
+		}while(ptr < r.txt.size());
 
 		SceneData::GdtfConverter::ConvertUUID(uuid, localServ.StationUUID);
 		strcpy(localServ.StationName, name.GetCharPtr());

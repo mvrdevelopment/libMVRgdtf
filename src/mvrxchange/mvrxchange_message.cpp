@@ -321,6 +321,7 @@ uint32_t HandleStringNumber(const nlohmann::json& item)
 
 void MVRxchangePacket::Internal_ToExternalMessage(const nlohmann::json& payload, VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage &in)
 {
+    bool noUUIDError = true;
     if (payload["Type"] == "MVR_JOIN")
     {
         in.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_JOIN;
@@ -328,7 +329,7 @@ void MVRxchangePacket::Internal_ToExternalMessage(const nlohmann::json& payload,
         in.JOIN.VersionMinor = HandleStringNumber(payload["verMinor"]);
         strcpy(in.JOIN.Provider, payload["Provider"].get<std::string>().c_str());
         strcpy(in.JOIN.StationName, payload["StationName"].get<std::string>().c_str());
-        SceneData::GdtfConverter::ConvertUUID(payload["StationUUID"].get<std::string>(), in.JOIN.StationUUID);
+        noUUIDError = SceneData::GdtfConverter::ConvertUUID(payload["StationUUID"].get<std::string>(), in.JOIN.StationUUID);
 
         in.JOIN.Files.clear();
         for (auto &it : payload["Files"])
@@ -344,7 +345,7 @@ void MVRxchangePacket::Internal_ToExternalMessage(const nlohmann::json& payload,
         in.JOIN.VersionMinor = HandleStringNumber(payload["verMinor"]);
         strcpy(in.JOIN.Provider, payload["Provider"].get<std::string>().c_str());
         strcpy(in.JOIN.StationName, payload["StationName"].get<std::string>().c_str());
-        SceneData::GdtfConverter::ConvertUUID(payload["StationUUID"].get<std::string>(), in.JOIN.StationUUID);
+        noUUIDError = SceneData::GdtfConverter::ConvertUUID(payload["StationUUID"].get<std::string>(), in.JOIN.StationUUID);
 
         in.RetIsOK = payload["OK"].get<bool>();
         strcpy(in.RetError, payload["Message"].get<std::string>().c_str());
@@ -370,7 +371,7 @@ void MVRxchangePacket::Internal_ToExternalMessage(const nlohmann::json& payload,
     else if (payload["Type"] == "MVR_REQUEST")
     {
         in.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_REQUEST;
-        SceneData::GdtfConverter::ConvertUUID(payload["FileUUID"].get<std::string>(), in.REQUEST.FileUUID);
+        noUUIDError = SceneData::GdtfConverter::ConvertUUID(payload["FileUUID"].get<std::string>(), in.REQUEST.FileUUID);
 
         in.REQUEST.FromStationUUID.clear();
         // TODO
@@ -392,7 +393,7 @@ void MVRxchangePacket::Internal_ToExternalMessage(const nlohmann::json& payload,
     else if (payload["Type"] == "MVR_LEAVE")
     {
         in.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_LEAVE;
-        SceneData::GdtfConverter::ConvertUUID(payload["FromStationUUID"].get<std::string>(), in.LEAVE.FromStationUUID);
+        noUUIDError = SceneData::GdtfConverter::ConvertUUID(payload["FromStationUUID"].get<std::string>(), in.LEAVE.FromStationUUID);
     }
     else if (payload["Type"] == "MVR_LEAVE_RET")
     {
@@ -401,6 +402,11 @@ void MVRxchangePacket::Internal_ToExternalMessage(const nlohmann::json& payload,
         strcpy(in.RetError, payload["Message"].get<std::string>().c_str());
     }else{
         throw std::runtime_error("Unable to parse payload type correctly");
+    }
+
+    if(!noUUIDError)
+    {
+        throw std::runtime_error("Unable to parse UUID correctly");
     }
 }
 
@@ -434,7 +440,7 @@ void MVRxchangePacket::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMV
         {
             Internal_ToExternalMessage(payload, in);
         }
-        catch (const nlohmann::json::exception &e)
+        catch (const std::exception &e)
         {
             in.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_UNDEFINED;
             in.RetIsOK = false;
