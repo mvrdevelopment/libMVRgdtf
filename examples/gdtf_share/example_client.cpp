@@ -72,7 +72,7 @@ VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage onMsg(const VectorworksMV
     if (args.Type == MsgType::MVR_JOIN)
     {
         out.Type = MsgType::MVR_JOIN_RET;
-        out.JOIN.Files = PseudoFiles(data); // Return available Files to new Client
+        out.JOIN.Commits = PseudoFiles(data); // Return available Files to new Client
         strcpy(out.JOIN.StationName, data.connArgs.StationName);
         strcpy(out.JOIN.Provider, data.connArgs.Provider);
         out.JOIN.StationUUID = data.connArgs.StationUUID;
@@ -81,7 +81,7 @@ VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage onMsg(const VectorworksMV
 
         std::cout << "New Client: " << args.JOIN.Provider << " -> " << args.JOIN.StationName << std::endl;
         std::cout << "Available Files on station " << args.JOIN.Provider << " -> " << args.JOIN.StationName << ":" << std::endl;
-        for (auto &it : args.JOIN.Files)
+        for (auto &it : args.JOIN.Commits)
         {
             VectorworksMVR::VWFC::Tools::VWUUID uuid(it.FileUUID.a, it.FileUUID.b, it.FileUUID.c, it.FileUUID.d);
             std::cout << uuid.ToString(true).GetStdString() << "  " << it.Comment << std::endl;
@@ -90,7 +90,7 @@ VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage onMsg(const VectorworksMV
     else if (args.Type == MsgType::MVR_JOIN_RET)
     {
         std::cout << "Available Files on station " << args.JOIN.Provider << " -> " << args.JOIN.StationName << ":" << std::endl;
-        for (auto &it : args.JOIN.Files)
+        for (auto &it : args.JOIN.Commits)
         {
             VectorworksMVR::VWFC::Tools::VWUUID uuid(it.FileUUID.a, it.FileUUID.b, it.FileUUID.c, it.FileUUID.d);
             std::cout << uuid.ToString(true).GetStdString() << "  " << it.Comment << std::endl;

@@ -90,7 +90,7 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 	joinMessage.Message.JOIN.VersionMajor 	= fCurrentService.VersionMajor;
 	joinMessage.Message.JOIN.VersionMinor 	= fCurrentService.VersionMinor;
 	joinMessage.Message.JOIN.StationUUID  	= fCurrentService.StationUUID;
-	joinMessage.Message.JOIN.Files			= fCurrentService.InitialFiles;
+	joinMessage.Message.JOIN.Commits		= fCurrentService.InitialFiles;
 	this->Send_message(joinMessage);
 
 	if (fmdns_Thread.joinable())
