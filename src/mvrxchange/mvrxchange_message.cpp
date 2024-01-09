@@ -375,7 +375,7 @@ void MVRxchangePacket::Internal_ToExternalMessage(const nlohmann::json& payload,
 
         in.REQUEST.FromStationUUID.clear();
         // TODO
-        for (const auto &e : payload["FromStationsUUID"])
+        for (const auto &e : payload["FromStationUUID"])
         {
             in.REQUEST.FromStationUUID.emplace_back();
             if (!SceneData::GdtfConverter::ConvertUUID(e.get<std::string>(), in.REQUEST.FromStationUUID.back()))
