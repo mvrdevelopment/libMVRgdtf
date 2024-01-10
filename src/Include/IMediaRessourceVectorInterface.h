@@ -1770,9 +1770,27 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		public:
 		MVRxchangeString()
 		{
-			memset(fBuffer,0,1024);
+			std::memset(fBuffer,0,1024);
 		}
 		mutable char fBuffer[1024];
+
+		MVRxchangeString operator=(const char* str)
+		{
+			if(std::strlen(str) > 1023)
+			{
+				std::memcpy(fBuffer, str, 1023);
+				fBuffer[1023] = 0;
+			}else{
+				std::memset(fBuffer, 0, 1024);
+				std::strcpy(fBuffer, str);
+			}
+			return *this;
+		}
+
+		bool operator==(const MVRxchangeString& other) const
+		{
+			return std::strncmp(fBuffer, other.fBuffer, 1023) == 0;
+		}
 
 		operator char*  () const
 		{

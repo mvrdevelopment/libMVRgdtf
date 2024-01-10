@@ -457,4 +457,17 @@ void MVRxchangePacket::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMV
         in.BufferToFile = new char[fBodyLength];
         memcpy(in.BufferToFile, GetBody(), fBodyLength);
     }
+    else
+    {
+            in.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_UNDEFINED;
+            in.RetIsOK = false;
+            if(fType != kMVR_Package_JSON_TYPE && fType != kMVR_Package_BUFFER_TYPE)
+            {
+                snprintf(in.RetError.fBuffer, 1023, "Parse Error: Unknown Package Type");
+            }
+            else
+            {
+                snprintf(in.RetError.fBuffer, 1023, "Parse Error: Empty Package");
+            }
+    }
 }
