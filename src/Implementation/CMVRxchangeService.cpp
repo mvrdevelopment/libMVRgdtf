@@ -226,6 +226,7 @@ void CMVRxchangeServiceImpl::TCP_Start()
 	}
 
 	tcp::endpoint endpoint(tcp::v4(), 0);
+	delete fServer;
 	fServer = new MVRxchangeNetwork::MVRxchangeServer(fServer_IO_Context, endpoint, this);
 	fServer_Running = true;
 	fServer_Thread = std::thread(&CMVRxchangeServiceImpl::TCP_ServerNetworksThread, this);
