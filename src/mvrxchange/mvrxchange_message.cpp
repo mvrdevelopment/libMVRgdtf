@@ -424,7 +424,7 @@ void MVRxchangePacket::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMV
         {
             in.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_UNDEFINED;
             in.RetIsOK = false;
-            snprintf(in.RetError.fBuffer, 1023, "Parse Error: %s", e.what());
+            std::snprintf(in.RetError.fBuffer, 1023, "Parse Error: %s", e.what());
             return;
         }
 
@@ -432,7 +432,7 @@ void MVRxchangePacket::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMV
         {
             in.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_UNDEFINED;
             in.RetIsOK = false;
-            snprintf(in.RetError.fBuffer, 1023, "Parse Error: Type Field is missing");
+            std::snprintf(in.RetError.fBuffer, 1023, "Parse Error: Type Field is missing");
             return;
         }
 
@@ -446,7 +446,7 @@ void MVRxchangePacket::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMV
         {
             // Type is already set (either to undefined or to the appropriate type)
             in.RetIsOK = false;
-            snprintf(in.RetError.fBuffer, 1023, "Parse Error: %s", e.what());
+            std::snprintf(in.RetError.fBuffer, 1023, "Parse Error: %s", e.what());
             return;
         }
     }
@@ -456,5 +456,18 @@ void MVRxchangePacket::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMV
         in.BufferToFileLength = fBodyLength;
         in.BufferToFile = new char[fBodyLength];
         memcpy(in.BufferToFile, GetBody(), fBodyLength);
+    }
+    else
+    {
+            in.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_UNDEFINED;
+            in.RetIsOK = false;
+            if(fType != kMVR_Package_JSON_TYPE && fType != kMVR_Package_BUFFER_TYPE)
+            {
+                std::snprintf(in.RetError.fBuffer, 1023, "Parse Error: Unknown Package Type");
+            }
+            else
+            {
+                std::snprintf(in.RetError.fBuffer, 1023, "Parse Error: Empty Package");
+            }
     }
 }
