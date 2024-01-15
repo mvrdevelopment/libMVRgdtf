@@ -7,16 +7,28 @@
 
 using namespace MVRxchangeNetwork;
 
-MVRxchangeServer::MVRxchangeServer(boost::asio::io_context& io_context, const tcp::endpoint& endpoint, CMVRxchangeServiceImpl* impl) 
-    : fAcceptor(io_context, endpoint),
-      fImpl(impl)
+MVRxchangeServer::MVRxchangeServer(CMVRxchangeServiceImpl* impl) : 
+    fImpl(impl), 
+    fEndpoint(tcp::v4(), 0), 
+    fContext(), 
+    fAcceptor(fContext, fEndpoint)
 {
-    DoAccept();
-
     std::cout << "Port: " << fAcceptor.local_endpoint().port() << std::endl;
 
     fPort = fAcceptor.local_endpoint().port();
     fIp   = fAcceptor.local_endpoint().address().to_v4().to_ulong();
+
+    DoAccept();
+    fExecutionThread = std::thread(&MVRxchangeServer::ExecutionFunction, this);
+}
+
+MVRxchangeServer::~MVRxchangeServer()
+{
+    fContext.stop();
+    if(fExecutionThread.joinable())
+    {
+        fExecutionThread.join();
+    }
 }
 
 void MVRxchangeServer::DoAccept()
@@ -26,8 +38,6 @@ void MVRxchangeServer::DoAccept()
     {
         if (!ec)
         {
-            std::cout << "Start Session" << std::endl;
-            // XXX whats the point of making a shared pointer that directly leaves scop. Then just intstiate an object.
             auto session = std::make_shared<MVRxchangeSession>(std::move(socket), fImpl, this);
 
             AddSession(session);
@@ -37,17 +47,20 @@ void MVRxchangeServer::DoAccept()
 
         DoAccept();
     });
-
 }
 
+void MVRxchangeServer::ExecutionFunction()
+{
+    fContext.run();
+}
 
-void MVRxchangeServer::AddSession(std::shared_ptr<MVRxchangeSession> p) 
+void MVRxchangeServer::AddSession(const std::shared_ptr<MVRxchangeSession>& p) 
 {
     std::unique_lock<std::mutex> mSession;
     fSession.insert(p);
 }
 
-void MVRxchangeServer::CloseSession(std::shared_ptr<MVRxchangeSession> p) 
+void MVRxchangeServer::CloseSession(const std::shared_ptr<MVRxchangeSession>& p) 
 {
     std::unique_lock<std::mutex> mSession;
     fSession.erase(p);

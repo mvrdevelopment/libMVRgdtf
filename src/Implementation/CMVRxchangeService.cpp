@@ -12,7 +12,6 @@
 
 VectorworksMVR::CMVRxchangeServiceImpl::CMVRxchangeServiceImpl()
 {
-	fServer_Running = false;
 	fServer = nullptr;
 }
 
@@ -220,32 +219,18 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::Send_message(const SendMessage
 
 void CMVRxchangeServiceImpl::TCP_Start()
 {
-	if (fServer_Running)
+	if (fServer)
 	{
 		TCP_Stop();
 	}
 
-	tcp::endpoint endpoint(tcp::v4(), 0);
-	delete fServer;
-	fServer = new MVRxchangeNetwork::MVRxchangeServer(fServer_IO_Context, endpoint, this);
-	fServer_Running = true;
-	fServer_Thread = std::thread(&CMVRxchangeServiceImpl::TCP_ServerNetworksThread, this);
+	fServer = new MVRxchangeNetwork::MVRxchangeServer(this);
 }
 
 void CMVRxchangeServiceImpl::TCP_Stop()
 {
-	if (fServer_Thread.joinable())
-	{
-		fServer_IO_Context.stop();
-		fServer_Thread.join();
-	}
-	fServer_Running = false;
-}
-
-void CMVRxchangeServiceImpl::TCP_ServerNetworksThread()
-{
-
-	fServer_IO_Context.run();
+	delete fServer;
+	fServer = nullptr;
 }
 
 IMVRxchangeService::IMVRxchangeMessage CMVRxchangeServiceImpl::TCP_OnIncommingMessage(const IMVRxchangeService::IMVRxchangeMessage& in, const TCPMessageInfo& data)
