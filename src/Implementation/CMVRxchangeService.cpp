@@ -86,8 +86,8 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 	// Start mDNS Service
 	SendMessageArgs joinMessage;
 	joinMessage.Message.Type = MVRxchangeMessageType::MVR_JOIN;
-	strcpy(joinMessage.Message.JOIN.StationName, fCurrentService.StationName);		
-	strcpy(joinMessage.Message.JOIN.Provider, fCurrentService.Provider);		
+	joinMessage.Message.JOIN.StationName 	= fCurrentService.StationName;		
+	joinMessage.Message.JOIN.Provider		= fCurrentService.Provider;		
 	joinMessage.Message.JOIN.VersionMajor 	= fCurrentService.VersionMajor;
 	joinMessage.Message.JOIN.VersionMinor 	= fCurrentService.VersionMinor;
 	joinMessage.Message.JOIN.StationUUID  	= fCurrentService.StationUUID;
@@ -201,9 +201,14 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::Send_message(const SendMessage
 	MVRxchangeNetwork::MVRxchangePacket out;
 	out.FromExternalMessage(messageHandler.Message);
 	{
-		std::lock_guard<std::mutex> lock(fMvrGroupMutex);
+		std::vector<MVRxchangeGroupMember> g;
 
-		for (const auto& e : fMVRGroup)
+		{
+			std::lock_guard<std::mutex> lock(fMvrGroupMutex);
+			g = fMVRGroup;
+		}
+
+		for (const auto& e : g)
 		{
 			if(recipientFilter.size() != 0 && std::find(recipientFilter.begin(), recipientFilter.end(), e.stationUUID) == recipientFilter.end()){
 				continue;
