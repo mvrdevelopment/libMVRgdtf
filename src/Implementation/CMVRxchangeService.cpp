@@ -202,25 +202,21 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::Send_message(const SendMessage
 	MVRxchangeNetwork::MVRxchangePacket out;
 	out.FromExternalMessage(messageHandler.Message);
 	{
-		std::vector<MVRxchangeGroupMember> g;
+		std::lock_guard<std::mutex> lock(fMvrGroupMutex);
 
-		{
-			std::lock_guard<std::mutex> lock(fMvrGroupMutex);
-			g = fMVRGroup;
-		}
-
-		for (const auto& e : g)
+		for (const auto& e : fMVRGroup)
 		{
 			if(recipientFilter.size() != 0 && std::find(recipientFilter.begin(), recipientFilter.end(), e.stationUUID) == recipientFilter.end()){
 				continue;
 			}
-			
+
+			uint16_t port = e.Port;
 			for(auto& ip : e.IP)
 			{
 				toAwait.push_back(std::async(std::launch::async, 
-				[this, ip, &e, &out](){
+				[this, ip, port, &out](){
 					MVRxchangeNetwork::MVRxchangeClient::SendResult ret;
-					SendMessageToLocalNetworks(ip, e.Port, out, ret);
+					SendMessageToLocalNetworks(ip, port, out, ret);
 					return ret;
 				}));
 			}
