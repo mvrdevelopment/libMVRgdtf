@@ -170,9 +170,10 @@ void onRetMsg(const VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage& sent
         // Example of how to request a file
         // This also shows how to use the .CustomReturnCallback to retrieve an answer
         // Be aware that using ->Send_message() is only allowed in the ReturningCallback NOT in the IncomingCallback
-        //if(args.JOIN.Commits.size())
+        if(args.JOIN.Commits.size())
         {
-            /*
+            VectorworksMVR::IMVRxchangeService::SendMessageArgs out;
+            out.Message.Type = MsgType::MVR_REQUEST;
             out.Message.REQUEST.FileUUID = args.JOIN.Commits[0].FileUUID;
             out.CustomReturnCallback = [](const VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage& sentMsg, const VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage &args, void *context){
                 if(args.RetIsOK && args.Type == MsgType::MVR_REQUEST_RET)
@@ -186,12 +187,7 @@ void onRetMsg(const VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage& sent
                     std::cerr << "error receiving file" << std::endl;
                 }
             };
-            */
-            service->LeaveLocalService();
-
-            std::this_thread::sleep_for(std::chrono::seconds(3));
-            std::cout << "reconnect" << std::endl;
-            service->ConnectToLocalService(data.connArgs);
+            service->Send_message(out);
         }
     }
     else if (args.Type == MsgType::MVR_REQUEST_RET)
