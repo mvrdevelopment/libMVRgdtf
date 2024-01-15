@@ -197,7 +197,8 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::Send_message(const SendMessage
 	}
 
 	//---------------------------------------------------------------------------------------------
-	// Start mDNS Service
+	// Send Message async to speed things up
+	std::vector<std::future<MVRxchangeNetwork::MVRxchangeClient::SendResult>> toAwait;
 	MVRxchangeNetwork::MVRxchangePacket out;
 	out.FromExternalMessage(messageHandler.Message);
 	{
@@ -216,21 +217,30 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::Send_message(const SendMessage
 			
 			for(auto& ip : e.IP)
 			{
+				toAwait.push_back(std::async(std::launch::async, 
+				[this, ip, &e, &out](){
 					MVRxchangeNetwork::MVRxchangeClient::SendResult ret;
-					if(!SendMessageToLocalNetworks(ip, e.Port, out, ret))
-					{
-						MVRXCHANGE_ERROR(ret.error.message());
-						continue;
-					}
-
-					IMVRxchangeService::IMVRxchangeMessage in;
-					ret.message.ToExternalMessage(in);
-					TCP_OnReturningMessage(messageHandler, in, ret.messageInfo);
-					delete[] in.BufferToFile;
+					SendMessageToLocalNetworks(ip, e.Port, out, ret);
+					return ret;
+				}));
 			}
 		}
 	}
 
+	for(auto& i : toAwait)
+	{
+		MVRxchangeNetwork::MVRxchangeClient::SendResult result = i.get();
+		if(result.success)
+		{
+			IMVRxchangeService::IMVRxchangeMessage in;
+			result.message.ToExternalMessage(in);
+			TCP_OnReturningMessage(messageHandler, in, result.messageInfo);
+			delete[] in.BufferToFile;
+		}else{
+			MVRXCHANGE_ERROR(result.error.message());
+		}
+	}
+	
 	delete[] messageHandler.Message.BufferToFile;
 
 	return kVCOMError_NoError;
