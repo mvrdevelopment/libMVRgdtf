@@ -198,16 +198,31 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::Send_message(const SendMessage
 
 	//---------------------------------------------------------------------------------------------
 	// Start mDNS Service
+	MVRxchangeNetwork::MVRxchangePacket out;
+	out.FromExternalMessage(messageHandler.Message);
 	{
-		MVRxchangeNetwork::MVRxchangePacket msg;
-		msg.FromExternalMessage(messageHandler.Message);
 		std::lock_guard<std::mutex> lock(fMvrGroupMutex);
+
 		for (const auto& e : fMVRGroup)
 		{
 			if(recipientFilter.size() != 0 && std::find(recipientFilter.begin(), recipientFilter.end(), e.stationUUID) == recipientFilter.end()){
 				continue;
 			}
-			SendMessageToLocalNetworks(e.IP, e.Port, msg);
+			
+			for(auto& ip : e.IP)
+			{
+					MVRxchangeNetwork::MVRxchangeClient::SendResult ret;
+					if(!SendMessageToLocalNetworks(ip, e.Port, out, ret))
+					{
+						MVRXCHANGE_ERROR(ret.error.message());
+						continue;
+					}
+
+					IMVRxchangeService::IMVRxchangeMessage in;
+					ret.message.ToExternalMessage(in);
+					TCP_OnReturningMessage(messageHandler, in, ret.messageInfo);
+					delete[] in.BufferToFile;
+			}
 		}
 	}
 
@@ -344,13 +359,12 @@ bool CMVRxchangeServiceImpl::SendMessageToLocalNetworks(const TXString& ip, uint
 
 	std::string port = std::to_string(p);
 
-	bool ok = false;
 	if(c.Connect(retVal, ip.GetStdString(), port, std::chrono::seconds(1)))
 	{
 		retVal = c.SendMessage(std::chrono::seconds(10)); // Write & Read each
-		ok = retVal.success;
 	}
-	return ok;
+
+	return retVal.success;
 }
 
 std::vector<MVRxchangeGroupMember> CMVRxchangeServiceImpl::GetMembersOfService(const MVRxchangeString& serviceName)
