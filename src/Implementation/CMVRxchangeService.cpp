@@ -312,26 +312,10 @@ IMVRxchangeService::IMVRxchangeMessage CMVRxchangeServiceImpl::TCP_OnIncommingMe
 		if(GetSingleMemberOfService(in.LEAVE.FromStationUUID, newItem) != kVCOMError_NoError)
 		{
 			std::lock_guard<std::mutex> lock(fMvrGroupMutex);
-			std::remove_if(fMVRGroup.begin(), fMVRGroup.end(), [&data](const MVRxchangeGroupMember& it){
-				// Match if Port identical and at least one IP matches
-				return it.Port == data.port && std::find(it.IP.begin(), it.IP.end(), data.ip) != it.IP.end();
-			});
-		}else{
-			std::lock_guard<std::mutex> lock(fMvrGroupMutex);
 			std::remove_if(fMVRGroup.begin(), fMVRGroup.end(), [&newItem](const MVRxchangeGroupMember& it){
-				// Match if Port identical and at least one IP matches
-				if(it.Port != newItem.Port)
-				{
-					return false;
-				}
-				TXStringArray listA = it.IP;
-				TXStringArray listB = newItem.IP;
-				std::sort(listA.begin(), listA.end());
-				std::sort(listB.begin(), listB.end());
-				return listA == listB;
+				return it.stationUUID == newItem.stationUUID;
 			});
 		}
-		
 	}
 
 	IMVRxchangeService::IMVRxchangeMessage ret;
