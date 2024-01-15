@@ -441,11 +441,12 @@ void mDNS::runMainLoop() {
 
   // This is a crude implementation that checks for incoming queries
 
-  struct timeval timeout;
-  timeout.tv_sec = ITER_SEARCH_TIME;
-  timeout.tv_usec = 0;
-
   while (running_) {
+    // struct is modified by select(), so reset it every time
+    struct timeval timeout;
+    timeout.tv_sec = ITER_SEARCH_TIME;
+    timeout.tv_usec = 0;
+
     int nfds = 0;
     fd_set readfs{};
     FD_ZERO(&readfs);
