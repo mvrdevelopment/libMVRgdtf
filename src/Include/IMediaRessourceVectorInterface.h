@@ -1963,9 +1963,11 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 
 			// Called, when an answer to a sent message is received (e.g. all MVR_*_RET message-type)
 			// Arguments are (SentMessage, AnswerMessage, Context) -> void
-			// [SentMessage] is a copy of the message previously sent using ->Send_message() to use as a reference
+			// [SentMessage] is a reference to the message previously sent using ->Send_message()
 			// This callback can be called (possibly asynchronously) multiple times for the same sent message (e.g. when multiple stations answer)
 			IMVRxchangeReturningMessage ReturningCallback; 
+
+			// A custom context to passed to the handlers
 			void*					 Context;
 		};
 		/**
