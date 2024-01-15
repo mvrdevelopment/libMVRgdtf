@@ -7,23 +7,20 @@
 #include "mdns_cpp/mdns.hpp"
 #include "../mvrxchange/mvrxchange_prefix.h"
 #include "../mvrxchange/mvrxchange_server.h"
+#include "../mvrxchange/mvrxchange_client.h"
 
 
 namespace VectorworksMVR
 {
 	struct MVRxchangeGroupMember
 	{
-		TXString IP;
+		TXStringArray IP;	  // One Member can broadcast on multiple adapters
 		uint16_t Port;
 		TXString Name;
 		MvrUUID  stationUUID;
 	};
 
-	struct TCPMessageInfo
-	{
-		uint16_t port;
-		std::string ip;
-	};
+	using TCPMessageInfo = MVRxchangeNetwork::TCPMessageInfo;
 
 	//----------------------------------------------------------------------------------------
 	class CMVRxchangeServiceImpl : public VCOMImpl<IMVRxchangeService>
@@ -57,6 +54,8 @@ namespace VectorworksMVR
 
 		void mDNS_Client_Start();
 		void mDNS_Client_Stop();
+
+		void mDNS_Client_Tick(boost::asio::deadline_timer* t);
 	public:
 		void mDNS_Client_Task();
 	private:
@@ -74,7 +73,8 @@ namespace VectorworksMVR
 		void TCP_Stop();
 		void TCP_ServerNetworksThread();
 	public:
-		IMVRxchangeMessage TCP_OnIncommingMessage(const IMVRxchangeMessage&, const TCPMessageInfo& data);
+		IMVRxchangeMessage TCP_OnIncommingMessage(const IMVRxchangeMessage&, const TCPMessageInfo&);
+		void 			   TCP_OnReturningMessage(const SendMessageArgs&, const IMVRxchangeMessage&, const TCPMessageInfo&);
 
 		std::mutex fMvrGroupMutex;
 		std::vector<MVRxchangeGroupMember>			fMVRGroup;
@@ -84,13 +84,25 @@ namespace VectorworksMVR
 		//---------------------------------------------------------------------------
 		// TCP Client - Local Network mode
 
-		bool SendMessageToLocalNetworks(const TXString& ip, uint16_t p, const MVRxchangeNetwork::MVRxchangePacket& msg);
+		bool SendMessageToLocalNetworks(const TXString& ip, uint16_t p, const MVRxchangeNetwork::MVRxchangePacket& msg, MVRxchangeNetwork::MVRxchangeClient::SendResult& retVal);
 
 
 		//---------------------------------------------------------------------------
 		// mDNS Functions
-		std::vector<MVRxchangeGroupMember> 	GetMembersOfService(const ConnectToLocalServiceArgs& services);
+
+		// Get Services for a certain name
+		// [serviceName] is the name without _mvrxchange._tcp.local. ; e.g. for TestService._mvrxchange._tcp.local. use TestService as [serviceName]
+		std::vector<MVRxchangeGroupMember> 			GetMembersOfService(const MVRxchangeString& serviceName);
+		inline std::vector<MVRxchangeGroupMember> 	GetMembersOfService(const TXString& serviceName) {
+			MVRxchangeString t;
+			t = serviceName.GetCharPtr();
+			return GetMembersOfService(t);
+		}
+
 		VCOMError 							GetSingleMemberOfService(const MvrUUID& stationUUID, MVRxchangeGroupMember& out);
+
+		// Filters duplicates and own mDNS-sockets
+		// this function is moving objects from [input]. Do not use [input] after this call
 		mdns_cpp::QueryResList 				mDNS_Filter_Queries(mdns_cpp::QueryResList& input);
 	};
 }

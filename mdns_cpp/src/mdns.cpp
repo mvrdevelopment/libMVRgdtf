@@ -410,6 +410,9 @@ std::vector<std::pair<std::string, uint32_t>> mDNS::getInterfaces()
   return fInterfaces;
 }
 
+#define ITER_SEARCH_TIME 2
+#define MAX_SEARCH_TIME ITER_SEARCH_TIME * 4
+
 void mDNS::runMainLoop() {
   constexpr size_t number_of_sockets = 32;
   int sockets[number_of_sockets];
@@ -437,6 +440,11 @@ void mDNS::runMainLoop() {
   service_record.txtlenght = txt_record_.size();
 
   // This is a crude implementation that checks for incoming queries
+
+  struct timeval timeout;
+  timeout.tv_sec = ITER_SEARCH_TIME;
+  timeout.tv_usec = 0;
+
   while (running_) {
     int nfds = 0;
     fd_set readfs{};
@@ -446,7 +454,7 @@ void mDNS::runMainLoop() {
       FD_SET(sockets[isock], &readfs);
     }
 
-    if (select(nfds, &readfs, 0, 0, 0) >= 0) {
+    if (select(nfds, &readfs, 0, 0, &timeout) >= 0) {
       for (int isock = 0; isock < num_sockets; ++isock) {
         if (FD_ISSET(sockets[isock], &readfs)) {
           mdns_socket_listen(sockets[isock], buffer.get(), capacity, service_callback, &service_record);
@@ -495,8 +503,6 @@ QueryResList mDNS::executeQuery2(const std::string &service) {
   {
 
     // This is a simple implementation that loops for ITER_SEARCH_TIME seconds or as long as we get replies
-#define ITER_SEARCH_TIME 2
-#define MAX_SEARCH_TIME ITER_SEARCH_TIME * 4
 
     auto startPoint = std::chrono::steady_clock::now();
     size_t millisecondsDone = 0;
@@ -544,8 +550,6 @@ QueryResList mDNS::executeQuery2(const std::string &service) {
     bool add = false;
     std::string service(in.canonicalName.begin(), in.canonicalName.begin() + in.canonicalName.find('.'));
 
-
-
     add = add || in.canonicalName == comp.canonicalName;
     add = add || in.canonicalName == comp.data.name;
     add = add || (comp.canonicalName.length() >= in.canonicalName.length() && in.canonicalName == std::string(comp.canonicalName.end() - in.canonicalName.length(), comp.canonicalName.end()));
@@ -579,16 +583,14 @@ QueryResList mDNS::executeQuery2(const std::string &service) {
     for(auto& t : queryRes.aRecords)
     {
       if(testQueryPart(t, *it)){
-        outItem.ipV4_adress = t.data;
-        break;
+        outItem.ipV4_address.insert(t.data);
       }
     }
 
     for(auto& t : queryRes.aaaaRecords)
     {
       if(testQueryPart(t, *it)){
-        outItem.ipV6_adress = t.data;
-        break;
+        outItem.ipV6_address.insert(t.data);
       }
     }
 
@@ -602,7 +604,6 @@ QueryResList mDNS::executeQuery2(const std::string &service) {
 
     outList.push_back(outItem);
   }
-
 
   return outList;
 }

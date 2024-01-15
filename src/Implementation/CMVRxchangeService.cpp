@@ -9,6 +9,7 @@
 #include <boost/bind.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <unordered_map>
+#include <thread>
 
 VectorworksMVR::CMVRxchangeServiceImpl::CMVRxchangeServiceImpl()
 {
@@ -78,7 +79,7 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 
 	{
 		std::lock_guard<std::mutex> lock(fMvrGroupMutex);
-		fMVRGroup = GetMembersOfService(fCurrentService);
+		fMVRGroup = GetMembersOfService(fCurrentService.Service);
 	}
 	
 	//---------------------------------------------------------------------------------------------
@@ -250,7 +251,6 @@ void CMVRxchangeServiceImpl::TCP_ServerNetworksThread()
 
 IMVRxchangeService::IMVRxchangeMessage CMVRxchangeServiceImpl::TCP_OnIncommingMessage(const IMVRxchangeService::IMVRxchangeMessage& in, const TCPMessageInfo& data)
 {
-	IMVRxchangeService::IMVRxchangeMessage empty;
     
     if(in.Type == MVRxchangeMessageType::MVR_JOIN)
     {
@@ -283,7 +283,6 @@ IMVRxchangeService::IMVRxchangeMessage CMVRxchangeServiceImpl::TCP_OnIncommingMe
 					std::lock_guard<std::mutex> lock(fMvrGroupMutex);
 					fMVRGroup.push_back(newItem);
 				}
-
 			});
 		}
     }
@@ -292,40 +291,69 @@ IMVRxchangeService::IMVRxchangeMessage CMVRxchangeServiceImpl::TCP_OnIncommingMe
 		MVRxchangeGroupMember newItem;
 		if(GetSingleMemberOfService(in.LEAVE.FromStationUUID, newItem) != kVCOMError_NoError)
 		{
-			newItem.IP = data.ip;
-			newItem.Port = data.port;
+			std::lock_guard<std::mutex> lock(fMvrGroupMutex);
+			std::remove_if(fMVRGroup.begin(), fMVRGroup.end(), [&data](const MVRxchangeGroupMember& it){
+				// Match if Port identical and at least one IP matches
+				return it.Port == data.port && std::find(it.IP.begin(), it.IP.end(), data.ip) != it.IP.end();
+			});
+		}else{
+			std::lock_guard<std::mutex> lock(fMvrGroupMutex);
+			std::remove_if(fMVRGroup.begin(), fMVRGroup.end(), [&newItem](const MVRxchangeGroupMember& it){
+				// Match if Port identical and at least one IP matches
+				if(it.Port != newItem.Port)
+				{
+					return false;
+				}
+				TXStringArray listA = it.IP;
+				TXStringArray listB = newItem.IP;
+				std::sort(listA.begin(), listA.end());
+				std::sort(listB.begin(), listB.end());
+				return listA == listB;
+			});
 		}
-		std::lock_guard<std::mutex> lock(fMvrGroupMutex);
-		std::remove_if(fMVRGroup.begin(), fMVRGroup.end(), [&newItem](const MVRxchangeGroupMember& it){
-			return it.IP == newItem.IP && it.Port == newItem.Port;
-		});
+		
 	}
 
-	if (fCallBack.Callback)
+	IMVRxchangeService::IMVRxchangeMessage ret;
+	if (fCallBack.IncomingCallback)
 	{
-		empty = (*fCallBack.Callback)(in, fCallBack.Context);
+		ret = fCallBack.IncomingCallback(in, fCallBack.Context);
 	}
 
-	return empty;
+	return ret;
 }
 
 
-bool CMVRxchangeServiceImpl::SendMessageToLocalNetworks(const TXString& ip, uint16_t p, const MVRxchangeNetwork::MVRxchangePacket& msg)
+void CMVRxchangeServiceImpl::TCP_OnReturningMessage(
+	const SendMessageArgs& messageArgs,
+	const IMVRxchangeService::IMVRxchangeMessage& in, 
+	const TCPMessageInfo& data)
 {
-	MVRxchangeNetwork::MVRxchangeClient c (this, msg);
+	if(messageArgs.CustomReturnCallback)
+	{
+		messageArgs.CustomReturnCallback(messageArgs.Message, in, messageArgs.CustomReturnContext);
+	}else if (fCallBack.ReturningCallback)
+	{
+		fCallBack.ReturningCallback(messageArgs.Message, in, fCallBack.Context);
+	}
+}
+
+bool CMVRxchangeServiceImpl::SendMessageToLocalNetworks(const TXString& ip, uint16_t p, const MVRxchangeNetwork::MVRxchangePacket& msg, MVRxchangeNetwork::MVRxchangeClient::SendResult& retVal)
+{
+	MVRxchangeNetwork::MVRxchangeClient c (msg);
 
 	std::string port = std::to_string(p);
 
 	bool ok = false;
-	if(c.Connect(ip.GetStdString(), port, std::chrono::seconds(1)))
+	if(c.Connect(retVal, ip.GetStdString(), port, std::chrono::seconds(1)))
 	{
-		ok = c.WriteMessage(std::chrono::seconds(10)); // Write & Read each
+		retVal = c.SendMessage(std::chrono::seconds(10)); // Write & Read each
+		ok = retVal.success;
 	}
-
 	return ok;
 }
 
-std::vector<MVRxchangeGroupMember> CMVRxchangeServiceImpl::GetMembersOfService(const ConnectToLocalServiceArgs& services)
+std::vector<MVRxchangeGroupMember> CMVRxchangeServiceImpl::GetMembersOfService(const MVRxchangeString& serviceName)
 {
 	std::vector<MVRxchangeGroupMember> list;
 	std::string serviceAsString(MVRXChange_Service);
@@ -335,10 +363,13 @@ std::vector<MVRxchangeGroupMember> CMVRxchangeServiceImpl::GetMembersOfService(c
 	{
 		std::string service(e.Service.fBuffer);
 
-        if(service == (std::string(services.Service) + '.' + serviceAsString))
+        if(service == (std::string(serviceName.fBuffer) + '.' + serviceAsString))
 		{
 			MVRxchangeGroupMember member;
-			member.IP   = e.IPv4;
+			for(auto& i : e.IPv4_list)
+			{
+				member.IP.emplace_back(i);
+			}
 			member.Port = e.Port;
 			member.Name = e.StationName;
 			member.stationUUID = e.StationUUID;
@@ -353,13 +384,15 @@ std::vector<MVRxchangeGroupMember> CMVRxchangeServiceImpl::GetMembersOfService(c
 VCOMError CMVRxchangeServiceImpl::GetSingleMemberOfService(const MvrUUID& stationUUID, MVRxchangeGroupMember& out){
 	std::lock_guard<std::mutex> lock (fQueryLocalServicesResult_mtx);
 
-
 	for(const auto& e : fQueryLocalServicesResult)
 	{
         if(e.StationUUID == stationUUID)
 		{
 			MVRxchangeGroupMember member;
-			member.IP   = e.IPv4;
+			for(auto& i : e.IPv4_list)
+			{
+				member.IP.emplace_back(i);
+			}
 			member.Port = e.Port;
 			member.Name = e.StationName;
 			member.stationUUID = stationUUID;
@@ -373,12 +406,12 @@ VCOMError CMVRxchangeServiceImpl::GetSingleMemberOfService(const MvrUUID& statio
 }
 
 
-void Func(const boost::system::error_code& /*e*/, boost::asio::deadline_timer* t, CMVRxchangeServiceImpl* imp)
+void CMVRxchangeServiceImpl::mDNS_Client_Tick(boost::asio::deadline_timer* t)
 {
-	std::cout << std::endl<< std::endl << std::endl << " mDNS_Client_Task " << std::endl<< std::endl<< std::endl;
-	imp->mDNS_Client_Task();
+	MVRXCHANGE_LOG("mDNS_Client_Tick");
+	mDNS_Client_Task();
 
-	t->async_wait(boost::bind(Func, boost::asio::placeholders::error, t, imp));
+	t->async_wait(boost::bind(&CMVRxchangeServiceImpl::mDNS_Client_Tick, this, t));
 }
 
 void CMVRxchangeServiceImpl::mDNS_Client_Start()
@@ -386,7 +419,7 @@ void CMVRxchangeServiceImpl::mDNS_Client_Start()
 	boost::asio::deadline_timer t_long (fmdns_IO_Context, boost::posix_time::seconds(45));
 	{
 		boost::asio::deadline_timer t_short(fmdns_IO_Context, boost::posix_time::seconds(1));
-		t_short.async_wait(boost::bind(Func, boost::asio::placeholders::error, &t_long, this));
+		t_short.async_wait(boost::bind(&CMVRxchangeServiceImpl::mDNS_Client_Tick, this, &t_long));
 	}
 	fmdns_IO_Context.run();
 }
@@ -402,30 +435,44 @@ void CMVRxchangeServiceImpl::mDNS_Client_Stop()
 
 mdns_cpp::QueryResList CMVRxchangeServiceImpl::mDNS_Filter_Queries(mdns_cpp::QueryResList &input)
 {
+	// IPv6 is currently not supported
+
 	mdns_cpp::QueryResList out;
 
 	std::string serviceAsString(MVRXChange_Service);
 
 	for (auto &i : input)
 	{
-		auto it = std::find_if(out.begin(), out.end(), [&i](mdns_cpp::Query_result &result)
-							   { return i.ipV4_adress == result.ipV4_adress && i.ipV6_adress == result.ipV6_adress && i.port && result.port; });
+		// filter multiple
+		auto it = std::find_if(out.begin(), out.end(), 
+		[&i](mdns_cpp::Query_result &result)
+		{ 
+			return i.port == result.port && i.ipV4_address == result.ipV4_address && i.ipV6_address == result.ipV6_address; 
+		});
 
-		if (it != out.end())		{continue;}	// filter multiple
-		if (!i.ipV4_adress.size())	{continue;}	// filter empty
+		if (it != out.end())		{continue;}	
 
-		// IPv6 is currently not supported
-		//if (!i.ipV6_adress.size())	{continue;} // filter empty
+		if (!i.ipV4_address.size())	{continue;}	// filter empty
 
 		bool found = false;
-		std::string ipPort = i.ipV4_adress + ':' + std::to_string(i.port);
 
-		for (auto &socket : fmdns)
+		// filter own addresses
+		for(std::string /*no ref on purpose*/ ipPort : i.ipV4_address)
 		{
-			std::string o = socket->getServiceIPPort();
-			if (ipPort == o)
+			ipPort += ':' + std::to_string(i.port);
+
+			for (auto &socket : fmdns)
 			{
-				found = true;
+				std::string o = socket->getServiceIPPort();
+				if (ipPort == o)
+				{
+					found = true;
+					break;
+				}
+			}
+
+			if(found) {
+				break;
 			}
 		}
 
@@ -440,7 +487,6 @@ mdns_cpp::QueryResList CMVRxchangeServiceImpl::mDNS_Filter_Queries(mdns_cpp::Que
 			!std::equal(serviceAsString.rbegin(), serviceAsString.rend(), i.service_name.rbegin()))
 		{
 			// mdns not only retuns query results of the selected service, but also services that broadcasted during query, so filter them out here
-			// as an alternative, filtering could be done directly in the mdns lib, so that the timeout is only resetted when the selected service answered
 			continue;
 		}
 
@@ -465,9 +511,19 @@ void CMVRxchangeServiceImpl::mDNS_Client_Task()
 		result.emplace_back();
 		ConnectToLocalServiceArgs& localServ = result.back();
 
-		strcpy(localServ.Service, r.canonical_hostname.c_str());		 
-		strcpy(localServ.IPv4, r.ipV4_adress.c_str());
-		strcpy(localServ.IPv6, r.ipV6_adress.c_str());
+		localServ.Service = r.canonical_hostname.c_str();	
+
+		for(auto& ip : r.ipV4_address)
+		{
+			localServ.IPv4_list.emplace_back();
+			localServ.IPv4_list.back() = ip.c_str();
+		}
+
+		for(auto& ip : r.ipV6_address)
+		{
+			localServ.IPv6_list.emplace_back();
+			localServ.IPv6_list.back() = ip.c_str();
+		}
 		localServ.Port = r.port;
 
 		TXString name;

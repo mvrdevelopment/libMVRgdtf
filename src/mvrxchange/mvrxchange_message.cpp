@@ -470,4 +470,9 @@ void MVRxchangePacket::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMV
                 std::snprintf(in.RetError.fBuffer, 1023, "Parse Error: Empty Package");
             }
     }
+
+    if(!in.RetIsOK)
+    {
+        MVRXCHANGE_ERROR(in.RetError.fBuffer);
+    }
 }

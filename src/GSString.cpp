@@ -2569,6 +2569,17 @@ void TXString::SetStdUStrFromCharBuffer(const char* src, size_t srcLenToUse, ETX
 #endif
 }
 
+void TXString::swap(TXString& other)
+{
+	std::swap(stdUStr, other.stdUStr);
+	std::swap(charPtr, other.charPtr);
+	std::swap(charBufSize, other.charBufSize);
+}
+
+void swap(TXString& lhs, TXString& rhs)
+{
+	lhs.swap(rhs);
+}
 
 //=======================================================================================
 // http://unicode.org/faq/utf_bom.html#utf16-3
