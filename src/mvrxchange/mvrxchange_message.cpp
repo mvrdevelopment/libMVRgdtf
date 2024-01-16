@@ -265,6 +265,8 @@ void MVRxchangePacket::FromExternalMessage(const VectorworksMVR::IMVRxchangeServ
         break;
     }
 
+    MVRXCHANGE_LOG("sending message of type: " << payload["Type"].get<std::string>());
+
     fFlag       = kMVR_Package_Flag;
     fNumber     = 0;
     fCount      = 1;
@@ -437,6 +439,8 @@ void MVRxchangePacket::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMV
             std::snprintf(in.RetError.fBuffer, 1023, "Parse Error: Type Field is missing");
             return;
         }
+
+        MVRXCHANGE_LOG("received message of type: " << payload["Type"].get<std::string>());
 
         try
         {

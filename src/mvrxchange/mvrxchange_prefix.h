@@ -10,16 +10,21 @@
 #include <iostream>
 
 #ifndef MVRXCHANGE_LOG
-#define MVRXCHANGE_LOG(x) std::cout << "[MvrXChange] [LOG] " << x << std::endl
+    #define MVRXCHANGE_LOG(x) std::cout << "[MvrXChange] [LOG] " << x << std::endl
 #endif
 
 #ifndef MVRXCHANGE_ERROR
-#define MVRXCHANGE_ERROR(x) std::cerr << "[MvrXChange] [ERR] " << x << std::endl
+    #define MVRXCHANGE_ERROR(x) std::cerr << "[MvrXChange] [ERR] " << x << std::endl
 #endif
 
 #ifndef MVRXCHANGE_DEBUG
-#define MVRXCHANGE_DEBUG(x) std::cout << "[MvrXChange] [DBG] " << x << std::endl
+    #ifndef NDEBUG
+        #define MVRXCHANGE_DEBUG(x) std::cout << "[MvrXChange] [DBG] " << x << std::endl
+    #else
+        #define MVRXCHANGE_DEBUG(x)
+    #endif
 #endif
+
 namespace VectorworksMVR
 {
     class CMVRxchangeServiceImpl;
