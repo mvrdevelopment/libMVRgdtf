@@ -26,8 +26,7 @@ void MVRxchangeServer::DoAccept()
     {
         if (!ec)
         {
-            std::cout << "Start Session" << std::endl;
-            // XXX whats the point of making a shared pointer that directly leaves scop. Then just intstiate an object.
+            MVRXCHANGE_DEBUG("incoming message from: " << socket.remote_endpoint().address().to_string() << ":" << std::to_string(socket.remote_endpoint().port()));
             auto session = std::make_shared<MVRxchangeSession>(std::move(socket), fImpl, this);
 
             AddSession(session);

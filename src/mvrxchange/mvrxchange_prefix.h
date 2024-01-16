@@ -9,9 +9,17 @@
 #include <set>
 #include <iostream>
 
+#ifndef MVRXCHANGE_LOG
 #define MVRXCHANGE_LOG(x) std::cout << "[MvrXChange] [LOG] " << x << std::endl
-#define MVRXCHANGE_ERROR(x) std::cerr << "[MvrXChange] [ERR] " << x << std::endl
+#endif
 
+#ifndef MVRXCHANGE_ERROR
+#define MVRXCHANGE_ERROR(x) std::cerr << "[MvrXChange] [ERR] " << x << std::endl
+#endif
+
+#ifndef MVRXCHANGE_DEBUG
+#define MVRXCHANGE_DEBUG(x) std::cout << "[MvrXChange] [DBG] " << x << std::endl
+#endif
 namespace VectorworksMVR
 {
     class CMVRxchangeServiceImpl;
@@ -27,4 +35,4 @@ constexpr uint32_t kMVR_Package_Flag =  778682;
 constexpr uint32_t kMVR_Package_JSON_TYPE   =  0;
 constexpr uint32_t kMVR_Package_BUFFER_TYPE =  1;
 
-#define MVRXChange_Service "_mvrxchange._tcp.local."
+#define MVRXChange_Service "TestNetwork._mvrxchange._tcp.local."

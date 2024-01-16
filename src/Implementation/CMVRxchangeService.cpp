@@ -354,6 +354,7 @@ bool CMVRxchangeServiceImpl::SendMessageToLocalNetworks(const TXString& ip, uint
 
 	std::string port = std::to_string(p);
 
+	MVRXCHANGE_DEBUG("sending message to " << ip.GetStdString() << ":" << port);
 	if(c.Connect(retVal, ip.GetStdString(), port, std::chrono::seconds(1)))
 	{
 		retVal = c.SendMessage(std::chrono::seconds(10)); // Write & Read each
@@ -372,7 +373,7 @@ std::vector<MVRxchangeGroupMember> CMVRxchangeServiceImpl::GetMembersOfService(c
 	{
 		std::string service(e.Service.fBuffer);
 
-        if(service == (std::string(serviceName.fBuffer) + '.' + serviceAsString))
+        if(service == (serviceAsString))
 		{
 			MVRxchangeGroupMember member;
 			for(auto& i : e.IPv4_list)
@@ -417,7 +418,7 @@ VCOMError CMVRxchangeServiceImpl::GetSingleMemberOfService(const MvrUUID& statio
 
 void CMVRxchangeServiceImpl::mDNS_Client_Tick(boost::asio::deadline_timer* t)
 {
-	MVRXCHANGE_LOG("mDNS_Client_Tick");
+	MVRXCHANGE_DEBUG("mDNS_Client_Tick");
 	mDNS_Client_Task();
 
 	t->async_wait(boost::bind(&CMVRxchangeServiceImpl::mDNS_Client_Tick, this, t));
@@ -513,7 +514,10 @@ void CMVRxchangeServiceImpl::mDNS_Client_Task()
 	auto query_res = mdns.executeQuery2(MVRXChange_Service);
 	std::vector<ConnectToLocalServiceArgs> result;
 	
+	MVRXCHANGE_DEBUG("found (" << query_res.size() << ") unfiltered services");
 	query_res = this->mDNS_Filter_Queries(query_res);
+
+	MVRXCHANGE_DEBUG("filtered (" << query_res.size() << "):");
 
 	for (auto& r : query_res) 
 	{
@@ -563,6 +567,16 @@ void CMVRxchangeServiceImpl::mDNS_Client_Task()
 
 		SceneData::GdtfConverter::ConvertUUID(uuid, localServ.StationUUID);
 		strcpy(localServ.StationName, name.GetCharPtr());
+
+		std::string out;
+
+		out += std::string(localServ.Service) + " | ";
+        for(auto& i : localServ.IPv4_list)
+        {
+            out += std::string(i.fBuffer) + " | ";
+        }
+
+		MVRXCHANGE_DEBUG(out);
 	}
 
 	{

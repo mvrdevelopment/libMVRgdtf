@@ -265,7 +265,6 @@ void MVRxchangePacket::FromExternalMessage(const VectorworksMVR::IMVRxchangeServ
         break;
     }
 
-
     fFlag       = kMVR_Package_Flag;
     fNumber     = 0;
     fCount      = 1;
@@ -294,9 +293,12 @@ void MVRxchangePacket::FromExternalMessage(const VectorworksMVR::IMVRxchangeServ
         }
 
         fType       = kMVR_Package_BUFFER_TYPE;
+
+        MVRXCHANGE_DEBUG("outgoing buffer:\n" << "size: " << fBodyLength);
     }
     else
     {
+        MVRXCHANGE_DEBUG("outgoing message:\n" << payload.dump(4));
         std::string s = payload.dump();
         fBodyLength = s.size();
         fType       = kMVR_Package_JSON_TYPE;
@@ -449,6 +451,8 @@ void MVRxchangePacket::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMV
             std::snprintf(in.RetError.fBuffer, 1023, "Parse Error: %s", e.what());
             return;
         }
+
+        MVRXCHANGE_DEBUG("incoming message:\n" << payload.dump(4));
     }
     else if(fType == kMVR_Package_BUFFER_TYPE && fBodyLength > 0)
     {
@@ -456,6 +460,8 @@ void MVRxchangePacket::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMV
         in.BufferToFileLength = fBodyLength;
         in.BufferToFile = new char[fBodyLength];
         memcpy(in.BufferToFile, GetBody(), fBodyLength);
+
+        MVRXCHANGE_DEBUG("incombing buffer:\n" << "size: " << fBodyLength);
     }
     else
     {
