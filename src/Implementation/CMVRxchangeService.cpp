@@ -373,7 +373,7 @@ std::vector<MVRxchangeGroupMember> CMVRxchangeServiceImpl::GetMembersOfService(c
 	{
 		std::string service(e.Service.fBuffer);
 
-        if(service == (serviceAsString))
+        if(service == (std::string(serviceName.fBuffer) + '.' + serviceAsString))
 		{
 			MVRxchangeGroupMember member;
 			for(auto& i : e.IPv4_list)
@@ -568,15 +568,17 @@ void CMVRxchangeServiceImpl::mDNS_Client_Task()
 		SceneData::GdtfConverter::ConvertUUID(uuid, localServ.StationUUID);
 		strcpy(localServ.StationName, name.GetCharPtr());
 
-		std::string out;
+		#ifndef NDEBUG
+			std::string out;
 
-		out += std::string(localServ.Service) + " | ";
-        for(auto& i : localServ.IPv4_list)
-        {
-            out += std::string(i.fBuffer) + " | ";
-        }
+			out += std::string(localServ.Service) + " | ";
+			for(auto& i : localServ.IPv4_list)
+			{
+				out += std::string(i.fBuffer) + " | ";
+			}
 
-		MVRXCHANGE_DEBUG(out);
+			MVRXCHANGE_DEBUG(out);
+		#endif
 	}
 
 	{
