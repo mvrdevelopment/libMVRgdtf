@@ -4,6 +4,7 @@
 #include <string>
 #include <thread>
 #include <vector>
+#include <set>
 #include <unordered_map>
 
 #include "mdns_cpp/defs.hpp"
@@ -25,8 +26,8 @@ struct Query_result {
   std::string   mdnsAddress;
   std::string   txt;
   uint16_t		  port;
-  std::string   ipV4_adress;
-  std::string   ipV6_adress;  
+  std::set<std::string>   ipV4_address;
+  std::set<std::string>   ipV6_address;  
 };
 
 template<typename T>

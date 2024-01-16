@@ -7,6 +7,10 @@
 #include <boost/asio.hpp>
 #include <deque>
 #include <set>
+#include <iostream>
+
+#define MVRXCHANGE_LOG(x) std::cout << "[MvrXChange] [LOG] " << x << std::endl
+#define MVRXCHANGE_ERROR(x) std::cerr << "[MvrXChange] [ERR] " << x << std::endl
 
 namespace VectorworksMVR
 {

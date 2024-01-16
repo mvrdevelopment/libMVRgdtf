@@ -1772,18 +1772,18 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		{
 			std::memset(fBuffer,0,1024);
 		}
+		MVRxchangeString(const char* str)
+		{
+			std::memset(fBuffer,0,1024);
+			this->operator=(str);
+		}
+
 		mutable char fBuffer[1024];
 
-		MVRxchangeString operator=(const char* str)
+		MVRxchangeString& operator=(const char* str)
 		{
-			if(std::strlen(str) > 1023)
-			{
-				std::memcpy(fBuffer, str, 1023);
-				fBuffer[1023] = 0;
-			}else{
-				std::memset(fBuffer, 0, 1024);
-				std::strcpy(fBuffer, str);
-			}
+			std::strncpy(fBuffer, str, 1024);
+			fBuffer[1023] = '\0';	// In case str is longer than 1024, no terminator is set by strncpy
 			return *this;
 		}
 
@@ -1895,9 +1895,6 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 			bool 							RetIsOK;
 			MVRxchangeString 				RetError;
 		};
-
-		typedef IMVRxchangeMessage (*MVRxchangeMessageHandler)(const IMVRxchangeMessage& args, void* context);
-
 		struct ConnectToLocalServiceArgs
 		{
 			MVRxchangeString 	Service;
@@ -1912,8 +1909,8 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 			std::vector<MVR_COMMIT_MESSAGE> InitialFiles;
 
 			// Internal
-			MVRxchangeString IPv4;
-			MVRxchangeString IPv6;
+			std::vector<MVRxchangeString> IPv4_list;
+			std::vector<MVRxchangeString> IPv6_list;
 			uint16_t         Port;
 
 		};
@@ -1948,10 +1945,29 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		virtual VCOMError VCOM_CALLTYPE     QueryLocalServices(size_t& out_Count) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetLocalServiceAt(size_t index, ConnectToLocalServiceArgs& outLocalService) = 0;
         
+		typedef IMVRxchangeMessage (*IMVRxchangeIncomingMessage)(const IMVRxchangeMessage& args, void* context);
+		typedef void (*IMVRxchangeReturningMessage)(const IMVRxchangeMessage& outgoingMsg, const IMVRxchangeMessage& returningMsg, void* context);
 
 		struct OnMessageArgs
 		{
-			MVRxchangeMessageHandler Callback;
+			OnMessageArgs()
+			{
+				IncomingCallback = nullptr;
+				ReturningCallback = nullptr;
+				Context = nullptr;
+			}
+
+			// Called, when a message is received, requires returning of an answer to send back
+			// Arguments are (ReceivedMessage, Context) -> MessageToSend
+			IMVRxchangeIncomingMessage  IncomingCallback;
+
+			// Called, when an answer to a sent message is received (e.g. all MVR_*_RET message-type)
+			// Arguments are (SentMessage, AnswerMessage, Context) -> void
+			// [SentMessage] is a reference to the message previously sent using ->Send_message()
+			// This callback can be called (possibly asynchronously) multiple times for the same sent message (e.g. when multiple stations answer)
+			IMVRxchangeReturningMessage ReturningCallback; 
+
+			// A custom context to passed to the handlers
 			void*					 Context;
 		};
 		/**
@@ -1965,7 +1981,11 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		
 		struct SendMessageArgs
 		{
-			IMVRxchangeMessage Message;
+			IMVRxchangeMessage 			Message;
+
+			// If this is set, this callback is used instead of the one set by ->OnMessage()
+			IMVRxchangeReturningMessage CustomReturnCallback = nullptr;
+			void*					 	CustomReturnContext  = nullptr;
 		};
 		virtual VCOMError VCOM_CALLTYPE     Send_message(const SendMessageArgs& messageHandler) = 0;
 

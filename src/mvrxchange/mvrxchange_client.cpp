@@ -2,14 +2,12 @@
 //----- Copyright MVR Group 
 //-----------------------------------------------------------------------------
 
-#include "mvrxchange_prefix.h"
 #include "mvrxchange_client.h"
 #include "Implementation/CMVRxchangeService.h"
 
-
 using namespace MVRxchangeNetwork;
 
-MVRxchangeClient::MVRxchangeClient(CMVRxchangeServiceImpl* impl, const MVRxchangePacket& packet) : fImpl(impl), fMsg_send(packet)
+MVRxchangeClient::MVRxchangeClient(const MVRxchangePacket& packet) : fMsg_send(packet)
 {
 
 }
@@ -19,76 +17,79 @@ MVRxchangeClient::~MVRxchangeClient()
 
 }
 
-bool MVRxchangeClient::ReadMessage(std::chrono::steady_clock::duration timeout)
+MVRxchangeClient::SendResult MVRxchangeClient::SendMessage(std::chrono::steady_clock::duration timeout)
 {
-    boost::system::error_code error;
+    MVRxchangeClient::SendResult result;
+
+    if(WriteMessage(result, timeout))
+    {
+        ReadMessage(result, timeout);
+    }
+    
+    return result;
+}
+
+bool MVRxchangeClient::ReadMessage(SendResult& res, std::chrono::steady_clock::duration timeout)
+{
     boost::asio::async_read(fSocket,
-    boost::asio::buffer(fMsg_ret.GetData(), MVRxchangePacket::total_header_length),
+    boost::asio::buffer(res.message.GetData(), MVRxchangePacket::total_header_length),
     [&](const boost::system::error_code& result_error,
         std::size_t result_n)
     {
-        error = result_error;
+        res.error = result_error;
     });
 
     // Run the operation until it completes, or until the timeout.
     Run(timeout);
+
+    res.success = !res.error.failed();
     
-    if(!error)
+    if(res.success)
     {
-        fMsg_ret.DecodeHeader();
+        res.message.DecodeHeader();
 
         boost::asio::async_read(fSocket,
-        boost::asio::buffer(fMsg_ret.GetBody(), fMsg_ret.GetBodyLength()),
+        boost::asio::buffer(res.message.GetBody(), res.message.GetBodyLength()),
         [&](const boost::system::error_code& result_error,
             std::size_t result_n)
         {
-            error = result_error;
+            res.error = result_error;
         });
         Run(timeout);
+        res.success = !res.error.failed();
     }
 
-    if(! error)
+    if(res.success)
     {
-        IMVRxchangeService::IMVRxchangeMessage out;
-        fMsg_ret.ToExternalMessage(out);
-        TCPMessageInfo info {
+        res.messageInfo = TCPMessageInfo {
             this->fSocket.remote_endpoint().port(),
             this->fSocket.remote_endpoint().address().to_string()
         };
-        fImpl->TCP_OnIncommingMessage(out, info);
-        delete[] out.BufferToFile;
     }
 
-    // Determine whether the read completed successfully
-    return ! error;;
+    return res.success;
   }
 
-bool MVRxchangeClient::WriteMessage(std::chrono::steady_clock::duration timeout)
+bool MVRxchangeClient::WriteMessage(SendResult& res, std::chrono::steady_clock::duration timeout)
   {
 
     // Start the asynchronous operation itself. The lambda that is used as a
     // callback will update the error variable when the operation completes.
     // The blocking_udp_client.cpp example shows how you can use std::bind
     // rather than a lambda.
-    boost::system::error_code error;
     boost::asio::async_write(fSocket, 
     boost::asio::buffer(fMsg_send.GetData(), fMsg_send.GetLength()),
     [&](const boost::system::error_code& result_error,
         std::size_t /*result_n*/)
     {
-        error = result_error;
+        res.error = result_error;
     });
 
     // Run the operation until it completes, or until the timeout.
     Run(timeout);
+    res.success = !res.error.failed();
 
-    bool ok = false;
-    if(!error)
-    {   
-        ok = ReadMessage(timeout);   
-    }   
-
-    return ok;
+    return res.success;
   }
 
 void MVRxchangeClient::Run(std::chrono::steady_clock::duration timeout)
@@ -116,7 +117,7 @@ void MVRxchangeClient::Run(std::chrono::steady_clock::duration timeout)
     }
 }
 
-bool MVRxchangeClient::Connect(const std::string& host, const std::string& service, std::chrono::steady_clock::duration timeout)
+bool MVRxchangeClient::Connect(SendResult& res, const std::string& host, const std::string& service, std::chrono::steady_clock::duration timeout)
 {
     // Resolve the host name and service to a list of endpoints.
     auto endpoints = tcp::resolver(fio_context).resolve(host, service);
@@ -130,12 +131,12 @@ bool MVRxchangeClient::Connect(const std::string& host, const std::string& servi
         [&](const boost::system::error_code& result_error,
             const tcp::endpoint& /*result_endpoint*/)
         {
-            error = result_error;
+            res.error = result_error;
         });
 
 
     // Run the operation until it completes, or until the timeout.
     Run(timeout);
 
-    return ! error;
+    return res.success = !res.error.failed();
 }

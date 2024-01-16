@@ -43,6 +43,8 @@ void MVRxchangeServer::DoAccept()
             AddSession(session);
 
             session->Start();
+        }else{
+            MVRXCHANGE_ERROR(ec.message());
         }
 
         DoAccept();
