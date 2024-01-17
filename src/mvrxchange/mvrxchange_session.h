@@ -16,7 +16,7 @@ namespace MVRxchangeNetwork
         MVRxchangeSession(tcp::socket socket, CMVRxchangeServiceImpl* impl, MVRxchangeServer* s);
     
     public:
-        void            Start();
+        void Start();
 
 
     private:
@@ -26,7 +26,7 @@ namespace MVRxchangeNetwork
         CMVRxchangeServiceImpl*         fImpl;
         MVRxchangeServer*               fServer;
         tcp::socket                     fSocket;
-        MVRxchangePacket                freadmsg;
+        MVRxchangePacket                fReadMsg;
     };
 
 }

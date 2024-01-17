@@ -43,35 +43,26 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE     OnMessage(OnMessageArgs& messageHandler);
 		virtual VCOMError VCOM_CALLTYPE     Send_message(const SendMessageArgs& messageHandler);
 
+		void mDNS_Client_Task();
+
 	private:
+		void mDNS_Client_Start();
+		void mDNS_Client_Stop();
+		void mDNS_Client_Tick(boost::asio::deadline_timer* t);
+        
 		std::vector<std::unique_ptr<mdns_cpp::mDNS>>	fmdns;
 		std::thread 									fmdns_Thread;
 		boost::asio::io_context 						fmdns_IO_Context;
 
-		std::mutex 								fQueryLocalServicesResult_mtx;
-		std::vector<ConnectToLocalServiceArgs> 	fQueryLocalServicesResult;
-		bool									fIsInitialized = false;
+		std::mutex 										fQueryLocalServicesResult_mtx;
+		std::vector<ConnectToLocalServiceArgs> 			fQueryLocalServicesResult;
+		bool											fIsInitialized = false;
 
-		void mDNS_Client_Start();
-		void mDNS_Client_Stop();
-
-		void mDNS_Client_Tick(boost::asio::deadline_timer* t);
-	public:
-		void mDNS_Client_Task();
-	private:
-
-
-		//---------------------------------------------------------------------------
-		// TCP Server - Local Network mode
-		boost::asio::io_context 					fServer_IO_Context;
-		MVRxchangeNetwork::MVRxchangeServer*	    fServer;
-		std::thread									fServer_Thread;
-		std::atomic<bool>							fServer_Running;
-		ConnectToLocalServiceArgs					fCurrentService;
+		MVRxchangeNetwork::MVRxchangeServer*			fServer;
+		ConnectToLocalServiceArgs						fCurrentService;
 
 		void TCP_Start();
 		void TCP_Stop();
-		void TCP_ServerNetworksThread();
 	public:
 		IMVRxchangeMessage TCP_OnIncommingMessage(const IMVRxchangeMessage&, const TCPMessageInfo&);
 		void 			   TCP_OnReturningMessage(const SendMessageArgs&, const IMVRxchangeMessage&, const TCPMessageInfo&);

@@ -13,25 +13,31 @@ namespace MVRxchangeNetwork
     class MVRxchangeServer
     {
     public:
-        MVRxchangeServer(boost::asio::io_context& io_context, const tcp::endpoint& endpoint, CMVRxchangeServiceImpl* impl);
+        MVRxchangeServer(CMVRxchangeServiceImpl* impl);
+        ~MVRxchangeServer();
 
-    public:            
         uint16_t        GetPort() const;
         uint32_t        GetIP() const;
-
-
-        void AddSession(std::shared_ptr<MVRxchangeSession>);
-        void CloseSession(std::shared_ptr<MVRxchangeSession>);
+        void AddSession(const std::shared_ptr<MVRxchangeSession>&);
+        void CloseSession(const std::shared_ptr<MVRxchangeSession>&);
+        inline bool isRunning() const { return !fContext.stopped(); }
 
     private:
         void DoAccept();
+        void ExecutionFunction();
 
         CMVRxchangeServiceImpl*         fImpl;
-        std::mutex                                   mSession;
-        std::set<std::shared_ptr<MVRxchangeSession>> fSession;
+
+        tcp::endpoint                   fEndpoint;
+		boost::asio::io_context 	    fContext;
         tcp::acceptor                   fAcceptor;
+
+		std::thread						fExecutionThread;
+
         uint16_t                        fPort;
         uint32_t                        fIp;
 
+        std::mutex                                   mSession;
+        std::set<std::shared_ptr<MVRxchangeSession>> fSession;
     };
 }
