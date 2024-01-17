@@ -38,6 +38,7 @@ void MVRxchangeServer::DoAccept()
     {
         if (!ec)
         {
+            MVRXCHANGE_DEBUG("incoming message from: " << socket.remote_endpoint().address().to_string() << ":" << std::to_string(socket.remote_endpoint().port()));
             auto session = std::make_shared<MVRxchangeSession>(std::move(socket), fImpl, this);
 
             AddSession(session);
