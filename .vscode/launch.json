@@ -5,28 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "(gdb) Share Test",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/build/shareTest",
-            "args": [],
-            "stopAtEntry": false,
-            "cwd": "${fileDirname}",
-            "externalConsole": false,
-            "MIMode": "gdb",
-            "miDebuggerPath": "/usr/bin/gdb",
-            "setupCommands": [
-                {
-                    "description": "Automatische Strukturierung und Einrückung für \"gdb\" aktivieren",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                },
-                {
-                    "description": "Disassemblierungsvariante auf Intel festlegen",
-                    "text": "-gdb-set disassembly-flavor intel",
-                    "ignoreFailures": true
-                }
-            ],
+CreateDmxChannelSet
             "preLaunchTask": "build"
         },
         {

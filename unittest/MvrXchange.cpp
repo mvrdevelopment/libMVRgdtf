@@ -116,6 +116,41 @@ bool MvrXChangeUnitTest::ExecuteTest()
             }
         }
 
+        const char* t="{\"Commits\":[{\"Comment\":\"TestCommit\",\"FileSize\":12312313556,\"FileUUID\":\"05000000-0600-0000-0700-000008000000\",\"ForStationsUUID\":[\"09000000-0900-0000-0A00-000001000000\",\"05000000-0100-0000-0400-000006000000\"],\"StationUUID\":\"01000000-0200-0000-0300-000004000000\",\"Type\":\"MVR_COMMIT\",\"verMajor\":3,\"verMinor\":2},{\"Comment\":\"TestCommit\",\"FileSize\":234234,\"FileUUID\":\"01000000-0100-0000-0100-000001000000\",\"ForStationsUUID\":[],\"StationUUID\":\"02000000-0200-0000-0200-000002000000\",\"Type\":\"MVR_COMMIT\",\"verMajor\":3,\"verMinor\":2}],\"Provider\":\"Test Provider\",\"StationName\":\"Test Station\",\"StationUUID\":\"01000000-0200-0000-0300-000004000000\",\"Type\":\"MVR_JOIN\",\"verMajor\":5,\"verMinor\":\"6\"}";
+        
+        {
+            join_out_msg = IMVRxchangeService::IMVRxchangeMessage();
+            MVRxchangeNetwork::MVRxchangePacket inMsg;
+            inMsg.FromString(t);
+            inMsg.ToExternalMessage(join_out_msg);
+        }
+
+        __checkifTrue(join_in_msg.Type              ==  join_out_msg.Type              );
+        __checkifTrue(join_in_msg.JOIN.Provider     ==  join_out_msg.JOIN.Provider     );
+        __checkifTrue(join_in_msg.JOIN.StationName  ==  join_out_msg.JOIN.StationName  );
+        __checkifTrue(join_in_msg.JOIN.StationUUID  ==  join_out_msg.JOIN.StationUUID  );
+        __checkifTrue(join_in_msg.JOIN.VersionMajor ==  join_out_msg.JOIN.VersionMajor );
+        __checkifTrue(join_in_msg.JOIN.VersionMinor ==  join_out_msg.JOIN.VersionMinor );
+
+        eq = join_in_msg.JOIN.Commits.size() == join_out_msg.JOIN.Commits.size();
+        checkifTrue("join_in_msg.JOIN.Commits.size() == join_out_msg.JOIN.Commits.size()", eq);
+        if(eq)
+        {
+            for(size_t i = 0; i < join_in_msg.JOIN.Commits.size(); ++i)
+            {
+                auto& in = join_in_msg.JOIN.Commits[i];
+                auto& ou = join_out_msg.JOIN.Commits[i];
+
+                __checkifTrue(in.Comment         == ou.Comment        );
+                __checkifTrue(in.VersionMajor    == ou.VersionMajor   );
+                __checkifTrue(in.VersionMinor    == ou.VersionMinor   );
+                __checkifTrue(in.FileSize        == ou.FileSize       );
+                __checkifTrue(in.FileUUID        == ou.FileUUID       );
+                __checkifTrue(in.StationUUID     == ou.StationUUID    );
+                __checkifTrue(in.ForStationsUUID == ou.ForStationsUUID);
+            }
+        }
+
     }
 
     {
@@ -188,7 +223,7 @@ bool MvrXChangeUnitTest::ExecuteTest()
 
 
     {
-        // Deserialization Test;
+        // Deserialization Test; -> SHOULD FAIL
         MVRxchangeNetwork::MVRxchangePacket outMsg;
         IMVRxchangeService::IMVRxchangeMessage out_msg;
 
@@ -203,11 +238,10 @@ bool MvrXChangeUnitTest::ExecuteTest()
 
         __checkifTrue(out_msg.Type == VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_UNDEFINED);
         __checkifTrue(!out_msg.RetIsOK);
-        std::cout << "Error Msg:" << out_msg.RetError.fBuffer << std::endl;
     }
 
     {
-        // Deserialization Test;
+        // Deserialization Test; -> SHOULD FAIL
         MVRxchangeNetwork::MVRxchangePacket outMsg;
         IMVRxchangeService::IMVRxchangeMessage out_msg;
 
@@ -229,7 +263,28 @@ bool MvrXChangeUnitTest::ExecuteTest()
 
         __checkifTrue(out_msg.Type == VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_UNDEFINED);
         __checkifTrue(!out_msg.RetIsOK);
-        std::cout << "Error Msg:" << out_msg.RetError.fBuffer << std::endl;
+    }
+
+    {
+        const char* t = "{\"Type\":\"MVR_LEAVE_RET\",\"OK\":\"true\",\"Message\":\"TestMessage\"}";
+
+        IMVRxchangeService::IMVRxchangeMessage out_msg;
+        MVRxchangeNetwork::MVRxchangePacket inMsg;
+        inMsg.FromString(t);
+        inMsg.ToExternalMessage(out_msg);
+
+        __checkifTrue(out_msg.RetIsOK);
+    }
+
+    {
+        const char* t ="{\"Type\":\"MVR_LEAVE_RET\",\"OK\": true,\"Message\":\"TestMessage\"}";
+
+        IMVRxchangeService::IMVRxchangeMessage out_msg;
+        MVRxchangeNetwork::MVRxchangePacket inMsg;
+        inMsg.FromString(t);
+        inMsg.ToExternalMessage(out_msg);
+
+        __checkifTrue(out_msg.RetIsOK);
     }
 
     return true;
