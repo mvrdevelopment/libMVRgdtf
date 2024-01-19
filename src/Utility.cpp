@@ -10,6 +10,36 @@ using VectorworksMVR::Filing::IID_FolderIdentifier;
 
 using namespace VectorworksMVR;
 
+TXString MvrUtil::Remove_IllegalChars( const TXString &s)
+// From the gdtf spec: 
+// Names are UTF-8 literals. In the first 128 characters only use characters listed below. All characters above 127 are available.
+{
+    std::wstring whitelist = L"#%'()+-/0123456789:;<=>@ABCDEFGHIJKLMNOPQRSTUVWXYZ_`abcdefghijklmnopqrstuvwxyz"; // Removed * from spec whitelist, see below.
+    std::wstring blacklist = L"\\*"; // Aditionally we forbid these because they are not allowed in filenames.
+
+    const std::string replaceIllagelCharsWith = "";
+    
+    TXString cleanString;
+
+	for (size_t i = 0; i < s.GetLength(); i++)
+	{
+	    wchar_t valueChar = s.GetAt( i);
+
+	    if ( (whitelist.find(valueChar) != -1) || 
+             ((blacklist.find (valueChar) == -1) && ( (valueChar > 127) && (valueChar < 255)) )
+            )
+	    {
+	    	cleanString +=  valueChar;
+	    }
+        else
+        {
+            cleanString += replaceIllagelCharsWith;
+        }
+	}
+
+    return cleanString;
+}
+
 bool MvrUtil::isContainerType(ESceneObjType typ)
 {
     bool res = (

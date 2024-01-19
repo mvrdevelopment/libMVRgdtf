@@ -22,6 +22,7 @@ namespace VectorworksMVR
     class MvrUtil
     {
     public:
+        static TXString Remove_IllegalChars( const TXString &s);
         static bool isContainerType(ESceneObjType typ);
     };
 

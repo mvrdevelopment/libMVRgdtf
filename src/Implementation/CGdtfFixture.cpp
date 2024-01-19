@@ -664,7 +664,9 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateAttribute(MvrS
 	// Check if Set
 	if(!fFixtureObject) {return kVCOMError_NotInitialized;}
 	
-	TXString vwName		(name);
+	TXString vwName	(name);
+    vwName = MvrUtil::Remove_IllegalChars(vwName);
+
 	TXString vwPretty	(prettyName);
 	
 	SceneData::GdtfAttribute* gdtfAttribute = fFixtureObject->AddAttribute(vwName, vwPretty);
