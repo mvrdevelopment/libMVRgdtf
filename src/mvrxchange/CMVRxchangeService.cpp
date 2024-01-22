@@ -1,11 +1,11 @@
 //-----------------------------------------------------------------------------
 //----- Copyright deersoft 2015 - 2017 www.deersoft.de
 //-----------------------------------------------------------------------------
-#include "Prefix/StdAfx.h"
+#include "../Prefix/StdAfx.h"
 #include "CMVRxchangeService.h"
 #include "../mvrxchange/mvrxchange_prefix.h"
 #include "../mvrxchange/mvrxchange_client.h"
-#include "XmlFileHelper.h"
+#include "../XmlFileHelper.h"
 #include <boost/bind.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <unordered_map>
