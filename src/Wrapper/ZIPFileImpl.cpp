@@ -854,6 +854,9 @@ bool CZIPFileImpl::Inflate( void* pData, size_t dataSize, IZIPFileIOBuffer* outB
 
 	if ( inflateBuffer )
 		delete [] inflateBuffer;
+
+	mz_inflateEnd(streamToInflate);
+
 	if ( streamToInflate ) 
 		delete streamToInflate;
 
@@ -895,6 +898,8 @@ size_t CZIPFileImpl::Deflate( void* pData, size_t dataSize, void* outData )
 			bOk = bOk && !bError;
 		}
 	}
+
+	mz_deflateEnd( streamToDeflate );
 
 	if ( streamToDeflate ) 
 		delete streamToDeflate;
