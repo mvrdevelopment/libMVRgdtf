@@ -6253,20 +6253,7 @@ DmxValue GdtfDmxChannelFunction::GetEndAdress() const
 		// If the Start Adress differrs, the end Adress is based on the start adress of this channel 
 		else { return(fNextFunction->GetStartAdress() - 1);  }	
 	}
- 
 	
-	// The last channel function will have a nullptr for the next function 
-	
-
-	// If there is a next channel function return the end address based on its frist funxtion
-	GdtfDmxLogicalChannelPtr nextLogChannel = fParentLogicalChannel->GetNextLogicalChannel();
-	if(nextLogChannel)
-	{
-		if(!nextLogChannel->GetDmxChannelFunctions().empty())
-		{ return (nextLogChannel->GetDmxChannelFunctions().front()->GetStartAdress() - 1); }
-		
-	}	
-
 	// Otherwise return the max for this feature
 	return fParentLogicalChannel->GetParentDMXChannel()->GetChannelMaxDmx();
 }
