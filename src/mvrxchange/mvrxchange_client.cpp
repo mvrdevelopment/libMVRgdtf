@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------
 
 #include "mvrxchange_client.h"
-#include "Implementation/CMVRxchangeService.h"
+#include "CMVRxchangeService.h"
 
 using namespace MVRxchangeNetwork;
 

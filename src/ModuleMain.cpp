@@ -65,8 +65,11 @@
 #include "Implementation/CGdtfPinPatch.h"
 #include "Implementation/CGdtfSubPhysicalUnit.h"
 #include "Implementation/CGdtfGamut.h"
-#include "Implementation/CMVRxchangeService.h"
 
+#ifdef BUILD_MVR_XCHANGE
+// not in Implementation folder, so it can be switched off easily
+#include "mvrxchange/CMVRxchangeService.h"
+#endif
 
 // XML
 #include "XMLLib/XMLFileNodeImpl.h"
@@ -228,9 +231,10 @@ extern "C" VectorworksMVR::VCOMError VWQueryInterface(const VectorworksMVR::VWII
 		resultInterface = new CGdtfPinPatchImpl();
     else if (iid == VectorworksMVR::IID_GdtfSubPhysicalUnit)
 		resultInterface = new CGdtfSubPhysicalUnitImpl();
+    #ifdef BUILD_MVR_XCHANGE
     else if (iid == VectorworksMVR::IID_IMVRxchangeService)
 		resultInterface = new CMVRxchangeServiceImpl();
-	
+	#endif
 	// determine the result values
 	VCOMError result = kVCOMError_Failed;
 	if ( outInterface == nullptr )
