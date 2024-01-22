@@ -323,6 +323,17 @@ uint32_t HandleStringNumber(const nlohmann::json& item)
     }
 }
 
+bool HandleStringBool(const nlohmann::json& item)
+{
+    if(item.is_boolean())
+    {
+        return item.get<bool>();
+    }else
+    {
+        return item.get<std::string>() == "true";
+    }
+}
+
 void MVRxchangePacket::Internal_ToExternalMessage(const nlohmann::json& payload, VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage &in)
 {
     bool noUUIDError = true;
@@ -351,7 +362,7 @@ void MVRxchangePacket::Internal_ToExternalMessage(const nlohmann::json& payload,
         strcpy(in.JOIN.StationName, payload["StationName"].get<std::string>().c_str());
         noUUIDError = SceneData::GdtfConverter::ConvertUUID(payload["StationUUID"].get<std::string>(), in.JOIN.StationUUID);
 
-        in.RetIsOK = payload["OK"].get<bool>();
+        in.RetIsOK = HandleStringBool(payload["OK"]);
         strcpy(in.RetError, payload["Message"].get<std::string>().c_str());
 
         in.JOIN.Commits.clear();
@@ -369,7 +380,7 @@ void MVRxchangePacket::Internal_ToExternalMessage(const nlohmann::json& payload,
     else if (payload["Type"] == "MVR_COMMIT_RET")
     {
         in.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_COMMIT_RET;
-        in.RetIsOK = payload["OK"].get<bool>();
+        in.RetIsOK = HandleStringBool(payload["OK"]);
         strcpy(in.RetError, payload["Message"].get<std::string>().c_str());
     }
     else if (payload["Type"] == "MVR_REQUEST")
@@ -391,7 +402,7 @@ void MVRxchangePacket::Internal_ToExternalMessage(const nlohmann::json& payload,
     else if (payload["Type"] == "MVR_REQUEST_RET")
     {
         in.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_REQUEST_RET;
-        in.RetIsOK = payload["OK"].get<bool>();
+        in.RetIsOK = HandleStringBool(payload["OK"]);
         strcpy(in.RetError, payload["Message"].get<std::string>().c_str());
     }
     else if (payload["Type"] == "MVR_LEAVE")
@@ -402,7 +413,7 @@ void MVRxchangePacket::Internal_ToExternalMessage(const nlohmann::json& payload,
     else if (payload["Type"] == "MVR_LEAVE_RET")
     {
         in.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_LEAVE_RET;
-        in.RetIsOK = payload["OK"].get<bool>();
+        in.RetIsOK = HandleStringBool(payload["OK"]);
         strcpy(in.RetError, payload["Message"].get<std::string>().c_str());
     }else{
         throw std::runtime_error("Unable to parse payload type correctly");
