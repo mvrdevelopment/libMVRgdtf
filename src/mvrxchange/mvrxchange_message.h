@@ -40,6 +40,10 @@ namespace MVRxchangeNetwork
 
             void            FromExternalMessage(const VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage&);
             void            ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage&);
+#ifdef IS_UNITTEST
+            void            FromString(const std::string& in);
+            std::string     ToString();
+#endif
 
         private:
             void            Internal_ToExternalMessage(const nlohmann::json& payload, VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage &in);

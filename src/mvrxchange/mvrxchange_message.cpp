@@ -476,7 +476,7 @@ void MVRxchangePacket::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMV
         in.BufferToFile = new char[fBodyLength];
         memcpy(in.BufferToFile, GetBody(), fBodyLength);
 
-        MVRXCHANGE_DEBUG("incombing buffer:\n" << "size: " << fBodyLength);
+        MVRXCHANGE_DEBUG("incoming buffer:\n" << "size: " << fBodyLength);
     }
     else
     {
@@ -497,3 +497,24 @@ void MVRxchangePacket::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMV
         MVRXCHANGE_ERROR(in.RetError.fBuffer);
     }
 }
+
+#ifdef IS_UNITTEST
+
+void MVRxchangePacket::FromString(const std::string& in)
+{
+    fFlag = kMVR_Package_Flag;
+    fVersion = 1;
+    fNumber = 1;
+    fCount = 1;
+    fType = kMVR_Package_JSON_TYPE;
+    fBodyLength = in.size();
+    fData->GrowTo(fBodyLength + total_header_length);
+    memcpy(GetBody(), in.data(), fBodyLength);
+}
+
+std::string MVRxchangePacket::ToString()
+{
+    return std::string(GetBody(), fBodyLength);
+}
+
+#endif

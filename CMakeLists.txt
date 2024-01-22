@@ -102,7 +102,7 @@ add_executable(MvrGdtfUnitTest ${unitTestSourceFiles})
 add_definitions(-DGITPATH="${CMAKE_CURRENT_SOURCE_DIR}")
 
 target_link_libraries(MvrGdtfUnitTest MvrGdtf)
-
+add_compile_definitions(IS_UNITTEST)
 endif (UNITTEST)
 #################################################
 
