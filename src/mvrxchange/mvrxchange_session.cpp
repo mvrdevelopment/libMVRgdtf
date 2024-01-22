@@ -4,7 +4,7 @@
 
 #include "mvrxchange_prefix.h"
 #include "mvrxchange_session.h"
-#include "Implementation/CMVRxchangeService.h"
+#include "CMVRxchangeService.h"
 
 
 using namespace MVRxchangeNetwork;

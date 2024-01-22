@@ -7,9 +7,14 @@ set(WIN_RUNTIME_LIB "-MD" CACHE STRING "Set '-MD' or '-MT' for windows build")
 set(DO_NOT_INCLUDE_MINI_ZIP FALSE CACHE BOOL "Set whether or not we include the minzip lib")
 set(BUILD_MVR_XCHANGE_EXAMPLE FALSE CACHE BOOL "Whether to or not to build the MVRXChange example. Mutually exclusive with DO_NOT_INCLUDE_MINI_ZIP")
 set(DONT_USE_XERCES_AS_XMLLIB FALSE CACHE BOOL "Set whether or we use Xerces or tinyXML as xml lib")
+set(BUILD_MVR_XCHANGE TRUE CACHE BOOL "Set whether to include MVR_XChange in the build (requires boost)")
 
 set(XERCES_ROOT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../xerces-c CACHE STRING "Set the build path where you called cmake.")
 set(XERCES_INCLUDE_PATH ${XERCES_ROOT_PATH}/src ${XERCES_ROOT_PATH}/build/src CACHE STRING "Set the include path")
+
+if (${BUILD_MVR_XCHANGE} OR DEFINED ENV{BUILD_MVR_XCHANGE})
+    add_compile_definitions(BUILD_MVR_XCHANGE)
+endif()
 
 if (${DONT_USE_XERCES_AS_XMLLIB} OR DEFINED ENV{DONT_USE_XERCES_AS_XMLLIB})
     add_compile_definitions(DONT_USE_XERCES_AS_XMLLIB)
@@ -21,8 +26,8 @@ else()
     endif(WIN32)
 endif()
 
-if(${BUILD_MVR_XCHANGE_EXAMPLE} AND ${DO_NOT_INCLUDE_MINI_ZIP})
-  message( FATAL_ERROR "MVRXChange example must be linked against Mini Zip" )
+if(${BUILD_MVR_XCHANGE_EXAMPLE} AND ${DO_NOT_INCLUDE_MINI_ZIP} AND NOT ${BUILD_MVR_XCHANGE})
+  message( FATAL_ERROR "MVRXChange example must be linked against Mini Zip and boost" )
 endif()
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -65,9 +70,12 @@ if(NOT DEFINED CMAKE_ARCHIVE_OUTPUT_DIRECTORY)
 endif()
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src
-                    ${CMAKE_CURRENT_SOURCE_DIR}/../boost/
-                    ${CMAKE_CURRENT_SOURCE_DIR}/mdns_cpp/include/
                     ${XERCES_INCLUDE_PATH})
+
+if(BUILD_MVR_XCHANGE)
+    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../boost/
+                        ${CMAKE_CURRENT_SOURCE_DIR}/mdns_cpp/include/)
+endif()
 
 # default values
 # those can be removed probably
@@ -82,13 +90,21 @@ set(SRC_TESTDIR ${CMAKE_CURRENT_SOURCE_DIR}/unittest)
 #################################################
 # Add libMvrGdtf lib
 file(GLOB_RECURSE libSourceFiles ${SRCDIR}/*.cpp)
+
+if(NOT ${BUILD_MVR_XCHANGE})
+    list(FILTER libSourceFiles EXCLUDE REGEX ".*/mvrxchange/.*")
+endif()
+
 add_library(MvrGdtf STATIC ${libSourceFiles})
 
 if (NOT ${DONT_USE_XERCES_AS_XMLLIB} AND NOT DEFINED ENV{DONT_USE_XERCES_AS_XMLLIB})
     target_link_libraries(MvrGdtf ${XERCES_LIB_PATH})
 endif()
 
-target_link_libraries(MvrGdtf mdns_cpp)
+
+if(${BUILD_MVR_XCHANGE})
+    target_link_libraries(MvrGdtf mdns_cpp)
+endif()
 #################################################
 
 
