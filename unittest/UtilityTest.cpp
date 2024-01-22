@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include "Include/VectorworksMVR.h"
+
 using namespace VectorworksMVR;
 #define __checkVCOM(x) checkVCOM(x, #x)
 

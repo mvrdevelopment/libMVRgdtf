@@ -4,6 +4,7 @@
 #include <vector>
 #include <stdint.h>
 #include <cstring>
+#include <memory>
 
 // ---------------------------------------------------------------------------------------------------
 // Support

@@ -5,21 +5,25 @@ cmake_minimum_required(VERSION 3.9.4)
 set(UNITTEST FALSE CACHE BOOL "If enabled the tests wont be build!")
 set(WIN_RUNTIME_LIB "-MD" CACHE STRING "Set '-MD' or '-MT' for windows build")
 set(DO_NOT_INCLUDE_MINI_ZIP FALSE CACHE BOOL "Set whether or not we include the minzip lib")
+set(BUILD_MVR_XCHANGE_EXAMPLE FALSE CACHE BOOL "Whether to or not to build the MVRXChange example. Mutually exclusive with DO_NOT_INCLUDE_MINI_ZIP")
 set(DONT_USE_XERCES_AS_XMLLIB FALSE CACHE BOOL "Set whether or we use Xerces or tinyXML as xml lib")
 
-
-set(XERCES_ROOT_PATH ${CMAKE_SOURCE_DIR}/../xerces-c CACHE STRING "Set the build path where you called cmake.")
+set(XERCES_ROOT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../xerces-c CACHE STRING "Set the build path where you called cmake.")
 set(XERCES_INCLUDE_PATH ${XERCES_ROOT_PATH}/src ${XERCES_ROOT_PATH}/build/src CACHE STRING "Set the include path")
 
 if (${DONT_USE_XERCES_AS_XMLLIB} OR DEFINED ENV{DONT_USE_XERCES_AS_XMLLIB})
+    add_compile_definitions(DONT_USE_XERCES_AS_XMLLIB)
 else()
     if (WIN32)
-    set(XERCES_LIB_PATH ${CMAKE_SOURCE_DIR}/../xerces-c/build/src/Release/xerces-c_3.lib CACHE STRING "Set the xerces libary path")
+    set(XERCES_LIB_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../xerces-c/build/src/Release/xerces-c_3.lib CACHE STRING "Set the xerces libary path")
     else()
-    set(XERCES_LIB_PATH ${CMAKE_SOURCE_DIR}/../xerces-c/build/src/libxerces-c-3.2.a CACHE STRING "Set the xerces libary path")
+    set(XERCES_LIB_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../xerces-c/build/src/libxerces-c-3.2.a CACHE STRING "Set the xerces libary path")
     endif(WIN32)
 endif()
 
+if(${BUILD_MVR_XCHANGE_EXAMPLE} AND ${DO_NOT_INCLUDE_MINI_ZIP})
+  message( FATAL_ERROR "MVRXChange example must be linked against Mini Zip" )
+endif()
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
@@ -41,6 +45,7 @@ ADD_DEFINITIONS(-D_UNICODE)
 
 #################################################
 
+add_subdirectory(mdns_cpp)
 
 #################################################
 # create the project
@@ -51,16 +56,23 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 
 # Set output dir
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/libs/)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/libs/)
 
-include_directories(${CMAKE_SOURCE_DIR}/src
+if(NOT DEFINED CMAKE_LIBRARY_OUTPUT_DIRECTORY)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/libs/)
+endif()
+if(NOT DEFINED CMAKE_ARCHIVE_OUTPUT_DIRECTORY)
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/libs/)
+endif()
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src
+                    ${CMAKE_CURRENT_SOURCE_DIR}/../boost/
+                    ${CMAKE_CURRENT_SOURCE_DIR}/mdns_cpp/include/
                     ${XERCES_INCLUDE_PATH})
 
 # default values
 # those can be removed probably
-set(SRCDIR ${CMAKE_SOURCE_DIR}/src)
-set(SRC_TESTDIR ${CMAKE_SOURCE_DIR}/unittest)
+set(SRCDIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+set(SRC_TESTDIR ${CMAKE_CURRENT_SOURCE_DIR}/unittest)
 
 
 
@@ -72,7 +84,11 @@ set(SRC_TESTDIR ${CMAKE_SOURCE_DIR}/unittest)
 file(GLOB_RECURSE libSourceFiles ${SRCDIR}/*.cpp)
 add_library(MvrGdtf STATIC ${libSourceFiles})
 
-target_link_libraries(MvrGdtf ${XERCES_LIB_PATH})
+if (NOT ${DONT_USE_XERCES_AS_XMLLIB} AND NOT DEFINED ENV{DONT_USE_XERCES_AS_XMLLIB})
+    target_link_libraries(MvrGdtf ${XERCES_LIB_PATH})
+endif()
+
+target_link_libraries(MvrGdtf mdns_cpp)
 #################################################
 
 
@@ -83,10 +99,10 @@ if (UNITTEST)
 file(GLOB_RECURSE unitTestSourceFiles ${SRC_TESTDIR}/*.cpp)
 add_executable(MvrGdtfUnitTest ${unitTestSourceFiles})
 
-add_definitions(-DGITPATH="${CMAKE_SOURCE_DIR}")
+add_definitions(-DGITPATH="${CMAKE_CURRENT_SOURCE_DIR}")
 
 target_link_libraries(MvrGdtfUnitTest MvrGdtf)
-
+add_compile_definitions(IS_UNITTEST)
 endif (UNITTEST)
 #################################################
 
@@ -104,9 +120,12 @@ if (WIN32)
     set(EXTRA_LIBS ${EXTRA_LIBS} rpcrt4)
     set(EXTRA_LIBS ${EXTRA_LIBS} shlwapi)
 
-    set_target_properties( MvrGdtf PROPERTIES RUNTIME_OUTPUT_DIRECTORY    ${CMAKE_SOURCE_DIR}/libs/ )
-    set_target_properties( MvrGdtf PROPERTIES LIBRARY_OUTPUT_DIRECTORY   ${CMAKE_SOURCE_DIR}/libs/ )
-    set_target_properties( MvrGdtf PROPERTIES ARCHIVE_OUTPUT_DIRECTORY  ${CMAKE_SOURCE_DIR}/libs/ )
+    set_target_properties( MvrGdtf PROPERTIES RUNTIME_OUTPUT_DIRECTORY    ${CMAKE_CURRENT_SOURCE_DIR}/libs/ )
+    set_target_properties( MvrGdtf PROPERTIES LIBRARY_OUTPUT_DIRECTORY   ${CMAKE_CURRENT_SOURCE_DIR}/libs/ )
+    set_target_properties( MvrGdtf PROPERTIES ARCHIVE_OUTPUT_DIRECTORY  ${CMAKE_CURRENT_SOURCE_DIR}/libs/ )
+elseif(ANDROID)
+    set(PREPROCESSORS ${PREPROCESSORS} PUBLIC GS_LIN) # Use Linux imports for string related stuff
+    set(PREPROCESSORS ${PREPROCESSORS} PUBLIC _ANDROID)
 elseif(UNIX)
     if (APPLE)
         set(PREPROCESSORS ${PREPROCESSORS} PUBLIC GS_MAC)
@@ -119,15 +138,11 @@ elseif(UNIX)
     else()
         set(PREPROCESSORS ${PREPROCESSORS} PUBLIC GS_LIN)
         set(PREPROCESSORS ${PREPROCESSORS} PUBLIC _LINUX)
-
         set(EXTRA_LIBS ${EXTRA_LIBS} uuid)
-        #add_compile_definitions(GS_LIN)        
     endif(APPLE)
-
     set(EXTRA_LIBS ${EXTRA_LIBS} pthread)
 endif(WIN32)
 #################################################
-
 
 
 #################################################
@@ -162,6 +177,14 @@ if(${DO_NOT_INCLUDE_MINI_ZIP} OR DEFINED ENV{DO_NOT_INCLUDE_MINI_ZIP})
     set(OUTPUT_NAME_OLD "${OUTPUT_NAME_OLD}_NO_MZ")
 
     set_target_properties(MvrGdtf PROPERTIES OUTPUT_NAME ${OUTPUT_NAME_OLD})
+endif()
+
+if(${BUILD_MVR_XCHANGE_EXAMPLE})
+    file(GLOB_RECURSE share_files examples/gdtf_share/*.cpp)
+    add_executable(shareTest ${share_files})
+    target_link_libraries(shareTest MvrGdtf)
+    target_compile_definitions(shareTest ${PREPROCESSORS})
+    target_link_libraries(shareTest ${EXTRA_LIBS})
 endif()
 
 if(${DONT_USE_XERCES_AS_XMLLIB} OR DEFINED ENV{DONT_USE_XERCES_AS_XMLLIB})

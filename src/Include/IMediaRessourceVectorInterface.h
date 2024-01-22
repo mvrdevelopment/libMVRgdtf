@@ -62,6 +62,10 @@ namespace VectorworksMVR
 	
 	struct MvrUUID
 	{
+		MvrUUID()
+		{
+			a = b = c =d = 0;
+		}
 		MvrUUID(Uint32 a,Uint32 b,Uint32 c,Uint32 d) { this->a = a; this->b = b; this->c = c; this->d = d;}
 		Uint32 a, b, c, d;
 
@@ -1759,6 +1763,238 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
     };
     typedef VCOMPtr<IUtility>	IIUtilityPtr;
     const   VWIID IID_IUtility = { 0x706cb180, 0xcd45, 0x4a9a, {0xab, 0xdc, 0x62, 0xab, 0x5f, 0xfe, 0x37, 0x6b}};
+
+	
+	class MVRxchangeString
+	{
+		public:
+		MVRxchangeString()
+		{
+			std::memset(fBuffer,0,1024);
+		}
+		MVRxchangeString(const char* str)
+		{
+			std::memset(fBuffer,0,1024);
+			this->operator=(str);
+		}
+
+		mutable char fBuffer[1024];
+
+		MVRxchangeString& operator=(const char* str)
+		{
+			std::strncpy(fBuffer, str, 1024);
+			fBuffer[1023] = '\0';	// In case str is longer than 1024, no terminator is set by strncpy
+			return *this;
+		}
+
+		bool operator==(const MVRxchangeString& other) const
+		{
+			return std::strncmp(fBuffer, other.fBuffer, 1023) == 0;
+		}
+
+		operator char*  () const
+		{
+			return fBuffer;
+		}
+	};
+
+	class DYNAMIC_ATTRIBUTE IMVRxchangeService : public IVWUnknown
+    {
+		public:
+
+		struct ConnectToRemoteServiceArgs
+		{
+			MVRxchangeString Url;
+		};
+		/**
+		 * @brief Connects to a given Socket Mode Mode MVR-xchange system
+		 * 
+		 * @param service 
+		 * @return VCOMError 
+		 */
+		virtual VCOMError VCOM_CALLTYPE     ConnectToRemoteService(const ConnectToRemoteServiceArgs& service) = 0;
+		/**
+		 * @brief Leaves the WebSocket Mode MVR-xchange system when connected
+		 * 
+		 * @param service 
+		 * @return VCOMError 
+		 */
+		virtual VCOMError VCOM_CALLTYPE     LeaveRemoteService() = 0;
+		
+		enum class MVRxchangeMessageType
+		{
+			MVR_UNDEFINED,
+
+			MVR_JOIN,
+			MVR_LEAVE,
+			MVR_COMMIT,
+			MVR_REQUEST,
+
+			MVR_JOIN_RET,
+			MVR_LEAVE_RET,
+			MVR_COMMIT_RET,
+			MVR_REQUEST_RET,
+
+			MVR_NEW_SESSION_HOST
+		};
+
+		struct MVR_COMMIT_MESSAGE
+		{
+			MVRxchangeString 				Comment;
+			uint32_t 						VersionMajor;
+			uint32_t 						VersionMinor;
+			uint64_t 						FileSize;
+			MvrUUID							FileUUID;
+			MvrUUID							StationUUID;
+			std::vector<MvrUUID>			ForStationsUUID;
+		};
+
+		struct MVR_JOIN_MESSAGE
+		{
+			MVRxchangeString 				Provider;
+			MVRxchangeString 				StationName;
+			MvrUUID							StationUUID;
+			uint32_t 						VersionMajor;
+			uint32_t 						VersionMinor;
+			std::vector<MVR_COMMIT_MESSAGE> Commits;
+		};
+
+		struct MVR_REQUEST_MESSAGE
+		{
+			MvrUUID							FileUUID;
+			std::vector<MvrUUID>			FromStationUUID;
+		};
+
+		struct MVR_LEAVE_MESSAGE
+		{
+			MvrUUID							FromStationUUID;
+		};
+		
+
+		struct IMVRxchangeMessage
+		{
+			IMVRxchangeMessage()
+			{
+				Type = MVRxchangeMessageType::MVR_UNDEFINED;
+				RetIsOK = true;
+				BufferToFileLength = 0;
+				BufferToFile = nullptr;
+			}
+			MVRxchangeMessageType 	Type;
+			MVR_JOIN_MESSAGE 		JOIN;
+			MVR_COMMIT_MESSAGE 		COMMIT;
+			MVR_REQUEST_MESSAGE 	REQUEST;
+			MVR_LEAVE_MESSAGE 		LEAVE;
+
+			// Sending files is possible with both, a buffer (and buffer length) or a file path
+			// If both are set, buffer is used first
+			MVRxchangeString 				PathToFile;
+			char*							BufferToFile;
+			size_t							BufferToFileLength;
+			
+			bool 							RetIsOK;
+			MVRxchangeString 				RetError;
+		};
+		struct ConnectToLocalServiceArgs
+		{
+			MVRxchangeString 	Service;
+
+			MvrUUID 			StationUUID;
+			MVRxchangeString 	StationName;
+			MVRxchangeString 	Provider;
+
+			uint32_t     		VersionMajor;
+			uint32_t         	VersionMinor;
+
+			std::vector<MVR_COMMIT_MESSAGE> InitialFiles;
+
+			// Internal
+			std::vector<MVRxchangeString> IPv4_list;
+			std::vector<MVRxchangeString> IPv6_list;
+			uint16_t         Port;
+
+		};
+
+		
+		/**
+		 * @brief Connects to a given Local Network Mode MVR-xchange system
+		 * 
+		 * @param service 
+		 * @return VCOMError 
+		 */
+        virtual VCOMError VCOM_CALLTYPE     ConnectToLocalService(const ConnectToLocalServiceArgs& service) = 0;
+		/**
+		 * @brief Leaves the Local Network Mode MVR-xchange system when connected
+		 * 
+		 * @param service 
+		 * @return VCOMError 
+		 */
+        virtual VCOMError VCOM_CALLTYPE     LeaveLocalService() = 0;
+
+		//struct GetLocalServicesArgs
+		//{
+		//	ConnectToLocalServiceArgs** 	Service;
+		//	size_t 							CountServices;
+		//};
+		/**
+		 * @brief Get the local services that are currently available
+		 * 
+		 * @param service 
+		 * @return VCOMError 
+		 */
+		virtual VCOMError VCOM_CALLTYPE     QueryLocalServices(size_t& out_Count) = 0;
+        virtual VCOMError VCOM_CALLTYPE     GetLocalServiceAt(size_t index, ConnectToLocalServiceArgs& outLocalService) = 0;
+        
+		typedef IMVRxchangeMessage (*IMVRxchangeIncomingMessage)(const IMVRxchangeMessage& args, void* context);
+		typedef void (*IMVRxchangeReturningMessage)(const IMVRxchangeMessage& outgoingMsg, const IMVRxchangeMessage& returningMsg, void* context);
+
+		struct OnMessageArgs
+		{
+			OnMessageArgs()
+			{
+				IncomingCallback = nullptr;
+				ReturningCallback = nullptr;
+				Context = nullptr;
+			}
+
+			// Called, when a message is received, requires returning of an answer to send back
+			// Arguments are (ReceivedMessage, Context) -> MessageToSend
+			IMVRxchangeIncomingMessage  IncomingCallback;
+
+			// Called, when an answer to a sent message is received (e.g. all MVR_*_RET message-type)
+			// Arguments are (SentMessage, AnswerMessage, Context) -> void
+			// [SentMessage] is a reference to the message previously sent using ->Send_message()
+			// This callback can be called (possibly asynchronously) multiple times for the same sent message (e.g. when multiple stations answer)
+			IMVRxchangeReturningMessage ReturningCallback; 
+
+			// A custom context to passed to the handlers
+			void*					 Context;
+		};
+		/**
+		 * @brief Registers the message handlers
+		 * 
+		 * @param service 
+		 * @return VCOMError 
+		 */
+		virtual VCOMError VCOM_CALLTYPE     OnMessage(OnMessageArgs& messageHandler) = 0;
+		
+		
+		struct SendMessageArgs
+		{
+			IMVRxchangeMessage 			Message;
+
+			// If this is set, this callback is used instead of the one set by ->OnMessage()
+			IMVRxchangeReturningMessage CustomReturnCallback = nullptr;
+			void*					 	CustomReturnContext  = nullptr;
+		};
+		virtual VCOMError VCOM_CALLTYPE     Send_message(const SendMessageArgs& messageHandler) = 0;
+
+
+
+
+    };
+    typedef VCOMPtr<IMVRxchangeService>	IMVRxchangeServicePtr;
+    const   VWIID IID_IMVRxchangeService = { 0x706cb180, 0xcd45, 0x4a9a, {0xac, 0xfc, 0x62, 0xab, 0x5f, 0xfe, 0x37, 0x6b}};
 
 
 }

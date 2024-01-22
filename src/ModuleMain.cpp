@@ -65,6 +65,7 @@
 #include "Implementation/CGdtfPinPatch.h"
 #include "Implementation/CGdtfSubPhysicalUnit.h"
 #include "Implementation/CGdtfGamut.h"
+#include "Implementation/CMVRxchangeService.h"
 
 
 // XML
@@ -227,6 +228,8 @@ extern "C" VectorworksMVR::VCOMError VWQueryInterface(const VectorworksMVR::VWII
 		resultInterface = new CGdtfPinPatchImpl();
     else if (iid == VectorworksMVR::IID_GdtfSubPhysicalUnit)
 		resultInterface = new CGdtfSubPhysicalUnitImpl();
+    else if (iid == VectorworksMVR::IID_IMVRxchangeService)
+		resultInterface = new CMVRxchangeServiceImpl();
 	
 	// determine the result values
 	VCOMError result = kVCOMError_Failed;
