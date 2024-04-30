@@ -15,7 +15,7 @@ if %3.==. goto ERROR
 if %1 == Debug (set DCMAKE_CXX_FLAGS=-DCMAKE_CXX_FLAGS_DEBUG) else (set DCMAKE_CXX_FLAGS=-DCMAKE_CXX_FLAGS_RELEASE)
 if %1 == Debug (set RunTimeLib=%2d) else (set RunTimeLib=%2)
 if %3 == MZ    (set noMZ=false) else (set noMZ=true)
-
+if %3 == MZ    (set noXerces=true) else (set noXerces=false)
 
 
 @echo on
@@ -24,12 +24,12 @@ if exist build ( rd /S /Q build)
 
 mkdir build && cd build
 
-
-cmake -G "Visual Studio 15 2017 Win64" -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_INSTALL_PREFIX:PATH=libs -DCMAKE_CONFIGURATION_TYPES="%1" -Dxmlch-type=wchar_t %DCMAKE_CXX_FLAGS%:STRING="-%RunTimeLib% -O2 -Ob2 -DNDEBUG" -DDO_NOT_INCLUDE_MINI_ZIP=%noMZ% -DWIN_RUNTIME_LIB="-%RunTimeLib%" -DUNITTEST=%4 ..
+cmake -G "Visual Studio 17 2022" -A x64 -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_INSTALL_PREFIX:PATH=libs -DCMAKE_CONFIGURATION_TYPES="%1" -Dxmlch-type=wchar_t %DCMAKE_CXX_FLAGS%:STRING="-%RunTimeLib% -O2 -Ob2 -DNDEBUG" -DDO_NOT_INCLUDE_MINI_ZIP=%noMZ% -DWIN_RUNTIME_LIB="-%RunTimeLib%" -DDONT_USE_XERCES_AS_XMLLIB="%noXerces%" -DUNITTEST=%4 ..
 
 cd ..
 
-call "C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\Common7\Tools\VsDevCmd.bat"
+call "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\Tools\VsDevCmd.bat"
+
 REM build libVectorworksMvrGdtf
 cd build
 MSBuild.exe MvrGdtf.sln /t:Build /p:Configuration=%1 /m
@@ -42,3 +42,4 @@ Color 04
 echo Not all parameters are provided for this script!
 
 :END
+

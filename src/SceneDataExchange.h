@@ -827,7 +827,7 @@ namespace SceneData
 	
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataObjWithMatrix
-	class SceneDataTrussObj : public SceneDataGroupObj
+	class SceneDataTrussObj : public SceneDataGDTFSpecObj
 	{
 		
 	public:

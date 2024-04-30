@@ -2384,7 +2384,7 @@ ESceneDataObjectType SceneDataFocusPointObj::GetObjectType()
 
 // ----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataTrussObj
-SceneDataTrussObj::SceneDataTrussObj(const SceneDataGUID& guid) : SceneDataGroupObj(guid)
+SceneDataTrussObj::SceneDataTrussObj(const SceneDataGUID& guid) : SceneDataGDTFSpecObj(guid)
 {
 	
 }

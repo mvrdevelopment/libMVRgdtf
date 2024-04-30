@@ -252,7 +252,7 @@ bool MvrXChangeUnitTest::ExecuteTest()
 
         {
             // fill data-part (json) with random data
-            std::independent_bits_engine<std::default_random_engine, CHAR_BIT, unsigned char> rbe;
+            std::independent_bits_engine<std::default_random_engine, CHAR_BIT, unsigned long> rbe;
             std::generate(testBuffer.begin() + hLength, testBuffer.end(), std::ref(rbe));
         }
 

@@ -112,7 +112,7 @@ VCOMError CXMLFileImpl::WriteBuffer(IXMLFileIOBuffer* pOutputBuffer, EXMLEncodin
 {
 	tinyxml2::XMLPrinter printer;
 	fDoc.Print(&printer);
-	pOutputBuffer->SetData((void*)printer.CStr(), printer.CStrSize());
+	pOutputBuffer->SetData((void*)printer.CStr(), printer.CStrSize()-2);
 	return kVCOMError_NoError;
 }
 

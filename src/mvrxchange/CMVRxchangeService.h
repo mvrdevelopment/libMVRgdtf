@@ -43,16 +43,22 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE     OnMessage(OnMessageArgs& messageHandler);
 		virtual VCOMError VCOM_CALLTYPE     Send_message(const SendMessageArgs& messageHandler);
 
-		void mDNS_Client_Task();
-
 	private:
-		void mDNS_Client_Start();
+		void mDNS_Client_Task();	// actual mdns task
+		
+		void mDNS_Client_Tick();	// mdns tick function (executed by RFun function)
+		void mDNS_Client_RFun();	// thread function (executed by fmdns_Thread)
+
 		void mDNS_Client_Stop();
-		void mDNS_Client_Tick(boost::asio::deadline_timer* t);
+		void mDNS_Client_Start();
+
+
         
 		std::vector<std::unique_ptr<mdns_cpp::mDNS>>	fmdns;
 		std::thread 									fmdns_Thread;
 		boost::asio::io_context 						fmdns_IO_Context;
+		boost::asio::deadline_timer						fmdns_long_timer;
+		std::atomic<bool>								fmdns_stop_flag;
 
 		std::mutex 										fQueryLocalServicesResult_mtx;
 		std::vector<ConnectToLocalServiceArgs> 			fQueryLocalServicesResult;
