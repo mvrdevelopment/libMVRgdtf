@@ -10,8 +10,9 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <unordered_map>
 #include <thread>
+#include <regex>
 
-VectorworksMVR::CMVRxchangeServiceImpl::CMVRxchangeServiceImpl()
+VectorworksMVR::CMVRxchangeServiceImpl::CMVRxchangeServiceImpl(): fmdns_long_timer(fmdns_IO_Context)
 {
 	fServer = nullptr;
 }
@@ -19,8 +20,28 @@ VectorworksMVR::CMVRxchangeServiceImpl::CMVRxchangeServiceImpl()
 VectorworksMVR::CMVRxchangeServiceImpl::~CMVRxchangeServiceImpl()
 {
 	this->mDNS_Client_Stop();
+	if(fmdns_Thread.joinable())
+	{
+		fmdns_Thread.join();
+	}
 	this->TCP_Stop();
 }
+
+void FilterServiceName(MVRxchangeString& service)
+{
+	std::string s(service.fBuffer);
+	std::string out;
+    
+	if(s.empty())
+	{
+		return;
+	}
+
+	std::regex_replace(std::back_inserter(out), s.begin(), s.end(), std::regex("[^a-zA-Z0-9\\-_]"), "");
+
+	service = out.c_str();
+}
+
 
 VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const ConnectToLocalServiceArgs& service)
 {
@@ -30,6 +51,7 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 	fCurrentService = service;
 	this->TCP_Start();
 
+	FilterServiceName(fCurrentService.Service);
 
 	//---------------------------------------------------------------------------------------------
 	// Start mDNS Service
@@ -95,10 +117,10 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 
 	if (fmdns_Thread.joinable())
 	{
-		fmdns_IO_Context.stop();
-		fmdns_Thread.join();
+		mDNS_Client_Stop();
 	}
-	fmdns_Thread = std::thread(&CMVRxchangeServiceImpl::mDNS_Client_Start, this);
+
+	mDNS_Client_Start();
 
 	return kVCOMError_NoError;
 }
@@ -112,6 +134,7 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::LeaveLocalService()
 	leaveMessage.Message.Type = MVRxchangeMessageType::MVR_LEAVE;
 	leaveMessage.Message.LEAVE.FromStationUUID = fCurrentService.StationUUID;
 	this->Send_message(leaveMessage);
+	mDNS_Client_Stop();
 
     for(auto& s : fmdns)
     {
@@ -126,8 +149,21 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::LeaveLocalService()
 
 VCOMError VCOM_CALLTYPE  CMVRxchangeServiceImpl::QueryLocalServices(size_t& out_Count)
 {
-    this->mDNS_Client_Task();
-    
+
+	if(fmdns_Thread.joinable())
+	{
+		std::condition_variable cv;
+		std::mutex mut;
+		std::unique_lock<std::mutex> lock(mut);
+		boost::asio::post(fmdns_IO_Context, [this, &cv](){
+			this->mDNS_Client_Task();
+			cv.notify_all();
+		});
+		cv.wait(lock);
+	}else{
+		this->mDNS_Client_Task();
+	}
+
     {
         std::lock_guard<std::mutex> lock (fQueryLocalServicesResult_mtx);
         out_Count = fQueryLocalServicesResult.size();
@@ -303,9 +339,12 @@ IMVRxchangeService::IMVRxchangeMessage CMVRxchangeServiceImpl::TCP_OnIncommingMe
 		if(GetSingleMemberOfService(in.LEAVE.FromStationUUID, newItem) != kVCOMError_NoError)
 		{
 			std::lock_guard<std::mutex> lock(fMvrGroupMutex);
-			std::remove_if(fMVRGroup.begin(), fMVRGroup.end(), [&newItem](const MVRxchangeGroupMember& it){
-				return it.stationUUID == newItem.stationUUID;
-			});
+			fMVRGroup.erase(
+				std::remove_if(fMVRGroup.begin(), fMVRGroup.end(), [&newItem](const MVRxchangeGroupMember& it){
+					return it.stationUUID == newItem.stationUUID;
+				}),
+				fMVRGroup.end()
+			);
 		}
 	}
 
@@ -314,6 +353,7 @@ IMVRxchangeService::IMVRxchangeMessage CMVRxchangeServiceImpl::TCP_OnIncommingMe
 	{
 		ret = fCallBack.IncomingCallback(in, fCallBack.Context);
 	}
+
 
 	return ret;
 }
@@ -400,33 +440,39 @@ VCOMError CMVRxchangeServiceImpl::GetSingleMemberOfService(const MvrUUID& statio
 	return kVCOMError_Failed;
 }
 
-
-void CMVRxchangeServiceImpl::mDNS_Client_Tick(boost::asio::deadline_timer* t)
+void CMVRxchangeServiceImpl::mDNS_Client_Tick()
 {
 	MVRXCHANGE_DEBUG("mDNS_Client_Tick");
 	mDNS_Client_Task();
 
-	t->async_wait(boost::bind(&CMVRxchangeServiceImpl::mDNS_Client_Tick, this, t));
+	fmdns_long_timer.expires_from_now(boost::posix_time::seconds(45));
+	fmdns_long_timer.async_wait(boost::bind(&CMVRxchangeServiceImpl::mDNS_Client_Tick, this));
+}
+
+void CMVRxchangeServiceImpl::mDNS_Client_RFun()
+{	
+	while(!fmdns_stop_flag)
+	{
+		fmdns_IO_Context.run_for(std::chrono::seconds(1));
+	}
 }
 
 void CMVRxchangeServiceImpl::mDNS_Client_Start()
 {
-	boost::asio::deadline_timer t_long (fmdns_IO_Context, boost::posix_time::seconds(45));
-	{
-		boost::asio::deadline_timer t_short(fmdns_IO_Context, boost::posix_time::seconds(1));
-		t_short.async_wait(boost::bind(&CMVRxchangeServiceImpl::mDNS_Client_Tick, this, &t_long));
-	}
-	fmdns_IO_Context.run();
+	fmdns_stop_flag = false;
+	boost::asio::post(fmdns_IO_Context, boost::bind(&CMVRxchangeServiceImpl::mDNS_Client_Tick, this));
+	fmdns_Thread = std::thread(&CMVRxchangeServiceImpl::mDNS_Client_RFun, this);
 }
 
 void CMVRxchangeServiceImpl::mDNS_Client_Stop()
 {
-	if (fmdns_Thread.joinable())
+	fmdns_stop_flag = true;
+	if(fmdns_Thread.joinable())
 	{
-		fmdns_IO_Context.stop();
 		fmdns_Thread.join();
 	}
 }
+
 
 mdns_cpp::QueryResList CMVRxchangeServiceImpl::mDNS_Filter_Queries(mdns_cpp::QueryResList &input)
 {
@@ -493,8 +539,6 @@ mdns_cpp::QueryResList CMVRxchangeServiceImpl::mDNS_Filter_Queries(mdns_cpp::Que
 
 void CMVRxchangeServiceImpl::mDNS_Client_Task()
 {
-
-	
 	mdns_cpp::mDNS mdns;
 	auto query_res = mdns.executeQuery2(MVRXChange_Service);
 	std::vector<ConnectToLocalServiceArgs> result;

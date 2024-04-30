@@ -1266,17 +1266,9 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetConnectionAt(size_t 
 
 VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::CreateConnection(MvrString own, MvrString other, MvrUUID ToObject, IConnection** addedObj)
 {
-	ASSERTN(kEveryone,fType == ESceneObjType::Fixture);
-	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
-
-	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	const auto nObj = fPtr->AddConnectionObj(own, other, VWUUID(ToObject.a, ToObject.b, ToObject.c, ToObject.d));
 	
-	ASSERTN(kEveryone, fixture != nullptr);
-	if ( ! fixture) { return kVCOMError_Failed; }
-	
-	const auto nObj = fixture->AddConnectionObj(own, other, VWUUID(ToObject.a, ToObject.b, ToObject.c, ToObject.d));
-	
-		//---------------------------------------------------------------------------
+	//---------------------------------------------------------------------------
 	// Initialize Object
 	CConnectionImpl* pConnectionImpl = nullptr;
 	

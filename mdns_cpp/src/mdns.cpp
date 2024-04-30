@@ -549,11 +549,19 @@ QueryResList mDNS::executeQuery2(const std::string &service) {
     if(in.addr != comp.addr) {return false;}
 
     bool add = false;
-    std::string service(in.canonicalName.begin(), in.canonicalName.begin() + in.canonicalName.find('.'));
 
     add = add || in.canonicalName == comp.canonicalName;
     add = add || in.canonicalName == comp.data.name;
+      
     add = add || (comp.canonicalName.length() >= in.canonicalName.length() && in.canonicalName == std::string(comp.canonicalName.end() - in.canonicalName.length(), comp.canonicalName.end()));
+      
+    auto pos = in.canonicalName.find('.');
+    if(pos == std::string::npos)
+    {
+        pos = in.canonicalName.size();
+    }
+
+    std::string service(in.canonicalName.begin(), in.canonicalName.begin() + pos);
     add = add || (comp.canonicalName.length() >= service.length() && service == std::string(comp.canonicalName.begin(), comp.canonicalName.begin() + service.length()));
 
     return add;
