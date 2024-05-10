@@ -1782,10 +1782,12 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 
 		MVRxchangeString& operator=(const char* str)
 		{
+#ifdef _WINDOWS 
 #pragma warning(push) // Save the current warning state
 #pragma warning(disable : 4996) // Disable strncpy warning
 			std::strncpy(fBuffer, str, 1024);
 #pragma warning(pop)
+#endif
 
 			fBuffer[1023] = '\0';	// In case str is longer than 1024, no terminator is set by strncpy
 			return *this;
