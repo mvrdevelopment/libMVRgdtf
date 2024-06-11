@@ -111,6 +111,8 @@ VCOMError CXMLFileImpl::WriteFile(IFileIdentifier* pFileID, EXMLEncoding encodin
 VCOMError CXMLFileImpl::WriteBuffer(IXMLFileIOBuffer* pOutputBuffer, EXMLEncoding encoding)
 {
 	tinyxml2::XMLPrinter printer;
+	fDoc.SetBOM(true);
+	printer.PushDeclaration("xml version=\"1.0\" encoding=\"utf-8\"");
 	fDoc.Print(&printer);
 	pOutputBuffer->SetData((void*)printer.CStr(), printer.CStrSize()-2);
 	return kVCOMError_NoError;
