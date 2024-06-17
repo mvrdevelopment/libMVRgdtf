@@ -2562,7 +2562,7 @@ EGdtfObjectType GdtfGeometryColorFilter::GetObjectType()
 
 TXString GdtfGeometryColorFilter::GetNodeName()
 {
-	return XML_GDTF_FilterBeamNodeName;
+	return XML_GDTF_FilterColorNodeName;
 }
 
 //------------------------------------------------------------------------------------
