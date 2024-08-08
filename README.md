@@ -3,9 +3,9 @@
 
 The General Device Type Format (GDTF) creates a unified data exchange definition for the operation of intelligent luminaires, such as moving lights. By creating a manufacturer-supported, unified standard, customers/users of lighting control systems, CAD systems, and pre-visualizers benefit by knowing the tools they use to perform their job will work consistently and dependably. The file format is developed using open source formats, and luminaire manufacturers in the entertainment design, production, and performance industries are welcome to use this open source technology.
 
-The GDTF file format is standatised in [DIN SPEC 15800:2022-02](https://www.beuth.de/en/technical-rule/din-spec-15800/349717520).
+The GDTF file format is standardized in [DIN SPEC 15800:2022-02](https://www.beuth.de/en/technical-rule/din-spec-15800/349717520).
 
-The MVR file format is standartised in [DIN SPEC 15801:2023-12](DIN SPEC 15801:2023-12 also known as MVR Version 1.6).
+The MVR file format is standardized in [DIN SPEC 15801:2023-12](https://www.dinmedia.de/en/technical-rule/din-spec-15801/373968511).
 
 ## Current project status
 
