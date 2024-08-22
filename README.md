@@ -1,14 +1,20 @@
-# libMVRgdtf [![Build Status](https://travis-ci.com/DeerSoftDevelopment/libVectorworksMvrGdtf.svg?token=XYyJzkGhjzcyyYrPsJnY&branch=master)](https://travis-ci.com/DeerSoftDevelopment/libVectorworksMvrGdtf)
 ![Logo from GDTF](content/logo.png)
 
-The General Device Type Format (GDTF) creates a unified data exchange definition for the operation of intelligent luminaires, such as moving lights. By creating a manufacturer-supported, unified standard, customers/users of lighting control systems, CAD systems, and pre-visualizers benefit by knowing the tools they use to perform their job will work consistently and dependably. The file format is developed using open source formats, and luminaire manufacturers in the entertainment design, production, and performance industries are welcome to use this open source technology.
+# libMVRgdtf
 
-The GDTF file format is standartisied in [DIN SPEC 15800](https://www.beuth.de/de/technische-regel/din-spec-15800/324748671).
+**GDTF**: The `General Device Type Format` is an open standard for describing devices of the entertainment industry. These devices may be lighting fixtures, trusses, distribution boxes, media servers, lasers or other devices used in the entertainment industry. [This documentation](https://github.com/mvrdevelopment/spec/blob/main/gdtf-spec.md) describes [DIN SPEC 15800:2022-02](https://www.beuth.de/en/technical-rule/din-spec-15800/349717520) also known as GDTF, version 1.2.
 
+**MVR**: The `My Virtual Rig` file format is an open standard which allows programs to share data and geometry of a scene for the entertainment industry. A scene is a set of parametric objects such as fixtures, trusses, video screens, and other objects that are used in the entertainment industry. [This documentation](https://github.com/mvrdevelopment/spec/blob/main/mvr-spec.md) describes [DIN SPEC 15801:2023-12](https://www.dinmedia.de/en/technical-rule/din-spec-15801/373968511) also known as MVR, version 1.6.
+
+
+
+The GDTF file format is standardized in [DIN SPEC 15800:2022-02](https://www.beuth.de/en/technical-rule/din-spec-15800/349717520).
+
+The MVR file format is standardized in [DIN SPEC 15801:2023-12](https://www.dinmedia.de/en/technical-rule/din-spec-15801/373968511).
 
 ## Current project status
 
-The libary currently supports all GDTF 1.1 features and supports OSX, Windows, Linus and iOS.
+The library currently supports all features of DIN SPEC 15800:2022-02 (GDTF 1.2), DIN SPEC 15801:2023-12 (MVR 1.6), and supports OSX, Windows, Linux, Android, and iOS.
 
 ## Building
 
@@ -49,13 +55,13 @@ Contains all unit test related files.
 
 ## Where to get help
 
-When you need help with the fileformat itself, go to the [forum](https://gdtf-share.com/forum/). 
+For help with GDTF and MVR file formats, visit [forum](https://gdtf-share.com/forum/) on the [GDTF Share](https://gdtf-share.com).
 
-When you need help with the libaray itself, please feel free to open an issue here at Github.
+For help the library itself, [open an issue](https://github.com/mvrdevelopment/libMVRgdtf/issues/new/choose) here at Github.
 
 ## Contributing
 
 
 ## License
 
-For the legal details, see the LICENSE file.
+For the legal details, see the [LICENSE file](https://github.com/mvrdevelopment/libMVRgdtf/blob/master/LICENCE.md).
