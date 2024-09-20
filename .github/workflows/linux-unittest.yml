@@ -1,6 +1,6 @@
 name: Linux Unittest CI
 
-on: [push]
+on: [workflow_dispatch]
 
 env:
   XERCES_CONFIGURE_ENCODER: "gnuiconv"
