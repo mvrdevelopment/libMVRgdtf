@@ -1,4 +1,4 @@
-name: build Static
+name: Build Static
 
 on:
     workflow_dispatch:
@@ -59,7 +59,7 @@ jobs:
             cd libMVRgdtf
 
         - name: libMVRGdtf - checkout repository
-          uses: actions/checkout@v2
+          uses: actions/checkout
           with:
             path: libMvrGdtf
  
@@ -84,7 +84,7 @@ jobs:
           run: msbuild INSTALL.vcxproj /p:Configuration=MinSizeRel
 
         - name: Upload artifact
-          uses: actions/upload-artifact@v2
+          uses: actions/upload-artifact
           with:
             name: libMVRgdtf
             path: |
