@@ -59,7 +59,7 @@ jobs:
             cd libMVRgdtf
 
         - name: libMVRGdtf - checkout repository
-          uses: actions/checkout
+          uses: actions/checkout@v4
           with:
             path: libMvrGdtf
  
@@ -84,7 +84,7 @@ jobs:
           run: msbuild INSTALL.vcxproj /p:Configuration=MinSizeRel
 
         - name: Upload artifact
-          uses: actions/upload-artifact
+          uses: actions/upload-artifact@v4
           with:
             name: libMVRgdtf
             path: |
