@@ -326,8 +326,8 @@ jobs:
             make -j
             make install
             echo Combine into single lib file...
-            echo lipo -archs ../libs/libMvrGdtf.a
-            lipo -archs ../libs/libMvrGdtf.a
+            echo lipo -archs ../libs/libMvrGdtf_NO_MZ.a
+            lipo -archs ../libs/libMvrGdtf_NO_MZ.a
             echo lipo -archs ./libs/lib/libmdns_cpp.a
             lipo -archs ./libs/lib/libmdns_cpp.a
             echo lipo -archs ../../xerces-c/_build_mac_x64/lib/libxerces-c-all.a
