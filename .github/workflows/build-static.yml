@@ -34,14 +34,14 @@ jobs:
         - name: Xerces-C - build MinSizeRel
           working-directory: xerces-c/build
           run: |
-            msbuild ALL_BUILD.vcxproj /p:Configuration=MinSizeRel
-            msbuild INSTALL.vcxproj /p:Configuration=MinSizeRel
+            msbuild /m ALL_BUILD.vcxproj /p:Configuration=MinSizeRel
+            msbuild /m INSTALL.vcxproj /p:Configuration=MinSizeRel
 
         - name: Xerces-C - build Debug
           working-directory: xerces-c/build
           run: |
-            msbuild ALL_BUILD.vcxproj /p:Configuration=Debug
-            msbuild INSTALL.vcxproj /p:Configuration=Debug
+            msbuild /m ALL_BUILD.vcxproj /p:Configuration=Debug
+            msbuild /m INSTALL.vcxproj /p:Configuration=Debug
 
         # Xerces-C - build MT
         - name: Xerces-C - configure [MT]
@@ -54,14 +54,14 @@ jobs:
         - name: Xerces-C - build MinSizeRel [MT]
           working-directory: xerces-c/build_mt
           run: |
-            msbuild ALL_BUILD.vcxproj /p:Configuration=MinSizeRel
-            msbuild INSTALL.vcxproj /p:Configuration=MinSizeRel
+            msbuild /m ALL_BUILD.vcxproj /p:Configuration=MinSizeRel
+            msbuild /m INSTALL.vcxproj /p:Configuration=MinSizeRel
 
         - name: Xerces-C - build Debug [MT]
           working-directory: xerces-c/build_mt
           run: |
-            msbuild ALL_BUILD.vcxproj /p:Configuration=Debug
-            msbuild INSTALL.vcxproj /p:Configuration=Debug
+            msbuild /m ALL_BUILD.vcxproj /p:Configuration=Debug
+            msbuild /m INSTALL.vcxproj /p:Configuration=Debug
 
         # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         # Boost - setup and build
@@ -104,8 +104,8 @@ jobs:
         - name: libMVRGdtf [MD_NO_MZ] - compile Debug
           working-directory: libMvrGdtf/build_MD_NO_MZ
           run: |
-            msbuild ALL_BUILD.vcxproj /p:Configuration=Debug
-            msbuild INSTALL.vcxproj /p:Configuration=Debug
+            msbuild /m ALL_BUILD.vcxproj /p:Configuration=Debug
+            msbuild /m INSTALL.vcxproj /p:Configuration=Debug
 
         - name: libMVRGdtf [MD_NO_MZ] - compile Debug rename lib
           working-directory: libMvrGdtf
@@ -127,8 +127,8 @@ jobs:
         - name: libMVRGdtf [MD_NO_MZ] - compile MinSizeRel
           working-directory: libMvrGdtf/build_MD_NO_MZ
           run: |
-            msbuild ALL_BUILD.vcxproj /p:Configuration=MinSizeRel
-            msbuild INSTALL.vcxproj /p:Configuration=MinSizeRel
+            msbuild /m ALL_BUILD.vcxproj /p:Configuration=MinSizeRel
+            msbuild /m INSTALL.vcxproj /p:Configuration=MinSizeRel
 
         # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         - name: libMVRGdtf [MD] - configure
@@ -155,8 +155,8 @@ jobs:
         - name: libMVRGdtf [MD] - compile Debug
           working-directory: libMvrGdtf/build_MD
           run: |
-            msbuild ALL_BUILD.vcxproj /p:Configuration=Debug
-            msbuild INSTALL.vcxproj /p:Configuration=Debug
+            msbuild /m ALL_BUILD.vcxproj /p:Configuration=Debug
+            msbuild /m INSTALL.vcxproj /p:Configuration=Debug
 
         - name: libMVRGdtf [MD] - compile Debug rename lib
           working-directory: libMvrGdtf
@@ -178,8 +178,8 @@ jobs:
         - name: libMVRGdtf [MD] - compile MinSizeRel
           working-directory: libMvrGdtf/build_MD
           run: |
-            msbuild ALL_BUILD.vcxproj /p:Configuration=MinSizeRel
-            msbuild INSTALL.vcxproj /p:Configuration=MinSizeRel
+            msbuild /m ALL_BUILD.vcxproj /p:Configuration=MinSizeRel
+            msbuild /m INSTALL.vcxproj /p:Configuration=MinSizeRel
 
         # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         - name: libMVRGdtf [MT] - configure
@@ -206,8 +206,8 @@ jobs:
         - name: libMVRGdtf [MT] - compile Debug
           working-directory: libMvrGdtf/build_MT
           run: |
-            msbuild ALL_BUILD.vcxproj /p:Configuration=Debug
-            msbuild INSTALL.vcxproj /p:Configuration=Debug
+            msbuild /m ALL_BUILD.vcxproj /p:Configuration=Debug
+            msbuild /m INSTALL.vcxproj /p:Configuration=Debug
 
         - name: libMVRGdtf [MT] - compile Debug rename lib
           working-directory: libMvrGdtf
@@ -229,8 +229,8 @@ jobs:
         - name: libMVRGdtf [MT] - compile MinSizeRel
           working-directory: libMvrGdtf/build_MT
           run: |
-            msbuild ALL_BUILD.vcxproj /p:Configuration=MinSizeRel
-            msbuild INSTALL.vcxproj /p:Configuration=MinSizeRel
+            msbuild /m ALL_BUILD.vcxproj /p:Configuration=MinSizeRel
+            msbuild /m INSTALL.vcxproj /p:Configuration=MinSizeRel
 
         # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         - name: libMVRGdtf - Generate output library
@@ -278,12 +278,23 @@ jobs:
             curl -o xerces-c.zip https://dlcdn.apache.org//xerces/c/3/sources/xerces-c-3.2.5.zip
             tar -xf xerces-c.zip --strip-components=1
 
-        - name: Xerces-C - build x64 (this should produce arm/x64 libraries)
+        - name: Xerces-C - build arm64
+          working-directory: xerces-c
+          run: |
+            ./configure --disable-shared --prefix=$(pwd)/_build_mac_arm CFLAGS="-arch arm64" CXXFLAGS="-arch arm64"
+            make -j
+            make install
+
+        - name: Xerces-C - build x64
           working-directory: xerces-c
           run: |
             ./configure --disable-shared --prefix=$(pwd)/_build_mac_x64 CFLAGS="-arch x86_64" CXXFLAGS="-arch x86_64"
-            make
+            make -j
             make install
+
+        - name: Xerces-C - lipo arm/x64
+          working-directory: xerces-c
+          run: lipo _build_mac_arm/lib/libxerces-c.a _build_mac_x64/lib/libxerces-c.a -create -output _build_mac_x64/lib/libxerces-c-all.a
 
 
         # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -312,11 +323,17 @@ jobs:
             mkdir build_mac_x64_no_mz
             cd build_mac_x64_no_mz
             cmake .. -DCMAKE_C_FLAGS="-arch x86_64" -DCMAKE_CXX_FLAGS="-arch x86_64" -DDO_NOT_INCLUDE_MINI_ZIP=true -DCMAKE_INSTALL_PREFIX:PATH=libs -DXERCES_INCLUDE_PATH="../xerces-c/_build_mac_x64/include;../xerces/src" -DXERCES_LIB_PATH="../xerces/_build_mac_x64/lib" -DXERCES_ROOT_PATH="../xerces-c/_build_mac_x64"
-            make
+            make -j
             make install
-            ls -a
-#            libtool -static -o ../libs/libMvrGdtf_NO_MZ.a ../libs/libMvrGdtf.a ./libs/lib/libmdns_cpp.a
-#            rm ../libs/libMvrGdtf.a
+            echo Combine into single lib file...
+            echo lipo -archs ../libs/libMvrGdtf.a
+            lipo -archs ../libs/libMvrGdtf.a
+            echo lipo -archs ./libs/lib/libmdns_cpp.a
+            lipo -archs ./libs/lib/libmdns_cpp.a
+            echo lipo -archs ../../xerces-c/_build_mac_x64/lib/libxerces-c-all.a
+            lipo -archs ../../xerces-c/_build_mac_x64/lib/libxerces-c-all.a
+            libtool -static -o ../libs/libMvrGdtf_NO_MZ-all.a ../libs/libMvrGdtf_NO_MZ.a ./libs/lib/libmdns_cpp.a ../../xerces-c/_build_mac_x64/lib/libxerces-c-all.a
+            mv -f ../libs/libMvrGdtf_NO_MZ-all.a ../libs/libMvrGdtf_NO_MZ.a
 
         - name: libMVRGdtf - build x64 (this should produce arm/x64 libraries)
           working-directory: libMvrGdtf
@@ -324,11 +341,17 @@ jobs:
             mkdir build_mac_x64
             cd build_mac_x64
             cmake .. -DCMAKE_C_FLAGS="-arch x86_64" -DCMAKE_CXX_FLAGS="-arch x86_64" -DCMAKE_INSTALL_PREFIX:PATH=libs -DXERCES_INCLUDE_PATH="../xerces-c/_build_mac_x64/include;../xerces/src" -DXERCES_LIB_PATH="../xerces/_build_mac_x64/lib" -DXERCES_ROOT_PATH="../xerces-c/_build_mac_x64"
-            make
+            make -j
             make install
-#            libtool -static -o ../libs/libMvrGdtf-x64.a ../libs/libMvrGdtf.a ./libs/lib/libmdns_cpp.a
-#            mv ../libs/libMvrGdtf-x64.a ../libs/libMvrGdtf.a
-  
+            echo Combine into single lib file...
+            echo lipo -archs ../libs/libMvrGdtf.a
+            lipo -archs ../libs/libMvrGdtf.a
+            echo lipo -archs ./libs/lib/libmdns_cpp.a
+            lipo -archs ./libs/lib/libmdns_cpp.a
+            echo lipo -archs ../../xerces-c/_build_mac_x64/lib/libxerces-c-all.a
+            lipo -archs ../../xerces-c/_build_mac_x64/lib/libxerces-c-all.a
+            libtool -static -o ../libs/libMvrGdtf-all.a ../libs/libMvrGdtf.a ./libs/lib/libmdns_cpp.a ../../xerces-c/_build_mac_x64/lib/libxerces-c-all.a
+            mv -f ../libs/libMvrGdtf-all.a ../libs/libMvrGdtf.a
 
         # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         - name: Collect Artifact
@@ -345,6 +368,10 @@ jobs:
             name: libMVRgdtf-mac
             path: |
               libMvrGdtf/output
+
+
+
+
 
 
 
