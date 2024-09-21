@@ -523,7 +523,7 @@ public:
 	void swap(TXString& rhs);
 
 	// Hash function
-	size_t hash() const { return std::hash<StdUStr>{}(this->stdUStr); }
+	size_t hash() const { return std::hash<std::u16string>{}(*(std::u16string*)(&stdUStr)); }
 
 	//***********************************************************************************
 	// Private members
