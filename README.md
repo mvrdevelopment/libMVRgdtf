@@ -18,14 +18,11 @@ The library currently supports all features of DIN SPEC 15800:2022-02 (GDTF 1.2)
 
 ## Building
 
-Use CMake to build the project. Building should be as easy as:
+Use CMake to build the project. Make sure XERCES variables are properly set.
+You would need boost and xerces-c as dependencies.
 
-```` bash
-mkdir build
-cd build
-cmake ..
-make
-````
+A good example of how to build in on mac and win can be found in the GitHub Actions workflow file [libMVRgdtf/.github/workflows/build-static.yml](https://github.com/mvrdevelopment/libMVRgdtf/blob/master/.github/workflows/build-static.yml)
+
 
 ### Repository structure
 
