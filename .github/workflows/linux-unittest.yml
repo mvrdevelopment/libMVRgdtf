@@ -1,69 +1,59 @@
 name: Linux Unittest CI
 
-on: [workflow_dispatch]
-
-env:
-  XERCES_CONFIGURE_ENCODER: "gnuiconv"
+on:
+  workflow_dispatch:
 
 jobs:
-  run_unittest:
-    runs-on: [ self-hosted, Linux ]
-    
-    strategy:
-      matrix:
-        arch: [x64]
+  build:
+    runs-on: ubuntu-latest
 
-    concurrency: 
-      group: ${{ github.workflow }}-${{ github.ref }}
-      cancel-in-progress: true
-      
     steps:
-    - uses: actions/checkout@v3
-      with:
-        repository: DeerSoftDevelopment/xerces-c
-        ref: v3.2.2-1
-        path: xerces-c
-        submodules: true
+    # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    # Install curl
+    - name: Install prerequisites
+      run: |
+        sudo apt-get update -y
+        sudo apt-get install -y libboost-all-dev
+        sudo apt-get install -y libcurl4-openssl-dev
+        sudo apt-get install -y cmake
 
-    - uses: actions/checkout@v3
-      with:
-        repository: DeerSoftDevelopment/boost
-        ref: 1.78
-        token: ${{ secrets.ACTION_TOKEN }}
-        path: boost
-        submodules: true
-        
-    - uses: actions/checkout@v3
-      with:
-        token: ${{ secrets.ACTION_TOKEN }}
-        path: libMVRgdtf
+    # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    # Xerces-C - setup and build
+    # we need to compile it ourselves because libMVRGdtf expects XMLChar be uint16_t
+    - name: Xerces-C - prepare
+      run: |
+        mkdir xerces-c
+        cd xerces-c
+        curl -o xerces-c.zip https://dlcdn.apache.org//xerces/c/3/sources/xerces-c-3.2.5.zip
+        unzip xerces-c.zip -d . && mv xerces-c-*/* .
 
-    - name: Setup xerces-c
+    - name: Xerces-C - build
       working-directory: xerces-c
       run: |
-        rm -rf build
-        mkdir build
-      
-    - name: Build xerces-c
-      working-directory: xerces-c/build
+        ./configure --disable-shared --enable-xmlch-uint16_t --prefix=$(pwd)/_build
+        make -j
+        make install
+ 
+    # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    # libMVRGdtf - checkout repository
+    - name: libMVRGdtf - checkout repository
+      uses: actions/checkout@v4
+      with:
+        path: libMvrGdtf
+       
+    # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    # libMVRGdtf - setup and build and test
+    - name: libMVRGdtf - build
+      working-directory: libMvrGdtf
       run: |
-        cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DBUILD_SHARED_LIBS=OFF -Dxmlch-type=uint16_t -Dnetwork=OFF -Dtranscoder=${{env.XERCES_CONFIGURE_ENCODER}} ..
-        cmake --build . --config Release --parallel
-
-    - name: Setup libMVRgdtf
-      working-directory: libMVRgdtf
-      run: |
-        rm -rf build
         mkdir build
-    
-    - name: Setup Cmake
-      working-directory: libMVRgdtf/build
-      run: cmake .. -DUNITTEST=TRUE
+        cd build
+        cmake .. -DUNITTEST=TRUE -DEXTRA_LIBS="curl;icuuc;icudata;icui18n;icuio" -DXERCES_LIB_PATH="$(pwd)/../../xerces-c/_build/lib/libxerces-c.a"
+        make -j
 
-    - name: Compile
-      working-directory: libMVRgdtf/build
-      run: make -j$(nproc)
+    - name: Testing...
+      working-directory: libMvrGdtf/build
+      run: |
+        ./MvrGdtfUnitTest
 
-    - name: Unittest
-      working-directory: libMVRgdtf/build
-      run: ./MvrGdtfUnitTest
+
