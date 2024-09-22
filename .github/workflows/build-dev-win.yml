@@ -4,7 +4,7 @@ on:
     workflow_dispatch:
 
 jobs:
-    build_windows:
+    generate_dev_win:
         runs-on: windows-latest
 
         steps:
@@ -48,15 +48,6 @@ jobs:
           uses: actions/checkout@v4
           with:
             path: libMvrGdtf
-
-        # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        - name: libMVRGdtf [MD_NO_MZ] - configure
-          working-directory: libMvrGdtf
-          run: |
-            mkdir build_MD_NO_MZ
-            cd build_MD_NO_MZ
-            cmake .. -DCMAKE_INSTALL_PREFIX:PATH=libs -DWIN_RUNTIME_LIB=-MD -DXERCES_INCLUDE_PATH="..\xerces-c\build\libs\include;..\xerces\src" -DXERCES_LIB_PATH="..\xerces\build\libs\lib" -DXERCES_ROOT_PATH="..\xerces-c" -DDO_NOT_INCLUDE_MINI_ZIP=TRUE
-            ren MvrGdtf.vcxproj MvrGdtf_ORG.vcxproj
 
         # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         - name: libMVRGdtf [MD] - configure
