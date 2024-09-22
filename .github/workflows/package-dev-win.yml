@@ -75,11 +75,11 @@ jobs:
         - name: Upload artifact
           uses: actions/upload-artifact@v4
           with:
-            name: libMVRgdtf-mac
+            name: libMVRgdtf-dev
             path: |
-              libMvrGdtf/boost
-              libMvrGdtf/xercex-c
-              libMvrGdtf/libMVRgdtf
+              boost
+              xercex-c
+              libMVRgdtf
 
 
 
