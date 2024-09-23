@@ -73,7 +73,6 @@ jobs:
 
         # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         - name: Collect Artifact
-          working-directory: libMvrGdtf
           run: |
             dir
             Compress-Archive -Path xerces-c,libMvrGdtf,boost -DestinationPath libMVRgdtf-dev.zip
