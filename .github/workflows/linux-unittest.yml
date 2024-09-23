@@ -1,7 +1,7 @@
 name: Linux Unittest CI
 
 on:
-  workflow_dispatch:
+  [push, workflow_dispatch]
 
 jobs:
   build:
