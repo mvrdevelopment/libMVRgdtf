@@ -1,4 +1,4 @@
-name: Build Static
+name: Build Static Linux
 
 on:
     workflow_dispatch:
