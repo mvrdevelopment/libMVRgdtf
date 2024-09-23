@@ -3,6 +3,7 @@ name: Build Static
 on:
     workflow_dispatch:
 
+# test with: act -W '.github/workflows/build-static.yml'
 jobs:
     build_windows:
         runs-on: windows-latest
