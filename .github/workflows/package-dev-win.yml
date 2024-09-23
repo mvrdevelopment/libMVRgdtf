@@ -72,14 +72,17 @@ jobs:
           shell: pwsh
 
         # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        - name: Collect Artifact
+          working-directory: libMvrGdtf
+          run: |
+            Compress-Archive -Path boost,xerces-c,libMvrGdtf -DestinationPath libMVRgdtf-dev.zip
+          shell: pwsh
+
         - name: Upload artifact
           uses: actions/upload-artifact@v4
           with:
             name: libMVRgdtf-dev
-            path: |
-              boost
-              xercex-c
-              libMVRgdtf
+            path: libMVRgdtf-dev.zip
 
 
 
