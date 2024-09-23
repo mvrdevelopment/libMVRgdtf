@@ -1,0 +1,88 @@
+name: Package Dev Win
+
+on:
+    workflow_dispatch:
+
+jobs:
+    package_dev_win:
+        runs-on: windows-latest
+
+        steps:
+        # Prepare Visual Studio
+        - name: Set up Visual Studio
+          uses: microsoft/setup-msbuild@v2
+          with:
+            msbuild-architecture: x64
+
+        # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        # Xerces-C - setup
+        - name: Xerces-C - prepare
+          run: |
+            mkdir xerces-c
+            cd xerces-c
+            curl -o xerces-c.zip https://dlcdn.apache.org//xerces/c/3/sources/xerces-c-3.2.5.zip
+            tar -xf xerces-c.zip --strip-components=1
+            del xerces-c.zip
+
+        # Xerces-C - build MD
+        - name: Xerces-C - configure
+          working-directory: xerces-c
+          run: |
+            mkdir build
+            cd build
+            cmake .. -G "Visual Studio 17 2022" -A x64 -DCMAKE_INSTALL_PREFIX:PATH=libs -DCMAKE_CXX_FLAGS="/DWIN32 /D_WINDOWS -O2 -Ob2 -DNDEBUG" -DCMAKE_C_FLAGS="/DWIN32 /D_WINDOWS /W3" -DBUILD_SHARED_LIBS:BOOL=FALSE -Dxmlch-type=wchar_t
+
+        # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        # Boost - setup and build
+        - name: Boost - prepare
+          run: |
+            mkdir boost
+            cd boost
+            curl -o boost.zip https://archives.boost.io/release/1.86.0/source/boost_1_86_0.zip
+            tar -xf boost.zip --strip-components=1
+            del boost.zip
+
+        # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        # libMVRGdtf - setup
+        - name: libMVRGdtf - checkout repository
+          uses: actions/checkout@v4
+          with:
+            path: libMvrGdtf
+
+        # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        - name: libMVRGdtf [MD] - configure
+          working-directory: libMvrGdtf
+          run: |
+            mkdir build_MD
+            cd build_MD
+            cmake .. -DCMAKE_INSTALL_PREFIX:PATH=libs -DWIN_RUNTIME_LIB=-MD -DXERCES_INCLUDE_PATH="..\xerces-c\build\libs\include;..\xerces\src" -DXERCES_LIB_PATH="..\xerces\build\libs\lib" -DXERCES_ROOT_PATH="..\xerces-c\build"
+            ren MvrGdtf.vcxproj MvrGdtf_ORG.vcxproj
+      
+        # libMVRGdtf - build Debug
+        - name: libMVRGdtf [MD] - Debug - add lib dependencies
+          working-directory: libMvrGdtf/build_MD
+          run: |
+            $xml = [xml](Get-Content MvrGdtf_ORG.vcxproj)
+            $xml.Project.ItemDefinitionGroup | ForEach-Object {
+            $node = $xml.CreateElement("AdditionalDependencies", "http://schemas.microsoft.com/developer/msbuild/2003")
+            $node.InnerText = 'iphlpapi.lib;..\..\xerces-c\build\libs\lib\xerces-c_3D.lib;mdns_cpp\lib\Debug\mdns_cpp.lib;%(AdditionalDependencies)'
+            $_.Lib.AppendChild($node) | Out-Null
+            }
+            Set-Content -Path "MvrGdtf.vcxproj" -Value $xml.OuterXml
+          shell: pwsh
+
+        # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        - name: Collect Artifact
+          run: |
+            dir
+            Compress-Archive -Path xerces-c,libMvrGdtf,boost -DestinationPath libMVRgdtf-dev.zip
+          shell: pwsh
+
+        - name: Upload artifact
+          uses: actions/upload-artifact@v4
+          with:
+            name: libMVRgdtf-dev
+            path: libMVRgdtf-dev.zip
+
+
+
