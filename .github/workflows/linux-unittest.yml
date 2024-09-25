@@ -4,7 +4,7 @@ on:
   [push, workflow_dispatch]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4  # https://github.com/nektos/act/issues/307
