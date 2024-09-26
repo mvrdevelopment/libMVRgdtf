@@ -1,0 +1,43 @@
+name: 'Build Linux'
+description: 'Build ths packages for Linux package'
+runs:
+  using: "composite"
+  steps:
+    - name: Install prerequisites
+      shell: bash
+      run: |
+        sudo apt-get update -y
+        sudo apt-get install -y libboost-all-dev
+        sudo apt-get install -y libcurl4-openssl-dev
+        sudo apt-get install -y cmake
+
+    - name: Xerces-C - prepare
+      shell: bash
+      run: |
+        mkdir xerces-c
+        cd xerces-c
+        curl -o xerces-c.zip https://dlcdn.apache.org//xerces/c/3/sources/xerces-c-3.2.5.zip
+        unzip xerces-c.zip -d . && mv xerces-c-*/* .
+
+    # libMVRGdtf expects XMLChar be uint16_t
+    - name: Xerces-C - build
+      shell: bash
+      working-directory: xerces-c
+      run: |
+        ./configure --disable-shared --enable-xmlch-uint16_t --prefix=$(pwd)/_build
+        make -j
+        make install
+
+    - name: libMVRGdtf - checkout repository
+      uses: actions/checkout@v4
+      with:
+        path: libMvrGdtf
+
+    - name: libMVRGdtf - build
+      shell: bash
+      working-directory: libMvrGdtf
+      run: |
+        mkdir build
+        cd build
+        cmake .. -DUNITTEST=TRUE -DEXTRA_LIBS="curl;icuuc;icudata;icui18n;icuio" -DXERCES_LIB_PATH="$(pwd)/../../xerces-c/_build/lib/libxerces-c.a"
+        make -j
