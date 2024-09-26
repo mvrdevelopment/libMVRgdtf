@@ -6,6 +6,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    container: simeonrolev/mvr-lib-linux
     steps:
       - uses: actions/checkout@v4  # https://github.com/nektos/act/issues/307
       - name: Build
