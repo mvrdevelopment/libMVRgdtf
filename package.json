@@ -2,7 +2,7 @@
     "version": "9.0.11",
     "name": "@mvrdevelopment/lib-mvr-gdtf",
     "files": [
-        "libMvrGdtf/output"
+        "output"
     ],
     "author": "mvrdevelopment",
     "publishConfig": {
