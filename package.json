@@ -8,7 +8,9 @@
     "publishConfig": {
         "registry": "https://npm.pkg.github.com/mvrdevelopment"
     },
-    "repository": "https://github.com/mvrdevelopment/libMVRgdtf.git",
+    "repository": {
+        "url": "git+https://github.com/mvrdevelopment/libMVRgdtf.git"
+    },
     "private": false,
     "scripts": {
       "release": "auto shipit --base-branch=master"
