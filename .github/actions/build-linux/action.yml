@@ -1,3 +1,9 @@
+# This action to checkout like this before invoking it
+# - name: Checkout repository under ./libMvrGdtf
+#   uses: actions/checkout@v4
+#   with:
+#     path: libMvrGdtf
+
 name: 'Build Linux'
 description: 'Build ths packages for Linux package'
 runs:
@@ -37,7 +43,7 @@ runs:
         cmake .. -DUNITTEST=TRUE -DEXTRA_LIBS="curl;icuuc;icudata;icui18n;icuio" -DXERCES_LIB_PATH="$(pwd)/../../xerces-c/_build/lib/libxerces-c.a"
         make -j
 
-    - name: Prepare Artifact
+    - name: Prepare package
       shell: bash
       working-directory: libMvrGdtf
       run: |
