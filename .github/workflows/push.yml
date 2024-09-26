@@ -15,16 +15,8 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
-      # - name: Build
-      #   uses: ./libMvrGdtf/.github/actions/build-linux
-
-      - name: Add .npmrc
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_PKG_KEY}}
-        run: |
-          echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
-          echo "@mvrdevelopment:registry=https://npm.pkg.github.com/" >> ~/.npmrc
-          cat ~/.npmrc
+      - name: Build
+        uses: ./libMvrGdtf/.github/actions/build-linux
 
       - name: Create Release
         env:
