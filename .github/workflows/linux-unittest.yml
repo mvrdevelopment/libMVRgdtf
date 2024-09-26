@@ -13,7 +13,7 @@ jobs:
           path: libMvrGdtf
 
       - name: Build
-        uses: ./.github/actions/build-linux
+        uses: ./libMvrGdtf/.github/actions/build-linux
 
       - name: Testing...
         working-directory: libMvrGdtf/build
