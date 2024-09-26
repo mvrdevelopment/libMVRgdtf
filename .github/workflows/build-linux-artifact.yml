@@ -8,18 +8,13 @@ jobs:
     runs-on: ubuntu-latest
     name: Export a Linux build as an artifact
     steps:
-      - uses: actions/checkout@v4  # https://github.com/nektos/act/issues/307
-      - name: Build
-        uses: ./.github/actions/build-linux
+      - name: libMVRGdtf - checkout repository
+        uses: actions/checkout@v4
+        with:
+          path: libMvrGdtf
 
-      - name: Prepare Artifact
-        working-directory: libMvrGdtf
-        run: |
-          mkdir -p output/include
-          cp -r src/Include/* output/include/
-          
-          mkdir -p output/lib
-          cp -r libs/* output/lib/
+      - name: Build
+        uses: ./libMvrGdtf/.github/actions/build-linux
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4

@@ -7,7 +7,11 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4  # https://github.com/nektos/act/issues/307
+      - name: libMVRGdtf - checkout repository
+        uses: actions/checkout@v4
+        with:
+          path: libMvrGdtf
+
       - name: Build
         uses: ./.github/actions/build-linux
 

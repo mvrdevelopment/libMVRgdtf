@@ -28,11 +28,6 @@ runs:
         make -j
         make install
 
-    - name: libMVRGdtf - checkout repository
-      uses: actions/checkout@v4
-      with:
-        path: libMvrGdtf
-
     - name: libMVRGdtf - build
       shell: bash
       working-directory: libMvrGdtf
@@ -41,3 +36,13 @@ runs:
         cd build
         cmake .. -DUNITTEST=TRUE -DEXTRA_LIBS="curl;icuuc;icudata;icui18n;icuio" -DXERCES_LIB_PATH="$(pwd)/../../xerces-c/_build/lib/libxerces-c.a"
         make -j
+
+    - name: Prepare Artifact
+      shell: bash
+      working-directory: libMvrGdtf
+      run: |
+        mkdir -p output/include
+        cp -r src/Include/* output/include/
+        
+        mkdir -p output/lib
+        cp -r libs/* output/lib/

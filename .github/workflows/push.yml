@@ -1,0 +1,28 @@
+# Name of our action
+name: Release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository under ./libMvrGdtf
+        uses: actions/checkout@v4
+        with:
+          path: libMvrGdtf
+          fetch-depth: 0
+          fetch-tags: true
+
+      # - name: Build
+      #   uses: ./libMvrGdtf/.github/actions/build-linux
+
+      - name: Create Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.NPM_PKG_KEY }}
+          NODE_AUTH_TOKEN: ${{secrets.NPM_PKG_KEY}}
+        working-directory: libMvrGdtf 
+        run: |
+          npm install
+          npm run release
