@@ -30,7 +30,7 @@ runs:
       shell: bash
       working-directory: xerces-c
       run: |
-        ./configure --disable-shared --enable-xmlch-uint16_t --prefix=$(pwd)/_build
+        ./configure --disable-shared --enable-xmlch-uint16_t --prefix=$(pwd)/_build CFLAGS="-fPIC" CXXFLAGS="-fPIC" 
         make -j
         make install
 
