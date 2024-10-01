@@ -49,6 +49,7 @@ runs:
       run: |
         mkdir -p output/include
         cp -r src/Include/* output/include/
-        
+
         mkdir -p output/lib
+        cp ../xerces-c/_build/lib/libxerces-c.a ./libs/libxerces-c.a
         cp -r libs/* output/lib/
