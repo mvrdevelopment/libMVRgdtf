@@ -1,0 +1,21 @@
+{
+    "version": "9.0.11",
+    "name": "@mvrdevelopment/lib-mvr-gdtf",
+    "files": [
+        "output"
+    ],
+    "author": "mvrdevelopment",
+    "publishConfig": {
+        "registry": "https://npm.pkg.github.com/mvrdevelopment"
+    },
+    "repository": {
+        "url": "git+https://github.com/mvrdevelopment/libMVRgdtf.git"
+    },
+    "private": false,
+    "scripts": {
+      "release": "auto shipit --base-branch=master"
+    },
+    "devDependencies": {
+        "auto": "^11.2.1"
+    }
+}

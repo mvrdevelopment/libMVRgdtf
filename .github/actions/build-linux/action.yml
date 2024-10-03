@@ -1,3 +1,9 @@
+# This action to checkout like this before invoking it
+# - name: Checkout repository under ./libMvrGdtf
+#   uses: actions/checkout@v4
+#   with:
+#     path: libMvrGdtf
+
 name: 'Build Linux'
 description: 'Build ths packages for Linux package'
 runs:
@@ -24,14 +30,9 @@ runs:
       shell: bash
       working-directory: xerces-c
       run: |
-        ./configure --disable-shared --enable-xmlch-uint16_t --prefix=$(pwd)/_build
+        ./configure --disable-shared --enable-xmlch-uint16_t --prefix=$(pwd)/_build CFLAGS="-fPIC" CXXFLAGS="-fPIC" 
         make -j
         make install
-
-    - name: libMVRGdtf - checkout repository
-      uses: actions/checkout@v4
-      with:
-        path: libMvrGdtf
 
     - name: libMVRGdtf - build
       shell: bash
@@ -41,3 +42,14 @@ runs:
         cd build
         cmake .. -DUNITTEST=TRUE -DEXTRA_LIBS="curl;icuuc;icudata;icui18n;icuio" -DXERCES_LIB_PATH="$(pwd)/../../xerces-c/_build/lib/libxerces-c.a"
         make -j
+
+    - name: Prepare package
+      shell: bash
+      working-directory: libMvrGdtf
+      run: |
+        mkdir -p output/include
+        cp -r src/Include/* output/include/
+
+        mkdir -p output/lib
+        cp ../xerces-c/_build/lib/libxerces-c.a ./libs/libxerces-c.a
+        cp -r libs/* output/lib/
