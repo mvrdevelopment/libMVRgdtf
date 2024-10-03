@@ -47,6 +47,8 @@ obj/
 testfiles/
 enc_temp_folder/
 build/
+build_MD/
+build_MT/
 _build/
 
 # exclude specific files
