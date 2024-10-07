@@ -6,6 +6,8 @@ Example: `libMVRgdtf$ >node scripts/json-updater.js --name @mvr/lib-windows`
 const fs = require('fs');
 const path = require('path');
 
+const ARRAY_KEYS = ["files", "os"];
+
 class PackageJSONManager {
     constructor() {
         this.filePath = path.join('package.json')
@@ -14,7 +16,9 @@ class PackageJSONManager {
 
     updateKey(key, value) {
         if (!key || !value) return;
-        this.packageJson[key] = value;
+        this.packageJson[key] = ARRAY_KEYS.includes(key)
+            ? value.split(',')
+            : value
     }
 
     save() {
