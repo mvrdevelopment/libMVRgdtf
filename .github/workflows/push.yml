@@ -15,8 +15,8 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
-      - name: Build
-        uses: ./libMvrGdtf/.github/actions/build-linux
+      # - name: Build
+      #   uses: ./libMvrGdtf/.github/actions/build-linux
 
       - name: Add .npmrc
         env:
@@ -24,12 +24,27 @@ jobs:
         run: |
           echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
           echo "@mvrdevelopment:registry=https://npm.pkg.github.com/" >> ~/.npmrc
+      
+      - name: Mock github user
+        run: |
+          git config --global user.email "simorolev@gmail.com"
+          git config --global user.name "Simeon Rolev"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
       - name: Create Release
         env:
           GITHUB_TOKEN: ${{ secrets.NPM_PKG_KEY }}
           NODE_AUTH_TOKEN: ${{secrets.NPM_PKG_KEY}}
-        working-directory: libMvrGdtf 
+        working-directory: libMvrGdtf
         run: |
+          git checkout -b release/linux
+          node scripts/json-updater.js --name @mvrdevelopment/lib-gdtf-linux  --os "linux" --files "package.json"
+          npm version patch --no-git-tag-version
+          git add .
+          git commit -m "Package prepare"
+
           npm install
-          npm run release
+          npm publish --dry-run
