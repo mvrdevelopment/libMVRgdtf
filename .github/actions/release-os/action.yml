@@ -7,7 +7,7 @@ runs:
       shell: bash
       working-directory: libMvrGdtf
       run: |
-        export OS=$(node -e "console.log(process.platform)")
+        export OS=$(node -p process.platform)
         git checkout -b release/$OS
         node scripts/json-updater.js --name @mvrdevelopment/lib-gdtf-$OS --os $OS --files "output"
         npm version patch --no-git-tag-version
