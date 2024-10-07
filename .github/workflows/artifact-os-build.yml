@@ -1,10 +1,12 @@
 on:
-  workflow_call:
+  workflow_dispatch:
     inputs:
       runner:
-        description: 'One of: [ubuntu-latest, windows-latest]'
         required: true
-        type: string
+        type: choice
+        options:
+          - ubuntu-latest
+          - windows-latest
 
 jobs:
   build_artifact:
