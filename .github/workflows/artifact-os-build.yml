@@ -22,7 +22,7 @@ jobs:
         
       - name: Build Windows
         if: inputs.runner == 'windows-latest'
-        uses: ./libMvrGdtf/.github/actions/build-windows
+        uses: ./libMvrGdtf/.github/actions/build-win32
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4

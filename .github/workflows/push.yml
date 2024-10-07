@@ -6,7 +6,10 @@ on:
 
 jobs:
   release:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository under ./libMvrGdtf
         uses: actions/checkout@v4
@@ -15,24 +18,13 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
-      # - name: Build
-      #   uses: ./libMvrGdtf/.github/actions/build-linux
+      - name: Build Linux
+        if: matrix.os == 'ubuntu-latest'
+        uses: ./libMvrGdtf/.github/actions/build-linux
 
-      - name: Add .npmrc
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_PKG_KEY}}
-        run: |
-          echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
-          echo "@mvrdevelopment:registry=https://npm.pkg.github.com/" >> ~/.npmrc
-      
-      - name: Mock github user
-        run: |
-          git config --global user.email "simorolev@gmail.com"
-          git config --global user.name "Simeon Rolev"
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
+      - name: Build Windows
+        if: matrix.os == 'windows-latest'
+        uses: ./libMvrGdtf/.github/actions/build-win32
 
       - name: Release OS
         uses: ./libMvrGdtf/.github/actions/release-os
