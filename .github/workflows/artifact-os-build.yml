@@ -1,0 +1,32 @@
+on:
+  workflow_call:
+    inputs:
+      runner:
+        description: 'One of: [ubuntu-latest, windows-latest]'
+        required: true
+        type: string
+
+jobs:
+  build_artifact:
+    runs-on: ${{ inputs.runner }}
+    name: Export artifact for ${{ inputs.runner }}
+    steps:
+      - name: libMVRGdtf - checkout repository
+        uses: actions/checkout@v4
+        with:
+          path: libMvrGdtf
+      
+      - name: Build Linux
+        if: inputs.runner == 'ubuntu-latest'
+        uses: ./libMvrGdtf/.github/actions/build-linux
+        
+      - name: Build Windows
+        if: inputs.runner == 'windows-latest'
+        uses: ./libMvrGdtf/.github/actions/build-windows
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: libMVRgdtf-${{ inputs.runner }}
+          path: |
+            libMvrGdtf/output

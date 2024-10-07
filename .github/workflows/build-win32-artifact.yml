@@ -1,4 +1,4 @@
-name: Build Static Linux
+name: Build win32 artifact
 
 on:
   [workflow_call, workflow_dispatch]
@@ -7,4 +7,4 @@ jobs:
   build_artifact:
     uses: ./.github/workflows/artifact-os-build.yml
     with:
-      runner: 'ubuntu-latest'
+      runner: 'windows-latest'
