@@ -1,15 +1,15 @@
 name: Artifact
 
 on:
-  pull_request:
   workflow_dispatch:
     inputs:
       runner:
+        description: 'runs-on'
         required: true
         type: choice
         options:
-          - ubuntu-latest
-          - windows-latest
+        - ubuntu-latest
+        - windows-latest
 
 jobs:
   build_artifact:
