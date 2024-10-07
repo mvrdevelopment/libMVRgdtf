@@ -34,17 +34,8 @@ jobs:
         with:
           node-version: 20
 
-      - name: Create Release
+      - name: Release OS
+        uses: ./libMvrGdtf/.github/actions/release-os
         env:
           GITHUB_TOKEN: ${{ secrets.NPM_PKG_KEY }}
           NODE_AUTH_TOKEN: ${{secrets.NPM_PKG_KEY}}
-        working-directory: libMvrGdtf
-        run: |
-          git checkout -b release/linux
-          node scripts/json-updater.js --name @mvrdevelopment/lib-gdtf-linux  --os "linux" --files "package.json"
-          npm version patch --no-git-tag-version
-          git add .
-          git commit -m "Package prepare"
-
-          npm install
-          npm publish --dry-run

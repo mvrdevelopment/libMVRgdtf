@@ -1,14 +1,18 @@
-      - name: Create Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.NPM_PKG_KEY }}
-          NODE_AUTH_TOKEN: ${{secrets.NPM_PKG_KEY}}
-        working-directory: libMvrGdtf
-        run: |
-          git checkout -b release/linux
-          node scripts/json-updater.js --name @mvrdevelopment/lib-gdtf-linux  --os "linux" --files "package.json"
-          npm version patch --no-git-tag-version
-          git add .
-          git commit -m "Package prepare"
+name: Release OS package
+description: Release the package for a particular OS
+runs:
+  using: "composite"
+  steps:
+    - name: Release OS pacakge
+      shell: bash
+      working-directory: libMvrGdtf
+      run: |
+        export OS=$(node -e "console.log(process.platform)")
+        git checkout -b release/$OS
+        node scripts/json-updater.js --name @mvrdevelopment/lib-gdtf-$OS --os $OS --files "output"
+        npm version patch --no-git-tag-version
+        git add .
+        git commit -m "Prepare OS package.json"
 
-          npm install
-          npm publish --dry-run
+        npm install
+        npm publish --dry-run
