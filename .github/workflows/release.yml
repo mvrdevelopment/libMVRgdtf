@@ -21,6 +21,7 @@ jobs:
           npm install
           npm run release -- --dry-run
 
+  # Run as separate jobs, not separate matrix steps
   release-os-sub-packages:
     needs: release-main-package
     strategy:
