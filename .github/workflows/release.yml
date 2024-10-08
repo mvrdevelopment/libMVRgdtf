@@ -36,17 +36,8 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
-      - name: Build Linux
-        if: matrix.os == 'ubuntu-latest'
-        uses: ./libMvrGdtf/.github/actions/build-ubuntu
-
-      - name: Build Windows
-        if: matrix.os == 'windows-latest'
-        uses: ./libMvrGdtf/.github/actions/build-windows
-
-      - name: Build MacOS
-        if: matrix.os == 'macos-latest'
-        uses: ./libMvrGdtf/.github/actions/build-macos
+      - name: Build
+        uses: ./libMvrGdtf/.github/actions/build-lib
 
       - name: Release OS
         uses: ./libMvrGdtf/.github/actions/release-os
