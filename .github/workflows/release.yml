@@ -4,7 +4,25 @@ on:
   workflow_dispatch:
 
 jobs:
-  release:
+  release-main-package:
+    runs-on: 'ubuntu-latest'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+    
+      - name: Shipit
+        env:
+          GITHUB_TOKEN: ${{ secrets.NPM_PKG_KEY }}
+          NODE_AUTH_TOKEN: ${{secrets.NPM_PKG_KEY}}
+        run: |
+          npm install
+          npm run release -- --dry-run
+
+  release-os-sub-packages:
+    needs: release-main-package
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
