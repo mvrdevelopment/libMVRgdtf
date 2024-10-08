@@ -25,8 +25,8 @@ runs:
       run: |
         export OS=$(node -p process.platform)
         git checkout -b release/$OS
+        git fetch --tags
         node scripts/json-updater.js --name @mvrdevelopment/lib-gdtf-$OS --os $OS --files "output"
-        npm version patch --no-git-tag-version
         git add .
         git commit -m "Prepare OS package.json"
 

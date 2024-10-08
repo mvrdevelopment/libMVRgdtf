@@ -14,7 +14,7 @@
     "private": false,
     "scripts": {
       "release": "auto shipit --base-branch=master",
-      "install": "bash ./install.sh"
+      "postinstall": "bash ./install.sh"
     },
     "devDependencies": {
         "auto": "^11.2.1"
