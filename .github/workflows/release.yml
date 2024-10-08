@@ -1,5 +1,4 @@
-# Name of our action
-name: Release
+name: Release on NPM
 
 on:
   workflow_dispatch:
@@ -8,7 +7,7 @@ jobs:
   release:
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository under ./libMvrGdtf
@@ -20,11 +19,15 @@ jobs:
 
       - name: Build Linux
         if: matrix.os == 'ubuntu-latest'
-        uses: ./libMvrGdtf/.github/actions/build-linux
+        uses: ./libMvrGdtf/.github/actions/build-ubuntu
 
       - name: Build Windows
         if: matrix.os == 'windows-latest'
-        uses: ./libMvrGdtf/.github/actions/build-win32
+        uses: ./libMvrGdtf/.github/actions/build-windows
+
+      - name: Build MacOS
+        if: matrix.os == 'macos-latest'
+        uses: ./libMvrGdtf/.github/actions/build-macos
 
       - name: Release OS
         uses: ./libMvrGdtf/.github/actions/release-os
