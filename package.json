@@ -2,7 +2,7 @@
     "version": "9.0.11",
     "name": "@mvrdevelopment/lib-mvr-gdtf",
     "files": [
-        "output"
+        "main.js"
     ],
     "author": "mvrdevelopment",
     "publishConfig": {
