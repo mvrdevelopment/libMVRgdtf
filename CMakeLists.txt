@@ -1,5 +1,9 @@
 SET(CMAKE_POLICY_DEFAULT_CMP0074 NEW)
 cmake_minimum_required(VERSION 3.9.4)
+project(
+  libMvrGdtf
+  VERSION 0.1.0
+  LANGUAGES CXX)
 
 # pre setup for some vars
 set(UNITTEST FALSE CACHE BOOL "If enabled the tests wont be build!")
@@ -231,3 +235,46 @@ endif($ENV{XERCES_CONFIGURE_ENCODER})
 
 # Flag CXX
 
+
+# ##############################################################################
+# install
+# ##############################################################################
+
+include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
+
+install(
+  TARGETS ${PROJECT_NAME}
+  EXPORT ${PROJECT_NAME}_Targets
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+write_basic_package_version_file(
+  "${PROJECT_NAME}ConfigVersion.cmake"
+  VERSION ${PROJECT_VERSION}
+  COMPATIBILITY SameMajorVersion)
+
+configure_package_config_file(
+  "${PROJECT_SOURCE_DIR}/cmake/Config.cmake.in"
+  "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+  INSTALL_DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/cmake)
+
+install(
+  EXPORT ${PROJECT_NAME}_Targets
+  FILE ${PROJECT_NAME}Targets.cmake
+  NAMESPACE ${PROJECT_NAME}::
+  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/cmake
+  COMPONENT dev)
+
+install(
+  FILES "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+        "${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/cmake
+  COMPONENT dev)
+install(
+  DIRECTORY include/ ${CMAKE_CURRENT_BINARY_DIR}/include/
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+  COMPONENT dev
+  FILES_MATCHING
+  PATTERN "*.hpp")
