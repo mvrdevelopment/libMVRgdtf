@@ -56,10 +56,6 @@ ADD_DEFINITIONS(-D_UNICODE)
 
 
 #################################################
-
-add_subdirectory(mdns_cpp)
-
-#################################################
 # create the project
 project(MvrGdtf)
 set(CMAKE_CXX_STANDARD 11)
@@ -80,8 +76,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src
                     ${XERCES_INCLUDE_PATH})
 
 if(BUILD_MVR_XCHANGE)
-    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../boost/
-                        ${CMAKE_CURRENT_SOURCE_DIR}/mdns_cpp/include/)
+    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../boost/)
 endif()
 
 # default values
@@ -110,7 +105,7 @@ endif()
 
 
 if(${BUILD_MVR_XCHANGE})
-    target_link_libraries(MvrGdtf mdns_cpp)
+    add_compile_definitions(MVR_XCHANGE)
 endif()
 #################################################
 

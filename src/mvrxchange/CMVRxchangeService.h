@@ -4,7 +4,7 @@
 #pragma once
 
 #include "Include/IMediaRessourceVectorInterface.h"
-#include "mdns_cpp/mdns.hpp"
+#include "mdns/mdns.hpp"
 #include "../mvrxchange/mvrxchange_prefix.h"
 #include "../mvrxchange/mvrxchange_server.h"
 #include "../mvrxchange/mvrxchange_client.h"
