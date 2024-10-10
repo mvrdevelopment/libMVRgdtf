@@ -1409,7 +1409,6 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
     class DYNAMIC_ATTRIBUTE IGdtfCRI : public IVWUnknown
     {
     public:
-        virtual MvrString VCOM_CALLTYPE     GetName() = 0;
         // Getter
         virtual VCOMError VCOM_CALLTYPE GetColorSample(GdtfDefines::EGdtfColorSample outVal) = 0;
         virtual VCOMError VCOM_CALLTYPE GetColorRenderingIndex(Uint8& outVal) = 0;
@@ -1425,7 +1424,6 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
     class DYNAMIC_ATTRIBUTE IGdtfCRIGroup : public IVWUnknown
     {
     public:
-        virtual MvrString VCOM_CALLTYPE     GetName() = 0;
 
         virtual VCOMError VCOM_CALLTYPE GetColorTemperature(double& outVal) = 0;
         virtual VCOMError VCOM_CALLTYPE SetColorTemperature(double value) = 0;
