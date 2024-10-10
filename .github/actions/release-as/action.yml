@@ -1,3 +1,19 @@
+# WORK IN PROGRESS
+
+# The idea was to have a main package that installs the other three packages as dependencies, maybe optionalDependencies, keeping the same version somehow.
+# maybe a postinstall script that gets the current version of the main package and attempts to `npm install @mvr/lib-$OS@<main-version>`.
+
+# This composite action Releases a different-named package with the same version as the main one
+# Can modify any package.json params before releasing (name, os, files etc.)
+# Checks out to a temporary branch, prepares the package and releases it directly (not following auto shipit defaults)
+
+# Usage:
+# - name: Release OS
+#   uses: ./libMvrGdtf/.github/actions/release-as
+#   env:
+#     GITHUB_TOKEN: ${{ secrets.NPM_PKG_KEY }}
+#     NODE_AUTH_TOKEN: ${{secrets.NPM_PKG_KEY}}
+
 name: Release OS package
 description: Release the package for a particular OS
 runs:

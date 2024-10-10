@@ -4,30 +4,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  release-main-package:
+  release:
     runs-on: 'ubuntu-latest'
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          fetch-tags: true
-    
-      - name: Shipit
-        env:
-          GITHUB_TOKEN: ${{ secrets.NPM_PKG_KEY }}
-          NODE_AUTH_TOKEN: ${{secrets.NPM_PKG_KEY}}
-        run: |
-          npm install
-          npm run release -- --dry-run
-
-  # Run as separate jobs, not separate matrix steps
-  release-os-sub-packages:
-    needs: release-main-package
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository under ./libMvrGdtf
         uses: actions/checkout@v4
@@ -39,8 +17,11 @@ jobs:
       - name: Build
         uses: ./libMvrGdtf/.github/actions/build-lib
 
-      - name: Release OS
-        uses: ./libMvrGdtf/.github/actions/release-os
+      - name: Create Release
         env:
           GITHUB_TOKEN: ${{ secrets.NPM_PKG_KEY }}
           NODE_AUTH_TOKEN: ${{secrets.NPM_PKG_KEY}}
+        working-directory: libMvrGdtf 
+        run: |
+          npm install
+          npm run release

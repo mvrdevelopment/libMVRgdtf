@@ -1,9 +1,10 @@
 {
     "version": "9.0.11",
-    "name": "@mvrdevelopment/lib-mvr-gdtf",
+    "name": "@mvrdevelopment/lib-gdtf-linux",
     "files": [
-        "main.js"
+        "output"
     ],
+    "os": ["linux"],
     "author": "mvrdevelopment",
     "publishConfig": {
         "registry": "https://npm.pkg.github.com/mvrdevelopment"
@@ -13,8 +14,7 @@
     },
     "private": false,
     "scripts": {
-      "release": "auto shipit --base-branch=master",
-      "postinstall": "bash ./install.sh"
+      "release": "auto shipit --base-branch=master"
     },
     "devDependencies": {
         "auto": "^11.2.1"
