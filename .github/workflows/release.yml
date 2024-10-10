@@ -1,5 +1,4 @@
-# Name of our action
-name: Release
+name: Release on NPM
 
 on:
   workflow_dispatch:
@@ -16,14 +15,7 @@ jobs:
           fetch-tags: true
 
       - name: Build
-        uses: ./libMvrGdtf/.github/actions/build-linux
-
-      - name: Add .npmrc
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_PKG_KEY}}
-        run: |
-          echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
-          echo "@mvrdevelopment:registry=https://npm.pkg.github.com/" >> ~/.npmrc
+        uses: ./libMvrGdtf/.github/actions/build-lib
 
       - name: Create Release
         env:

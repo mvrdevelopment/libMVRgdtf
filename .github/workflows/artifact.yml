@@ -1,0 +1,33 @@
+name: Artifact
+
+on:
+  workflow_dispatch:
+    inputs:
+      runner:
+        description: 'runs-on'
+        required: true
+        type: choice
+        options:
+        - ubuntu-latest
+        - windows-latest
+        - macos-latest
+
+jobs:
+  build_artifact:
+    runs-on: ${{ inputs.runner }}
+    name: Export artifact for ${{ inputs.runner }}
+    steps:
+      - name: libMVRGdtf - checkout repository
+        uses: actions/checkout@v4
+        with:
+          path: libMvrGdtf
+      
+      - name: Build
+        uses: ./libMvrGdtf/.github/actions/build-lib
+        
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: libMVRgdtf-${{ inputs.runner }}
+          path: |
+            libMvrGdtf/output

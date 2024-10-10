@@ -1,0 +1,50 @@
+# WORK IN PROGRESS
+
+# The idea was to have a main package that installs the other three packages as dependencies, maybe optionalDependencies, keeping the same version somehow.
+# maybe a postinstall script that gets the current version of the main package and attempts to `npm install @mvr/lib-$OS@<main-version>`.
+
+# This composite action Releases a different-named package with the same version as the main one
+# Can modify any package.json params before releasing (name, os, files etc.)
+# Checks out to a temporary branch, prepares the package and releases it directly (not following auto shipit defaults)
+
+# Usage:
+# - name: Release OS
+#   uses: ./libMvrGdtf/.github/actions/release-as
+#   env:
+#     GITHUB_TOKEN: ${{ secrets.NPM_PKG_KEY }}
+#     NODE_AUTH_TOKEN: ${{secrets.NPM_PKG_KEY}}
+
+name: Release OS package
+description: Release the package for a particular OS
+runs:
+  using: "composite"
+  steps:
+    - name: Mock github user
+      shell: bash
+      run: |
+        git config --global user.email "simorolev@gmail.com"
+        git config --global user.name "Simeon Rolev"
+
+    - name: Add .npmrc
+      shell: bash
+      run: |
+        echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
+        echo "@mvrdevelopment:registry=https://npm.pkg.github.com/" >> ~/.npmrc
+
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 20
+
+    - name: Release OS pacakge
+      shell: bash
+      working-directory: libMvrGdtf
+      run: |
+        export OS=$(node -p process.platform)
+        git checkout -b release/$OS
+        git fetch --tags
+        node scripts/json-updater.js --name @mvrdevelopment/lib-gdtf-$OS --os $OS --files "output"
+        git add .
+        git commit -m "Prepare OS package.json"
+
+        npm install
+        npm publish --dry-run

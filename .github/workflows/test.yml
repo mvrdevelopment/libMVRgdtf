@@ -1,4 +1,4 @@
-name: Linux Unittest CI
+name: Test (Linux)
 
 on:
   [push, workflow_dispatch]
@@ -13,7 +13,7 @@ jobs:
           path: libMvrGdtf
 
       - name: Build
-        uses: ./libMvrGdtf/.github/actions/build-linux
+        uses: ./libMvrGdtf/.github/actions/build-lib
 
       - name: Testing...
         working-directory: libMvrGdtf/build
