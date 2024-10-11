@@ -16,6 +16,7 @@ jobs:
           token: ${{ secrets.ADMIN_TOKEN }}
       
       - name: Test pushable
+        working-directory: libMvrGdtf
         run: git push --dry-run 
 
       - name: Build
@@ -25,7 +26,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_PKG_KEY }}
-        working-directory: libMvrGdtf 
+        working-directory: libMvrGdtf
         run: |
           npm install
           npm run release
