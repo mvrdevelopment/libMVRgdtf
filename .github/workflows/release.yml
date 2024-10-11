@@ -14,6 +14,9 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
           token: ${{ secrets.ADMIN_TOKEN }}
+      
+      - name: Test pushable
+        run: git push --dry-run 
 
       - name: Build
         uses: ./libMvrGdtf/.github/actions/build-lib
