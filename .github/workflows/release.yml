@@ -13,6 +13,7 @@ jobs:
           path: libMvrGdtf
           fetch-depth: 0
           fetch-tags: true
+          token: ${{ secrets.ADMIN_TOKEN }}
 
       - name: Build
         uses: ./libMvrGdtf/.github/actions/build-lib
