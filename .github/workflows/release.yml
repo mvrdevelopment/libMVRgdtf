@@ -18,6 +18,8 @@ jobs:
       - name: Test pushable
         working-directory: libMvrGdtf
         run: git push --dry-run 
+        env:
+          GITHUB_TOKEN: ${{ secrets.ADMIN_TOKEN }}
 
       - name: Build
         uses: ./libMvrGdtf/.github/actions/build-lib
