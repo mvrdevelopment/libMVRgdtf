@@ -25,15 +25,11 @@ runs:
         git config --global user.email "simorolev@gmail.com"
         git config --global user.name "Simeon Rolev"
 
-    - name: Add .npmrc
-      shell: bash
-      run: |
-        echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
-        echo "@mvrdevelopment:registry=https://npm.pkg.github.com/" >> ~/.npmrc
-
     - uses: actions/setup-node@v4
       with:
         node-version: 20
+        registry-url: "https://npm.pkg.github.com"
+        scope: "@mvrdevelopment"
 
     - name: Release OS pacakge
       shell: bash
