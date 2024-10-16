@@ -43,7 +43,8 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE	AddGdtfFolderLocation(MvrString fullPathToFolder);
         virtual VCOMError VCOM_CALLTYPE	AddFileToMvrFile(MvrString fullPath);
 		virtual VCOMError VCOM_CALLTYPE AddBufferToMvrFile(MvrString filename, char* buffer, size_t length);
-		
+		virtual VCOMError VCOM_CALLTYPE	AddProviderAndProviderVersion( MvrString provider, MvrString providerVersion );
+
 		// After this you can generate Aux Objects
 		virtual VCOMError VCOM_CALLTYPE		CreateDataProviderObject(		MvrString provider,		MvrString version, 	ISceneDataProvider** outSceneDataProvider);
 		virtual VCOMError VCOM_CALLTYPE		CreatePositionObject(	 		const MvrUUID& guid,	MvrString name,		IPosition** outPositionObj);

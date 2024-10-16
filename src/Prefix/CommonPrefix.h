@@ -62,6 +62,8 @@
 #define XML_Val_RootNodeName			"GeneralSceneDescription"
 #define XML_Val_RootAttrMainVersion		"verMajor"
 #define XML_Val_RootAttrMinorVersion	"verMinor"
+#define XML_Val_RootAttrProvider		"provider"
+#define XML_Val_RootAttrProviderVersion	"providerVersion"
 
 #define XML_Val_UserDataNodeName		"UserData"
 #define XML_Val_UserDataVWEntry			"VWEntry"

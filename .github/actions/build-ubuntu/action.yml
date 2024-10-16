@@ -22,7 +22,7 @@ runs:
       run: |
         mkdir xerces-c
         cd xerces-c
-        curl -o xerces-c.zip https://dlcdn.apache.org//xerces/c/3/sources/xerces-c-3.2.5.zip
+        curl -o xerces-c.zip https://dlcdn.apache.org//xerces/c/3/sources/xerces-c-3.3.0.zip
         unzip xerces-c.zip -d . && mv xerces-c-*/* .
 
     # libMVRGdtf expects XMLChar be uint16_t

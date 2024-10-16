@@ -23,7 +23,6 @@ SceneData::SceneDataExchange* VectorworksMVR::CMediaRessourceVectorImpl::GetExch
 	return & fExchangeObj;
 }
 
-
 VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::AddFileToMvrFile(MvrString fullPath)
 {
     TXString strFullPath(fullPath);
@@ -72,6 +71,17 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::AddGdtfFold
 	
 	
 	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::AddProviderAndProviderVersion( MvrString provider, MvrString providerVersion )
+{
+	TXString strProvider(provider);
+	TXString strProviderVersion(providerVersion);
+	
+	fExchangeObj.AddProviderAndProviderVersion(strProvider, strProviderVersion);
+	
+	return kVCOMError_NoError;
+
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::OpenForWrite(MvrString fullPath)
