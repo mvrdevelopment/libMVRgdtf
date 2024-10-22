@@ -25,8 +25,8 @@ jobs:
           git commit --allow-empty -m "Test"
           git push --dry-run
 
-      - name: Build
-        uses: ./libMvrGdtf/.github/actions/build-lib
+      # - name: Build
+      #   uses: ./libMvrGdtf/.github/actions/build-lib
 
       - name: Create Release
         env:
