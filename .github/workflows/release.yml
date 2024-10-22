@@ -24,28 +24,11 @@ jobs:
           registry-url: https://npm.pkg.github.com/
           scope: '@mvrdevelopment'
 
-      - name: Test pushable
-        working-directory: libMvrGdtf
-        run: |
-          git config user.email "workflow_dispatch@mvrdevelopment.com"
-          git config user.name "workflow_dispatch@mvrdevelopment.com"
-          git commit --allow-empty -m "Test"
-          git push --dry-run
-
-      # - name: Build
-      #   uses: ./libMvrGdtf/.github/actions/build-lib
-
-      - name: Mock build
-        working-directory: libMvrGdtf
-        run: |
-          mkdir output
-          echo "Example" > output/temp.txt
+      - name: Build
+        uses: ./libMvrGdtf/.github/actions/build-lib
 
       - name: Create Release
         env:
-          # This command requires you to be logged in to https://npm.pkg.github.com
-          # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         working-directory: libMvrGdtf
