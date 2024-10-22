@@ -35,6 +35,13 @@ jobs:
       # - name: Build
       #   uses: ./libMvrGdtf/.github/actions/build-lib
 
+      - name: Mock build
+        working-directory: libMvrGdtf
+        run:
+          mkdir output
+          touch output/temp.txt
+          echo "Example" > output/temp.txt
+
       - name: Create Release
         env:
           # This command requires you to be logged in to https://npm.pkg.github.com
