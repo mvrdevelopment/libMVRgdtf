@@ -20,6 +20,8 @@ jobs:
       - name: Test pushable
         working-directory: libMvrGdtf
         run: |
+          git config user.email "workflow_dispatch@mvrdevelopment.com"
+          git config user.name "workflow_dispatch@mvrdevelopment.com"
           git commit --allow-empty -m "Test"
           git push --dry-run
 
