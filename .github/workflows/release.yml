@@ -39,7 +39,6 @@ jobs:
         working-directory: libMvrGdtf
         run:
           mkdir output
-          touch output/temp.txt
           echo "Example" > output/temp.txt
 
       - name: Create Release
