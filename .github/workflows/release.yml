@@ -30,8 +30,12 @@ jobs:
 
       - name: Create Release
         env:
+          # This command requires you to be logged in to https://npm.pkg.github.com
+          # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_PKG_KEY }}
+
         working-directory: libMvrGdtf
         run: |
           npm install
