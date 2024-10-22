@@ -37,7 +37,7 @@ jobs:
 
       - name: Mock build
         working-directory: libMvrGdtf
-        run:
+        run: |
           mkdir output
           echo "Example" > output/temp.txt
 
