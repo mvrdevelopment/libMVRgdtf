@@ -19,7 +19,6 @@
         "release": "auto shipit --base-branch=master"
     },
     "devDependencies": {
-        "@auto-it/protected-branch": "^11.2.1",
         "auto": "^11.2.1"
     }
 }
