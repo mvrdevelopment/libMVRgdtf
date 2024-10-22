@@ -1,3 +1,5 @@
+# Important information: https://intuit.github.io/auto/docs/build-platforms/github-actions
+
 name: Release on NPM
 
 on:
@@ -14,21 +16,19 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
           token: ${{ secrets.ADMIN_TOKEN }}
-      
+
       - name: Test pushable
         working-directory: libMvrGdtf
-        run: git push --dry-run 
-        env:
-          GITHUB_TOKEN: ${{ secrets.ADMIN_TOKEN }}
+        run: git push --dry-run
 
-      - name: Build
-        uses: ./libMvrGdtf/.github/actions/build-lib
+      # - name: Build
+      #   uses: ./libMvrGdtf/.github/actions/build-lib
 
-      - name: Create Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_PKG_KEY }}
-        working-directory: libMvrGdtf
-        run: |
-          npm install
-          npm run release
+      # - name: Create Release
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   working-directory: libMvrGdtf
+      #   run: |
+      #     npm install
+      #     npm run release
