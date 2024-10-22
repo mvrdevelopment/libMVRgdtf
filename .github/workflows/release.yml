@@ -19,7 +19,9 @@ jobs:
 
       - name: Test pushable
         working-directory: libMvrGdtf
-        run: git push --dry-run
+        run: |
+          git commit --allow-empty -m "Test"
+          git push --dry-run
 
       # - name: Build
       #   uses: ./libMvrGdtf/.github/actions/build-lib
