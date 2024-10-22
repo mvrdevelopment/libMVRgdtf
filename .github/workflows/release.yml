@@ -17,6 +17,13 @@ jobs:
           fetch-tags: true
           # token: ${{ secrets.ADMIN_TOKEN }}
 
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          registry-url: https://npm.pkg.github.com/
+          scope: '@mvrdevelopment'
+
       - name: Test pushable
         working-directory: libMvrGdtf
         run: |
@@ -34,7 +41,7 @@ jobs:
           # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_PKG_KEY }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
         working-directory: libMvrGdtf
         run: |
