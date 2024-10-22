@@ -4,7 +4,9 @@
     "files": [
         "output"
     ],
-    "os": ["linux"],
+    "os": [
+        "linux"
+    ],
     "author": "mvrdevelopment",
     "publishConfig": {
         "registry": "https://npm.pkg.github.com/mvrdevelopment"
@@ -14,9 +16,10 @@
     },
     "private": false,
     "scripts": {
-      "release": "auto shipit --base-branch=master"
+        "release": "auto shipit --base-branch=master"
     },
     "devDependencies": {
+        "@auto-it/protected-branch": "^11.2.1",
         "auto": "^11.2.1"
     }
 }
