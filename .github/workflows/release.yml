@@ -42,7 +42,7 @@ jobs:
           # NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+          PROTECTED_BRANCH_REVIEWER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         working-directory: libMvrGdtf
         run: |
           npm install
