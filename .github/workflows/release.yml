@@ -34,4 +34,6 @@ jobs:
         working-directory: libMvrGdtf
         run: |
           npm install
+          git config user.email "auto-release-bot@mvrdevelopment.com"
+          git config user.name "Auto release bot"
           npm run release
