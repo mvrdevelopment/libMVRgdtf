@@ -15,7 +15,7 @@ jobs:
           path: libMvrGdtf
           fetch-depth: 0
           fetch-tags: true
-          token: ${{ secrets.ADMIN_TOKEN }}
+          # token: ${{ secrets.ADMIN_TOKEN }}
 
       - name: Test pushable
         working-directory: libMvrGdtf
@@ -26,7 +26,6 @@ jobs:
 
       # - name: Create Release
       #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       #     NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       #   working-directory: libMvrGdtf
       #   run: |
