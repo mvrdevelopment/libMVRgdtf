@@ -25,13 +25,14 @@ jobs:
           git commit --allow-empty -m "Test"
           git push --dry-run
 
-      # - name: Build
-      #   uses: ./libMvrGdtf/.github/actions/build-lib
+      - name: Build
+        uses: ./libMvrGdtf/.github/actions/build-lib
 
-      # - name: Create Release
-      #   env:
-      #     NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   working-directory: libMvrGdtf
-      #   run: |
-      #     npm install
-      #     npm run release
+      - name: Create Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        working-directory: libMvrGdtf
+        run: |
+          npm install
+          npm run release
