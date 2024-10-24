@@ -3377,6 +3377,12 @@ bool SceneDataExchange::WriteToFile(const IFileIdentifierPtr& file)
 	return true;
 }
 
+void SceneDataExchange::AddProviderAndProviderVersion(const TXString& provider, const TXString& providerVersion)
+{
+	fProvider = provider;
+	fProviderVersion = providerVersion;
+}
+
 bool SceneDataExchange::WriteXml(const IFolderIdentifierPtr& folder, IXMLFileIOBufferImpl& outBuffer)
 {
     
@@ -3395,8 +3401,10 @@ bool SceneDataExchange::WriteXml(const IFolderIdentifierPtr& folder, IXMLFileIOB
 		{
 			//-------------------------------------------------------------------------------------------------
 			// Set Version for the export Format
-			pDatabaseRoot->SetNodeAttributeValue(XML_Val_RootAttrMainVersion,	TXString() << kMVR_MajorVersion);
-			pDatabaseRoot->SetNodeAttributeValue(XML_Val_RootAttrMinorVersion,	TXString() << kMVR_MinorVersion);
+			pDatabaseRoot->SetNodeAttributeValue(XML_Val_RootAttrMainVersion,		TXString() << kMVR_MajorVersion);
+			pDatabaseRoot->SetNodeAttributeValue(XML_Val_RootAttrMinorVersion,		TXString() << kMVR_MinorVersion);
+			pDatabaseRoot->SetNodeAttributeValue(XML_Val_RootAttrProvider,			fProvider);
+			pDatabaseRoot->SetNodeAttributeValue(XML_Val_RootAttrProviderVersion,	fProviderVersion);
 			
 			
 			//-------------------------------------------------------------------------------------------------

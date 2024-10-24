@@ -991,6 +991,8 @@ namespace SceneData
 		
 		//
 		size_t							fCountExportedGeometryProviders;
+		TXString						fProvider;
+		TXString						fProviderVersion;
 
 		//Duplicated Uuids flag
 		bool fDuplicatedUuids;
@@ -1068,7 +1070,8 @@ namespace SceneData
         void AddFileToZip(const IFileIdentifierPtr& file, ERessourceType resType);
 		void AddBufferToZip(const TXString& fileName, ISceneDataZipBuffer* buffer);
 		void AddLocationForGdtfFiles(IFolderIdentifierPtr folder);
-		
+		void AddProviderAndProviderVersion(const TXString& provider, const TXString& providerVersion );
+
 	private:
 		
 		bool WriteXml(const IFolderIdentifierPtr& folder , IXMLFileIOBufferImpl& outBuffer);
