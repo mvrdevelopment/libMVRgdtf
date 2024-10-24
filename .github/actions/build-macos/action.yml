@@ -23,7 +23,7 @@ runs:
       shell: bash
       working-directory: xerces-c
       run: |
-        ./configure --disable-shared --prefix=$(pwd)/_build_mac_x64 CFLAGS="-arch x86_64" CXXFLAGS="-arch x86_64"
+        ./configure --disable-shared --prefix=$(pwd)/_build_mac_x64 CFLAGS="-arch x86_64" CXXFLAGS="-arch x86_64" --enable-xmlch-wchar_t
         make -j
         make install
 
