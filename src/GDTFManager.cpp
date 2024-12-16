@@ -5020,18 +5020,26 @@ TSint32Array GdtfDmxMode::GetBreakArray() const
 		GdtfGeometryPtr geometry = geometrysToCheck.back();
 		geometrysToCheck.pop_back();
 
-		// Get all the internal geometries and prepare to chekc them
-		for(GdtfGeometryPtr child : geometry->GetInternalGeometries()) { geometrysToCheck.push_back(child); }
+		// Get all the internal geometries and prepare to check them
 
-		// Handle Geo Refs
-		if(geometry->GetObjectType() == eGdtfGeometryReference )
+		if ( geometry != nullptr )
 		{
-			GdtfGeometryReferencePtr geoRef = static_cast<GdtfGeometryReferencePtr>(geometry);
-			ASSERTN(kEveryone, geoRef != nullptr);
-			if(geoRef)
+			for ( GdtfGeometryPtr child : geometry->GetInternalGeometries() )
 			{
-				geometrysToCheck.push_back(geoRef->GetLinkedGeometry());
-				geometryRefs.push_back(geoRef);
+				geometrysToCheck.push_back( child );
+			}
+
+
+			// Handle Geo Refs
+			if ( geometry->GetObjectType() == eGdtfGeometryReference )
+			{
+				GdtfGeometryReferencePtr geoRef = static_cast<GdtfGeometryReferencePtr>( geometry );
+				ASSERTN( kEveryone, geoRef != nullptr );
+				if ( geoRef )
+				{
+					geometrysToCheck.push_back( geoRef->GetLinkedGeometry() );
+					geometryRefs.push_back( geoRef );
+				}
 			}
 		}
 	}
@@ -5126,22 +5134,25 @@ size_t GdtfDmxMode::GetFootPrintForBreak(size_t breakId)
 				GdtfGeometryPtr geometryInRefToCheck = geometriesInReferencedTree.back();
 				geometriesInReferencedTree.pop_back();
 
-				for (GdtfGeometryPtr childOfRef : geometryInRefToCheck->GetInternalGeometries()){ geometriesInReferencedTree.push_back(childOfRef); }
-
-				for (GdtfDmxChannelPtr channel : fChannels)
+				if ( geometryInRefToCheck != nullptr )
 				{
-					if(channel->GetGeomRef() == geometryInRefToCheck)
+					for (GdtfGeometryPtr childOfRef : geometryInRefToCheck->GetInternalGeometries()){ geometriesInReferencedTree.push_back(childOfRef); }
+
+					for (GdtfDmxChannelPtr channel : fChannels)
 					{
-						if(channel->GetDmxBreak() != kDmxBreakOverwriteValue)
+						if(channel->GetGeomRef() == geometryInRefToCheck)
 						{
-							if(std::find(breakIdsOfReference.begin(), breakIdsOfReference.end(), channel->GetDmxBreak()) == breakIdsOfReference.end())
+							if(channel->GetDmxBreak() != kDmxBreakOverwriteValue)
 							{
-								breakIdsOfReference.push_back(channel->GetDmxBreak());
+								if(std::find(breakIdsOfReference.begin(), breakIdsOfReference.end(), channel->GetDmxBreak()) == breakIdsOfReference.end())
+								{
+									breakIdsOfReference.push_back(channel->GetDmxBreak());
+								}
 							}
-						}
-						else 
-						{
-							overwrite = true;
+							else 
+							{
+								overwrite = true;
+							}
 						}
 					}
 				}
