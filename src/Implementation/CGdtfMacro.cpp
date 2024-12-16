@@ -219,7 +219,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfMacroImpl::GetMacroDMX(IGdtfMacro
 	if ( *outMacroDmx)
 	{
 		(*outMacroDmx)->Release();
-		 outMacroDmx = NULL;
+		 *outMacroDmx = NULL;
 	}
 	
 	//---------------------------------------------------------------------------
