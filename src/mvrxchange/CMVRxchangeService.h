@@ -8,6 +8,8 @@
 #include "../mvrxchange/mvrxchange_prefix.h"
 #include "../mvrxchange/mvrxchange_server.h"
 #include "../mvrxchange/mvrxchange_client.h"
+#include "../mvrxchange/mvrxchange_websocket.h"
+#include "CTaskQueue.h"
 
 
 namespace VectorworksMVR
@@ -43,6 +45,9 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE     OnMessage(OnMessageArgs& messageHandler);
 		virtual VCOMError VCOM_CALLTYPE     Send_message(const SendMessageArgs& messageHandler);
 
+		virtual VCOMError VCOM_CALLTYPE		SendMessageToRemote( const IMVRxchangeService::IMVRxchangeMessage& in );
+		void								onMessage( MVRxchangeNetwork::MVRxchangePacket msg );
+
 	private:
 		void mDNS_Client_Task();	// actual mdns task
 		
@@ -52,8 +57,11 @@ namespace VectorworksMVR
 		void mDNS_Client_Stop();
 		void mDNS_Client_Start();
 
+		std::thread										fioc_thread_;
+		boost::asio::io_context							fioc_;
+		std::shared_ptr<WebSocketClient>				fwebsocket_client_;
+		std::mutex										fwebsocket_client_mutex;
 
-        
 		std::vector<std::unique_ptr<mdns_cpp::mDNS>>	fmdns;
 		std::thread 									fmdns_Thread;
 		boost::asio::io_context 						fmdns_IO_Context;

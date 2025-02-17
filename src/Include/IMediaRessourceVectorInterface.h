@@ -76,6 +76,22 @@ namespace VectorworksMVR
                 (this->c == uuid.c) &&
                 (this->d == uuid.d));                          
         }
+
+		bool operator< (const MvrUUID& uuid) const 
+		{
+			if (this->a < uuid.a) return true;
+			if (this->a > uuid.a) return false;
+			if (this->b < uuid.b) return true;
+			if (this->b > uuid.b) return false;
+			if (this->c < uuid.c) return true;
+			if (this->c > uuid.c) return false;
+			return this->d < uuid.d;
+		}
+
+		bool isEmpty() const
+		{
+			return ( a == 0 && b == 0 && c == 0 && d == 0 );
+		}
 	};
 	
 	//-------------------------------------------------------------------------------------------------------------
@@ -1803,30 +1819,9 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		}
 	};
 
-	#ifdef BUILD_MVR_XCHANGE
-
 	class DYNAMIC_ATTRIBUTE IMVRxchangeService : public IVWUnknown
     {
 		public:
-
-		struct ConnectToRemoteServiceArgs
-		{
-			MVRxchangeString Url;
-		};
-		/**
-		 * @brief Connects to a given Socket Mode Mode MVR-xchange system
-		 * 
-		 * @param service 
-		 * @return VCOMError 
-		 */
-		virtual VCOMError VCOM_CALLTYPE     ConnectToRemoteService(const ConnectToRemoteServiceArgs& service) = 0;
-		/**
-		 * @brief Leaves the WebSocket Mode MVR-xchange system when connected
-		 * 
-		 * @param service 
-		 * @return VCOMError 
-		 */
-		virtual VCOMError VCOM_CALLTYPE     LeaveRemoteService() = 0;
 		
 		enum class MVRxchangeMessageType
 		{
@@ -1922,6 +1917,34 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 
 		};
 
+		struct ConnectToRemoteServiceArgs
+		{
+			MVRxchangeString Url;
+
+			MvrUUID 			StationUUID;
+			MVRxchangeString 	StationName;
+			MVRxchangeString 	Provider;
+
+			uint32_t     		VersionMajor;
+			uint32_t         	VersionMinor;
+
+			std::vector<MVR_COMMIT_MESSAGE> InitialFiles;
+		};
+		/**
+		* @brief Connects to a given Socket Mode Mode MVR-xchange system
+		* 
+		* @param service 
+		* @return VCOMError 
+		*/
+		virtual VCOMError VCOM_CALLTYPE     ConnectToRemoteService(const ConnectToRemoteServiceArgs& service) = 0;
+		/**
+		* @brief Leaves the WebSocket Mode MVR-xchange system when connected
+		* 
+		* @param service 
+		* @return VCOMError 
+		*/
+		virtual VCOMError VCOM_CALLTYPE     LeaveRemoteService() = 0;
+
 		
 		/**
 		 * @brief Connects to a given Local Network Mode MVR-xchange system
@@ -1996,6 +2019,7 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		};
 		virtual VCOMError VCOM_CALLTYPE     Send_message(const SendMessageArgs& messageHandler) = 0;
 
+		virtual VCOMError VCOM_CALLTYPE     SendMessageToRemote( const IMVRxchangeMessage& message ) = 0;
 
 
 
@@ -2003,5 +2027,4 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
     typedef VCOMPtr<IMVRxchangeService>	IMVRxchangeServicePtr;
     const   VWIID IID_IMVRxchangeService = { 0x706cb180, 0xcd45, 0x4a9a, {0xac, 0xfc, 0x62, 0xab, 0x5f, 0xfe, 0x37, 0x6b}};
 
-	#endif // BUILD_MVR_XCHANGE
 }

@@ -187,17 +187,83 @@ VCOMError VCOM_CALLTYPE VectorworksMVR::CMVRxchangeServiceImpl::GetLocalServiceA
 	return kVCOMError_NoError;
 }
 
-
-VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToRemoteService(const ConnectToRemoteServiceArgs& service)
+void VectorworksMVR::CMVRxchangeServiceImpl::onMessage(MVRxchangeNetwork::MVRxchangePacket inMsg)
 {
+	MVRxchangeNetwork::MVRxchangePacket msg(inMsg);
+	IMVRxchangeService::IMVRxchangeMessage in;
+	msg.ToExternalMessage( in );
+
+	if ( in.Type == MVRxchangeMessageType::MVR_JOIN
+		|| in.Type == MVRxchangeMessageType::MVR_LEAVE
+		|| in.Type == MVRxchangeMessageType::MVR_COMMIT
+		|| in.Type == MVRxchangeMessageType::MVR_REQUEST )
+	{
+		IMVRxchangeService::IMVRxchangeMessage ret = fCallBack.IncomingCallback( in, fCallBack.Context );
+		this->SendMessageToRemote( ret );
+	}
+	else
+	{
+		fCallBack.ReturningCallback( in, in, fCallBack.Context );
+	}
+}
+
+VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToRemoteService(const ConnectToRemoteServiceArgs& service) {
+	if (fwebsocket_client_) {
+		this->LeaveRemoteService();
+	}
+
+	auto client = std::make_shared<WebSocketClient>(fioc_, "ws://192.168.180.42:8080");
+	client->Connect([this](MVRxchangeNetwork::MVRxchangePacket msg) {
+		this->onMessage(msg);
+	});
+
+	{
+		std::lock_guard<std::mutex> lock(fwebsocket_client_mutex);
+		fwebsocket_client_ = client;
+	}
 
 	return kVCOMError_NoError;
 }
 
+VCOMError VectorworksMVR::CMVRxchangeServiceImpl::LeaveRemoteService() {
+	VCOMError err = kVCOMError_NoError;
 
-VCOMError VectorworksMVR::CMVRxchangeServiceImpl::LeaveRemoteService()
-{
-	return kVCOMError_NoError;
+	std::shared_ptr<WebSocketClient> client;
+	{
+		std::lock_guard<std::mutex> lock(fwebsocket_client_mutex);
+		client = fwebsocket_client_;
+	}
+
+	if (client) {
+		client->close();
+	} else {
+		err = kVCOMError_Failed;
+	}
+
+	return err;
+}
+
+
+VCOMError VectorworksMVR::CMVRxchangeServiceImpl::SendMessageToRemote(const IMVRxchangeService::IMVRxchangeMessage& in) {
+	VCOMError err = kVCOMError_NoError;
+
+	std::shared_ptr<WebSocketClient> client;
+	{
+		std::lock_guard<std::mutex> lock(fwebsocket_client_mutex);
+		client = fwebsocket_client_;
+	}
+
+	MVRxchangeNetwork::MVRxchangePacket msg;
+	msg.FromExternalMessage( in );
+
+	if (client) {
+		auto buffer = std::make_shared<std::vector<char>>(msg.GetData(), msg.GetData() + msg.GetLength());
+		client->send_message(buffer->data(), buffer->size());
+	} else {
+		err = kVCOMError_Failed;
+	}
+
+	return err;
 }
 
 VCOMError VectorworksMVR::CMVRxchangeServiceImpl::OnMessage(OnMessageArgs& messageHandler)
