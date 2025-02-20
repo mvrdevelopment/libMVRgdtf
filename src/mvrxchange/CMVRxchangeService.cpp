@@ -212,7 +212,7 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToRemoteService(const C
 		this->LeaveRemoteService();
 	}
 
-	auto client = std::make_shared<WebSocketClient>(fioc_, "ws://192.168.180.42:8080");
+	auto client = std::make_shared<WebSocketClient>(fioc_, service.Url.fBuffer);
 	client->Connect([this](MVRxchangeNetwork::MVRxchangePacket msg) {
 		this->onMessage(msg);
 	});
@@ -236,6 +236,7 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::LeaveRemoteService() {
 
 	if (client) {
 		client->close();
+		fwebsocket_client_.reset();
 	} else {
 		err = kVCOMError_Failed;
 	}
@@ -258,8 +259,10 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::SendMessageToRemote(const IMVR
 
 	if (client) {
 		auto buffer = std::make_shared<std::vector<char>>(msg.GetData(), msg.GetData() + msg.GetLength());
-		client->send_message(buffer->data(), buffer->size());
-	} else {
+		client->send_message( buffer->data(), buffer->size() );
+	} 
+	else 
+	{
 		err = kVCOMError_Failed;
 	}
 
