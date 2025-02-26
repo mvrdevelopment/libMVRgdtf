@@ -40,7 +40,6 @@ runs:
         curl -o boost.zip https://archives.boost.io/release/1.86.0/source/boost_1_86_0.zip
         tar -xf boost.zip --strip-components=1
 
-# OpenSSL - setup
     - name: OpenSSL - prepare
       shell: bash
       run: |
@@ -69,6 +68,12 @@ runs:
       shell: bash
       working-directory: openssl
       run: lipo _build_mac_arm/lib/libcrypto.a _build_mac_x64/lib/libcrypto.a -create -output _build_mac_x64/lib/libcrypto-all.a
+
+    - name: Verify OpenSSL build for arm64
+      shell: bash
+      working-directory: openssl
+      run: |
+        file _build_mac_arm/lib/libcrypto.a
 
     - name: libMVRGdtf - build x64 [NO-MZ] (this should produce arm/x64 libraries)
       shell: bash
