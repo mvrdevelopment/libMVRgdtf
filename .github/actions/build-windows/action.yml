@@ -82,7 +82,7 @@ runs:
       run: |
         mkdir openssl
         cd openssl
-        curl -o openssl.tar.gz https://www.openssl.org/source/openssl-3.4.1.tar.gz
+        curl -L -o openssl.tar.gz https://www.openssl.org/source/openssl-3.4.1.tar.gz
         tar -xvzf openssl.tar.gz --strip-components=1
 
     - name: OpenSSL - configure
