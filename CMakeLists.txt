@@ -78,6 +78,9 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src
 if(BUILD_MVR_XCHANGE)
     include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../boost/
                         ${CMAKE_CURRENT_SOURCE_DIR}/mdns_cpp/include/)
+    if(APPLE)
+        include_directories(${OPENSSL_INCLUDE_DIR})
+    endif()
 endif()
 
 # default values
