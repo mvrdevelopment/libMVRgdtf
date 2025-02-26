@@ -40,6 +40,36 @@ runs:
         curl -o boost.zip https://archives.boost.io/release/1.86.0/source/boost_1_86_0.zip
         tar -xf boost.zip --strip-components=1
 
+# OpenSSL - setup
+    - name: OpenSSL - prepare
+      shell: bash
+      run: |
+        mkdir openssl
+        cd openssl
+        curl -L -o openssl.tar.gz https://www.openssl.org/source/openssl-3.4.1.tar.gz
+        tar -xvzf openssl.tar.gz --strip-components=1
+
+    - name: OpenSSL - configure
+      working-directory: openssl
+      shell: bash
+      run: |
+        ./Configure darwin64-x86_64-cc --prefix=$(pwd)/_build_mac_x64
+        make -j
+        make install
+
+    - name: OpenSSL - configure arm64
+      working-directory: openssl
+      shell: bash
+      run: |
+       ./Configure darwin64-arm64-cc --prefix=$(pwd)/_build_mac_arm
+        make -j
+        make install
+
+    - name: OpenSSL - lipo arm/x64
+      shell: bash
+      working-directory: openssl
+      run: lipo _build_mac_arm/lib/libcrypto.a _build_mac_x64/lib/libcrypto.a -create -output _build_mac_x64/lib/libcrypto-all.a
+
     - name: libMVRGdtf - build x64 [NO-MZ] (this should produce arm/x64 libraries)
       shell: bash
       working-directory: libMvrGdtf
@@ -56,6 +86,8 @@ runs:
         lipo -archs ./libs/lib/libmdns_cpp.a
         echo lipo -archs ../../xerces-c/_build_mac_x64/lib/libxerces-c-all.a
         lipo -archs ../../xerces-c/_build_mac_x64/lib/libxerces-c-all.a
+        echo lipo -archs ../../openssl/_build_mac_x64/lib/libcrypto-all.a
+        lipo -archs ../../openssl/_build_mac_x64/lib/libcrypto-all.a
         libtool -static -o ../libs/libMvrGdtf_NO_MZ-all.a ../libs/libMvrGdtf_NO_MZ.a ./libs/lib/libmdns_cpp.a ../../xerces-c/_build_mac_x64/lib/libxerces-c-all.a
         mv -f ../libs/libMvrGdtf_NO_MZ-all.a ../libs/libMvrGdtf_NO_MZ.a
 
@@ -75,6 +107,8 @@ runs:
         lipo -archs ./libs/lib/libmdns_cpp.a
         echo lipo -archs ../../xerces-c/_build_mac_x64/lib/libxerces-c-all.a
         lipo -archs ../../xerces-c/_build_mac_x64/lib/libxerces-c-all.a
+        echo lipo -archs ../../openssl/_build_mac_x64/lib/libcrypto-all.a
+        lipo -archs ../../openssl/_build_mac_x64/lib/libcrypto-all.a
         libtool -static -o ../libs/libMvrGdtf-all.a ../libs/libMvrGdtf.a ./libs/lib/libmdns_cpp.a ../../xerces-c/_build_mac_x64/lib/libxerces-c-all.a
         mv -f ../libs/libMvrGdtf-all.a ../libs/libMvrGdtf.a
 
