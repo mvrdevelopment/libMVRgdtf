@@ -6,6 +6,7 @@ WebSocketClient::WebSocketClient(net::io_context& ioc, const std::string& url)
     , resolver_(net::make_strand(ioc))
     , url_(url)
     , ping_timer_(ioc)
+    , work_guard_(net::make_work_guard(ioc))
 {
     std::string protocol, host, port = "80", target = "/";
     std::string::size_type pos = url.find("://");
@@ -44,7 +45,6 @@ WebSocketClient::WebSocketClient(net::io_context& ioc, const std::string& url)
         port_ = "443";
         ssl_ctx_ = std::make_shared<ssl::context>(ssl::context::sslv23_client);
         ws_ssl_ = std::make_unique<websocket::stream<beast::ssl_stream<beast::tcp_stream>>>(net::make_strand(ioc), *ssl_ctx_);
-        ws_ssl_->read_message_max(8 * 1024 * 1024);
     } else {
         ws_plain_ = std::make_unique<websocket::stream<beast::tcp_stream>>(net::make_strand(ioc));
     }
@@ -73,7 +73,7 @@ void WebSocketClient::RunClient()
     }
 }
 
-void WebSocketClient::send_message(const char* data, const size_t& size)
+void WebSocketClient::send_message(const char* data, const size_t& size, bool clean_json)
 {
     {
         std::unique_lock<std::mutex> lock(connection_mutex_);
@@ -88,10 +88,10 @@ void WebSocketClient::send_message(const char* data, const size_t& size)
     }
 
     if (send_queue_.size() == 1)
-        do_write();
+        do_write(clean_json);
 }
 
-void WebSocketClient::do_write()
+void WebSocketClient::do_write(bool clean_json)
 {
     if (send_queue_.empty())
         return;
@@ -101,13 +101,14 @@ void WebSocketClient::do_write()
         std::lock_guard<std::mutex> lock(send_mutex_);
         msg = send_queue_.front();
 
-        std::string json_string(msg->begin(), msg->end());
-        std::string cleaned_json = this->clean_json(json_string);
-
-        msg = std::make_shared<std::vector<char>>(cleaned_json.begin(), cleaned_json.end());
+        if (clean_json) {
+            std::string json_string(msg->begin(), msg->end());
+            std::string cleaned_json = this->clean_json(json_string);
+            msg = std::make_shared<std::vector<char>>(cleaned_json.begin(), cleaned_json.end());
+        }
     }
 
-    auto write_callback = [this, msg](beast::error_code ec, std::size_t bytes_transferred) 
+    auto write_callback = [this, msg, clean_json](beast::error_code ec, std::size_t bytes_transferred) 
         {
             if (!ec) 
             {
@@ -116,7 +117,7 @@ void WebSocketClient::do_write()
                     send_queue_.pop_front();
                 }
 
-                this->do_write();
+                this->do_write(clean_json);
             } else {
                 std::string msg = ec.message();
             }
@@ -184,7 +185,7 @@ void WebSocketClient::read_message()
 void WebSocketClient::send_ping()
 {
     auto self = shared_from_this();
-    ping_timer_.expires_after(std::chrono::seconds(30));
+    ping_timer_.expires_after(std::chrono::seconds(1));
     ping_timer_.async_wait([this, self](beast::error_code ec) 
         {
             if (!ec) 
@@ -223,7 +224,6 @@ void WebSocketClient::send_ping()
             }
         });
 }
-
 
 void WebSocketClient::close()
 {
@@ -290,7 +290,7 @@ void WebSocketClient::run_websocket_client()
     {
         auto const results = resolver_.resolve(host_, port_);
         auto& ws_plain = *ws_plain_;
-        beast::get_lowest_layer(ws_plain).expires_after(std::chrono::seconds(30));
+        beast::get_lowest_layer(ws_plain).expires_never();
         beast::get_lowest_layer(ws_plain).async_connect(results,
             [this, &ws_plain](beast::error_code ec, tcp::resolver::results_type::endpoint_type) {
                 if (!ec) {
@@ -303,7 +303,7 @@ void WebSocketClient::run_websocket_client()
                                 }
                                 connection_cv_.notify_all();
                                 this->read_message();
-								this->send_ping();
+                                this->send_ping();
                             } else {
                                 std::string msg = ec.message();
                             }

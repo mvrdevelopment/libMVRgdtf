@@ -20,7 +20,7 @@ public:
 
     void Connect(std::function<void(const MVRxchangeNetwork::MVRxchangePacket& msg)> on_message);
 
-    void send_message(const char* data, const size_t& size);
+    void send_message(const char* data, const size_t& size, bool cleanJSON);
 
     void close();
 
@@ -30,10 +30,12 @@ private:
     void send_ping();
     void run_ssl_websocket_client();
     void run_websocket_client();
-    void do_write();
+    void do_write(bool cleanJSON);
     std::string clean_json( const std::string& json );
 
 private:
+
+    net::executor_work_guard<net::io_context::executor_type> work_guard_;
     net::io_context& ioc_;
     tcp::resolver resolver_;
     std::string url_;
@@ -68,5 +70,7 @@ private:
 
     // Thread to run the io_context
     std::thread fThread_;
+
+    bool use_clean_json_;
 };
 #endif // WEBSOCKETCLIENT_H

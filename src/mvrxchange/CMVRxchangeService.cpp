@@ -259,7 +259,15 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::SendMessageToRemote(const IMVR
 
 	if (client) {
 		auto buffer = std::make_shared<std::vector<char>>(msg.GetData(), msg.GetData() + msg.GetLength());
-		client->send_message( buffer->data(), buffer->size() );
+
+		if ( in.Type == IMVRxchangeService::MVRxchangeMessageType::MVR_REQUEST_RET )
+		{
+			client->send_message( buffer->data(), buffer->size(), false );
+		}
+		else
+		{
+			client->send_message( buffer->data(), buffer->size(), true );
+		}
 	} 
 	else 
 	{
