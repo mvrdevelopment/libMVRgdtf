@@ -42,7 +42,7 @@ runs:
       run: |
         mkdir build
         cd build
-        cmake .. -DUNITTEST=TRUE -DEXTRA_LIBS="curl;icuuc;icudata;icui18n;icuio" -DXERCES_LIB_PATH="$(pwd)/../../xerces-c/_build/lib/libxerces-c.a" -DLIBSSL_LIB_PATH="..\..\openssl\lib\VC\x64\MDd\libssl.lib" -DLIBCRYPTO_LIB_PATH="..\..\openssl\lib\VC\x64\MDd\libcrypto.lib"
+        cmake .. -DUNITTEST=TRUE -DEXTRA_LIBS="curl;icuuc;icudata;icui18n;icuio" -DXERCES_LIB_PATH="$(pwd)/../../xerces-c/_build/lib/libxerces-c.a" -DLIBSSL_LIB_PATH="/usr/lib/x86_64-linux-gnu/libssl.so" -DLIBCRYPTO_LIB_PATH="/usr/lib/x86_64-linux-gnu/libcrypto.so"
         make -j
 
     - name: Prepare package
