@@ -125,7 +125,7 @@ runs:
         $xml = [xml](Get-Content MvrGdtf_ORG.vcxproj)
         $xml.Project.ItemDefinitionGroup | ForEach-Object {
           $node = $xml.CreateElement("AdditionalDependencies", "http://schemas.microsoft.com/developer/msbuild/2003")
-          $node.InnerText = 'iphlpapi.lib;..\..\xerces-c\build\libs\lib\xerces-c_3.lib;mdns_cpp\lib\MinSizeRel\mdns_cpp.lib;..\..\openssl\build\lib\libssl.lib;..\..\openssl\build\lib\libcrypto.lib;%(AdditionalDependencies)'
+          $node.InnerText = 'iphlpapi.lib;..\..\xerces-c\build\libs\lib\xerces-c_3.lib;mdns_cpp\lib\Debug\mdns_cpp.lib;..\..\openssl\build\lib\libssl.lib;..\..\openssl\build\lib\libcrypto.lib;%(AdditionalDependencies)'
           $_.Lib.AppendChild($node) | Out-Null
         }
         Set-Content -Path "MvrGdtf.vcxproj" -Value $xml.OuterXml
@@ -175,7 +175,7 @@ runs:
         $xml = [xml](Get-Content MvrGdtf_ORG.vcxproj)
         $xml.Project.ItemDefinitionGroup | ForEach-Object {
           $node = $xml.CreateElement("AdditionalDependencies", "http://schemas.microsoft.com/developer/msbuild/2003")
-          $node.InnerText = 'iphlpapi.lib;..\..\xerces-c\build\libs\lib\xerces-c_3.lib;mdns_cpp\lib\MinSizeRel\mdns_cpp.lib;..\..\openssl\build\lib\libssl.lib;..\..\openssl\build\lib\libcrypto.lib;%(AdditionalDependencies)'
+          $node.InnerText = 'iphlpapi.lib;..\..\xerces-c\build\libs\lib\xerces-c_3.lib;mdns_cpp\lib\Debug\mdns_cpp.lib;..\..\openssl\build\lib\libssl.lib;..\..\openssl\build\lib\libcrypto.lib;%(AdditionalDependencies)'
           $_.Lib.AppendChild($node) | Out-Null
         }
         Set-Content -Path "MvrGdtf.vcxproj" -Value $xml.OuterXml
@@ -225,7 +225,7 @@ runs:
         $xml = [xml](Get-Content MvrGdtf_ORG.vcxproj)
         $xml.Project.ItemDefinitionGroup | ForEach-Object {
           $node = $xml.CreateElement("AdditionalDependencies", "http://schemas.microsoft.com/developer/msbuild/2003")
-          $node.InnerText = 'iphlpapi.lib;..\..\xerces-c\build\libs\lib\xerces-c_3.lib;mdns_cpp\lib\MinSizeRel\mdns_cpp.lib;..\..\openssl\build\lib\libssl.lib;..\..\openssl\build\lib\libcrypto.lib;%(AdditionalDependencies)'
+                  $node.InnerText = 'iphlpapi.lib;..\..\xerces-c\build\libs\lib\xerces-c_3.lib;mdns_cpp\lib\Debug\mdns_cpp.lib;..\..\openssl\build\lib\libssl.lib;..\..\openssl\build\lib\libcrypto.lib;%(AdditionalDependencies)'
           $_.Lib.AppendChild($node) | Out-Null
         }
         Set-Content -Path "MvrGdtf.vcxproj" -Value $xml.OuterXml
@@ -245,7 +245,7 @@ runs:
         $xml = [xml](Get-Content MvrGdtf_ORG.vcxproj)
         $xml.Project.ItemDefinitionGroup | ForEach-Object {
           $node = $xml.CreateElement("AdditionalDependencies", "http://schemas.microsoft.com/developer/msbuild/2003")
-          $node.InnerText = 'iphlpapi.lib;..\..\xerces-c\build\libs\lib\xerces-c_3.lib;mdns_cpp\lib\MinSizeRel\mdns_cpp.lib;..\..\openssl\build\lib\libssl.lib;..\..\openssl\build\lib\libcrypto.lib;%(AdditionalDependencies)'
+          $node.InnerText = 'iphlpapi.lib;..\..\xerces-c\build_mt\libs\lib\xerces-c_3.lib;mdns_cpp\lib\MinSizeRel\mdns_cpp.lib;%(AdditionalDependencies)'
           $_.Lib.AppendChild($node) | Out-Null
         }
         Set-Content -Path "MvrGdtf.vcxproj" -Value $xml.OuterXml
