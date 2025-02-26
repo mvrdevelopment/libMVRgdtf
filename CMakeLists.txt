@@ -107,6 +107,8 @@ endif()
 
 if(${BUILD_MVR_XCHANGE})
     target_link_libraries(MvrGdtf mdns_cpp)
+    target_link_libraries(MvrGdtf ${LIBSSL_LIB_PATH})
+    target_link_libraries(MvrGdtf ${LIBCRYPTO_LIB_PATH})
 endif()
 #################################################
 
