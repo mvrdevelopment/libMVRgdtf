@@ -52,7 +52,7 @@ runs:
       working-directory: openssl
       shell: bash
       run: |
-        ./Configure darwin64-x86_64-cc --prefix=$(pwd)/_build_mac_x64
+        ./Configure darwin64-x86_64-cc no-shared enable-legacy --prefix=$(pwd)/_build_mac_x64
         make -j
         make install
 
@@ -60,7 +60,7 @@ runs:
       working-directory: openssl
       shell: bash
       run: |
-       ./Configure darwin64-arm64-cc --prefix=$(pwd)/_build_mac_arm
+       ./Configure darwin64-arm64-cc no-shared enable-legacy --prefix=$(pwd)/_build_mac_arm
         make -j
         make install
 
@@ -68,12 +68,6 @@ runs:
       shell: bash
       working-directory: openssl
       run: lipo _build_mac_arm/lib/libcrypto.a _build_mac_x64/lib/libcrypto.a -create -output _build_mac_x64/lib/libcrypto-all.a
-
-    - name: Verify OpenSSL build for arm64
-      shell: bash
-      working-directory: openssl
-      run: |
-        file _build_mac_arm/lib/libcrypto.a
 
     - name: libMVRGdtf - build x64 [NO-MZ] (this should produce arm/x64 libraries)
       shell: bash
