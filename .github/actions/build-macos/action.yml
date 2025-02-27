@@ -40,20 +40,27 @@ runs:
         curl -o boost.zip https://archives.boost.io/release/1.86.0/source/boost_1_86_0.zip
         tar -xf boost.zip --strip-components=1
 
+    - name: OpenSSL - prepare
+      shell: bash
+      run: |
+        mkdir openssl-src
+        cd openssl-src
+        curl -L -o openssl.tar.gz https://www.openssl.org/source/openssl-1.1.1w.tar.gz
+        tar -xvzf openssl.tar.gz --strip-components=1
+
     - name: OpenSSL - configure
       shell: bash
       run: |
-        cd /opt/homebrew/opt/openssl
+        cd ./openssl-src
         ./Configure darwin64-x86_64-cc no-shared enable-legacy --prefix=$(pwd)/_build_mac_x64
         make -j
         make install
 
-
     - name: OpenSSL - lipo arm/x64
       shell: bash
-      working-directory: openssl
+      working-directory: openssl-src
       run: |
-        lipo /usr/local/opt/openssl/lib/libcrypto.a _build_mac_x64/lib/libcrypto.a -create -output _build_mac_x64/lib/libcrypto-all.a
+        lipo /opt/homebrew/opt/openssl/lib/libcrypto.a _build_mac_x64/lib/libcrypto.a -create -output _build_mac_x64/lib/libcrypto-all.a
 
     - name: libMVRGdtf - build x64 [NO-MZ] (this should produce arm/x64 libraries)
       shell: bash
@@ -61,7 +68,7 @@ runs:
       run: |
         mkdir build_mac_x64_no_mz
         cd build_mac_x64_no_mz
-        cmake .. -DCMAKE_C_FLAGS="-arch x86_64" -DCMAKE_CXX_FLAGS="-arch x86_64" -DDO_NOT_INCLUDE_MINI_ZIP=true -DCMAKE_INSTALL_PREFIX:PATH=libs -DXERCES_INCLUDE_PATH="../xerces-c/_build_mac_x64/include;../xerces/src" -DXERCES_LIB_PATH="../xerces/_build_mac_x64/lib" -DXERCES_ROOT_PATH="../xerces-c/_build_mac_x64" -DOPENSSL_PATH="/opt/homebrew/opt/openssl" -DOPENSSL_INCLUDE_DIR="/opt/homebrew/opt/openssl/include" -DOPENSSL_LIBRARIES="/opt/homebrew/opt/openssl/lib"
+        cmake .. -DCMAKE_C_FLAGS="-arch x86_64" -DCMAKE_CXX_FLAGS="-arch x86_64" -DDO_NOT_INCLUDE_MINI_ZIP=true -DCMAKE_INSTALL_PREFIX:PATH=libs -DXERCES_INCLUDE_PATH="../xerces-c/_build_mac_x64/include;../xerces/src" -DXERCES_LIB_PATH="../xerces/_build_mac_x64/lib" -DXERCES_ROOT_PATH="../xerces-c/_build_mac_x64" -DOPENSSL_PATH="../openssl-src/_build_mac_x64" -DOPENSSL_INCLUDE_DIR="../openssl-src/_build_mac_x64/include" -DOPENSSL_LIBRARIES="../openssl-src/_build_mac_x64/lib"
         make -j
         make install
         echo Combine into single lib file...
@@ -82,7 +89,7 @@ runs:
       run: |
         mkdir build_mac_x64
         cd build_mac_x64
-        cmake .. -DCMAKE_C_FLAGS="-arch x86_64" -DCMAKE_CXX_FLAGS="-arch x86_64" -DCMAKE_INSTALL_PREFIX:PATH=libs -DXERCES_INCLUDE_PATH="../xerces-c/_build_mac_x64/include;../xerces/src" -DXERCES_LIB_PATH="../xerces/_build_mac_x64/lib" -DXERCES_ROOT_PATH="../xerces-c/_build_mac_x64" -DOPENSSL_PATH="/opt/homebrew/opt/openssl" -DOPENSSL_INCLUDE_DIR="/opt/homebrew/opt/openssl/include" -DOPENSSL_LIBRARIES="/opt/homebrew/opt/openssl/lib"
+        cmake .. -DCMAKE_C_FLAGS="-arch x86_64" -DCMAKE_CXX_FLAGS="-arch x86_64" -DCMAKE_INSTALL_PREFIX:PATH=libs -DXERCES_INCLUDE_PATH="../xerces-c/_build_mac_x64/include;../xerces/src" -DXERCES_LIB_PATH="../xerces/_build_mac_x64/lib" -DXERCES_ROOT_PATH="../xerces-c/_build_mac_x64" -DOPENSSL_PATH="../openssl-src/_build_mac_x64" -DOPENSSL_INCLUDE_DIR="../openssl-src/_build_mac_x64/include" -DOPENSSL_LIBRARIES="../openssl-src/_build_mac_x64/lib"
         make -j
         make install
         echo Combine into single lib file...
@@ -94,7 +101,7 @@ runs:
         lipo -archs ../../xerces-c/_build_mac_x64/lib/libxerces-c-all.a
         echo lipo -archs ../../openssl/_build_mac_x64/lib/libcrypto-all.a
         lipo -archs ../../openssl/_build_mac_x64/lib/libcrypto-all.a
-        libtool -static -o ../libs/libMvrGdtf-all.a ../libs/libMvrGdtf.a ./libs/lib/libmdns_cpp.a ../../xerces-c/_build_mac_x64/lib/libxerces-c-all.a ../../openssl/_build_mac_x64/lib/libcrypto-all.a
+        libtool -static -o ../libs/libMvrGdtf-all.a ../libs/libMvrGdtf.a ./libs/lib/libmdns_cpp.a ../../xerces-c/_build_mac_x64/lib/libxerces-c-all.a ../../openssl-src/_build_mac_x64/lib/libcrypto-all.a
         mv -f ../libs/libMvrGdtf-all.a ../libs/libMvrGdtf.a
 
     - name: Prepare package
