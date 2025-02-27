@@ -3,6 +3,28 @@ description: 'Build ths packages for MACOS package'
 runs:
   using: "composite"
   steps:
+    - name: OpenSSL - prepare
+      shell: bash
+      run: |
+        mkdir openssl-src
+        cd openssl-src
+        curl -L -o openssl.tar.gz https://www.openssl.org/source/openssl-1.1.1w.tar.gz
+        tar -xvzf openssl.tar.gz --strip-components=1
+
+    - name: OpenSSL - configure
+      shell: bash
+      run: |
+        cd ./openssl-src
+        ./Configure darwin64-x86_64-cc no-shared --prefix=$(pwd)/_build_mac_x64
+        make -j
+        make install
+
+    - name: OpenSSL - lipo arm/x64
+      shell: bash
+      working-directory: openssl-src
+      run: |
+        lipo /opt/homebrew/opt/openssl/lib/libcrypto.a _build_mac_x64/lib/libcrypto.a -create -output _build_mac_x64/lib/libcrypto-all.a
+        
     - name: Xerces-C - prepare
       shell: bash
       run: |
@@ -39,28 +61,6 @@ runs:
         cd boost
         curl -o boost.zip https://archives.boost.io/release/1.86.0/source/boost_1_86_0.zip
         tar -xf boost.zip --strip-components=1
-
-    - name: OpenSSL - prepare
-      shell: bash
-      run: |
-        mkdir openssl-src
-        cd openssl-src
-        curl -L -o openssl.tar.gz https://www.openssl.org/source/openssl-1.1.1w.tar.gz
-        tar -xvzf openssl.tar.gz --strip-components=1
-
-    - name: OpenSSL - configure
-      shell: bash
-      run: |
-        cd ./openssl-src
-        ./Configure darwin64-x86_64-cc no-shared enable-legacy --prefix=$(pwd)/_build_mac_x64
-        make -j
-        make install
-
-    - name: OpenSSL - lipo arm/x64
-      shell: bash
-      working-directory: openssl-src
-      run: |
-        lipo /opt/homebrew/opt/openssl/lib/libcrypto.a _build_mac_x64/lib/libcrypto.a -create -output _build_mac_x64/lib/libcrypto-all.a
 
     - name: libMVRGdtf - build x64 [NO-MZ] (this should produce arm/x64 libraries)
       shell: bash
