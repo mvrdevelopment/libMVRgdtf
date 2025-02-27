@@ -16,6 +16,12 @@ runs:
         else
           echo "OpenSSL is already installed."
         fi
+        
+    - name: Print machine architecture
+      shell: bash
+      run: |
+        echo "Machine architecture:"
+        uname -m
 
     - name: Xerces-C - prepare
       shell: bash
