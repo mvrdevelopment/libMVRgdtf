@@ -3,11 +3,6 @@ description: 'Build ths packages for MACOS package'
 runs:
   using: "composite"
   steps:
-    - name: Openssl test
-      shell: bash
-      run: |
-        which openssl
-        
     - name: Xerces-C - prepare
       shell: bash
       run: |
@@ -48,8 +43,7 @@ runs:
     - name: OpenSSL - configure
       shell: bash
       run: |
-        OPENSSL_DIR=$(brew --prefix openssl)
-        cd $OPENSSL_DIR
+        cd /opt/homebrew/opt/openssl
         ./Configure darwin64-x86_64-cc no-shared enable-legacy --prefix=$(pwd)/_build_mac_x64
         make -j
         make install
@@ -67,7 +61,7 @@ runs:
       run: |
         mkdir build_mac_x64_no_mz
         cd build_mac_x64_no_mz
-        cmake .. -DCMAKE_C_FLAGS="-arch x86_64" -DCMAKE_CXX_FLAGS="-arch x86_64" -DDO_NOT_INCLUDE_MINI_ZIP=true -DCMAKE_INSTALL_PREFIX:PATH=libs -DXERCES_INCLUDE_PATH="../xerces-c/_build_mac_x64/include;../xerces/src" -DXERCES_LIB_PATH="../xerces/_build_mac_x64/lib" -DXERCES_ROOT_PATH="../xerces-c/_build_mac_x64" -DOPENSSL_INCLUDE_DIR="/usr/local/opt/openssl/include" -DOPENSSL_LIBRARIES="/usr/local/opt/openssl/lib"
+        cmake .. -DCMAKE_C_FLAGS="-arch x86_64" -DCMAKE_CXX_FLAGS="-arch x86_64" -DDO_NOT_INCLUDE_MINI_ZIP=true -DCMAKE_INSTALL_PREFIX:PATH=libs -DXERCES_INCLUDE_PATH="../xerces-c/_build_mac_x64/include;../xerces/src" -DXERCES_LIB_PATH="../xerces/_build_mac_x64/lib" -DXERCES_ROOT_PATH="../xerces-c/_build_mac_x64" -DOPENSSL_PATH="/opt/homebrew/opt/openssl" -DOPENSSL_INCLUDE_DIR="/opt/homebrew/opt/openssl/include" -DOPENSSL_LIBRARIES="/opt/homebrew/opt/openssl/lib"
         make -j
         make install
         echo Combine into single lib file...
@@ -88,7 +82,7 @@ runs:
       run: |
         mkdir build_mac_x64
         cd build_mac_x64
-        cmake .. -DCMAKE_C_FLAGS="-arch x86_64" -DCMAKE_CXX_FLAGS="-arch x86_64" -DCMAKE_INSTALL_PREFIX:PATH=libs -DXERCES_INCLUDE_PATH="../xerces-c/_build_mac_x64/include;../xerces/src" -DXERCES_LIB_PATH="../xerces/_build_mac_x64/lib" -DXERCES_ROOT_PATH="../xerces-c/_build_mac_x64" -DOPENSSL_INCLUDE_DIR="../openssl/_build_mac_x64/include" -DOPENSSL_LIBRARIES="../openssl/_build_mac_x64/lib"
+        cmake .. -DCMAKE_C_FLAGS="-arch x86_64" -DCMAKE_CXX_FLAGS="-arch x86_64" -DCMAKE_INSTALL_PREFIX:PATH=libs -DXERCES_INCLUDE_PATH="../xerces-c/_build_mac_x64/include;../xerces/src" -DXERCES_LIB_PATH="../xerces/_build_mac_x64/lib" -DXERCES_ROOT_PATH="../xerces-c/_build_mac_x64" -DOPENSSL_PATH="/opt/homebrew/opt/openssl" -DOPENSSL_INCLUDE_DIR="/opt/homebrew/opt/openssl/include" -DOPENSSL_LIBRARIES="/opt/homebrew/opt/openssl/lib"
         make -j
         make install
         echo Combine into single lib file...
