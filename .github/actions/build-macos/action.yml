@@ -4,6 +4,7 @@ runs:
   using: "composite"
   steps:
     - name: Check if OpenSSL is installed
+      id: check_openssl
       shell: bash
       run: |
         if ! command -v openssl &> /dev/null
@@ -13,10 +14,14 @@ runs:
           cd openssl
           curl -L -o openssl.tar.gz https://www.openssl.org/source/openssl-3.4.1.tar.gz
           tar -xvzf openssl.tar.gz --strip-components=1
+          echo "installed=false" >> $GITHUB_ENV
         else
           echo "OpenSSL is already installed."
+          openssl version
+          which openssl
+          echo "installed=true" >> $GITHUB_ENV
         fi
-        
+
     - name: Print machine architecture
       shell: bash
       run: |
@@ -77,6 +82,7 @@ runs:
         make install
 
     - name: OpenSSL - configure arm64
+      if: env.installed == 'false'
       working-directory: openssl
       shell: bash
       run: |
