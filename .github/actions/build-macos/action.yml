@@ -24,7 +24,7 @@ runs:
       working-directory: openssl-src
       run: |
         lipo /opt/homebrew/opt/openssl/lib/libcrypto.a _build_mac_x64/lib/libcrypto.a -create -output _build_mac_x64/lib/libcrypto-all.a
-        
+
     - name: Xerces-C - prepare
       shell: bash
       run: |
@@ -78,9 +78,9 @@ runs:
         lipo -archs ./libs/lib/libmdns_cpp.a
         echo lipo -archs ../../xerces-c/_build_mac_x64/lib/libxerces-c-all.a
         lipo -archs ../../xerces-c/_build_mac_x64/lib/libxerces-c-all.a
-        echo lipo -archs ../../openssl/_build_mac_x64/lib/libcrypto-all.a
-        lipo -archs ../../openssl/_build_mac_x64/lib/libcrypto-all.a
-        libtool -static -o ../libs/libMvrGdtf_NO_MZ-all.a ../libs/libMvrGdtf_NO_MZ.a ./libs/lib/libmdns_cpp.a ../../xerces-c/_build_mac_x64/lib/libxerces-c-all.a ../../openssl/_build_mac_x64/lib/libcrypto-all.a
+        echo lipo -archs ../../openssl-src/_build_mac_x64/lib/libcrypto-all.a
+        lipo -archs ../../openssl-src/_build_mac_x64/lib/libcrypto-all.a
+        libtool -static -o ../libs/libMvrGdtf_NO_MZ-all.a ../libs/libMvrGdtf_NO_MZ.a ./libs/lib/libmdns_cpp.a ../../xerces-c/_build_mac_x64/lib/libxerces-c-all.a ../../openssl-src/_build_mac_x64/lib/libcrypto-all.a
         mv -f ../libs/libMvrGdtf_NO_MZ-all.a ../libs/libMvrGdtf_NO_MZ.a
 
     - name: libMVRGdtf - build x64 (this should produce arm/x64 libraries)
@@ -99,8 +99,8 @@ runs:
         lipo -archs ./libs/lib/libmdns_cpp.a
         echo lipo -archs ../../xerces-c/_build_mac_x64/lib/libxerces-c-all.a
         lipo -archs ../../xerces-c/_build_mac_x64/lib/libxerces-c-all.a
-        echo lipo -archs ../../openssl/_build_mac_x64/lib/libcrypto-all.a
-        lipo -archs ../../openssl/_build_mac_x64/lib/libcrypto-all.a
+        echo lipo -archs ../../openssl-src/_build_mac_x64/lib/libcrypto-all.a
+        lipo -archs ../../openssl-src/_build_mac_x64/lib/libcrypto-all.a
         libtool -static -o ../libs/libMvrGdtf-all.a ../libs/libMvrGdtf.a ./libs/lib/libmdns_cpp.a ../../xerces-c/_build_mac_x64/lib/libxerces-c-all.a ../../openssl-src/_build_mac_x64/lib/libcrypto-all.a
         mv -f ../libs/libMvrGdtf-all.a ../libs/libMvrGdtf.a
 
