@@ -3,6 +3,11 @@ description: 'Build ths packages for MACOS package'
 runs:
   using: "composite"
   steps:
+    - name: Openssl test
+      shell: bash
+      run: |
+        which openssl
+        
     - name: Xerces-C - prepare
       shell: bash
       run: |
