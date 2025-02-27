@@ -11,6 +11,7 @@ set(BUILD_MVR_XCHANGE TRUE CACHE BOOL "Set whether to include MVR_XChange in the
 
 set(XERCES_ROOT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../xerces-c CACHE STRING "Set the build path where you called cmake.")
 set(XERCES_INCLUDE_PATH ${XERCES_ROOT_PATH}/src ${XERCES_ROOT_PATH}/build/src CACHE STRING "Set the include path")
+set(OPENSSL_PATH $ENV{OPENSSL_PATH} CACHE STRING "Set the OpenSSL path")
 
 if (${BUILD_MVR_XCHANGE} OR DEFINED ENV{BUILD_MVR_XCHANGE})
     add_compile_definitions(BUILD_MVR_XCHANGE)
@@ -60,7 +61,6 @@ add_subdirectory(mdns_cpp)
 project(MvrGdtf)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-
 
 
 # Set output dir

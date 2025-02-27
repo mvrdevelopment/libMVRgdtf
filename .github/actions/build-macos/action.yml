@@ -3,31 +3,6 @@ description: 'Build ths packages for MACOS package'
 runs:
   using: "composite"
   steps:
-    - name: Check if OpenSSL is installed
-      id: check_openssl
-      shell: bash
-      run: |
-        if ! command -v openssl &> /dev/null
-        then
-          echo "OpenSSL could not be found, proceeding with installation."
-          mkdir openssl
-          cd openssl
-          curl -L -o openssl.tar.gz https://www.openssl.org/source/openssl-3.4.1.tar.gz
-          tar -xvzf openssl.tar.gz --strip-components=1
-          echo "installed=false" >> $GITHUB_ENV
-        else
-          echo "OpenSSL is already installed."
-          openssl version
-          which openssl
-          echo "installed=true" >> $GITHUB_ENV
-        fi
-
-    - name: Print machine architecture
-      shell: bash
-      run: |
-        echo "Machine architecture:"
-        uname -m
-
     - name: Xerces-C - prepare
       shell: bash
       run: |
@@ -65,35 +40,19 @@ runs:
         curl -o boost.zip https://archives.boost.io/release/1.86.0/source/boost_1_86_0.zip
         tar -xf boost.zip --strip-components=1
 
-    - name: OpenSSL - prepare
-      shell: bash
-      run: |
-        mkdir openssl
-        cd openssl
-        curl -L -o openssl.tar.gz https://www.openssl.org/source/openssl-3.4.1.tar.gz
-        tar -xvzf openssl.tar.gz --strip-components=1
-
     - name: OpenSSL - configure
-      working-directory: openssl
+      working-directory: /usr/local/opt/openssl
       shell: bash
       run: |
         ./Configure darwin64-x86_64-cc no-shared enable-legacy --prefix=$(pwd)/_build_mac_x64
         make -j
         make install
 
-    - name: OpenSSL - configure arm64
-      if: env.installed == 'false'
-      working-directory: openssl
-      shell: bash
-      run: |
-       ./Configure darwin64-arm64-cc no-shared enable-legacy --prefix=$(pwd)/_build_mac_arm
-        make -j
-        make install
-
     - name: OpenSSL - lipo arm/x64
       shell: bash
       working-directory: openssl
-      run: lipo _build_mac_arm/lib/libcrypto.a _build_mac_x64/lib/libcrypto.a -create -output _build_mac_x64/lib/libcrypto-all.a
+      run: |
+        lipo /usr/local/opt/openssl/lib/libcrypto.a _build_mac_x64/lib/libcrypto.a -create -output _build_mac_x64/lib/libcrypto-all.a
 
     - name: libMVRGdtf - build x64 [NO-MZ] (this should produce arm/x64 libraries)
       shell: bash
@@ -101,7 +60,7 @@ runs:
       run: |
         mkdir build_mac_x64_no_mz
         cd build_mac_x64_no_mz
-        cmake .. -DCMAKE_C_FLAGS="-arch x86_64" -DCMAKE_CXX_FLAGS="-arch x86_64" -DDO_NOT_INCLUDE_MINI_ZIP=true -DCMAKE_INSTALL_PREFIX:PATH=libs -DXERCES_INCLUDE_PATH="../xerces-c/_build_mac_x64/include;../xerces/src" -DXERCES_LIB_PATH="../xerces/_build_mac_x64/lib" -DXERCES_ROOT_PATH="../xerces-c/_build_mac_x64" -DOPENSSL_INCLUDE_DIR="../openssl/_build_mac_x64/include" -DOPENSSL_LIBRARIES="../openssl/_build_mac_x64/lib"
+        cmake .. -DCMAKE_C_FLAGS="-arch x86_64" -DCMAKE_CXX_FLAGS="-arch x86_64" -DDO_NOT_INCLUDE_MINI_ZIP=true -DCMAKE_INSTALL_PREFIX:PATH=libs -DXERCES_INCLUDE_PATH="../xerces-c/_build_mac_x64/include;../xerces/src" -DXERCES_LIB_PATH="../xerces/_build_mac_x64/lib" -DXERCES_ROOT_PATH="../xerces-c/_build_mac_x64" -DOPENSSL_INCLUDE_DIR="/usr/local/opt/openssl/include" -DOPENSSL_LIBRARIES="/usr/local/opt/openssl/lib"
         make -j
         make install
         echo Combine into single lib file...
