@@ -41,12 +41,14 @@ runs:
         tar -xf boost.zip --strip-components=1
 
     - name: OpenSSL - configure
-      working-directory: /usr/local/opt/openssl
       shell: bash
       run: |
+        OPENSSL_DIR=$(brew --prefix openssl)
+        cd $OPENSSL_DIR
         ./Configure darwin64-x86_64-cc no-shared enable-legacy --prefix=$(pwd)/_build_mac_x64
         make -j
         make install
+
 
     - name: OpenSSL - lipo arm/x64
       shell: bash
