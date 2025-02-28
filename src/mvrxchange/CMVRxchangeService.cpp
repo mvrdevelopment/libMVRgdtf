@@ -286,72 +286,72 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::OnMessage(OnMessageArgs& messa
 
 VCOMError VectorworksMVR::CMVRxchangeServiceImpl::Send_message(const SendMessageArgs& messageHandler)
 {
-	std::vector<MvrUUID> recipientFilter;
+    std::vector<MvrUUID> recipientFilter;
 
-	{
-		using ServiceType = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType;
-		if(messageHandler.Message.Type == ServiceType::MVR_COMMIT)
-		{
-			recipientFilter.insert(
-				recipientFilter.end(), 
-				messageHandler.Message.COMMIT.ForStationsUUID.begin(),
-				messageHandler.Message.COMMIT.ForStationsUUID.end()
-			);
-		}
-		else if(messageHandler.Message.Type == ServiceType::MVR_REQUEST)
-		{
-			recipientFilter.insert(
-				recipientFilter.end(), 
-				messageHandler.Message.REQUEST.FromStationUUID.begin(),
-				messageHandler.Message.REQUEST.FromStationUUID.end()
-			);
-		}
-	}
+    {
+        using ServiceType = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType;
+        if(messageHandler.Message.Type == ServiceType::MVR_COMMIT)
+        {
+            recipientFilter.insert(
+                recipientFilter.end(), 
+                messageHandler.Message.COMMIT.ForStationsUUID.begin(),
+                messageHandler.Message.COMMIT.ForStationsUUID.end()
+            );
+        }
+        else if(messageHandler.Message.Type == ServiceType::MVR_REQUEST)
+        {
+            recipientFilter.insert(
+                recipientFilter.end(), 
+                messageHandler.Message.REQUEST.FromStationUUID.begin(),
+                messageHandler.Message.REQUEST.FromStationUUID.end()
+            );
+        }
+    }
 
-	//---------------------------------------------------------------------------------------------
-	// Send Message async to speed things up
-	std::vector<std::future<MVRxchangeNetwork::MVRxchangeClient::SendResult>> toAwait;
-	MVRxchangeNetwork::MVRxchangePacket out;
-	out.FromExternalMessage(messageHandler.Message);
-	{
-		std::lock_guard<std::mutex> lock(fMvrGroupMutex);
+    //---------------------------------------------------------------------------------------------
+    // Send Message async to speed things up
+    std::vector<std::future<MVRxchangeNetwork::MVRxchangeClient::SendResult>> toAwait;
+    MVRxchangeNetwork::MVRxchangePacket out;
+    out.FromExternalMessage(messageHandler.Message);
+    {
+        std::lock_guard<std::mutex> lock(fMvrGroupMutex);
 
-		for (const auto& e : fMVRGroup)
-		{
-			if(recipientFilter.size() != 0 && std::find(recipientFilter.begin(), recipientFilter.end(), e.stationUUID) == recipientFilter.end()){
-				continue;
-			}
+        for (const auto& e : fMVRGroup)
+        {
+            if(recipientFilter.size() != 0 && std::find(recipientFilter.begin(), recipientFilter.end(), e.stationUUID) == recipientFilter.end()){
+                continue;
+            }
 
-			uint16_t port = e.Port;
-			for(auto& ip : e.IP)
-			{
-				toAwait.push_back(std::async(std::launch::async, 
-				[this, ip, port, &out](){
-					MVRxchangeNetwork::MVRxchangeClient::SendResult ret;
-					SendMessageToLocalNetworks(ip, port, out, ret);
-					return ret;
-				}));
-			}
-		}
-	}
+            uint16_t port = e.Port;
+            for(auto& ip : e.IP)
+            {
+                toAwait.push_back(std::async(std::launch::async, 
+                [this, ip, port, &out](){
+                    MVRxchangeNetwork::MVRxchangeClient::SendResult ret;
+                    SendMessageToLocalNetworks(ip, port, out, ret);
+                    return ret;
+                }));
+            }
+        }
+    }
 
-	for(auto& i : toAwait)
-	{
-		MVRxchangeNetwork::MVRxchangeClient::SendResult result = i.get();
-		if(result.success)
-		{
-			IMVRxchangeService::IMVRxchangeMessage in;
-			result.message.ToExternalMessage(in);
-			TCP_OnReturningMessage(messageHandler, in, result.messageInfo);
-			delete[] in.BufferToFile;
-		}else{
-			MVRXCHANGE_ERROR(result.error.message());
-		}
-	}
-	
-	delete[] messageHandler.Message.BufferToFile;
+    for(auto& i : toAwait)
+    {
+        MVRxchangeNetwork::MVRxchangeClient::SendResult result = i.get();
+        if(result.success)
+        {
+            IMVRxchangeService::IMVRxchangeMessage in;
+            result.message.ToExternalMessage(in);
+            TCP_OnReturningMessage(messageHandler, in, result.messageInfo);
+            delete[] in.BufferToFile;
+        }else{
+            MVRXCHANGE_ERROR(result.error.message());
+        }
+    }
+    
+    delete[] messageHandler.Message.BufferToFile;
 
-	return kVCOMError_NoError;
+    return kVCOMError_NoError;
 }
 
 //---------------------------------------------------------------------------
@@ -452,14 +452,14 @@ void CMVRxchangeServiceImpl::TCP_OnReturningMessage(
 
 bool CMVRxchangeServiceImpl::SendMessageToLocalNetworks(const TXString& ip, uint16_t p, const MVRxchangeNetwork::MVRxchangePacket& msg, MVRxchangeNetwork::MVRxchangeClient::SendResult& retVal)
 {
-	MVRxchangeNetwork::MVRxchangeClient c (msg);
+	std::unique_ptr<MVRxchangeNetwork::MVRxchangeClient> c = std::make_unique<MVRxchangeNetwork::MVRxchangeClient>( msg );
 
 	std::string port = std::to_string(p);
 
 	MVRXCHANGE_DEBUG("sending message to " << ip.GetStdString() << ":" << port);
-	if(c.Connect(retVal, ip.GetStdString(), port, std::chrono::seconds(1)))
+	if(c->Connect(retVal, ip.GetStdString(), port, std::chrono::seconds(1)))
 	{
-		retVal = c.SendMessage(std::chrono::seconds(10)); // Write & Read each
+		retVal = c->SendMessage(std::chrono::seconds(10)); // Write & Read each
 	}
 
 	return retVal.success;
