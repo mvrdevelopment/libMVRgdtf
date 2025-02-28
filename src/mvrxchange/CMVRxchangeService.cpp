@@ -452,7 +452,8 @@ void CMVRxchangeServiceImpl::TCP_OnReturningMessage(
 
 bool CMVRxchangeServiceImpl::SendMessageToLocalNetworks(const TXString& ip, uint16_t p, const MVRxchangeNetwork::MVRxchangePacket& msg, MVRxchangeNetwork::MVRxchangeClient::SendResult& retVal)
 {
-	std::unique_ptr<MVRxchangeNetwork::MVRxchangeClient> c = std::make_unique<MVRxchangeNetwork::MVRxchangeClient>( msg );
+	auto& ioc = std::make_shared<boost::asio::io_context>();
+	std::unique_ptr<MVRxchangeNetwork::MVRxchangeClient> c = std::make_unique<MVRxchangeNetwork::MVRxchangeClient>( msg, ioc );
 
 	std::string port = std::to_string(p);
 
