@@ -446,7 +446,7 @@ void MVRxchangePacket::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMV
         try
         {
             std::string json = std::string(GetBody(), fBodyLength);
-            std::string cleaned_json = this->clean_json(s);
+            std::string cleaned_json = this->clean_json(json);
             payload = nlohmann::json::parse(cleaned_json);
             
         }
