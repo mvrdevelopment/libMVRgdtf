@@ -151,6 +151,10 @@ runs:
           $includeNode = $xml.CreateElement("AdditionalIncludeDirectories", "http://schemas.microsoft.com/developer/msbuild/2003")
           $includeNode.InnerText = '..\..\openssl\build\include;%(AdditionalIncludeDirectories)'
           $_.ClCompile.AppendChild($includeNode) | Out-Null
+
+          $compilerOptionsNode = $xml.CreateElement("AdditionalOptions", "http://schemas.microsoft.com/developer/msbuild/2003")
+          $compilerOptionsNode.InnerText = '/bigobj %(AdditionalOptions)'
+          $_.ClCompile.AppendChild($compilerOptionsNode) | Out-Null
         }
         Set-Content -Path "MvrGdtf.vcxproj" -Value $xml.OuterXml
       
@@ -175,6 +179,10 @@ runs:
           $includeNode = $xml.CreateElement("AdditionalIncludeDirectories", "http://schemas.microsoft.com/developer/msbuild/2003")
           $includeNode.InnerText = '..\..\openssl\build\include;%(AdditionalIncludeDirectories)'
           $_.ClCompile.AppendChild($includeNode) | Out-Null
+
+          $compilerOptionsNode = $xml.CreateElement("AdditionalOptions", "http://schemas.microsoft.com/developer/msbuild/2003")
+          $compilerOptionsNode.InnerText = '/bigobj %(AdditionalOptions)'
+          $_.ClCompile.AppendChild($compilerOptionsNode) | Out-Null
         }
         Set-Content -Path "MvrGdtf.vcxproj" -Value $xml.OuterXml
 
@@ -209,6 +217,10 @@ runs:
           $includeNode = $xml.CreateElement("AdditionalIncludeDirectories", "http://schemas.microsoft.com/developer/msbuild/2003")
           $includeNode.InnerText = '..\..\openssl\build\include;%(AdditionalIncludeDirectories)'
           $_.ClCompile.AppendChild($includeNode) | Out-Null
+
+          $compilerOptionsNode = $xml.CreateElement("AdditionalOptions", "http://schemas.microsoft.com/developer/msbuild/2003")
+          $compilerOptionsNode.InnerText = '/bigobj %(AdditionalOptions)'
+          $_.ClCompile.AppendChild($compilerOptionsNode) | Out-Null
         }
         Set-Content -Path "MvrGdtf.vcxproj" -Value $xml.OuterXml
       
@@ -233,6 +245,10 @@ runs:
           $includeNode = $xml.CreateElement("AdditionalIncludeDirectories", "http://schemas.microsoft.com/developer/msbuild/2003")
           $includeNode.InnerText = '..\..\openssl\build\include;%(AdditionalIncludeDirectories)'
           $_.ClCompile.AppendChild($includeNode) | Out-Null
+
+          $compilerOptionsNode = $xml.CreateElement("AdditionalOptions", "http://schemas.microsoft.com/developer/msbuild/2003")
+          $compilerOptionsNode.InnerText = '/bigobj %(AdditionalOptions)'
+          $_.ClCompile.AppendChild($compilerOptionsNode) | Out-Null
         }
         Set-Content -Path "MvrGdtf.vcxproj" -Value $xml.OuterXml
 
@@ -267,6 +283,10 @@ runs:
           $includeNode = $xml.CreateElement("AdditionalIncludeDirectories", "http://schemas.microsoft.com/developer/msbuild/2003")
           $includeNode.InnerText = '..\..\openssl\build\include;%(AdditionalIncludeDirectories)'
           $_.ClCompile.AppendChild($includeNode) | Out-Null
+
+          $compilerOptionsNode = $xml.CreateElement("AdditionalOptions", "http://schemas.microsoft.com/developer/msbuild/2003")
+          $compilerOptionsNode.InnerText = '/bigobj %(AdditionalOptions)'
+          $_.ClCompile.AppendChild($compilerOptionsNode) | Out-Null
         }
         Set-Content -Path "MvrGdtf.vcxproj" -Value $xml.OuterXml
       
@@ -291,6 +311,10 @@ runs:
           $includeNode = $xml.CreateElement("AdditionalIncludeDirectories", "http://schemas.microsoft.com/developer/msbuild/2003")
           $includeNode.InnerText = '..\..\openssl\build\include;%(AdditionalIncludeDirectories)'
           $_.ClCompile.AppendChild($includeNode) | Out-Null
+
+          $compilerOptionsNode = $xml.CreateElement("AdditionalOptions", "http://schemas.microsoft.com/developer/msbuild/2003")
+          $compilerOptionsNode.InnerText = '/bigobj %(AdditionalOptions)'
+          $_.ClCompile.AppendChild($compilerOptionsNode) | Out-Null
         }
         Set-Content -Path "MvrGdtf.vcxproj" -Value $xml.OuterXml
 
