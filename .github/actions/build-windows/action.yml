@@ -9,6 +9,14 @@ runs:
       with:
         msbuild-architecture: x64
 
+    # Install NASM
+    - name: Install NASM
+      shell: cmd
+      run: |
+        curl -L -o nasm.zip https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/win64/nasm-2.15.05-win64.zip
+        tar -xf nasm.zip --strip-components=1 -C C:\nasm
+        setx PATH "%PATH%;C:\nasm"
+
   #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     # OpenSSL - setup
     - name: OpenSSL - prepare
