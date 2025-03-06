@@ -20,7 +20,7 @@ runs:
     - name: Test
       shell: cmd
       run: |
-        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Auxiliary\Build\vcvars64.bat"
+        call "C:\Program Files\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvars64.bat"
         where nmake
         where msbuild
         where nasm
@@ -40,7 +40,6 @@ runs:
       working-directory: openssl
       shell: cmd
       run: |
-        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Auxiliary\Build\vcvars64.bat"
         perl Configure VC-WIN64A --prefix=%cd%\build --openssldir=%cd%\build
         nmake
 
@@ -49,7 +48,6 @@ runs:
       working-directory: openssl
       shell: cmd
       run: |
-        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Auxiliary\Build\vcvars64.bat"
         nmake install
 
     # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
