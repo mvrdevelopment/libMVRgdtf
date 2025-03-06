@@ -16,14 +16,6 @@ runs:
         choco install nasm
         echo "C:\Program Files\NASM" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
-    # Test
-    - name: Test
-      shell: cmd
-      run: |
-        call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-        where nmake
-        where msbuild
-        where nasm
   #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     # OpenSSL - setup
     - name: OpenSSL - prepare
@@ -33,7 +25,6 @@ runs:
         cd openssl
         curl -L -o openssl.tar.gz https://www.openssl.org/source/openssl-1.1.1w.tar.gz
         tar -xvzf openssl.tar.gz --strip-components=1
-        dir
 
   # OpenSSL - configure
     - name: OpenSSL - configure
@@ -54,14 +45,6 @@ runs:
         where nmake
         nmake install
 
-    # OpenSSL - verify build
-    - name: OpenSSL - verify build
-      working-directory: openssl/build
-      shell: cmd
-      run: |
-        dir
-        cd ./lib
-        dir
     # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     # Xerces-C - setup
     - name: Xerces-C - prepare
@@ -153,7 +136,7 @@ runs:
         $xml = [xml](Get-Content MvrGdtf_ORG.vcxproj)
         $xml.Project.ItemDefinitionGroup | ForEach-Object {
           $node = $xml.CreateElement("AdditionalDependencies", "http://schemas.microsoft.com/developer/msbuild/2003")
-          $node.InnerText = 'iphlpapi.lib;..\..\xerces-c\build\libs\lib\xerces-c_3D.lib;mdns_cpp\lib\Debug\mdns_cpp.lib;..\..\openssl\build\lib\libssl.lib;..\..\openssl\build\lib\libcrypto.lib;%(AdditionalDependencies)'
+          $node.InnerText = 'iphlpapi.lib;..\..\xerces-c\build\libs\lib\xerces-c_3.lib;mdns_cpp\lib\Debug\mdns_cpp.lib;..\..\openssl\build\lib\libssl.lib;..\..\openssl\build\lib\libcrypto.lib;%(AdditionalDependencies)'
           $_.Lib.AppendChild($node) | Out-Null
 
           $includeNode = $xml.CreateElement("AdditionalIncludeDirectories", "http://schemas.microsoft.com/developer/msbuild/2003")
@@ -219,7 +202,7 @@ runs:
         $xml = [xml](Get-Content MvrGdtf_ORG.vcxproj)
         $xml.Project.ItemDefinitionGroup | ForEach-Object {
           $node = $xml.CreateElement("AdditionalDependencies", "http://schemas.microsoft.com/developer/msbuild/2003")
-          $node.InnerText = 'iphlpapi.lib;..\..\xerces-c\build\libs\lib\xerces-c_3D.lib;mdns_cpp\lib\Debug\mdns_cpp.lib;..\..\openssl\build\lib\libssl.lib;..\..\openssl\build\lib\libcrypto.lib;%(AdditionalDependencies)'
+          $node.InnerText = 'iphlpapi.lib;..\..\xerces-c\build\libs\lib\xerces-c_3.lib;mdns_cpp\lib\Debug\mdns_cpp.lib;..\..\openssl\build\lib\libssl.lib;..\..\openssl\build\lib\libcrypto.lib;%(AdditionalDependencies)'
           $_.Lib.AppendChild($node) | Out-Null
 
           $includeNode = $xml.CreateElement("AdditionalIncludeDirectories", "http://schemas.microsoft.com/developer/msbuild/2003")
@@ -285,7 +268,7 @@ runs:
         $xml = [xml](Get-Content MvrGdtf_ORG.vcxproj)
         $xml.Project.ItemDefinitionGroup | ForEach-Object {
           $node = $xml.CreateElement("AdditionalDependencies", "http://schemas.microsoft.com/developer/msbuild/2003")
-                  $node.InnerText = 'iphlpapi.lib;..\..\xerces-c\build\libs\lib\xerces-c_3D.lib;mdns_cpp\lib\Debug\mdns_cpp.lib;..\..\openssl\build\lib\libssl.lib;..\..\openssl\build\lib\libcrypto.lib;%(AdditionalDependencies)'
+                  $node.InnerText = 'iphlpapi.lib;..\..\xerces-c\build\libs\lib\xerces-c_3.lib;mdns_cpp\lib\Debug\mdns_cpp.lib;..\..\openssl\build\lib\libssl.lib;..\..\openssl\build\lib\libcrypto.lib;%(AdditionalDependencies)'
           $_.Lib.AppendChild($node) | Out-Null
 
           $includeNode = $xml.CreateElement("AdditionalIncludeDirectories", "http://schemas.microsoft.com/developer/msbuild/2003")
