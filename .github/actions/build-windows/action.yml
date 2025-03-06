@@ -13,10 +13,8 @@ runs:
     - name: Install NASM
       shell: cmd
       run: |
-        mkdir C:\nasm
-        curl -L -o nasm.zip https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/win64/nasm-2.15.05-win64.zip
-        tar -xf nasm.zip --strip-components=1 -C C:\nasm
-        setx PATH "%PATH%;C:\nasm"
+        choco install nasm
+        echo "C:\Program Files\NASM" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
   #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     # OpenSSL - setup
