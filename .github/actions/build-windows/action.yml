@@ -40,6 +40,8 @@ runs:
       working-directory: openssl
       shell: cmd
       run: |
+        call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        where nmake
         perl Configure VC-WIN64A --prefix=%cd%\build --openssldir=%cd%\build
         nmake
 
@@ -48,6 +50,8 @@ runs:
       working-directory: openssl
       shell: cmd
       run: |
+        call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        where nmake
         nmake install
 
     # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
