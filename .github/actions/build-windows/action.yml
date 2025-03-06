@@ -9,6 +9,31 @@ runs:
       with:
         msbuild-architecture: x64
 
+    #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    # OpenSSL - setup
+    - name: OpenSSL - prepare
+      shell: cmd
+      run: |
+        mkdir openssl
+        cd openssl
+        curl -L -o openssl.tar.gz https://www.openssl.org/source/openssl-3.4.1.tar.gz
+        tar -xvzf openssl.tar.gz --strip-components=1
+
+    - name: OpenSSL - configure
+      working-directory: openssl
+      shell: cmd
+      run: |
+        mkdir build
+        cd build
+        cmake .. -G "Visual Studio 17 2022" -A x64 -DCMAKE_INSTALL_PREFIX:PATH=libs
+
+    - name: OpenSSL - build
+      working-directory: openssl/build
+      shell: cmd
+      run: |
+        msbuild /m ALL_BUILD.vcxproj /p:Configuration=Release
+        msbuild /m INSTALL.vcxproj /p:Configuration=Release
+
     # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     # Xerces-C - setup
     - name: Xerces-C - prepare
@@ -74,31 +99,6 @@ runs:
           cd boost
           curl -o boost.zip https://archives.boost.io/release/1.86.0/source/boost_1_86_0.zip
           tar -xf boost.zip --strip-components=1
-          
-    #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    # OpenSSL - setup
-    - name: OpenSSL - prepare
-      shell: cmd
-      run: |
-        mkdir openssl
-        cd openssl
-        curl -L -o openssl.tar.gz https://www.openssl.org/source/openssl-3.4.1.tar.gz
-        tar -xvzf openssl.tar.gz --strip-components=1
-
-    - name: OpenSSL - configure
-      working-directory: openssl
-      shell: cmd
-      run: |
-        mkdir build
-        cd build
-        cmake .. -G "Visual Studio 17 2022" -A x64 -DCMAKE_INSTALL_PREFIX:PATH=libs
-
-    - name: OpenSSL - build
-      working-directory: openssl/build
-      shell: cmd
-      run: |
-        msbuild /m ALL_BUILD.vcxproj /p:Configuration=Release
-        msbuild /m INSTALL.vcxproj /p:Configuration=Release
 
     # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     # libMVRGdtf - setup
