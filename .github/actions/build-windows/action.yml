@@ -1,5 +1,5 @@
 name: 'Build Windows'
-description: 'Build the packages for Windows package'
+description: 'Build ths packages for Windows package'
 runs:
   using: "composite"
   steps:
@@ -9,7 +9,7 @@ runs:
       with:
         msbuild-architecture: x64
 
-    #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     # OpenSSL - setup
     - name: OpenSSL - prepare
       shell: cmd
@@ -24,16 +24,14 @@ runs:
       working-directory: openssl
       shell: cmd
       run: |
-        mkdir build
-        cd build
-        cmake .. -G "Visual Studio 17 2022" -A x64 -DCMAKE_INSTALL_PREFIX:PATH=libs
+        perl Configure VC-WIN64A --prefix=%cd%\build --openssldir=%cd%\build
+        nmake
 
     - name: OpenSSL - build
-      working-directory: openssl/build
+      working-directory: openssl
       shell: cmd
       run: |
-        msbuild /m ALL_BUILD.vcxproj /p:Configuration=Release
-        msbuild /m INSTALL.vcxproj /p:Configuration=Release
+        nmake install
 
     # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     # Xerces-C - setup
@@ -123,6 +121,7 @@ runs:
       working-directory: libMvrGdtf/build_MD_NO_MZ
       shell: pwsh
       run: |
+        $xml = [xml](Get-Content MvrGdtf_ORG.vcxproj)
         $xml.Project.ItemDefinitionGroup | ForEach-Object {
           $node = $xml.CreateElement("AdditionalDependencies", "http://schemas.microsoft.com/developer/msbuild/2003")
           $node.InnerText = 'iphlpapi.lib;..\..\xerces-c\build\libs\lib\xerces-c_3.lib;mdns_cpp\lib\Debug\mdns_cpp.lib;..\..\openssl\build\lib\libssl.lib;..\..\openssl\build\lib\libcrypto.lib;%(AdditionalDependencies)'
