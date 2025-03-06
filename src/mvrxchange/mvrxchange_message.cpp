@@ -425,6 +425,19 @@ void MVRxchangePacket::Internal_ToExternalMessage(const nlohmann::json& payload,
     }
 }
 
+std::string MVRxchangePacket::clean_json(const std::string& json) {
+    std::string cleaned;
+
+    for (char c : json) 
+    {
+        if ((c >= 32 && c <= 126) || c == '\n' || c == '\t' || c == '\r') {
+            cleaned += c;
+        }
+    }
+
+    return cleaned;
+}
+
 void MVRxchangePacket::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage &in)
 {
     if (fType == kMVR_Package_JSON_TYPE && fBodyLength > 0)
@@ -432,7 +445,9 @@ void MVRxchangePacket::ToExternalMessage(VectorworksMVR::IMVRxchangeService::IMV
         nlohmann::json payload;
         try
         {
-            payload = nlohmann::json::parse(this->GetBody(), this->GetBody() + fBodyLength, nullptr, false, true);
+            std::string json = std::string(GetBody(), fBodyLength);
+            std::string cleaned_json = this->clean_json(s);
+            payload = nlohmann::json::parse(cleaned_json);
             
         }
         catch (const nlohmann::json::exception &e)

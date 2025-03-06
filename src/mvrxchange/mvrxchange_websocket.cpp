@@ -101,11 +101,11 @@ void WebSocketClient::do_write(bool clean_json)
         std::lock_guard<std::mutex> lock(send_mutex_);
         msg = send_queue_.front();
 
-        if (clean_json) {
-            std::string json_string(msg->begin(), msg->end());
-            std::string cleaned_json = this->clean_json(json_string);
-            msg = std::make_shared<std::vector<char>>(cleaned_json.begin(), cleaned_json.end());
-        }
+        //if (clean_json) {
+        //    std::string json_string(msg->begin(), msg->end());
+        //    std::string cleaned_json = this->clean_json(json_string);
+        //    msg = std::make_shared<std::vector<char>>(cleaned_json.begin(), cleaned_json.end());
+        //}
     }
 
     auto write_callback = [this, msg, clean_json](beast::error_code ec, std::size_t bytes_transferred) 
@@ -151,6 +151,7 @@ void WebSocketClient::read_message()
             MVRxchangeNetwork::MVRxchangePacket packet;
             packet.SetBody(bytes_transferred, const_cast<char*>(data.c_str()));
             packet.DecodeHeader();
+            packet.SetBody(bytes_transferred, const_cast<char*>(data.c_str()));
             if (on_message_)
                 on_message_(packet);
 

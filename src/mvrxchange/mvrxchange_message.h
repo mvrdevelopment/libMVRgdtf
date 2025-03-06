@@ -47,7 +47,7 @@ namespace MVRxchangeNetwork
 
         private:
             void            Internal_ToExternalMessage(const nlohmann::json& payload, VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage &in);
-
+            std::string     clean_json(const std::string& json);
 
             uint32_t            fFlag;
             uint32_t            fVersion;
