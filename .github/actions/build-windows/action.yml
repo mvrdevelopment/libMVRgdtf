@@ -54,6 +54,14 @@ runs:
         where nmake
         nmake install
 
+    # OpenSSL - verify build
+    - name: OpenSSL - verify build
+      working-directory: openssl/build
+      shell: cmd
+      run: |
+        dir
+        cd ./lib
+        dir
     # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     # Xerces-C - setup
     - name: Xerces-C - prepare
