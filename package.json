@@ -16,7 +16,8 @@
     },
     "private": false,
     "scripts": {
-        "release": "auto shipit --base-branch=master"
+        "release": "auto shipit --base-branch=master",
+        "build": "bash ./scripts/build.sh"
     },
     "devDependencies": {
         "auto": "^11.2.1"
