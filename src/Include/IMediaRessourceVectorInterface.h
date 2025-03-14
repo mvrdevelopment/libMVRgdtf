@@ -1803,8 +1803,6 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		}
 	};
 
-	#ifdef BUILD_MVR_XCHANGE
-
 	class DYNAMIC_ATTRIBUTE IMVRxchangeService : public IVWUnknown
     {
 		public:
@@ -2002,6 +2000,4 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
     };
     typedef VCOMPtr<IMVRxchangeService>	IMVRxchangeServicePtr;
     const   VWIID IID_IMVRxchangeService = { 0x706cb180, 0xcd45, 0x4a9a, {0xac, 0xfc, 0x62, 0xab, 0x5f, 0xfe, 0x37, 0x6b}};
-
-	#endif // BUILD_MVR_XCHANGE
 }
