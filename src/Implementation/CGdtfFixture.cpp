@@ -667,6 +667,9 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateAttribute(MvrS
 	TXString vwName		(name);
 	TXString vwPretty	(prettyName);
 	
+    GdtfUtil::DoesNameContainInvalidChars( vwName );
+	GdtfUtil::DoesNameContainInvalidChars( vwPretty );
+
 	SceneData::GdtfAttribute* gdtfAttribute = fFixtureObject->AddAttribute(vwName, vwPretty);
 	
 	

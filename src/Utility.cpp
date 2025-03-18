@@ -83,3 +83,26 @@ TXString SystemUtil::ExtractFolderFromPath(TXString& path)
     return folder;
 }
 
+bool GdtfUtil::IsValidNameChar(TXChar codepoint) {
+    return 
+        (codepoint == 0x20                          ||
+        (codepoint >= 0x22 && codepoint <= 0x3E)    ||
+        (codepoint == 0x40)                         ||
+        (codepoint >= 0x41 && codepoint <= 0x5A)    ||
+        (codepoint >= 0x5F && codepoint <= 0x60)    ||
+        (codepoint >= 0x61 && codepoint <= 0x7A)
+        );
+}
+
+void GdtfUtil::DoesNameContainInvalidChars( TXString& name )
+{
+    for ( int i = 0; i < name.GetLength(); i++ )
+    {
+        TXChar ch = name.GetAt( i );
+        if ( !IsValidNameChar( ch ))
+        {
+            name.Delete(i, 1);
+            i--;
+        }
+    }
+}
