@@ -76,7 +76,11 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::OpenForWrite(MvrStri
 	fFixtureObject = new SceneData::GdtfFixture();
 	
 	TXString	vwName			(name);
-	TXString	vwManufacturer (manufacturer);
+	TXString	vwManufacturer (manufacturer);	
+
+    GdtfUtil::DoesNameContainInvalidChars( vwName );
+	GdtfUtil::DoesNameContainInvalidChars( vwManufacturer );
+
 	VWFC::Tools::VWUUID vwUuid = VWFC::Tools::VWUUID(uuid.a, uuid.b, uuid.c, uuid.d);
 	
 	fFixtureObject->SetName(vwName);
@@ -112,6 +116,10 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::OpenForWrite(MvrStri
 	
 	TXString	vwName			(name);
 	TXString	vwManufacturer (manufacturer);
+
+	GdtfUtil::DoesNameContainInvalidChars( vwName );
+	GdtfUtil::DoesNameContainInvalidChars( vwManufacturer );
+
 	VWFC::Tools::VWUUID vwUuid = VWFC::Tools::VWUUID(uuid.a, uuid.b, uuid.c, uuid.d);
 	
 	fFixtureObject->SetName(vwName);
@@ -361,6 +369,8 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::SetShortName(MvrStri
 	if(!fFixtureObject) {return kVCOMError_NotInitialized;}
 	
 	TXString vwName (shortName);
+    GdtfUtil::DoesNameContainInvalidChars( vwName );
+
 	fFixtureObject->SetShortName(vwName);
 	
 	return kVCOMError_NoError;
@@ -371,6 +381,8 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::SetLongName(MvrStrin
 	if(!fFixtureObject) {return kVCOMError_NotInitialized;}
 	
 	TXString vwName (longname);
+	GdtfUtil::DoesNameContainInvalidChars( vwName );
+
 	fFixtureObject->SetLongName(vwName);
 	
 	return kVCOMError_NoError;
@@ -458,6 +470,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateActivationGrou
 	if(!fFixtureObject) {return kVCOMError_NotInitialized;}
 	
 	TXString vwName(name);
+    GdtfUtil::DoesNameContainInvalidChars( vwName );
 	
 	SceneData::GdtfActivationGroup* gdtfActivationGroup = fFixtureObject->AddActivationGroup(vwName);
 	
@@ -563,6 +576,9 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateFeatureGroup(M
 	TXString vwName		(name);
 	TXString vwPretty	(prettyName);
 	
+	GdtfUtil::DoesNameContainInvalidChars( vwName );
+	GdtfUtil::DoesNameContainInvalidChars( vwPretty );
+
 	SceneData::GdtfFeatureGroup* gdtfFeatureGroup = fFixtureObject->AddFeatureGroup(vwName, vwPretty);
 	
 	
@@ -770,8 +786,11 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateWheel(MvrStrin
 {
 	// Check if Set
 	if(!fFixtureObject) {return kVCOMError_NotInitialized;}
-		
-	SceneData::GdtfWheel* gdtfWheel = fFixtureObject->AddWheel(name);
+	
+	TXString vwName ( name );
+    GdtfUtil::DoesNameContainInvalidChars( vwName );
+
+	SceneData::GdtfWheel* gdtfWheel = fFixtureObject->AddWheel(vwName);
 		
 	//---------------------------------------------------------------------------
 	// Initialize Object
@@ -872,6 +891,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateModel(MvrStrin
 	if(!fFixtureObject) {return kVCOMError_NotInitialized;}
 	
 	TXString vwName (name);
+	GdtfUtil::DoesNameContainInvalidChars( vwName );
 	
 	SceneData::GdtfModel* gdtfModel = fFixtureObject->AddModel(vwName);
 	
@@ -990,6 +1010,8 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateGeometry(EGdtf
 	TXString			vwName (name);
 	VWTransformMatrix	ma;
 	GdtfUtil::ConvertMatrix(mat, ma);
+
+	GdtfUtil::DoesNameContainInvalidChars( vwName );
 	
 	SceneData::GdtfGeometry* gdtfGeometry = nullptr;
 	
@@ -1120,6 +1142,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateDmxMode(MvrStr
 	if(!fFixtureObject) {return kVCOMError_NotInitialized;}
 	
 	TXString vwName (name);
+	GdtfUtil::DoesNameContainInvalidChars( vwName );
 	
 	SceneData::GdtfDmxMode* gdtfDmxMode = fFixtureObject->AddDmxMode(vwName);
 	
@@ -1223,6 +1246,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateRevision(MvrSt
 	if(!fFixtureObject) {return kVCOMError_NotInitialized;}
 	
 	TXString vwText (text);
+    GdtfUtil::DoesNameContainInvalidChars( vwText );
 	
 	SceneData::GdtfRevision* gdtfRevision = fFixtureObject->AddRevision(vwText, date);
 	
@@ -1736,8 +1760,10 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateAdditionalColo
     // Check if Set
     if (!fFixtureObject) { return kVCOMError_NotInitialized; }
 
+	TXString vwName( name );
+	GdtfUtil::DoesNameContainInvalidChars( vwName );
 
-    SceneData::GdtfColorSpace* gdtfColorSpace = fFixtureObject->GetPhysicalDesciptionsContainer().AddAdditionalColorSpace(name, colorSpace);
+    SceneData::GdtfColorSpace* gdtfColorSpace = fFixtureObject->GetPhysicalDesciptionsContainer().AddAdditionalColorSpace(vwName, colorSpace);
 
     //---------------------------------------------------------------------------
     // Initialize Object
@@ -1837,8 +1863,11 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateGamut(MvrStrin
     // Check if Set
     if (!fFixtureObject) { return kVCOMError_NotInitialized; }
 
+	TXString vwName( name );
+	GdtfUtil::DoesNameContainInvalidChars( vwName );
+
     CCieColorPtr colorPtr = new CCieColor(color.fx, color.fy, color.f_Y);
-    SceneData::GdtfGamut* gdtfGamut = fFixtureObject->GetPhysicalDesciptionsContainer().AddGamut(name, colorPtr);
+    SceneData::GdtfGamut* gdtfGamut = fFixtureObject->GetPhysicalDesciptionsContainer().AddGamut(vwName, colorPtr);
 
     //---------------------------------------------------------------------------
     // Initialize Object
@@ -1941,8 +1970,10 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateEmitter(MvrStr
     // Check if Set
     if (!fFixtureObject) { return kVCOMError_NotInitialized; }
 
+	TXString vwName( name );
+	GdtfUtil::DoesNameContainInvalidChars( vwName );
 
-    SceneData::GdtfPhysicalEmitter* gdtfEmitter = fFixtureObject->GetPhysicalDesciptionsContainer().AddEmitter(name, SceneData::GdtfConverter::ConvertCColor(color) );
+    SceneData::GdtfPhysicalEmitter* gdtfEmitter = fFixtureObject->GetPhysicalDesciptionsContainer().AddEmitter(vwName, SceneData::GdtfConverter::ConvertCColor(color) );
 
     //---------------------------------------------------------------------------
     // Initialize Object
@@ -2045,7 +2076,10 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateFilter(MvrStri
     // Check if Set
     if (!fFixtureObject) { return kVCOMError_NotInitialized; }
     
-    SceneData::GdtfFilter* gdtfFilter = fFixtureObject->GetPhysicalDesciptionsContainer().AddFilter(name, SceneData::GdtfConverter::ConvertCColor(color));
+	TXString vwName( name );
+	GdtfUtil::DoesNameContainInvalidChars( vwName );
+
+    SceneData::GdtfFilter* gdtfFilter = fFixtureObject->GetPhysicalDesciptionsContainer().AddFilter(vwName, SceneData::GdtfConverter::ConvertCColor(color));
 
     //---------------------------------------------------------------------------
     // Initialize Object
@@ -2537,8 +2571,10 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateConnector(MvrS
     // Check if Set
     if (!fFixtureObject) { return kVCOMError_NotInitialized; }
 
+	TXString vwName( name );
+	GdtfUtil::DoesNameContainInvalidChars( vwName );
 
-    SceneData::GdtfConnector* gdtfConnector = fFixtureObject->GetPhysicalDesciptionsContainer().AddConnector(name, type);
+    SceneData::GdtfConnector* gdtfConnector = fFixtureObject->GetPhysicalDesciptionsContainer().AddConnector(vwName, type);
 
     //---------------------------------------------------------------------------
     // Initialize Object

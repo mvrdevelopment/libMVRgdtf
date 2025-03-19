@@ -222,7 +222,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::CreateGeometry(EGdt
 	TXString			vwName (name);
 	VWTransformMatrix	ma;
 	GdtfUtil::ConvertMatrix(mat, ma);
-	
+	GdtfUtil::DoesNameContainInvalidChars( vwName );
 	
 	
 	SceneData::GdtfGeometry* gdtfGeometry = nullptr;
@@ -510,7 +510,10 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetName(MvrString n
 {
 	if( ! fGeometry) return kVCOMError_NotInitialized;	
 	
-    fGeometry->SetName(name);
+	TXString vwName ( name );
+	GdtfUtil::DoesNameContainInvalidChars( vwName );
+
+    fGeometry->SetName(vwName);
 
    	return kVCOMError_NoError;    
 }
@@ -1474,7 +1477,10 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::CreateLaserProtocol
 	SceneData::GdtfGeometryLaserPtr laser = static_cast<SceneData::GdtfGeometryLaserPtr>(fGeometry);
 	if ( ! laser) { return kVCOMError_Failed; }
 	
-	SceneData::GdtfLaserProtocolPtr gdtfLaserProtocol = laser->CreateLaserProtocol(name);
+	TXString vwName( name );
+	GdtfUtil::DoesNameContainInvalidChars( vwName );
+
+	SceneData::GdtfLaserProtocolPtr gdtfLaserProtocol = laser->CreateLaserProtocol(vwName);
 	
 	//---------------------------------------------------------------------------
 	// Initialize Object

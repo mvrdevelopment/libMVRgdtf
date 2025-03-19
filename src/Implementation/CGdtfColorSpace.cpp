@@ -5,7 +5,7 @@
 #include "Prefix/StdAfx.h"
 #include "CGdtfColorSpace.h"
 #include "XmlFileHelper.h"
-
+#include "Utility.h"
 
 
 using namespace VectorworksMVR;
@@ -81,7 +81,10 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfColorSpaceImpl::SetName(MvrString
 {
 	if(!fColorSpace) return kVCOMError_NotInitialized;	
 	
-    fColorSpace->SetName(name);
+	TXString nameStr( name );
+	GdtfUtil::DoesNameContainInvalidChars( nameStr );
+
+    fColorSpace->SetName(nameStr);
 
    	return kVCOMError_NoError;   
 }

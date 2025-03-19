@@ -46,6 +46,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::AddFileToMv
 VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::AddBufferToMvrFile(MvrString filename, char* buffer, size_t length)
 {
     TXString strFileName (filename);
+	GdtfUtil::DoesNameContainInvalidChars( strFileName );
 
     if (strFileName.IsEmpty()) 	{ return kVCOMError_InvalidArg; }
 	if (length == 0) 		 	{ return kVCOMError_InvalidArg; }
@@ -149,6 +150,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreatePosit
 	VWFC::Tools::VWUUID uuid (guid.a,guid.b,guid.c,guid.d);
 	
 	TXString nameStr ( name );
+	GdtfUtil::DoesNameContainInvalidChars( nameStr );
 	SceneData::SceneDataPositionObjPtr scPostion = fExchangeObj.CreatePositionObject(uuid, nameStr);
 	
 	//---------------------------------------------------------------------------
@@ -197,7 +199,8 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateSymDe
 	if(guid.a == 0 && guid.b == 0 &&  guid.c == 0 && guid.d == 0){ uuid.New(); }
 
 	TXString	nameStr ( name );
-	
+	GdtfUtil::DoesNameContainInvalidChars( nameStr );
+
 	SceneData::SceneDataSymDefObjPtr scSymDef = fExchangeObj.CreateSymDefObject(uuid, nameStr);
 	
 	//---------------------------------------------------------------------------
@@ -242,7 +245,8 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateClass
 	// Create the obj
 	VWFC::Tools::VWUUID	uuid	(guid.a,guid.b,guid.c,guid.d);
 	TXString	nameStr ( name );
-	
+	GdtfUtil::DoesNameContainInvalidChars( nameStr );
+
 	SceneData::SceneDataClassObjPtr scClass = fExchangeObj.CreateClassObject(uuid, nameStr);
 	
 	//---------------------------------------------------------------------------
@@ -287,7 +291,8 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateMappi
 	// Create the obj
 	VWFC::Tools::VWUUID	uuid(guid.a,guid.b,guid.c,guid.d);
 	TXString			nameStr(name);
-	
+	GdtfUtil::DoesNameContainInvalidChars( nameStr );
+
 	SceneData::SceneDataMappingDefinitionObjPtr scMapDef = fExchangeObj.CreateMappingDefinitionObject(uuid, nameStr);
 	
 	//---------------------------------------------------------------------------
@@ -332,7 +337,8 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateLayer
 	// Create the obj
 	VWFC::Tools::VWUUID	uuid	(guid.a,guid.b,guid.c,guid.d);
 	TXString	nameStr ( name );
-	
+	GdtfUtil::DoesNameContainInvalidChars( nameStr );
+
 	SceneData::SceneDataLayerObjPtr ptr = fExchangeObj.CreateLayerObject(uuid, nameStr);
 	
 	//---------------------------------------------------------------------------
@@ -465,7 +471,10 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateGroup
 	VWTransformMatrix ma;
 	GdtfUtil::ConvertMatrix(offset, ma);
 	
-	SceneData::SceneDataGroupObjPtr ptr = fExchangeObj.CreateGroupObject(uuid, ma, name, group);
+	TXString nameStr ( name );
+	GdtfUtil::DoesNameContainInvalidChars( nameStr );
+
+	SceneData::SceneDataGroupObjPtr ptr = fExchangeObj.CreateGroupObject(uuid, ma, nameStr, group);
 	
 	//---------------------------------------------------------------------------
 	// Initialize Object
@@ -529,6 +538,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateFixtu
 	// Create the obj
 	VWFC::Tools::VWUUID	uuid	(guid.a,guid.b,guid.c,guid.d);
 	TXString	nameStr ( name );
+	GdtfUtil::DoesNameContainInvalidChars( nameStr );
 	
 	VWTransformMatrix ma;
 	GdtfUtil::ConvertMatrix(offset, ma);
@@ -596,6 +606,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateScene
 	// Create the obj
 	VWFC::Tools::VWUUID	uuid	(guid.a,guid.b,guid.c,guid.d);
 	TXString	nameStr ( name );
+	GdtfUtil::DoesNameContainInvalidChars( nameStr );
 	
 	VWTransformMatrix ma;
 	GdtfUtil::ConvertMatrix(offset, ma);
@@ -662,6 +673,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateFocus
 	// Create the obj
 	VWFC::Tools::VWUUID	uuid	(guid.a,guid.b,guid.c,guid.d);
 	TXString	nameStr ( name );
+	GdtfUtil::DoesNameContainInvalidChars( nameStr );
 	
 	VWTransformMatrix ma;
 	GdtfUtil::ConvertMatrix(offset, ma);
@@ -730,6 +742,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateTruss
 	// Create the obj
 	VWFC::Tools::VWUUID	uuid	(guid.a,guid.b,guid.c,guid.d);
 	TXString	nameStr	( name );
+	GdtfUtil::DoesNameContainInvalidChars( nameStr );
 	
 	VWTransformMatrix ma;
 	GdtfUtil::ConvertMatrix(offset, ma);
@@ -799,7 +812,8 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateSuppo
 	// Create the obj
 	VWFC::Tools::VWUUID	uuid	(guid.a,guid.b,guid.c,guid.d);
 	TXString	nameStr	( name );
-	
+	GdtfUtil::DoesNameContainInvalidChars( nameStr );
+
 	VWTransformMatrix ma;
 	GdtfUtil::ConvertMatrix(offset, ma);
 	
@@ -868,7 +882,8 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateVideo
 	// Create the obj
 	VWFC::Tools::VWUUID	uuid	(guid.a,guid.b,guid.c,guid.d);
 	TXString	nameStr ( name );
-	
+	GdtfUtil::DoesNameContainInvalidChars( nameStr );
+
 	VWTransformMatrix ma;
 	GdtfUtil::ConvertMatrix(offset, ma);
 	
@@ -935,6 +950,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateProje
 	// Create the obj
 	VWFC::Tools::VWUUID	uuid	(guid.a,guid.b,guid.c,guid.d);
 	TXString	nameStr ( name );
+	GdtfUtil::DoesNameContainInvalidChars( nameStr );
 	
 	VWTransformMatrix ma;
 	GdtfUtil::ConvertMatrix(offset, ma);
