@@ -208,6 +208,20 @@
 #define XML_Val_FixtureGoboRotation "rotation"
 #define XML_Val_FixtureCastShadow   "CastShadow"
 #define XML_Val_FixtureMappings     "Mappings"
+#define XML_Val_DMXInvertPan		"DMXInvertPan"
+#define XML_Val_DMXInvertTilt		"DMXInvertTilt"
+
+#define XML_Val_Protocols 					"Protocols"
+#define XML_Val_Protocol 					"Protocol"
+#define XML_Val_ProtocolType 				"type"
+#define XML_Val_ProtocolGeometry 			"geometry"
+#define XML_Val_ProtocolName 				"name"
+#define XML_Val_ProtocolVersion 			"version"
+#define XML_Val_ProtocolTransmission		"transmission"
+#define XML_Val_ProtocolAnycast				"Anycast"
+#define XML_Val_ProtocolMulticast			"Multicast"
+#define XML_Val_ProtocolUnicast				"Unicast"
+#define XML_Val_ProtocolBroadcast			"Broadcast"
 
 #define XML_Val_SceneObjectNodeName			"SceneObject"
 

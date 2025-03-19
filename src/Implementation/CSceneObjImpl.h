@@ -72,6 +72,10 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetCastShadow(bool& value);
 		virtual VCOMError VCOM_CALLTYPE		GetMappingCount(size_t& outMappings);
 		virtual VCOMError VCOM_CALLTYPE		GetMappingAt(size_t at, IMapping** outMapping);
+		virtual VCOMError VCOM_CALLTYPE		GetDMXInvertPan( bool& invertPan );
+		virtual VCOMError VCOM_CALLTYPE		GetDMXInvertTilt( bool& invertTilt );
+		virtual VCOMError VCOM_CALLTYPE		GetProtocolsCount( size_t& outProtocols );
+		virtual VCOMError VCOM_CALLTYPE		GetProtocolAt( size_t at, SProtocol** outProtocol );
 
 
 		virtual VCOMError VCOM_CALLTYPE		SetFocusPoint(ISceneObj* focusPoint);
@@ -85,6 +89,8 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		SetGobo(MvrString gobo);
 		virtual VCOMError VCOM_CALLTYPE		SetGoboRotation(double rotation);
 		virtual VCOMError VCOM_CALLTYPE		SetCastShadow(bool castShadow);
+		virtual VCOMError VCOM_CALLTYPE		SetDMXInvertPan( bool invertPan );
+		virtual VCOMError VCOM_CALLTYPE		SetDMXInvertTilt( bool invertTilt );
 		virtual VCOMError VCOM_CALLTYPE		AddMapping(MvrUUID mapDefUuid);
 
 		// Video Screen

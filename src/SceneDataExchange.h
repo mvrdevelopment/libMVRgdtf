@@ -734,6 +734,24 @@ namespace SceneData
 	typedef std::vector<SceneDataDmxAdress>	SceneDataAdressArray;
 	
 	
+	struct SceneDataProtocols
+	{
+		TXString				fGeometry;
+		TXString				fName;
+		TXString				fType;
+		TXString				fVersion;
+		ETransmissionType		fTransmision;
+
+		SceneDataProtocols( const TXString& geometry, const TXString& name, const TXString& type, const TXString& version, const ETransmissionType& transmision );
+
+		TXString				GetGeometry() const;
+		TXString				GetName() const;
+		TXString				GetType() const;
+		TXString				GetVersion() const;
+		ETransmissionType		GetTransmission() const;
+	};
+	typedef std::vector<SceneDataProtocols>	SceneDataProtocolsArray;
+
 	class SceneDataFixtureObj : public SceneDataGDTFSpecObj
 	{
 		
@@ -757,6 +775,9 @@ namespace SceneData
 		size_t							fCustomId;
 		bool							fCastShadow;
 		SceneDataMappingObjArray		fMappings;
+		bool							fDMXInvertPan;
+		bool							fDMXInvertTilt;
+		SceneDataProtocolsArray			fProtocols;
 		
 		
 		// Reading Storage
@@ -785,6 +806,9 @@ namespace SceneData
 		double							GetGoboRotation();
 		bool							GetCastShadow();
 		SceneDataMappingObjArray		GetMappingsArray();
+		bool							GetDMXInvertPan();
+		bool							GetDMXInvertTilt();
+		const SceneDataProtocolsArray&  GetProtocolsArray();
 		
 		void							SetFunction(const TXString& str);
 		void							SetPosition(SceneDataPositionObjPtr ptr);
@@ -798,7 +822,10 @@ namespace SceneData
 		void							SetGobo(const TXString& value);
 		void							SetGoboRotation(double value);
 		void							SetCastShadow(bool value);
+		void							SetDMXInvertPan( bool value );
+		void							SetDMXInvertTilt( bool value );
 		void							AddMapping(SceneDataGUID mappingDefinitionUuid);
+		void							AddProtocol( const SceneDataProtocols& protocol );
 		
 	protected:
 		virtual	TXString				GetNodeName();

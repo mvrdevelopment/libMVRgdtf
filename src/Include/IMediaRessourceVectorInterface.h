@@ -60,6 +60,15 @@ namespace VectorworksMVR
 		Sint32 r, g, b;
 	};
 	
+	struct SProtocol
+	{
+		MvrString fGeometry;
+		MvrString fName;
+		MvrString fType;
+		MvrString fVersion;
+		GdtfDefines::ETransmissionType fTransmision;
+	};
+
 	struct MvrUUID
 	{
 		MvrUUID()
@@ -281,7 +290,7 @@ namespace VectorworksMVR
 		
 	};
 	typedef VCOMPtr<IOverwrite>	IOverwritePtr;
-	
+
 	//-------------------------------------------------------------------------------------------------------------
 	enum class ESceneObjType
 	{
@@ -341,6 +350,10 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetCastShadow(bool& value) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetMappingCount(size_t& outMappings) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetMappingAt(size_t at, IMapping** outMapping) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetDMXInvertPan( bool& invertPan ) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetDMXInvertTilt( bool& invertTilt ) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetProtocolsCount( size_t& outProtocols ) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetProtocolsAt( size_t at, SProtocol& outProtocol ) = 0;
 		
 		virtual VCOMError VCOM_CALLTYPE		SetFocusPoint(ISceneObj* focusPoint) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetPosition(IPosition* position) = 0;
@@ -353,7 +366,10 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		SetGobo(MvrString gobo) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetGoboRotation(double rotation) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetCastShadow(bool castShadow) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetDMXInvertPan( bool invertPan ) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetDMXInvertTilt( bool invertTilt ) = 0;
 		virtual VCOMError VCOM_CALLTYPE		AddMapping(MvrUUID mapDefUuid) = 0;
+		virtual VCOMError VCOM_CALLTYPE		AddProtocol( SProtocol protocol) = 0;
 
 		// Video Screen
 		virtual VCOMError VCOM_CALLTYPE		SetVideoScreenSource(MvrString value, MvrString linkedGeometry, GdtfDefines::ESourceType) = 0;
