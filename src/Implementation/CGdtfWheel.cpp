@@ -4,6 +4,7 @@
 #include "Prefix/StdAfx.h"
 #include "CGdtfWheel.h"
 #include "CGdtfWheelSlot.h"
+#include "Utility.h"
 
 
 using namespace VectorworksMVR::Filing;
@@ -90,6 +91,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelImpl::CreateWheelSlot(MvrStr
 	if( ! fWheel) return kVCOMError_NotInitialized;
 	
 	TXString vwName (name);
+	GdtfUtil::DoesNameContainInvalidChars( vwName );
 	
 	SceneData::GdtfWheelSlot* gdtfWheelSlot = fWheel->AddWheelSlot(vwName);
 	

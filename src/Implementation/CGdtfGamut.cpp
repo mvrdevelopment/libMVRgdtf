@@ -4,7 +4,7 @@
 #include "Prefix/StdAfx.h"
 #include "CGdtfGamut.h"
 #include "XmlFileHelper.h"
-
+#include "Utility.h"
 
 using namespace VectorworksMVR::Filing;
 
@@ -30,7 +30,10 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGamutImpl::SetName(MvrString name
 {
 	if( ! fGamut) return kVCOMError_NotInitialized;	
 	
-    fGamut->SetName(name);
+	TXString nameStr( name );
+	GdtfUtil::DoesNameContainInvalidChars( nameStr );
+
+    fGamut->SetName(nameStr);
 
    	return kVCOMError_NoError;    
 }

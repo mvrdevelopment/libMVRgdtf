@@ -4,6 +4,7 @@
 #include "Prefix/StdAfx.h"
 #include "CGdtfDmxProfile.h"
 #include "CGdtfPoint.h"
+#include "Utility.h"
 
 VectorworksMVR::CGdtfDMXProfileImpl::CGdtfDMXProfileImpl()
 {
@@ -26,6 +27,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDMXProfileImpl::SetName(MvrString
 	if(!fDMXProfile) {return kVCOMError_NotInitialized;}
 	
 	TXString vwName (name);
+	GdtfUtil::DoesNameContainInvalidChars( vwName );
 	fDMXProfile->SetName(vwName);
 	
 	return kVCOMError_NoError;

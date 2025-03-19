@@ -6,6 +6,7 @@
 #include "CGdtfWheelSlotPrismFacet.h"
 #include "CGdtfWheelSlotAnimationSystem.h"
 #include "CGdtfFilter.h"
+#include "Utility.h"
 
 using namespace VectorworksMVR::Filing;
 
@@ -59,7 +60,10 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotImpl::SetName(MvrString 
 	// Check Pointer
 	if( ! fWheelSlot) return kVCOMError_NotInitialized;
 
-	fWheelSlot->SetName(name);
+	TXString vwName ( name );
+	GdtfUtil::DoesNameContainInvalidChars( vwName );
+
+	fWheelSlot->SetName(vwName);
 
     return kVCOMError_NoError;
 }

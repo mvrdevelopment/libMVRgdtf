@@ -6,6 +6,7 @@
 #include "CGdtfDmxChannelFunction.h"
 #include "CGdtfMacroDMX.h"
 #include "CGdtfMacroVisual.h"
+#include "Utility.h"
 
 
 using namespace VectorworksMVR::Filing;
@@ -30,6 +31,9 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfMacroImpl::SetName(MvrString name
 {
   	// Check if valid
 	if( ! fMacro) return kVCOMError_NotInitialized;
+
+	TXString nameStr( name );
+	GdtfUtil::DoesNameContainInvalidChars( nameStr );
 
     fMacro->SetName(name);
 

@@ -4,6 +4,7 @@
 #include "Prefix/StdAfx.h"
 #include "CGdtfFeatureGroup.h"
 #include "CGdtfFeature.h"
+#include "Utility.h"
 
 using namespace VectorworksMVR::Filing;
 
@@ -36,7 +37,10 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFeatureGroupImpl::SetPrettyName(M
 	// Check Pointer
 	if( ! fFeatureGroup) return kVCOMError_NotInitialized;
 
-	fFeatureGroup->SetPrettyName(name);
+	TXString vwName ( name );
+	GdtfUtil::DoesNameContainInvalidChars( vwName );
+
+	fFeatureGroup->SetPrettyName(vwName);
 
     return kVCOMError_NoError;
 }
@@ -105,6 +109,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFeatureGroupImpl::CreateFeature(M
 	if( ! fFeatureGroup) return kVCOMError_NotInitialized;
 	
 	TXString vwName (name);
+	GdtfUtil::DoesNameContainInvalidChars( vwName );
 	
 	SceneData::GdtfFeature* gdtfFeature = fFeatureGroup->AddFeature(vwName);
 	

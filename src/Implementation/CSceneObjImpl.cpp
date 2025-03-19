@@ -407,7 +407,9 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetGdtfName(MvrString g
 	SceneData::SceneDataGDTFSpecObjPtr gdtfSpecObj = static_cast<SceneData::SceneDataGDTFSpecObjPtr>(fPtr);
 	
 	TXString name (gdtfName);
-	gdtfSpecObj->SetGDTFFile(gdtfName);
+
+	GdtfUtil::DoesNameContainInvalidChars( name );
+	gdtfSpecObj->SetGDTFFile(name);
 	
 	return kVCOMError_NoError;
 }
