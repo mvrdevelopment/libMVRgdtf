@@ -1037,6 +1037,25 @@ MvrString VectorworksMVR::CSceneObjImpl::GetFixtureId()
 	return fixture->GetFixtureId().GetCharPtr();
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetFixtureIdNumeric(size_t &value)
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+
+	// Check the type is right
+	ASSERTN(kEveryone,fType == ESceneObjType::Fixture);
+	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
+
+	// Try to cast
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	if( ! fixture) return kVCOMError_NoFixtureObj;
+
+	value = fixture->GetFixtureIdNumeric();
+
+	return kVCOMError_NoError;
+}
+
 VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetColor(CieColor& outColor)
 {
 	// Check if this is initialized
@@ -1541,6 +1560,27 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetFixtureId(MvrString 
 	
 	return kVCOMError_NoError;
 }
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetFixtureIdNumeric(const size_t& value)
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+
+	// Check the type is right
+	ASSERTN(kEveryone,fType == ESceneObjType::Fixture);
+	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
+
+	// Try to cast
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	if( ! fixture) return kVCOMError_NoFixtureObj;
+
+	//
+	fixture->SetFixtureIdNumeric(value);
+
+	return kVCOMError_NoError;
+}
+
 
 VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetColor(const CieColor& color)
 {

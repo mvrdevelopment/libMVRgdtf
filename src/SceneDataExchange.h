@@ -769,6 +769,7 @@ namespace SceneData
 		SceneDataPositionObjPtr			fPosition;
 		SceneDataAdressArray			fAdresses;
 		TXString						fFixtureId;
+		size_t							fFixtureIdNumeric;
 		Sint32							fUnitNumber;
 		CCieColor						fColor;
 		Sint8							fFixtureTypeId;
@@ -797,6 +798,7 @@ namespace SceneData
 		SceneDataFocusPointObjPtr		GetFocusPoint();
 		SceneDataPositionObjPtr			GetPosition();
 		const TXString&					GetFixtureId();
+		size_t							GetFixtureIdNumeric();
 		Sint32							GetUnitNumber();
 		CCieColor						GetColor();
 		Sint8							GetFixtureTypeId();
@@ -818,6 +820,7 @@ namespace SceneData
 		void							SetFixtureTypeId(const Sint8& value);
 		void							SetCustomId(const size_t& value);
 		void							SetFixtureId(const TXString& value);
+		void							SetFixtureIdNumeric( const size_t& value );
 		void							SetUnitNumber(Sint32 value);
 		void							SetGobo(const TXString& value);
 		void							SetGoboRotation(double value);

@@ -1820,7 +1820,7 @@ size_t SceneDataDmxAdress::GetUniverse() const
 // SceneDataProtocols
 SceneDataProtocols::SceneDataProtocols( const TXString& geometry, const TXString& name, const TXString& type, const TXString& version, const ETransmissionType& transmision )
 {
-	fGeometry		= geometry;
+	fGeometry		= geometry.IsEmpty() ? "NetworkInOut_1" : geometry;
 	fName			= name;
 	fType			= type;
 	fVersion		= version;
@@ -1897,6 +1897,11 @@ SceneDataPositionObjPtr SceneDataFixtureObj::GetPosition()
 const TXString& SceneDataFixtureObj::GetFixtureId()
 {
 	return fFixtureId;
+}
+
+size_t SceneDataFixtureObj::GetFixtureIdNumeric()
+{
+	return fFixtureIdNumeric;
 }
 
 void SceneDataFixtureObj::SetFunction(const TXString& function)
@@ -2032,6 +2037,13 @@ void SceneDataFixtureObj::SetColor(const CCieColor& color)
 void SceneDataFixtureObj::SetFixtureId(const TXString& value)
 {
 	fFixtureId = value;
+	fFixtureIdNumeric = fFixtureId.atoi();
+}	
+
+void SceneDataFixtureObj::SetFixtureIdNumeric( const size_t& value )
+{
+	fFixtureIdNumeric = value;
+	fFixtureId = std::to_string( value );
 }
 
 void SceneDataFixtureObj::SetUnitNumber(Sint32 value)
@@ -2262,7 +2274,9 @@ void SceneDataFixtureObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneData
 	// Read the ChannelID
 	IXMLFileNodePtr pFixtureId;
 	if ( VCOM_SUCCEEDED( pNode->GetChildNode( XML_Val_FixtureFixtureID, & pFixtureId ) ) )			{ pFixtureId->GetNodeValue(fFixtureId); }
-	
+
+
+
 	//--------------------------------------------------------------------------------------------
 	// Read the UnitNumber
 	IXMLFileNodePtr pUnitNumberNode;
