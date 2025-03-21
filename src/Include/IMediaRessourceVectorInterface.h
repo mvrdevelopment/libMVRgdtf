@@ -962,6 +962,21 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		SetResistanceXX(double resistanceXX) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetResistanceYY(double resistanceYY) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetResistanceZZ(double resistanceZZ) = 0;
+
+		// Speaker
+		virtual VCOMError VCOM_CALLTYPE     GetFrequencyMin(double& frequencyMin) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetFrequencyMax(double& frequencyMax) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetAngleVertical(double& angleVertical) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetAngleHorizontal(double& angleHorizontal) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetMaxSPL(double& maxSPL) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetImpedance(double& impedance) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE     SetFrequencyMin(double frequencyMin) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetFrequencyMax(double frequencyMax) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetAngleVertical(double angleVertical) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetAngleHorizontal(double angleHorizontal) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetMaxSPL(double maxSPL) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetImpedance(double impedance) = 0;
 	};
 	typedef VCOMPtr<IGdtfGeometry>	IGdtfGeometryPtr;
     

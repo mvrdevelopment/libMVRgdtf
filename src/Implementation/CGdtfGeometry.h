@@ -191,6 +191,21 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		SetResistanceYY(double resistanceYY);
 		virtual VCOMError VCOM_CALLTYPE		SetResistanceZZ(double resistanceZZ);
 
+        // Speaker
+        virtual VCOMError VCOM_CALLTYPE		GetFrequencyMin(double& frequencyMin);
+        virtual VCOMError VCOM_CALLTYPE		GetFrequencyMax(double& frequencyMax);
+        virtual VCOMError VCOM_CALLTYPE		GetAngleVertical(double& angleVertical);
+        virtual VCOMError VCOM_CALLTYPE		GetAngleHorizontal(double& angleHorizontal);
+        virtual VCOMError VCOM_CALLTYPE		GetMaxSPL(double& maxSPL);
+        virtual VCOMError VCOM_CALLTYPE		GetImpedance(double& impedance);
+
+        virtual VCOMError VCOM_CALLTYPE		SetFrequencyMin(double frequencyMin);
+        virtual VCOMError VCOM_CALLTYPE		SetFrequencyMax(double frequencyMax);
+        virtual VCOMError VCOM_CALLTYPE		SetAngleVertical(double angleVertical);
+        virtual VCOMError VCOM_CALLTYPE		SetAngleHorizontal(double angleHorizontal);
+        virtual VCOMError VCOM_CALLTYPE		SetMaxSPL(double maxSPL);
+        virtual VCOMError VCOM_CALLTYPE		SetImpedance(double impedance);
+
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr);
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject();
 		

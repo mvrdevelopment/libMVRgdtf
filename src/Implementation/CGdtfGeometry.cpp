@@ -245,6 +245,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::CreateGeometry(EGdt
         case eGdtfGeometryInventory:            gdtfGeometry = fGeometry->AddGeometryInventory(         vwName, scModel, ma); break;
         case eGdtfGeometryStructure:            gdtfGeometry = fGeometry->AddGeometryStructure(         vwName, scModel, ma); break;
         case eGdtfGeometrySupport:              gdtfGeometry = fGeometry->AddGeometrySupport(          	vwName, scModel, ma); break;
+		case eGdtfGeometrySpeaker:              gdtfGeometry = fGeometry->AddGeometrySpeaker(          	vwName, scModel, ma); break;
         case eGdtfGeometryMagnet:              	gdtfGeometry = fGeometry->AddGeometryMagnet(          	vwName, scModel, ma); break;
 		case eGdtfGeometry:						gdtfGeometry = fGeometry->AddGeometry(					vwName, scModel, ma); break;
 			
@@ -2853,6 +2854,190 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetResistanceZZ(dou
 }
 
 //---------------------------------------------------------------------------
+// Speaker
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetFrequencyMin(double& frequencyMin)
+{
+	// Check Pointer
+	if(!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type
+	if (fGeometryType != EGdtfObjectType::eGdtfGeometrySpeaker) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySpeakerPtr speaker = static_cast<SceneData::GdtfGeometrySpeakerPtr>(fGeometry);
+	if(!speaker) {return kVCOMError_Failed;}
+
+	frequencyMin = speaker->GetFrequencyMin();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetFrequencyMax(double& frequencyMax)
+{
+	// Check Pointer
+	if(!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type
+	if (fGeometryType != EGdtfObjectType::eGdtfGeometrySpeaker) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySpeakerPtr speaker = static_cast<SceneData::GdtfGeometrySpeakerPtr>(fGeometry);
+	if(!speaker) {return kVCOMError_Failed;}
+
+	frequencyMax = speaker->GetFrequencyMax();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetAngleVertical(double& angleVertical)
+{
+	// Check Pointer
+	if(!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type
+	if (fGeometryType != EGdtfObjectType::eGdtfGeometrySpeaker) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySpeakerPtr speaker = static_cast<SceneData::GdtfGeometrySpeakerPtr>(fGeometry);
+	if(!speaker) {return kVCOMError_Failed;}
+
+	angleVertical = speaker->GetAngleVertical();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetAngleHorizontal(double& angleHorizontal)
+{
+	// Check Pointer
+	if(!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type
+	if (fGeometryType != EGdtfObjectType::eGdtfGeometrySpeaker) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySpeakerPtr speaker = static_cast<SceneData::GdtfGeometrySpeakerPtr>(fGeometry);
+	if(!speaker) {return kVCOMError_Failed;}
+
+	angleHorizontal = speaker->GetAngleHorizontal();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetMaxSPL(double& maxSPL)
+{
+	// Check Pointer
+	if(!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type
+	if (fGeometryType != EGdtfObjectType::eGdtfGeometrySpeaker) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySpeakerPtr speaker = static_cast<SceneData::GdtfGeometrySpeakerPtr>(fGeometry);
+	if(!speaker) {return kVCOMError_Failed;}
+
+	maxSPL = speaker->GetMaxSPL();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetImpedance(double& impedance)
+{
+	// Check Pointer
+	if(!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type
+	if (fGeometryType != EGdtfObjectType::eGdtfGeometrySpeaker) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySpeakerPtr speaker = static_cast<SceneData::GdtfGeometrySpeakerPtr>(fGeometry);
+	if(!speaker) {return kVCOMError_Failed;}
+
+	impedance = speaker->GetImpedance();
+	return kVCOMError_NoError;
+}
+
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetFrequencyMin(double frequencyMin)
+{
+	// Check Pointer
+	if(!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if(fGeometryType != EGdtfObjectType::eGdtfGeometrySpeaker) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySpeakerPtr speaker = static_cast<SceneData::GdtfGeometrySpeakerPtr>(fGeometry);
+	if(!speaker) {return kVCOMError_Failed;}
+
+	speaker->SetFrequencyMin(frequencyMin);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetFrequencyMax(double frequencyMax)
+{
+	// Check Pointer
+	if(!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if(fGeometryType != EGdtfObjectType::eGdtfGeometrySpeaker) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySpeakerPtr speaker = static_cast<SceneData::GdtfGeometrySpeakerPtr>(fGeometry);
+	if(!speaker) {return kVCOMError_Failed;}
+
+	speaker->SetFrequencyMax(frequencyMax);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetAngleVertical(double angleVertical)
+{
+	// Check Pointer
+	if(!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if(fGeometryType != EGdtfObjectType::eGdtfGeometrySpeaker) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySpeakerPtr speaker = static_cast<SceneData::GdtfGeometrySpeakerPtr>(fGeometry);
+	if(!speaker) {return kVCOMError_Failed;}
+
+	speaker->SetAngleVertical(angleVertical);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetAngleHorizontal(double angleHorizontal)
+{
+	// Check Pointer
+	if(!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if(fGeometryType != EGdtfObjectType::eGdtfGeometrySpeaker) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySpeakerPtr speaker = static_cast<SceneData::GdtfGeometrySpeakerPtr>(fGeometry);
+	if(!speaker) {return kVCOMError_Failed;}
+
+	speaker->SetAngleHorizontal(angleHorizontal);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetMaxSPL(double maxSPL)
+{
+	// Check Pointer
+	if(!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if(fGeometryType != EGdtfObjectType::eGdtfGeometrySpeaker) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySpeakerPtr speaker = static_cast<SceneData::GdtfGeometrySpeakerPtr>(fGeometry);
+	if(!speaker) {return kVCOMError_Failed;}
+
+	speaker->SetMaxSPL(maxSPL);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetImpedance(double impedance)
+{
+	// Check Pointer
+	if(!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if(fGeometryType != EGdtfObjectType::eGdtfGeometrySpeaker) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySpeakerPtr speaker = static_cast<SceneData::GdtfGeometrySpeakerPtr>(fGeometry);
+	if(!speaker) {return kVCOMError_Failed;}
+
+	speaker->SetImpedance(impedance);
+	return kVCOMError_NoError;
+}
+
+//---------------------------------------------------------------------------
 void VectorworksMVR::CGdtfGeometryImpl::SetPointer(SceneData::GdtfGeometry* geometry)
 {
 	fGeometry		= geometry;
@@ -2875,6 +3060,7 @@ void VectorworksMVR::CGdtfGeometryImpl::SetPointer(SceneData::GdtfGeometry* geom
 						fGeometryType == EGdtfObjectType::eGdtfGeometryInventory ||
 						fGeometryType == EGdtfObjectType::eGdtfGeometryStructure ||
 						fGeometryType == EGdtfObjectType::eGdtfGeometrySupport ||
+						fGeometryType == EGdtfObjectType::eGdtfGeometrySpeaker ||
 						fGeometryType == EGdtfObjectType::eGdtfGeometryMagnet);
 }
 

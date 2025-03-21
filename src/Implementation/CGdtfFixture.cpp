@@ -1008,6 +1008,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateGeometry(EGdtf
         case eGdtfGeometryInventory:            gdtfGeometry = fFixtureObject->AddGeometryInventory(        vwName, scModel, ma); break;
         case eGdtfGeometryStructure:            gdtfGeometry = fFixtureObject->AddGeometryStructure(        vwName, scModel, ma); break;
         case eGdtfGeometrySupport:              gdtfGeometry = fFixtureObject->AddGeometrySupport(          vwName, scModel, ma); break;
+        case eGdtfGeometrySpeaker:              gdtfGeometry = fFixtureObject->AddGeometrySpeaker(          vwName, scModel, ma); break;
         case eGdtfGeometryMagnet:               gdtfGeometry = fFixtureObject->AddGeometryMagnet(           vwName, scModel, ma); break;
 		case eGdtfGeometry:				        gdtfGeometry = fFixtureObject->AddGeometry(			        vwName, scModel, ma); break;
 

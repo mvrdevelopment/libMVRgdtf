@@ -150,6 +150,16 @@ void GdtfEmptyModelTest::WriteFile(VectorworksMVR::IGdtfFixturePtr& fixture)
         __checkVCOM(geometry12->SetResistanceXX(2.4));
         __checkVCOM(geometry12->SetResistanceYY(2.5));
         __checkVCOM(geometry12->SetResistanceZZ(2.6));
+
+        // Speaker
+        IGdtfGeometryPtr geometry13;
+        __checkVCOM(geometry1->CreateGeometry(EGdtfObjectType::eGdtfGeometrySpeaker, "Geometry13 Speaker", filledModel, STransformMatrix(), &geometry13));
+        __checkVCOM(geometry13->SetFrequencyMin(1.1));
+        __checkVCOM(geometry13->SetFrequencyMax(1.2));
+        __checkVCOM(geometry13->SetAngleVertical(1.3));
+        __checkVCOM(geometry13->SetAngleHorizontal(1.4));
+        __checkVCOM(geometry13->SetMaxSPL(1.5));
+        __checkVCOM(geometry13->SetImpedance(1.6));
     }
 
 }
@@ -466,6 +476,36 @@ void GdtfEmptyModelTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
         double resistanceZZ = 0.0;
         __checkVCOM(geoSupport->GetResistanceZZ(resistanceZZ));
         checkifEqual("Support ResistanceZZ", resistanceZZ, 2.6);
+
+        //-------------------------------------------------------------------------------------------------
+        // Speaker
+        IGdtfGeometryPtr geoSpeaker;
+        __checkVCOM(geometry1->GetInternalGeometryAt(11, &geoSpeaker));
+        checkifEqual("Speaker Geometry Name", geoSpeaker->GetName(), "Geometry13 Speaker");
+
+        double frequencyMin = 0.0;
+        __checkVCOM(geoSpeaker->GetFrequencyMin(frequencyMin));
+        checkifEqual("Speaker FrequencyMin", frequencyMin, 1.1);
+
+        double frequencyMax = 0.0;
+        __checkVCOM(geoSpeaker->GetFrequencyMax(frequencyMax));
+        checkifEqual("Speaker FrequencyMax", frequencyMax, 1.2);
+
+        double angleVertical = 0.0;
+        __checkVCOM(geoSpeaker->GetAngleVertical(angleVertical));
+        checkifEqual("Speaker AngleVertical", angleVertical, 1.3);
+
+        double angleHorizontal = 0.0;
+        __checkVCOM(geoSpeaker->GetAngleHorizontal(angleHorizontal));
+        checkifEqual("Speaker AngleHorizontal", angleHorizontal, 1.4);
+
+        double maxSPL = 0.0;
+        __checkVCOM(geoSpeaker->GetMaxSPL(maxSPL));
+        checkifEqual("Speaker MaxSPL", maxSPL, 1.5);
+
+        double impedance = 0.0;
+        __checkVCOM(geoSpeaker->GetImpedance(impedance));
+        checkifEqual("Speaker Impedance", impedance, 1.6);
     }
 
 }

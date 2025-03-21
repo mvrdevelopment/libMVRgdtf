@@ -512,6 +512,14 @@ const Sint32 kMVR_MinorVersion = 5;
 #define XML_GDTF_SupportResistanceYY                "ResistanceYY"
 #define XML_GDTF_SupportResistanceZZ                "ResistanceZZ"
 
+#define XML_GDTF_SpeakerNodeName                    "Speaker"
+#define XML_GDTF_SpeakerFrequencyMin                "FrequencyMin"
+#define XML_GDTF_SpeakerFrequencyMax                "FrequencyMax"
+#define XML_GDTF_SpeakerAngleVertical               "AngleVertical"
+#define XML_GDTF_SpeakerAngleHorizontal             "AngleHorizontal"
+#define XML_GDTF_SpeakerMaxSPL                      "MaxSPL"
+#define XML_GDTF_SpeakerImpedance                   "Impedance"
+
 #define XML_GDTF_MagnetNodeName                 "Magnet"
 
 #define XML_GDTF_LampNodeName					"Beam"
