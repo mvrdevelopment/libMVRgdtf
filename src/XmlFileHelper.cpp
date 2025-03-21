@@ -2161,6 +2161,46 @@ CieColor SceneData::GdtfConverter::ConvertCColor(const CCieColor & color)
     return true;
 }
 
+TXString GdtfConverter::ConvertTransmissionTypeEnum( GdtfDefines::ETransmissionType value )
+{
+	switch ( value )
+	{
+		case ETransmissionType::Anycast:	return XML_Val_ProtocolAnycast;
+		case ETransmissionType::Multicast:	return XML_Val_ProtocolMulticast;
+		case ETransmissionType::Unicast:	return XML_Val_ProtocolUnicast;
+		case ETransmissionType::Broadcast:	return XML_Val_ProtocolBroadcast;
+	}
+}
+
+bool GdtfConverter::ConvertTransmissionTypeEnum( const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::ETransmissionType& outVal )
+{
+	if ( inVal == XML_Val_ProtocolAnycast )
+	{
+		outVal = ETransmissionType::Anycast;
+	}
+	else if ( inVal == XML_Val_ProtocolMulticast )
+	{
+		outVal = ETransmissionType::Multicast;
+	}
+	else if ( inVal == XML_Val_ProtocolUnicast )
+	{
+		outVal = ETransmissionType::Unicast;
+	}
+	else if ( inVal == XML_Val_ProtocolBroadcast )
+	{
+		outVal = ETransmissionType::Broadcast;
+	}
+	else if ( inVal.IsEmpty() )
+	{
+		outVal = ETransmissionType::Anycast;
+	}
+	else
+	{
+		DSTOP( ( kEveryone, "Unknown Value for ETransmissionType" ) );
+		outVal = ETransmissionType::Anycast;
+	}
+	return true;
+}
 
 bool SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, const IFileIdentifierPtr& file, ERessourceType resType, bool deleteFile, bool mustExist)
 {

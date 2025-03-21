@@ -63,6 +63,7 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetAdressAt(size_t at, SDmxAdress& adress);
 		virtual VCOMError VCOM_CALLTYPE		GetUnitNumber(Sint32& outUnitNumber);
 		virtual MvrString VCOM_CALLTYPE		GetFixtureId();
+		virtual VCOMError VCOM_CALLTYPE		GetFixtureIdNumeric( size_t& outFixtureId );
 		virtual VCOMError VCOM_CALLTYPE		GetColor(CieColor& outColor);
 		virtual VCOMError VCOM_CALLTYPE		GetFixtureTypeId(Sint8& outType);
 		virtual VCOMError VCOM_CALLTYPE		GetCustomId(size_t& outId);
@@ -72,6 +73,10 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetCastShadow(bool& value);
 		virtual VCOMError VCOM_CALLTYPE		GetMappingCount(size_t& outMappings);
 		virtual VCOMError VCOM_CALLTYPE		GetMappingAt(size_t at, IMapping** outMapping);
+		virtual VCOMError VCOM_CALLTYPE		GetDMXInvertPan( bool& invertPan );
+		virtual VCOMError VCOM_CALLTYPE		GetDMXInvertTilt( bool& invertTilt );
+		virtual VCOMError VCOM_CALLTYPE		GetProtocolsCount( size_t& outProtocols );
+		virtual VCOMError VCOM_CALLTYPE		GetProtocolAt( size_t at, SProtocol** outProtocol );
 
 
 		virtual VCOMError VCOM_CALLTYPE		SetFocusPoint(ISceneObj* focusPoint);
@@ -79,13 +84,17 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		AddAdress(const size_t& adresses, const size_t& breakId);
 		virtual VCOMError VCOM_CALLTYPE		SetUnitNumber(const Sint32& unitNumber);
 		virtual VCOMError VCOM_CALLTYPE		SetFixtureId(MvrString fixtureId);
+		virtual VCOMError VCOM_CALLTYPE		SetFixtureIdNumeric( const size_t& fixtureId );
 		virtual VCOMError VCOM_CALLTYPE		SetColor(const CieColor& color);
 		virtual VCOMError VCOM_CALLTYPE		SetFixtureTypeId(const Sint8& outType);
 		virtual VCOMError VCOM_CALLTYPE		SetCustomId(const size_t& outId);
 		virtual VCOMError VCOM_CALLTYPE		SetGobo(MvrString gobo);
 		virtual VCOMError VCOM_CALLTYPE		SetGoboRotation(double rotation);
 		virtual VCOMError VCOM_CALLTYPE		SetCastShadow(bool castShadow);
+		virtual VCOMError VCOM_CALLTYPE		SetDMXInvertPan( bool invertPan );
+		virtual VCOMError VCOM_CALLTYPE		SetDMXInvertTilt( bool invertTilt );
 		virtual VCOMError VCOM_CALLTYPE		AddMapping(MvrUUID mapDefUuid);
+		virtual VCOMError VCOM_CALLTYPE		AddProtocol( SProtocol protocol );
 
 		// Video Screen
 		virtual VCOMError VCOM_CALLTYPE		SetVideoScreenSource(MvrString value, MvrString linkedGeometry, GdtfDefines::ESourceType);
