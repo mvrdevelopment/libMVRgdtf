@@ -2191,6 +2191,15 @@ GdtfGeometryPtr GdtfGeometry::AddGeometrySupport(const TXString& name, GdtfModel
 	return geo;
 }
 
+GdtfGeometryPtr GdtfGeometry::AddGeometrySpeaker(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma)
+{
+	GdtfGeometry* geo = new GdtfGeometrySpeaker(name, refToModel, ma, this);
+
+	fInternalGeometries.push_back(geo);
+
+	return geo;
+}
+
 GdtfGeometryPtr GdtfGeometry::AddGeometryMagnet(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma)
 {
 	GdtfGeometry* geo = new GdtfGeometryMagnet(name, refToModel, ma, this);
@@ -2247,7 +2256,7 @@ void GdtfGeometry::OnReadFromNode(const IXMLFileNodePtr& pNode)
 										bool hasBreak = false;
 										
 										GdtfGeometryPtr geometry = nullptr;
-										if	  (childNodeName == XML_GDTF_GeometryAxisNodeName)			{ geometry = new GdtfGeometryAxis(this);}
+										if	  	(childNodeName == XML_GDTF_GeometryAxisNodeName)		{ geometry = new GdtfGeometryAxis(this);}
 										else if (childNodeName == XML_GDTF_GeometryNodeName)			{ geometry = new GdtfGeometry(this);}
 										else if (childNodeName == XML_GDTF_FilterBeamNodeName)			{ geometry = new GdtfGeometryBeamFilter(this);}
 										else if (childNodeName == XML_GDTF_FilterColorNodeName)			{ geometry = new GdtfGeometryColorFilter(this);}
@@ -2264,6 +2273,7 @@ void GdtfGeometry::OnReadFromNode(const IXMLFileNodePtr& pNode)
 										else if (childNodeName == XML_GDTF_InventoryNodeName)			{ geometry = new GdtfGeometryInventory(this);}
 										else if (childNodeName == XML_GDTF_StructureNodeName)			{ geometry = new GdtfGeometryStructure(this);}
 										else if (childNodeName == XML_GDTF_SupportNodeName)				{ geometry = new GdtfGeometrySupport(this);}
+										else if (childNodeName == XML_GDTF_SpeakerNodeName)				{ geometry = new GdtfGeometrySpeaker(this);}
 										else if (childNodeName == XML_GDTF_MagnetNodeName)				{ geometry = new GdtfGeometryMagnet(this);}
 										else if (childNodeName == XML_GDTF_BreakNodeName)				{ hasBreak = true; }
 										else if (childNodeName == XML_GDTF_LaserProtocolNodeName)		{ return; /* Laser Protocols are handled in the Laser OnReadFromNode function */ }
@@ -4231,6 +4241,158 @@ EGdtfObjectType GdtfGeometrySupport::GetObjectType()
 TXString GdtfGeometrySupport::GetNodeName()
 {
 	return XML_GDTF_SupportNodeName;
+}
+
+//------------------------------------------------------------------------------------
+// GdtfGeometrySpeaker
+GdtfGeometrySpeaker::GdtfGeometrySpeaker(GdtfGeometry* parent)
+					:GdtfGeometry(parent)
+{
+	fFrequencyMin		= 0;
+	fFrequencyMax		= 0;
+	fAngleVertical 		= 0;
+	fAngleHorizontal 	= 0;
+	fMaxSPL 			= 0;
+	fImpedance			= 0;
+}
+
+GdtfGeometrySpeaker::GdtfGeometrySpeaker(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma, GdtfGeometry* parent) 
+					:GdtfGeometry(name, refToModel, ma, parent)
+{
+	fFrequencyMin		= 0;
+	fFrequencyMax		= 0;
+	fAngleVertical 		= 0;
+	fAngleHorizontal 	= 0;
+	fMaxSPL 			= 0;
+	fImpedance			= 0;
+}
+
+GdtfGeometrySpeaker::~GdtfGeometrySpeaker()
+{
+}
+
+double GdtfGeometrySpeaker::GetFrequencyMin() const
+{
+	return fFrequencyMin;
+}
+
+double GdtfGeometrySpeaker::GetFrequencyMax() const
+{
+	return fFrequencyMax;
+}
+
+double GdtfGeometrySpeaker::GetAngleVertical() const
+{
+	return fAngleVertical;
+}
+
+double GdtfGeometrySpeaker::GetAngleHorizontal() const
+{
+	return fAngleHorizontal;
+}
+
+double GdtfGeometrySpeaker::GetMaxSPL() const
+{
+	return fMaxSPL;
+}
+
+double GdtfGeometrySpeaker::GetImpedance() const
+{
+	return fImpedance;
+}
+
+void GdtfGeometrySpeaker::SetFrequencyMin(double frequencyMin)
+{
+	fFrequencyMin = frequencyMin;
+}
+
+void GdtfGeometrySpeaker::SetFrequencyMax(double frequencyMax)
+{
+	fFrequencyMax = frequencyMax;
+}
+
+void GdtfGeometrySpeaker::SetAngleVertical(double angleVertical)
+{
+	fAngleVertical = angleVertical;
+}
+
+void GdtfGeometrySpeaker::SetAngleHorizontal(double angleHorizontal)
+{
+	fAngleHorizontal = angleHorizontal;
+}
+
+void GdtfGeometrySpeaker::SetMaxSPL(double maxSPL)
+{
+	fMaxSPL = maxSPL;
+}
+
+void GdtfGeometrySpeaker::SetImpedance(double impedance)
+{
+	fImpedance = impedance;
+}
+
+void GdtfGeometrySpeaker::OnPrintToFile(IXMLFileNodePtr pNode) 
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfGeometry::OnPrintToFile(pNode);
+
+	pNode->SetNodeAttributeValue(XML_GDTF_SpeakerFrequencyMin,			GdtfConverter::ConvertDouble(fFrequencyMin));
+	pNode->SetNodeAttributeValue(XML_GDTF_SpeakerFrequencyMax,			GdtfConverter::ConvertDouble(fFrequencyMax));
+	pNode->SetNodeAttributeValue(XML_GDTF_SpeakerAngleVertical,			GdtfConverter::ConvertDouble(fAngleVertical));
+	pNode->SetNodeAttributeValue(XML_GDTF_SpeakerAngleHorizontal,		GdtfConverter::ConvertDouble(fAngleHorizontal));
+	pNode->SetNodeAttributeValue(XML_GDTF_SpeakerMaxSPL,				GdtfConverter::ConvertDouble(fMaxSPL));
+	pNode->SetNodeAttributeValue(XML_GDTF_SpeakerImpedance,				GdtfConverter::ConvertDouble(fImpedance));
+}
+
+void GdtfGeometrySpeaker::OnReadFromNode(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfGeometry::OnReadFromNode(pNode);
+
+	TXString frequencyMin;		pNode->GetNodeAttributeValue(XML_GDTF_SpeakerFrequencyMin, frequencyMin);			GdtfConverter::ConvertDouble(frequencyMin, pNode, fFrequencyMin);
+	TXString frequencyMax;		pNode->GetNodeAttributeValue(XML_GDTF_SpeakerFrequencyMax, frequencyMax);			GdtfConverter::ConvertDouble(frequencyMax, pNode, fFrequencyMax);
+	TXString angleVertical;		pNode->GetNodeAttributeValue(XML_GDTF_SpeakerAngleVertical, angleVertical);			GdtfConverter::ConvertDouble(angleVertical, pNode, fAngleVertical);
+	TXString angleHorizontal;	pNode->GetNodeAttributeValue(XML_GDTF_SpeakerAngleHorizontal, angleHorizontal);		GdtfConverter::ConvertDouble(angleHorizontal, pNode, fAngleHorizontal);
+	TXString maxSPL;			pNode->GetNodeAttributeValue(XML_GDTF_SpeakerMaxSPL, maxSPL);						GdtfConverter::ConvertDouble(maxSPL, pNode, fMaxSPL);
+	TXString impedance;			pNode->GetNodeAttributeValue(XML_GDTF_SpeakerImpedance, impedance);					GdtfConverter::ConvertDouble(impedance, pNode, fImpedance);
+}
+
+void GdtfGeometrySpeaker::OnErrorCheck(const IXMLFileNodePtr& pNode)
+{
+	//------------------------------------------------------------------------------------
+	// Call the parent
+	GdtfObject::OnErrorCheck(pNode);
+
+	//------------------------------------------------------------------------------------
+	// Create needed and optional Attribute Arrays
+	TXStringArray needed;
+	TXStringArray optional;
+	needed.push_back(XML_GDTF_GeometryName);
+	optional.push_back(XML_GDTF_GeometryModelRef);
+	needed.push_back(XML_GDTF_GeometryMatrix);
+
+	needed.push_back(XML_GDTF_SpeakerFrequencyMin);
+	needed.push_back(XML_GDTF_SpeakerFrequencyMax);
+	needed.push_back(XML_GDTF_SpeakerAngleVertical);
+	needed.push_back(XML_GDTF_SpeakerAngleHorizontal);
+	needed.push_back(XML_GDTF_SpeakerMaxSPL);
+	needed.push_back(XML_GDTF_SpeakerImpedance);
+		
+	//------------------------------------------------------------------------------------
+	// Check Attributes for node
+	GdtfParsingError::CheckNodeAttributes(pNode, needed, optional);
+}
+
+EGdtfObjectType GdtfGeometrySpeaker::GetObjectType() 
+{
+	return EGdtfObjectType::eGdtfGeometrySpeaker;
+}
+
+TXString GdtfGeometrySpeaker::GetNodeName()
+{
+	return XML_GDTF_SpeakerNodeName;
 }
 
 //------------------------------------------------------------------------------------
@@ -9145,6 +9307,7 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 							else if (childNodeName == XML_GDTF_InventoryNodeName)			{ geometry = new GdtfGeometryInventory(nullptr);}
 							else if (childNodeName == XML_GDTF_StructureNodeName)			{ geometry = new GdtfGeometryStructure(nullptr);}
 							else if (childNodeName == XML_GDTF_SupportNodeName)				{ geometry = new GdtfGeometrySupport(nullptr);}
+							else if (childNodeName == XML_GDTF_SpeakerNodeName)				{ geometry = new GdtfGeometrySpeaker(nullptr);}
 							else if (childNodeName == XML_GDTF_MagnetNodeName)				{ geometry = new GdtfGeometryMagnet(nullptr);}
 							else															{ DSTOP((kEveryone,"There is a node that was not expected!")); }
 							
@@ -9509,6 +9672,15 @@ GdtfGeometryPtr GdtfFixture::AddGeometrySupport(const TXString& name, GdtfModelP
 
 	fGeometries.push_back(geo);
 	
+	return geo;
+}
+
+GdtfGeometryPtr GdtfFixture::AddGeometrySpeaker(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma)
+{
+	GdtfGeometry* geo = new GdtfGeometrySpeaker(name, refToModel, ma, nullptr);
+
+	fGeometries.push_back(geo);
+
 	return geo;
 }
 
