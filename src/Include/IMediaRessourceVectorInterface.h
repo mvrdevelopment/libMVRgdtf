@@ -76,6 +76,22 @@ namespace VectorworksMVR
                 (this->c == uuid.c) &&
                 (this->d == uuid.d));                          
         }
+
+		bool operator< (const MvrUUID& uuid) const 
+		{
+			if (this->a < uuid.a) return true;
+			if (this->a > uuid.a) return false;
+			if (this->b < uuid.b) return true;
+			if (this->b > uuid.b) return false;
+			if (this->c < uuid.c) return true;
+			if (this->c > uuid.c) return false;
+			return this->d < uuid.d;
+		}
+
+		bool isEmpty() const
+		{
+			return ( a == 0 && b == 0 && c == 0 && d == 0 );
+		}
 	};
 	
 	//-------------------------------------------------------------------------------------------------------------
