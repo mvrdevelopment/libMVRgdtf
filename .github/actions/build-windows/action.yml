@@ -12,7 +12,7 @@ runs:
     - name: Check Available MSVC Versions
       shell: cmd
       run: |
-        "C:\Program Files\Microsoft Visual Studio\Installer\vswhere.exe" -products * -property installationPath
+        "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" -products * -property installationPath
 
     - name: Install MSVC v14.41
       shell: cmd
