@@ -19,7 +19,7 @@ runs:
       run: |
         choco install visualstudio2022buildtools --force
         choco install visualstudio2022-workload-vctools --force
-        
+
     # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     # Xerces-C - setup
     - name: Xerces-C - prepare
@@ -147,7 +147,7 @@ runs:
     - name: libMVRGdtf [MD] - configure
       working-directory: libMvrGdtf
       shell: cmd
-      run: |      cmake .. -G "Visual Studio 17 2022" -A x64 -T v143,version=14.41 …
+      run: |
         mkdir build_MD
         cd build_MD
         cmake .. -DCMAKE_INSTALL_PREFIX:PATH=libs -T v143,version=14.41 -DWIN_RUNTIME_LIB=-MD -DXERCES_INCLUDE_PATH="..\xerces-c\build\libs\include;..\xerces\src" -DXERCES_LIB_PATH="..\xerces\build\libs\lib" -DXERCES_ROOT_PATH="..\xerces-c\build"
