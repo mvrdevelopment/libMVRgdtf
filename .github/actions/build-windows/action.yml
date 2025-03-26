@@ -9,10 +9,11 @@ runs:
       with:
         msbuild-architecture: x64
 
-    - name: Install MSVC 14.41
-      shell: cmd
+    - name: Install MSVC v143 version 14.41
       run: |
-        "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vs_installer.exe" modify --installPath "C:\Program Files\Microsoft Visual Studio\2022\Enterprise" --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --quiet --wait --norestart
+        # Install the Build Tools with MSVC v143 and version 14.41 using the existing vs_installer
+        & "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vs_installer.exe" install --productId "Microsoft.VisualStudio.2022" --channelId "VisualStudio" --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended --quiet --norestart
+
 
     - name: Check Available MSVC Versions
       shell: cmd
