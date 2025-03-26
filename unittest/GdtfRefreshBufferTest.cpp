@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-//----- Copyright deersoft 2015 - 2018 www.deersoft.de
+//----- Copyright MVR Group
 //-----------------------------------------------------------------------------
 #include "Unittest.h"
 #include "GdtfRefreshBufferTest.h"

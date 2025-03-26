@@ -1,6 +1,6 @@
 #ifdef DONT_USE_XERCES_AS_XMLLIB
 //-----------------------------------------------------------------------------
-//----- Copyright deersoft 2015 - 2019 www.deersoft.de
+//----- Copyright MVR Group
 //-----------------------------------------------------------------------------
 #include "Prefix/StdAfx.h"
 #include "XMLFileImpl.h"

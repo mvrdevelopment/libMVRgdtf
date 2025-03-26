@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-//----- Copyright deersoft 2015 - 2017 www.deersoft.de
+//----- Copyright MVR Group
 //-----------------------------------------------------------------------------
 #include "Prefix/StdAfx.h"
 #include "CGdtfMacroDMXStep.h"
