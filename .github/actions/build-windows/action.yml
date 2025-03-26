@@ -9,11 +9,11 @@ runs:
       with:
         msbuild-architecture: x64
 
-    # - name: Install MSVC v14.41
-    #   shell: cmd
-    #   run: |
-    #     choco install visualstudio2022buildtools --force
-    #     choco install visualstudio2022-workload-vctools --force
+    - name: Install MSVC v14.41
+      shell: cmd
+      run: |
+        choco install visualstudio2022buildtools --force
+        choco install visualstudio2022-workload-vctools --force
 
     - name: Check Available MSVC Versions
       shell: cmd
