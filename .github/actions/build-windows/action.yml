@@ -10,6 +10,7 @@ runs:
         msbuild-architecture: x64
 
     - name: Install MSVC v143 version 14.41
+      shell: pwsh
       run: |
         # Install the Build Tools with MSVC v143 and version 14.41 using the existing vs_installer
         & "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vs_installer.exe" install --productId "Microsoft.VisualStudio.2022" --channelId "VisualStudio" --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended --quiet --norestart
