@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-//----- Copyright deersoft 2015 - 2019 www.deersoft.de
+//----- Copyright MVR Group
 //-----------------------------------------------------------------------------
 #include "mvrxchange_prefix.h"
 #include "mvrxchange_dynamic_buffer.h"
