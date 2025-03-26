@@ -9,6 +9,12 @@ runs:
       with:
         msbuild-architecture: x64
 
+    - name: Check Available MSVC Versions
+      shell: cmd
+      run: |
+        "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" -products * -property installationPath
+        dir /b "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC"
+
     - name: Install MSVC v14.41
       shell: cmd
       run: |
@@ -19,7 +25,7 @@ runs:
       shell: cmd
       run: |
         "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" -products * -property installationPath
-        dir "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\14.41\Microsoft.VCToolsVersion.14.41.props" || (echo v14.41 is not installed. & exit /b 1)
+        dir /b "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC"
 
     # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     # Xerces-C - setup
