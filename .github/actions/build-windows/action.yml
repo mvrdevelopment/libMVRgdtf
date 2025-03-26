@@ -9,16 +9,17 @@ runs:
       with:
         msbuild-architecture: x64
 
+    # - name: Install MSVC v14.41
+    #   shell: cmd
+    #   run: |
+    #     choco install visualstudio2022buildtools --force
+    #     choco install visualstudio2022-workload-vctools --force
+
     - name: Check Available MSVC Versions
       shell: cmd
       run: |
         "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" -products * -property installationPath
-
-    - name: Install MSVC v14.41
-      shell: cmd
-      run: |
-        choco install visualstudio2022buildtools --force
-        choco install visualstudio2022-workload-vctools --force
+        dir "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\14.41\Microsoft.VCToolsVersion.14.41.props" || (echo v14.41 is not installed. & exit /b 1)
 
     # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     # Xerces-C - setup
