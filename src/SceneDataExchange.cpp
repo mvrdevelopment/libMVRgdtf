@@ -1817,6 +1817,41 @@ size_t SceneDataDmxAdress::GetUniverse() const
 	return universe;
 }
 
+// SceneDataProtocols
+SceneDataProtocols::SceneDataProtocols( const TXString& geometry, const TXString& name, const TXString& type, const TXString& version, const ETransmissionType& transmision )
+{
+	fGeometry		= geometry.IsEmpty() ? "NetworkInOut_1" : geometry;
+	fName			= name;
+	fType			= type;
+	fVersion		= version;
+	fTransmision	= transmision;
+}
+
+TXString SceneDataProtocols::GetGeometry() const
+{
+	return fGeometry;
+}
+
+TXString SceneDataProtocols::GetName() const
+{
+	return fName;
+}
+
+TXString SceneDataProtocols::GetType() const
+{
+	return fType;
+}
+
+TXString SceneDataProtocols::GetVersion() const
+{
+	return fVersion;
+}
+
+ETransmissionType SceneDataProtocols::GetTransmission() const
+{
+	return fTransmision;
+}
+
 SceneDataFixtureObj::SceneDataFixtureObj(const SceneDataGUID& guid) : SceneDataGDTFSpecObj(guid)
 {
 	fFocusPoint		= nullptr;
@@ -1827,6 +1862,8 @@ SceneDataFixtureObj::SceneDataFixtureObj(const SceneDataGUID& guid) : SceneDataG
 	fCustomId		= 0;
 	fGoboRotation 	= 0.0;
 	fCastShadow		= false;
+	fDMXInvertPan	= false;
+	fDMXInvertTilt	= false;
 }
 
 SceneDataFixtureObj::~SceneDataFixtureObj()
@@ -1860,6 +1897,11 @@ SceneDataPositionObjPtr SceneDataFixtureObj::GetPosition()
 const TXString& SceneDataFixtureObj::GetFixtureId()
 {
 	return fFixtureId;
+}
+
+size_t SceneDataFixtureObj::GetFixtureIdNumeric()
+{
+	return fFixtureIdNumeric;
 }
 
 void SceneDataFixtureObj::SetFunction(const TXString& function)
@@ -1947,6 +1989,21 @@ ESceneDataObjectType SceneDataFixtureObj::GetObjectType()
 	return ESceneDataObjectType::eFixture;
 }
 
+bool SceneDataFixtureObj::GetDMXInvertPan()
+{
+	return fDMXInvertPan;
+}
+
+bool SceneDataFixtureObj::GetDMXInvertTilt()
+{
+	return fDMXInvertTilt;
+}
+
+const SceneDataProtocolsArray& SceneDataFixtureObj::GetProtocolsArray()
+{
+	return fProtocols;
+}
+
 void SceneDataFixtureObj::SetPosition(SceneDataPositionObjPtr ptr)
 {
 	ASSERTN(kEveryone, ptr != nullptr);
@@ -1980,6 +2037,13 @@ void SceneDataFixtureObj::SetColor(const CCieColor& color)
 void SceneDataFixtureObj::SetFixtureId(const TXString& value)
 {
 	fFixtureId = value;
+	fFixtureIdNumeric = fFixtureId.atoi();
+}	
+
+void SceneDataFixtureObj::SetFixtureIdNumeric( const size_t& value )
+{
+	fFixtureIdNumeric = value;
+	fFixtureId = std::to_string( value );
 }
 
 void SceneDataFixtureObj::SetUnitNumber(Sint32 value)
@@ -2012,9 +2076,24 @@ void SceneDataFixtureObj::SetCastShadow(bool value)
 	fCastShadow = value;
 }
 
+void SceneDataFixtureObj::SetDMXInvertPan( bool value )
+{
+	fDMXInvertPan = value;
+}
+
+void SceneDataFixtureObj::SetDMXInvertTilt( bool value )
+{
+	fDMXInvertTilt = value;
+}
+
 void SceneDataFixtureObj::AddMapping(SceneDataGUID mappingDefinitionUuid)
 {
 	fMappings.push_back(new SceneDataMappingObj(mappingDefinitionUuid));
+}
+
+void SceneDataFixtureObj::AddProtocol( const SceneDataProtocols& protocol )
+{
+	fProtocols.push_back( protocol );
 }
 
 void SceneDataFixtureObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
@@ -2144,6 +2223,35 @@ void SceneDataFixtureObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange
 			mapping->PrintToFile(pMappingsNode, exchange);
 		}
 	}
+
+	IXMLFileNodePtr pDMXInvertPanNode;
+	if ( VCOM_SUCCEEDED( pNode->CreateChildNode( XML_Val_DMXInvertPan, &pDMXInvertPanNode ) ) )
+	{
+		pDMXInvertPanNode->SetNodeValue( GdtfConverter::ConvertBool( fDMXInvertPan ) );
+	}
+
+	IXMLFileNodePtr pDMXInvertTiltNode;
+	if ( VCOM_SUCCEEDED( pNode->CreateChildNode( XML_Val_DMXInvertTilt, &pDMXInvertTiltNode ) ) )
+	{
+		pDMXInvertTiltNode->SetNodeValue( GdtfConverter::ConvertBool( fDMXInvertTilt ) );
+	}
+
+	IXMLFileNodePtr pProtocolsNode;
+	if ( VCOM_SUCCEEDED( pNode->CreateChildNode( XML_Val_Protocols, &pProtocolsNode ) ) )
+	{
+		for ( const SceneDataProtocols& protocol : fProtocols )
+		{
+			IXMLFileNodePtr pProtocolNode;
+			if ( VCOM_SUCCEEDED( pProtocolsNode->CreateChildNode( XML_Val_Protocol, &pProtocolNode ) ) )
+			{
+				pProtocolNode->SetNodeAttributeValue( XML_Val_ProtocolGeometry		, protocol.GetGeometry() );
+				pProtocolNode->SetNodeAttributeValue( XML_Val_ProtocolName			, protocol.GetName() );
+				pProtocolNode->SetNodeAttributeValue( XML_Val_ProtocolType			, protocol.GetType() );
+				pProtocolNode->SetNodeAttributeValue( XML_Val_ProtocolVersion		, protocol.GetVersion() );
+				pProtocolNode->SetNodeAttributeValue( XML_Val_ProtocolTransmission, GdtfConverter::ConvertTransmissionTypeEnum( protocol.GetTransmission() ) );
+			}
+		}
+	}
 }
 
 void SceneDataFixtureObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
@@ -2166,7 +2274,9 @@ void SceneDataFixtureObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneData
 	// Read the ChannelID
 	IXMLFileNodePtr pFixtureId;
 	if ( VCOM_SUCCEEDED( pNode->GetChildNode( XML_Val_FixtureFixtureID, & pFixtureId ) ) )			{ pFixtureId->GetNodeValue(fFixtureId); }
-	
+
+
+
 	//--------------------------------------------------------------------------------------------
 	// Read the UnitNumber
 	IXMLFileNodePtr pUnitNumberNode;
@@ -2260,6 +2370,37 @@ void SceneDataFixtureObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneData
 								}
 								);
 	
+	IXMLFileNodePtr pDMXInvertPanNode;
+	TXString dmxInvertPan;
+	if ( VCOM_SUCCEEDED( pNode->GetChildNode( XML_Val_DMXInvertPan, &pDMXInvertPanNode ) ) )
+	{
+		pDMXInvertPanNode->GetNodeValue( dmxInvertPan );
+		GdtfConverter::ConvertBool( dmxInvertPan, pNode, fDMXInvertPan );
+	}
+
+	IXMLFileNodePtr pDMXInvertTiltNode;
+	TXString dmxInvertTilt;
+	if ( VCOM_SUCCEEDED( pNode->GetChildNode( XML_Val_DMXInvertTilt, &pDMXInvertTiltNode ) ) )
+	{
+		pDMXInvertTiltNode->GetNodeValue( dmxInvertTilt );
+		GdtfConverter::ConvertBool( dmxInvertTilt, pNode, fDMXInvertTilt );
+	}
+
+	GdtfConverter::TraverseNodes( pNode, XML_Val_Protocols, XML_Val_Protocol, [ this, exchange ] ( IXMLFileNodePtr pNode ) -> void
+		{
+			TXString geometry, name, type, version, transmission;
+			pNode->GetNodeAttributeValue( XML_Val_ProtocolGeometry, geometry );
+			pNode->GetNodeAttributeValue( XML_Val_ProtocolName, name );
+			pNode->GetNodeAttributeValue( XML_Val_ProtocolType, type );
+			pNode->GetNodeAttributeValue( XML_Val_ProtocolVersion, version );
+			pNode->GetNodeAttributeValue( XML_Val_ProtocolTransmission, transmission );
+			ETransmissionType transmision;
+			GdtfConverter::ConvertTransmissionTypeEnum( transmission, pNode, transmision );
+
+			SceneDataProtocols protocol( geometry, name, type, version, transmision );
+			fProtocols.push_back( protocol );
+
+		} );
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------------
