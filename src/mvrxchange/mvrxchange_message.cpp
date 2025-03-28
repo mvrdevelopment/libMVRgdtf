@@ -149,6 +149,7 @@ void MVRxchangePacket::EncodeHeader()
 void MVR_COMMIT_ToJson(const IMVRxchangeService::MVR_COMMIT_MESSAGE& msg, nlohmann::json& payload)
 {
     payload["Type"]             = "MVR_COMMIT";
+	payload[ "FileName" ]       = msg.FileName;
     payload["Comment"]          = msg.Comment;
     payload["FileSize"]         = msg.FileSize;
     payload["FileUUID"]         = SceneData::GdtfConverter::ConvertUUID(VWUUID(msg.FileUUID.a, msg.FileUUID.b, msg.FileUUID.c, msg.FileUUID.d)).GetStdString();
