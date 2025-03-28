@@ -1861,6 +1861,7 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 
 		struct MVR_COMMIT_MESSAGE
 		{
+			MVRxchangeString			    FileName;
 			MVRxchangeString 				Comment;
 			uint32_t 						VersionMajor;
 			uint32_t 						VersionMinor;
