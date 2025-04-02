@@ -116,7 +116,7 @@ bool MvrXChangeUnitTest::ExecuteTest()
             }
         }
 
-        const char* t="{\"Commits\":[{\"Comment\":\"TestCommit\",\"FileSize\":12312313556,\"FileUUID\":\"05000000-0600-0000-0700-000008000000\",\"ForStationsUUID\":[\"09000000-0900-0000-0A00-000001000000\",\"05000000-0100-0000-0400-000006000000\"],\"StationUUID\":\"01000000-0200-0000-0300-000004000000\",\"Type\":\"MVR_COMMIT\",\"verMajor\":3,\"verMinor\":2},{\"Comment\":\"TestCommit\",\"FileSize\":234234,\"FileUUID\":\"01000000-0100-0000-0100-000001000000\",\"ForStationsUUID\":[],\"StationUUID\":\"02000000-0200-0000-0200-000002000000\",\"Type\":\"MVR_COMMIT\",\"verMajor\":3,\"verMinor\":2}],\"Provider\":\"Test Provider\",\"StationName\":\"Test Station\",\"StationUUID\":\"01000000-0200-0000-0300-000004000000\",\"Type\":\"MVR_JOIN\",\"verMajor\":5,\"verMinor\":\"6\"}";
+        const char* t="{\"Commits\":[{\"FileName\":\"\",\"Comment\":\"TestCommit\",\"FileSize\":12312313556,\"FileUUID\":\"05000000-0600-0000-0700-000008000000\",\"ForStationsUUID\":[\"09000000-0900-0000-0A00-000001000000\",\"05000000-0100-0000-0400-000006000000\"],\"StationUUID\":\"01000000-0200-0000-0300-000004000000\",\"Type\":\"MVR_COMMIT\",\"verMajor\":3,\"verMinor\":2},{\"Comment\":\"TestCommit\",\"FileSize\":234234,\"FileUUID\":\"01000000-0100-0000-0100-000001000000\",\"ForStationsUUID\":[],\"StationUUID\":\"02000000-0200-0000-0200-000002000000\",\"Type\":\"MVR_COMMIT\",\"verMajor\":3,\"verMinor\":2}],\"Provider\":\"Test Provider\",\"StationName\":\"Test Station\",\"StationUUID\":\"01000000-0200-0000-0300-000004000000\",\"Type\":\"MVR_JOIN\",\"verMajor\":5,\"verMinor\":\"6\"}";
         
         {
             join_out_msg = IMVRxchangeService::IMVRxchangeMessage();
