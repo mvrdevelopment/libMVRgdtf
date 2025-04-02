@@ -2163,13 +2163,16 @@ CieColor SceneData::GdtfConverter::ConvertCColor(const CCieColor & color)
 
 TXString GdtfConverter::ConvertTransmissionTypeEnum( GdtfDefines::ETransmissionType value )
 {
+	TXString result;
 	switch ( value )
 	{
-		case ETransmissionType::Anycast:	return XML_Val_ProtocolAnycast;
-		case ETransmissionType::Multicast:	return XML_Val_ProtocolMulticast;
-		case ETransmissionType::Unicast:	return XML_Val_ProtocolUnicast;
-		case ETransmissionType::Broadcast:	return XML_Val_ProtocolBroadcast;
+		case ETransmissionType::Anycast:	result = XML_Val_ProtocolAnycast;
+		case ETransmissionType::Multicast:	result = XML_Val_ProtocolMulticast;
+		case ETransmissionType::Unicast:	result = XML_Val_ProtocolUnicast;
+		case ETransmissionType::Broadcast:	result = XML_Val_ProtocolBroadcast;
 	}
+
+	return result;
 }
 
 bool GdtfConverter::ConvertTransmissionTypeEnum( const TXString& inVal, const IXMLFileNodePtr& node, GdtfDefines::ETransmissionType& outVal )
