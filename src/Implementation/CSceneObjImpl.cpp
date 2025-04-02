@@ -900,6 +900,59 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetPosition(IPosition**
 	return kVCOMError_NoError;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetProtocolsCount( size_t& outProtocols )
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+
+	// Check the type is right
+	ASSERTN(kEveryone,fType == ESceneObjType::Fixture);
+	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
+
+	// Try to cast
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	if( ! fixture) return kVCOMError_NoFixtureObj;
+
+	outProtocols = fixture->GetProtocolsArray().size();
+
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetProtocolAt( size_t at, SProtocol** outProtocol )
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+
+	// Check the type is right
+	ASSERTN(kEveryone,fType == ESceneObjType::Fixture);
+	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
+
+	// Try to cast
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	if( ! fixture) return kVCOMError_NoFixtureObj;
+
+	// Check the psotion of the array
+	if (at > fixture->GetProtocolsArray().size() )
+	{
+		DSTOP((kEveryone, "Array overflow"));
+		return kVCOMError_Failed;
+	}
+
+	SceneData::SceneDataProtocols protocol = fixture->GetProtocolsArray().at( at );
+	SProtocol* pProtocol = new SProtocol;
+	pProtocol->fGeometry = protocol.GetGeometry().GetCharPtr();
+	pProtocol->fName = protocol.GetName().GetCharPtr();
+	pProtocol->fTransmision = protocol.GetTransmission();
+	pProtocol->fVersion = protocol.GetVersion().GetCharPtr();
+	pProtocol->fType = protocol.GetType().GetCharPtr();
+
+	outProtocol = &pProtocol;
+
+	return kVCOMError_NoError;
+}
+
 VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetAdressCount(size_t& outAdresses)
 {
 	// Check if this is initialized
@@ -982,6 +1035,25 @@ MvrString VectorworksMVR::CSceneObjImpl::GetFixtureId()
 	if( ! fixture) return "";
 	
 	return fixture->GetFixtureId().GetCharPtr();
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetFixtureIdNumeric(size_t &value)
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+
+	// Check the type is right
+	ASSERTN(kEveryone,fType == ESceneObjType::Fixture);
+	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
+
+	// Try to cast
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	if( ! fixture) return kVCOMError_NoFixtureObj;
+
+	value = fixture->GetFixtureIdNumeric();
+
+	return kVCOMError_NoError;
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetColor(CieColor& outColor)
@@ -1115,6 +1187,44 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetCastShadow(bool& val
 	if( ! fixture) return kVCOMError_NoFixtureObj;
 		
 	value = fixture->GetCastShadow();
+
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetDMXInvertPan( bool& invertPan )
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+
+	// Check the type is right
+	ASSERTN(kEveryone,fType == ESceneObjType::Fixture);
+	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
+
+	// Try to cast
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	if( ! fixture) return kVCOMError_NoFixtureObj;
+
+	invertPan = fixture->GetDMXInvertPan();
+
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetDMXInvertTilt( bool& invertTilt )
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+
+	// Check the type is right
+	ASSERTN(kEveryone,fType == ESceneObjType::Fixture);
+	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
+
+	// Try to cast
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	if( ! fixture) return kVCOMError_NoFixtureObj;
+
+	invertTilt = fixture->GetDMXInvertTilt();
 
 	return kVCOMError_NoError;
 }
@@ -1451,6 +1561,27 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetFixtureId(MvrString 
 	return kVCOMError_NoError;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetFixtureIdNumeric(const size_t& value)
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+
+	// Check the type is right
+	ASSERTN(kEveryone,fType == ESceneObjType::Fixture);
+	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
+
+	// Try to cast
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	if( ! fixture) return kVCOMError_NoFixtureObj;
+
+	//
+	fixture->SetFixtureIdNumeric(value);
+
+	return kVCOMError_NoError;
+}
+
+
 VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetColor(const CieColor& color)
 {
 	// Check if this is initialized
@@ -1572,6 +1703,46 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetCastShadow(bool cast
 	return kVCOMError_NoError;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetDMXInvertPan( bool invertPan )
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) {return kVCOMError_NotInitialized;}
+
+	// Check the type is right
+	ASSERTN(kEveryone,fType == ESceneObjType::Fixture);
+	if( fType != ESceneObjType::Fixture) {return kVCOMError_NoFixtureObj;}
+
+	// Try to cast
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	if( ! fixture) {return kVCOMError_NoFixtureObj;}
+
+	//
+	fixture->SetDMXInvertPan( invertPan );
+
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetDMXInvertTilt( bool invertTilt )
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) {return kVCOMError_NotInitialized;}
+
+	// Check the type is right
+	ASSERTN(kEveryone,fType == ESceneObjType::Fixture);
+	if( fType != ESceneObjType::Fixture) {return kVCOMError_NoFixtureObj;}
+
+	// Try to cast
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+	if( ! fixture) {return kVCOMError_NoFixtureObj;}
+
+	//
+	fixture->SetDMXInvertTilt( invertTilt );
+
+	return kVCOMError_NoError;
+}
+
 VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::AddMapping(MvrUUID mapDefUuid)
 {
 	// ------------------------------------------------------------------------------------------
@@ -1601,6 +1772,27 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::AddMapping(MvrUUID mapD
 	return kVCOMError_NoError;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::AddProtocol( SProtocol protocol )
+{
+	// ------------------------------------------------------------------------------------------
+	// Check the type is right
+	ASSERTN(kEveryone,fType == ESceneObjType::Fixture);
+	if( fType != ESceneObjType::Fixture) return kVCOMError_NoFixtureObj;
+
+	// ------------------------------------------------------------------------------------------
+	// Cast to this object
+	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
+
+	ASSERTN(kEveryone, fixture != nullptr);
+	if ( ! fixture) { return kVCOMError_Failed; }
+
+	// ------------------------------------------------------------------------------------------
+	SceneData::SceneDataProtocols newProtocol( protocol.fGeometry, protocol.fName, protocol.fType, protocol.fVersion, protocol.fTransmision );
+
+	fixture->AddProtocol( newProtocol );
+
+	return kVCOMError_NoError;
+}
 //------------------------------------------------------------------------------------------------------------------------------------------
 // Videos Screen
 VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetVideoScreenSource(MvrString value, MvrString linkedGeometry, GdtfDefines::ESourceType type)
