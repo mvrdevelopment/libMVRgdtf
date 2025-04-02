@@ -170,6 +170,7 @@ void MVR_COMMIT_FromJson(const nlohmann::json& payload, IMVRxchangeService::MVR_
     in.VersionMajor= payload["verMajor"];
     in.VersionMinor= payload["verMinor"];
     in.FileSize= payload["FileSize"];
+    strcpy(in.FileName, payload["FileName"].get<std::string>().c_str());
 
     SceneData::GdtfConverter::ConvertUUID(payload["FileUUID"].get<std::string>(), in.FileUUID);
     SceneData::GdtfConverter::ConvertUUID(payload["StationUUID"].get<std::string>(), in.StationUUID);
