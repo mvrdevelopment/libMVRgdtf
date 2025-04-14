@@ -3,6 +3,7 @@
 //-----------------------------------------------------------------------------
 #include "Prefix/StdAfx.h"
 #include "CGdtfConnector.h"
+#include "Utility.h"
 
 
 VectorworksMVR::CGdtfConnectorImpl::CGdtfConnectorImpl()
@@ -68,7 +69,10 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfConnectorImpl::SetName(MvrString 
 	// Check if valid
 	if(!fConnector) return kVCOMError_NotInitialized;
 
-    fConnector->SetName(name);
+	TXString nameStr( name );
+	GdtfUtil::DoesNameContainInvalidChars( nameStr );
+
+    fConnector->SetName(nameStr);
 
 	return kVCOMError_NoError;
 }
