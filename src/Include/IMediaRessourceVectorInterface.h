@@ -818,7 +818,10 @@ namespace VectorworksMVR
 
 		// Display
 		virtual MvrString VCOM_CALLTYPE		GetTexture() = 0;
+		virtual MvrString VCOM_CALLTYPE		GetAspectRatio() = 0;
+
 		virtual VCOMError VCOM_CALLTYPE		SetTexture(MvrString texture) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetAspectRatio(MvrString aspectRatio) = 0;
 
 		// GDTF 1.2
 		// Lamp
