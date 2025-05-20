@@ -6,6 +6,7 @@
 #include "CGdtfWheelSlotPrismFacet.h"
 #include "CGdtfWheelSlotAnimationSystem.h"
 #include "CGdtfFilter.h"
+#include "Utility.h"
 
 using namespace VectorworksMVR::Filing;
 

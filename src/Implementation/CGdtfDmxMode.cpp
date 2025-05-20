@@ -9,7 +9,7 @@
 #include "CGdtfMacro.h"
 #include "CGdtfDmxChannelFunction.h"
 #include "CGdtfDmxChannel.h"
-
+#include "Utility.h"
 
 using namespace VectorworksMVR::Filing;
 
