@@ -148,10 +148,8 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreatePosit
 	//---------------------------------------------------------------------------
 	// Create the obj
 	VWFC::Tools::VWUUID uuid (guid.a,guid.b,guid.c,guid.d);
-	
-	TXString nameStr ( name );
-	GdtfUtil::DoesNameContainInvalidChars( nameStr );
-	SceneData::SceneDataPositionObjPtr scPostion = fExchangeObj.CreatePositionObject(uuid, nameStr);
+
+	SceneData::SceneDataPositionObjPtr scPostion = fExchangeObj.CreatePositionObject(uuid, name);
 	
 	//---------------------------------------------------------------------------
 	// Initialize Object
@@ -198,10 +196,8 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateSymDe
 	// If the UUID is empty, create a new one
 	if(guid.a == 0 && guid.b == 0 &&  guid.c == 0 && guid.d == 0){ uuid.New(); }
 
-	TXString	nameStr ( name );
-	GdtfUtil::DoesNameContainInvalidChars( nameStr );
 
-	SceneData::SceneDataSymDefObjPtr scSymDef = fExchangeObj.CreateSymDefObject(uuid, nameStr);
+	SceneData::SceneDataSymDefObjPtr scSymDef = fExchangeObj.CreateSymDefObject(uuid, name);
 	
 	//---------------------------------------------------------------------------
 	// Initialize Object
@@ -244,10 +240,8 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateClass
 	//---------------------------------------------------------------------------
 	// Create the obj
 	VWFC::Tools::VWUUID	uuid	(guid.a,guid.b,guid.c,guid.d);
-	TXString	nameStr ( name );
-	GdtfUtil::DoesNameContainInvalidChars( nameStr );
 
-	SceneData::SceneDataClassObjPtr scClass = fExchangeObj.CreateClassObject(uuid, nameStr);
+	SceneData::SceneDataClassObjPtr scClass = fExchangeObj.CreateClassObject(uuid, name);
 	
 	//---------------------------------------------------------------------------
 	// Initialize Object
@@ -290,10 +284,8 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateMappi
 	//---------------------------------------------------------------------------
 	// Create the obj
 	VWFC::Tools::VWUUID	uuid(guid.a,guid.b,guid.c,guid.d);
-	TXString			nameStr(name);
-	GdtfUtil::DoesNameContainInvalidChars( nameStr );
 
-	SceneData::SceneDataMappingDefinitionObjPtr scMapDef = fExchangeObj.CreateMappingDefinitionObject(uuid, nameStr);
+	SceneData::SceneDataMappingDefinitionObjPtr scMapDef = fExchangeObj.CreateMappingDefinitionObject(uuid, name);
 	
 	//---------------------------------------------------------------------------
 	// Initialize Object
@@ -336,10 +328,8 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateLayer
 	//---------------------------------------------------------------------------
 	// Create the obj
 	VWFC::Tools::VWUUID	uuid	(guid.a,guid.b,guid.c,guid.d);
-	TXString	nameStr ( name );
-	GdtfUtil::DoesNameContainInvalidChars( nameStr );
 
-	SceneData::SceneDataLayerObjPtr ptr = fExchangeObj.CreateLayerObject(uuid, nameStr);
+	SceneData::SceneDataLayerObjPtr ptr = fExchangeObj.CreateLayerObject(uuid, name);
 	
 	//---------------------------------------------------------------------------
 	// Initialize Object
@@ -471,10 +461,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateGroup
 	VWTransformMatrix ma;
 	GdtfUtil::ConvertMatrix(offset, ma);
 	
-	TXString nameStr ( name );
-	GdtfUtil::DoesNameContainInvalidChars( nameStr );
-
-	SceneData::SceneDataGroupObjPtr ptr = fExchangeObj.CreateGroupObject(uuid, ma, nameStr, group);
+	SceneData::SceneDataGroupObjPtr ptr = fExchangeObj.CreateGroupObject(uuid, ma, name, group);
 	
 	//---------------------------------------------------------------------------
 	// Initialize Object
@@ -537,13 +524,11 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateFixtu
 	//---------------------------------------------------------------------------
 	// Create the obj
 	VWFC::Tools::VWUUID	uuid	(guid.a,guid.b,guid.c,guid.d);
-	TXString	nameStr ( name );
-	GdtfUtil::DoesNameContainInvalidChars( nameStr );
 	
 	VWTransformMatrix ma;
 	GdtfUtil::ConvertMatrix(offset, ma);
 	
-	SceneData::SceneDataFixtureObjPtr ptr = fExchangeObj.CreateFixture(uuid, ma, nameStr, group);
+	SceneData::SceneDataFixtureObjPtr ptr = fExchangeObj.CreateFixture(uuid, ma, name, group);
 	
 	//---------------------------------------------------------------------------
 	// Initialize Object
@@ -605,13 +590,11 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateScene
 	//---------------------------------------------------------------------------
 	// Create the obj
 	VWFC::Tools::VWUUID	uuid	(guid.a,guid.b,guid.c,guid.d);
-	TXString	nameStr ( name );
-	GdtfUtil::DoesNameContainInvalidChars( nameStr );
 	
 	VWTransformMatrix ma;
 	GdtfUtil::ConvertMatrix(offset, ma);
 	
-	SceneData::SceneDataSceneryObjPtr ptr = fExchangeObj.CreateSceneryObject(uuid, ma, nameStr, group);
+	SceneData::SceneDataSceneryObjPtr ptr = fExchangeObj.CreateSceneryObject(uuid, ma, name, group);
 	//---------------------------------------------------------------------------
 	// Initialize Object
 	CSceneObjImpl* pSceneObj = nullptr;
@@ -672,13 +655,11 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateFocus
 	//---------------------------------------------------------------------------
 	// Create the obj
 	VWFC::Tools::VWUUID	uuid	(guid.a,guid.b,guid.c,guid.d);
-	TXString	nameStr ( name );
-	GdtfUtil::DoesNameContainInvalidChars( nameStr );
 	
 	VWTransformMatrix ma;
 	GdtfUtil::ConvertMatrix(offset, ma);
 	
-	SceneData::SceneDataFocusPointObjPtr ptr = fExchangeObj.CreateFocusPoint(uuid, ma, nameStr, group);
+	SceneData::SceneDataFocusPointObjPtr ptr = fExchangeObj.CreateFocusPoint(uuid, ma, name, group);
 	
 	//---------------------------------------------------------------------------
 	// Initialize Object
@@ -741,13 +722,11 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateTruss
 	//---------------------------------------------------------------------------
 	// Create the obj
 	VWFC::Tools::VWUUID	uuid	(guid.a,guid.b,guid.c,guid.d);
-	TXString	nameStr	( name );
-	GdtfUtil::DoesNameContainInvalidChars( nameStr );
 	
 	VWTransformMatrix ma;
 	GdtfUtil::ConvertMatrix(offset, ma);
 	
-	SceneData::SceneDataTrussObjPtr ptr = fExchangeObj.CreateTruss(uuid, ma, nameStr, group);
+	SceneData::SceneDataTrussObjPtr ptr = fExchangeObj.CreateTruss(uuid, ma, name, group);
 	
 	//---------------------------------------------------------------------------
 	// Initialize Object
@@ -811,13 +790,11 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateSuppo
 	//---------------------------------------------------------------------------
 	// Create the obj
 	VWFC::Tools::VWUUID	uuid	(guid.a,guid.b,guid.c,guid.d);
-	TXString	nameStr	( name );
-	GdtfUtil::DoesNameContainInvalidChars( nameStr );
 
 	VWTransformMatrix ma;
 	GdtfUtil::ConvertMatrix(offset, ma);
 	
-	SceneData::SceneDataSupportObjPtr ptr = fExchangeObj.CreateSupport(uuid, ma, nameStr, group);
+	SceneData::SceneDataSupportObjPtr ptr = fExchangeObj.CreateSupport(uuid, ma, name, group);
 	
 	//---------------------------------------------------------------------------
 	// Initialize Object
@@ -881,13 +858,11 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateVideo
 	//---------------------------------------------------------------------------
 	// Create the obj
 	VWFC::Tools::VWUUID	uuid	(guid.a,guid.b,guid.c,guid.d);
-	TXString	nameStr ( name );
-	GdtfUtil::DoesNameContainInvalidChars( nameStr );
 
 	VWTransformMatrix ma;
 	GdtfUtil::ConvertMatrix(offset, ma);
 	
-	SceneData::SceneDataVideoScreenObjPtr ptr = fExchangeObj.CreateVideoScreen(uuid, ma, nameStr, group);
+	SceneData::SceneDataVideoScreenObjPtr ptr = fExchangeObj.CreateVideoScreen(uuid, ma, name, group);
 	
 	//---------------------------------------------------------------------------
 	// Initialize Object
@@ -949,13 +924,11 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateProje
 	//---------------------------------------------------------------------------
 	// Create the obj
 	VWFC::Tools::VWUUID	uuid	(guid.a,guid.b,guid.c,guid.d);
-	TXString	nameStr ( name );
-	GdtfUtil::DoesNameContainInvalidChars( nameStr );
 	
 	VWTransformMatrix ma;
 	GdtfUtil::ConvertMatrix(offset, ma);
 	
-	SceneData::SceneDataProjectorObjPtr ptr = fExchangeObj.CreateProjector(uuid, ma, nameStr, group);
+	SceneData::SceneDataProjectorObjPtr ptr = fExchangeObj.CreateProjector(uuid, ma, name, group);
 	
 	//---------------------------------------------------------------------------
 	// Initialize Object

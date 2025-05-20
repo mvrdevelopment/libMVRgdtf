@@ -60,10 +60,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotImpl::SetName(MvrString 
 	// Check Pointer
 	if( ! fWheelSlot) return kVCOMError_NotInitialized;
 
-	TXString vwName ( name );
-	GdtfUtil::DoesNameContainInvalidChars( vwName );
-
-	fWheelSlot->SetName(vwName);
+	fWheelSlot->SetName(name);
 
     return kVCOMError_NoError;
 }

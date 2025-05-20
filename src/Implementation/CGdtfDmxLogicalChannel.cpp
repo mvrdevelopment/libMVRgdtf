@@ -235,8 +235,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxLogicalChannelImpl::CreateDmxF
 	//---------------------------------------------------------------------------
 	// Initialize Object
 	TXString vwName (name);
-    GdtfUtil::DoesNameContainInvalidChars( vwName );
-	
+
 	SceneData::GdtfDmxChannelFunctionPtr	gdtfFunction = fLogicalChannel->AddDmxChannelFunction(vwName);
 	
 	// Query Interface
