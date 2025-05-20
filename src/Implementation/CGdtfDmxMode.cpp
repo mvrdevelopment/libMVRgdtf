@@ -305,7 +305,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxModeImpl::CreateDmxRelation(Mv
 
     // Now Create the new Relatation
     TXString vwName (name);
-	GdtfUtil::DoesNameContainInvalidChars( vwName );
 
     SceneData::GdtfDmxRelation* gdtfDmxRelation = fDmxMode->AddDmxRelation(gdtfDmxChan, gdtfFunc, vwName);
     gdtfDmxRelation->SetRelationType(type);
@@ -412,7 +411,6 @@ VectorworksMVR::VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfDmxModeImpl::Create
 {
 	// Create the new Macro
 	TXString vwName(name);
-	GdtfUtil::DoesNameContainInvalidChars( vwName );
 
 	SceneData::GdtfMacro* gdtfDmxMacro = fDmxMode->AddMacro(vwName);
 
