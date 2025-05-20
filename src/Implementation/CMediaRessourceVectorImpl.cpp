@@ -46,7 +46,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::AddFileToMv
 VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::AddBufferToMvrFile(MvrString filename, char* buffer, size_t length)
 {
     TXString strFileName (filename);
-	GdtfUtil::DoesNameContainInvalidChars( strFileName );
 
     if (strFileName.IsEmpty()) 	{ return kVCOMError_InvalidArg; }
 	if (length == 0) 		 	{ return kVCOMError_InvalidArg; }
