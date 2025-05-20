@@ -726,6 +726,13 @@ namespace VectorworksMVR
             RatioVertical   = 10,
         };
 
+        enum ETransmissionType
+        {
+            Unicast		= 0,
+            Multicast	= 1,
+            Broadcast	= 2,
+            Anycast		= 3,
+        };
 	}
 }
 

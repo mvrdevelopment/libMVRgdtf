@@ -60,6 +60,15 @@ namespace VectorworksMVR
 		Sint32 r, g, b;
 	};
 	
+	struct SProtocol
+	{
+		MvrString fGeometry;
+		MvrString fName;
+		MvrString fType;
+		MvrString fVersion;
+		GdtfDefines::ETransmissionType fTransmision;
+	};
+
 	struct MvrUUID
 	{
 		MvrUUID()
@@ -297,7 +306,7 @@ namespace VectorworksMVR
 		
 	};
 	typedef VCOMPtr<IOverwrite>	IOverwritePtr;
-	
+
 	//-------------------------------------------------------------------------------------------------------------
 	enum class ESceneObjType
 	{
@@ -348,6 +357,7 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetAdressAt(size_t at, SDmxAdress& adress) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetUnitNumber(Sint32& outUnitNumber) = 0;
 		virtual MvrString VCOM_CALLTYPE		GetFixtureId() = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetFixtureIdNumeric( size_t& outFixtureId ) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetColor(CieColor& outColor) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetFixtureTypeId(Sint8& outType) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetCustomId(size_t& outId) = 0;
@@ -357,19 +367,27 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetCastShadow(bool& value) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetMappingCount(size_t& outMappings) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetMappingAt(size_t at, IMapping** outMapping) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetDMXInvertPan( bool& invertPan ) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetDMXInvertTilt( bool& invertTilt ) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetProtocolsCount( size_t& outProtocols ) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetProtocolAt( size_t at, SProtocol** outProtocol ) = 0;
 		
 		virtual VCOMError VCOM_CALLTYPE		SetFocusPoint(ISceneObj* focusPoint) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetPosition(IPosition* position) = 0;
 		virtual VCOMError VCOM_CALLTYPE		AddAdress(const size_t& adresses, const size_t& breakId) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetUnitNumber(const Sint32& unitNumber) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetFixtureId(MvrString fixtureId) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetFixtureIdNumeric( const size_t& fixtureId ) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetColor(const CieColor& color) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetFixtureTypeId(const Sint8& type) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetCustomId(const size_t& Cid) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetGobo(MvrString gobo) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetGoboRotation(double rotation) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetCastShadow(bool castShadow) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetDMXInvertPan( bool invertPan ) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetDMXInvertTilt( bool invertTilt ) = 0;
 		virtual VCOMError VCOM_CALLTYPE		AddMapping(MvrUUID mapDefUuid) = 0;
+		virtual VCOMError VCOM_CALLTYPE		AddProtocol( SProtocol protocol) = 0;
 
 		// Video Screen
 		virtual VCOMError VCOM_CALLTYPE		SetVideoScreenSource(MvrString value, MvrString linkedGeometry, GdtfDefines::ESourceType) = 0;
