@@ -78,9 +78,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::OpenForWrite(MvrStri
 	TXString	vwName			(name);
 	TXString	vwManufacturer (manufacturer);	
 
-    GdtfUtil::DoesNameContainInvalidChars( vwName );
-	GdtfUtil::DoesNameContainInvalidChars( vwManufacturer );
-
 	VWFC::Tools::VWUUID vwUuid = VWFC::Tools::VWUUID(uuid.a, uuid.b, uuid.c, uuid.d);
 	
 	fFixtureObject->SetName(vwName);
@@ -117,8 +114,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::OpenForWrite(MvrStri
 	TXString	vwName			(name);
 	TXString	vwManufacturer (manufacturer);
 
-	GdtfUtil::DoesNameContainInvalidChars( vwName );
-	GdtfUtil::DoesNameContainInvalidChars( vwManufacturer );
 
 	VWFC::Tools::VWUUID vwUuid = VWFC::Tools::VWUUID(uuid.a, uuid.b, uuid.c, uuid.d);
 	
@@ -891,7 +886,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateModel(MvrStrin
 	if(!fFixtureObject) {return kVCOMError_NotInitialized;}
 	
 	TXString vwName (name);
-	GdtfUtil::DoesNameContainInvalidChars( vwName );
 	
 	SceneData::GdtfModel* gdtfModel = fFixtureObject->AddModel(vwName);
 	
@@ -1011,7 +1005,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateGeometry(EGdtf
 	VWTransformMatrix	ma;
 	GdtfUtil::ConvertMatrix(mat, ma);
 
-	GdtfUtil::DoesNameContainInvalidChars( vwName );
 	
 	SceneData::GdtfGeometry* gdtfGeometry = nullptr;
 	
@@ -1142,7 +1135,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateDmxMode(MvrStr
 	if(!fFixtureObject) {return kVCOMError_NotInitialized;}
 	
 	TXString vwName (name);
-	GdtfUtil::DoesNameContainInvalidChars( vwName );
 	
 	SceneData::GdtfDmxMode* gdtfDmxMode = fFixtureObject->AddDmxMode(vwName);
 	
@@ -1246,7 +1238,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateRevision(MvrSt
 	if(!fFixtureObject) {return kVCOMError_NotInitialized;}
 	
 	TXString vwText (text);
-    GdtfUtil::DoesNameContainInvalidChars( vwText );
 	
 	SceneData::GdtfRevision* gdtfRevision = fFixtureObject->AddRevision(vwText, date);
 	
@@ -1761,7 +1752,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateAdditionalColo
     if (!fFixtureObject) { return kVCOMError_NotInitialized; }
 
 	TXString vwName( name );
-	GdtfUtil::DoesNameContainInvalidChars( vwName );
 
     SceneData::GdtfColorSpace* gdtfColorSpace = fFixtureObject->GetPhysicalDesciptionsContainer().AddAdditionalColorSpace(vwName, colorSpace);
 
@@ -1864,7 +1854,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateGamut(MvrStrin
     if (!fFixtureObject) { return kVCOMError_NotInitialized; }
 
 	TXString vwName( name );
-	GdtfUtil::DoesNameContainInvalidChars( vwName );
 
     CCieColorPtr colorPtr = new CCieColor(color.fx, color.fy, color.f_Y);
     SceneData::GdtfGamut* gdtfGamut = fFixtureObject->GetPhysicalDesciptionsContainer().AddGamut(vwName, colorPtr);
@@ -1971,7 +1960,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateEmitter(MvrStr
     if (!fFixtureObject) { return kVCOMError_NotInitialized; }
 
 	TXString vwName( name );
-	GdtfUtil::DoesNameContainInvalidChars( vwName );
 
     SceneData::GdtfPhysicalEmitter* gdtfEmitter = fFixtureObject->GetPhysicalDesciptionsContainer().AddEmitter(vwName, SceneData::GdtfConverter::ConvertCColor(color) );
 
@@ -2077,7 +2065,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateFilter(MvrStri
     if (!fFixtureObject) { return kVCOMError_NotInitialized; }
     
 	TXString vwName( name );
-	GdtfUtil::DoesNameContainInvalidChars( vwName );
 
     SceneData::GdtfFilter* gdtfFilter = fFixtureObject->GetPhysicalDesciptionsContainer().AddFilter(vwName, SceneData::GdtfConverter::ConvertCColor(color));
 
@@ -2572,7 +2559,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateConnector(MvrS
     if (!fFixtureObject) { return kVCOMError_NotInitialized; }
 
 	TXString vwName( name );
-	GdtfUtil::DoesNameContainInvalidChars( vwName );
 
     SceneData::GdtfConnector* gdtfConnector = fFixtureObject->GetPhysicalDesciptionsContainer().AddConnector(vwName, type);
 
