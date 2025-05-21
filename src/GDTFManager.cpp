@@ -5803,6 +5803,7 @@ GdtfDmxChannel* GdtfDmxLogicalChannel::GetParentDMXChannel() const
 GdtfDmxChannelFunction::GdtfDmxChannelFunction(GdtfDmxLogicalChannel* parent)
 {
 	fDefaultValue			= 0;
+	fDefaultValueNone       = true;
 	fAdressStart			= 0;
 	fPhysicalStart			= 0;
 	fPhysicalEnd			= 1;
@@ -5837,6 +5838,7 @@ GdtfDmxChannelFunction::GdtfDmxChannelFunction(const TXString& name, GdtfDmxLogi
 {
 	fName					= name;
 	fDefaultValue			= 0;
+	fDefaultValueNone       = true;
 	fAdressStart			= 0;
 	fPhysicalStart			= 0;
 	fPhysicalEnd			= 1;
@@ -5897,6 +5899,7 @@ void GdtfDmxChannelFunction::SetOriginalAttribute(const TXString &attribute)
 void GdtfDmxChannelFunction::SetDefaultValue(DmxValue defaultValue)
 {
 	fDefaultValue = defaultValue;
+	fDefaultValueNone = false;
 }
 
 void GdtfDmxChannelFunction::SetStartAddress(DmxValue address)
@@ -5950,7 +5953,7 @@ void GdtfDmxChannelFunction::OnPrintToFile(IXMLFileNodePtr pNode)
 	// Print node attributes
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionName,				fName);
 
-	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionDefault,				GdtfConverter::ConvertDMXValue(fDefaultValue, chanelReso));
+	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionDefault,                GdtfConverter::ConvertDMXValue(fDefaultValue, chanelReso, fDefaultValueNone));
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionDMXFrom,				GdtfConverter::ConvertDMXValue(fAdressStart, chanelReso));
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionPhysicalFrom,		GdtfConverter::ConvertDouble(fPhysicalStart));
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelFuntionPhysicalTo,			GdtfConverter::ConvertDouble(fPhysicalEnd));
@@ -6077,7 +6080,9 @@ void GdtfDmxChannelFunction::OnReadFromNode(const IXMLFileNodePtr& pNode)
 
 							pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionName,				fName);
 							pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionOriginalAttribute,	fOrignalAttribute);
-	TXString defaultValue;	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionDefault,				defaultValue);		GdtfConverter::ConvertDMXValue(defaultValue,	pNode,	channelReso,fDefaultValue);
+	TXString defaultValue;
+    if(VCOM_SUCCEEDED(pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionDefault, defaultValue)))
+        GdtfConverter::ConvertDMXValue(defaultValue, pNode, channelReso, fDefaultValue, fDefaultValueNone);
 	TXString dmxFrom;		pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionDMXFrom,				dmxFrom);			GdtfConverter::ConvertDMXValue(dmxFrom, 		pNode,	channelReso,fAdressStart);
 	TXString physFrom;		pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionPhysicalFrom,		physFrom);			GdtfConverter::ConvertDouble(physFrom, 			pNode,				fPhysicalStart);
 	TXString physTo;		pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionPhysicalTo,			physTo);			GdtfConverter::ConvertDouble(physTo, 			pNode,				fPhysicalEnd);
@@ -6248,6 +6253,11 @@ const TXString& GdtfDmxChannelFunction::GetOriginalAttribute()
 DmxValue GdtfDmxChannelFunction::GetDefaultValue() const
 {
 	return fDefaultValue;
+}
+
+bool GdtfDmxChannelFunction::HasDefaultValue() const
+{
+    return !fDefaultValueNone;
 }
 
 DmxValue GdtfDmxChannelFunction::GetStartAdress() const
