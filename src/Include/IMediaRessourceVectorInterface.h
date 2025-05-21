@@ -1,5 +1,5 @@
 #pragma once
-
+#include <functional>
 
 // Type defs
 #ifndef _GS_TYPES_
@@ -459,7 +459,9 @@ namespace VectorworksMVR
 	public:
 		// Call this at the start of generating a MVR file
 		virtual VCOMError VCOM_CALLTYPE		OpenForRead(MvrString fullPath) = 0;
-		
+
+		virtual VCOMError VCOM_CALLTYPE     SetCallback(std::function<void(const std::string&)> cb, void* context) = 0;
+
 		// Get data provider objs
 		virtual VCOMError VCOM_CALLTYPE		GetDataProviderObjectCount(size_t& outCount) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetDataProviderObjectAt(size_t at, ISceneDataProvider** outSceneDataProvider ) = 0;

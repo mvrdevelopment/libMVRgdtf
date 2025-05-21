@@ -4,6 +4,7 @@
 #pragma once
 
 #include "SceneDataExchange.h"
+#include "../FeedbackDispatcher.h"
 #include "Include/IMediaRessourceVectorInterface.h"
 #include "CPositionImpl.h"
 #include "CMappingDefinitionImpl.h"
@@ -14,6 +15,7 @@
 
 #include "CSourceImpl.h"
 #include "CMappingImpl.h"
+
 namespace VectorworksMVR
 {
 	class CMediaRessourceVectorImpl : public VCOMImpl<IMediaRessourceVectorInterface>
@@ -74,6 +76,8 @@ namespace VectorworksMVR
 	public:
 		// Call this at the start of generating a MVR file
 		virtual VCOMError VCOM_CALLTYPE		OpenForRead(MvrString fullPath);
+
+		virtual VCOMError VCOM_CALLTYPE     SetCallback(std::function<void(const std::string&)> cb, void* context);
 		
 		// Get data provider objs
 		virtual VCOMError VCOM_CALLTYPE		GetDataProviderObjectCount(size_t& outCount);

@@ -9007,6 +9007,7 @@ void GdtfFixture::OnPrintToFile(IXMLFileNodePtr pNode)
 
 void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 {
+	VectorworksMVR::FeedbackDispatcher::Send("Reading: " + fName);
 	pNode->GetNodeAttributeValue(XML_GDTF_FixtureName,						fName);
     fName.Replace("/", "_");
 
@@ -9019,7 +9020,7 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	TXString thumbnailOffsetX; 	pNode->GetNodeAttributeValue(XML_GDTF_FixtureThumbnailOffsetX, thumbnailOffsetX); 	GdtfConverter::ConvertInteger(thumbnailOffsetX, pNode, fThumbnailOffsetX);
 	TXString thumbnailOffsetY; 	pNode->GetNodeAttributeValue(XML_GDTF_FixtureThumbnailOffsetY, thumbnailOffsetY); 	GdtfConverter::ConvertInteger(thumbnailOffsetY, pNode, fThumbnailOffsetY);
 	TXString canHaveChildren; 	pNode->GetNodeAttributeValue(XML_GDTF_FixtureCanHaveChildren,	 canHaveChildren); 	GdtfConverter::ConvertEGdtfCanHaveChildren(canHaveChildren, pNode, fCanHaveChildren);
-	
+	VectorworksMVR::FeedbackDispatcher::Send("FixtureType is completed");
 	
 	TXString linkedUuid;
 	pNode->GetNodeAttributeValue(XML_GDTF_LinkedUuid,		linkedUuid );
@@ -9029,15 +9030,24 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// Read Prorocols
     IXMLFileNodePtr protoNode;
     if (VCOM_SUCCEEDED(pNode->GetChildNode(XML_GDTF_Protocols, &protoNode))) 
-    {        
+    {   
+		TXString nodeName;
+		protoNode->GetNodeName( nodeName );
+		VectorworksMVR::FeedbackDispatcher::Send("Reading : " + fName + " " + nodeName);
         fProtocollContainer.ReadFromNode(protoNode); 
+		VectorworksMVR::FeedbackDispatcher::Send(fName + " " + nodeName + " - 100% read");
+
     } 
 
     // Read PhysicalDesciptions
     IXMLFileNodePtr physDescrNode;
     if (VCOM_SUCCEEDED(pNode->GetChildNode(XML_GDTF_FixtureChildNodePhysicalDesrip, &physDescrNode) ))
     {
+		TXString nodeName;
+		physDescrNode->GetNodeName( nodeName );
+		VectorworksMVR::FeedbackDispatcher::Send("Reading : " + fName + " " + nodeName);
         fPhysicalDesciptions.ReadFromNode(physDescrNode);
+		VectorworksMVR::FeedbackDispatcher::Send(fName + " " + nodeName + " - 100% read");
     }
 
     // ------------------------------------------------------------------------------------
@@ -9047,6 +9057,9 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
     if (VCOM_SUCCEEDED(pNode->GetChildNode(XML_GDTF_FixtureChildNodeAttributeDef, & attrDefs)))
     
     {
+		TXString nodeName;
+		attrDefs->GetNodeName( nodeName );
+		VectorworksMVR::FeedbackDispatcher::Send("Reading : " + fName + " " + nodeName);
         // ------------------------------------------------------------------------------------
         // Read fActivationGroups
         GdtfConverter::TraverseNodes(attrDefs, XML_GDTF_FixtureChildNodeActivationGroupDef, XML_GDTF_ActivationGroupNode, [this] (IXMLFileNodePtr objNode) -> void
@@ -9056,6 +9069,9 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
                                          pActicationGroup->ReadFromNode(objNode);
                                          
                                          fActivationGroups.push_back(pActicationGroup);
+										 TXString nodeName;
+										 objNode->GetNodeName( nodeName );
+										 VectorworksMVR::FeedbackDispatcher::Send(fName + " " + nodeName + " - 100% read");
                                          
                                          return;
                                      });
@@ -9069,7 +9085,9 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 										 pFeatureGroup->ReadFromNode(objNode);
 										 
 										 fFeatureGroups.push_back(pFeatureGroup);
-										 
+										 TXString nodeName;
+										 objNode->GetNodeName( nodeName );
+										 VectorworksMVR::FeedbackDispatcher::Send(fName + " " + nodeName + " - 100% read");
                                          return;
                                      });
         
@@ -9082,7 +9100,9 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 										 pAttr->ReadFromNode(objNode);
 										 
 										 fAttributes.push_back(pAttr);
-										 
+										 TXString nodeName;
+										 objNode->GetNodeName( nodeName );
+										 VectorworksMVR::FeedbackDispatcher::Send(fName + " " + nodeName + " - 100% read");
                                          return;
                                      });
     }
@@ -9100,6 +9120,9 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 							
 							// Add to list
 							fWheels.push_back(wheel);
+							TXString nodeName;
+							objNode->GetNodeName( nodeName );
+							VectorworksMVR::FeedbackDispatcher::Send(fName + " " + nodeName + " - 100% read");
 							return;
 						});
 	
@@ -9116,6 +9139,9 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 							
 							// Add to list
 							fModels.push_back(model);
+							TXString nodeName;
+							objNode->GetNodeName( nodeName );
+							VectorworksMVR::FeedbackDispatcher::Send(fName + " " + nodeName + " - 100% read");
 							return;
 						});
 
@@ -9159,6 +9185,9 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 								GdtfParsingError error (GdtfDefines::EGdtfParsingError::eNodeWrongName, objNode);
 								SceneData::GdtfFixture::AddError(error);
 							}
+							TXString nodeName;
+							objNode->GetNodeName( nodeName );
+							VectorworksMVR::FeedbackDispatcher::Send(fName + " " + nodeName + " - 100% read");
 							return;
 						});
 	
@@ -9176,6 +9205,9 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 									 
 									 // Add to list
 									 fDmxModes.push_back(dmxMode);
+									 TXString nodeName;
+									 objNode->GetNodeName( nodeName );
+									 VectorworksMVR::FeedbackDispatcher::Send(fName + " " + nodeName + " - 100% read");
 									 return;
 								 });
 	
@@ -9191,8 +9223,13 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 									 
 									 // Add to list
 									 fRevisions.push_back(rev);
+									 TXString nodeName;
+									 objNode->GetNodeName( nodeName );
+									 VectorworksMVR::FeedbackDispatcher::Send(fName + " " + nodeName + " - 100% read");
 									 return;
 								 });
+
+	VectorworksMVR::FeedbackDispatcher::Send(fName + " - Completed");
 	// ------------------------------------------------------------------------------------
 	// Read presets
     // -
