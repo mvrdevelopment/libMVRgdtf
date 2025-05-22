@@ -1023,7 +1023,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::OpenForRead
 	
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::SetCallback(std::function<void(const std::string&)> cb, void* context)
+VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::SetCallback(std::function<void(const FixtureFeedback&)> cb, void* context)
 {
 	//---------------------------------------------------------------------------
 	// Set Path

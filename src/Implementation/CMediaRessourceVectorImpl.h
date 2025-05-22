@@ -77,7 +77,7 @@ namespace VectorworksMVR
 		// Call this at the start of generating a MVR file
 		virtual VCOMError VCOM_CALLTYPE		OpenForRead(MvrString fullPath);
 
-		virtual VCOMError VCOM_CALLTYPE     SetCallback(std::function<void(const std::string&)> cb, void* context);
+		virtual VCOMError VCOM_CALLTYPE     SetCallback(std::function<void(const FixtureFeedback&)> cb, void* context);
 		
 		// Get data provider objs
 		virtual VCOMError VCOM_CALLTYPE		GetDataProviderObjectCount(size_t& outCount);

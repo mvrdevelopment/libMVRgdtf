@@ -2648,3 +2648,15 @@ VCOMError VCOM_CALLTYPE	CGdtfFixtureImpl::SetLegHeight(double value)
 	
 	return kVCOMError_NoError;
 }
+
+VCOMError VCOM_CALLTYPE CGdtfFixtureImpl::SetAbortCallback( const std::function<void( bool& )>& cb )
+{
+	if ( !fFixtureObject )
+	{
+		return kVCOMError_NotInitialized;
+	}
+
+    SceneData::GdtfObject::SetAbortCallback(cb);
+
+	return kVCOMError_NoError;
+}

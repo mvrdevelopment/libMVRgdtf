@@ -9,11 +9,11 @@ namespace VectorworksMVR
     {
 
     public:
-        static void SetCallback(std::function<void(const std::string&)> cb, void* context);
-        static void Send(const TXString& msg);
+        static void SetCallback(std::function<void(const FixtureFeedback&)> cb, void* context);
+        static void Send(const FixtureFeedback& msg);
 
     private:
-        static std::function<void(const std::string&)>& GetCallbackRef();
+        static std::function<void(const FixtureFeedback&)>& GetCallbackRef();
         static void*& GetContextRef();
 
     };

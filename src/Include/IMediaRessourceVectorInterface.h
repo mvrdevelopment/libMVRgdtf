@@ -103,6 +103,13 @@ namespace VectorworksMVR
 		}
 	};
 	
+	struct FixtureFeedback
+	{
+		MvrString fFileName;
+		size_t    fTotalNumberOfNodes = 0;
+		size_t    fTotalCompletedNodes = 0;
+	};
+
 	//-------------------------------------------------------------------------------------------------------------
 	// Predefines for classes
 	class ISymDef;
@@ -460,7 +467,7 @@ namespace VectorworksMVR
 		// Call this at the start of generating a MVR file
 		virtual VCOMError VCOM_CALLTYPE		OpenForRead(MvrString fullPath) = 0;
 
-		virtual VCOMError VCOM_CALLTYPE     SetCallback(std::function<void(const std::string&)> cb, void* context) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetCallback(std::function<void(const FixtureFeedback&)> cb, void* context) = 0;
 
 		// Get data provider objs
 		virtual VCOMError VCOM_CALLTYPE		GetDataProviderObjectCount(size_t& outCount) = 0;
@@ -1542,6 +1549,8 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		virtual VCOMError VCOM_CALLTYPE		OpenForWrite(MvrString name, MvrString manufacturer, const MvrUUID& uuid) = 0;
 		virtual VCOMError VCOM_CALLTYPE		AddFileToGdtfFile(MvrString fullPath, GdtfDefines::ERessourceType resType, MvrString newFileName = "") = 0;
 		virtual VCOMError VCOM_CALLTYPE		AddBufferToGdtfFile(MvrString filename, const char* inBuffer, size_t length, GdtfDefines::ERessourceType resType) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE     SetAbortCallback( const std::function<void( bool& )>& cb ) = 0;
 
 		virtual VCOMError VCOM_CALLTYPE		Close() = 0;
         

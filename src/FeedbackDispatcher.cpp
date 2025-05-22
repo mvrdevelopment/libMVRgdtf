@@ -6,9 +6,9 @@
 
 using namespace VectorworksMVR;
 
-std::function<void(const std::string&)>& FeedbackDispatcher::GetCallbackRef()
+std::function<void(const FixtureFeedback&)>& FeedbackDispatcher::GetCallbackRef()
 {
-	static std::function<void(const std::string&)> callback;
+	static std::function<void(const FixtureFeedback&)> callback;
 	return callback;
 }
 
@@ -18,15 +18,15 @@ void*& FeedbackDispatcher::GetContextRef()
 	return context;
 }
 
-void FeedbackDispatcher::SetCallback( std::function<void(const std::string&)> cb, void* context )
+void FeedbackDispatcher::SetCallback( std::function<void(const FixtureFeedback&)> cb, void* context )
 {
 	GetCallbackRef() = cb;
 }
 
-void FeedbackDispatcher::Send( const TXString& msg )
+void FeedbackDispatcher::Send( const FixtureFeedback& msg )
 {
-	std::function<void(const std::string&)>& cb = GetCallbackRef();
+	std::function<void(const FixtureFeedback&)>& cb = GetCallbackRef();
 	void* ctx = GetContextRef();
-	if ( cb ) cb( msg.GetStdString() );
+	if ( cb ) cb( msg );
 }
 

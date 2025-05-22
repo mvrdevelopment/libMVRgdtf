@@ -80,8 +80,8 @@ namespace SceneData
 	private:
 		void*		    fBindValue;
         IXMLFileNodePtr fNode;
-		
-		
+		bool			fAbortReading = false;
+
 	public:
 		// Write
 		void			WriteToNode(IXMLFileNodePtr pContainerNode);
@@ -89,6 +89,7 @@ namespace SceneData
 
         void			GetNode(IXMLFileNodePtr& pNode);
 		
+		static void		SetAbortCallback( const std::function<void( bool& )>& cb );
 		
 		// Bind Behavoir
 		void	SetBind(void* ptr);
@@ -104,6 +105,8 @@ namespace SceneData
 		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
 		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
         virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+
+		bool							CheckAbort();
 		
 	};
 	
@@ -2901,6 +2904,8 @@ namespace SceneData
 		IFolderIdentifierPtr			fWorkingFolder;
         TGdtfParsingErrorArray          fParsingErrors;
 
+		size_t						    fTotalNodesCount = 0;
+
 
 		// 
 		GdtfAttributePtr 				fNoFeature;
@@ -3054,6 +3059,7 @@ namespace SceneData
 	private:
 		bool							ImportFromZip(IZIPFilePtr& zipfile);
 		void 							PrepareWorkingFolder(TXString folderName);
+		void							GetFileNodesCount(const IXMLFileNodePtr& rootNode);
 
 	public:
 		bool							ExportToFile(IZIPFilePtr& zipfile);

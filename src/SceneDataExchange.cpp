@@ -3738,8 +3738,6 @@ void SceneDataExchange::ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xml
 		if (VCOM_SUCCEEDED(file->GetRootNode( & rootNode)) && rootNode)
 		{
 			TXString rootName;
-			rootNode->GetNodeName(rootName);
-			VectorworksMVR::FeedbackDispatcher::Send("Reading: "+ rootName);
 			ASSERTN(kEveryone, rootName == XML_Val_RootNodeName);
 			
 			// ----------------------------------------------------------------
@@ -3752,9 +3750,6 @@ void SceneDataExchange::ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xml
 							// Create the object
 							SceneDataProviderObj* userData = new SceneDataProviderObj();
 
-							TXString nodeName;
-							objNode->GetNodeName( nodeName );
-							VectorworksMVR::FeedbackDispatcher::Send("Reading: "+ nodeName);
 							// Read from node
 							userData->ReadFromNode(objNode, this);
 							
@@ -3773,11 +3768,6 @@ void SceneDataExchange::ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xml
 			IXMLFileNodePtr sceneNode = nullptr;
 			if (VCOM_SUCCEEDED(rootNode->FindChildNode(XML_Val_SceneNodeName, & sceneNode)))
 			{
-				TXString nodeName;
-				sceneNode->GetNodeName( nodeName );
-				VectorworksMVR::FeedbackDispatcher::Send("Reading: "+ nodeName);
-
-			
 				// ----------------------------------------------------------------
 				// Find the Scene Node
 				IXMLFileNodePtr auxDataNode = nullptr;
@@ -3793,7 +3783,6 @@ void SceneDataExchange::ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xml
 							// Check the Node Name
 							TXString nodeName;
 							auxDataObj->GetNodeName(nodeName);
-							VectorworksMVR::FeedbackDispatcher::Send("Reading: "+ nodeName);
 							// ---------------------------------------------------------------------------
 							// Do stuff with Layer
 							if (nodeName == XML_Val_SymDefNodeName)				{ ReadSymDefObject(auxDataObj);		}
@@ -3806,7 +3795,6 @@ void SceneDataExchange::ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xml
 							IXMLFileNodePtr nextNode = nullptr;
 							auxDataObj->GetNextSiblingNode( & nextNode);
 							auxDataObj = nextNode;
-							VectorworksMVR::FeedbackDispatcher::Send("Reading: " + nodeName + " - Completed 100%");
 						}
 					}
 					
@@ -3828,7 +3816,6 @@ void SceneDataExchange::ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xml
 							TXString nodeName;
 							layerObjNode->GetNodeName(nodeName);
 							ASSERTN(kEveryone, nodeName == XML_Val_LayerObjectNodeName);
-							VectorworksMVR::FeedbackDispatcher::Send("Reading: "+ nodeName);
 							// ---------------------------------------------------------------------------
 							// Do stuff with Layer
 							if (nodeName == XML_Val_LayerObjectNodeName) { ProcessLayer(layerObjNode); }
@@ -3838,7 +3825,6 @@ void SceneDataExchange::ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xml
 							IXMLFileNodePtr nextNode = nullptr;
 							layerObjNode->GetNextSiblingNode( & nextNode);
 							layerObjNode = nextNode;
-							VectorworksMVR::FeedbackDispatcher::Send("Reading: " + nodeName + " - Completed 100%");
 						}
 					}
 					
@@ -3851,16 +3837,10 @@ void SceneDataExchange::ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xml
 		
 	}
 	
-	
-
-	VectorworksMVR::FeedbackDispatcher::Send("Starting Reading fixtures: " + fFixtures.size());
-	size_t counter = 0;
 	//------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// Resolve pointers from uuids
 	for (SceneDataFixtureObjPtr fixture : fFixtures)
 	{
-		counter++;
-		VectorworksMVR::FeedbackDispatcher::Send("Starting Reading fixture: " + counter);
 		TXString focusUuid		= fixture->GetUnresolvedFocusUUID();
 		TXString postionUuid	= fixture->GetUnresolvedPositionUUID();
 		
@@ -3896,16 +3876,11 @@ void SceneDataExchange::ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xml
 			if (!match) { DSTOP((kEveryone, "Could not resolve UUID from Postion to Object")); }
 		}
 	}
-	VectorworksMVR::FeedbackDispatcher::Send("Completed Reading fixture: " + counter);
-	
-	VectorworksMVR::FeedbackDispatcher::Send("Starting Reading sceneObjects: " + fSceneObjects.size());
-	counter = 0;
+
 	//------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// Resolve classes from uuids
 	for (SceneDataObjWithMatrixPtr scObj : fSceneObjects)
 	{
-		counter++;
-		VectorworksMVR::FeedbackDispatcher::Send("Starting Reading scene objects: " + counter);
 		TXString classUuid		= scObj->GetUnresolvedClass();
 		
 		if (classUuid.IsEmpty() == false)
