@@ -3738,7 +3738,6 @@ void SceneDataExchange::ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xml
 		if (VCOM_SUCCEEDED(file->GetRootNode( & rootNode)) && rootNode)
 		{
 			TXString rootName;
-			rootNode->GetNodeName(rootName);
 			ASSERTN(kEveryone, rootName == XML_Val_RootNodeName);
 			
 			// ----------------------------------------------------------------
@@ -3750,12 +3749,15 @@ void SceneDataExchange::ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xml
 						{
 							// Create the object
 							SceneDataProviderObj* userData = new SceneDataProviderObj();
-							
+
 							// Read from node
 							userData->ReadFromNode(objNode, this);
 							
 							// Add to list
 							fProviderObjs.push_back(userData);
+
+							
+
 							return;
 						});
 			} ASSERTN(kEveryone, userDataNode != nullptr);
@@ -3781,7 +3783,6 @@ void SceneDataExchange::ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xml
 							// Check the Node Name
 							TXString nodeName;
 							auxDataObj->GetNodeName(nodeName);
-							
 							// ---------------------------------------------------------------------------
 							// Do stuff with Layer
 							if (nodeName == XML_Val_SymDefNodeName)				{ ReadSymDefObject(auxDataObj);		}
@@ -3815,7 +3816,6 @@ void SceneDataExchange::ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xml
 							TXString nodeName;
 							layerObjNode->GetNodeName(nodeName);
 							ASSERTN(kEveryone, nodeName == XML_Val_LayerObjectNodeName);
-							
 							// ---------------------------------------------------------------------------
 							// Do stuff with Layer
 							if (nodeName == XML_Val_LayerObjectNodeName) { ProcessLayer(layerObjNode); }
@@ -3829,14 +3829,13 @@ void SceneDataExchange::ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xml
 					}
 					
 				}ASSERTN(kEveryone, layersNode != nullptr);
-				
+
+
 			} ASSERTN(kEveryone, sceneNode != nullptr);
 			
 		}ASSERTN(kEveryone, rootNode != nullptr);
 		
 	}
-	
-	
 	
 	//------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// Resolve pointers from uuids
@@ -3877,7 +3876,7 @@ void SceneDataExchange::ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xml
 			if (!match) { DSTOP((kEveryone, "Could not resolve UUID from Postion to Object")); }
 		}
 	}
-	
+
 	//------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// Resolve classes from uuids
 	for (SceneDataObjWithMatrixPtr scObj : fSceneObjects)
