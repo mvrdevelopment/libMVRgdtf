@@ -7761,8 +7761,19 @@ void GdtfFixture::AutoGenerateNames(GdtfDmxModePtr dmxMode)
 			{
 				//------------------------------------------------------------------------------------------------
 				//  Create Names for Logical Channels
-				ASSERTN(kEveryone, logicalChannel->GetAttribute() != nullptr);
-				logicalChannel->SetName(logicalChannel->GetAttribute()->GetName());
+				if ( logicalChannel->GetAttribute() != nullptr )
+				{
+					logicalChannel->SetName(logicalChannel->GetAttribute()->GetName());
+				}
+				else
+				{
+					IXMLFileNodePtr node;
+					logicalChannel->GetNode(node);
+					GdtfParsingError error (GdtfDefines::EGdtfParsingError::eFixtureLogicalChannelMissingAttribute, node);
+					SceneData::GdtfFixture::AddError(error);
+					ASSERTN(kEveryone, logicalChannel->GetAttribute() != nullptr);
+					continue;
+				}
 				
 				// Set first Attribute
 				if (firstAttr == nullptr) { firstAttr = logicalChannel->GetAttribute(); }
