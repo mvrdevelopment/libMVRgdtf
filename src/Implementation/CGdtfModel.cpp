@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------
 #include "Prefix/StdAfx.h"
 #include "CGdtfModel.h"
-
+#include "Utility.h"
 
 using namespace VectorworksMVR::Filing;
 
@@ -248,6 +248,9 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfModelImpl::SetName(MvrString name
 {
 	if(!fModel) return kVCOMError_NotInitialized;	
 	
+	TXString vwName ( name );
+	GdtfUtil::DoesNameContainInvalidChars( vwName );
+
     fModel->SetName(name);
 
    	return kVCOMError_NoError;   
