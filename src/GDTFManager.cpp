@@ -12519,17 +12519,11 @@ void SceneData::GdtfMeasurement::OnReadFromNode(const IXMLFileNodePtr & pNode)
     TXString   lumiStr; pNode->GetNodeAttributeValue(XML_GDTF_MeasurementLuminousIntensity,  lumiStr);
     GdtfConverter::ConvertDouble( lumiStr, pNode, fLuminousIntensity);
 
-	if(fIsForFilter)
-	{
-		TXString   transmStr; pNode->GetNodeAttributeValue(XML_GDTF_MeasurementTransmission,  transmStr);    
-		GdtfConverter::ConvertDouble( transmStr, pNode, fTransmission);
-	}
-	else
-	{
-		TXString   interpolStr; pNode->GetNodeAttributeValue(XML_GDTF_MeasurementInterpolationTo, interpolStr);
-		GdtfConverter::ConvertEGdtfInterpolationTo(interpolStr, pNode, fInterpolationTo);
-	}
+	TXString   transmStr; pNode->GetNodeAttributeValue(XML_GDTF_MeasurementTransmission,  transmStr);    
+	GdtfConverter::ConvertDouble( transmStr, pNode, fTransmission);
 
+	TXString   interpolStr; pNode->GetNodeAttributeValue(XML_GDTF_MeasurementInterpolationTo, interpolStr);
+	GdtfConverter::ConvertEGdtfInterpolationTo(interpolStr, pNode, fInterpolationTo);
 
     // Read the childs
     GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_MeasurementPointNode, [this](IXMLFileNodePtr objNode) -> void
