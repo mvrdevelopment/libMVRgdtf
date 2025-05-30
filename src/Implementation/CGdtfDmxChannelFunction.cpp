@@ -101,6 +101,16 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetDefaul
     return kVCOMError_NoError;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::HasDefaultValue(bool &defaultValue)
+{
+	// Check Pointer
+	if ( ! fFunction) { return kVCOMError_NotInitialized; }
+	
+	defaultValue = fFunction->HasDefaultValue();
+	
+	return kVCOMError_NoError;
+}
+
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetStartAddress(DmxValue& address)
 {
 	// Check Pointer
