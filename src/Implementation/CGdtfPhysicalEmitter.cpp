@@ -4,7 +4,7 @@
 #include "Prefix/StdAfx.h"
 #include "CGdtfPhysicalEmitter.h"
 #include "CGdtfMeasurement.h"
-
+#include "Utility.h"
 
 using namespace VectorworksMVR::Filing;
 
@@ -164,7 +164,10 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfPhysicalEmitterImpl::SetName(MvrS
 	// Check if valid
 	if(!fEmitter) return kVCOMError_NotInitialized;
 
-    fEmitter->SetName(name);
+	TXString vwName ( name );
+	GdtfUtil::DoesNameContainInvalidChars( vwName );
+
+    fEmitter->SetName(vwName);
 
 	return kVCOMError_NoError;
 }

@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------
 #include "Prefix/StdAfx.h"
 #include "CGdtfLaserProtocol.h"
-
+#include "Utility.h"
 
 using namespace VectorworksMVR::Filing;
 
@@ -29,6 +29,9 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfLaserProtocolImpl::SetName(MvrStr
 {
 	if( ! fLaserProtocol) return kVCOMError_NotInitialized;	
 	
+	TXString vwName ( name );
+	GdtfUtil::DoesNameContainInvalidChars( vwName );
+
     fLaserProtocol->SetName(name);
 
    	return kVCOMError_NoError;    
