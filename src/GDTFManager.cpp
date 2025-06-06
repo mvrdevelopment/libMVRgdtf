@@ -12,6 +12,9 @@
 
 using namespace SceneData;
 
+static std::function<void( bool& )> fAbortCallback;
+static std::mutex fAbortCallbackMutex;
+
 //------------------------------------------------------------------------------------
 // GdtfObject
 GdtfObject::GdtfObject()
@@ -78,6 +81,28 @@ void GdtfObject::SetBind(void* ptr)
 void* GdtfObject::GetBind()
 {
 	return fBindValue;
+}
+
+void GdtfObject::SetAbortCallback( const std::function<void( bool& )>& cb )
+{
+	std::lock_guard<std::mutex> lock(fAbortCallbackMutex);
+	fAbortCallback = cb;
+}
+
+bool GdtfObject::CheckAbort()
+{
+	std::lock_guard<std::mutex> lock(fAbortCallbackMutex);
+	if (fAbortCallback)
+	{
+		bool abort = false;
+		fAbortCallback(abort);
+		if ( abort )
+		{
+			fAbortReading = abort;
+		}
+		return abort;
+	}
+	return false;
 }
 
 TXString GdtfObject::GetNodeReference()
@@ -7720,6 +7745,7 @@ bool GdtfFixture::ImportFromZip(IZIPFilePtr& zipfile)
 				{
 					//---------------------------------------------------------------------------------------------
 					// Read Stuff
+					this->GetFileNodesCount( fixtureNode );
 					this->ReadFromNode(fixtureNode);
 					this->ResolveAllReferences();		
 				}
@@ -7730,6 +7756,20 @@ bool GdtfFixture::ImportFromZip(IZIPFilePtr& zipfile)
 	__ERROR_CONTAINER_POINTER = nullptr;
 
 	return true;
+}
+
+void GdtfFixture::GetFileNodesCount(const IXMLFileNodePtr& rootNode)
+{
+	IXMLFileNodePtr node;
+	rootNode->GetFirstChildNode( &node );
+
+	while ( node != nullptr )
+	{
+		fTotalNodesCount++;
+		node->GetNextSiblingNode( &node );
+	}
+
+	fTotalNodesCount--;
 }
 
 /*static*/ void	GdtfFixture::AddError(const GdtfParsingError& error)
@@ -9018,8 +9058,15 @@ void GdtfFixture::OnPrintToFile(IXMLFileNodePtr pNode)
 
 void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 {
+	if ( CheckAbort() ) return;
+	FixtureFeedback feedback;
+	feedback.fTotalNumberOfNodes = fTotalNodesCount;
+
 	pNode->GetNodeAttributeValue(XML_GDTF_FixtureName,						fName);
     fName.Replace("/", "_");
+
+	feedback.fFileName = fName;
+	VectorworksMVR::FeedbackDispatcher::Send(feedback);
 
 	pNode->GetNodeAttributeValue(XML_GDTF_FixtureShortName,					fShortName);
 	pNode->GetNodeAttributeValue(XML_GDTF_FixtureLongName,					fLongName);
@@ -9030,18 +9077,25 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	TXString thumbnailOffsetX; 	pNode->GetNodeAttributeValue(XML_GDTF_FixtureThumbnailOffsetX, thumbnailOffsetX); 	GdtfConverter::ConvertInteger(thumbnailOffsetX, pNode, fThumbnailOffsetX);
 	TXString thumbnailOffsetY; 	pNode->GetNodeAttributeValue(XML_GDTF_FixtureThumbnailOffsetY, thumbnailOffsetY); 	GdtfConverter::ConvertInteger(thumbnailOffsetY, pNode, fThumbnailOffsetY);
 	TXString canHaveChildren; 	pNode->GetNodeAttributeValue(XML_GDTF_FixtureCanHaveChildren,	 canHaveChildren); 	GdtfConverter::ConvertEGdtfCanHaveChildren(canHaveChildren, pNode, fCanHaveChildren);
-	
-	
+
 	TXString linkedUuid;
 	pNode->GetNodeAttributeValue(XML_GDTF_LinkedUuid,		linkedUuid );
 	fHasLinkedGuid = GdtfConverter::ConvertUUID(linkedUuid, pNode, fLinkedGuid);
 	
+	if ( CheckAbort() ) return;
+
     // ------------------------------------------------------------------------------------
 	// Read Prorocols
     IXMLFileNodePtr protoNode;
     if (VCOM_SUCCEEDED(pNode->GetChildNode(XML_GDTF_Protocols, &protoNode))) 
-    {        
+    {   
+		TXString nodeName;
+		protoNode->GetNodeName( nodeName );
         fProtocollContainer.ReadFromNode(protoNode); 
+
+		feedback.fTotalCompletedNodes++;
+		VectorworksMVR::FeedbackDispatcher::Send(feedback);
+		if ( CheckAbort() ) return;
     } 
 
     // Read PhysicalDesciptions
@@ -9049,6 +9103,9 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
     if (VCOM_SUCCEEDED(pNode->GetChildNode(XML_GDTF_FixtureChildNodePhysicalDesrip, &physDescrNode) ))
     {
         fPhysicalDesciptions.ReadFromNode(physDescrNode);
+		feedback.fTotalCompletedNodes++;
+		VectorworksMVR::FeedbackDispatcher::Send(feedback);
+		if ( CheckAbort() ) return;
     }
 
     // ------------------------------------------------------------------------------------
@@ -9067,6 +9124,7 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
                                          pActicationGroup->ReadFromNode(objNode);
                                          
                                          fActivationGroups.push_back(pActicationGroup);
+										 if ( CheckAbort() ) return;
                                          
                                          return;
                                      });
@@ -9080,7 +9138,8 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 										 pFeatureGroup->ReadFromNode(objNode);
 										 
 										 fFeatureGroups.push_back(pFeatureGroup);
-										 
+										 if ( CheckAbort() ) return;
+
                                          return;
                                      });
         
@@ -9093,10 +9152,14 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 										 pAttr->ReadFromNode(objNode);
 										 
 										 fAttributes.push_back(pAttr);
-										 
+										 if ( CheckAbort() ) return;
+
                                          return;
                                      });
     }
+
+	feedback.fTotalCompletedNodes++;
+	VectorworksMVR::FeedbackDispatcher::Send(feedback);
     
     
 	// ------------------------------------------------------------------------------------
@@ -9111,9 +9174,13 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 							
 							// Add to list
 							fWheels.push_back(wheel);
+							if ( CheckAbort() ) return;
+
 							return;
 						});
 	
+	feedback.fTotalCompletedNodes++;
+	VectorworksMVR::FeedbackDispatcher::Send(feedback);
 	
 	// ------------------------------------------------------------------------------------
 	// Read Geometry
@@ -9127,17 +9194,22 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 							
 							// Add to list
 							fModels.push_back(model);
+							if ( CheckAbort() ) return;
+
 							return;
 						});
 
 	
-
+	feedback.fTotalCompletedNodes++;
+	VectorworksMVR::FeedbackDispatcher::Send(feedback);
 
 	
 	// ------------------------------------------------------------------------------------
 	// Read Geometries
 	GdtfConverter::TraverseMultiNodes(pNode, XML_GDTF_FixtureChildNodeGeomertries, [this] (IXMLFileNodePtr objNode,const TXString& childNodeName) -> void
 						{
+							if ( CheckAbort() ) return;
+
 							GdtfGeometryPtr geometry = nullptr;
 							if		(childNodeName == XML_GDTF_GeometryAxisNodeName)		{ geometry = new GdtfGeometryAxis(nullptr);}
 							else if (childNodeName == XML_GDTF_GeometryNodeName)			{ geometry = new GdtfGeometry(nullptr);}
@@ -9173,7 +9245,8 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 							return;
 						});
 	
-	
+	feedback.fTotalCompletedNodes++;
+	VectorworksMVR::FeedbackDispatcher::Send(feedback);
 	
 	// ------------------------------------------------------------------------------------
 	// Read dmxModes
@@ -9187,9 +9260,14 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 									 
 									 // Add to list
 									 fDmxModes.push_back(dmxMode);
+									 if ( CheckAbort() ) return;
+
 									 return;
 								 });
 	
+	feedback.fTotalCompletedNodes++;
+	VectorworksMVR::FeedbackDispatcher::Send(feedback);
+
 	// ------------------------------------------------------------------------------------
 	// Read Revision
 	GdtfConverter::TraverseNodes(pNode, XML_GDTF_FixtureChildNodeRevisions, XML_GDTF_RevisionNodeName, [this] (IXMLFileNodePtr objNode) -> void
@@ -9202,8 +9280,14 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 									 
 									 // Add to list
 									 fRevisions.push_back(rev);
+									 if ( CheckAbort() ) return;
+
 									 return;
 								 });
+
+	feedback.fTotalCompletedNodes++;
+	VectorworksMVR::FeedbackDispatcher::Send(feedback);
+
 	// ------------------------------------------------------------------------------------
 	// Read presets
     // -
