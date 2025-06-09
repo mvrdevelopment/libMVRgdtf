@@ -7,7 +7,7 @@
 #include "HashManager.h"
 #include <iostream>
 #include "Utility.h"
-
+#include "FeedbackDispatcher.h"
 #include "Wrapper/ZIPFileImpl.h"
 
 using namespace SceneData;

@@ -349,6 +349,7 @@ namespace VectorworksMVR
 		
 		virtual MvrString VCOM_CALLTYPE		GetGdtfName() = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetGdtfFixture(IGdtfFixture** outFixture) = 0;
+
 		virtual VCOMError VCOM_CALLTYPE		SetGdtfName(MvrString gdtfName) = 0;
 		
 		virtual MvrString VCOM_CALLTYPE		GetGdtfMode() = 0;
@@ -466,8 +467,6 @@ namespace VectorworksMVR
 	public:
 		// Call this at the start of generating a MVR file
 		virtual VCOMError VCOM_CALLTYPE		OpenForRead(MvrString fullPath) = 0;
-
-		virtual VCOMError VCOM_CALLTYPE     SetCallback(std::function<void(const FixtureFeedback&)> cb, void* context) = 0;
 
 		// Get data provider objs
 		virtual VCOMError VCOM_CALLTYPE		GetDataProviderObjectCount(size_t& outCount) = 0;
@@ -1550,6 +1549,7 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		virtual VCOMError VCOM_CALLTYPE		AddFileToGdtfFile(MvrString fullPath, GdtfDefines::ERessourceType resType, MvrString newFileName = "") = 0;
 		virtual VCOMError VCOM_CALLTYPE		AddBufferToGdtfFile(MvrString filename, const char* inBuffer, size_t length, GdtfDefines::ERessourceType resType) = 0;
 
+		virtual VCOMError VCOM_CALLTYPE     SetFeedbackCallback(std::function<void(const FixtureFeedback&)> cb, void* context) = 0;
 		virtual VCOMError VCOM_CALLTYPE     SetAbortCallback( const std::function<void( bool& )>& cb ) = 0;
 
 		virtual VCOMError VCOM_CALLTYPE		Close() = 0;

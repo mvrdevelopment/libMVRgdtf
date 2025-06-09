@@ -27,6 +27,7 @@
 #include "CGdtfColorSpace.h"
 #include "CGdtfConnector.h"
 #include "CGdtfGamut.h"
+#include "../FeedbackDispatcher.h"
 
 using namespace VectorworksMVR::Filing;
 
@@ -2659,4 +2660,19 @@ VCOMError VCOM_CALLTYPE CGdtfFixtureImpl::SetAbortCallback( const std::function<
     SceneData::GdtfObject::SetAbortCallback(cb);
 
 	return kVCOMError_NoError;
+}
+
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::SetFeedbackCallback(std::function<void(const FixtureFeedback&)> cb, void* context)
+{
+    //---------------------------------------------------------------------------
+    // Set Path
+
+    if ( VCOM_FAILED(cb == nullptr) )	{return kVCOMError_Failed;}
+
+    FeedbackDispatcher::SetCallback( cb, context );
+
+    // If the file could not be read, we return a no file error
+    return kVCOMError_FileNotFound;
+
 }

@@ -6,7 +6,6 @@
 #include "CieColor.h"
 #include "GdtfError.h"
 #include "Include/GDTFPrefix.h"
-#include "FeedbackDispatcher.h"
 
 using namespace VectorworksMVR::Filing;
 using namespace VectorworksMVR::GdtfDefines;
