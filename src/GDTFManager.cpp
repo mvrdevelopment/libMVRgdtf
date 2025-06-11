@@ -7766,7 +7766,10 @@ void GdtfFixture::GetFileNodesCount(const IXMLFileNodePtr& rootNode)
 	while ( node != nullptr )
 	{
 		fTotalNodesCount++;
-		node->GetNextSiblingNode( &node );
+		if ( VCOM_FAILED(( node->GetNextSiblingNode( &node ))))
+		{
+			node = nullptr;
+		}
 	}
 
 	fTotalNodesCount--;
