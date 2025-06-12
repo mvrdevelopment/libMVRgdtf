@@ -2652,10 +2652,7 @@ VCOMError VCOM_CALLTYPE	CGdtfFixtureImpl::SetLegHeight(double value)
 
 VCOMError VCOM_CALLTYPE CGdtfFixtureImpl::SetAbortCallback( const std::function<void( bool& )>& cb )
 {
-	if ( !fFixtureObject )
-	{
-		return kVCOMError_NotInitialized;
-	}
+    if ( VCOM_FAILED(cb == nullptr) )	{return kVCOMError_Failed;}
 
     SceneData::GdtfObject::SetAbortCallback(cb);
 
@@ -2665,14 +2662,9 @@ VCOMError VCOM_CALLTYPE CGdtfFixtureImpl::SetAbortCallback( const std::function<
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::SetFeedbackCallback(std::function<void(const FixtureFeedback&)> cb, void* context)
 {
-    //---------------------------------------------------------------------------
-    // Set Path
-
     if ( VCOM_FAILED(cb == nullptr) )	{return kVCOMError_Failed;}
 
     FeedbackDispatcher::SetCallback( cb, context );
 
-    // If the file could not be read, we return a no file error
-    return kVCOMError_FileNotFound;
-
+    return kVCOMError_NoError;
 }
