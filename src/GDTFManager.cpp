@@ -8425,12 +8425,19 @@ void GdtfFixture::ResolveDMXModeMasters()
 {	
 	for (GdtfDmxModePtr mode : fDmxModes)
 	{
+		if (CheckAbort()) { return; }
+
 		for(GdtfDmxChannelPtr channel : mode->GetChannelArray())
 		{
+			if (CheckAbort()) { return; }
+
 			for(GdtfDmxLogicalChannelPtr logicalChannel : channel->GetLogicalChannelArray())
 			{
+				if (CheckAbort()) { return; }
+
 				for(GdtfDmxChannelFunctionPtr function : logicalChannel->GetDmxChannelFunctions())
 				{
+					if (CheckAbort()) { return; }
 					// ----------------------------------------------------------------------------------------
 					// DmxChanelFunction Mode Master Channel (Optional)
 					TXString unresolvedModeMaster = function->getUnresolvedModeMasterRef();
