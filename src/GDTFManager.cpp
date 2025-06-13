@@ -7817,6 +7817,7 @@ void GdtfFixture::AutoGenerateNames(GdtfDmxModePtr dmxMode)
 {
 		for (GdtfDmxChannelPtr dmxChannel : dmxMode->GetChannelArray())
 		{
+			if ( CheckAbort() ) return;
 			//------------------------------------------------------------------------------------------------
 			//  Create Names for DMX Channel
 			ASSERTN(kEveryone, dmxChannel->GetGeomRef() != nullptr);
@@ -7826,6 +7827,7 @@ void GdtfFixture::AutoGenerateNames(GdtfDmxModePtr dmxMode)
 			
 			for (GdtfDmxLogicalChannelPtr logicalChannel : dmxChannel->GetLogicalChannelArray())
 			{
+				if(CheckAbort()) { return; }
 				//------------------------------------------------------------------------------------------------
 				//  Create Names for Logical Channels
 				if ( logicalChannel->GetAttribute() != nullptr )
@@ -7850,6 +7852,7 @@ void GdtfFixture::AutoGenerateNames(GdtfDmxModePtr dmxMode)
 				Sint64 channelFunctionNumber = 1;
 				for (GdtfDmxChannelFunctionPtr function : logicalChannel->GetDmxChannelFunctions())
 				{
+					if(CheckAbort()) { return; }
 					//
 					if (function->GetName().IsEmpty())
 					{
@@ -8057,10 +8060,13 @@ GdtfDmxChannelFunctionPtr GdtfFixture::getDmxFunctionByRef(const TXString& ref, 
 {
 	for(GdtfDmxChannelPtr channel : mode->GetChannelArray())
 	{
+		if(CheckAbort()) { return; }
 		for(GdtfDmxLogicalChannelPtr logicalChannel : channel->GetLogicalChannelArray())
 		{
+			if(CheckAbort()) { return; }
 			for(GdtfDmxChannelFunctionPtr function : logicalChannel->GetDmxChannelFunctions())
 			{
+				if(CheckAbort()) { return; }
 				if(function->GetNodeReference() == ref) { return function; }
 			}
 		}
@@ -8095,6 +8101,7 @@ void GdtfFixture::ResolveGeometryRefs()
 	// Geometry.Model
 	for (GdtfGeometryPtr geometry : fGeometries)
 	{
+		if(CheckAbort()) { return; }
 		ResolveGeometryRefs_Recursive(geometry);
 	}
 }
@@ -8224,8 +8231,10 @@ void GdtfFixture::ResolveWheelSlots()
 {
 	for(GdtfWheelPtr wheel : fWheels)
 	{
+		if(CheckAbort()) { return; }
 		for(GdtfWheelSlotPtr slot :  wheel->GetWheelSlotArray())
 		{
+			if(CheckAbort()) { return; }
 			TXString ref = slot->GetUnresolvedFilter();
 			if( ! ref.IsEmpty())
 			{
@@ -8240,6 +8249,7 @@ void GdtfFixture::ResolveAttribRefs()
 {
 	for (GdtfAttributePtr attr : fAttributes)
 	{
+		if (CheckAbort()) { return; }
 		// ------------------------------------------------------------------------------------------
 		// Attributes.ActivationGroup
 		TXString attrRef = attr->GetUnresolvedActGroup();
@@ -8269,7 +8279,8 @@ void GdtfFixture::ResolveAttribRefs()
 		if(unresolvedFeat.IsEmpty()) { continue; }
 
 		for (GdtfFeatureGroupPtr featGrp : fFeatureGroups)
-		{			
+		{	
+			if(CheckAbort()) { return; }
 			for (GdtfFeaturePtr feat : featGrp->GetFeatureArray() )
 			{				
 				if (unresolvedFeat == feat->GetNodeReference() ) { featPtr = feat; break; }
@@ -8309,6 +8320,7 @@ void GdtfFixture::ResolveMacroRefs(GdtfDmxModePtr dmxMode)
 {
 	for (GdtfMacroPtr macro : dmxMode->GetDmxMacrosArray())
 	{
+		if (CheckAbort()) { return; }
 		TXString unresolvedChannelFunction = macro->GetUnresolvedChannelFunction();
 		if ( ! unresolvedChannelFunction.IsEmpty())
 		{
@@ -8320,13 +8332,16 @@ void GdtfFixture::ResolveMacroRefs(GdtfDmxModePtr dmxMode)
 		{
 			for (GdtfMacroDMXStepPtr step : macro->GetMacroDMX()->GetStepArray())
 			{
+				if (CheckAbort()) { return; }
 				for(GdtfMacroDMXValuePtr value : step->GetDMXValueArray())
 				{
+					if (CheckAbort()) { return; }
 					IXMLFileNodePtr node;
 					value->GetNode(node);
 
 					for(GdtfDmxChannelPtr channel : dmxMode->GetChannelArray())
 					{
+						if (CheckAbort()) { return; }
 						if (channel->GetNodeReference() == value->GetUnresolvedDMXChannel()) { value->SetDMXChannel(channel); break; }
 					}
 
@@ -8350,14 +8365,19 @@ void GdtfFixture::ResolveMacroRefs(GdtfDmxModePtr dmxMode)
 		{
 			for (GdtfMacroVisualStepPtr step : macro->GetMacroVisual()->GetVisualStepArray())
 			{
+				if (CheckAbort()) { return; }
 				for (GdtfMacroVisualValuePtr value : step->GetVisualValueArray())
 				{
+					if (CheckAbort()) { return; }
 					for (GdtfDmxChannelPtr channel : dmxMode->GetChannelArray())
 					{
+						if (CheckAbort()) { return; }
 						for (GdtfDmxLogicalChannelPtr logChannel : channel->GetLogicalChannelArray())
 						{
+							if (CheckAbort()) { return; }
 							for (GdtfDmxChannelFunctionPtr channelFunction : logChannel->GetDmxChannelFunctions())
 							{
+								if (CheckAbort()) { return; }
 								if (channelFunction->GetNodeReference() == value->GetUnresolvedChannelFunctionRef())
 								{
 									value->SetChannelFunction(channelFunction);
@@ -8382,6 +8402,7 @@ void GdtfFixture::ResolveDmxModeRefs()
 {	
 	for (GdtfDmxModePtr dmxMode : fDmxModes)
 	{
+		if (CheckAbort()) { return; }
 		//---------------------------------------------------------------------------------------
 		// DmxMode.Geometry
 		TXString 		unresolvedgeomRef	= dmxMode->GetUnresolvedGeomRef();
@@ -8500,8 +8521,10 @@ void GdtfFixture::ResolveDMXPersonalityRefs()
     {
         for (GdtfSoftwareVersionID* softID : rdm->GetSoftwareVersIDs() ) 
         {
+			if (CheckAbort()) { return; }
             for (GdtfDMXPersonality* dmxPerso : softID->GetDMXPersonalityArray() ) 
             {
+				if (CheckAbort()) { return; }
                 GdtfDmxModePtr dmxMode =  ResolveDMXMode(dmxPerso->GetUnresolvedDMXMode()); 
             
 				ASSERTN(kEveryone, dmxMode != nullptr);
@@ -8522,6 +8545,7 @@ void GdtfFixture::ResolveDmxRelationRefs(GdtfDmxModePtr dmxMode)
 {
 	for (GdtfDmxRelationPtr rel : dmxMode->GetDmxRelations())
 	{	
+		if (CheckAbort()) { return; }
 		// DMXChannel (Master)
 		GdtfDmxChannelPtr			master	= dmxMode->GetMasterByRef(rel->GetUnresolvedMasterRef() );
 		GdtfDmxChannelFunctionPtr	slave	= dmxMode->GetSlaveByRef(rel->GetUnresolvedSlaveRef() );
@@ -8535,6 +8559,7 @@ void GdtfFixture::ResolveDmxChannelRefs(GdtfDmxModePtr dmxMode)
 {	
 	for (GdtfDmxChannelPtr chnl: dmxMode->GetChannelArray() )
 	{
+		if (CheckAbort()) { return; }
 		// ----------------------------------------------------------------------------------------
 		// DmxChannel.Geometry
 		GdtfGeometryPtr geomPtr = nullptr;
@@ -8580,8 +8605,10 @@ void GdtfFixture::ResolveDmxChannelRefs(GdtfDmxModePtr dmxMode)
 		{
 			for (GdtfDmxLogicalChannelPtr logicalChannel : chnl->GetLogicalChannelArray())
 			{
+				if(CheckAbort()) { return; }
 				for (GdtfDmxChannelFunctionPtr channelFunction : logicalChannel->GetDmxChannelFunctions())
 				{
+					if(CheckAbort()) { return; }
 					if (channelFunction->GetNodeReference() == unresolvedInitialFunction) { initialFunctionPtr = channelFunction; break;}
 				}
 				
@@ -8636,6 +8663,7 @@ void GdtfFixture::ResolveDmxLogicalChanRefs(GdtfDmxChannelPtr dmxChnl)
 {		
 	for ( GdtfDmxLogicalChannelPtr logChnl : dmxChnl->GetLogicalChannelArray() )
 	{
+		if(CheckAbort()) { return; }
 		IXMLFileNodePtr node;
 		logChnl->GetNode(node);
 
@@ -8663,6 +8691,7 @@ void GdtfFixture::ResolveDmxLogicalChanRefs(GdtfDmxChannelPtr dmxChnl)
 			
 			for(GdtfDmxChannelPtr channel : mode->GetChannelArray())
 			{
+				if(CheckAbort()) { return; }
 				GdtfGeometryPtr currentGeometry = channel->GetGeomRef();
 				if(currentGeometry == nullptr) { break; }
 				TXString currentGeometryName = currentGeometry->GetName();
@@ -8713,6 +8742,7 @@ void GdtfFixture::ResolveDmxChanelFunctionRefs(GdtfDmxLogicalChannelPtr dmxLogCh
 {
 	for (GdtfDmxChannelFunctionPtr chnlFunc : dmxLogChnl->GetDmxChannelFunctions())
 	{
+		if(CheckAbort()) { return; }
 		// ----------------------------------------------------------------------------------------
 		// DmxChanelFunction.Attribute
 		GdtfAttributePtr attrPtr = getAttributeByRef(chnlFunc->getUnresolvedAttrRef());
@@ -8797,6 +8827,7 @@ void GdtfFixture::ResolveDmxSubChannelSetRefs(GdtfDmxChannelFunctionPtr channelF
 {
 	for (GdtfDmxSubChannelSetPtr subChannelSet : channelFunction->GetSubChannelSets())
 	{
+		if(CheckAbort()) { return; }
 		// ----------------------------------------------------------------------------------------		
         // SubPhysicalUnit Refs
         TXString unresolvedSubPhysicalUnitRef = subChannelSet->GetUnresolvedSubPhysicalUnitRef();
@@ -8821,16 +8852,20 @@ void GdtfFixture::CheckForMissingModeMasters()
 {	
 	for (GdtfDmxModePtr mode : fDmxModes)
 	{
+		if (CheckAbort()) { return; }
 		for(GdtfDmxChannelPtr channel : mode->GetChannelArray())
 		{
+			if (CheckAbort()) { return; }
 			for(GdtfDmxLogicalChannelPtr logicalChannel : channel->GetLogicalChannelArray())
 			{
+				if (CheckAbort()) { return; }
 				TGdtfDmxChannelFuntionArray channelFunctions = logicalChannel->GetDmxChannelFunctions();
 
                 if(channelFunctions.size() > 0)
                 {
                     for(size_t i = 0; i < channelFunctions.size() - 1; i++)
                     {
+						if(CheckAbort()) { return; }
                         GdtfDmxChannelFunctionPtr function = channelFunctions[i];
                         // ----------------------------------------------------------------------------------------
                         DmxValue functionStart 	= function->GetStartAdress();
@@ -8838,6 +8873,7 @@ void GdtfFixture::CheckForMissingModeMasters()
 
                         for(size_t j = i+1; j < channelFunctions.size(); j++)
                         {
+							if(CheckAbort()) { return; }
                             GdtfDmxChannelFunctionPtr currentFunction = channelFunctions[j];
 
                             DmxValue currentFunctionStart	= currentFunction->GetStartAdress();
