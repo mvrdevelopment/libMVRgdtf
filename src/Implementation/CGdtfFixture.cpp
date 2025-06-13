@@ -27,6 +27,7 @@
 #include "CGdtfColorSpace.h"
 #include "CGdtfConnector.h"
 #include "CGdtfGamut.h"
+#include "../FeedbackDispatcher.h"
 
 using namespace VectorworksMVR::Filing;
 
@@ -2651,12 +2652,19 @@ VCOMError VCOM_CALLTYPE	CGdtfFixtureImpl::SetLegHeight(double value)
 
 VCOMError VCOM_CALLTYPE CGdtfFixtureImpl::SetAbortCallback( const std::function<void( bool& )>& cb )
 {
-	if ( !fFixtureObject )
-	{
-		return kVCOMError_NotInitialized;
-	}
+    if ( VCOM_FAILED(cb == nullptr) )	{return kVCOMError_Failed;}
 
     SceneData::GdtfObject::SetAbortCallback(cb);
 
 	return kVCOMError_NoError;
+}
+
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::SetFeedbackCallback(std::function<void(const FixtureFeedback&)> cb, void* context)
+{
+    if ( VCOM_FAILED(cb == nullptr) )	{return kVCOMError_Failed;}
+
+    FeedbackDispatcher::SetCallback( cb, context );
+
+    return kVCOMError_NoError;
 }

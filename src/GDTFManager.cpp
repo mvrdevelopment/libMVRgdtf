@@ -7,7 +7,7 @@
 #include "HashManager.h"
 #include <iostream>
 #include "Utility.h"
-
+#include "FeedbackDispatcher.h"
 #include "Wrapper/ZIPFileImpl.h"
 
 using namespace SceneData;
@@ -371,6 +371,7 @@ void GdtfFeatureGroup::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// Read the childs
 	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_FeatureNode, [this] (IXMLFileNodePtr objNode) -> void
 								 { 
+									 if ( CheckAbort() ) return;
 									 GdtfFeaturePtr feature = new GdtfFeature(this);
 									 
 									 feature->ReadFromNode(objNode);
@@ -675,6 +676,7 @@ void GdtfAttribute::OnReadFromNode(const IXMLFileNodePtr& pNode)
 
 	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_SubPhysicalUnitNodeName, [this] (IXMLFileNodePtr objNode) -> void
 								 {
+									if ( CheckAbort() ) return;
 									 // Create the object
 									 GdtfSubPhysicalUnitPtr subPhysicalUnit = new GdtfSubPhysicalUnit();
 									 
@@ -883,7 +885,8 @@ void GdtfWheel::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	//------------------------------------------------------------------------------------
 	// Read the wheel slots
 	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_WheelSlotNodeName, [this] (IXMLFileNodePtr objNode) -> void
-								 {
+								 {   
+									if ( CheckAbort() ) return;
 									 // Create the object
 									 GdtfWheelSlotPtr wheelSlot = new GdtfWheelSlot(this);
 									 
@@ -1313,6 +1316,7 @@ void GdtfWheelSlot::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// Read the wheel slots
 	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_PrismFacetNodeName, [this] (IXMLFileNodePtr objNode) -> void
 								{
+									if ( CheckAbort() ) return;
 									// Create the object
 									GdtfWheelSlotPrismFacetPtr facet = new GdtfWheelSlotPrismFacet();
 									
@@ -3222,6 +3226,7 @@ void GdtfGeometryLaser::OnReadFromNode(const IXMLFileNodePtr& pNode)
 
 	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_LaserProtocolNodeName, [this] (IXMLFileNodePtr objNode) -> void
 								{ 
+									if ( CheckAbort() ) return;
 									GdtfLaserProtocolPtr laserProtocol = new GdtfLaserProtocol();
 									
 									laserProtocol->ReadFromNode(objNode);
@@ -3659,6 +3664,7 @@ void GdtfGeometryWiringObject::OnReadFromNode(const IXMLFileNodePtr& pNode)
 
 	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_PinPatchNodeName, [this] (IXMLFileNodePtr objNode) -> void
 								{ 
+									if ( CheckAbort() ) return;		
 									GdtfPinPatchPtr pinPatch = new GdtfPinPatch();
 									
 									pinPatch->ReadFromNode(objNode);
@@ -4848,7 +4854,8 @@ void GdtfDmxMode::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// Print Channels
 	
 	GdtfConverter::TraverseNodes(pNode, XML_GDTF_DMXModeDMXChannels, XML_GDTF_DMXChannelNodeName, [this] (IXMLFileNodePtr pNode) -> void
-								 {
+								 {	
+									 if ( CheckAbort() ) return;
 									 GdtfDmxChannelPtr channel = new GdtfDmxChannel(this);
 									 channel->ReadFromNode(pNode);
 									 fChannels.push_back(channel);
@@ -4860,6 +4867,7 @@ void GdtfDmxMode::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// Print Relations
 	GdtfConverter::TraverseNodes(pNode, XML_GDTF_DMXModeRelations, XML_GDTF_DMXRelationNodeName, [this] (IXMLFileNodePtr pNode) -> void
 								 {
+									 if ( CheckAbort() ) return;
 									 GdtfDmxRelationPtr relation = new GdtfDmxRelation();
 									 relation->ReadFromNode(pNode);
 									 fRelations.push_back(relation);
@@ -4871,6 +4879,7 @@ void GdtfDmxMode::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// Print Macros
 	GdtfConverter::TraverseNodes(pNode, XML_GDTF_DMXModeMacros, XML_GDTF_MacroNodeName, [this](IXMLFileNodePtr pNode) -> void
 								{
+									if ( CheckAbort() ) return;
 									GdtfMacroPtr macro = new GdtfMacro();
 									macro->ReadFromNode(pNode);
 									fMacros.push_back(macro);
@@ -5138,6 +5147,7 @@ size_t GdtfDmxMode::GetFootPrintForBreak(size_t breakId)
 		// if channel is linked to the current geometry and the breaks match add the dmx addresses to the footprint 
 		for (GdtfDmxChannelPtr channel : fChannels)
 		{
+			if(CheckAbort()) { return 0; }
 			if(channel->GetGeomRef() == geoToCheck && channel->GetDmxBreak() == (Sint32)breakId && ! channel->IsVirtual()) 
 			{
 				GetAddressesFromChannel(addressesOfGeo, channel, 0);
@@ -5165,6 +5175,7 @@ size_t GdtfDmxMode::GetFootPrintForBreak(size_t breakId)
 
 					for (GdtfDmxChannelPtr channel : fChannels)
 					{
+						if(CheckAbort()) { return 0; }
 						if(channel->GetGeomRef() == geometryInRefToCheck)
 						{
 							if(channel->GetDmxBreak() != kDmxBreakOverwriteValue)
@@ -5202,6 +5213,7 @@ size_t GdtfDmxMode::GetFootPrintForBreak(size_t breakId)
 
 					for(GdtfDmxChannelPtr channel : fChannels)
 					{
+						if(CheckAbort()) { return 0; }
 						if(channel->GetGeomRef() == geometryInRefToCheck 
 							&& channel->GetDmxBreak() == (Sint32)breakId &&
 							! channel->IsVirtual())  
@@ -5228,6 +5240,7 @@ size_t GdtfDmxMode::GetFootPrintForBreak(size_t breakId)
 
 						for(GdtfDmxChannelPtr channel : fChannels)
 						{
+							if(CheckAbort()) { return 0; }
 							if(channel->GetGeomRef() == geometryInRefToCheck && channel->GetDmxBreak() == kDmxBreakOverwriteValue  && ! channel->IsVirtual()) 
 							{
 								GetAddressesFromChannel(addressesOfGeo, channel, overwriteBreak->GetDmxAddress()-1);
@@ -5411,6 +5424,7 @@ void GdtfDmxChannel::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// LogicalChannels	
 	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_DMXLogicalChannelNodeName, [this] (IXMLFileNodePtr objNode) -> void
 								 {
+									 if ( CheckAbort() ) return;
 									 // Create the object
 									 GdtfDmxLogicalChannelPtr logicalChan = new GdtfDmxLogicalChannel(this);
 
@@ -5432,6 +5446,8 @@ void GdtfDmxChannel::OnReadFromNode(const IXMLFileNodePtr& pNode)
 									}
 								
 									 fLogicalChannels.push_back(logicalChan);
+
+									
 									 return;
 								 });
 }
@@ -5719,6 +5735,8 @@ void GdtfDmxLogicalChannel::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// Read LogicalChannels
 	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_DMXChannelFuntionNodeName, [this] (IXMLFileNodePtr objNode) -> void
 								 {
+									 if ( CheckAbort() ) return;
+
 									 // Create the object
 									 GdtfDmxChannelFunctionPtr function = new GdtfDmxChannelFunction(this);
 									 
@@ -5740,6 +5758,7 @@ void GdtfDmxLogicalChannel::OnReadFromNode(const IXMLFileNodePtr& pNode)
 									 // Add to list
 									 fFunctions.push_back(function);
 
+									 
 									 
 									 return;
 								 });
@@ -6130,7 +6149,9 @@ void GdtfDmxChannelFunction::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// ------------------------------------------------------------------------------------
 	// GdtfDmxChannelSet
 	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_DMXChannelSetNodeName, [this] (IXMLFileNodePtr objNode) -> void
-	{
+	{	
+		if ( CheckAbort() ) return;
+
 		// Create the object
 		GdtfDmxChannelSetPtr channelSet = new GdtfDmxChannelSet(this);
 		
@@ -6149,6 +6170,7 @@ void GdtfDmxChannelFunction::OnReadFromNode(const IXMLFileNodePtr& pNode)
 		
 		// Add to list
 		fChannelSets.push_back(channelSet);
+		
 		return;
 	});
 	
@@ -6165,6 +6187,8 @@ void GdtfDmxChannelFunction::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// GdtfDmxSubChannelSet
 	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_DMXSubChannelSetNodeName, [this] (IXMLFileNodePtr objNode) -> void
 	{
+		if ( CheckAbort() ) return;
+
 		// Create the object
 		GdtfDmxSubChannelSetPtr subChannelSet = new GdtfDmxSubChannelSet();
 		
@@ -6173,6 +6197,7 @@ void GdtfDmxChannelFunction::OnReadFromNode(const IXMLFileNodePtr& pNode)
 
 		// Add to list
 		fSubChannelSets.push_back(subChannelSet);
+
 		return;
 	});
 }
@@ -7238,6 +7263,8 @@ void GdtfPhysicalEmitter::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// Read Measurements
 	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_MeasurementNodeName, [this] (IXMLFileNodePtr objNode) -> void
 								 {
+									 if ( CheckAbort() ) return;
+
 									 // Create the object
 									 GdtfMeasurementPtr mes = new GdtfMeasurement(false);
 									 
@@ -7246,6 +7273,7 @@ void GdtfPhysicalEmitter::OnReadFromNode(const IXMLFileNodePtr& pNode)
 									 
 									 // Add to list
 									 fMeasurements.push_back(mes);
+
 									 return;
 								 });
 }
@@ -7766,7 +7794,10 @@ void GdtfFixture::GetFileNodesCount(const IXMLFileNodePtr& rootNode)
 	while ( node != nullptr )
 	{
 		fTotalNodesCount++;
-		node->GetNextSiblingNode( &node );
+		if ( VCOM_FAILED(( node->GetNextSiblingNode( &node ))))
+		{
+			node = nullptr;
+		}
 	}
 
 	fTotalNodesCount--;
@@ -7790,6 +7821,7 @@ void GdtfFixture::AutoGenerateNames(GdtfDmxModePtr dmxMode)
 {
 		for (GdtfDmxChannelPtr dmxChannel : dmxMode->GetChannelArray())
 		{
+			if ( CheckAbort() ) return;
 			//------------------------------------------------------------------------------------------------
 			//  Create Names for DMX Channel
 			ASSERTN(kEveryone, dmxChannel->GetGeomRef() != nullptr);
@@ -7799,6 +7831,7 @@ void GdtfFixture::AutoGenerateNames(GdtfDmxModePtr dmxMode)
 			
 			for (GdtfDmxLogicalChannelPtr logicalChannel : dmxChannel->GetLogicalChannelArray())
 			{
+				if(CheckAbort()) { return; }
 				//------------------------------------------------------------------------------------------------
 				//  Create Names for Logical Channels
 				if ( logicalChannel->GetAttribute() != nullptr )
@@ -7823,6 +7856,7 @@ void GdtfFixture::AutoGenerateNames(GdtfDmxModePtr dmxMode)
 				Sint64 channelFunctionNumber = 1;
 				for (GdtfDmxChannelFunctionPtr function : logicalChannel->GetDmxChannelFunctions())
 				{
+					if(CheckAbort()) { return; }
 					//
 					if (function->GetName().IsEmpty())
 					{
@@ -7861,6 +7895,7 @@ GdtfAttributePtr GdtfFixture::getAttributeByRef(const TXString& ref)
 	// Check fi there
 	for (GdtfAttributePtr attr : fAttributes)
 	{
+		if(CheckAbort()) { return fNoFeature; }
 		if (fNoFeature == nullptr && XML_GDTF_AttributeNoFeature_nullptr == ref) { fNoFeature = attr; }
 		if (attr->GetNodeReference() == ref) { return attr; };
 	}
@@ -7931,6 +7966,7 @@ GdtfWheelPtr GdtfFixture::getWheelByRef(const TXString& ref)
 {
 	for (GdtfWheelPtr whl : fWheels)
 	{
+		if(CheckAbort()) { return nullptr; }
 		if (whl->GetNodeReference() == ref){ return whl;};
 	}
 	
@@ -7943,6 +7979,7 @@ GdtfPhysicalEmitterPtr GdtfFixture::getEmiterByRef(const TXString& ref)
 {
 	for (GdtfPhysicalEmitterPtr emt : fPhysicalDesciptions.GetPhysicalEmitterArray() )
 	{
+		if(CheckAbort()) { return nullptr; }
 		if (emt->GetNodeReference() == ref){ return emt;};
 	}
 
@@ -7955,6 +7992,7 @@ GdtfFilterPtr GdtfFixture::getFilterByRef(const TXString& ref)
 {
     for (GdtfFilterPtr fltr : fPhysicalDesciptions.GetFilterArray())
     {
+		if(CheckAbort()) { return nullptr; }
         if (fltr->GetNodeReference() == ref) { return fltr; }
     }
 
@@ -7967,6 +8005,7 @@ GdtfConnectorPtr GdtfFixture::getConnectorByRef(const TXString& ref)
 {
     for (GdtfConnectorPtr connector : fPhysicalDesciptions.GetConnectorArray())
     {
+		if(CheckAbort()) { return nullptr; }
         if (connector->GetNodeReference() == ref) { return connector; }
     }
 
@@ -7979,6 +8018,7 @@ GdtfColorSpacePtr GdtfFixture::getColorSpaceByRef(const TXString& ref)
 {
     for (GdtfColorSpacePtr colorSpace : fPhysicalDesciptions.GetAdditionalColorSpaceArray())
     {
+		if(CheckAbort()) { return nullptr; }
         if (colorSpace->GetNodeReference() == ref) { return colorSpace; }
     }
 
@@ -7991,6 +8031,7 @@ GdtfGamutPtr GdtfFixture::getGamutByRef(const TXString& ref)
 {
     for (GdtfGamutPtr gamut : fPhysicalDesciptions.GetGamutArray())
     {
+		if(CheckAbort()) { return nullptr; }
         if (gamut->GetNodeReference() == ref) { return gamut; }
     }
 
@@ -8003,6 +8044,7 @@ GdtfDMXProfilePtr GdtfFixture::getDMXProfileByRef(const TXString& ref)
 {
     for (GdtfDMXProfilePtr dmxProfile : fPhysicalDesciptions.GetDmxProfileArray())
     {
+		if(CheckAbort()) { return nullptr; }
         if (dmxProfile->GetNodeReference() == ref) { return dmxProfile; }
     }
 
@@ -8015,8 +8057,10 @@ GdtfSubPhysicalUnitPtr GdtfFixture::getSubPhysicalUnitByRef(const TXString& ref)
 {
     for (GdtfAttributePtr attr : fAttributes)
 	{
+		if(CheckAbort()) { return nullptr; }
 		for (GdtfSubPhysicalUnitPtr subPhysicalUnit : attr->GetSubPhysicalUnitArray())
 		{
+			if(CheckAbort()) { return nullptr; }
 			if(subPhysicalUnit->GetNodeReference() == ref) { return subPhysicalUnit; }
 		}
 	}
@@ -8030,10 +8074,13 @@ GdtfDmxChannelFunctionPtr GdtfFixture::getDmxFunctionByRef(const TXString& ref, 
 {
 	for(GdtfDmxChannelPtr channel : mode->GetChannelArray())
 	{
+		if(CheckAbort()) { return nullptr; }
 		for(GdtfDmxLogicalChannelPtr logicalChannel : channel->GetLogicalChannelArray())
 		{
+			if(CheckAbort()) { return nullptr; }
 			for(GdtfDmxChannelFunctionPtr function : logicalChannel->GetDmxChannelFunctions())
 			{
+				if(CheckAbort()) { return nullptr; }
 				if(function->GetNodeReference() == ref) { return function; }
 			}
 		}
@@ -8046,6 +8093,7 @@ GdtfDmxChannelPtr GdtfFixture::getDmxChannelByRef(const TXString& ref, GdtfDmxMo
 {
 	for(GdtfDmxChannelPtr channel : mode->GetChannelArray())
 	{
+		if(CheckAbort()) { return nullptr; }
 		if(channel->GetNodeReference() == ref) { return channel; }
 	}
 
@@ -8068,6 +8116,7 @@ void GdtfFixture::ResolveGeometryRefs()
 	// Geometry.Model
 	for (GdtfGeometryPtr geometry : fGeometries)
 	{
+		if(CheckAbort()) { return; }
 		ResolveGeometryRefs_Recursive(geometry);
 	}
 }
@@ -8083,6 +8132,7 @@ void GdtfFixture::ResolveGeometryRefs_Recursive(GdtfGeometryPtr geometry)
 		
 		for (GdtfModelPtr modelRef: fModels)
 		{
+			if(CheckAbort()) { return; }
 			if (modelRef->GetNodeReference() == unresolvedModelRef)	{ linkedModel = modelRef; break; }
 		}
 		
@@ -8189,6 +8239,7 @@ void GdtfFixture::ResolveGeometryRefs_Recursive(GdtfGeometryPtr geometry)
 	// Now traverse child geometry
 	for (GdtfGeometryPtr internalGeometry : geometry->GetInternalGeometries())
 	{
+		if(CheckAbort()) { return; }
 		ResolveGeometryRefs_Recursive(internalGeometry);
 	}
 }
@@ -8197,8 +8248,10 @@ void GdtfFixture::ResolveWheelSlots()
 {
 	for(GdtfWheelPtr wheel : fWheels)
 	{
+		if(CheckAbort()) { return; }
 		for(GdtfWheelSlotPtr slot :  wheel->GetWheelSlotArray())
 		{
+			if(CheckAbort()) { return; }
 			TXString ref = slot->GetUnresolvedFilter();
 			if( ! ref.IsEmpty())
 			{
@@ -8213,6 +8266,7 @@ void GdtfFixture::ResolveAttribRefs()
 {
 	for (GdtfAttributePtr attr : fAttributes)
 	{
+		if (CheckAbort()) { return; }
 		// ------------------------------------------------------------------------------------------
 		// Attributes.ActivationGroup
 		TXString attrRef = attr->GetUnresolvedActGroup();
@@ -8242,7 +8296,8 @@ void GdtfFixture::ResolveAttribRefs()
 		if(unresolvedFeat.IsEmpty()) { continue; }
 
 		for (GdtfFeatureGroupPtr featGrp : fFeatureGroups)
-		{			
+		{	
+			if(CheckAbort()) { return; }
 			for (GdtfFeaturePtr feat : featGrp->GetFeatureArray() )
 			{				
 				if (unresolvedFeat == feat->GetNodeReference() ) { featPtr = feat; break; }
@@ -8282,6 +8337,7 @@ void GdtfFixture::ResolveMacroRefs(GdtfDmxModePtr dmxMode)
 {
 	for (GdtfMacroPtr macro : dmxMode->GetDmxMacrosArray())
 	{
+		if (CheckAbort()) { return; }
 		TXString unresolvedChannelFunction = macro->GetUnresolvedChannelFunction();
 		if ( ! unresolvedChannelFunction.IsEmpty())
 		{
@@ -8293,13 +8349,16 @@ void GdtfFixture::ResolveMacroRefs(GdtfDmxModePtr dmxMode)
 		{
 			for (GdtfMacroDMXStepPtr step : macro->GetMacroDMX()->GetStepArray())
 			{
+				if (CheckAbort()) { return; }
 				for(GdtfMacroDMXValuePtr value : step->GetDMXValueArray())
 				{
+					if (CheckAbort()) { return; }
 					IXMLFileNodePtr node;
 					value->GetNode(node);
 
 					for(GdtfDmxChannelPtr channel : dmxMode->GetChannelArray())
 					{
+						if (CheckAbort()) { return; }
 						if (channel->GetNodeReference() == value->GetUnresolvedDMXChannel()) { value->SetDMXChannel(channel); break; }
 					}
 
@@ -8323,14 +8382,19 @@ void GdtfFixture::ResolveMacroRefs(GdtfDmxModePtr dmxMode)
 		{
 			for (GdtfMacroVisualStepPtr step : macro->GetMacroVisual()->GetVisualStepArray())
 			{
+				if (CheckAbort()) { return; }
 				for (GdtfMacroVisualValuePtr value : step->GetVisualValueArray())
 				{
+					if (CheckAbort()) { return; }
 					for (GdtfDmxChannelPtr channel : dmxMode->GetChannelArray())
 					{
+						if (CheckAbort()) { return; }
 						for (GdtfDmxLogicalChannelPtr logChannel : channel->GetLogicalChannelArray())
 						{
+							if (CheckAbort()) { return; }
 							for (GdtfDmxChannelFunctionPtr channelFunction : logChannel->GetDmxChannelFunctions())
 							{
+								if (CheckAbort()) { return; }
 								if (channelFunction->GetNodeReference() == value->GetUnresolvedChannelFunctionRef())
 								{
 									value->SetChannelFunction(channelFunction);
@@ -8355,6 +8419,7 @@ void GdtfFixture::ResolveDmxModeRefs()
 {	
 	for (GdtfDmxModePtr dmxMode : fDmxModes)
 	{
+		if (CheckAbort()) { return; }
 		//---------------------------------------------------------------------------------------
 		// DmxMode.Geometry
 		TXString 		unresolvedgeomRef	= dmxMode->GetUnresolvedGeomRef();
@@ -8398,12 +8463,19 @@ void GdtfFixture::ResolveDMXModeMasters()
 {	
 	for (GdtfDmxModePtr mode : fDmxModes)
 	{
+		if (CheckAbort()) { return; }
+
 		for(GdtfDmxChannelPtr channel : mode->GetChannelArray())
 		{
+			if (CheckAbort()) { return; }
+
 			for(GdtfDmxLogicalChannelPtr logicalChannel : channel->GetLogicalChannelArray())
 			{
+				if (CheckAbort()) { return; }
+
 				for(GdtfDmxChannelFunctionPtr function : logicalChannel->GetDmxChannelFunctions())
 				{
+					if (CheckAbort()) { return; }
 					// ----------------------------------------------------------------------------------------
 					// DmxChanelFunction Mode Master Channel (Optional)
 					TXString unresolvedModeMaster = function->getUnresolvedModeMasterRef();
@@ -8466,8 +8538,10 @@ void GdtfFixture::ResolveDMXPersonalityRefs()
     {
         for (GdtfSoftwareVersionID* softID : rdm->GetSoftwareVersIDs() ) 
         {
+			if (CheckAbort()) { return; }
             for (GdtfDMXPersonality* dmxPerso : softID->GetDMXPersonalityArray() ) 
             {
+				if (CheckAbort()) { return; }
                 GdtfDmxModePtr dmxMode =  ResolveDMXMode(dmxPerso->GetUnresolvedDMXMode()); 
             
 				ASSERTN(kEveryone, dmxMode != nullptr);
@@ -8488,6 +8562,7 @@ void GdtfFixture::ResolveDmxRelationRefs(GdtfDmxModePtr dmxMode)
 {
 	for (GdtfDmxRelationPtr rel : dmxMode->GetDmxRelations())
 	{	
+		if (CheckAbort()) { return; }
 		// DMXChannel (Master)
 		GdtfDmxChannelPtr			master	= dmxMode->GetMasterByRef(rel->GetUnresolvedMasterRef() );
 		GdtfDmxChannelFunctionPtr	slave	= dmxMode->GetSlaveByRef(rel->GetUnresolvedSlaveRef() );
@@ -8501,6 +8576,7 @@ void GdtfFixture::ResolveDmxChannelRefs(GdtfDmxModePtr dmxMode)
 {	
 	for (GdtfDmxChannelPtr chnl: dmxMode->GetChannelArray() )
 	{
+		if (CheckAbort()) { return; }
 		// ----------------------------------------------------------------------------------------
 		// DmxChannel.Geometry
 		GdtfGeometryPtr geomPtr = nullptr;
@@ -8546,8 +8622,10 @@ void GdtfFixture::ResolveDmxChannelRefs(GdtfDmxModePtr dmxMode)
 		{
 			for (GdtfDmxLogicalChannelPtr logicalChannel : chnl->GetLogicalChannelArray())
 			{
+				if(CheckAbort()) { return; }
 				for (GdtfDmxChannelFunctionPtr channelFunction : logicalChannel->GetDmxChannelFunctions())
 				{
+					if(CheckAbort()) { return; }
 					if (channelFunction->GetNodeReference() == unresolvedInitialFunction) { initialFunctionPtr = channelFunction; break;}
 				}
 				
@@ -8602,6 +8680,7 @@ void GdtfFixture::ResolveDmxLogicalChanRefs(GdtfDmxChannelPtr dmxChnl)
 {		
 	for ( GdtfDmxLogicalChannelPtr logChnl : dmxChnl->GetLogicalChannelArray() )
 	{
+		if(CheckAbort()) { return; }
 		IXMLFileNodePtr node;
 		logChnl->GetNode(node);
 
@@ -8629,6 +8708,7 @@ void GdtfFixture::ResolveDmxLogicalChanRefs(GdtfDmxChannelPtr dmxChnl)
 			
 			for(GdtfDmxChannelPtr channel : mode->GetChannelArray())
 			{
+				if(CheckAbort()) { return; }
 				GdtfGeometryPtr currentGeometry = channel->GetGeomRef();
 				if(currentGeometry == nullptr) { break; }
 				TXString currentGeometryName = currentGeometry->GetName();
@@ -8679,6 +8759,7 @@ void GdtfFixture::ResolveDmxChanelFunctionRefs(GdtfDmxLogicalChannelPtr dmxLogCh
 {
 	for (GdtfDmxChannelFunctionPtr chnlFunc : dmxLogChnl->GetDmxChannelFunctions())
 	{
+		if(CheckAbort()) { return; }
 		// ----------------------------------------------------------------------------------------
 		// DmxChanelFunction.Attribute
 		GdtfAttributePtr attrPtr = getAttributeByRef(chnlFunc->getUnresolvedAttrRef());
@@ -8763,6 +8844,7 @@ void GdtfFixture::ResolveDmxSubChannelSetRefs(GdtfDmxChannelFunctionPtr channelF
 {
 	for (GdtfDmxSubChannelSetPtr subChannelSet : channelFunction->GetSubChannelSets())
 	{
+		if(CheckAbort()) { return; }
 		// ----------------------------------------------------------------------------------------		
         // SubPhysicalUnit Refs
         TXString unresolvedSubPhysicalUnitRef = subChannelSet->GetUnresolvedSubPhysicalUnitRef();
@@ -8787,16 +8869,20 @@ void GdtfFixture::CheckForMissingModeMasters()
 {	
 	for (GdtfDmxModePtr mode : fDmxModes)
 	{
+		if (CheckAbort()) { return; }
 		for(GdtfDmxChannelPtr channel : mode->GetChannelArray())
 		{
+			if (CheckAbort()) { return; }
 			for(GdtfDmxLogicalChannelPtr logicalChannel : channel->GetLogicalChannelArray())
 			{
+				if (CheckAbort()) { return; }
 				TGdtfDmxChannelFuntionArray channelFunctions = logicalChannel->GetDmxChannelFunctions();
 
                 if(channelFunctions.size() > 0)
                 {
                     for(size_t i = 0; i < channelFunctions.size() - 1; i++)
                     {
+						if(CheckAbort()) { return; }
                         GdtfDmxChannelFunctionPtr function = channelFunctions[i];
                         // ----------------------------------------------------------------------------------------
                         DmxValue functionStart 	= function->GetStartAdress();
@@ -8804,6 +8890,7 @@ void GdtfFixture::CheckForMissingModeMasters()
 
                         for(size_t j = i+1; j < channelFunctions.size(); j++)
                         {
+							if(CheckAbort()) { return; }
                             GdtfDmxChannelFunctionPtr currentFunction = channelFunctions[j];
 
                             DmxValue currentFunctionStart	= currentFunction->GetStartAdress();
@@ -9118,14 +9205,15 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
         // ------------------------------------------------------------------------------------
         // Read fActivationGroups
         GdtfConverter::TraverseNodes(attrDefs, XML_GDTF_FixtureChildNodeActivationGroupDef, XML_GDTF_ActivationGroupNode, [this] (IXMLFileNodePtr objNode) -> void
-                                     {
+                                     { 
+										 if ( CheckAbort() ) return;
+
                                          GdtfActivationGroupPtr pActicationGroup = new GdtfActivationGroup();
                                          
                                          pActicationGroup->ReadFromNode(objNode);
                                          
                                          fActivationGroups.push_back(pActicationGroup);
-										 if ( CheckAbort() ) return;
-                                         
+										
                                          return;
                                      });
         
@@ -9133,12 +9221,13 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
         // Read fFeatureGroups
         GdtfConverter::TraverseNodes(attrDefs, XML_GDTF_FixtureChildNodeFeatureGroupDef, XML_GDTF_FeatureGroupNode, [this] (IXMLFileNodePtr objNode) -> void
                                      {
+										 if ( CheckAbort() ) return;
+
 										 GdtfFeatureGroupPtr pFeatureGroup = new GdtfFeatureGroup();
 										 
 										 pFeatureGroup->ReadFromNode(objNode);
 										 
-										 fFeatureGroups.push_back(pFeatureGroup);
-										 if ( CheckAbort() ) return;
+										 fFeatureGroups.push_back( pFeatureGroup );
 
                                          return;
                                      });
@@ -9147,12 +9236,13 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
         // Read fAttributes
         GdtfConverter::TraverseNodes(attrDefs, XML_GDTF_FixtureChildNodeAttributesDef, XML_GDTF_AttributeNode, [this] (IXMLFileNodePtr objNode) -> void
                                      {
+										 if ( CheckAbort() ) return;
+
 										 GdtfAttributePtr pAttr = new GdtfAttribute();
 										 
 										 pAttr->ReadFromNode(objNode);
 										 
 										 fAttributes.push_back(pAttr);
-										 if ( CheckAbort() ) return;
 
                                          return;
                                      });
@@ -9166,6 +9256,8 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// Read Wheels
 	GdtfConverter::TraverseNodes(pNode, XML_GDTF_FixtureChildNodeWheels, XML_GDTF_WheelNodeName, [this] (IXMLFileNodePtr objNode) -> void
 						{
+							if ( CheckAbort() ) return;
+
 							// Create the object
 							GdtfWheelPtr wheel = new GdtfWheel(this);
 							
@@ -9174,8 +9266,7 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 							
 							// Add to list
 							fWheels.push_back(wheel);
-							if ( CheckAbort() ) return;
-
+							
 							return;
 						});
 	
@@ -9186,6 +9277,8 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// Read Geometry
 	GdtfConverter::TraverseNodes(pNode, XML_GDTF_FixtureChildNodeModels, XML_GDTF_ModelNodeName, [this] (IXMLFileNodePtr objNode) -> void
 						{
+							if ( CheckAbort() ) return;
+
 							// Create the object
 							GdtfModel* model = new GdtfModel(this);
 							
@@ -9194,8 +9287,7 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 							
 							// Add to list
 							fModels.push_back(model);
-							if ( CheckAbort() ) return;
-
+							
 							return;
 						});
 
@@ -9251,7 +9343,8 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// ------------------------------------------------------------------------------------
 	// Read dmxModes
 	GdtfConverter::TraverseNodes(pNode, XML_GDTF_FixtureChildNodeDMX, XML_GDTF_DMXModeNodeName, [this] (IXMLFileNodePtr objNode) -> void
-								 {
+								 { 
+									 if ( CheckAbort() ) return;
 									 // Create the object
 									 GdtfDmxModePtr dmxMode = new GdtfDmxMode(this, "");
 									 
@@ -9260,7 +9353,7 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 									 
 									 // Add to list
 									 fDmxModes.push_back(dmxMode);
-									 if ( CheckAbort() ) return;
+									
 
 									 return;
 								 });
@@ -9272,6 +9365,7 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// Read Revision
 	GdtfConverter::TraverseNodes(pNode, XML_GDTF_FixtureChildNodeRevisions, XML_GDTF_RevisionNodeName, [this] (IXMLFileNodePtr objNode) -> void
 								 {
+									 if ( CheckAbort() ) return;	
 									 // Create the object
 									 GdtfRevisionPtr rev = new GdtfRevision();
 									 
@@ -9280,8 +9374,7 @@ void GdtfFixture::OnReadFromNode(const IXMLFileNodePtr& pNode)
 									 
 									 // Add to list
 									 fRevisions.push_back(rev);
-									 if ( CheckAbort() ) return;
-
+									
 									 return;
 								 });
 
@@ -10082,6 +10175,8 @@ void SceneData::GdtfDMXProfile::OnReadFromNode(const IXMLFileNodePtr & pNode)
     // Read the children
     GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_Point, [this](IXMLFileNodePtr objNode) -> void
     {
+		if ( CheckAbort() ) return;
+
         GdtfPoint* point = new GdtfPoint();
 
         point->ReadFromNode(objNode);
@@ -10190,6 +10285,8 @@ void SceneData::GdtfCRIGroup::OnReadFromNode(const IXMLFileNodePtr & pNode)
     // Read the children
     GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_ColorRenderingIndex, [this](IXMLFileNodePtr objNode) -> void
     {
+		if ( CheckAbort() ) return;
+
         GdtfCRI* cri = new GdtfCRI();
 
         cri->ReadFromNode(objNode);
@@ -10350,6 +10447,8 @@ void SceneData::GdtfFTRDM::OnReadFromNode(const IXMLFileNodePtr & pNode)
 	// Read the childs
 	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_SoftwareVersionID_NodeNam, [this](IXMLFileNodePtr objNode) -> void
 								 {
+									 if ( CheckAbort() ) return;
+
 									 GdtfSoftwareVersionIDPtr  softID = new GdtfSoftwareVersionID();
 									 
 									 softID->ReadFromNode(objNode);
@@ -10837,6 +10936,8 @@ void GdtfArtNet::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// Read the children
     GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_MapNodeName, [this](IXMLFileNodePtr objNode) -> void
     {
+		if ( CheckAbort() ) return;
+
         GdtfMapPtr map = new GdtfMap();
 
         map->ReadFromNode(objNode);
@@ -10903,6 +11004,8 @@ void GdtfsAcn::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// Read the children
     GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_MapNodeName, [this](IXMLFileNodePtr objNode) -> void
     {
+		if ( CheckAbort() ) return;
+
         GdtfMapPtr map = new GdtfMap();
 
         map->ReadFromNode(objNode);
@@ -11071,6 +11174,7 @@ void SceneData::GdtfMacroDMX::OnReadFromNode(const IXMLFileNodePtr & pNode)
 	// Read the childs
 	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_MacroDMXStep, [this](IXMLFileNodePtr objNode) -> void
 								 {
+									 if ( CheckAbort() ) return;
 									 GdtfMacroDMXStepPtr  dmxStep = new GdtfMacroDMXStep();
 									 
 									 dmxStep->ReadFromNode(objNode);
@@ -11174,6 +11278,7 @@ void SceneData::GdtfMacroDMXStep::OnReadFromNode(const IXMLFileNodePtr & pNode)
 	// Read the childs
 	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_MacroDMXValue, [this](IXMLFileNodePtr objNode) -> void
 								 {
+									 if ( CheckAbort() ) return;
 									 GdtfMacroDMXValuePtr dmxValue= new GdtfMacroDMXValue();
 									 
 									 dmxValue->ReadFromNode(objNode);
@@ -11351,6 +11456,7 @@ void SceneData::GdtfMacroVisual::OnReadFromNode(const IXMLFileNodePtr & pNode)
 	// Read the childs
 	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_MacroVisualStep, [this](IXMLFileNodePtr objNode) -> void
 								 {
+									 if ( CheckAbort() ) return;
 									 GdtfMacroVisualStepPtr macroVisual= new GdtfMacroVisualStep();
 									 
 									 macroVisual->ReadFromNode(objNode);
@@ -11464,6 +11570,7 @@ void SceneData::GdtfMacroVisualStep::OnReadFromNode(const IXMLFileNodePtr & pNod
 	// Read the childs
 	GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_MacroVisualValue, [this](IXMLFileNodePtr objNode) -> void
 								 {
+									 if ( CheckAbort() ) return;
 									 GdtfMacroVisualValuePtr visuealVal = new GdtfMacroVisualValue();
 									 
 									 visuealVal->ReadFromNode(objNode);
@@ -11678,6 +11785,7 @@ void SceneData::GdtfSoftwareVersionID::OnReadFromNode(const IXMLFileNodePtr & pN
     // Read the childs
     GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_DMXPersonalityNodeNam, [this](IXMLFileNodePtr objNode) -> void
     {
+		if ( CheckAbort() ) return;
         GdtfDMXPersonalityPtr dmxPerso = new GdtfDMXPersonality();
 
         dmxPerso->ReadFromNode(objNode);
@@ -12072,6 +12180,7 @@ void SceneData::GdtfPhysicalDescriptions::OnReadFromNode(const IXMLFileNodePtr &
 	// Read AdditionalColorSpaces (PhysicalDescription Child)
 	GdtfConverter::TraverseNodes(pNode, XML_GDTF_PhysicalDescriptionsColorSpaceCollect, XML_GDTF_ColorSpaceNode, [this] (IXMLFileNodePtr objNode) -> void
 									{
+										if ( CheckAbort() ) return;
 										// Create the object
 										GdtfColorSpacePtr colorSpace = new GdtfColorSpace();
 										 
@@ -12086,6 +12195,7 @@ void SceneData::GdtfPhysicalDescriptions::OnReadFromNode(const IXMLFileNodePtr &
 	// Read Gamuts (PhysicalDescription Child)
 	GdtfConverter::TraverseNodes(pNode, XML_GDTF_PhysicalDescriptionsGamutCollect, XML_GDTF_GamutNodeName, [this] (IXMLFileNodePtr objNode) -> void
 									{
+										if ( CheckAbort() ) return;	
 										// Create the object
 										GdtfGamutPtr gamut = new GdtfGamut();
 										 
@@ -12100,6 +12210,7 @@ void SceneData::GdtfPhysicalDescriptions::OnReadFromNode(const IXMLFileNodePtr &
 	// Read Filters
 	GdtfConverter::TraverseNodes(pNode, XML_GDTF_FiltersCollect, XML_GDTF_FilterNode, [this] (IXMLFileNodePtr objNode) -> void
 									{
+										if ( CheckAbort() ) return;
 										// Create the object
 										GdtfFilterPtr filter = new GdtfFilter();
 										 
@@ -12114,6 +12225,7 @@ void SceneData::GdtfPhysicalDescriptions::OnReadFromNode(const IXMLFileNodePtr &
     // Read Emitters (PhysicalDescription Child)
 	GdtfConverter::TraverseNodes(pNode, XML_GDTF_PhysicalDescriptionsEmitterCollect, XML_GDTF_EmitterNodeName, [this] (IXMLFileNodePtr objNode) -> void
 									{
+										if ( CheckAbort() ) return;
 										// Create the object
 										GdtfPhysicalEmitterPtr emitter = new GdtfPhysicalEmitter();
 										 
@@ -12127,6 +12239,7 @@ void SceneData::GdtfPhysicalDescriptions::OnReadFromNode(const IXMLFileNodePtr &
     // Read DmxProfiles (PhysicalDescription Child) 
     GdtfConverter::TraverseNodes(pNode, XML_GDTF_DMX_ProfileCollect, XML_GDTF_DMX_Profile, [this](IXMLFileNodePtr objNode) -> void
     {
+		if ( CheckAbort() ) return;
         // Create the object
         GdtfDMXProfilePtr dmxProfile = new GdtfDMXProfile();
 
@@ -12142,6 +12255,7 @@ void SceneData::GdtfPhysicalDescriptions::OnReadFromNode(const IXMLFileNodePtr &
     // Read CRIs
 	GdtfConverter::TraverseNodes(pNode, XML_GDTF_ColorRenderingIndexCollect, XML_GDTF_ColorRenderingIndexGroup, [this](IXMLFileNodePtr objNode) -> void
 									{
+										if ( CheckAbort() ) return;
 										GdtfCRIGroupPtr criGroup = new GdtfCRIGroup();
 											
 										// Read from node
@@ -12154,6 +12268,7 @@ void SceneData::GdtfPhysicalDescriptions::OnReadFromNode(const IXMLFileNodePtr &
 	// Read Connectors (PhysicalDescription Child)
 	GdtfConverter::TraverseNodes(pNode, XML_GDTF_ConnectorCollect, XML_GDTF_ConnectorNodeName, [this] (IXMLFileNodePtr objNode) -> void
 									{
+										if ( CheckAbort() ) return;
 										// Create the object
 										GdtfConnectorPtr connector = new GdtfConnector();
 										 
@@ -12476,6 +12591,7 @@ void SceneData::GdtfFilter::OnReadFromNode(const IXMLFileNodePtr & pNode)
     // Read the childs
     GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_MeasurementNodeName, [this](IXMLFileNodePtr objNode) -> void
     {
+		if ( CheckAbort() ) return;
         GdtfMeasurement* measurePt = new GdtfMeasurement(true);
 
         measurePt->ReadFromNode(objNode);
@@ -12612,6 +12728,7 @@ void SceneData::GdtfMeasurement::OnReadFromNode(const IXMLFileNodePtr & pNode)
     // Read the childs
     GdtfConverter::TraverseNodes(pNode, "", XML_GDTF_MeasurementPointNode, [this](IXMLFileNodePtr objNode) -> void
     {
+		if ( CheckAbort() ) return;
         GdtfMeasurementPoint* measurePt = new GdtfMeasurementPoint();
 
         measurePt->ReadFromNode(objNode);

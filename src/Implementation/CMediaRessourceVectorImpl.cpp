@@ -1023,21 +1023,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::OpenForRead
 	
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::SetCallback(std::function<void(const FixtureFeedback&)> cb, void* context)
-{
-	//---------------------------------------------------------------------------
-	// Set Path
-
-	if ( VCOM_FAILED(cb == nullptr) )	{return kVCOMError_Failed;}
-
-	FeedbackDispatcher::SetCallback( cb, context );
-
-	// If the file could not be read, we return a no file error
-	return kVCOMError_FileNotFound;
-
-}
-
-
 VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetDataProviderObjectCount(size_t& outCount)
 {
 	outCount = fExchangeObj.GetProviderObjects().size();
