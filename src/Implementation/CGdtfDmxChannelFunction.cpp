@@ -677,7 +677,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetCustom
 	if( ! fFunction) return kVCOMError_NotInitialized;
 
     TXString nameStr( name );
-    GdtfUtil::DoesNameContainInvalidChars( nameStr );
 
     fFunction->SetCustomName(nameStr);
 

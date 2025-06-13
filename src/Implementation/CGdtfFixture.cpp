@@ -364,7 +364,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::SetShortName(MvrStri
 	if(!fFixtureObject) {return kVCOMError_NotInitialized;}
 	
 	TXString vwName (shortName);
-    GdtfUtil::DoesNameContainInvalidChars( vwName );
 
 	fFixtureObject->SetShortName(vwName);
 	
@@ -376,7 +375,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::SetLongName(MvrStrin
 	if(!fFixtureObject) {return kVCOMError_NotInitialized;}
 	
 	TXString vwName (longname);
-	GdtfUtil::DoesNameContainInvalidChars( vwName );
 
 	fFixtureObject->SetLongName(vwName);
 	
@@ -570,9 +568,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateFeatureGroup(M
 	
 	TXString vwName		(name);
 	TXString vwPretty	(prettyName);
-	
-	GdtfUtil::DoesNameContainInvalidChars( vwName );
-	GdtfUtil::DoesNameContainInvalidChars( vwPretty );
 
 	SceneData::GdtfFeatureGroup* gdtfFeatureGroup = fFixtureObject->AddFeatureGroup(vwName, vwPretty);
 	
@@ -677,9 +672,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateAttribute(MvrS
 	
 	TXString vwName		(name);
 	TXString vwPretty	(prettyName);
-	
-    GdtfUtil::DoesNameContainInvalidChars( vwName );
-	GdtfUtil::DoesNameContainInvalidChars( vwPretty );
 
 	SceneData::GdtfAttribute* gdtfAttribute = fFixtureObject->AddAttribute(vwName, vwPretty);
 	

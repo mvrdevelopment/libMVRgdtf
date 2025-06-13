@@ -38,7 +38,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFeatureGroupImpl::SetPrettyName(M
 	if( ! fFeatureGroup) return kVCOMError_NotInitialized;
 
 	TXString vwName ( name );
-	GdtfUtil::DoesNameContainInvalidChars( vwName );
 
 	fFeatureGroup->SetPrettyName(vwName);
 
