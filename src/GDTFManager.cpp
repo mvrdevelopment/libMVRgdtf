@@ -7891,6 +7891,7 @@ GdtfAttributePtr GdtfFixture::getAttributeByRef(const TXString& ref)
 	// Check fi there
 	for (GdtfAttributePtr attr : fAttributes)
 	{
+		if(CheckAbort()) { return fNoFeature; }
 		if (fNoFeature == nullptr && XML_GDTF_AttributeNoFeature_nullptr == ref) { fNoFeature = attr; }
 		if (attr->GetNodeReference() == ref) { return attr; };
 	}
@@ -7961,6 +7962,7 @@ GdtfWheelPtr GdtfFixture::getWheelByRef(const TXString& ref)
 {
 	for (GdtfWheelPtr whl : fWheels)
 	{
+		if(CheckAbort()) { return nullptr; }
 		if (whl->GetNodeReference() == ref){ return whl;};
 	}
 	
@@ -7973,6 +7975,7 @@ GdtfPhysicalEmitterPtr GdtfFixture::getEmiterByRef(const TXString& ref)
 {
 	for (GdtfPhysicalEmitterPtr emt : fPhysicalDesciptions.GetPhysicalEmitterArray() )
 	{
+		if(CheckAbort()) { return nullptr; }
 		if (emt->GetNodeReference() == ref){ return emt;};
 	}
 
@@ -7985,6 +7988,7 @@ GdtfFilterPtr GdtfFixture::getFilterByRef(const TXString& ref)
 {
     for (GdtfFilterPtr fltr : fPhysicalDesciptions.GetFilterArray())
     {
+		if(CheckAbort()) { return nullptr; }
         if (fltr->GetNodeReference() == ref) { return fltr; }
     }
 
@@ -7997,6 +8001,7 @@ GdtfConnectorPtr GdtfFixture::getConnectorByRef(const TXString& ref)
 {
     for (GdtfConnectorPtr connector : fPhysicalDesciptions.GetConnectorArray())
     {
+		if(CheckAbort()) { return nullptr; }
         if (connector->GetNodeReference() == ref) { return connector; }
     }
 
@@ -8009,6 +8014,7 @@ GdtfColorSpacePtr GdtfFixture::getColorSpaceByRef(const TXString& ref)
 {
     for (GdtfColorSpacePtr colorSpace : fPhysicalDesciptions.GetAdditionalColorSpaceArray())
     {
+		if(CheckAbort()) { return nullptr; }
         if (colorSpace->GetNodeReference() == ref) { return colorSpace; }
     }
 
@@ -8021,6 +8027,7 @@ GdtfGamutPtr GdtfFixture::getGamutByRef(const TXString& ref)
 {
     for (GdtfGamutPtr gamut : fPhysicalDesciptions.GetGamutArray())
     {
+		if(CheckAbort()) { return nullptr; }
         if (gamut->GetNodeReference() == ref) { return gamut; }
     }
 
@@ -8033,6 +8040,7 @@ GdtfDMXProfilePtr GdtfFixture::getDMXProfileByRef(const TXString& ref)
 {
     for (GdtfDMXProfilePtr dmxProfile : fPhysicalDesciptions.GetDmxProfileArray())
     {
+		if(CheckAbort()) { return nullptr; }
         if (dmxProfile->GetNodeReference() == ref) { return dmxProfile; }
     }
 
@@ -8045,8 +8053,10 @@ GdtfSubPhysicalUnitPtr GdtfFixture::getSubPhysicalUnitByRef(const TXString& ref)
 {
     for (GdtfAttributePtr attr : fAttributes)
 	{
+		if(CheckAbort()) { return nullptr; }
 		for (GdtfSubPhysicalUnitPtr subPhysicalUnit : attr->GetSubPhysicalUnitArray())
 		{
+			if(CheckAbort()) { return nullptr; }
 			if(subPhysicalUnit->GetNodeReference() == ref) { return subPhysicalUnit; }
 		}
 	}
@@ -8060,13 +8070,13 @@ GdtfDmxChannelFunctionPtr GdtfFixture::getDmxFunctionByRef(const TXString& ref, 
 {
 	for(GdtfDmxChannelPtr channel : mode->GetChannelArray())
 	{
-		if(CheckAbort()) { return; }
+		if(CheckAbort()) { return nullptr; }
 		for(GdtfDmxLogicalChannelPtr logicalChannel : channel->GetLogicalChannelArray())
 		{
-			if(CheckAbort()) { return; }
+			if(CheckAbort()) { return nullptr; }
 			for(GdtfDmxChannelFunctionPtr function : logicalChannel->GetDmxChannelFunctions())
 			{
-				if(CheckAbort()) { return; }
+				if(CheckAbort()) { return nullptr; }
 				if(function->GetNodeReference() == ref) { return function; }
 			}
 		}
@@ -8079,6 +8089,7 @@ GdtfDmxChannelPtr GdtfFixture::getDmxChannelByRef(const TXString& ref, GdtfDmxMo
 {
 	for(GdtfDmxChannelPtr channel : mode->GetChannelArray())
 	{
+		if(CheckAbort()) { return nullptr; }
 		if(channel->GetNodeReference() == ref) { return channel; }
 	}
 
@@ -8223,6 +8234,7 @@ void GdtfFixture::ResolveGeometryRefs_Recursive(GdtfGeometryPtr geometry)
 	// Now traverse child geometry
 	for (GdtfGeometryPtr internalGeometry : geometry->GetInternalGeometries())
 	{
+		if(CheckAbort()) { return; }
 		ResolveGeometryRefs_Recursive(internalGeometry);
 	}
 }
