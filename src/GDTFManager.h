@@ -1631,6 +1631,7 @@ namespace SceneData
 		GdtfAttribute*		    fAttribute;
 		TXString				fOrignalAttribute;
 		DmxValue				fDefaultValue;
+		bool					fDefaultValueNone;
 		DmxValue				fAdressStart;
 		double					fPhysicalStart;
 		double					fPhysicalEnd;
@@ -1679,6 +1680,7 @@ namespace SceneData
         GdtfAttribute*				    GetAttribute();
 		const TXString&					GetOriginalAttribute();
 		DmxValue						GetDefaultValue() const;
+		bool							HasDefaultValue() const;
         DmxValue						GetStartAdress() const;
         DmxValue						GetEndAdress() const;
         double							GetPhysicalStart() const;

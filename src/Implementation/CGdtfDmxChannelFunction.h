@@ -19,6 +19,7 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE     GetAttribute(IGdtfAttribute** attribute);
         virtual MvrString VCOM_CALLTYPE     GetOriginalAttribute();
         virtual VCOMError VCOM_CALLTYPE     GetDefaultValue(DmxValue& defaultValue);
+		virtual VCOMError VCOM_CALLTYPE     HasDefaultValue(bool& defaultValue);
         virtual VCOMError VCOM_CALLTYPE     GetStartAddress(DmxValue& address);
         virtual VCOMError VCOM_CALLTYPE     GetEndAddress(DmxValue& address);
         virtual VCOMError VCOM_CALLTYPE     GetPhysicalStart(double& start);
