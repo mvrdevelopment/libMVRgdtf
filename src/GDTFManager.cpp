@@ -5147,6 +5147,7 @@ size_t GdtfDmxMode::GetFootPrintForBreak(size_t breakId)
 		// if channel is linked to the current geometry and the breaks match add the dmx addresses to the footprint 
 		for (GdtfDmxChannelPtr channel : fChannels)
 		{
+			if(CheckAbort()) { return 0; }
 			if(channel->GetGeomRef() == geoToCheck && channel->GetDmxBreak() == (Sint32)breakId && ! channel->IsVirtual()) 
 			{
 				GetAddressesFromChannel(addressesOfGeo, channel, 0);
@@ -5174,6 +5175,7 @@ size_t GdtfDmxMode::GetFootPrintForBreak(size_t breakId)
 
 					for (GdtfDmxChannelPtr channel : fChannels)
 					{
+						if(CheckAbort()) { return 0; }
 						if(channel->GetGeomRef() == geometryInRefToCheck)
 						{
 							if(channel->GetDmxBreak() != kDmxBreakOverwriteValue)
@@ -5211,6 +5213,7 @@ size_t GdtfDmxMode::GetFootPrintForBreak(size_t breakId)
 
 					for(GdtfDmxChannelPtr channel : fChannels)
 					{
+						if(CheckAbort()) { return 0; }
 						if(channel->GetGeomRef() == geometryInRefToCheck 
 							&& channel->GetDmxBreak() == (Sint32)breakId &&
 							! channel->IsVirtual())  
@@ -5237,6 +5240,7 @@ size_t GdtfDmxMode::GetFootPrintForBreak(size_t breakId)
 
 						for(GdtfDmxChannelPtr channel : fChannels)
 						{
+							if(CheckAbort()) { return 0; }
 							if(channel->GetGeomRef() == geometryInRefToCheck && channel->GetDmxBreak() == kDmxBreakOverwriteValue  && ! channel->IsVirtual()) 
 							{
 								GetAddressesFromChannel(addressesOfGeo, channel, overwriteBreak->GetDmxAddress()-1);
@@ -8128,6 +8132,7 @@ void GdtfFixture::ResolveGeometryRefs_Recursive(GdtfGeometryPtr geometry)
 		
 		for (GdtfModelPtr modelRef: fModels)
 		{
+			if(CheckAbort()) { return; }
 			if (modelRef->GetNodeReference() == unresolvedModelRef)	{ linkedModel = modelRef; break; }
 		}
 		
