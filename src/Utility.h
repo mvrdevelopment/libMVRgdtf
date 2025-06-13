@@ -18,7 +18,7 @@ namespace VectorworksMVR
 		static void ConvertMatrix(const VWTransformMatrix & vwmatrix, VectorworksMVR::STransformMatrix & smatrix);
 		static void ConvertVector3(const VWPoint3D & vector, VectorworksMVR::SVector3 & svector);
 
-		static bool GdtfUtil::IsValidNameChar( TXChar codepoint );
+		static bool IsValidNameChar( TXChar codepoint );
 		static void DoesNameContainInvalidChars( TXString& name );
 	};
 
