@@ -6,6 +6,7 @@
 #include "CGdtfDmxSubChannelSet.h"
 #include "CGdtfSubPhysicalUnit.h"
 #include "CGdtfDmxProfile.h"
+#include "Utility.h"
 
 using namespace VectorworksMVR::Filing;
 
@@ -137,6 +138,9 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxSubChannelSetImpl::SetName(Mvr
 {
 	if( ! fSubChannelSet) return kVCOMError_NotInitialized;	
 	
+	TXString vwName ( name );
+	GdtfUtil::DoesNameContainInvalidChars( vwName );
+
     fSubChannelSet->SetName(name);
 
    	return kVCOMError_NoError;    

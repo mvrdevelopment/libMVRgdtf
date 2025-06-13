@@ -6,6 +6,7 @@
 #include "CGdtfFilter.h"
 #include "CGdtfMeasurement.h"
 #include "XmlFileHelper.h"
+#include "Utility.h"
 
 using namespace VectorworksMVR;
 
@@ -41,6 +42,9 @@ VCOMError VCOM_CALLTYPE VectorworksMVR::CGdtfFilterImpl::SetName(MvrString name)
     // Check if valid
     if(!fFilter) return kVCOMError_NotInitialized;
 	
+	TXString nameStr( name );
+	GdtfUtil::DoesNameContainInvalidChars( nameStr );
+
     fFilter->SetName(name);
 
     return kVCOMError_NoError;   

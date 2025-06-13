@@ -5,6 +5,7 @@
 #include "CGdtfFeature.h"
 #include "CGdtfFeatureGroup.h"
 #include "CGdtfAttribute.h"
+#include "Utility.h"
 
 
 using namespace VectorworksMVR::Filing;
@@ -41,7 +42,10 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFeatureImpl::SetName(MvrString na
   	// Check if valid
 	if(!fFeature) return kVCOMError_NotInitialized;
 
-    fFeature->SetName(name);
+	TXString nameStr( name );
+	GdtfUtil::DoesNameContainInvalidChars( nameStr );
+
+    fFeature->SetName(nameStr);
 
     return kVCOMError_NoError;
 }

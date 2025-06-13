@@ -406,7 +406,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetGdtfName(MvrString g
 	if( fType == ESceneObjType::Layer || fType == ESceneObjType::Group) return kVCOMError_NoValidContainerObj;
 	SceneData::SceneDataGDTFSpecObjPtr gdtfSpecObj = static_cast<SceneData::SceneDataGDTFSpecObjPtr>(fPtr);
 	
-	TXString name (gdtfName);
+	TXString name ( gdtfName );
 	gdtfSpecObj->SetGDTFFile(gdtfName);
 	
 	return kVCOMError_NoError;

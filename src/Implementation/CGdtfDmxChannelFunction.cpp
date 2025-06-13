@@ -15,6 +15,7 @@
 #include "CGdtfGamut.h"
 #include "CGdtfDmxProfile.h"
 #include "CGdtfSubPhysicalUnit.h"
+#include "Utility.h"
 
 using namespace VectorworksMVR::Filing;
 
@@ -675,7 +676,9 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::SetCustom
   	// Check if valid
 	if( ! fFunction) return kVCOMError_NotInitialized;
 
-    fFunction->SetCustomName(name);
+    TXString nameStr( name );
+
+    fFunction->SetCustomName(nameStr);
 
     return kVCOMError_NoError;
 }
@@ -744,6 +747,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::CreateDmx
 	//---------------------------------------------------------------------------
 	// Initialize Object
 	TXString vwName (name);
+	GdtfUtil::DoesNameContainInvalidChars( vwName );
 	
 	SceneData::GdtfDmxChannelSet*	gdtfChannelSet = fFunction->AddChannelSet(vwName);
 	gdtfChannelSet->SetDmxStart(start);
@@ -844,10 +848,13 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::CreateDmx
 	CGdtfSubPhysicalUnitImpl* pSubPhysicalUnitObj = static_cast<CGdtfSubPhysicalUnitImpl*>(subPhysicalUnit);
 	if(!pSubPhysicalUnitObj) { return kVCOMError_InvalidArg; }
 
+    TXString nameStr( name );
+    GdtfUtil::DoesNameContainInvalidChars( nameStr );
+
     //---------------------------------------------------------------------------
     // Initialize Object
     SceneData::GdtfSubPhysicalUnit* gdtfSubPhysicalUnit = pSubPhysicalUnitObj->GetPointer();
-	SceneData::GdtfDmxSubChannelSet* gdtfSubChannelSet  = fFunction->AddSubChannelSet(gdtfSubPhysicalUnit, name);
+	SceneData::GdtfDmxSubChannelSet* gdtfSubChannelSet  = fFunction->AddSubChannelSet(gdtfSubPhysicalUnit, nameStr);
     
     CGdtfDmxSubChannelSetImpl* pSubChannelSetObj = nullptr;
     
