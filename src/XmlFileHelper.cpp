@@ -2166,10 +2166,26 @@ TXString GdtfConverter::ConvertTransmissionTypeEnum( GdtfDefines::ETransmissionT
 	TXString result;
 	switch ( value )
 	{
-		case ETransmissionType::Anycast:	result = XML_Val_ProtocolAnycast;
-		case ETransmissionType::Multicast:	result = XML_Val_ProtocolMulticast;
-		case ETransmissionType::Unicast:	result = XML_Val_ProtocolUnicast;
-		case ETransmissionType::Broadcast:	result = XML_Val_ProtocolBroadcast;
+		case ETransmissionType::Anycast:
+		{
+			result = XML_Val_ProtocolAnycast;
+			break;
+		}
+		case ETransmissionType::Multicast:
+		{
+			result = XML_Val_ProtocolMulticast;
+			break;
+		}
+		case ETransmissionType::Unicast:
+		{
+			result = XML_Val_ProtocolUnicast;
+			break;
+		}
+		case ETransmissionType::Broadcast:
+		{
+			result = XML_Val_ProtocolBroadcast;
+			break;
+		}
 	}
 
 	return result;
