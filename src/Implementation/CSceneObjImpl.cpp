@@ -1051,7 +1051,17 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetFixtureIdNumeric(siz
 	SceneData::SceneDataFixtureObjPtr fixture = static_cast<SceneData::SceneDataFixtureObjPtr>(fPtr);
 	if( ! fixture) return kVCOMError_NoFixtureObj;
 
-	value = fixture->GetFixtureIdNumeric();
+	TXString fixtureID = fixture->GetFixtureId();
+	size_t fixtureIDNumeric = fixture->GetFixtureIdNumeric();
+
+	if ( fixtureID.atoi() == fixtureIDNumeric && fixtureID != "" )
+	{
+		value = fixtureIDNumeric;
+	}
+	else
+	{
+		return kVCOMError_NotSet;
+	}
 
 	return kVCOMError_NoError;
 }
