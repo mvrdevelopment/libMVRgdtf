@@ -1054,7 +1054,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetFixtureIdNumeric(siz
 	TXString fixtureID = fixture->GetFixtureId();
 	size_t fixtureIDNumeric = fixture->GetFixtureIdNumeric();
 
-	if ( fixtureID.atoi() == fixtureIDNumeric )
+	if ( fixtureID.atoi() == fixtureIDNumeric && fixtureID != "" )
 	{
 		value = fixtureIDNumeric;
 	}
