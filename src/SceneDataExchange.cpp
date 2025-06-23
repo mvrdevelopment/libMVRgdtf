@@ -2147,8 +2147,15 @@ void SceneDataFixtureObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange
 	IXMLFileNodePtr pChannelIdNode;
 	if ( VCOM_SUCCEEDED( pNode->CreateChildNode( XML_Val_FixtureFixtureID, & pChannelIdNode ) ) )
 	{
-		pChannelIdNode->SetNodeValue( GetFixtureId() );
-		
+		pChannelIdNode->SetNodeValue( this->GetFixtureId() );
+	}
+
+	//--------------------------------------------------------------------------------------------
+	// Print the FixtureIdNumeric
+	IXMLFileNodePtr pFixtureIdNumericNode;
+	if ( VCOM_SUCCEEDED( pNode->CreateChildNode( XML_Val_FixtureFixtureIDNumeric, & pFixtureIdNumericNode ) ) )
+	{
+		pFixtureIdNumericNode->SetNodeValue(GdtfConverter::ConvertInteger(this->GetFixtureIdNumeric()));
 	}
 	
 	//--------------------------------------------------------------------------------------------
@@ -2275,7 +2282,11 @@ void SceneDataFixtureObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneData
 	IXMLFileNodePtr pFixtureId;
 	if ( VCOM_SUCCEEDED( pNode->GetChildNode( XML_Val_FixtureFixtureID, & pFixtureId ) ) )			{ pFixtureId->GetNodeValue(fFixtureId); }
 
-
+	//--------------------------------------------------------------------------------------------
+	// Read the FixtureIDNumeric
+	IXMLFileNodePtr pFixtureIdNumeric;
+	TXString		fixtureIdNumeric;
+	if ( VCOM_SUCCEEDED( pNode->GetChildNode( XML_Val_FixtureFixtureIDNumeric, &pFixtureIdNumeric ) ) ) { pFixtureIdNumeric->GetNodeValue(fixtureIdNumeric); GdtfConverter::ConvertInteger(fixtureIdNumeric, pNode, fFixtureIdNumeric); }
 
 	//--------------------------------------------------------------------------------------------
 	// Read the UnitNumber
