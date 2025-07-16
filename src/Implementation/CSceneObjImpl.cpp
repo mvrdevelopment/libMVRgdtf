@@ -330,7 +330,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetGdtfFixture(IGdtfFix
 	
 	// Check the type is right
 	ASSERTN(kEveryone,fType != ESceneObjType::Layer && fType != ESceneObjType::Group);
-	if( fType == ESceneObjType::Layer || fType == ESceneObjType::Group) return kVCOMError_NoValidContainerObj;	
+	if( fType == ESceneObjType::Layer || fType == ESceneObjType::Group || fType == ESceneObjType::FocusPoint) return kVCOMError_NoValidContainerObj;	
 	SceneData::SceneDataGDTFSpecObjPtr gdtfSpecObj = static_cast<SceneData::SceneDataGDTFSpecObjPtr>(fPtr);
 	
 	//---------------------------------------------------------------------------------------------------
