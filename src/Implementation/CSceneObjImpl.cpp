@@ -315,7 +315,7 @@ MvrString VectorworksMVR::CSceneObjImpl::GetGdtfName()
 	
 	// Check the type is right
 	ASSERTN(kEveryone,fType != ESceneObjType::Layer && fType != ESceneObjType::Group);
-	if( fType == ESceneObjType::Layer || fType == ESceneObjType::Group) return "";
+	if( fType == ESceneObjType::Layer || fType == ESceneObjType::Group || fType == ESceneObjType::FocusPoint) return "";
 	
 	SceneData::SceneDataGDTFSpecObjPtr gdtfSpecObj = static_cast<SceneData::SceneDataGDTFSpecObjPtr >(fPtr);
 
@@ -330,7 +330,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetGdtfFixture(IGdtfFix
 	
 	// Check the type is right
 	ASSERTN(kEveryone,fType != ESceneObjType::Layer && fType != ESceneObjType::Group);
-	if( fType == ESceneObjType::Layer || fType == ESceneObjType::Group) return kVCOMError_NoValidContainerObj;	
+	if( fType == ESceneObjType::Layer || fType == ESceneObjType::Group || fType == ESceneObjType::FocusPoint) return kVCOMError_NoValidContainerObj;	
 	SceneData::SceneDataGDTFSpecObjPtr gdtfSpecObj = static_cast<SceneData::SceneDataGDTFSpecObjPtr>(fPtr);
 	
 	//---------------------------------------------------------------------------------------------------
@@ -403,7 +403,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetGdtfName(MvrString g
 	
 	// Check the type is right
 	ASSERTN(kEveryone,fType != ESceneObjType::Layer && fType != ESceneObjType::Group);
-	if( fType == ESceneObjType::Layer || fType == ESceneObjType::Group) return kVCOMError_NoValidContainerObj;
+	if( fType == ESceneObjType::Layer || fType == ESceneObjType::Group || fType == ESceneObjType::FocusPoint) return kVCOMError_NoValidContainerObj;
 	SceneData::SceneDataGDTFSpecObjPtr gdtfSpecObj = static_cast<SceneData::SceneDataGDTFSpecObjPtr>(fPtr);
 	
 	TXString name ( gdtfName );
@@ -420,7 +420,7 @@ MvrString VectorworksMVR::CSceneObjImpl::GetGdtfMode()
 	
 	// Check the type is right
 	ASSERTN(kEveryone,fType != ESceneObjType::Layer && fType != ESceneObjType::Group);
-	if( fType == ESceneObjType::Layer || fType == ESceneObjType::Group) return "";	
+	if( fType == ESceneObjType::Layer || fType == ESceneObjType::Group || fType == ESceneObjType::FocusPoint) return "";	
 	SceneData::SceneDataGDTFSpecObjPtr gdtfSpecObj = static_cast<SceneData::SceneDataGDTFSpecObjPtr>(fPtr);
 	
 	return gdtfSpecObj->GetGdtfDmxMode().GetCharPtr();
@@ -434,7 +434,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetGdtfMode(MvrString g
 	
 	// Check the type is right
 	ASSERTN(kEveryone,fType != ESceneObjType::Layer && fType != ESceneObjType::Group);
-	if( fType == ESceneObjType::Layer || fType == ESceneObjType::Group) return kVCOMError_NoValidContainerObj;
+	if( fType == ESceneObjType::Layer || fType == ESceneObjType::Group || fType == ESceneObjType::FocusPoint) return kVCOMError_NoValidContainerObj;
 	SceneData::SceneDataGDTFSpecObjPtr gdtfSpecObj = static_cast<SceneData::SceneDataGDTFSpecObjPtr>(fPtr);
 
 	TXString name (gdtfMode);
