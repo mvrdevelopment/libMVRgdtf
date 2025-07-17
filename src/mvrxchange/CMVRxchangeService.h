@@ -52,6 +52,8 @@ namespace VectorworksMVR
 		void mDNS_Client_Stop();
 		void mDNS_Client_Start();
 
+		TXString FilterCannonicalName( const TXString& name ) const;
+
 
         
 		std::vector<std::unique_ptr<mdns_cpp::mDNS>>	fmdns;
