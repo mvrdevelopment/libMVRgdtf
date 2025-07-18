@@ -58,7 +58,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetGuid(MvrUUID& outGui
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetMultipatch( MvrUUID& multipatch )
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetMultipatch( const MvrUUID& multipatch )
 {
 	// Check if this is initialized
 	ASSERTN( kEveryone, fPtr );
@@ -66,6 +66,18 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetMultipatch( MvrUUID&
 
 	// Set Multipatch
 	fPtr->setMultipatch( multipatch );
+
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetMultipatch(MvrUUID& multipatch)
+{
+	// Check if this is initialized
+	ASSERTN( kEveryone, fPtr );
+	if ( !fPtr ) return kVCOMError_NotInitialized;
+
+	// Get Multipatch
+	multipatch = fPtr->getMultipatch();
 
 	return kVCOMError_NoError;
 }

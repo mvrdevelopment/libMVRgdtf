@@ -117,8 +117,10 @@ namespace SceneData
 		SceneDataGUID&	getGuid();
 		const TXString&	getName() const;
 		void			setName(const TXString& value);
+
 		void            setMultipatch( const MvrUUID& value );
-		
+		const MvrUUID&	getMultipatch() const;
+
 		// Write
 		virtual void	PrintToFile(IXMLFileNodePtr pContainerNode, SceneDataExchange* exchange);
 		void			ReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange);

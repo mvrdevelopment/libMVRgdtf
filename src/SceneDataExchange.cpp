@@ -239,6 +239,11 @@ void SceneDataObj::setMultipatch( const MvrUUID& value )
 	fMultipatchGuid = value;
 }
 
+const MvrUUID& SceneDataObj::getMultipatch() const
+{
+	return fMultipatchGuid;
+}
+
 void SceneDataObj::PrintToFile(IXMLFileNodePtr pContainerNode, SceneDataExchange* exchange)
 {
     // Create the new node
@@ -299,15 +304,21 @@ void SceneDataObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchang
 	//The guid is already in the object, you only have to read the name here
 	TXString name;
 	pNode->GetNodeAttributeValue(XML_Val_NameAttrName, name);
-	setName(name);
+	this->setName(name);
 
 	TXString multipatch;
 	pNode->GetNodeAttributeValue( XML_Val_MultipatchAttrName, multipatch );
 
-	VWUUID multipatchUuid(multipatch);
-	MvrUUID mvrMultipatchUUID(0,0,0,0);
-	multipatchUuid.GetUUID( mvrMultipatchUUID.a, mvrMultipatchUUID.b, mvrMultipatchUUID.c, mvrMultipatchUUID.d );
-	this->setMultipatch(mvrMultipatchUUID);
+	if ( !multipatch.IsEmpty() )
+	{	
+		VWUUID multipatchUuid;
+		if ( multipatchUuid.FromString( multipatch, false ) )
+		{
+			MvrUUID mvrMultipatchUUID(0,0,0,0);
+			multipatchUuid.GetUUID( mvrMultipatchUUID.a, mvrMultipatchUUID.b, mvrMultipatchUUID.c, mvrMultipatchUUID.d );
+			this->setMultipatch(mvrMultipatchUUID);
+		}
+	}
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------------
