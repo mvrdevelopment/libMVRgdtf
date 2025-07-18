@@ -211,7 +211,7 @@ ESceneDataObjectType SceneDataGeometryObj::GetObjectType()
 // SceneDataObj
 SceneDataObj::SceneDataObj(const SceneDataGUID& guid) : fGuid(guid)
 {
-	
+	fMultipatchGuid = MvrUUID( 0, 0, 0, 0 );
 }
 
 SceneDataObj::~SceneDataObj()
@@ -232,6 +232,16 @@ const TXString& SceneDataObj::getName() const
 void SceneDataObj::setName(const TXString& value)
 {
 	fName = value;
+}
+
+void SceneDataObj::setMultipatch( const MvrUUID& value )
+{
+	fMultipatchGuid = value;
+}
+
+const MvrUUID& SceneDataObj::getMultipatch() const
+{
+	return fMultipatchGuid;
 }
 
 void SceneDataObj::PrintToFile(IXMLFileNodePtr pContainerNode, SceneDataExchange* exchange)
@@ -263,6 +273,17 @@ void SceneDataObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* excha
 	{
 		pNode->SetNodeAttributeValue(XML_Val_NameAttrName, nameAttrStr);
 	}
+
+	//------------------------------------------------------------------------------------
+	if ( !fMultipatchGuid.isEmpty() )
+	{
+		VWUUID multipatchUuid( fMultipatchGuid.a, fMultipatchGuid.b, fMultipatchGuid.c, fMultipatchGuid.d );
+		pNode->SetNodeAttributeValue( XML_Val_MultipatchAttrName, multipatchUuid.ToString( false ) );
+	}
+	else
+	{
+		pNode->SetNodeAttributeValue( XML_Val_MultipatchAttrName, "" );
+	}
 }
 
 void SceneDataObj::ReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
@@ -283,7 +304,21 @@ void SceneDataObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchang
 	//The guid is already in the object, you only have to read the name here
 	TXString name;
 	pNode->GetNodeAttributeValue(XML_Val_NameAttrName, name);
-	setName(name);
+	this->setName(name);
+
+	TXString multipatch;
+	pNode->GetNodeAttributeValue( XML_Val_MultipatchAttrName, multipatch );
+
+	if ( !multipatch.IsEmpty() )
+	{	
+		VWUUID multipatchUuid;
+		if ( multipatchUuid.FromString( multipatch, false ) )
+		{
+			MvrUUID mvrMultipatchUUID(0,0,0,0);
+			multipatchUuid.GetUUID( mvrMultipatchUUID.a, mvrMultipatchUUID.b, mvrMultipatchUUID.c, mvrMultipatchUUID.d );
+			this->setMultipatch(mvrMultipatchUUID);
+		}
+	}
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------------

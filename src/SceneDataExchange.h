@@ -111,11 +111,16 @@ namespace SceneData
 	private:
 		SceneDataGUID	fGuid;
 		TXString		fName;
+		MvrUUID         fMultipatchGuid;
+
 	public:
 		SceneDataGUID&	getGuid();
 		const TXString&	getName() const;
 		void			setName(const TXString& value);
-		
+
+		void            setMultipatch( const MvrUUID& value );
+		const MvrUUID&	getMultipatch() const;
+
 		// Write
 		virtual void	PrintToFile(IXMLFileNodePtr pContainerNode, SceneDataExchange* exchange);
 		void			ReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange);
@@ -571,7 +576,6 @@ namespace SceneData
 		
 		SceneDataConnectionObjPtr			AddConnectionObj(const TXString& own, const TXString& other, const SceneDataGUID toObject);
 		const SceneDataConnectionObjArray&	GetConnectionArr() const;
-		
 
 	protected:
 		void						ReadMatrixNodeValue(const IXMLFileNodePtr& pNode, VWPoint3D& inOutPoint);
