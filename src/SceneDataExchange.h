@@ -104,38 +104,34 @@ namespace SceneData
 		friend SceneDataExchange;
 		
 	public:
-		SceneDataObj(const SceneDataGUID& guid);
-		virtual ~SceneDataObj();
-		
+											SceneDataObj(const SceneDataGUID& guid);
+		virtual								~SceneDataObj();
 
 	private:
-		SceneDataGUID	fGuid;
-		TXString		fName;
-		MvrUUID         fMultipatchGuid;
+		SceneDataGUID						fGuid;
+		TXString							fName;
+		SceneDataObj*						fMultipatchObj = nullptr;
 
 	public:
-		SceneDataGUID&	getGuid();
-		const TXString&	getName() const;
-		void			setName(const TXString& value);
+		SceneDataGUID&						getGuid();
+		const TXString&						getName() const;
+		void								setName(const TXString& value);
 
-		void            setMultipatch( const MvrUUID& value );
-		const MvrUUID&	getMultipatch() const;
+		void								setMultipatch( SceneDataObj* value );
+		SceneDataObj*				        getMultipatch() const;
 
 		// Write
-		virtual void	PrintToFile(IXMLFileNodePtr pContainerNode, SceneDataExchange* exchange);
-		void			ReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange);
+		virtual void						PrintToFile(IXMLFileNodePtr pContainerNode, SceneDataExchange* exchange);
+		void								ReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange);
 		
 	public:
-		virtual ESceneDataObjectType	GetObjectType() = 0;
+		virtual ESceneDataObjectType		GetObjectType() = 0;
 		
 	protected:
-		virtual	TXString				GetNodeName() = 0;
+		virtual	TXString					GetNodeName() = 0;
 		
-		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);
-		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange);
-		
-		
-		
+		virtual	void						OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);
+		virtual	void						OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange);
 		
 	};
 	typedef SceneDataObj*					SceneDataObjPtr;
@@ -1121,6 +1117,7 @@ namespace SceneData
 		bool	GetAttachedFileCountAt(size_t at, IFileIdentifierPtr& outFile);
 
 		bool	GetDuplicatedUuids() const;		
+		SceneDataObjPtr		GetSceneObjByUUID( const SceneDataGUID& guid );
 		
 	private:
 		void ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xmlFile);

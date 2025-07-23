@@ -211,7 +211,6 @@ ESceneDataObjectType SceneDataGeometryObj::GetObjectType()
 // SceneDataObj
 SceneDataObj::SceneDataObj(const SceneDataGUID& guid) : fGuid(guid)
 {
-	fMultipatchGuid = MvrUUID( 0, 0, 0, 0 );
 }
 
 SceneDataObj::~SceneDataObj()
@@ -234,14 +233,14 @@ void SceneDataObj::setName(const TXString& value)
 	fName = value;
 }
 
-void SceneDataObj::setMultipatch( const MvrUUID& value )
+void SceneDataObj::setMultipatch( SceneDataObj* value )
 {
-	fMultipatchGuid = value;
+	fMultipatchObj = value;
 }
 
-const MvrUUID& SceneDataObj::getMultipatch() const
+SceneDataObj* SceneDataObj::getMultipatch() const
 {
-	return fMultipatchGuid;
+	return fMultipatchObj;
 }
 
 void SceneDataObj::PrintToFile(IXMLFileNodePtr pContainerNode, SceneDataExchange* exchange)
@@ -275,14 +274,10 @@ void SceneDataObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* excha
 	}
 
 	//------------------------------------------------------------------------------------
-	if ( !fMultipatchGuid.isEmpty() )
+	if ( fMultipatchObj )
 	{
-		VWUUID multipatchUuid( fMultipatchGuid.a, fMultipatchGuid.b, fMultipatchGuid.c, fMultipatchGuid.d );
-		pNode->SetNodeAttributeValue( XML_Val_MultipatchAttrName, multipatchUuid.ToString( false ) );
-	}
-	else
-	{
-		pNode->SetNodeAttributeValue( XML_Val_MultipatchAttrName, "" );
+		TXString multipatch = fMultipatchObj->getGuid().GetUUIDString();
+		pNode->SetNodeAttributeValue( XML_Val_MultipatchAttrName, multipatch );
 	}
 }
 
@@ -311,13 +306,9 @@ void SceneDataObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchang
 
 	if ( !multipatch.IsEmpty() )
 	{	
-		VWUUID multipatchUuid;
-		if ( multipatchUuid.FromString( multipatch, false ) )
-		{
-			MvrUUID mvrMultipatchUUID(0,0,0,0);
-			multipatchUuid.GetUUID( mvrMultipatchUUID.a, mvrMultipatchUUID.b, mvrMultipatchUUID.c, mvrMultipatchUUID.d );
-			this->setMultipatch(mvrMultipatchUUID);
-		}
+		SceneDataGUID uuid( multipatch );
+		const auto& multipatchObj = exchange->GetSceneObjByUUID(uuid);
+		this->setMultipatch(multipatchObj);
 	}
 }
 
@@ -2942,6 +2933,22 @@ SceneDataSymDefObjPtr SceneDataExchange::GetSymDefByUUID(const SceneDataGUID& gu
 	}
 	return nullptr;
 }
+
+SceneDataObjPtr SceneDataExchange::GetSceneObjByUUID(const SceneDataGUID& guid)
+{	
+	for (const auto& sceneObj: fSceneObjects)
+	{
+		if (sceneObj->getGuid() == guid)
+		{
+			SceneDataObjPtr sceneDataObj = static_cast<SceneDataObjPtr>(sceneObj);
+
+			ASSERTN(kEveryone, sceneDataObj != nullptr);
+			return sceneDataObj;
+		}
+	}
+	return nullptr;
+}
+
 
 SceneDataProviderObjPtr SceneDataExchange::CreateDataProviderObject(const TXString& provider, const TXString& version)
 {
