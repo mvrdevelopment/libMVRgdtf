@@ -58,7 +58,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetGuid(MvrUUID& outGui
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetMultipatch( ISceneObj* multipatchObj )
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetMultipatchParent( ISceneObj* multipatchObj )
 {
 	// ------------------------------------------------------------------------------------------
 	// Check the type is right
@@ -87,20 +87,17 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetMultipatch( ISceneOb
 
 	// ------------------------------------------------------------------------------------------
 	// Set the multipatch
-	currentObj->setMultipatch(multipatch);
+	currentObj->setMultipatchParent(multipatch);
 
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetMultipatch(ISceneObj** multipatchObj)
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetMultipatchParent(ISceneObj** multipatchObj)
 {
 	//---------------------------------------------------------------------------
 	// Check if this is initialized
-	ASSERTN(kEveryone,fPtr);
-	if( ! fPtr) return kVCOMError_NotInitialized;
-
-	ASSERTN(kEveryone,fContext);
-	if( ! fContext) return kVCOMError_NotInitialized;
+    ASSERTN(kEveryone, fPtr && fContext);
+    if (!fPtr || !fContext) return kVCOMError_NotInitialized;
 
 	//---------------------------------------------------------------------------
 	// Check if this is fixture
@@ -114,8 +111,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetMultipatch(ISceneObj
 	ASSERTN(kEveryone, currentObj);
 	if	( currentObj == nullptr) { return kVCOMError_Failed; }
 
-	SceneData::SceneDataObjWithMatrixPtr multipatch = static_cast<SceneData::SceneDataObjWithMatrixPtr>(currentObj->getMultipatch());
-
+	SceneData::SceneDataObjWithMatrixPtr multipatch = static_cast<SceneData::SceneDataObjWithMatrixPtr>(currentObj->getMultipatchParent());
 	if ( !multipatch ) { return kVCOMError_NotSet; }
 
 	//---------------------------------------------------------------------------
@@ -140,17 +136,17 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetMultipatch(ISceneObj
 	}
 
 	//---------------------------------------------------------------------------
-	// Check Incomming Object
+	// Check Incoming Object
 	if (*multipatchObj)
 	{
 		(*multipatchObj)->Release();
 		*multipatchObj		= NULL;
 	}
 
-
 	//---------------------------------------------------------------------------
-	// Set Out Value
+	// Return Multipatch
 	*multipatchObj		= pMultipatchPtr;
+
 	return kVCOMError_NoError;
 }
 

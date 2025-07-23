@@ -117,8 +117,8 @@ namespace SceneData
 		const TXString&						getName() const;
 		void								setName(const TXString& value);
 
-		void								setMultipatch( SceneDataObj* value );
-		SceneDataObj*				        getMultipatch() const;
+		void								setMultipatchParent( SceneDataObj* value );
+		SceneDataObj*				        getMultipatchParent() const;
 
 		// Write
 		virtual void						PrintToFile(IXMLFileNodePtr pContainerNode, SceneDataExchange* exchange);

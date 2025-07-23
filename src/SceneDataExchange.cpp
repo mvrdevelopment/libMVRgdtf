@@ -233,12 +233,12 @@ void SceneDataObj::setName(const TXString& value)
 	fName = value;
 }
 
-void SceneDataObj::setMultipatch( SceneDataObj* value )
+void SceneDataObj::setMultipatchParent( SceneDataObj* value )
 {
 	fMultipatchObj = value;
 }
 
-SceneDataObj* SceneDataObj::getMultipatch() const
+SceneDataObj* SceneDataObj::getMultipatchParent() const
 {
 	return fMultipatchObj;
 }
@@ -308,7 +308,7 @@ void SceneDataObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchang
 	{	
 		SceneDataGUID uuid( multipatch );
 		const auto& multipatchObj = exchange->GetSceneObjByUUID(uuid);
-		this->setMultipatch(multipatchObj);
+		this->setMultipatchParent(multipatchObj);
 	}
 }
 
