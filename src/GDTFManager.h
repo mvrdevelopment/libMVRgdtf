@@ -993,12 +993,15 @@ namespace SceneData
 	
 	private:
 		TXString	fTexture;
+		TXString    fAspectRatio;
 
 	public:
 		virtual EGdtfObjectType			GetObjectType();
 		const TXString&	GetTexture();
+		const TXString& GetAspectRatio() const;
 
 		void			SetTexture(const TXString& texture);
+		void			SetAspectRatio( const TXString& aspectRatio );
 
 	protected:
 		virtual	TXString				GetNodeName();

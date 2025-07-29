@@ -983,6 +983,31 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetTexture(MvrStrin
 	return kVCOMError_NoError;
 }
 
+MvrString VectorworksMVR::CGdtfGeometryImpl::GetAspectRatio() 
+{
+	if(!fGeometry) return "";
+
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryDisplay) return "";
+
+	SceneData::GdtfGeometryDisplayPtr display = static_cast<SceneData::GdtfGeometryDisplayPtr>(fGeometry);
+	if(!display) return "";
+
+	return display->GetAspectRatio().GetCharPtr();
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetAspectRatio(MvrString aspectRatio)
+{
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryDisplay) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometryDisplayPtr display = static_cast<SceneData::GdtfGeometryDisplayPtr>(fGeometry);
+	if(!display) return kVCOMError_Failed;
+
+	display->SetAspectRatio(aspectRatio);
+	return kVCOMError_NoError;
+}
+
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetCountLinkedDmxChannel(size_t& count, IGdtfDmxMode * forMode)
 {
 	// Get Count

@@ -65,7 +65,10 @@ namespace VectorworksMVR
 
         // Display
 		virtual MvrString VCOM_CALLTYPE		GetTexture();
-		virtual VCOMError VCOM_CALLTYPE		SetTexture(MvrString texture);
+        virtual MvrString VCOM_CALLTYPE		GetAspectRatio();
+        virtual VCOMError VCOM_CALLTYPE		SetTexture(MvrString texture);
+		virtual VCOMError VCOM_CALLTYPE		SetAspectRatio(MvrString aspectRatio);
+
 
         // Helpers
         virtual VCOMError VCOM_CALLTYPE     GetCountLinkedDmxChannel(size_t& count, IGdtfDmxMode * forMode);
