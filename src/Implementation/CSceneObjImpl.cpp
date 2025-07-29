@@ -58,6 +58,98 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetGuid(MvrUUID& outGui
 	return kVCOMError_NoError;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetMultipatchParent( ISceneObj* multipatchObj )
+{
+	// ------------------------------------------------------------------------------------------
+	// Check the type is right
+	ASSERTN(kEveryone, fType == ESceneObjType::Layer || fType == ESceneObjType::Group);
+	if( fType == ESceneObjType::Layer || fType == ESceneObjType::Group) return kVCOMError_InvalidArg;
+
+	// ------------------------------------------------------------------------------------------
+	// Check the container object
+	if ( ! multipatchObj) { return kVCOMError_InvalidArg; }
+
+	// ------------------------------------------------------------------------------------------
+	// Cast to object
+	CSceneObjImpl* pMultipatchObj = static_cast<CSceneObjImpl* >(multipatchObj);
+
+	ASSERTN(kEveryone, pMultipatchObj != nullptr);
+	if ( ! pMultipatchObj) { return kVCOMError_Failed;	}
+
+	// ------------------------------------------------------------------------------------------
+	// Cast to this object
+	SceneData::SceneDataObjWithMatrixPtr currentObj = static_cast<SceneData::SceneDataObjWithMatrixPtr>(fPtr);
+
+	SceneData::SceneDataObjWithMatrixPtr multipatch = static_cast<SceneData::SceneDataObjWithMatrixPtr>( pMultipatchObj->fPtr );
+
+	ASSERTN(kEveryone, multipatch != nullptr);
+	if ( !multipatch ) { return kVCOMError_Failed; }
+
+	// ------------------------------------------------------------------------------------------
+	// Set the multipatch
+	currentObj->setMultipatchParent(multipatch);
+
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetMultipatchParent(ISceneObj** multipatchObj)
+{
+	//---------------------------------------------------------------------------
+	// Check if this is initialized
+    ASSERTN(kEveryone, fPtr && fContext);
+    if (!fPtr || !fContext) return kVCOMError_NotInitialized;
+
+	//---------------------------------------------------------------------------
+	// Check if this is fixture
+	ASSERTN(kEveryone, fType == ESceneObjType::Layer || fType == ESceneObjType::Group);
+	if( fType == ESceneObjType::Layer || fType == ESceneObjType::Group) return kVCOMError_InvalidArg;
+
+	//---------------------------------------------------------------------------
+	// Check if you can cast this
+	SceneData::SceneDataObjWithMatrixPtr currentObj = static_cast<SceneData::SceneDataObjWithMatrixPtr>(fPtr);
+
+	ASSERTN(kEveryone, currentObj);
+	if	( currentObj == nullptr) { return kVCOMError_Failed; }
+
+	SceneData::SceneDataObjWithMatrixPtr multipatch = static_cast<SceneData::SceneDataObjWithMatrixPtr>(currentObj->getMultipatchParent());
+	if ( !multipatch ) { return kVCOMError_NotSet; }
+
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CSceneObjImpl* pMultipatchPtr = nullptr;
+
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_SceneObject, (IVWUnknown**) & pMultipatchPtr)))
+	{
+		// Check Casting
+		CSceneObjImpl* pResultInterface = static_cast<CSceneObjImpl* >(pMultipatchPtr);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(multipatch, fContext);
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+
+	//---------------------------------------------------------------------------
+	// Check Incoming Object
+	if (*multipatchObj)
+	{
+		(*multipatchObj)->Release();
+		*multipatchObj		= NULL;
+	}
+
+	//---------------------------------------------------------------------------
+	// Return Multipatch
+	*multipatchObj		= pMultipatchPtr;
+
+	return kVCOMError_NoError;
+}
+
 VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetTransfromMatrix(STransformMatrix& outMatrix)
 {
 	// Check if this is initialized

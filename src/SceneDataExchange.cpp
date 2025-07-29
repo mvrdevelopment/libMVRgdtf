@@ -211,7 +211,6 @@ ESceneDataObjectType SceneDataGeometryObj::GetObjectType()
 // SceneDataObj
 SceneDataObj::SceneDataObj(const SceneDataGUID& guid) : fGuid(guid)
 {
-	
 }
 
 SceneDataObj::~SceneDataObj()
@@ -232,6 +231,16 @@ const TXString& SceneDataObj::getName() const
 void SceneDataObj::setName(const TXString& value)
 {
 	fName = value;
+}
+
+void SceneDataObj::setMultipatchParent( SceneDataObj* value )
+{
+	fMultipatchObj = value;
+}
+
+SceneDataObj* SceneDataObj::getMultipatchParent() const
+{
+	return fMultipatchObj;
 }
 
 void SceneDataObj::PrintToFile(IXMLFileNodePtr pContainerNode, SceneDataExchange* exchange)
@@ -263,6 +272,13 @@ void SceneDataObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* excha
 	{
 		pNode->SetNodeAttributeValue(XML_Val_NameAttrName, nameAttrStr);
 	}
+
+	//------------------------------------------------------------------------------------
+	if ( fMultipatchObj )
+	{
+		TXString multipatch = fMultipatchObj->getGuid().GetUUIDString();
+		pNode->SetNodeAttributeValue( XML_Val_MultipatchAttrName, multipatch );
+	}
 }
 
 void SceneDataObj::ReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
@@ -283,7 +299,17 @@ void SceneDataObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchang
 	//The guid is already in the object, you only have to read the name here
 	TXString name;
 	pNode->GetNodeAttributeValue(XML_Val_NameAttrName, name);
-	setName(name);
+	this->setName(name);
+
+	TXString multipatch;
+	pNode->GetNodeAttributeValue( XML_Val_MultipatchAttrName, multipatch );
+
+	if ( !multipatch.IsEmpty() )
+	{	
+		SceneDataGUID uuid( multipatch );
+		const auto& multipatchObj = exchange->GetSceneObjByUUID(uuid);
+		this->setMultipatchParent(multipatchObj);
+	}
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------------
@@ -2907,6 +2933,22 @@ SceneDataSymDefObjPtr SceneDataExchange::GetSymDefByUUID(const SceneDataGUID& gu
 	}
 	return nullptr;
 }
+
+SceneDataObjPtr SceneDataExchange::GetSceneObjByUUID(const SceneDataGUID& guid)
+{	
+	for (const auto& sceneObj: fSceneObjects)
+	{
+		if (sceneObj->getGuid() == guid)
+		{
+			SceneDataObjPtr sceneDataObj = static_cast<SceneDataObjPtr>(sceneObj);
+
+			ASSERTN(kEveryone, sceneDataObj != nullptr);
+			return sceneDataObj;
+		}
+	}
+	return nullptr;
+}
+
 
 SceneDataProviderObjPtr SceneDataExchange::CreateDataProviderObject(const TXString& provider, const TXString& version)
 {
