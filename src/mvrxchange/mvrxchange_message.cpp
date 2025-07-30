@@ -187,18 +187,6 @@ void MVR_COMMIT_FromJson(const nlohmann::json& payload, IMVRxchangeService::MVR_
     }
 }
 
-void isRetOkay( const nlohmann::json& payload, VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage& in )
-{
-    if ( payload.contains( "OK" ) )
-    {
-        in.RetIsOK = HandleStringBool( payload[ "OK" ] );
-    }
-    else
-    {
-        in.RetIsOK = false;
-    }
-}
-
 // -----------------------------------------
 
 void MVRxchangePacket::FromExternalMessage(const VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage& in)
@@ -348,6 +336,18 @@ bool HandleStringBool(const nlohmann::json& item)
     }
 }
 
+void isRetOkay( const nlohmann::json& payload, VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage& in )
+{
+    if ( payload.contains( "OK" ) )
+    {
+        in.RetIsOK = HandleStringBool( payload[ "OK" ] );
+    }
+    else
+    {
+        in.RetIsOK = false;
+    }
+}
+
 void MVRxchangePacket::Internal_ToExternalMessage(const nlohmann::json& payload, VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage &in)
 {
     bool noUUIDError = true;
@@ -486,7 +486,7 @@ void MVRxchangePacket::Internal_ToExternalMessage(const nlohmann::json& payload,
     else if (payload["Type"] == "MVR_REQUEST_RET")
     {
         in.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_REQUEST_RET;
-        in.RetIsOK = HandleStringBool(payload["OK"]);
+		isRetOkay( payload, in );
         strcpy(in.RetError, payload["Message"].get<std::string>().c_str());
     }
     else if (payload["Type"] == "MVR_LEAVE")
@@ -505,7 +505,7 @@ void MVRxchangePacket::Internal_ToExternalMessage(const nlohmann::json& payload,
     else if (payload["Type"] == "MVR_LEAVE_RET")
     {
         in.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_LEAVE_RET;
-        in.RetIsOK = HandleStringBool(payload["OK"]);
+		isRetOkay( payload, in );
         strcpy(in.RetError, payload["Message"].get<std::string>().c_str());
     }else{
         throw std::runtime_error("Unable to parse payload type correctly");
