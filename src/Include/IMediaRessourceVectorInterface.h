@@ -434,6 +434,9 @@ namespace VectorworksMVR
 		//----------------------------------------------------------------------------------------
 		// methods to write a file
 	public:
+
+		virtual VCOMError VCOM_CALLTYPE		GetLibVersion( MvrString& outVersion ) = 0;
+
 		// Call this at the start of generating a MVR file
 		virtual VCOMError VCOM_CALLTYPE		OpenForWrite(MvrString fullPath) = 0;
 		virtual VCOMError VCOM_CALLTYPE		AddGdtfFolderLocation(MvrString fullPathToFolder) = 0;

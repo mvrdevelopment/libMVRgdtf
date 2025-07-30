@@ -17,6 +17,18 @@
 #pragma warning( disable : 4800)
 #endif	// _WINDOWS
 
+#ifndef LIB_VERSION_MAJOR
+#define LIB_VERSION_MAJOR 1
+#endif
+
+#ifndef LIB_VERSION_MINOR
+#define LIB_VERSION_MINOR 0
+#endif
+
+#ifndef LIB_VERSION_PATCH
+#define LIB_VERSION_PATCH 0
+#endif
+
 #include "GSTypes.h"
 #include "CommonPrefix.h"
 #include "Include/VectorworksMVR.h"

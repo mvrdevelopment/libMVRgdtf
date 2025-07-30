@@ -89,7 +89,7 @@ runs:
       run: |
         mkdir build_MD_NO_MZ
         cd build_MD_NO_MZ
-        cmake .. -DCMAKE_INSTALL_PREFIX:PATH=libs -T v142,version=14.29 -DWIN_RUNTIME_LIB=-MD -DXERCES_INCLUDE_PATH="..\xerces-c\build\libs\include;..\xerces\src" -DXERCES_LIB_PATH="..\xerces\build\libs\lib" -DXERCES_ROOT_PATH="..\xerces-c" -DDO_NOT_INCLUDE_MINI_ZIP=TRUE
+        cmake .. -DCMAKE_INSTALL_PREFIX:PATH=libs -T v142,version=14.29  -DWIN_RUNTIME_LIB=-MD -DXERCES_INCLUDE_PATH="..\xerces-c\build\libs\include;..\xerces\src" -DXERCES_LIB_PATH="..\xerces\build\libs\lib" -DXERCES_ROOT_PATH="..\xerces-c" -DDO_NOT_INCLUDE_MINI_ZIP=TRUE
         ren MvrGdtf.vcxproj MvrGdtf_ORG.vcxproj
 
     # libMVRGdtf - build Debug
