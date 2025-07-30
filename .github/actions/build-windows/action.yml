@@ -89,7 +89,7 @@ runs:
       run: |
         mkdir build_MD_NO_MZ
         cd build_MD_NO_MZ
-        cmake .. -DCMAKE_INSTALL_PREFIX:PATH=libs -T v142,version=14.29  -DWIN_RUNTIME_LIB=-MD -DXERCES_INCLUDE_PATH="..\xerces-c\build\libs\include;..\xerces\src" -DXERCES_LIB_PATH="..\xerces\build\libs\lib" -DXERCES_ROOT_PATH="..\xerces-c" -DDO_NOT_INCLUDE_MINI_ZIP=TRUE
+        cmake .. -DLIB_VERSION_MAJOR=1 -DLIB_VERSION_MINOR=2 -DLIB_VERSION_PATCH=3 -DCMAKE_INSTALL_PREFIX:PATH=libs -T v142,version=14.29  -DWIN_RUNTIME_LIB=-MD -DXERCES_INCLUDE_PATH="..\xerces-c\build\libs\include;..\xerces\src" -DXERCES_LIB_PATH="..\xerces\build\libs\lib" -DXERCES_ROOT_PATH="..\xerces-c" -DDO_NOT_INCLUDE_MINI_ZIP=TRUE
         ren MvrGdtf.vcxproj MvrGdtf_ORG.vcxproj
 
     # libMVRGdtf - build Debug
@@ -139,7 +139,7 @@ runs:
       run: |
         mkdir build_MD
         cd build_MD
-        cmake .. -DCMAKE_INSTALL_PREFIX:PATH=libs -T v142,version=14.29 -DWIN_RUNTIME_LIB=-MD -DXERCES_INCLUDE_PATH="..\xerces-c\build\libs\include;..\xerces\src" -DXERCES_LIB_PATH="..\xerces\build\libs\lib" -DXERCES_ROOT_PATH="..\xerces-c\build"
+        cmake .. -DLIB_VERSION_MAJOR=1 -DLIB_VERSION_MINOR=2 -DLIB_VERSION_PATCH=3 -DCMAKE_INSTALL_PREFIX:PATH=libs -T v142,version=14.29 -DWIN_RUNTIME_LIB=-MD -DXERCES_INCLUDE_PATH="..\xerces-c\build\libs\include;..\xerces\src" -DXERCES_LIB_PATH="..\xerces\build\libs\lib" -DXERCES_ROOT_PATH="..\xerces-c\build"
         ren MvrGdtf.vcxproj MvrGdtf_ORG.vcxproj
 
     # libMVRGdtf - build Debug
@@ -189,7 +189,7 @@ runs:
       run: |
         mkdir build_MT
         cd build_MT
-        cmake .. -DCMAKE_INSTALL_PREFIX:PATH=libs -T v142,version=14.29 -DWIN_RUNTIME_LIB=-MT -DXERCES_INCLUDE_PATH="..\xerces-c\build_mt\libs\include;..\xerces\src" -DXERCES_LIB_PATH="..\xerces\build_mt\libs\lib" -DXERCES_ROOT_PATH="..\xerces-c\build_mt"
+        cmake .. -DLIB_VERSION_MAJOR=1 -DLIB_VERSION_MINOR=2 -DLIB_VERSION_PATCH=3 -DCMAKE_INSTALL_PREFIX:PATH=libs -T v142,version=14.29 -DWIN_RUNTIME_LIB=-MT -DXERCES_INCLUDE_PATH="..\xerces-c\build_mt\libs\include;..\xerces\src" -DXERCES_LIB_PATH="..\xerces\build_mt\libs\lib" -DXERCES_ROOT_PATH="..\xerces-c\build_mt"
         ren MvrGdtf.vcxproj MvrGdtf_ORG.vcxproj
 
     # libMVRGdtf - build Debug

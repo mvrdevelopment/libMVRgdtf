@@ -42,7 +42,7 @@ runs:
       run: |
         mkdir build
         cd build
-        cmake .. -DUNITTEST=TRUE -DEXTRA_LIBS="curl;icuuc;icudata;icui18n;icuio" -DXERCES_LIB_PATH="$(pwd)/../../xerces-c/_build/lib/libxerces-c.a"
+        cmake .. -DLIB_VERSION_MAJOR=1 -DLIB_VERSION_MINOR=2 -DLIB_VERSION_PATCH=3  -DUNITTEST=TRUE -DEXTRA_LIBS="curl;icuuc;icudata;icui18n;icuio" -DXERCES_LIB_PATH="$(pwd)/../../xerces-c/_build/lib/libxerces-c.a"
         make -j
 
     - name: Prepare package
