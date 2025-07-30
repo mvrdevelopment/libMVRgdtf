@@ -17,6 +17,16 @@
 #pragma warning( disable : 4800)
 #endif	// _WINDOWS
 
+#ifndef LIB_VERSION_MAJOR
+#error "LIB_VERSION_MAJOR must be defined by the build system"
+#endif
+#ifndef LIB_VERSION_MINOR
+#error "LIB_VERSION_MINOR must be defined by the build system"
+#endif
+#ifndef LIB_VERSION_PATCH
+#error "LIB_VERSION_PATCH must be defined by the build system"
+#endif
+
 #include "GSTypes.h"
 #include "CommonPrefix.h"
 #include "Include/VectorworksMVR.h"

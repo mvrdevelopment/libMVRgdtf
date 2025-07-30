@@ -4131,4 +4131,16 @@ bool SceneDataExchange::GetDuplicatedUuids() const
 	return fDuplicatedUuids;
 }
 
+MvrString SceneDataExchange::GetLibVersion() const
+{
+	size_t majorVersion = LIB_VERSION_MAJOR;
+	size_t minorVersion = LIB_VERSION_MINOR;
+	size_t patchVersion = LIB_VERSION_PATCH;
+
+	TXString version = TXString(std::to_string(majorVersion).c_str()) + "." + TXString(std::to_string(minorVersion).c_str()) + "." + TXString(std::to_string(patchVersion).c_str());
+
+	MvrString libVersion = version.GetCharPtr();
+
+	return libVersion;
+}
 
