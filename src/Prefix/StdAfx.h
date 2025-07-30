@@ -18,15 +18,13 @@
 #endif	// _WINDOWS
 
 #ifndef LIB_VERSION_MAJOR
-#define LIB_VERSION_MAJOR 1
+#error "LIB_VERSION_MAJOR must be defined by the build system"
 #endif
-
 #ifndef LIB_VERSION_MINOR
-#define LIB_VERSION_MINOR 0
+#error "LIB_VERSION_MINOR must be defined by the build system"
 #endif
-
 #ifndef LIB_VERSION_PATCH
-#define LIB_VERSION_PATCH 0
+#error "LIB_VERSION_PATCH must be defined by the build system"
 #endif
 
 #include "GSTypes.h"

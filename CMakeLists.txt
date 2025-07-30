@@ -185,6 +185,7 @@ target_compile_definitions(MvrGdtf PRIVATE
     LIB_VERSION_MINOR=${LIB_VERSION_MINOR}
     LIB_VERSION_PATCH=${LIB_VERSION_PATCH}
 )
+
 target_link_libraries(MvrGdtf ${EXTRA_LIBS})
 
 if(${UNITTEST})
