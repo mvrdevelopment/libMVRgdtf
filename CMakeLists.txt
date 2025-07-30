@@ -190,6 +190,11 @@ target_link_libraries(MvrGdtf ${EXTRA_LIBS})
 
 if(${UNITTEST})
 target_compile_definitions(MvrGdtfUnitTest ${PREPROCESSORS})
+target_compile_definitions(MvrGdtfUnitTest PRIVATE
+    LIB_VERSION_MAJOR=${LIB_VERSION_MAJOR}
+    LIB_VERSION_MINOR=${LIB_VERSION_MINOR}
+    LIB_VERSION_PATCH=${LIB_VERSION_PATCH}
+)
 target_link_libraries(MvrGdtfUnitTest ${EXTRA_LIBS})
 
 #Append Runtime
