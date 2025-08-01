@@ -553,7 +553,9 @@ void CMVRxchangeServiceImpl::mDNS_Client_Task()
 		result.emplace_back();
 		ConnectToLocalServiceArgs& localServ = result.back();
 
-		localServ.Service = r.canonical_hostname.c_str();	
+		TXString cannonicalName = this->FilterCannonicalName( r.canonical_hostname );
+
+		localServ.Service = cannonicalName.GetStdString().c_str();	
 
 		for(auto& ip : r.ipV4_address)
 		{
@@ -616,4 +618,18 @@ void CMVRxchangeServiceImpl::mDNS_Client_Task()
 		fIsInitialized = true;
 	}
 
+}
+
+TXString CMVRxchangeServiceImpl::FilterCannonicalName( const TXString& name ) const
+{
+	TXString serviceAsString = MVRXChange_Service; // e.g. "_mvrxchange._tcp"
+	ptrdiff_t servicePos = name.Find(serviceAsString);
+	if (servicePos == std::string::npos)
+		return "";
+
+	ptrdiff_t dotBeforeGroup = name.ReverseFind('.', servicePos - 2);
+	if (dotBeforeGroup == std::string::npos)
+		dotBeforeGroup = -1;
+
+	return name.Mid(dotBeforeGroup + 1);
 }
