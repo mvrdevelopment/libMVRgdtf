@@ -7768,8 +7768,29 @@ bool GdtfFixture::ImportFromZip(IZIPFilePtr& zipfile)
 			IXMLFileNodePtr rootNode;
 			if (VCOM_SUCCEEDED(xmlFile->GetRootNode( & rootNode)))
 			{
+				TXString version;
+				rootNode->GetNodeAttributeValue( XML_GDTF_ROOTNODEATTRVERSION, version );
+				
+				int majorVersion = 0;
+				int minorVersion = 0;
+				size_t dotPos = version.Find(".");
+				if (dotPos != std::string::npos) {
+					TXString majorStr = version.Mid(0, dotPos);
+					TXString minorStr = version.Mid(dotPos + 1);
+					try {
+						majorVersion = std::stoi(majorStr.GetStdWString());
+						minorVersion = std::stoi(minorStr.GetStdWString());
+					} catch (...) {
+						majorVersion = 0;
+						minorVersion = 0;
+					}
+				}
+
+				this->SetMajorVersion( majorVersion );
+				this->SetMinorVersion( minorVersion );
+
 				IXMLFileNodePtr fixtureNode;
-				if (VCOM_SUCCEEDED(rootNode->GetChildNode(XML_GDTF_FixtureNodeName, & fixtureNode)))
+				if (VCOM_SUCCEEDED(rootNode->GetChildNode(XML_GDTF_FixtureNodeName, &fixtureNode)))
 				{
 					//---------------------------------------------------------------------------------------------
 					// Read Stuff
@@ -9900,6 +9921,16 @@ GdtfPhysicalDescriptions& SceneData::GdtfFixture::GetPhysicalDesciptionsContaine
     return fPhysicalDesciptions;
 }
 
+Sint32 GdtfFixture::GetMajorVersion() const
+{
+	return fMajorVersion;
+}
+
+Sint32 GdtfFixture::GetMinorVersion() const
+{
+	return fMinorVersion;
+}
+
 void GdtfFixture::SetName(const TXString& name)
 {
 	fName = name;
@@ -9954,6 +9985,16 @@ void GdtfFixture::SetThumbnailOffsetY(Sint32 thumbnailOffsetY)
 void GdtfFixture::SetCanHaveChildren(bool canHaveChildren)
 {
 	fCanHaveChildren = canHaveChildren;
+}
+
+void GdtfFixture::SetMajorVersion( Sint32 majorVersion )
+{
+	fMajorVersion = majorVersion;
+}
+
+void GdtfFixture::SetMinorVersion( Sint32 minorVersion )
+{
+	fMinorVersion = minorVersion;
 }
 
 //------------------------------------------------------------------------------------
