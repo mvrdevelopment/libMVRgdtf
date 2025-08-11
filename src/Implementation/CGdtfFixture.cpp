@@ -219,6 +219,28 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::ReadFromFile(IFileId
     return retVal;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetGDTFVersion( Sint32& major, Sint32& minor )
+{
+	if ( !fFixtureObject )
+	{
+		return kVCOMError_NotInitialized;
+	}
+
+    major = fFixtureObject->GetMajorVersion();
+	minor = fFixtureObject->GetMinorVersion();
+
+	if ( major <= 0 || minor <= 0 )
+	{
+		major = 0;
+		minor = 0;
+
+		return kVCOMError_Failed;
+	}
+
+	return kVCOMError_NoError;
+}
+
+
 MvrString VectorworksMVR::CGdtfFixtureImpl::GetName()
 {
     if(!fFixtureObject) {return "";}
