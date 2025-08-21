@@ -1886,6 +1886,7 @@ SceneDataFixtureObj::SceneDataFixtureObj(const SceneDataGUID& guid) : SceneDataG
 	fUnitNumber		= 0;
 	fFixtureTypeId	= 0;
 	fCustomId		= 0;
+	fFixtureIdNumeric = 0;
 	fGoboRotation 	= 0.0;
 	fCastShadow		= false;
 	fDMXInvertPan	= false;
