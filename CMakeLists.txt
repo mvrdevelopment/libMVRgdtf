@@ -8,8 +8,6 @@ set(DO_NOT_INCLUDE_MINI_ZIP FALSE CACHE BOOL "Set whether or not we include the 
 set(BUILD_MVR_XCHANGE_EXAMPLE FALSE CACHE BOOL "Whether to or not to build the MVRXChange example. Mutually exclusive with DO_NOT_INCLUDE_MINI_ZIP")
 set(DONT_USE_XERCES_AS_XMLLIB FALSE CACHE BOOL "Set whether or we use Xerces or tinyXML as xml lib")
 set(BUILD_MVR_XCHANGE TRUE CACHE BOOL "Set whether to include MVR_XChange in the build (requires boost)")
-#MA needs special difinitions for building a compatible version for grandMA3 under Linux
-set(BUILD_USING_MA_TOOLCHAIN_SPECIFICATIONS FALSE CACHE BOOL "Set whether or not to use specific definitions from MA Lighting to build compatible version for grandMA3")
 
 set(XERCES_ROOT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../xerces-c CACHE STRING "Set the build path where you called cmake.")
 set(XERCES_INCLUDE_PATH ${XERCES_ROOT_PATH}/src ${XERCES_ROOT_PATH}/build/src CACHE STRING "Set the include path")
@@ -171,27 +169,6 @@ endif(WIN32)
 # Link extra libs
 target_compile_definitions(MvrGdtf ${PREPROCESSORS})
 target_link_libraries(MvrGdtf ${EXTRA_LIBS})
-
-#MA needs special difinitions for building a compatible version for grandMA3 under Linux
-if (${BUILD_USING_MA_TOOLCHAIN_SPECIFICATIONS})
-    if(UNIX)
-        target_link_options(MvrGdtf PUBLIC
-            -stdlib=libc++
-            -nostdlib++
-            )
-        target_link_libraries(MvrGdtf
-            -Wl,--push-state,-Bstatic
-            -lc++
-            -lc++abi
-            -lunwind
-            -Wl,--pop-state
-            -static-libgcc
-            -lanl
-            -lrt
-            )
-        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
-    endif()
-endif()
 
 if(${UNITTEST})
 target_compile_definitions(MvrGdtfUnitTest ${PREPROCESSORS})
