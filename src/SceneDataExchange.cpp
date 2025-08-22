@@ -1886,6 +1886,7 @@ SceneDataFixtureObj::SceneDataFixtureObj(const SceneDataGUID& guid) : SceneDataG
 	fUnitNumber		= 0;
 	fFixtureTypeId	= 0;
 	fCustomId		= 0;
+	fFixtureIdNumeric = 0;
 	fGoboRotation 	= 0.0;
 	fCastShadow		= false;
 	fDMXInvertPan	= false;
@@ -2177,7 +2178,7 @@ void SceneDataFixtureObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange
 	//--------------------------------------------------------------------------------------------
 	// Print the FixtureIdNumeric
 	IXMLFileNodePtr pFixtureIdNumericNode;
-	if ( VCOM_SUCCEEDED( pNode->CreateChildNode( XML_Val_FixtureFixtureIDNumeric, & pFixtureIdNumericNode ) ) )
+	if ((this->GetFixtureIdNumeric() != 0) && VCOM_SUCCEEDED( pNode->CreateChildNode( XML_Val_FixtureFixtureIDNumeric, & pFixtureIdNumericNode ) ) )
 	{
 		pFixtureIdNumericNode->SetNodeValue(GdtfConverter::ConvertInteger(this->GetFixtureIdNumeric()));
 	}
