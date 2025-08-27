@@ -1128,7 +1128,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateDmxMode(MvrStr
 	if(!fFixtureObject) {return kVCOMError_NotInitialized;}
 	
 	TXString vwName (name);
-	
+    GdtfUtil::DoesNameContainInvalidChars(vwName);
 	SceneData::GdtfDmxMode* gdtfDmxMode = fFixtureObject->AddDmxMode(vwName);
 	
 	
