@@ -187,18 +187,6 @@ void MVR_COMMIT_FromJson(const nlohmann::json& payload, IMVRxchangeService::MVR_
     }
 }
 
-void isRetOkay( const nlohmann::json& payload, VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage& in )
-{
-    if ( payload.contains( "OK" ) )
-    {
-        in.RetIsOK = HandleStringBool( payload[ "OK" ] );
-    }
-    else
-    {
-        in.RetIsOK = false;
-    }
-}
-
 // -----------------------------------------
 
 void MVRxchangePacket::FromExternalMessage(const VectorworksMVR::IMVRxchangeService::IMVRxchangeMessage& in)
@@ -354,88 +342,36 @@ void MVRxchangePacket::Internal_ToExternalMessage(const nlohmann::json& payload,
     if (payload["Type"] == "MVR_JOIN")
     {
         in.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_JOIN;
-
-		if ( payload.contains( "verMajor" ) )
-		{
-            in.JOIN.VersionMajor = HandleStringNumber(payload["verMajor"]);
-		}
-
-        if ( payload.contains( "verMinor" ) )
-        {
-            in.JOIN.VersionMinor = HandleStringNumber(payload["verMinor"]);
-        }
-
-        if ( payload.contains( "Provider" ) )
-        {
-            strcpy(in.JOIN.Provider, payload["Provider"].get<std::string>().c_str());
-        }
-
-		if ( payload.contains( "StationName" ) )
-		{
-			strcpy( in.JOIN.StationName, payload[ "StationName" ].get<std::string>().c_str() );
-		}
-
-        if ( payload.contains( "StationUUID" ) )
-        {
-            noUUIDError = SceneData::GdtfConverter::ConvertUUID(payload["StationUUID"].get<std::string>(), in.JOIN.StationUUID);
-        }
+        in.JOIN.VersionMajor = HandleStringNumber(payload["verMajor"]);
+        in.JOIN.VersionMinor = HandleStringNumber(payload["verMinor"]);
+        strcpy(in.JOIN.Provider, payload["Provider"].get<std::string>().c_str());
+        strcpy(in.JOIN.StationName, payload["StationName"].get<std::string>().c_str());
+        noUUIDError = SceneData::GdtfConverter::ConvertUUID(payload["StationUUID"].get<std::string>(), in.JOIN.StationUUID);
 
         in.JOIN.Commits.clear();
-
-        if ( payload.contains( "Commits" ) )
+        for (auto &it : payload["Commits"])
         {
-            for (auto &it : payload["Commits"])
-            {
-                in.JOIN.Commits.emplace_back();
-                MVR_COMMIT_FromJson(it, in.JOIN.Commits.back());
-            }
+            in.JOIN.Commits.emplace_back();
+            MVR_COMMIT_FromJson(it, in.JOIN.Commits.back());
         }
     }
     else if (payload["Type"] == "MVR_JOIN_RET")
     {
         in.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_JOIN_RET;
+        in.JOIN.VersionMajor = HandleStringNumber(payload["verMajor"]);
+        in.JOIN.VersionMinor = HandleStringNumber(payload["verMinor"]);
+        strcpy(in.JOIN.Provider, payload["Provider"].get<std::string>().c_str());
+        strcpy(in.JOIN.StationName, payload["StationName"].get<std::string>().c_str());
+        noUUIDError = SceneData::GdtfConverter::ConvertUUID(payload["StationUUID"].get<std::string>(), in.JOIN.StationUUID);
 
-		if ( payload.contains( "verMajor" ) )
-		{
-			in.JOIN.VersionMajor = HandleStringNumber( payload[ "verMajor" ] );
-		}
-
-        if ( payload.contains( "verMinor" ) )
-        {
-            in.JOIN.VersionMinor = HandleStringNumber( payload[ "verMinor" ] );
-        }
-
-		if ( payload.contains( "Provider" ) )
-		{
-			strcpy( in.JOIN.Provider, payload[ "Provider" ].get<std::string>().c_str() );
-		}
-
-		if ( payload.contains( "StationName" ) )
-		{
-			strcpy( in.JOIN.StationName, payload[ "StationName" ].get<std::string>().c_str() );
-		}
-
-        if ( payload.contains( "StationUUID" ) )
-        {
-            noUUIDError = SceneData::GdtfConverter::ConvertUUID(payload["StationUUID"].get<std::string>(), in.JOIN.StationUUID);
-        }
-
-		isRetOkay( payload, in );
-
-		if ( payload.contains( "Message" ) )
-		{
-            strcpy(in.RetError, payload["Message"].get<std::string>().c_str());
-		}
+        in.RetIsOK = HandleStringBool(payload["OK"]);
+        strcpy(in.RetError, payload["Message"].get<std::string>().c_str());
 
         in.JOIN.Commits.clear();
-
-        if ( payload.contains( "Commits" ) )
+        for (auto &it : payload["Commits"])
         {
-            for (auto &it : payload["Commits"])
-            {
-                in.JOIN.Commits.emplace_back();
-                MVR_COMMIT_FromJson(it, in.JOIN.Commits.back());
-            }
+            in.JOIN.Commits.emplace_back();
+            MVR_COMMIT_FromJson(it, in.JOIN.Commits.back());
         }
     }
     else if (payload["Type"] == "MVR_COMMIT")
@@ -446,40 +382,22 @@ void MVRxchangePacket::Internal_ToExternalMessage(const nlohmann::json& payload,
     else if (payload["Type"] == "MVR_COMMIT_RET")
     {
         in.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_COMMIT_RET;
-		isRetOkay( payload, in );
-
+        in.RetIsOK = HandleStringBool(payload["OK"]);
         strcpy(in.RetError, payload["Message"].get<std::string>().c_str());
     }
     else if (payload["Type"] == "MVR_REQUEST")
     {
         in.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_REQUEST;
-        if ( payload.contains( "FileUUID" ) )
-        {
-            noUUIDError = SceneData::GdtfConverter::ConvertUUID(payload["FileUUID"].get<std::string>(), in.REQUEST.FileUUID);
-        }
+        noUUIDError = SceneData::GdtfConverter::ConvertUUID(payload["FileUUID"].get<std::string>(), in.REQUEST.FileUUID);
 
         in.REQUEST.FromStationUUID.clear();
         // TODO
-        if ( payload.contains( "FromStationUUID" ) )
+        for (const auto &e : payload["FromStationUUID"])
         {
-            for (const auto &e : payload["FromStationUUID"])
+            in.REQUEST.FromStationUUID.emplace_back();
+            if (!SceneData::GdtfConverter::ConvertUUID(e.get<std::string>(), in.REQUEST.FromStationUUID.back()))
             {
-                in.REQUEST.FromStationUUID.emplace_back();
-                if (!SceneData::GdtfConverter::ConvertUUID(e.get<std::string>(), in.REQUEST.FromStationUUID.back()))
-                {
-                    in.REQUEST.FromStationUUID.pop_back();
-                }
-            }
-        }
-        else if ( payload.contains( "StationUUID" ) )
-        {
-            for (const auto &e : payload["StationUUID"])
-            {
-                in.REQUEST.FromStationUUID.emplace_back();
-                if (!SceneData::GdtfConverter::ConvertUUID(e.get<std::string>(), in.REQUEST.FromStationUUID.back()))
-                {
-                    in.REQUEST.FromStationUUID.pop_back();
-                }
+                in.REQUEST.FromStationUUID.pop_back();
             }
         }
     }
@@ -492,15 +410,7 @@ void MVRxchangePacket::Internal_ToExternalMessage(const nlohmann::json& payload,
     else if (payload["Type"] == "MVR_LEAVE")
     {
         in.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_LEAVE;
-
-		if ( payload.contains( "FromStationUUID" ) )
-		{
-            noUUIDError = SceneData::GdtfConverter::ConvertUUID(payload["FromStationUUID"].get<std::string>(), in.LEAVE.FromStationUUID);
-		}
-		else if ( payload.contains( "StationUUID" ) )
-		{
-			noUUIDError = SceneData::GdtfConverter::ConvertUUID( payload[ "StationUUID" ].get<std::string>(), in.LEAVE.FromStationUUID );
-		}
+        noUUIDError = SceneData::GdtfConverter::ConvertUUID(payload["FromStationUUID"].get<std::string>(), in.LEAVE.FromStationUUID);
     }
     else if (payload["Type"] == "MVR_LEAVE_RET")
     {
