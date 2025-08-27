@@ -410,7 +410,14 @@ void MVRxchangePacket::Internal_ToExternalMessage(const nlohmann::json& payload,
     else if (payload["Type"] == "MVR_LEAVE")
     {
         in.Type = VectorworksMVR::IMVRxchangeService::MVRxchangeMessageType::MVR_LEAVE;
-        noUUIDError = SceneData::GdtfConverter::ConvertUUID(payload["FromStationUUID"].get<std::string>(), in.LEAVE.FromStationUUID);
+        if ( payload.contains( "FromStationUUID" ) )
+        {
+            noUUIDError = SceneData::GdtfConverter::ConvertUUID(payload["FromStationUUID"].get<std::string>(), in.LEAVE.FromStationUUID);
+        }
+        else if ( payload.contains( "StationUUID" ) )
+        {
+            noUUIDError = SceneData::GdtfConverter::ConvertUUID( payload[ "StationUUID" ].get<std::string>(), in.LEAVE.FromStationUUID );
+        }
     }
     else if (payload["Type"] == "MVR_LEAVE_RET")
     {
