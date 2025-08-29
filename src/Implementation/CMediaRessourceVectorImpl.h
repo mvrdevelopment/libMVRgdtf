@@ -111,5 +111,7 @@ namespace VectorworksMVR
 		// Check for duplicated uuids
 		virtual VCOMError VCOM_CALLTYPE		GetDuplicatedUuids(bool& outDuplicated);
 
+		virtual VCOMError VCOM_CALLTYPE		GetLibVersion( MvrString& outVersion );
+
 	};
 }

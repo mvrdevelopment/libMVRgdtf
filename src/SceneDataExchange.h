@@ -1110,7 +1110,10 @@ namespace SceneData
 		void								ReadChildObjs(const IXMLFileNodePtr & node, SceneDataGroupObjPtr addToContainer);
 		SceneDataGroupObjPtr				ProcessGroup(const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
 		
-		
+		// ---------------------------------------------------------------------------------------------------------------------
+		// Lib Version
+	public:
+		MvrString                           GetLibVersion() const;
 		
 	};
 	

@@ -32,6 +32,7 @@ if(${BUILD_MVR_XCHANGE_EXAMPLE} AND ${DO_NOT_INCLUDE_MINI_ZIP} AND NOT ${BUILD_M
   message( FATAL_ERROR "MVRXChange example must be linked against Mini Zip and boost" )
 endif()
 
+
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 #################################################
@@ -62,6 +63,17 @@ add_subdirectory(mdns_cpp)
 project(MvrGdtf)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+# Require version variables to be set by the user
+if(NOT DEFINED LIB_VERSION_MAJOR)
+    message(FATAL_ERROR "You must define LIB_VERSION_MAJOR when building the library.")
+endif()
+if(NOT DEFINED LIB_VERSION_MINOR)
+    message(FATAL_ERROR "You must define LIB_VERSION_MINOR when building the library.")
+endif()
+if(NOT DEFINED LIB_VERSION_PATCH)
+    message(FATAL_ERROR "You must define LIB_VERSION_PATCH when building the library.")
+endif()
 
 
 
@@ -170,6 +182,12 @@ endif(WIN32)
 # Add the preprocessors
 # Link extra libs
 target_compile_definitions(MvrGdtf ${PREPROCESSORS})
+target_compile_definitions(MvrGdtf PRIVATE
+    LIB_VERSION_MAJOR=${LIB_VERSION_MAJOR}
+    LIB_VERSION_MINOR=${LIB_VERSION_MINOR}
+    LIB_VERSION_PATCH=${LIB_VERSION_PATCH}
+)
+
 target_link_libraries(MvrGdtf ${EXTRA_LIBS})
 
 #MA needs special difinitions for building a compatible version for grandMA3 under Linux
@@ -195,6 +213,11 @@ endif()
 
 if(${UNITTEST})
 target_compile_definitions(MvrGdtfUnitTest ${PREPROCESSORS})
+target_compile_definitions(MvrGdtfUnitTest PRIVATE
+    LIB_VERSION_MAJOR=${LIB_VERSION_MAJOR}
+    LIB_VERSION_MINOR=${LIB_VERSION_MINOR}
+    LIB_VERSION_PATCH=${LIB_VERSION_PATCH}
+)
 target_link_libraries(MvrGdtfUnitTest ${EXTRA_LIBS})
 
 #Append Runtime

@@ -1584,3 +1584,14 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetDuplicat
 	outDuplicated = fExchangeObj.GetDuplicatedUuids();
 	return kVCOMError_NoError;
 }
+
+VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetLibVersion( MvrString& outVersion )
+{
+	// Get the version from the exchange object
+	TXString version = fExchangeObj.GetLibVersion();
+
+	// Set the out value
+	outVersion = version.GetCharPtr();
+
+	return kVCOMError_NoError;
+}
