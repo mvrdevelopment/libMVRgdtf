@@ -2799,6 +2799,8 @@ namespace SceneData
 
 		size_t									fTotalNodesCount = 0;
 
+		Sint32                                  fMajorVersion = 0;
+		Sint32                                  fMinorVersion = 0;
 
 		// 
 		GdtfAttributePtr 						fNoFeature;
@@ -2836,6 +2838,8 @@ namespace SceneData
         const TXString&							GetSVGThumnailFullPath();
         GdtfProtocols&							GetProtocollContainer();
         GdtfPhysicalDescriptions&				GetPhysicalDesciptionsContainer();
+		Sint32									GetMajorVersion() const;
+		Sint32									GetMinorVersion() const;
         
         // Setter
 		void									SetName(const TXString& name);
@@ -2850,6 +2854,9 @@ namespace SceneData
 		void									SetThumbnailOffsetY(Sint32 thumbnailOffsetY);
 		void									SetCanHaveChildren(bool canHaveChildren);
 
+
+		void				                    SetMajorVersion( Sint32 majorVersion );
+		void				                    SetMinorVersion( Sint32 minorVersion );
 
 	public:
 		//----------------------------------------------------------------------------------------------------------------------------------------------------------------
