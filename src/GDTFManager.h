@@ -2756,6 +2756,7 @@ namespace SceneData
 		//------------------------------------------------
         // Parameters for the GdtfDataFile
         TXString								gdtfFileVersion = XML_GDTF_CurrentVersion;
+        TXString								gdtfLatestVersion = XML_GDTF_CurrentVersion;
 		
 		//------------------------------------------------
 		// Parameters for a GdtfFixture
@@ -2825,7 +2826,7 @@ namespace SceneData
 		//----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		// Getter
 		const TXString&							GetGdtfFileVersion() const { return gdtfFileVersion; }
-		const TXString&							GetCurrentGdtfVersion() const { return XML_GDTF_CurrentVersion; }
+		const TXString&							GetCurrentGdtfVersion() const { return gdtfLatestVersion; }
 				
 		const TXString&							GetName() const;
         const TXString&							GetShortName() const;
