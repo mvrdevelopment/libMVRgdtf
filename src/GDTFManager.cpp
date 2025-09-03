@@ -7768,6 +7768,8 @@ bool GdtfFixture::ImportFromZip(IZIPFilePtr& zipfile)
 			IXMLFileNodePtr rootNode;
 			if (VCOM_SUCCEEDED(xmlFile->GetRootNode( & rootNode)))
 			{
+				rootNode->GetNodeAttributeValue(XML_GDTF_ROOTNODEATTRVERSION, gdtfFileVersion);
+
 				IXMLFileNodePtr fixtureNode;
 				if (VCOM_SUCCEEDED(rootNode->GetChildNode(XML_GDTF_FixtureNodeName, & fixtureNode)))
 				{

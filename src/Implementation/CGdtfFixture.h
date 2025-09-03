@@ -27,6 +27,9 @@ namespace VectorworksMVR
         virtual VCOMError VCOM_CALLTYPE		AddBufferToGdtfFile(MvrString filename, const char* inBuffer, size_t length, GdtfDefines::ERessourceType resType);
 		virtual VCOMError VCOM_CALLTYPE		Close();
 		
+        virtual MvrString VCOM_CALLTYPE		GetGdtfFileVersion();
+        virtual MvrString VCOM_CALLTYPE		GetCurrentGdtfVersion();
+		
         virtual MvrString VCOM_CALLTYPE		GetName();
         virtual MvrString VCOM_CALLTYPE		GetShortName();
 		virtual MvrString VCOM_CALLTYPE		GetLongName();

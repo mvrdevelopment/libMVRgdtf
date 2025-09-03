@@ -219,6 +219,20 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::ReadFromFile(IFileId
     return retVal;
 }
 
+MvrString VectorworksMVR::CGdtfFixtureImpl::GetGdtfFileVersion()
+{
+    if(!fFixtureObject) {return "";}
+
+    return fFixtureObject->GetGdtfFileVersion().GetCharPtr();
+}
+
+MvrString VectorworksMVR::CGdtfFixtureImpl::GetCurrentGdtfVersion()
+{
+    if(!fFixtureObject) {return "";}
+
+    return fFixtureObject->GetCurrentGdtfVersion().GetCharPtr();
+}
+
 MvrString VectorworksMVR::CGdtfFixtureImpl::GetName()
 {
     if(!fFixtureObject) {return "";}

@@ -2754,6 +2754,10 @@ namespace SceneData
 		
 	private:
 		//------------------------------------------------
+        // Parameters for the GdtfDataFile
+        TXString								gdtfFileVersion = XML_GDTF_CurrentVersion;
+		
+		//------------------------------------------------
 		// Parameters for a GdtfFixture
 		TXString								fName;
 		TXString								fShortName;
@@ -2820,6 +2824,9 @@ namespace SceneData
 	public:
 		//----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		// Getter
+		const TXString&							GetGdtfFileVersion() const { return gdtfFileVersion; }
+		const TXString&							GetCurrentGdtfVersion() const { return XML_GDTF_CurrentVersion; }
+				
 		const TXString&							GetName() const;
         const TXString&							GetShortName() const;
 		const TXString&							GetLongName() const;
