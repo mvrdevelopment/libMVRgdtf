@@ -1556,6 +1556,9 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 
 		virtual VCOMError VCOM_CALLTYPE		Close() = 0;
         
+        virtual MvrString VCOM_CALLTYPE		GetGdtfFileVersion() = 0;
+        virtual MvrString VCOM_CALLTYPE		GetCurrentGdtfVersion() = 0;
+
         virtual MvrString VCOM_CALLTYPE		GetName() = 0;
         virtual MvrString VCOM_CALLTYPE     GetManufacturer() = 0;
         virtual VCOMError VCOM_CALLTYPE     GetFixtureGUID(MvrUUID& uuid) = 0;
