@@ -75,6 +75,10 @@ namespace VectorworksMVR
 	public:
 		// Call this at the start of generating a MVR file
 		virtual VCOMError VCOM_CALLTYPE		OpenForRead(MvrString fullPath);
+
+		//Feedback and Abort Callbacks
+		virtual VCOMError VCOM_CALLTYPE     SetAbortCallback( const std::function<void( bool& )>& cb );
+		virtual VCOMError VCOM_CALLTYPE     SetFeedbackCallback(std::function<void(const FixtureFeedback&)> cb, void* context);
 		
 		// Get data provider objs
 		virtual VCOMError VCOM_CALLTYPE		GetDataProviderObjectCount(size_t& outCount);
@@ -110,6 +114,5 @@ namespace VectorworksMVR
 
 		// Check for duplicated uuids
 		virtual VCOMError VCOM_CALLTYPE		GetDuplicatedUuids(bool& outDuplicated);
-
 	};
 }

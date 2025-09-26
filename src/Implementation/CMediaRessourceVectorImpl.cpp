@@ -4,6 +4,7 @@
 #include "Prefix/StdAfx.h"
 #include "CMediaRessourceVectorImpl.h"
 #include "Utility.h"
+#include "../FeedbackDispatcher.h"
 
 using namespace VectorworksMVR::Filing;
 
@@ -1582,5 +1583,24 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetSceneObj
 VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetDuplicatedUuids(bool& outDuplicated)
 {
 	outDuplicated = fExchangeObj.GetDuplicatedUuids();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::SetAbortCallback( const std::function<void( bool& )>& cb )
+{
+	if ( VCOM_FAILED(cb == nullptr) )	{return kVCOMError_Failed;}
+
+	fExchangeObj.SetAbortCallback( cb );
+
+	return kVCOMError_NoError;
+}
+
+
+VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::SetFeedbackCallback(std::function<void(const FixtureFeedback&)> cb, void* context)
+{
+	if ( VCOM_FAILED(cb == nullptr) )	{return kVCOMError_Failed;}
+
+	FeedbackDispatcher::SetCallback( cb, context );
+
 	return kVCOMError_NoError;
 }
