@@ -1018,6 +1018,9 @@ namespace SceneData
 
 		//Duplicated Uuids flag
 		bool								fDuplicatedUuids;
+
+		//Abort reading flag
+		bool								fAbortReading = false;
 		
 	public:
 		// ---------------------------------------------------------------------------------------------------------------------
@@ -1104,11 +1107,14 @@ namespace SceneData
 		bool								GetDuplicatedUuids() const;		
 		SceneDataObjPtr						GetSceneObjByUUID( const SceneDataGUID& guid );
 		
+		static void							SetAbortCallback( const std::function<void( bool& )>& cb );
+
 	private:
 		void								ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xmlFile);
 		void								ProcessLayer(const IXMLFileNodePtr& node);
 		void								ReadChildObjs(const IXMLFileNodePtr & node, SceneDataGroupObjPtr addToContainer);
 		SceneDataGroupObjPtr				ProcessGroup(const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
+		bool								CheckAbort();
 		
 		
 		

@@ -9,6 +9,9 @@
 
 using namespace SceneData;
 
+static std::function<void( bool& )> fAbortCallback;
+static std::mutex fAbortCallbackMutex;
+
 SceneDataGUID::SceneDataGUID(const TXString& uuid)
 {
 	ASSERTN(kEveryone, uuid != "");
@@ -2979,6 +2982,7 @@ SceneDataSymDefObjPtr SceneDataExchange::CreateSymDefObject(const SceneDataGUID&
 
 SceneDataSymDefObjPtr SceneDataExchange::ReadSymDefObject(const IXMLFileNodePtr& node)
 {
+	if ( CheckAbort() ) return nullptr;
 	TXString uuid;
 	node->GetNodeAttributeValue(XML_Val_GuidAttrName, uuid);
 	
@@ -3069,6 +3073,7 @@ SceneDataPositionObjPtr SceneDataExchange::CreatePositionObject(const SceneDataG
 
 SceneDataPositionObjPtr SceneDataExchange::ReadPositionObject(const IXMLFileNodePtr& node)
 {
+	if ( CheckAbort() ) return nullptr;
 	// ------------------------------------------------------------------------------------
 	// Read the uuid
 	TXString uuid;
@@ -3122,6 +3127,7 @@ SceneDataClassObjPtr SceneDataExchange::CreateClassObject(const SceneDataGUID& g
 
 SceneDataClassObjPtr SceneDataExchange::ReadClassObject(const IXMLFileNodePtr& node)
 {
+	if ( CheckAbort() ) return nullptr;
 	// ------------------------------------------------------------------------------------
 	// Read the uuid
 	TXString uuid;
@@ -3166,6 +3172,7 @@ SceneDataMappingDefinitionObjPtr SceneDataExchange::CreateMappingDefinitionObjec
 
 SceneDataMappingDefinitionObjPtr SceneDataExchange::ReadMappingDefinitionObject(const IXMLFileNodePtr& node)
 {
+	if ( CheckAbort() ) return nullptr;
 	TXString uuid;
 	node->GetNodeAttributeValue(XML_Val_GuidAttrName, uuid);
 	
@@ -3194,7 +3201,7 @@ SceneDataGroupObjPtr SceneDataExchange::CreateGroupObject(const SceneDataGUID& g
 
 SceneDataGroupObjPtr SceneDataExchange::ReadGroupObject(const SceneDataGUID& guid, const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer)
 {
-
+	if ( CheckAbort() ) return nullptr;
 	SceneDataGroupObjPtr newGroup =  new SceneDataGroupObj(guid);
 	addToContainer->AddObject(newGroup);
 	
@@ -3224,6 +3231,7 @@ SceneDataFixtureObjPtr SceneDataExchange::CreateFixture(const SceneDataGUID& gui
 
 SceneDataFixtureObjPtr SceneDataExchange::ReadFixture(const SceneDataGUID& guid, const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer)
 {
+	if ( CheckAbort() ) return nullptr;
 	//----------------------------------------------------------------------------
 	// Create new object
 	SceneDataFixtureObjPtr newFixture =  new SceneDataFixtureObj(guid);
@@ -3256,6 +3264,7 @@ SceneDataSceneryObjPtr SceneDataExchange::CreateSceneryObject(const SceneDataGUI
 
 SceneDataSceneryObjPtr SceneDataExchange::ReadSceneryObject(const SceneDataGUID& guid,const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer)
 {
+	if ( CheckAbort() ) return nullptr;
 	//----------------------------------------------------------------------------
 	// Create new object
 	SceneDataSceneryObjPtr newSceneryObj = new SceneDataSceneryObj(guid);
@@ -3313,6 +3322,7 @@ SceneDataFocusPointObjPtr SceneDataExchange::CreateFocusPoint(const SceneDataGUI
 
 SceneDataFocusPointObjPtr SceneDataExchange::ReadFocusPoint(const SceneDataGUID& guid,const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer)
 {
+	if ( CheckAbort() ) return nullptr;
 	//----------------------------------------------------------------------------
 	// Create new object
 	SceneDataFocusPointObjPtr newFocusPointObj = new SceneDataFocusPointObj(guid);
@@ -3344,6 +3354,7 @@ SceneDataTrussObjPtr SceneDataExchange::CreateTruss(const SceneDataGUID& guid, c
 
 SceneDataTrussObjPtr SceneDataExchange::ReadTruss(const SceneDataGUID& guid,const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer)
 {
+	if ( CheckAbort() ) return nullptr;
 	//----------------------------------------------------------------------------
 	// Create new Object
 	SceneDataTrussObjPtr newTrussObj = new SceneDataTrussObj(guid);
@@ -3369,6 +3380,7 @@ SceneDataSupportObjPtr SceneDataExchange::CreateSupport(const SceneDataGUID& gui
 
 SceneDataSupportObjPtr SceneDataExchange::ReadSupport(const SceneDataGUID& guid,const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer)
 {
+	if ( CheckAbort() ) return nullptr;
 	//----------------------------------------------------------------------------
 	// Create new Object
 	SceneDataSupportObjPtr newSupportObj = new SceneDataSupportObj(guid);
@@ -3394,6 +3406,7 @@ SceneDataVideoScreenObjPtr SceneDataExchange::CreateVideoScreen(const SceneDataG
 
 SceneDataVideoScreenObjPtr SceneDataExchange::ReadVideoScreen(const SceneDataGUID& guid,const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer)
 {
+	if ( CheckAbort() ) return nullptr;
 	//----------------------------------------------------------------------------
 	// Create new Object
 	SceneDataVideoScreenObjPtr newVSObj = new SceneDataVideoScreenObj(guid);
@@ -3419,6 +3432,7 @@ SceneDataProjectorObjPtr SceneDataExchange::CreateProjector(const SceneDataGUID&
 
 SceneDataProjectorObjPtr SceneDataExchange::ReadProjector(const SceneDataGUID& guid,const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer)
 {
+	if ( CheckAbort() ) return nullptr;
 	//----------------------------------------------------------------------------
 	// Create new Object
 	SceneDataProjectorObjPtr newProjectorObj = new SceneDataProjectorObj(guid);
@@ -3799,6 +3813,7 @@ void SceneDataExchange::ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xml
 			{
 					GdtfConverter::TraverseNodes(userDataNode, "", XML_Val_DataNodeName, [this] (IXMLFileNodePtr objNode) -> void
 						{
+							if ( CheckAbort() ) return;
 							// Create the object
 							SceneDataProviderObj* userData = new SceneDataProviderObj();
 
@@ -3820,17 +3835,20 @@ void SceneDataExchange::ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xml
 			IXMLFileNodePtr sceneNode = nullptr;
 			if (VCOM_SUCCEEDED(rootNode->FindChildNode(XML_Val_SceneNodeName, & sceneNode)))
 			{
+				if ( CheckAbort() ) return;
 				// ----------------------------------------------------------------
 				// Find the Scene Node
 				IXMLFileNodePtr auxDataNode = nullptr;
 				if (VCOM_SUCCEEDED(sceneNode->FindChildNode(XML_Val_AuxDataNodeName, & auxDataNode)))
 				{
+					if ( CheckAbort() ) return;
 					IXMLFileNodePtr auxDataObj = nullptr;
 					if (VCOM_SUCCEEDED(auxDataNode->GetFirstChildNode( & auxDataObj)))
 					{
 						
 						while (auxDataObj)
 						{
+							if ( CheckAbort() ) return;
 							// ---------------------------------------------------------------------------
 							// Check the Node Name
 							TXString nodeName;
@@ -3857,12 +3875,14 @@ void SceneDataExchange::ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xml
 				IXMLFileNodePtr layersNode = nullptr;
 				if (VCOM_SUCCEEDED(sceneNode->FindChildNode(XML_Val_LayersNodeName, & layersNode)))
 				{
+					if ( CheckAbort() ) return;
 					IXMLFileNodePtr layerObjNode = nullptr;
 					if (VCOM_SUCCEEDED(layersNode->GetFirstChildNode( & layerObjNode)))
 					{
 						
 						while (layerObjNode)
 						{
+							if ( CheckAbort() ) return;
 							// ---------------------------------------------------------------------------
 							// Check the Node Name
 							TXString nodeName;
@@ -4019,6 +4039,7 @@ void SceneDataExchange::ReadChildObjs(const IXMLFileNodePtr& node, SceneDataGrou
 		{
 			while (objNode)
 			{
+				if ( CheckAbort() ) return;
 				// ---------------------------------------------------------------------------
 				// Check the Node Name
 				TXString	nodeName;
@@ -4132,4 +4153,24 @@ bool SceneDataExchange::GetDuplicatedUuids() const
 	return fDuplicatedUuids;
 }
 
+void SceneDataExchange::SetAbortCallback( const std::function<void( bool& )>& cb )
+{
+	std::lock_guard<std::mutex> lock(fAbortCallbackMutex);
+	fAbortCallback = cb;
+}
 
+bool SceneDataExchange::CheckAbort()
+{
+	std::lock_guard<std::mutex> lock(fAbortCallbackMutex);
+	if (fAbortCallback)
+	{
+		bool abort = false;
+		fAbortCallback(abort);
+		if ( abort )
+		{
+			fAbortReading = abort;
+		}
+		return abort;
+	}
+	return false;
+}

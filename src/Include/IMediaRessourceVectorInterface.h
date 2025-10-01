@@ -470,6 +470,8 @@ namespace VectorworksMVR
 		// Call this at the start of generating a MVR file
 		virtual VCOMError VCOM_CALLTYPE		OpenForRead(MvrString fullPath) = 0;
 
+		virtual VCOMError VCOM_CALLTYPE     SetAbortCallback( const std::function<void( bool& )>& cb ) = 0;
+
 		// Get data provider objs
 		virtual VCOMError VCOM_CALLTYPE		GetDataProviderObjectCount(size_t& outCount) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetDataProviderObjectAt(size_t at, ISceneDataProvider** outSceneDataProvider ) = 0;

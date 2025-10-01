@@ -1584,3 +1584,12 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetDuplicat
 	outDuplicated = fExchangeObj.GetDuplicatedUuids();
 	return kVCOMError_NoError;
 }
+
+VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::SetAbortCallback( const std::function<void( bool& )>& cb )
+{
+	if ( VCOM_FAILED(cb == nullptr) )	{return kVCOMError_Failed;}
+
+	fExchangeObj.SetAbortCallback( cb );
+
+	return kVCOMError_NoError;
+}
