@@ -10,6 +10,7 @@ set(DONT_USE_XERCES_AS_XMLLIB FALSE CACHE BOOL "Set whether or we use Xerces or 
 set(BUILD_MVR_XCHANGE TRUE CACHE BOOL "Set whether to include MVR_XChange in the build (requires boost)")
 #MA needs special difinitions for building a compatible version for grandMA3 under Linux
 set(BUILD_USING_MA_TOOLCHAIN_SPECIFICATIONS FALSE CACHE BOOL "Set whether or not to use specific definitions from MA Lighting to build compatible version for grandMA3")
+set(ENABLE_ASAN FALSE CACHE BOOL "Enable Address Sanitizer")
 
 set(XERCES_ROOT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../xerces-c CACHE STRING "Set the build path where you called cmake.")
 set(XERCES_INCLUDE_PATH ${XERCES_ROOT_PATH}/src ${XERCES_ROOT_PATH}/build/src CACHE STRING "Set the include path")
@@ -247,6 +248,14 @@ set(CMAKE_EXE_LINKER_FLAGS  ${CMAKE_EXE_LINKER_FLAGS}
                             $ENV{ADDIONAL_LD})
 
 add_compile_options($ENV{CXX_FLAGS_CUSTOM})
+
+if (ENABLE_ASAN)
+    if (MSVC)
+        message(STATUS "ASAN aktiviert für RelWithDebInfo")
+        target_compile_options(MvrGdtf PRIVATE /fsanitize=address)
+        target_compile_options(MvrGdtf PRIVATE /MTd)
+    endif()
+endif()
 
 if($ENV{XERCES_CONFIGURE_ENCODER})
     add_compile_options($ENV{XERCES_CONFIGURE_ENCODER})
