@@ -4159,6 +4159,12 @@ void SceneDataExchange::SetAbortCallback( const std::function<void( bool& )>& cb
 	fAbortCallback = cb;
 }
 
+void SceneDataExchange::GetAbortCallback( std::function<void( bool& )>& cb )
+{
+	std::lock_guard<std::mutex> lock(fAbortCallbackMutex);
+	cb = fAbortCallback;
+}
+
 bool SceneDataExchange::CheckAbort()
 {
 	std::lock_guard<std::mutex> lock(fAbortCallbackMutex);

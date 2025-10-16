@@ -1108,6 +1108,7 @@ namespace SceneData
 		SceneDataObjPtr						GetSceneObjByUUID( const SceneDataGUID& guid );
 		
 		static void							SetAbortCallback( const std::function<void( bool& )>& cb );
+		void								GetAbortCallback( std::function<void( bool& )>& cb );
 
 	private:
 		void								ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xmlFile);

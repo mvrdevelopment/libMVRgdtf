@@ -149,6 +149,10 @@ namespace VectorworksMVR
         
         virtual VCOMError VCOM_CALLTYPE     RefreshBuffer();
 
+        //Feedback and Abort Callbacks
+        virtual VCOMError VCOM_CALLTYPE     SetAbortCallback( const std::function<void( bool& )>& cb );
+        virtual VCOMError VCOM_CALLTYPE     SetFeedbackCallback(std::function<void(const FixtureFeedback&)> cb, void* context);
+
         private:
         void FreeBuffer();
 
@@ -171,10 +175,6 @@ namespace VectorworksMVR
 
 		virtual VCOMError VCOM_CALLTYPE		GetLegHeight(double& value);
 		virtual VCOMError VCOM_CALLTYPE		SetLegHeight(double value);
-
-		//Feedback and Abort Callbacks
-		virtual VCOMError VCOM_CALLTYPE     SetAbortCallback( const std::function<void( bool& )>& cb );
-        virtual VCOMError VCOM_CALLTYPE     SetFeedbackCallback(std::function<void(const FixtureFeedback&)> cb, void* context);
 		
 	private:
         SceneData::GdtfFixture*             fFixtureObject;
