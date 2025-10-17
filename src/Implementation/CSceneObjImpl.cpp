@@ -459,6 +459,14 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetGdtfFixture(IGdtfFix
 		CGdtfFixtureImpl* pResultInterface = static_cast<CGdtfFixtureImpl* >(pGdtfFixture);
 		if (pResultInterface)
 		{
+			std::function<void( bool& )> abortCallback;
+			fContext->GetAbortCallback( abortCallback );
+
+			if ( abortCallback )
+			{
+				pResultInterface->SetAbortCallback( abortCallback );
+			}
+
 			read = VCOM_SUCCEEDED( pResultInterface->ReadFromFile(gdtfFile, workingFolderName) );
 		}
 		else
