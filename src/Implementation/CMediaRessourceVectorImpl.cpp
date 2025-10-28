@@ -1287,53 +1287,60 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetMappingD
 
 VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetMappingDefinitionAt(size_t at, IMappingDefinition** outMapDef)
 {
-	const auto& auxObjects = fExchangeObj.GetAuxDataObjects();
-	const auto& auxObj = auxObjects[ at ];
-
-	if ( auxObj->GetObjectType() == SceneData::ESceneDataObjectType::eMappingDefinitionObject )
+	// Prepare a var for local counting
+	size_t mapDefCount = 0;
+	
+	// Now cycle thru aux data
+	for (SceneData::SceneDataAuxObjPtr auxObj : fExchangeObj.GetAuxDataObjects())
 	{
-		// Do the cast
-		SceneData::SceneDataMappingDefinitionObjPtr scMapDef = static_cast<SceneData::SceneDataMappingDefinitionObjPtr>( auxObj );
-		ASSERTN( kEveryone, scMapDef != nullptr );
-		if ( !scMapDef )
+		if (auxObj->GetObjectType() == SceneData::ESceneDataObjectType::eMappingDefinitionObject)
 		{
-			return kVCOMError_Failed;
-		}
-
-
-		//---------------------------------------------------------------------------
-		// Initialize Object
-		CMappingDefinitionImpl* pMapDef = nullptr;
-
-		// Query Interface
-		if ( VCOM_SUCCEEDED( VWQueryInterface( IID_MappingDefinitionObj, (IVWUnknown**) &pMapDef ) ) )
-		{
-			// Check Casting
-			CMappingDefinitionImpl* pResultInterface = static_cast<CMappingDefinitionImpl*>( pMapDef );
-			if ( pResultInterface )
+			if (at == mapDefCount)
 			{
-				pResultInterface->SetPointer( scMapDef );
+				// Do the cast
+				SceneData::SceneDataMappingDefinitionObjPtr scMapDef = static_cast<SceneData::SceneDataMappingDefinitionObjPtr>(auxObj);
+				ASSERTN(kEveryone, scMapDef != nullptr);
+				if (!scMapDef) { return kVCOMError_Failed; }
+				
+				
+				//---------------------------------------------------------------------------
+				// Initialize Object
+				CMappingDefinitionImpl* pMapDef = nullptr;
+				
+				// Query Interface
+				if (VCOM_SUCCEEDED(VWQueryInterface(IID_MappingDefinitionObj, (IVWUnknown**) & pMapDef)))
+				{
+					// Check Casting
+					CMappingDefinitionImpl* pResultInterface = static_cast<CMappingDefinitionImpl* >(pMapDef);
+					if (pResultInterface)
+					{
+						pResultInterface->SetPointer(scMapDef);
+					}
+					else
+					{
+						pResultInterface->Release();
+						pResultInterface = nullptr;
+						return kVCOMError_NoInterface;
+					}
+				}
+				
+				//---------------------------------------------------------------------------
+				// Check Incomming Object
+				if (*outMapDef)
+				{
+					(*outMapDef)->Release();
+					*outMapDef		= NULL;
+				}
+				
+				//---------------------------------------------------------------------------
+				// Set Out Value
+				*outMapDef		= pMapDef;
+				return kVCOMError_NoError;
 			}
-			else
-			{
-				pResultInterface->Release();
-				pResultInterface = nullptr;
-				return kVCOMError_NoInterface;
-			}
+			
+			// Increase position count
+			mapDefCount++;
 		}
-
-		//---------------------------------------------------------------------------
-		// Check Incomming Object
-		if ( *outMapDef )
-		{
-			( *outMapDef )->Release();
-			*outMapDef		= NULL;
-		}
-
-		//---------------------------------------------------------------------------
-		// Set Out Value
-		*outMapDef		= pMapDef;
-		return kVCOMError_NoError;
 	}
 	
 	DSTOP((kEveryone,"GetMappingDefinitionAt is out of bounds!"));
