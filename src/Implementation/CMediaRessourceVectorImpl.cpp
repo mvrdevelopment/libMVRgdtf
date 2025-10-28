@@ -1090,54 +1090,62 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetPosition
 
 VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetPositionObjectAt(size_t at, IPosition** outPosition)
 {
-	const auto& auxObjects = fExchangeObj.GetAuxDataObjects();
-	const auto& auxObj = auxObjects[ at ];
+	// Prepare a var for local counting
+	size_t positionCount = 0;
 
-	if ( auxObj->GetObjectType() == SceneData::ESceneDataObjectType::ePosition )
+	// Now cycle thru aux data
+	for ( SceneData::SceneDataAuxObjPtr auxObj : fExchangeObj.GetAuxDataObjects() )
 	{
-		// Do the cast
-		SceneData::SceneDataPositionObjPtr scPosition = static_cast<SceneData::SceneDataPositionObjPtr>( auxObj );
-		ASSERTN( kEveryone, scPosition != nullptr );
-		if ( !scPosition )
+		if ( auxObj->GetObjectType() == SceneData::ESceneDataObjectType::ePosition )
 		{
-			return kVCOMError_Failed;
-		}
-
-		//---------------------------------------------------------------------------
-		// Initialize Object
-		CPositionImpl* pPosition = nullptr;
-
-		// Query Interface
-		if ( VCOM_SUCCEEDED( VWQueryInterface( IID_PositionObj, (IVWUnknown**) &pPosition ) ) )
-		{
-			// Check Casting
-			CPositionImpl* pResultInterface = static_cast<CPositionImpl*>( pPosition );
-			if ( pResultInterface )
+			if ( at == positionCount )
 			{
-				pResultInterface->SetPointer( scPosition );
-			}
-			else
-			{
-				pResultInterface->Release();
-				pResultInterface = nullptr;
-				return kVCOMError_NoInterface;
-			}
-		}
+				// Do the cast
+				SceneData::SceneDataPositionObjPtr scPosition = static_cast<SceneData::SceneDataPositionObjPtr>( auxObj );
+				ASSERTN( kEveryone, scPosition != nullptr );
+				if ( !scPosition )
+				{
+					return kVCOMError_Failed;
+				}
 
-		//---------------------------------------------------------------------------
-		// Check Incomming Object
-		if ( *outPosition )
-		{
-			( *outPosition )->Release();
-			*outPosition		= NULL;
-		}
+				//---------------------------------------------------------------------------
+				// Initialize Object
+				CPositionImpl* pPosition = nullptr;
 
-		//---------------------------------------------------------------------------
-		// Set Out Value
-		*outPosition		= pPosition;
-		return kVCOMError_NoError;
+				// Query Interface
+				if ( VCOM_SUCCEEDED( VWQueryInterface( IID_PositionObj, (IVWUnknown**) &pPosition ) ) )
+				{
+					// Check Casting
+					CPositionImpl* pResultInterface = static_cast<CPositionImpl*>( pPosition );
+					if ( pResultInterface )
+					{
+						pResultInterface->SetPointer( scPosition );
+					}
+					else
+					{
+						pResultInterface->Release();
+						pResultInterface = nullptr;
+						return kVCOMError_NoInterface;
+					}
+				}
+
+				//---------------------------------------------------------------------------
+				// Check Incomming Object
+				if ( *outPosition )
+				{
+					( *outPosition )->Release();
+					*outPosition		= NULL;
+				}
+
+				//---------------------------------------------------------------------------
+				// Set Out Value
+				*outPosition		= pPosition;
+				return kVCOMError_NoError;
+			}
+			// Increase position count
+			positionCount++;
+		}
 	}
-			
 	
 	DSTOP((kEveryone,"Get Position is out of bounds!"));
 	return kVCOMError_Failed;
@@ -1287,60 +1295,53 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetMappingD
 
 VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetMappingDefinitionAt(size_t at, IMappingDefinition** outMapDef)
 {
-	// Prepare a var for local counting
-	size_t mapDefCount = 0;
-	
-	// Now cycle thru aux data
-	for (SceneData::SceneDataAuxObjPtr auxObj : fExchangeObj.GetAuxDataObjects())
+	const auto& auxObjects = fExchangeObj.GetAuxDataObjects();
+	const auto& auxObj = auxObjects[ at ];
+
+	if ( auxObj->GetObjectType() == SceneData::ESceneDataObjectType::eMappingDefinitionObject )
 	{
-		if (auxObj->GetObjectType() == SceneData::ESceneDataObjectType::eMappingDefinitionObject)
+		// Do the cast
+		SceneData::SceneDataMappingDefinitionObjPtr scMapDef = static_cast<SceneData::SceneDataMappingDefinitionObjPtr>( auxObj );
+		ASSERTN( kEveryone, scMapDef != nullptr );
+		if ( !scMapDef )
 		{
-			if (at == mapDefCount)
-			{
-				// Do the cast
-				SceneData::SceneDataMappingDefinitionObjPtr scMapDef = static_cast<SceneData::SceneDataMappingDefinitionObjPtr>(auxObj);
-				ASSERTN(kEveryone, scMapDef != nullptr);
-				if (!scMapDef) { return kVCOMError_Failed; }
-				
-				
-				//---------------------------------------------------------------------------
-				// Initialize Object
-				CMappingDefinitionImpl* pMapDef = nullptr;
-				
-				// Query Interface
-				if (VCOM_SUCCEEDED(VWQueryInterface(IID_MappingDefinitionObj, (IVWUnknown**) & pMapDef)))
-				{
-					// Check Casting
-					CMappingDefinitionImpl* pResultInterface = static_cast<CMappingDefinitionImpl* >(pMapDef);
-					if (pResultInterface)
-					{
-						pResultInterface->SetPointer(scMapDef);
-					}
-					else
-					{
-						pResultInterface->Release();
-						pResultInterface = nullptr;
-						return kVCOMError_NoInterface;
-					}
-				}
-				
-				//---------------------------------------------------------------------------
-				// Check Incomming Object
-				if (*outMapDef)
-				{
-					(*outMapDef)->Release();
-					*outMapDef		= NULL;
-				}
-				
-				//---------------------------------------------------------------------------
-				// Set Out Value
-				*outMapDef		= pMapDef;
-				return kVCOMError_NoError;
-			}
-			
-			// Increase position count
-			mapDefCount++;
+			return kVCOMError_Failed;
 		}
+
+
+		//---------------------------------------------------------------------------
+		// Initialize Object
+		CMappingDefinitionImpl* pMapDef = nullptr;
+
+		// Query Interface
+		if ( VCOM_SUCCEEDED( VWQueryInterface( IID_MappingDefinitionObj, (IVWUnknown**) &pMapDef ) ) )
+		{
+			// Check Casting
+			CMappingDefinitionImpl* pResultInterface = static_cast<CMappingDefinitionImpl*>( pMapDef );
+			if ( pResultInterface )
+			{
+				pResultInterface->SetPointer( scMapDef );
+			}
+			else
+			{
+				pResultInterface->Release();
+				pResultInterface = nullptr;
+				return kVCOMError_NoInterface;
+			}
+		}
+
+		//---------------------------------------------------------------------------
+		// Check Incomming Object
+		if ( *outMapDef )
+		{
+			( *outMapDef )->Release();
+			*outMapDef		= NULL;
+		}
+
+		//---------------------------------------------------------------------------
+		// Set Out Value
+		*outMapDef		= pMapDef;
+		return kVCOMError_NoError;
 	}
 	
 	DSTOP((kEveryone,"GetMappingDefinitionAt is out of bounds!"));
