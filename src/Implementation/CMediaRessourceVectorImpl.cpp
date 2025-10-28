@@ -25,29 +25,29 @@ SceneData::SceneDataExchange* VectorworksMVR::CMediaRessourceVectorImpl::GetExch
 
 VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::AddFileToMvrFile(MvrString fullPath)
 {
-    TXString strFullPath(fullPath);
+	TXString strFullPath(fullPath);
 
-    // Create the file pointer on the full path
-    IFileIdentifierPtr file(IID_FileIdentifier);
-    file->Set(strFullPath);
+	// Create the file pointer on the full path
+	IFileIdentifierPtr file(IID_FileIdentifier);
+	file->Set(strFullPath);
 
-    bool fileExisis = false;
-    file->ExistsOnDisk(fileExisis);
+	bool fileExisis = false;
+	file->ExistsOnDisk(fileExisis);
 
-    // Check if the file exists
-    if (!fileExisis) { return kVCOMError_Failed; }
+	// Check if the file exists
+	if (!fileExisis) { return kVCOMError_Failed; }
 
-    fExchangeObj.AddFileToZip(file, ERessourceType::RessoureFixture /*next to the object*/);
+	fExchangeObj.AddFileToZip(file, ERessourceType::RessoureFixture /*next to the object*/);
 
-    // 
-    return kVCOMError_NoError;
+	// 
+	return kVCOMError_NoError;
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::AddBufferToMvrFile(MvrString filename, char* buffer, size_t length)
 {
-    TXString strFileName (filename);
+	TXString strFileName (filename);
 
-    if (strFileName.IsEmpty()) 	{ return kVCOMError_InvalidArg; }
+	if (strFileName.IsEmpty()) 	{ return kVCOMError_InvalidArg; }
 	if (length == 0) 		 	{ return kVCOMError_InvalidArg; }
 	if (buffer == nullptr) 	 	{ return kVCOMError_InvalidArg; }
 
@@ -56,20 +56,20 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::AddBufferTo
 	internalBuffer->SetData(buffer, length);
 
 	fExchangeObj.AddBufferToZip(strFileName, internalBuffer);
-    // 
-    return kVCOMError_NoError;
+	// 
+	return kVCOMError_NoError;
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::AddGdtfFolderLocation(MvrString fullPathToFolder)
 {
 	TXString path (fullPathToFolder);
-	
+
 	IFolderIdentifierPtr folder (IID_FolderIdentifier);
 	folder->Set(path);
-	
+
 	fExchangeObj.AddLocationForGdtfFiles(folder);
-	
-	
+
+
 	return kVCOMError_NoError;
 }
 
@@ -77,9 +77,9 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::AddProvider
 {
 	TXString strProvider(provider);
 	TXString strProviderVersion(providerVersion);
-	
+
 	fExchangeObj.AddProviderAndProviderVersion(strProvider, strProviderVersion);
-	
+
 	return kVCOMError_NoError;
 
 }
@@ -90,13 +90,13 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::OpenForWrit
 	// Set Path
 	fPath = IFileIdentifierPtr(IID_FileIdentifier);
 	if ( VCOM_FAILED(fPath->Set(fullPath)) )	{return kVCOMError_Failed;}
-	
-	
+
+
 	//---------------------------------------------------------------------------
 	// Initialize Reading
 	fExchangeObj.InitializeForExport();
 	fWriteMode = true;
-	
+
 	return kVCOMError_NoError;
 }
 
@@ -105,11 +105,11 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateDataP
 	//---------------------------------------------------------------------------
 	// Create the obj
 	SceneData::SceneDataProviderObjPtr ptr = fExchangeObj.CreateDataProviderObject(provider, version);
-	
+
 	//---------------------------------------------------------------------------
 	// Initialize Object
 	CSceneDataProviderImpl* pProviderObj = nullptr;
-	
+
 	// Query Interface
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_SceneDataProvider, (IVWUnknown**) & pProviderObj)))
 	{
@@ -126,7 +126,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateDataP
 			return kVCOMError_NoInterface;
 		}
 	}
-	
+
 	//---------------------------------------------------------------------------
 	// Check Incomming Object
 	if (*outSceneDataProvider)
@@ -134,11 +134,11 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateDataP
 		(*outSceneDataProvider)->Release();
 		*outSceneDataProvider		= NULL;
 	}
-	
+
 	//---------------------------------------------------------------------------
 	// Set Out Value
 	*outSceneDataProvider		= pProviderObj;
-	
+
 	return kVCOMError_NoError;
 }
 
@@ -150,11 +150,11 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreatePosit
 
 	TXString nameStr ( name );
 	SceneData::SceneDataPositionObjPtr scPostion = fExchangeObj.CreatePositionObject(uuid, nameStr);
-	
+
 	//---------------------------------------------------------------------------
 	// Initialize Object
 	CPositionImpl* pPosition = nullptr;
-	
+
 	// Query Interface
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_PositionObj, (IVWUnknown**) & pPosition)))
 	{
@@ -171,7 +171,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreatePosit
 			return kVCOMError_NoInterface;
 		}
 	}
-	
+
 	//---------------------------------------------------------------------------
 	// Check Incomming Object
 	if (*outPositionObj)
@@ -179,11 +179,11 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreatePosit
 		(*outPositionObj)->Release();
 		*outPositionObj		= NULL;
 	}
-	
+
 	//---------------------------------------------------------------------------
 	// Set Out Value
 	*outPositionObj		= pPosition;
-	
+
 	return kVCOMError_NoError;
 }
 
@@ -196,13 +196,13 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateSymDe
 	// If the UUID is empty, create a new one
 	if(guid.a == 0 && guid.b == 0 &&  guid.c == 0 && guid.d == 0){ uuid.New(); }
 	TXString nameStr ( name );
-	
+
 	SceneData::SceneDataSymDefObjPtr scSymDef = fExchangeObj.CreateSymDefObject(uuid, nameStr);
-	
+
 	//---------------------------------------------------------------------------
 	// Initialize Object
 	CSymDefImpl* pSymDef = nullptr;
-	
+
 	// Query Interface
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_ISymDef, (IVWUnknown**) & pSymDef)))
 	{
@@ -219,7 +219,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateSymDe
 			return kVCOMError_NoInterface;
 		}
 	}
-	
+
 	//---------------------------------------------------------------------------
 	// Check Incomming Object
 	if (*outSymDef)
@@ -227,11 +227,11 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateSymDe
 		(*outSymDef)->Release();
 		*outSymDef		= NULL;
 	}
-	
+
 	//---------------------------------------------------------------------------
 	// Set Out Value
 	*outSymDef		= pSymDef;
-	
+
 	return kVCOMError_NoError;
 }
 
@@ -243,11 +243,11 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateClass
 	TXString nameStr ( name );
 
 	SceneData::SceneDataClassObjPtr scClass = fExchangeObj.CreateClassObject(uuid, nameStr);
-	
+
 	//---------------------------------------------------------------------------
 	// Initialize Object
 	CClassImpl* pClass = nullptr;
-	
+
 	// Query Interface
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_IClass, (IVWUnknown**) & pClass)))
 	{
@@ -264,7 +264,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateClass
 			return kVCOMError_NoInterface;
 		}
 	}
-	
+
 	//---------------------------------------------------------------------------
 	// Check Incomming Object
 	if (*outclass)
@@ -272,11 +272,11 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateClass
 		(*outclass)->Release();
 		*outclass		= NULL;
 	}
-	
+
 	//---------------------------------------------------------------------------
 	// Set Out Value
 	*outclass		= pClass;
-	
+
 	return kVCOMError_NoError;
 }
 
@@ -288,11 +288,11 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateMappi
 	TXString nameStr ( name );
 
 	SceneData::SceneDataMappingDefinitionObjPtr scMapDef = fExchangeObj.CreateMappingDefinitionObject(uuid, nameStr);
-	
+
 	//---------------------------------------------------------------------------
 	// Initialize Object
 	CMappingDefinitionImpl* pMappingDefinition = nullptr;
-	
+
 	// Query Interface
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_MappingDefinitionObj, (IVWUnknown**) & pMappingDefinition)))
 	{
@@ -309,7 +309,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateMappi
 			return kVCOMError_NoInterface;
 		}
 	}
-	
+
 	//---------------------------------------------------------------------------
 	// Check Incoming Object
 	if (*outMapDef)
@@ -317,11 +317,11 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateMappi
 		(*outMapDef)->Release();
 		*outMapDef = NULL;
 	}
-	
+
 	//---------------------------------------------------------------------------
 	// Set Out Value
 	*outMapDef = pMappingDefinition;
-	
+
 	return kVCOMError_NoError;
 }
 
@@ -332,11 +332,11 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateLayer
 	VWFC::Tools::VWUUID	uuid	(guid.a,guid.b,guid.c,guid.d);
 
 	SceneData::SceneDataLayerObjPtr ptr = fExchangeObj.CreateLayerObject(uuid, name);
-	
+
 	//---------------------------------------------------------------------------
 	// Initialize Object
 	CSceneObjImpl* pProviderObj = nullptr;
-	
+
 	// Query Interface
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_SceneObject, (IVWUnknown**) & pProviderObj)))
 	{
@@ -353,7 +353,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateLayer
 			return kVCOMError_NoInterface;
 		}
 	}
-	
+
 	//---------------------------------------------------------------------------
 	// Check Incomming Object
 	if (*outLayerObj)
@@ -361,11 +361,11 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateLayer
 		(*outLayerObj)->Release();
 		*outLayerObj		= NULL;
 	}
-	
+
 	//---------------------------------------------------------------------------
 	// Set Out Value
 	*outLayerObj		= pProviderObj;
-	
+
 	return kVCOMError_NoError;
 }
 
@@ -374,35 +374,35 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateGroup
 	//---------------------------------------------------------------------------
 	// Read Container
 	CSceneObjImpl* pContainer = static_cast<CSceneObjImpl* >(addToContainer);
-	
+
 	ASSERTN(kEveryone, pContainer != nullptr);
 	if ( ! pContainer) { return kVCOMError_NoValidContainerObj; }
-	
-	
+
+
 	SceneData::SceneDataObjWithMatrixPtr	obj		= nullptr;
 	ESceneObjType							type	= ESceneObjType::Layer;
 	pContainer->GetPointer(obj, type);
-	
-    if( ! VectorworksMVR::MvrUtil::isContainerType(type)) { return kVCOMError_NoValidContainerObj; }	
-	
+
+	if( ! VectorworksMVR::MvrUtil::isContainerType(type)) { return kVCOMError_NoValidContainerObj; }	
+
 	SceneData::SceneDataGroupObjPtr group = static_cast<SceneData::SceneDataGroupObjPtr>(obj);
-	
+
 	ASSERTN(kEveryone, group != nullptr);
 	if ( ! group) { return kVCOMError_NoValidContainerObj; }
-	
+
 	//---------------------------------------------------------------------------
 	// Create the obj
 	VWFC::Tools::VWUUID	uuid	(guid.a,guid.b,guid.c,guid.d);
-	
+
 	VWTransformMatrix ma;
 	GdtfUtil::ConvertMatrix(offset, ma);
-	
+
 	SceneData::SceneDataGroupObjPtr ptr = fExchangeObj.CreateGroupObject(uuid, ma, group);
-	
+
 	//---------------------------------------------------------------------------
 	// Initialize Object
 	CSceneObjImpl* pGroupObj = nullptr;
-	
+
 	// Query Interface
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_SceneObject, (IVWUnknown**) & pGroupObj)))
 	{
@@ -419,7 +419,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateGroup
 			return kVCOMError_NoInterface;
 		}
 	}
-	
+
 	//---------------------------------------------------------------------------
 	// Check Incomming Object
 	if (*outGroupObj)
@@ -427,11 +427,11 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateGroup
 		(*outGroupObj)->Release();
 		*outGroupObj		= NULL;
 	}
-	
+
 	//---------------------------------------------------------------------------
 	// Set Out Value
 	*outGroupObj		= pGroupObj;
-	
+
 	return kVCOMError_NoError;
 }
 
@@ -440,35 +440,35 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateGroup
 	//---------------------------------------------------------------------------
 	// Read Container
 	CSceneObjImpl* pContainer = static_cast<CSceneObjImpl* >(addToContainer);
-	
+
 	ASSERTN(kEveryone, pContainer != nullptr);
 	if ( ! pContainer) { return kVCOMError_NoValidContainerObj; }
-	
-	
+
+
 	SceneData::SceneDataObjWithMatrixPtr	obj		= nullptr;
 	ESceneObjType							type	= ESceneObjType::Layer;
 	pContainer->GetPointer(obj, type);
-	
-    if( ! VectorworksMVR::MvrUtil::isContainerType(type)) { return kVCOMError_NoValidContainerObj; }	
-	
+
+	if( ! VectorworksMVR::MvrUtil::isContainerType(type)) { return kVCOMError_NoValidContainerObj; }	
+
 	SceneData::SceneDataGroupObjPtr group = static_cast<SceneData::SceneDataGroupObjPtr>(obj);
-	
+
 	ASSERTN(kEveryone, group != nullptr);
 	if ( ! group) { return kVCOMError_NoValidContainerObj; }
-	
+
 	//---------------------------------------------------------------------------
 	// Create the obj
 	VWFC::Tools::VWUUID	uuid	(guid.a,guid.b,guid.c,guid.d);
-	
+
 	VWTransformMatrix ma;
 	GdtfUtil::ConvertMatrix(offset, ma);
-	
+
 	SceneData::SceneDataGroupObjPtr ptr = fExchangeObj.CreateGroupObject(uuid, ma, name, group);
-	
+
 	//---------------------------------------------------------------------------
 	// Initialize Object
 	CSceneObjImpl* pGroupObj = nullptr;
-	
+
 	// Query Interface
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_SceneObject, (IVWUnknown**) & pGroupObj)))
 	{
@@ -485,7 +485,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateGroup
 			return kVCOMError_NoInterface;
 		}
 	}
-	
+
 	//---------------------------------------------------------------------------
 	// Check Incomming Object
 	if (*outGroupObj)
@@ -493,36 +493,36 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateGroup
 		(*outGroupObj)->Release();
 		*outGroupObj		= NULL;
 	}
-	
+
 	//---------------------------------------------------------------------------
 	// Set Out Value
 	*outGroupObj		= pGroupObj;
-	
+
 	return kVCOMError_NoError;
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateFixture(const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outFixture)
 {
-	
+
 	//---------------------------------------------------------------------------
 	// Read Container
 	CSceneObjImpl* pContainer = static_cast<CSceneObjImpl* >(addToContainer);
-	
+
 	ASSERTN(kEveryone, pContainer != nullptr);
 	if ( ! pContainer) { return kVCOMError_NoValidContainerObj; }
-	
-	
+
+
 	SceneData::SceneDataObjWithMatrixPtr	obj		= nullptr;
 	ESceneObjType							type	= ESceneObjType::Layer;
 	pContainer->GetPointer(obj, type);
-	
-    if( ! VectorworksMVR::MvrUtil::isContainerType(type)) { return kVCOMError_NoValidContainerObj; }
-	
+
+	if( ! VectorworksMVR::MvrUtil::isContainerType(type)) { return kVCOMError_NoValidContainerObj; }
+
 	SceneData::SceneDataGroupObjPtr group = static_cast<SceneData::SceneDataGroupObjPtr>(obj);
-	
+
 	ASSERTN(kEveryone, group != nullptr);
 	if ( ! group) { return kVCOMError_NoValidContainerObj; }
-	
+
 	//---------------------------------------------------------------------------
 	// Create the obj
 	VWFC::Tools::VWUUID	uuid	(guid.a,guid.b,guid.c,guid.d);
@@ -531,13 +531,13 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateFixtu
 
 	VWTransformMatrix ma;
 	GdtfUtil::ConvertMatrix(offset, ma);
-	
+
 	SceneData::SceneDataFixtureObjPtr ptr = fExchangeObj.CreateFixture(uuid, ma, nameStr, group);
-	
+
 	//---------------------------------------------------------------------------
 	// Initialize Object
 	CSceneObjImpl* pProviderObj = nullptr;
-	
+
 	// Query Interface
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_SceneObject, (IVWUnknown**) & pProviderObj)))
 	{
@@ -554,7 +554,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateFixtu
 			return kVCOMError_NoInterface;
 		}
 	}
-	
+
 	//---------------------------------------------------------------------------
 	// Check Incomming Object
 	if (*outFixture)
@@ -562,11 +562,11 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateFixtu
 		(*outFixture)->Release();
 		*outFixture		= NULL;
 	}
-	
+
 	//---------------------------------------------------------------------------
 	// Set Out Value
 	*outFixture		= pProviderObj;
-	
+
 	return kVCOMError_NoError;
 }
 
@@ -575,22 +575,22 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateScene
 	//---------------------------------------------------------------------------
 	// Read Container
 	CSceneObjImpl* pContainer = static_cast<CSceneObjImpl* >(addToContainer);
-	
+
 	ASSERTN(kEveryone, pContainer != nullptr);
 	if ( ! pContainer) { return kVCOMError_NoValidContainerObj; }
-	
-	
+
+
 	SceneData::SceneDataObjWithMatrixPtr	obj		= nullptr;
 	ESceneObjType							type	= ESceneObjType::Layer;
 	pContainer->GetPointer(obj, type);
-	
-    if( ! VectorworksMVR::MvrUtil::isContainerType(type)) { return kVCOMError_NoValidContainerObj; }	
-	
+
+	if( ! VectorworksMVR::MvrUtil::isContainerType(type)) { return kVCOMError_NoValidContainerObj; }	
+
 	SceneData::SceneDataGroupObjPtr group = static_cast<SceneData::SceneDataGroupObjPtr>(obj);
-	
+
 	ASSERTN(kEveryone, group != nullptr);
 	if ( ! group) { return kVCOMError_NoValidContainerObj; }
-	
+
 	//---------------------------------------------------------------------------
 	// Create the obj
 	VWFC::Tools::VWUUID	uuid	(guid.a,guid.b,guid.c,guid.d);
@@ -598,12 +598,12 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateScene
 
 	VWTransformMatrix ma;
 	GdtfUtil::ConvertMatrix(offset, ma);
-	
+
 	SceneData::SceneDataSceneryObjPtr ptr = fExchangeObj.CreateSceneryObject(uuid, ma, nameStr, group);
 	//---------------------------------------------------------------------------
 	// Initialize Object
 	CSceneObjImpl* pSceneObj = nullptr;
-	
+
 	// Query Interface
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_SceneObject, (IVWUnknown**) & pSceneObj)))
 	{
@@ -620,7 +620,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateScene
 			return kVCOMError_NoInterface;
 		}
 	}
-	
+
 	//---------------------------------------------------------------------------
 	// Check Incomming Object
 	if (*outSceneObj)
@@ -628,11 +628,11 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateScene
 		(*outSceneObj)->Release();
 		*outSceneObj		= NULL;
 	}
-	
+
 	//---------------------------------------------------------------------------
 	// Set Out Value
 	*outSceneObj		= pSceneObj;
-	
+
 	return kVCOMError_NoError;
 }
 
@@ -641,22 +641,22 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateFocus
 	//---------------------------------------------------------------------------
 	// Read Container
 	CSceneObjImpl* pContainer = static_cast<CSceneObjImpl* >(addToContainer);
-	
+
 	ASSERTN(kEveryone, pContainer != nullptr);
 	if ( ! pContainer) { return kVCOMError_NoValidContainerObj; }
-	
-	
+
+
 	SceneData::SceneDataObjWithMatrixPtr	obj		= nullptr;
 	ESceneObjType							type	= ESceneObjType::Layer;
 	pContainer->GetPointer(obj, type);
-	
-    if( ! VectorworksMVR::MvrUtil::isContainerType(type)) { return kVCOMError_NoValidContainerObj; }	
-	
+
+	if( ! VectorworksMVR::MvrUtil::isContainerType(type)) { return kVCOMError_NoValidContainerObj; }	
+
 	SceneData::SceneDataGroupObjPtr group = static_cast<SceneData::SceneDataGroupObjPtr>(obj);
-	
+
 	ASSERTN(kEveryone, group != nullptr);
 	if ( ! group) { return kVCOMError_NoValidContainerObj; }
-	
+
 	//---------------------------------------------------------------------------
 	// Create the obj
 	VWFC::Tools::VWUUID	uuid	(guid.a,guid.b,guid.c,guid.d);
@@ -664,13 +664,13 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateFocus
 
 	VWTransformMatrix ma;
 	GdtfUtil::ConvertMatrix(offset, ma);
-	
+
 	SceneData::SceneDataFocusPointObjPtr ptr = fExchangeObj.CreateFocusPoint(uuid, ma, nameStr, group);
-	
+
 	//---------------------------------------------------------------------------
 	// Initialize Object
 	CSceneObjImpl* pProviderObj = nullptr;
-	
+
 	// Query Interface
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_SceneObject, (IVWUnknown**) & pProviderObj)))
 	{
@@ -687,7 +687,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateFocus
 			return kVCOMError_NoInterface;
 		}
 	}
-	
+
 	//---------------------------------------------------------------------------
 	// Check Incomming Object
 	if (*outFocusPoint)
@@ -695,11 +695,11 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateFocus
 		(*outFocusPoint)->Release();
 		*outFocusPoint		= NULL;
 	}
-	
+
 	//---------------------------------------------------------------------------
 	// Set Out Value
 	*outFocusPoint		= pProviderObj;
-	
+
 	return kVCOMError_NoError;
 }
 
@@ -708,23 +708,23 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateTruss
 	//---------------------------------------------------------------------------
 	// Read Container
 	CSceneObjImpl* pContainer = static_cast<CSceneObjImpl* >(addToContainer);
-	
+
 	ASSERTN(kEveryone, pContainer != nullptr);
 	if ( ! pContainer) { return kVCOMError_NoValidContainerObj; }
-	
-	
+
+
 	SceneData::SceneDataObjWithMatrixPtr	obj		= nullptr;
 	ESceneObjType							type	= ESceneObjType::Layer;
 	pContainer->GetPointer(obj, type);
-	
-	
-    if( ! VectorworksMVR::MvrUtil::isContainerType(type)) { return kVCOMError_NoValidContainerObj; }	
+
+
+	if( ! VectorworksMVR::MvrUtil::isContainerType(type)) { return kVCOMError_NoValidContainerObj; }	
 
 	SceneData::SceneDataGroupObjPtr group = static_cast<SceneData::SceneDataGroupObjPtr>(obj);
-	
+
 	ASSERTN(kEveryone, group != nullptr);
 	if ( ! group) { return kVCOMError_NoValidContainerObj; }
-	
+
 	//---------------------------------------------------------------------------
 	// Create the obj
 	VWFC::Tools::VWUUID	uuid	(guid.a,guid.b,guid.c,guid.d);
@@ -732,13 +732,13 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateTruss
 
 	VWTransformMatrix ma;
 	GdtfUtil::ConvertMatrix(offset, ma);
-	
+
 	SceneData::SceneDataTrussObjPtr ptr = fExchangeObj.CreateTruss(uuid, ma, nameStr, group);
-	
+
 	//---------------------------------------------------------------------------
 	// Initialize Object
 	CSceneObjImpl* pTrussObj = nullptr;
-	
+
 	// Query Interface
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_SceneObject, (IVWUnknown**) & pTrussObj)))
 	{
@@ -755,7 +755,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateTruss
 			return kVCOMError_NoInterface;
 		}
 	}
-	
+
 	//---------------------------------------------------------------------------
 	// Check Incomming Object
 	if (*outTruss)
@@ -763,11 +763,11 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateTruss
 		(*outTruss)->Release();
 		*outTruss		= NULL;
 	}
-	
+
 	//---------------------------------------------------------------------------
 	// Set Out Value
 	*outTruss		= pTrussObj;
-	
+
 	return kVCOMError_NoError;
 }
 
@@ -777,23 +777,23 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateSuppo
 	//---------------------------------------------------------------------------
 	// Read Container
 	CSceneObjImpl* pContainer = static_cast<CSceneObjImpl* >(addToContainer);
-	
+
 	ASSERTN(kEveryone, pContainer != nullptr);
 	if ( ! pContainer) { return kVCOMError_NoValidContainerObj; }
-	
-	
+
+
 	SceneData::SceneDataObjWithMatrixPtr	obj		= nullptr;
 	ESceneObjType							type	= ESceneObjType::Layer;
 	pContainer->GetPointer(obj, type);
-	
-	
-    if( ! VectorworksMVR::MvrUtil::isContainerType(type)) { return kVCOMError_NoValidContainerObj; }	
+
+
+	if( ! VectorworksMVR::MvrUtil::isContainerType(type)) { return kVCOMError_NoValidContainerObj; }	
 
 	SceneData::SceneDataGroupObjPtr group = static_cast<SceneData::SceneDataGroupObjPtr>(obj);
-	
+
 	ASSERTN(kEveryone, group != nullptr);
 	if ( ! group) { return kVCOMError_NoValidContainerObj; }
-	
+
 	//---------------------------------------------------------------------------
 	// Create the obj
 	VWFC::Tools::VWUUID	uuid	(guid.a,guid.b,guid.c,guid.d);
@@ -801,13 +801,13 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateSuppo
 
 	VWTransformMatrix ma;
 	GdtfUtil::ConvertMatrix(offset, ma);
-	
+
 	SceneData::SceneDataSupportObjPtr ptr = fExchangeObj.CreateSupport(uuid, ma, nameStr, group);
-	
+
 	//---------------------------------------------------------------------------
 	// Initialize Object
 	CSceneObjImpl* pSupportObj = nullptr;
-	
+
 	// Query Interface
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_SceneObject, (IVWUnknown**) & pSupportObj)))
 	{
@@ -824,7 +824,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateSuppo
 			return kVCOMError_NoInterface;
 		}
 	}
-	
+
 	//---------------------------------------------------------------------------
 	// Check Incomming Object
 	if (*outSupport)
@@ -832,11 +832,11 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateSuppo
 		(*outSupport)->Release();
 		*outSupport		= NULL;
 	}
-	
+
 	//---------------------------------------------------------------------------
 	// Set Out Value
 	*outSupport		= pSupportObj;
-	
+
 	return kVCOMError_NoError;
 }
 
@@ -846,23 +846,23 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateVideo
 	//---------------------------------------------------------------------------
 	// Read Container
 	CSceneObjImpl* pContainer = static_cast<CSceneObjImpl* >(addToContainer);
-	
+
 	ASSERTN(kEveryone, pContainer != nullptr);
 	if ( ! pContainer) { return kVCOMError_NoValidContainerObj; }
-	
-	
+
+
 	SceneData::SceneDataObjWithMatrixPtr	obj		= nullptr;
 	ESceneObjType							type	= ESceneObjType::Layer;
 	pContainer->GetPointer(obj, type);
-	
-	
+
+
 	if( ! VectorworksMVR::MvrUtil::isContainerType(type)) { return kVCOMError_NoValidContainerObj; }	
-	
+
 	SceneData::SceneDataGroupObjPtr group = static_cast<SceneData::SceneDataGroupObjPtr>(obj);
-	
+
 	ASSERTN(kEveryone, group != nullptr);
 	if ( ! group) { return kVCOMError_NoValidContainerObj; }
-	
+
 	//---------------------------------------------------------------------------
 	// Create the obj
 	VWFC::Tools::VWUUID	uuid	(guid.a,guid.b,guid.c,guid.d);
@@ -870,13 +870,13 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateVideo
 
 	VWTransformMatrix ma;
 	GdtfUtil::ConvertMatrix(offset, ma);
-	
+
 	SceneData::SceneDataVideoScreenObjPtr ptr = fExchangeObj.CreateVideoScreen(uuid, ma, nameStr, group);
-	
+
 	//---------------------------------------------------------------------------
 	// Initialize Object
 	CSceneObjImpl* pVideoScreen = nullptr;
-	
+
 	// Query Interface
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_SceneObject, (IVWUnknown**) & pVideoScreen)))
 	{
@@ -893,7 +893,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateVideo
 			return kVCOMError_NoInterface;
 		}
 	}
-	
+
 	//---------------------------------------------------------------------------
 	// Check Incomming Object
 	if (*outVideoScreen)
@@ -901,11 +901,11 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateVideo
 		(*outVideoScreen)->Release();
 		*outVideoScreen		= NULL;
 	}
-	
+
 	//---------------------------------------------------------------------------
 	// Set Out Value
 	*outVideoScreen		= pVideoScreen;
-	
+
 	return kVCOMError_NoError;
 }
 
@@ -914,22 +914,22 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateProje
 	//---------------------------------------------------------------------------
 	// Read Container
 	CSceneObjImpl* pContainer = static_cast<CSceneObjImpl* >(addToContainer);
-	
+
 	ASSERTN(kEveryone, pContainer != nullptr);
 	if ( ! pContainer) { return kVCOMError_NoValidContainerObj; }
-	
-	
+
+
 	SceneData::SceneDataObjWithMatrixPtr	obj		= nullptr;
 	ESceneObjType							type	= ESceneObjType::Layer;
 	pContainer->GetPointer(obj, type);
-	
-    if( ! VectorworksMVR::MvrUtil::isContainerType(type)) { return kVCOMError_NoValidContainerObj; }	
-	
+
+	if( ! VectorworksMVR::MvrUtil::isContainerType(type)) { return kVCOMError_NoValidContainerObj; }	
+
 	SceneData::SceneDataGroupObjPtr group = static_cast<SceneData::SceneDataGroupObjPtr>(obj);
-	
+
 	ASSERTN(kEveryone, group != nullptr);
 	if ( ! group) { return kVCOMError_NoValidContainerObj; }
-	
+
 	//---------------------------------------------------------------------------
 	// Create the obj
 	VWFC::Tools::VWUUID	uuid	(guid.a,guid.b,guid.c,guid.d);
@@ -937,13 +937,13 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateProje
 
 	VWTransformMatrix ma;
 	GdtfUtil::ConvertMatrix(offset, ma);
-	
+
 	SceneData::SceneDataProjectorObjPtr ptr = fExchangeObj.CreateProjector(uuid, ma, nameStr, group);
-	
+
 	//---------------------------------------------------------------------------
 	// Initialize Object
 	CSceneObjImpl* pProjector = nullptr;
-	
+
 	// Query Interface
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_SceneObject, (IVWUnknown**) & pProjector)))
 	{
@@ -960,7 +960,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateProje
 			return kVCOMError_NoInterface;
 		}
 	}
-	
+
 	//---------------------------------------------------------------------------
 	// Check Incoming Object
 	if (*outProjector)
@@ -968,11 +968,11 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateProje
 		(*outProjector)->Release();
 		*outProjector		= NULL;
 	}
-	
+
 	//---------------------------------------------------------------------------
 	// Set Out Value
 	*outProjector = pProjector;
-	
+
 	return kVCOMError_NoError;
 }
 
@@ -985,14 +985,14 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::Close()
 		fExchangeObj.WriteToFile(fPath);
 		return kVCOMError_NoError;
 	}
-	
+
 	//------------------------------------------------------------------
 	// Read Mode
 	if(fReadMode)
 	{
 		return kVCOMError_NoError;
 	}
-	
+
 	return kVCOMError_Failed;
 }
 
@@ -1002,12 +1002,12 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::OpenForRead
 	// Set Path
 	fPath = IFileIdentifierPtr(IID_FileIdentifier);
 	if ( VCOM_FAILED(fPath->Set(fullPath)) )	{return kVCOMError_Failed;}
-	
+
 	//---------------------------------------------------------------------------
 	// Initialize & Read
 	fExchangeObj.InitializeForImport();
 	fReadMode = true;
-	
+
 	if (fExchangeObj.ReadFromFile(fPath))	
 	{ 
 		// Prepare the Attached File Count
@@ -1016,10 +1016,10 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::OpenForRead
 
 		return kVCOMError_NoError; 
 	}
-	
+
 	// If the file could not be read, we return a no file error
 	return kVCOMError_FileNotFound;
-	
+
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetDataProviderObjectCount(size_t& outCount)
@@ -1033,19 +1033,19 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetDataProv
 	//---------------------------------------------------------------------------
 	// Check incomming count
 	size_t count = fExchangeObj.GetProviderObjects().size();
-	
+
 	ASSERTN(kEveryone, at < count);
 	if (at >= count) { return kVCOMError_InvalidArg; }
-	
-	
+
+
 	//---------------------------------------------------------------------------
 	// Get Symdef
 	SceneData::SceneDataProviderObjPtr provider = fExchangeObj.GetProviderObjects().at(at);
-	
+
 	//---------------------------------------------------------------------------
 	// Create Symdef
 	CSceneDataProviderImpl* pSymDef = nullptr;
-	
+
 	// Query Interface
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_SceneDataProvider, (IVWUnknown**) & pSymDef)))
 	{
@@ -1062,7 +1062,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetDataProv
 			return kVCOMError_NoInterface;
 		}
 	}
-	
+
 	//---------------------------------------------------------------------------
 	// Check Incomming Object
 	if (*outSceneDataProvider)
@@ -1070,7 +1070,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetDataProv
 		(*outSceneDataProvider)->Release();
 		*outSceneDataProvider		= NULL;
 	}
-	
+
 	//---------------------------------------------------------------------------
 	// Set Out Value
 	*outSceneDataProvider		= pSymDef;
@@ -1084,7 +1084,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetPosition
 	{
 		if (auxObj->GetObjectType() == SceneData::ESceneDataObjectType::ePosition) { outCount++; }
 	}
-	
+
 	return kVCOMError_NoError;
 }
 
@@ -1094,32 +1094,30 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetPosition
 	size_t positionCount = 0;
 
 	// Now cycle thru aux data
-	for ( SceneData::SceneDataAuxObjPtr auxObj : fExchangeObj.GetAuxDataObjects() )
+	for (SceneData::SceneDataAuxObjPtr auxObj : fExchangeObj.GetAuxDataObjects())
 	{
-		if ( auxObj->GetObjectType() == SceneData::ESceneDataObjectType::ePosition )
+		if (auxObj->GetObjectType() == SceneData::ESceneDataObjectType::ePosition)
 		{
-			if ( at == positionCount )
+			if (at == positionCount)
 			{
 				// Do the cast
-				SceneData::SceneDataPositionObjPtr scPosition = static_cast<SceneData::SceneDataPositionObjPtr>( auxObj );
-				ASSERTN( kEveryone, scPosition != nullptr );
-				if ( !scPosition )
-				{
-					return kVCOMError_Failed;
-				}
+				SceneData::SceneDataPositionObjPtr scPosition = static_cast<SceneData::SceneDataPositionObjPtr>(auxObj);
+				ASSERTN(kEveryone, scPosition != nullptr);
+				if (!scPosition) { return kVCOMError_Failed; }
+
 
 				//---------------------------------------------------------------------------
 				// Initialize Object
 				CPositionImpl* pPosition = nullptr;
 
 				// Query Interface
-				if ( VCOM_SUCCEEDED( VWQueryInterface( IID_PositionObj, (IVWUnknown**) &pPosition ) ) )
+				if (VCOM_SUCCEEDED(VWQueryInterface(IID_PositionObj, (IVWUnknown**) & pPosition)))
 				{
 					// Check Casting
-					CPositionImpl* pResultInterface = static_cast<CPositionImpl*>( pPosition );
-					if ( pResultInterface )
+					CPositionImpl* pResultInterface = static_cast<CPositionImpl* >(pPosition);
+					if (pResultInterface)
 					{
-						pResultInterface->SetPointer( scPosition );
+						pResultInterface->SetPointer(scPosition);
 					}
 					else
 					{
@@ -1131,9 +1129,9 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetPosition
 
 				//---------------------------------------------------------------------------
 				// Check Incomming Object
-				if ( *outPosition )
+				if (*outPosition)
 				{
-					( *outPosition )->Release();
+					(*outPosition)->Release();
 					*outPosition		= NULL;
 				}
 
@@ -1142,15 +1140,16 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetPosition
 				*outPosition		= pPosition;
 				return kVCOMError_NoError;
 			}
+
 			// Increase position count
 			positionCount++;
 		}
 	}
-	
+
 	DSTOP((kEveryone,"Get Position is out of bounds!"));
 	return kVCOMError_Failed;
 }
-																				  
+
 VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetSymDefCount(size_t& outCount)
 {
 	outCount = 0;
@@ -1158,7 +1157,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetSymDefCo
 	{
 		if (auxObj->GetObjectType() == SceneData::ESceneDataObjectType::eSymDef) { outCount++; }
 	}
-	
+
 	return kVCOMError_NoError;
 }
 
@@ -1176,6 +1175,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetSymDefAt
 		{
 			return kVCOMError_Failed;
 		}
+
 
 		//---------------------------------------------------------------------------
 		// Initialize Object
@@ -1211,7 +1211,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetSymDefAt
 		*outSymDef		= pSymDef;
 		return kVCOMError_NoError;
 	}
-	
+
 	DSTOP((kEveryone,"Get Position is out of bounds!"));
 	return kVCOMError_Failed;
 }
@@ -1223,61 +1223,68 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetClassCou
 	{
 		if (auxObj->GetObjectType() == SceneData::ESceneDataObjectType::eClassObject) { outCount++; }
 	}
-	
+
 	return kVCOMError_NoError;
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetClassAt(size_t at, IClass** outClass)
 {
-	const auto& auxObjects = fExchangeObj.GetAuxDataObjects();
-	const auto& auxObj = auxObjects[ at ];
+	// Prepare a var for local counting
+	size_t classCount = 0;
 
-	if ( auxObj->GetObjectType() == SceneData::ESceneDataObjectType::eClassObject )
+	// Now cycle thru aux data
+	for (SceneData::SceneDataAuxObjPtr auxObj : fExchangeObj.GetAuxDataObjects())
 	{
-		// Do the cast
-		SceneData::SceneDataClassObjPtr scClass = static_cast<SceneData::SceneDataClassObjPtr>( auxObj );
-		ASSERTN( kEveryone, scClass != nullptr );
-		if ( !scClass )
+		if (auxObj->GetObjectType() == SceneData::ESceneDataObjectType::eClassObject)
 		{
-			return kVCOMError_Failed;
-		}
-
-
-		//---------------------------------------------------------------------------
-		// Initialize Object
-		CClassImpl* pClass = nullptr;
-
-		// Query Interface
-		if ( VCOM_SUCCEEDED( VWQueryInterface( IID_IClass, (IVWUnknown**) &pClass ) ) )
-		{
-			// Check Casting
-			CClassImpl* pResultInterface = static_cast<CClassImpl*>( pClass );
-			if ( pResultInterface )
+			if (at == classCount)
 			{
-				pResultInterface->SetPointer( scClass );
-			}
-			else
-			{
-				pResultInterface->Release();
-				pResultInterface = nullptr;
-				return kVCOMError_NoInterface;
-			}
-		}
+				// Do the cast
+				SceneData::SceneDataClassObjPtr scClass = static_cast<SceneData::SceneDataClassObjPtr>(auxObj);
+				ASSERTN(kEveryone, scClass != nullptr);
+				if (!scClass) { return kVCOMError_Failed; }
 
-		//---------------------------------------------------------------------------
-		// Check Incomming Object
-		if ( *outClass )
-		{
-			( *outClass )->Release();
-			*outClass		= NULL;
-		}
 
-		//---------------------------------------------------------------------------
-		// Set Out Value
-		*outClass		= pClass;
-		return kVCOMError_NoError;
+				//---------------------------------------------------------------------------
+				// Initialize Object
+				CClassImpl* pClass = nullptr;
+
+				// Query Interface
+				if (VCOM_SUCCEEDED(VWQueryInterface(IID_IClass, (IVWUnknown**) & pClass)))
+				{
+					// Check Casting
+					CClassImpl* pResultInterface = static_cast<CClassImpl* >(pClass);
+					if (pResultInterface)
+					{
+						pResultInterface->SetPointer(scClass);
+					}
+					else
+					{
+						pResultInterface->Release();
+						pResultInterface = nullptr;
+						return kVCOMError_NoInterface;
+					}
+				}
+
+				//---------------------------------------------------------------------------
+				// Check Incomming Object
+				if (*outClass)
+				{
+					(*outClass)->Release();
+					*outClass		= NULL;
+				}
+
+				//---------------------------------------------------------------------------
+				// Set Out Value
+				*outClass		= pClass;
+				return kVCOMError_NoError;
+			}
+
+			// Increase position count
+			classCount++;
+		}
 	}
-	
+
 	DSTOP((kEveryone,"Get Position is out of bounds!"));
 	return kVCOMError_Failed;
 }
@@ -1289,61 +1296,68 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetMappingD
 	{
 		if (auxObj->GetObjectType() == SceneData::ESceneDataObjectType::eMappingDefinitionObject) { outCount++; }
 	}
-	
+
 	return kVCOMError_NoError;
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetMappingDefinitionAt(size_t at, IMappingDefinition** outMapDef)
 {
-	const auto& auxObjects = fExchangeObj.GetAuxDataObjects();
-	const auto& auxObj = auxObjects[ at ];
+	// Prepare a var for local counting
+	size_t mapDefCount = 0;
 
-	if ( auxObj->GetObjectType() == SceneData::ESceneDataObjectType::eMappingDefinitionObject )
+	// Now cycle thru aux data
+	for (SceneData::SceneDataAuxObjPtr auxObj : fExchangeObj.GetAuxDataObjects())
 	{
-		// Do the cast
-		SceneData::SceneDataMappingDefinitionObjPtr scMapDef = static_cast<SceneData::SceneDataMappingDefinitionObjPtr>( auxObj );
-		ASSERTN( kEveryone, scMapDef != nullptr );
-		if ( !scMapDef )
+		if (auxObj->GetObjectType() == SceneData::ESceneDataObjectType::eMappingDefinitionObject)
 		{
-			return kVCOMError_Failed;
-		}
-
-
-		//---------------------------------------------------------------------------
-		// Initialize Object
-		CMappingDefinitionImpl* pMapDef = nullptr;
-
-		// Query Interface
-		if ( VCOM_SUCCEEDED( VWQueryInterface( IID_MappingDefinitionObj, (IVWUnknown**) &pMapDef ) ) )
-		{
-			// Check Casting
-			CMappingDefinitionImpl* pResultInterface = static_cast<CMappingDefinitionImpl*>( pMapDef );
-			if ( pResultInterface )
+			if (at == mapDefCount)
 			{
-				pResultInterface->SetPointer( scMapDef );
-			}
-			else
-			{
-				pResultInterface->Release();
-				pResultInterface = nullptr;
-				return kVCOMError_NoInterface;
-			}
-		}
+				// Do the cast
+				SceneData::SceneDataMappingDefinitionObjPtr scMapDef = static_cast<SceneData::SceneDataMappingDefinitionObjPtr>(auxObj);
+				ASSERTN(kEveryone, scMapDef != nullptr);
+				if (!scMapDef) { return kVCOMError_Failed; }
 
-		//---------------------------------------------------------------------------
-		// Check Incomming Object
-		if ( *outMapDef )
-		{
-			( *outMapDef )->Release();
-			*outMapDef		= NULL;
-		}
 
-		//---------------------------------------------------------------------------
-		// Set Out Value
-		*outMapDef		= pMapDef;
-		return kVCOMError_NoError;
+				//---------------------------------------------------------------------------
+				// Initialize Object
+				CMappingDefinitionImpl* pMapDef = nullptr;
+
+				// Query Interface
+				if (VCOM_SUCCEEDED(VWQueryInterface(IID_MappingDefinitionObj, (IVWUnknown**) & pMapDef)))
+				{
+					// Check Casting
+					CMappingDefinitionImpl* pResultInterface = static_cast<CMappingDefinitionImpl* >(pMapDef);
+					if (pResultInterface)
+					{
+						pResultInterface->SetPointer(scMapDef);
+					}
+					else
+					{
+						pResultInterface->Release();
+						pResultInterface = nullptr;
+						return kVCOMError_NoInterface;
+					}
+				}
+
+				//---------------------------------------------------------------------------
+				// Check Incomming Object
+				if (*outMapDef)
+				{
+					(*outMapDef)->Release();
+					*outMapDef		= NULL;
+				}
+
+				//---------------------------------------------------------------------------
+				// Set Out Value
+				*outMapDef		= pMapDef;
+				return kVCOMError_NoError;
+			}
+
+			// Increase position count
+			mapDefCount++;
+		}
 	}
-	
+
 	DSTOP((kEveryone,"GetMappingDefinitionAt is out of bounds!"));
 	return kVCOMError_Failed;
 }
@@ -1353,7 +1367,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetFirstLay
 	// ------------------------------------------------------------------------------------------
 	// Check if there is a layer
 	if (fExchangeObj.GetChildObjects().size() == 0) { return kVCOMError_NoLayerObj; }
-	
+
 	//---------------------------------------------------------------------------
 	// Check Incomming Object
 	if (*firstLayer)
@@ -1361,14 +1375,14 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetFirstLay
 		(*firstLayer)->Release();
 		*firstLayer		= NULL;
 	}
-	
+
 	SceneData::SceneDataObjWithMatrixPtr layer = fExchangeObj.GetChildObjects().at(0);
-	
-	
+
+
 	//---------------------------------------------------------------------------
 	// Initialize Object
 	CSceneObjImpl* pLayerObj = nullptr;
-	
+
 	// Query Interface
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_SceneObject, (IVWUnknown**) & pLayerObj)))
 	{
@@ -1385,7 +1399,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetFirstLay
 			return kVCOMError_NoInterface;
 		}
 	}
-	
+
 	//---------------------------------------------------------------------------
 	// Set Out Value
 	*firstLayer		= pLayerObj;
@@ -1397,41 +1411,41 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetFirstChi
 	// ------------------------------------------------------------------------------------------
 	// Check the container object
 	if ( ! container) { return kVCOMError_NoValidContainerObj; }
-	
-	
+
+
 	// ------------------------------------------------------------------------------------------
 	// Cast to object
 	CSceneObjImpl* pContainer = static_cast<CSceneObjImpl* >(container);
-	
+
 	//
 	SceneData::SceneDataObjWithMatrixPtr	layer	= nullptr;
 	ESceneObjType							objType;
-	
+
 	pContainer->GetPointer(layer, objType);
-	
+
 	if ( ! layer)							{ return kVCOMError_NoValidContainerObj; }	
-	
+
 	ASSERTN(kEveryone,	VectorworksMVR::MvrUtil::isContainerType(objType));						
 
 	if ( ! VectorworksMVR::MvrUtil::isContainerType(objType))	
-    {
-        return kVCOMError_NoValidContainerObj; 
-    }	
-	
+	{
+		return kVCOMError_NoValidContainerObj; 
+	}	
+
 	// Do the last casting
 	SceneData::SceneDataGroupObjPtr scGroupObj = static_cast<SceneData::SceneDataGroupObjPtr >(layer);
 	if(!scGroupObj) { return kVCOMError_NoValidContainerObj; }
-	
+
 	//---------------------------------------------------------------------------
 	// Check of there are childs and get first object
 	if (scGroupObj->GetChildArray().size() == 0){ return kVCOMError_NoObj; }
-	
+
 	SceneData::SceneDataObjWithMatrixPtr	child	= scGroupObj->GetChildArray().at(0);
-	
+
 	//---------------------------------------------------------------------------
 	// Initialize Object
 	CSceneObjImpl* pSceneObject = nullptr;
-	
+
 	// Query Interface
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_SceneObject, (IVWUnknown**) & pSceneObject)))
 	{
@@ -1448,7 +1462,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetFirstChi
 			return kVCOMError_NoInterface;
 		}
 	}
-	
+
 	//---------------------------------------------------------------------------
 	// Check Incomming Object
 	if (*outChild)
@@ -1456,39 +1470,39 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetFirstChi
 		(*outChild)->Release();
 		*outChild		= NULL;
 	}
-	
-	
+
+
 	//---------------------------------------------------------------------------
 	// Set Out Value
 	*outChild		= pSceneObject;
 	return kVCOMError_NoError;
-	
-	
+
+
 }
-																				  
+
 VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetNextObject(ISceneObj* object, ISceneObj** outNextObj)
 {
 	// ------------------------------------------------------------------------------------------
 	// Check the container object
 	if ( ! object) { return kVCOMError_NoValidContainerObj; }
-	
-	
+
+
 	// ------------------------------------------------------------------------------------------
 	// Cast to object
 	CSceneObjImpl* pContainer = static_cast<CSceneObjImpl* >(object);
-	
+
 	//
 	SceneData::SceneDataObjWithMatrixPtr	scObject	= nullptr;
 	ESceneObjType							objType;
-	
+
 	pContainer->GetPointer(scObject, objType);
-	
-	
+
+
 	//---------------------------------------------------------------------------
 	// Check of there are childs and get first object
 	SceneData::SceneDataObjWithMatrixPtr scNextObj = scObject->GetNextObject();
-	
-	
+
+
 	//---------------------------------------------------------------------------
 	// Check Incomming Object - This need to be done before the possible return
 	// of empty next object call
@@ -1497,15 +1511,15 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetNextObje
 		(*outNextObj)->Release();
 		*outNextObj		= NULL;
 	}
-	
-	
+
+
 	// If no next object is there, just return ok
 	if (scNextObj == nullptr)	{ return kVCOMError_NotSet; }
-	
+
 	//---------------------------------------------------------------------------
 	// Initialize Object
 	CSceneObjImpl* pSceneObject = nullptr;
-	
+
 	// Query Interface
 	if (VCOM_SUCCEEDED(VWQueryInterface(IID_SceneObject, (IVWUnknown**) & pSceneObject)))
 	{
@@ -1522,10 +1536,10 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetNextObje
 			return kVCOMError_NoInterface;
 		}
 	}
-	
 
-	
-	
+
+
+
 	//---------------------------------------------------------------------------
 	// Set Out Value
 	*outNextObj		= pSceneObject;
@@ -1536,8 +1550,8 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetAttached
 {
 	outCount = fExchangeObj.GetAttachedFileCount();
 
-    // 
-    return kVCOMError_NoError;
+	// 
+	return kVCOMError_NoError;
 }
 
 MvrString VectorworksMVR::CMediaRessourceVectorImpl::GetAttachedFileCountAt(size_t at)
@@ -1549,7 +1563,7 @@ MvrString VectorworksMVR::CMediaRessourceVectorImpl::GetAttachedFileCountAt(size
 		return fullPathStorage[at].GetCharPtr();
 	}
 
-    return "";
+	return "";
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetSceneObjectCount(size_t& countObjects)
