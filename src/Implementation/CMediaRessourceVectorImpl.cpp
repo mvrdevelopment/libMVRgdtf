@@ -1163,8 +1163,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetSymDefCo
 
 VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetSymDefAt(size_t at, ISymDef** outSymDef)
 {
-	const auto& auxObjects = fExchangeObj.GetAuxDataObjects();
-	auto auxObj = auxObjects[ at ];
+	const auto& auxObj = fExchangeObj.GetAuxDataObjects().at(at);
 
 	if ( auxObj->GetObjectType() == SceneData::ESceneDataObjectType::eSymDef )
 	{
