@@ -205,10 +205,12 @@ namespace SceneData
 		
 	private:
 		SceneDataGeometryObjArray		fGeometries;
+		bool							fContainsSymbolGeometry = false;
 		
 	public:
 		const SceneDataGeometryObjArray& getGeometryArray() const;
 		void							Add(SceneDataGeoInstanceObjPtr object);
+		bool							IsContaingSymbolGeometry() const;
 
 	protected:
 		virtual	TXString				GetNodeName();
