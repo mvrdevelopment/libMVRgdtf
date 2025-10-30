@@ -1079,71 +1079,58 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetDataProv
 
 VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetPositionObjectCount(size_t& outCount)
 {
-	outCount = 0;
-	for (SceneData::SceneDataAuxObjPtr auxObj : fExchangeObj.GetAuxDataObjects())
-	{
-		if (auxObj->GetObjectType() == SceneData::ESceneDataObjectType::ePosition) { outCount++; }
-	}
+	outCount = fExchangeObj.GetSymDefObjects().size();
 	
 	return kVCOMError_NoError;
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetPositionObjectAt(size_t at, IPosition** outPosition)
 {
-	// Prepare a var for local counting
-	size_t positionCount = 0;
-	
-	// Now cycle thru aux data
-	for (SceneData::SceneDataAuxObjPtr auxObj : fExchangeObj.GetAuxDataObjects())
+	const auto auxObj = fExchangeObj.GetSymDefObjects().at(at);
+	if ( auxObj->GetObjectType() == SceneData::ESceneDataObjectType::ePosition )
 	{
-		if (auxObj->GetObjectType() == SceneData::ESceneDataObjectType::ePosition)
+		// Do the cast
+		SceneData::SceneDataPositionObjPtr scPosition = static_cast<SceneData::SceneDataPositionObjPtr>( auxObj );
+		ASSERTN( kEveryone, scPosition != nullptr );
+		if ( !scPosition )
 		{
-			if (at == positionCount)
-			{
-				// Do the cast
-				SceneData::SceneDataPositionObjPtr scPosition = static_cast<SceneData::SceneDataPositionObjPtr>(auxObj);
-				ASSERTN(kEveryone, scPosition != nullptr);
-				if (!scPosition) { return kVCOMError_Failed; }
-				
-				
-				//---------------------------------------------------------------------------
-				// Initialize Object
-				CPositionImpl* pPosition = nullptr;
-				
-				// Query Interface
-				if (VCOM_SUCCEEDED(VWQueryInterface(IID_PositionObj, (IVWUnknown**) & pPosition)))
-				{
-					// Check Casting
-					CPositionImpl* pResultInterface = static_cast<CPositionImpl* >(pPosition);
-					if (pResultInterface)
-					{
-						pResultInterface->SetPointer(scPosition);
-					}
-					else
-					{
-						pResultInterface->Release();
-						pResultInterface = nullptr;
-						return kVCOMError_NoInterface;
-					}
-				}
-				
-				//---------------------------------------------------------------------------
-				// Check Incomming Object
-				if (*outPosition)
-				{
-					(*outPosition)->Release();
-					*outPosition		= NULL;
-				}
-				
-				//---------------------------------------------------------------------------
-				// Set Out Value
-				*outPosition		= pPosition;
-				return kVCOMError_NoError;
-			}
-			
-			// Increase position count
-			positionCount++;
+			return kVCOMError_Failed;
 		}
+
+
+		//---------------------------------------------------------------------------
+		// Initialize Object
+		CPositionImpl* pPosition = nullptr;
+
+		// Query Interface
+		if ( VCOM_SUCCEEDED( VWQueryInterface( IID_PositionObj, (IVWUnknown**) &pPosition ) ) )
+		{
+			// Check Casting
+			CPositionImpl* pResultInterface = static_cast<CPositionImpl*>( pPosition );
+			if ( pResultInterface )
+			{
+				pResultInterface->SetPointer( scPosition );
+			}
+			else
+			{
+				pResultInterface->Release();
+				pResultInterface = nullptr;
+				return kVCOMError_NoInterface;
+			}
+		}
+
+		//---------------------------------------------------------------------------
+		// Check Incomming Object
+		if ( *outPosition )
+		{
+			( *outPosition )->Release();
+			*outPosition		= NULL;
+		}
+
+		//---------------------------------------------------------------------------
+		// Set Out Value
+		*outPosition		= pPosition;
+		return kVCOMError_NoError;
 	}
 	
 	DSTOP((kEveryone,"Get Position is out of bounds!"));
