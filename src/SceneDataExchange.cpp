@@ -514,6 +514,7 @@ void SceneDataSymDefObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataE
 			SceneDataSymbolObjPtr symbol = new SceneDataSymbolObj(uuidSymbol);
 			symbol->ReadFromNode(objNode, exchange);
 			fGeometries.push_back(symbol);		
+			fContainsSymbolGeometry = true;
 		}
 		else
 		{
@@ -550,6 +551,11 @@ void SceneDataSymDefObj::Add(SceneDataGeoInstanceObjPtr object)
 		fGeometries.push_back(object);
 	}
 	
+}
+
+bool SceneDataSymDefObj::IsContaingSymbolGeometry() const
+{
+	return fContainsSymbolGeometry;
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------------
