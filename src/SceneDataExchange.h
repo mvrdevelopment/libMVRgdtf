@@ -976,7 +976,7 @@ namespace SceneData
 		SceneDataProviderObjArray			fProviderObjs;
 		SceneDataAuxObjArray				fAuxDataObjs;
 		SceneDataObjWithMatrixArray			fChildObjs;
-		
+		SceneDataAuxObjArray				fSymDefObjs;
 		
 		// Arrays for eachobject typ		e
 		SceneDataObjWithMatrixArray			fSceneObjects;
@@ -1028,7 +1028,8 @@ namespace SceneData
 		SceneDataProviderObjArray&			GetProviderObjects();
 		SceneDataAuxObjArray&				GetAuxDataObjects();
 		SceneDataObjWithMatrixArray&		GetChildObjects();
-		
+		SceneDataAuxObjArray&				GetSymDefObjects();
+
 		SceneDataObjWithMatrixArray&		GetSceneDataObjects();
 		
 	private:
