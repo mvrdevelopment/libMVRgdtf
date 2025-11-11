@@ -5674,11 +5674,6 @@ EGdtfChannelBitResolution SceneData::GdtfDmxChannel::ExtractResolutionFromDMXFro
 	
 	EGdtfChannelBitResolution calculatedRes = GetCalculatedChannelBitResolution();
 	
-	printf("[DEBUG] No DMXFrom resolution found, using calculated: %d-bit\n",
-		   calculatedRes == EGdtfChannelBitResolution::eGdtfChannelBitResolution_8 ? 8 :
-		   calculatedRes == EGdtfChannelBitResolution::eGdtfChannelBitResolution_16 ? 16 :
-		   calculatedRes == EGdtfChannelBitResolution::eGdtfChannelBitResolution_24 ? 24 : 32);
-	
 	return calculatedRes;
 }
 
