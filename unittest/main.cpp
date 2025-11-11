@@ -32,6 +32,7 @@
 #include "GdtfBufferWrite.h"
 #include "GdtfRefreshBufferTest.h"
 #include "GdtfVirtualChannelTest.h"
+#include "ResolutionTest.h"
 
 using namespace VectorworksMVR;					
 
@@ -122,8 +123,11 @@ int main(int argc, char* argv[])
 	MvrXChangeUnitTest test22(base);
 	bool test22_ok = test22.RunTest();
 
+	ResolutionTest test23(base);
+	bool test23_ok = test23.RunTest();
 
-    return  (mvrFailed || gdtfFailed || gdtfDmxFailed || errorFailed || modeMasterFailed || test1_ok || test2_ok|| test3_ok || test4_ok || test5_ok || test6_ok || test7_ok || test8_ok || test9_ok || test10_ok || test11_ok || test12_ok || test13_ok || test14_ok || test15_ok || test16_ok || test17_ok || test18_ok || test19_ok || test21_ok || test22_ok);
+
+    return  (mvrFailed || gdtfFailed || gdtfDmxFailed || errorFailed || modeMasterFailed || test1_ok || test2_ok|| test3_ok || test4_ok || test5_ok || test6_ok || test7_ok || test8_ok || test9_ok || test10_ok || test11_ok || test12_ok || test13_ok || test14_ok || test15_ok || test16_ok || test17_ok || test18_ok || test19_ok || test21_ok || test22_ok || test23_ok);
 }
 
 

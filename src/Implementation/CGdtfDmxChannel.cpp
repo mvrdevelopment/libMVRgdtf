@@ -148,7 +148,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::GetResolution(Gdt
 	// Check Pointer
 	if ( ! fChannel) { return kVCOMError_NotInitialized; }
 	
-	resolution = fChannel->GetChannelBitResolution();
+	resolution = fChannel->GetResolution();
 	
 	return kVCOMError_NoError;
 }
@@ -232,6 +232,16 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::SetGeometry(IGdtf
 	fChannel->SetGeomRef(scgeo);
 	
 	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::SetResolution(GdtfDefines::EGdtfChannelBitResolution resolution)
+{
+    // Check Pointer
+    if ( ! fChannel) { return kVCOMError_NotInitialized; }
+
+    fChannel->SetResolution(resolution);
+
+    return kVCOMError_NoError;
 }
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelImpl::GetLogicalChannelCount(size_t &count)

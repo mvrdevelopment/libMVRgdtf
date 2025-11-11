@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GDTF DataVersion="1.1">
+  <FixtureType CanHaveChildren="Yes" Description="Test fixture for resolution extraction testing" FixtureTypeID="12345678-1234-1234-1234-123456789001" LongName="Resolution Test Fixture" Manufacturer="Test Manufacturer" Name="Resolution Test Fixture" RefFT="" ShortName="ResTest" Thumbnail="">
+    <AttributeDefinitions>
+      <FeatureGroups>
+        <FeatureGroup Name="Dimmer" Pretty="Dimmer">
+          <Feature Name="Dimmer"/>
+        </FeatureGroup>
+        <FeatureGroup Name="Pan" Pretty="Pan">
+          <Feature Name="Pan"/>
+        </FeatureGroup>
+        <FeatureGroup Name="Tilt" Pretty="Tilt">
+          <Feature Name="Tilt"/>
+        </FeatureGroup>
+        <FeatureGroup Name="ColorMixing" Pretty="Color Mixing">
+          <Feature Name="Red"/>
+          <Feature Name="Green"/> 
+          <Feature Name="Blue"/>
+        </FeatureGroup>
+      </FeatureGroups>
+      <Attributes>
+        <Attribute Feature="Dimmer.Dimmer" Name="Dimmer" PhysicalUnit="None" Pretty="Dim"/>
+        <Attribute Feature="Pan.Pan" Name="Pan" PhysicalUnit="None" Pretty="Pan"/>
+        <Attribute Feature="Tilt.Tilt" Name="Tilt" PhysicalUnit="None" Pretty="Tilt"/>
+        <Attribute Feature="ColorMixing.Red" Name="Red" PhysicalUnit="None" Pretty="Red"/>
+        <Attribute Feature="ColorMixing.Green" Name="Green" PhysicalUnit="None" Pretty="Green"/>
+        <Attribute Feature="ColorMixing.Blue" Name="Blue" PhysicalUnit="None" Pretty="Blue"/>
+      </Attributes>
+    </AttributeDefinitions>
+    <Wheels/>
+    <PhysicalDescriptions>
+      <ColorSpace Mode="sRGB"/>
+      <Filters/>
+      <Emitters/>
+      <DMXProfiles/>
+      <CRIs/>
+      <Connectors/>
+      <Properties>
+        <OperatingTemperature High="40.000000" Low="0.000000"/>
+        <Weight Value="0.000000"/>
+        <LegHeight Value="0.000000"/>
+      </Properties>
+    </PhysicalDescriptions>
+    <Models>
+      <Model File="" Height="1.000000" Length="1.000000" Name="Body" PrimitiveType="Cube" Width="1.000000"/>
+    </Models>
+    <Geometries>
+      <Geometry Model="Body" Name="Body" Position="{1.000000,0.000000,0.000000,0.000000}{0.000000,1.000000,0.000000,0.000000}{0.000000,0.000000,1.000000,0.000000}{0,0,0,1}"/>
+    </Geometries>
+    <DMXModes>
+      <DMXMode Geometry="Body" Name="Multi Resolution Mode">
+        <DMXChannels>
+          <!-- Channel 1: 8-bit resolution (DMXFrom with /1) -->
+          <DMXChannel DMXBreak="1" Geometry="Body" Offset="1">
+            <LogicalChannel Attribute="Dimmer" Master="Grand" Snap="No">
+              <ChannelFunction Attribute="Dimmer" DMXFrom="255/1" Default="0/1" Name="Dimmer 8bit"/>
+            </LogicalChannel>
+          </DMXChannel>
+          
+          <!-- Channel 2-3: 16-bit resolution (DMXFrom with /2) -->
+          <DMXChannel DMXBreak="1" Geometry="Body" Offset="2,3">
+            <LogicalChannel Attribute="Pan" Master="None" Snap="No">
+              <ChannelFunction Attribute="Pan" DMXFrom="65535/2" Default="32768/2" Name="Pan 16bit"/>
+            </LogicalChannel>
+          </DMXChannel>
+          
+          <!-- Channel 4-6: 24-bit resolution (DMXFrom with /3) -->
+          <DMXChannel DMXBreak="1" Geometry="Body" Offset="4,5,6">
+            <LogicalChannel Attribute="Tilt" Master="None" Snap="No">
+              <ChannelFunction Attribute="Tilt" DMXFrom="16777215/3" Default="8388608/3" Name="Tilt 24bit"/>
+            </LogicalChannel>
+          </DMXChannel>
+          
+          <!-- Channel 7-10: 32-bit resolution (DMXFrom with /4) -->
+          <DMXChannel DMXBreak="1" Geometry="Body" Offset="7,8,9,10">
+            <LogicalChannel Attribute="Red" Master="None" Snap="No">
+              <ChannelFunction Attribute="Red" DMXFrom="4294967295/4" Default="2147483648/4" Name="Red 32bit"/>
+            </LogicalChannel>
+          </DMXChannel>
+          
+          <!-- Channel 11: Another 8-bit for mixed testing -->
+          <DMXChannel DMXBreak="1" Geometry="Body" Offset="11">
+            <LogicalChannel Attribute="Green" Master="None" Snap="No">
+              <ChannelFunction Attribute="Green" DMXFrom="128/1" Default="0/1" Name="Green 8bit"/>
+            </LogicalChannel>
+          </DMXChannel>
+          
+          <!-- Channel 12-13: Another 16-bit for mixed testing -->
+          <DMXChannel DMXBreak="1" Geometry="Body" Offset="12,13">
+            <LogicalChannel Attribute="Blue" Master="None" Snap="No">
+              <ChannelFunction Attribute="Blue" DMXFrom="32768/2" Default="0/2" Name="Blue 16bit"/>
+            </LogicalChannel>
+          </DMXChannel>
+        </DMXChannels>
+      </DMXMode>
+    </DMXModes>
+  </FixtureType>
+</GDTF>

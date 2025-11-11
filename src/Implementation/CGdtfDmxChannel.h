@@ -33,6 +33,7 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE     SetUber(Sint32 uber);		
 		virtual VCOMError VCOM_CALLTYPE     SetHighlight(DmxValue highlight);
 		virtual VCOMError VCOM_CALLTYPE     SetGeometry(IGdtfGeometry* model);
+        virtual VCOMError VCOM_CALLTYPE     SetResolution(GdtfDefines::EGdtfChannelBitResolution resolution);
 		
         virtual VCOMError VCOM_CALLTYPE     GetLogicalChannelCount(size_t& count);
         virtual VCOMError VCOM_CALLTYPE     GetLogicalChannelAt(size_t at, IGdtfDmxLogicalChannel** channel);
