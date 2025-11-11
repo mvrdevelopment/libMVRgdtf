@@ -1593,3 +1593,24 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::SetAbortCal
 
 	return kVCOMError_NoError;
 }
+
+VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetMVRFileVersion(MvrString& version)
+{
+	version = fExchangeObj.GetMVRFileVersion();
+
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VCOM_CALLTYPE VectorworksMVR::CMediaRessourceVectorImpl::GetLatestMVRSupoortedVersion( MvrString& version )
+{
+	version = TXString::ToStringReal( kLatestMVRFileVersion );
+
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VCOM_CALLTYPE VectorworksMVR::CMediaRessourceVectorImpl::GetLatestGDTFSupoortedVersion( MvrString& version )
+{
+	version = TXString::ToStringReal( kLatestGDTFFileVersion );
+
+	return kVCOMError_NoError;
+}

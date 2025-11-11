@@ -113,5 +113,14 @@ namespace VectorworksMVR
 
 		// Check for duplicated uuids
 		virtual VCOMError VCOM_CALLTYPE		GetDuplicatedUuids(bool& outDuplicated);
+
+		// Get MVR File Version
+		virtual VCOMError VCOM_CALLTYPE		GetMVRFileVersion( MvrString& version );
+
+		// Get latest MVR supported version
+		virtual VCOMError VCOM_CALLTYPE		GetLatestMVRSupoortedVersion( MvrString& version );
+
+		// Get latest GDTF supported version
+		virtual VCOMError VCOM_CALLTYPE		GetLatestGDTFSupoortedVersion( MvrString& version );
 	};
 }

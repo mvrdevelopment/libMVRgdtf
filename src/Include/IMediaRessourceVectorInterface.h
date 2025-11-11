@@ -507,6 +507,14 @@ namespace VectorworksMVR
 
 		// Check for duplicated uuids
 		virtual VCOMError VCOM_CALLTYPE		GetDuplicatedUuids(bool& outDuplicated) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE		GetMVRFileVersion( MvrString& version ) = 0;
+
+		// Get latest MVR supported version
+		virtual VCOMError VCOM_CALLTYPE		GetLatestMVRSupoortedVersion( MvrString& version ) = 0;
+
+		// Get latest GDTF supported version
+		virtual VCOMError VCOM_CALLTYPE		GetLatestGDTFSupoortedVersion( MvrString& version ) = 0;
 				
 	};
 	typedef VCOMPtr<IMediaRessourceVectorInterface>	IMediaRessourceVectorInterfacePtr;
@@ -1559,6 +1567,7 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		virtual VCOMError VCOM_CALLTYPE		Close() = 0;
         
 		virtual VCOMError VCOM_CALLTYPE     GetGDTFVersion( Sint32& major, Sint32& minor ) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetGDTFVersion( MvrString& version ) = 0;
 
         virtual MvrString VCOM_CALLTYPE		GetName() = 0;
         virtual MvrString VCOM_CALLTYPE     GetManufacturer() = 0;

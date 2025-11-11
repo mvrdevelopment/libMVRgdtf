@@ -28,6 +28,7 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		Close();
 		
         virtual VCOMError VCOM_CALLTYPE     GetGDTFVersion( Sint32& major, Sint32& minor );
+        virtual VCOMError VCOM_CALLTYPE     GetGDTFVersion( MvrString& version );
 
         virtual MvrString VCOM_CALLTYPE		GetName();
         virtual MvrString VCOM_CALLTYPE		GetShortName();
