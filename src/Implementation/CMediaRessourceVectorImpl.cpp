@@ -1593,3 +1593,11 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::SetAbortCal
 
 	return kVCOMError_NoError;
 }
+
+VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetLibVersion( size_t& major, size_t& minor )
+{
+	major = LIBMVRGDTF_VERSION_MAJOR;
+	minor = LIBMVRGDTF_VERSION_MINOR;
+
+	return kVCOMError_NoError;
+}
