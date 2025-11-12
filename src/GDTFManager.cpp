@@ -8702,33 +8702,38 @@ void GdtfFixture::ResolveDmxLogicalChanRefs(GdtfDmxChannelPtr dmxChnl)
 				geometryName = geoRef->GetName();
 			}
 
-
-			bool alreadyExists = false;
-			GdtfDmxModePtr mode = dmxChnl->GetParentMode();
+			// Allow NoFeature attributes to be linked multiple times to the same geometry
+			bool isNoFeatureAttribute = (attrPtr == fNoFeature) || (attributeName.EqualNoCase("NoFeature"));
 			
-			for(GdtfDmxChannelPtr channel : mode->GetChannelArray())
+			bool alreadyExists = false;
+			if (!isNoFeatureAttribute)
 			{
-				if(CheckAbort()) { return; }
-				GdtfGeometryPtr currentGeometry = channel->GetGeomRef();
-				if(currentGeometry == nullptr) { break; }
-				TXString currentGeometryName = currentGeometry->GetName();
-				for(GdtfDmxLogicalChannelPtr logicalChannel : channel->GetLogicalChannelArray())
+				GdtfDmxModePtr mode = dmxChnl->GetParentMode();
+				
+				for(GdtfDmxChannelPtr channel : mode->GetChannelArray())
 				{
-					TXString currentAttributeName = "";
-					GdtfAttributePtr currentAttribute = logicalChannel->GetAttribute();
-					if(currentAttribute != nullptr)
+					if(CheckAbort()) { return; }
+					GdtfGeometryPtr currentGeometry = channel->GetGeomRef();
+					if(currentGeometry == nullptr) { break; }
+					TXString currentGeometryName = currentGeometry->GetName();
+					for(GdtfDmxLogicalChannelPtr logicalChannel : channel->GetLogicalChannelArray())
 					{
-						currentAttributeName = currentAttribute->GetName();
+						TXString currentAttributeName = "";
+						GdtfAttributePtr currentAttribute = logicalChannel->GetAttribute();
+						if(currentAttribute != nullptr)
+						{
+							currentAttributeName = currentAttribute->GetName();
+						}
+
+						if(geometryName.EqualNoCase(currentGeometryName) && attributeName.EqualNoCase(currentAttributeName))
+						{
+							alreadyExists = true;
+							break;
+						}
 					}
 
-					if(geometryName.EqualNoCase(currentGeometryName) && attributeName.EqualNoCase(currentAttributeName))
-					{
-						alreadyExists = true;
-						break;
-					}
+					if(alreadyExists) { break; }
 				}
-
-				if(alreadyExists) { break; }
 			}
 
 			if(alreadyExists)
