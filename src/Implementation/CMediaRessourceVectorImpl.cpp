@@ -1594,7 +1594,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::SetAbortCal
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetMVRFileVersion(Sint32& major, Sint32& minor)
+VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetMVRVersion(Sint32& major, Sint32& minor)
 {
 	major = fExchangeObj.GetMVRFileMajorVersion();
 	minor = fExchangeObj.GetMVRFileMinorVersion();

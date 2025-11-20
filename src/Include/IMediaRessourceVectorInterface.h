@@ -509,7 +509,7 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetDuplicatedUuids(bool& outDuplicated) = 0;
 		
 		// Get MVR file version
-		virtual VCOMError VCOM_CALLTYPE		GetMVRFileVersion( Sint32& major, Sint32& minor ) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetMVRVersion( Sint32& major, Sint32& minor ) = 0;
 
 		// Get latest MVR supported version
 		virtual VCOMError VCOM_CALLTYPE		GetLatestMVRSupoortedVersion( Sint32& major, Sint32& minor ) = 0;
