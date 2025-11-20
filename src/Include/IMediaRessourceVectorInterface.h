@@ -507,7 +507,8 @@ namespace VectorworksMVR
 
 		// Check for duplicated uuids
 		virtual VCOMError VCOM_CALLTYPE		GetDuplicatedUuids(bool& outDuplicated) = 0;
-
+		
+		// Get MVR file version
 		virtual VCOMError VCOM_CALLTYPE		GetMVRFileVersion( Sint32& major, Sint32& minor ) = 0;
 
 		// Get latest MVR supported version
@@ -515,6 +516,9 @@ namespace VectorworksMVR
 
 		// Get latest GDTF supported version
 		virtual VCOMError VCOM_CALLTYPE		GetLatestGDTFSupoortedVersion( Sint32& major, Sint32& minor ) = 0;
+
+		// Returns the version of the library used to create the MVR/GDTF files
+		virtual VCOMError VCOM_CALLTYPE     GetLibVersion(size_t& major, size_t& minor) = 0;
 				
 	};
 	typedef VCOMPtr<IMediaRessourceVectorInterface>	IMediaRessourceVectorInterfacePtr;

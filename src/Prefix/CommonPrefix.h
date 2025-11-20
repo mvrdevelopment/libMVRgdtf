@@ -3,6 +3,10 @@
 //-----------------------------------------------------------------------------
 #include "Prefix/StdAfx.h"
 
+// LibMVRgdtf version
+#define LIBMVRGDTF_VERSION_MAJOR		1
+#define LIBMVRGDTF_VERSION_MINOR		0
+
 ////////////////////////////////////////////////////////////////
 // Plug-in specific
 #define VWParaLightingDevice_CLASSNAME			"Lighting Device"

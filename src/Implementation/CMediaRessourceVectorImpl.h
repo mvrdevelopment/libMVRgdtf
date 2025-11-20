@@ -122,5 +122,8 @@ namespace VectorworksMVR
 
 		// Get latest GDTF supported version
 		virtual VCOMError VCOM_CALLTYPE		GetLatestGDTFSupoortedVersion( Sint32& major, Sint32& minor );
+
+		// Returns the version of the library used to create the MVR/GDTF files
+		virtual VCOMError VCOM_CALLTYPE		GetLibVersion( size_t& major, size_t& minor );
 	};
 }
