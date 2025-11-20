@@ -3,11 +3,6 @@
 //-----------------------------------------------------------------------------
 #include "Prefix/StdAfx.h"
 
-// Latest MVR version supported
-#define kLatestMVRFileVersion		1.5
-// Latest GDTF version supported
-#define kLatestGDTFFileVersion		1.2
-
 ////////////////////////////////////////////////////////////////
 // Plug-in specific
 #define VWParaLightingDevice_CLASSNAME			"Lighting Device"
@@ -254,6 +249,9 @@
 
 const Sint32 kMVR_MajorVersion = 1;
 const Sint32 kMVR_MinorVersion = 5;
+
+const Sint32 kGDTF_CurrentMajorVersion = 1;
+const Sint32 kGDTF_CurrentMinorVersion = 2;
 
 // ----------------------------------------------------------------------------------------------------------------------------------
 // GDTF XML Values

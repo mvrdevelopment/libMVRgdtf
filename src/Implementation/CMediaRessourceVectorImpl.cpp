@@ -1594,23 +1594,26 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::SetAbortCal
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetMVRFileVersion(MvrString& version)
+VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetMVRFileVersion(Sint32& major, Sint32& minor)
 {
-	version = fExchangeObj.GetMVRFileVersion();
+	major = fExchangeObj.GetMVRFileMajorVersion();
+	minor = fExchangeObj.GetMVRFileMinorVersion();
 
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VCOM_CALLTYPE VectorworksMVR::CMediaRessourceVectorImpl::GetLatestMVRSupoortedVersion( MvrString& version )
+VectorworksMVR::VCOMError VCOM_CALLTYPE VectorworksMVR::CMediaRessourceVectorImpl::GetLatestMVRSupoortedVersion( Sint32& major, Sint32& minor )
 {
-	version = TXString::ToStringReal( kLatestMVRFileVersion );
+	major = kMVR_MajorVersion;
+	minor = kMVR_MinorVersion;
 
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VCOM_CALLTYPE VectorworksMVR::CMediaRessourceVectorImpl::GetLatestGDTFSupoortedVersion( MvrString& version )
+VectorworksMVR::VCOMError VCOM_CALLTYPE VectorworksMVR::CMediaRessourceVectorImpl::GetLatestGDTFSupoortedVersion( Sint32& major, Sint32& minor )
 {
-	version = TXString::ToStringReal( kLatestGDTFFileVersion );
+	major = kGDTF_CurrentMajorVersion;
+	minor = kGDTF_CurrentMinorVersion;
 
 	return kVCOMError_NoError;
 }

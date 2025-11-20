@@ -3809,7 +3809,8 @@ void SceneDataExchange::ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xml
 			TXString outMajorValue, outMinorValue;
 			rootNode->GetNodeAttributeValue(XML_Val_RootAttrMainVersion, outMajorValue);
 			rootNode->GetNodeAttributeValue( XML_Val_RootAttrMinorVersion, outMinorValue );
-			fMVRFileVersion = outMajorValue + "." + outMinorValue;
+			fMVRFileMajorVersion = outMajorValue.atoi();
+			fMVRFileMinorVersion = outMinorValue.atoi();
 			
 			// ----------------------------------------------------------------
 			// Find the user data Node
@@ -4186,7 +4187,12 @@ bool SceneDataExchange::CheckAbort()
 	return false;
 }
 
-TXString SceneDataExchange::GetMVRFileVersion() const
+size_t SceneDataExchange::GetMVRFileMajorVersion() const
 {
-	return fMVRFileVersion;
+	return fMVRFileMajorVersion;
+}
+
+size_t SceneDataExchange::GetMVRFileMinorVersion() const
+{
+	return fMVRFileMinorVersion;
 }

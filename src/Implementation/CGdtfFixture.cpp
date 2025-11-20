@@ -240,32 +240,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetGDTFVersion( Sint
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetGDTFVersion( MvrString& version )
-{
-    if ( !fFixtureObject )
-    {
-        return kVCOMError_NotInitialized;
-    }
-
-    Sint32 major = fFixtureObject->GetMajorVersion();
-    Sint32 minor = fFixtureObject->GetMinorVersion();
-
-    if ( major <= 0 || minor <= 0 )
-    {
-        major = 0;
-        minor = 0;
-
-        return kVCOMError_Failed;
-    }
-    else
-    {
-		version = major + "." + minor;
-    }
-
-    return kVCOMError_NoError;
-}
-
-
 MvrString VectorworksMVR::CGdtfFixtureImpl::GetName()
 {
     if(!fFixtureObject) {return "";}

@@ -1022,7 +1022,8 @@ namespace SceneData
 		//Abort reading flag
 		bool								fAbortReading = false;
 
-		TXString							fMVRFileVersion = "0.0";
+		size_t								fMVRFileMajorVersion = 0;
+		size_t								fMVRFileMinorVersion = 0;
 		
 	public:
 		// ---------------------------------------------------------------------------------------------------------------------
@@ -1112,7 +1113,8 @@ namespace SceneData
 		static void							SetAbortCallback( const std::function<void( bool& )>& cb );
 		void								GetAbortCallback( std::function<void( bool& )>& cb );
 
-		TXString							GetMVRFileVersion() const;
+		size_t								GetMVRFileMajorVersion() const;
+		size_t								GetMVRFileMinorVersion() const;
 
 	private:
 		void								ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xmlFile);
