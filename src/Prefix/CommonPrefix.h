@@ -254,6 +254,9 @@
 const Sint32 kMVR_MajorVersion = 1;
 const Sint32 kMVR_MinorVersion = 5;
 
+const Sint32 kGDTF_CurrentMajorVersion = 1;
+const Sint32 kGDTF_CurrentMinorVersion = 2;
+
 // ----------------------------------------------------------------------------------------------------------------------------------
 // GDTF XML Values
 

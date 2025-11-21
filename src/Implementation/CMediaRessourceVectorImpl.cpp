@@ -1594,6 +1594,30 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::SetAbortCal
 	return kVCOMError_NoError;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetMVRVersion(Sint32& major, Sint32& minor)
+{
+	major = fExchangeObj.GetMVRFileMajorVersion();
+	minor = fExchangeObj.GetMVRFileMinorVersion();
+
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VCOM_CALLTYPE VectorworksMVR::CMediaRessourceVectorImpl::GetLatestMVRSupoortedVersion( Sint32& major, Sint32& minor )
+{
+	major = kMVR_MajorVersion;
+	minor = kMVR_MinorVersion;
+
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VCOM_CALLTYPE VectorworksMVR::CMediaRessourceVectorImpl::GetLatestGDTFSupoortedVersion( Sint32& major, Sint32& minor )
+{
+	major = kGDTF_CurrentMajorVersion;
+	minor = kGDTF_CurrentMinorVersion;
+
+	return kVCOMError_NoError;
+}
+
 VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetLibVersion( size_t& major, size_t& minor )
 {
 	major = LIBMVRGDTF_VERSION_MAJOR;

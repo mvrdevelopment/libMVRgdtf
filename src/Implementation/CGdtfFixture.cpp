@@ -240,7 +240,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetGDTFVersion( Sint
 	return kVCOMError_NoError;
 }
 
-
 MvrString VectorworksMVR::CGdtfFixtureImpl::GetName()
 {
     if(!fFixtureObject) {return "";}
