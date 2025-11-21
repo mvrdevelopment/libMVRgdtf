@@ -1785,7 +1785,7 @@ namespace SceneData
 		TXString								GetUnresolvedGeomRef() const;
 		GdtfDmxChannelFunctionPtr				GetInitialFunction();
 		TXString								GetUnresolvedInitialFunction() const;
-		EGdtfChannelBitResolution				GetCalculatedChannelBitResolution();
+		EGdtfChannelBitResolution				GetCalculatedChannelBitResolution(const IXMLFileNodePtr& pNode);
 		DmxValue								GetChannelMaxDmx();
 		bool									IsVirtual() const;
 

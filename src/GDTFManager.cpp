@@ -5407,7 +5407,7 @@ void GdtfDmxChannel::OnReadFromNode(const IXMLFileNodePtr& pNode)
 		GdtfConverter::ConvertDmxOffset(offset, pNode, fCoarse, fFine, fUltra, fUber);
 	}	
 
-	fResolution = ExtractResolutionFromDMXFrom(pNode);
+	fResolution = GetCalculatedChannelBitResolution(pNode);
 
 	// In GDTF 1.0, default value was in the DMX channel, this is for old files :
 	TXString defVal;	
@@ -5599,10 +5599,10 @@ const TGdtfDmxLogicalChannelArray GdtfDmxChannel::GetLogicalChannelArray()
 	return fLogicalChannels;
 }
 
-EGdtfChannelBitResolution SceneData::GdtfDmxChannel::GetCalculatedChannelBitResolution()
+EGdtfChannelBitResolution SceneData::GdtfDmxChannel::GetCalculatedChannelBitResolution(const IXMLFileNodePtr& pNode)
 {
 	// 0 is false, everything else is true
-	if		((!fCoarse) && !fFine  &&  !fUltra &&    !fUber)	{ return EGdtfChannelBitResolution::eGdtfChannelBitResolution_32; }
+	if		((!fCoarse) && !fFine  &&  !fUltra &&    !fUber)	{ return ExtractResolutionFromDMXFrom(pNode); }
 	else if	(( fCoarse) && !fFine  &&  !fUltra &&    !fUber)	{ return EGdtfChannelBitResolution::eGdtfChannelBitResolution_8; }
 	else if (( fCoarse) &&( fFine) &&  !fUltra  &&   !fUber )	{ return EGdtfChannelBitResolution::eGdtfChannelBitResolution_16; }
 	else if (( fCoarse) &&( fFine) && ( fUltra) &&   !fUber )	{ return EGdtfChannelBitResolution::eGdtfChannelBitResolution_24; }
@@ -5671,10 +5671,8 @@ EGdtfChannelBitResolution SceneData::GdtfDmxChannel::ExtractResolutionFromDMXFro
 	if (found) {
 		return foundResolution;
 	}
-	
-	EGdtfChannelBitResolution calculatedRes = GetCalculatedChannelBitResolution();
-	
-	return calculatedRes;
+		
+	return EGdtfChannelBitResolution::eGdtfChannelBitResolution_32;
 }
 
 DmxValue SceneData::GdtfDmxChannel::GetChannelMaxDmx()
