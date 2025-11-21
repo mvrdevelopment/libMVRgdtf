@@ -205,10 +205,12 @@ namespace SceneData
 		
 	private:
 		SceneDataGeometryObjArray		fGeometries;
+		bool							fContainsSymbolGeometry = false;
 		
 	public:
 		const SceneDataGeometryObjArray& getGeometryArray() const;
 		void							Add(SceneDataGeoInstanceObjPtr object);
+		bool							IsContaingSymbolGeometry() const;
 
 	protected:
 		virtual	TXString				GetNodeName();
@@ -976,7 +978,7 @@ namespace SceneData
 		SceneDataProviderObjArray			fProviderObjs;
 		SceneDataAuxObjArray				fAuxDataObjs;
 		SceneDataObjWithMatrixArray			fChildObjs;
-		
+		SceneDataAuxObjArray				fSymDefObjs;
 		
 		// Arrays for eachobject typ		e
 		SceneDataObjWithMatrixArray			fSceneObjects;
@@ -1031,7 +1033,8 @@ namespace SceneData
 		SceneDataProviderObjArray&			GetProviderObjects();
 		SceneDataAuxObjArray&				GetAuxDataObjects();
 		SceneDataObjWithMatrixArray&		GetChildObjects();
-		
+		SceneDataAuxObjArray&				GetSymDefObjects();
+
 		SceneDataObjWithMatrixArray&		GetSceneDataObjects();
 		
 	private:

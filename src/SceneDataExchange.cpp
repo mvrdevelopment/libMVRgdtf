@@ -514,6 +514,7 @@ void SceneDataSymDefObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataE
 			SceneDataSymbolObjPtr symbol = new SceneDataSymbolObj(uuidSymbol);
 			symbol->ReadFromNode(objNode, exchange);
 			fGeometries.push_back(symbol);		
+			fContainsSymbolGeometry = true;
 		}
 		else
 		{
@@ -550,6 +551,11 @@ void SceneDataSymDefObj::Add(SceneDataGeoInstanceObjPtr object)
 		fGeometries.push_back(object);
 	}
 	
+}
+
+bool SceneDataSymDefObj::IsContaingSymbolGeometry() const
+{
+	return fContainsSymbolGeometry;
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------------
@@ -2880,7 +2886,8 @@ SceneDataExchange::~SceneDataExchange()
 	{
 		fFilesInZip[i]->DeleteOnDisk();
 	}
-	
+
+	fSymDefObjs.clear();
 	for (SceneDataObjWithMatrixPtr	childObj : fChildObjs )		{ delete childObj; }
 	for (SceneDataAuxObjPtr			childAux : fAuxDataObjs )	{ delete childAux; }
 	for (SceneDataProviderObjPtr	childPro : fProviderObjs )	{ delete childPro; }
@@ -2919,6 +2926,11 @@ SceneDataObjWithMatrixArray& SceneDataExchange::GetChildObjects()
 SceneDataObjWithMatrixArray& SceneDataExchange::GetSceneDataObjects()
 {
 	return fSceneObjects;
+}
+
+SceneDataAuxObjArray& SceneDataExchange::GetSymDefObjects()
+{
+	return fSymDefObjs;
 }
 
 SceneDataSymDefObjPtr SceneDataExchange::GetSymDefByUUID(const SceneDataGUID& guid)
@@ -2990,6 +3002,7 @@ SceneDataSymDefObjPtr SceneDataExchange::ReadSymDefObject(const IXMLFileNodePtr&
 	newSymDef->ReadFromNode(node, this);
 	
 	fAuxDataObjs.push_back(newSymDef);
+	fSymDefObjs.push_back( newSymDef );
 	fSymDefMap[uuid] = newSymDef;
 
 	return newSymDef;
