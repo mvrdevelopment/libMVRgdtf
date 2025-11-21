@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GDTF DataVersion="1.1">
+  <FixtureType CanHaveChildren="Yes" Description="Edge cases and validation test fixture" FixtureTypeID="12345678-1234-1234-1234-123456789004" LongName="Resolution Edge Case Test" Manufacturer="Test Manufacturer" Name="Resolution Edge Case Test" RefFT="" ShortName="EdgeTest" Thumbnail="">
+    <AttributeDefinitions>
+      <FeatureGroups>
+        <FeatureGroup Name="Dimmer" Pretty="Dimmer">
+          <Feature Name="Dimmer"/>
+        </FeatureGroup>
+        <FeatureGroup Name="Pan" Pretty="Pan">
+          <Feature Name="Pan"/>
+        </FeatureGroup>
+        <FeatureGroup Name="ColorMixing" Pretty="Color Mixing">
+          <Feature Name="Red"/>
+        </FeatureGroup>
+      </FeatureGroups>
+      <Attributes>
+        <Attribute Feature="Dimmer.Dimmer" Name="Dimmer" PhysicalUnit="None" Pretty="Dim"/>
+        <Attribute Feature="Pan.Pan" Name="Pan" PhysicalUnit="None" Pretty="Pan"/>
+        <Attribute Feature="ColorMixing.Red" Name="Red" PhysicalUnit="None" Pretty="Red"/>
+      </Attributes>
+    </AttributeDefinitions>
+    <Wheels/>
+    <PhysicalDescriptions>
+      <ColorSpace Mode="sRGB"/>
+      <Filters/>
+      <Emitters/>
+      <DMXProfiles/>
+      <CRIs/>
+      <Connectors/>
+      <Properties>
+        <OperatingTemperature High="40.000000" Low="0.000000"/>
+        <Weight Value="0.000000"/>
+        <LegHeight Value="0.000000"/>
+      </Properties>
+    </PhysicalDescriptions>
+    <Models>
+      <Model File="" Height="1.000000" Length="1.000000" Name="Body" PrimitiveType="Cube" Width="1.000000"/>
+    </Models>
+    <Geometries>
+      <Geometry Model="Body" Name="Body" Position="{1.000000,0.000000,0.000000,0.000000}{0.000000,1.000000,0.000000,0.000000}{0.000000,0.000000,1.000000,0.000000}{0,0,0,1}"/>
+    </Geometries>
+    <DMXModes>
+      <DMXMode Geometry="Body" Name="Edge Case Mode">
+        <DMXChannels>
+          <!-- Edge Case 1: No DMXFrom resolution (should calculate from offset) -->
+          <DMXChannel DMXBreak="1" Geometry="Body" Offset="1">
+            <LogicalChannel Attribute="Dimmer" Master="Grand" Snap="No">
+              <ChannelFunction Attribute="Dimmer" DMXFrom="0" Default="0" Name="Dimmer No Resolution"/>
+            </LogicalChannel>
+          </DMXChannel>
+          
+          <!-- Edge Case 2: Single channel with calculated 16-bit (offset spans 2 channels) -->
+          <DMXChannel DMXBreak="1" Geometry="Body" Offset="2,3">
+            <LogicalChannel Attribute="Pan" Master="None" Snap="No">
+              <ChannelFunction Attribute="Pan" DMXFrom="0" Default="0" Name="Pan Calculated 16bit"/>
+            </LogicalChannel>
+          </DMXChannel>
+          
+          <!-- Edge Case 3: Maximum values -->
+          <DMXChannel DMXBreak="1" Geometry="Body" Offset="4">
+            <LogicalChannel Attribute="Red" Master="None" Snap="No">
+              <ChannelFunction Attribute="Red" DMXFrom="255/1" Default="255/1" Name="Red Max 8bit"/>
+            </LogicalChannel>
+          </DMXChannel>
+          
+          <!-- Edge Case 4: Zero values but with resolution specified -->
+          <DMXChannel DMXBreak="1" Geometry="Body" Offset="5,6">
+            <LogicalChannel Attribute="Dimmer" Master="None" Snap="No">
+              <ChannelFunction Attribute="Dimmer" DMXFrom="0/2" Default="0/2" Name="Dimmer Zero 16bit"/>
+            </LogicalChannel>
+          </DMXChannel>
+          
+          <!-- Edge Case 5: Channel with no offset attribute (edge case testing) -->
+          <DMXChannel DMXBreak="1" Geometry="Body" Offset="">
+            <LogicalChannel Attribute="Pan" Master="None" Snap="No">
+              <ChannelFunction Attribute="Pan" DMXFrom="1000/2" Default="500/2" Name="Pan No Offset"/>
+            </LogicalChannel>
+          </DMXChannel>
+        </DMXChannels>
+      </DMXMode>
+    </DMXModes>
+  </FixtureType>
+</GDTF>

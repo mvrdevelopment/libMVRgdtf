@@ -293,7 +293,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfDmxChannelFunctionImpl::GetResolu
 	// Check Pointer
 	if ( ! fFunction) { return kVCOMError_NotInitialized; }
 	
-	resolution = fFunction->GetParentDMXChannel()->GetChannelBitResolution();
+	resolution = fFunction->GetParentDMXChannel()->GetResolution();
 	
 	return kVCOMError_NoError;
 }

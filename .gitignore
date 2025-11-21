@@ -77,3 +77,6 @@ build_v8a/
 
 node_modules
 output
+
+# Copilot instruction files
+copilot-instructions.md

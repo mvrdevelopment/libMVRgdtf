@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GDTF DataVersion="1.1">
+  <FixtureType CanHaveChildren="Yes" Description="16-bit only test fixture" FixtureTypeID="12345678-1234-1234-1234-123456789003" LongName="16-bit Test Fixture" Manufacturer="Test Manufacturer" Name="16-bit Test Fixture" RefFT="" ShortName="16bitTest" Thumbnail="">
+    <AttributeDefinitions>
+      <FeatureGroups>
+        <FeatureGroup Name="Pan" Pretty="Pan">
+          <Feature Name="Pan"/>
+        </FeatureGroup>
+        <FeatureGroup Name="Tilt" Pretty="Tilt">
+          <Feature Name="Tilt"/>
+        </FeatureGroup> 
+        <FeatureGroup Name="Dimmer" Pretty="Dimmer">
+          <Feature Name="Dimmer"/>
+        </FeatureGroup>
+      </FeatureGroups>
+      <Attributes>
+        <Attribute Feature="Pan.Pan" Name="Pan" PhysicalUnit="None" Pretty="Pan"/>
+        <Attribute Feature="Tilt.Tilt" Name="Tilt" PhysicalUnit="None" Pretty="Tilt"/>
+        <Attribute Feature="Dimmer.Dimmer" Name="Dimmer" PhysicalUnit="None" Pretty="Dim"/>
+      </Attributes>
+    </AttributeDefinitions>
+    <Wheels/>
+    <PhysicalDescriptions>
+      <ColorSpace Mode="sRGB"/>
+      <Filters/>
+      <Emitters/>
+      <DMXProfiles/>
+      <CRIs/>
+      <Connectors/>
+      <Properties>
+        <OperatingTemperature High="40.000000" Low="0.000000"/>
+        <Weight Value="0.000000"/>
+        <LegHeight Value="0.000000"/>
+      </Properties>
+    </PhysicalDescriptions>
+    <Models>
+      <Model File="" Height="1.000000" Length="1.000000" Name="Body" PrimitiveType="Cube" Width="1.000000"/>
+    </Models>
+    <Geometries>
+      <Geometry Model="Body" Name="Body" Position="{1.000000,0.000000,0.000000,0.000000}{0.000000,1.000000,0.000000,0.000000}{0.000000,0.000000,1.000000,0.000000}{0,0,0,1}"/>
+    </Geometries>
+    <DMXModes>
+      <DMXMode Geometry="Body" Name="16-bit Mode">
+        <DMXChannels>
+          <!-- All channels use 16-bit resolution (DMXFrom with /2) -->
+          <DMXChannel DMXBreak="1" Geometry="Body" Offset="1,2">
+            <LogicalChannel Attribute="Pan" Master="None" Snap="No">
+              <ChannelFunction Attribute="Pan" DMXFrom="65535/2" Default="32768/2" Name="Pan 16bit"/>
+            </LogicalChannel>
+          </DMXChannel>
+          
+          <DMXChannel DMXBreak="1" Geometry="Body" Offset="3,4">
+            <LogicalChannel Attribute="Tilt" Master="None" Snap="No">
+              <ChannelFunction Attribute="Tilt" DMXFrom="65535/2" Default="32768/2" Name="Tilt 16bit"/>
+            </LogicalChannel>
+          </DMXChannel>
+          
+          <DMXChannel DMXBreak="1" Geometry="Body" Offset="5,6">
+            <LogicalChannel Attribute="Dimmer" Master="Grand" Snap="No">
+              <ChannelFunction Attribute="Dimmer" DMXFrom="65535/2" Default="0/2" Name="Dimmer 16bit"/>
+            </LogicalChannel>
+          </DMXChannel>
+        </DMXChannels>
+      </DMXMode>
+    </DMXModes>
+  </FixtureType>
+</GDTF>
