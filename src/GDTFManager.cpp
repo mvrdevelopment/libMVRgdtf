@@ -5590,7 +5590,7 @@ const TGdtfDmxLogicalChannelArray GdtfDmxChannel::GetLogicalChannelArray()
 EGdtfChannelBitResolution SceneData::GdtfDmxChannel::GetChannelBitResolution()
 {
 	// 0 is false, everything else is true
-	if		((!fCoarse) && !fFine  &&  !fUltra &&    !fUber)	{ return EGdtfChannelBitResolution::eGdtfChannelBitResolution_32; }
+	if		((!fCoarse) && !fFine  &&  !fUltra &&    !fUber)	{ return EGdtfChannelBitResolution::eGdtfChannelBitResolution_16; }
 	else if	(( fCoarse) && !fFine  &&  !fUltra &&    !fUber)	{ return EGdtfChannelBitResolution::eGdtfChannelBitResolution_8; }
 	else if (( fCoarse) &&( fFine) &&  !fUltra  &&   !fUber )	{ return EGdtfChannelBitResolution::eGdtfChannelBitResolution_16; }
 	else if (( fCoarse) &&( fFine) && ( fUltra) &&   !fUber )	{ return EGdtfChannelBitResolution::eGdtfChannelBitResolution_24; }
