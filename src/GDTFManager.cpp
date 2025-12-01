@@ -8723,11 +8723,12 @@ void GdtfFixture::ResolveDmxLogicalChanRefs(GdtfDmxChannelPtr dmxChnl)
 				geometryName = geoRef->GetName();
 			}
 
-			// Allow NoFeature attributes to be linked multiple times to the same geometry
+			// Allow NoFeature and Dummy attributes to be linked multiple times to the same geometry
 			bool isNoFeatureAttribute = (attrPtr == fNoFeature) || (attributeName.EqualNoCase("NoFeature"));
+			bool isDummyAttribute = attributeName.EqualNoCase("Dummy");
 			
 			bool alreadyExists = false;
-			if (!isNoFeatureAttribute)
+			if (!isNoFeatureAttribute && !isDummyAttribute)
 			{
 				GdtfDmxModePtr mode = dmxChnl->GetParentMode();
 				
