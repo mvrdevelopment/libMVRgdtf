@@ -5589,16 +5589,12 @@ const TGdtfDmxLogicalChannelArray GdtfDmxChannel::GetLogicalChannelArray()
 
 EGdtfChannelBitResolution SceneData::GdtfDmxChannel::GetChannelBitResolution()
 {
-	// 0 is false, everything else is true
-	if		((!fCoarse) && !fFine  &&  !fUltra &&    !fUber)	{ return EGdtfChannelBitResolution::eGdtfChannelBitResolution_16; }
-	else if	(( fCoarse) && !fFine  &&  !fUltra &&    !fUber)	{ return EGdtfChannelBitResolution::eGdtfChannelBitResolution_8; }
-	else if (( fCoarse) &&( fFine) &&  !fUltra  &&   !fUber )	{ return EGdtfChannelBitResolution::eGdtfChannelBitResolution_16; }
-	else if (( fCoarse) &&( fFine) && ( fUltra) &&   !fUber )	{ return EGdtfChannelBitResolution::eGdtfChannelBitResolution_24; }
-	else if (( fCoarse) &&( fFine) && ( fUltra) && (  fUber))	{ return EGdtfChannelBitResolution::eGdtfChannelBitResolution_32; }
-    	
-	// Other states are invalid. This line should never be reached.
-	DSTOP((kEveryone, "Invalid state in GetChannelBitResolution()"));
-	return EGdtfChannelBitResolution::eGdtfChannelBitResolution_8;	
+	if		(!fCoarse)	{ return EGdtfChannelBitResolution::eGdtfChannelBitResolution_16; }
+	else if	(!fFine)	{ return EGdtfChannelBitResolution::eGdtfChannelBitResolution_8; }
+	else if (!fUltra)	{ return EGdtfChannelBitResolution::eGdtfChannelBitResolution_16; }
+	else if (!fUber )	{ return EGdtfChannelBitResolution::eGdtfChannelBitResolution_24; }
+
+	return EGdtfChannelBitResolution::eGdtfChannelBitResolution_32;
 }
 
 DmxValue SceneData::GdtfDmxChannel::GetChannelMaxDmx()
