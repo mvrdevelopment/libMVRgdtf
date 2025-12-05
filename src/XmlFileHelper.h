@@ -128,8 +128,8 @@ namespace SceneData
 		static bool		ConvertInteger(					const TXString& value, const IXMLFileNodePtr& node,	Sint32&	intValue,						bool& noneValue);
         static bool     ConvertIntegerArray(				  TXString  values,const IXMLFileNodePtr& node,	TSint32Array& intArray);
 		static bool		ConvertDMXAdress(				const TXString& value, const IXMLFileNodePtr& node,	DMXAddress& intValue);
-		static bool  	ConvertDMXValue(				const TXString& value, const IXMLFileNodePtr& node,	EGdtfChannelBitResolution chanlReso,	DmxValue& intValue);
-		static bool  	ConvertDMXValue(				const TXString& value, const IXMLFileNodePtr& node,	EGdtfChannelBitResolution chanlReso,	DmxValue& intValue, bool& noneValue);		
+		static bool  	ConvertDMXValue(				const TXString& value, const IXMLFileNodePtr& node,	EGdtfChannelBitResolution chanlReso,	DmxValue& intValue, bool isVirtual);
+		static bool  	ConvertDMXValue(				const TXString& value, const IXMLFileNodePtr& node,	EGdtfChannelBitResolution chanlReso,	DmxValue& intValue, bool& noneValue, bool isVirtual);		
 		static bool		ConvertRelationEnum(			const TXString& value, const IXMLFileNodePtr& node,	EGdtfDmxRelationType& relation);
 		static bool		ConvertSnapEnum(				const TXString& value, const IXMLFileNodePtr& node,	EGdtfDmxSnap& snap);
 		static bool		ConvertMasterEnum(				const TXString& value, const IXMLFileNodePtr& node,	EGdtfDmxMaster& master);

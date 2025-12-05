@@ -675,13 +675,20 @@ bool SplitStr(const TXString& str, TXString& part1, TXString& part2, size_t spli
 	return true;
 }
 
-bool SceneData::GdtfConverter::ConvertDMXValue(const TXString& strValue, const IXMLFileNodePtr& node, EGdtfChannelBitResolution chanlReso, DmxValue & intValue)
+bool SceneData::GdtfConverter::ConvertDMXValue(const TXString& strValue, const IXMLFileNodePtr& node, EGdtfChannelBitResolution chanlReso, DmxValue & intValue, bool isVirtual)
 /* Converts a string to a DmxValue. returns succes of the opeation as bool (XXX this is always true at the moment.)*/
 {
 	if(strValue.IsEmpty())
 	{
 		intValue = 0;
 		return true;
+	}
+
+	// If isVirtual is true and channel resolution is 32-bit, convert to work as 16-bit
+	// This allows old 32-bit virtual channels to be converted to 16-bit
+	if (isVirtual && chanlReso == 4)
+	{
+		chanlReso = (EGdtfChannelBitResolution)2;  // Change resolution from 32-bit to 16-bit
 	}
 
 	// Split the String ("ValRaw/byteSpecifier")
@@ -767,7 +774,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString& strValue, const I
 	return true;
 }
 
-bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const IXMLFileNodePtr& node, EGdtfChannelBitResolution chanlReso, DmxValue & intValue, bool & noneValue)
+bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const IXMLFileNodePtr& node, EGdtfChannelBitResolution chanlReso, DmxValue & intValue, bool & noneValue, bool isVirtual)
 /* Converts a string to a DmxValue */
 {	
 	noneValue = false; 
@@ -778,7 +785,7 @@ bool SceneData::GdtfConverter::ConvertDMXValue(const TXString & strValue, const 
 		return true;
 	}
 
-	ConvertDMXValue(strValue, node, chanlReso, intValue);
+	ConvertDMXValue(strValue, node, chanlReso, intValue, isVirtual);
 
 	return true;
 }
@@ -2407,7 +2414,7 @@ TXString SceneData::SceneDataZip::GetResourceSubFolder(ERessourceType resType)
 
 /*static*/ bool GdtfConverter::ConvertDMXValue_UnitTest(const char* value, EGdtfChannelBitResolution chanlReso,	DmxValue& intValue)
 {
-	return GdtfConverter::ConvertDMXValue(value,nullptr, chanlReso, intValue);
+	return GdtfConverter::ConvertDMXValue(value,nullptr, chanlReso, intValue, false);
 }
 
 void GdtfConverter::TraverseNodes(IXMLFileNodePtr root, const TXString& childContainerNodeName, const TXString& childNodeName, TProcessNodeCall processNodeFunction)

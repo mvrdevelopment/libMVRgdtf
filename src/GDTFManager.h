@@ -1643,7 +1643,7 @@ namespace SceneData
 
 		GdtfDmxChannel*							GetParentDMXChannel() const;
         GdtfDmxLogicalChannel*					GetParentLogicalChannel() const;
-        void									ResolveModeMasterDmx(EGdtfChannelBitResolution resolution);
+        void									ResolveModeMasterDmx(EGdtfChannelBitResolution resolution, bool isVirtual);
 
         void									SetNextFunction(GdtfDmxChannelFunction* next);
         GdtfDmxChannelFunction*					GetNextFunction() const;
