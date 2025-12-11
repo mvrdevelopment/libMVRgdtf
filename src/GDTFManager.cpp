@@ -5406,7 +5406,7 @@ void GdtfDmxChannel::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	TXString defVal;	
 	if (pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionDefault, defVal) == kVCOMError_NoError)
 	{
-		GdtfConverter::ConvertDMXValue(defVal, pNode, this->GetChannelBitResolution(), fDefaultValue_old);
+		GdtfConverter::ConvertDMXValue(defVal, pNode, this->GetChannelBitResolution(), fDefaultValue_old, this->IsVirtual());
 	}
 	// ------------------------------------------------------------------------------------
 
@@ -5414,7 +5414,7 @@ void GdtfDmxChannel::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	TXString highlight;	
 	if(VCOM_SUCCEEDED(pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelHighlight,			highlight)	))
 	{
-		GdtfConverter::ConvertDMXValue(highlight, pNode, this->GetChannelBitResolution(), fHeighlight, fHeighlightNone);
+		GdtfConverter::ConvertDMXValue(highlight, pNode, this->GetChannelBitResolution(), fHeighlight, fHeighlightNone, this->IsVirtual());
 	}	
 	
 	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelGeometry, 			fUnresolvedGeomRef);
@@ -6114,11 +6114,14 @@ void GdtfDmxChannelFunction::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// ------------------------------------------------------------------------------------
 	// Print node attributes
 	EGdtfChannelBitResolution channelReso = fParentLogicalChannel->GetParentDMXChannel()->GetChannelBitResolution();
+	bool isVirtual = fParentLogicalChannel->GetParentDMXChannel()->IsVirtual();
 
 							pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionName,				fName);
 							pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionOriginalAttribute,	fOrignalAttribute);
-	TXString defaultValue;	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionDefault,				defaultValue);		GdtfConverter::ConvertDMXValue(defaultValue,	pNode,	channelReso,fDefaultValue);
-	TXString dmxFrom;		pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionDMXFrom,				dmxFrom);			GdtfConverter::ConvertDMXValue(dmxFrom, 		pNode,	channelReso,fAdressStart);
+	bool noneValue_defaultValue = false;
+	TXString defaultValue;	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionDefault,				defaultValue);		GdtfConverter::ConvertDMXValue(defaultValue,	pNode,	channelReso,fDefaultValue, noneValue_defaultValue, isVirtual);
+	bool noneValue_dmxFrom = false;
+	TXString dmxFrom;		pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionDMXFrom,				dmxFrom);			GdtfConverter::ConvertDMXValue(dmxFrom, 		pNode,	channelReso,fAdressStart, noneValue_dmxFrom, isVirtual);
 	TXString physFrom;		pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionPhysicalFrom,		physFrom);			GdtfConverter::ConvertDouble(physFrom, 			pNode,				fPhysicalStart);
 	TXString physTo;		pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionPhysicalTo,			physTo);			GdtfConverter::ConvertDouble(physTo, 			pNode,				fPhysicalEnd);
 	TXString realFade;		pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelFuntionRealFade,			realFade);			GdtfConverter::ConvertDouble(realFade, 			pNode,				fRealFade);
@@ -6415,13 +6418,13 @@ DmxValue GdtfDmxChannelFunction::GetModeMasterDmxEnd() const
 	return fDmxModeEnd;
 }
 
-void GdtfDmxChannelFunction::ResolveModeMasterDmx(EGdtfChannelBitResolution resolution)
+void GdtfDmxChannelFunction::ResolveModeMasterDmx(EGdtfChannelBitResolution resolution, bool isVirtual)
 {
 	IXMLFileNodePtr node;
 	this->GetNode(node);
 
-	GdtfConverter::ConvertDMXValue(fUnresolvedDmxModeStart, node, resolution, fDmxModeStart);
-	GdtfConverter::ConvertDMXValue(fUnresolvedDmxModeEnd,node, resolution, fDmxModeEnd);
+	GdtfConverter::ConvertDMXValue(fUnresolvedDmxModeStart, node, resolution, fDmxModeStart, isVirtual);
+	GdtfConverter::ConvertDMXValue(fUnresolvedDmxModeEnd,node, resolution, fDmxModeEnd, isVirtual);
 }
 
 void GdtfDmxChannelFunction::SetModeMaster_Channel(GdtfDmxChannel* channel)
@@ -6660,8 +6663,10 @@ void GdtfDmxChannelSet::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelSetName,				fUniqueName);
 	
 	EGdtfChannelBitResolution channelReso = fParentChnlFunction->GetParentDMXChannel()->GetChannelBitResolution();
+	bool isVirtual = fParentChnlFunction->GetParentDMXChannel()->IsVirtual();
+	bool noneValue = false;
 
-	TXString dmxfrom;	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelSetDMXFrom,				dmxfrom);	fValid = GdtfConverter::ConvertDMXValue (dmxfrom, pNode, channelReso, fDmxStart);
+	TXString dmxfrom;	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelSetDMXFrom,				dmxfrom);	fValid = GdtfConverter::ConvertDMXValue (dmxfrom, pNode, channelReso, fDmxStart, noneValue, isVirtual);
 	TXString wheelId;	pNode->GetNodeAttributeValue(XML_GDTF_DMXChannelSetWheelSlotIndexRef,	wheelId);	GdtfConverter::ConvertInteger(wheelId, pNode,  fWheelSlotIdx);
 	
 	
@@ -8383,7 +8388,7 @@ void GdtfFixture::ResolveMacroRefs(GdtfDmxModePtr dmxMode)
 					{
 						
 						DmxValue dmxVal = 0;						
-						GdtfConverter::ConvertDMXValue(value->GetUnresolvedDMXValue(), node, value->GetDMXChannel()->GetChannelBitResolution(), dmxVal);
+						GdtfConverter::ConvertDMXValue(value->GetUnresolvedDMXValue(), node, value->GetDMXChannel()->GetChannelBitResolution(), dmxVal, false);
 						value->SetValue(dmxVal);
 					}
 					else
@@ -8420,7 +8425,7 @@ void GdtfFixture::ResolveMacroRefs(GdtfDmxModePtr dmxMode)
 									value->GetNode(node);
 								
 									DmxValue dmxVal = 0;
-									GdtfConverter::ConvertDMXValue(value->GetUnresolvedDMXValue(), node, channelFunction->GetParentDMXChannel()->GetChannelBitResolution(), dmxVal);
+									GdtfConverter::ConvertDMXValue(value->GetUnresolvedDMXValue(), node, channelFunction->GetParentDMXChannel()->GetChannelBitResolution(), dmxVal, false);
 									value->SetDmxValue(dmxVal);
 								}
 							}
@@ -8500,13 +8505,15 @@ void GdtfFixture::ResolveDMXModeMasters()
 					{
 						bool 						resolved 	= false;
 						EGdtfChannelBitResolution 	resolution 	= EGdtfChannelBitResolution::eGdtfChannelBitResolution_8;
+						bool 						isVirtual 	= false;
 
 						GdtfDmxChannelPtr channelPtr = getDmxChannelByRef(unresolvedModeMaster, mode);
 						if(! resolved && channelPtr)
 						{ 
 							function->SetModeMaster_Channel(channelPtr); 
 							resolved = true; 
-							resolution = channelPtr->GetChannelBitResolution(); 
+							resolution = channelPtr->GetChannelBitResolution();
+							isVirtual = channelPtr->IsVirtual(); 
 						}
 
 						GdtfDmxChannelFunctionPtr functionPtr = getDmxFunctionByRef(unresolvedModeMaster, mode);
@@ -8515,10 +8522,11 @@ void GdtfFixture::ResolveDMXModeMasters()
 							function->SetModeMaster_Function(functionPtr);
 							resolved = true; 
 							resolution = functionPtr->GetParentDMXChannel()->GetChannelBitResolution();
+							isVirtual = functionPtr->GetParentDMXChannel()->IsVirtual();
 						}
 						
 						ASSERTN(kEveryone, resolved);
-						if(resolved) { function->ResolveModeMasterDmx(resolution); }
+						if(resolved) { function->ResolveModeMasterDmx(resolution, isVirtual); }
 						else
 						{
 							IXMLFileNodePtr node;

@@ -31,7 +31,7 @@ void CheckDmxValue(const char* string, DmxValue result, EGdtfChannelBitResolutio
 {
 #ifndef _WINDOWS
 	DmxValue value = 0;
-	ref->checkifTrue("DMX Conversion failed" ,GdtfConverter::ConvertDMXValue(string, nullptr, targetResolution, value) );
+	ref->checkifTrue("DMX Conversion failed" ,GdtfConverter::ConvertDMXValue(string, nullptr, targetResolution, value, false) );
 	ref->checkifEqual("DmxValue", value, result);
 #endif
 };
