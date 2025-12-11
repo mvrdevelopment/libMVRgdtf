@@ -1,3 +1,18 @@
+# v9.0.14 (Thu Dec 11 2025)
+
+#### 🐛 Bug Fix
+
+- Add functionality Dummy attribute to can be linked multiple times to… [#132](https://github.com/mvrdevelopment/libMVRgdtf/pull/132) ([@VzhelevVector](https://github.com/VzhelevVector))
+- Fixed converting from higher to lower resolution [#135](https://github.com/mvrdevelopment/libMVRgdtf/pull/135) ([@VzhelevVector](https://github.com/VzhelevVector))
+- Changing the MVR version [#134](https://github.com/mvrdevelopment/libMVRgdtf/pull/134) ([@adragnevVW](https://github.com/adragnevVW))
+
+#### Authors: 2
+
+- Alesandro Dragnev ([@adragnevVW](https://github.com/adragnevVW))
+- Vladislav Zhelev ([@VzhelevVector](https://github.com/VzhelevVector))
+
+---
+
 # v9.0.13 (Mon Nov 24 2025)
 
 #### 🐛 Bug Fix
