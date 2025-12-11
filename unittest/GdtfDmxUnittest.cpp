@@ -303,13 +303,14 @@ void GdtfDmxUnittest::WriteFile()
 		virtualFunction->SetAttribute(attribute5);
 		__checkVCOM(virtualFunction->SetDefaultValue(50000));
 
-		IGdtfDmxChannelSetPtr virtualChannelSet1;
-		virtualFunction->CreateDmxChannelSet("My Name1", 0, 0, &virtualChannelSet1);
+	IGdtfDmxChannelSetPtr virtualChannelSet1;
+	virtualFunction->CreateDmxChannelSet("My Name1", 0, 0, &virtualChannelSet1);
 
-		IGdtfDmxChannelSetPtr virtualChannelSet3;
-		virtualFunction->CreateDmxChannelSet("My Name3", 4294967295, 4294967295, &virtualChannelSet3);
+	IGdtfDmxChannelSetPtr virtualChannelSet2;
+	virtualFunction->CreateDmxChannelSet("", 1, 65534, &virtualChannelSet2);
 
-
+	IGdtfDmxChannelSetPtr virtualChannelSet3;
+	virtualFunction->CreateDmxChannelSet("My Name3", 65535, 65535, &virtualChannelSet3);
         __checkVCOM(gdtfWrite->Close());
     }
 }
@@ -581,13 +582,13 @@ void GdtfDmxUnittest::ReadFile()
 		this->CheckChannelSet(virtualChannelSet1, "My Name1", 0, 0);
 
 
-		IGdtfDmxChannelSetPtr virtualChannelSet2;
-		__checkVCOM(virtualFunction->GetDmxChannelSetAt(1, &virtualChannelSet2));
-		this->CheckChannelSet(virtualChannelSet2, "", 1, 4294967294);
+	IGdtfDmxChannelSetPtr virtualChannelSet2;
+	__checkVCOM(virtualFunction->GetDmxChannelSetAt(1, &virtualChannelSet2));
+	this->CheckChannelSet(virtualChannelSet2, "", 1, 65534);
 
-		IGdtfDmxChannelSetPtr virtualChannelSet3;
-		__checkVCOM(virtualFunction->GetDmxChannelSetAt(2, &virtualChannelSet3));
-		this->CheckChannelSet(virtualChannelSet3, "My Name3", 4294967295, 4294967295);
+	IGdtfDmxChannelSetPtr virtualChannelSet3;
+	__checkVCOM(virtualFunction->GetDmxChannelSetAt(2, &virtualChannelSet3));
+	this->CheckChannelSet(virtualChannelSet3, "My Name3", 65535, 65535);
 	}
 
 	PrintParsingErrorList(gdtfRead);
