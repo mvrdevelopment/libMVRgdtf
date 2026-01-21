@@ -54,6 +54,7 @@ void GdtfEmptyModelTest::WriteFile(VectorworksMVR::IGdtfFixturePtr& fixture)
         IGdtfGeometryPtr geometry4;
         __checkVCOM(geometry1->CreateGeometry(EGdtfObjectType::eGdtfGeometryDisplay, "Geometry4", filledModel, STransformMatrix(), &geometry4));
         __checkVCOM(geometry4->SetTexture("Texture.png"));
+        __checkVCOM(geometry4->SetAspectRatio("16:9"));
 
         // Magnet
         IGdtfGeometryPtr geometry5;
