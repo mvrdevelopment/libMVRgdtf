@@ -13,7 +13,7 @@ using namespace VectorworksMVR::GdtfDefines;
 #define __checkVCOM(x) this->checkVCOM(x, #x)
 #define __checkVCOM_NotSet(x) this->checkVCOM_NotSet(x, #x)
 
-GdtfEmptyModelTest::GdtfEmptyModelTest(const std::string& currentDir) : GdtfUnitTest(currentDir)
+GdtfEmptyModelTest::GdtfEmptyModelTest(const std::string& currentDir)
 {
 }
 
@@ -21,10 +21,20 @@ GdtfEmptyModelTest::~GdtfEmptyModelTest()
 {  
 }
 
+bool GdtfEmptyModelTest::ExecuteTest()
+{
+    std::cout << "=                                    GdtfEmptyModelTest                         =" << std::endl;
 
-std::string GdtfEmptyModelTest::GetUnitTestName()
-{  
-    return  std::string("GdtfEmptyModel");
+	VectorworksMVR::IGdtfFixturePtr fixture( IID_IGdtfFixture );
+	fixture->OpenForWrite( "EmptyGeometryUnitTest", "MVR Group", MvrUUID(1,1,1,1) );
+
+    WriteFile(fixture);
+
+	fixture->Close();
+
+    ReadFile(fixture);
+
+    return true;
 }
 
 void GdtfEmptyModelTest::WriteFile(VectorworksMVR::IGdtfFixturePtr& fixture)
