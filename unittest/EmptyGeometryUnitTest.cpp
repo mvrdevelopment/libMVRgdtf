@@ -201,6 +201,8 @@ void GdtfEmptyModelTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
 
         checkifEqual("Check Texture", geometry4->GetTexture(), "Texture.png");
 
+        checkifEqual("Check Aspect Ratio", geometry4->GetAspectRatio(), "16:9");
+
         // Magnet
         IGdtfGeometryPtr geoMagnet;
         __checkVCOM(geometry1->GetInternalGeometryAt(3, &geoMagnet));
