@@ -951,10 +951,14 @@ namespace SceneData
 												~GdtfGeometryDisplay();
 	private:
 		TXString								fTexture;
+		TXString								fAspectRatio;
+
 	public:
 		virtual EGdtfObjectType					GetObjectType();
 		const TXString&							GetTexture();
 		void									SetTexture(const TXString& texture);
+		const TXString&							GetAspectRatio() const;
+		void									SetAspectRatio( const TXString& aspectRatio );
 	protected:
 		virtual	TXString						GetNodeName();
 		virtual	void							OnPrintToFile(IXMLFileNodePtr pNode);
