@@ -254,6 +254,17 @@ if (ENABLE_ASAN)
         message(STATUS "ASAN aktiviert für RelWithDebInfo")
         target_compile_options(MvrGdtf PRIVATE /fsanitize=address)
         target_compile_options(MvrGdtf PRIVATE /MTd)
+    else()
+        # GCC and Clang support for Address Sanitizer
+        message(STATUS "ASAN enabled for GCC/Clang")
+        target_compile_options(MvrGdtf PRIVATE -fsanitize=address -fno-omit-frame-pointer -g)
+        target_link_options(MvrGdtf PRIVATE -fsanitize=address)
+        
+        # Also enable ASAN for unit tests if they are being built
+        if(${UNITTEST})
+            target_compile_options(MvrGdtfUnitTest PRIVATE -fsanitize=address -fno-omit-frame-pointer -g)
+            target_link_options(MvrGdtfUnitTest PRIVATE -fsanitize=address)
+        endif()
     endif()
 endif()
 

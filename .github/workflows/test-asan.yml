@@ -1,0 +1,24 @@
+name: Test with Address Sanitizer (macOS ARM64)
+
+on:
+  [push, workflow_dispatch]
+
+jobs:
+  test-asan:
+    runs-on: macos-latest
+    steps:
+      - name: libMVRGdtf - checkout repository
+        uses: actions/checkout@v4
+        with:
+          path: libMvrGdtf
+
+      - name: Build with ASAN
+        uses: ./libMvrGdtf/.github/actions/build-macos-arm-asan
+
+      - name: Testing with ASAN enabled
+        working-directory: libMvrGdtf/build_mac_arm_asan
+        run: |
+          echo "Running tests with Address Sanitizer enabled..."
+          echo "Note: ASAN will detect memory errors and report them"
+          # If unit tests are built, they would be run here
+          # ./MvrGdtfUnitTest

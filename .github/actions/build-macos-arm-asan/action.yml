@@ -1,0 +1,86 @@
+name: 'Build macOS ARM64 with ASAN'
+description: 'Build the package for macOS ARM64 with Address Sanitizer using Clang'
+runs:
+  using: "composite"
+  steps:
+    - name: Xerces-C - prepare
+      shell: bash
+      run: |
+        mkdir xerces-c
+        cd xerces-c
+        curl -o xerces-c.zip https://dlcdn.apache.org/xerces/c/3/sources/xerces-c-3.3.0.zip
+        tar -xf xerces-c.zip --strip-components=1
+
+    - name: Xerces-C - build arm64 with ASAN
+      shell: bash
+      working-directory: xerces-c
+      run: |
+        ./configure --disable-shared --prefix=$(pwd)/_build_mac_arm_asan CFLAGS="-arch arm64 -fsanitize=address -g" CXXFLAGS="-arch arm64 -fsanitize=address -g" LDFLAGS="-fsanitize=address" --enable-xmlch-uint16_t
+        make -j
+        make install
+
+    - name: Boost - prepare
+      shell: bash
+      run: |
+        mkdir boost
+        cd boost
+        curl -o boost.zip https://archives.boost.io/release/1.86.0/source/boost_1_86_0.zip
+        tar -xf boost.zip --strip-components=1
+
+    - name: libMVRGdtf - build ARM64 with ASAN [NO-MZ]
+      shell: bash
+      working-directory: libMvrGdtf
+      run: |
+        mkdir build_mac_arm_asan_no_mz
+        cd build_mac_arm_asan_no_mz
+        cmake .. \
+          -DCMAKE_C_FLAGS="-arch arm64 -fsanitize=address -g" \
+          -DCMAKE_CXX_FLAGS="-arch arm64 -fsanitize=address -g" \
+          -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=address" \
+          -DCMAKE_SHARED_LINKER_FLAGS="-fsanitize=address" \
+          -DENABLE_ASAN=TRUE \
+          -DDO_NOT_INCLUDE_MINI_ZIP=true \
+          -DCMAKE_INSTALL_PREFIX:PATH=libs \
+          -DXERCES_INCLUDE_PATH="../xerces-c/_build_mac_arm_asan/include;../xerces/src" \
+          -DXERCES_LIB_PATH="../xerces/_build_mac_arm_asan/lib" \
+          -DXERCES_ROOT_PATH="../xerces-c/_build_mac_arm_asan" \
+          -DLIB_OUTPUT_NAME="MvrGdtf_ASAN"
+        make -j
+        make install
+        echo "Built library with ASAN for ARM64"
+        lipo -archs ../libs/libMvrGdtf_ASAN_NO_MZ.a
+        libtool -static -o ../libs/libMvrGdtf_ASAN_NO_MZ-all.a ../libs/libMvrGdtf_ASAN_NO_MZ.a ./libs/lib/libmdns_cpp.a ../../xerces-c/_build_mac_arm_asan/lib/libxerces-c.a
+        mv -f ../libs/libMvrGdtf_ASAN_NO_MZ-all.a ../libs/libMvrGdtf_ASAN_NO_MZ.a
+
+    - name: libMVRGdtf - build ARM64 with ASAN
+      shell: bash
+      working-directory: libMvrGdtf
+      run: |
+        mkdir build_mac_arm_asan
+        cd build_mac_arm_asan
+        cmake .. \
+          -DCMAKE_C_FLAGS="-arch arm64 -fsanitize=address -g" \
+          -DCMAKE_CXX_FLAGS="-arch arm64 -fsanitize=address -g" \
+          -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=address" \
+          -DCMAKE_SHARED_LINKER_FLAGS="-fsanitize=address" \
+          -DENABLE_ASAN=TRUE \
+          -DCMAKE_INSTALL_PREFIX:PATH=libs \
+          -DXERCES_INCLUDE_PATH="../xerces-c/_build_mac_arm_asan/include;../xerces/src" \
+          -DXERCES_LIB_PATH="../xerces/_build_mac_arm_asan/lib" \
+          -DXERCES_ROOT_PATH="../xerces-c/_build_mac_arm_asan" \
+          -DLIB_OUTPUT_NAME="MvrGdtf_ASAN"
+        make -j
+        make install
+        echo "Built library with ASAN for ARM64"
+        lipo -archs ../libs/libMvrGdtf_ASAN.a
+        libtool -static -o ../libs/libMvrGdtf_ASAN-all.a ../libs/libMvrGdtf_ASAN.a ./libs/lib/libmdns_cpp.a ../../xerces-c/_build_mac_arm_asan/lib/libxerces-c.a
+        mv -f ../libs/libMvrGdtf_ASAN-all.a ../libs/libMvrGdtf_ASAN.a
+
+    - name: Prepare package
+      shell: bash
+      working-directory: libMvrGdtf
+      run: |
+        mkdir -p output/include
+        cp -r src/include/* output/include/
+        mkdir -p output/lib
+        cp -r libs/* output/lib/
