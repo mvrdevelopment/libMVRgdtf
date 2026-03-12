@@ -11,6 +11,15 @@ on:
         - ubuntu-22.04
         - windows-latest
         - macos-latest
+      build-type:
+        description: 'Build type'
+        required: false
+        default: 'normal'
+        type: choice
+        options:
+          - normal
+          - asan
+          - all
 
 jobs:
   build_artifact:
@@ -24,6 +33,8 @@ jobs:
       
       - name: Build
         uses: ./libMvrGdtf/.github/actions/build-lib
+        with:
+          build-type: ${{ inputs.build-type }}
         
       - name: Upload artifact
         uses: actions/upload-artifact@v4
