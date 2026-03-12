@@ -79,7 +79,7 @@ runs:
           -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=address" \
           -DCMAKE_SHARED_LINKER_FLAGS="-fsanitize=address" \
           -DENABLE_ASAN=TRUE \
-          -DBUILD_MVR_XCHANGE=FALSE \
+          -DCMAKE_INSTALL_PREFIX:PATH=libs \
           -DXERCES_INCLUDE_PATH="../xerces-c/_build_mac_arm_asan/include;../xerces/src" \
           -DXERCES_LIB_PATH="../xerces/_build_mac_arm_asan/lib" \
           -DXERCES_ROOT_PATH="../xerces-c/_build_mac_arm_asan" \
