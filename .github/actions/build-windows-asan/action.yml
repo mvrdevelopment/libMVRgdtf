@@ -29,7 +29,7 @@ runs:
         curl -sL -o xerces-c.zip https://dlcdn.apache.org//xerces/c/3/sources/xerces-c-3.3.0.zip
         tar -xf xerces-c.zip --strip-components=1
 
-    # Xerces-C - build Debug with ASAN
+    # Xerces-C - build Debug (without ASAN - only libMVRgdtf will have ASAN)
     - name: Xerces-C - configure Debug
       if: steps.cache-xerces-debug.outputs.cache-hit != 'true'
       working-directory: xerces-c
@@ -37,7 +37,7 @@ runs:
       run: |
         mkdir build
         cd build
-        cmake .. -G "Visual Studio 17 2022" -A x64 -T v142,version=14.29 -DCMAKE_INSTALL_PREFIX:PATH=libs -DCMAKE_CXX_FLAGS_DEBUG="/MTd /Zi /Ob0 /Od /RTC1 /fsanitize=address" -DCMAKE_C_FLAGS_DEBUG="/MTd /Zi /Ob0 /Od /RTC1 /fsanitize=address" -DCMAKE_C_FLAGS="/DWIN32 /D_WINDOWS /W3" -DBUILD_SHARED_LIBS:BOOL=FALSE -Dxmlch-type=wchar_t
+        cmake .. -G "Visual Studio 17 2022" -A x64 -DCMAKE_INSTALL_PREFIX:PATH=libs -DCMAKE_CXX_FLAGS_DEBUG="/MTd /Zi /Ob0 /Od /RTC1" -DCMAKE_C_FLAGS_DEBUG="/MTd /Zi /Ob0 /Od /RTC1" -DCMAKE_C_FLAGS="/DWIN32 /D_WINDOWS /W3" -DBUILD_SHARED_LIBS:BOOL=FALSE -Dxmlch-type=wchar_t
 
     - name: Xerces-C - build Debug
       if: steps.cache-xerces-debug.outputs.cache-hit != 'true'
@@ -47,7 +47,16 @@ runs:
         msbuild /m /maxcpucount ALL_BUILD.vcxproj /p:Configuration=Debug
         msbuild /m /maxcpucount INSTALL.vcxproj /p:Configuration=Debug
 
-    # Note: Boost download removed - not needed since BUILD_MVR_XCHANGE is not enabled
+    # Boost - setup and build
+    - name: Boost - prepare
+      shell: cmd
+      run: |
+          mkdir boost
+          cd boost
+          curl -o boost.zip https://archives.boost.io/release/1.86.0/source/boost_1_86_0.zip
+          tar -xf boost.zip --strip-components=1
+
+    # Note: BUILD_MVR_XCHANGE is disabled - Boost not needed for ASAN builds
 
     # libMVRGdtf - setup
     - name: libMVRGdtf - checkout repository
@@ -55,14 +64,14 @@ runs:
       with:
         path: libMvrGdtf
 
-    # libMVRGdtf [ASAN] - Debug build
+    # libMVRGdtf [ASAN] - Debug build (uses default VS 2022 toolset for ASAN support)
     - name: libMVRGdtf [ASAN] - configure Debug
       working-directory: libMvrGdtf
       shell: cmd
       run: |
         mkdir build_ASAN
         cd build_ASAN
-        cmake .. -DCMAKE_INSTALL_PREFIX:PATH=libs -T v142,version=14.29 -DWIN_RUNTIME_LIB=-MT -DENABLE_ASAN=TRUE -DXERCES_INCLUDE_PATH="..\xerces-c\build\libs\include;..\xerces\src" -DXERCES_LIB_PATH="..\xerces-c\build\libs\lib" -DXERCES_ROOT_PATH="..\xerces-c" -DLIB_OUTPUT_NAME="MvrGdtf_ASAN"
+        cmake .. -G "Visual Studio 17 2022" -A x64 -T v142,version=14.29 -DCMAKE_INSTALL_PREFIX:PATH=libs -DWIN_RUNTIME_LIB=-MT -DENABLE_ASAN=TRUE -DXERCES_INCLUDE_PATH="..\xerces-c\build\libs\include;..\xerces\src" -DXERCES_LIB_PATH="..\xerces-c\build\libs\lib" -DXERCES_ROOT_PATH="..\xerces-c" -DLIB_OUTPUT_NAME="MvrGdtf_ASAN"
         ren MvrGdtf.vcxproj MvrGdtf_ORG.vcxproj
 
     - name: libMVRGdtf [ASAN] - Debug - add lib dependencies
@@ -84,14 +93,14 @@ runs:
         msbuild /m /maxcpucount ALL_BUILD.vcxproj /p:Configuration=Debug
         msbuild /m /maxcpucount INSTALL.vcxproj /p:Configuration=Debug
 
-    # libMVRGdtf [ASAN_NO_MZ] - Debug build without MiniZip
+    # libMVRGdtf [ASAN_NO_MZ] - Debug build without MiniZip (uses default VS 2022 toolset)
     - name: libMVRGdtf [ASAN_NO_MZ] - configure Debug
       working-directory: libMvrGdtf
       shell: cmd
       run: |
         mkdir build_ASAN_NO_MZ
         cd build_ASAN_NO_MZ
-        cmake .. -DCMAKE_INSTALL_PREFIX:PATH=libs -T v142,version=14.29 -DWIN_RUNTIME_LIB=-MT -DENABLE_ASAN=TRUE -DDO_NOT_INCLUDE_MINI_ZIP=TRUE -DXERCES_INCLUDE_PATH="..\xerces-c\build\libs\include;..\xerces\src" -DXERCES_LIB_PATH="..\xerces-c\build\libs\lib" -DXERCES_ROOT_PATH="..\xerces-c" -DLIB_OUTPUT_NAME="MvrGdtf_ASAN"
+        cmake .. -G "Visual Studio 17 2022" -A x64 -T v142,version=14.29 -DCMAKE_INSTALL_PREFIX:PATH=libs -DWIN_RUNTIME_LIB=-MT -DENABLE_ASAN=TRUE -DDO_NOT_INCLUDE_MINI_ZIP=TRUE -DXERCES_INCLUDE_PATH="..\xerces-c\build\libs\include;..\xerces\src" -DXERCES_LIB_PATH="..\xerces-c\build\libs\lib" -DXERCES_ROOT_PATH="..\xerces-c" -DLIB_OUTPUT_NAME="MvrGdtf_ASAN"
         ren MvrGdtf.vcxproj MvrGdtf_ORG.vcxproj
 
     - name: libMVRGdtf [ASAN_NO_MZ] - Debug - add lib dependencies

@@ -251,9 +251,16 @@ add_compile_options($ENV{CXX_FLAGS_CUSTOM})
 
 if (ENABLE_ASAN)
     if (MSVC)
-        message(STATUS "ASAN aktiviert für RelWithDebInfo")
-        target_compile_options(MvrGdtf PRIVATE /fsanitize=address)
-        target_compile_options(MvrGdtf PRIVATE /MTd)
+        message(STATUS "ASAN enabled for MSVC")
+        # MSVC ASAN: /fsanitize=address is incompatible with /RTC1
+        # Explicitly disable /RTC1 and use static runtime /MTd
+        target_compile_options(MvrGdtf PRIVATE /fsanitize=address /Zi /MTd)
+        # Disable runtime checks which are incompatible with ASAN
+        target_compile_options(MvrGdtf PRIVATE /RTC1-)
+        
+        if(${UNITTEST})
+            target_compile_options(MvrGdtfUnitTest PRIVATE /fsanitize=address /Zi /MTd /RTC1-)
+        endif()
     else()
         # GCC and Clang support for Address Sanitizer
         message(STATUS "ASAN enabled for GCC/Clang")
