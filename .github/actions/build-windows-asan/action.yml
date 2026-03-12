@@ -1,0 +1,132 @@
+name: 'Build Windows with ASAN'
+description: 'Build the packages for Windows with Address Sanitizer (MSVC)'
+runs:
+  using: "composite"
+  steps:
+    # Prepare Visual Studio
+    - name: Set up Visual Studio
+      uses: microsoft/setup-msbuild@v2
+      with:
+        msbuild-architecture: x64
+
+    # Cache Xerces-C to avoid rebuilding (saves ~8-12 minutes on cache hit)
+    - name: Cache Xerces-C Debug build
+      uses: actions/cache@v4
+      id: cache-xerces-debug
+      with:
+        path: xerces-c/build/libs
+        key: xerces-c-3.3.0-windows-debug-asan-${{ runner.os }}-v1
+        restore-keys: |
+          xerces-c-3.3.0-windows-debug-asan-${{ runner.os }}-
+
+    # Xerces-C - setup
+    - name: Xerces-C - prepare
+      if: steps.cache-xerces-debug.outputs.cache-hit != 'true'
+      shell: cmd
+      run: |
+        mkdir xerces-c
+        cd xerces-c
+        curl -sL -o xerces-c.zip https://dlcdn.apache.org//xerces/c/3/sources/xerces-c-3.3.0.zip
+        tar -xf xerces-c.zip --strip-components=1
+
+    # Xerces-C - build Debug with ASAN
+    - name: Xerces-C - configure Debug
+      if: steps.cache-xerces-debug.outputs.cache-hit != 'true'
+      working-directory: xerces-c
+      shell: cmd
+      run: |
+        mkdir build
+        cd build
+        cmake .. -G "Visual Studio 17 2022" -A x64 -T v142,version=14.29 -DCMAKE_INSTALL_PREFIX:PATH=libs -DCMAKE_CXX_FLAGS_DEBUG="/MTd /Zi /Ob0 /Od /RTC1 /fsanitize=address" -DCMAKE_C_FLAGS_DEBUG="/MTd /Zi /Ob0 /Od /RTC1 /fsanitize=address" -DCMAKE_C_FLAGS="/DWIN32 /D_WINDOWS /W3" -DBUILD_SHARED_LIBS:BOOL=FALSE -Dxmlch-type=wchar_t
+
+    - name: Xerces-C - build Debug
+      if: steps.cache-xerces-debug.outputs.cache-hit != 'true'
+      working-directory: xerces-c/build
+      shell: cmd
+      run: |
+        msbuild /m /maxcpucount ALL_BUILD.vcxproj /p:Configuration=Debug
+        msbuild /m /maxcpucount INSTALL.vcxproj /p:Configuration=Debug
+
+    # Note: Boost download removed - not needed since BUILD_MVR_XCHANGE is not enabled
+
+    # libMVRGdtf - setup
+    - name: libMVRGdtf - checkout repository
+      uses: actions/checkout@v4
+      with:
+        path: libMvrGdtf
+
+    # libMVRGdtf [ASAN] - Debug build
+    - name: libMVRGdtf [ASAN] - configure Debug
+      working-directory: libMvrGdtf
+      shell: cmd
+      run: |
+        mkdir build_ASAN
+        cd build_ASAN
+        cmake .. -DCMAKE_INSTALL_PREFIX:PATH=libs -T v142,version=14.29 -DWIN_RUNTIME_LIB=-MT -DENABLE_ASAN=TRUE -DXERCES_INCLUDE_PATH="..\xerces-c\build\libs\include;..\xerces\src" -DXERCES_LIB_PATH="..\xerces-c\build\libs\lib" -DXERCES_ROOT_PATH="..\xerces-c" -DLIB_OUTPUT_NAME="MvrGdtf_ASAN"
+        ren MvrGdtf.vcxproj MvrGdtf_ORG.vcxproj
+
+    - name: libMVRGdtf [ASAN] - Debug - add lib dependencies
+      working-directory: libMvrGdtf/build_ASAN
+      shell: pwsh
+      run: |
+        $xml = [xml](Get-Content MvrGdtf_ORG.vcxproj)
+        $xml.Project.ItemDefinitionGroup | ForEach-Object {
+          $node = $xml.CreateElement("AdditionalDependencies", "http://schemas.microsoft.com/developer/msbuild/2003")
+          $node.InnerText = 'iphlpapi.lib;..\..\xerces-c\build\libs\lib\xerces-c_3D.lib;mdns_cpp\lib\Debug\mdns_cpp.lib;%(AdditionalDependencies)'
+          $_.Lib.AppendChild($node) | Out-Null
+        }
+        Set-Content -Path "MvrGdtf.vcxproj" -Value $xml.OuterXml
+      
+    - name: libMVRGdtf [ASAN] - compile Debug
+      working-directory: libMvrGdtf/build_ASAN
+      shell: cmd
+      run: |
+        msbuild /m /maxcpucount ALL_BUILD.vcxproj /p:Configuration=Debug
+        msbuild /m /maxcpucount INSTALL.vcxproj /p:Configuration=Debug
+
+    # libMVRGdtf [ASAN_NO_MZ] - Debug build without MiniZip
+    - name: libMVRGdtf [ASAN_NO_MZ] - configure Debug
+      working-directory: libMvrGdtf
+      shell: cmd
+      run: |
+        mkdir build_ASAN_NO_MZ
+        cd build_ASAN_NO_MZ
+        cmake .. -DCMAKE_INSTALL_PREFIX:PATH=libs -T v142,version=14.29 -DWIN_RUNTIME_LIB=-MT -DENABLE_ASAN=TRUE -DDO_NOT_INCLUDE_MINI_ZIP=TRUE -DXERCES_INCLUDE_PATH="..\xerces-c\build\libs\include;..\xerces\src" -DXERCES_LIB_PATH="..\xerces-c\build\libs\lib" -DXERCES_ROOT_PATH="..\xerces-c" -DLIB_OUTPUT_NAME="MvrGdtf_ASAN"
+        ren MvrGdtf.vcxproj MvrGdtf_ORG.vcxproj
+
+    - name: libMVRGdtf [ASAN_NO_MZ] - Debug - add lib dependencies
+      working-directory: libMvrGdtf/build_ASAN_NO_MZ
+      shell: pwsh
+      run: |
+        $xml = [xml](Get-Content MvrGdtf_ORG.vcxproj)
+        $xml.Project.ItemDefinitionGroup | ForEach-Object {
+          $node = $xml.CreateElement("AdditionalDependencies", "http://schemas.microsoft.com/developer/msbuild/2003")
+          $node.InnerText = 'iphlpapi.lib;..\..\xerces-c\build\libs\lib\xerces-c_3D.lib;mdns_cpp\lib\Debug\mdns_cpp.lib;%(AdditionalDependencies)'
+          $_.Lib.AppendChild($node) | Out-Null
+        }
+        Set-Content -Path "MvrGdtf.vcxproj" -Value $xml.OuterXml
+      
+    - name: libMVRGdtf [ASAN_NO_MZ] - compile Debug
+      working-directory: libMvrGdtf/build_ASAN_NO_MZ
+      shell: cmd
+      run: |
+        msbuild /m /maxcpucount ALL_BUILD.vcxproj /p:Configuration=Debug
+        msbuild /m /maxcpucount INSTALL.vcxproj /p:Configuration=Debug
+
+    # Generate output
+    - name: libMVRGdtf - Generate output library
+      working-directory: libMvrGdtf
+      shell: pwsh
+      run: |
+        if (Test-Path -Path "output") {
+          Remove-Item -Path "output" -Recurse -Force
+        }
+        New-Item -Path "output\libMvrGdtf\lib" -ItemType Directory -Force
+        Copy-Item -Path "libs\Debug\*" -Destination "output\libMvrGdtf\lib" -Recurse
+
+        New-Item -Path "output\libMvrGdtf\include" -ItemType Directory -Force
+        Copy-Item -Path "src\Include\*" -Destination "output\libMvrGdtf\include" -Recurse
+        
+        if (Test-Path -Path "libs\Debug") {
+          Remove-Item -Path "libs\Debug" -Recurse -Force
+        }

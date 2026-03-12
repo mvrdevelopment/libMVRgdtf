@@ -3,29 +3,35 @@ description: 'Build the package for macOS ARM64 with Address Sanitizer using Cla
 runs:
   using: "composite"
   steps:
+    # Cache Xerces-C to avoid rebuilding (saves ~5-8 minutes on cache hit)
+    - name: Cache Xerces-C ARM64 ASAN build
+      uses: actions/cache@v4
+      id: cache-xerces
+      with:
+        path: xerces-c/_build_mac_arm_asan
+        key: xerces-c-3.3.0-macos-arm64-asan-${{ runner.os }}-v1
+        restore-keys: |
+          xerces-c-3.3.0-macos-arm64-asan-${{ runner.os }}-
+
     - name: Xerces-C - prepare
+      if: steps.cache-xerces.outputs.cache-hit != 'true'
       shell: bash
       run: |
-        mkdir xerces-c
+        mkdir -p xerces-c
         cd xerces-c
-        curl -o xerces-c.zip https://dlcdn.apache.org/xerces/c/3/sources/xerces-c-3.3.0.zip
+        curl -sL -o xerces-c.zip https://dlcdn.apache.org/xerces/c/3/sources/xerces-c-3.3.0.zip
         tar -xf xerces-c.zip --strip-components=1
 
     - name: Xerces-C - build arm64 with ASAN
+      if: steps.cache-xerces.outputs.cache-hit != 'true'
       shell: bash
       working-directory: xerces-c
       run: |
-        ./configure --disable-shared --prefix=$(pwd)/_build_mac_arm_asan CFLAGS="-arch arm64 -fsanitize=address -g" CXXFLAGS="-arch arm64 -fsanitize=address -g" LDFLAGS="-fsanitize=address" --enable-xmlch-uint16_t
-        make -j
+        ./configure --disable-shared --prefix=$(pwd)/_build_mac_arm_asan CFLAGS="-arch arm64 -fsanitize=address -g -O2" CXXFLAGS="-arch arm64 -fsanitize=address -g -O2" LDFLAGS="-fsanitize=address" --enable-xmlch-uint16_t
+        make -j$(sysctl -n hw.ncpu)
         make install
 
-    - name: Boost - prepare
-      shell: bash
-      run: |
-        mkdir boost
-        cd boost
-        curl -o boost.zip https://archives.boost.io/release/1.86.0/source/boost_1_86_0.zip
-        tar -xf boost.zip --strip-components=1
+    # Note: Boost download removed - not needed since BUILD_MVR_XCHANGE is not enabled
 
     - name: libMVRGdtf - build ARM64 with ASAN [NO-MZ]
       shell: bash
@@ -34,8 +40,8 @@ runs:
         mkdir build_mac_arm_asan_no_mz
         cd build_mac_arm_asan_no_mz
         cmake .. \
-          -DCMAKE_C_FLAGS="-arch arm64 -fsanitize=address -g" \
-          -DCMAKE_CXX_FLAGS="-arch arm64 -fsanitize=address -g" \
+          -DCMAKE_C_FLAGS="-arch arm64 -fsanitize=address -g -O2" \
+          -DCMAKE_CXX_FLAGS="-arch arm64 -fsanitize=address -g -O2" \
           -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=address" \
           -DCMAKE_SHARED_LINKER_FLAGS="-fsanitize=address" \
           -DENABLE_ASAN=TRUE \
@@ -45,7 +51,7 @@ runs:
           -DXERCES_LIB_PATH="../xerces/_build_mac_arm_asan/lib" \
           -DXERCES_ROOT_PATH="../xerces-c/_build_mac_arm_asan" \
           -DLIB_OUTPUT_NAME="MvrGdtf_ASAN"
-        make -j
+        make -j$(sysctl -n hw.ncpu)
         make install
         echo "Built library with ASAN for ARM64"
         lipo -archs ../libs/libMvrGdtf_ASAN_NO_MZ.a
@@ -59,8 +65,8 @@ runs:
         mkdir build_mac_arm_asan
         cd build_mac_arm_asan
         cmake .. \
-          -DCMAKE_C_FLAGS="-arch arm64 -fsanitize=address -g" \
-          -DCMAKE_CXX_FLAGS="-arch arm64 -fsanitize=address -g" \
+          -DCMAKE_C_FLAGS="-arch arm64 -fsanitize=address -g -O2" \
+          -DCMAKE_CXX_FLAGS="-arch arm64 -fsanitize=address -g -O2" \
           -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=address" \
           -DCMAKE_SHARED_LINKER_FLAGS="-fsanitize=address" \
           -DENABLE_ASAN=TRUE \
@@ -69,7 +75,7 @@ runs:
           -DXERCES_LIB_PATH="../xerces/_build_mac_arm_asan/lib" \
           -DXERCES_ROOT_PATH="../xerces-c/_build_mac_arm_asan" \
           -DLIB_OUTPUT_NAME="MvrGdtf_ASAN"
-        make -j
+        make -j$(sysctl -n hw.ncpu)
         make install
         echo "Built library with ASAN for ARM64"
         lipo -archs ../libs/libMvrGdtf_ASAN.a
