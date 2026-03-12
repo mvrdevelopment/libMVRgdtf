@@ -1,5 +1,14 @@
 name: Build OS
 description: Build for the current OS
+inputs:
+  build-type:
+    description: 'Build type: normal, asan, or all'
+    required: false
+    default: 'normal'
+  enable-asan:
+    description: 'Enable Address Sanitizer build (deprecated: use build-type instead)'
+    required: false
+    default: 'false'
 runs:
   using: composite
   steps:
@@ -9,14 +18,27 @@ runs:
         registry-url: "https://npm.pkg.github.com"
         scope: "@mvrdevelopment"
 
+    # Normal builds (when build-type is 'normal' or 'all')
     - name: Build Linux
-      if: runner.os == 'Linux'
+      if: runner.os == 'Linux' && (inputs.build-type == 'normal' || inputs.build-type == 'all')
       uses: ./libMvrGdtf/.github/actions/build-ubuntu
       
     - name: Build Windows
-      if: runner.os == 'Windows'
+      if: runner.os == 'Windows' && (inputs.build-type == 'normal' || inputs.build-type == 'all')
       uses: ./libMvrGdtf/.github/actions/build-windows
       
     - name: Build macOS
-      if: runner.os == 'macOS'
+      if: runner.os == 'macOS' && (inputs.build-type == 'normal' || inputs.build-type == 'all')
       uses: ./libMvrGdtf/.github/actions/build-macos
+
+    - name: Build Windows with ASAN
+      if: runner.os == 'Windows' && (inputs.build-type == 'asan' || inputs.build-type == 'all' || inputs.enable-asan == 'true')
+      uses: ./libMvrGdtf/.github/actions/build-windows-asan
+      
+    - name: Build macOS ARM64 with ASAN
+      if: runner.os == 'macOS' && (inputs.build-type == 'asan' || inputs.build-type == 'all' || inputs.enable-asan == 'true')
+      uses: ./libMvrGdtf/.github/actions/build-macos-arm-asan
+    
+    - name: Build Linux with ASAN
+      if: runner.os == 'Linux' && (inputs.build-type == 'asan' || inputs.build-type == 'all' || inputs.enable-asan == 'true')
+      uses: ./libMvrGdtf/.github/actions/build-ubuntu
