@@ -7691,7 +7691,13 @@ void GdtfFixture::PrepareWorkingFolder(TXString folderName)
 	if(folderName.IsEmpty()){ folderName = "GdtfGroup"; }
 
 	fWorkingFolder = (IID_FolderIdentifier);
-	fWorkingFolder->Set(EFolderSpecifier::kSpotlightFolder, true /*UserFolder*/, folderName);
+
+	IFolderIdentifierPtr folder ( IID_FolderIdentifier );
+	folder->Set( EFolderSpecifier::kSpotlightFolder, true, "GDTFs" );
+	folder->CreateOnDisk();
+
+	fWorkingFolder->Set(folder, folderName );
+
 	
 	//---------------------------------------------------------------------------------------------
 	// Always start with a empty folder

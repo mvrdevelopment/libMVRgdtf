@@ -533,8 +533,8 @@ void GdtfUnittest::ReadFile()
 		this->checkifEqual("GetFixtureThumbnail "		, thumbFileName,  "MyThumbnail"); 
         
         // Check if the Resource Files have been unpacked correctly.
-		this->checkifEqual("GetFixtureThumbnail "		, fullPath_PNG, fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator + "MyThumbnail.png" ); 
-        this->checkifEqual("GetFixtureThumbnail "		, fullPath_SVG, fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator + "MyThumbnail.svg");        
+		this->checkifEqual("GetFixtureThumbnail "		, fullPath_PNG, fAppDataFolder + kSeparator + "GDTFs" + kSeparator + "GdtfGroup" + kSeparator + "MyThumbnail.png");
+        this->checkifEqual("GetFixtureThumbnail "		, fullPath_SVG, fAppDataFolder + kSeparator + "GDTFs" + kSeparator + "GdtfGroup" + kSeparator + "MyThumbnail.svg");        
         
         this->checkifTrue("Testwheel PNG exists.", UnitTestUtil::FileExists (fullPath_PNG) );
         this->checkifTrue("Testmodel SVG exits.", UnitTestUtil::FileExists (fullPath_SVG) );
@@ -1717,7 +1717,7 @@ void GdtfUnittest::ReadFile()
 std::string GdtfUnittest::GetTestPNG_ThumbNail(bool readLocation)
 {
 	std::string path;
-	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator; }
+	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GDTFs" + kSeparator + "GdtfGroup" + kSeparator; }
 	else 				{ path = fTestResourcesFolder + kSeparator; }
     path += "MyThumbnail.png";
     return path;
@@ -1726,7 +1726,7 @@ std::string GdtfUnittest::GetTestPNG_ThumbNail(bool readLocation)
 std::string GdtfUnittest::GetTestSVG_ThumbNail(bool readLocation)
 {
 	std::string path;
-	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator; }
+	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GDTFs" + kSeparator + "GdtfGroup" + kSeparator; }
 	else 				{ path = fTestResourcesFolder + kSeparator; }
     path += "MyThumbnail.svg";
     return path;
@@ -1735,7 +1735,7 @@ std::string GdtfUnittest::GetTestSVG_ThumbNail(bool readLocation)
 std::string GdtfUnittest::GetTestSVG_Model(bool readLocation)
 {
 	std::string path;
-	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator+ "modelssvg" + kSeparator; }
+	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GDTFs" + kSeparator +  "GdtfGroup" + kSeparator+ "modelssvg" + kSeparator; }
 	else 				{ path = fTestResourcesFolder + kSeparator; }
     path += "MyModel.svg";
     return path;
@@ -1744,7 +1744,7 @@ std::string GdtfUnittest::GetTestSVG_Model(bool readLocation)
 std::string GdtfUnittest::GetTestSVGSide_Model(bool readLocation)
 {
 	std::string path;
-	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator+ "modelssvg_side" + kSeparator; }
+	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GDTFs" + kSeparator + "GdtfGroup" + kSeparator+ "modelssvg_side" + kSeparator; }
 	else 				{ path = fTestResourcesFolder + kSeparator; }
     path += "MyModelSide.svg";
     return path;
@@ -1753,7 +1753,7 @@ std::string GdtfUnittest::GetTestSVGSide_Model(bool readLocation)
 std::string GdtfUnittest::GetTestSVGFront_Model(bool readLocation)
 {
 	std::string path;
-	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator+ "modelssvg_front" + kSeparator; }
+	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GDTFs" + kSeparator + "GdtfGroup" + kSeparator+ "modelssvg_front" + kSeparator; }
 	else 				{ path = fTestResourcesFolder + kSeparator; }
     path += "MyModelFront.svg";
     return path;
@@ -1762,7 +1762,7 @@ std::string GdtfUnittest::GetTestSVGFront_Model(bool readLocation)
 std::string GdtfUnittest::GetTest3DS_Model(bool readLocation)
 {
 	std::string path;
-	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator+ "models3ds" + kSeparator; }
+	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GDTFs" + kSeparator + "GdtfGroup" + kSeparator+ "models3ds" + kSeparator; }
 	else 				{ path = fTestResourcesFolder + kSeparator; }
 	
     path += "MyModel.3ds";
@@ -1772,7 +1772,7 @@ std::string GdtfUnittest::GetTest3DS_Model(bool readLocation)
 std::string GdtfUnittest::GetTest3DSLow_Model(bool readLocation)
 {
 	std::string path;
-	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator+ "models3ds_low" + kSeparator; }
+	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GDTFs" + kSeparator + "GdtfGroup" + kSeparator+ "models3ds_low" + kSeparator; }
 	else 				{ path = fTestResourcesFolder + kSeparator; }
 	
     path += "MyModelLow.3ds";
@@ -1782,7 +1782,7 @@ std::string GdtfUnittest::GetTest3DSLow_Model(bool readLocation)
 std::string GdtfUnittest::GetTest3DSHigh_Model(bool readLocation)
 {
 	std::string path;
-	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator+ "models3ds_high" + kSeparator; }
+	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GDTFs" + kSeparator + "GdtfGroup" + kSeparator+ "models3ds_high" + kSeparator; }
 	else 				{ path = fTestResourcesFolder + kSeparator; }
 	
     path += "MyModelHigh.3ds";
@@ -1792,7 +1792,7 @@ std::string GdtfUnittest::GetTest3DSHigh_Model(bool readLocation)
 std::string GdtfUnittest::GetTestGLTF_Model_glb(bool readLocation)
 {
 	std::string path;
-	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator+ "modelsgltf" + kSeparator; }
+	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GDTFs" + kSeparator + "GdtfGroup" + kSeparator+ "modelsgltf" + kSeparator; }
 	else 				{ path = fTestResourcesFolder + kSeparator; }
 	
     path += "MyModel.glb";
@@ -1802,7 +1802,7 @@ std::string GdtfUnittest::GetTestGLTF_Model_glb(bool readLocation)
 std::string GdtfUnittest::GetTestGLTFLow_Model_glb(bool readLocation)
 {
 	std::string path;
-	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator+ "modelsgltf_low" + kSeparator; }
+	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GDTFs" + kSeparator + "GdtfGroup" + kSeparator+ "modelsgltf_low" + kSeparator; }
 	else 				{ path = fTestResourcesFolder + kSeparator; }
 	
     path += "MyModelLow.glb";
@@ -1812,7 +1812,7 @@ std::string GdtfUnittest::GetTestGLTFLow_Model_glb(bool readLocation)
 std::string GdtfUnittest::GetTestGLTFHigh_Model_glb(bool readLocation)
 {
 	std::string path;
-	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator+ "modelsgltf_high" + kSeparator; }
+	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GDTFs" + kSeparator + "GdtfGroup" + kSeparator+ "modelsgltf_high" + kSeparator; }
 	else 				{ path = fTestResourcesFolder + kSeparator; }
 	
     path += "MyModelHigh.glb";
@@ -1822,7 +1822,7 @@ std::string GdtfUnittest::GetTestGLTFHigh_Model_glb(bool readLocation)
 std::string GdtfUnittest::GetTestGLTF_Model(bool readLocation)
 {
 	std::string path;
-	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator+ "modelsgltf" + kSeparator; }
+	if(readLocation)	{ path = fAppDataFolder + kSeparator +  "GDTFs" + kSeparator + "GdtfGroup" + kSeparator+ "modelsgltf" + kSeparator; }
 	else 				{ path = fTestResourcesFolder + kSeparator; }
 	
     path += "Fox.gltf";
@@ -1832,7 +1832,7 @@ std::string GdtfUnittest::GetTestGLTF_Model(bool readLocation)
 std::string GdtfUnittest::GetTestWheel_PNG(bool readLocation)
 {
 	std::string path;
-	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GdtfGroup" + kSeparator + "wheels" + kSeparator; }
+	if(readLocation)	{ path = fAppDataFolder + kSeparator + "GDTFs" + kSeparator + "GdtfGroup" + kSeparator + "wheels" + kSeparator; }
 	else 				{ path = fTestResourcesFolder + kSeparator; }
     path += "MWheel_Img1.png";
     return path;
