@@ -1086,54 +1086,50 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetPosition
 
 VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetPositionObjectAt( size_t at, IPosition** outPosition )
 {
-	const auto& auxObj = fExchangeObj.GetAuxDataObjects().at( at );
-	if ( auxObj->GetObjectType() == SceneData::ESceneDataObjectType::ePosition )
+	//---------------------------------------------------------------------------
+	// Check incoming count
+	size_t count = fExchangeObj.GetPositionObjects().size();
+
+	ASSERTN(kEveryone, at < count);
+	if (at >= count) { return kVCOMError_InvalidArg; }
+
+	//---------------------------------------------------------------------------
+	// Get Position object
+	SceneData::SceneDataPositionObjPtr scPosition = fExchangeObj.GetPositionObjects().at(at);
+
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CPositionImpl* pPosition = nullptr;
+
+	// Query Interface
+	if ( VCOM_SUCCEEDED( VWQueryInterface( IID_PositionObj, (IVWUnknown**) &pPosition ) ) )
 	{
-		// Do the cast
-		SceneData::SceneDataPositionObjPtr scPosition = static_cast<SceneData::SceneDataPositionObjPtr>( auxObj );
-		ASSERTN( kEveryone, scPosition != nullptr );
-		if ( !scPosition )
+		// Check Casting
+		CPositionImpl* pResultInterface = static_cast<CPositionImpl*>( pPosition );
+		if ( pResultInterface )
 		{
-			return kVCOMError_Failed;
+			pResultInterface->SetPointer( scPosition );
 		}
-
-		//---------------------------------------------------------------------------
-		// Initialize Object
-		CPositionImpl* pPosition = nullptr;
-
-		// Query Interface
-		if ( VCOM_SUCCEEDED( VWQueryInterface( IID_PositionObj, (IVWUnknown**) &pPosition ) ) )
+		else
 		{
-			// Check Casting
-			CPositionImpl* pResultInterface = static_cast<CPositionImpl*>( pPosition );
-			if ( pResultInterface )
-			{
-				pResultInterface->SetPointer( scPosition );
-			}
-			else
-			{
-				pResultInterface->Release();
-				pResultInterface = nullptr;
-				return kVCOMError_NoInterface;
-			}
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
 		}
-
-		//---------------------------------------------------------------------------
-		// Check Incomming Object
-		if ( *outPosition )
-		{
-			( *outPosition )->Release();
-			*outPosition		= NULL;
-		}
-
-		//---------------------------------------------------------------------------
-		// Set Out Value
-		*outPosition		= pPosition;
-		return kVCOMError_NoError;
 	}
 
-	DSTOP( ( kEveryone, "Get Position is out of bounds!" ) );
-	return kVCOMError_Failed;
+	//---------------------------------------------------------------------------
+	// Check Incomming Object
+	if ( *outPosition )
+	{
+		( *outPosition )->Release();
+		*outPosition		= NULL;
+	}
+
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*outPosition		= pPosition;
+	return kVCOMError_NoError;
 }
 																				  
 VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetSymDefCount(size_t& outCount)
