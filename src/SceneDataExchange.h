@@ -979,8 +979,10 @@ namespace SceneData
 		SceneDataAuxObjArray				fAuxDataObjs;
 		SceneDataObjWithMatrixArray			fChildObjs;
 		SceneDataAuxObjArray				fSymDefObjs;
+		SceneDataAuxObjArray				fClassObjs;
+		SceneDataMappingDefinitionObjArray	fMappingDefinitionObjs;
 		
-		// Arrays for eachobject typ		e
+		// Arrays for eachobject type
 		SceneDataObjWithMatrixArray			fSceneObjects;
 		SceneDataFocusPointObjArray			fFocusPoints;
 		SceneDataPositionObjArray			fPositions;
@@ -1034,6 +1036,10 @@ namespace SceneData
 		SceneDataAuxObjArray&				GetAuxDataObjects();
 		SceneDataObjWithMatrixArray&		GetChildObjects();
 		SceneDataAuxObjArray&				GetSymDefObjects();
+		SceneDataClassObjArray&				GetClassObjects();
+		SceneDataMappingDefinitionObjArray& GetMappingDefinitionObjects();
+		SceneDataPositionObjArray&			GetPositionObjects();
+
 
 		SceneDataObjWithMatrixArray&		GetSceneDataObjects();
 		
