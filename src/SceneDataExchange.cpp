@@ -2888,6 +2888,7 @@ SceneDataExchange::~SceneDataExchange()
 	}
 
 	fSymDefObjs.clear();
+	fClassObjs.clear();
 	for (SceneDataObjWithMatrixPtr	childObj : fChildObjs )		{ delete childObj; }
 	for (SceneDataAuxObjPtr			childAux : fAuxDataObjs )	{ delete childAux; }
 	for (SceneDataProviderObjPtr	childPro : fProviderObjs )	{ delete childPro; }
@@ -2931,6 +2932,21 @@ SceneDataObjWithMatrixArray& SceneDataExchange::GetSceneDataObjects()
 SceneDataAuxObjArray& SceneDataExchange::GetSymDefObjects()
 {
 	return fSymDefObjs;
+}
+
+SceneDataClassObjArray& SceneDataExchange::GetClassObjects()
+{
+	return fClasses;
+}
+
+SceneDataMappingDefinitionObjArray& SceneDataExchange::GetMappingDefinitionObjects()
+{
+	return fMappingDefinitionObjs;
+}
+
+SceneDataPositionObjArray& SceneDataExchange::GetPositionObjects()
+{
+	return fPositions;
 }
 
 SceneDataSymDefObjPtr SceneDataExchange::GetSymDefByUUID(const SceneDataGUID& guid)
@@ -3179,6 +3195,7 @@ SceneDataMappingDefinitionObjPtr SceneDataExchange::CreateMappingDefinitionObjec
 	newMappingDefinition->setName(name);
 	
 	fAuxDataObjs.push_back(newMappingDefinition);
+	fMappingDefinitionObjs.push_back( newMappingDefinition );
 	
 	return newMappingDefinition;
 }
