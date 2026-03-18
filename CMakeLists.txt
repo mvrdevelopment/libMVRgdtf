@@ -253,7 +253,7 @@ if (ENABLE_ASAN)
     if (MSVC)
         message(STATUS "ASAN aktiviert für RelWithDebInfo")
         target_compile_options(MvrGdtf PRIVATE /fsanitize=address)
-
+        target_compile_options(MvrGdtf PRIVATE /MTd)
     endif()
 endif()
 
