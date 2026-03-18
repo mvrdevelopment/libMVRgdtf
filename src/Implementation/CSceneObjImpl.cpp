@@ -1875,7 +1875,7 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::AddMapping(MvrUUID mapD
 	// A fixture can't have 2 mappings with the same linked mappingDef
 	for(SceneData::SceneDataMappingObjPtr mapping : fixture->GetMappingsArray())
 	{
-		if(mapping->GetLinkedDefUuid() == newMappingUuid) { return kVCOMError_InvalidArg; }
+		if(mapping->GetLinkedDefUuid().GetUuidObj() == newMappingUuid.GetUuidObj() ) { return kVCOMError_InvalidArg; }
 	}
 
 	fixture->AddMapping(newMappingUuid);
