@@ -2960,6 +2960,16 @@ void GdtfGeometryDisplay::SetHeight( size_t height )
 	fHeight = height;
 }
 
+void GdtfGeometryDisplay::SetIsCurved( const bool& isCurved )
+{
+	fIsCurved = isCurved;
+}
+
+void GdtfGeometryDisplay::GetIsCurved( bool& curvedRadius ) const
+{
+	curvedRadius = fIsCurved;
+}
+
 void GdtfGeometryDisplay::OnPrintToFile(IXMLFileNodePtr pNode) 
 {
 	//------------------------------------------------------------------------------------

@@ -951,20 +951,24 @@ namespace SceneData
 												~GdtfGeometryDisplay();
 	private:
 		TXString								fTexture;
-		double									fAspectRatio;
 		size_t									fWidth;
 		size_t									fHeight;
+		double									fAspectRatio;
+		bool 									fIsCurved;
 
 	public:
 		virtual EGdtfObjectType					GetObjectType();
 		const TXString&							GetTexture();
-		void									SetTexture(const TXString& texture);
+		void									GetIsCurved( bool& curvedRadius ) const;
+		const size_t&							GetHeight() const;
+		const size_t&							GetWidth() const;
 		const double&							GetAspectRatio() const;
+
+		void									SetTexture(const TXString& texture);
 		void									SetAspectRatio( const double& aspectRatio );
 		void									SetWidth( size_t width );
-		const size_t&							GetWidth() const;
 		void 									SetHeight( size_t height );
-		const size_t&							GetHeight() const;
+		void									SetIsCurved( const bool& isCurved );
 
 
 	protected:
