@@ -3210,6 +3210,7 @@ SceneDataMappingDefinitionObjPtr SceneDataExchange::ReadMappingDefinitionObject(
 	newMappingDefinition->ReadFromNode(node, this);
 	
 	fAuxDataObjs.push_back(newMappingDefinition);
+	fMappingDefinitionObjs.push_back( newMappingDefinition );
 
 	return newMappingDefinition;
 }
