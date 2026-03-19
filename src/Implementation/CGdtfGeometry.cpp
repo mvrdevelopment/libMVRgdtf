@@ -983,19 +983,21 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetTexture(MvrStrin
 	return kVCOMError_NoError;
 }
 
-MvrString VectorworksMVR::CGdtfGeometryImpl::GetAspectRatio() 
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetAspectRatio(double& aspectRatio) 
 {
-	if(!fGeometry) return "";
+	if(!fGeometry) return kVCOMError_Failed;
 
-	if( fGeometryType != EGdtfObjectType::eGdtfGeometryDisplay) return "";
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryDisplay) return kVCOMError_Failed;
 
 	SceneData::GdtfGeometryDisplayPtr display = static_cast<SceneData::GdtfGeometryDisplayPtr>(fGeometry);
-	if(!display) return "";
+	if(!display) return kVCOMError_Failed;
 
-	return display->GetAspectRatio().GetCharPtr();
+	aspectRatio = display->GetAspectRatio();
+
+	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetAspectRatio(MvrString aspectRatio)
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetAspectRatio(double aspectRatio)
 {
 	if (!fGeometry) return kVCOMError_NotInitialized;
 
@@ -1005,9 +1007,65 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetAspectRatio(MvrS
 	if(!display) return kVCOMError_Failed;
 
 	display->SetAspectRatio(aspectRatio);
+
 	return kVCOMError_NoError;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetWidth(size_t& width) 
+{
+	if(!fGeometry) return kVCOMError_Failed;
+
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryDisplay) return kVCOMError_Failed;
+
+	SceneData::GdtfGeometryDisplayPtr display = static_cast<SceneData::GdtfGeometryDisplayPtr>(fGeometry);
+	if(!display) return kVCOMError_Failed;
+
+	width = display->GetWidth();
+
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetWidth(size_t width)
+{
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryDisplay) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometryDisplayPtr display = static_cast<SceneData::GdtfGeometryDisplayPtr>(fGeometry);
+	if(!display) return kVCOMError_Failed;
+
+	display->SetWidth(width);
+
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetHeight(size_t& height) 
+{
+	if(!fGeometry) return kVCOMError_Failed;
+
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryDisplay) return kVCOMError_Failed;
+
+	SceneData::GdtfGeometryDisplayPtr display = static_cast<SceneData::GdtfGeometryDisplayPtr>(fGeometry);
+	if(!display) return kVCOMError_Failed;
+
+	height = display->GetHeight();
+
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetHeight(size_t height)
+{
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryDisplay) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometryDisplayPtr display = static_cast<SceneData::GdtfGeometryDisplayPtr>(fGeometry);
+	if(!display) return kVCOMError_Failed;
+
+	display->SetHeight(height);
+
+	return kVCOMError_NoError;
+}
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetCountLinkedDmxChannel(size_t& count, IGdtfDmxMode * forMode)
 {

@@ -951,14 +951,22 @@ namespace SceneData
 												~GdtfGeometryDisplay();
 	private:
 		TXString								fTexture;
-		TXString								fAspectRatio;
+		double									fAspectRatio;
+		size_t									fWidth;
+		size_t									fHeight;
 
 	public:
 		virtual EGdtfObjectType					GetObjectType();
 		const TXString&							GetTexture();
 		void									SetTexture(const TXString& texture);
-		const TXString&							GetAspectRatio() const;
-		void									SetAspectRatio( const TXString& aspectRatio );
+		const double&							GetAspectRatio() const;
+		void									SetAspectRatio( const double& aspectRatio );
+		void									SetWidth( size_t width );
+		const size_t&							GetWidth() const;
+		void 									SetHeight( size_t height );
+		const size_t&							GetHeight() const;
+
+
 	protected:
 		virtual	TXString						GetNodeName();
 		virtual	void							OnPrintToFile(IXMLFileNodePtr pNode);

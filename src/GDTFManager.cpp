@@ -2906,14 +2906,14 @@ GdtfGeometryDisplay::GdtfGeometryDisplay(GdtfGeometry* parent)
 					:GdtfGeometry(parent)
 {
 	fTexture = "";
-	fAspectRatio = "";
+	fAspectRatio = 0;
 }
 
 GdtfGeometryDisplay::GdtfGeometryDisplay(const TXString& name, GdtfModelPtr refToModel,const VWTransformMatrix& ma, GdtfGeometry* parent) 
 					:GdtfGeometry(name,refToModel,ma, parent)
 {
 	fTexture = "";
-	fAspectRatio = "";
+	fAspectRatio = 0;
 }
 
 GdtfGeometryDisplay::~GdtfGeometryDisplay()
@@ -2930,14 +2930,34 @@ void GdtfGeometryDisplay::SetTexture(const TXString& texture)
 	fTexture = texture;
 }
 
-const TXString& GdtfGeometryDisplay::GetAspectRatio() const
+const double& GdtfGeometryDisplay::GetAspectRatio() const
 {
 	return fAspectRatio;
 }
 
-void GdtfGeometryDisplay::SetAspectRatio( const TXString& aspectRatio )
+void GdtfGeometryDisplay::SetAspectRatio( const double& aspectRatio )
 {
 	fAspectRatio = aspectRatio;
+}
+
+const size_t& GdtfGeometryDisplay::GetWidth() const
+{
+	return fWidth;
+}
+
+void GdtfGeometryDisplay::SetWidth( size_t width )
+{
+	fWidth = width;
+}
+
+const size_t& GdtfGeometryDisplay::GetHeight() const
+{
+	return fHeight;
+}
+
+void GdtfGeometryDisplay::SetHeight( size_t height )
+{
+	fHeight = height;
 }
 
 void GdtfGeometryDisplay::OnPrintToFile(IXMLFileNodePtr pNode) 
@@ -2945,8 +2965,10 @@ void GdtfGeometryDisplay::OnPrintToFile(IXMLFileNodePtr pNode)
 	//------------------------------------------------------------------------------------
 	// Call the parent
 	GdtfGeometry::OnPrintToFile(pNode);
-	pNode->SetNodeAttributeValue( XML_GDTF_DisplayTexture, fTexture);
-	pNode->SetNodeAttributeValue( XML_GDTF_DisplayAspectRatio, fAspectRatio );
+	pNode->SetNodeAttributeValue( XML_GDTF_DisplayTexture,		fTexture );
+	pNode->SetNodeAttributeValue( XML_GDTF_DisplayAspectRatio, 	GdtfConverter::ConvertDouble(fAspectRatio) );
+	pNode->SetNodeAttributeValue( XML_GDTF_DisplayWidth,		GdtfConverter::ConvertInteger(fWidth) );
+	pNode->SetNodeAttributeValue( XML_GDTF_DisplayHeight,		GdtfConverter::ConvertInteger( fHeight ) );
 }
 
 void GdtfGeometryDisplay::OnReadFromNode(const IXMLFileNodePtr& pNode)
@@ -2955,8 +2977,16 @@ void GdtfGeometryDisplay::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// Call the parent
 	GdtfGeometry::OnReadFromNode(pNode);
 
+	TXString width, height, aspectRatio = "";
+
 	pNode->GetNodeAttributeValue( XML_GDTF_DisplayTexture, fTexture);
-	pNode->GetNodeAttributeValue( XML_GDTF_DisplayAspectRatio, fAspectRatio );
+	pNode->GetNodeAttributeValue( XML_GDTF_DisplayAspectRatio, aspectRatio );
+	pNode->GetNodeAttributeValue( XML_GDTF_DisplayWidth, width );
+	pNode->GetNodeAttributeValue( XML_GDTF_DisplayHeight, height );
+
+	GdtfConverter::ConvertInteger( width, pNode, fWidth );
+	GdtfConverter::ConvertInteger( height, pNode, fHeight );
+	GdtfConverter::ConvertDouble( aspectRatio, pNode, fAspectRatio );
 }
 
 void GdtfGeometryDisplay::OnErrorCheck(const IXMLFileNodePtr& pNode)
