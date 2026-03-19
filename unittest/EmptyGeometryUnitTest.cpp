@@ -64,7 +64,11 @@ void GdtfEmptyModelTest::WriteFile(VectorworksMVR::IGdtfFixturePtr& fixture)
         IGdtfGeometryPtr geometry4;
         __checkVCOM(geometry1->CreateGeometry(EGdtfObjectType::eGdtfGeometryDisplay, "Geometry4", filledModel, STransformMatrix(), &geometry4));
         __checkVCOM(geometry4->SetTexture("Texture.png"));
-        __checkVCOM(geometry4->SetAspectRatio("16:9"));
+        __checkVCOM(geometry4->SetAspectRatio( 1.78 ));
+        __checkVCOM(geometry4->SetWidth(4700));
+        __checkVCOM(geometry4->SetHeight(2700));
+        __checkVCOM(geometry4->SetIsCurved(false));
+
 
         // Magnet
         IGdtfGeometryPtr geometry5;
@@ -211,7 +215,21 @@ void GdtfEmptyModelTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
 
         checkifEqual("Check Texture", geometry4->GetTexture(), "Texture.png");
 
-        checkifEqual("Check Aspect Ratio", geometry4->GetAspectRatio(), "16:9");
+		double aspectRatio = 0.0;
+        geometry4->GetAspectRatio( aspectRatio );
+        checkifEqual("Check Aspect Ratio", aspectRatio, 1.78);
+
+		size_t width = 0;
+        geometry4->GetWidth( width );
+		checkifEqual( "Check Width", width, (size_t) 4700 );
+
+		size_t height = 0;
+        geometry4->GetHeight( height );
+		checkifEqual( "Check Height", height, (size_t) 2700 );
+
+		bool isCurved = false;
+		geometry4->GetIsCurved( isCurved );
+		checkifEqual( "Check IsCurved", isCurved, false );
 
         // Magnet
         IGdtfGeometryPtr geoMagnet;
