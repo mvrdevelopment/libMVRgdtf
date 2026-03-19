@@ -455,6 +455,7 @@ const Sint32 kGDTF_CurrentMinorVersion = 2;
 #define XML_GDTF_DisplayAspectRatio				"AspectRatio"
 #define XML_GDTF_DisplayWidth					"Width"
 #define XML_GDTF_DisplayHeight					"Height"
+#define XML_GDTF_DisplayIsCurved				"IsCurved"
 
 #define XML_GDTF_LaserProtocolNodeName          "Protocol"
 #define XML_GDTF_LaserProtocolName              "Name"

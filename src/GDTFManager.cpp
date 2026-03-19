@@ -2979,6 +2979,7 @@ void GdtfGeometryDisplay::OnPrintToFile(IXMLFileNodePtr pNode)
 	pNode->SetNodeAttributeValue( XML_GDTF_DisplayAspectRatio, 	GdtfConverter::ConvertDouble(fAspectRatio) );
 	pNode->SetNodeAttributeValue( XML_GDTF_DisplayWidth,		GdtfConverter::ConvertInteger(fWidth) );
 	pNode->SetNodeAttributeValue( XML_GDTF_DisplayHeight,		GdtfConverter::ConvertInteger( fHeight ) );
+	pNode->SetNodeAttributeValue( XML_GDTF_DisplayIsCurved,		fIsCurved ? "true" : "false" );
 }
 
 void GdtfGeometryDisplay::OnReadFromNode(const IXMLFileNodePtr& pNode)
@@ -2987,16 +2988,18 @@ void GdtfGeometryDisplay::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// Call the parent
 	GdtfGeometry::OnReadFromNode(pNode);
 
-	TXString width, height, aspectRatio = "";
+	TXString width, height, aspectRatio, isCurved = "";
 
 	pNode->GetNodeAttributeValue( XML_GDTF_DisplayTexture, fTexture);
 	pNode->GetNodeAttributeValue( XML_GDTF_DisplayAspectRatio, aspectRatio );
 	pNode->GetNodeAttributeValue( XML_GDTF_DisplayWidth, width );
 	pNode->GetNodeAttributeValue( XML_GDTF_DisplayHeight, height );
+	pNode->GetNodeAttributeValue( XML_GDTF_DisplayIsCurved, isCurved );
 
-	GdtfConverter::ConvertInteger( width, pNode, fWidth );
-	GdtfConverter::ConvertInteger( height, pNode, fHeight );
-	GdtfConverter::ConvertDouble( aspectRatio, pNode, fAspectRatio );
+	GdtfConverter::ConvertInteger(	width,			pNode,		fWidth );
+	GdtfConverter::ConvertInteger(	height,			pNode,		fHeight );
+	GdtfConverter::ConvertDouble(	aspectRatio,	pNode,		fAspectRatio );
+	GdtfConverter::ConvertBool(		isCurved,		pNode,		fIsCurved );
 }
 
 void GdtfGeometryDisplay::OnErrorCheck(const IXMLFileNodePtr& pNode)
