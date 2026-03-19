@@ -50,6 +50,7 @@ build/
 build_MD/
 build_MT/
 _build/
+build_with_tests/
 
 # exclude specific files
 \.vscode/settings\.json
