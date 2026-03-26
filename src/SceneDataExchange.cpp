@@ -3676,6 +3676,21 @@ bool SceneDataExchange::WriteXml(const IFolderIdentifierPtr& folder, IXMLFileIOB
 					{
 						auxObj->PrintToFile(pAuxDataNode, this);
 					}
+
+					for ( const auto& mappingDef : fMappingDefinitionObjs )
+					{
+						mappingDef->PrintToFile(pAuxDataNode, this);
+					}
+
+					for ( const auto& position : fPositions )
+					{
+						position->PrintToFile( pAuxDataNode, this );
+					}
+
+					for ( const auto& symDef : fSymDefObjs )
+					{
+						symDef->PrintToFile( pAuxDataNode, this );
+					}
 				}
 				
 
