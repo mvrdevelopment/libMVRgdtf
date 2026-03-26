@@ -2889,6 +2889,8 @@ SceneDataExchange::~SceneDataExchange()
 
 	fSymDefObjs.clear();
 	fClassObjs.clear();
+	fPositions.clear();
+	fMappingDefinitionObjs.clear();
 	for (SceneDataObjWithMatrixPtr	childObj : fChildObjs )		{ delete childObj; }
 	for (SceneDataAuxObjPtr			childAux : fAuxDataObjs )	{ delete childAux; }
 	for (SceneDataProviderObjPtr	childPro : fProviderObjs )	{ delete childPro; }
@@ -3017,7 +3019,6 @@ SceneDataSymDefObjPtr SceneDataExchange::ReadSymDefObject(const IXMLFileNodePtr&
 	SceneDataSymDefObjPtr newSymDef =  new SceneDataSymDefObj(SceneDataGUID(uuid));
 	newSymDef->ReadFromNode(node, this);
 	
-	fAuxDataObjs.push_back(newSymDef);
 	fSymDefObjs.push_back( newSymDef );
 	fSymDefMap[uuid] = newSymDef;
 
@@ -3113,11 +3114,6 @@ SceneDataPositionObjPtr SceneDataExchange::ReadPositionObject(const IXMLFileNode
 	SceneDataPositionObjPtr newPostion =  new SceneDataPositionObj(SceneDataGUID(uuid));
 	newPostion->ReadFromNode(node, this);
 	
-	
-	// ------------------------------------------------------------------------------------
-	// Add to aux Data
-	fAuxDataObjs.push_back(newPostion);
-	
 	// ------------------------------------------------------------------------------------
 	// Add to Positions
 	fPositions.push_back(newPostion);
@@ -3167,11 +3163,6 @@ SceneDataClassObjPtr SceneDataExchange::ReadClassObject(const IXMLFileNodePtr& n
 	SceneDataClassObjPtr newClass =  new SceneDataClassObj(SceneDataGUID(uuid));
 	newClass->ReadFromNode(node, this);
 	
-	
-	// ------------------------------------------------------------------------------------
-	// Add to aux Data
-	fAuxDataObjs.push_back(newClass);
-	
 	// ------------------------------------------------------------------------------------
 	// Add to Positions
 	fClasses.push_back(newClass);
@@ -3194,7 +3185,6 @@ SceneDataMappingDefinitionObjPtr SceneDataExchange::CreateMappingDefinitionObjec
 	SceneDataMappingDefinitionObjPtr newMappingDefinition = new SceneDataMappingDefinitionObj(guid);
 	newMappingDefinition->setName(name);
 	
-	fAuxDataObjs.push_back(newMappingDefinition);
 	fMappingDefinitionObjs.push_back( newMappingDefinition );
 	
 	return newMappingDefinition;
@@ -3209,7 +3199,6 @@ SceneDataMappingDefinitionObjPtr SceneDataExchange::ReadMappingDefinitionObject(
 	SceneDataMappingDefinitionObjPtr newMappingDefinition = new SceneDataMappingDefinitionObj(SceneDataGUID(uuid));
 	newMappingDefinition->ReadFromNode(node, this);
 	
-	fAuxDataObjs.push_back(newMappingDefinition);
 	fMappingDefinitionObjs.push_back( newMappingDefinition );
 
 	return newMappingDefinition;
