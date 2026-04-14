@@ -514,6 +514,7 @@ void SceneDataSymDefObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataE
 			SceneDataSymbolObjPtr symbol = new SceneDataSymbolObj(uuidSymbol);
 			symbol->ReadFromNode(objNode, exchange);
 			fGeometries.push_back(symbol);		
+			fContainsSymbolGeometry = true;
 		}
 		else
 		{
@@ -550,6 +551,11 @@ void SceneDataSymDefObj::Add(SceneDataGeoInstanceObjPtr object)
 		fGeometries.push_back(object);
 	}
 	
+}
+
+bool SceneDataSymDefObj::IsContaingSymbolGeometry() const
+{
+	return fContainsSymbolGeometry;
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------------
@@ -2880,9 +2886,12 @@ SceneDataExchange::~SceneDataExchange()
 	{
 		fFilesInZip[i]->DeleteOnDisk();
 	}
-	
+
+	fSymDefObjs.clear();
+	fClassObjs.clear();
+	fPositions.clear();
+	fMappingDefinitionObjs.clear();
 	for (SceneDataObjWithMatrixPtr	childObj : fChildObjs )		{ delete childObj; }
-	for (SceneDataAuxObjPtr			childAux : fAuxDataObjs )	{ delete childAux; }
 	for (SceneDataProviderObjPtr	childPro : fProviderObjs )	{ delete childPro; }
 	
 }
@@ -2906,11 +2915,6 @@ SceneDataProviderObjArray& SceneDataExchange::GetProviderObjects()
 	return fProviderObjs;
 }
 
-SceneDataAuxObjArray& SceneDataExchange::GetAuxDataObjects()
-{
-	return fAuxDataObjs;
-}
-
 SceneDataObjWithMatrixArray& SceneDataExchange::GetChildObjects()
 {
 	return fChildObjs;
@@ -2921,19 +2925,24 @@ SceneDataObjWithMatrixArray& SceneDataExchange::GetSceneDataObjects()
 	return fSceneObjects;
 }
 
-SceneDataSymDefObjPtr SceneDataExchange::GetSymDefByUUID(const SceneDataGUID& guid)
-{	
-	for (SceneDataAuxObjPtr auxObj: fAuxDataObjs)
-	{
-		if (auxObj->getGuid() == guid)
-		{
-			SceneDataSymDefObjPtr symDef = static_cast<SceneDataSymDefObjPtr>(auxObj);
-			
-			ASSERTN(kEveryone, symDef != nullptr);
-			return symDef;
-		}
-	}
-	return nullptr;
+SceneDataAuxObjArray& SceneDataExchange::GetSymDefObjects()
+{
+	return fSymDefObjs;
+}
+
+SceneDataClassObjArray& SceneDataExchange::GetClassObjects()
+{
+	return fClasses;
+}
+
+SceneDataMappingDefinitionObjArray& SceneDataExchange::GetMappingDefinitionObjects()
+{
+	return fMappingDefinitionObjs;
+}
+
+SceneDataPositionObjArray& SceneDataExchange::GetPositionObjects()
+{
+	return fPositions;
 }
 
 SceneDataObjPtr SceneDataExchange::GetSceneObjByUUID(const SceneDataGUID& guid)
@@ -2962,7 +2971,7 @@ SceneDataProviderObjPtr SceneDataExchange::CreateDataProviderObject(const TXStri
 
 SceneDataSymDefObjPtr SceneDataExchange::CreateSymDefObject(const SceneDataGUID& guid, const TXString& name)
 {
-	for (SceneDataAuxObjPtr auxObj : fAuxDataObjs)
+	for (SceneDataAuxObjPtr auxObj : fSymDefObjs)
 	{
 		if (auxObj->getGuid() == guid)
 		{
@@ -2975,7 +2984,7 @@ SceneDataSymDefObjPtr SceneDataExchange::CreateSymDefObject(const SceneDataGUID&
 	SceneDataSymDefObjPtr newSymDef =  new SceneDataSymDefObj(guid);
 	newSymDef->setName(name);
 	
-	fAuxDataObjs.push_back(newSymDef);
+	fSymDefObjs.push_back(newSymDef);
 	
 	return newSymDef;
 }
@@ -2989,7 +2998,7 @@ SceneDataSymDefObjPtr SceneDataExchange::ReadSymDefObject(const IXMLFileNodePtr&
 	SceneDataSymDefObjPtr newSymDef =  new SceneDataSymDefObj(SceneDataGUID(uuid));
 	newSymDef->ReadFromNode(node, this);
 	
-	fAuxDataObjs.push_back(newSymDef);
+	fSymDefObjs.push_back( newSymDef );
 	fSymDefMap[uuid] = newSymDef;
 
 	return newSymDef;
@@ -3044,7 +3053,7 @@ SceneDataPositionObjPtr SceneDataExchange::CreatePositionObject(const SceneDataG
 {
 	// ------------------------------------------------------------------------------------
 	// Traverse Existig Obj
-	for (SceneDataAuxObjPtr auxObj : fAuxDataObjs)
+	for (SceneDataAuxObjPtr auxObj : fPositions)
 	{
 		// Try to cast
 		SceneDataPositionObjPtr position = static_cast<SceneDataPositionObjPtr>(auxObj);
@@ -3066,7 +3075,7 @@ SceneDataPositionObjPtr SceneDataExchange::CreatePositionObject(const SceneDataG
 	// Otherwise generate a new one
 	SceneDataPositionObjPtr newPosition =  new SceneDataPositionObj(guid);
 	newPosition->setName(name);
-	fAuxDataObjs.push_back(newPosition);
+	fPositions.push_back(newPosition);
 	
 	return newPosition;
 }
@@ -3084,11 +3093,6 @@ SceneDataPositionObjPtr SceneDataExchange::ReadPositionObject(const IXMLFileNode
 	SceneDataPositionObjPtr newPostion =  new SceneDataPositionObj(SceneDataGUID(uuid));
 	newPostion->ReadFromNode(node, this);
 	
-	
-	// ------------------------------------------------------------------------------------
-	// Add to aux Data
-	fAuxDataObjs.push_back(newPostion);
-	
 	// ------------------------------------------------------------------------------------
 	// Add to Positions
 	fPositions.push_back(newPostion);
@@ -3100,7 +3104,7 @@ SceneDataClassObjPtr SceneDataExchange::CreateClassObject(const SceneDataGUID& g
 {
 	// ------------------------------------------------------------------------------------
 	// Traverse Existig Obj
-	for (SceneDataAuxObjPtr auxObj : fAuxDataObjs)
+	for (SceneDataAuxObjPtr auxObj : fClasses)
 	{
 		// Try to cast
 		SceneDataClassObjPtr clas = static_cast<SceneDataClassObjPtr>(auxObj);
@@ -3120,7 +3124,7 @@ SceneDataClassObjPtr SceneDataExchange::CreateClassObject(const SceneDataGUID& g
 	// Otherwise generate a new one
 	SceneDataClassObjPtr newClass =  new SceneDataClassObj(guid);
 	newClass->setName(name);
-	fAuxDataObjs.push_back(newClass);
+	fClasses.push_back(newClass);
 	
 	return newClass;
 }
@@ -3138,11 +3142,6 @@ SceneDataClassObjPtr SceneDataExchange::ReadClassObject(const IXMLFileNodePtr& n
 	SceneDataClassObjPtr newClass =  new SceneDataClassObj(SceneDataGUID(uuid));
 	newClass->ReadFromNode(node, this);
 	
-	
-	// ------------------------------------------------------------------------------------
-	// Add to aux Data
-	fAuxDataObjs.push_back(newClass);
-	
 	// ------------------------------------------------------------------------------------
 	// Add to Positions
 	fClasses.push_back(newClass);
@@ -3152,7 +3151,7 @@ SceneDataClassObjPtr SceneDataExchange::ReadClassObject(const IXMLFileNodePtr& n
 
 SceneDataMappingDefinitionObjPtr SceneDataExchange::CreateMappingDefinitionObject(const SceneDataGUID& guid, const TXString& name)
 {
-	for (SceneDataAuxObjPtr auxObj : fAuxDataObjs)
+	for (SceneDataAuxObjPtr auxObj : fMappingDefinitionObjs)
 	{
 		if (auxObj->getGuid() == guid)
 		{
@@ -3165,7 +3164,7 @@ SceneDataMappingDefinitionObjPtr SceneDataExchange::CreateMappingDefinitionObjec
 	SceneDataMappingDefinitionObjPtr newMappingDefinition = new SceneDataMappingDefinitionObj(guid);
 	newMappingDefinition->setName(name);
 	
-	fAuxDataObjs.push_back(newMappingDefinition);
+	fMappingDefinitionObjs.push_back( newMappingDefinition );
 	
 	return newMappingDefinition;
 }
@@ -3179,7 +3178,7 @@ SceneDataMappingDefinitionObjPtr SceneDataExchange::ReadMappingDefinitionObject(
 	SceneDataMappingDefinitionObjPtr newMappingDefinition = new SceneDataMappingDefinitionObj(SceneDataGUID(uuid));
 	newMappingDefinition->ReadFromNode(node, this);
 	
-	fAuxDataObjs.push_back(newMappingDefinition);
+	fMappingDefinitionObjs.push_back( newMappingDefinition );
 
 	return newMappingDefinition;
 }
@@ -3652,9 +3651,19 @@ bool SceneDataExchange::WriteXml(const IFolderIdentifierPtr& folder, IXMLFileIOB
 				IXMLFileNodePtr pAuxDataNode;
 				if ( VCOM_SUCCEEDED( pSceneNode->CreateChildNode( XML_Val_AuxDataNodeName, & pAuxDataNode ) ) )
 				{
-					for (SceneDataAuxObjPtr auxObj : fAuxDataObjs)
+					for ( const auto& mappingDef : fMappingDefinitionObjs )
 					{
-						auxObj->PrintToFile(pAuxDataNode, this);
+						mappingDef->PrintToFile(pAuxDataNode, this);
+					}
+
+					for ( const auto& position : fPositions )
+					{
+						position->PrintToFile( pAuxDataNode, this );
+					}
+
+					for ( const auto& symDef : fSymDefObjs )
+					{
+						symDef->PrintToFile( pAuxDataNode, this );
 					}
 				}
 				

@@ -113,6 +113,23 @@ VectorworksMVR::VCOMError VectorworksMVR::CSymDefImpl::GetGeometryAt(size_t at, 
 	return kVCOMError_NoError;
 }
 
+
+VectorworksMVR::VCOMError VectorworksMVR::CSymDefImpl::GetIsContaingSymbolGeomtery( bool& isContaining )
+{
+	//------------------------------------------------------------------------------------------
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+
+	ASSERTN(kEveryone,fContext);
+	if( ! fContext) return kVCOMError_NotInitialized;
+
+
+	isContaining = fPtr->IsContaingSymbolGeometry();
+
+	return kVCOMError_NoError;
+}
+
 VectorworksMVR::VCOMError VectorworksMVR::CSymDefImpl::AddGeometry(const STransformMatrix& scMatrix, MvrString fileName)
 {
 	//---------------------------------------------------------------------------

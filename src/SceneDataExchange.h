@@ -205,10 +205,12 @@ namespace SceneData
 		
 	private:
 		SceneDataGeometryObjArray		fGeometries;
+		bool							fContainsSymbolGeometry = false;
 		
 	public:
 		const SceneDataGeometryObjArray& getGeometryArray() const;
 		void							Add(SceneDataGeoInstanceObjPtr object);
+		bool							IsContaingSymbolGeometry() const;
 
 	protected:
 		virtual	TXString				GetNodeName();
@@ -974,11 +976,12 @@ namespace SceneData
 		// ---------------------------------------------------------------------------------------------------------------------
 		// Database
 		SceneDataProviderObjArray			fProviderObjs;
-		SceneDataAuxObjArray				fAuxDataObjs;
 		SceneDataObjWithMatrixArray			fChildObjs;
+		SceneDataAuxObjArray				fSymDefObjs;
+		SceneDataAuxObjArray				fClassObjs;
+		SceneDataMappingDefinitionObjArray	fMappingDefinitionObjs;
 		
-		
-		// Arrays for eachobject typ		e
+		// Arrays for eachobject type
 		SceneDataObjWithMatrixArray			fSceneObjects;
 		SceneDataFocusPointObjArray			fFocusPoints;
 		SceneDataPositionObjArray			fPositions;
@@ -1029,15 +1032,15 @@ namespace SceneData
 		// ---------------------------------------------------------------------------------------------------------------------
 		// Database
 		SceneDataProviderObjArray&			GetProviderObjects();
-		SceneDataAuxObjArray&				GetAuxDataObjects();
 		SceneDataObjWithMatrixArray&		GetChildObjects();
-		
-		SceneDataObjWithMatrixArray&		GetSceneDataObjects();
-		
-	private:
-		SceneDataSymDefObjPtr				GetSymDefByUUID(const SceneDataGUID& guid);
+		SceneDataAuxObjArray&				GetSymDefObjects();
+		SceneDataClassObjArray&				GetClassObjects();
+		SceneDataMappingDefinitionObjArray& GetMappingDefinitionObjects();
+		SceneDataPositionObjArray&			GetPositionObjects();
 
-	public:
+
+		SceneDataObjWithMatrixArray&		GetSceneDataObjects();
+
 		// ---------------------------------------------------------------------------------------------------------------------
 		// Export
 		void								InitializeForExport();
@@ -1046,7 +1049,6 @@ namespace SceneData
 		
 		// ---------------------------------------------------------------------------------------------------------------------
 		// Create calls
-	public:
 		SceneDataProviderObjPtr				CreateDataProviderObject(const TXString& provider, const TXString& version);
 		SceneDataPositionObjPtr				CreatePositionObject(const SceneDataGUID& guid, const TXString& name);
 		SceneDataSymDefObjPtr				CreateSymDefObject(const SceneDataGUID& guid, const TXString& name);
