@@ -976,7 +976,6 @@ namespace SceneData
 		// ---------------------------------------------------------------------------------------------------------------------
 		// Database
 		SceneDataProviderObjArray			fProviderObjs;
-		SceneDataAuxObjArray				fAuxDataObjs;
 		SceneDataObjWithMatrixArray			fChildObjs;
 		SceneDataAuxObjArray				fSymDefObjs;
 		SceneDataAuxObjArray				fClassObjs;

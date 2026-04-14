@@ -2892,7 +2892,6 @@ SceneDataExchange::~SceneDataExchange()
 	fPositions.clear();
 	fMappingDefinitionObjs.clear();
 	for (SceneDataObjWithMatrixPtr	childObj : fChildObjs )		{ delete childObj; }
-	for (SceneDataAuxObjPtr			childAux : fAuxDataObjs )	{ delete childAux; }
 	for (SceneDataProviderObjPtr	childPro : fProviderObjs )	{ delete childPro; }
 	
 }
@@ -2914,11 +2913,6 @@ void SceneDataExchange::InitializeForImport()
 SceneDataProviderObjArray& SceneDataExchange::GetProviderObjects()
 {
 	return fProviderObjs;
-}
-
-SceneDataAuxObjArray& SceneDataExchange::GetAuxDataObjects()
-{
-	return fAuxDataObjs;
 }
 
 SceneDataObjWithMatrixArray& SceneDataExchange::GetChildObjects()
@@ -2951,21 +2945,6 @@ SceneDataPositionObjArray& SceneDataExchange::GetPositionObjects()
 	return fPositions;
 }
 
-SceneDataSymDefObjPtr SceneDataExchange::GetSymDefByUUID(const SceneDataGUID& guid)
-{	
-	for (SceneDataAuxObjPtr auxObj: fAuxDataObjs)
-	{
-		if (auxObj->getGuid() == guid)
-		{
-			SceneDataSymDefObjPtr symDef = static_cast<SceneDataSymDefObjPtr>(auxObj);
-			
-			ASSERTN(kEveryone, symDef != nullptr);
-			return symDef;
-		}
-	}
-	return nullptr;
-}
-
 SceneDataObjPtr SceneDataExchange::GetSceneObjByUUID(const SceneDataGUID& guid)
 {	
 	for (const auto& sceneObj: fSceneObjects)
@@ -2992,7 +2971,7 @@ SceneDataProviderObjPtr SceneDataExchange::CreateDataProviderObject(const TXStri
 
 SceneDataSymDefObjPtr SceneDataExchange::CreateSymDefObject(const SceneDataGUID& guid, const TXString& name)
 {
-	for (SceneDataAuxObjPtr auxObj : fAuxDataObjs)
+	for (SceneDataAuxObjPtr auxObj : fSymDefObjs)
 	{
 		if (auxObj->getGuid() == guid)
 		{
@@ -3005,7 +2984,7 @@ SceneDataSymDefObjPtr SceneDataExchange::CreateSymDefObject(const SceneDataGUID&
 	SceneDataSymDefObjPtr newSymDef =  new SceneDataSymDefObj(guid);
 	newSymDef->setName(name);
 	
-	fAuxDataObjs.push_back(newSymDef);
+	fSymDefObjs.push_back(newSymDef);
 	
 	return newSymDef;
 }
@@ -3074,7 +3053,7 @@ SceneDataPositionObjPtr SceneDataExchange::CreatePositionObject(const SceneDataG
 {
 	// ------------------------------------------------------------------------------------
 	// Traverse Existig Obj
-	for (SceneDataAuxObjPtr auxObj : fAuxDataObjs)
+	for (SceneDataAuxObjPtr auxObj : fPositions)
 	{
 		// Try to cast
 		SceneDataPositionObjPtr position = static_cast<SceneDataPositionObjPtr>(auxObj);
@@ -3096,7 +3075,7 @@ SceneDataPositionObjPtr SceneDataExchange::CreatePositionObject(const SceneDataG
 	// Otherwise generate a new one
 	SceneDataPositionObjPtr newPosition =  new SceneDataPositionObj(guid);
 	newPosition->setName(name);
-	fAuxDataObjs.push_back(newPosition);
+	fPositions.push_back(newPosition);
 	
 	return newPosition;
 }
@@ -3125,7 +3104,7 @@ SceneDataClassObjPtr SceneDataExchange::CreateClassObject(const SceneDataGUID& g
 {
 	// ------------------------------------------------------------------------------------
 	// Traverse Existig Obj
-	for (SceneDataAuxObjPtr auxObj : fAuxDataObjs)
+	for (SceneDataAuxObjPtr auxObj : fClasses)
 	{
 		// Try to cast
 		SceneDataClassObjPtr clas = static_cast<SceneDataClassObjPtr>(auxObj);
@@ -3145,7 +3124,7 @@ SceneDataClassObjPtr SceneDataExchange::CreateClassObject(const SceneDataGUID& g
 	// Otherwise generate a new one
 	SceneDataClassObjPtr newClass =  new SceneDataClassObj(guid);
 	newClass->setName(name);
-	fAuxDataObjs.push_back(newClass);
+	fClasses.push_back(newClass);
 	
 	return newClass;
 }
@@ -3172,7 +3151,7 @@ SceneDataClassObjPtr SceneDataExchange::ReadClassObject(const IXMLFileNodePtr& n
 
 SceneDataMappingDefinitionObjPtr SceneDataExchange::CreateMappingDefinitionObject(const SceneDataGUID& guid, const TXString& name)
 {
-	for (SceneDataAuxObjPtr auxObj : fAuxDataObjs)
+	for (SceneDataAuxObjPtr auxObj : fMappingDefinitionObjs)
 	{
 		if (auxObj->getGuid() == guid)
 		{
@@ -3672,11 +3651,6 @@ bool SceneDataExchange::WriteXml(const IFolderIdentifierPtr& folder, IXMLFileIOB
 				IXMLFileNodePtr pAuxDataNode;
 				if ( VCOM_SUCCEEDED( pSceneNode->CreateChildNode( XML_Val_AuxDataNodeName, & pAuxDataNode ) ) )
 				{
-					for (SceneDataAuxObjPtr auxObj : fAuxDataObjs)
-					{
-						auxObj->PrintToFile(pAuxDataNode, this);
-					}
-
 					for ( const auto& mappingDef : fMappingDefinitionObjs )
 					{
 						mappingDef->PrintToFile(pAuxDataNode, this);
