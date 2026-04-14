@@ -1849,7 +1849,7 @@ size_t SceneDataDmxAdress::GetUniverse() const
 // SceneDataProtocols
 SceneDataProtocols::SceneDataProtocols( const TXString& geometry, const TXString& name, const TXString& type, const TXString& version, const ETransmissionType& transmision )
 {
-	fGeometry		= geometry.IsEmpty() ? "NetworkInOut_1" : geometry;
+	fGeometry		= geometry.IsEmpty() ? TXString("NetworkInOut_1") : geometry;
 	fName			= name;
 	fType			= type;
 	fVersion		= version;
@@ -4080,7 +4080,7 @@ void SceneDataExchange::ReadChildObjs(const IXMLFileNodePtr& node, SceneDataGrou
 						SceneDataGUID guid = SceneDataGUID(groupUuid);
 						for(SceneDataObjWithMatrixPtr sceneObject : fSceneObjects)
 						{
-							if(sceneObject->getGuid() == guid)
+							if(sceneObject->getGuid().GetUuidObj() == guid.GetUuidObj() )
 							{
 								fDuplicatedUuids = true;
 								DSTOP((kEveryone, "Some scene object's UUID is duplicated"));

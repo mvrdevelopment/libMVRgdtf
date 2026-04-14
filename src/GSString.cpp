@@ -354,7 +354,7 @@ TXString::TXString(wchar_t w, size_t count /* 1 */)
 // Destructor
 TXString::~TXString()
 {
-	if (charPtr) delete charPtr;
+	if (charPtr) ::operator delete(charPtr);
 }
 
 
