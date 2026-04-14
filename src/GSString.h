@@ -49,10 +49,8 @@ enum class ETXEncoding {
 // TXString character type
 #if GS_WIN
 typedef wchar_t TXChar;
-#elif GS_LIN
-typedef char16_t TXChar;
 #else
-typedef UniChar TXChar;
+typedef char16_t TXChar;
 #endif
 
 // StdUStr definition
