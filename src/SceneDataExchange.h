@@ -1029,7 +1029,6 @@ namespace SceneData
 		// ---------------------------------------------------------------------------------------------------------------------
 		// Database
 		SceneDataProviderObjArray&			GetProviderObjects();
-		SceneDataAuxObjArray&				GetAuxDataObjects();
 		SceneDataObjWithMatrixArray&		GetChildObjects();
 		SceneDataAuxObjArray&				GetSymDefObjects();
 		SceneDataClassObjArray&				GetClassObjects();
@@ -1038,11 +1037,7 @@ namespace SceneData
 
 
 		SceneDataObjWithMatrixArray&		GetSceneDataObjects();
-		
-	private:
-		SceneDataSymDefObjPtr				GetSymDefByUUID(const SceneDataGUID& guid);
 
-	public:
 		// ---------------------------------------------------------------------------------------------------------------------
 		// Export
 		void								InitializeForExport();
@@ -1051,7 +1046,6 @@ namespace SceneData
 		
 		// ---------------------------------------------------------------------------------------------------------------------
 		// Create calls
-	public:
 		SceneDataProviderObjPtr				CreateDataProviderObject(const TXString& provider, const TXString& version);
 		SceneDataPositionObjPtr				CreatePositionObject(const SceneDataGUID& guid, const TXString& name);
 		SceneDataSymDefObjPtr				CreateSymDefObject(const SceneDataGUID& guid, const TXString& name);
