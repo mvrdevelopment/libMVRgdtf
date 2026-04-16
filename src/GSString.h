@@ -248,7 +248,7 @@ public:
 	TXString& operator+=(unsigned char ch);
 	TXString& operator+=(UCChar ch);
 	TXString& operator+=(wchar_t ch);
-	#ifdef GS_LIN
+	#ifndef GS_WIN
 	TXString& operator+=(TXChar ch);
 	#endif
 	TXString& operator+=(int n);				// Unicode code point, for example: 0x63
