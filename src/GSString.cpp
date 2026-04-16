@@ -1,4 +1,4 @@
-﻿//
+//
 //	Copyright (c) Vectorworks, Inc.
 //	Use of this file is governed by the Nemetschek Vectorworks SDK License Agreement
 //	http://developer.vectorworks.net/index.php?title=Vectorworks_SDK_License
@@ -340,11 +340,11 @@ TXString::TXString(wchar_t w, size_t count /* 1 */)
 	else
 	{
 		UCChar u[3];
-		utf32ToTXCharBuffer((char32_t)w, u);
+		utf32ToTXCharBuffer((char32_t)w, (TXChar*)u);
 
 		for(int i = 0; i < count; ++i)
 		{
-			stdUStr.append(u);
+			stdUStr.append((TXChar*)u);
 		}
 	}
 }
@@ -533,8 +533,8 @@ TXString& TXString::operator=(wchar_t w)
 	else
 	{
 		UCChar u[3];
-		utf32ToTXCharBuffer((char32_t)w, u);
-		stdUStr = u;
+		utf32ToTXCharBuffer((char32_t)w, (TXChar*)u);
+		stdUStr = (TXChar*)u;
 	}
 #endif
 
@@ -842,7 +842,7 @@ TXString& TXString::operator+=(char ch)
 	return *this;
 }
 
-#ifdef GS_LIN
+#ifndef GS_WIN
 // Appends one char
 TXString& TXString::operator+=(TXChar ch)
 {
@@ -883,8 +883,8 @@ TXString& TXString::operator+=(wchar_t w)
 	else
 	{
 		UCChar u[3];
-		utf32ToTXCharBuffer(w, u);
-		stdUStr += u;
+		utf32ToTXCharBuffer(w, (TXChar*)u);
+		stdUStr += (TXChar*)u;
 	}
 #endif
 
@@ -1194,15 +1194,15 @@ TXString& TXString::Insert(size_t pos, wchar_t w)
 	else
 	{
 		UCChar u[3];
-		utf32ToTXCharBuffer(w, u);
+		utf32ToTXCharBuffer(w, (TXChar*)u);
 		
 		if(pos < stdUStr.length())
 		{
-			stdUStr.insert(pos, u);
+			stdUStr.insert(pos, (TXChar*)u);
 		}
 		else
 		{
-			stdUStr.append(u);
+			stdUStr.append((TXChar*)u);
 		}
 	}
 #endif
@@ -1555,7 +1555,7 @@ std::wstring TXString::GetStdWString() const
 #if GS_MAC
 CFStringRef TXString::GetCFStringRef() const
 {
-	return CFStringCreateWithCharacters(NULL, stdUStr.data(), stdUStr.length());
+	return CFStringCreateWithCharacters(NULL, (UniChar*)stdUStr.data(), stdUStr.length());
 }
 #endif
 
@@ -2396,7 +2396,7 @@ void TXString::PrepareCharBuffer(ETXEncoding encoding) const
     }
 
     // (CodePage, Flags, WideCharStr, WideCharCount, MultiByteStr, MultiByteCount, DefaultChar, UsedDefaultChar)
-    WideCharToMultiByte(codePage, 0, stdUStr.c_str(), -1, charPtr, len, (codePage == CP_UTF8) ? NULL : "?", NULL);
+    WideCharToMultiByte(codePage, 0, stdUStr.c_str(), -1, charPtr, (int)len, (codePage == CP_UTF8) ? NULL : "?", NULL);
 #elif GS_LIN
 	size_t len = (size_t)stdUStr.length() * 4 + 1;
 
@@ -2437,7 +2437,7 @@ void TXString::PrepareCharBuffer(ETXEncoding encoding) const
 	}
 	// Create a CFString to do the conversion
 	CFStringRef cfStr = CFStringCreateWithCharactersNoCopy(kCFAllocatorDefault,
-		stdUStr.data(),
+		(UniChar*)stdUStr.data(),
 		stdUStr.length(),
 		kCFAllocatorNull);
 
@@ -2557,7 +2557,7 @@ void TXString::SetStdUStrFromCharBuffer(const char* src, size_t srcLenToUse, ETX
 			std::unique_ptr<UniChar[]> uniChars(new UniChar[cfStrLen + 1]);
 			CFStringGetCharacters(cfStr, cfStrRange, uniChars.get());
 			uniChars[cfStrLen] = '\0';
-			stdUStr = uniChars.get();
+			stdUStr = (TXChar*)uniChars.get();
 			CFRelease(cfStr);
 		}
 		else
@@ -2736,3 +2736,4 @@ inline void utf8BufferToTXCharBuffer(const char* const input, TXChar* output, si
 }
 
 }
+
