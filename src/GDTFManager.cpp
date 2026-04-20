@@ -2975,10 +2975,9 @@ void GdtfGeometryDisplay::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// Call the parent
 	GdtfGeometry::OnReadFromNode(pNode);
 
-	TXString width, height, aspectRatio, isCurved = "";
+	TXString width, height, isCurved = "";
 
 	pNode->GetNodeAttributeValue( XML_GDTF_DisplayTexture, fTexture);
-	pNode->GetNodeAttributeValue( XML_GDTF_DisplayAspectRatio, aspectRatio );
 	pNode->GetNodeAttributeValue( XML_GDTF_DisplayWidth, width );
 	pNode->GetNodeAttributeValue( XML_GDTF_DisplayHeight, height );
 	pNode->GetNodeAttributeValue( XML_GDTF_DisplayIsCurved, isCurved );

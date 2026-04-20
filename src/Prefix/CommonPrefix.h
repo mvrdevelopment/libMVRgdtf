@@ -452,7 +452,6 @@ const Sint32 kGDTF_CurrentMinorVersion = 2;
 
 #define XML_GDTF_DisplayNodeName                "Display"
 #define XML_GDTF_DisplayTexture                 "Texture"
-#define XML_GDTF_DisplayAspectRatio				"AspectRatio"
 #define XML_GDTF_DisplayWidth					"Width"
 #define XML_GDTF_DisplayHeight					"Height"
 #define XML_GDTF_DisplayIsCurved				"IsCurved"
