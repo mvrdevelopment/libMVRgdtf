@@ -6,9 +6,21 @@
 #include "CieColor.h"
 #include "GdtfError.h"
 #include "Include/GDTFPrefix.h"
+#include <unordered_map>
+#include <unordered_set>
 
 using namespace VectorworksMVR::Filing;
 using namespace VectorworksMVR::GdtfDefines;
+
+// Case-insensitive hash for TXString to match operator== (which uses CompareNoCase).
+// Required for correct behavior in unordered_map/unordered_set with TXString keys.
+struct TXStringNoCaseHash {
+	std::size_t operator()(const TXString& s) const {
+		TXString lower = s;
+		lower.MakeLower();
+		return lower.hash();
+	}
+};
 
 typedef VectorworksMVR::VWFC::Tools::VWUUID	GdtfFixtureGUID;
 typedef TXString							GdtfPNGFile;
@@ -204,7 +216,7 @@ namespace SceneData
 	public:
         const TXString&							GetName() const;
         const TXString&							GetPrettyName() const;
-        const TGdtfFeatureArray					GetFeatureArray();
+        const TGdtfFeatureArray&					GetFeatureArray();
 		virtual EGdtfObjectType					GetObjectType();
 		
 		GdtfFeature*							AddFeature(const TXString& name);
@@ -297,7 +309,7 @@ namespace SceneData
         EGdtfPhysicalUnit						GetPhysicalUnit();
         CCieColor								GetColor();		
 		bool                       				HasColor() const;
-		TGdtfSubPhysicalUnitArray				GetSubPhysicalUnitArray() const;
+		const TGdtfSubPhysicalUnitArray&			GetSubPhysicalUnitArray() const;
 
 		// Setters
 		void									SetName(const TXString& name);
@@ -772,7 +784,7 @@ namespace SceneData
 		const TXString&							GetName() const;
 		GdtfModelPtr							GetModelRef() const;
 		void									GetTransformMatrix(VWTransformMatrix& ma) const;        
-        const std::vector<GdtfGeometry*>		GetInternalGeometries();
+        const std::vector<GdtfGeometry*>&	GetInternalGeometries();
 		virtual TXString						GetNodeReference();
 		GdtfGeometry*							GetParentGeometry();
 
@@ -813,7 +825,7 @@ namespace SceneData
 	public:
 		//----------------------------------------------------------------------------------------------------------------------------------------------------------------
 		// Resolve Model Ref
-		TXString								GetUnresolvedModelRef() const;
+		const TXString&							GetUnresolvedModelRef() const;
 		void									SetUnresolvedModelRef(GdtfModelPtr ref);
 	};
 	typedef GdtfGeometry*					GdtfGeometryPtr;
@@ -1359,7 +1371,7 @@ namespace SceneData
         Sint32									GetColorIndex();
 		GdtfPhysicalEmitter*					GetEmitterSpectrum();
 
-		TXString								GetUnresolvedEmitterRef() const;
+		const TXString&							GetUnresolvedEmitterRef() const;
 
 		// Setter
 		void									SetLampType(EGdtfLampType type);
@@ -1632,10 +1644,10 @@ namespace SceneData
 		const TGdtfDmxChannelSetArray&			GetChannelSets() const;		
 		const TGdtfDmxSubChannelSetArray&		GetSubChannelSets() const;		
 		//
-		TXString								getUnresolvedAttrRef() const;
-		TXString								getUnresolvedWheelRef() const;
-		TXString								getUnresolvedEmitterRef() const;
-        TXString								getUnresolvedModeMasterRef() const;
+		const TXString&							getUnresolvedAttrRef() const;
+		const TXString&							getUnresolvedWheelRef() const;
+		const TXString&							getUnresolvedEmitterRef() const;
+        const TXString&							getUnresolvedModeMasterRef() const;
         const TXString&							getUnresolvedFilterRef();
         const TXString&							getUnresolvedColorSpaceRef() const;
         const TXString&							getUnresolvedGamutRef() const;
@@ -1715,8 +1727,8 @@ namespace SceneData
         GdtfAttribute*							GetAttribute();
 		EGdtfDmxSnap							GetDmxSnap() const;
 		EGdtfDmxMaster							GetDmxMaster() const;
-        const TGdtfDmxChannelFuntionArray		GetDmxChannelFunctions();		
-		TXString								GetUnresolvedAttribRef() const;
+        const TGdtfDmxChannelFuntionArray&		GetDmxChannelFunctions();		
+		const TXString&							GetUnresolvedAttribRef() const;
 		GdtfDmxChannel*							GetParentDMXChannel() const;        
 		GdtfDmxLogicalChannel*					GetNextLogicalChannel() ;
         double									GetMoveInBlackFrames() const;
@@ -1778,11 +1790,11 @@ namespace SceneData
         DmxValue								GetHighlight() const;
 		bool									HasHighlight() const;
 		DmxValue								GetOldDefaultValue() const;
-        const TGdtfDmxLogicalChannelArray		GetLogicalChannelArray();
+        const TGdtfDmxLogicalChannelArray&		GetLogicalChannelArray();
 		GdtfGeometryPtr							GetGeomRef();
-		TXString								GetUnresolvedGeomRef() const;
+		const TXString&							GetUnresolvedGeomRef() const;
 		GdtfDmxChannelFunctionPtr				GetInitialFunction();
-		TXString								GetUnresolvedInitialFunction() const;
+		const TXString&							GetUnresolvedInitialFunction() const;
 		EGdtfChannelBitResolution				GetChannelBitResolution();
 		DmxValue								GetChannelMaxDmx();
 		bool									IsVirtual() const;
@@ -1829,8 +1841,8 @@ namespace SceneData
 		TXString								fUnresolvedSlaveRef;
 		
 	public:
-		TXString								GetUnresolvedMasterRef() const;
-		TXString								GetUnresolvedSlaveRef() const;
+		const TXString&							GetUnresolvedMasterRef() const;
+		const TXString&							GetUnresolvedSlaveRef() const;
 		// Getter
 		virtual EGdtfObjectType					GetObjectType();
         const TXString&							GetName() const;		
@@ -2082,22 +2094,28 @@ namespace SceneData
 		TGdtfDmxRelationArray					fRelations;
 		TGdtfMacroArray							fMacros;
 
+		// Per-mode lookup indexes (built during reference resolution)
+		std::unordered_map<TXString, GdtfDmxChannelPtr, TXStringNoCaseHash>          fChannelIndex;
+		std::unordered_map<TXString, GdtfDmxChannelFunctionPtr, TXStringNoCaseHash>  fFunctionIndex;
 
 	public:		
 		const TXString&							GetModeName() const;
 		const TXString&							GetDescription() const;
-		const TGdtfDmxChannelArray				GetChannelArray() const;		
+		const TGdtfDmxChannelArray&				GetChannelArray() const;		
 		GdtfDmxChannelPtr						GetMasterByRef(const TXString& ref) const;
 		GdtfDmxChannelFunctionPtr				GetSlaveByRef(const TXString& ref) const;
+		void									BuildModeIndexes();
+		GdtfDmxChannelPtr						GetChannelByIndex(const TXString& ref) const;
+		GdtfDmxChannelFunctionPtr				GetFunctionByIndex(const TXString& ref) const;
 		GdtfGeometryPtr							GetGeomRef();
 		TGdtfDmxChannelArray					GetChannelsForGeometry(GdtfGeometryPtr geometry);
 		
         const TXString&							GetUnresolvedGeomRef();
-		const TGdtfDmxRelationArray				GetDmxRelations();
+		const TGdtfDmxRelationArray&				GetDmxRelations();
 		size_t     								GetFootPrintForBreak(size_t breakId);
 		TSint32Array							GetBreakArray() const;
 		void									GetAddressesFromChannel(TDMXAddressArray& addresses, GdtfDmxChannel* channel, DMXAddress offset) const;
-		const TGdtfMacroArray					GetDmxMacrosArray();
+		const TGdtfMacroArray&					GetDmxMacrosArray();
 
 		
 		void									SetName(const TXString& name);
@@ -2807,6 +2825,20 @@ namespace SceneData
 
 		std::map<TXString, std::pair<char*, size_t> > fFileBuffers;
 
+		// Used for big files
+		std::unordered_map<TXString, GdtfAttributePtr, TXStringNoCaseHash>        fAttributeIndex;
+		std::unordered_map<TXString, GdtfWheelPtr, TXStringNoCaseHash>            fWheelIndex;
+		std::unordered_map<TXString, GdtfPhysicalEmitterPtr, TXStringNoCaseHash>  fEmitterIndex;
+		std::unordered_map<TXString, GdtfFilterPtr, TXStringNoCaseHash>           fFilterIndex;
+		std::unordered_map<TXString, GdtfConnectorPtr, TXStringNoCaseHash>        fConnectorIndex;
+		std::unordered_map<TXString, GdtfColorSpacePtr, TXStringNoCaseHash>       fColorSpaceIndex;
+		std::unordered_map<TXString, GdtfGamutPtr, TXStringNoCaseHash>            fGamutIndex;
+		std::unordered_map<TXString, GdtfDMXProfilePtr, TXStringNoCaseHash>       fDMXProfileIndex;
+		std::unordered_map<TXString, GdtfModelPtr, TXStringNoCaseHash>            fModelIndex;
+		std::unordered_map<TXString, GdtfGeometryPtr, TXStringNoCaseHash>         fGeometryIndex;
+		std::unordered_map<TXString, GdtfSubPhysicalUnitPtr, TXStringNoCaseHash>  fSubPhysicalUnitIndex;
+		bool                                                  fUseIndexes = false;
+
 	public:
 		static TGdtfParsingErrorArray*			__ERROR_CONTAINER_POINTER;
         static void								AddError(const GdtfParsingError& error);
@@ -2934,6 +2966,8 @@ namespace SceneData
 		
 		// Resolve References		
 		void									ResolveAllReferences();
+		void									BuildLookupIndexes();
+		void									IndexGeometryTree(const TGdtfGeometryArray& geometries);
 		void									ResolveGeometryRefs();
 		void									ResolveGeometryRefs_Recursive(GdtfGeometryPtr geometry);
 		
@@ -2947,7 +2981,7 @@ namespace SceneData
 		GdtfGeometryPtr							ResolveGeometryRef(const TXString& unresolvedGeoRef, const TGdtfGeometryArray& geometryArray);
 		GdtfDmxModePtr							ResolveDMXMode(const TXString & unresolvedDMXmode);
 
-		void									ResolveDmxLogicalChanRefs(GdtfDmxChannelPtr dmxChnl);
+		void									ResolveDmxLogicalChanRefs(GdtfDmxChannelPtr dmxChnl, std::unordered_set<TXString, TXStringNoCaseHash>* seenGeoAttrPairs);
 		void									ResolveDmxChanelFunctionRefs(GdtfDmxLogicalChannelPtr dmxLogChnl);
 		void									ResolveDmxSubChannelSetRefs(GdtfDmxChannelFunctionPtr channelFunction);
 		void									ResolveMacroRefs(GdtfDmxModePtr dmxMode);
