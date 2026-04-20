@@ -2911,7 +2911,7 @@ GdtfGeometryDisplay::GdtfGeometryDisplay(GdtfGeometry* parent)
 GdtfGeometryDisplay::GdtfGeometryDisplay(const TXString& name, GdtfModelPtr refToModel,const VWTransformMatrix& ma, GdtfGeometry* parent) 
 					:GdtfGeometry(name,refToModel,ma, parent)
 {
-	fTexture = "";	
+	fTexture = "";
 }
 
 GdtfGeometryDisplay::~GdtfGeometryDisplay()
@@ -2928,12 +2928,45 @@ void GdtfGeometryDisplay::SetTexture(const TXString& texture)
 	fTexture = texture;
 }
 
+const size_t& GdtfGeometryDisplay::GetWidth() const
+{
+	return fWidth;
+}
+
+void GdtfGeometryDisplay::SetWidth( size_t width )
+{
+	fWidth = width;
+}
+
+const size_t& GdtfGeometryDisplay::GetHeight() const
+{
+	return fHeight;
+}
+
+void GdtfGeometryDisplay::SetHeight( size_t height )
+{
+	fHeight = height;
+}
+
+void GdtfGeometryDisplay::SetIsCurved( const bool& isCurved )
+{
+	fIsCurved = isCurved;
+}
+
+void GdtfGeometryDisplay::GetIsCurved( bool& curvedRadius ) const
+{
+	curvedRadius = fIsCurved;
+}
+
 void GdtfGeometryDisplay::OnPrintToFile(IXMLFileNodePtr pNode) 
 {
 	//------------------------------------------------------------------------------------
 	// Call the parent
 	GdtfGeometry::OnPrintToFile(pNode);
-	pNode->SetNodeAttributeValue(XML_GDTF_DisplayTexture, fTexture);
+	pNode->SetNodeAttributeValue( XML_GDTF_DisplayTexture,		fTexture );
+	pNode->SetNodeAttributeValue( XML_GDTF_DisplayWidth,		GdtfConverter::ConvertInteger(fWidth) );
+	pNode->SetNodeAttributeValue( XML_GDTF_DisplayHeight,		GdtfConverter::ConvertInteger( fHeight ) );
+	pNode->SetNodeAttributeValue( XML_GDTF_DisplayIsCurved,		fIsCurved ? "true" : "false" );
 }
 
 void GdtfGeometryDisplay::OnReadFromNode(const IXMLFileNodePtr& pNode)
@@ -2942,7 +2975,16 @@ void GdtfGeometryDisplay::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// Call the parent
 	GdtfGeometry::OnReadFromNode(pNode);
 
-	pNode->GetNodeAttributeValue(XML_GDTF_DisplayTexture, fTexture);
+	TXString width, height, isCurved = "";
+
+	pNode->GetNodeAttributeValue( XML_GDTF_DisplayTexture, fTexture);
+	pNode->GetNodeAttributeValue( XML_GDTF_DisplayWidth, width );
+	pNode->GetNodeAttributeValue( XML_GDTF_DisplayHeight, height );
+	pNode->GetNodeAttributeValue( XML_GDTF_DisplayIsCurved, isCurved );
+
+	GdtfConverter::ConvertInteger(	width,			pNode,		fWidth );
+	GdtfConverter::ConvertInteger(	height,			pNode,		fHeight );
+	GdtfConverter::ConvertBool(		isCurved,		pNode,		fIsCurved );
 }
 
 void GdtfGeometryDisplay::OnErrorCheck(const IXMLFileNodePtr& pNode)
