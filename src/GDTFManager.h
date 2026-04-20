@@ -953,7 +953,6 @@ namespace SceneData
 		TXString								fTexture;
 		size_t									fWidth;
 		size_t									fHeight;
-		double									fAspectRatio;
 		bool 									fIsCurved;
 
 	public:
@@ -962,10 +961,8 @@ namespace SceneData
 		void									GetIsCurved( bool& curvedRadius ) const;
 		const size_t&							GetHeight() const;
 		const size_t&							GetWidth() const;
-		const double&							GetAspectRatio() const;
 
 		void									SetTexture(const TXString& texture);
-		void									SetAspectRatio( const double& aspectRatio );
 		void									SetWidth( size_t width );
 		void 									SetHeight( size_t height );
 		void									SetIsCurved( const bool& isCurved );

@@ -64,7 +64,6 @@ void GdtfEmptyModelTest::WriteFile(VectorworksMVR::IGdtfFixturePtr& fixture)
         IGdtfGeometryPtr geometry4;
         __checkVCOM(geometry1->CreateGeometry(EGdtfObjectType::eGdtfGeometryDisplay, "Geometry4", filledModel, STransformMatrix(), &geometry4));
         __checkVCOM(geometry4->SetTexture("Texture.png"));
-        __checkVCOM(geometry4->SetAspectRatio( 1.78 ));
         __checkVCOM(geometry4->SetWidth(4700));
         __checkVCOM(geometry4->SetHeight(2700));
         __checkVCOM(geometry4->SetIsCurved(false));
@@ -214,10 +213,6 @@ void GdtfEmptyModelTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
         checkifEqual("Second Level Geometry Name", geometry4->GetName(), "Geometry4");
 
         checkifEqual("Check Texture", geometry4->GetTexture(), "Texture.png");
-
-		double aspectRatio = 0.0;
-        geometry4->GetAspectRatio( aspectRatio );
-        checkifEqual("Check Aspect Ratio", aspectRatio, 1.78);
 
 		size_t width = 0;
         geometry4->GetWidth( width );

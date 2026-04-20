@@ -2906,14 +2906,12 @@ GdtfGeometryDisplay::GdtfGeometryDisplay(GdtfGeometry* parent)
 					:GdtfGeometry(parent)
 {
 	fTexture = "";
-	fAspectRatio = 0;
 }
 
 GdtfGeometryDisplay::GdtfGeometryDisplay(const TXString& name, GdtfModelPtr refToModel,const VWTransformMatrix& ma, GdtfGeometry* parent) 
 					:GdtfGeometry(name,refToModel,ma, parent)
 {
 	fTexture = "";
-	fAspectRatio = 0;
 }
 
 GdtfGeometryDisplay::~GdtfGeometryDisplay()
@@ -2928,16 +2926,6 @@ const TXString& GdtfGeometryDisplay::GetTexture()
 void GdtfGeometryDisplay::SetTexture(const TXString& texture) 
 {
 	fTexture = texture;
-}
-
-const double& GdtfGeometryDisplay::GetAspectRatio() const
-{
-	return fAspectRatio;
-}
-
-void GdtfGeometryDisplay::SetAspectRatio( const double& aspectRatio )
-{
-	fAspectRatio = aspectRatio;
 }
 
 const size_t& GdtfGeometryDisplay::GetWidth() const
@@ -2976,7 +2964,6 @@ void GdtfGeometryDisplay::OnPrintToFile(IXMLFileNodePtr pNode)
 	// Call the parent
 	GdtfGeometry::OnPrintToFile(pNode);
 	pNode->SetNodeAttributeValue( XML_GDTF_DisplayTexture,		fTexture );
-	pNode->SetNodeAttributeValue( XML_GDTF_DisplayAspectRatio, 	GdtfConverter::ConvertDouble(fAspectRatio) );
 	pNode->SetNodeAttributeValue( XML_GDTF_DisplayWidth,		GdtfConverter::ConvertInteger(fWidth) );
 	pNode->SetNodeAttributeValue( XML_GDTF_DisplayHeight,		GdtfConverter::ConvertInteger( fHeight ) );
 	pNode->SetNodeAttributeValue( XML_GDTF_DisplayIsCurved,		fIsCurved ? "true" : "false" );
@@ -2998,7 +2985,6 @@ void GdtfGeometryDisplay::OnReadFromNode(const IXMLFileNodePtr& pNode)
 
 	GdtfConverter::ConvertInteger(	width,			pNode,		fWidth );
 	GdtfConverter::ConvertInteger(	height,			pNode,		fHeight );
-	GdtfConverter::ConvertDouble(	aspectRatio,	pNode,		fAspectRatio );
 	GdtfConverter::ConvertBool(		isCurved,		pNode,		fIsCurved );
 }
 
