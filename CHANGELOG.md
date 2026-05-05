@@ -1,3 +1,22 @@
+# v9.0.16 (Tue May 05 2026)
+
+#### 🐛 Bug Fix
+
+- GDTF reading optimization for big files. [#146](https://github.com/mvrdevelopment/libMVRgdtf/pull/146) ([@VzhelevVector](https://github.com/VzhelevVector))
+- another fix for mac build [#145](https://github.com/mvrdevelopment/libMVRgdtf/pull/145) ([@AndriiVoitenko](https://github.com/AndriiVoitenko))
+- macOS build failure with libc++ 19 [#144](https://github.com/mvrdevelopment/libMVRgdtf/pull/144) ([@AndriiVoitenko](https://github.com/AndriiVoitenko))
+- Fix #123 performance bottlenecks [#125](https://github.com/mvrdevelopment/libMVRgdtf/pull/125) ([@adragnevVW](https://github.com/adragnevVW))
+- Fixing Address sanitizer issues [#142](https://github.com/mvrdevelopment/libMVRgdtf/pull/142) ([@adragnevVW](https://github.com/adragnevVW))
+- Fix-GDTF-creates-empty-folder [#139](https://github.com/mvrdevelopment/libMVRgdtf/pull/139) ([@adragnevVW](https://github.com/adragnevVW))
+
+#### Authors: 3
+
+- [@AndriiVoitenko](https://github.com/AndriiVoitenko)
+- Alesandro Dragnev ([@adragnevVW](https://github.com/adragnevVW))
+- Vladislav Zhelev ([@VzhelevVector](https://github.com/VzhelevVector))
+
+---
+
 # v9.0.15 (Tue Dec 16 2025)
 
 #### 🐛 Bug Fix
