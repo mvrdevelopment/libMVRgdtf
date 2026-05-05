@@ -4,6 +4,7 @@
 #include "GdtfError.h"
 #include "XmlFileHelper.h"
 #include <algorithm>
+#include <unordered_set>
 #include "GDTFManager.h"
 
 //------------------------------------------------------------------------------------
@@ -70,38 +71,37 @@ const TXString& GdtfParsingError::GetObjectName() const
 
 /*static*/ void GdtfParsingError::CheckNodeAttributes(IXMLFileNodePtr pNode, const TXStringArray& needed, const TXStringArray& optional) 
 {
-   	TXStringArray nodeAttributes;
-	pNode->GetNodeAttributes(nodeAttributes);    
+    TXStringArray rawAttributes;
+    pNode->GetNodeAttributes(rawAttributes);
 
-    // Check required Attributes
-    for(const TXString &attribute : needed)
+    // Load all actual node attributes into a set for O(1) lookup and removal
+    std::unordered_set<TXString, TXStringNoCaseHash> nodeAttributes(rawAttributes.begin(), rawAttributes.end());
+
+    // Check required attributes: report error if missing, remove from set if found
+    for (const TXString& attribute : needed)
     {
-        if (std::find(nodeAttributes.begin(), nodeAttributes.end(), attribute) != nodeAttributes.end())
+        if (!nodeAttributes.erase(attribute))
         {
-            nodeAttributes.erase(std::find(nodeAttributes.begin(), nodeAttributes.end(), attribute));
-        }
-        else
-        {
-            GdtfParsingError error (GdtfDefines::EGdtfParsingError::eNodeMissingMandatoryAttribute, pNode);
+            GdtfParsingError error(GdtfDefines::EGdtfParsingError::eNodeMissingMandatoryAttribute, pNode);
             error.fErrorMessage = attribute;
             SceneData::GdtfFixture::AddError(error);
         }
     }
-    
-    // Check optional Attributes
-    for(const TXString &attribute : optional)
+
+    // Remove optional attributes from the set (no error if missing)
+    for (const TXString& attribute : optional)
     {
-        if (std::find(nodeAttributes.begin(), nodeAttributes.end(), attribute) != nodeAttributes.end())
+        nodeAttributes.erase(attribute);
+    }
+
+    // Any attributes still remaining in the set are unexpected (iterate rawAttributes to preserve XML order)
+    for (const TXString& attribute : rawAttributes)
+    {
+        if (nodeAttributes.count(attribute))
         {
-            nodeAttributes.erase(std::find(nodeAttributes.begin(), nodeAttributes.end(), attribute));
+            GdtfParsingError error(GdtfDefines::EGdtfParsingError::eNodeWrongAttribute, pNode);
+            error.fErrorMessage = attribute;
+            SceneData::GdtfFixture::AddError(error);
         }
     }
-
-    for (const TXString& attribute : nodeAttributes)
-    {
-        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eNodeWrongAttribute, pNode);
-        error.fErrorMessage = attribute;
-        SceneData::GdtfFixture::AddError(error);
-    }
-
 }
