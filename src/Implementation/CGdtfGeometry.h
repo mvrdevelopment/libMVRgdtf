@@ -65,7 +65,14 @@ namespace VectorworksMVR
 
         // Display
 		virtual MvrString VCOM_CALLTYPE		GetTexture();
-		virtual VCOMError VCOM_CALLTYPE		SetTexture(MvrString texture);
+        virtual VCOMError VCOM_CALLTYPE		GetWidth( size_t& width );
+        virtual VCOMError VCOM_CALLTYPE		GetHeight( size_t& height );
+        virtual VCOMError VCOM_CALLTYPE     GetIsCurved( bool& isCurved );
+
+        virtual VCOMError VCOM_CALLTYPE		SetTexture(MvrString texture);
+		virtual VCOMError VCOM_CALLTYPE		SetWidth( size_t width );
+		virtual VCOMError VCOM_CALLTYPE		SetHeight( size_t height );
+        virtual VCOMError VCOM_CALLTYPE     SetIsCurved( bool isCurved );
 
         // Helpers
         virtual VCOMError VCOM_CALLTYPE     GetCountLinkedDmxChannel(size_t& count, IGdtfDmxMode * forMode);

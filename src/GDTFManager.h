@@ -963,10 +963,23 @@ namespace SceneData
 												~GdtfGeometryDisplay();
 	private:
 		TXString								fTexture;
+		size_t									fWidth;
+		size_t									fHeight;
+		bool 									fIsCurved;
+
 	public:
 		virtual EGdtfObjectType					GetObjectType();
 		const TXString&							GetTexture();
+		void									GetIsCurved( bool& curvedRadius ) const;
+		const size_t&							GetHeight() const;
+		const size_t&							GetWidth() const;
+
 		void									SetTexture(const TXString& texture);
+		void									SetWidth( size_t width );
+		void 									SetHeight( size_t height );
+		void									SetIsCurved( const bool& isCurved );
+
+
 	protected:
 		virtual	TXString						GetNodeName();
 		virtual	void							OnPrintToFile(IXMLFileNodePtr pNode);

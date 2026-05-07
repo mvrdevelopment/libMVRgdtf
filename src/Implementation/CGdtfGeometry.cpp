@@ -983,6 +983,90 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetTexture(MvrStrin
 	return kVCOMError_NoError;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetWidth(size_t& width) 
+{
+	if(!fGeometry) return kVCOMError_Failed;
+
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryDisplay) return kVCOMError_Failed;
+
+	SceneData::GdtfGeometryDisplayPtr display = static_cast<SceneData::GdtfGeometryDisplayPtr>(fGeometry);
+	if(!display) return kVCOMError_Failed;
+
+	width = display->GetWidth();
+
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetWidth(size_t width)
+{
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryDisplay) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometryDisplayPtr display = static_cast<SceneData::GdtfGeometryDisplayPtr>(fGeometry);
+	if(!display) return kVCOMError_Failed;
+
+	display->SetWidth(width);
+
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetHeight(size_t& height) 
+{
+	if(!fGeometry) return kVCOMError_Failed;
+
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryDisplay) return kVCOMError_Failed;
+
+	SceneData::GdtfGeometryDisplayPtr display = static_cast<SceneData::GdtfGeometryDisplayPtr>(fGeometry);
+	if(!display) return kVCOMError_Failed;
+
+	height = display->GetHeight();
+
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetHeight(size_t height)
+{
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryDisplay) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometryDisplayPtr display = static_cast<SceneData::GdtfGeometryDisplayPtr>(fGeometry);
+	if(!display) return kVCOMError_Failed;
+
+	display->SetHeight(height);
+
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetIsCurved(bool& isCurved) 
+{
+	if(!fGeometry) return kVCOMError_Failed;
+
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryDisplay) return kVCOMError_Failed;
+
+	SceneData::GdtfGeometryDisplayPtr display = static_cast<SceneData::GdtfGeometryDisplayPtr>(fGeometry);
+	if(!display) return kVCOMError_Failed;
+
+	display->GetIsCurved(isCurved);
+
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetIsCurved(bool isCurved)
+{
+	if (!fGeometry) return kVCOMError_NotInitialized;
+
+	if( fGeometryType != EGdtfObjectType::eGdtfGeometryDisplay) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometryDisplayPtr display = static_cast<SceneData::GdtfGeometryDisplayPtr>(fGeometry);
+	if(!display) return kVCOMError_Failed;
+
+	display->SetIsCurved(isCurved);
+
+	return kVCOMError_NoError;
+}
+
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetCountLinkedDmxChannel(size_t& count, IGdtfDmxMode * forMode)
 {
 	// Get Count
