@@ -2796,6 +2796,35 @@ void SceneDataProjectorObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDa
 		
 }
 
+// ----------------------------------------------------------------------------------------------------------------------------------
+// SceneDataListeningPlaneObj
+SceneDataListeningPlaneObj::SceneDataListeningPlaneObj(const SceneDataGUID& guid) : SceneDataGDTFSpecObj(guid)
+{
+}
+
+SceneDataListeningPlaneObj::~SceneDataListeningPlaneObj()
+{
+}
+
+TXString SceneDataListeningPlaneObj::GetNodeName()
+{
+	return TXString(XML_Val_ListeningPlaneObjectNodeName);
+}
+
+ESceneDataObjectType SceneDataListeningPlaneObj::GetObjectType()
+{
+	return ESceneDataObjectType::eListeningPlane;
+}
+
+void SceneDataListeningPlaneObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
+{
+	SceneDataObjWithMatrix::OnPrintToFile( pNode, exchange );
+}
+
+void SceneDataListeningPlaneObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
+{
+	SceneDataObjWithMatrix::OnReadFromNode( pNode, exchange );
+}
 
 // ----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataSymbolObj
@@ -3442,6 +3471,32 @@ SceneDataProjectorObjPtr SceneDataExchange::ReadProjector(const SceneDataGUID& g
 	newProjectorObj->ReadFromNode(node, this);
 	
 	return newProjectorObj;
+}
+
+SceneDataListeningPlaneObjPtr SceneDataExchange::CreateListeningPlane(const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name, SceneDataGroupObjPtr addToContainer)
+{
+	SceneDataListeningPlaneObjPtr newListeningPlaneObj = new SceneDataListeningPlaneObj(guid);
+	addToContainer->AddObject(newListeningPlaneObj);
+
+	newListeningPlaneObj->setName(name);
+	newListeningPlaneObj->SetTransformMatrix(offset);
+
+	return newListeningPlaneObj;
+}
+
+SceneDataListeningPlaneObjPtr SceneDataExchange::ReadListeningPlane(const SceneDataGUID& guid,const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer)
+{
+	if ( CheckAbort() ) return nullptr;
+	//----------------------------------------------------------------------------
+	// Create new Object
+	SceneDataListeningPlaneObjPtr newListeningPlaneObj = new SceneDataListeningPlaneObj(guid);
+	addToContainer->AddObject(newListeningPlaneObj);
+
+	//----------------------------------------------------------------------------
+	// Read
+	newListeningPlaneObj->ReadFromNode(node, this);
+
+	return newListeningPlaneObj;
 }
 
 SceneDataSymbolObjPtr SceneDataExchange::CreateSymbol(const SceneDataGUID& guid, const VWTransformMatrix& offset, SceneDataSymDefObjPtr symDef)
