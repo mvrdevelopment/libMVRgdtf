@@ -327,6 +327,7 @@ namespace VectorworksMVR
 		Fixture,
 		Projector,
 		Support,
+		ListeningPlane
 	};
 	
 	class DYNAMIC_ATTRIBUTE ISceneObj : public IVWUnknown
