@@ -2798,7 +2798,7 @@ void SceneDataProjectorObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDa
 
 // ----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataListeningPlaneObj
-SceneDataListeningPlaneObj::SceneDataListeningPlaneObj(const SceneDataGUID& guid) : SceneDataGDTFSpecObj(guid)
+SceneDataListeningPlaneObj::SceneDataListeningPlaneObj(const SceneDataGUID& guid) : SceneDataGroupObj(guid)
 {
 }
 
@@ -3487,13 +3487,10 @@ SceneDataListeningPlaneObjPtr SceneDataExchange::CreateListeningPlane(const Scen
 SceneDataListeningPlaneObjPtr SceneDataExchange::ReadListeningPlane(const SceneDataGUID& guid,const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer)
 {
 	if ( CheckAbort() ) return nullptr;
-	//----------------------------------------------------------------------------
-	// Create new Object
+
 	SceneDataListeningPlaneObjPtr newListeningPlaneObj = new SceneDataListeningPlaneObj(guid);
 	addToContainer->AddObject(newListeningPlaneObj);
 
-	//----------------------------------------------------------------------------
-	// Read
 	newListeningPlaneObj->ReadFromNode(node, this);
 
 	return newListeningPlaneObj;
@@ -4122,14 +4119,15 @@ void SceneDataExchange::ReadChildObjs(const IXMLFileNodePtr& node, SceneDataGrou
 				{
 					SceneDataObjWithMatrixPtr obj = nullptr;
 					
-					if		( nodeName == XML_Val_FixtureNodeName)				{ obj = ReadFixture(		SceneDataGUID(groupUuid),objNode, addToContainer); }
-					else if	( nodeName == XML_Val_SceneObjectNodeName)			{ obj = ReadSceneryObject(	SceneDataGUID(groupUuid),objNode, addToContainer); }
-					else if	( nodeName == XML_Val_FocusPointObjectNodeName)		{ obj = ReadFocusPoint(		SceneDataGUID(groupUuid),objNode, addToContainer); }
-					else if	( nodeName == XML_Val_TrussObjectNodeName)			{ obj = ReadTruss(			SceneDataGUID(groupUuid),objNode, addToContainer); }
-					else if	( nodeName == XML_Val_VideoScreenObjectNodeName)	{ obj = ReadVideoScreen(	SceneDataGUID(groupUuid),objNode, addToContainer); }
-					else if	( nodeName == XML_Val_SupportObjectNodeName)		{ obj = ReadSupport(		SceneDataGUID(groupUuid),objNode, addToContainer); }
-					else if	( nodeName == XML_Val_ProjectorObjectNodeName)		{ obj = ReadProjector(		SceneDataGUID(groupUuid),objNode, addToContainer); }
-					else if ( nodeName == XML_Val_GroupNodeName)				{ obj = ProcessGroup(objNode, addToContainer); }
+					if		( nodeName == XML_Val_FixtureNodeName)					{ obj = ReadFixture(		SceneDataGUID(groupUuid),	objNode,	addToContainer);	}
+					else if	( nodeName == XML_Val_SceneObjectNodeName)				{ obj = ReadSceneryObject(	SceneDataGUID(groupUuid),	objNode,	addToContainer);	}
+					else if	( nodeName == XML_Val_FocusPointObjectNodeName)			{ obj = ReadFocusPoint(		SceneDataGUID(groupUuid),	objNode,	addToContainer);	}
+					else if	( nodeName == XML_Val_TrussObjectNodeName)				{ obj = ReadTruss(			SceneDataGUID(groupUuid),	objNode,	addToContainer);	}
+					else if	( nodeName == XML_Val_VideoScreenObjectNodeName)		{ obj = ReadVideoScreen(	SceneDataGUID(groupUuid),	objNode,	addToContainer);	}
+					else if	( nodeName == XML_Val_SupportObjectNodeName)			{ obj = ReadSupport(		SceneDataGUID(groupUuid),	objNode,	addToContainer);	}
+					else if	( nodeName == XML_Val_ProjectorObjectNodeName)			{ obj = ReadProjector(		SceneDataGUID(groupUuid),	objNode,	addToContainer);	}
+					else if ( nodeName == XML_Val_ListeningPlaneObjectNodeName )	{ obj = ReadListeningPlane( SceneDataGUID(groupUuid),	objNode,	addToContainer);	}
+					else if ( nodeName == XML_Val_GroupNodeName)					{ obj = ProcessGroup(objNode, addToContainer);											}
 					     
                     auto grp = dynamic_cast<SceneDataGroupObjPtr>(obj);
                     if (grp)

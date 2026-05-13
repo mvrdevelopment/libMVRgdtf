@@ -2152,15 +2152,16 @@ void VectorworksMVR::CSceneObjImpl::SetPointer(SceneData::SceneDataObjWithMatrix
 	
 	switch (pointer->GetObjectType())
 	{
-		case SceneData::eLayer:			fType = ESceneObjType::Layer;		break;
-		case SceneData::eGroup:			fType = ESceneObjType::Group;		break;
-		case SceneData::eTruss:			fType = ESceneObjType::Truss;		break;
-		case SceneData::eSupport:		fType = ESceneObjType::Support;		break;
-		case SceneData::eFixture:		fType = ESceneObjType::Fixture;		break;
-		case SceneData::eFocusPoint:	fType = ESceneObjType::FocusPoint;	break;
-		case SceneData::eSceneObject:	fType = ESceneObjType::SceneObj;	break;
-		case SceneData::eVideoScreen:	fType = ESceneObjType::VideoScreen; break;
-		case SceneData::eProjector:		fType = ESceneObjType::Projector; 	break;
+		case SceneData::eLayer:				fType = ESceneObjType::Layer;			break;
+		case SceneData::eGroup:				fType = ESceneObjType::Group;			break;
+		case SceneData::eTruss:				fType = ESceneObjType::Truss;			break;
+		case SceneData::eSupport:			fType = ESceneObjType::Support;			break;
+		case SceneData::eFixture:			fType = ESceneObjType::Fixture;			break;
+		case SceneData::eFocusPoint:		fType = ESceneObjType::FocusPoint;		break;
+		case SceneData::eSceneObject:		fType = ESceneObjType::SceneObj;		break;
+		case SceneData::eVideoScreen:		fType = ESceneObjType::VideoScreen;		break;
+		case SceneData::eProjector:			fType = ESceneObjType::Projector; 		break;
+		case SceneData::eListeningPlane:	fType = ESceneObjType::ListeningPlane; 	break;
 			
 		default:
 			DSTOP((kEveryone, "Unexpected input!"));
