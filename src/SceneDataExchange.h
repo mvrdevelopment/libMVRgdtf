@@ -940,16 +940,17 @@ namespace SceneData
 	
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataListeningPlaneObj
-	class SceneDataListeningPlaneObj : public SceneDataGDTFSpecObj
+	class SceneDataListeningPlaneObj : public SceneDataGroupObj
 	{
 
 	public:
-		SceneDataListeningPlaneObj(const SceneDataGUID& guid);
+											SceneDataListeningPlaneObj(const SceneDataGUID& guid);
 		virtual								~SceneDataListeningPlaneObj();
 
 	private:
 		virtual	TXString					GetNodeName();
 		virtual ESceneDataObjectType		GetObjectType();
+
 		virtual void						OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);
 		virtual	void						OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange);
 
