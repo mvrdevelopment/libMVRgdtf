@@ -405,6 +405,10 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		SetVideoScreenSource(MvrString value, MvrString linkedGeometry, GdtfDefines::ESourceType) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetVideoScreenSource(ISource** outSource) = 0;
 
+		// Listening Plane
+		virtual VCOMError VCOM_CALLTYPE		SetAudioDescriptionFile(MvrString value) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetAudioDescriptionFile(MvrString& outValue) = 0;
+
 		// Projector
 		virtual VCOMError VCOM_CALLTYPE		SetProjectorSource(MvrString value, MvrString linkedGeometry, GdtfDefines::ESourceType) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetProjectorSource(ISource** outSource) = 0;
