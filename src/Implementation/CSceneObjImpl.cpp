@@ -1984,6 +1984,46 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetVideoScreenSource(IS
 	return kVCOMError_NoError;
 }
 
+// ------------------------------------------------------------------------------------------------------------------------------------------
+// Listening Plane
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetAudioDescriptionFile(MvrString fileName)
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+
+	// Check the type is right
+	ASSERTN(kEveryone,fType == ESceneObjType::ListeningPlane);
+	if( fType != ESceneObjType::ListeningPlane) return kVCOMError_Failed;
+
+	// Try to cast
+	SceneData::SceneDataListeningPlaneObjPtr listeningPlane = static_cast<SceneData::SceneDataListeningPlaneObjPtr>(fPtr);
+	if( ! listeningPlane) return kVCOMError_Failed;
+
+	listeningPlane->SetAudioDescriptionFile(fileName);
+
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetAudioDescriptionFile( MvrString& outFileName )
+{
+	// Check if this is initialized
+	ASSERTN( kEveryone, fPtr );
+	if ( !fPtr ) return kVCOMError_NotInitialized;
+
+	// Check the type is right
+	ASSERTN( kEveryone, fType == ESceneObjType::ListeningPlane );
+	if ( fType != ESceneObjType::ListeningPlane ) return kVCOMError_Failed;
+
+	// Try to cast
+	SceneData::SceneDataListeningPlaneObjPtr listeningPlane = static_cast<SceneData::SceneDataListeningPlaneObjPtr>( fPtr );
+	if ( !listeningPlane ) return kVCOMError_Failed;
+
+	outFileName = listeningPlane->GetAudioDescriptionFile();
+
+	return kVCOMError_NoError;
+}
+
 //------------------------------------------------------------------------------------------------------------------------------------------
 // Projector
 VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetProjectorSource(MvrString value, MvrString linkedGeometry, GdtfDefines::ESourceType type)

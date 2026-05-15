@@ -947,7 +947,12 @@ namespace SceneData
 											SceneDataListeningPlaneObj(const SceneDataGUID& guid);
 		virtual								~SceneDataListeningPlaneObj();
 
+		virtual const TXString&             GetAudioDescriptionFile() const;
+		virtual void						SetAudioDescriptionFile(const TXString& value);
+
 	private:
+		TXString  					        fAudioDescriptionFile;
+
 		virtual	TXString					GetNodeName();
 		virtual ESceneDataObjectType		GetObjectType();
 

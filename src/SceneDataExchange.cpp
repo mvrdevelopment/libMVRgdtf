@@ -2806,6 +2806,16 @@ SceneDataListeningPlaneObj::~SceneDataListeningPlaneObj()
 {
 }
 
+const TXString& SceneDataListeningPlaneObj::GetAudioDescriptionFile() const
+{
+	return fAudioDescriptionFile;
+}
+
+void SceneDataListeningPlaneObj::SetAudioDescriptionFile( const TXString& value )
+{
+	fAudioDescriptionFile = value;
+}
+
 TXString SceneDataListeningPlaneObj::GetNodeName()
 {
 	return TXString(XML_Val_ListeningPlaneObjectNodeName);
@@ -2819,11 +2829,15 @@ ESceneDataObjectType SceneDataListeningPlaneObj::GetObjectType()
 void SceneDataListeningPlaneObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
 {
 	SceneDataObjWithMatrix::OnPrintToFile( pNode, exchange );
+
+	pNode->SetNodeAttributeValue("AudioDescriptionFile", fAudioDescriptionFile);
 }
 
 void SceneDataListeningPlaneObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
 {
 	SceneDataObjWithMatrix::OnReadFromNode( pNode, exchange );
+
+	pNode->GetNodeAttributeValue("AudioDescriptionFile", fAudioDescriptionFile);
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------------
