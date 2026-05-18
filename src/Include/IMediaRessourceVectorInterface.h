@@ -861,7 +861,14 @@ namespace VectorworksMVR
 
 		// Display
 		virtual MvrString VCOM_CALLTYPE		GetTexture() = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetWidth( size_t& width ) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetHeight( size_t& height ) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetIsCurved( bool& isCurved ) = 0;
+
 		virtual VCOMError VCOM_CALLTYPE		SetTexture(MvrString texture) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetWidth( size_t width ) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetHeight( size_t height ) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetIsCurved( bool isCurved ) = 0;
 
 		// GDTF 1.2
 		// Lamp

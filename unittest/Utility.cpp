@@ -53,6 +53,7 @@ bool UnitTestUtil::GetFolderAppDataLocal(std::string& outPath)
 	if(!result) return false;
     std::wstring ws(buffer);
 	outPath = std::string(ws.begin(), ws.end());
+	std::cout << "AppData Local Folder: " << outPath << std::endl;
     
 #elif _LINUX
 	// LINUX_IMPLEMENTATION - done
