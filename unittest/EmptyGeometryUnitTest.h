@@ -7,16 +7,16 @@
 #include "GdtfUnittestHandler.h"
 
 
-class GdtfEmptyModelTest : public GdtfUnitTest
+class GdtfEmptyModelTest : public Unittest
 {
 public:
     GdtfEmptyModelTest(const std::string& currentDir);
     virtual ~GdtfEmptyModelTest();
 protected:
-    std::string virtual GetUnitTestName() override;
+    bool virtual ExecuteTest();
 
 private:
-    void virtual WriteFile(VectorworksMVR::IGdtfFixturePtr& fixtureDuringRead) override;
-    void virtual ReadFile(VectorworksMVR::IGdtfFixturePtr& fixtureDuringWrite) override;
+    void WriteFile(VectorworksMVR::IGdtfFixturePtr& fixtureDuringRead);
+    void ReadFile(VectorworksMVR::IGdtfFixturePtr& fixtureDuringWrite);
 
 };
