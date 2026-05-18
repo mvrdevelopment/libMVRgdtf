@@ -245,6 +245,8 @@
 #define XML_Val_ProjectorObjectProjection       "Projection"
 #define XML_Val_ProjectorObjectScaleHandling    "ScaleHandling"
 
+#define XML_Val_ListeningPlaneObjectNodeName	"ListeningPlane"
+
 #define XML_Val_SymbolObjectNodeName		"Symbol"
 #define XML_Val_GuidSymdefAttrName			"symdef"
 

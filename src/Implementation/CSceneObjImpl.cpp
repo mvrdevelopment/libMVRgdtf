@@ -1984,6 +1984,46 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetVideoScreenSource(IS
 	return kVCOMError_NoError;
 }
 
+// ------------------------------------------------------------------------------------------------------------------------------------------
+// Listening Plane
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetAudioDescriptionFile(MvrString fileName)
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+
+	// Check the type is right
+	ASSERTN(kEveryone,fType == ESceneObjType::ListeningPlane);
+	if( fType != ESceneObjType::ListeningPlane) return kVCOMError_Failed;
+
+	// Try to cast
+	SceneData::SceneDataListeningPlaneObjPtr listeningPlane = static_cast<SceneData::SceneDataListeningPlaneObjPtr>(fPtr);
+	if( ! listeningPlane) return kVCOMError_Failed;
+
+	listeningPlane->SetAudioDescriptionFile(fileName);
+
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetAudioDescriptionFile( MvrString& outFileName )
+{
+	// Check if this is initialized
+	ASSERTN( kEveryone, fPtr );
+	if ( !fPtr ) return kVCOMError_NotInitialized;
+
+	// Check the type is right
+	ASSERTN( kEveryone, fType == ESceneObjType::ListeningPlane );
+	if ( fType != ESceneObjType::ListeningPlane ) return kVCOMError_Failed;
+
+	// Try to cast
+	SceneData::SceneDataListeningPlaneObjPtr listeningPlane = static_cast<SceneData::SceneDataListeningPlaneObjPtr>( fPtr );
+	if ( !listeningPlane ) return kVCOMError_Failed;
+
+	outFileName = listeningPlane->GetAudioDescriptionFile();
+
+	return kVCOMError_NoError;
+}
+
 //------------------------------------------------------------------------------------------------------------------------------------------
 // Projector
 VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetProjectorSource(MvrString value, MvrString linkedGeometry, GdtfDefines::ESourceType type)
@@ -2152,15 +2192,16 @@ void VectorworksMVR::CSceneObjImpl::SetPointer(SceneData::SceneDataObjWithMatrix
 	
 	switch (pointer->GetObjectType())
 	{
-		case SceneData::eLayer:			fType = ESceneObjType::Layer;		break;
-		case SceneData::eGroup:			fType = ESceneObjType::Group;		break;
-		case SceneData::eTruss:			fType = ESceneObjType::Truss;		break;
-		case SceneData::eSupport:		fType = ESceneObjType::Support;		break;
-		case SceneData::eFixture:		fType = ESceneObjType::Fixture;		break;
-		case SceneData::eFocusPoint:	fType = ESceneObjType::FocusPoint;	break;
-		case SceneData::eSceneObject:	fType = ESceneObjType::SceneObj;	break;
-		case SceneData::eVideoScreen:	fType = ESceneObjType::VideoScreen; break;
-		case SceneData::eProjector:		fType = ESceneObjType::Projector; 	break;
+		case SceneData::eLayer:				fType = ESceneObjType::Layer;			break;
+		case SceneData::eGroup:				fType = ESceneObjType::Group;			break;
+		case SceneData::eTruss:				fType = ESceneObjType::Truss;			break;
+		case SceneData::eSupport:			fType = ESceneObjType::Support;			break;
+		case SceneData::eFixture:			fType = ESceneObjType::Fixture;			break;
+		case SceneData::eFocusPoint:		fType = ESceneObjType::FocusPoint;		break;
+		case SceneData::eSceneObject:		fType = ESceneObjType::SceneObj;		break;
+		case SceneData::eVideoScreen:		fType = ESceneObjType::VideoScreen;		break;
+		case SceneData::eProjector:			fType = ESceneObjType::Projector; 		break;
+		case SceneData::eListeningPlane:	fType = ESceneObjType::ListeningPlane; 	break;
 			
 		default:
 			DSTOP((kEveryone, "Unexpected input!"));

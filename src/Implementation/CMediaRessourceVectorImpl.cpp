@@ -976,6 +976,74 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateProje
 	return kVCOMError_NoError;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateListeningPlane(const MvrUUID& guid, const STransformMatrix& offset, MvrString name, ISceneObj* addToContainer, ISceneObj** outlisteningPlane)
+{
+	//---------------------------------------------------------------------------
+	// Read Container
+	CSceneObjImpl* pContainer = static_cast<CSceneObjImpl* >(addToContainer);
+
+	ASSERTN(kEveryone, pContainer != nullptr);
+	if ( ! pContainer) { return kVCOMError_NoValidContainerObj; }
+
+
+	SceneData::SceneDataObjWithMatrixPtr	obj		= nullptr;
+	ESceneObjType							type	= ESceneObjType::Layer;
+	pContainer->GetPointer(obj, type);
+
+	if( ! VectorworksMVR::MvrUtil::isContainerType(type)) { return kVCOMError_NoValidContainerObj; }	
+
+	SceneData::SceneDataGroupObjPtr group = static_cast<SceneData::SceneDataGroupObjPtr>(obj);
+
+	ASSERTN(kEveryone, group != nullptr);
+	if ( ! group) { return kVCOMError_NoValidContainerObj; }
+
+	//---------------------------------------------------------------------------
+	// Create the obj
+	VWFC::Tools::VWUUID	uuid	(guid.a,guid.b,guid.c,guid.d);
+	TXString nameStr ( name );
+
+	VWTransformMatrix ma;
+	GdtfUtil::ConvertMatrix(offset, ma);
+
+	SceneData::SceneDataListeningPlaneObjPtr ptr = fExchangeObj.CreateListeningPlane(uuid, ma, nameStr, group);
+
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CSceneObjImpl* pListeningPlane = nullptr;
+
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_SceneObject, (IVWUnknown**) & pListeningPlane)))
+	{
+		// Check Casting
+		CSceneObjImpl* pResultInterface = static_cast<CSceneObjImpl* >(pListeningPlane);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(ptr, GetExchangeObj());
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+
+	//---------------------------------------------------------------------------
+	// Check Incoming Object
+	if (*outlisteningPlane)
+	{
+		(*outlisteningPlane)->Release();
+		*outlisteningPlane		= NULL;
+	}
+
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*outlisteningPlane = pListeningPlane;
+
+	return kVCOMError_NoError;
+}
+
+
 VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::Close()
 {
 	//------------------------------------------------------------------
