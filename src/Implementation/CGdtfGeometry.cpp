@@ -2892,36 +2892,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetFrequencyMax(dou
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetAngleVertical(double& angleVertical)
-{
-	// Check Pointer
-	if(!fGeometry) return kVCOMError_NotInitialized;
-
-	// Check if it is the right type
-	if (fGeometryType != EGdtfObjectType::eGdtfGeometrySpeaker) return kVCOMError_WrongGeometryType;
-
-	SceneData::GdtfGeometrySpeakerPtr speaker = static_cast<SceneData::GdtfGeometrySpeakerPtr>(fGeometry);
-	if(!speaker) {return kVCOMError_Failed;}
-
-	angleVertical = speaker->GetAngleVertical();
-	return kVCOMError_NoError;
-}
-
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetAngleHorizontal(double& angleHorizontal)
-{
-	// Check Pointer
-	if(!fGeometry) return kVCOMError_NotInitialized;
-
-	// Check if it is the right type
-	if (fGeometryType != EGdtfObjectType::eGdtfGeometrySpeaker) return kVCOMError_WrongGeometryType;
-
-	SceneData::GdtfGeometrySpeakerPtr speaker = static_cast<SceneData::GdtfGeometrySpeakerPtr>(fGeometry);
-	if(!speaker) {return kVCOMError_Failed;}
-
-	angleHorizontal = speaker->GetAngleHorizontal();
-	return kVCOMError_NoError;
-}
-
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetMaxSPL(double& maxSPL)
 {
 	// Check Pointer
@@ -2952,6 +2922,80 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetImpedance(double
 	return kVCOMError_NoError;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetSoundAngleRotationMax(double& soundAngleRotationMax)
+{
+	// Check Pointer
+	if(!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type
+	if (fGeometryType != EGdtfObjectType::eGdtfGeometrySpeaker) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySpeakerPtr speaker = static_cast<SceneData::GdtfGeometrySpeakerPtr>(fGeometry);
+	if(!speaker) {return kVCOMError_Failed;}
+
+	soundAngleRotationMax = speaker->GetSoundAngleRotationMax();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetVerticalCoverageUp(double& verticalCoverageUp)
+{
+	// Check Pointer
+	if(!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type
+	if (fGeometryType != EGdtfObjectType::eGdtfGeometrySpeaker) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySpeakerPtr speaker = static_cast<SceneData::GdtfGeometrySpeakerPtr>(fGeometry);
+	if(!speaker) {return kVCOMError_Failed;}
+
+	verticalCoverageUp = speaker->GetVerticalCoverageUp();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetVerticalCoverageDown(double& verticalCoverageDown)
+{
+	// Check Pointer
+	if(!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type
+	if (fGeometryType != EGdtfObjectType::eGdtfGeometrySpeaker) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySpeakerPtr speaker = static_cast<SceneData::GdtfGeometrySpeakerPtr>(fGeometry);
+	if(!speaker) {return kVCOMError_Failed;}
+
+	verticalCoverageDown = speaker->GetVerticalCoverageDown();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetHorizontalCoverageLeft(double& horizontalCoverageLeft)
+{
+	// Check Pointer
+	if(!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type
+	if (fGeometryType != EGdtfObjectType::eGdtfGeometrySpeaker) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySpeakerPtr speaker = static_cast<SceneData::GdtfGeometrySpeakerPtr>(fGeometry);
+	if(!speaker) {return kVCOMError_Failed;}
+
+	horizontalCoverageLeft = speaker->GetHorizontalCoverageLeft();
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::GetHorizontalCoverageRight(double& horizontalCoverageRight)
+{
+	// Check Pointer
+	if(!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type
+	if (fGeometryType != EGdtfObjectType::eGdtfGeometrySpeaker) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySpeakerPtr speaker = static_cast<SceneData::GdtfGeometrySpeakerPtr>(fGeometry);
+	if(!speaker) {return kVCOMError_Failed;}
+
+	horizontalCoverageRight = speaker->GetHorizontalCoverageRight();
+	return kVCOMError_NoError;
+}
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetFrequencyMin(double frequencyMin)
 {
@@ -2983,36 +3027,6 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetFrequencyMax(dou
 	return kVCOMError_NoError;
 }
 
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetAngleVertical(double angleVertical)
-{
-	// Check Pointer
-	if(!fGeometry) return kVCOMError_NotInitialized;
-
-	// Check if it is the right type	
-	if(fGeometryType != EGdtfObjectType::eGdtfGeometrySpeaker) return kVCOMError_WrongGeometryType;
-
-	SceneData::GdtfGeometrySpeakerPtr speaker = static_cast<SceneData::GdtfGeometrySpeakerPtr>(fGeometry);
-	if(!speaker) {return kVCOMError_Failed;}
-
-	speaker->SetAngleVertical(angleVertical);
-	return kVCOMError_NoError;
-}
-
-VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetAngleHorizontal(double angleHorizontal)
-{
-	// Check Pointer
-	if(!fGeometry) return kVCOMError_NotInitialized;
-
-	// Check if it is the right type	
-	if(fGeometryType != EGdtfObjectType::eGdtfGeometrySpeaker) return kVCOMError_WrongGeometryType;
-
-	SceneData::GdtfGeometrySpeakerPtr speaker = static_cast<SceneData::GdtfGeometrySpeakerPtr>(fGeometry);
-	if(!speaker) {return kVCOMError_Failed;}
-
-	speaker->SetAngleHorizontal(angleHorizontal);
-	return kVCOMError_NoError;
-}
-
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetMaxSPL(double maxSPL)
 {
 	// Check Pointer
@@ -3040,6 +3054,81 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetImpedance(double
 	if(!speaker) {return kVCOMError_Failed;}
 
 	speaker->SetImpedance(impedance);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetSoundAngleRotationMax(double soundAngleRotationMax)
+{
+	// Check Pointer
+	if(!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if(fGeometryType != EGdtfObjectType::eGdtfGeometrySpeaker) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySpeakerPtr speaker = static_cast<SceneData::GdtfGeometrySpeakerPtr>(fGeometry);
+	if(!speaker) {return kVCOMError_Failed;}
+
+	speaker->SetSoundAngleRotationMax(soundAngleRotationMax);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetVerticalCoverageUp(double verticalCoverageUp)
+{
+	// Check Pointer
+	if(!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if(fGeometryType != EGdtfObjectType::eGdtfGeometrySpeaker) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySpeakerPtr speaker = static_cast<SceneData::GdtfGeometrySpeakerPtr>(fGeometry);
+	if(!speaker) {return kVCOMError_Failed;}
+
+	speaker->SetVerticalCoverageUp(verticalCoverageUp);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetVerticalCoverageDown(double verticalCoverageDown)
+{
+	// Check Pointer
+	if(!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if(fGeometryType != EGdtfObjectType::eGdtfGeometrySpeaker) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySpeakerPtr speaker = static_cast<SceneData::GdtfGeometrySpeakerPtr>(fGeometry);
+	if(!speaker) {return kVCOMError_Failed;}
+
+	speaker->SetVerticalCoverageDown(verticalCoverageDown);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetHorizontalCoverageLeft(double horizontalCoverageLeft)
+{
+	// Check Pointer
+	if(!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if(fGeometryType != EGdtfObjectType::eGdtfGeometrySpeaker) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySpeakerPtr speaker = static_cast<SceneData::GdtfGeometrySpeakerPtr>(fGeometry);
+	if(!speaker) {return kVCOMError_Failed;}
+
+	speaker->SetHorizontalCoverageLeft(horizontalCoverageLeft);
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfGeometryImpl::SetHorizontalCoverageRight(double horizontalCoverageRight)
+{
+	// Check Pointer
+	if(!fGeometry) return kVCOMError_NotInitialized;
+
+	// Check if it is the right type	
+	if(fGeometryType != EGdtfObjectType::eGdtfGeometrySpeaker) return kVCOMError_WrongGeometryType;
+
+	SceneData::GdtfGeometrySpeakerPtr speaker = static_cast<SceneData::GdtfGeometrySpeakerPtr>(fGeometry);
+	if(!speaker) {return kVCOMError_Failed;}
+
+	speaker->SetHorizontalCoverageRight(horizontalCoverageRight);
 	return kVCOMError_NoError;
 }
 

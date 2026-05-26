@@ -194,17 +194,23 @@ namespace VectorworksMVR
         // Speaker
         virtual VCOMError VCOM_CALLTYPE		GetFrequencyMin(double& frequencyMin);
         virtual VCOMError VCOM_CALLTYPE		GetFrequencyMax(double& frequencyMax);
-        virtual VCOMError VCOM_CALLTYPE		GetAngleVertical(double& angleVertical);
-        virtual VCOMError VCOM_CALLTYPE		GetAngleHorizontal(double& angleHorizontal);
         virtual VCOMError VCOM_CALLTYPE		GetMaxSPL(double& maxSPL);
         virtual VCOMError VCOM_CALLTYPE		GetImpedance(double& impedance);
+        virtual VCOMError VCOM_CALLTYPE		GetSoundAngleRotationMax(double& soundAngleRotationMax);
+        virtual VCOMError VCOM_CALLTYPE		GetVerticalCoverageUp(double& verticalCoverageUp);
+        virtual VCOMError VCOM_CALLTYPE		GetVerticalCoverageDown(double& verticalCoverageDown);
+        virtual VCOMError VCOM_CALLTYPE		GetHorizontalCoverageLeft(double& horizontalCoverageLeft);
+        virtual VCOMError VCOM_CALLTYPE		GetHorizontalCoverageRight(double& horizontalCoverageRight);
 
         virtual VCOMError VCOM_CALLTYPE		SetFrequencyMin(double frequencyMin);
         virtual VCOMError VCOM_CALLTYPE		SetFrequencyMax(double frequencyMax);
-        virtual VCOMError VCOM_CALLTYPE		SetAngleVertical(double angleVertical);
-        virtual VCOMError VCOM_CALLTYPE		SetAngleHorizontal(double angleHorizontal);
         virtual VCOMError VCOM_CALLTYPE		SetMaxSPL(double maxSPL);
         virtual VCOMError VCOM_CALLTYPE		SetImpedance(double impedance);
+        virtual VCOMError VCOM_CALLTYPE		SetSoundAngleRotationMax(double soundAngleRotationMax);
+        virtual VCOMError VCOM_CALLTYPE		SetVerticalCoverageUp(double verticalCoverageUp);
+        virtual VCOMError VCOM_CALLTYPE		SetVerticalCoverageDown(double verticalCoverageDown);
+        virtual VCOMError VCOM_CALLTYPE		SetHorizontalCoverageLeft(double horizontalCoverageLeft);
+        virtual VCOMError VCOM_CALLTYPE		SetHorizontalCoverageRight(double horizontalCoverageRight);
 
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr);
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject();

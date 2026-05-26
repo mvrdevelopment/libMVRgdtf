@@ -156,10 +156,13 @@ void GdtfEmptyModelTest::WriteFile(VectorworksMVR::IGdtfFixturePtr& fixture)
         __checkVCOM(geometry1->CreateGeometry(EGdtfObjectType::eGdtfGeometrySpeaker, "Geometry13 Speaker", filledModel, STransformMatrix(), &geometry13));
         __checkVCOM(geometry13->SetFrequencyMin(1.1));
         __checkVCOM(geometry13->SetFrequencyMax(1.2));
-        __checkVCOM(geometry13->SetAngleVertical(1.3));
-        __checkVCOM(geometry13->SetAngleHorizontal(1.4));
         __checkVCOM(geometry13->SetMaxSPL(1.5));
         __checkVCOM(geometry13->SetImpedance(1.6));
+        __checkVCOM(geometry13->SetSoundAngleRotationMax(1.7));
+        __checkVCOM(geometry13->SetVerticalCoverageUp(1.8));
+        __checkVCOM(geometry13->SetVerticalCoverageDown(1.9));
+        __checkVCOM(geometry13->SetHorizontalCoverageLeft(2.0));
+        __checkVCOM(geometry13->SetHorizontalCoverageRight(2.1));
     }
 
 }
@@ -491,14 +494,6 @@ void GdtfEmptyModelTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
         __checkVCOM(geoSpeaker->GetFrequencyMax(frequencyMax));
         checkifEqual("Speaker FrequencyMax", frequencyMax, 1.2);
 
-        double angleVertical = 0.0;
-        __checkVCOM(geoSpeaker->GetAngleVertical(angleVertical));
-        checkifEqual("Speaker AngleVertical", angleVertical, 1.3);
-
-        double angleHorizontal = 0.0;
-        __checkVCOM(geoSpeaker->GetAngleHorizontal(angleHorizontal));
-        checkifEqual("Speaker AngleHorizontal", angleHorizontal, 1.4);
-
         double maxSPL = 0.0;
         __checkVCOM(geoSpeaker->GetMaxSPL(maxSPL));
         checkifEqual("Speaker MaxSPL", maxSPL, 1.5);
@@ -506,6 +501,26 @@ void GdtfEmptyModelTest::ReadFile(VectorworksMVR::IGdtfFixturePtr& fixture)
         double impedance = 0.0;
         __checkVCOM(geoSpeaker->GetImpedance(impedance));
         checkifEqual("Speaker Impedance", impedance, 1.6);
+
+        double soundAngleRotationMax = 0.0;
+        __checkVCOM(geoSpeaker->GetSoundAngleRotationMax(soundAngleRotationMax));
+        checkifEqual("Speaker SoundAngleRotationMax", soundAngleRotationMax, 1.7);
+
+        double verticalCoverageUp = 0.0;
+        __checkVCOM(geoSpeaker->GetVerticalCoverageUp(verticalCoverageUp));
+        checkifEqual("Speaker VerticalCoverageUp", verticalCoverageUp, 1.8);
+
+        double verticalCoverageDown = 0.0;
+        __checkVCOM(geoSpeaker->GetVerticalCoverageDown(verticalCoverageDown));
+        checkifEqual("Speaker VerticalCoverageDown", verticalCoverageDown, 1.9);
+
+        double horizontalCoverageLeft = 0.0;
+        __checkVCOM(geoSpeaker->GetHorizontalCoverageLeft(horizontalCoverageLeft));
+        checkifEqual("Speaker HorizontalCoverageLeft", horizontalCoverageLeft, 2.0);
+
+        double horizontalCoverageRight = 0.0;
+        __checkVCOM(geoSpeaker->GetHorizontalCoverageRight(horizontalCoverageRight));
+        checkifEqual("Speaker HorizontalCoverageRight", horizontalCoverageRight, 2.1);
     }
 
 }

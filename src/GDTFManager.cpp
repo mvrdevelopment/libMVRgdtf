@@ -4281,10 +4281,13 @@ GdtfGeometrySpeaker::GdtfGeometrySpeaker(GdtfGeometry* parent)
 {
 	fFrequencyMin		= 0;
 	fFrequencyMax		= 0;
-	fAngleVertical 		= 0;
-	fAngleHorizontal 	= 0;
 	fMaxSPL 			= 0;
 	fImpedance			= 0;
+	fSoundAngleRotationMax	= 0;
+	fVerticalCoverageUp		= 0;
+	fVerticalCoverageDown	= 0;
+	fHorizontalCoverageLeft	= 0;
+	fHorizontalCoverageRight= 0;
 }
 
 GdtfGeometrySpeaker::GdtfGeometrySpeaker(const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma, GdtfGeometry* parent) 
@@ -4292,10 +4295,13 @@ GdtfGeometrySpeaker::GdtfGeometrySpeaker(const TXString& name, GdtfModelPtr refT
 {
 	fFrequencyMin		= 0;
 	fFrequencyMax		= 0;
-	fAngleVertical 		= 0;
-	fAngleHorizontal 	= 0;
 	fMaxSPL 			= 0;
 	fImpedance			= 0;
+	fSoundAngleRotationMax	= 0;
+	fVerticalCoverageUp		= 0;
+	fVerticalCoverageDown	= 0;
+	fHorizontalCoverageLeft	= 0;
+	fHorizontalCoverageRight= 0;
 }
 
 GdtfGeometrySpeaker::~GdtfGeometrySpeaker()
@@ -4312,16 +4318,6 @@ double GdtfGeometrySpeaker::GetFrequencyMax() const
 	return fFrequencyMax;
 }
 
-double GdtfGeometrySpeaker::GetAngleVertical() const
-{
-	return fAngleVertical;
-}
-
-double GdtfGeometrySpeaker::GetAngleHorizontal() const
-{
-	return fAngleHorizontal;
-}
-
 double GdtfGeometrySpeaker::GetMaxSPL() const
 {
 	return fMaxSPL;
@@ -4330,6 +4326,31 @@ double GdtfGeometrySpeaker::GetMaxSPL() const
 double GdtfGeometrySpeaker::GetImpedance() const
 {
 	return fImpedance;
+}
+
+double GdtfGeometrySpeaker::GetSoundAngleRotationMax() const
+{
+	return fSoundAngleRotationMax;
+}
+
+double GdtfGeometrySpeaker::GetVerticalCoverageUp() const
+{
+	return fVerticalCoverageUp;
+}
+
+double GdtfGeometrySpeaker::GetVerticalCoverageDown() const
+{
+	return fVerticalCoverageDown;
+}
+
+double GdtfGeometrySpeaker::GetHorizontalCoverageLeft() const
+{
+	return fHorizontalCoverageLeft;
+}
+
+double GdtfGeometrySpeaker::GetHorizontalCoverageRight() const
+{
+	return fHorizontalCoverageRight;
 }
 
 void GdtfGeometrySpeaker::SetFrequencyMin(double frequencyMin)
@@ -4342,16 +4363,6 @@ void GdtfGeometrySpeaker::SetFrequencyMax(double frequencyMax)
 	fFrequencyMax = frequencyMax;
 }
 
-void GdtfGeometrySpeaker::SetAngleVertical(double angleVertical)
-{
-	fAngleVertical = angleVertical;
-}
-
-void GdtfGeometrySpeaker::SetAngleHorizontal(double angleHorizontal)
-{
-	fAngleHorizontal = angleHorizontal;
-}
-
 void GdtfGeometrySpeaker::SetMaxSPL(double maxSPL)
 {
 	fMaxSPL = maxSPL;
@@ -4362,6 +4373,31 @@ void GdtfGeometrySpeaker::SetImpedance(double impedance)
 	fImpedance = impedance;
 }
 
+void GdtfGeometrySpeaker::SetSoundAngleRotationMax(double soundAngleRotationMax)
+{
+	fSoundAngleRotationMax = soundAngleRotationMax;
+}
+
+void GdtfGeometrySpeaker::SetVerticalCoverageUp(double verticalCoverageUp)
+{
+	fVerticalCoverageUp = verticalCoverageUp;
+}
+
+void GdtfGeometrySpeaker::SetVerticalCoverageDown(double verticalCoverageDown)
+{
+	fVerticalCoverageDown = verticalCoverageDown;
+}
+
+void GdtfGeometrySpeaker::SetHorizontalCoverageLeft(double horizontalCoverageLeft)
+{
+	fHorizontalCoverageLeft = horizontalCoverageLeft;
+}
+
+void GdtfGeometrySpeaker::SetHorizontalCoverageRight(double horizontalCoverageRight)
+{
+	fHorizontalCoverageRight = horizontalCoverageRight;
+}
+
 void GdtfGeometrySpeaker::OnPrintToFile(IXMLFileNodePtr pNode) 
 {
 	//------------------------------------------------------------------------------------
@@ -4370,10 +4406,13 @@ void GdtfGeometrySpeaker::OnPrintToFile(IXMLFileNodePtr pNode)
 
 	pNode->SetNodeAttributeValue(XML_GDTF_SpeakerFrequencyMin,			GdtfConverter::ConvertDouble(fFrequencyMin));
 	pNode->SetNodeAttributeValue(XML_GDTF_SpeakerFrequencyMax,			GdtfConverter::ConvertDouble(fFrequencyMax));
-	pNode->SetNodeAttributeValue(XML_GDTF_SpeakerAngleVertical,			GdtfConverter::ConvertDouble(fAngleVertical));
-	pNode->SetNodeAttributeValue(XML_GDTF_SpeakerAngleHorizontal,		GdtfConverter::ConvertDouble(fAngleHorizontal));
 	pNode->SetNodeAttributeValue(XML_GDTF_SpeakerMaxSPL,				GdtfConverter::ConvertDouble(fMaxSPL));
 	pNode->SetNodeAttributeValue(XML_GDTF_SpeakerImpedance,				GdtfConverter::ConvertDouble(fImpedance));
+	pNode->SetNodeAttributeValue(XML_GDTF_SpeakerSoundAngleRotationMax,		GdtfConverter::ConvertDouble(fSoundAngleRotationMax));
+	pNode->SetNodeAttributeValue(XML_GDTF_SpeakerVerticalCoverageUp,		GdtfConverter::ConvertDouble(fVerticalCoverageUp));
+	pNode->SetNodeAttributeValue(XML_GDTF_SpeakerVerticalCoverageDown,		GdtfConverter::ConvertDouble(fVerticalCoverageDown));
+	pNode->SetNodeAttributeValue(XML_GDTF_SpeakerHorizontalCoverageLeft,	GdtfConverter::ConvertDouble(fHorizontalCoverageLeft));
+	pNode->SetNodeAttributeValue(XML_GDTF_SpeakerHorizontalCoverageRight,	GdtfConverter::ConvertDouble(fHorizontalCoverageRight));
 }
 
 void GdtfGeometrySpeaker::OnReadFromNode(const IXMLFileNodePtr& pNode)
@@ -4384,10 +4423,13 @@ void GdtfGeometrySpeaker::OnReadFromNode(const IXMLFileNodePtr& pNode)
 
 	TXString frequencyMin;		pNode->GetNodeAttributeValue(XML_GDTF_SpeakerFrequencyMin, frequencyMin);			GdtfConverter::ConvertDouble(frequencyMin, pNode, fFrequencyMin);
 	TXString frequencyMax;		pNode->GetNodeAttributeValue(XML_GDTF_SpeakerFrequencyMax, frequencyMax);			GdtfConverter::ConvertDouble(frequencyMax, pNode, fFrequencyMax);
-	TXString angleVertical;		pNode->GetNodeAttributeValue(XML_GDTF_SpeakerAngleVertical, angleVertical);			GdtfConverter::ConvertDouble(angleVertical, pNode, fAngleVertical);
-	TXString angleHorizontal;	pNode->GetNodeAttributeValue(XML_GDTF_SpeakerAngleHorizontal, angleHorizontal);		GdtfConverter::ConvertDouble(angleHorizontal, pNode, fAngleHorizontal);
 	TXString maxSPL;			pNode->GetNodeAttributeValue(XML_GDTF_SpeakerMaxSPL, maxSPL);						GdtfConverter::ConvertDouble(maxSPL, pNode, fMaxSPL);
 	TXString impedance;			pNode->GetNodeAttributeValue(XML_GDTF_SpeakerImpedance, impedance);					GdtfConverter::ConvertDouble(impedance, pNode, fImpedance);
+	TXString soundAngleRotationMax;		pNode->GetNodeAttributeValue(XML_GDTF_SpeakerSoundAngleRotationMax, soundAngleRotationMax);		GdtfConverter::ConvertDouble(soundAngleRotationMax, pNode, fSoundAngleRotationMax);
+	TXString verticalCoverageUp;		pNode->GetNodeAttributeValue(XML_GDTF_SpeakerVerticalCoverageUp, verticalCoverageUp);			GdtfConverter::ConvertDouble(verticalCoverageUp, pNode, fVerticalCoverageUp);
+	TXString verticalCoverageDown;		pNode->GetNodeAttributeValue(XML_GDTF_SpeakerVerticalCoverageDown, verticalCoverageDown);		GdtfConverter::ConvertDouble(verticalCoverageDown, pNode, fVerticalCoverageDown);
+	TXString horizontalCoverageLeft;	pNode->GetNodeAttributeValue(XML_GDTF_SpeakerHorizontalCoverageLeft, horizontalCoverageLeft);	GdtfConverter::ConvertDouble(horizontalCoverageLeft, pNode, fHorizontalCoverageLeft);
+	TXString horizontalCoverageRight;	pNode->GetNodeAttributeValue(XML_GDTF_SpeakerHorizontalCoverageRight, horizontalCoverageRight);	GdtfConverter::ConvertDouble(horizontalCoverageRight, pNode, fHorizontalCoverageRight);
 }
 
 void GdtfGeometrySpeaker::OnErrorCheck(const IXMLFileNodePtr& pNode)
@@ -4406,10 +4448,13 @@ void GdtfGeometrySpeaker::OnErrorCheck(const IXMLFileNodePtr& pNode)
 
 	needed.push_back(XML_GDTF_SpeakerFrequencyMin);
 	needed.push_back(XML_GDTF_SpeakerFrequencyMax);
-	needed.push_back(XML_GDTF_SpeakerAngleVertical);
-	needed.push_back(XML_GDTF_SpeakerAngleHorizontal);
 	needed.push_back(XML_GDTF_SpeakerMaxSPL);
 	needed.push_back(XML_GDTF_SpeakerImpedance);
+	needed.push_back(XML_GDTF_SpeakerSoundAngleRotationMax);
+	needed.push_back(XML_GDTF_SpeakerVerticalCoverageUp);
+	needed.push_back(XML_GDTF_SpeakerVerticalCoverageDown);
+	needed.push_back(XML_GDTF_SpeakerHorizontalCoverageLeft);
+	needed.push_back(XML_GDTF_SpeakerHorizontalCoverageRight);
 		
 	//------------------------------------------------------------------------------------
 	// Check Attributes for node

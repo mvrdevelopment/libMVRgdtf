@@ -1328,10 +1328,13 @@ namespace SceneData
 	private:
 		double 					fFrequencyMin;
 		double 					fFrequencyMax;
-		double 					fAngleVertical;
-		double 					fAngleHorizontal;
 		double 					fMaxSPL;
 		double 					fImpedance;
+		double 					fSoundAngleRotationMax;
+		double 					fVerticalCoverageUp;
+		double 					fVerticalCoverageDown;
+		double 					fHorizontalCoverageLeft;
+		double 					fHorizontalCoverageRight;
 		
 	public:
 		virtual EGdtfObjectType			GetObjectType();
@@ -1339,18 +1342,24 @@ namespace SceneData
 		// Getters
 		double							GetFrequencyMin() const;
 		double							GetFrequencyMax() const;
-		double							GetAngleVertical() const;
-		double							GetAngleHorizontal() const;
 		double							GetMaxSPL() const;
 		double							GetImpedance() const;
+		double							GetSoundAngleRotationMax() const;
+		double							GetVerticalCoverageUp() const;
+		double							GetVerticalCoverageDown() const;
+		double							GetHorizontalCoverageLeft() const;
+		double							GetHorizontalCoverageRight() const;
 
 		// Setters
 		void							SetFrequencyMin(double frequencyMin);
 		void							SetFrequencyMax(double frequencyMax);
-		void							SetAngleVertical(double angleVertical);
-		void							SetAngleHorizontal(double angleHorizontal);
 		void							SetMaxSPL(double maxSPL);
 		void							SetImpedance(double impedance);
+		void							SetSoundAngleRotationMax(double soundAngleRotationMax);
+		void							SetVerticalCoverageUp(double verticalCoverageUp);
+		void							SetVerticalCoverageDown(double verticalCoverageDown);
+		void							SetHorizontalCoverageLeft(double horizontalCoverageLeft);
+		void							SetHorizontalCoverageRight(double horizontalCoverageRight);
 
 	protected:
 		virtual	TXString				GetNodeName();

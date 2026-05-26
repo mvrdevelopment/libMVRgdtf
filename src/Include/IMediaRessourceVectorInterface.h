@@ -991,17 +991,23 @@ namespace VectorworksMVR
 		// Speaker
 		virtual VCOMError VCOM_CALLTYPE     GetFrequencyMin(double& frequencyMin) = 0;
 		virtual VCOMError VCOM_CALLTYPE     GetFrequencyMax(double& frequencyMax) = 0;
-		virtual VCOMError VCOM_CALLTYPE     GetAngleVertical(double& angleVertical) = 0;
-		virtual VCOMError VCOM_CALLTYPE     GetAngleHorizontal(double& angleHorizontal) = 0;
 		virtual VCOMError VCOM_CALLTYPE     GetMaxSPL(double& maxSPL) = 0;
 		virtual VCOMError VCOM_CALLTYPE     GetImpedance(double& impedance) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetSoundAngleRotationMax(double& soundAngleRotationMax) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetVerticalCoverageUp(double& verticalCoverageUp) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetVerticalCoverageDown(double& verticalCoverageDown) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetHorizontalCoverageLeft(double& horizontalCoverageLeft) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetHorizontalCoverageRight(double& horizontalCoverageRight) = 0;
 
 		virtual VCOMError VCOM_CALLTYPE     SetFrequencyMin(double frequencyMin) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetFrequencyMax(double frequencyMax) = 0;
-		virtual VCOMError VCOM_CALLTYPE		SetAngleVertical(double angleVertical) = 0;
-		virtual VCOMError VCOM_CALLTYPE		SetAngleHorizontal(double angleHorizontal) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetMaxSPL(double maxSPL) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetImpedance(double impedance) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetSoundAngleRotationMax(double soundAngleRotationMax) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetVerticalCoverageUp(double verticalCoverageUp) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetVerticalCoverageDown(double verticalCoverageDown) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetHorizontalCoverageLeft(double horizontalCoverageLeft) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetHorizontalCoverageRight(double horizontalCoverageRight) = 0;
 	};
 	typedef VCOMPtr<IGdtfGeometry>	IGdtfGeometryPtr;
     
