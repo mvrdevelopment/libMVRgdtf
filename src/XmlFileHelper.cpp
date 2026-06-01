@@ -1697,10 +1697,12 @@ CieColor SceneData::GdtfConverter::ConvertCColor(const CCieColor & color)
     else if (inVal == XML_GDTF_ColorSample_97) { outVal = EGdtfColorSample::CES_97; }
     else if (inVal == XML_GDTF_ColorSample_98) { outVal = EGdtfColorSample::CES_98; }
     else if (inVal == XML_GDTF_ColorSample_99) { outVal = EGdtfColorSample::CES_99; }
-
-    DSTOP((kEveryone, "Unknown Value for EGdtfColorSample"));
-    GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertColorSample, node);
-    SceneData::GdtfFixture::AddError(error);
+    else
+    {
+        DSTOP((kEveryone, "Unknown Value for EGdtfColorSample"));
+        GdtfParsingError error (GdtfDefines::EGdtfParsingError::eValueError_NoMatchInEnum_ConvertColorSample, node);
+        SceneData::GdtfFixture::AddError(error);
+    }
        
     return true;
 }
