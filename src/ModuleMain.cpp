@@ -60,6 +60,8 @@
 #include "Implementation/CGdtfPoint.h"
 #include "Implementation/CGdtfColorSpace.h"
 #include "Implementation/CGdtfConnector.h"
+#include "Implementation/CGdtfCRIGroup.h"
+#include "Implementation/CGdtfCRI.h"
 #include "Implementation/CUtility.h"
 #include "Implementation/CGdtfLaserProtocol.h"
 #include "Implementation/CGdtfPinPatch.h"
@@ -209,6 +211,10 @@ extern "C" VectorworksMVR::VCOMError VWQueryInterface(const VectorworksMVR::VWII
         resultInterface = new CGdtfColorSpaceImpl();
     else if (iid == VectorworksMVR::IID_GdtfGamut)
 		resultInterface = new CGdtfGamutImpl();
+    else if (iid == VectorworksMVR::IID_GdtfCRIGroup)
+        resultInterface = new CGdtfCRIGroupImpl();
+    else if (iid == VectorworksMVR::IID_GdtfCRI)
+        resultInterface = new CGdtfCRIImpl();
     else if (iid == VectorworksMVR::IID_GdtfConnector)
         resultInterface = new CGdtfConnectorImpl();
 	else if (iid == VectorworksMVR::Filing::IID_FileIdentifier)

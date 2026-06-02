@@ -2656,10 +2656,10 @@ namespace SceneData
     public:
         virtual EGdtfObjectType					GetObjectType();
 
-        // Getter        
+		// Getter
         double									GetColorTemperature() const;
         TGdtf_CRIArray							GetCRI_Array() const;
-        // Setter       
+		// Setter
         void									SetColorTemperature(double val);
         GdtfCRIPtr								Add_CRI(EGdtfColorSample ces, Sint32 colorTemp);
     protected:

@@ -12,7 +12,7 @@ namespace VectorworksMVR
     public:
         CGdtfCRIGroupImpl();
         virtual ~CGdtfCRIGroupImpl();
-        
+
         virtual VCOMError VCOM_CALLTYPE GetColorTemperature(double& outVal);
         virtual VCOMError VCOM_CALLTYPE SetColorTemperature(double value);
         
