@@ -14,6 +14,11 @@ on:
           - master
           - beta
           - alpha
+      dry_run:
+        description: 'Dry run (no publish)'
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   release:
@@ -27,6 +32,17 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
           token: ${{ secrets.ADMIN_TOKEN }}
+
+      - name: Set up branch tracking
+        working-directory: libMvrGdtf
+        run: |
+          git checkout ${{ inputs.ref }}
+          git branch --set-upstream-to=origin/${{ inputs.ref }} ${{ inputs.ref }}
+          git pull --ff-only
+          echo "=== branch ==="
+          git branch --show-current
+          echo "=== status ==="
+          git status -sb
 
       - name: Use Node.js 20.x
         uses: actions/setup-node@v4
@@ -42,12 +58,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # auto reads the branch from GITHUB_REF in CI; override so beta/alpha are detected as prerelease
-          GITHUB_REF: refs/heads/${{ inputs.ref }}
-          GITHUB_REF_NAME: ${{ inputs.ref }}
         working-directory: libMvrGdtf
         run: |
           npm install
           git config user.email "auto-release-bot@mvrdevelopment.com"
           git config user.name "Auto release bot"
-          npm run release
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            npx auto shipit --base-branch=master --dry-run -vv
+          else
+            npm run release
+          fi
