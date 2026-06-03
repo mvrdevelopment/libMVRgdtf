@@ -28,19 +28,6 @@ jobs:
           fetch-tags: true
           token: ${{ secrets.ADMIN_TOKEN }}
 
-      - name: Debug prerelease detection
-        working-directory: libMvrGdtf
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          npm install
-          echo '=== current branch ==='
-          git branch --show-current
-          echo '=== recent tags ==='
-          git tag --list | tail -30
-          echo '=== auto dry-run ==='
-          npx auto shipit --base-branch=master --dry-run -vv
-
       - name: Use Node.js 20.x
         uses: actions/setup-node@v4
         with:
@@ -55,6 +42,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # auto reads the branch from GITHUB_REF in CI; override so beta/alpha are detected as prerelease
+          GITHUB_REF: refs/heads/${{ inputs.ref }}
+          GITHUB_REF_NAME: ${{ inputs.ref }}
         working-directory: libMvrGdtf
         run: |
           npm install
