@@ -4,6 +4,16 @@ name: Release on NPM
 
 on:
   workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Branch to release from'
+        required: true
+        default: 'master'
+        type: choice
+        options:
+          - master
+          - beta
+          - alpha
 
 jobs:
   release:
@@ -13,6 +23,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           path: libMvrGdtf
+          ref: ${{ inputs.ref }}
           fetch-depth: 0
           fetch-tags: true
           token: ${{ secrets.ADMIN_TOKEN }}
