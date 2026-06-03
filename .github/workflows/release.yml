@@ -28,6 +28,14 @@ jobs:
           fetch-tags: true
           token: ${{ secrets.ADMIN_TOKEN }}
 
+      - name: Debug prerelease detection
+        working-directory: libMvrGdtf
+        run: |
+          git branch --show-current
+          git status
+          cat .autorc.json
+          npx auto info --base-branch=master
+
       - name: Use Node.js 20.x
         uses: actions/setup-node@v4
         with:
