@@ -44,6 +44,15 @@ jobs:
           echo "=== status ==="
           git status -sb
 
+      - name: Override branch context for auto
+        run: |
+          # auto (env-ci) reads the branch from GITHUB_REF, which on a
+          # workflow_dispatch is always the branch the workflow was launched
+          # from (master), NOT the branch we checked out. We point both vars
+          # at the selected ref so auto detects beta/alpha as a prerelease.
+          echo "GITHUB_REF=refs/heads/${{ inputs.ref }}" >> "$GITHUB_ENV"
+          echo "GITHUB_REF_NAME=${{ inputs.ref }}" >> "$GITHUB_ENV"
+
       - name: Use Node.js 20.x
         uses: actions/setup-node@v4
         with:
@@ -64,7 +73,7 @@ jobs:
           git config user.email "auto-release-bot@mvrdevelopment.com"
           git config user.name "Auto release bot"
           if [ "${{ inputs.dry_run }}" = "true" ]; then
-            npx auto shipit --base-branch=master --dry-run -vv
+            npx auto shipit --dry-run -vv
           else
-            npm run release
+            npx auto shipit -vv
           fi
