@@ -1,0 +1,7 @@
+{
+  "baseBranch": "master",
+  "prereleaseBranches": ["beta", "alpha"],
+  "plugins": [
+    "npm"
+  ]
+}
