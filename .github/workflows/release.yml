@@ -30,11 +30,16 @@ jobs:
 
       - name: Debug prerelease detection
         working-directory: libMvrGdtf
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          npm install
+          echo '=== current branch ==='
           git branch --show-current
-          git status
-          cat .autorc.json
-          npx auto info --base-branch=master
+          echo '=== recent tags ==='
+          git tag --list | tail -30
+          echo '=== auto dry-run ==='
+          npx auto shipit --base-branch=master --dry-run -vv
 
       - name: Use Node.js 20.x
         uses: actions/setup-node@v4
