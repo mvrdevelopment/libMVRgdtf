@@ -14,6 +14,11 @@ on:
           - master
           - beta
           - alpha
+      dry_run:
+        description: 'Dry run (no publish)'
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   release:
@@ -27,6 +32,17 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
           token: ${{ secrets.ADMIN_TOKEN }}
+
+      - name: Set up branch tracking
+        working-directory: libMvrGdtf
+        run: |
+          git checkout ${{ inputs.ref }}
+          git branch --set-upstream-to=origin/${{ inputs.ref }} ${{ inputs.ref }}
+          git pull --ff-only
+          echo "=== branch ==="
+          git branch --show-current
+          echo "=== status ==="
+          git status -sb
 
       - name: Use Node.js 20.x
         uses: actions/setup-node@v4
@@ -47,4 +63,18 @@ jobs:
           npm install
           git config user.email "auto-release-bot@mvrdevelopment.com"
           git config user.name "Auto release bot"
-          npm run release
+
+          # auto's env-ci reads the branch from GITHUB_REF. On a
+          # workflow_dispatch GITHUB_REF is always the branch the workflow was
+          # launched from (master), NOT the ref we checked out. Writing it to
+          # $GITHUB_ENV in a prior step does NOT override the runner's built-in
+          # GITHUB_REF, so we export it inline here, right before calling auto.
+          export GITHUB_REF="refs/heads/${{ inputs.ref }}"
+          export GITHUB_REF_NAME="${{ inputs.ref }}"
+          echo "Using GITHUB_REF=$GITHUB_REF"
+
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            npx auto shipit --dry-run -vv
+          else
+            npx auto shipit -vv
+          fi
