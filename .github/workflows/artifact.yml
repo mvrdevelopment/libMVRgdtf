@@ -10,7 +10,7 @@ on:
         options:
         - ubuntu-22.04
         - windows-latest
-        - macos-latest
+        - macos-14
 
 jobs:
   build_artifact:
