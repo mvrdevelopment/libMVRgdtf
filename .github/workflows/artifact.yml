@@ -9,7 +9,7 @@ on:
         type: choice
         options:
         - ubuntu-22.04
-        - windows-latest
+        - windows-2022
         - macos-14
 
 jobs:
