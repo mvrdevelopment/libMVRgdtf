@@ -374,3 +374,59 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotImpl::SetFilter (IGdtfFi
 
     return kVCOMError_NoError;
 }
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotImpl::GetDuration(double& outDuration)
+{
+    if(!fWheelSlot) return kVCOMError_NotInitialized;
+    outDuration = fWheelSlot->GetDuration();
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotImpl::GetWidth(size_t& outWidth)
+{
+    if(!fWheelSlot) return kVCOMError_NotInitialized;
+    outWidth = fWheelSlot->GetWidth();
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotImpl::GetHeight(size_t& outHeight)
+{
+    if(!fWheelSlot) return kVCOMError_NotInitialized;
+    outHeight = fWheelSlot->GetHeight();
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotImpl::GetFPS(size_t& outFPS)
+{
+    if(!fWheelSlot) return kVCOMError_NotInitialized;
+    outFPS = fWheelSlot->GetFPS();
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotImpl::SetDuration(double duration)
+{
+    if(!fWheelSlot) return kVCOMError_NotInitialized;
+    fWheelSlot->SetDuration(duration);
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotImpl::SetWidth(size_t width)
+{
+    if(!fWheelSlot) return kVCOMError_NotInitialized;
+    fWheelSlot->SetWidth(width);
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotImpl::SetHeight(size_t height)
+{
+    if(!fWheelSlot) return kVCOMError_NotInitialized;
+    fWheelSlot->SetHeight(height);
+    return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CGdtfWheelSlotImpl::SetFPS(size_t fps)
+{
+    if(!fWheelSlot) return kVCOMError_NotInitialized;
+    fWheelSlot->SetFPS(fps);
+    return kVCOMError_NoError;
+}

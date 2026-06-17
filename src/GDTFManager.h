@@ -428,6 +428,10 @@ namespace SceneData
 		GdtfFilter*								fFilter;
 		TXString								fUnresolvedFilter;
 		GdtfWheelSlotAnimationSystem*			fAnimationSystem;
+		double									fDuration;
+		size_t									fWidth;
+		size_t									fHeight;
+		size_t									fFPS;
 		
 	public:
 		const TXString&							GetGobo() const;
@@ -437,6 +441,10 @@ namespace SceneData
         TGdtfWheelSlotPrismFacetArray			GetPrismFacets();
 		GdtfFilter*                 			GetFilter() const;
 		GdtfWheelSlotAnimationSystem*			GetAnimationSystem() const;
+		double									GetDuration() const;
+		size_t									GetWidth() const;
+		size_t									GetHeight() const;
+		size_t									GetFPS() const;
 		
 		void									SetName(const TXString& name);
 		void									SetGobo(const GdtfPNGFile& png);
@@ -444,6 +452,10 @@ namespace SceneData
 		void									SetFilter(GdtfFilter* filter);
 		GdtfWheelSlotPrismFacet*				AddPrismFacet();
 		GdtfWheelSlotAnimationSystem*			AddAnimationSystem();
+		void									SetDuration(double duration);
+		void									SetWidth(size_t width);
+		void									SetHeight(size_t height);
+		void									SetFPS(size_t fps);
 
 		virtual TXString						GetNodeReference();
 

@@ -390,6 +390,10 @@ const Sint32 kGDTF_CurrentMinorVersion = 2;
 #define XML_GDTF_WheelSlotColor			"Color"
 #define XML_GDTF_WheelSlotPicture		"MediaFileName"
 #define XML_GDTF_WheelSlotFilter		"Filter"
+#define XML_GDTF_WheelSlotDuration		"Duration"
+#define XML_GDTF_WheelSlotWidth			"Width"
+#define XML_GDTF_WheelSlotHeight		"Height"
+#define XML_GDTF_WheelSlotFPS			"FPS"
 
 #define XML_GDTF_PrismFacetNodeName		"Facet"
 #define XML_GDTF_PrismFacetColor		"Color"
