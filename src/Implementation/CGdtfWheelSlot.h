@@ -32,6 +32,15 @@ namespace VectorworksMVR
 
         virtual VCOMError VCOM_CALLTYPE     GetAnimationSystem(IGdtfWheelSlotAnimationSystem** outAnimationSystem);
 		virtual VCOMError VCOM_CALLTYPE     CreateAnimationSystem(double p1_X, double p1_Y, double p2_X, double p2_Y, double p3_X, double p3_Y, double radius, IGdtfWheelSlotAnimationSystem**   outAnimationSystem);
+
+		virtual VCOMError VCOM_CALLTYPE     GetDuration(double& outDuration);
+		virtual VCOMError VCOM_CALLTYPE     GetWidth(size_t& outWidth);
+		virtual VCOMError VCOM_CALLTYPE     GetHeight(size_t& outHeight);
+		virtual VCOMError VCOM_CALLTYPE     GetFPS(size_t& outFPS);
+		virtual VCOMError VCOM_CALLTYPE     SetDuration(double duration);
+		virtual VCOMError VCOM_CALLTYPE     SetWidth(size_t width);
+		virtual VCOMError VCOM_CALLTYPE     SetHeight(size_t height);
+		virtual VCOMError VCOM_CALLTYPE     SetFPS(size_t fps);
 		
 		virtual VCOMError VCOM_CALLTYPE     BindToObject(void* objAddr);
 		virtual void*	  VCOM_CALLTYPE     GetBoundObject();
