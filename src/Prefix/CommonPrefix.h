@@ -525,6 +525,17 @@ const Sint32 kGDTF_CurrentMinorVersion = 2;
 #define XML_GDTF_SupportResistanceYY                "ResistanceYY"
 #define XML_GDTF_SupportResistanceZZ                "ResistanceZZ"
 
+#define XML_GDTF_SpeakerNodeName                    "Speaker"
+#define XML_GDTF_SpeakerFrequencyMin                "FrequencyMin"
+#define XML_GDTF_SpeakerFrequencyMax                "FrequencyMax"
+#define XML_GDTF_SpeakerMaxSPL                      "MaxSPL"
+#define XML_GDTF_SpeakerImpedance                   "Impedance"
+#define XML_GDTF_SpeakerSoundAngleRotationMax       "SoundAngleRotationMax"
+#define XML_GDTF_SpeakerVerticalCoverageUp          "VerticalCoverageUp"
+#define XML_GDTF_SpeakerVerticalCoverageDown        "VerticalCoverageDown"
+#define XML_GDTF_SpeakerHorizontalCoverageLeft      "HorizontalCoverageLeft"
+#define XML_GDTF_SpeakerHorizontalCoverageRight     "HorizontalCoverageRight"
+
 #define XML_GDTF_MagnetNodeName                 "Magnet"
 
 #define XML_GDTF_LampNodeName					"Beam"
