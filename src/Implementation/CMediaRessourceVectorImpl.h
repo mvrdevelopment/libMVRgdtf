@@ -66,7 +66,8 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		CreateVideoScreen(		const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj** outVideoScreen);
 		virtual VCOMError VCOM_CALLTYPE		CreateProjector(		const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outProjector);
 		virtual VCOMError VCOM_CALLTYPE		CreateListeningPlane(	const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outListeningPlane);
-		
+		virtual VCOMError VCOM_CALLTYPE		CreateSpeaker(			const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outSpeaker);
+
 		// Add the end call to write the file to disk
 		virtual VCOMError VCOM_CALLTYPE		Close();
 		

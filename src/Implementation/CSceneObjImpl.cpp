@@ -1996,11 +1996,13 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetAudioDescriptionFile
 	ASSERTN(kEveryone,fType == ESceneObjType::ListeningPlane);
 	if( fType != ESceneObjType::ListeningPlane) return kVCOMError_Failed;
 
-	// Try to cast
-	SceneData::SceneDataListeningPlaneObjPtr listeningPlane = static_cast<SceneData::SceneDataListeningPlaneObjPtr>(fPtr);
-	if( ! listeningPlane) return kVCOMError_Failed;
+	if (fType == ESceneObjType::ListeningPlane)
+	{
+		SceneData::SceneDataListeningPlaneObjPtr listeningPlane = static_cast<SceneData::SceneDataListeningPlaneObjPtr>(fPtr);
+		if( ! listeningPlane) return kVCOMError_Failed;
+		listeningPlane->SetAudioDescriptionFile(fileName);
+	}
 
-	listeningPlane->SetAudioDescriptionFile(fileName);
 
 	return kVCOMError_NoError;
 }
@@ -2012,14 +2014,15 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetAudioDescriptionFile
 	if ( !fPtr ) return kVCOMError_NotInitialized;
 
 	// Check the type is right
-	ASSERTN( kEveryone, fType == ESceneObjType::ListeningPlane );
+	ASSERTN( kEveryone, fType == ESceneObjType::ListeningPlane);
 	if ( fType != ESceneObjType::ListeningPlane ) return kVCOMError_Failed;
 
-	// Try to cast
-	SceneData::SceneDataListeningPlaneObjPtr listeningPlane = static_cast<SceneData::SceneDataListeningPlaneObjPtr>( fPtr );
-	if ( !listeningPlane ) return kVCOMError_Failed;
-
-	outFileName = listeningPlane->GetAudioDescriptionFile();
+	if (fType == ESceneObjType::ListeningPlane)
+	{
+		SceneData::SceneDataListeningPlaneObjPtr listeningPlane = static_cast<SceneData::SceneDataListeningPlaneObjPtr>( fPtr );
+		if ( !listeningPlane ) return kVCOMError_Failed;
+		outFileName = listeningPlane->GetAudioDescriptionFile();
+	}
 
 	return kVCOMError_NoError;
 }
@@ -2202,7 +2205,8 @@ void VectorworksMVR::CSceneObjImpl::SetPointer(SceneData::SceneDataObjWithMatrix
 		case SceneData::eVideoScreen:		fType = ESceneObjType::VideoScreen;		break;
 		case SceneData::eProjector:			fType = ESceneObjType::Projector; 		break;
 		case SceneData::eListeningPlane:	fType = ESceneObjType::ListeningPlane; 	break;
-			
+		case SceneData::eSpeaker:			fType = ESceneObjType::Speaker; 		break;
+
 		default:
 			DSTOP((kEveryone, "Unexpected input!"));
 			break;

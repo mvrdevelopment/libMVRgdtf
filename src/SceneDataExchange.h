@@ -48,6 +48,7 @@ namespace SceneData
 		eProjector					= 8,
 		eSupport					= 9,
 		eListeningPlane				= 10,
+		eSpeaker					= 11,
 		eSymDef						= -1,
 		eProviderObj				= -2,
 		ePosition					= -3,
@@ -963,6 +964,25 @@ namespace SceneData
 	typedef SceneDataListeningPlaneObj* SceneDataListeningPlaneObjPtr;
 
 	// ----------------------------------------------------------------------------------------------------------------------------------
+	// SceneDataSpeakerObj
+	class SceneDataSpeakerObj : public SceneDataGDTFSpecObj
+	{
+
+	public:
+											SceneDataSpeakerObj(const SceneDataGUID& guid);
+		virtual								~SceneDataSpeakerObj();
+
+	private:
+		virtual	TXString					GetNodeName();
+		virtual ESceneDataObjectType		GetObjectType();
+
+		virtual void						OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);
+		virtual	void						OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange);
+
+	};
+	typedef SceneDataSpeakerObj* SceneDataSpeakerObjPtr;
+
+	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataSymbolObj
 	class SceneDataSymbolObj : public SceneDataGeoInstanceObj
 	{
@@ -1093,7 +1113,8 @@ namespace SceneData
 		SceneDataVideoScreenObjPtr			CreateVideoScreen(		const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
 		SceneDataProjectorObjPtr			CreateProjector(		const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
 		SceneDataListeningPlaneObjPtr		CreateListeningPlane(	const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
-		
+		SceneDataSpeakerObjPtr				CreateSpeaker(			const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
+
 		// ---------------------------------------------------------------------------------------------------------------------
 		// Read calls
 	private:
@@ -1114,7 +1135,8 @@ namespace SceneData
 		SceneDataVideoScreenObjPtr			ReadVideoScreen(		const SceneDataGUID& guid,	const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
 		SceneDataProjectorObjPtr			ReadProjector(			const SceneDataGUID& guid,	const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
 		SceneDataListeningPlaneObjPtr		ReadListeningPlane(		const SceneDataGUID& guid,	const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer );
-		
+		SceneDataSpeakerObjPtr				ReadSpeaker(			const SceneDataGUID& guid,	const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer );
+
 		// ---------------------------------------------------------------------------------------------------------------------
 		// Write calls
 	public:

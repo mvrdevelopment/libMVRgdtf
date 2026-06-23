@@ -247,6 +247,8 @@
 
 #define XML_Val_ListeningPlaneObjectNodeName	"ListeningPlane"
 
+#define XML_Val_SpeakerObjectNodeName		"Speaker"
+
 #define XML_Val_SymbolObjectNodeName		"Symbol"
 #define XML_Val_GuidSymdefAttrName			"symdef"
 

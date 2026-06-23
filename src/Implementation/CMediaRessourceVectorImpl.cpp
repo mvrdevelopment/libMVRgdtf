@@ -1043,6 +1043,73 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateListe
 	return kVCOMError_NoError;
 }
 
+VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::CreateSpeaker(const MvrUUID& guid, const STransformMatrix& offset, MvrString name, ISceneObj* addToContainer, ISceneObj** outSpeaker)
+{
+	//---------------------------------------------------------------------------
+	// Read Container
+	CSceneObjImpl* pContainer = static_cast<CSceneObjImpl* >(addToContainer);
+
+	ASSERTN(kEveryone, pContainer != nullptr);
+	if ( ! pContainer) { return kVCOMError_NoValidContainerObj; }
+
+
+	SceneData::SceneDataObjWithMatrixPtr	obj		= nullptr;
+	ESceneObjType						type	= ESceneObjType::Layer;
+	pContainer->GetPointer(obj, type);
+
+	if( ! VectorworksMVR::MvrUtil::isContainerType(type)) { return kVCOMError_NoValidContainerObj; }	
+
+	SceneData::SceneDataGroupObjPtr group = static_cast<SceneData::SceneDataGroupObjPtr>(obj);
+
+	ASSERTN(kEveryone, group != nullptr);
+	if ( ! group) { return kVCOMError_NoValidContainerObj; }
+
+	//---------------------------------------------------------------------------
+	// Create the obj
+	VWFC::Tools::VWUUID	uuid	(guid.a,guid.b,guid.c,guid.d);
+	TXString nameStr ( name );
+
+	VWTransformMatrix ma;
+	GdtfUtil::ConvertMatrix(offset, ma);
+
+	SceneData::SceneDataSpeakerObjPtr ptr = fExchangeObj.CreateSpeaker(uuid, ma, nameStr, group);
+
+	//---------------------------------------------------------------------------
+	// Initialize Object
+	CSceneObjImpl* pSpeaker = nullptr;
+
+	// Query Interface
+	if (VCOM_SUCCEEDED(VWQueryInterface(IID_SceneObject, (IVWUnknown**) & pSpeaker)))
+	{
+		// Check Casting
+		CSceneObjImpl* pResultInterface = static_cast<CSceneObjImpl* >(pSpeaker);
+		if (pResultInterface)
+		{
+			pResultInterface->SetPointer(ptr, GetExchangeObj());
+		}
+		else
+		{
+			pResultInterface->Release();
+			pResultInterface = nullptr;
+			return kVCOMError_NoInterface;
+		}
+	}
+
+	//---------------------------------------------------------------------------
+	// Check Incoming Object
+	if (*outSpeaker)
+	{
+		(*outSpeaker)->Release();
+		*outSpeaker		= NULL;
+	}
+
+	//---------------------------------------------------------------------------
+	// Set Out Value
+	*outSpeaker = pSpeaker;
+
+	return kVCOMError_NoError;
+}
+
 
 VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::Close()
 {

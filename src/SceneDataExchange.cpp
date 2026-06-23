@@ -2841,6 +2841,36 @@ void SceneDataListeningPlaneObj::OnReadFromNode(const IXMLFileNodePtr& pNode, Sc
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------------
+// SceneDataSpeakerObj
+SceneDataSpeakerObj::SceneDataSpeakerObj(const SceneDataGUID& guid) :SceneDataGDTFSpecObj(guid)
+{
+}
+
+SceneDataSpeakerObj::~SceneDataSpeakerObj()
+{
+}
+
+TXString SceneDataSpeakerObj::GetNodeName()
+{
+	return TXString(XML_Val_SpeakerObjectNodeName);
+}
+
+ESceneDataObjectType SceneDataSpeakerObj::GetObjectType()
+{
+	return ESceneDataObjectType::eSpeaker;
+}
+
+void SceneDataSpeakerObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
+{
+	SceneDataGDTFSpecObj::OnPrintToFile( pNode, exchange );
+}
+
+void SceneDataSpeakerObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
+{
+	SceneDataGDTFSpecObj::OnReadFromNode( pNode, exchange );
+}
+
+// ----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataSymbolObj
 SceneDataSymbolObj::SceneDataSymbolObj(const SceneDataGUID& guid) : SceneDataGeoInstanceObj(guid, true /*Is SymbolDef*/)
 {
@@ -3510,6 +3540,29 @@ SceneDataListeningPlaneObjPtr SceneDataExchange::ReadListeningPlane(const SceneD
 	return newListeningPlaneObj;
 }
 
+SceneDataSpeakerObjPtr SceneDataExchange::CreateSpeaker(const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name, SceneDataGroupObjPtr addToContainer)
+{
+	SceneDataSpeakerObjPtr newSpeakerObj = new SceneDataSpeakerObj(guid);
+	addToContainer->AddObject(newSpeakerObj);
+
+	newSpeakerObj->setName(name);
+	newSpeakerObj->SetTransformMatrix(offset);
+
+	return newSpeakerObj;
+}
+
+SceneDataSpeakerObjPtr SceneDataExchange::ReadSpeaker(const SceneDataGUID& guid,const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer)
+{
+	if ( CheckAbort() ) return nullptr;
+
+	SceneDataSpeakerObjPtr newSpeakerObj = new SceneDataSpeakerObj(guid);
+	addToContainer->AddObject(newSpeakerObj);
+
+	newSpeakerObj->ReadFromNode(node, this);
+
+	return newSpeakerObj;
+}
+
 SceneDataSymbolObjPtr SceneDataExchange::CreateSymbol(const SceneDataGUID& guid, const VWTransformMatrix& offset, SceneDataSymDefObjPtr symDef)
 {
 	SceneDataSymbolObjPtr newSymbolObj = new SceneDataSymbolObj(guid);
@@ -4141,6 +4194,7 @@ void SceneDataExchange::ReadChildObjs(const IXMLFileNodePtr& node, SceneDataGrou
 					else if	( nodeName == XML_Val_SupportObjectNodeName)			{ obj = ReadSupport(		SceneDataGUID(groupUuid),	objNode,	addToContainer);	}
 					else if	( nodeName == XML_Val_ProjectorObjectNodeName)			{ obj = ReadProjector(		SceneDataGUID(groupUuid),	objNode,	addToContainer);	}
 					else if ( nodeName == XML_Val_ListeningPlaneObjectNodeName )	{ obj = ReadListeningPlane( SceneDataGUID(groupUuid),	objNode,	addToContainer);	}
+					else if ( nodeName == XML_Val_SpeakerObjectNodeName )			{ obj = ReadSpeaker(		SceneDataGUID(groupUuid),	objNode,	addToContainer);	}
 					else if ( nodeName == XML_Val_GroupNodeName)					{ obj = ProcessGroup(objNode, addToContainer);											}
 					     
                     auto grp = dynamic_cast<SceneDataGroupObjPtr>(obj);
