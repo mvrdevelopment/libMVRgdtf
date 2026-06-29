@@ -327,6 +327,9 @@ namespace VectorworksMVR
 		Fixture,
 		Projector,
 		Support,
+		ListeningPlane,
+		Speaker,
+		SpeakerBumper
 	};
 	
 	class DYNAMIC_ATTRIBUTE ISceneObj : public IVWUnknown
@@ -404,6 +407,10 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		SetVideoScreenSource(MvrString value, MvrString linkedGeometry, GdtfDefines::ESourceType) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetVideoScreenSource(ISource** outSource) = 0;
 
+		// Listening Plane
+		virtual VCOMError VCOM_CALLTYPE		SetAudioDescriptionFile(MvrString value) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetAudioDescriptionFile(MvrString& outValue) = 0;
+
 		// Projector
 		virtual VCOMError VCOM_CALLTYPE		SetProjectorSource(MvrString value, MvrString linkedGeometry, GdtfDefines::ESourceType) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetProjectorSource(ISource** outSource) = 0;
@@ -450,16 +457,19 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		CreateMappingDefinitionObject(	const MvrUUID& guid,	MvrString name,		IMappingDefinition** outMapDef) = 0;
 		
 		// Then you can generate all other objects
-		virtual VCOMError VCOM_CALLTYPE		CreateLayerObject(	const MvrUUID& guid,								 MvrString name,								ISceneObj**	outLayerObj) = 0;
-		virtual VCOMError VCOM_CALLTYPE		CreateGroupObject(	const MvrUUID& guid, const STransformMatrix& offset,					ISceneObj* addToContainer,	ISceneObj**	outGroupObj) = 0;
-		virtual VCOMError VCOM_CALLTYPE		CreateGroupObject(	const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outGroupObj) = 0;
-		virtual VCOMError VCOM_CALLTYPE		CreateFixture(		const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outFixture) = 0;
-		virtual VCOMError VCOM_CALLTYPE		CreateSceneObject(	const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outSceneObj) = 0;
-		virtual VCOMError VCOM_CALLTYPE		CreateFocusPoint(	const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj** outFocusPoint) = 0;
-		virtual VCOMError VCOM_CALLTYPE		CreateVideoScreen(	const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj** outVideoScreen) = 0;
-		virtual VCOMError VCOM_CALLTYPE		CreateTruss(		const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outTruss) = 0;
-		virtual VCOMError VCOM_CALLTYPE		CreateSupport(		const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outSupport) = 0;
-		virtual VCOMError VCOM_CALLTYPE		CreateProjector(	const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outProjector) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateLayerObject(		const MvrUUID& guid,								 MvrString name,								ISceneObj**	outLayerObj) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateGroupObject(		const MvrUUID& guid, const STransformMatrix& offset,					ISceneObj* addToContainer,	ISceneObj**	outGroupObj) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateGroupObject(		const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outGroupObj) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateFixture(			const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outFixture) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateSceneObject(		const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outSceneObj) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateFocusPoint(		const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj** outFocusPoint) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateVideoScreen(		const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj** outVideoScreen) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateTruss(			const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outTruss) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateSupport(			const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outSupport) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateProjector(		const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outProjector) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateListeningPlane(	const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outListeningPlane) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateSpeaker(			const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outSpeaker) = 0;
+		virtual VCOMError VCOM_CALLTYPE		CreateSpeakerBumper(	const MvrUUID& guid, const STransformMatrix& offset, MvrString name,	ISceneObj* addToContainer,	ISceneObj**	outSpeakerBumper) = 0;
 
 		// Add the end call to write the file to disk
 		virtual VCOMError VCOM_CALLTYPE		Close() = 0;
@@ -994,6 +1004,27 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		SetResistanceXX(double resistanceXX) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetResistanceYY(double resistanceYY) = 0;
 		virtual VCOMError VCOM_CALLTYPE		SetResistanceZZ(double resistanceZZ) = 0;
+
+		// Speaker
+		virtual VCOMError VCOM_CALLTYPE     GetFrequencyMin(double& frequencyMin) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetFrequencyMax(double& frequencyMax) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetMaxSPL(double& maxSPL) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetImpedance(double& impedance) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetSoundAngleRotationMax(double& soundAngleRotationMax) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetVerticalCoverageUp(double& verticalCoverageUp) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetVerticalCoverageDown(double& verticalCoverageDown) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetHorizontalCoverageLeft(double& horizontalCoverageLeft) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetHorizontalCoverageRight(double& horizontalCoverageRight) = 0;
+
+		virtual VCOMError VCOM_CALLTYPE     SetFrequencyMin(double frequencyMin) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetFrequencyMax(double frequencyMax) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetMaxSPL(double maxSPL) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetImpedance(double impedance) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetSoundAngleRotationMax(double soundAngleRotationMax) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetVerticalCoverageUp(double verticalCoverageUp) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetVerticalCoverageDown(double verticalCoverageDown) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetHorizontalCoverageLeft(double horizontalCoverageLeft) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetHorizontalCoverageRight(double horizontalCoverageRight) = 0;
 	};
 	typedef VCOMPtr<IGdtfGeometry>	IGdtfGeometryPtr;
     

@@ -112,6 +112,8 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetConnectionAt(size_t at, IConnection** outConnection);
 		virtual VCOMError VCOM_CALLTYPE		CreateConnection(MvrString own, MvrString other, MvrUUID ToObject, IConnection** addedObj);
 
+		virtual VCOMError VCOM_CALLTYPE		SetAudioDescriptionFile( MvrString fileName );
+		virtual VCOMError VCOM_CALLTYPE		GetAudioDescriptionFile( MvrString& outFileName );
 
 		// Implementation
 	public:

@@ -47,6 +47,9 @@ namespace SceneData
 		eVideoScreen				= 7,
 		eProjector					= 8,
 		eSupport					= 9,
+		eListeningPlane				= 10,
+		eSpeaker					= 11,
+		eSpeakerBumper				= 12,
 		eSymDef						= -1,
 		eProviderObj				= -2,
 		ePosition					= -3,
@@ -938,6 +941,68 @@ namespace SceneData
 	typedef SceneDataProjectorObj* SceneDataProjectorObjPtr;
 	
 	// ----------------------------------------------------------------------------------------------------------------------------------
+	// SceneDataListeningPlaneObj
+	class SceneDataListeningPlaneObj : public SceneDataGroupObj
+	{
+
+	public:
+											SceneDataListeningPlaneObj(const SceneDataGUID& guid);
+		virtual								~SceneDataListeningPlaneObj();
+
+		virtual const TXString&             GetAudioDescriptionFile() const;
+		virtual void						SetAudioDescriptionFile(const TXString& value);
+
+	private:
+		TXString  					        fAudioDescriptionFile;
+
+		virtual	TXString					GetNodeName();
+		virtual ESceneDataObjectType		GetObjectType();
+
+		virtual void						OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);
+		virtual	void						OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange);
+
+	};
+	typedef SceneDataListeningPlaneObj* SceneDataListeningPlaneObjPtr;
+
+	// ----------------------------------------------------------------------------------------------------------------------------------
+	// SceneDataSpeakerObj
+	class SceneDataSpeakerObj : public SceneDataGDTFSpecObj
+	{
+
+	public:
+											SceneDataSpeakerObj(const SceneDataGUID& guid);
+		virtual								~SceneDataSpeakerObj();
+
+	private:
+		virtual	TXString					GetNodeName();
+		virtual ESceneDataObjectType		GetObjectType();
+
+		virtual void						OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);
+		virtual	void						OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange);
+
+	};
+	typedef SceneDataSpeakerObj* SceneDataSpeakerObjPtr;
+
+	// ----------------------------------------------------------------------------------------------------------------------------------
+	// SceneDataSpeakerBumperObj
+	class SceneDataSpeakerBumperObj : public SceneDataGDTFSpecObj
+	{
+
+	public:
+											SceneDataSpeakerBumperObj(const SceneDataGUID& guid);
+		virtual								~SceneDataSpeakerBumperObj();
+
+	private:
+		virtual	TXString					GetNodeName();
+		virtual ESceneDataObjectType		GetObjectType();
+
+		virtual void						OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange);
+		virtual	void						OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange);
+
+	};
+	typedef SceneDataSpeakerBumperObj* SceneDataSpeakerBumperObjPtr;
+
+	// ----------------------------------------------------------------------------------------------------------------------------------
 	// SceneDataSymbolObj
 	class SceneDataSymbolObj : public SceneDataGeoInstanceObj
 	{
@@ -1057,18 +1122,20 @@ namespace SceneData
 		SceneDataMappingDefinitionObjPtr	CreateMappingDefinitionObject(const SceneDataGUID& guid, const TXString& name);
 		
 		
-		SceneDataLayerObjPtr				CreateLayerObject(	const SceneDataGUID& guid,									const TXString& name);
-		SceneDataGroupObjPtr				CreateGroupObject(	const SceneDataGUID& guid, const VWTransformMatrix& offset,							SceneDataGroupObjPtr addToContainer);
-		SceneDataGroupObjPtr				CreateGroupObject(	const SceneDataGUID& guid, const VWTransformMatrix& offset,	const TXString& name,	SceneDataGroupObjPtr addToContainer);
-		SceneDataFixtureObjPtr				CreateFixture(		const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
-		SceneDataSceneryObjPtr				CreateSceneryObject(const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
-		SceneDataFocusPointObjPtr			CreateFocusPoint(	const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
-		SceneDataTrussObjPtr				CreateTruss(		const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
-		SceneDataSupportObjPtr				CreateSupport(		const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
-		SceneDataVideoScreenObjPtr			CreateVideoScreen(	const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
-		SceneDataProjectorObjPtr			CreateProjector(	const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
-		
-		
+		SceneDataLayerObjPtr				CreateLayerObject(		const SceneDataGUID& guid,									const TXString& name);
+		SceneDataGroupObjPtr				CreateGroupObject(		const SceneDataGUID& guid, const VWTransformMatrix& offset,							SceneDataGroupObjPtr addToContainer);
+		SceneDataGroupObjPtr				CreateGroupObject(		const SceneDataGUID& guid, const VWTransformMatrix& offset,	const TXString& name,	SceneDataGroupObjPtr addToContainer);
+		SceneDataFixtureObjPtr				CreateFixture(			const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
+		SceneDataSceneryObjPtr				CreateSceneryObject(	const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
+		SceneDataFocusPointObjPtr			CreateFocusPoint(		const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
+		SceneDataTrussObjPtr				CreateTruss(			const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
+		SceneDataSupportObjPtr				CreateSupport(			const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
+		SceneDataVideoScreenObjPtr			CreateVideoScreen(		const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
+		SceneDataProjectorObjPtr			CreateProjector(		const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
+		SceneDataListeningPlaneObjPtr		CreateListeningPlane(	const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
+		SceneDataSpeakerObjPtr				CreateSpeaker(			const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
+		SceneDataSpeakerBumperObjPtr		CreateSpeakerBumper(	const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name,	SceneDataGroupObjPtr addToContainer);
+
 		// ---------------------------------------------------------------------------------------------------------------------
 		// Read calls
 	private:
@@ -1079,16 +1146,19 @@ namespace SceneData
 		SceneDataMappingDefinitionObjPtr	ReadMappingDefinitionObject(const IXMLFileNodePtr& node);
 		
 		
-		SceneDataLayerObjPtr				ReadLayerObject(		const SceneDataGUID& guid,const IXMLFileNodePtr& node);
-		SceneDataGroupObjPtr				ReadGroupObject(		const SceneDataGUID& guid,const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
-		SceneDataFixtureObjPtr				ReadFixture(			const SceneDataGUID& guid,const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
-		SceneDataSceneryObjPtr				ReadSceneryObject(		const SceneDataGUID& guid,const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
-		SceneDataFocusPointObjPtr			ReadFocusPoint(			const SceneDataGUID& guid,const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
-		SceneDataTrussObjPtr				ReadTruss(				const SceneDataGUID& guid,const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
-		SceneDataSupportObjPtr				ReadSupport(			const SceneDataGUID& guid,const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
-		SceneDataVideoScreenObjPtr			ReadVideoScreen(		const SceneDataGUID& guid,const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
-		SceneDataProjectorObjPtr			ReadProjector(			const SceneDataGUID& guid,const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
-		
+		SceneDataLayerObjPtr				ReadLayerObject(		const SceneDataGUID& guid,	const IXMLFileNodePtr& node);
+		SceneDataGroupObjPtr				ReadGroupObject(		const SceneDataGUID& guid,	const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
+		SceneDataFixtureObjPtr				ReadFixture(			const SceneDataGUID& guid,	const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
+		SceneDataSceneryObjPtr				ReadSceneryObject(		const SceneDataGUID& guid,	const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
+		SceneDataFocusPointObjPtr			ReadFocusPoint(			const SceneDataGUID& guid,	const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
+		SceneDataTrussObjPtr				ReadTruss(				const SceneDataGUID& guid,	const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
+		SceneDataSupportObjPtr				ReadSupport(			const SceneDataGUID& guid,	const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
+		SceneDataVideoScreenObjPtr			ReadVideoScreen(		const SceneDataGUID& guid,	const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
+		SceneDataProjectorObjPtr			ReadProjector(			const SceneDataGUID& guid,	const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer);
+		SceneDataListeningPlaneObjPtr		ReadListeningPlane(		const SceneDataGUID& guid,	const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer );
+		SceneDataSpeakerObjPtr				ReadSpeaker(			const SceneDataGUID& guid,	const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer );
+		SceneDataSpeakerBumperObjPtr		ReadSpeakerBumper(		const SceneDataGUID& guid,	const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer );
+
 		// ---------------------------------------------------------------------------------------------------------------------
 		// Write calls
 	public:

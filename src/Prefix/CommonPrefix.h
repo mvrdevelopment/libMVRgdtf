@@ -245,6 +245,12 @@
 #define XML_Val_ProjectorObjectProjection       "Projection"
 #define XML_Val_ProjectorObjectScaleHandling    "ScaleHandling"
 
+#define XML_Val_ListeningPlaneObjectNodeName	"ListeningPlane"
+
+#define XML_Val_SpeakerObjectNodeName			"Speaker"
+
+#define XML_Val_SpeakerBumperObjectNodeName		"SpeakerBumper"
+
 #define XML_Val_SymbolObjectNodeName		"Symbol"
 #define XML_Val_GuidSymdefAttrName			"symdef"
 
@@ -522,6 +528,17 @@ const Sint32 kGDTF_CurrentMinorVersion = 2;
 #define XML_GDTF_SupportResistanceXX                "ResistanceXX"
 #define XML_GDTF_SupportResistanceYY                "ResistanceYY"
 #define XML_GDTF_SupportResistanceZZ                "ResistanceZZ"
+
+#define XML_GDTF_SpeakerNodeName                    "Speaker"
+#define XML_GDTF_SpeakerFrequencyMin                "FrequencyMin"
+#define XML_GDTF_SpeakerFrequencyMax                "FrequencyMax"
+#define XML_GDTF_SpeakerMaxSPL                      "MaxSPL"
+#define XML_GDTF_SpeakerImpedance                   "Impedance"
+#define XML_GDTF_SpeakerSoundAngleRotationMax       "SoundAngleRotationMax"
+#define XML_GDTF_SpeakerVerticalCoverageUp          "VerticalCoverageUp"
+#define XML_GDTF_SpeakerVerticalCoverageDown        "VerticalCoverageDown"
+#define XML_GDTF_SpeakerHorizontalCoverageLeft      "HorizontalCoverageLeft"
+#define XML_GDTF_SpeakerHorizontalCoverageRight     "HorizontalCoverageRight"
 
 #define XML_GDTF_MagnetNodeName                 "Magnet"
 
