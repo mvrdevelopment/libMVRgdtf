@@ -2206,6 +2206,7 @@ void VectorworksMVR::CSceneObjImpl::SetPointer(SceneData::SceneDataObjWithMatrix
 		case SceneData::eProjector:			fType = ESceneObjType::Projector; 		break;
 		case SceneData::eListeningPlane:	fType = ESceneObjType::ListeningPlane; 	break;
 		case SceneData::eSpeaker:			fType = ESceneObjType::Speaker; 		break;
+		case SceneData::eSpeakerBumper:		fType = ESceneObjType::SpeakerBumper; 		break;
 
 		default:
 			DSTOP((kEveryone, "Unexpected input!"));
