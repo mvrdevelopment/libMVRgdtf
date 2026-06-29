@@ -4248,6 +4248,7 @@ void SceneDataExchange::ReadChildObjs(const IXMLFileNodePtr& node, SceneDataGrou
 					else if	( nodeName == XML_Val_ProjectorObjectNodeName)			{ obj = ReadProjector(		SceneDataGUID(groupUuid),	objNode,	addToContainer);	}
 					else if ( nodeName == XML_Val_ListeningPlaneObjectNodeName )	{ obj = ReadListeningPlane( SceneDataGUID(groupUuid),	objNode,	addToContainer);	}
 					else if ( nodeName == XML_Val_SpeakerObjectNodeName )			{ obj = ReadSpeaker(		SceneDataGUID(groupUuid),	objNode,	addToContainer);	}
+					else if ( nodeName == XML_Val_SpeakerBumperObjectNodeName )		{ obj = ReadSpeakerBumper(	SceneDataGUID(groupUuid),	objNode,	addToContainer);	}
 					else if ( nodeName == XML_Val_GroupNodeName)					{ obj = ProcessGroup(objNode, addToContainer);											}
 					     
                     auto grp = dynamic_cast<SceneDataGroupObjPtr>(obj);
