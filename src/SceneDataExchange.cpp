@@ -2871,6 +2871,36 @@ void SceneDataSpeakerObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneData
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------------
+// SceneDataSpeakerBumperObj
+SceneDataSpeakerBumperObj::SceneDataSpeakerBumperObj(const SceneDataGUID& guid) :SceneDataGDTFSpecObj(guid)
+{
+}
+
+SceneDataSpeakerBumperObj::~SceneDataSpeakerBumperObj()
+{
+}
+
+TXString SceneDataSpeakerBumperObj::GetNodeName()
+{
+	return TXString(XML_Val_SpeakerBumperObjectNodeName);
+}
+
+ESceneDataObjectType SceneDataSpeakerBumperObj::GetObjectType()
+{
+	return ESceneDataObjectType::eSpeakerBumper;
+}
+
+void SceneDataSpeakerBumperObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
+{
+	SceneDataGDTFSpecObj::OnPrintToFile( pNode, exchange );
+}
+
+void SceneDataSpeakerBumperObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
+{
+	SceneDataGDTFSpecObj::OnReadFromNode( pNode, exchange );
+}
+
+// ----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataSymbolObj
 SceneDataSymbolObj::SceneDataSymbolObj(const SceneDataGUID& guid) : SceneDataGeoInstanceObj(guid, true /*Is SymbolDef*/)
 {
@@ -3561,6 +3591,29 @@ SceneDataSpeakerObjPtr SceneDataExchange::ReadSpeaker(const SceneDataGUID& guid,
 	newSpeakerObj->ReadFromNode(node, this);
 
 	return newSpeakerObj;
+}
+
+SceneDataSpeakerBumperObjPtr SceneDataExchange::CreateSpeakerBumper(const SceneDataGUID& guid, const VWTransformMatrix& offset, const TXString& name, SceneDataGroupObjPtr addToContainer)
+{
+	SceneDataSpeakerBumperObjPtr newSpeakerBumperObj = new SceneDataSpeakerBumperObj(guid);
+	addToContainer->AddObject(newSpeakerBumperObj);
+
+	newSpeakerBumperObj->setName(name);
+	newSpeakerBumperObj->SetTransformMatrix(offset);
+
+	return newSpeakerBumperObj;
+}
+
+SceneDataSpeakerBumperObjPtr SceneDataExchange::ReadSpeakerBumper(const SceneDataGUID& guid,const IXMLFileNodePtr& node, SceneDataGroupObjPtr addToContainer)
+{
+	if ( CheckAbort() ) return nullptr;
+
+	SceneDataSpeakerBumperObjPtr newSpeakerBumperObj = new SceneDataSpeakerBumperObj(guid);
+	addToContainer->AddObject(newSpeakerBumperObj);
+
+	newSpeakerBumperObj->ReadFromNode(node, this);
+
+	return newSpeakerBumperObj;
 }
 
 SceneDataSymbolObjPtr SceneDataExchange::CreateSymbol(const SceneDataGUID& guid, const VWTransformMatrix& offset, SceneDataSymDefObjPtr symDef)
