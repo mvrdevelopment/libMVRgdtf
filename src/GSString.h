@@ -97,7 +97,7 @@ public:
 	// Deallocation
 	void deallocate(pointer p, size_type)
 	{
-		delete p;
+		free(p);
 	}
 
 	// Construction
