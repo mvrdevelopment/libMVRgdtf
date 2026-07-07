@@ -3813,6 +3813,7 @@ void SceneDataExchange::ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xml
 		if (VCOM_SUCCEEDED(file->GetRootNode( & rootNode)) && rootNode)
 		{
 			TXString rootName;
+            rootNode->GetNodeName(rootName);
 			ASSERTN(kEveryone, rootName == XML_Val_RootNodeName);
 
 			TXString outMajorValue, outMinorValue;
