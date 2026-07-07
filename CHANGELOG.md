@@ -1,3 +1,27 @@
+# v9.0.17 (Tue Jul 07 2026)
+
+#### 🐛 Bug Fix
+
+- First step - adding new WheelSlot params [#167](https://github.com/mvrdevelopment/libMVRgdtf/pull/167) ([@VzhelevVector](https://github.com/VzhelevVector))
+- update release file [#163](https://github.com/mvrdevelopment/libMVRgdtf/pull/163) ([@VzhelevVector](https://github.com/VzhelevVector))
+- test and pot fix2 [#162](https://github.com/mvrdevelopment/libMVRgdtf/pull/162) ([@VzhelevVector](https://github.com/VzhelevVector))
+- test and pot fix [#161](https://github.com/mvrdevelopment/libMVRgdtf/pull/161) ([@VzhelevVector](https://github.com/VzhelevVector))
+- test [#160](https://github.com/mvrdevelopment/libMVRgdtf/pull/160) ([@VzhelevVector](https://github.com/VzhelevVector))
+- input ref for github [#159](https://github.com/mvrdevelopment/libMVRgdtf/pull/159) ([@VzhelevVector](https://github.com/VzhelevVector))
+- log update [#158](https://github.com/mvrdevelopment/libMVRgdtf/pull/158) ([@VzhelevVector](https://github.com/VzhelevVector))
+- diagnostic step [#157](https://github.com/mvrdevelopment/libMVRgdtf/pull/157) ([@VzhelevVector](https://github.com/VzhelevVector))
+- ref and autorc added [#156](https://github.com/mvrdevelopment/libMVRgdtf/pull/156) ([@VzhelevVector](https://github.com/VzhelevVector))
+- ref and autorc added [#154](https://github.com/mvrdevelopment/libMVRgdtf/pull/154) ([@VzhelevVector](https://github.com/VzhelevVector))
+- lib CRI implementation [#152](https://github.com/mvrdevelopment/libMVRgdtf/pull/152) ([@VzhelevVector](https://github.com/VzhelevVector))
+- Feature/adding ratio support to display [#149](https://github.com/mvrdevelopment/libMVRgdtf/pull/149) ([@adragnevVW](https://github.com/adragnevVW))
+
+#### Authors: 2
+
+- Alesandro Dragnev ([@adragnevVW](https://github.com/adragnevVW))
+- Vladislav Zhelev ([@VzhelevVector](https://github.com/VzhelevVector))
+
+---
+
 # v9.0.16 (Tue May 05 2026)
 
 #### 🐛 Bug Fix
