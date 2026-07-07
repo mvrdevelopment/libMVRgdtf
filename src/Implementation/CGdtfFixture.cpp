@@ -2234,6 +2234,9 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetCRIGroupCount(siz
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetCRIGroupAt(size_t at, VectorworksMVR::IGdtfCRIGroup** value)
 {
+    if (!value) { return kVCOMError_InvalidArg; }
+    *value = nullptr;
+
     // Check if Set
     if (!fFixtureObject) { return kVCOMError_NotInitialized; }
 
@@ -2264,6 +2267,12 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetCRIGroupAt(size_t
             return kVCOMError_NoInterface;
         }
     }
+    else
+    {
+        return kVCOMError_NoInterface;
+    }
+
+    if (!pCRIGroupObj) { return kVCOMError_NoInterface; }
 
     //---------------------------------------------------------------------------
     // Check Incomming Object
@@ -2283,6 +2292,9 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::GetCRIGroupAt(size_t
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateCRIGroup(double colorTemp, VectorworksMVR::IGdtfCRIGroup **outVal)
 {
+    if (!outVal) { return kVCOMError_InvalidArg; }
+    *outVal = nullptr;
+
     // Check if Set
     if (!fFixtureObject) { return kVCOMError_NotInitialized; }
 
@@ -2309,6 +2321,12 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfFixtureImpl::CreateCRIGroup(doubl
             return kVCOMError_NoInterface;
         }
     }
+    else
+    {
+        return kVCOMError_NoInterface;
+    }
+
+    if (!pCRIGroupObj) { return kVCOMError_NoInterface; }
 
     //---------------------------------------------------------------------------
     // Check Incomming Object

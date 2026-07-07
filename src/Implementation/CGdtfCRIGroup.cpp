@@ -4,6 +4,7 @@
 #include "Prefix/StdAfx.h"
 #include "CGdtfCRIGroup.h"
 #include "CGdtfCRI.h"
+#include "Utility.h"
 
 VectorworksMVR::CGdtfCRIGroupImpl::CGdtfCRIGroupImpl()
 {
@@ -45,6 +46,9 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfCRIGroupImpl::GetCRICount(size_t 
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfCRIGroupImpl::GetCRIAt(size_t at, VectorworksMVR::IGdtfCRI** value)
 {
+    if (!value) { return kVCOMError_InvalidArg; }
+    *value = nullptr;
+
     // Check if Set
     if (!fCRIGroup) { return kVCOMError_NotInitialized; }
 
@@ -74,6 +78,12 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfCRIGroupImpl::GetCRIAt(size_t at,
             return kVCOMError_NoInterface;
         }
     }
+    else
+    {
+        return kVCOMError_NoInterface;
+    }
+
+    if (!pCRIObj) { return kVCOMError_NoInterface; }
 
     //---------------------------------------------------------------------------
     // Check Incomming Object
@@ -93,6 +103,9 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfCRIGroupImpl::GetCRIAt(size_t at,
 
 VectorworksMVR::VCOMError VectorworksMVR::CGdtfCRIGroupImpl::CreateCRI(EGdtfColorSample ces, Sint32 colorTemp, VectorworksMVR::IGdtfCRI **outVal)
 {
+    if (!outVal) { return kVCOMError_InvalidArg; }
+    *outVal = nullptr;
+
     // Check if Set
     if (!fCRIGroup) { return kVCOMError_NotInitialized; }
 
@@ -119,6 +132,12 @@ VectorworksMVR::VCOMError VectorworksMVR::CGdtfCRIGroupImpl::CreateCRI(EGdtfColo
             return kVCOMError_NoInterface;
         }
     }
+    else
+    {
+        return kVCOMError_NoInterface;
+    }
+
+    if (!pCRIObj) { return kVCOMError_NoInterface; }
 
     //---------------------------------------------------------------------------
     // Check Incomming Object

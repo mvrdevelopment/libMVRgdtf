@@ -390,6 +390,10 @@ const Sint32 kGDTF_CurrentMinorVersion = 2;
 #define XML_GDTF_WheelSlotColor			"Color"
 #define XML_GDTF_WheelSlotPicture		"MediaFileName"
 #define XML_GDTF_WheelSlotFilter		"Filter"
+#define XML_GDTF_WheelSlotDuration		"Duration"
+#define XML_GDTF_WheelSlotWidth			"Width"
+#define XML_GDTF_WheelSlotHeight		"Height"
+#define XML_GDTF_WheelSlotFPS			"FPS"
 
 #define XML_GDTF_PrismFacetNodeName		"Facet"
 #define XML_GDTF_PrismFacetColor		"Color"
@@ -452,6 +456,9 @@ const Sint32 kGDTF_CurrentMinorVersion = 2;
 
 #define XML_GDTF_DisplayNodeName                "Display"
 #define XML_GDTF_DisplayTexture                 "Texture"
+#define XML_GDTF_DisplayWidth					"Width"
+#define XML_GDTF_DisplayHeight					"Height"
+#define XML_GDTF_DisplayIsCurved				"IsCurved"
 
 #define XML_GDTF_LaserProtocolNodeName          "Protocol"
 #define XML_GDTF_LaserProtocolName              "Name"

@@ -1153,6 +1153,10 @@ GdtfWheelSlot::GdtfWheelSlot(GdtfWheel* parent)
 	fWheelParent 		= parent;
 	fFilter 	 		= nullptr;
 	fAnimationSystem	= nullptr;
+	fDuration			= 0.0;
+	fWidth				= 0;
+	fHeight				= 0;
+	fFPS				= 0;
 }
 
 GdtfWheelSlot::GdtfWheelSlot(const TXString& name, GdtfWheel* parent)
@@ -1161,6 +1165,10 @@ GdtfWheelSlot::GdtfWheelSlot(const TXString& name, GdtfWheel* parent)
 	fWheelParent 		= parent;
 	fFilter		 		= nullptr;
 	fAnimationSystem	= nullptr;
+	fDuration			= 0.0;
+	fWidth				= 0;
+	fHeight				= 0;
+	fFPS				= 0;
 }
 
 
@@ -1270,6 +1278,10 @@ void GdtfWheelSlot::OnPrintToFile(IXMLFileNodePtr pNode)
 	pNode->SetNodeAttributeValue(XML_GDTF_WheelSlotColor,		GdtfConverter::ConvertColor(fColor));
 	if(fGobo != "")	{ pNode->SetNodeAttributeValue(XML_GDTF_WheelSlotPicture,	fGobo); }
 	if(fFilter)	{ pNode->SetNodeAttributeValue(XML_GDTF_WheelSlotFilter,		fFilter->GetNodeReference()); }
+	if(fDuration != 0.0)	{ pNode->SetNodeAttributeValue(XML_GDTF_WheelSlotDuration,	GdtfConverter::ConvertDouble(fDuration)); }
+	if(fWidth != 0)			{ pNode->SetNodeAttributeValue(XML_GDTF_WheelSlotWidth,		GdtfConverter::ConvertInteger(fWidth)); }
+	if(fHeight != 0)		{ pNode->SetNodeAttributeValue(XML_GDTF_WheelSlotHeight,	GdtfConverter::ConvertInteger(fHeight)); }
+	if(fFPS != 0)			{ pNode->SetNodeAttributeValue(XML_GDTF_WheelSlotFPS,		GdtfConverter::ConvertInteger(fFPS)); }
 	
 	//------------------------------------------------------------------------------------
 	// Print the children
@@ -1311,6 +1323,16 @@ void GdtfWheelSlot::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	
 
 	pNode->GetNodeAttributeValue(XML_GDTF_WheelSlotFilter,	fUnresolvedFilter);
+
+	TXString duration, width, height, fps;
+	pNode->GetNodeAttributeValue(XML_GDTF_WheelSlotDuration,	duration);
+	pNode->GetNodeAttributeValue(XML_GDTF_WheelSlotWidth,		width);
+	pNode->GetNodeAttributeValue(XML_GDTF_WheelSlotHeight,		height);
+	pNode->GetNodeAttributeValue(XML_GDTF_WheelSlotFPS,			fps);
+	if(!duration.IsEmpty())	{ GdtfConverter::ConvertDouble(duration,	pNode, fDuration); }
+	if(!width.IsEmpty())	{ GdtfConverter::ConvertInteger(width,		pNode, fWidth); }
+	if(!height.IsEmpty())	{ GdtfConverter::ConvertInteger(height,		pNode, fHeight); }
+	if(!fps.IsEmpty())		{ GdtfConverter::ConvertInteger(fps,		pNode, fFPS); }
 	
 	//------------------------------------------------------------------------------------
 	// Read the wheel slots
@@ -1358,6 +1380,10 @@ void GdtfWheelSlot::OnErrorCheck(const IXMLFileNodePtr& pNode)
 	optional.push_back(XML_GDTF_WheelSlotColor);
 	optional.push_back(XML_GDTF_WheelSlotPicture);
 	optional.push_back(XML_GDTF_WheelSlotFilter);
+	optional.push_back(XML_GDTF_WheelSlotDuration);
+	optional.push_back(XML_GDTF_WheelSlotWidth);
+	optional.push_back(XML_GDTF_WheelSlotHeight);
+	optional.push_back(XML_GDTF_WheelSlotFPS);
 
 	
 	//------------------------------------------------------------------------------------
@@ -1389,6 +1415,16 @@ GdtfWheelSlotAnimationSystem* GdtfWheelSlot::GetAnimationSystem() const
 {
 	return fAnimationSystem;
 }
+
+double GdtfWheelSlot::GetDuration() const { return fDuration; }
+size_t GdtfWheelSlot::GetWidth()    const { return fWidth; }
+size_t GdtfWheelSlot::GetHeight()   const { return fHeight; }
+size_t GdtfWheelSlot::GetFPS()      const { return fFPS; }
+
+void GdtfWheelSlot::SetDuration(double duration) { fDuration = duration; }
+void GdtfWheelSlot::SetWidth(size_t width)       { fWidth = width; }
+void GdtfWheelSlot::SetHeight(size_t height)     { fHeight = height; }
+void GdtfWheelSlot::SetFPS(size_t fps)           { fFPS = fps; }
 
 //------------------------------------------------------------------------------------
 // GdtfModel
@@ -2911,7 +2947,7 @@ GdtfGeometryDisplay::GdtfGeometryDisplay(GdtfGeometry* parent)
 GdtfGeometryDisplay::GdtfGeometryDisplay(const TXString& name, GdtfModelPtr refToModel,const VWTransformMatrix& ma, GdtfGeometry* parent) 
 					:GdtfGeometry(name,refToModel,ma, parent)
 {
-	fTexture = "";	
+	fTexture = "";
 }
 
 GdtfGeometryDisplay::~GdtfGeometryDisplay()
@@ -2928,12 +2964,45 @@ void GdtfGeometryDisplay::SetTexture(const TXString& texture)
 	fTexture = texture;
 }
 
+const size_t& GdtfGeometryDisplay::GetWidth() const
+{
+	return fWidth;
+}
+
+void GdtfGeometryDisplay::SetWidth( size_t width )
+{
+	fWidth = width;
+}
+
+const size_t& GdtfGeometryDisplay::GetHeight() const
+{
+	return fHeight;
+}
+
+void GdtfGeometryDisplay::SetHeight( size_t height )
+{
+	fHeight = height;
+}
+
+void GdtfGeometryDisplay::SetIsCurved( const bool& isCurved )
+{
+	fIsCurved = isCurved;
+}
+
+void GdtfGeometryDisplay::GetIsCurved( bool& curvedRadius ) const
+{
+	curvedRadius = fIsCurved;
+}
+
 void GdtfGeometryDisplay::OnPrintToFile(IXMLFileNodePtr pNode) 
 {
 	//------------------------------------------------------------------------------------
 	// Call the parent
 	GdtfGeometry::OnPrintToFile(pNode);
-	pNode->SetNodeAttributeValue(XML_GDTF_DisplayTexture, fTexture);
+	pNode->SetNodeAttributeValue( XML_GDTF_DisplayTexture,		fTexture );
+	pNode->SetNodeAttributeValue( XML_GDTF_DisplayWidth,		GdtfConverter::ConvertInteger(fWidth) );
+	pNode->SetNodeAttributeValue( XML_GDTF_DisplayHeight,		GdtfConverter::ConvertInteger( fHeight ) );
+	pNode->SetNodeAttributeValue( XML_GDTF_DisplayIsCurved,		fIsCurved ? "true" : "false" );
 }
 
 void GdtfGeometryDisplay::OnReadFromNode(const IXMLFileNodePtr& pNode)
@@ -2942,7 +3011,16 @@ void GdtfGeometryDisplay::OnReadFromNode(const IXMLFileNodePtr& pNode)
 	// Call the parent
 	GdtfGeometry::OnReadFromNode(pNode);
 
-	pNode->GetNodeAttributeValue(XML_GDTF_DisplayTexture, fTexture);
+	TXString width, height, isCurved = "";
+
+	pNode->GetNodeAttributeValue( XML_GDTF_DisplayTexture, fTexture);
+	pNode->GetNodeAttributeValue( XML_GDTF_DisplayWidth, width );
+	pNode->GetNodeAttributeValue( XML_GDTF_DisplayHeight, height );
+	pNode->GetNodeAttributeValue( XML_GDTF_DisplayIsCurved, isCurved );
+
+	GdtfConverter::ConvertInteger(	width,			pNode,		fWidth );
+	GdtfConverter::ConvertInteger(	height,			pNode,		fHeight );
+	GdtfConverter::ConvertBool(		isCurved,		pNode,		fIsCurved );
 }
 
 void GdtfGeometryDisplay::OnErrorCheck(const IXMLFileNodePtr& pNode)

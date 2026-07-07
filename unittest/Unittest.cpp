@@ -265,6 +265,7 @@ void Unittest::checkifEqual(const std::string& check, const std::string& aspecte
 
 	fFailedTests.push_back(test);
 
+	std::cout << "Failed Test: " << test.fMessage << std::endl;
 };
 
 bool Unittest::checkVCOM(VectorworksMVR::VCOMError error, const std::string& check)

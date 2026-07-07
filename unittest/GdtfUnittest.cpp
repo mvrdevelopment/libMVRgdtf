@@ -194,6 +194,11 @@ void GdtfUnittest::WriteFile()
 				IGdtfWheelSlotAnimationSystemPtr gdtfAnimationSystem;
 				__checkVCOM(wheelSlotContainer->CreateAnimationSystem(1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0 /*radius*/, &gdtfAnimationSystem));
 
+				// Set media content attributes (Spec PR #305)
+				__checkVCOM(wheelSlotContainer->SetDuration(12.345));
+				__checkVCOM(wheelSlotContainer->SetWidth(1920));
+				__checkVCOM(wheelSlotContainer->SetHeight(1080));
+				__checkVCOM(wheelSlotContainer->SetFPS(30));
 
 				// Set Filter link
 				__checkVCOM(wheelSlotContainer->SetFilter(gdtfFilter));
@@ -670,6 +675,18 @@ void GdtfUnittest::ReadFile()
 							this->checkifEqual("GetWheelSlotAnimationSystemRadius ", radius, 4.0);
 
 						}
+
+						// Media content attributes (Spec PR #305)
+						double duration = 0.0;
+						size_t width = 0, height = 0, fps = 0;
+						__checkVCOM(gdtfSlot->GetDuration(duration));
+						__checkVCOM(gdtfSlot->GetWidth(width));
+						__checkVCOM(gdtfSlot->GetHeight(height));
+						__checkVCOM(gdtfSlot->GetFPS(fps));
+						this->checkifEqual("GetWheelSlotDuration ", duration, 12.345);
+						this->checkifEqual("GetWheelSlotWidth ",    width,    size_t(1920));
+						this->checkifEqual("GetWheelSlotHeight ",   height,   size_t(1080));
+						this->checkifEqual("GetWheelSlotFPS ",      fps,      size_t(30));
 
 					} // WheelSlot loop
 				}

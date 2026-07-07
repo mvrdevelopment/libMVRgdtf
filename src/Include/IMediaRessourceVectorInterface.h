@@ -684,6 +684,16 @@ namespace VectorworksMVR
 		//GDTF 1.1
 		virtual VCOMError VCOM_CALLTYPE     GetAnimationSystem(IGdtfWheelSlotAnimationSystem** outAnimationSystem) = 0;
 		virtual VCOMError VCOM_CALLTYPE     CreateAnimationSystem(double p1_X, double p1_Y, double p2_X, double p2_Y, double p3_X, double p3_Y, double radius, IGdtfWheelSlotAnimationSystem** 	outAnimationSystem) = 0;
+
+		// Spec PR #305 - Media content attributes
+		virtual VCOMError VCOM_CALLTYPE     GetDuration(double& outDuration) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetWidth(size_t& outWidth) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetHeight(size_t& outHeight) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetFPS(size_t& outFPS) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetDuration(double duration) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetWidth(size_t width) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetHeight(size_t height) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetFPS(size_t fps) = 0;
     };
 	typedef VCOMPtr<IGdtfWheelSlot>	IGdtfWheelSlotPtr;
     
@@ -861,7 +871,14 @@ namespace VectorworksMVR
 
 		// Display
 		virtual MvrString VCOM_CALLTYPE		GetTexture() = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetWidth( size_t& width ) = 0;
+		virtual VCOMError VCOM_CALLTYPE		GetHeight( size_t& height ) = 0;
+		virtual VCOMError VCOM_CALLTYPE     GetIsCurved( bool& isCurved ) = 0;
+
 		virtual VCOMError VCOM_CALLTYPE		SetTexture(MvrString texture) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetWidth( size_t width ) = 0;
+		virtual VCOMError VCOM_CALLTYPE		SetHeight( size_t height ) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetIsCurved( bool isCurved ) = 0;
 
 		// GDTF 1.2
 		// Lamp
