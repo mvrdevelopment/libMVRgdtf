@@ -396,6 +396,12 @@ bool VectorworksMVR::Filing::GetFolderAppDataPath(TXString& outPath)
 	
 	if(!result) return false;
 	outPath = TXString(buffer);
+#elif defined(__EMSCRIPTEN__)
+	// Emscripten/WASM: getpwuid() returns NULL; use $HOME or the default
+	// MEMFS home directory instead
+	const char* homedir = getenv("HOME");
+	if (homedir == nullptr || homedir[0] == 0) { homedir = "/home/web_user"; }
+	outPath = TXString(homedir);
 #elif _LINUX
 	// LINUX_IMPLEMENTATION - done
 	struct passwd *pw = getpwuid(getuid());
