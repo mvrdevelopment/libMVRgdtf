@@ -1989,7 +1989,7 @@ EGdtfModel_PrimitiveType GdtfModel::GetPrimitiveType() const
 
 void GdtfModel::GetBuffer3DS(void** bufferToCopy, size_t& length)
 {
-	if(fBuffer3DS)
+	if(!fBuffer3DS)
 	{
 		return;
 	}
@@ -2005,7 +2005,7 @@ void GdtfModel::GetBuffer3DS(void** bufferToCopy, size_t& length)
 
 void GdtfModel::GetBufferSVG(void** bufferToCopy, size_t& length)
 {
-	if(fBufferSVG)
+	if(!fBufferSVG)
 	{
 		return;
 	}
