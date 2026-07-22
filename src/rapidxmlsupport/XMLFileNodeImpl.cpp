@@ -14,6 +14,7 @@ using namespace VectorworksMVR::VWFC::Tools;
 CXMLFileNodeImpl::CXMLFileNodeImpl()
 {
 	fElement = nullptr;
+	fRefCnt  = 0;
 }
 
 CXMLFileNodeImpl::~CXMLFileNodeImpl()

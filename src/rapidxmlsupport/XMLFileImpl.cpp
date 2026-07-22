@@ -16,6 +16,7 @@ using namespace VectorworksMVR::VWFC::Tools;
 // ----------------------------------------------------------------------------------------------------
 CXMLFileImpl::CXMLFileImpl()
 {
+	fRefCnt = 0;
 }
 
 CXMLFileImpl::~CXMLFileImpl()
