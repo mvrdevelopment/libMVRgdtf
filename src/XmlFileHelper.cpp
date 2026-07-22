@@ -399,7 +399,7 @@ bool SceneData::GdtfConverter::ConvertColorArray(TXString values, const IXMLFile
 	return valueStr;
 }
 
-#ifdef IS64BIT
+#if defined(IS64BIT) || defined(__EMSCRIPTEN__)
 /*static*/ TXString GdtfConverter::ConvertInteger(Uint32 value)
 {
 	TXString valueStr;
@@ -449,7 +449,7 @@ bool SceneData::GdtfConverter::ConvertColorArray(TXString values, const IXMLFile
 	return true;
 }
 
-#ifdef IS64BIT
+#if defined(IS64BIT) || defined(__EMSCRIPTEN__)
 /*static*/ bool GdtfConverter::ConvertInteger(const TXString& value, const IXMLFileNodePtr& node, Uint32& intValue)
 {
     if(value.IsEmpty()) return false;
