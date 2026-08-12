@@ -3837,6 +3837,11 @@ bool SceneDataExchange::WriteXml(const IFolderIdentifierPtr& folder, IXMLFileIOB
 					{
 						symDef->PrintToFile( pAuxDataNode, this );
 					}
+
+					for ( const auto& classes : fClasses )
+					{
+						classes->PrintToFile( pAuxDataNode, this );
+					}
 				}
 				
 
