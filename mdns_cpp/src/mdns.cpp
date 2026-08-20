@@ -34,7 +34,8 @@ int mDNS::openServiceSockets(int *sockets, int max_sockets) {
   if (num_sockets < max_sockets) {
     sockaddr_in sock_addr{};
     sock_addr.sin_family = AF_INET;
-#ifdef _WIN32
+#if defined(_WIN32) && defined(_MSC_VER)
+    // in4addr_any is only declared in the Windows SDK, not in mingw-w64 headers
     sock_addr.sin_addr = in4addr_any;
 #else
     sock_addr.sin_addr.s_addr = INADDR_ANY;

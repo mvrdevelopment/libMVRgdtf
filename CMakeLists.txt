@@ -1,6 +1,11 @@
 SET(CMAKE_POLICY_DEFAULT_CMP0074 NEW)
 cmake_minimum_required(VERSION 3.9.4)
 
+# Call project() early so the compiler is identified (MSVC, CMAKE_CXX_COMPILER_ID, ...)
+# before the MSVC runtime flag setup below, and so that flags set there are also
+# inherited by the mdns_cpp subdirectory
+project(MvrGdtf LANGUAGES C CXX)
+
 # pre setup for some vars
 set(UNITTEST FALSE CACHE BOOL "If enabled the tests wont be build!")
 set(WIN_RUNTIME_LIB "-MD" CACHE STRING "Set '-MD' or '-MT' for windows build")
@@ -38,11 +43,13 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 #################################################
 # System setup
 if (WIN32)
+if (MSVC)
 message("MSVC Runtime lib: " ${WIN_RUNTIME_LIB})
 set(CMAKE_CXX_FLAGS_DEBUG ${WIN_RUNTIME_LIB}d)
 set(CMAKE_CXX_FLAGS_RELEASE ${WIN_RUNTIME_LIB})
 set(CMAKE_CXX_FLAGS_MINSIZEREL ${WIN_RUNTIME_LIB})
 SET(CMAKE_CXX_FLAGS_RELWITHDEBINFO ${WIN_RUNTIME_LIB})
+endif(MSVC)
 elseif(APPLE)
     if($ENV{OSX_VERSION})
     message("Setting osx version: " $ENV{OSX_VERSION})
@@ -141,6 +148,11 @@ if (WIN32)
     
     set(EXTRA_LIBS ${EXTRA_LIBS} rpcrt4)
     set(EXTRA_LIBS ${EXTRA_LIBS} shlwapi)
+    if (NOT MSVC)
+        # boost::asio uses AcceptEx/GetAcceptExSockaddrs; MSVC auto-links mswsock via
+        # #pragma comment(lib) in the asio headers, mingw does not
+        set(EXTRA_LIBS ${EXTRA_LIBS} mswsock)
+    endif()
 
     set_target_properties( MvrGdtf PROPERTIES RUNTIME_OUTPUT_DIRECTORY    ${CMAKE_CURRENT_SOURCE_DIR}/libs/ )
     set_target_properties( MvrGdtf PROPERTIES LIBRARY_OUTPUT_DIRECTORY   ${CMAKE_CURRENT_SOURCE_DIR}/libs/ )
@@ -201,6 +213,10 @@ target_link_libraries(MvrGdtfUnitTest ${EXTRA_LIBS})
 #Append Runtime
 if (WIN32)
     get_target_property(OUTPUT_NAME_OLD MvrGdtfUnitTest OUTPUT_NAME)
+    if(NOT OUTPUT_NAME_OLD)
+        # OUTPUT_NAME is not set yet, so get_target_property returns NOTFOUND
+        set(OUTPUT_NAME_OLD MvrGdtfUnitTest)
+    endif()
     set(OUTPUT_NAME_OLD "${OUTPUT_NAME_OLD}${WIN_RUNTIME_LIB}")
     set_target_properties(MvrGdtfUnitTest PROPERTIES OUTPUT_NAME ${OUTPUT_NAME_OLD})
 endif(WIN32)

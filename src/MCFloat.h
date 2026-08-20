@@ -222,6 +222,13 @@ enum {
 
 #define	DOUBLE_SIZE		8
 
+#if defined(__MINGW32__) || defined(__MINGW64__)
+// mingw-w64's math.h defines FP_SNAN/FP_QNAN as macros (MSVC does not),
+// which would break the enumerator names below
+#undef FP_SNAN
+#undef FP_QNAN
+#endif
+
 enum {
     FP_SNAN                     = 3,                            /*      signaling NaN                         */
     FP_QNAN                     = 4,                            /*      quiet NaN                             */
