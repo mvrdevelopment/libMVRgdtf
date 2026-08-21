@@ -419,6 +419,11 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE		GetConnectionCount(size_t& outConnections) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetConnectionAt(size_t at, IConnection** outConnection) = 0;
 		virtual VCOMError VCOM_CALLTYPE		CreateConnection(MvrString own, MvrString other, MvrUUID ToObject, IConnection** addedObj) = 0;
+
+		// Speaker and Speaker Bumper
+		virtual VCOMError VCOM_CALLTYPE     GetAngleToRelative( double& outAngleToRelative ) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetAngleToRelative( double angleToRelative ) = 0;
+
 		// MVR 1.5
 		virtual VCOMError VCOM_CALLTYPE		GetCustomCommandCount(size_t& outCount) = 0;
 		virtual VCOMError VCOM_CALLTYPE		GetCustomCommandAt(size_t at, ICustomCommand** outCustomCommand) = 0;

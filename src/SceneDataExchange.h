@@ -973,7 +973,12 @@ namespace SceneData
 											SceneDataSpeakerObj(const SceneDataGUID& guid);
 		virtual								~SceneDataSpeakerObj();
 
+		virtual double						GetAngleToRelative();
+		virtual void						SetAngleToRelative( double angleToRelative );
+
 	private:
+		double								fAngleToRelative;
+
 		virtual	TXString					GetNodeName();
 		virtual ESceneDataObjectType		GetObjectType();
 
@@ -992,7 +997,12 @@ namespace SceneData
 											SceneDataSpeakerBumperObj(const SceneDataGUID& guid);
 		virtual								~SceneDataSpeakerBumperObj();
 
+		virtual double						GetAngleToRelative();
+		virtual void						SetAngleToRelative( double angleToRelative );
+
 	private:
+		double								fAngleToRelative;
+
 		virtual	TXString					GetNodeName();
 		virtual ESceneDataObjectType		GetObjectType();
 

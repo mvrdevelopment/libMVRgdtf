@@ -2844,6 +2844,7 @@ void SceneDataListeningPlaneObj::OnReadFromNode(const IXMLFileNodePtr& pNode, Sc
 // SceneDataSpeakerObj
 SceneDataSpeakerObj::SceneDataSpeakerObj(const SceneDataGUID& guid) :SceneDataGDTFSpecObj(guid)
 {
+	fAngleToRelative = 0.0;
 }
 
 SceneDataSpeakerObj::~SceneDataSpeakerObj()
@@ -2855,6 +2856,16 @@ TXString SceneDataSpeakerObj::GetNodeName()
 	return TXString(XML_Val_SpeakerObjectNodeName);
 }
 
+double SceneDataSpeakerObj::GetAngleToRelative()
+{
+	return fAngleToRelative;
+}
+
+void SceneDataSpeakerObj::SetAngleToRelative( double value )
+{
+	fAngleToRelative = value;
+}
+
 ESceneDataObjectType SceneDataSpeakerObj::GetObjectType()
 {
 	return ESceneDataObjectType::eSpeaker;
@@ -2863,17 +2874,24 @@ ESceneDataObjectType SceneDataSpeakerObj::GetObjectType()
 void SceneDataSpeakerObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
 {
 	SceneDataGDTFSpecObj::OnPrintToFile( pNode, exchange );
+
+	pNode->SetNodeAttributeValue( "AngleToRelative", GdtfConverter::ConvertDouble( fAngleToRelative ) );
 }
 
 void SceneDataSpeakerObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
 {
 	SceneDataGDTFSpecObj::OnReadFromNode( pNode, exchange );
+
+	TXString value;
+	pNode->GetNodeAttributeValue("AngleToRelative", value);
+	GdtfConverter::ConvertDouble( value, pNode, fAngleToRelative );
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------------
 // SceneDataSpeakerBumperObj
 SceneDataSpeakerBumperObj::SceneDataSpeakerBumperObj(const SceneDataGUID& guid) :SceneDataGDTFSpecObj(guid)
 {
+	fAngleToRelative = 0.0;
 }
 
 SceneDataSpeakerBumperObj::~SceneDataSpeakerBumperObj()
@@ -2890,14 +2908,30 @@ ESceneDataObjectType SceneDataSpeakerBumperObj::GetObjectType()
 	return ESceneDataObjectType::eSpeakerBumper;
 }
 
+double SceneDataSpeakerBumperObj::GetAngleToRelative()
+{
+	return fAngleToRelative;
+}
+
+void SceneDataSpeakerBumperObj::SetAngleToRelative( double value )
+{
+	fAngleToRelative = value;
+}
+
 void SceneDataSpeakerBumperObj::OnPrintToFile(IXMLFileNodePtr pNode, SceneDataExchange* exchange)
 {
 	SceneDataGDTFSpecObj::OnPrintToFile( pNode, exchange );
+
+	pNode->SetNodeAttributeValue( "AngleToRelative", GdtfConverter::ConvertDouble( fAngleToRelative ) );
 }
 
 void SceneDataSpeakerBumperObj::OnReadFromNode(const IXMLFileNodePtr& pNode, SceneDataExchange* exchange)
 {
 	SceneDataGDTFSpecObj::OnReadFromNode( pNode, exchange );
+
+	TXString value;
+	pNode->GetNodeAttributeValue("AngleToRelative", value);
+	GdtfConverter::ConvertDouble( value, pNode, fAngleToRelative );
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------------

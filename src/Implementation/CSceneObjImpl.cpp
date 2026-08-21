@@ -2028,6 +2028,62 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetAudioDescriptionFile
 }
 
 //------------------------------------------------------------------------------------------------------------------------------------------
+// Speaker and Speaker Bumper
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetAngleToRelative( double& outAngleToRelative )
+{
+	ASSERTN(kEveryone,fPtr);
+	if( !fPtr ) return kVCOMError_NotInitialized;
+
+	if ( fType  == ESceneObjType::Speaker )
+	{
+		SceneData::SceneDataSpeakerObjPtr speaker = static_cast<SceneData::SceneDataSpeakerObjPtr>(fPtr);
+		if( ! speaker) return kVCOMError_Failed;
+		outAngleToRelative = speaker->GetAngleToRelative();
+	}
+	else if ( fType == ESceneObjType::SpeakerBumper )
+	{
+		SceneData::SceneDataSpeakerBumperObjPtr speakerBumper = static_cast<SceneData::SceneDataSpeakerBumperObjPtr>( fPtr );
+		if ( !speakerBumper ) return kVCOMError_Failed;
+		outAngleToRelative = speakerBumper->GetAngleToRelative();
+	}
+	else
+	{
+		ASSERTN(kEveryone,fType == ESceneObjType::Speaker || fType == ESceneObjType::SpeakerBumper);
+		return kVCOMError_Failed;
+	}
+
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetAngleToRelative( double outAngleToRelative )
+{
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+
+	if ( fType == ESceneObjType::Speaker )
+	{
+		SceneData::SceneDataSpeakerObjPtr speaker = static_cast<SceneData::SceneDataSpeakerObjPtr>(fPtr);
+		if( ! speaker) return kVCOMError_Failed;
+
+		speaker->SetAngleToRelative(outAngleToRelative);
+	}
+	else if ( fType == ESceneObjType::SpeakerBumper )
+	{
+		SceneData::SceneDataSpeakerBumperObjPtr speakerBumper = static_cast<SceneData::SceneDataSpeakerBumperObjPtr>( fPtr );
+		if ( !speakerBumper ) return kVCOMError_Failed;
+
+		speakerBumper->SetAngleToRelative( outAngleToRelative );
+	}
+	else
+	{
+		ASSERTN( kEveryone, fType == ESceneObjType::Speaker || fType == ESceneObjType::SpeakerBumper );
+		return kVCOMError_Failed;
+	}
+
+	return kVCOMError_NoError;
+}
+
+//------------------------------------------------------------------------------------------------------------------------------------------
 // Projector
 VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetProjectorSource(MvrString value, MvrString linkedGeometry, GdtfDefines::ESourceType type)
 {
