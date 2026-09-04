@@ -21,6 +21,7 @@ namespace VectorworksMVR
 	};
 
 	using TCPMessageInfo = MVRxchangeNetwork::TCPMessageInfo;
+	using NetworkInterface = std::pair<std::string, uint32_t>;
 
 	//----------------------------------------------------------------------------------------
 	class CMVRxchangeServiceImpl : public VCOMImpl<IMVRxchangeService>
@@ -42,6 +43,9 @@ namespace VectorworksMVR
 
 		virtual VCOMError VCOM_CALLTYPE     OnMessage(OnMessageArgs& messageHandler);
 		virtual VCOMError VCOM_CALLTYPE     Send_message(const SendMessageArgs& messageHandler);
+
+		virtual VCOMError VCOM_CALLTYPE     QueryAllAvailableInterfaces( std::vector<NetworkInterface>& out );
+		virtual VCOMError VCOM_CALLTYPE     SetNetworkInterface( const NetworkInterface& interface );
 
 	private:
 		void mDNS_Client_Task();	// actual mdns task
@@ -67,6 +71,8 @@ namespace VectorworksMVR
 		MVRxchangeNetwork::MVRxchangeServer*			fServer;
 		ConnectToLocalServiceArgs						fCurrentService;
 
+		NetworkInterface								fNetworkInterface;
+
 		void TCP_Start();
 		void TCP_Stop();
 	public:
@@ -75,6 +81,7 @@ namespace VectorworksMVR
 
 		std::mutex fMvrGroupMutex;
 		std::vector<MVRxchangeGroupMember>			fMVRGroup;
+
 	private:
 
 		OnMessageArgs  fCallBack;

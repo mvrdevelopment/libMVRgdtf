@@ -2062,6 +2062,11 @@ class DYNAMIC_ATTRIBUTE IGdtfMacro : public IVWUnknown
 		 */
 		virtual VCOMError VCOM_CALLTYPE     QueryLocalServices(size_t& out_Count) = 0;
         virtual VCOMError VCOM_CALLTYPE     GetLocalServiceAt(size_t index, ConnectToLocalServiceArgs& outLocalService) = 0;
+
+		using NetworkInterface = std::pair<std::string, uint32_t>;
+		// Allows the user to query all available network interfaces on the system, and set one of them for the MVR-xchange service to use
+		virtual VCOMError VCOM_CALLTYPE     QueryAllAvailableInterfaces( std::vector<NetworkInterface>& out ) = 0;
+		virtual VCOMError VCOM_CALLTYPE     SetNetworkInterface( const NetworkInterface& interface ) = 0;
         
 		typedef IMVRxchangeMessage (*IMVRxchangeIncomingMessage)(const IMVRxchangeMessage& args, void* context);
 		typedef void (*IMVRxchangeReturningMessage)(const IMVRxchangeMessage& outgoingMsg, const IMVRxchangeMessage& returningMsg, void* context);

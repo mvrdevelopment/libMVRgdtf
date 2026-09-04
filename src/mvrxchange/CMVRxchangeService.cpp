@@ -68,23 +68,37 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 	txt += (uint8_t)txt2.size();
 	txt += txt2;
 
-	for(std::pair<std::string, uint32_t> e : mdns_cpp::mDNS().getInterfaces())
+	if ( !fNetworkInterface.first.empty() || fNetworkInterface.second != 0 )
 	{
-		// Bitmasking IP Address to check if it is 127.x.x.x
-		// We dont want to start the mDNS Server on loopback addresses
-		// If two programs on the same device want to connect, they can use one of the other interfaces as well
-		if((e.second & 4278190080) == 2130706432) {
-			continue;
-		}
-	
 		mdns_cpp::mDNS* s = new mdns_cpp::mDNS();
 		s->setServiceHostname(std::string(fCurrentService.Service.fBuffer));
 		s->setServicePort(fServer->GetPort());
-		s->setServiceIP(e.second);
+		s->setServiceIP(fNetworkInterface.second);
 		s->setServiceName(MVRXChange_Service);
 		s->setServiceTxtRecord(txt);
 		s->startService();
-		fmdns.emplace_back(s);	// Pointer is now managed by the unique ptr and deleted upon fmdns going out of scope
+		fmdns.emplace_back(s);
+	}
+	else
+	{
+		for(NetworkInterface e : mdns_cpp::mDNS().getInterfaces())
+		{
+			// Bitmasking IP Address to check if it is 127.x.x.x
+			// We dont want to start the mDNS Server on loopback addresses
+			// If two programs on the same device want to connect, they can use one of the other interfaces as well
+			if((e.second & 4278190080) == 2130706432) {
+				continue;
+			}
+
+			mdns_cpp::mDNS* s = new mdns_cpp::mDNS();
+			s->setServiceHostname(std::string(fCurrentService.Service.fBuffer));
+			s->setServicePort(fServer->GetPort());
+			s->setServiceIP(e.second);
+			s->setServiceName(MVRXChange_Service);
+			s->setServiceTxtRecord(txt);
+			s->startService();
+			fmdns.emplace_back(s);	// Pointer is now managed by the unique ptr and deleted upon fmdns going out of scope
+		}
 	}
 
 	bool doInit = false; // avoid deadlock with temp variable
@@ -274,6 +288,27 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::Send_message(const SendMessage
 	
 	delete[] messageHandler.Message.BufferToFile;
 
+	return kVCOMError_NoError;
+}
+
+VCOMError VectorworksMVR::CMVRxchangeServiceImpl::QueryAllAvailableInterfaces(std::vector<NetworkInterface>& out)
+{
+	out.clear();
+	for(NetworkInterface e : mdns_cpp::mDNS().getInterfaces())
+	{
+		// remove loopback addresses (127.x.x.x) from the list of available interfaces, as they are not useful for mDNS service discovery in a local network context
+		if((e.second & 4278190080) == 2130706432) {
+			continue;
+		}
+		out.push_back(e);
+	}
+
+	return kVCOMError_NoError;
+}
+
+VCOMError VectorworksMVR::CMVRxchangeServiceImpl::SetNetworkInterface( const NetworkInterface& interface )
+{
+	fNetworkInterface = interface;
 	return kVCOMError_NoError;
 }
 
