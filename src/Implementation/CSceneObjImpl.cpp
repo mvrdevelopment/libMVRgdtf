@@ -1984,6 +1984,105 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetVideoScreenSource(IS
 	return kVCOMError_NoError;
 }
 
+// ------------------------------------------------------------------------------------------------------------------------------------------
+// Listening Plane
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetAudioDescriptionFile(MvrString fileName)
+{
+	// Check if this is initialized
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+
+	// Check the type is right
+	ASSERTN(kEveryone,fType == ESceneObjType::ListeningPlane);
+	if( fType != ESceneObjType::ListeningPlane) return kVCOMError_Failed;
+
+	if (fType == ESceneObjType::ListeningPlane)
+	{
+		SceneData::SceneDataListeningPlaneObjPtr listeningPlane = static_cast<SceneData::SceneDataListeningPlaneObjPtr>(fPtr);
+		if( ! listeningPlane) return kVCOMError_Failed;
+		listeningPlane->SetAudioDescriptionFile(fileName);
+	}
+
+
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetAudioDescriptionFile( MvrString& outFileName )
+{
+	// Check if this is initialized
+	ASSERTN( kEveryone, fPtr );
+	if ( !fPtr ) return kVCOMError_NotInitialized;
+
+	// Check the type is right
+	ASSERTN( kEveryone, fType == ESceneObjType::ListeningPlane);
+	if ( fType != ESceneObjType::ListeningPlane ) return kVCOMError_Failed;
+
+	if (fType == ESceneObjType::ListeningPlane)
+	{
+		SceneData::SceneDataListeningPlaneObjPtr listeningPlane = static_cast<SceneData::SceneDataListeningPlaneObjPtr>( fPtr );
+		if ( !listeningPlane ) return kVCOMError_Failed;
+		outFileName = listeningPlane->GetAudioDescriptionFile();
+	}
+
+	return kVCOMError_NoError;
+}
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+// Speaker and Speaker Bumper
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetAngleToRelative( double& outAngleToRelative )
+{
+	ASSERTN(kEveryone,fPtr);
+	if( !fPtr ) return kVCOMError_NotInitialized;
+
+	if ( fType  == ESceneObjType::Speaker )
+	{
+		SceneData::SceneDataSpeakerObjPtr speaker = static_cast<SceneData::SceneDataSpeakerObjPtr>(fPtr);
+		if( ! speaker) return kVCOMError_Failed;
+		outAngleToRelative = speaker->GetAngleToRelative();
+	}
+	else if ( fType == ESceneObjType::SpeakerBumper )
+	{
+		SceneData::SceneDataSpeakerBumperObjPtr speakerBumper = static_cast<SceneData::SceneDataSpeakerBumperObjPtr>( fPtr );
+		if ( !speakerBumper ) return kVCOMError_Failed;
+		outAngleToRelative = speakerBumper->GetAngleToRelative();
+	}
+	else
+	{
+		ASSERTN(kEveryone,fType == ESceneObjType::Speaker || fType == ESceneObjType::SpeakerBumper);
+		return kVCOMError_Failed;
+	}
+
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetAngleToRelative( double outAngleToRelative )
+{
+	ASSERTN(kEveryone,fPtr);
+	if( ! fPtr) return kVCOMError_NotInitialized;
+
+	if ( fType == ESceneObjType::Speaker )
+	{
+		SceneData::SceneDataSpeakerObjPtr speaker = static_cast<SceneData::SceneDataSpeakerObjPtr>(fPtr);
+		if( ! speaker) return kVCOMError_Failed;
+
+		speaker->SetAngleToRelative(outAngleToRelative);
+	}
+	else if ( fType == ESceneObjType::SpeakerBumper )
+	{
+		SceneData::SceneDataSpeakerBumperObjPtr speakerBumper = static_cast<SceneData::SceneDataSpeakerBumperObjPtr>( fPtr );
+		if ( !speakerBumper ) return kVCOMError_Failed;
+
+		speakerBumper->SetAngleToRelative( outAngleToRelative );
+	}
+	else
+	{
+		ASSERTN( kEveryone, fType == ESceneObjType::Speaker || fType == ESceneObjType::SpeakerBumper );
+		return kVCOMError_Failed;
+	}
+
+	return kVCOMError_NoError;
+}
+
 //------------------------------------------------------------------------------------------------------------------------------------------
 // Projector
 VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::SetProjectorSource(MvrString value, MvrString linkedGeometry, GdtfDefines::ESourceType type)
@@ -2152,16 +2251,19 @@ void VectorworksMVR::CSceneObjImpl::SetPointer(SceneData::SceneDataObjWithMatrix
 	
 	switch (pointer->GetObjectType())
 	{
-		case SceneData::eLayer:			fType = ESceneObjType::Layer;		break;
-		case SceneData::eGroup:			fType = ESceneObjType::Group;		break;
-		case SceneData::eTruss:			fType = ESceneObjType::Truss;		break;
-		case SceneData::eSupport:		fType = ESceneObjType::Support;		break;
-		case SceneData::eFixture:		fType = ESceneObjType::Fixture;		break;
-		case SceneData::eFocusPoint:	fType = ESceneObjType::FocusPoint;	break;
-		case SceneData::eSceneObject:	fType = ESceneObjType::SceneObj;	break;
-		case SceneData::eVideoScreen:	fType = ESceneObjType::VideoScreen; break;
-		case SceneData::eProjector:		fType = ESceneObjType::Projector; 	break;
-			
+		case SceneData::eLayer:				fType = ESceneObjType::Layer;			break;
+		case SceneData::eGroup:				fType = ESceneObjType::Group;			break;
+		case SceneData::eTruss:				fType = ESceneObjType::Truss;			break;
+		case SceneData::eSupport:			fType = ESceneObjType::Support;			break;
+		case SceneData::eFixture:			fType = ESceneObjType::Fixture;			break;
+		case SceneData::eFocusPoint:		fType = ESceneObjType::FocusPoint;		break;
+		case SceneData::eSceneObject:		fType = ESceneObjType::SceneObj;		break;
+		case SceneData::eVideoScreen:		fType = ESceneObjType::VideoScreen;		break;
+		case SceneData::eProjector:			fType = ESceneObjType::Projector; 		break;
+		case SceneData::eListeningPlane:	fType = ESceneObjType::ListeningPlane; 	break;
+		case SceneData::eSpeaker:			fType = ESceneObjType::Speaker; 		break;
+		case SceneData::eSpeakerBumper:		fType = ESceneObjType::SpeakerBumper; 		break;
+
 		default:
 			DSTOP((kEveryone, "Unexpected input!"));
 			break;

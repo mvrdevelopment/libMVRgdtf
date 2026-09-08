@@ -810,6 +810,7 @@ namespace SceneData
 		GdtfGeometry*							AddGeometryInventory(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 		GdtfGeometry*							AddGeometryStructure(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 		GdtfGeometry*							AddGeometrySupport(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
+		GdtfGeometry*							AddGeometrySpeaker(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
 		GdtfGeometry*							AddGeometryMagnet(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 
 	protected:
@@ -1328,6 +1329,58 @@ namespace SceneData
         virtual	void							OnErrorCheck(const IXMLFileNodePtr& pNode);
 	};
 	typedef GdtfGeometrySupport* GdtfGeometrySupportPtr;
+
+	class GdtfGeometrySpeaker : public GdtfGeometry
+	{
+	public:
+		GdtfGeometrySpeaker(GdtfGeometry* parent);
+		GdtfGeometrySpeaker(const TXString& name, GdtfModelPtr refToModel,const VWTransformMatrix& ma, GdtfGeometry* parent);
+
+		~GdtfGeometrySpeaker();
+
+	private:
+		double 					fFrequencyMin;
+		double 					fFrequencyMax;
+		double 					fMaxSPL;
+		double 					fImpedance;
+		double 					fSoundAngleRotationMax;
+		double 					fVerticalCoverageUp;
+		double 					fVerticalCoverageDown;
+		double 					fHorizontalCoverageLeft;
+		double 					fHorizontalCoverageRight;
+
+	public:
+		virtual EGdtfObjectType			GetObjectType();
+
+		// Getters
+		double							GetFrequencyMin() const;
+		double							GetFrequencyMax() const;
+		double							GetMaxSPL() const;
+		double							GetImpedance() const;
+		double							GetSoundAngleRotationMax() const;
+		double							GetVerticalCoverageUp() const;
+		double							GetVerticalCoverageDown() const;
+		double							GetHorizontalCoverageLeft() const;
+		double							GetHorizontalCoverageRight() const;
+
+		// Setters
+		void							SetFrequencyMin(double frequencyMin);
+		void							SetFrequencyMax(double frequencyMax);
+		void							SetMaxSPL(double maxSPL);
+		void							SetImpedance(double impedance);
+		void							SetSoundAngleRotationMax(double soundAngleRotationMax);
+		void							SetVerticalCoverageUp(double verticalCoverageUp);
+		void							SetVerticalCoverageDown(double verticalCoverageDown);
+		void							SetHorizontalCoverageLeft(double horizontalCoverageLeft);
+		void							SetHorizontalCoverageRight(double horizontalCoverageRight);
+
+	protected:
+		virtual	TXString				GetNodeName();
+		virtual	void					OnPrintToFile(IXMLFileNodePtr pNode);
+		virtual	void					OnReadFromNode(const IXMLFileNodePtr& pNode);
+		virtual	void					OnErrorCheck(const IXMLFileNodePtr& pNode);
+	};
+	typedef GdtfGeometrySpeaker* GdtfGeometrySpeakerPtr;
 
 	class GdtfGeometryMagnet : public GdtfGeometry
 	{
@@ -2926,6 +2979,7 @@ namespace SceneData
 		GdtfGeometryPtr							AddGeometryWiringObject(		const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 		GdtfGeometryPtr							AddGeometryInventory(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 		GdtfGeometryPtr							AddGeometryStructure(			const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
+		GdtfGeometryPtr							AddGeometrySpeaker( const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix& ma);
 		GdtfGeometryPtr							AddGeometrySupport(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 		GdtfGeometryPtr							AddGeometryMagnet(				const TXString& name, GdtfModelPtr refToModel, const VWTransformMatrix&	ma);
 
