@@ -77,6 +77,11 @@ class mDNS {
   void          setServiceIP(std::uint32_t ip);
   std::uint32_t getServiceIP();
 
+  // Restricts outgoing queries to the interface with this IPv4 address (network byte order).
+  // 0 (the default) queries on every non-loopback interface.
+  void          setQueryInterface(std::uint32_t ip);
+  std::uint32_t getQueryInterface();
+
   std::string   getServiceIPPort(); // IP:Port
 
   void setServiceName(const std::string &name);
@@ -91,6 +96,9 @@ class mDNS {
  private:
   void runMainLoop();
   int openClientSockets(int *sockets, int max_sockets, int port);
+  // [filter_ipv4] == 0 opens sockets on every interface, otherwise only on the matching one.
+  // Interface enumeration into [fInterfaces] always covers every interface.
+  int openClientSocketsFiltered(int *sockets, int max_sockets, int port, std::uint32_t filter_ipv4);
   int openServiceSockets(int *sockets, int max_sockets);
 
   std::string hostname_{"dummy-host"};
@@ -104,6 +112,7 @@ class mDNS {
   bool has_ipv6_{false};
 
   uint32_t service_address_ipv4_{0};
+  uint32_t query_interface_ipv4_{0};
   std::vector<std::pair<std::string, uint32_t>> fInterfaces;
   uint8_t service_address_ipv6_[16]{0};
 

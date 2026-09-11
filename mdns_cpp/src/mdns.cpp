@@ -64,10 +64,13 @@ int mDNS::openServiceSockets(int *sockets, int max_sockets) {
   return num_sockets;
 }
 
-int mDNS::openClientSockets(int *sockets, int max_sockets, int port) {
+int mDNS::openClientSocketsFiltered(int *sockets, int max_sockets, int port, std::uint32_t filter_ipv4) {
   // When sending, each socket can only send to one network interface
   // Thus we need to open one socket for each interface and address family
   int num_sockets = 0;
+
+  // Every call re-enumerates all interfaces, so start from a clean list
+  fInterfaces.clear();
 
 #ifdef _WIN32
 
@@ -113,7 +116,8 @@ int mDNS::openClientSockets(int *sockets, int max_sockets, int port) {
           
 
           has_ipv4_ = 1;
-          if (num_sockets < max_sockets) {
+          const bool interface_selected = (filter_ipv4 == 0) || (saddr->sin_addr.s_addr == filter_ipv4);
+          if (interface_selected && num_sockets < max_sockets) {
             saddr->sin_port = htons((unsigned short)port);
             int sock = mdns_socket_open_ipv4(saddr);
             if (sock >= 0) {
@@ -142,7 +146,7 @@ int mDNS::openClientSockets(int *sockets, int max_sockets, int port) {
             log_addr = 1;
           }
           has_ipv6_ = 1;
-          if (num_sockets < max_sockets) {
+          if ((filter_ipv4 == 0) && num_sockets < max_sockets) {
             saddr->sin6_port = htons((unsigned short)port);
             int sock = mdns_socket_open_ipv6(saddr);
             if (sock >= 0) {
@@ -185,8 +189,9 @@ int mDNS::openClientSockets(int *sockets, int max_sockets, int port) {
       {
         int log_addr = 0;
         fInterfaces.push_back(std::make_pair(ifa->ifa_name, saddr->sin_addr.s_addr));
-        
-        if (num_sockets < max_sockets) {
+
+        const bool interface_selected = (filter_ipv4 == 0) || (saddr->sin_addr.s_addr == filter_ipv4);
+        if (interface_selected && num_sockets < max_sockets) {
           saddr->sin_port = htons(port);
           int sock = mdns_socket_open_ipv4(saddr);
           if (sock >= 0) {
@@ -209,7 +214,7 @@ int mDNS::openClientSockets(int *sockets, int max_sockets, int port) {
           log_addr = 1;
         }
         has_ipv6_ = 1;
-        if (num_sockets < max_sockets) {
+        if ((filter_ipv4 == 0) && num_sockets < max_sockets) {
           saddr->sin6_port = htons(port);
           int sock = mdns_socket_open_ipv6(saddr);
           if (sock >= 0) {
@@ -231,6 +236,19 @@ int mDNS::openClientSockets(int *sockets, int max_sockets, int port) {
   freeifaddrs(ifaddr);
 
 #endif
+
+  return num_sockets;
+}
+
+int mDNS::openClientSockets(int *sockets, int max_sockets, int port) {
+  int num_sockets = openClientSocketsFiltered(sockets, max_sockets, port, query_interface_ipv4_);
+
+  if ((query_interface_ipv4_ != 0) && (max_sockets > 0) && (num_sockets == 0)) {
+    // The selected interface is gone (unplugged, new DHCP lease, ...).
+    // Fall back to all interfaces instead of silently discovering nothing.
+    MDNS_LOG << "Selected network interface is not available, falling back to all interfaces\n";
+    num_sockets = openClientSocketsFiltered(sockets, max_sockets, port, 0);
+  }
 
   return num_sockets;
 }
@@ -385,6 +403,9 @@ std::uint16_t mDNS::getServicePort() { return port_; }
 
 void mDNS::setServiceIP(std::uint32_t ip) { service_address_ipv4_ = ip; has_ipv4_ = true; }
 std::uint32_t mDNS::getServiceIP() { return service_address_ipv4_; }
+
+void mDNS::setQueryInterface(std::uint32_t ip) { query_interface_ipv4_ = ip; }
+std::uint32_t mDNS::getQueryInterface() { return query_interface_ipv4_; }
 
 std::string mDNS::getServiceIPPort()
 {

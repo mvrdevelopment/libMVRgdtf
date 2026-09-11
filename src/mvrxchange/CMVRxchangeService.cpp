@@ -11,6 +11,7 @@
 #include <unordered_map>
 #include <thread>
 #include <regex>
+#include <cstring>
 
 VectorworksMVR::CMVRxchangeServiceImpl::CMVRxchangeServiceImpl(): fmdns_long_timer(fmdns_IO_Context)
 {
@@ -43,6 +44,61 @@ void FilterServiceName(MVRxchangeString& service)
 }
 
 
+// Parses a dotted quad (an optional ":port" suffix is ignored) into its four octets
+static bool ParseIPv4(const std::string& address, std::uint8_t (&outOctets)[4])
+{
+	const std::string ip = address.substr(0, address.find(':'));
+
+	size_t start = 0;
+	for (size_t i = 0; i < 4; i++)
+	{
+		const size_t end = (i == 3) ? ip.size() : ip.find('.', start);
+		if (end == std::string::npos || end == start)
+		{
+			return false;
+		}
+
+		const std::string octet = ip.substr(start, end - start);
+		if (octet.find_first_not_of("0123456789") != std::string::npos)
+		{
+			return false;
+		}
+
+		const unsigned long value = std::stoul(octet);
+		if (value > 255)
+		{
+			return false;
+		}
+
+		outOctets[i] = (std::uint8_t)value;
+		start = end + 1;
+	}
+
+	return true;
+}
+
+// mdns_cpp reports the address of an interface but not its prefix length, so the network is
+// approximated with classful rules (/8, /16, /24). Hosts outside the network of the selected
+// interface are not reachable through it, so their announcements are dropped.
+static bool IsAddressOnInterface(std::uint32_t interfaceIp, const std::string& address)
+{
+	std::uint8_t interfaceOctets[4];
+	std::memcpy(interfaceOctets, &interfaceIp, sizeof(interfaceOctets)); // stored in network byte order, so octet order matches
+
+	std::uint8_t addressOctets[4];
+	if (!ParseIPv4(address, addressOctets))
+	{
+		return false;
+	}
+
+	size_t compare = 3;
+	if (interfaceOctets[0] < 128)		{ compare = 1; }
+	else if (interfaceOctets[0] < 192)	{ compare = 2; }
+
+	return std::equal(interfaceOctets, interfaceOctets + compare, addressOctets);
+}
+
+
 VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const ConnectToLocalServiceArgs& service)
 {
 	this->LeaveLocalService();
@@ -68,12 +124,13 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 	txt += (uint8_t)txt2.size();
 	txt += txt2;
 
-	if ( !fNetworkInterface.first.empty() || fNetworkInterface.second != 0 )
+	const NetworkInterface selectedInterface = GetSelectedNetworkInterface();
+	if ( !selectedInterface.first.empty() || selectedInterface.second != 0 )
 	{
 		mdns_cpp::mDNS* s = new mdns_cpp::mDNS();
 		s->setServiceHostname(std::string(fCurrentService.Service.fBuffer));
 		s->setServicePort(fServer->GetPort());
-		s->setServiceIP(fNetworkInterface.second);
+		s->setServiceIP(selectedInterface.second);
 		s->setServiceName(MVRXChange_Service);
 		s->setServiceTxtRecord(txt);
 		s->startService();
@@ -308,8 +365,15 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::QueryAllAvailableInterfaces(st
 
 VCOMError VectorworksMVR::CMVRxchangeServiceImpl::SetNetworkInterface( const NetworkInterface& interface )
 {
+	std::lock_guard<std::mutex> lock(fNetworkInterfaceMutex);
 	fNetworkInterface = interface;
 	return kVCOMError_NoError;
+}
+
+NetworkInterface VectorworksMVR::CMVRxchangeServiceImpl::GetSelectedNetworkInterface()
+{
+	std::lock_guard<std::mutex> lock(fNetworkInterfaceMutex);
+	return fNetworkInterface;
 }
 
 //---------------------------------------------------------------------------
@@ -517,6 +581,9 @@ mdns_cpp::QueryResList CMVRxchangeServiceImpl::mDNS_Filter_Queries(mdns_cpp::Que
 
 	std::string serviceAsString(MVRXChange_Service);
 
+	const NetworkInterface selectedInterface = GetSelectedNetworkInterface();
+	const bool hasInterfaceFilter = !selectedInterface.first.empty() || selectedInterface.second != 0;
+
 	for (auto &i : input)
 	{
 		// filter multiple
@@ -566,6 +633,22 @@ mdns_cpp::QueryResList CMVRxchangeServiceImpl::mDNS_Filter_Queries(mdns_cpp::Que
 			continue;
 		}
 
+		if (hasInterfaceFilter)
+		{
+			bool reachable = IsAddressOnInterface(selectedInterface.second, i.mdnsAddress);
+
+			for (auto it = i.ipV4_address.begin(); !reachable && it != i.ipV4_address.end(); ++it)
+			{
+				reachable = IsAddressOnInterface(selectedInterface.second, *it);
+			}
+
+			if (!reachable)
+			{
+				// not on the network of the selected interface
+				continue;
+			}
+		}
+
 		out.push_back(std::move(i));
 	}
 
@@ -574,7 +657,10 @@ mdns_cpp::QueryResList CMVRxchangeServiceImpl::mDNS_Filter_Queries(mdns_cpp::Que
 
 void CMVRxchangeServiceImpl::mDNS_Client_Task()
 {
+	const NetworkInterface selectedInterface = GetSelectedNetworkInterface();
+
 	mdns_cpp::mDNS mdns;
+	mdns.setQueryInterface(selectedInterface.second);
 	auto query_res = mdns.executeQuery2(MVRXChange_Service);
 	std::vector<ConnectToLocalServiceArgs> result;
 	
