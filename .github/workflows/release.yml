@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout repository under ./libMvrGdtf
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           path: libMvrGdtf
           ref: ${{ inputs.ref }}
@@ -45,7 +45,7 @@ jobs:
           git status -sb
 
       - name: Use Node.js 20.x
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 20
           registry-url: https://npm.pkg.github.com/
@@ -60,7 +60,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         working-directory: libMvrGdtf
         run: |
-          npm install
+          npm ci
           git config user.email "auto-release-bot@mvrdevelopment.com"
           git config user.name "Auto release bot"
 
