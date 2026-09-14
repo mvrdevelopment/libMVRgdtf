@@ -11,6 +11,7 @@
 #include <unordered_map>
 #include <thread>
 #include <regex>
+#include <cstring>
 
 VectorworksMVR::CMVRxchangeServiceImpl::CMVRxchangeServiceImpl(): fmdns_long_timer(fmdns_IO_Context)
 {
@@ -43,6 +44,85 @@ void FilterServiceName(MVRxchangeString& service)
 }
 
 
+// Parses a dotted quad (an optional ":port" suffix is ignored) into its four octets
+static bool ParseIPv4(const std::string& address, std::uint8_t (&outOctets)[4])
+{
+	const std::string ip = address.substr(0, address.find(':'));
+
+	size_t start = 0;
+	for (size_t i = 0; i < 4; i++)
+	{
+		const size_t end = (i == 3) ? ip.size() : ip.find('.', start);
+		if (end == std::string::npos || end == start)
+		{
+			return false;
+		}
+
+		const std::string octet = ip.substr(start, end - start);
+		if (octet.find_first_not_of("0123456789") != std::string::npos)
+		{
+			return false;
+		}
+
+		const unsigned long value = std::stoul(octet);
+		if (value > 255)
+		{
+			return false;
+		}
+
+		outOctets[i] = (std::uint8_t)value;
+		start = end + 1;
+	}
+
+	return true;
+}
+
+// Filters mDNS announcements to only reachable addresses on the selected interface.
+// Uses the interface's real netmask (prefix length) to determine reachability.
+// If the netmask is unavailable, all addresses are accepted and the TCP connection
+// filters out the peers that are not reachable.
+static bool IsAddressOnInterface(std::uint32_t interfaceIp, std::uint8_t prefixLength, const std::string& address)
+{
+	if (prefixLength > 32)
+	{
+		// unknown prefix length, do not guess the network
+		return true;
+	}
+
+	std::uint8_t addressOctets[4];
+	if (!ParseIPv4(address, addressOctets))
+	{
+		return false;
+	}
+
+	std::uint8_t interfaceOctets[4];
+	std::memcpy(interfaceOctets, &interfaceIp, sizeof(interfaceOctets)); // stored in network byte order, so octet order matches
+
+	const std::uint32_t interfaceHostOrder	= ((std::uint32_t)interfaceOctets[0] << 24) | ((std::uint32_t)interfaceOctets[1] << 16) |
+											  ((std::uint32_t)interfaceOctets[2] << 8) | (std::uint32_t)interfaceOctets[3];
+	const std::uint32_t addressHostOrder	= ((std::uint32_t)addressOctets[0] << 24) | ((std::uint32_t)addressOctets[1] << 16) |
+											  ((std::uint32_t)addressOctets[2] << 8) | (std::uint32_t)addressOctets[3];
+	const std::uint32_t mask				= (prefixLength == 0) ? 0u : (0xFFFFFFFFu << (32 - prefixLength));
+
+	return (interfaceHostOrder & mask) == (addressHostOrder & mask);
+}
+
+// Prefix length of the network of the interface with [interfaceIp], or an unknown prefix length
+// when the interface is not reported by the OS (anymore).
+static std::uint8_t GetInterfacePrefixLength(std::uint32_t interfaceIp)
+{
+	for (const mdns_cpp::InterfaceInfo& info : mdns_cpp::mDNS().getInterfaceInfos())
+	{
+		if (info.ip == interfaceIp)
+		{
+			return info.prefix_length;
+		}
+	}
+
+	return mdns_cpp::InterfaceInfo::kUnknownPrefixLength;
+}
+
+
 VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const ConnectToLocalServiceArgs& service)
 {
 	this->LeaveLocalService();
@@ -68,23 +148,38 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 	txt += (uint8_t)txt2.size();
 	txt += txt2;
 
-	for(std::pair<std::string, uint32_t> e : mdns_cpp::mDNS().getInterfaces())
+	const NetworkInterface selectedInterface = GetSelectedNetworkInterface();
+	if ( !selectedInterface.first.empty() || selectedInterface.second != 0 )
 	{
-		// Bitmasking IP Address to check if it is 127.x.x.x
-		// We dont want to start the mDNS Server on loopback addresses
-		// If two programs on the same device want to connect, they can use one of the other interfaces as well
-		if((e.second & 4278190080) == 2130706432) {
-			continue;
-		}
-	
 		mdns_cpp::mDNS* s = new mdns_cpp::mDNS();
 		s->setServiceHostname(std::string(fCurrentService.Service.fBuffer));
 		s->setServicePort(fServer->GetPort());
-		s->setServiceIP(e.second);
+		s->setServiceIP(selectedInterface.second);
 		s->setServiceName(MVRXChange_Service);
 		s->setServiceTxtRecord(txt);
 		s->startService();
-		fmdns.emplace_back(s);	// Pointer is now managed by the unique ptr and deleted upon fmdns going out of scope
+		fmdns.emplace_back(s);
+	}
+	else
+	{
+		for(NetworkInterface e : mdns_cpp::mDNS().getInterfaces())
+		{
+			// Bitmasking IP Address to check if it is 127.x.x.x
+			// We dont want to start the mDNS Server on loopback addresses
+			// If two programs on the same device want to connect, they can use one of the other interfaces as well
+			if((e.second & 4278190080) == 2130706432) {
+				continue;
+			}
+
+			mdns_cpp::mDNS* s = new mdns_cpp::mDNS();
+			s->setServiceHostname(std::string(fCurrentService.Service.fBuffer));
+			s->setServicePort(fServer->GetPort());
+			s->setServiceIP(e.second);
+			s->setServiceName(MVRXChange_Service);
+			s->setServiceTxtRecord(txt);
+			s->startService();
+			fmdns.emplace_back(s);	// Pointer is now managed by the unique ptr and deleted upon fmdns going out of scope
+		}
 	}
 
 	bool doInit = false; // avoid deadlock with temp variable
@@ -275,6 +370,34 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::Send_message(const SendMessage
 	delete[] messageHandler.Message.BufferToFile;
 
 	return kVCOMError_NoError;
+}
+
+VCOMError VectorworksMVR::CMVRxchangeServiceImpl::QueryAllAvailableInterfaces(std::vector<NetworkInterface>& out)
+{
+	out.clear();
+	for(NetworkInterface e : mdns_cpp::mDNS().getInterfaces())
+	{
+		// remove loopback addresses (127.x.x.x) from the list of available interfaces, as they are not useful for mDNS service discovery in a local network context
+		if((e.second & 4278190080) == 2130706432) {
+			continue;
+		}
+		out.push_back(e);
+	}
+
+	return kVCOMError_NoError;
+}
+
+VCOMError VectorworksMVR::CMVRxchangeServiceImpl::SetNetworkInterface( const NetworkInterface& interface )
+{
+	std::lock_guard<std::mutex> lock(fNetworkInterfaceMutex);
+	fNetworkInterface = interface;
+	return kVCOMError_NoError;
+}
+
+NetworkInterface VectorworksMVR::CMVRxchangeServiceImpl::GetSelectedNetworkInterface()
+{
+	std::lock_guard<std::mutex> lock(fNetworkInterfaceMutex);
+	return fNetworkInterface;
 }
 
 //---------------------------------------------------------------------------
@@ -482,6 +605,10 @@ mdns_cpp::QueryResList CMVRxchangeServiceImpl::mDNS_Filter_Queries(mdns_cpp::Que
 
 	std::string serviceAsString(MVRXChange_Service);
 
+	const NetworkInterface selectedInterface = GetSelectedNetworkInterface();
+	const bool hasInterfaceFilter = !selectedInterface.first.empty() || selectedInterface.second != 0;
+	const std::uint8_t interfacePrefixLength = hasInterfaceFilter ? GetInterfacePrefixLength(selectedInterface.second) : mdns_cpp::InterfaceInfo::kUnknownPrefixLength;
+
 	for (auto &i : input)
 	{
 		// filter multiple
@@ -531,6 +658,22 @@ mdns_cpp::QueryResList CMVRxchangeServiceImpl::mDNS_Filter_Queries(mdns_cpp::Que
 			continue;
 		}
 
+		if (hasInterfaceFilter)
+		{
+			bool reachable = IsAddressOnInterface(selectedInterface.second, interfacePrefixLength, i.mdnsAddress);
+
+			for (auto it = i.ipV4_address.begin(); !reachable && it != i.ipV4_address.end(); ++it)
+			{
+				reachable = IsAddressOnInterface(selectedInterface.second, interfacePrefixLength, *it);
+			}
+
+			if (!reachable)
+			{
+				// not on the network of the selected interface
+				continue;
+			}
+		}
+
 		out.push_back(std::move(i));
 	}
 
@@ -539,7 +682,10 @@ mdns_cpp::QueryResList CMVRxchangeServiceImpl::mDNS_Filter_Queries(mdns_cpp::Que
 
 void CMVRxchangeServiceImpl::mDNS_Client_Task()
 {
+	const NetworkInterface selectedInterface = GetSelectedNetworkInterface();
+
 	mdns_cpp::mDNS mdns;
+	mdns.setQueryInterface(selectedInterface.second);
 	auto query_res = mdns.executeQuery2(MVRXChange_Service);
 	std::vector<ConnectToLocalServiceArgs> result;
 	

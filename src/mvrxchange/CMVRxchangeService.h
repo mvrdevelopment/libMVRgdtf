@@ -21,6 +21,7 @@ namespace VectorworksMVR
 	};
 
 	using TCPMessageInfo = MVRxchangeNetwork::TCPMessageInfo;
+	using NetworkInterface = std::pair<std::string, uint32_t>;
 
 	//----------------------------------------------------------------------------------------
 	class CMVRxchangeServiceImpl : public VCOMImpl<IMVRxchangeService>
@@ -42,6 +43,14 @@ namespace VectorworksMVR
 
 		virtual VCOMError VCOM_CALLTYPE     OnMessage(OnMessageArgs& messageHandler);
 		virtual VCOMError VCOM_CALLTYPE     Send_message(const SendMessageArgs& messageHandler);
+
+		virtual VCOMError VCOM_CALLTYPE     QueryAllAvailableInterfaces( std::vector<NetworkInterface>& out );
+
+		// Restricts both the advertised service and the service discovery to [interface].
+		// An unset (default constructed) interface means all non-loopback interfaces.
+		// The value is applied on the next ConnectToLocalService / QueryLocalServices;
+		// a running discovery loop is not re-bound.
+		virtual VCOMError VCOM_CALLTYPE     SetNetworkInterface( const NetworkInterface& interface );
 
 	private:
 		void mDNS_Client_Task();	// actual mdns task
@@ -67,6 +76,12 @@ namespace VectorworksMVR
 		MVRxchangeNetwork::MVRxchangeServer*			fServer;
 		ConnectToLocalServiceArgs						fCurrentService;
 
+		std::mutex								fNetworkInterfaceMutex;
+		NetworkInterface							fNetworkInterface;
+
+		// Thread safe snapshot of [fNetworkInterface]; an unset interface is returned as an empty pair
+		NetworkInterface							GetSelectedNetworkInterface();
+
 		void TCP_Start();
 		void TCP_Stop();
 	public:
@@ -75,6 +90,7 @@ namespace VectorworksMVR
 
 		std::mutex fMvrGroupMutex;
 		std::vector<MVRxchangeGroupMember>			fMVRGroup;
+
 	private:
 
 		OnMessageArgs  fCallBack;
