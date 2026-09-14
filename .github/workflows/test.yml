@@ -8,12 +8,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: libMVRGdtf - checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           path: libMvrGdtf
 
       - name: Build
         uses: ./libMvrGdtf/.github/actions/build-lib
+
+      - name: Audit production dependencies
+        working-directory: libMvrGdtf
+        run: |
+          npm ci
+          npm audit --omit=dev
 
       - name: Testing...
         working-directory: libMvrGdtf/build
