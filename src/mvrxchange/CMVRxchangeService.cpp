@@ -77,13 +77,17 @@ static bool ParseIPv4(const std::string& address, std::uint8_t (&outOctets)[4])
 	return true;
 }
 
-// mdns_cpp reports the address of an interface but not its prefix length, so the network is
-// approximated with classful rules (/8, /16, /24). Hosts outside the network of the selected
-// interface are not reachable through it, so their announcements are dropped.
-static bool IsAddressOnInterface(std::uint32_t interfaceIp, const std::string& address)
+// Filters mDNS announcements to only reachable addresses on the selected interface.
+// Uses the interface's real netmask (prefix length) to determine reachability.
+// If the netmask is unavailable, all addresses are accepted and the TCP connection
+// filters out the peers that are not reachable.
+static bool IsAddressOnInterface(std::uint32_t interfaceIp, std::uint8_t prefixLength, const std::string& address)
 {
-	std::uint8_t interfaceOctets[4];
-	std::memcpy(interfaceOctets, &interfaceIp, sizeof(interfaceOctets)); // stored in network byte order, so octet order matches
+	if (prefixLength > 32)
+	{
+		// unknown prefix length, do not guess the network
+		return true;
+	}
 
 	std::uint8_t addressOctets[4];
 	if (!ParseIPv4(address, addressOctets))
@@ -91,11 +95,31 @@ static bool IsAddressOnInterface(std::uint32_t interfaceIp, const std::string& a
 		return false;
 	}
 
-	size_t compare = 3;
-	if (interfaceOctets[0] < 128)		{ compare = 1; }
-	else if (interfaceOctets[0] < 192)	{ compare = 2; }
+	std::uint8_t interfaceOctets[4];
+	std::memcpy(interfaceOctets, &interfaceIp, sizeof(interfaceOctets)); // stored in network byte order, so octet order matches
 
-	return std::equal(interfaceOctets, interfaceOctets + compare, addressOctets);
+	const std::uint32_t interfaceHostOrder	= ((std::uint32_t)interfaceOctets[0] << 24) | ((std::uint32_t)interfaceOctets[1] << 16) |
+											  ((std::uint32_t)interfaceOctets[2] << 8) | (std::uint32_t)interfaceOctets[3];
+	const std::uint32_t addressHostOrder	= ((std::uint32_t)addressOctets[0] << 24) | ((std::uint32_t)addressOctets[1] << 16) |
+											  ((std::uint32_t)addressOctets[2] << 8) | (std::uint32_t)addressOctets[3];
+	const std::uint32_t mask				= (prefixLength == 0) ? 0u : (0xFFFFFFFFu << (32 - prefixLength));
+
+	return (interfaceHostOrder & mask) == (addressHostOrder & mask);
+}
+
+// Prefix length of the network of the interface with [interfaceIp], or an unknown prefix length
+// when the interface is not reported by the OS (anymore).
+static std::uint8_t GetInterfacePrefixLength(std::uint32_t interfaceIp)
+{
+	for (const mdns_cpp::InterfaceInfo& info : mdns_cpp::mDNS().getInterfaceInfos())
+	{
+		if (info.ip == interfaceIp)
+		{
+			return info.prefix_length;
+		}
+	}
+
+	return mdns_cpp::InterfaceInfo::kUnknownPrefixLength;
 }
 
 
@@ -583,6 +607,7 @@ mdns_cpp::QueryResList CMVRxchangeServiceImpl::mDNS_Filter_Queries(mdns_cpp::Que
 
 	const NetworkInterface selectedInterface = GetSelectedNetworkInterface();
 	const bool hasInterfaceFilter = !selectedInterface.first.empty() || selectedInterface.second != 0;
+	const std::uint8_t interfacePrefixLength = hasInterfaceFilter ? GetInterfacePrefixLength(selectedInterface.second) : mdns_cpp::InterfaceInfo::kUnknownPrefixLength;
 
 	for (auto &i : input)
 	{
@@ -635,11 +660,11 @@ mdns_cpp::QueryResList CMVRxchangeServiceImpl::mDNS_Filter_Queries(mdns_cpp::Que
 
 		if (hasInterfaceFilter)
 		{
-			bool reachable = IsAddressOnInterface(selectedInterface.second, i.mdnsAddress);
+			bool reachable = IsAddressOnInterface(selectedInterface.second, interfacePrefixLength, i.mdnsAddress);
 
 			for (auto it = i.ipV4_address.begin(); !reachable && it != i.ipV4_address.end(); ++it)
 			{
-				reachable = IsAddressOnInterface(selectedInterface.second, *it);
+				reachable = IsAddressOnInterface(selectedInterface.second, interfacePrefixLength, *it);
 			}
 
 			if (!reachable)

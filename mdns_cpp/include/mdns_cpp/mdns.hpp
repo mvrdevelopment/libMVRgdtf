@@ -1,6 +1,7 @@
 #pragma once
 
 #include <functional>
+#include <cstdint>
 #include <string>
 #include <thread>
 #include <vector>
@@ -61,6 +62,15 @@ struct unsorted_query_t {
 
 using QueryResList = std::vector<Query_result>;
 
+// Describes one local IPv4 interface address together with the prefix length of its network.
+struct InterfaceInfo {
+  static constexpr std::uint8_t kUnknownPrefixLength = 0xFF;
+
+  std::string   name;
+  std::uint32_t ip{0};                                        // network byte order
+  std::uint8_t  prefix_length{kUnknownPrefixLength};          // CIDR prefix, [kUnknownPrefixLength] when the OS did not report a netmask
+};
+
 class mDNS { 
  public:
   ~mDNS();
@@ -87,6 +97,8 @@ class mDNS {
   void setServiceName(const std::string &name);
   void setServiceTxtRecord(const std::string &text_record);
   std::vector<std::pair<std::string, uint32_t>> getInterfaces();
+  // Same interfaces as [getInterfaces], but including the prefix length of each network.
+  std::vector<InterfaceInfo> getInterfaceInfos();
 
   QueryResList executeQuery2(const std::string &service);
 
@@ -114,6 +126,7 @@ class mDNS {
   uint32_t service_address_ipv4_{0};
   uint32_t query_interface_ipv4_{0};
   std::vector<std::pair<std::string, uint32_t>> fInterfaces;
+  std::vector<InterfaceInfo> fInterfaceInfos;
   uint8_t service_address_ipv6_[16]{0};
 
   std::thread worker_thread_;

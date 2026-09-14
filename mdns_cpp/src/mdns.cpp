@@ -71,6 +71,7 @@ int mDNS::openClientSocketsFiltered(int *sockets, int max_sockets, int port, std
 
   // Every call re-enumerates all interfaces, so start from a clean list
   fInterfaces.clear();
+  fInterfaceInfos.clear();
 
 #ifdef _WIN32
 
@@ -112,8 +113,17 @@ int mDNS::openClientSocketsFiltered(int *sockets, int max_sockets, int port, std
             (saddr->sin_addr.S_un.S_un_b.s_b3 != 0) || (saddr->sin_addr.S_un.S_un_b.s_b4 != 1)) {
           int log_addr = 1;
             char buffer[128];
-            fInterfaces.push_back(std::make_pair(ipv4AddressToString(buffer, sizeof(buffer), saddr, sizeof(struct sockaddr_in)), saddr->sin_addr.s_addr));
-          
+            const std::string interfaceName = ipv4AddressToString(buffer, sizeof(buffer), saddr, sizeof(struct sockaddr_in));
+            fInterfaces.push_back(std::make_pair(interfaceName, saddr->sin_addr.s_addr));
+
+            InterfaceInfo info;
+            info.name = interfaceName;
+            info.ip = saddr->sin_addr.s_addr;
+            if (unicast->OnLinkPrefixLength <= 32) {
+              info.prefix_length = (std::uint8_t)unicast->OnLinkPrefixLength;
+            }
+            fInterfaceInfos.push_back(info);
+
 
           has_ipv4_ = 1;
           const bool interface_selected = (filter_ipv4 == 0) || (saddr->sin_addr.s_addr == filter_ipv4);
@@ -189,6 +199,23 @@ int mDNS::openClientSocketsFiltered(int *sockets, int max_sockets, int port, std
       {
         int log_addr = 0;
         fInterfaces.push_back(std::make_pair(ifa->ifa_name, saddr->sin_addr.s_addr));
+
+        InterfaceInfo info;
+        info.name = ifa->ifa_name;
+        info.ip = saddr->sin_addr.s_addr;
+        if (ifa->ifa_netmask && ifa->ifa_netmask->sa_family == AF_INET) {
+          const std::uint32_t mask = ntohl(((struct sockaddr_in *)ifa->ifa_netmask)->sin_addr.s_addr);
+          std::uint8_t prefix = 0;
+          for (int bit = 31; bit >= 0 && (mask & (1u << bit)); --bit) {
+            ++prefix;
+          }
+          // Only contiguous masks describe a valid prefix length
+          const std::uint32_t rebuilt = (prefix == 0) ? 0u : (0xFFFFFFFFu << (32 - prefix));
+          if (rebuilt == mask) {
+            info.prefix_length = prefix;
+          }
+        }
+        fInterfaceInfos.push_back(info);
 
         const bool interface_selected = (filter_ipv4 == 0) || (saddr->sin_addr.s_addr == filter_ipv4);
         if (interface_selected && num_sockets < max_sockets) {
@@ -429,6 +456,15 @@ std::vector<std::pair<std::string, uint32_t>> mDNS::getInterfaces()
   openClientSockets(0, 0, 0);
 
   return fInterfaces;
+}
+
+std::vector<InterfaceInfo> mDNS::getInterfaceInfos()
+{
+  // Call the client socket function to enumerate and get local addresses,
+  // but not open the actual sockets
+  openClientSockets(0, 0, 0);
+
+  return fInterfaceInfos;
 }
 
 #define ITER_SEARCH_TIME 2
