@@ -20,6 +20,9 @@
         "build": "bash ./scripts/build.sh"
     },
     "devDependencies": {
-        "auto": "^11.2.1"
+        "auto": "^11.3.6"
+    },
+    "overrides": {
+        "typescript": "5.6.2"
     }
 }
