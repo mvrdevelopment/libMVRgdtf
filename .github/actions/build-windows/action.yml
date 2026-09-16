@@ -83,7 +83,15 @@ runs:
 
     # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     # Boost - setup and build
+    - name: Boost - cache
+      id: cache-boost
+      uses: actions/cache@v4
+      with:
+        path: boost
+        key: boost-${{ runner.os }}-${{ hashFiles('libMvrGdtf/.github/actions/build-windows/action.yml') }}
+
     - name: Boost - prepare
+      if: steps.cache-boost.outputs.cache-hit != 'true'
       shell: cmd
       run: |
           mkdir boost
