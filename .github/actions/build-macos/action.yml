@@ -3,7 +3,17 @@ description: 'Build ths packages for MACOS package'
 runs:
   using: "composite"
   steps:
+    - name: Xerces-C - cache
+      id: cache-xerces
+      uses: actions/cache@v4
+      with:
+        path: |
+          xerces-c/_build_mac_arm
+          xerces-c/_build_mac_x64
+        key: xerces-c-${{ runner.os }}-${{ hashFiles('libMvrGdtf/.github/actions/build-macos/action.yml') }}
+
     - name: Xerces-C - prepare
+      if: steps.cache-xerces.outputs.cache-hit != 'true'
       shell: bash
       run: |
         mkdir xerces-c
@@ -12,6 +22,7 @@ runs:
         tar -xf xerces-c.zip --strip-components=1
 
     - name: Xerces-C - build arm64
+      if: steps.cache-xerces.outputs.cache-hit != 'true'
       shell: bash
       working-directory: xerces-c
       run: |
@@ -20,6 +31,7 @@ runs:
         make install
 
     - name: Xerces-C - build x64
+      if: steps.cache-xerces.outputs.cache-hit != 'true'
       shell: bash
       working-directory: xerces-c
       run: |
@@ -28,6 +40,7 @@ runs:
         make install
 
     - name: Xerces-C - lipo arm/x64
+      if: steps.cache-xerces.outputs.cache-hit != 'true'
       shell: bash
       working-directory: xerces-c
       run: lipo _build_mac_arm/lib/libxerces-c.a _build_mac_x64/lib/libxerces-c.a -create -output _build_mac_x64/lib/libxerces-c-all.a

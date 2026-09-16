@@ -11,7 +11,17 @@ runs:
 
     # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     # Xerces-C - setup
+    - name: Xerces-C - cache
+      id: cache-xerces
+      uses: actions/cache@v4
+      with:
+        path: |
+          xerces-c/build/libs
+          xerces-c/build_mt/libs
+        key: xerces-c-${{ runner.os }}-${{ hashFiles('libMvrGdtf/.github/actions/build-windows/action.yml') }}
+
     - name: Xerces-C - prepare
+      if: steps.cache-xerces.outputs.cache-hit != 'true'
       shell: cmd
       run: |
         mkdir xerces-c
@@ -21,6 +31,7 @@ runs:
 
     # Xerces-C - build MD
     - name: Xerces-C - configure
+      if: steps.cache-xerces.outputs.cache-hit != 'true'
       working-directory: xerces-c
       shell: cmd
       run: |
@@ -29,6 +40,7 @@ runs:
         cmake .. -G "Visual Studio 17 2022" -A x64 -T v142,version=14.29 -DCMAKE_INSTALL_PREFIX:PATH=libs -DCMAKE_CXX_FLAGS="/DWIN32 /D_WINDOWS -O2 -Ob2 -DNDEBUG" -DCMAKE_C_FLAGS="/DWIN32 /D_WINDOWS /W3" -DBUILD_SHARED_LIBS:BOOL=FALSE -Dxmlch-type=wchar_t
 
     - name: Xerces-C - build MinSizeRel
+      if: steps.cache-xerces.outputs.cache-hit != 'true'
       working-directory: xerces-c/build
       shell: cmd
       run: |
@@ -36,6 +48,7 @@ runs:
         msbuild /m INSTALL.vcxproj /p:Configuration=MinSizeRel
 
     - name: Xerces-C - build Debug
+      if: steps.cache-xerces.outputs.cache-hit != 'true'
       working-directory: xerces-c/build
       shell: cmd
       run: |
@@ -44,6 +57,7 @@ runs:
 
     # Xerces-C - build MT
     - name: Xerces-C - configure [MT]
+      if: steps.cache-xerces.outputs.cache-hit != 'true'
       working-directory: xerces-c
       shell: cmd
       run: |
@@ -52,6 +66,7 @@ runs:
         cmake .. -G "Visual Studio 17 2022" -A x64 -T v142,version=14.29 -DCMAKE_INSTALL_PREFIX:PATH=libs -DCMAKE_CXX_FLAGS_DEBUG="/MTd /Zi /Ob0 /Od /RTC1" -DCMAKE_CXX_FLAGS_MINSIZEREL="/MT /O1 /Ob1 /DNDEBUG" -DCMAKE_C_FLAGS_DEBUG="/MTd /Zi /Ob0 /Od /RTC1" -DCMAKE_C_FLAGS_MINSIZEREL="/MT /O1 /Ob1 /DNDEBUG" -DCMAKE_C_FLAGS="/DWIN32 /D_WINDOWS /W3" -DBUILD_SHARED_LIBS:BOOL=FALSE -Dxmlch-type=wchar_t
 
     - name: Xerces-C - build MinSizeRel [MT]
+      if: steps.cache-xerces.outputs.cache-hit != 'true'
       working-directory: xerces-c/build_mt
       shell: cmd
       run: |
@@ -59,6 +74,7 @@ runs:
         msbuild /m INSTALL.vcxproj /p:Configuration=MinSizeRel
 
     - name: Xerces-C - build Debug [MT]
+      if: steps.cache-xerces.outputs.cache-hit != 'true'
       working-directory: xerces-c/build_mt
       shell: cmd
       run: |
