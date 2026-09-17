@@ -19,15 +19,7 @@ runs:
         sudo apt-get install -y cmake
         sudo apt-get install -y uuid-dev
 
-    - name: Xerces-C - cache
-      id: cache-xerces
-      uses: actions/cache@v4
-      with:
-        path: xerces-c/_build
-        key: xerces-c-${{ runner.os }}-${{ hashFiles('libMvrGdtf/.github/actions/build-ubuntu/action.yml') }}
-
     - name: Xerces-C - prepare
-      if: steps.cache-xerces.outputs.cache-hit != 'true'
       shell: bash
       run: |
         mkdir xerces-c
@@ -37,7 +29,6 @@ runs:
 
     # libMVRGdtf expects XMLChar be uint16_t
     - name: Xerces-C - build
-      if: steps.cache-xerces.outputs.cache-hit != 'true'
       shell: bash
       working-directory: xerces-c
       run: |
