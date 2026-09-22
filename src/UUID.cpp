@@ -6,7 +6,10 @@
 
 #include "Prefix/StdAfx.h"
 
-#if _LINUX
+#if defined(__EMSCRIPTEN__)
+	// Emscripten/WASM: no libuuid available, we generate random (v4) UUIDs
+	#include <random>
+#elif _LINUX
 	// If this include fails, run this command to install it:
 	// sudo apt-get install uuid-dev
 	#include <uuid/uuid.h>
@@ -309,6 +312,17 @@ void VWFC::Tools::VWUUID::New()
 	fData[13]			= guid.Data4[5];
 	fData[14]			= guid.Data4[6];
 	fData[15]			= guid.Data4[7];
+#elif defined(__EMSCRIPTEN__)
+	// Generate a random (version 4) UUID.
+	// std::random_device maps to a secure entropy source in Emscripten
+	{
+		std::random_device rd;
+		std::uniform_int_distribution<unsigned int> dist(0, 255);
+		for (size_t i = 0; i < 16; i++) { fData[i] = (Uint8)dist(rd); }
+
+		fData[6] = (Uint8)((fData[6] & 0x0F) | 0x40);	// version 4
+		fData[8] = (Uint8)((fData[8] & 0x3F) | 0x80);	// variant 10xx
+	}
 #elif _LINUX
 	uuid_t myUUID;
 	uuid_generate_time_safe( myUUID );
