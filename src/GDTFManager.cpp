@@ -5822,7 +5822,14 @@ const TXString& GdtfDmxChannel::GetName()
 		TXString dmxChannelName;
 		if(fGeomRef) { dmxChannelName += fGeomRef->GetName(); }
 		dmxChannelName += "_";
-		if(fLogicalChannels.size() > 0) { dmxChannelName += fLogicalChannels[0]->GetAttribute()->GetName(); }
+		if(fLogicalChannels.size() > 0) 
+		{ 
+			auto attr = fLogicalChannels[ 0 ]->GetAttribute();
+			if ( attr != nullptr )
+			{
+				dmxChannelName += attr->GetName();
+			}
+		}
 		
 		this->SetName(dmxChannelName);
 
