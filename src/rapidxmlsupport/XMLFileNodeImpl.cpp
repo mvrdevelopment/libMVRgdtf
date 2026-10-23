@@ -13,12 +13,19 @@ using namespace VectorworksMVR::VWFC::Tools;
 // ----------------------------------------------------------------------------------------------------
 CXMLFileNodeImpl::CXMLFileNodeImpl()
 {
+	fFile    = nullptr;
 	fElement = nullptr;
 	fRefCnt  = 0;
 }
 
 CXMLFileNodeImpl::~CXMLFileNodeImpl()
 {
+	fElement = nullptr;
+	if ( fFile )
+	{
+		fFile->Release();
+		fFile = nullptr;
+	}
 }
 
 uint32_t CXMLFileNodeImpl::AddRef()
@@ -35,7 +42,7 @@ uint32_t CXMLFileNodeImpl::Release()
 
 		// mechanizm for immediate delete of the interface instance
 		if ( fRefCnt == 0 ) {
-			// ::GS_VWNotifyDeleteInterface( this ); TODO
+			delete this;
 			// EXIT IMMEDIATELY! 'this' no longer exist!!!
 			return 0;
 		}
@@ -144,7 +151,7 @@ VCOMError CXMLFileNodeImpl::CreateChildNode(const TXString& name, IXMLFileNode**
 {
 	if(fElement)
 	{
-		return GetInterface(fElement->InsertNewChildElement(name), ppOutNode);
+		return GetInterface(fFile, fElement->InsertNewChildElement(name), ppOutNode);
 	}
 	return kVCOMError_NotInitialized;
 }
@@ -156,7 +163,7 @@ VCOMError CXMLFileNodeImpl::GetChildNode(const TXString& name, IXMLFileNode** pp
 		tinyxml2::XMLElement* child = fElement->FirstChildElement(name);
         if(child)
         {
-            return GetInterface(child, ppOutNode);
+            return GetInterface(fFile, child, ppOutNode);
         }
 
 		return kVCOMError_Failed;
@@ -178,7 +185,7 @@ VCOMError CXMLFileNodeImpl::GetParentNode(IXMLFileNode** ppOutNode)
 {
 	if(fElement)
 	{
-		return GetInterface(fElement->Parent()->ToElement(), ppOutNode);
+		return GetInterface(fFile, fElement->Parent()->ToElement(), ppOutNode);
 	}
 	return kVCOMError_NotInitialized;
 }
@@ -187,7 +194,7 @@ VCOMError CXMLFileNodeImpl::GetFirstChildNode(IXMLFileNode** ppOutNode)
 {
 	if(fElement)
 	{
-		return GetInterface(fElement->FirstChildElement(), ppOutNode);
+		return GetInterface(fFile, fElement->FirstChildElement(), ppOutNode);
 	}
 	return kVCOMError_NotInitialized;
 }
@@ -196,7 +203,7 @@ VCOMError CXMLFileNodeImpl::GetLastChildNode(IXMLFileNode** ppOutNode)
 {
 	if(fElement)
 	{
-		return GetInterface(fElement->FirstChildElement(), ppOutNode);
+		return GetInterface(fFile, fElement->FirstChildElement(), ppOutNode);
 	}
 	return kVCOMError_NotInitialized;
 }
@@ -205,7 +212,7 @@ VCOMError CXMLFileNodeImpl::GetNextSiblingNode(IXMLFileNode** ppOutNode)
 {
 	if(fElement)
 	{
-		return GetInterface(fElement->NextSiblingElement(), ppOutNode);
+		return GetInterface(fFile, fElement->NextSiblingElement(), ppOutNode);
 	}
 	return kVCOMError_NotInitialized;
 }
@@ -214,7 +221,7 @@ VCOMError CXMLFileNodeImpl::GetPrevSiblingNode(IXMLFileNode** ppOutNode)
 {
 	if(fElement)
 	{
-		return GetInterface(fElement->PreviousSiblingElement(), ppOutNode);
+		return GetInterface(fFile, fElement->PreviousSiblingElement(), ppOutNode);
 	}
 	return kVCOMError_NotInitialized;
 }
@@ -222,7 +229,7 @@ VCOMError CXMLFileNodeImpl::GetPrevSiblingNode(IXMLFileNode** ppOutNode)
 VCOMError CXMLFileNodeImpl::FindChildNode(const TXString& nodeName, IXMLFileNode** ppOutNode)
 {
 	if(fElement){
-		return GetInterface(fElement->FirstChildElement(nodeName.GetCharPtr()), ppOutNode);
+		return GetInterface(fFile, fElement->FirstChildElement(nodeName.GetCharPtr()), ppOutNode);
 	}
 	return kVCOMError_NotInitialized;
 }
@@ -275,37 +282,42 @@ VCOMError CXMLFileNodeImpl::AddCopyOfExistingNodeBeforeIndex(const IXMLFileNode*
 	return kVCOMError_NotInitialized;
 }
 
-void CXMLFileNodeImpl::SetElement(tinyxml2::XMLElement* element)
+void CXMLFileNodeImpl::SetElement(IXMLFile* file, tinyxml2::XMLElement* element)
 {
+	if ( file ) file->AddRef();
+	if ( fFile ) fFile->Release();
+	fFile    = file;
 	fElement = element;
 }
 
-VCOMError CXMLFileNodeImpl::GetInterface(tinyxml2::XMLElement* element, IXMLFileNode** ppOutNode)
+tinyxml2::XMLElement* CXMLFileNodeImpl::GetElement() const
+{
+	return fElement;
+}
+
+VCOMError CXMLFileNodeImpl::GetInterface(IXMLFile* file, tinyxml2::XMLElement* element, IXMLFileNode** ppOutNode)
 {
     if(!element){
         return kVCOMError_NoObj;
     }
 	//---------------------------------------------------------------------------
 	// Initialize Object
-	CXMLFileNodeImpl* pDmxVal = nullptr;
+	IVWUnknown* pUnknown = nullptr;
 
-	// Query Interface
-	if (VCOM_SUCCEEDED(VWQueryInterface(IID_XMLFileNode, (IVWUnknown**)& pDmxVal)))
+	// Query Interface (the new object carries one reference)
+	if (VCOM_FAILED(VWQueryInterface(IID_XMLFileNode, &pUnknown)) || pUnknown == nullptr)
 	{
-		// Check Casting
-		CXMLFileNodeImpl* pResultInterface = dynamic_cast<CXMLFileNodeImpl* >(pDmxVal);
-		if (pResultInterface)
-		{
-			pResultInterface->SetElement(element);
-		}
-		else
-		{
-			pResultInterface->Release();
-			pResultInterface = nullptr;
-			return kVCOMError_NoInterface;
-		}
+		return kVCOMError_NoInterface;
 	}
 
+	// Check Casting
+	CXMLFileNodeImpl* pResultInterface = dynamic_cast<CXMLFileNodeImpl* >(pUnknown);
+	if (pResultInterface == nullptr)
+	{
+		pUnknown->Release();
+		return kVCOMError_NoInterface;
+	}
+	pResultInterface->SetElement(file, element);
 
 	//---------------------------------------------------------------------------
 	// Check Incomming Object
@@ -316,7 +328,7 @@ VCOMError CXMLFileNodeImpl::GetInterface(tinyxml2::XMLElement* element, IXMLFile
 	}
 	//---------------------------------------------------------------------------
 	// Set Out Value
-	*ppOutNode = pDmxVal;
+	*ppOutNode = pResultInterface;
 
 	return kVCOMError_NoError;
 
