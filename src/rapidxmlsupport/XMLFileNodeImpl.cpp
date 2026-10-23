@@ -196,7 +196,7 @@ VCOMError CXMLFileNodeImpl::GetLastChildNode(IXMLFileNode** ppOutNode)
 {
 	if(fElement)
 	{
-		return GetInterface(fElement->FirstChildElement(), ppOutNode);
+		return GetInterface(fElement->LastChildElement(), ppOutNode);
 	}
 	return kVCOMError_NotInitialized;
 }
