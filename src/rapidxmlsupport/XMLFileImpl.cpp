@@ -120,7 +120,7 @@ VCOMError CXMLFileImpl::WriteBuffer(IXMLFileIOBuffer* pOutputBuffer, EXMLEncodin
 
 VCOMError CXMLFileImpl::GetRootNode(IXMLFileNode** ppOutNode)
 {
-	return CXMLFileNodeImpl::GetInterface(fDoc.RootElement(), ppOutNode);
+	return CXMLFileNodeImpl::GetInterface(this, fDoc.RootElement(), ppOutNode);
 }
 
 VCOMError CXMLFileImpl::GetLastError(EXMLFileError& outError)
@@ -141,7 +141,12 @@ VCOMError CXMLFileImpl::GetSimpleNode(const TXString& nodePath, IXMLFileNode** p
 		return kVCOMError_InvalidArg;
 	}
 
-	return CXMLFileNodeImpl::GetInterface(fDoc.RootElement()->FirstChildElement(arrNodeNames[0].GetCharPtr()), ppOutNode);
+	tinyxml2::XMLElement* root = fDoc.RootElement();
+	if(root == nullptr){
+		return kVCOMError_NotInitialized;
+	}
+
+	return CXMLFileNodeImpl::GetInterface(this, root->FirstChildElement(arrNodeNames[0].GetCharPtr()), ppOutNode);
 }
 
 VCOMError CXMLFileImpl::GetSimpleNode(IXMLFileNode* pRefNode, const TXString& nodePath, IXMLFileNode** ppOutNode)
@@ -152,9 +157,13 @@ VCOMError CXMLFileImpl::GetSimpleNode(IXMLFileNode* pRefNode, const TXString& no
 	if(arrNodeNames.size() != 1){
 		return kVCOMError_InvalidArg;
 	}
-	CXMLFileImpl* imp = dynamic_cast<CXMLFileImpl*>(pRefNode);
-	
-	return CXMLFileNodeImpl::GetInterface(imp->fDoc.FirstChildElement(arrNodeNames[0].GetCharPtr()), ppOutNode);
+	// The reference is a node of this document, not the file itself.
+	CXMLFileNodeImpl* refNode = dynamic_cast<CXMLFileNodeImpl*>(pRefNode);
+	if(refNode == nullptr || refNode->GetElement() == nullptr){
+		return kVCOMError_InvalidArg;
+	}
+
+	return CXMLFileNodeImpl::GetInterface(this, refNode->GetElement()->FirstChildElement(arrNodeNames[0].GetCharPtr()), ppOutNode);
 }
 
 VCOMError CXMLFileImpl::GetSimpleValue(const TXString& nodePath, TXString& outValue)
@@ -211,7 +220,7 @@ uint32_t CXMLFileImpl::Release()
 
 		// mechanizm for immediate delete of the interface instance
 		if ( fRefCnt == 0 ) {
-			// ::GS_VWNotifyDeleteInterface( this ); TODO
+			delete this;
 			// EXIT IMMEDIATELY! 'this' no longer exist!!!
 			return 0;
 		}

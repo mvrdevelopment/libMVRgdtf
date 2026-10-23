@@ -57,13 +57,19 @@ namespace VectorworksMVR
 			virtual uint32_t	VCOM_CALLTYPE	Release();
 		private:
 			uint32_t 				fRefCnt;
+			// The IXMLFile whose tinyxml2 document owns fElement. The node keeps
+			// one reference on it so the document (a member of CXMLFileImpl)
+			// outlives every node handed out from it: callers routinely drop
+			// their IXMLFilePtr and keep IXMLFileNodePtrs (GdtfObject::fNode).
+			IXMLFile*				fFile;
 			tinyxml2::XMLElement* 	fElement;
 			
 		public:
-			void 				SetElement(tinyxml2::XMLElement* element);
-			static VCOMError 	GetInterface(tinyxml2::XMLElement* element, IXMLFileNode** ppOutNode);
-			
-			
+			void 					SetElement(IXMLFile* file, tinyxml2::XMLElement* element);
+			tinyxml2::XMLElement*	GetElement() const;
+			// Wraps `element` (owned by the document of `file`) in a new node
+			// interface with one reference, replacing and releasing *ppOutNode.
+			static VCOMError 		GetInterface(IXMLFile* file, tinyxml2::XMLElement* element, IXMLFileNode** ppOutNode);
 
 		};
 	}
