@@ -151,14 +151,14 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 	const NetworkInterface selectedInterface = GetSelectedNetworkInterface();
 	if ( !selectedInterface.first.empty() || selectedInterface.second != 0 )
 	{
-		mdns_cpp::mDNS* s = new mdns_cpp::mDNS();
+		auto s = std::make_unique<mdns_cpp::mDNS>();
 		s->setServiceHostname(std::string(fCurrentService.Service.fBuffer));
 		s->setServicePort(fServer->GetPort());
 		s->setServiceIP(selectedInterface.second);
 		s->setServiceName(MVRXChange_Service);
 		s->setServiceTxtRecord(txt);
 		s->startService();
-		fmdns.emplace_back(s);
+		fmdns.push_back(std::move(s));
 	}
 	else
 	{
@@ -171,14 +171,14 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 				continue;
 			}
 
-			mdns_cpp::mDNS* s = new mdns_cpp::mDNS();
+			auto s = std::make_unique<mdns_cpp::mDNS>();
 			s->setServiceHostname(std::string(fCurrentService.Service.fBuffer));
 			s->setServicePort(fServer->GetPort());
 			s->setServiceIP(e.second);
 			s->setServiceName(MVRXChange_Service);
 			s->setServiceTxtRecord(txt);
 			s->startService();
-			fmdns.emplace_back(s);	// Pointer is now managed by the unique ptr and deleted upon fmdns going out of scope
+			fmdns.push_back(std::move(s));
 		}
 	}
 
@@ -249,12 +249,16 @@ VCOMError VCOM_CALLTYPE  CMVRxchangeServiceImpl::QueryLocalServices(size_t& out_
 	{
 		std::condition_variable cv;
 		std::mutex mut;
+		bool isDone = false;
 		std::unique_lock<std::mutex> lock(mut);
-		boost::asio::post(fmdns_IO_Context, [this, &cv](){
+		boost::asio::post(fmdns_IO_Context, [this, &cv, &mut, &isDone](){
 			this->mDNS_Client_Task();
+			// Notify under the lock so the waiter cannot destroy cv/mut while we still use them.
+			std::lock_guard<std::mutex> doneLock(mut);
+			isDone = true;
 			cv.notify_all();
 		});
-		cv.wait(lock);
+		cv.wait(lock, [&isDone](){ return isDone; });
 	}else{
 		this->mDNS_Client_Task();
 	}
@@ -272,7 +276,7 @@ VCOMError VCOM_CALLTYPE  CMVRxchangeServiceImpl::QueryLocalServices(size_t& out_
 VCOMError VCOM_CALLTYPE VectorworksMVR::CMVRxchangeServiceImpl::GetLocalServiceAt(size_t index, ConnectToLocalServiceArgs& outLocalService)
 {
 	std::lock_guard<std::mutex> lock (fQueryLocalServicesResult_mtx);
-	if ( fQueryLocalServicesResult.size() < index)
+	if ( index >= fQueryLocalServicesResult.size() )
 	{
 		return kVCOMError_Failed;
 	}
@@ -563,13 +567,19 @@ VCOMError CMVRxchangeServiceImpl::GetSingleMemberOfService(const MvrUUID& statio
 	return kVCOMError_Failed;
 }
 
-void CMVRxchangeServiceImpl::mDNS_Client_Tick()
+void CMVRxchangeServiceImpl::mDNS_Client_Tick(const boost::system::error_code& ec)
 {
+	// A cancelled timer (see mDNS_Client_Stop) must neither query nor re-arm itself.
+	if (ec == boost::asio::error::operation_aborted)
+	{
+		return;
+	}
+
 	MVRXCHANGE_DEBUG("mDNS_Client_Tick");
 	mDNS_Client_Task();
 
 	fmdns_long_timer.expires_from_now(boost::posix_time::seconds(45));
-	fmdns_long_timer.async_wait(boost::bind(&CMVRxchangeServiceImpl::mDNS_Client_Tick, this));
+	fmdns_long_timer.async_wait(boost::bind(&CMVRxchangeServiceImpl::mDNS_Client_Tick, this, boost::placeholders::_1));
 }
 
 void CMVRxchangeServiceImpl::mDNS_Client_RFun()
@@ -583,17 +593,25 @@ void CMVRxchangeServiceImpl::mDNS_Client_RFun()
 void CMVRxchangeServiceImpl::mDNS_Client_Start()
 {
 	fmdns_stop_flag = false;
-	boost::asio::post(fmdns_IO_Context, boost::bind(&CMVRxchangeServiceImpl::mDNS_Client_Tick, this));
+	// The context was stopped by mDNS_Client_Stop and must be restarted before running again.
+	fmdns_IO_Context.restart();
+	boost::asio::post(fmdns_IO_Context, boost::bind(&CMVRxchangeServiceImpl::mDNS_Client_Tick, this, boost::system::error_code()));
 	fmdns_Thread = std::thread(&CMVRxchangeServiceImpl::mDNS_Client_RFun, this);
 }
 
 void CMVRxchangeServiceImpl::mDNS_Client_Stop()
 {
 	fmdns_stop_flag = true;
+	// Wake the io thread immediately instead of waiting for the run_for timeout.
+	fmdns_IO_Context.stop();
 	if(fmdns_Thread.joinable())
 	{
 		fmdns_Thread.join();
 	}
+
+	// The io thread is gone, so no handler can race with the cancel; the aborted handler is discarded on restart/destruction.
+	boost::system::error_code ignored;
+	fmdns_long_timer.cancel(ignored);
 }
 
 

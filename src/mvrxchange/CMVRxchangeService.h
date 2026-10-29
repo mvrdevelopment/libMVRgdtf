@@ -55,7 +55,7 @@ namespace VectorworksMVR
 	private:
 		void mDNS_Client_Task();	// actual mdns task
 		
-		void mDNS_Client_Tick();	// mdns tick function (executed by RFun function)
+		void mDNS_Client_Tick(const boost::system::error_code& ec);	// mdns tick function (executed by RFun function)
 		void mDNS_Client_RFun();	// thread function (executed by fmdns_Thread)
 
 		void mDNS_Client_Stop();

@@ -59,13 +59,13 @@ void MVRxchangeServer::ExecutionFunction()
 
 void MVRxchangeServer::AddSession(const std::shared_ptr<MVRxchangeSession>& p) 
 {
-    std::unique_lock<std::mutex> mSession;
+    std::unique_lock<std::mutex> lock(mSession);
     fSession.insert(p);
 }
 
 void MVRxchangeServer::CloseSession(const std::shared_ptr<MVRxchangeSession>& p) 
 {
-    std::unique_lock<std::mutex> mSession;
+    std::unique_lock<std::mutex> lock(mSession);
     fSession.erase(p);
 }
 
