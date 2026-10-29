@@ -73,7 +73,7 @@ runs:
           mkdir boost
           cd boost
           curl -L -o boost.zip https://archives.boost.io/release/1.86.0/source/boost_1_86_0.zip
-          tar -xf boost.zip
+          7z x boost.zip -y -bso0 -bsp0
           if ($LASTEXITCODE -ne 0) { throw "Boost extraction failed" }
           Get-ChildItem boost_1_86_0 | Move-Item -Destination .
           Remove-Item boost_1_86_0, boost.zip
