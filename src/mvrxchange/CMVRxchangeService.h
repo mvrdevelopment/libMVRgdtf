@@ -66,7 +66,7 @@ namespace VectorworksMVR
 		std::vector<std::unique_ptr<mdns_cpp::mDNS>>	fmdns;
 		std::thread 									fmdns_Thread;
 		boost::asio::io_context 						fmdns_IO_Context;
-		boost::asio::deadline_timer						fmdns_long_timer;
+		boost::asio::steady_timer						fmdns_long_timer;
 		std::atomic<bool>								fmdns_stop_flag;
 
 		std::mutex 										fQueryLocalServicesResult_mtx;

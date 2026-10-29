@@ -578,7 +578,7 @@ void CMVRxchangeServiceImpl::mDNS_Client_Tick(const boost::system::error_code& e
 	MVRXCHANGE_DEBUG("mDNS_Client_Tick");
 	mDNS_Client_Task();
 
-	fmdns_long_timer.expires_from_now(boost::posix_time::seconds(45));
+	fmdns_long_timer.expires_after(std::chrono::seconds(45));
 	fmdns_long_timer.async_wait(boost::bind(&CMVRxchangeServiceImpl::mDNS_Client_Tick, this, boost::placeholders::_1));
 }
 
@@ -610,8 +610,7 @@ void CMVRxchangeServiceImpl::mDNS_Client_Stop()
 	}
 
 	// The io thread is gone, so no handler can race with the cancel; the aborted handler is discarded on restart/destruction.
-	boost::system::error_code ignored;
-	fmdns_long_timer.cancel(ignored);
+	fmdns_long_timer.cancel();
 }
 
 
