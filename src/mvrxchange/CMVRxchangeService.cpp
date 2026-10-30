@@ -430,7 +430,6 @@ void CMVRxchangeServiceImpl::TCP_Stop()
 
 	delete server;
 }
-}
 
 IMVRxchangeService::IMVRxchangeMessage CMVRxchangeServiceImpl::TCP_OnIncommingMessage(const IMVRxchangeService::IMVRxchangeMessage& in, const TCPMessageInfo& data)
 {
