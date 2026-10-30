@@ -22,6 +22,13 @@ void MVRxchangeSession::Start()
     DoRead();
 }
 
+void MVRxchangeSession::Close()
+{
+    boost::system::error_code ec;
+    fSocket.shutdown(tcp::socket::shutdown_both, ec);
+    fSocket.close(ec);
+}
+
 void MVRxchangeSession::DoRead()
 {
     auto self(shared_from_this());

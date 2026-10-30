@@ -21,6 +21,7 @@ namespace VectorworksMVR
 	};
 
 	using TCPMessageInfo = MVRxchangeNetwork::TCPMessageInfo;
+	using NetworkInterface = std::pair<std::string, uint32_t>;
 
 	//----------------------------------------------------------------------------------------
 	class CMVRxchangeServiceImpl : public VCOMImpl<IMVRxchangeService>
@@ -43,10 +44,18 @@ namespace VectorworksMVR
 		virtual VCOMError VCOM_CALLTYPE     OnMessage(OnMessageArgs& messageHandler);
 		virtual VCOMError VCOM_CALLTYPE     Send_message(const SendMessageArgs& messageHandler);
 
+		virtual VCOMError VCOM_CALLTYPE     QueryAllAvailableInterfaces( std::vector<NetworkInterface>& out );
+
+		// Restricts both the advertised service and the service discovery to [interface].
+		// An unset (default constructed) interface means all non-loopback interfaces.
+		// The value is applied on the next ConnectToLocalService / QueryLocalServices;
+		// a running discovery loop is not re-bound.
+		virtual VCOMError VCOM_CALLTYPE     SetNetworkInterface( const NetworkInterface& interface );
+
 	private:
 		void mDNS_Client_Task();	// actual mdns task
 		
-		void mDNS_Client_Tick();	// mdns tick function (executed by RFun function)
+		void mDNS_Client_Tick(const boost::system::error_code& ec);	// mdns tick function (executed by RFun function)
 		void mDNS_Client_RFun();	// thread function (executed by fmdns_Thread)
 
 		void mDNS_Client_Stop();
@@ -57,7 +66,7 @@ namespace VectorworksMVR
 		std::vector<std::unique_ptr<mdns_cpp::mDNS>>	fmdns;
 		std::thread 									fmdns_Thread;
 		boost::asio::io_context 						fmdns_IO_Context;
-		boost::asio::deadline_timer						fmdns_long_timer;
+		boost::asio::steady_timer						fmdns_long_timer;
 		std::atomic<bool>								fmdns_stop_flag;
 
 		std::mutex 										fQueryLocalServicesResult_mtx;
@@ -65,7 +74,14 @@ namespace VectorworksMVR
 		bool											fIsInitialized = false;
 
 		MVRxchangeNetwork::MVRxchangeServer*			fServer;
+		std::mutex										fServerMutex;
 		ConnectToLocalServiceArgs						fCurrentService;
+
+		std::mutex								fNetworkInterfaceMutex;
+		NetworkInterface							fNetworkInterface;
+
+		// Thread safe snapshot of [fNetworkInterface]; an unset interface is returned as an empty pair
+		NetworkInterface							GetSelectedNetworkInterface();
 
 		void TCP_Start();
 		void TCP_Stop();
@@ -75,6 +91,7 @@ namespace VectorworksMVR
 
 		std::mutex fMvrGroupMutex;
 		std::vector<MVRxchangeGroupMember>			fMVRGroup;
+
 	private:
 
 		OnMessageArgs  fCallBack;
