@@ -29,6 +29,27 @@ MVRxchangeServer::~MVRxchangeServer()
     {
         fExecutionThread.join();
     }
+
+    // No handler runs anymore, so sockets can be closed safely before the io_context is destroyed.
+    // Otherwise the sessions kept alive by pending handlers would be destroyed inside the
+    // io_context shutdown, which can block forever.
+    boost::system::error_code ec;
+    fAcceptor.close(ec);
+    this->CloseAllSessions();
+}
+
+void MVRxchangeServer::CloseAllSessions()
+{
+    std::set<std::shared_ptr<MVRxchangeSession>> sessions;
+    {
+        std::unique_lock<std::mutex> lock(mSession);
+        sessions.swap(fSession);
+    }
+
+    for(const auto& session : sessions)
+    {
+        session->Close();
+    }
 }
 
 void MVRxchangeServer::DoAccept()

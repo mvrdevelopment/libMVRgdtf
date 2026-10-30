@@ -74,6 +74,7 @@ namespace VectorworksMVR
 		bool											fIsInitialized = false;
 
 		MVRxchangeNetwork::MVRxchangeServer*			fServer;
+		std::mutex										fServerMutex;
 		ConnectToLocalServiceArgs						fCurrentService;
 
 		std::mutex								fNetworkInterfaceMutex;

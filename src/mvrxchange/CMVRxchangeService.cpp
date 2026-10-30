@@ -419,8 +419,17 @@ void CMVRxchangeServiceImpl::TCP_Start()
 
 void CMVRxchangeServiceImpl::TCP_Stop()
 {
-	delete fServer;
-	fServer = nullptr;
+	// Detach under the lock so two threads can never delete the same server;
+	// the (blocking) destruction itself runs outside the lock.
+	MVRxchangeNetwork::MVRxchangeServer* server = nullptr;
+	{
+		std::lock_guard<std::mutex> lock(fServerMutex);
+		server	= fServer;
+		fServer	= nullptr;
+	}
+
+	delete server;
+}
 }
 
 IMVRxchangeService::IMVRxchangeMessage CMVRxchangeServiceImpl::TCP_OnIncommingMessage(const IMVRxchangeService::IMVRxchangeMessage& in, const TCPMessageInfo& data)

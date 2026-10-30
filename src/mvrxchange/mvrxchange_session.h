@@ -17,7 +17,7 @@ namespace MVRxchangeNetwork
     
     public:
         void Start();
-
+        void Close();
 
     private:
         void DoRead();
