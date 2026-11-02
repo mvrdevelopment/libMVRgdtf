@@ -249,6 +249,10 @@ set(CMAKE_EXE_LINKER_FLAGS  ${CMAKE_EXE_LINKER_FLAGS}
 
 add_compile_options($ENV{CXX_FLAGS_CUSTOM})
 
+if(APPLE)
+    target_compile_options(MvrGdtf PRIVATE -fvisibility=hidden -fvisibility-inlines-hidden)
+endif()
+
 if (ENABLE_ASAN)
     if (MSVC)
         message(STATUS "ASAN aktiviert für RelWithDebInfo")

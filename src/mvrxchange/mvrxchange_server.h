@@ -25,8 +25,14 @@ namespace MVRxchangeNetwork
     private:
         void DoAccept();
         void ExecutionFunction();
+        void CloseAllSessions();
 
         CMVRxchangeServiceImpl*         fImpl;
+
+        // Declared before fContext so they outlive it; pending handlers destroyed
+        // during the io_context shutdown may still release sessions.
+        std::mutex                                   mSession;
+        std::set<std::shared_ptr<MVRxchangeSession>> fSession;
 
         tcp::endpoint                   fEndpoint;
 		boost::asio::io_context 	    fContext;
@@ -36,8 +42,5 @@ namespace MVRxchangeNetwork
 
         uint16_t                        fPort;
         uint32_t                        fIp;
-
-        std::mutex                                   mSession;
-        std::set<std::shared_ptr<MVRxchangeSession>> fSession;
     };
 }
