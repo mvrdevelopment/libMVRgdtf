@@ -162,19 +162,18 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::ConnectToLocalService(const Co
 	}
 	else
 	{
-		for(NetworkInterface e : mdns_cpp::mDNS().getInterfaces())
+		// Advertise on physical interfaces only. Tunnels (e.g. utun4) and loopback would make this
+		// station show up with an address that other computers cannot use or that is on a different network.
+		for(const mdns_cpp::InterfaceInfo& e : mdns_cpp::mDNS().getInterfaceInfos())
 		{
-			// Bitmasking IP Address to check if it is 127.x.x.x
-			// We dont want to start the mDNS Server on loopback addresses
-			// If two programs on the same device want to connect, they can use one of the other interfaces as well
-			if((e.second & 4278190080) == 2130706432) {
+			if(e.type != mdns_cpp::EInterfaceType::Ethernet) {
 				continue;
 			}
 
 			auto s = std::make_unique<mdns_cpp::mDNS>();
 			s->setServiceHostname(std::string(fCurrentService.Service.fBuffer));
 			s->setServicePort(fServer->GetPort());
-			s->setServiceIP(e.second);
+			s->setServiceIP(e.ip);
 			s->setServiceName(MVRXChange_Service);
 			s->setServiceTxtRecord(txt);
 			s->startService();
@@ -379,13 +378,14 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::Send_message(const SendMessage
 VCOMError VectorworksMVR::CMVRxchangeServiceImpl::QueryAllAvailableInterfaces(std::vector<NetworkInterface>& out)
 {
 	out.clear();
-	for(NetworkInterface e : mdns_cpp::mDNS().getInterfaces())
+
+	// Pulldown order: Ethernet, Loopback, Virtual (the enum order)
+	std::vector<mdns_cpp::InterfaceInfo> infos = mdns_cpp::mDNS().getInterfaceInfos();
+	std::stable_sort(infos.begin(), infos.end(), [](const mdns_cpp::InterfaceInfo& a, const mdns_cpp::InterfaceInfo& b) { return a.type < b.type; });
+	out.clear();
+	for(const mdns_cpp::InterfaceInfo& e : infos)
 	{
-		// remove loopback addresses (127.x.x.x) from the list of available interfaces, as they are not useful for mDNS service discovery in a local network context
-		if((e.second & 4278190080) == 2130706432) {
-			continue;
-		}
-		out.push_back(e);
+		out.push_back(NetworkInterface(e.name, e.ip));
 	}
 
 	return kVCOMError_NoError;
@@ -685,14 +685,14 @@ mdns_cpp::QueryResList CMVRxchangeServiceImpl::mDNS_Filter_Queries(mdns_cpp::Que
 
 		if (hasInterfaceFilter)
 		{
-			bool reachable = IsAddressOnInterface(selectedInterface.second, interfacePrefixLength, i.mdnsAddress);
-
-			for (auto it = i.ipV4_address.begin(); !reachable && it != i.ipV4_address.end(); ++it)
+			// Only the advertised A records decide. The packet's source address is not used: a Mac announcing
+			// its utun4 (VPN/tunnel) address still sends the packet over Ethernet, which used to let it pass.
+			for (auto ip = i.ipV4_address.begin(); ip != i.ipV4_address.end();)
 			{
-				reachable = IsAddressOnInterface(selectedInterface.second, interfacePrefixLength, *it);
+				ip = IsAddressOnInterface(selectedInterface.second, interfacePrefixLength, *ip) ? std::next(ip) : i.ipV4_address.erase(ip);
 			}
 
-			if (!reachable)
+			if (i.ipV4_address.empty())
 			{
 				// not on the network of the selected interface
 				continue;

@@ -62,11 +62,19 @@ struct unsorted_query_t {
 
 using QueryResList = std::vector<Query_result>;
 
+// User facing category of a network interface.
+enum class EInterfaceType : std::uint8_t {
+  Ethernet,   // physical adapters (wired and Wi-Fi)
+  Loopback,   // 127.x.x.x, only reachable from the same computer
+  Virtual     // tunnels, VPNs, VM host adapters (e.g. utun4, vEthernet, vmnet)
+};
+
 // Describes one local IPv4 interface address together with the prefix length of its network.
 struct InterfaceInfo {
   static constexpr std::uint8_t kUnknownPrefixLength = 0xFF;
 
-  std::string   name;
+  std::string   name;                                         // display label, e.g. "Ethernet (192.168.1.5)"
+  EInterfaceType type{EInterfaceType::Ethernet};
   std::uint32_t ip{0};                                        // network byte order
   std::uint8_t  prefix_length{kUnknownPrefixLength};          // CIDR prefix, [kUnknownPrefixLength] when the OS did not report a netmask
 };

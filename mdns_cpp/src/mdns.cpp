@@ -13,8 +13,11 @@
 
 #ifdef _WIN32
 #include <iphlpapi.h>
+#include <cwctype>
 #else
 #include <ifaddrs.h>
+#include <arpa/inet.h>
+#include <net/if.h>
 #include <netdb.h>
 #include <netinet/in.h>
 #endif
@@ -22,6 +25,78 @@
 #include <optional>
 
 namespace mdns_cpp {
+
+static const char *GetInterfaceTypeLabel(EInterfaceType type) {
+  switch (type) {
+    case EInterfaceType::Loopback:
+      return "Loopback";
+    case EInterfaceType::Virtual:
+      return "Virtual";
+    default:
+      return "Ethernet";
+  }
+}
+
+// "Ethernet (192.168.1.5)": the category is what the user chooses by, the address tells apart several adapters of the same category.
+static std::string MakeInterfaceLabel(EInterfaceType type, const std::string &ip) {
+  return std::string(GetInterfaceTypeLabel(type)) + " (" + ip + ")";
+}
+
+#ifdef _WIN32
+
+static bool ContainsNoCase(const wchar_t *text, const wchar_t *needle) {
+  if (!text) {
+    return false;
+  }
+  std::wstring haystack(text);
+  std::transform(haystack.begin(), haystack.end(), haystack.begin(), [](wchar_t c) { return (wchar_t)std::towlower(c); });
+  return haystack.find(needle) != std::wstring::npos;
+}
+
+static EInterfaceType ClassifyAdapter(const IP_ADAPTER_ADDRESSES *adapter) {
+  if (adapter->IfType == IF_TYPE_SOFTWARE_LOOPBACK) {
+    return EInterfaceType::Loopback;
+  }
+
+  if (adapter->IfType == IF_TYPE_TUNNEL || adapter->IfType == IF_TYPE_PPP || adapter->TunnelType != TUNNEL_TYPE_NONE) {
+    return EInterfaceType::Virtual;
+  }
+
+  static const wchar_t *const kVirtualMarkers[] = {L"virtual", L"vethernet", L"vmware", L"vbox", L"hyper-v", L"wsl", L"tap-",
+                                                    L"tailscale", L"wireguard", L"vpn", L"zerotier", L"loopback adapter"};
+  for (const wchar_t *marker : kVirtualMarkers) {
+    if (ContainsNoCase(adapter->Description, marker) || ContainsNoCase(adapter->FriendlyName, marker)) {
+      return EInterfaceType::Virtual;
+    }
+  }
+
+  return EInterfaceType::Ethernet;
+}
+
+#else
+
+static EInterfaceType ClassifyInterface(const struct ifaddrs *ifa) {
+  if (ifa->ifa_flags & IFF_LOOPBACK) {
+    return EInterfaceType::Loopback;
+  }
+
+  // Tunnels (utun, VPN) are point-to-point; the other prefixes are virtual or system-internal adapters
+  if (ifa->ifa_flags & IFF_POINTOPOINT) {
+    return EInterfaceType::Virtual;
+  }
+
+  static const char *const kVirtualPrefixes[] = {"utun", "awdl", "llw", "ap", "gif", "stf", "bridge", "vmnet", "vboxnet", "feth",
+                                                  "anpi", "docker", "veth", "virbr", "tun", "tap", "wg", "ppp", "ipsec", "br-"};
+  for (const char *prefix : kVirtualPrefixes) {
+    if (strncmp(ifa->ifa_name, prefix, strlen(prefix)) == 0) {
+      return EInterfaceType::Virtual;
+    }
+  }
+
+  return EInterfaceType::Ethernet;
+}
+
+#endif
 
 int mDNS::openServiceSockets(int *sockets, int max_sockets) {
   // When receiving, each socket can receive data from all network interfaces
@@ -110,15 +185,17 @@ int mDNS::openClientSocketsFiltered(int *sockets, int max_sockets, int port, std
     for (IP_ADAPTER_UNICAST_ADDRESS *unicast = adapter->FirstUnicastAddress; unicast; unicast = unicast->Next) {
       if (unicast->Address.lpSockaddr->sa_family == AF_INET) {
         struct sockaddr_in *saddr = (struct sockaddr_in *)unicast->Address.lpSockaddr;
-        if ((saddr->sin_addr.S_un.S_un_b.s_b1 != 127) || (saddr->sin_addr.S_un.S_un_b.s_b2 != 0) ||
-            (saddr->sin_addr.S_un.S_un_b.s_b3 != 0) || (saddr->sin_addr.S_un.S_un_b.s_b4 != 1)) {
+        {
           int log_addr = 1;
             char buffer[128];
-            const std::string interfaceName = ipv4AddressToString(buffer, sizeof(buffer), saddr, sizeof(struct sockaddr_in));
+            const EInterfaceType interfaceType = ClassifyAdapter(adapter);
+            const std::string ipString = ipv4AddressToString(buffer, sizeof(buffer), saddr, sizeof(struct sockaddr_in));
+            const std::string interfaceName = MakeInterfaceLabel(interfaceType, ipString);
             fInterfaces.push_back(std::make_pair(interfaceName, saddr->sin_addr.s_addr));
 
             InterfaceInfo info;
             info.name = interfaceName;
+            info.type = interfaceType;
             info.ip = saddr->sin_addr.s_addr;
             if (unicast->OnLinkPrefixLength <= 32) {
               info.prefix_length = (std::uint8_t)unicast->OnLinkPrefixLength;
@@ -127,7 +204,8 @@ int mDNS::openClientSocketsFiltered(int *sockets, int max_sockets, int port, std
 
 
           has_ipv4_ = 1;
-          const bool interface_selected = (filter_ipv4 == 0) || (saddr->sin_addr.s_addr == filter_ipv4);
+          // Loopback only gets sockets when it is selected explicitly
+          const bool interface_selected = (filter_ipv4 == 0) ? (interfaceType != EInterfaceType::Loopback) : (saddr->sin_addr.s_addr == filter_ipv4);
           if (interface_selected && num_sockets < max_sockets) {
             saddr->sin_port = htons((unsigned short)port);
             int sock = mdns_socket_open_ipv4(saddr);
@@ -196,13 +274,17 @@ int mDNS::openClientSocketsFiltered(int *sockets, int max_sockets, int port, std
 
     if (ifa->ifa_addr->sa_family == AF_INET) {
       struct sockaddr_in *saddr = (struct sockaddr_in *)ifa->ifa_addr;
-      if (saddr->sin_addr.s_addr != htonl(INADDR_LOOPBACK)) 
       {
         int log_addr = 0;
-        fInterfaces.push_back(std::make_pair(ifa->ifa_name, saddr->sin_addr.s_addr));
+        const EInterfaceType interfaceType = ClassifyInterface(ifa);
+        char ipBuffer[INET_ADDRSTRLEN] = {};
+        inet_ntop(AF_INET, &saddr->sin_addr, ipBuffer, sizeof(ipBuffer));
+        const std::string interfaceName = MakeInterfaceLabel(interfaceType, ipBuffer);
+        fInterfaces.push_back(std::make_pair(interfaceName, saddr->sin_addr.s_addr));
 
         InterfaceInfo info;
-        info.name = ifa->ifa_name;
+        info.name = interfaceName;
+        info.type = interfaceType;
         info.ip = saddr->sin_addr.s_addr;
         if (ifa->ifa_netmask && ifa->ifa_netmask->sa_family == AF_INET) {
           const std::uint32_t mask = ntohl(((struct sockaddr_in *)ifa->ifa_netmask)->sin_addr.s_addr);
@@ -218,7 +300,8 @@ int mDNS::openClientSocketsFiltered(int *sockets, int max_sockets, int port, std
         }
         fInterfaceInfos.push_back(info);
 
-        const bool interface_selected = (filter_ipv4 == 0) || (saddr->sin_addr.s_addr == filter_ipv4);
+        // Loopback only gets sockets when it is selected explicitly
+        const bool interface_selected = (filter_ipv4 == 0) ? (interfaceType != EInterfaceType::Loopback) : (saddr->sin_addr.s_addr == filter_ipv4);
         if (interface_selected && num_sockets < max_sockets) {
           saddr->sin_port = htons(port);
           int sock = mdns_socket_open_ipv4(saddr);
