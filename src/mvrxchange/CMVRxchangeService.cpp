@@ -400,8 +400,24 @@ VCOMError VectorworksMVR::CMVRxchangeServiceImpl::SetNetworkInterface( const Net
 
 NetworkInterface VectorworksMVR::CMVRxchangeServiceImpl::GetSelectedNetworkInterface()
 {
-	std::lock_guard<std::mutex> lock(fNetworkInterfaceMutex);
-	return fNetworkInterface;
+	{
+		std::lock_guard<std::mutex> lock(fNetworkInterfaceMutex);
+		if(!fNetworkInterface.first.empty() || fNetworkInterface.second != 0)
+		{
+			return fNetworkInterface;
+		}
+	}
+
+	// Nothing selected: default to the first Ethernet interface (there is no "Auto" entry)
+	for(const mdns_cpp::InterfaceInfo& e : mdns_cpp::mDNS().getInterfaceInfos())
+	{
+		if(e.type == mdns_cpp::EInterfaceType::Ethernet)
+		{
+			return NetworkInterface(e.name, e.ip);
+		}
+	}
+
+	return NetworkInterface();
 }
 
 //---------------------------------------------------------------------------
