@@ -445,7 +445,7 @@ void CMVRxchangeServiceImpl::mDNS_Client_Tick()
 	MVRXCHANGE_DEBUG("mDNS_Client_Tick");
 	mDNS_Client_Task();
 
-	fmdns_long_timer.expires_from_now(boost::posix_time::seconds(15));
+	fmdns_long_timer.expires_after(std::chrono::seconds(15));
 	fmdns_long_timer.async_wait(boost::bind(&CMVRxchangeServiceImpl::mDNS_Client_Tick, this));
 }
 
