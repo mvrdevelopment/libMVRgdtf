@@ -10,8 +10,25 @@ runs:
         msbuild-architecture: x64
 
     # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    # Xerces-C - setup
+    # libMVRGdtf - setup
+    - name: libMVRGdtf - checkout repository
+      uses: actions/checkout@v4
+      with:
+        path: libMvrGdtf
+
+    # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    # Xerces-C - setup (only the installed headers and libs are cached; bump the "-v1" suffix when the build settings below change)
+    - name: Xerces-C - restore cache
+      id: xerces-cache
+      uses: actions/cache@v4
+      with:
+        path: |
+          xerces-c/build/libs
+          xerces-c/build_mt/libs
+        key: xerces-c-3.3.0-win-x64-v142-v1
+
     - name: Xerces-C - prepare
+      if: steps.xerces-cache.outputs.cache-hit != 'true'
       shell: cmd
       run: |
         mkdir xerces-c
@@ -20,70 +37,83 @@ runs:
         tar -xf xerces-c.zip --strip-components=1
 
     # Xerces-C - build MD
+    # Only the xerces-c library target is built and installed (src\cmake_install.cmake), the tests and samples are skipped.
     - name: Xerces-C - configure
+      if: steps.xerces-cache.outputs.cache-hit != 'true'
       working-directory: xerces-c
       shell: cmd
       run: |
         mkdir build
         cd build
-        cmake .. -G "Visual Studio 17 2022" -A x64 -T v142,version=14.29 -DCMAKE_INSTALL_PREFIX:PATH=libs -DCMAKE_CXX_FLAGS="/DWIN32 /D_WINDOWS -O2 -Ob2 -DNDEBUG" -DCMAKE_C_FLAGS="/DWIN32 /D_WINDOWS /W3" -DBUILD_SHARED_LIBS:BOOL=FALSE -Dxmlch-type=wchar_t
+        cmake .. -G "Visual Studio 17 2022" -A x64 -T v142,version=14.29 -DCMAKE_INSTALL_PREFIX:PATH=libs -DCMAKE_CXX_FLAGS="/DWIN32 /D_WINDOWS -O2 -Ob2 -DNDEBUG /MP" -DCMAKE_C_FLAGS="/DWIN32 /D_WINDOWS /W3" -DBUILD_SHARED_LIBS:BOOL=FALSE -Dxmlch-type=wchar_t
 
     - name: Xerces-C - build MinSizeRel
+      if: steps.xerces-cache.outputs.cache-hit != 'true'
       working-directory: xerces-c/build
       shell: cmd
       run: |
-        msbuild /m ALL_BUILD.vcxproj /p:Configuration=MinSizeRel
-        msbuild /m INSTALL.vcxproj /p:Configuration=MinSizeRel
+        cmake --build . --config MinSizeRel --target xerces-c
+        cmake -DCMAKE_INSTALL_CONFIG_NAME=MinSizeRel -P src\cmake_install.cmake
 
     - name: Xerces-C - build Debug
+      if: steps.xerces-cache.outputs.cache-hit != 'true'
       working-directory: xerces-c/build
       shell: cmd
       run: |
-        msbuild /m ALL_BUILD.vcxproj /p:Configuration=Debug
-        msbuild /m INSTALL.vcxproj /p:Configuration=Debug
+        cmake --build . --config Debug --target xerces-c
+        cmake -DCMAKE_INSTALL_CONFIG_NAME=Debug -P src\cmake_install.cmake
 
     # Xerces-C - build MT
     - name: Xerces-C - configure [MT]
+      if: steps.xerces-cache.outputs.cache-hit != 'true'
       working-directory: xerces-c
       shell: cmd
       run: |
         mkdir build_mt
         cd build_mt
-        cmake .. -G "Visual Studio 17 2022" -A x64 -T v142,version=14.29 -DCMAKE_INSTALL_PREFIX:PATH=libs -DCMAKE_CXX_FLAGS_DEBUG="/MTd /Zi /Ob0 /Od /RTC1" -DCMAKE_CXX_FLAGS_MINSIZEREL="/MT /O1 /Ob1 /DNDEBUG" -DCMAKE_C_FLAGS_DEBUG="/MTd /Zi /Ob0 /Od /RTC1" -DCMAKE_C_FLAGS_MINSIZEREL="/MT /O1 /Ob1 /DNDEBUG" -DCMAKE_C_FLAGS="/DWIN32 /D_WINDOWS /W3" -DBUILD_SHARED_LIBS:BOOL=FALSE -Dxmlch-type=wchar_t
+        cmake .. -G "Visual Studio 17 2022" -A x64 -T v142,version=14.29 -DCMAKE_INSTALL_PREFIX:PATH=libs -DCMAKE_CXX_FLAGS="/DWIN32 /D_WINDOWS /EHsc /MP" -DCMAKE_CXX_FLAGS_DEBUG="/MTd /Zi /Ob0 /Od /RTC1" -DCMAKE_CXX_FLAGS_MINSIZEREL="/MT /O1 /Ob1 /DNDEBUG" -DCMAKE_C_FLAGS_DEBUG="/MTd /Zi /Ob0 /Od /RTC1" -DCMAKE_C_FLAGS_MINSIZEREL="/MT /O1 /Ob1 /DNDEBUG" -DCMAKE_C_FLAGS="/DWIN32 /D_WINDOWS /W3" -DBUILD_SHARED_LIBS:BOOL=FALSE -Dxmlch-type=wchar_t
 
     - name: Xerces-C - build MinSizeRel [MT]
+      if: steps.xerces-cache.outputs.cache-hit != 'true'
       working-directory: xerces-c/build_mt
       shell: cmd
       run: |
-        msbuild /m ALL_BUILD.vcxproj /p:Configuration=MinSizeRel
-        msbuild /m INSTALL.vcxproj /p:Configuration=MinSizeRel
+        cmake --build . --config MinSizeRel --target xerces-c
+        cmake -DCMAKE_INSTALL_CONFIG_NAME=MinSizeRel -P src\cmake_install.cmake
 
     - name: Xerces-C - build Debug [MT]
+      if: steps.xerces-cache.outputs.cache-hit != 'true'
       working-directory: xerces-c/build_mt
       shell: cmd
       run: |
-        msbuild /m ALL_BUILD.vcxproj /p:Configuration=Debug
-        msbuild /m INSTALL.vcxproj /p:Configuration=Debug
+        cmake --build . --config Debug --target xerces-c
+        cmake -DCMAKE_INSTALL_CONFIG_NAME=Debug -P src\cmake_install.cmake
 
     # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    # Boost - setup and build
+    # Boost - setup (the extracted headers are cached)
+    - name: Boost - restore cache
+      id: boost-cache
+      uses: actions/cache@v4
+      with:
+        path: boost
+        key: boost-1.86.0-win-v1
+
     - name: Boost - prepare
-      shell: cmd
+      if: steps.boost-cache.outputs.cache-hit != 'true'
+      shell: pwsh
       run: |
           mkdir boost
           cd boost
-          curl -o boost.zip https://archives.boost.io/release/1.86.0/source/boost_1_86_0.zip
-          tar -xf boost.zip --strip-components=1
-
-    # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    # libMVRGdtf - setup
-    - name: libMVRGdtf - checkout repository
-      uses: actions/checkout@v4
-      with:
-        path: libMvrGdtf
+          curl -L -o boost.zip https://archives.boost.io/release/1.86.0/source/boost_1_86_0.zip
+          7z x boost.zip -y -bso0 -bsp0
+          if ($LASTEXITCODE -ne 0) { throw "Boost extraction failed" }
+          Get-ChildItem boost_1_86_0 | Move-Item -Destination .
+          Remove-Item boost_1_86_0, boost.zip
 
     # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     - name: libMVRGdtf [MD_NO_MZ] - configure
+      env:
+        CXXFLAGS: /MP
       working-directory: libMvrGdtf
       shell: cmd
       run: |
@@ -134,6 +164,8 @@ runs:
 
     # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     - name: libMVRGdtf [MD] - configure
+      env:
+        CXX_FLAGS_CUSTOM: /MP
       working-directory: libMvrGdtf
       shell: cmd
       run: |
@@ -184,6 +216,8 @@ runs:
 
     # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     - name: libMVRGdtf [MT] - configure
+      env:
+        CXX_FLAGS_CUSTOM: /MP
       working-directory: libMvrGdtf
       shell: cmd
       run: |
