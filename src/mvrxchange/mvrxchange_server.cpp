@@ -16,7 +16,7 @@ MVRxchangeServer::MVRxchangeServer(CMVRxchangeServiceImpl* impl) :
     std::cout << "Port: " << fAcceptor.local_endpoint().port() << std::endl;
 
     fPort = fAcceptor.local_endpoint().port();
-    fIp   = fAcceptor.local_endpoint().address().to_v4().to_ulong();
+    fIp   = fAcceptor.local_endpoint().address().to_v4().to_uint();
 
     DoAccept();
     fExecutionThread = std::thread(&MVRxchangeServer::ExecutionFunction, this);
