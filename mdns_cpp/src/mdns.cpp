@@ -1,5 +1,6 @@
 #include "mdns_cpp/mdns.hpp"
 
+#include <algorithm>
 #include <iostream>
 #include <memory>
 #include <thread>
