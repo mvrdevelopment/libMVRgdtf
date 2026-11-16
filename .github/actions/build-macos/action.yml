@@ -3,7 +3,27 @@ description: 'Build ths packages for MACOS package'
 runs:
   using: "composite"
   steps:
+    - name: Number of CPUs
+      shell: bash
+      run: echo "BUILD_JOBS=$(sysctl -n hw.ncpu)" >> $GITHUB_ENV
+
+    # Xerces-C is built for arm64 and x86_64 (about the slowest part); reuse the result between runs
+    - name: Xerces-C - cache
+      id: cache-xerces
+      uses: actions/cache@v4
+      with:
+        path: xerces-c
+        key: xerces-c-3.3.0-macos-arm64-x64-${{ runner.arch }}-v1
+
+    - name: Boost - cache
+      id: cache-boost
+      uses: actions/cache@v4
+      with:
+        path: boost
+        key: boost-1.86.0-macos-v1
+
     - name: Xerces-C - prepare
+      if: steps.cache-xerces.outputs.cache-hit != 'true'
       shell: bash
       run: |
         mkdir xerces-c
@@ -12,27 +32,31 @@ runs:
         tar -xf xerces-c.zip --strip-components=1
 
     - name: Xerces-C - build arm64
+      if: steps.cache-xerces.outputs.cache-hit != 'true'
       shell: bash
       working-directory: xerces-c
       run: |
         ./configure --disable-shared --prefix=$(pwd)/_build_mac_arm CFLAGS="-arch arm64" CXXFLAGS="-arch arm64" --enable-xmlch-uint16_t
-        make -j
+                make -j$BUILD_JOBS
         make install
 
     - name: Xerces-C - build x64
+      if: steps.cache-xerces.outputs.cache-hit != 'true'
       shell: bash
       working-directory: xerces-c
       run: |
         ./configure --disable-shared --prefix=$(pwd)/_build_mac_x64 CFLAGS="-arch x86_64" CXXFLAGS="-arch x86_64" --enable-xmlch-uint16_t
-        make -j
+                make -j$BUILD_JOBS
         make install
 
     - name: Xerces-C - lipo arm/x64
+      if: steps.cache-xerces.outputs.cache-hit != 'true'
       shell: bash
       working-directory: xerces-c
       run: lipo _build_mac_arm/lib/libxerces-c.a _build_mac_x64/lib/libxerces-c.a -create -output _build_mac_x64/lib/libxerces-c-all.a
 
     - name: Boost - prepare
+      if: steps.cache-boost.outputs.cache-hit != 'true'
       shell: bash
       run: |
         mkdir boost
@@ -47,7 +71,7 @@ runs:
         mkdir build_mac_x64_no_mz
         cd build_mac_x64_no_mz
         cmake .. -DCMAKE_C_FLAGS="-arch x86_64" -DCMAKE_CXX_FLAGS="-arch x86_64" -DDO_NOT_INCLUDE_MINI_ZIP=true -DCMAKE_INSTALL_PREFIX:PATH=libs -DXERCES_INCLUDE_PATH="../xerces-c/_build_mac_x64/include;../xerces/src" -DXERCES_LIB_PATH="../xerces/_build_mac_x64/lib" -DXERCES_ROOT_PATH="../xerces-c/_build_mac_x64"
-        make -j
+                make -j$BUILD_JOBS
         make install
         echo Combine into single lib file...
         echo lipo -archs ../libs/libMvrGdtf_NO_MZ.a
@@ -66,7 +90,7 @@ runs:
         mkdir build_mac_x64
         cd build_mac_x64
         cmake .. -DCMAKE_C_FLAGS="-arch x86_64" -DCMAKE_CXX_FLAGS="-arch x86_64" -DCMAKE_INSTALL_PREFIX:PATH=libs -DXERCES_INCLUDE_PATH="../xerces-c/_build_mac_x64/include;../xerces/src" -DXERCES_LIB_PATH="../xerces/_build_mac_x64/lib" -DXERCES_ROOT_PATH="../xerces-c/_build_mac_x64"
-        make -j
+                make -j$BUILD_JOBS
         make install
         echo Combine into single lib file...
         echo lipo -archs ../libs/libMvrGdtf.a
