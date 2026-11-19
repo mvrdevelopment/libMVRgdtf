@@ -603,7 +603,7 @@ void CMVRxchangeServiceImpl::mDNS_Client_Tick(const boost::system::error_code& e
 	mDNS_Client_Task();
 
 	fmdns_long_timer.expires_after(std::chrono::seconds(15));
-	fmdns_long_timer.async_wait(boost::bind(&CMVRxchangeServiceImpl::mDNS_Client_Tick, this));
+	fmdns_long_timer.async_wait([this](const boost::system::error_code& ec) { mDNS_Client_Tick(ec); });
 }
 
 void CMVRxchangeServiceImpl::mDNS_Client_RFun()
@@ -619,7 +619,7 @@ void CMVRxchangeServiceImpl::mDNS_Client_Start()
 	fmdns_stop_flag = false;
 	// The context was stopped by mDNS_Client_Stop and must be restarted before running again.
 	fmdns_IO_Context.restart();
-	boost::asio::post(fmdns_IO_Context, boost::bind(&CMVRxchangeServiceImpl::mDNS_Client_Tick, this, boost::system::error_code()));
+	boost::asio::post(fmdns_IO_Context, [this]() { mDNS_Client_Tick(boost::system::error_code()); });
 	fmdns_Thread = std::thread(&CMVRxchangeServiceImpl::mDNS_Client_RFun, this);
 }
 
