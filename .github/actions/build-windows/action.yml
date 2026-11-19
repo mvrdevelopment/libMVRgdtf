@@ -113,7 +113,7 @@ runs:
     # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     - name: libMVRGdtf [MD_NO_MZ] - configure
       env:
-        CXX_FLAGS_CUSTOM: /MP
+        CXXFLAGS: /MP
       working-directory: libMvrGdtf
       shell: cmd
       run: |

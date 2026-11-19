@@ -602,8 +602,8 @@ void CMVRxchangeServiceImpl::mDNS_Client_Tick(const boost::system::error_code& e
 	MVRXCHANGE_DEBUG("mDNS_Client_Tick");
 	mDNS_Client_Task();
 
-	fmdns_long_timer.expires_after(std::chrono::seconds(45));
-	fmdns_long_timer.async_wait(boost::bind(&CMVRxchangeServiceImpl::mDNS_Client_Tick, this, boost::placeholders::_1));
+	fmdns_long_timer.expires_after(std::chrono::seconds(15));
+	fmdns_long_timer.async_wait(boost::bind(&CMVRxchangeServiceImpl::mDNS_Client_Tick, this));
 }
 
 void CMVRxchangeServiceImpl::mDNS_Client_RFun()
