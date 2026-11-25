@@ -6842,7 +6842,12 @@ void GdtfDmxChannelSet::OnPrintToFile(IXMLFileNodePtr pNode)
 	// Print node attributes
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelSetName,				fUniqueName);
 	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelSetDMXFrom,				GdtfConverter::ConvertDMXValue(fDmxStart, chanelReso));
-	pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelSetWheelSlotIndexRef,	GdtfConverter::ConvertInteger(fWheelSlotIdx));
+
+	// WheelSlotIndex is optional and is normalized to 1, so it is only written when the channel set links to a wheel slot
+	if(fWheelSlotIdx > 0)
+	{
+		pNode->SetNodeAttributeValue(XML_GDTF_DMXChannelSetWheelSlotIndexRef,	GdtfConverter::ConvertInteger(fWheelSlotIdx));
+	}
 	
 	if(fSetPhysical)
 	{
