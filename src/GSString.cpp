@@ -661,7 +661,7 @@ TXChar& TXString::operator[](ptrdiff_t nIndex)
 	}
 	else
 	{
-		static TXChar zero;
+		thread_local TXChar zero;
 		zero = 0;
 		return zero;
 	}
@@ -694,7 +694,7 @@ TXChar& TXString::GetAt(size_t nIndex)
 	}
 	else
 	{
-		static TXChar zero;
+		thread_local TXChar zero;
 		zero = 0;
 		return zero;
 	}
@@ -723,7 +723,7 @@ TXChar& TXString::GetLast()
 	//ASSERTN(kPChang, !stdUStr.empty());
 	if (stdUStr.empty())
 	{
-		static TXChar zero;
+		thread_local TXChar zero;
 		zero = 0;
 		return zero;
 	}

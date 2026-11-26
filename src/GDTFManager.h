@@ -2906,7 +2906,7 @@ namespace SceneData
 		bool                                                  fUseIndexes = false;
 
 	public:
-		static TGdtfParsingErrorArray*			__ERROR_CONTAINER_POINTER;
+		static thread_local TGdtfParsingErrorArray*	__ERROR_CONTAINER_POINTER;
         static void								AddError(const GdtfParsingError& error);
         TGdtfParsingErrorArray&					GetParsingErrorArray();
         

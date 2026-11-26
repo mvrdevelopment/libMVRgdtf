@@ -11,6 +11,8 @@ using namespace VectorworksMVR::VWFC;
 #include "CieColor.h"
 #include "XmlFileHelper.h"
 
+namespace VectorworksMVR { class IGdtfFixture; }
+
 namespace SceneData
 {
 
@@ -1102,6 +1104,14 @@ namespace SceneData
 
 		size_t								fMVRFileMajorVersion = 0;
 		size_t								fMVRFileMinorVersion = 0;
+
+		// Opt-in cache filled by IMediaRessourceVectorInterface::PreloadGdtfFixtures. Owns one reference per fixture.
+		struct SCachedGdtfFixture
+		{
+			VectorworksMVR::IGdtfFixture*	fFixture	= nullptr;
+			bool							fRead		= false;
+		};
+		std::unordered_map<std::string, SCachedGdtfFixture>	fGdtfFixtureCache;
 		
 	public:
 		// ---------------------------------------------------------------------------------------------------------------------
@@ -1197,6 +1207,12 @@ namespace SceneData
 
 		size_t								GetMVRFileMajorVersion() const;
 		size_t								GetMVRFileMinorVersion() const;
+
+		// GDTF fixture cache (gdtfName includes the ".gdtf" extension). SetCachedGdtfFixture takes over the
+		// caller's reference; GetCachedGdtfFixture does not AddRef. Main thread only.
+		void								SetCachedGdtfFixture(const TXString& gdtfName, VectorworksMVR::IGdtfFixture* fixture, bool read);
+		bool								GetCachedGdtfFixture(const TXString& gdtfName, VectorworksMVR::IGdtfFixture*& outFixture, bool& outRead) const;
+		void								ClearGdtfFixtureCache();
 
 	private:
 		void								ReadFromGeneralSceneDescription(ISceneDataZipBuffer& xmlFile);

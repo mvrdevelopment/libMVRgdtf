@@ -75,7 +75,7 @@ namespace VectorworksMVR
 			XMLCh					fTheNewLine[5];
 
 		private:
-			static VCOMError		fLastError;
+			static thread_local VCOMError	fLastError;
 		};
 	}
 }

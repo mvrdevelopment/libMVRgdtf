@@ -2228,6 +2228,25 @@ bool GdtfConverter::ConvertTransmissionTypeEnum( const TXString& inVal, const IX
 
 bool SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, const IFileIdentifierPtr& file, ERessourceType resType, bool deleteFile, bool mustExist)
 {
+	TXString nameFile;
+	if ( ! GetZipEntryName(file, resType, mustExist, nameFile)) { return false; }
+
+	//-------------------------------------------------------------------------------------------------
+	// Write the  file
+	zipFile->AddFile(nameFile, file);
+	
+	//-------------------------------------------------------------------------------------------------
+	// HouseKeeping
+	if (deleteFile) {
+		file->DeleteOnDisk();
+	}
+	
+	return true;
+	
+}
+
+bool SceneDataZip::GetZipEntryName(const IFileIdentifierPtr& file, ERessourceType resType, bool mustExist, TXString& outName)
+{
 	//-------------------------------------------------------------------------------------------------
 	// Check if there is a pointer
 	ASSERTN(kEveryone, file != nullptr);
@@ -2245,20 +2264,21 @@ bool SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, const IFileIdentifierPtr& 
 	TXString nameFile;	file->GetFileName(nameFile);
 	
     // Append the SubFoldername for resources.
-    nameFile = SceneData::SceneDataZip::GetResourceSubFolder(resType) + nameFile;
+    outName = SceneData::SceneDataZip::GetResourceSubFolder(resType) + nameFile;
 
-	//-------------------------------------------------------------------------------------------------
-	// Write the  file
-	zipFile->AddFile(nameFile, file);
-	
-	//-------------------------------------------------------------------------------------------------
-	// HouseKeeping
-	if (deleteFile) {
-		file->DeleteOnDisk();
-	}
-	
 	return true;
-	
+}
+
+void SceneDataZip::WriteBufferToFile(IFileIdentifier* file, const void* data, size_t size)
+{
+	if ( ! file) { return; }
+
+	IRawOSFilePtr pFile( IID_RawOSFile );
+	if ( pFile && VCOM_SUCCEEDED( pFile->Open( file, true, true, true, true ) ) )
+	{
+		if (size > 0) { pFile->Write( 0, (Uint64)size, const_cast<void*>(data) ); }
+		pFile->Close();
+	}
 }
 
 void SceneDataZip::AddFileToZip(IZIPFilePtr& zipFile, ISceneDataZipBuffer& buffer,const TXString &name)

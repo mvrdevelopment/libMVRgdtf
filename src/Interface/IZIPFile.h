@@ -9,6 +9,10 @@
 
 #include "IFileIdentifier.h"
 
+#include <functional>
+#include <string>
+#include <vector>
+
 namespace VectorworksMVR
 {
 	namespace Filing
@@ -46,6 +50,16 @@ namespace VectorworksMVR
 		};
 
 		// ----------------------------------------------------------------------------------------------------
+		struct SZIPAddFileRequest
+		{
+			TXString			fPath;
+			IZIPFileIOBuffer*	fBuffer	= nullptr;	// either fBuffer or fFile must be set
+			IFileIdentifier*	fFile	= nullptr;
+		};
+
+		typedef std::function<void(size_t index, VCOMError error, IZIPFileIOBuffer& buffer)> TZIPGetFileCallback;
+
+		// ----------------------------------------------------------------------------------------------------
 		// {3D7D62FB-4D99-40F2-8E87-9994DF64ED5D}
 		static const VWIID IID_ZIPFile = { 0x3d7d62fb, 0x4d99, 0x40f2, { 0x8e, 0x87, 0x99, 0x94, 0xdf, 0x64, 0xed, 0x5d } };
 
@@ -77,6 +91,22 @@ namespace VectorworksMVR
 
 			virtual VCOMError VCOM_CALLTYPE	RemoveFile(const TXString& path) = 0;
 			//virtual VCOMError VCOM_CALLTYPE	MoveFile(const TXString& path) = 0;
+
+			// Batch API: data is read/compressed or inflated on worker threads, while the archive itself is
+			// only modified on the calling thread. Each IFileIdentifier / IZIPFileIOBuffer passed in must be
+			// a distinct object that is not used by anyone else during the call.
+
+			// Adds all files in request order, equivalent to calling AddFile for every request.
+			// outResults receives one error code per request.
+			virtual VCOMError VCOM_CALLTYPE	AddFiles(const std::vector<SZIPAddFileRequest>& requests, std::vector<VCOMError>& outResults) = 0;
+
+			// Returns the unique entry names in central directory order (duplicates are listed once, at their first position).
+			virtual VCOMError VCOM_CALLTYPE	GetFileNames(std::vector<std::string>& outNames) = 0;
+
+			// Extracts the given entries in parallel. callback(index, error, buffer) is invoked once per entry,
+			// possibly from a worker thread and in any order. Errors for unsupported entries are reported on the
+			// calling thread before extraction starts.
+			virtual VCOMError VCOM_CALLTYPE	GetFiles(const std::vector<std::string>& names, const TZIPGetFileCallback& callback) = 0;
 		};
 		typedef VCOMPtr<IZIPFile>		IZIPFilePtr;
 	}

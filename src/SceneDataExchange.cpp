@@ -6,6 +6,11 @@
 #include "HashManager.h"
 #include "GDTFManager.h"
 #include "XmlFileHelper.h"
+#include "Include/IMediaRessourceVectorInterface.h"
+
+#include <algorithm>
+#include <cctype>
+#include <unordered_map>
 
 using namespace SceneData;
 
@@ -3019,6 +3024,8 @@ SceneDataExchange::~SceneDataExchange()
 {
 	//-------------------------------------------------------------------------------------------------
 	// Housekeeping
+	ClearGdtfFixtureCache();
+
 	for (size_t i = 0; i <  fFilesInZip.size() ; i++)
 	{
 		fFilesInZip[i]->DeleteOnDisk();
@@ -3691,73 +3698,68 @@ bool SceneDataExchange::WriteToFile(const IFileIdentifierPtr& file)
     ISceneDataZipBuffer zipXmlBuffer;
     zipXmlBuffer.SetData(data, size);
 	
-	// Add the xml zipfile buffer
-    SceneDataZip::AddFileToZip(zipfile, zipXmlBuffer, filename);
-	
+	// All entries are collected in the same order as the former sequential AddFile calls and then
+	// compressed in parallel by AddFiles. Each request gets its own IFileIdentifier, because the workers
+	// read from it and the same identifier may have been queued more than once.
+	std::vector<SZIPAddFileRequest>	requests;
+	std::vector<IFileIdentifierPtr>	requestFiles;
+
+	SZIPAddFileRequest xmlRequest;
+	xmlRequest.fPath	= filename;
+	xmlRequest.fBuffer	= &zipXmlBuffer;
+	requests.push_back(xmlRequest);
+
+	auto addFileRequest = [&](const IFileIdentifierPtr& resFile, ERessourceType resType, bool mustExist) -> bool
+	{
+		TXString entryName;
+		if ( ! SceneDataZip::GetZipEntryName(resFile, resType, mustExist, entryName)) { return false; }
+
+		TXString fullPath;
+		resFile->GetFileFullPath(fullPath);
+
+		IFileIdentifierPtr fileCopy (IID_FileIdentifier);
+		fileCopy->Set(fullPath);
+		requestFiles.push_back(fileCopy);
+
+		SZIPAddFileRequest request;
+		request.fPath	= entryName;
+		request.fFile	= fileCopy;
+		requests.push_back(request);
+		return true;
+	};
+
 	//-------------------------------------------------------------------------------------------------	
     // Add the Resources
+	const std::pair<const TFileIdentifierPtrArray*, ERessourceType> resourceLists[] =
+	{
+		{ &f3DS_FilesToAdd,				ERessourceType::Model3DS },
+		{ &f3DSLow_FilesToAdd,			ERessourceType::Model3DSLow },
+		{ &f3DSHigh_FilesToAdd,			ERessourceType::Model3DSHigh },
+		{ &fSVG_FilesToAdd,				ERessourceType::ModelSVG },
+		{ &fSVGSide_FilesToAdd,			ERessourceType::ModelSVGSide },
+		{ &fSVGFront_FilesToAdd,		ERessourceType::ModelSVGFront },
+		{ &fGLTF_FilesToAdd,			ERessourceType::ModelGLTF },
+		{ &fGLTFLow_FilesToAdd,			ERessourceType::ModelGLTFLow },
+		{ &fGLTFHigh_FilesToAdd,		ERessourceType::ModelGLTFHigh },
+		{ &fWheel_Image_FilesToAdd,		ERessourceType::ImageWheel },
+		{ &fFixtureResources_FilesToAdd,ERessourceType::RessoureFixture },
+	};
 
-	for (size_t i = 0; i < f3DS_FilesToAdd.size(); i++)
-	{        
-		SceneDataZip::AddFileToZip(zipfile, f3DS_FilesToAdd.at(i),  ERessourceType::Model3DS, false/*Delete*/);
-	}
-
-	for (size_t i = 0; i < f3DSLow_FilesToAdd.size(); i++)
-	{        
-		SceneDataZip::AddFileToZip(zipfile, f3DSLow_FilesToAdd.at(i),  ERessourceType::Model3DSLow, false/*Delete*/);
-	}
-
-	for (size_t i = 0; i < f3DSHigh_FilesToAdd.size(); i++)
-	{        
-		SceneDataZip::AddFileToZip(zipfile, f3DSHigh_FilesToAdd.at(i),  ERessourceType::Model3DSHigh, false/*Delete*/);
-	}
-
-	for (size_t i = 0; i < fSVG_FilesToAdd.size(); i++)
-	{        
-		SceneDataZip::AddFileToZip(zipfile, fSVG_FilesToAdd.at(i), ERessourceType::ModelSVG, false/*Delete*/);
-	}
-
-	for (size_t i = 0; i < fSVGSide_FilesToAdd.size(); i++)
-	{        
-		SceneDataZip::AddFileToZip(zipfile, fSVGSide_FilesToAdd.at(i), ERessourceType::ModelSVGSide, false/*Delete*/);
-	}
-
-	for (size_t i = 0; i < fSVGFront_FilesToAdd.size(); i++)
-	{        
-		SceneDataZip::AddFileToZip(zipfile, fSVGFront_FilesToAdd.at(i), ERessourceType::ModelSVGFront, false/*Delete*/);
-	}
-
-	for (size_t i = 0; i < fGLTF_FilesToAdd.size(); i++)
-	{        
-		SceneDataZip::AddFileToZip(zipfile, fGLTF_FilesToAdd.at(i),  ERessourceType::ModelGLTF, false/*Delete*/);
-	}
-
-	for (size_t i = 0; i < fGLTFLow_FilesToAdd.size(); i++)
-	{        
-		SceneDataZip::AddFileToZip(zipfile, fGLTFLow_FilesToAdd.at(i),  ERessourceType::ModelGLTFLow, false/*Delete*/);
-	}
-
-	for (size_t i = 0; i < fGLTFHigh_FilesToAdd.size(); i++)
-	{        
-		SceneDataZip::AddFileToZip(zipfile, fGLTFHigh_FilesToAdd.at(i),  ERessourceType::ModelGLTFHigh, false/*Delete*/);
-	}
-
-	for (size_t i = 0; i < fWheel_Image_FilesToAdd.size(); i++)
-	{        
-		SceneDataZip::AddFileToZip(zipfile, fWheel_Image_FilesToAdd.at(i), ERessourceType::ImageWheel, false/*Delete*/);
-	}
-
-	for (size_t i = 0; i < fFixtureResources_FilesToAdd.size(); i++)
-	{        
-		SceneDataZip::AddFileToZip(zipfile, fFixtureResources_FilesToAdd.at(i), ERessourceType::RessoureFixture, false/*Delete*/);
+	for (const auto& resourceList : resourceLists)
+	{
+		for (const IFileIdentifierPtr& resFile : *resourceList.first)
+		{
+			addFileRequest(resFile, resourceList.second, true/*ASSERT*/);
+		}
 	}
 
 	for (size_t i = 0; i < fBuffersToAdd.size(); i++)
-	{        
-    	SceneDataZip::AddFileToZip(zipfile, *fBuffersToAdd[i].second, fBuffersToAdd[i].first);
-		delete fBuffersToAdd[i].second;
+	{
+		SZIPAddFileRequest request;
+		request.fPath	= fBuffersToAdd[i].first;
+		request.fBuffer	= fBuffersToAdd[i].second;
+		requests.push_back(request);
 	}
-	fBuffersToAdd.clear();
 	
 	//-------------------------------------------------------------------------------------------------
 	// Add the needed
@@ -3771,7 +3773,7 @@ bool SceneDataExchange::WriteToFile(const IFileIdentifierPtr& file)
 			IFileIdentifierPtr gdtfFilePtr (IID_FileIdentifier);
 			gdtfFilePtr->Set(folder, gdtfFileName);
 			
-			if		(SceneDataZip::AddFileToZip(zipfile, gdtfFilePtr, ERessourceType::RessoureFixture, false/*Delete*/, false/*ASSERT*/))	{ exported = true;  break; }
+			if		(addFileRequest(gdtfFilePtr, ERessourceType::RessoureFixture, false/*ASSERT*/))	{ exported = true;  break; }
 		}
 	
 		
@@ -3779,6 +3781,15 @@ bool SceneDataExchange::WriteToFile(const IFileIdentifierPtr& file)
 		if (!exported) { DSTOP((kEveryone,"No matching GDTF File found in one of the selected folders!")); }
 		
 	}
+
+	std::vector<VCOMError> results;
+	zipfile->AddFiles(requests, results);
+
+	for (size_t i = 0; i < fBuffersToAdd.size(); i++)
+	{
+		delete fBuffersToAdd[i].second;
+	}
+	fBuffersToAdd.clear();
 	
 
 	//-------------------------------------------------------------------------------------------------
@@ -3926,6 +3937,7 @@ bool SceneDataExchange::ReadFromFile(const IFileIdentifierPtr& file)
 {
 	// First clear the array
 	fSceneObjects.clear();
+	ClearGdtfFixtureCache();
 
 	//-------------------------------------------------------------------------------------------------
 	// Duplicate ZIP File
@@ -3943,41 +3955,83 @@ bool SceneDataExchange::ReadFromFile(const IFileIdentifierPtr& file)
 	
 	//-------------------------------------------------------------------------------------------------
 	// Decompress the files
-	std::string outPath	= "";
-	std::string inPath	= "";
-	while (VCOM_SUCCEEDED( zipfile->GetNextFile(inPath, outPath)))
+	const std::string xmlName = "GeneralSceneDescription.xml";
+
+	std::vector<std::string> fileNames;
+	zipfile->GetFileNames(fileNames);
+
+	// Serial pass: create the file objects in archive order. Entries that map to the same file on disk
+	// (compared case-insensitively, to be safe on case-insensitive file systems) are grouped and written
+	// serially afterwards in archive order, so the last one wins like with sequential extraction.
+	// All other entries are written directly from the extraction workers.
+	std::vector<IFileIdentifierPtr>				filesByIndex(fileNames.size());
+	std::vector<char>							isDeferred(fileNames.size(), 0);
+	std::vector<std::vector<size_t>>			groups;
+	std::unordered_map<std::string, size_t>		groupByPath;
+	size_t										xmlIndex = size_t(-1);
+
+	for (size_t i = 0; i < fileNames.size(); i++)
 	{
-		// This is the current file that we are reading
-        ISceneDataZipBuffer buffer;
-		
-		zipfile->GetFile(outPath, &buffer);
-		
-        if (outPath == "GeneralSceneDescription.xml")
-        {
-			// Read the data
-			size_t	size = 0;							buffer.GetDataSize(size);
-			void*	data = malloc(size * sizeof(char));	buffer.CopyDataInto(data, size);
-			
-			// Set the buffer object
-            xmlFileBuffer.SetData(data, size);
-			
-			// House keeping
-			std::free(data);
-        }
-        else
-        {
-			// Prepare pointer to the new files
-			IFileIdentifierPtr file (IID_FileIdentifier);
-			file->Set(fWorkingFolder, outPath);
-			
-			// dump buffer into file
-            buffer.WriteToFile(file);
-			
-			// Add it into the file list
-            fFilesInZip.push_back(file);
-		
-        }
-        inPath = outPath;
+		if (fileNames[i] == xmlName) { xmlIndex = i; continue; }
+
+		IFileIdentifierPtr localFile (IID_FileIdentifier);
+		localFile->Set(fWorkingFolder, fileNames[i]);
+		filesByIndex[i] = localFile;
+		fFilesInZip.push_back(localFile);
+
+		TXString fullPath;
+		localFile->GetFileFullPath(fullPath);
+		std::string key = fullPath.GetStdString();
+		std::transform(key.begin(), key.end(), key.begin(), [](unsigned char c) { return (char)std::tolower(c); });
+
+		auto it = groupByPath.find(key);
+		if (it == groupByPath.end())
+		{
+			groupByPath[key] = groups.size();
+			groups.push_back({ i });
+		}
+		else
+		{
+			groups[it->second].push_back(i);
+		}
+	}
+
+	std::vector<std::vector<char>> deferredData(fileNames.size());
+	for (const std::vector<size_t>& group : groups)
+	{
+		if (group.size() > 1) { for (size_t i : group) { isDeferred[i] = 1; } }
+	}
+
+	std::vector<char> xmlData;
+	zipfile->GetFiles(fileNames, [&](size_t index, VCOMError error, IZIPFileIOBuffer& buffer)
+	{
+		// Like the former GetFile loop, a failed entry still results in an (empty) file.
+		std::vector<char> data;
+		if (VCOM_SUCCEEDED(error))
+		{
+			size_t size = 0;
+			buffer.GetDataSize(size);
+			data.resize(size);
+			if (size > 0) { buffer.CopyDataInto(data.data(), size); }
+		}
+
+		if		(index == xmlIndex)					{ xmlData.swap(data); }
+		else if	(isDeferred[index])						{ deferredData[index].swap(data); }
+		else										{ SceneDataZip::WriteBufferToFile(filesByIndex[index], data.data(), data.size()); }
+	});
+
+	for (const std::vector<size_t>& group : groups)
+	{
+		if (group.size() < 2) { continue; }
+		for (size_t i : group)
+		{
+			SceneDataZip::WriteBufferToFile(filesByIndex[i], deferredData[i].data(), deferredData[i].size());
+		}
+	}
+
+	if (xmlIndex != size_t(-1))
+	{
+		xmlFileBuffer.SetData(xmlData.data(), xmlData.size());
 	}
 	
 	//-------------------------------------------------------------------------------------------------
@@ -4418,4 +4472,32 @@ size_t SceneDataExchange::GetMVRFileMajorVersion() const
 size_t SceneDataExchange::GetMVRFileMinorVersion() const
 {
 	return fMVRFileMinorVersion;
+}
+
+void SceneDataExchange::SetCachedGdtfFixture(const TXString& gdtfName, VectorworksMVR::IGdtfFixture* fixture, bool read)
+{
+	SCachedGdtfFixture& entry = fGdtfFixtureCache[gdtfName.GetStdString()];
+	if (entry.fFixture) { entry.fFixture->Release(); }
+
+	entry.fFixture	= fixture;
+	entry.fRead		= read;
+}
+
+bool SceneDataExchange::GetCachedGdtfFixture(const TXString& gdtfName, VectorworksMVR::IGdtfFixture*& outFixture, bool& outRead) const
+{
+	auto it = fGdtfFixtureCache.find(gdtfName.GetStdString());
+	if (it == fGdtfFixtureCache.end() || it->second.fFixture == nullptr) { return false; }
+
+	outFixture	= it->second.fFixture;
+	outRead		= it->second.fRead;
+	return true;
+}
+
+void SceneDataExchange::ClearGdtfFixtureCache()
+{
+	for (auto& entry : fGdtfFixtureCache)
+	{
+		if (entry.second.fFixture) { entry.second.fFixture->Release(); }
+	}
+	fGdtfFixtureCache.clear();
 }

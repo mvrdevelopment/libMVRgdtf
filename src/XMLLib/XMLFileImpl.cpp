@@ -5,12 +5,20 @@
 #include "XMLFileNodeImpl.h"
 #include "TaggingDOMParser.h"
 #include "../GDTFManager.h"
+#include <mutex>
 
 using namespace VectorworksMVR::Filing;
 using namespace VectorworksMVR::XML;
 using namespace VectorworksMVR::VWFC::Tools;
 
-/*static*/ VCOMError	CXMLFileImpl::fLastError;
+/*static*/ thread_local VCOMError	CXMLFileImpl::fLastError;
+
+// XMLPlatformUtils::Initialize/Terminate keep a reference count that is not thread safe.
+static std::mutex& XercesInitMutex()
+{
+	static std::mutex sMutex;
+	return sMutex;
+}
 
 class XmlDomErrorHandler: public HandlerBase
 {
@@ -68,7 +76,10 @@ CXMLFileImpl::CXMLFileImpl()
 	fTheNewLine[1]			= chLF;
 	fTheNewLine[2]			= chNull;
 
-	XMLPlatformUtils::Initialize();
+	{
+		std::lock_guard<std::mutex> lock(XercesInitMutex());
+		XMLPlatformUtils::Initialize();
+	}
 	
 	const XMLCh gLS[]		= { chLatin_L, chLatin_S, chNull };
 	fpImpl					= DOMImplementationRegistry::getDOMImplementation(gLS);
@@ -90,6 +101,7 @@ CXMLFileImpl::~CXMLFileImpl()
 	// Visual C++ function _CrtDumpMemoryLeaks. If you just start VW and then
 	// quit, there are many leaks reported. This change appears to fix over
 	// 3000 leaks. [BAF 10/27/15]
+	std::lock_guard<std::mutex> lock(XercesInitMutex());
 	XMLPlatformUtils::Terminate();
 }
 

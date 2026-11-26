@@ -535,6 +535,13 @@ namespace VectorworksMVR
 
 		// Returns the version of the library used to create the MVR/GDTF files
 		virtual VCOMError VCOM_CALLTYPE     GetLibVersion(size_t& major, size_t& minor) = 0;
+
+		// Optional, call after OpenForRead: parses all GDTF files referenced by the scene objects in parallel and caches them.
+		// Afterwards ISceneObj::GetGdtfFixture returns the cached fixture instead of parsing the GDTF file again.
+		// All scene objects that reference the same GDTF file then share ONE IGdtfFixture instance, so changes made
+		// to it (e.g. BindToObject) are visible through every scene object. Without this call nothing changes.
+		// The abort callback may be invoked from worker threads during this call (invocations are serialized).
+		virtual VCOMError VCOM_CALLTYPE     PreloadGdtfFixtures() = 0;
 				
 	};
 	typedef VCOMPtr<IMediaRessourceVectorInterface>	IMediaRessourceVectorInterfacePtr;
