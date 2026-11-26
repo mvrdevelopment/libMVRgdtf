@@ -430,6 +430,23 @@ VectorworksMVR::VCOMError VectorworksMVR::CSceneObjImpl::GetGdtfFixture(IGdtfFix
 	TXString gdtfName = gdtfSpecObj->GetGdtfFile();
 	
 	if (gdtfName.Find(".gdtf") == ptrdiff_t(-1)) { gdtfName += ".gdtf";}
+
+	// Use the fixture parsed by IMediaRessourceVectorInterface::PreloadGdtfFixtures, if any
+	IGdtfFixture*	cachedFixture	= nullptr;
+	bool			cachedRead		= false;
+	if (fContext->GetCachedGdtfFixture(gdtfName, cachedFixture, cachedRead))
+	{
+		cachedFixture->AddRef();
+
+		if (*outFixture)
+		{
+			(*outFixture)->Release();
+			*outFixture	= NULL;
+		}
+		*outFixture = cachedFixture;
+
+		return cachedRead ? kVCOMError_NoError : kVCOMError_Failed;
+	}
 	
 	IFolderIdentifierPtr workingFolder = fContext->GetWorkingFolder();
 	

@@ -20,11 +20,15 @@
 #include "TDQuickDraw.h"
 
 #include "GDTFManager.h"
+#include "ParallelUtil.h"
+
+#include <algorithm>
+#include <unordered_map>
 
 //using namespace ZIP;
 using namespace VectorworksMVR::Filing;
 
-/*static*/ VCOMError	CZIPFileImpl::fLastError;
+/*static*/ thread_local VCOMError	CZIPFileImpl::fLastError;
 
 #if GS_MAC
 	const Sint32 kYearOffset = 76;
@@ -123,6 +127,8 @@ CZIPFileImpl::CZIPFileImpl()
 	fFolderPath				= "";
 	fOpenedFileFullPath		= "";
 
+	fLocalDataEnd			= 0;
+	fCentralDirWritten		= false;
 }
 
 CZIPFileImpl::~CZIPFileImpl()
@@ -138,9 +144,11 @@ VCOMError CZIPFileImpl::OpenRead(IFileIdentifier* pFileID)
 {
 	if ( fpOpenedFile )
 	{
+		this->EnsureFinalized();
 		fpOpenedFile->Close();
 		delete fpOpenedFile;
 	}
+	this->ResetWriteState();
 
 	fbOpenedWrite		= false;
 
@@ -160,9 +168,11 @@ VCOMError CZIPFileImpl::OpenRead(const char* buffer, size_t length)
 {
 	if ( fpOpenedFile )
 	{
+		this->EnsureFinalized();
 		fpOpenedFile->Close();
 		delete fpOpenedFile;
 	}
+	this->ResetWriteState();
 
 	fbOpenedWrite		= false;
 
@@ -176,9 +186,11 @@ VCOMError CZIPFileImpl::OpenWrite(IFileIdentifier* pFileID)
 {
 	if ( fpOpenedFile )
 	{
+		this->EnsureFinalized();
 		fpOpenedFile->Close();
 		delete fpOpenedFile;
 	}
+	this->ResetWriteState();
 
 	fbOpenedWrite	= true;
 	fbCompressFiles = true;
@@ -199,9 +211,11 @@ VCOMError CZIPFileImpl::OpenNewWrite(IFileIdentifier* pFileID, bool compressFile
 {
 	if ( fpOpenedFile )
 	{
+		this->EnsureFinalized();
 		fpOpenedFile->Close();
 		delete fpOpenedFile;
 	}
+	this->ResetWriteState();
 
 	fbOpenedWrite	= true;
 	fbCompressFiles	= compressFiles;
@@ -222,6 +236,7 @@ VCOMError CZIPFileImpl::Close()
 {
 	if ( fpOpenedFile )
 	{
+		this->EnsureFinalized();
 		fpOpenedFile->Close();
 		fbOpenedWrite		= false;
 		fOpenedFileFullPath = "";
@@ -232,12 +247,14 @@ VCOMError CZIPFileImpl::Close()
 
 VCOMError CZIPFileImpl::ToBuffer(char*& p, size_t& inLength)
 {
+	this->EnsureFinalized();
 	fpOpenedFile->Copy(p, inLength);
 	return kVCOMError_NoError;
 }
 
 VCOMError CZIPFileImpl::GetSize(Uint64& outValue)
 {
+	this->EnsureFinalized();
 	if ( fpOpenedFile )
 	{
 		fpOpenedFile->GetFileSize( outValue );
@@ -251,6 +268,7 @@ VCOMError CZIPFileImpl::GetSize(Uint64& outValue)
 
 VCOMError CZIPFileImpl::GetNextFile(const std::string& path, std::string& outPath)
 {
+	this->EnsureFinalized();
 	VCOMError err = kVCOMError_NoError;
 	// first find the refernced file
 
@@ -339,6 +357,8 @@ VCOMError CZIPFileImpl::GetFileInfo(const std::string& path, SZIPFileInfo& outIn
 
 	if (!fpOpenedFile)
 		return kVCOMError_NotInitialized;
+
+	this->EnsureFinalized();
 
 	Uint32 currentReadPosition = 0;
 	this->GetFileCentralHeaderPosition( path, currentReadPosition );
@@ -474,196 +494,392 @@ VCOMError CZIPFileImpl::AddFile(const TXString& inPath, IZIPFileIOBuffer* inputB
 {
 	TXString path = inPath;
 	path.Replace("\\", "/");
-	VCOMError err = kVCOMError_NoError;
 	if ( !fpOpenedFile || !fbOpenedWrite )
 		return kVCOMError_NotInitialized;
 
-	Uint32 existingPosition = 0;
-	this->GetFileCentralHeaderPosition( path.GetStdString(), existingPosition );
-	
-	if ( existingPosition ) // we don't add the file if a file with the same name already exists
-		err =  kVCOMError_InvalidArg;
+	// we don't add the file if a file with the same name already exists
+	if ( this->IsNameAlreadyAdded( path.GetStdString() ) )
+		return kVCOMError_InvalidArg;
 
-	if ( err == kVCOMError_NoError )
+	size_t uncompressedSize = 0;
+	inputBuffer->GetDataSize( uncompressedSize );
+	std::vector<Uint8> data( uncompressedSize );
+	if ( uncompressedSize ) { inputBuffer->CopyDataInto( (void*)data.data(), uncompressedSize ); }
+
+	SPreparedEntry entry;
+	this->PrepareEntry( path, data.data(), uncompressedSize, fbCompressFiles, entry );
+	this->AppendPreparedEntry( entry );
+
+	return entry.fOk ? kVCOMError_NoError : kVCOMError_Failed;
+}
+
+VCOMError CZIPFileImpl::AddFiles(const std::vector<SZIPAddFileRequest>& requests, std::vector<VCOMError>& outResults)
+{
+	const size_t count = requests.size();
+	if ( !fpOpenedFile || !fbOpenedWrite )
 	{
-		Uint32 centralDirPosition = 0;
-		Uint32 endSignaturePosition = 0;
-		Uint32 currentReadPosition = 0;
-		Uint64 fileSize = 0;
+		outResults.assign( count, kVCOMError_NotInitialized );
+		return kVCOMError_NotInitialized;
+	}
 
-		this->GetSize( fileSize );
-		this->GetCentralDirPosition( centralDirPosition );
-		this->GetEndOfCentralDirPosition( endSignaturePosition );
+	outResults.assign( count, kVCOMError_NoError );
 
-		if ( fileSize && centralDirPosition && endSignaturePosition )
+	// Serial pre-pass: normalize names and reject duplicates exactly like sequential AddFile calls would.
+	std::vector<TXString>			paths( count );
+	std::vector<char>				process( count, 0 );
+	std::unordered_set<std::string>	namesInBatch;
+	for ( size_t i = 0; i < count; i++ )
+	{
+		paths[i] = requests[i].fPath;
+		paths[i].Replace( "\\", "/" );
+		std::string name = paths[i].GetStdString();
+
+		if ( requests[i].fBuffer == nullptr && requests[i].fFile == nullptr )		{ outResults[i] = kVCOMError_InvalidArg; }
+		else if ( this->IsNameAlreadyAdded( name ) )								{ outResults[i] = kVCOMError_InvalidArg; }
+		else if ( !name.empty() && !namesInBatch.insert( name ).second )			{ outResults[i] = kVCOMError_InvalidArg; }
+		else																		{ process[i] = 1; }
+	}
+
+	// Read and compress in parallel, then append in request order. Work in chunks to bound the memory
+	// held by compressed data that is not yet appended.
+	const bool		compress	= fbCompressFiles;
+	const size_t	chunkSize	= (std::max)( size_t(16), Parallel::GetWorkerCount( count ) * 4 );
+	for ( size_t chunkStart = 0; chunkStart < count; chunkStart += chunkSize )
+	{
+		const size_t chunkCount = (std::min)( chunkSize, count - chunkStart );
+		std::vector<SPreparedEntry> prepared( chunkCount );
+
+		Parallel::ParallelFor( chunkCount, [&]( size_t chunkIndex )
 		{
-			char* readData1 = new char[(size_t)centralDirPosition ]; 
-			char* readData2 = new char[(size_t)( endSignaturePosition - centralDirPosition )]; 
-		
-			Uint64 inOutReadSize = (Uint64)centralDirPosition;
-			this->ReadFromFile( currentReadPosition, inOutReadSize, (void*)readData1 );
+			const size_t i = chunkStart + chunkIndex;
+			if ( !process[i] ) { return; }
 
-			inOutReadSize = endSignaturePosition - centralDirPosition;
-			currentReadPosition = centralDirPosition;
-			this->ReadFromFile( currentReadPosition, inOutReadSize, readData2 );
-	
-			SZIPFileInfo zipFileInfo;
-			SZIPArchiveInfo zipArchiveInfo;
-			this->GetZipArchiveInfo( &zipArchiveInfo );
-		
-			size_t uncompressedSize = 0;
-			inputBuffer->GetDataSize( uncompressedSize );
-			Uint8* deflateBuffer = new Uint8[ uncompressedSize ];
-			inputBuffer->CopyDataInto( (void*)deflateBuffer, uncompressedSize );
-
-			Uint16 compressionMethod = 0;
-			size_t compressedSize = 0;
-			Bytef* outData = nullptr;
-
-			if ( fbCompressFiles )
+			CZIPFileIOBufferImpl	fileBuffer;
+			IZIPFileIOBuffer*		source = requests[i].fBuffer;
+			if ( requests[i].fFile )
 			{
-				size_t bufferSize = (size_t)( ( (double)uncompressedSize )*((double)((double)11/(double)10)) + 13);
-				outData = new Bytef[bufferSize];
-		
-				compressedSize = this->Deflate( deflateBuffer, uncompressedSize, (void*)outData ) - kShortLength;
-				outData += kShortLength;
-
-				compressionMethod = 8; // Deflate
+				// Like AddFile(path, IFileIdentifier): an unreadable file results in an empty entry.
+				this->Read( &fileBuffer, requests[i].fFile );
+				source = &fileBuffer;
 			}
-			else
-			{
-				compressedSize = uncompressedSize;
-				outData = new Bytef[compressedSize];
-
-				memcpy( (void*)outData, (void*)deflateBuffer, compressedSize );
-			}
-
-			if ( !compressedSize )
-				err = kVCOMError_Failed;
-
-			zipFileInfo.bFolder = (uncompressedSize)?false:true;
-			zipFileInfo.fFileName = path;
-			zipFileInfo.fComment = "";
-			zipFileInfo.dwCompressedSize = (Uint32)compressedSize; 
-			zipFileInfo.dwUncompressedSize = (Uint32)uncompressedSize; 
-			zipFileInfo.dwCompressionMethod = compressionMethod;
-			zipFileInfo.dwFlags = 0;
-			zipFileInfo.dwExternalAttrib = 0;
-			zipFileInfo.dwInternalAttrib = 0;
-			zipFileInfo.dwOffsetOfLocalHeader = (Uint32)centralDirPosition;
-			zipFileInfo.dwVersion = 20;
-			zipFileInfo.dwVersionNeeded = 20;
-			zipFileInfo.dwCRC = crc32(0L, Z_NULL, 0);
-			zipFileInfo.dwCRC = crc32( zipFileInfo.dwCRC, deflateBuffer, uncompressedSize  ); 
-			this->GetDosDateAndTime( zipFileInfo.dwDosDate, zipFileInfo.dwDosTime );
-	
-			zipArchiveInfo.dwNumberOfEntriesOnThisDisk++;
-			zipArchiveInfo.dwTotalNumberOfEntries++;
-			zipArchiveInfo.dwOffsetCentralDir = centralDirPosition + (Uint32)compressedSize + (Uint32)zipFileInfo.fFileName.GetEncodingLength(ETXEncoding::eUTF8) + kLocalFileHeaderLength; 
-			zipArchiveInfo.dwSizeOfCentralDir += kCentralFileHeaderLength + (Uint32)zipFileInfo.fFileName.GetEncodingLength(ETXEncoding::eUTF8); 
-
-			Uint64 currentWritePosition = 0;
-			fpOpenedFile->CleanBuffer();
-			this->WriteToFile( (void*)readData1, currentWritePosition,  centralDirPosition );
-			this->WriteLocalFileHeader( &zipFileInfo, currentWritePosition);
-			this->WriteToFile( (void*)outData, currentWritePosition, compressedSize );
-			this->WriteToFile( (void*)readData2, currentWritePosition,  ( endSignaturePosition - centralDirPosition ) );
-			this->WriteCentralDirectoryHeader( &zipArchiveInfo, &zipFileInfo, currentWritePosition);
-			this->WriteEndHeader( &zipArchiveInfo, currentWritePosition );
-			
-			if ( fbCompressFiles )
-				outData -= kShortLength;
-
-			if ( readData1 )
-				delete [] readData1;
-			if ( readData2 )
-				delete [] readData2;
-			if ( deflateBuffer )
-				delete [] deflateBuffer;
-			if ( outData )
-				delete [] outData;
-		}
-		else
-		{
-			SZIPFileInfo zipFileInfo;
-			SZIPArchiveInfo zipArchiveInfo;
 
 			size_t uncompressedSize = 0;
-			inputBuffer->GetDataSize( uncompressedSize );
-			Uint8* deflateBuffer = new Uint8[ uncompressedSize ];
-			inputBuffer->CopyDataInto( (void*)deflateBuffer, uncompressedSize );
+			source->GetDataSize( uncompressedSize );
+			std::vector<Uint8> data( uncompressedSize );
+			if ( uncompressedSize ) { source->CopyDataInto( (void*)data.data(), uncompressedSize ); }
 
-			Uint16 compressionMethod = 0;
-			size_t compressedSize = 0;
-			Bytef* outData = nullptr;
+			this->PrepareEntry( paths[i], data.data(), uncompressedSize, compress, prepared[chunkIndex] );
+		});
 
-			if ( fbCompressFiles )
-			{
-				size_t bufferSize = (size_t)( ( (double)uncompressedSize )*((double)((double)11/(double)10)) + 13);
-				outData = new Bytef[bufferSize];
-				
-				compressedSize = this->Deflate( deflateBuffer, uncompressedSize, (void*)outData ) - kShortLength;
-				outData += kShortLength;
+		for ( size_t chunkIndex = 0; chunkIndex < chunkCount; chunkIndex++ )
+		{
+			const size_t i = chunkStart + chunkIndex;
+			if ( !process[i] ) { continue; }
 
-				compressionMethod = 8; // Deflate
-			}
-			else
-			{
-				compressedSize = uncompressedSize;
-				outData = new Bytef[compressedSize];
-
-				memcpy( (void*)outData, (void*)deflateBuffer, compressedSize );
-			}
-
-			if ( !compressedSize )
-				err = kVCOMError_Failed;
-		
-			zipFileInfo.bFolder = (uncompressedSize)?false:true;
-			zipFileInfo.fFileName = path;
-			zipFileInfo.fComment = "";
-			zipFileInfo.dwCompressedSize =(Uint32) compressedSize; 
-			zipFileInfo.dwUncompressedSize = (Uint32)uncompressedSize; 
-			zipFileInfo.dwCompressionMethod = compressionMethod;
-			zipFileInfo.dwDosTime = 0;
-			zipFileInfo.dwDosDate = 0;
-			zipFileInfo.dwFlags = 0;
-			zipFileInfo.dwExternalAttrib = 0;
-			zipFileInfo.dwInternalAttrib = 0;
-			zipFileInfo.dwOffsetOfLocalHeader = 0;
-			zipFileInfo.dwVersion = 20;
-			zipFileInfo.dwVersionNeeded = 20;
-			this->GetDosDateAndTime( zipFileInfo.dwDosDate, zipFileInfo.dwDosTime );
-			
-			zipArchiveInfo.dwCommentLength = 0;
-			zipArchiveInfo.dwNumberOfCentralDirDisk = 0;
-			zipArchiveInfo.dwNumberOfEntriesOnThisDisk = 1;
-			zipArchiveInfo.dwNumberOfThisDisk = 0;
-			zipArchiveInfo.dwOffsetCentralDir = 30 + (Uint32)zipFileInfo.fFileName.GetEncodingLength(ETXEncoding::eUTF8) + (Uint32)compressedSize; 
-			zipArchiveInfo.dwSizeOfCentralDir = 46 + (Uint32)zipFileInfo.fFileName.GetEncodingLength(ETXEncoding::eUTF8); 
-			zipArchiveInfo.dwStartingDiskNumber = 0;
-			zipArchiveInfo.dwTotalNumberOfEntries = 1;
-			zipArchiveInfo.fFileComment = "";
-			zipFileInfo.dwCRC = crc32(0L, Z_NULL, 0);
-			zipFileInfo.dwCRC = crc32( zipFileInfo.dwCRC, deflateBuffer, uncompressedSize  ); 
-		
-			Uint64 currentWritePosition = 0;
-			this->Close();
-			this->OpenNewWrite( fpOpenedFileID, fbCompressFiles );
-			this->WriteLocalFileHeader( &zipFileInfo, currentWritePosition );
-			this->WriteToFile( outData, currentWritePosition, compressedSize );
-			this->WriteCentralDirectoryHeader( &zipArchiveInfo, &zipFileInfo, currentWritePosition );
-			this->WriteEndHeader( &zipArchiveInfo, currentWritePosition );
-
-			if ( fbCompressFiles )
-				outData -= kShortLength;
-
-			if ( deflateBuffer )
-				delete[] deflateBuffer;
-			if ( outData )
-				delete[] outData;
+			this->AppendPreparedEntry( prepared[chunkIndex] );
+			outResults[i] = prepared[chunkIndex].fOk ? kVCOMError_NoError : kVCOMError_Failed;
 		}
 	}
-	return err;
+
+	return kVCOMError_NoError;
+}
+
+bool CZIPFileImpl::IsNameAlreadyAdded( const std::string& name ) const
+{
+	// Empty names were never found by the central directory lookup, so they are never duplicates.
+	return !name.empty() && fWriteEntryNames.count( name ) > 0;
+}
+
+void CZIPFileImpl::PrepareEntry( const TXString& path, const Uint8* data, size_t uncompressedSize, bool compress, SPreparedEntry& outEntry )
+{
+	Uint16 compressionMethod	= 0;
+	size_t compressedSize		= 0;
+	outEntry.fDataOffset		= 0;
+
+	if ( compress )
+	{
+		size_t bufferSize = (size_t)( ( (double)uncompressedSize )*((double)((double)11/(double)10)) + 13);
+		outEntry.fData.resize( bufferSize );
+
+		// Deflate returns the zlib stream without adler-32; skip the 2 byte zlib header to get raw deflate data.
+		size_t deflatedSize = this->Deflate( (void*)data, uncompressedSize, (void*)outEntry.fData.data() );
+		if ( deflatedSize >= (size_t)kShortLength && deflatedSize <= bufferSize )
+		{
+			compressedSize = deflatedSize - kShortLength;
+		}
+		outEntry.fDataOffset = kShortLength;
+
+		compressionMethod = 8; // Deflate
+	}
+	else
+	{
+		compressedSize = uncompressedSize;
+		outEntry.fData.assign( data, data + uncompressedSize );
+	}
+
+	outEntry.fOk = ( compressedSize != 0 );
+
+	SZIPFileInfo& info			= outEntry.fInfo;
+	info.bFolder				= (uncompressedSize)?false:true;
+	info.fFileName				= path;
+	info.fComment				= "";
+	info.dwCompressedSize		= (Uint32)compressedSize;
+	info.dwUncompressedSize		= (Uint32)uncompressedSize;
+	info.dwCompressionMethod	= compressionMethod;
+	info.dwDosTime				= 0;
+	info.dwDosDate				= 0;
+	info.dwFlags				= 0;
+	info.dwExternalAttrib		= 0;
+	info.dwInternalAttrib		= 0;
+	info.dwOffsetOfLocalHeader	= 0;
+	info.dwVersion				= 20;
+	info.dwVersionNeeded		= 20;
+	info.dwCRC					= crc32( 0L, Z_NULL, 0 );
+	info.dwCRC					= crc32( info.dwCRC, data, uncompressedSize );
+}
+
+void CZIPFileImpl::AppendPreparedEntry( SPreparedEntry& entry )
+{
+	// Drop a previously flushed central directory; it will be regenerated including this entry.
+	if ( fCentralDirWritten )
+	{
+		fpOpenedFile->Truncate( fLocalDataEnd );
+		fCentralDirWritten = false;
+	}
+
+	SZIPFileInfo& info = entry.fInfo;
+	this->GetDosDateAndTime( info.dwDosDate, info.dwDosTime );
+	info.dwOffsetOfLocalHeader = (Uint32)fLocalDataEnd;
+
+	Uint64 currentWritePosition = fLocalDataEnd;
+	this->WriteLocalFileHeader( &info, currentWritePosition );
+	if ( info.dwCompressedSize )
+	{
+		this->WriteToFile( (void*)( entry.fData.data() + entry.fDataOffset ), currentWritePosition, info.dwCompressedSize );
+	}
+	fLocalDataEnd = currentWritePosition;
+
+	fWriteEntryNames.insert( info.fFileName.GetStdString() );
+	fWriteEntries.push_back( info );
+
+	std::vector<Uint8>().swap( entry.fData );
+}
+
+void CZIPFileImpl::EnsureFinalized()
+{
+	if ( !fpOpenedFile || !fbOpenedWrite || fCentralDirWritten || fWriteEntries.empty() )
+		return;
+
+	SZIPArchiveInfo zipArchiveInfo;
+	zipArchiveInfo.fFileComment					= "";
+	zipArchiveInfo.dwCommentLength				= 0;
+	zipArchiveInfo.dwNumberOfThisDisk			= 0;
+	zipArchiveInfo.dwNumberOfCentralDirDisk		= 0;
+	zipArchiveInfo.dwStartingDiskNumber			= 0;
+	zipArchiveInfo.dwNumberOfEntriesOnThisDisk	= (Uint16)fWriteEntries.size();
+	zipArchiveInfo.dwTotalNumberOfEntries		= (Uint16)fWriteEntries.size();
+	zipArchiveInfo.dwOffsetCentralDir			= (Uint32)fLocalDataEnd;
+	zipArchiveInfo.dwSizeOfCentralDir			= 0;
+	for ( const SZIPFileInfo& info : fWriteEntries )
+	{
+		zipArchiveInfo.dwSizeOfCentralDir += kCentralFileHeaderLength + (Uint32)info.fFileName.GetEncodingLength(ETXEncoding::eUTF8);
+	}
+
+	fpOpenedFile->Truncate( fLocalDataEnd );
+	Uint64 currentWritePosition = fLocalDataEnd;
+	this->WriteCentralDirectoryHeader( &zipArchiveInfo, &fWriteEntries, currentWritePosition );
+	this->WriteEndHeader( &zipArchiveInfo, currentWritePosition );
+
+	fCentralDirWritten = true;
+}
+
+void CZIPFileImpl::ResetWriteState()
+{
+	fWriteEntries.clear();
+	fWriteEntryNames.clear();
+	fLocalDataEnd		= 0;
+	fCentralDirWritten	= false;
+}
+
+void CZIPFileImpl::RebuildWriteStateFromBuffer()
+{
+	ResetWriteState();
+	if ( !fpOpenedFile || !fbOpenedWrite )
+		return;
+
+	Uint32 centralDirPosition = 0;
+	this->GetCentralDirPosition( centralDirPosition );
+	if ( !centralDirPosition )
+		return;
+
+	// The buffer already contains a complete central directory.
+	fLocalDataEnd		= centralDirPosition;
+	fCentralDirWritten	= true;
+
+	std::vector<SEntryLocation> entries;
+	this->ScanCentralDirectory( entries );
+	for ( const SEntryLocation& entry : entries )
+	{
+		SZIPFileInfo info;
+		if ( VCOM_SUCCEEDED( this->GetFileInfo( entry.fName, info ) ) )
+		{
+			fWriteEntryNames.insert( entry.fName );
+			fWriteEntries.push_back( info );
+		}
+	}
+}
+
+void CZIPFileImpl::ScanCentralDirectory( std::vector<SEntryLocation>& outEntries )
+{
+	outEntries.clear();
+	if ( !fpOpenedFile )
+		return;
+
+	Uint32 currentReadPosition = 0;
+	this->GetCentralDirPosition( currentReadPosition );
+	if ( !currentReadPosition )
+		return;
+
+	Uint64 fileSize = 0;
+	fpOpenedFile->GetFileSize( fileSize );
+
+	for (;;)
+	{
+		Uint32 signature = 0;
+		this->ReadLong( signature, currentReadPosition );
+		if ( signature != kCentralDirSignature )
+			break;
+
+		SEntryLocation entry;
+		currentReadPosition += ( 3 * kShortLength );						// version made by, version needed, flags
+		this->ReadShort( entry.fCompressionMethod, currentReadPosition );
+		currentReadPosition += ( 2 * kShortLength ) + kLongLength;			// time, date, crc
+		this->ReadLong( entry.fCompressedSize, currentReadPosition );
+		currentReadPosition += kLongLength;									// uncompressed size
+
+		Uint16 fileNameLength		= 0;
+		Uint16 extraFieldLength		= 0;
+		Uint16 fileCommentLength	= 0;
+		this->ReadShort( fileNameLength, currentReadPosition );
+		this->ReadShort( extraFieldLength, currentReadPosition );
+		this->ReadShort( fileCommentLength, currentReadPosition );
+		currentReadPosition += ( 2 * kShortLength ) + kLongLength;			// disk number, internal and external attributes
+		this->ReadLong( entry.fLocalHeaderOffset, currentReadPosition );
+
+		if ( (Uint64)currentReadPosition + fileNameLength > fileSize )
+			break;
+
+		entry.fName.resize( fileNameLength );
+		Uint64 inOutReadSize = (Uint64)fileNameLength;
+		if ( fileNameLength ) { this->ReadFromFile( currentReadPosition, inOutReadSize, (void*)&entry.fName[0] ); }
+
+		// GetNextFile stops at the first entry without a name
+		if ( entry.fName.empty() || entry.fName[0] == '\0' )
+			break;
+
+		currentReadPosition += extraFieldLength + fileCommentLength;
+		outEntries.push_back( entry );
+	}
+}
+
+VCOMError CZIPFileImpl::GetFileNames(std::vector<std::string>& outNames)
+{
+	outNames.clear();
+	if ( !fpOpenedFile )
+		return kVCOMError_NotInitialized;
+
+	this->EnsureFinalized();
+
+	std::vector<SEntryLocation> entries;
+	this->ScanCentralDirectory( entries );
+
+	// Duplicate names are reported once; GetFile/GetFiles resolve a name to its first entry.
+	std::unordered_set<std::string> seen;
+	outNames.reserve( entries.size() );
+	for ( const SEntryLocation& entry : entries )
+	{
+		if ( seen.insert( entry.fName ).second ) { outNames.push_back( entry.fName ); }
+	}
+
+	return kVCOMError_NoError;
+}
+
+VCOMError CZIPFileImpl::ExtractEntry( const SEntryLocation& entry, IZIPFileIOBuffer* outputBuffer )
+{
+	Uint32 currentReadPosition = entry.fLocalHeaderOffset;
+	currentReadPosition += ( 5 * kShortLength ) + ( 4 * kLongLength ); // start of variable data
+
+	Uint16 fileNameLength	= 0;
+	Uint16 extraFieldLength	= 0;
+	this->ReadShort( fileNameLength, currentReadPosition );
+	this->ReadShort( extraFieldLength, currentReadPosition );
+	currentReadPosition += fileNameLength + extraFieldLength;
+
+	Uint64 fileSize = 0;
+	fpOpenedFile->GetFileSize( fileSize );
+	if ( (Uint64)currentReadPosition + entry.fCompressedSize > fileSize )
+		return kVCOMError_Failed;
+
+	std::vector<Uint8> rawData( entry.fCompressedSize );
+	Uint64 inOutReadSize = (Uint64)entry.fCompressedSize;
+	if ( inOutReadSize ) { fpOpenedFile->Read( currentReadPosition, inOutReadSize, (void*)rawData.data() ); }
+
+	Uint8 empty = 0;
+	if ( entry.fCompressionMethod == 12 /* bzip2 */ )
+	{
+		return kVCOMError_Failed;
+	}
+	else if ( entry.fCompressionMethod == 0 /* No compression */ )
+	{
+		return outputBuffer->SetData( rawData.empty() ? (void*)&empty : (void*)rawData.data(), rawData.size() );
+	}
+
+	std::vector<Uint8> inflated;
+	if ( !InflateRaw( rawData.data(), rawData.size(), inflated ) )
+		return kVCOMError_Failed;
+
+	return outputBuffer->SetData( inflated.empty() ? (void*)&empty : (void*)inflated.data(), inflated.size() );
+}
+
+VCOMError CZIPFileImpl::GetFiles(const std::vector<std::string>& names, const TZIPGetFileCallback& callback)
+{
+	if ( !fpOpenedFile )
+		return kVCOMError_NotInitialized;
+
+	this->EnsureFinalized();
+
+	std::vector<SEntryLocation> entries;
+	this->ScanCentralDirectory( entries );
+
+	// Like GetFile, a name refers to the first entry with that name.
+	std::unordered_map<std::string, size_t> entryByName;
+	for ( size_t i = 0; i < entries.size(); i++ ) { entryByName.emplace( entries[i].fName, i ); }
+
+	std::vector<const SEntryLocation*> locations( names.size(), nullptr );
+	for ( size_t i = 0; i < names.size(); i++ )
+	{
+		auto it = entryByName.find( names[i] );
+		if ( it == entryByName.end() ) { continue; }
+
+		locations[i] = &entries[it->second];
+
+		// Report errors on the calling thread, in entry order (error containers are thread local).
+		if ( locations[i]->fCompressionMethod == 12 /* bzip2 */ )
+		{
+			SceneData::GdtfFixture::AddError(GdtfParsingError(GdtfDefines::EGdtfParsingError::eFileWithUnsupportedEncodingInZip));
+		}
+	}
+
+	Parallel::ParallelFor( names.size(), [&]( size_t i )
+	{
+		CZIPFileIOBufferImpl	buffer;
+		VCOMError				err = kVCOMError_Failed;
+		if ( locations[i] ) { err = this->ExtractEntry( *locations[i], &buffer ); }
+
+		callback( i, err, buffer );
+	});
+
+	return kVCOMError_NoError;
 }
 
 VCOMError CZIPFileImpl::AddFile(const TXString& path, IFileIdentifier* inputFile)
@@ -679,6 +895,8 @@ VCOMError CZIPFileImpl::RemoveFile(const TXString& path)
 	VCOMError err = kVCOMError_NoError;
 	if ( !fpOpenedFile )
 		return kVCOMError_NotInitialized;
+
+	this->EnsureFinalized();
 
 	Uint32 centralFileHeaderPosition = 0;
 	Uint32 localFileHeaderPosition = 0;
@@ -776,6 +994,8 @@ VCOMError CZIPFileImpl::RemoveFile(const TXString& path)
 			delete [] readData1;
 		if ( readData2 )
 			delete [] readData2;
+
+		this->RebuildWriteStateFromBuffer();
 	}
 
 	return kVCOMError_NoError;
@@ -785,6 +1005,8 @@ VCOMError CZIPFileImpl::MoveFile(const TXString& path)
 {
 	if ( !fpOpenedFile )
 	 return kVCOMError_NotInitialized;
+
+	this->EnsureFinalized();
 		
 	IFileIdentifierPtr pMovedFile( IID_FileIdentifier );
 	pMovedFile->Set( path );
@@ -809,58 +1031,45 @@ VCOMError CZIPFileImpl::MoveFile(const TXString& path)
 
 bool CZIPFileImpl::Inflate( void* pData, size_t dataSize, IZIPFileIOBuffer* outBuffer )
 {
-	mz_streamp streamToInflate = new z_stream;
-	streamToInflate->zalloc = (alloc_func)0;
-	streamToInflate->zfree = (free_func)0;
-	streamToInflate->opaque = (voidpf)0;
-	int err = inflateInit2( streamToInflate, -kMaxWBITS );
-	if (err)
+	std::vector<Uint8> inflated;
+	if ( !InflateRaw( pData, dataSize, inflated ) )
 		return false;
-	
-	streamToInflate->next_in = (Uint8*)pData;
-	streamToInflate->avail_in = (unsigned int)dataSize; 
-	streamToInflate->total_in = 0;
-	streamToInflate->data_type = 0;
-	
-	CZIPFileIOBufferImpl zipBuffer;
+
+	Uint8 empty = 0;
+	outBuffer->SetData( inflated.empty() ? (void*)&empty : (void*)inflated.data(), inflated.size() );
+	return true;
+}
+
+/*static*/ bool CZIPFileImpl::InflateRaw( const void* pData, size_t dataSize, std::vector<Uint8>& outData )
+{
+	z_stream stream;
+	memset( &stream, 0, sizeof(stream) );
+	if ( inflateInit2( &stream, -kMaxWBITS ) != Z_OK )
+		return false;
+
+	stream.next_in		= (Bytef*)pData;
+	stream.avail_in		= (unsigned int)dataSize;
+
+	const size_t chunkSize = (std::max)( dataSize, size_t(64 * 1024) );
+	outData.clear();
+
 	bool bOk = false;
-	bool bFinished = false;
-
-	Uint8* inflateBuffer = new Uint8[ dataSize ];
-	while ( !bFinished )
+	for (;;)
 	{
-		streamToInflate->next_out = inflateBuffer;
-		streamToInflate->avail_out = (unsigned int)dataSize; 
-		int result = inflate( streamToInflate, Z_NO_FLUSH  );
-		zipBuffer.AppendData( inflateBuffer, ( dataSize - streamToInflate->avail_out ) );
-		bOk = result == Z_STREAM_END;
-		bool bError = result < 0;
-		if ( bError || bOk )
-		{
-			bFinished = true;
-			bOk = bOk && !bError;
-		}
-	}
-	if ( bOk )
-	{
-		zipBuffer.GetDataSize( dataSize  );
-		Uint8* tempBuffer = new Uint8[ dataSize ];
-		zipBuffer.CopyDataInto( tempBuffer, dataSize );
-		outBuffer->SetData( tempBuffer, dataSize );
+		size_t oldSize = outData.size();
+		outData.resize( oldSize + chunkSize );
+		stream.next_out		= outData.data() + oldSize;
+		stream.avail_out	= (unsigned int)chunkSize;
 
-		if ( tempBuffer )
-			delete [] tempBuffer;
+		int result = inflate( &stream, Z_NO_FLUSH );
+		outData.resize( oldSize + ( chunkSize - stream.avail_out ) );
+
+		if ( result == Z_STREAM_END )	{ bOk = true; break; }
+		if ( result < 0 )				{ break; }
 	}
 
-	if ( inflateBuffer )
-		delete [] inflateBuffer;
-
-	mz_inflateEnd(streamToInflate);
-
-	if ( streamToInflate ) 
-		delete streamToInflate;
-
-	return bOk ;
+	inflateEnd( &stream );
+	return bOk;
 }
 
 size_t CZIPFileImpl::Deflate( void* pData, size_t dataSize, void* outData )

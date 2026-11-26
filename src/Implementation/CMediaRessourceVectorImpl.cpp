@@ -3,7 +3,14 @@
 //-----------------------------------------------------------------------------
 #include "Prefix/StdAfx.h"
 #include "CMediaRessourceVectorImpl.h"
+#include "CGdtfFixture.h"
+#include "ParallelUtil.h"
 #include "Utility.h"
+
+#include <algorithm>
+#include <cctype>
+#include <map>
+#include <set>
 
 using namespace VectorworksMVR::Filing;
 
@@ -1760,6 +1767,108 @@ VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::GetLibVersi
 {
 	major = LIBMVRGDTF_VERSION_MAJOR;
 	minor = LIBMVRGDTF_VERSION_MINOR;
+
+	return kVCOMError_NoError;
+}
+
+VectorworksMVR::VCOMError VectorworksMVR::CMediaRessourceVectorImpl::PreloadGdtfFixtures()
+{
+	if ( ! fReadMode) { return kVCOMError_NotInitialized; }
+
+	IFolderIdentifierPtr workingFolder = fExchangeObj.GetWorkingFolder();
+	if ( ! workingFolder) { return kVCOMError_NotInitialized; }
+
+	//---------------------------------------------------------------------------
+	// Serial pass: collect the unique GDTF files, in the same way as CSceneObjImpl::GetGdtfFixture resolves them.
+	// Everything that touches shared objects (working folder, refcounts) happens here on the calling thread.
+	struct SPreloadJob
+	{
+		TXString			fGdtfName;
+		TXString			fFolderName;
+		IFileIdentifierPtr	fFile;
+		CGdtfFixtureImpl*	fFixture	= nullptr;
+		bool				fRead		= false;
+	};
+	std::vector<SPreloadJob>	jobs;
+	std::set<std::string>		seenNames;
+
+	for (SceneData::SceneDataObjWithMatrixPtr obj : fExchangeObj.GetSceneDataObjects())
+	{
+		SceneData::SceneDataGDTFSpecObjPtr gdtfSpecObj = dynamic_cast<SceneData::SceneDataGDTFSpecObjPtr>(obj);
+		if ( ! gdtfSpecObj) { continue; }
+
+		TXString gdtfName = gdtfSpecObj->GetGdtfFile();
+		if (gdtfName.IsEmpty()) { continue; }
+		if (gdtfName.Find(".gdtf") == ptrdiff_t(-1)) { gdtfName += ".gdtf";}
+
+		IGdtfFixture*	cached		= nullptr;
+		bool			cachedRead	= false;
+		if (fExchangeObj.GetCachedGdtfFixture(gdtfName, cached, cachedRead)) { continue; }
+		if ( ! seenNames.insert(gdtfName.GetStdString()).second) { continue; }
+
+		IFileIdentifierPtr gdtfFile (IID_FileIdentifier);
+		gdtfFile->Set(workingFolder, gdtfName);
+
+		bool fileExists = false;
+		if (VCOM_FAILED(gdtfFile->ExistsOnDisk(fileExists)) || ! fileExists) { continue; }
+
+		SPreloadJob job;
+		job.fGdtfName	= gdtfName;
+		job.fFile		= gdtfFile;
+		gdtfFile->GetFileNameWithoutExtension(job.fFolderName);
+
+		if (VCOM_FAILED(VWQueryInterface(IID_IGdtfFixture, (IVWUnknown**) & job.fFixture)) || ! job.fFixture) { continue; }
+
+		jobs.push_back(job);
+	}
+
+	if (jobs.empty()) { return kVCOMError_NoError; }
+
+	// Every GDTF is extracted into its own working folder (GDTFs/<name>), which is deleted and recreated first.
+	// Jobs whose folders could collide on a case-insensitive file system are executed serially in one group.
+	std::vector<std::vector<size_t>>		groups;
+	std::map<std::string, size_t>			groupByFolder;
+	for (size_t i = 0; i < jobs.size(); i++)
+	{
+		std::string key = jobs[i].fFolderName.GetStdString();
+		std::transform(key.begin(), key.end(), key.begin(), [](unsigned char c) { return (char)std::tolower(c); });
+
+		auto it = groupByFolder.find(key);
+		if (it == groupByFolder.end())	{ groupByFolder[key] = groups.size(); groups.push_back({ i }); }
+		else							{ groups[it->second].push_back(i); }
+	}
+
+	// The abort callback is global for all GDTF fixtures; set it once here instead of per fixture.
+	std::function<void( bool& )> abortCallback;
+	fExchangeObj.GetAbortCallback( abortCallback );
+	if (abortCallback) { SceneData::GdtfObject::SetAbortCallback( abortCallback ); }
+
+	// Create the shared parent folder up front, so the workers don't race on it.
+	IFolderIdentifierPtr gdtfParentFolder ( IID_FolderIdentifier );
+	gdtfParentFolder->Set( EFolderSpecifier::kSpotlightFolder, true, "GDTFs" );
+	gdtfParentFolder->CreateOnDisk();
+
+	// Keep the XML library initialized during the parallel phase, so it is not initialized/terminated per worker.
+	IXMLFilePtr keepXmlLibraryAlive ( IID_XMLFile );
+
+	//---------------------------------------------------------------------------
+	// Parallel pass: each job only uses objects it owns.
+	Parallel::ParallelFor(groups.size(), [&jobs, &groups](size_t groupIndex)
+	{
+		for (size_t i : groups[groupIndex])
+		{
+			SPreloadJob& job = jobs[i];
+			job.fRead = VCOM_SUCCEEDED( job.fFixture->ReadFromFile(job.fFile, job.fFolderName) );
+		}
+	});
+
+	//---------------------------------------------------------------------------
+	// Serial pass: hand the fixtures over to the cache
+	for (SPreloadJob& job : jobs)
+	{
+		fExchangeObj.SetCachedGdtfFixture(job.fGdtfName, job.fFixture, job.fRead);
+		job.fFixture = nullptr;
+	}
 
 	return kVCOMError_NoError;
 }

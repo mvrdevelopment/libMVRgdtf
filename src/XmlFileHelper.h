@@ -192,6 +192,12 @@ namespace SceneData
 		static bool AddFileToZip(IZIPFilePtr& zipFile, const IFileIdentifierPtr& file, ERessourceType resType, bool deleteFile, bool mustExist = true);
         static void AddFileToZip(IZIPFilePtr& zipFile, ISceneDataZipBuffer& buffer,const TXString &name);		
 
+		// Checks that the file exists and returns the name it gets inside the zip (same rules as AddFileToZip).
+		static bool GetZipEntryName(const IFileIdentifierPtr& file, ERessourceType resType, bool mustExist, TXString& outName);
+
+		// Writes data to file, truncating it. Thread safe when 'file' is not used concurrently elsewhere.
+		static void WriteBufferToFile(IFileIdentifier* file, const void* data, size_t size);
+
         static TXString GetResourceSubFolder(ERessourceType resType);
 	};
 }

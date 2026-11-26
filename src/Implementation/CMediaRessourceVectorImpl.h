@@ -129,5 +129,7 @@ namespace VectorworksMVR
 
 		// Returns the version of the library used to create the MVR/GDTF files
 		virtual VCOMError VCOM_CALLTYPE		GetLibVersion( size_t& major, size_t& minor );
+
+		virtual VCOMError VCOM_CALLTYPE		PreloadGdtfFixtures();
 	};
 }

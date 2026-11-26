@@ -11,6 +11,8 @@
 
 #include "ZIPFileBuffer.h"
 
+#include <unordered_set>
+
 namespace VectorworksMVR
 {
 	namespace Filing
@@ -93,6 +95,10 @@ namespace VectorworksMVR
 			virtual VCOMError VCOM_CALLTYPE	RemoveFile(const TXString& path);
 			virtual VCOMError VCOM_CALLTYPE	MoveFile(const TXString& path);
 
+			virtual VCOMError VCOM_CALLTYPE	AddFiles(const std::vector<SZIPAddFileRequest>& requests, std::vector<VCOMError>& outResults);
+			virtual VCOMError VCOM_CALLTYPE	GetFileNames(std::vector<std::string>& outNames);
+			virtual VCOMError VCOM_CALLTYPE	GetFiles(const std::vector<std::string>& names, const TZIPGetFileCallback& callback);
+
 		public:
 			size_t	Deflate( void* pData, size_t dataSize, void* outData );
 			bool	Inflate( void* pData, size_t dataSize, IZIPFileIOBuffer* outBuffer );
@@ -120,6 +126,35 @@ namespace VectorworksMVR
 			
 			void	GetZipArchiveInfo( SZIPArchiveInfo* zipArchiveInfo );
 			void	GetDosDateAndTime( Uint16& dosDate, Uint16& dosTime);
+
+		private:
+			struct SPreparedEntry
+			{
+				SZIPFileInfo		fInfo;
+				std::vector<Uint8>	fData;
+				size_t				fDataOffset	= 0;
+				bool				fOk			= false;
+			};
+
+			struct SEntryLocation
+			{
+				std::string	fName;
+				Uint16		fCompressionMethod	= 0;
+				Uint32		fCompressedSize		= 0;
+				Uint32		fLocalHeaderOffset	= 0;
+			};
+
+			// Thread safe: only uses the passed data and local state.
+			void		PrepareEntry( const TXString& path, const Uint8* data, size_t size, bool compress, SPreparedEntry& outEntry );
+			void		AppendPreparedEntry( SPreparedEntry& entry );
+			bool		IsNameAlreadyAdded( const std::string& name ) const;
+			void		EnsureFinalized();
+			void		ResetWriteState();
+			void		RebuildWriteStateFromBuffer();
+			void		ScanCentralDirectory( std::vector<SEntryLocation>& outEntries );
+			// Thread safe: reads the in-memory archive only.
+			VCOMError	ExtractEntry( const SEntryLocation& entry, IZIPFileIOBuffer* outputBuffer );
+			static bool	InflateRaw( const void* pData, size_t dataSize, std::vector<Uint8>& outData );
 	
 		private:
 
@@ -132,8 +167,14 @@ namespace VectorworksMVR
 			TXString						fOpenedFileFullPath;
 			TXString						fFolderPath;
 			char							fReadFileName[1024];
+
+			// Write mode: the central directory is generated lazily from these entries.
+			TZIPFileInfoArray				fWriteEntries;
+			std::unordered_set<std::string>	fWriteEntryNames;
+			Uint64							fLocalDataEnd;
+			bool							fCentralDirWritten;
 		private:
-			static VCOMError				fLastError;
+			static thread_local VCOMError	fLastError;
 
 		};
 	}

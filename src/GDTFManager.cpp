@@ -9,6 +9,7 @@
 #include "Utility.h"
 #include "FeedbackDispatcher.h"
 #include "Wrapper/ZIPFileImpl.h"
+#include "ParallelUtil.h"
 
 using namespace SceneData;
 
@@ -7990,7 +7991,7 @@ double GdtfMeasurementPoint::GetEnergy()
 
 //------------------------------------------------------------------------------------
 // GdtfFixture
-TGdtfParsingErrorArray* GdtfFixture::__ERROR_CONTAINER_POINTER = nullptr;
+thread_local TGdtfParsingErrorArray* GdtfFixture::__ERROR_CONTAINER_POINTER = nullptr;
 
 void GdtfFixture::ImportFromFile(IFileIdentifierPtr inZipFile, const TXString& folder)
 {
@@ -8050,77 +8051,109 @@ bool GdtfFixture::ImportFromZip(IZIPFilePtr& zipfile)
 	ISceneDataZipBuffer xmlFileBuffer;
 		
 	//-------------------------------------------------------------------------------------------------
-	// Decompress the files
-	std::string fileName				= "";
-	std::string inPath					= "";
-	while (VCOM_SUCCEEDED( zipfile->GetNextFile(inPath, fileName)))
+	// Decompress the files (in parallel, into memory)
+	std::vector<std::string> fileNames;
+	zipfile->GetFileNames(fileNames);
+
+	struct SExtractedFile
 	{
-		// This is the current file that we are reading
-		ISceneDataZipBuffer buffer;
-		if(VCOM_SUCCEEDED(zipfile->GetFile(fileName, &buffer)))
+		bool	fOk		= false;
+		char*	fData	= nullptr;	// malloc'd, ownership moves to fFileBuffers
+		size_t	fSize	= 0;
+	};
+	std::vector<SExtractedFile> extracted(fileNames.size());
+
+	zipfile->GetFiles(fileNames, [&extracted](size_t index, VCOMError error, IZIPFileIOBuffer& buffer)
+	{
+		if (VCOM_FAILED(error)) { return; }
+
+		SExtractedFile& file = extracted[index];
+		buffer.GetDataSize(file.fSize);
+		file.fData	= (char*)malloc(file.fSize * sizeof(char));
+		buffer.CopyDataInto(file.fData, file.fSize);
+		file.fOk	= true;
+	});
+
+	//-------------------------------------------------------------------------------------------------
+	// Register the files in archive order
+	std::vector<IFileIdentifierPtr>		filesToWrite;
+	std::vector<const SExtractedFile*>	dataToWrite;
+	std::map<std::string, size_t>		writeIndexByPath;
+	for (size_t i = 0; i < fileNames.size(); i++)
+	{
+		const std::string&	fileName	= fileNames[i];
+		SExtractedFile&		file		= extracted[i];
+		if ( ! file.fOk) { continue; }
+
+		if (fileName == "description.xml")
 		{
-			if (fileName == "description.xml")
+			// Set the buffer object
+			xmlFileBuffer.SetData(file.fData, file.fSize);
+			
+			// House keeping
+			std::free(file.fData);
+			file.fData = nullptr;
+		}
+		else
+		{
+			//-----------------------------------------------------------------------------
+			// Prepare pointer to the new files            
+			
+			// Separate filename und folder
+			TXString fileNameWithoutFolder = TXString(fileName).Replace("/", TXString(kSeperator) );	
+	#ifndef _WINDOWS
+			fileNameWithoutFolder          = TXString(fileName).Replace("\\", TXString(kSeperator) ); // It seems some zips come also with this.
+	#endif
+			TXString subFolder 			   = SystemUtil::ExtractFolderFromPath(fileNameWithoutFolder);        
+			
+			// flatten the folder structure
+			subFolder = subFolder.Replace(TXString(kSeperator), "");
+			subFolder = TXString(kSeperator) + subFolder;
+
+			// write the data into the filebuffer map. data is deleted in the GdtfFixture destructor.
+			std::pair<char*, size_t> bufferPair = std::make_pair(file.fData, file.fSize);
+			fFileBuffers[fileNameWithoutFolder] = bufferPair;
+
+			//-----------------------------------------------------------------------------
+			IFolderIdentifierPtr targetFolder (IID_FolderIdentifier);
+			targetFolder->Set(fWorkingFolder, subFolder);
+			
+			bool exists = false;
+			targetFolder->ExistsOnDisk(exists);
+			if( ! exists )	{ targetFolder->CreateOnDisk(); }
+			
+			
+			IFileIdentifierPtr localFile (IID_FileIdentifier);
+			localFile->Set(targetFolder, fileNameWithoutFolder);
+			
+			TXString fullPathRessource;
+			localFile->GetFileFullPath(fullPathRessource);
+
+			// Two entries can map to the same local file; the later one wins, as with sequential writing.
+			auto existing = writeIndexByPath.find(fullPathRessource.GetStdString());
+			if (existing != writeIndexByPath.end())
 			{
-				// Read the data
-				size_t	size = 0;							buffer.GetDataSize(size);
-				void*	data = malloc(size * sizeof(char));	buffer.CopyDataInto(data, size);
-				
-				// Set the buffer object
-				xmlFileBuffer.SetData(data, size);
-				
-				// House keeping
-				std::free(data);
+				dataToWrite[existing->second] = &file;
 			}
 			else
 			{
-				//-----------------------------------------------------------------------------
-				// Prepare pointer to the new files            
-				
-				// Separate filename und folder
-				TXString fileNameWithoutFolder = TXString(fileName).Replace("/", TXString(kSeperator) );	
-	#ifndef _WINDOWS
-				fileNameWithoutFolder          = TXString(fileName).Replace("\\", TXString(kSeperator) ); // It seems some zips come also with this.
-	#endif
-				TXString subFolder 			   = SystemUtil::ExtractFolderFromPath(fileNameWithoutFolder);        
-				
-				// flatten the folder structure
-				subFolder = subFolder.Replace(TXString(kSeperator), "");
-				subFolder = TXString(kSeperator) + subFolder;
-
-				// write the data into the filebuffer map.
-				size_t	size = 0;							buffer.GetDataSize(size);
-				void*	data = malloc(size * sizeof(char));	buffer.CopyDataInto(data, size); //data is deleted in the GdtfFixture destructor.
-				std::pair<char*, size_t> bufferPair = std::make_pair((char*)data, size);
-				fFileBuffers[fileNameWithoutFolder] = bufferPair;
-
-				//-----------------------------------------------------------------------------
-				IFolderIdentifierPtr targetFolder (IID_FolderIdentifier);
-				targetFolder->Set(fWorkingFolder, subFolder);
-				
-				bool exists = false;
-				targetFolder->ExistsOnDisk(exists);
-				if( ! exists )	{ targetFolder->CreateOnDisk(); }
-				
-				
-				IFileIdentifierPtr file (IID_FileIdentifier);
-				file->Set(targetFolder, fileNameWithoutFolder);
-				
-				// dump buffer into file
-				buffer.WriteToFile(file);
-				
-				// Add it into the file list
-				fLocalFiles.push_back(file);
-
-				TXString fullPathRessource;
-				file->GetFileFullPath(fullPathRessource);
-				fLocalFilesFullPath.push_back(fullPathRessource);
-
-
+				writeIndexByPath[fullPathRessource.GetStdString()] = filesToWrite.size();
+				filesToWrite.push_back(localFile);
+				dataToWrite.push_back(&file);
 			}
+			
+			// Add it into the file list
+			fLocalFiles.push_back(localFile);
+			fLocalFilesFullPath.push_back(fullPathRessource);
 		}
-		
-		inPath = fileName;
 	}
+
+	//-------------------------------------------------------------------------------------------------
+	// Dump the buffers into files (in parallel, every file object is used by one thread only)
+	Parallel::ParallelFor(filesToWrite.size(), [&filesToWrite, &dataToWrite](size_t i)
+	{
+		SceneDataZip::WriteBufferToFile(filesToWrite[i], dataToWrite[i]->fData, dataToWrite[i]->fSize);
+	});
 	
 	zipfile->Close();
 	
@@ -8992,6 +9025,9 @@ void GdtfFixture::ResolveMacroRefs(GdtfDmxModePtr dmxMode)
 
 void GdtfFixture::ResolveDmxModeRefs()
 {	
+	// Intentionally serial: resolving a mode mutates shared fixture state (getAttributeByRef lazily creates
+	// fNoFeature and appends it to fAttributes), reads shared TXStrings (not safe concurrently) and the
+	// order of the reported parsing errors must stay stable.
 	for (GdtfDmxModePtr dmxMode : fDmxModes)
 	{
 		if (CheckAbort()) { return; }
@@ -10081,6 +10117,8 @@ bool GdtfFixture::ExportToFile(IZIPFilePtr& zipfile)
 
 	//------------------------------------------------------------------------------------
 	// Add meshes
+	std::vector<std::unique_ptr<CZIPFileIOBufferImpl>>	meshBuffers;
+	std::vector<SZIPAddFileRequest>						requests;
 
 	for (auto it = fFileBuffers.begin(); it != fFileBuffers.end(); it++)
 	{
@@ -10103,13 +10141,18 @@ bool GdtfFixture::ExportToFile(IZIPFilePtr& zipfile)
 
 		if(!strFileName.IsEmpty())
 		{
-			CZIPFileIOBufferImpl* bufferzip = new CZIPFileIOBufferImpl();
-			bufferzip->SetData((void*)it->second.first, it->second.second);
-			zipfile->AddFile(strFileName, bufferzip);
+			meshBuffers.emplace_back(new CZIPFileIOBufferImpl());
+			meshBuffers.back()->SetData((void*)it->second.first, it->second.second);
 
-			delete bufferzip;
+			SZIPAddFileRequest request;
+			request.fPath	= strFileName;
+			request.fBuffer	= meshBuffers.back().get();
+			requests.push_back(request);
 		}
 	}
+
+	std::vector<VCOMError> results;
+	zipfile->AddFiles(requests, results);
 	
 	return true;
 }

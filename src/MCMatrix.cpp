@@ -738,12 +738,8 @@ const GS_API TransformMatrix& VectorworksMVR::IdentityMatrix()
 // matrix (a singleton).
 //
 {
-	static bool setToIdentity = false;
-	static TransformMatrix iMatrix; // static, so it lasts until shutdown
-	if ( !setToIdentity ) {
-		VectorworksMVR::IdentityMatrix(iMatrix);
-		setToIdentity = true;
-	}
+	// Magic static: initialization is thread safe.
+	static const TransformMatrix iMatrix = []() { TransformMatrix m; VectorworksMVR::IdentityMatrix(m); return m; }();
 	return iMatrix;
 }
 

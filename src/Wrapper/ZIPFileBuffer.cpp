@@ -4,6 +4,8 @@
 #include "Prefix/StdAfx.h"
 #include "ZIPFileBuffer.h"
 
+#include <algorithm>
+
 using namespace VectorworksMVR::Filing;
 
 const size_t k_5_MegaByte = 5 * 1024;
@@ -112,8 +114,8 @@ VCOMError ZIPFileBuffer::Write(Uint64 position, Uint64 size, const void* pBuffer
 	// Otherwise allocate more mempry
 	else
 	{
-		// Calculate the new needed buffer
-		fAllocatedMemorySize = needToAllocate + k_5_MegaByte;
+		// Grow geometrically so that appending many entries stays linear
+		fAllocatedMemorySize = std::max<Uint64>(needToAllocate, fAllocatedMemorySize * 2) + k_5_MegaByte;
 
 		// Create new Buffer
 		Uint8* tempBuffer = new Uint8[fAllocatedMemorySize];
@@ -147,6 +149,11 @@ VCOMError VectorworksMVR::Filing::ZIPFileBuffer::CleanBuffer()
 	return kVCOMError_NoError;
 }
 
+
+void ZIPFileBuffer::Truncate(Uint64 size)
+{
+	if (size < fZIPFileBufferSize) { fZIPFileBufferSize = size; }
+}
 
 void ZIPFileBuffer::Copy(char*& p, size_t& inLength)
 {	
